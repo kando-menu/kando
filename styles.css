@@ -6,3 +6,10 @@ body {
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+.circle {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    border-radius: 100%;
+}

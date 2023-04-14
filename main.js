@@ -20,8 +20,6 @@ if (!gotTheLock) {
   electron.app.whenReady().then(() => {
     let mainScreen = electron.screen.getPrimaryDisplay();
 
-    console.log(mainScreen);
-
     mainWindow = new electron.BrowserWindow({
       webPreferences: {
         contextIsolation: true,
