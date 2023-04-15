@@ -13,6 +13,11 @@
 const electron = require('electron');
 const path     = require('path');
 
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require('electron-squirrel-startup')) {
+  electron.app.quit();
+}
+
 const gotTheLock = electron.app.requestSingleInstanceLock();
 
 let mainWindow;
@@ -42,13 +47,15 @@ if (!gotTheLock) {
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
-        preload: path.join(__dirname, 'preload.js')
+        preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
       },
       transparent: true,
       resizable: false,
       frame: false,
       alwaysOnTop: true,
-      width: mainScreen.workAreaSize.width + 1,
+      x: 0,
+      y: 0,
+      width: mainScreen.workAreaSize.width / 2 + 1,
       height: mainScreen.workAreaSize.height + 1,
       type: 'dock',
       show: false
@@ -61,7 +68,7 @@ if (!gotTheLock) {
     });
 
     // and load the index.html of the app.
-    mainWindow.loadFile('index.html');
+    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   });
 
 

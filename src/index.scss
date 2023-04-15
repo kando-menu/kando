@@ -1,4 +1,4 @@
-<!-- ----------------------------------------------------------------------------------- #
+/* ------------------------------------------------------------------------------------- #
 #                                                                                        #
 #     |  /  __|   \ |       _ \   _ \      This file is part of Ken-Do, the              #
 #     . <   _|   .  | ____| |  | (   |     cross-platform marking menu.                  #
@@ -8,25 +8,36 @@
 
 SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
--->
+*/
 
-<!DOCTYPE html>
-<html>
+body {
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    overflow: hidden;
+    margin: 0;
+    transition: background-color 500ms;
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
-  <link href="./styles.css" rel="stylesheet">
-  <title>Ken-Do</title>
-</head>
+    &.visible {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+}
 
-<body>
-  <input type="button" id="close-button" value="Close">
-  <input type="button" id="dev-tools-button" value="Show Dev Tools">
-  <div id="thing" class="circle"></div>
+.circle {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    border-radius: 100%;
+    opacity: 0;
+    transition: opacity 500ms;
 
-  <script src="./renderer.js"></script>
-</body>
+    &:hover {
+        background-color: rgb(247, 101, 101);
+    }
+}
 
-</html>
+body.visible .circle {
+    opacity: 1;
+}

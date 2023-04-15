@@ -1,4 +1,4 @@
-/* ------------------------------------------------------------------------------------- #
+<!-- ----------------------------------------------------------------------------------- #
 #                                                                                        #
 #     |  /  __|   \ |       _ \   _ \      This file is part of Ken-Do, the              #
 #     . <   _|   .  | ____| |  | (   |     cross-platform marking menu.                  #
@@ -8,36 +8,20 @@
 
 SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
-*/
+-->
 
-body {
-    color: white;
-    background-color: rgba(0, 0, 0, 0);
-    overflow: hidden;
-    margin: 0;
-    transition: background-color 500ms;
-}
+<!DOCTYPE html>
+<html>
 
-body.visible {
-    background-color: rgba(0, 0, 0, 0.2);
-}
+<head>
+  <meta charset="UTF-8">
+  <title>Ken-Do</title>
+</head>
 
-.circle {
-    position: absolute;
-    top: -50px;
-    left: -50px;
-    width: 100px;
-    height: 100px;
-    background-color: red;
-    border-radius: 100%;
-    opacity: 0;
-    transition: opacity 500ms;
-}
+<body>
+  <input type="button" id="close-button" value="Close">
+  <input type="button" id="dev-tools-button" value="Show Dev Tools">
+  <div id="thing" class="circle"></div>
+</body>
 
-.circle:hover {
-    background-color: rgb(247, 101, 101);
-}
-
-body.visible .circle {
-    opacity: 1;
-}
+</html>

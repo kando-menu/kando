@@ -1,18 +1,35 @@
 {
-  "name": "electron-quick-start",
+  "name": "ken-do",
+  "productName": "ken-do",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
+  "description": "My Electron application description",
+  "main": ".webpack/main",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "keywords": [],
+  "author": {
+    "name": "Simon Schneegans",
+    "email": "code@simonschneegans.de"
+  },
+  "license": "MIT",
   "devDependencies": {
-    "electron": "^24.1.2"
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
+    "@electron-forge/plugin-webpack": "^6.1.1",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "css-loader": "^6.7.3",
+    "electron": "24.1.2",
+    "node-loader": "^2.0.0",
+    "sass-loader": "^13.2.2",
+    "style-loader": "^3.3.2"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
   }
 }

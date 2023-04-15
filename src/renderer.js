@@ -9,6 +9,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import './index.scss';
+
 document.querySelector('#close-button').addEventListener('click', () => {
   window.api.hideWindow();
 });
@@ -33,3 +35,8 @@ window.api.showMenu((a, pos) => {
   document.querySelector('body').classList.add('visible');
   thing.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
 });
+
+// document.addEventListener('mousemove', ev => {
+//   document.querySelector('body').classList.add('visible');
+//   thing.style.transform = `translate(${ev.x}px, ${ev.y}px)`;
+// });
