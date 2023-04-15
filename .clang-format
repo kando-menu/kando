@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+BasedOnStyle: Google
+AlignConsecutiveAssignments: true
+AlignAfterOpenBracket: Align
+ContinuationIndentWidth: 2
+KeepEmptyLinesAtTheStartOfBlocks: true
+SortIncludes: false
+ColumnLimit: 90

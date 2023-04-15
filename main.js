@@ -1,6 +1,17 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//    |  /  __|   \ |       _ \   _ \      This file is part of Ken-Do, the             //
+//    . <   _|   .  | ____| |  | (   |     cross-platform marking menu.                 //
+//   _|\_\ ___| _|\_|      ___/ \___/      Read more on github.com/ken-do/ken-do        //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
 // Modules to control application life and create native browser window
 const electron = require('electron');
-const path = require('path');
+const path     = require('path');
 
 const gotTheLock = electron.app.requestSingleInstanceLock();
 
@@ -37,8 +48,8 @@ if (!gotTheLock) {
       resizable: false,
       frame: false,
       alwaysOnTop: true,
-      width: mainScreen.workAreaSize.width,
-      height: mainScreen.workAreaSize.height,
+      width: mainScreen.workAreaSize.width + 1,
+      height: mainScreen.workAreaSize.height + 1,
       type: 'dock',
       show: false
     });

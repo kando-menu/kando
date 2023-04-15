@@ -1,0 +1,6 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: .vscode/* package.json package-lock.json
+Copyright: Simon Schneegans <code@simonschneegans.de>
+License: CC0-1.0
+
