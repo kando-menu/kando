@@ -1,7 +1,3 @@
-/* styles.css */
-
-/* Add styles here to customize the appearance of your app */
-
 body {
     color: white;
     background-color: rgba(0, 0, 0, 0);
@@ -22,8 +18,14 @@ body.visible {
     height: 100px;
     background-color: red;
     border-radius: 100%;
+    opacity: 0;
+    transition: opacity 500ms;
 }
 
 .circle:hover {
     background-color: rgb(247, 101, 101);
+}
+
+body.visible .circle {
+    opacity: 1;
 }
