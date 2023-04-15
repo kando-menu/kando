@@ -4,12 +4,26 @@
 
 body {
     color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0);
+    overflow: hidden;
+    margin: 0;
+    transition: background-color 500ms;
+}
+
+body.visible {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .circle {
+    position: absolute;
+    top: -50px;
+    left: -50px;
     width: 100px;
     height: 100px;
     background-color: red;
     border-radius: 100%;
+}
+
+.circle:hover {
+    background-color: rgb(247, 101, 101);
 }
