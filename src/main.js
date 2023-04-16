@@ -29,19 +29,17 @@ if (!gotTheLock) {
     mainWindow.show();
   });
 
-
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   electron.app.whenReady().then(() => {
-    // electron.globalShortcut.register('Alt+CommandOrControl+I', () => {
-    //   mainWindow.show();
-    // });
+    electron.globalShortcut.register('Shift+CommandOrControl+K', () => {
+      mainWindow.show();
+      let pos = electron.screen.getCursorScreenPoint();
+      mainWindow.webContents.send('show-menu', pos);
+    });
 
     let mainScreen = electron.screen.getPrimaryDisplay();
-
-    console.log(mainScreen.workAreaSize);
-
 
     mainWindow = new electron.BrowserWindow({
       webPreferences: {
@@ -55,34 +53,34 @@ if (!gotTheLock) {
       alwaysOnTop: true,
       x: 0,
       y: 0,
-      width: mainScreen.workAreaSize.width / 2 + 1,
+      width: mainScreen.workAreaSize.width + 1,
       height: mainScreen.workAreaSize.height + 1,
       type: 'dock',
       show: false
     });
 
-    mainWindow.once('ready-to-show', () => {
-      let pos = electron.screen.getCursorScreenPoint();
-      mainWindow.webContents.send('show-menu', pos);
-      mainWindow.show();
-    });
+    // mainWindow.once('ready-to-show', () => {
+    //   mainWindow.show();
+    //   let pos = electron.screen.getCursorScreenPoint();
+    //   mainWindow.webContents.send('show-menu', pos);
+    // });
+
+    // mainWindow.once('focus', () => {
+    //   console.log(electron.screen.getCursorScreenPoint());
+    // });
 
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   });
 
 
-  // electron.app.on('window-all-closed', function() {
-  //   app.quit();
-  // });
-
   electron.ipcMain.on('show-dev-tools', () => {
     mainWindow.webContents.openDevTools();
   });
 
   electron.ipcMain.on('hide-window', () => {
-    electron.app.quit();
-    // mainWindow.hide();
+    // electron.app.quit();
+    mainWindow.hide();
   });
 
   electron.ipcMain.on('item-selected', () => {
