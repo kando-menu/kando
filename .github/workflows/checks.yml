@@ -8,6 +8,7 @@ on:
     branches:
       - '**'
 
+jobs:
   reuse:
     name: Check Compliance with REUSE Specification
     runs-on: ubuntu-latest
