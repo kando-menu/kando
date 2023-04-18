@@ -33,9 +33,7 @@ if (!gotTheLock) {
     console.log(`Running on Linux (${process.env.XDG_CURRENT_DESKTOP} on ${
       process.env.XDG_SESSION_TYPE})!`);
   } else if (os.platform() === 'win32') {
-    console.log('Running on Windows!');
-    console.log(os.release());
-    console.log(os.version());
+    console.log(`Running on Windows ${os.release()}!`);
   } else if (os.platform() === 'darwin') {
     console.log('MacOS is not yet supported!');
     electron.app.quit();
