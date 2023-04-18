@@ -9,9 +9,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// Modules to control application life and create native browser window
 const electron = require('electron');
-const path     = require('path');
+const os       = require('node:os');
+const process  = require('node:process');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -28,6 +28,18 @@ if (!gotTheLock) {
   electron.app.on('second-instance', (event, commandLine, workingDirectory) => {
     mainWindow.show();
   });
+
+  if (os.platform() === 'linux') {
+    console.log(`Running on Linux (${process.env.XDG_CURRENT_DESKTOP} on ${
+      process.env.XDG_SESSION_TYPE})!`);
+  } else if (os.platform() === 'win32') {
+    console.log('Running on Windows!');
+    console.log(os.release());
+    console.log(os.version());
+  } else if (os.platform() === 'darwin') {
+    console.log('MacOS is not yet supported!');
+    electron.app.quit();
+  }
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
