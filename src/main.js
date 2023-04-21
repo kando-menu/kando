@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
-//    |  /  __|   \ |       _ \   _ \      This file is part of Ken-Do, the             //
-//    . <   _|   .  | ____| |  | (   |     cross-platform marking menu.                 //
-//   _|\_\ ___| _|\_|      ___/ \___/      Read more on github.com/ken-do/ken-do        //
+//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do, the truly       //
+//     . <   _|   .  | ____| |  | (   |    amazing cross-platform marking menu.         //
+//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -10,45 +10,63 @@
 // SPDX-License-Identifier: MIT
 
 const electron = require('electron');
-const os       = require('node:os');
-const process  = require('node:process');
+
+const Platform = require('./platform').default;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   electron.app.quit();
 }
 
-const gotTheLock = electron.app.requestSingleInstanceLock();
+let platform = new Platform();
+
+function showMenu() {
+
+  platform.getFocusedWindow().then(window => {
+    mainWindow.webContents.send('set-window-info', window);
+
+    platform.getPointer().then(pointer => {
+      mainWindow.show();
+      mainWindow.webContents.send('show-menu', pointer);
+    });
+  });
+
+  // let pos = electron.screen.getCursorScreenPoint();
+  // electron.globalShortcut.register
+  // electron.globalShortcut.unregisterAll();
+}
+
+platform.connect()
+  .then(() => {
+    console.log('Connected to platform');
+
+    platform.bindShortcut('Shift+CommandOrControl+K', showMenu);
+  })
+  .catch(err => {
+    console.error('Failed to connect to the Ken-Do Integration extension: ' + err);
+  });
+
 
 let mainWindow;
+
+
+
+const gotTheLock = electron.app.requestSingleInstanceLock();
+
 
 if (!gotTheLock) {
   electron.app.quit();
 } else {
+
   electron.app.on('second-instance', (event, commandLine, workingDirectory) => {
-    mainWindow.show();
+    showMenu();
   });
 
-  if (os.platform() === 'linux') {
-    console.log(`Running on Linux (${process.env.XDG_CURRENT_DESKTOP} on ${
-      process.env.XDG_SESSION_TYPE})!`);
-  } else if (os.platform() === 'win32') {
-    console.log(`Running on Windows ${os.release()}!`);
-  } else if (os.platform() === 'darwin') {
-    console.log('MacOS is not yet supported!');
-    electron.app.quit();
-  }
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   electron.app.whenReady().then(() => {
-    electron.globalShortcut.register('Shift+CommandOrControl+K', () => {
-      mainWindow.show();
-      let pos = electron.screen.getCursorScreenPoint();
-      mainWindow.webContents.send('show-menu', pos);
-    });
-
     let mainScreen = electron.screen.getPrimaryDisplay();
 
     mainWindow = new electron.BrowserWindow({
@@ -98,6 +116,8 @@ if (!gotTheLock) {
   });
 
   electron.app.on('will-quit', () => {
+    // Unregister all shortcuts.
+    platform.unbindShortcut('Shift+CommandOrControl+K');
     console.log('Bye!');
   });
 }

@@ -9,22 +9,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-const {ipcRenderer, contextBridge} = require('electron');
+const os      = require('node:os');
+const process = require('node:process');
 
-contextBridge.exposeInMainWorld('api', {
-  hideWindow: function() {
-    ipcRenderer.send('hide-window');
-  },
-  showDevTools: function() {
-    ipcRenderer.send('show-dev-tools');
-  },
-  itemSelected: function() {
-    ipcRenderer.send('item-selected');
-  },
-  showMenu: function(func) {
-    ipcRenderer.on('show-menu', (event, ...args) => func(event, ...args));
-  },
-  setWindowInfo: function(func) {
-    ipcRenderer.on('set-window-info', (event, ...args) => func(event, ...args));
-  }
-});
+let Platform;
+
+if (os.platform() === 'linux') {
+  console.log(`Running on Linux (${process.env.XDG_CURRENT_DESKTOP} on ${
+    process.env.XDG_SESSION_TYPE})!`);
+  Platform = require('./gnome.js').default;
+  
+} else if (os.platform() === 'win32') {
+  console.log(`Running on Windows ${os.release()}!`);
+} else if (os.platform() === 'darwin') {
+  console.log('MacOS is not yet supported!');
+}
+
+export default Platform;

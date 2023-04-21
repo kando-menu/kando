@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
-//    |  /  __|   \ |       _ \   _ \      This file is part of Ken-Do, the             //
-//    . <   _|   .  | ____| |  | (   |     cross-platform marking menu.                 //
-//   _|\_\ ___| _|\_|      ___/ \___/      Read more on github.com/ken-do/ken-do        //
+//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do, the truly       //
+//     . <   _|   .  | ____| |  | (   |    amazing cross-platform marking menu.         //
+//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -28,12 +28,16 @@ document.addEventListener('keyup', ev => {
 let thing = document.querySelector('#thing');
 
 thing.addEventListener('click', () => {
-  window.api.itemSelected();
+window.api.itemSelected();
 });
 
 window.api.showMenu((a, pos) => {
   document.querySelector('body').classList.add('visible');
   thing.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+});
+
+window.api.setWindowInfo((a, info) => {
+  document.querySelector('#window-info').textContent = `${info.name} (${info.wmClass})`;
 });
 
 // document.addEventListener('mousemove', ev => {

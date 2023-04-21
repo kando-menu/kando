@@ -30,6 +30,7 @@
     "style-loader": "^3.3.2"
   },
   "dependencies": {
+    "dbus": "^1.0.7",
     "electron-squirrel-startup": "^1.0.0"
   }
 }
