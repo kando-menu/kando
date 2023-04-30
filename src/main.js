@@ -92,7 +92,8 @@ electron.ipcMain.on('item-selected', () => {
 
 electron.ipcMain.on('simulate-shortcut', () => {
   mainWindow.hide();
-  backend.simulateShortcut('Ctrl+Alt+Right');
+  backend.simulateShortcut('Ctrl+Alt+Tab');
+  //backend.simulateShortcut('Ctrl+Alt+Right');
 });
 
 electron.app.on('will-quit', () => {

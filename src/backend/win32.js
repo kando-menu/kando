@@ -32,7 +32,7 @@ export default class Backend {
 
   getFocusedWindow() {
     return new Promise((resolve, reject) => {
-      exec('dir', (err, stdout) => {
+      exec(`dir`, (err, stdout) => {
         if (err) {
           reject(err);
           return;
@@ -47,7 +47,14 @@ export default class Backend {
 
   simulateShortcut(shortcut) {
     return new Promise((resolve, reject) => {
-      exec(`dir`, err => {
+      try {
+        shortcut = this._toPowershellAccelerator(shortcut);
+      } catch (err) {
+        reject(err);
+        return;
+      }
+
+      exec(`powershell -command "$wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('${shortcut}')"`, err => {
         if (err) {
           reject(err);
         } else {
@@ -79,5 +86,37 @@ export default class Backend {
       electron.globalShortcut.unregisterAll();
       resolve();
     });
+  }
+
+  _toPowershellAccelerator(shortcut) {
+    if (shortcut.includes('Option')) {
+      throw new Error('Shortcuts including Option are not yet supported on GNOME.');
+    }
+
+    if (shortcut.includes('AltGr')) {
+      throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
+    }
+
+    if (shortcut.includes('Meta')) {
+      throw new Error('Shortcuts including Meta are not yet supported on GNOME.');
+    }
+
+    if (shortcut.includes('Super')) {
+      throw new Error('Shortcuts including Super are not yet supported on GNOME.');
+    }
+
+    shortcut = shortcut.replace('^', '{^}');
+    shortcut = shortcut.replace('%', '{%}');
+    shortcut = shortcut.replace('CommandOrControl+', '^');
+    shortcut = shortcut.replace('CmdOrCtrl+', '^');
+    shortcut = shortcut.replace('Command+', '^');
+    shortcut = shortcut.replace('Control+', '^');
+    shortcut = shortcut.replace('Cmd+', '^');
+    shortcut = shortcut.replace('Ctrl+', '^');
+    shortcut = shortcut.replace('Alt+', '%');
+    shortcut = shortcut.replace('Shift+', '+');
+    shortcut = shortcut.replace('Tab', '{tab}');
+
+    return shortcut;
   }
 }
