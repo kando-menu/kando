@@ -9,7 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "postinstall": "npmpd"
   },
   "keywords": [],
   "author": {
@@ -30,7 +31,10 @@
     "style-loader": "^3.3.2"
   },
   "dependencies": {
-    "dbus": "^1.0.7",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "npm-platform-dependencies": "^0.1.0"
+  },
+  "linuxDependencies": {
+    "dbus": "^1.0.7"
   }
 }
