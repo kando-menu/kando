@@ -28,7 +28,10 @@ if (os.platform() === 'linux') {
   }
 
 } else if (os.platform() === 'win32') {
+
   console.log(`Running on Windows ${os.release()}!`);
+  Backend = require('./win32.js').default;
+
 } else if (os.platform() === 'darwin') {
   console.log('MacOS is not yet supported!');
 }
