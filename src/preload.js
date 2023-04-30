@@ -18,6 +18,9 @@ contextBridge.exposeInMainWorld('api', {
   showDevTools: function() {
     ipcRenderer.send('show-dev-tools');
   },
+  simulateShortcut: function() {
+    ipcRenderer.send('simulate-shortcut');
+  },
   itemSelected: function() {
     ipcRenderer.send('item-selected');
   },

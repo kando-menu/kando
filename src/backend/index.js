@@ -12,17 +12,25 @@
 const os      = require('node:os');
 const process = require('node:process');
 
-let Platform;
+let Backend;
 
 if (os.platform() === 'linux') {
+
   console.log(`Running on Linux (${process.env.XDG_CURRENT_DESKTOP} on ${
     process.env.XDG_SESSION_TYPE})!`);
-  Platform = require('./gnome.js').default;
-  
+
+  if (process.env.XDG_SESSION_TYPE === 'x11') {
+    Backend = require('./x11.js').default;
+  } else if (process.env.XDG_SESSION_TYPE === 'wayland') {
+    Backend = require('./gnome.js').default;
+  } else {
+    console.log('Unknown session type!');
+  }
+
 } else if (os.platform() === 'win32') {
   console.log(`Running on Windows ${os.release()}!`);
 } else if (os.platform() === 'darwin') {
   console.log('MacOS is not yet supported!');
 }
 
-export default Platform;
+export default Backend;

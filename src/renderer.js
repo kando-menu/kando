@@ -19,6 +19,10 @@ document.querySelector('#dev-tools-button').addEventListener('click', () => {
   window.api.showDevTools();
 });
 
+document.querySelector('#shortcut-button').addEventListener('click', () => {
+  window.api.simulateShortcut();
+});
+
 document.addEventListener('keyup', ev => {
   if (ev.key === 'Escape') {
     window.api.hideWindow();

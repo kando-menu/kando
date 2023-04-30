@@ -11,113 +11,91 @@
 
 const electron = require('electron');
 
-const Platform = require('./platform').default;
+const Backend = require('./backend').default;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   electron.app.quit();
+  throw '';
 }
 
-let platform = new Platform();
+const gotTheLock = electron.app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  electron.app.quit();
+  throw '';
+}
+
+let backend = new Backend();
+let mainWindow;
 
 function showMenu() {
-
-  platform.getFocusedWindow().then(window => {
+  backend.getFocusedWindow().then(window => {
     mainWindow.webContents.send('set-window-info', window);
 
-    platform.getPointer().then(pointer => {
+    backend.getPointer().then(pointer => {
       mainWindow.show();
       mainWindow.webContents.send('show-menu', pointer);
     });
   });
-
-  // let pos = electron.screen.getCursorScreenPoint();
-  // electron.globalShortcut.register
-  // electron.globalShortcut.unregisterAll();
 }
 
-platform.connect()
-  .then(() => {
-    console.log('Connected to platform');
+// electron.app.on('second-instance', (event, commandLine, workingDirectory) => {});
 
-    platform.bindShortcut('Shift+CommandOrControl+K', showMenu);
-  })
-  .catch(err => {
-    console.error('Failed to connect to the Ken-Do Integration extension: ' + err);
-  });
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+electron.app.whenReady().then(() => {
+  backend.connect()
+    .then(() => {
+      console.log('Connected to backend');
 
-
-let mainWindow;
-
-
-
-const gotTheLock = electron.app.requestSingleInstanceLock();
-
-
-if (!gotTheLock) {
-  electron.app.quit();
-} else {
-
-  electron.app.on('second-instance', (event, commandLine, workingDirectory) => {
-    showMenu();
-  });
-
-
-  // This method will be called when Electron has finished
-  // initialization and is ready to create browser windows.
-  // Some APIs can only be used after this event occurs.
-  electron.app.whenReady().then(() => {
-    let mainScreen = electron.screen.getPrimaryDisplay();
-
-    mainWindow = new electron.BrowserWindow({
-      webPreferences: {
-        contextIsolation: true,
-        sandbox: true,
-        preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
-      },
-      transparent: true,
-      resizable: false,
-      frame: false,
-      alwaysOnTop: true,
-      x: 0,
-      y: 0,
-      width: mainScreen.workAreaSize.width + 1,
-      height: mainScreen.workAreaSize.height + 1,
-      type: 'dock',
-      show: false
+      backend.bindShortcut('Shift+CommandOrControl+K', showMenu);
+    })
+    .catch(err => {
+      console.error('Failed to connect to the Ken-Do Integration extension: ' + err);
     });
 
-    // mainWindow.once('ready-to-show', () => {
-    //   mainWindow.show();
-    //   let pos = electron.screen.getCursorScreenPoint();
-    //   mainWindow.webContents.send('show-menu', pos);
-    // });
 
-    // mainWindow.once('focus', () => {
-    //   console.log(electron.screen.getCursorScreenPoint());
-    // });
+  let mainScreen = electron.screen.getPrimaryDisplay();
 
-    // and load the index.html of the app.
-    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow = new electron.BrowserWindow({
+    webPreferences:
+      {contextIsolation: true, sandbox: true, preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY},
+    transparent: true,
+    resizable: false,
+    frame: false,
+    alwaysOnTop: true,
+    x: 0,
+    y: 0,
+    width: mainScreen.workAreaSize.width + 1,
+    height: mainScreen.workAreaSize.height + 1,
+    type: 'dock',
+    show: false
   });
 
+  // and load the index.html of the app.
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+});
 
-  electron.ipcMain.on('show-dev-tools', () => {
-    mainWindow.webContents.openDevTools();
-  });
 
-  electron.ipcMain.on('hide-window', () => {
-    // electron.app.quit();
-    mainWindow.hide();
-  });
+electron.ipcMain.on('show-dev-tools', () => {
+  mainWindow.webContents.openDevTools();
+});
 
-  electron.ipcMain.on('item-selected', () => {
-    console.log('foo');
-  });
+electron.ipcMain.on('hide-window', () => {
+  mainWindow.hide();
+});
 
-  electron.app.on('will-quit', () => {
-    // Unregister all shortcuts.
-    platform.unbindShortcut('Shift+CommandOrControl+K');
-    console.log('Bye!');
-  });
-}
+electron.ipcMain.on('item-selected', () => {
+  console.log('foo');
+});
+
+electron.ipcMain.on('simulate-shortcut', () => {
+  mainWindow.hide();
+  backend.simulateShortcut('Ctrl+Alt+Right');
+});
+
+electron.app.on('will-quit', () => {
+  backend.unbindAllShortcuts();
+  console.log('Bye!');
+});
