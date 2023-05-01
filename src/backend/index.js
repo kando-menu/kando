@@ -20,9 +20,9 @@ if (os.platform() === 'linux') {
     process.env.XDG_SESSION_TYPE})!`);
 
   if (process.env.XDG_SESSION_TYPE === 'x11') {
-    Backend = require('./x11.js').default;
+    Backend = require('./x11/backend.js').default;
   } else if (process.env.XDG_SESSION_TYPE === 'wayland') {
-    Backend = require('./gnome.js').default;
+    Backend = require('./gnome/backend.js').default;
   } else {
     console.log('Unknown session type!');
   }
@@ -30,7 +30,7 @@ if (os.platform() === 'linux') {
 } else if (os.platform() === 'win32') {
 
   console.log(`Running on Windows ${os.release()}!`);
-  Backend = require('./win32.js').default;
+  Backend = require('./win32/backend.js').default;
 
 } else if (os.platform() === 'darwin') {
   console.log('MacOS is not yet supported!');

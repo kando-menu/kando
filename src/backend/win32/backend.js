@@ -32,11 +32,57 @@ export default class Backend {
 
   getFocusedWindow() {
     return new Promise((resolve, reject) => {
-      exec(`dir`, (err, stdout) => {
+      const script = `powershell -command '
+        Add-Type @"
+          using System;
+          using System.Runtime.InteropServices;
+          using System.Text;
+
+          public class Win32API {
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetForegroundWindow();
+
+            [DllImport("user32.dll", CharSet=CharSet.Auto, SetLastError=true)]
+            public static extern int GetWindowText(IntPtr hwnd, StringBuilder lpString, int cch);
+
+            [DllImport("user32.dll", CharSet=CharSet.Auto, SetLastError=true)]
+            public static extern Int32 GetWindowTextLength(IntPtr hWnd);
+
+            [DllImport("user32.dll", CharSet=CharSet.Auto, SetLastError=true)]
+            public static extern int GetClassName(IntPtr hwnd, StringBuilder lpString, int cch);
+
+            public static string GetTitle(IntPtr hWnd) {
+              var len = GetWindowTextLength(hWnd);
+              StringBuilder title = new StringBuilder(len + 1);
+              GetWindowText(hWnd, title, title.Capacity);
+              return title.ToString();
+            }
+
+            public static string GetClass(IntPtr hWnd) {
+              var len = 255;
+              StringBuilder className = new StringBuilder(len + 1);
+              GetClassName(hWnd, className, className.Capacity);
+              return className.ToString();
+            }
+          }
+        "@;
+
+        $hwnd = [Win32API]::GetForegroundWindow();
+        $title = [Win32API]::GetTitle($hwnd);
+        $class = [Win32API]::GetClass($hwnd);
+
+        Write-Output $title;
+        Write-Output $class;
+      '`;
+
+      exec(script.replace(/\n/g, ""), (err, stdout, stderr) => {
         if (err) {
           reject(err);
           return;
         }
+
+        console.log(stdout);
+        console.log(stderr);
 
         // ...
         //   resolve({name: title, wmClass: wmClass});
