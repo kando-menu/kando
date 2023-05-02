@@ -48,13 +48,16 @@ export default class Backend {
         return;
       }
 
-      exec(`powershell -command "$wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('${shortcut}')"`, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+      exec(
+        `powershell -command "$wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('${
+          shortcut}')"`,
+        err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
     });
   }
 

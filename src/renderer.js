@@ -32,7 +32,7 @@ document.addEventListener('keyup', ev => {
 let thing = document.querySelector('#thing');
 
 thing.addEventListener('click', () => {
-window.api.itemSelected();
+  window.api.itemSelected();
 });
 
 window.api.showMenu((a, pos) => {

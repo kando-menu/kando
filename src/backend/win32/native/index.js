@@ -12,5 +12,5 @@
 const native = require('./../../../../build/Release/native.node');
 
 module.exports = {
-  getActiveWindow: native.getActiveWindow
+  getActiveWindow : native.getActiveWindow
 };
