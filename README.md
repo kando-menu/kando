@@ -11,3 +11,29 @@ SPDX-License-Identifier: CC-BY-4.0
 
 _:construction: Ken-Do is currently in a very early stage of development. For now, I use this repository mainly for testing things. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans)._
 
+## Building
+
+You will have to install `node` and `npm`.
+You will also need `node-gyp` for building the native backends:
+
+```
+npm install -g node-gyp
+```
+
+Additionally, you will need a C++ toolchain.
+On Linux, this will be installed already.
+On Windows, you can install either Visual Studio or run this:
+
+
+```
+npm install -g windows-build-tools
+```
+
+Once these dependencies are installed, only these two commands are required:
+
+```
+npm install
+npm start
+```
+
+To create a distributable zip file, just run `npm make`.
