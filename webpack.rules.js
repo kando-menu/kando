@@ -19,4 +19,14 @@ module.exports = [
       },
     },
   },
+  {
+    test: /[/\\]build[/\\]Release[/\\].+\.node$/,
+    parser: {amd: false},
+    use: {
+      loader: '@vercel/webpack-asset-relocator-loader',
+      options: {
+        outputAssetBase: 'native_modules',
+      },
+    },
+  },
 ];
