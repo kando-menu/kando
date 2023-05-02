@@ -11,6 +11,7 @@
 
 const electron = require('electron');
 const {exec}   = require('node:child_process');
+const native   = require('./native');
 
 export default class Backend {
   constructor() {
@@ -32,22 +33,9 @@ export default class Backend {
 
   getFocusedWindow() {
     return new Promise((resolve, reject) => {
-      exec(
-        'xprop -id $(xprop -root _NET_ACTIVE_WINDOW | awk \'{print $5}\') WM_CLASS _NET_WM_NAME',
-        (err, stdout) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          const wmClassMatch = stdout.match(/WM_CLASS\(STRING\) = ".*", "(.*)"/);
-          const titleMatch   = stdout.match(/_NET_WM_NAME\(UTF8_STRING\) = "(.*)"/);
-
-          const wmClass = wmClassMatch ? wmClassMatch[1] : null;
-          const title   = titleMatch ? titleMatch[1] : null;
-
-          resolve({name: title, wmClass: wmClass});
-        });
+      const w = native.getActiveWindow();
+      console.log(w);
+      resolve(w);
     });
   }
 
