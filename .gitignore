@@ -4,4 +4,5 @@
 .webpack
 node_modules
 build
-
+out
+bin
