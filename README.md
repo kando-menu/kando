@@ -12,21 +12,36 @@ _:construction: This project is currently in a very early stage of development. 
 
 **Ken-Do** will be a pie menu for the desktop.
 It will be highly customizable and will allow you to create your own menus and actions.
-For instance, you can use it to control your music player, to open your favorite websites or to control your window manager.
+For instance, you can use it to control your music player, to open your favorite websites or to simulate shortcuts.
 It will be available for Windows, Linux and maybe macOS.
 
-## Motivation
+# The Vision
+
 
 I am the developer of [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), which is a similar project but limited to the GNOME desktop.
 I have been working on Fly-Pie for more than 3 years now and I am very happy with the result.
 However, I have always wanted to create a similar application for the desktop in general.
 This is why I started this project.
 
-## Current State
+# The Prototype
 
 This project is currently in a very early stage of development.
 I am currently working on a prototype which will allow me to test some of the core concepts.
-It minimal working prototype currently supports the following features on Linux and Windows:
+It currently demonstrates the following features:
+
+|  | Windows | Linux (X11) | Linux (Wayland) |
+|--|---------|-------------|-----------------|
+| Opening a transparent top-level window | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Listening to global hotkeys | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Drawing something at the mouse position | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Get the name of the currently focused window | :heavy_check_mark:[^1] | :heavy_check_mark:[^2] | :heavy_check_mark: |
+| Simulating key presses | :heavy_check_mark:[^1] | :heavy_check_mark:[^2] | :heavy_check_mark: |
+
+[^1]: This is implemented with a native C++ node module which uses the Windows API.
+[^2]: This is implemented with a native C++ node module which uses XLib methods.
+
+
+on Linux and Windows:
 - [x] Opening a transparent top-level window.
 - [x] Listening to global hotkeys. On Windows and X11 this works with a native node module, on Wayland this requires communication with the compositor. For, this only works on GNOME via a small extension.
 - [x] Simulating key presses. Again, this works on Windows and X11, but requires a small extension on Wayland.
