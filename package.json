@@ -9,8 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "postinstall": "npmpd"
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
   "author": {
@@ -31,11 +30,8 @@
     "style-loader": "^3.3.2"
   },
   "dependencies": {
+    "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
-    "node-addon-api": "^6.1.0",
-    "npm-platform-dependencies": "^0.1.0"
-  },
-  "linuxDependencies": {
-    "dbus": "^1.0.7"
+    "node-addon-api": "^6.1.0"
   }
 }

@@ -9,7 +9,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-const DBus = require('dbus');
+const DBus = require('dbus-final');
 
 export default class Backend {
   constructor() {
@@ -19,58 +19,49 @@ export default class Backend {
   }
 
   connect() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (this._interface) {
         resolve();
       } else {
-        const bus = DBus.getBus('session');
 
-        bus.getInterface(
-          'org.gnome.Shell', '/org/gnome/shell/extensions/KenDoIntegration',
-          'org.gnome.Shell.Extensions.KenDoIntegration', (error, iFace) => {
-            if (error) {
-              reject(error);
-              return;
-            }
+        try {
+          const bus = DBus.sessionBus();
 
-            this._interface = iFace;
+          const obj = await bus.getProxyObject(
+            'org.gnome.Shell', '/org/gnome/shell/extensions/KenDoIntegration');
 
-            this._interface.on('ShortcutPressed', shortcut => {
-              this._callbacks[shortcut]();
-            });
+          this._interface =
+            obj.getInterface('org.gnome.Shell.Extensions.KenDoIntegration');
 
-            resolve();
+          this._interface.on('ShortcutPressed', shortcut => {
+            this._callbacks[shortcut]();
           });
+
+          resolve();
+
+        } catch (err) {
+          reject(err);
+        }
       }
     });
   }
 
   getPointer() {
-    return new Promise((resolve, reject) => {
-      this._interface.GetPointer((err, [x, y, mods]) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve({x: x, y: y, mods: mods});
-        }
-      });
+    return new Promise(async (resolve, reject) => {
+      const [x, y, mods] = await this._interface.GetPointer();
+      resolve({x: x, y: y, mods: mods});
     });
   }
 
   getFocusedWindow() {
-    return new Promise((resolve, reject) => {
-      this._interface.GetFocusedWindow((err, [name, wmClass]) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve({name: name, wmClass: wmClass});
-        }
-      });
+    return new Promise(async (resolve, reject) => {
+      const [name, wmClass] = await this._interface.GetFocusedWindow();
+      resolve({name: name, wmClass: wmClass});
     });
   }
 
   simulateShortcut(shortcut) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         shortcut = this._toGdkAccelerator(shortcut);
       } catch (err) {
@@ -78,24 +69,19 @@ export default class Backend {
         return;
       }
 
-      this._interface.SimulateShortcut(shortcut, (err, success) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      const success = await this._interface.SimulateShortcut(shortcut);
 
-        if (!success) {
-          reject('Failed to simulate shortcut.');
-          return;
-        }
+      if (!success) {
+        reject('Failed to simulate shortcut.');
+        return;
+      }
 
-        resolve();
-      });
+      resolve();
     });
   }
 
   bindShortcut(shortcut, callback) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         shortcut = this._toGdkAccelerator(shortcut);
       } catch (err) {
@@ -103,25 +89,20 @@ export default class Backend {
         return;
       }
 
-      this._interface.BindShortcut(shortcut, (err, success) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      const success = await this._interface.BindShortcut(shortcut);
 
-        if (!success) {
-          reject('Shortcut is already in use.');
-          return;
-        }
+      if (!success) {
+        reject('Shortcut is already in use.');
+        return;
+      }
 
-        this._callbacks[shortcut] = callback;
-        resolve();
-      });
+      this._callbacks[shortcut] = callback;
+      resolve();
     });
   }
 
   unbindShortcut(shortcut) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         shortcut = this._toGdkAccelerator(shortcut);
       } catch (err) {
@@ -129,31 +110,20 @@ export default class Backend {
         return;
       }
 
-      this._interface.UnbindShortcut(shortcut, (err, success) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      const success = await this._interface.UnbindShortcut(shortcut);
 
-        if (!success) {
-          reject('Shortcut was not bound.');
-          return;
-        }
+      if (!success) {
+        reject('Shortcut was not bound.');
+        return;
+      }
 
-        resolve();
-      });
+      resolve();
     });
   }
 
   unbindAllShortcuts() {
-    return new Promise((resolve, reject) => {
-      this._interface.UnbindAllShortcuts(err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+    return new Promise(async (resolve, reject) => {
+      await this._interface.UnbindAllShortcuts();
     });
   }
 
