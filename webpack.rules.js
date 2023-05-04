@@ -10,7 +10,7 @@ module.exports = [
     use : 'node-loader',
   },
   {
-    test : /[/\\]node_modules[/\\].+\.(m?js|node)$/,
+    test : /[/\\](node_modules|build)[/\\].+\.(m?js|node)$/,
     parser : {amd : false},
     use : {
       loader : '@vercel/webpack-asset-relocator-loader',
@@ -20,12 +20,17 @@ module.exports = [
     },
   },
   {
-    test : /[/\\]build[/\\]Release[/\\].+\.node$/,
-    parser : {amd : false},
+    // The dbus-final module imports some native modules which are not actually used. We
+    // can safely ignore them.
+    test : /[/\\]node_modules[/\\]dbus-final[/\\]lib[/\\].+\.js$/,
     use : {
-      loader : '@vercel/webpack-asset-relocator-loader',
+      loader : 'string-replace-loader',
       options : {
-        outputAssetBase : 'native_modules',
+        multiple :
+        [
+          {search : 'require\\(\'usocket\'\\)', replace : 'undefined', flags : 'g'},
+          {search : 'require\\(\'x11\'\\)', replace : 'undefined', flags : 'g'}
+        ]
       },
     },
   },
