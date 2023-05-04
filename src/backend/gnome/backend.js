@@ -18,113 +18,67 @@ export default class Backend {
     this._callbacks = {};
   }
 
-  connect() {
-    return new Promise(async (resolve, reject) => {
-      if (this._interface) {
-        resolve();
-      } else {
+  async init() {
+    if (this._interface) {
+      return;
+    }
 
-        try {
-          const bus = DBus.sessionBus();
+    const bus = DBus.sessionBus();
 
-          const obj = await bus.getProxyObject(
-            'org.gnome.Shell', '/org/gnome/shell/extensions/KenDoIntegration');
+    const obj = await bus.getProxyObject('org.gnome.Shell',
+                                         '/org/gnome/shell/extensions/KenDoIntegration');
 
-          this._interface =
-            obj.getInterface('org.gnome.Shell.Extensions.KenDoIntegration');
+    this._interface = obj.getInterface('org.gnome.Shell.Extensions.KenDoIntegration');
 
-          this._interface.on('ShortcutPressed', shortcut => {
-            this._callbacks[shortcut]();
-          });
-
-          resolve();
-
-        } catch (err) {
-          reject(err);
-        }
-      }
+    this._interface.on('ShortcutPressed', shortcut => {
+      this._callbacks[shortcut]();
     });
   }
 
-  getPointer() {
-    return new Promise(async (resolve, reject) => {
-      const [x, y, mods] = await this._interface.GetPointer();
-      resolve({x: x, y: y, mods: mods});
-    });
+  async getPointer() {
+    const [x, y, mods] = await this._interface.GetPointer();
+    return {x: x, y: y, mods: mods};
   }
 
-  getFocusedWindow() {
-    return new Promise(async (resolve, reject) => {
-      const [name, wmClass] = await this._interface.GetFocusedWindow();
-      resolve({name: name, wmClass: wmClass});
-    });
+  async getFocusedWindow() {
+    const [name, wmClass] = await this._interface.GetFocusedWindow();
+    return {name: name, wmClass: wmClass};
   }
 
-  simulateShortcut(shortcut) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        shortcut = this._toGdkAccelerator(shortcut);
-      } catch (err) {
-        reject(err);
-        return;
-      }
+  async simulateShortcut(shortcut) {
+    shortcut = this._toGdkAccelerator(shortcut);
 
-      const success = await this._interface.SimulateShortcut(shortcut);
+    const success = await this._interface.SimulateShortcut(shortcut);
 
-      if (!success) {
-        reject('Failed to simulate shortcut.');
-        return;
-      }
-
-      resolve();
-    });
+    if (!success) {
+      throw new Error('Failed to simulate shortcut.');
+    }
   }
 
-  bindShortcut(shortcut, callback) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        shortcut = this._toGdkAccelerator(shortcut);
-      } catch (err) {
-        reject(err);
-        return;
-      }
+  async bindShortcut(shortcut, callback) {
+    shortcut = this._toGdkAccelerator(shortcut);
 
-      const success = await this._interface.BindShortcut(shortcut);
+    const success = await this._interface.BindShortcut(shortcut);
 
-      if (!success) {
-        reject('Shortcut is already in use.');
-        return;
-      }
+    if (!success) {
+      throw new Error('Shortcut is already in use.');
+    }
 
-      this._callbacks[shortcut] = callback;
-      resolve();
-    });
+    this._callbacks[shortcut] = callback;
   }
 
-  unbindShortcut(shortcut) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        shortcut = this._toGdkAccelerator(shortcut);
-      } catch (err) {
-        reject(err);
-        return;
-      }
+  async unbindShortcut(shortcut) {
+    shortcut = this._toGdkAccelerator(shortcut);
 
-      const success = await this._interface.UnbindShortcut(shortcut);
+    const success = await this._interface.UnbindShortcut(shortcut);
 
-      if (!success) {
-        reject('Shortcut was not bound.');
-        return;
-      }
-
-      resolve();
-    });
+    if (!success) {
+      throw new Error('Shortcut was not bound.');
+    }
   }
 
-  unbindAllShortcuts() {
-    return new Promise(async (resolve, reject) => {
-      await this._interface.UnbindAllShortcuts();
-    });
+  async unbindAllShortcuts() {
+    await this._interface.UnbindAllShortcuts();
   }
 
   _toGdkAccelerator(shortcut) {

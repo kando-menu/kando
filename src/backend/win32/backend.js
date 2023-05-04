@@ -18,28 +18,20 @@ export default class Backend {
     console.log('Win32 backend created');
   }
 
-  connect() {
-    return new Promise((resolve, reject) => {
-      resolve();
-    });
+  async init() {}
+
+  async getPointer() {
+    let pos = electron.screen.getCursorScreenPoint();
+    return {x: pos.x, y: pos.y, mods: 0};
   }
 
-  getPointer() {
-    return new Promise(resolve => {
-      let pos = electron.screen.getCursorScreenPoint();
-      resolve({x: pos.x, y: pos.y, mods: 0});
-    });
+  async getFocusedWindow() {
+    const w = native.getActiveWindow();
+    console.log(w);
+    return w;
   }
 
-  getFocusedWindow() {
-    return new Promise((resolve, reject) => {
-      const w = native.getActiveWindow();
-      console.log(w);
-      resolve(w);
-    });
-  }
-
-  simulateShortcut(shortcut) {
+  async simulateShortcut(shortcut) {
     return new Promise((resolve, reject) => {
       try {
         shortcut = this._toPowershellAccelerator(shortcut);
@@ -61,28 +53,18 @@ export default class Backend {
     });
   }
 
-  bindShortcut(shortcut, callback) {
-    return new Promise((resolve, reject) => {
-      if (electron.globalShortcut.register(shortcut, callback)) {
-        resolve();
-      } else {
-        reject('Shortcut is already in use.');
-      }
-    });
+  async bindShortcut(shortcut, callback) {
+    if (!electron.globalShortcut.register(shortcut, callback)) {
+      throw new Error('Shortcut is already in use.');
+    }
   }
 
-  unbindShortcut(shortcut) {
-    return new Promise(resolve => {
-      electron.globalShortcut.unregister(shortcut);
-      resolve();
-    });
+  async unbindShortcut(shortcut) {
+    electron.globalShortcut.unregister(shortcut);
   }
 
-  unbindAllShortcuts() {
-    return new Promise(resolve => {
-      electron.globalShortcut.unregisterAll();
-      resolve();
-    });
+  async unbindAllShortcuts() {
+    electron.globalShortcut.unregisterAll();
   }
 
   _toPowershellAccelerator(shortcut) {
