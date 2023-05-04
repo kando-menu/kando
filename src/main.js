@@ -10,6 +10,7 @@
 // SPDX-License-Identifier: MIT
 
 const electron = require('electron');
+const os       = require('node:os');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -55,6 +56,12 @@ class KenDoApp {
 
     const screen = electron.screen.getPrimaryDisplay();
 
+    const windowTypes = {
+      linux: 'dock',
+      win32: 'toolbar',
+      darwin: 'panel'
+    };
+
     const window = new electron.BrowserWindow({
       webPreferences: {
         contextIsolation: true,
@@ -69,7 +76,7 @@ class KenDoApp {
       y: 0,
       width: screen.workAreaSize.width + 1,
       height: screen.workAreaSize.height + 1,
-      type: 'dock',
+      type: windowTypes[os.platform()],
       show: false
     });
 
