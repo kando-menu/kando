@@ -78,5 +78,5 @@ npm start
 
 Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> to open the test window.
 
-To create a distributable zip file, just run `npm make`.
+To create a distributable zip file, just run `npm run make`.
 
