@@ -16,6 +16,8 @@ body {
     overflow: hidden;
     margin: 0;
     transition: background-color 500ms;
+    font-family: Arial, Helvetica, sans-serif;
+    user-select: none;
 
     &.visible {
         background-color: rgba(0, 0, 0, 0.2);
@@ -40,4 +42,17 @@ body {
 
 body.visible .circle {
     opacity: 1;
+}
+
+.intro {
+    margin: 20px auto 0 20px;
+    width: 500px;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+
+    span {
+        font-weight: bold;
+    }
 }
