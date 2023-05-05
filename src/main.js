@@ -18,16 +18,20 @@ if (require('electron-squirrel-startup')) {
   throw '';
 }
 
+// Prevent multiple instances of the app. In the future, we may want to show the
+// preferences window instead.
+// electron.app.on('second-instance', (event, commandLine, workingDirectory) => {});
 const gotTheLock = electron.app.requestSingleInstanceLock();
 if (!gotTheLock) {
   electron.app.quit();
   throw '';
 }
 
+// The backend is responsible for all the system interaction. It is implemented
+// differently for each platform.
 const Backend = require('./backend').default;
-// electron.app.on('second-instance', (event, commandLine, workingDirectory) => {});
 
-
+// This will get it's own file in the future.
 class KenDoApp {
   constructor() {
     this._backend = new Backend();
@@ -81,6 +85,7 @@ class KenDoApp {
     return window;
   }
 
+  // Setup IPC communication with the renderer process.
   _initRenderer() {
     electron.ipcMain.on('show-dev-tools', () => {
       this._window.webContents.openDevTools();
@@ -91,16 +96,22 @@ class KenDoApp {
     });
 
     electron.ipcMain.on('item-selected', () => {
-      console.log('foo');
+      console.log('Red circle was clicked!');
     });
 
     electron.ipcMain.on('simulate-shortcut', () => {
       this._window.hide();
-      this._backend.simulateShortcut('Ctrl+Alt+Tab');
-      // this._backend.simulateShortcut('Ctrl+Alt+Right');
+
+      if (os.platform() === 'win32') {
+        this._backend.simulateShortcut('Ctrl+Alt+Tab');
+      } else {
+        this._backend.simulateShortcut('Ctrl+Alt+Right');
+      }
     });
   }
 
+  // This is called when the user presses the shortcut. It will get the current
+  // window and pointer position and send them to the renderer process.
   _showMenu() {
     Promise.all([this._backend.getFocusedWindow(), this._backend.getPointer()])
       .then(([window, pointer]) => {
@@ -114,7 +125,7 @@ class KenDoApp {
   }
 }
 
-
+// Start the app.
 const app = new KenDoApp();
 app.init()
   .then(() => {

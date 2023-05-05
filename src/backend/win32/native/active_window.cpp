@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: Yves Hoppe <contact@bytee.net>
 // SPDX-License-Identifier: MIT
 
 #include "active_window.hpp"
@@ -17,9 +18,10 @@
 #include <codecvt>
 #include <string>
 
-// Based on https://github.com/yvesh/active-windows
+// This is based on https://github.com/yvesh/active-windows
 
 namespace active_window {
+
 void getActiveWindow(Napi::Object& obj) {
   WCHAR window_title[256];
   HWND foreground_window = GetForegroundWindow();
@@ -27,7 +29,7 @@ void getActiveWindow(Napi::Object& obj) {
 
   DWORD pid;
   GetWindowThreadProcessId(foreground_window, &pid);
-  // Process
+
   TCHAR process_filename[MAX_PATH];
   DWORD charsCarried = MAX_PATH;
 

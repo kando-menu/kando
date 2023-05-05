@@ -29,22 +29,18 @@ document.addEventListener('keyup', ev => {
   }
 });
 
-let thing = document.querySelector('#thing');
+let menu = document.querySelector('#menu');
 
-thing.addEventListener('click', () => {
+menu.addEventListener('click', () => {
   window.api.itemSelected();
 });
 
 window.api.showMenu((a, pos) => {
   document.querySelector('body').classList.add('visible');
-  thing.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+  menu.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
 });
 
 window.api.setWindowInfo((a, info) => {
-  document.querySelector('#window-info').textContent = `${info.name} (${info.wmClass})`;
+  document.querySelector('#window-name').textContent  = info.name;
+  document.querySelector('#window-class').textContent = info.wmClass;
 });
-
-// document.addEventListener('mousemove', ev => {
-//   document.querySelector('body').classList.add('visible');
-//   thing.style.transform = `translate(${ev.x}px, ${ev.y}px)`;
-// });

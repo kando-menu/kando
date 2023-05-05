@@ -13,11 +13,14 @@ const DBus = require('dbus-final');
 
 export default class Backend {
   constructor() {
-    console.log('GNOME backend created');
+    console.log('GNOME backend created.');
 
     this._callbacks = {};
   }
 
+  // Initializes the backend. This method must be called before any other method is
+  // called. It connects to the DBus interface of the Ken-Do GNOME Shell integration
+  // extension.
   async init() {
     if (this._interface) {
       return;
@@ -35,16 +38,19 @@ export default class Backend {
     });
   }
 
+  // Returns the current pointer position and the currently pressed modifier keys.
   async getPointer() {
     const [x, y, mods] = await this._interface.GetPointer();
     return {x: x, y: y, mods: mods};
   }
 
+  // Returns the name and the WM_CLASS of the currently focused window.
   async getFocusedWindow() {
     const [name, wmClass] = await this._interface.GetFocusedWindow();
     return {name: name, wmClass: wmClass};
   }
 
+  // Simulates a keyboard shortcut.
   async simulateShortcut(shortcut) {
     shortcut = this._toGdkAccelerator(shortcut);
 
@@ -55,6 +61,8 @@ export default class Backend {
     }
   }
 
+  // Binds a callback to a keyboard shortcut. The callback is called whenever the
+  // shortcut is pressed.
   async bindShortcut(shortcut, callback) {
     shortcut = this._toGdkAccelerator(shortcut);
 
@@ -67,6 +75,7 @@ export default class Backend {
     this._callbacks[shortcut] = callback;
   }
 
+  // Unbinds a keyboard shortcut.
   async unbindShortcut(shortcut) {
     shortcut = this._toGdkAccelerator(shortcut);
 
@@ -77,10 +86,12 @@ export default class Backend {
     }
   }
 
+  // Unbinds all keyboard shortcuts.
   async unbindAllShortcuts() {
     await this._interface.UnbindAllShortcuts();
   }
 
+  // Translates a shortcut from the Electron format to the GDK format.
   _toGdkAccelerator(shortcut) {
     if (shortcut.includes('Option')) {
       throw new Error('Shortcuts including Option are not yet supported on GNOME.');

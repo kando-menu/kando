@@ -11,6 +11,7 @@
 
 const {ipcRenderer, contextBridge} = require('electron');
 
+// Expose a bridged API to the renderer process.
 contextBridge.exposeInMainWorld('api', {
   hideWindow: function() {
     ipcRenderer.send('hide-window');

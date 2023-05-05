@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: Yves Hoppe <contact@bytee.net>
 // SPDX-License-Identifier: MIT
 
 #include "active_window.hpp"
@@ -15,10 +16,9 @@
 
 #include <string>
 
-// Based on https://github.com/yvesh/active-windows
+// This is based on https://github.com/yvesh/active-windows
 
 extern "C" {
-// SEE xprop
 #define MAXSTR 1000
 unsigned long window;
 unsigned char* prop;
