@@ -36,15 +36,13 @@ It currently demonstrates the following core features:
 | Key Feature | Windows | Linux (X11) | Linux (Wayland) |
 |-------------|---------|-------------|-----------------|
 | Opening a transparent top-level window | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Listening to global hotkeys | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (5) |
-| Drawing something at the mouse position | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (6) |
-| Get the name and class of the currently focused application window | :heavy_check_mark: (1) | :heavy_check_mark: (3) | :heavy_minus_sign: (7) |
-| Simulating key presses | :heavy_check_mark: (2) | :heavy_check_mark: (4) | :heavy_minus_sign: (8) |
+| Listening to global hotkeys | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (3) |
+| Drawing something at the mouse position | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (4) |
+| Get the name and class of the currently focused application window | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (5) |
+| Simulating key presses | :heavy_check_mark: (1) | :heavy_check_mark: (2) | :heavy_minus_sign: (6) |
 
-1. Requires a native C++ node module which uses [`GetForegroundWindow()`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow) from the Windows API.
 1. Uses a `powershell` script to simulate key presses. This is not ideal, as it fails to simulate the <kbd>Super</kbd> key. In future, we will require a native module using [`SendInput()`](https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-sendinput) from the Windows API.
-1. Requires a native C++ node module which uses XLib methods.
-1. Uses a `xdotool` script to simulate key presses.
+1. Uses a `xdotool` script to simulate key presses for now. Maybe we should use a native module here as well.
 1. For now, this only works on GNOME using an [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is the [global shortcuts portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.GlobalShortcuts) which may solve this for all Wayland compositors.
 1. This is more difficult than it appears. On Wayland, clients seem to get the current mouse pointer position only when the user moves the pointer over the window for the first time. So if the mouse pointer is stationary while the window opens, the window will not receive any mouse input events. I made this work on GNOME by using an [extension]((https://github.com/ken-do-menu/gnome-shell-integration)) which reports the current mouse position to the client over DBus. Maybe something similar can be done for other compositors.
 1. For now, this also only works on GNOME using the [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is a request for a [corresponding portal](https://github.com/flatpak/xdg-desktop-portal/issues/304) which may solve this for all Wayland compositors.
