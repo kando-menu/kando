@@ -23,9 +23,9 @@ I have been working on Fly-Pie for more than 3 years now and I am very happy wit
 However, I have always wanted to create a similar application for the desktop in general.
 This is why I started this project.
 
-Ken-Do will be very similar to Fly-Pie in terms of interaction and appearance.
-However, I plan to make application-dependent menus a first-class citizen.
-So the menu will be able to show different actions depending on the currently focused application.
+**Ken-Do will be very similar to Fly-Pie in terms of interaction and appearance.
+At the same time, there will be some major differences.
+You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!**
 
 # The Prototype
 
@@ -88,28 +88,3 @@ If you like the idea of Ken-Do, you can help in many ways:
 * **Spread the word!** Tell your friends about Ken-Do and share this post on social media.
 * **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement.
 * **Sponsor the development!** Time is by far the most limiting factor. If you like the idea, you can also support me financially. You can do this either on [Ko-fi](https://ko-fi.com/schneegans) or by [sponsoring me on GitHub](https://github.com/sponsors/Schneegans). **If enough people do this, I will be able to spend much more time on Ken-Do and make it a reality.**
-
-### Commit Messages
-
-Here are some basic rules to get you started:
-Commits should start with a Capital letter and should be written in present tense (e.g. __:tada: Add cool new feature__ instead of __:tada: Added cool new feature__).
-You should also start your commit message with **one** applicable emoji.
-This does not only look great but also makes you rethink what to add to a commit. Make many but small commits!
-
-Emoji | Description
-------|------------
-:tada: `:tada:` | When you added a cool new feature.
-:wrench: `:wrench:` | When you added a piece of code.
-:recycle: `:recycle:` | When you refactored a part of the code.
-:sparkles: `:sparkles:` | When you applied clang-format.
-:globe_with_meridians: `:globe_with_meridians:` | When you worked on translations.
-:art: `:art:` | When you improved / added assets like themes.
-:lipstick: `:lipstick:` | When you worked on the UI of the preferences dialog.
-:rocket: `:rocket:` | When you improved performance.
-:memo: `:memo:` | When you wrote documentation.
-:beetle: `:beetle:` | When you fixed a bug.
-:revolving_hearts: `:revolving_hearts:` | When a new sponsor is added or credits are updated.
-:heavy_check_mark: `:heavy_check_mark:` | When you worked on checks or adjusted the code to be compliant with them.
-:twisted_rightwards_arrows: `:twisted_rightwards_arrows:` | When you merged a branch.
-:fire: `:fire:` | When you removed something.
-:truck: `:truck:` | When you moved / renamed something.
