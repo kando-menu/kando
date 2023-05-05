@@ -52,7 +52,7 @@ class KenDoApp {
 
     electron.app.on('will-quit', () => {
       this._backend.unbindAllShortcuts();
-      console.log('Bye!');
+      console.log('Good-Pie :)');
     });
   }
 
