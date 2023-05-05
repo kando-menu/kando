@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
-//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do, the truly       //
-//     . <   _|   .  | ____| |  | (   |    amazing cross-platform marking menu.         //
+//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                 //
+//     . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.     //
 //    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -56,11 +56,7 @@ class KenDoApp {
 
     const screen = electron.screen.getPrimaryDisplay();
 
-    const windowTypes = {
-      linux: 'dock',
-      win32: 'toolbar',
-      darwin: 'panel'
-    };
+    const windowTypes = {linux: 'dock', win32: 'toolbar', darwin: 'panel'};
 
     const window = new electron.BrowserWindow({
       webPreferences: {
