@@ -21,7 +21,6 @@ export default class KenDoApp {
   _window  = null;
 
   async init() {
-    await electron.app.whenReady();
     await this._backend.init();
     await this._backend.bindShortcut('Shift+CommandOrControl+K', () => {
       this._showMenu();
@@ -30,12 +29,6 @@ export default class KenDoApp {
     this._window = await this._initWindow();
 
     this._initRenderer();
-
-
-    electron.app.on('will-quit', () => {
-      this._backend.unbindAllShortcuts();
-      console.log('Good-Pie :)');
-    });
   }
 
   // This creates the main window. It is a transparent window which covers the whole
@@ -67,6 +60,11 @@ export default class KenDoApp {
     await window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     return window;
+  }
+
+  // This is called when the app is closed. It will unbind all shortcuts.
+  async quit() {
+    await this._backend.unbindAllShortcuts();
   }
 
   // Setup IPC communication with the renderer process.

@@ -31,12 +31,17 @@ if (!gotTheLock) {
 const KenDoApp = require('./app').default;
 
 // Start the app.
-const app = new KenDoApp();
-app.init()
-  .then(() => {
-    console.log('Ken-Do is ready!');
-  })
+const kenDo = new KenDoApp();
+
+electron.app.whenReady()
+  .then(() => kenDo.init())
+  .then(() => console.log('Ken-Do is ready!'))
   .catch(err => {
     console.error('Failed to initialize Ken-Do: ' + err);
     electron.app.quit();
   });
+
+electron.app.on('will-quit', async () => {
+  await kenDo.quit();
+  console.log('Good-Pie :)');
+});
