@@ -48,25 +48,38 @@ It currently demonstrates the following core features:
 1. For now, this also only works on GNOME using the [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is a request for a [corresponding portal](https://github.com/flatpak/xdg-desktop-portal/issues/304) which may solve this for all Wayland compositors.
 1. For now, this also only works on GNOME using the [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is the [remote desktop portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) which may solve this for all Wayland compositors.
 
-## Building the Prototype
+## Installing Dependencies
 
-Before you start, you will have to install `node` and `npm`.
+If you want to test the prototype, you will have to install `node` and `npm`.
 You will also need `node-gyp` for building the native backends:
 
 ```
 npm install -g node-gyp
 ```
 
-Additionally, you will need a C++ toolchain.
-On Linux, this will be installed already.
-On Windows, you can install either Visual Studio or run this:
+### Windows
 
+Additionally, you will need a C++ toolchain.
+On Windows, you can install either Visual Studio or run this:
 
 ```
 npm install -g windows-build-tools
 ```
 
+### Linux
+
+On Linux, `gcc` should already be installed.
+However, some additional packages may be required for the native backend module.
+On Debian-based distributions you can install them with:
+
+```
+sudo apt install libx11-dev libxss-dev xdotool
+```
+
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/ken-do-menu/gnome-shell-integration).
+
+## Running the Prototype
+
 Once these dependencies are installed, only these two commands are required:
 
 ```
