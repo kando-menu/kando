@@ -25,6 +25,9 @@ contextBridge.exposeInMainWorld('api', {
   itemSelected: function() {
     ipcRenderer.send('item-selected');
   },
+  log: function(message) {
+    ipcRenderer.send('log', message);
+  },
   showMenu: function(func) {
     ipcRenderer.on('show-menu', (event, ...args) => func(event, ...args));
   },

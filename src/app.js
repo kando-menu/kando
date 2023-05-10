@@ -81,6 +81,10 @@ export default class KenDoApp {
       console.log('Red circle was clicked!');
     });
 
+    electron.ipcMain.on('log', (event, message) => {
+      console.log(message);
+    });
+
     electron.ipcMain.on('simulate-shortcut', () => {
       this._window.hide();
 
