@@ -14,7 +14,10 @@ import './theme.scss';
 
 const {computeItemAngles} = require('./math.js');
 
-const CHILDREN_PER_LEVEL = [8, 5, 3, 3];
+const CHILDREN_PER_LEVEL  = [8, 5, 3, 3];
+const CENTER_RADIUS       = 50;
+const CHILD_DISTANCE      = 100;
+const GRANDCHILD_DISTANCE = 25;
 
 export default class Menu {
 
@@ -128,17 +131,17 @@ export default class Menu {
 
     if (level === 0) {
 
-      if (this._mouseDistance > 50) {
-        node.div.classList.remove('hover');
+      if (this._mouseDistance > CENTER_RADIUS) {
+        node.div.classList.remove('hovered');
       } else {
-        node.div.classList.add('hover');
+        node.div.classList.add('hovered');
       }
 
     } else if (level === 1) {
       let transform = '';
       let hovered   = false;
 
-      if (this._mouseDistance > 50) {
+      if (this._mouseDistance > CENTER_RADIUS) {
         hovered =
           ((this._mouseAngle > node.startAngle && this._mouseAngle <= node.endAngle) ||
            (this._mouseAngle - 360 > node.startAngle &&
@@ -154,21 +157,21 @@ export default class Menu {
         transform = `scale(${scale}) `;
       }
 
-
       if (hovered) {
-        node.div.classList.add('hover');
+        node.div.classList.add('hovered');
       } else {
-        node.div.classList.remove('hover');
+        node.div.classList.remove('hovered');
       }
 
-      transform += `translate(${100 * Math.cos((node.angle - 90) * Math.PI / 180)}px, ${
-        100 * Math.sin((node.angle - 90) * Math.PI / 180)}px)`;
+      const x = CHILD_DISTANCE * Math.cos((node.angle - 90) * Math.PI / 180);
+      const y = CHILD_DISTANCE * Math.sin((node.angle - 90) * Math.PI / 180);
+      transform += `translate(${x}px, ${y}px)`;
       node.div.style.transform = transform;
 
     } else if (level === 2) {
-      node.div.style.transform =
-        `translate(${25 * Math.cos((node.angle - 90) * Math.PI / 180)}px, ${
-          25 * Math.sin((node.angle - 90) * Math.PI / 180)}px)`;
+      const x = GRANDCHILD_DISTANCE * Math.cos((node.angle - 90) * Math.PI / 180);
+      const y = GRANDCHILD_DISTANCE * Math.sin((node.angle - 90) * Math.PI / 180);
+      node.div.style.transform = `translate(${x}px, ${y}px)`;
     }
 
     for (const child of node.children) {

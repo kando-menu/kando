@@ -45,7 +45,7 @@ $border-color: rgb(109, 109, 109);
     transform: scale(1.0);
 }
 
-.node.active.hover>.item {
+.node.active.hovered>.item {
     transform: scale(0.9);
 }
 
@@ -63,7 +63,7 @@ $border-color: rgb(109, 109, 109);
     transform: scale(1.0);
 }
 
-.node.active>.node.hover>.item {
+.node.active>.node.hovered>.item {
     transform: scale(1.1);
     background-color: $hovered-item-color;
 }
