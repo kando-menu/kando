@@ -1,0 +1,71 @@
+/* ------------------------------------------------------------------------------------- #
+#                                                                                        #
+#      |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                  #
+#      . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.      #
+#     _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do    #
+#                                                                                        #
+# -------------------------------------------------------------------------------------- #
+
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+SPDX-License-Identifier: MIT
+*/
+
+$root-size: 100px;
+$child-size: 50px;
+$grandchild-size: 15px;
+$item-color: rgb(255, 255, 255);
+$hovered-item-color: rgb(255, 200, 200);
+$border-color: rgb(109, 109, 109);
+
+.node {
+    transition: all 70ms ease-out; 
+}
+
+.item {
+    transition: all 70ms ease-out; 
+    border: 1px solid $border-color;
+}
+
+// Root items.
+.node.active>.item {
+    top: calc(-1 * $root-size / 2);
+    left: calc(-1 * $root-size / 2);
+    width: $root-size;
+    height: $root-size;
+    background-color: $item-color;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+
+    transform: scale(1.0);
+}
+
+.node.active.hover>.item {
+    transform: scale(0.9);
+}
+
+// Child items.
+.node.active>.node>.item {
+    top: calc(-1 * $child-size / 2 );
+    left: calc(-1 * $child-size / 2 );
+    width: $child-size;
+    height: $child-size;
+    background-color: $item-color;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+
+    transform: scale(1.0);
+}
+
+.node.active>.node.hover>.item {
+    transform: scale(1.1);
+    background-color: $hovered-item-color;
+}
+
+// Grandchild items.
+.node.active>.node>.node>.item {
+    top: calc(-1 * $grandchild-size / 2 );
+    left: calc(-1 * $grandchild-size / 2 );
+    width: $grandchild-size;
+    height: $grandchild-size;
+    background-color: $border-color;
+    z-index: 0;
+}

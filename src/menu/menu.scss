@@ -10,52 +10,17 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
 */
 
-$root-size: 100px;
-$child-size: 40px;
-$grandchild-size: 12px;
-
 .node {
     position: absolute;
     pointer-events: none;
-    transition: all 50ms linear; 
 }
 
 .item {
     position: absolute;
     border-radius: 100%;
-    border: 2px solid black;
 }
 
-// Root items.
-.active.node>.item {
-    top: calc(-1 * $root-size / 2);
-    left: calc(-1 * $root-size / 2);
-    width: $root-size;
-    height: $root-size;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-// Child items.
-.active.node>.node>.item {
-    top: calc(-1 * $child-size / 2 );
-    left: calc(-1 * $child-size / 2 );
-    width: $child-size;
-    height: $child-size;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-// Grandchild items.
-.active.node>.node>.node>.item {
-    top: calc(-1 * $grandchild-size / 2 );
-    left: calc(-1 * $grandchild-size / 2 );
-    width: $grandchild-size;
-    height: $grandchild-size;
-    background-color: rgb(101, 196, 247);
-}
-
-// Hide deeper levels.
-.active.node>.node>.node>.node {
+// Hide deeper levels than grandchildren.
+.node.active>.node>.node>.node {
     display: none;
 }

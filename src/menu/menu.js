@@ -10,6 +10,7 @@
 // SPDX-License-Identifier: MIT
 
 import './menu.scss';
+import './theme.scss';
 
 const {computeItemAngles} = require('./math.js');
 
@@ -124,23 +125,49 @@ export default class Menu {
       return;
     }
 
-    if (level === 1) {
-      let transform = '';
+    if (level === 0) {
 
       if (this._mouseDistance > 50) {
-        const angleDiff = Math.abs(node.angle - this._mouseAngle);
-        const scale     = 1.0 + 0.2 * Math.pow(1 - angleDiff / 180, 4.0);
-        transform       = `scale(${scale}) `;
+        node.div.classList.remove('hover');
+      } else {
+        node.div.classList.add('hover');
       }
 
-      transform += `translate(${80 * Math.cos((node.angle - 90) * Math.PI / 180)}px, ${
-        80 * Math.sin((node.angle - 90) * Math.PI / 180)}px)`;
+    } else if (level === 1) {
+      let transform = '';
+      let hovered   = false;
+
+      if (this._mouseDistance > 50) {
+        hovered =
+          ((this._mouseAngle > node.startAngle && this._mouseAngle <= node.endAngle) ||
+           (this._mouseAngle - 360 > node.startAngle &&
+            this._mouseAngle - 360 <= node.endAngle));
+
+        const angleDiff = Math.abs(node.angle - this._mouseAngle);
+        let scale       = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
+
+        if (hovered) {
+          scale += 0.05;
+        }
+
+        transform = `scale(${scale}) `;
+      }
+
+
+      if (hovered) {
+        node.div.classList.add('hover');
+      } else {
+        node.div.classList.remove('hover');
+      }
+
+      transform += `translate(${100 * Math.cos((node.angle - 90) * Math.PI / 180)}px, ${
+        100 * Math.sin((node.angle - 90) * Math.PI / 180)}px)`;
       node.div.style.transform = transform;
 
     } else if (level === 2) {
       node.div.style.transform =
-        `translate(${20 * Math.cos((node.angle - 90) * Math.PI / 180)}px, ${
-          20 * Math.sin((node.angle - 90) * Math.PI / 180)}px)`;
+        `translate(${25 * Math.cos((node.angle - 90) * Math.PI / 180)}px, ${
+          25 * Math.sin((node.angle - 90) * Math.PI / 180)}px)`;
     }
 
     for (const child of node.children) {
@@ -157,8 +184,23 @@ export default class Menu {
     const angles = computeItemAngles(node.children, (node.angle + 180) % 360);
 
     for (let i = 0; i < node.children.length; ++i) {
-      const child = node.children[i];
-      child.angle = angles[i];
+      let previousAngle = angles[(i - 1 + angles.length) % angles.length];
+      let nextAngle     = angles[(i + 1) % angles.length];
+
+      // Make sure we wrap around.
+      if (nextAngle < previousAngle) {
+        nextAngle += 360;
+      }
+
+      if (angles[i] < previousAngle) {
+        nextAngle -= 360;
+        previousAngle -= 360;
+      }
+
+      const child      = node.children[i];
+      child.angle      = angles[i];
+      child.startAngle = (child.angle + previousAngle) / 2;
+      child.endAngle   = (child.angle + nextAngle) / 2;
       this._setupAngles(child);
     }
   }
