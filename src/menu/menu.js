@@ -68,8 +68,8 @@ export default class Menu {
         parent.children = [];
         for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
           const node = {
-            name: `Item-${level}-${i}`,
-            icon: 'edit',
+            name: `Item ${level}.${i}`,
+            icon: `${i}`,
           };
           parent.children.push(node);
           addChildren(node, level + 1);
@@ -108,6 +108,7 @@ export default class Menu {
 
     const item = document.createElement('div');
     item.classList.add('item');
+    item.innerHTML = node.icon;
 
     container.appendChild(node.div);
     node.div.appendChild(item);
