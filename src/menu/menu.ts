@@ -30,8 +30,8 @@ export class Menu {
 
   private menuPosition: IVec2 = { x: 0, y: 0 };
   private mousePosition: IVec2 = { x: 0, y: 0 };
-  private mouseAngle: number = 0;
-  private mouseDistance: number = 0;
+  private mouseAngle = 0;
+  private mouseDistance = 0;
 
   private readonly CHILDREN_PER_LEVEL = [8, 5, 3, 3];
   private readonly CENTER_RADIUS = 50;

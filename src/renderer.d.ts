@@ -16,9 +16,9 @@ export interface IElectronAPI {
   simulateShortcut: () => void;
   itemSelected: () => void;
   log: (message: string) => void;
-  showMenu: (func: (event: any, pos: { x: number; y: number }) => void) => void;
+  showMenu: (func: (pos: { x: number; y: number }) => void) => void;
   setWindowInfo: (
-    func: (event: any, info: { name: string; wmClass: string }) => void
+    func: (info: { name: string; wmClass: string }) => void
   ) => void;
 }
 

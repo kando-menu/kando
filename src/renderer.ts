@@ -35,11 +35,11 @@ document.addEventListener("keyup", (ev) => {
   }
 });
 
-window.api.showMenu((a, pos) => {
+window.api.showMenu((pos) => {
   menu.show(pos);
 });
 
-window.api.setWindowInfo((a, info) => {
+window.api.setWindowInfo((info) => {
   document.querySelector("#window-name").textContent = info.name;
   document.querySelector("#window-class").textContent = info.wmClass;
 });

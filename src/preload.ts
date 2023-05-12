@@ -28,10 +28,12 @@ contextBridge.exposeInMainWorld("api", {
   log: function (message: string) {
     ipcRenderer.send("log", message);
   },
-  showMenu: function (func: (event: any, ...args: any[]) => void) {
-    ipcRenderer.on("show-menu", (event, ...args) => func(event, ...args));
+  showMenu: function (callback: (pos: { x: number; y: number }) => void) {
+    ipcRenderer.on("show-menu", (event, pos) => callback(pos));
   },
-  setWindowInfo: function (func: (event: any, ...args: any[]) => void) {
-    ipcRenderer.on("set-window-info", (event, ...args) => func(event, ...args));
+  setWindowInfo: function (
+    callback: (info: { name: string; wmClass: string }) => void
+  ) {
+    ipcRenderer.on("set-window-info", (event, info) => callback(info));
   },
 });
