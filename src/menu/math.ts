@@ -9,6 +9,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+export interface IVec2 {
+  x: number;
+  y: number;
+}
+
 // This method receives an array of objects, each representing an item in a menu level.
 // For each item it computes an angle defining the direction in which the item should
 // be rendered. The angles are returned in an array (of the same length as the input
@@ -19,9 +24,11 @@
 // 90° on the right, 180° on the bottom and so on. This method may return null if for some
 // reason the angles could not be computed. For instance, this would be the case if the
 // fixed angles are not monotonically increasing.
-export function computeItemAngles(items, parentAngle) {
-
-  const itemAngles = [];
+export function computeItemAngles(
+  items: { angle?: number }[],
+  parentAngle: number | undefined
+): number[] {
+  const itemAngles: number[] = [];
 
   // Shouldn't happen, but who knows...
   if (items.length == 0) {
@@ -29,10 +36,10 @@ export function computeItemAngles(items, parentAngle) {
   }
 
   // We begin by storing all fixed angles.
-  const fixedAngles = [];
+  const fixedAngles: { angle: number; index: number }[] = [];
   items.forEach((item, index) => {
-    if ('angle' in item && item.angle >= 0) {
-      fixedAngles.push({angle: item.angle, index: index});
+    if ("angle" in item && item.angle >= 0) {
+      fixedAngles.push({ angle: item.angle, index: index });
     }
   });
 
@@ -55,7 +62,7 @@ export function computeItemAngles(items, parentAngle) {
 
   // Make sure that the fixed angles increase monotonically. If a fixed angle is larger
   // than the next one, the next one will be ignored.
-  for (let i = 0; i < fixedAngles.length - 1;) {
+  for (let i = 0; i < fixedAngles.length - 1; ) {
     if (fixedAngles[i].angle > fixedAngles[i + 1].angle) {
       fixedAngles.splice(i + 1, 1);
     } else {
@@ -70,19 +77,19 @@ export function computeItemAngles(items, parentAngle) {
   if (fixedAngles.length == 0) {
     let firstAngle = 0;
     if (parentAngle != undefined) {
-      const wedgeSize  = 360 / (items.length + 1);
+      const wedgeSize = 360 / (items.length + 1);
       let minAngleDiff = 360;
       for (let i = 0; i < items.length; i++) {
-        const angle     = (parentAngle + (i + 1) * wedgeSize) % 360;
+        const angle = (parentAngle + (i + 1) * wedgeSize) % 360;
         const angleDiff = Math.min(angle, 360 - angle);
 
         if (angleDiff < minAngleDiff) {
           minAngleDiff = angleDiff;
-          firstAngle   = (angle + 360) % 360;
+          firstAngle = (angle + 360) % 360;
         }
       }
     }
-    fixedAngles.push({angle: firstAngle, index: 0});
+    fixedAngles.push({ angle: firstAngle, index: 0 });
     itemAngles[0] = firstAngle;
   }
 
@@ -90,10 +97,10 @@ export function computeItemAngles(items, parentAngle) {
   // consecutive pairs of fixed angles. If there is only one fixed angle, there is also
   // only one 360°-wedge.
   for (let i = 0; i < fixedAngles.length; i++) {
-    let wedgeBeginIndex = fixedAngles[i].index;
-    let wedgeBeginAngle = fixedAngles[i].angle;
-    let wedgeEndIndex   = fixedAngles[(i + 1) % fixedAngles.length].index;
-    let wedgeEndAngle   = fixedAngles[(i + 1) % fixedAngles.length].angle;
+    const wedgeBeginIndex = fixedAngles[i].index;
+    const wedgeBeginAngle = fixedAngles[i].angle;
+    const wedgeEndIndex = fixedAngles[(i + 1) % fixedAngles.length].index;
+    let wedgeEndAngle = fixedAngles[(i + 1) % fixedAngles.length].angle;
 
     // The fixed angle can be stored in our output.
     itemAngles[wedgeBeginIndex] = wedgeBeginAngle;
@@ -117,18 +124,20 @@ export function computeItemAngles(items, parentAngle) {
         parentAngle += 360;
       }
 
-      parentInWedge = parentAngle > wedgeBeginAngle && parentAngle < wedgeEndAngle;
+      parentInWedge =
+        parentAngle > wedgeBeginAngle && parentAngle < wedgeEndAngle;
       if (parentInWedge) {
         wedgeItemCount += 1;
       }
     }
 
     // Calculate the angular difference between consecutive items in the current wedge.
-    const wedgeItemGap = (wedgeEndAngle - wedgeBeginAngle) / (wedgeItemCount + 1);
+    const wedgeItemGap =
+      (wedgeEndAngle - wedgeBeginAngle) / (wedgeItemCount + 1);
 
     // Now we assign an angle to each item between the begin and end indices.
-    let index             = (wedgeBeginIndex + 1) % items.length;
-    let count             = 1;
+    let index = (wedgeBeginIndex + 1) % items.length;
+    let count = 1;
     let parentGapRequired = parentInWedge;
 
     while (index != wedgeEndIndex) {
@@ -137,7 +146,7 @@ export function computeItemAngles(items, parentAngle) {
       // Insert gap for parent link if required.
       if (parentGapRequired && itemAngle + wedgeItemGap / 2 - parentAngle > 0) {
         count += 1;
-        itemAngle         = wedgeBeginAngle + wedgeItemGap * count;
+        itemAngle = wedgeBeginAngle + wedgeItemGap * count;
         parentGapRequired = false;
       }
 

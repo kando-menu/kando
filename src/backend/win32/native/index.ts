@@ -9,8 +9,4 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-const native = require('./../../../../build/Release/native.node');
-
-module.exports = {
-  getActiveWindow : native.getActiveWindow
-};
+export { getActiveWindow } from "./../../../../build/Release/native.node";

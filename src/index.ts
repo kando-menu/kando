@@ -9,39 +9,37 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-const electron = require('electron');
+import { app } from "electron";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  electron.app.quit();
-  throw '';
+if (require("electron-squirrel-startup")) {
+  app.quit();
+  throw "";
 }
 
 // Prevent multiple instances of the app. In the future, we may want to show the
 // preferences window instead.
-// electron.app.on('second-instance', (event, commandLine, workingDirectory) => {});
-const gotTheLock = electron.app.requestSingleInstanceLock();
+// app.on('second-instance', (event, commandLine, workingDirectory) => {});
+const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
-  electron.app.quit();
-  throw '';
+  app.quit();
+  throw "";
 }
 
-// The backend is responsible for all the system interaction. It is implemented
-// differently for each platform.
-const KenDoApp = require('./app').default;
-
 // Start the app.
-const kenDo = new KenDoApp();
+import kendo = require("./app");
+const kenDo = new kendo.KenDoApp();
 
-electron.app.whenReady()
+app
+  .whenReady()
   .then(() => kenDo.init())
-  .then(() => console.log('Ken-Do is ready!'))
-  .catch(err => {
-    console.error('Failed to initialize Ken-Do: ' + err);
-    electron.app.quit();
+  .then(() => console.log("Ken-Do is ready!"))
+  .catch((err) => {
+    console.error("Failed to initialize Ken-Do: " + err);
+    app.quit();
   });
 
-electron.app.on('will-quit', async () => {
+app.on("will-quit", async () => {
   await kenDo.quit();
-  console.log('Good-Pie :)');
+  console.log("Good-Pie :)");
 });

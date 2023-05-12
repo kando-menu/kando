@@ -9,8 +9,21 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-const native = require('./../../../../build/Release/native.node');
+export interface IElectronAPI {
+  loadPreferences: () => void;
+  hideWindow: () => void;
+  showDevTools: () => void;
+  simulateShortcut: () => void;
+  itemSelected: () => void;
+  log: (message: string) => void;
+  showMenu: (func: (event: any, pos: { x: number; y: number }) => void) => void;
+  setWindowInfo: (
+    func: (event: any, info: { name: string; wmClass: string }) => void
+  ) => void;
+}
 
-module.exports = {
-  getActiveWindow : native.getActiveWindow
-};
+declare global {
+  interface Window {
+    api: IElectronAPI;
+  }
+}

@@ -1,21 +1,23 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: CC0-1.0
 
-module.exports = [
+import type { ModuleOptions } from 'webpack';
+
+export const rules: Required<ModuleOptions>['rules'] = [
   // Add support for native node modules
   {
-    // We're specifying native_modules in the test because the asset relocator loader
-    // generates a "fake" .node file which is really a cjs file.
-    test : /native_modules[/\\].+\.node$/,
-    use : 'node-loader',
+    // We're specifying native_modules in the test because the asset relocator loader generates a
+    // "fake" .node file which is really a cjs file.
+    test: /native_modules[/\\].+\.node$/,
+    use: 'node-loader',
   },
   {
     test : /[/\\](node_modules|build)[/\\].+\.(m?js|node)$/,
-    parser : {amd : false},
-    use : {
-      loader : '@vercel/webpack-asset-relocator-loader',
-      options : {
-        outputAssetBase : 'native_modules',
+    parser: { amd: false },
+    use: {
+      loader: '@vercel/webpack-asset-relocator-loader',
+      options: {
+        outputAssetBase: 'native_modules',
       },
     },
   },
@@ -31,6 +33,16 @@ module.exports = [
           {search : 'require\\(\'usocket\'\\)', replace : 'undefined', flags : 'g'},
           {search : 'require\\(\'x11\'\\)', replace : 'undefined', flags : 'g'}
         ]
+      },
+    },
+  },
+  {
+    test: /\.tsx?$/,
+    exclude: /(node_modules|\.webpack)/,
+    use: {
+      loader: 'ts-loader',
+      options: {
+        transpileOnly: true,
       },
     },
   },
