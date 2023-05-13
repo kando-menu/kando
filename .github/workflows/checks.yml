@@ -10,7 +10,7 @@ on:
 
 jobs:
   reuse:
-    name: Check REUSE Compliance
+    name: Check REUSE
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
