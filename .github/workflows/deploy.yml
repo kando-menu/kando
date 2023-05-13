@@ -27,21 +27,18 @@ jobs:
       - name: Upload ZIP
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: out/make/zip/x64/*.zip
           tag: ${{ github.ref }}
           file_glob: true
       - name: Upload DEB
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: out/make/deb/x64/*.deb
           tag: ${{ github.ref }}
           file_glob: true
       - name: Upload RPM
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: out/make/rpm/x64/*.rpm
           tag: ${{ github.ref }}
           file_glob: true
