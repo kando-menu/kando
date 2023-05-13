@@ -9,7 +9,7 @@ on:
       - '**'
 
 jobs:
-  deploy_linux:
+  linux:
     name: Deploy for Linux
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-     - name: Install Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt install libx11-dev
           npm ci
