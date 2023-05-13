@@ -11,16 +11,16 @@ SPDX-License-Identifier: MIT
 */
 
 .node {
-    position: absolute;
-    pointer-events: none;
+  position: absolute;
+  pointer-events: none;
 }
 
 .item {
-    position: absolute;
-    border-radius: 100%;
+  position: absolute;
+  border-radius: 100%;
 }
 
 // Hide deeper levels than grandchildren.
-.node.active>.node>.node>.node {
-    display: none;
+.node.active > .node > .node > .node {
+  display: none;
 }

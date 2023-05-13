@@ -12,31 +12,33 @@ SPDX-License-Identifier: MIT
 
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ken-Do</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Ken-Do</title>
-</head>
+  <body>
+    <div id="menu"></div>
 
-<body>
-  <div id="menu"></div>
+    <div class="intro">
+      <h1>Welcome to Ken-Do!</h1>
+      <p>
+        You just opened the prototype's test window. Below are three buttons which you can
+        use to interact with the window. The first one closes the window, the second one
+        opens the dev tools and the third one simulates a hard-coded shortcut.
+      </p>
 
-  <div class="intro">
-    <h1>Welcome to Ken-Do!</h1>
-    <p>You just opened the prototype's test window. Below are three buttons which you can use to
-      interact with the window. The first one closes the window, the second one opens the dev tools
-      and the third one simulates a hard-coded shortcut.</p>
+      <input type="button" id="close-button" value="Close" />
+      <input type="button" id="dev-tools-button" value="Show Dev Tools" />
+      <input type="button" id="shortcut-button" value="Simulate Shortcut" />
 
-    <input type="button" id="close-button" value="Close">
-    <input type="button" id="dev-tools-button" value="Show Dev Tools">
-    <input type="button" id="shortcut-button" value="Simulate Shortcut">
+      <p>
+        You can not interact with the menu for now. Close this window by pressing
+        <code>ESC</code>.
+      </p>
 
-    <p>You can not interact with the menu for now.
-      Close this window by pressing <code>ESC</code>.</p>
-
-    <p>Window Class: <span id="window-class"></span></p>
-    <p>Window Name: <span id="window-name"></span></p>
-  </div>
-</body>
-
+      <p>Window Class: <span id="window-class"></span></p>
+      <p>Window Name: <span id="window-name"></span></p>
+    </div>
+  </body>
 </html>

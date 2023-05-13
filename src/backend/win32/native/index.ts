@@ -9,4 +9,4 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export { getActiveWindow } from "./../../../../build/Release/native.node";
+export { getActiveWindow } from './../../../../build/Release/native.node';
