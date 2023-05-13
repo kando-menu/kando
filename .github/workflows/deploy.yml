@@ -12,6 +12,8 @@ jobs:
   linux:
     name: Deploy for Linux
     runs-on: ubuntu-20.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -31,7 +33,6 @@ jobs:
           asset_name: ken-do-x64-linux.zip
           tag: ${{ github.ref }}
           file_glob: true
-          overwrite: true
       - name: Upload DEB
         uses: svenstaro/upload-release-action@v2
         with:
@@ -39,7 +40,6 @@ jobs:
           asset_name: ken-do-x64.deb
           tag: ${{ github.ref }}
           file_glob: true
-          overwrite: true
       - name: Upload RPM
         uses: svenstaro/upload-release-action@v2
         with:
@@ -47,4 +47,27 @@ jobs:
           asset_name: ken-do-x64.rpm
           tag: ${{ github.ref }}
           file_glob: true
-          overwrite: true
+
+  windows:
+    name: Deploy for Windows
+    runs-on: windows-2019
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: |
+          npm ci
+      - name: Create Release
+        run: |
+          npm run make
+      - name: Upload ZIP
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: out/make/zip/win32/x64/*.zip
+          asset_name: ken-do-x64-windows.zip
+          tag: ${{ github.ref }}
+          file_glob: true
