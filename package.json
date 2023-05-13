@@ -1,7 +1,7 @@
 {
   "name": "ken-do",
   "productName": "ken-do",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
