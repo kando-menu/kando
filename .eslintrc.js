@@ -9,5 +9,6 @@ module.exports = {
   root : true,
   rules : {
     '@typescript-eslint/no-empty-function' : 'off',
+    '@typescript-eslint/no-var-requires' : 'off',
   }
 };
