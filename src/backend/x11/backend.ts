@@ -11,7 +11,7 @@
 
 import { screen, globalShortcut } from 'electron';
 import { exec } from 'node:child_process';
-import { getActiveWindow } from './native';
+import { native } from './native';
 import { Backend } from '../backend';
 
 export class X11Backend implements Backend {
@@ -30,7 +30,7 @@ export class X11Backend implements Backend {
 
   // Returns the name and class of the currently focused window.
   public async getFocusedWindow() {
-    const w = getActiveWindow();
+    const w = native.getActiveWindow();
     console.log(w);
     return w;
   }

@@ -9,4 +9,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export { getActiveWindow } from './../../../../build/Release/native.node';
+export interface Native {
+  getActiveWindow(): { wmClass: string; name: string };
+}
+
+const native: Native = require('./../../../../build/Release/native.node');
+
+export { native };
