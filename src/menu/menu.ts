@@ -72,9 +72,20 @@ export class Menu {
     this.menuPosition = position;
     this.root = {
       name: 'Root',
-      icon: 'R',
+      icon: '',
       children: [],
     };
+
+    const TEST_ICONS = [
+      'play_circle',
+      'public',
+      'arrow_circle_right',
+      'terminal',
+      'settings',
+      'apps',
+      'arrow_circle_left',
+      'fullscreen',
+    ];
 
     const addChildren = (parent: INode, level: number) => {
       if (level < this.CHILDREN_PER_LEVEL.length) {
@@ -82,7 +93,7 @@ export class Menu {
         for (let i = 0; i < this.CHILDREN_PER_LEVEL[level]; ++i) {
           const node: INode = {
             name: `Item ${level}.${i}`,
-            icon: `${i}`,
+            icon: TEST_ICONS[i % TEST_ICONS.length],
             children: [],
           };
           parent.children.push(node);
@@ -129,8 +140,9 @@ export class Menu {
     node.div = document.createElement('div');
     node.div.classList.add('node');
 
-    const item = document.createElement('div');
+    const item = document.createElement('i');
     item.classList.add('item');
+    item.classList.add('material-icons-round');
     item.innerHTML = node.icon;
 
     container.appendChild(node.div);
