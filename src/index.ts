@@ -33,7 +33,9 @@ const kenDo = new kendo.KenDoApp();
 app
   .whenReady()
   .then(() => kenDo.init())
-  .then(() => console.log('Ken-Do is ready!'))
+  .then(() =>
+    console.log('Ken-Do is ready! Press <Ctrl>+<Shift>+<K> to open the prototype menu.')
+  )
   .catch((err) => {
     console.error('Failed to initialize Ken-Do: ' + err);
     app.quit();
