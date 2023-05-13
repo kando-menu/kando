@@ -1,8 +1,8 @@
 {
   "name": "ken-do",
-  "productName": "ken-do",
   "version": "0.0.1",
-  "description": "My Electron application description",
+  "description": "The Cross-Platform Pie Menu.",
+  "copyright": "Copyright © 2023 Simon Schneegans",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
