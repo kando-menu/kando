@@ -14,16 +14,23 @@ export interface IVec2 {
   y: number;
 }
 
-// This method receives an array of objects, each representing an item in a menu level.
-// For each item it computes an angle defining the direction in which the item should
-// be rendered. The angles are returned in an array (of the same length as the input
-// array). If an item in the input array already has an 'angle' property, this is
-// considered a fixed angle and all others are distributed more ore less evenly around.
-// This method also reserves the required angular space for the back navigation link to
-// the parent item (if given). Angles in items are always in degrees, 0° is on the top,
-// 90° on the right, 180° on the bottom and so on. This method may return null if for some
-// reason the angles could not be computed. For instance, this would be the case if the
-// fixed angles are not monotonically increasing.
+/**
+ * This method receives an array of objects, each representing an item in a menu level.
+ * For each item it computes an angle defining the direction in which the item should be
+ * rendered. The angles are returned in an array (of the same length as the input array).
+ * If an item in the input array already has an 'angle' property, this is considered a
+ * fixed angle and all others are distributed more ore less evenly around. This method
+ * also reserves the required angular space for the back navigation link to the parent
+ * item (if given). Angles in items are always in degrees, 0° is on the top, 90° on the
+ * right, 180° on the bottom and so on. Fixed angles must be monotonically increasing. If
+ * this is not the case, the smaller angle is ignored.
+ *
+ * @param items The Items for which the angles should be computed. They may already have
+ *   an angle property. If so, this is considered a fixed angle.
+ * @param parentAngle The angle of the parent item. If given, there will be some reserved
+ *   space.
+ * @returns An array of angles in degrees.
+ */
 export function computeItemAngles(
   items: { angle?: number }[],
   parentAngle: number | undefined

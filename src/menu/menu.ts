@@ -204,6 +204,14 @@ export class Menu {
     }
   }
 
+  /**
+   * This method computes the 'angle', 'startAngle' and 'endAngle' properties for the
+   * given node and all its children. The 'angle' property is the angle of the node
+   * itself, the 'startAngle' and 'endAngle' properties are the angular bounds of the
+   * node's wedge.
+   *
+   * @param node The node to setup the angles for recursively.
+   */
   private setupAngles(node: INode) {
     if (node.children.length === 0) {
       return;
