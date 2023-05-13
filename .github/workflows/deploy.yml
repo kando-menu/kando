@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+name: Deploy
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  linux:
+    name: Deploy for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+     - name: Install Dependencies
+        run: |
+          sudo apt install libx11-dev
+          npm ci
+      - name: Create Release
+        run: |
+          make run make
+      - name: Upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/*/x64/*
+          tag: ${{ github.ref }}
+          file_glob: true
