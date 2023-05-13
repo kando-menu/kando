@@ -9,7 +9,7 @@ on:
       - '**'
 
 jobs:
-  linux:
+  deploy_linux:
     name: Deploy for Linux
     runs-on: ubuntu-latest
     steps:
