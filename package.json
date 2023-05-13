@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx src",
+    "lint": "eslint src",
     "prettier": "prettier --check src"
   },
   "keywords": [],
