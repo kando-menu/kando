@@ -38,7 +38,7 @@ export function computeItemAngles(
   // We begin by storing all fixed angles.
   const fixedAngles: { angle: number; index: number }[] = [];
   items.forEach((item, index) => {
-    if ("angle" in item && item.angle >= 0) {
+    if ('angle' in item && item.angle >= 0) {
       fixedAngles.push({ angle: item.angle, index: index });
     }
   });
@@ -124,16 +124,14 @@ export function computeItemAngles(
         parentAngle += 360;
       }
 
-      parentInWedge =
-        parentAngle > wedgeBeginAngle && parentAngle < wedgeEndAngle;
+      parentInWedge = parentAngle > wedgeBeginAngle && parentAngle < wedgeEndAngle;
       if (parentInWedge) {
         wedgeItemCount += 1;
       }
     }
 
     // Calculate the angular difference between consecutive items in the current wedge.
-    const wedgeItemGap =
-      (wedgeEndAngle - wedgeBeginAngle) / (wedgeItemCount + 1);
+    const wedgeItemGap = (wedgeEndAngle - wedgeBeginAngle) / (wedgeItemCount + 1);
 
     // Now we assign an angle to each item between the begin and end indices.
     let index = (wedgeBeginIndex + 1) % items.length;

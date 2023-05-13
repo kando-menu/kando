@@ -9,14 +9,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, globalShortcut } from "electron";
-import { exec } from "node:child_process";
-import { getActiveWindow } from "./native";
-import { Backend } from "../backend";
+import { screen, globalShortcut } from 'electron';
+import { exec } from 'node:child_process';
+import { getActiveWindow } from './native';
+import { Backend } from '../backend';
 
 export class Win32Backend implements Backend {
   constructor() {
-    console.log("Win32 backend created.");
+    console.log('Win32 backend created.');
   }
 
   // This is called when the backend is created. Currently, this this does nothing on
@@ -62,7 +62,7 @@ export class Win32Backend implements Backend {
   // This binds a shortcut to a callback. The callback is called when the shortcut is pressed.
   public async bindShortcut(shortcut: string, callback: () => void) {
     if (!globalShortcut.register(shortcut, callback)) {
-      throw new Error("Shortcut is already in use.");
+      throw new Error('Shortcut is already in use.');
     }
   }
 
@@ -79,41 +79,33 @@ export class Win32Backend implements Backend {
   // This converts a shortcut from the format used by Electron to the format used by
   // PowerShell.
   private toPowershellAccelerator(shortcut: string) {
-    if (shortcut.includes("Option")) {
-      throw new Error(
-        "Shortcuts including Option are not yet supported on GNOME."
-      );
+    if (shortcut.includes('Option')) {
+      throw new Error('Shortcuts including Option are not yet supported on GNOME.');
     }
 
-    if (shortcut.includes("AltGr")) {
-      throw new Error(
-        "Shortcuts including AltGr are not yet supported on GNOME."
-      );
+    if (shortcut.includes('AltGr')) {
+      throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
     }
 
-    if (shortcut.includes("Meta")) {
-      throw new Error(
-        "Shortcuts including Meta are not yet supported on GNOME."
-      );
+    if (shortcut.includes('Meta')) {
+      throw new Error('Shortcuts including Meta are not yet supported on GNOME.');
     }
 
-    if (shortcut.includes("Super")) {
-      throw new Error(
-        "Shortcuts including Super are not yet supported on GNOME."
-      );
+    if (shortcut.includes('Super')) {
+      throw new Error('Shortcuts including Super are not yet supported on GNOME.');
     }
 
-    shortcut = shortcut.replace("^", "{^}");
-    shortcut = shortcut.replace("%", "{%}");
-    shortcut = shortcut.replace("CommandOrControl+", "^");
-    shortcut = shortcut.replace("CmdOrCtrl+", "^");
-    shortcut = shortcut.replace("Command+", "^");
-    shortcut = shortcut.replace("Control+", "^");
-    shortcut = shortcut.replace("Cmd+", "^");
-    shortcut = shortcut.replace("Ctrl+", "^");
-    shortcut = shortcut.replace("Alt+", "%");
-    shortcut = shortcut.replace("Shift+", "+");
-    shortcut = shortcut.replace("Tab", "{tab}");
+    shortcut = shortcut.replace('^', '{^}');
+    shortcut = shortcut.replace('%', '{%}');
+    shortcut = shortcut.replace('CommandOrControl+', '^');
+    shortcut = shortcut.replace('CmdOrCtrl+', '^');
+    shortcut = shortcut.replace('Command+', '^');
+    shortcut = shortcut.replace('Control+', '^');
+    shortcut = shortcut.replace('Cmd+', '^');
+    shortcut = shortcut.replace('Ctrl+', '^');
+    shortcut = shortcut.replace('Alt+', '%');
+    shortcut = shortcut.replace('Shift+', '+');
+    shortcut = shortcut.replace('Tab', '{tab}');
 
     return shortcut;
   }

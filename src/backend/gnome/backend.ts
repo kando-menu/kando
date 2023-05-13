@@ -9,15 +9,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import DBus from "dbus-final";
-import { Backend } from "../backend";
+import DBus from 'dbus-final';
+import { Backend } from '../backend';
 
 export class GnomeBackend implements Backend {
   private callbacks: { [shortcut: string]: () => void } = {};
   private interface: DBus.ClientInterface | undefined;
 
   constructor() {
-    console.log("GNOME backend created.");
+    console.log('GNOME backend created.');
   }
 
   // Initializes the backend. This method must be called before any other method is
@@ -31,15 +31,13 @@ export class GnomeBackend implements Backend {
     const bus = DBus.sessionBus();
 
     const obj = await bus.getProxyObject(
-      "org.gnome.Shell",
-      "/org/gnome/shell/extensions/KenDoIntegration"
+      'org.gnome.Shell',
+      '/org/gnome/shell/extensions/KenDoIntegration'
     );
 
-    this.interface = obj.getInterface(
-      "org.gnome.Shell.Extensions.KenDoIntegration"
-    );
+    this.interface = obj.getInterface('org.gnome.Shell.Extensions.KenDoIntegration');
 
-    this.interface.on("ShortcutPressed", (shortcut: string) => {
+    this.interface.on('ShortcutPressed', (shortcut: string) => {
       this.callbacks[shortcut]();
     });
   }
@@ -63,7 +61,7 @@ export class GnomeBackend implements Backend {
     const success = await this.interface.SimulateShortcut(shortcut);
 
     if (!success) {
-      throw new Error("Failed to simulate shortcut.");
+      throw new Error('Failed to simulate shortcut.');
     }
   }
 
@@ -75,7 +73,7 @@ export class GnomeBackend implements Backend {
     const success = await this.interface.BindShortcut(shortcut);
 
     if (!success) {
-      throw new Error("Shortcut is already in use.");
+      throw new Error('Shortcut is already in use.');
     }
 
     this.callbacks[shortcut] = callback;
@@ -88,7 +86,7 @@ export class GnomeBackend implements Backend {
     const success = await this.interface.UnbindShortcut(shortcut);
 
     if (!success) {
-      throw new Error("Shortcut was not bound.");
+      throw new Error('Shortcut was not bound.');
     }
   }
 
@@ -99,28 +97,24 @@ export class GnomeBackend implements Backend {
 
   // Translates a shortcut from the Electron format to the GDK format.
   private toGdkAccelerator(shortcut: string) {
-    if (shortcut.includes("Option")) {
-      throw new Error(
-        "Shortcuts including Option are not yet supported on GNOME."
-      );
+    if (shortcut.includes('Option')) {
+      throw new Error('Shortcuts including Option are not yet supported on GNOME.');
     }
 
-    if (shortcut.includes("AltGr")) {
-      throw new Error(
-        "Shortcuts including AltGr are not yet supported on GNOME."
-      );
+    if (shortcut.includes('AltGr')) {
+      throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
     }
 
-    shortcut = shortcut.replace("CommandOrControl+", "<Ctrl>");
-    shortcut = shortcut.replace("CmdOrCtrl+", "<Ctrl>");
-    shortcut = shortcut.replace("Command+", "<Ctrl>");
-    shortcut = shortcut.replace("Control+", "<Ctrl>");
-    shortcut = shortcut.replace("Cmd+", "<Ctrl>");
-    shortcut = shortcut.replace("Ctrl+", "<Ctrl>");
-    shortcut = shortcut.replace("Alt+", "<Alt>");
-    shortcut = shortcut.replace("Shift+", "<Shift>");
-    shortcut = shortcut.replace("Meta+", "<Meta>");
-    shortcut = shortcut.replace("Super+", "<Super>");
+    shortcut = shortcut.replace('CommandOrControl+', '<Ctrl>');
+    shortcut = shortcut.replace('CmdOrCtrl+', '<Ctrl>');
+    shortcut = shortcut.replace('Command+', '<Ctrl>');
+    shortcut = shortcut.replace('Control+', '<Ctrl>');
+    shortcut = shortcut.replace('Cmd+', '<Ctrl>');
+    shortcut = shortcut.replace('Ctrl+', '<Ctrl>');
+    shortcut = shortcut.replace('Alt+', '<Alt>');
+    shortcut = shortcut.replace('Shift+', '<Shift>');
+    shortcut = shortcut.replace('Meta+', '<Meta>');
+    shortcut = shortcut.replace('Super+', '<Super>');
 
     return shortcut;
   }

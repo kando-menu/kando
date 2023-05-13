@@ -17,9 +17,7 @@ export interface IElectronAPI {
   itemSelected: () => void;
   log: (message: string) => void;
   showMenu: (func: (pos: { x: number; y: number }) => void) => void;
-  setWindowInfo: (
-    func: (info: { name: string; wmClass: string }) => void
-  ) => void;
+  setWindowInfo: (func: (info: { name: string; wmClass: string }) => void) => void;
 }
 
 declare global {

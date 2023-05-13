@@ -9,10 +9,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import "./menu.scss";
-import "./theme.scss";
+import './menu.scss';
+import './theme.scss';
 
-import { computeItemAngles, IVec2 } from "./math";
+import { computeItemAngles, IVec2 } from './math';
 
 interface INode {
   name: string;
@@ -39,11 +39,11 @@ export class Menu {
   private readonly GRANDCHILD_DISTANCE = 25;
 
   constructor() {
-    window.api.log("Menu constructor");
+    window.api.log('Menu constructor');
 
-    this.container = document.getElementById("menu");
+    this.container = document.getElementById('menu');
 
-    this.container.addEventListener("mousemove", (e) => {
+    this.container.addEventListener('mousemove', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -56,8 +56,7 @@ export class Menu {
             this.mousePosition.y * this.mousePosition.y
         );
         this.mouseAngle =
-          (Math.acos(this.mousePosition.x / this.mouseDistance) * 180) /
-          Math.PI;
+          (Math.acos(this.mousePosition.x / this.mouseDistance) * 180) / Math.PI;
 
         if (this.mousePosition.y < 0) {
           this.mouseAngle = 360 - this.mouseAngle;
@@ -66,11 +65,11 @@ export class Menu {
         // Turn 0° up.
         this.mouseAngle = (this.mouseAngle + 90) % 360;
 
-        this._redraw(this.root, 0);
+        this.redraw(this.root, 0);
       }
     });
 
-    this.container.addEventListener("mousedown", (e) => {
+    this.container.addEventListener('mousedown', (e) => {
       e.preventDefault();
       e.stopPropagation();
     });
@@ -81,8 +80,8 @@ export class Menu {
 
     this.menuPosition = position;
     this.root = {
-      name: "Root",
-      icon: "R",
+      name: 'Root',
+      icon: 'R',
       children: [],
     };
 
@@ -108,29 +107,39 @@ export class Menu {
     window.api.log(`Created ${count} children!`);
 
     this.setupAngles(this.root);
-    this._createNodeTree(this.root, this.container);
+    this.createNodeTree(this.root, this.container);
 
-    this._redraw(this.root, 0);
-    this.root.div.classList.add("active");
+    this.redraw(this.root, 0);
+    this.root.div.classList.add('active');
 
     this.root.div.style.transform = `translate(${this.menuPosition.x}px, ${this.menuPosition.y}px)`;
   }
 
-  hide() {
-    window.api.log("Menu hide");
+  /** Removes all DOM elements from the menu and resets the root node. */
+  public hide() {
+    window.api.log('Menu hide');
 
-    this.container.innerHTML = "";
+    this.container.innerHTML = '';
     this.root = null;
   }
 
   // --------------------------------------------------------------------- private methods
 
-  _createNodeTree(node: INode, container: HTMLElement) {
-    node.div = document.createElement("div");
-    node.div.classList.add("node");
+  /**
+   * This method creates the DOM tree for the given node and all its children. For each
+   * node, a div element with the class ".node" is created and appended to the given
+   * container. In addition to the child nodes, the div element contains a div with the
+   * class ".item" which contains the visual representation of the node.
+   *
+   * @param node The node to create the DOM tree for.
+   * @param container The container to append the DOM tree to.
+   */
+  private createNodeTree(node: INode, container: HTMLElement) {
+    node.div = document.createElement('div');
+    node.div.classList.add('node');
 
-    const item = document.createElement("div");
-    item.classList.add("item");
+    const item = document.createElement('div');
+    item.classList.add('item');
     item.innerHTML = node.icon;
 
     container.appendChild(node.div);
@@ -138,30 +147,29 @@ export class Menu {
 
     if (node.children) {
       for (const child of node.children) {
-        this._createNodeTree(child, node.div);
+        this.createNodeTree(child, node.div);
       }
     }
   }
 
-  _redraw(node: INode, level: number) {
+  private redraw(node: INode, level: number) {
     if (level > 2) {
       return;
     }
 
     if (level === 0) {
       if (this.mouseDistance > this.CENTER_RADIUS) {
-        node.div.classList.remove("hovered");
+        node.div.classList.remove('hovered');
       } else {
-        node.div.classList.add("hovered");
+        node.div.classList.add('hovered');
       }
     } else if (level === 1) {
-      let transform = "";
+      let transform = '';
       let hovered = false;
 
       if (this.mouseDistance > this.CENTER_RADIUS) {
         hovered =
-          (this.mouseAngle > node.startAngle &&
-            this.mouseAngle <= node.endAngle) ||
+          (this.mouseAngle > node.startAngle && this.mouseAngle <= node.endAngle) ||
           (this.mouseAngle - 360 > node.startAngle &&
             this.mouseAngle - 360 <= node.endAngle);
 
@@ -176,29 +184,23 @@ export class Menu {
       }
 
       if (hovered) {
-        node.div.classList.add("hovered");
+        node.div.classList.add('hovered');
       } else {
-        node.div.classList.remove("hovered");
+        node.div.classList.remove('hovered');
       }
 
-      const x =
-        this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y =
-        this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
+      const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
+      const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
       transform += `translate(${x}px, ${y}px)`;
       node.div.style.transform = transform;
     } else if (level === 2) {
-      const x =
-        this.GRANDCHILD_DISTANCE *
-        Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y =
-        this.GRANDCHILD_DISTANCE *
-        Math.sin(((node.angle - 90) * Math.PI) / 180);
+      const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
+      const y = this.GRANDCHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
       node.div.style.transform = `translate(${x}px, ${y}px)`;
     }
 
     for (const child of node.children) {
-      this._redraw(child, level + 1);
+      this.redraw(child, level + 1);
     }
   }
 

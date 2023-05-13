@@ -9,14 +9,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, globalShortcut } from "electron";
-import { exec } from "node:child_process";
-import { getActiveWindow } from "./native";
-import { Backend } from "../backend";
+import { screen, globalShortcut } from 'electron';
+import { exec } from 'node:child_process';
+import { getActiveWindow } from './native';
+import { Backend } from '../backend';
 
 export class X11Backend implements Backend {
   constructor() {
-    console.log("X11 backend created.");
+    console.log('X11 backend created.');
   }
 
   // This is called when the backend is created. Currently, this this does nothing on X11.
@@ -52,7 +52,7 @@ export class X11Backend implements Backend {
   // when the shortcut is pressed.
   public async bindShortcut(shortcut: string, callback: () => void) {
     if (!globalShortcut.register(shortcut, callback)) {
-      throw new Error("Shortcut is already in use.");
+      throw new Error('Shortcut is already in use.');
     }
   }
 

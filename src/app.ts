@@ -9,9 +9,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, BrowserWindow, ipcMain } from "electron";
-import os from "node:os";
-import { Backend, getBackend } from "./backend";
+import { screen, BrowserWindow, ipcMain } from 'electron';
+import os from 'node:os';
+import { Backend, getBackend } from './backend';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -24,7 +24,7 @@ export class KenDoApp {
 
   public async init() {
     await this.backend.init();
-    await this.backend.bindShortcut("Shift+CommandOrControl+K", () => {
+    await this.backend.bindShortcut('Shift+CommandOrControl+K', () => {
       this.showMenu();
     });
 
@@ -44,9 +44,9 @@ export class KenDoApp {
     const display = screen.getPrimaryDisplay();
 
     const windowTypes = new Map<string, string>([
-      ["linux", "dock"],
-      ["win32", "toolbar"],
-      ["darwin", "panel"],
+      ['linux', 'dock'],
+      ['win32', 'toolbar'],
+      ['darwin', 'panel'],
     ]);
 
     const window = new BrowserWindow({
@@ -74,29 +74,29 @@ export class KenDoApp {
 
   // Setup IPC communication with the renderer process.
   private initRenderer() {
-    ipcMain.on("show-dev-tools", () => {
+    ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
     });
 
-    ipcMain.on("hide-window", () => {
+    ipcMain.on('hide-window', () => {
       this.window.hide();
     });
 
-    ipcMain.on("item-selected", () => {
-      console.log("Red circle was clicked!");
+    ipcMain.on('item-selected', () => {
+      console.log('Red circle was clicked!');
     });
 
-    ipcMain.on("log", (event, message) => {
+    ipcMain.on('log', (event, message) => {
       console.log(message);
     });
 
-    ipcMain.on("simulate-shortcut", () => {
+    ipcMain.on('simulate-shortcut', () => {
       this.window.hide();
 
-      if (os.platform() === "win32") {
-        this.backend.simulateShortcut("Ctrl+Alt+Tab");
+      if (os.platform() === 'win32') {
+        this.backend.simulateShortcut('Ctrl+Alt+Tab');
       } else {
-        this.backend.simulateShortcut("Ctrl+Alt+Right");
+        this.backend.simulateShortcut('Ctrl+Alt+Right');
       }
     });
   }
@@ -106,12 +106,12 @@ export class KenDoApp {
   private showMenu() {
     Promise.all([this.backend.getFocusedWindow(), this.backend.getPointer()])
       .then(([window, pointer]) => {
-        this.window.webContents.send("set-window-info", window);
-        this.window.webContents.send("show-menu", pointer);
+        this.window.webContents.send('set-window-info', window);
+        this.window.webContents.send('show-menu', pointer);
         this.window.show();
       })
       .catch((err) => {
-        console.error("Failed to show menu: " + err);
+        console.error('Failed to show menu: ' + err);
       });
   }
 }
