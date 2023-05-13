@@ -4,3 +4,6 @@ Files: tsconfig.json package.json package-lock.json
 Copyright: Simon Schneegans <code@simonschneegans.de>
 License: CC0-1.0
 
+Files: icons/*
+Copyright: Simon Schneegans <code@simonschneegans.de>
+License: CC-BY-4.0
