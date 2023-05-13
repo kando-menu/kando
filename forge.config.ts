@@ -19,13 +19,24 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({}),
     new MakerZIP({}),
-    new MakerRpm({}),
+    new MakerRpm({
+      // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
+      options: {
+        productName: 'Ken-Do',
+        icon: 'icons/icon.svg',
+        homepage: 'https://github.com/ken-do-menu/ken-do',
+        requires: ['xdotool'],
+        categories: ['Utility'],
+      },
+    }),
     new MakerDeb({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
       options: {
         productName: 'Ken-Do',
         icon: 'icons/icon.svg',
         homepage: 'https://github.com/ken-do-menu/ken-do',
+        depends: ['xdotool'],
+        categories: ['Utility'],
       },
     }),
   ],
