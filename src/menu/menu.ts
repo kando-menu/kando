@@ -13,16 +13,7 @@ import './menu.scss';
 import './theme.scss';
 
 import { computeItemAngles, IVec2 } from './math';
-
-interface INode {
-  name: string;
-  icon: string;
-  children: Array<INode>;
-  angle?: number;
-  startAngle?: number;
-  endAngle?: number;
-  div?: HTMLElement;
-}
+import { INode } from './node';
 
 export class Menu {
   private container: HTMLElement = null;
