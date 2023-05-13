@@ -9,12 +9,8 @@
          ['OS=="linux"', {
            'sources': ["src/backend/x11/native/main.cpp", "src/backend/x11/native/active_window.cpp"],
            'libraries': [
-               "-lX11",
-               "-lXss",
-               "-lxcb"
-             ],
-             'cflags': ["-lX11 -lXext -lXss"],
-             'cflags_cc': ["-lX11 -lXext -lXss"],
+               "-lX11"
+             ]
            }
          ],
          ['OS=="win"', {

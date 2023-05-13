@@ -73,7 +73,7 @@ However, some additional packages may be required for the native backend module.
 On Debian-based distributions you can install them with:
 
 ```
-sudo apt install libx11-dev libxss-dev xdotool
+sudo apt install libx11-dev xdotool
 ```
 
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/ken-do-menu/gnome-shell-integration).
