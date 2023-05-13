@@ -26,25 +26,10 @@ jobs:
       - name: Create Release
         run: |
           npm run make
-      - name: Upload ZIP
+      - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
-          file: out/make/zip/x64/*.zip
-          asset_name: ken-do-x64-linux.zip
-          tag: ${{ github.ref }}
-          file_glob: true
-      - name: Upload DEB
-        uses: svenstaro/upload-release-action@v2
-        with:
-          file: out/make/deb/x64/*.deb
-          asset_name: ken-do-x64.deb
-          tag: ${{ github.ref }}
-          file_glob: true
-      - name: Upload RPM
-        uses: svenstaro/upload-release-action@v2
-        with:
-          file: out/make/rpm/x64/*.rpm
-          asset_name: ken-do-x64.rpm
+          file: out/make/**/x64/*
           tag: ${{ github.ref }}
           file_glob: true
 
@@ -64,10 +49,9 @@ jobs:
       - name: Create Release
         run: |
           npm run make
-      - name: Upload ZIP
+      - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
           file: out/make/zip/win32/x64/*.zip
-          asset_name: ken-do-x64-windows.zip
           tag: ${{ github.ref }}
           file_glob: true
