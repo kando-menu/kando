@@ -12,9 +12,23 @@ import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
-  packagerConfig: {},
+  packagerConfig: {
+    icon: 'icons/icon',
+  },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerZIP({}),
+    new MakerRpm({}),
+    new MakerDeb({
+      // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
+      options: {
+        productName: 'Ken-Do',
+        icon: 'icons/icon.svg',
+        homepage: 'https://github.com/ken-do-menu/ken-do',
+      },
+    }),
+  ],
   plugins: [
     new WebpackPlugin({
       mainConfig,
