@@ -23,7 +23,7 @@ jobs:
           npm ci
       - name: Create Release
         run: |
-          make run make
+          npm run make
       - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
