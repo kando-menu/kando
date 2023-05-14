@@ -35,6 +35,13 @@ document.addEventListener('keyup', (ev) => {
   }
 });
 
+document.addEventListener('mouseup', (ev) => {
+  if (ev.button === 2) {
+    window.api.hideWindow();
+    menu.hide();
+  }
+});
+
 window.api.showMenu((pos) => {
   menu.show(pos);
 });
