@@ -19,10 +19,14 @@ export class Menu {
   private container: HTMLElement = null;
   private root: INode = null;
 
+  private hoveredNode: INode = null;
+  private draggedNode: INode = null;
+
   private menuPosition: IVec2 = { x: 0, y: 0 };
   private mousePosition: IVec2 = { x: 0, y: 0 };
   private mouseAngle = 0;
   private mouseDistance = 0;
+  private mouseIsDown = false;
 
   private readonly CHILDREN_PER_LEVEL = [8, 5, 3, 3];
   private readonly CENTER_RADIUS = 50;
@@ -56,13 +60,31 @@ export class Menu {
         // Turn 0° up.
         this.mouseAngle = (this.mouseAngle + 90) % 360;
 
-        this.redraw(this.root, 0);
+        this.redraw();
       }
     });
 
     this.container.addEventListener('mousedown', (e) => {
       e.preventDefault();
       e.stopPropagation();
+
+      this.mouseIsDown = true;
+
+      if (this.hoveredNode) {
+        this.setDraggedNode(this.hoveredNode);
+      }
+
+      this.redraw();
+    });
+
+    this.container.addEventListener('mouseup', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.mouseIsDown = false;
+
+      this.setDraggedNode(null);
+      this.redraw();
     });
   }
 
@@ -111,7 +133,7 @@ export class Menu {
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
 
-    this.redraw(this.root, 0);
+    this.redraw();
     this.root.div.classList.add('active');
 
     this.root.div.style.transform = `translate(${this.menuPosition.x}px, ${this.menuPosition.y}px)`;
@@ -155,7 +177,26 @@ export class Menu {
     }
   }
 
-  private redraw(node: INode, level: number) {
+  private redraw() {
+    this.hoveredNode = null;
+
+    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS) {
+      this.setDraggedNode(null);
+    }
+
+    this.updateNodeTransform(this.root, 0);
+
+    if (
+      this.mouseIsDown &&
+      !this.draggedNode &&
+      this.mouseDistance > this.CENTER_RADIUS &&
+      this.hoveredNode
+    ) {
+      this.setDraggedNode(this.hoveredNode);
+    }
+  }
+
+  private updateNodeTransform(node: INode, level: number) {
     if (level > 2) {
       return;
     }
@@ -187,14 +228,24 @@ export class Menu {
       }
 
       if (hovered) {
+        this.hoveredNode = node;
         node.div.classList.add('hovered');
+
+        if (this.draggedNode && this.draggedNode !== node) {
+          this.setDraggedNode(node);
+        }
       } else {
         node.div.classList.remove('hovered');
       }
 
-      const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-      transform += `translate(${x}px, ${y}px)`;
+      if (node === this.draggedNode) {
+        transform = `translate(${this.mousePosition.x}px, ${this.mousePosition.y}px)`;
+      } else {
+        const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
+        const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
+        transform += `translate(${x}px, ${y}px)`;
+      }
+
       node.div.style.transform = transform;
     } else if (level === 2) {
       const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
@@ -203,7 +254,19 @@ export class Menu {
     }
 
     for (const child of node.children) {
-      this.redraw(child, level + 1);
+      this.updateNodeTransform(child, level + 1);
+    }
+  }
+
+  private setDraggedNode(node?: INode) {
+    if (this.draggedNode) {
+      this.draggedNode.div.classList.remove('dragged');
+      this.draggedNode = null;
+    }
+
+    if (node) {
+      this.draggedNode = node;
+      this.draggedNode.div.classList.add('dragged');
     }
   }
 

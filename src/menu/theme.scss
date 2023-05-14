@@ -71,9 +71,6 @@ $border-color: rgb(109, 109, 109);
   transform: scale(1.1);
   background-color: $hovered-item-color;
 }
-.node.active > .node.dragged > .item {
-  transform: scale(0.9);
-}
 
 // Grandchild items.
 .node.active > .node > .node > .item {
