@@ -21,6 +21,7 @@ SPDX-License-Identifier: MIT
 }
 
 // Hide deeper levels than grandchildren.
+.node.parent > .node:not(.active):not(.parent) > .node,
 .node.active > .node > .node > .node {
   display: none;
 }
