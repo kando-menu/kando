@@ -390,12 +390,6 @@ export class Menu {
       return;
     }
 
-    // If there are no selected nodes yet, select the given node. This will only happen
-    // once for the root node.
-    if (this.selectionChain.length === 0) {
-      this.selectionChain.push(node);
-    }
-
     // If the node is the parent of the currently selected node, we have to pop the
     // currently selected node from the list of selected nodes.
     else if (
