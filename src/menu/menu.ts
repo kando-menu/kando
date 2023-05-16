@@ -398,28 +398,29 @@ export class Menu {
       return;
     }
 
-    // If the node is the parent of the currently selected node, we have to pop the
-    // currently selected node from the list of selected nodes.
-    else if (
+    // Is the node the parent of the currently active node?
+    const selectedParent =
       this.selectionChain.length > 1 &&
-      this.selectionChain[this.selectionChain.length - 2] === node
-    ) {
-      this.selectionChain.pop();
-    }
-
-    // If the node is a child of the currently selected node, we have to push it to the
-    // list of selected nodes.
-    else {
-      this.selectionChain.push(node);
-    }
+      this.selectionChain[this.selectionChain.length - 2] === node;
 
     // Now we have to position the root element of the menu at a position so that the
-    // newly selected node is at the mouse position. For this, we first compute the
-    // absolute position of the last-but-one node in the selection chain. There is the
-    // special case where there is only a single node in the selection chain. In this
-    // case, we simply position the root element at the mouse position.
-    if (this.selectionChain.length === 1) {
+    // newly selected node is at the mouse position. For this, we first compute ideal
+    // position of the new node based on its angle and the mouse distance to the currently
+    // active node. There is the special case where we select the root node. In this case,
+    // we simply position the root element at the mouse position.
+    if (node === this.root) {
       this.root.position = this.absoluteMousePosition;
+    } else if (selectedParent) {
+      const active = this.selectionChain[this.selectionChain.length - 1];
+      const offset = {
+        x: this.relativeMousePosition.x + active.position.x,
+        y: this.relativeMousePosition.y + active.position.y,
+      };
+
+      this.root.position = {
+        x: this.root.position.x + offset.x,
+        y: this.root.position.y + offset.y,
+      };
     } else {
       const x = this.mouseDistance * Math.cos(((node.angle - 90) * Math.PI) / 180);
       const y = this.mouseDistance * Math.sin(((node.angle - 90) * Math.PI) / 180);
@@ -435,6 +436,15 @@ export class Menu {
         x: this.root.position.x + offset.x,
         y: this.root.position.y + offset.y,
       };
+    }
+
+    // If the node is the parent of the currently selected node, we have to pop the
+    // currently selected node from the list of selected nodes. If the node is a child of
+    // the currently selected node, we have to push it to the list of selected nodes.
+    if (selectedParent) {
+      this.selectionChain.pop();
+    } else {
+      this.selectionChain.push(node);
     }
 
     this.relativeMousePosition = { x: 0, y: 0 };
