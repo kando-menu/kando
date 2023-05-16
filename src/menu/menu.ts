@@ -44,16 +44,17 @@ export class Menu {
   private draggedNode: INode = null;
   private selectionChain: Array<INode> = [];
 
+  private dragStartPosition?: IVec2 = null;
   private absoluteMousePosition: IVec2 = { x: 0, y: 0 };
   private relativeMousePosition: IVec2 = { x: 0, y: 0 };
   private mouseAngle = 0;
   private mouseDistance = 0;
-  private mouseIsDown = false;
 
   private readonly CHILDREN_PER_LEVEL = [8, 5, 5];
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
   private readonly GRANDCHILD_DISTANCE = 25;
+  private readonly DRAG_THRESHOLD = 5;
 
   constructor() {
     window.api.log('Menu constructor');
@@ -102,7 +103,7 @@ export class Menu {
       e.preventDefault();
       e.stopPropagation();
 
-      this.mouseIsDown = true;
+      this.dragStartPosition = { x: e.clientX, y: e.clientY };
 
       if (this.hoveredNode) {
         this.dragNode(this.hoveredNode);
@@ -115,7 +116,7 @@ export class Menu {
       e.preventDefault();
       e.stopPropagation();
 
-      this.mouseIsDown = false;
+      this.dragStartPosition = null;
 
       if (this.draggedNode) {
         this.selectNode(this.draggedNode);
@@ -131,7 +132,7 @@ export class Menu {
 
     this.root = {
       name: 'Root',
-      icon: '',
+      icon: 'open_with',
       children: [],
     };
 
@@ -271,7 +272,7 @@ export class Menu {
     }
 
     if (
-      this.mouseIsDown &&
+      this.dragStartPosition &&
       !this.draggedNode &&
       this.mouseDistance > this.CENTER_RADIUS &&
       this.hoveredNode
@@ -312,7 +313,13 @@ export class Menu {
       }
 
       // If the node is dragged, move it to the mouse position.
-      if (node === this.draggedNode) {
+      if (
+        node === this.draggedNode &&
+        Math.sqrt(
+          Math.pow(this.absoluteMousePosition.x - this.dragStartPosition.x, 2) +
+            Math.pow(this.absoluteMousePosition.y - this.dragStartPosition.y, 2)
+        ) > this.DRAG_THRESHOLD
+      ) {
         transform = `translate(${this.relativeMousePosition.x}px, ${this.relativeMousePosition.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
