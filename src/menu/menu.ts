@@ -329,6 +329,13 @@ export class Menu {
     }
   }
 
+  /**
+   * This will assign the CSS class 'dragged' to the given node's div element. It will
+   * also remove the class from the previously dragged node.
+   *
+   * @param node The node to drag. If null, the previously dragged node will be
+   *   un-dragged.
+   */
   private dragNode(node?: INode) {
     if (this.draggedNode === node) {
       return;
@@ -345,6 +352,12 @@ export class Menu {
     }
   }
 
+  /**
+   * This will assign the CSS class 'hovered' to the given node's div element. It will
+   * also remove the class from the previously hovered node.
+   *
+   * @param node The node to hover. If null, the currently hovered node will be unhovered.
+   */
   private hoverNode(node?: INode) {
     if (this.hoveredNode === node) {
       return;
@@ -361,6 +374,13 @@ export class Menu {
     }
   }
 
+  /**
+   * Selects the given node. This will either push the node to the list of selected nodes
+   * or pop the last node from the list of selected nodes if the newly selected node is
+   * the parent of the previously selected node.
+   *
+   * @param node The newly selected node.
+   */
   private selectNode(node: INode) {
     // If the node is already selected, do nothing.
     if (
@@ -391,9 +411,19 @@ export class Menu {
       this.selectionChain.push(node);
     }
 
+    // Finally update the CSS classes of all nodes according to the new selection chain.
     this.updateCSSClasses();
   }
 
+  /**
+   * Updates the CSS classes of all nodes according to the current selection chain. The
+   * methods will assign the following CSS classes to the nodes:
+   *
+   * - 'active' to the last node in the selection chain.
+   * - 'parent' to all nodes in the selection chain except the last one.
+   * - 'child' to all children of the last node in the selection chain.
+   * - 'grandchild' to all children of parents and children.
+   */
   private updateCSSClasses() {
     for (let i = 0; i < this.selectionChain.length; ++i) {
       const node = this.selectionChain[i];
