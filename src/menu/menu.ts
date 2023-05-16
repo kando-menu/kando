@@ -15,13 +15,6 @@ import './theme.scss';
 import { computeItemAngles, IVec2 } from './math';
 import { INode } from './node';
 
-enum NodeState {
-  PARENT,
-  ACTIVE,
-  CHILD,
-  GRANDCHILD,
-}
-
 /**
  * Child nodes are always placed on a circle around the parent node. Grandchild nodes are
  * placed on a circle around the child node.
@@ -276,56 +269,62 @@ export class Menu {
       this.dragNode(this.hoveredNode);
     }
 
-    const activeNode = this.selectionChain.length === 1;
-    this.updateNode(this.root, activeNode ? NodeState.ACTIVE : NodeState.PARENT);
+    this.updateTransform(this.root);
   }
 
-  private updateNode(node: INode, state: NodeState) {
-    if (state === NodeState.PARENT) {
-      for (const child of node.children) {
-        const index = this.selectionChain.indexOf(child);
-        if (index === this.selectionChain.length - 1) {
-          this.updateNode(child, NodeState.ACTIVE);
-        } else if (index >= 0) {
-          this.updateNode(child, NodeState.PARENT);
+  /**
+   * This method updates the transformation of the given node and all its children. The
+   * transformation is computed based on the given state.
+   *
+   * @param node The transformation will be recomputed for this node and all its children.
+   * @param state The state of the given node. The transformation will be computed
+   *   differently depending on the state.
+   */
+  private updateTransform(node: INode) {
+    for (const child of node.children) {
+      if (child.div.classList.contains('grandchild')) {
+        const x =
+          this.GRANDCHILD_DISTANCE * Math.cos(((child.angle - 90) * Math.PI) / 180);
+        const y =
+          this.GRANDCHILD_DISTANCE * Math.sin(((child.angle - 90) * Math.PI) / 180);
+        child.div.style.transform = `translate(${x}px, ${y}px)`;
+      } else if (child.div.classList.contains('child')) {
+        let transform = '';
+
+        // If the node is hovered, increase the scale a bit.
+        if (this.mouseDistance > this.CENTER_RADIUS) {
+          const angleDiff = Math.abs(child.angle - this.mouseAngle);
+          let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
+
+          // If the node is hovered, increase the scale a bit more.
+          if (child === this.hoveredNode) {
+            scale += 0.05;
+          }
+
+          transform = `scale(${scale}) `;
+        }
+
+        // If the node is dragged, move it to the mouse position.
+        if (child === this.draggedNode) {
+          transform = `translate(${this.mousePosition.x}px, ${this.mousePosition.y}px)`;
         } else {
-          this.updateNode(child, NodeState.GRANDCHILD);
-        }
-      }
-    } else if (state === NodeState.ACTIVE) {
-      for (const child of node.children) {
-        this.updateNode(child, NodeState.CHILD);
-      }
-    } else if (state === NodeState.CHILD) {
-      let transform = '';
-
-      if (this.mouseDistance > this.CENTER_RADIUS) {
-        const angleDiff = Math.abs(node.angle - this.mouseAngle);
-        let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
-
-        if (node === this.hoveredNode) {
-          scale += 0.05;
+          // If the node is not dragged, move it to its position on the circle.
+          const x = this.CHILD_DISTANCE * Math.cos(((child.angle - 90) * Math.PI) / 180);
+          const y = this.CHILD_DISTANCE * Math.sin(((child.angle - 90) * Math.PI) / 180);
+          transform += `translate(${x}px, ${y}px)`;
         }
 
-        transform = `scale(${scale}) `;
-      }
+        // Finally, apply the transformation to the node and update the transformation of
+        // all its children.
+        child.div.style.transform = transform;
 
-      if (node === this.draggedNode) {
-        transform = `translate(${this.mousePosition.x}px, ${this.mousePosition.y}px)`;
-      } else {
-        const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-        const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-        transform += `translate(${x}px, ${y}px)`;
+        this.updateTransform(child);
+      } else if (
+        child.div.classList.contains('active') ||
+        child.div.classList.contains('parent')
+      ) {
+        this.updateTransform(child);
       }
-
-      node.div.style.transform = transform;
-      for (const child of node.children) {
-        this.updateNode(child, NodeState.GRANDCHILD);
-      }
-    } else if (state === NodeState.GRANDCHILD) {
-      const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y = this.GRANDCHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-      node.div.style.transform = `translate(${x}px, ${y}px)`;
     }
   }
 
