@@ -22,13 +22,34 @@ enum NodeState {
   GRANDCHILD,
 }
 
+/**
+ * Child nodes are always placed on a circle around the parent node. Grandchild nodes are
+ * placed on a circle around the child node.
+ *
+ * Nodes can be in one of four states:
+ *
+ * - PARENT: The node is the parent of the currently selected node. All nodes along the
+ *   chain from the root to the selected node are in this state. Nodes of this type will
+ *   have the .parent css class.
+ * - ACTIVE: The node is the currently selected node. Nodes of this type will have the
+ *   .active css class.
+ * - CHILD: The node is a child of the currently selected node. Nodes of this type will have
+ *   the .child css class.
+ * - GRANDCHILD: The node is a grandchild of the currently selected node. This state is also
+ *   used for all children of parent nodes which have not been selected. Nodes of this
+ *   type will have the .grandchild css class.
+ *
+ * In addition, child nodes can be be either hovered or dragged. Hovered nodes will have
+ * the .hovered css class. Dragged nodes will have the .dragged css class.
+ */
+
 export class Menu {
   private container: HTMLElement = null;
   private root: INode = null;
 
   private hoveredNode: INode = null;
   private draggedNode: INode = null;
-  private selectedNodes: Array<INode> = [];
+  private selectionChain: Array<INode> = [];
 
   private menuPosition: IVec2 = { x: 0, y: 0 };
   private mousePosition: IVec2 = { x: 0, y: 0 };
@@ -52,7 +73,7 @@ export class Menu {
 
       if (this.root) {
         const rect =
-          this.selectedNodes[this.selectedNodes.length - 1].div.getBoundingClientRect();
+          this.selectionChain[this.selectionChain.length - 1].div.getBoundingClientRect();
         this.mousePosition.x = e.clientX - rect.x;
         this.mousePosition.y = e.clientY - rect.y;
 
@@ -161,7 +182,7 @@ export class Menu {
 
     this.hoveredNode = null;
     this.draggedNode = null;
-    this.selectedNodes = [];
+    this.selectionChain = [];
   }
 
   // --------------------------------------------------------------------- private methods
@@ -207,15 +228,15 @@ export class Menu {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected node.
     if (this.mouseDistance < this.CENTER_RADIUS) {
-      if (this.selectedNodes.length > 1) {
-        return this.selectedNodes[this.selectedNodes.length - 2];
+      if (this.selectionChain.length > 1) {
+        return this.selectionChain[this.selectionChain.length - 2];
       }
       return null;
     }
 
     // If the mouse is not in the center, check if it is in one of the children of the
     // currently selected node.
-    for (const child of this.selectedNodes[this.selectedNodes.length - 1].children) {
+    for (const child of this.selectionChain[this.selectionChain.length - 1].children) {
       if (
         (this.mouseAngle > child.startAngle && this.mouseAngle <= child.endAngle) ||
         (this.mouseAngle - 360 > child.startAngle &&
@@ -227,8 +248,8 @@ export class Menu {
 
     // If the mouse is not in the center and not in one of the children, it is most likely
     // in the parent's wedge. Return the parent of the currently selected node.
-    if (this.selectedNodes.length > 1) {
-      return this.selectedNodes[this.selectedNodes.length - 2];
+    if (this.selectionChain.length > 1) {
+      return this.selectionChain[this.selectionChain.length - 2];
     }
 
     // This should actually never happen.
@@ -255,15 +276,15 @@ export class Menu {
       this.dragNode(this.hoveredNode);
     }
 
-    const activeNode = this.selectedNodes.length === 1;
+    const activeNode = this.selectionChain.length === 1;
     this.updateNode(this.root, activeNode ? NodeState.ACTIVE : NodeState.PARENT);
   }
 
   private updateNode(node: INode, state: NodeState) {
     if (state === NodeState.PARENT) {
       for (const child of node.children) {
-        const index = this.selectedNodes.indexOf(child);
-        if (index === this.selectedNodes.length - 1) {
+        const index = this.selectionChain.indexOf(child);
+        if (index === this.selectionChain.length - 1) {
           this.updateNode(child, NodeState.ACTIVE);
         } else if (index >= 0) {
           this.updateNode(child, NodeState.PARENT);
@@ -338,48 +359,62 @@ export class Menu {
       this.hoveredNode = node;
       this.hoveredNode.div.classList.add('hovered');
     }
-
-    const activeNode = this.selectedNodes[this.selectedNodes.length - 1];
-    if (node != null && activeNode.children.indexOf(node) >= 0) {
-      activeNode.div.classList.add('child-hovered');
-    } else {
-      activeNode.div.classList.remove('child-hovered');
-    }
   }
 
   private selectNode(node: INode) {
-    // If there are no selected nodes, select the given node. This will be the root node.
-    if (this.selectedNodes.length === 0) {
-      node.div.classList.add('active');
-      this.selectedNodes.push(node);
-      return;
-    }
-
     // If the node is already selected, do nothing.
-    if (this.selectedNodes[this.selectedNodes.length - 1] === node) {
+    if (
+      this.selectionChain.length > 0 &&
+      this.selectionChain[this.selectionChain.length - 1] === node
+    ) {
       return;
     }
 
-    const previous = this.selectedNodes[this.selectedNodes.length - 1];
-    previous.div.classList.remove('active');
+    // If there are no selected nodes yet, select the given node. This will only happen
+    // once for the root node.
+    if (this.selectionChain.length === 0) {
+      this.selectionChain.push(node);
+    }
 
     // If the node is the parent of the currently selected node, we have to pop the
     // currently selected node from the list of selected nodes.
-    if (this.selectedNodes.length > 1) {
-      const parent = this.selectedNodes[this.selectedNodes.length - 2];
-      if (parent === node) {
-        parent.div.classList.add('active');
-        parent.div.classList.remove('parent');
-        this.selectedNodes.pop();
-        return;
-      }
+    else if (
+      this.selectionChain.length > 1 &&
+      this.selectionChain[this.selectionChain.length - 2] === node
+    ) {
+      this.selectionChain.pop();
     }
 
     // If the node is a child of the currently selected node, we have to push it to the
     // list of selected nodes.
-    previous.div.classList.add('parent');
-    node.div.classList.add('active');
-    this.selectedNodes.push(node);
+    else {
+      this.selectionChain.push(node);
+    }
+
+    this.updateCSSClasses();
+  }
+
+  private updateCSSClasses() {
+    for (let i = 0; i < this.selectionChain.length; ++i) {
+      const node = this.selectionChain[i];
+      if (i === this.selectionChain.length - 1) {
+        node.div.className = 'node active';
+
+        for (const child of node.children) {
+          child.div.className = 'node child';
+
+          for (const grandchild of child.children) {
+            grandchild.div.className = 'node grandchild';
+          }
+        }
+      } else {
+        node.div.className = 'node parent';
+
+        for (const child of node.children) {
+          child.div.className = 'node grandchild';
+        }
+      }
+    }
   }
 
   /**
