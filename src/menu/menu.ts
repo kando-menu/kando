@@ -44,8 +44,8 @@ export class Menu {
   private draggedNode: INode = null;
   private selectionChain: Array<INode> = [];
 
-  private menuPosition: IVec2 = { x: 0, y: 0 };
-  private mousePosition: IVec2 = { x: 0, y: 0 };
+  private absoluteMousePosition: IVec2 = { x: 0, y: 0 };
+  private relativeMousePosition: IVec2 = { x: 0, y: 0 };
   private mouseAngle = 0;
   private mouseDistance = 0;
   private mouseIsDown = false;
@@ -64,20 +64,30 @@ export class Menu {
       e.preventDefault();
       e.stopPropagation();
 
+      this.absoluteMousePosition = { x: e.clientX, y: e.clientY };
+
       if (this.root) {
-        const rect =
-          this.selectionChain[this.selectionChain.length - 1].div.getBoundingClientRect();
-        this.mousePosition.x = e.clientX - rect.x;
-        this.mousePosition.y = e.clientY - rect.y;
+        const position = { x: this.root.position.x, y: this.root.position.y };
+
+        for (let i = 1; i < this.selectionChain.length; ++i) {
+          const node = this.selectionChain[i];
+          position.x += node.position.x;
+          position.y += node.position.y;
+        }
+
+        this.relativeMousePosition = {
+          x: e.clientX - position.x,
+          y: e.clientY - position.y,
+        };
 
         this.mouseDistance = Math.sqrt(
-          this.mousePosition.x * this.mousePosition.x +
-            this.mousePosition.y * this.mousePosition.y
+          this.relativeMousePosition.x * this.relativeMousePosition.x +
+            this.relativeMousePosition.y * this.relativeMousePosition.y
         );
         this.mouseAngle =
-          (Math.acos(this.mousePosition.x / this.mouseDistance) * 180) / Math.PI;
+          (Math.acos(this.relativeMousePosition.x / this.mouseDistance) * 180) / Math.PI;
 
-        if (this.mousePosition.y < 0) {
+        if (this.relativeMousePosition.y < 0) {
           this.mouseAngle = 360 - this.mouseAngle;
         }
 
@@ -116,9 +126,9 @@ export class Menu {
   }
 
   public show(position: IVec2) {
-    window.api.log(`Menu show at ${position.x}, ${position.y}`);
+    this.relativeMousePosition = { x: 0, y: 0 };
+    this.absoluteMousePosition = { x: position.x, y: position.y };
 
-    this.menuPosition = position;
     this.root = {
       name: 'Root',
       icon: '',
@@ -162,8 +172,6 @@ export class Menu {
 
     this.selectNode(this.root);
     this.redraw();
-
-    this.root.div.style.transform = `translate(${this.menuPosition.x}px, ${this.menuPosition.y}px)`;
   }
 
   /** Removes all DOM elements from the menu and resets the root node. */
@@ -281,48 +289,49 @@ export class Menu {
    *   differently depending on the state.
    */
   private updateTransform(node: INode) {
-    for (const child of node.children) {
-      if (child.div.classList.contains('grandchild')) {
-        const x =
-          this.GRANDCHILD_DISTANCE * Math.cos(((child.angle - 90) * Math.PI) / 180);
-        const y =
-          this.GRANDCHILD_DISTANCE * Math.sin(((child.angle - 90) * Math.PI) / 180);
-        child.div.style.transform = `translate(${x}px, ${y}px)`;
-      } else if (child.div.classList.contains('child')) {
-        let transform = '';
+    if (node.div.classList.contains('grandchild')) {
+      const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
+      const y = this.GRANDCHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
+      node.div.style.transform = `translate(${x}px, ${y}px)`;
+    } else if (node.div.classList.contains('child')) {
+      let transform = '';
 
-        // If the node is hovered, increase the scale a bit.
-        if (this.mouseDistance > this.CENTER_RADIUS) {
-          const angleDiff = Math.abs(child.angle - this.mouseAngle);
-          let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
+      // If the node is hovered, increase the scale a bit.
+      if (this.mouseDistance > this.CENTER_RADIUS) {
+        const angleDiff = Math.abs(node.angle - this.mouseAngle);
+        let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
 
-          // If the node is hovered, increase the scale a bit more.
-          if (child === this.hoveredNode) {
-            scale += 0.05;
-          }
-
-          transform = `scale(${scale}) `;
+        // If the node is hovered, increase the scale a bit more.
+        if (node === this.hoveredNode) {
+          scale += 0.05;
         }
 
-        // If the node is dragged, move it to the mouse position.
-        if (child === this.draggedNode) {
-          transform = `translate(${this.mousePosition.x}px, ${this.mousePosition.y}px)`;
-        } else {
-          // If the node is not dragged, move it to its position on the circle.
-          const x = this.CHILD_DISTANCE * Math.cos(((child.angle - 90) * Math.PI) / 180);
-          const y = this.CHILD_DISTANCE * Math.sin(((child.angle - 90) * Math.PI) / 180);
-          transform += `translate(${x}px, ${y}px)`;
-        }
+        transform = `scale(${scale}) `;
+      }
 
-        // Finally, apply the transformation to the node and update the transformation of
-        // all its children.
-        child.div.style.transform = transform;
+      // If the node is dragged, move it to the mouse position.
+      if (node === this.draggedNode) {
+        transform = `translate(${this.relativeMousePosition.x}px, ${this.relativeMousePosition.y}px)`;
+      } else {
+        // If the node is not dragged, move it to its position on the circle.
+        const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
+        const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
+        transform += `translate(${x}px, ${y}px)`;
+      }
 
+      // Finally, apply the transformation to the node and update the transformation of
+      // all its children.
+      node.div.style.transform = transform;
+
+      for (const child of node.children) {
         this.updateTransform(child);
-      } else if (
-        child.div.classList.contains('active') ||
-        child.div.classList.contains('parent')
-      ) {
+      }
+    } else if (
+      node.div.classList.contains('active') ||
+      node.div.classList.contains('parent')
+    ) {
+      node.div.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
+      for (const child of node.children) {
         this.updateTransform(child);
       }
     }
@@ -403,6 +412,33 @@ export class Menu {
     else {
       this.selectionChain.push(node);
     }
+
+    // Now we have to position the root element of the menu at a position so that the
+    // newly selected node is at the mouse position. For this, we first compute the
+    // absolute position of the last-but-one node in the selection chain. There is the
+    // special case where there is only a single node in the selection chain. In this
+    // case, we simply position the root element at the mouse position.
+    if (this.selectionChain.length === 1) {
+      this.root.position = this.absoluteMousePosition;
+    } else {
+      const x = this.mouseDistance * Math.cos(((node.angle - 90) * Math.PI) / 180);
+      const y = this.mouseDistance * Math.sin(((node.angle - 90) * Math.PI) / 180);
+
+      node.position = { x, y };
+
+      const offset = {
+        x: this.relativeMousePosition.x - node.position.x,
+        y: this.relativeMousePosition.y - node.position.y,
+      };
+
+      this.root.position = {
+        x: this.root.position.x + offset.x,
+        y: this.root.position.y + offset.y,
+      };
+    }
+
+    this.relativeMousePosition = { x: 0, y: 0 };
+    this.mouseDistance = 0;
 
     // Finally update the CSS classes of all nodes according to the new selection chain.
     this.updateCSSClasses();

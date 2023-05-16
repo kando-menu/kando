@@ -9,6 +9,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { IVec2 } from './math';
+
 /**
  * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
  * represent submenus, leaf nodes represent actual menu items.
@@ -44,6 +46,12 @@ export interface INode {
    * once the menu is opened.
    */
   endAngle?: number;
+
+  /**
+   * Once a menu item is selected, it will be drawn at a specific distance from the parent
+   * menu. This property stores the relative position of the menu item.
+   */
+  position?: IVec2;
 
   /**
    * The visual representation of this menu item. This is a div element which is created
