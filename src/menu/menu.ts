@@ -50,7 +50,7 @@ export class Menu {
   private mouseDistance = 0;
   private mouseIsDown = false;
 
-  private readonly CHILDREN_PER_LEVEL = [8, 5, 3, 3];
+  private readonly CHILDREN_PER_LEVEL = [8, 5, 5];
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
   private readonly GRANDCHILD_DISTANCE = 25;
@@ -241,7 +241,9 @@ export class Menu {
       if (
         (this.mouseAngle > child.startAngle && this.mouseAngle <= child.endAngle) ||
         (this.mouseAngle - 360 > child.startAngle &&
-          this.mouseAngle - 360 <= child.endAngle)
+          this.mouseAngle - 360 <= child.endAngle) ||
+        (this.mouseAngle + 360 > child.startAngle &&
+          this.mouseAngle + 360 <= child.endAngle)
       ) {
         return child;
       }
@@ -488,48 +490,71 @@ export class Menu {
 
   /**
    * This method computes the 'angle', 'startAngle' and 'endAngle' properties for the
-   * given node and all its children. The 'angle' property is the angle of the node
+   * children of the given node. The 'angle' property is the angle of the child relative
    * itself, the 'startAngle' and 'endAngle' properties are the angular bounds of the
-   * node's wedge.
+   * child's wedge. If the given node has an 'angle' property itself, the child wedges
+   * leave a gap at the position towards the parent node.
+   *
+   * For now, this method performs some expensive computations like sorting lists and
+   * searching for indices. This could be optimized in the future. I guess that there is a
+   * more analytical solution to this problem. However, for now this is good enough as it
+   * performs pretty well even for thousands of nodes.
    *
    * @param node The node to setup the angles for recursively.
    */
   private setupAngles(node: INode) {
+    // If the node has no children, we can stop here.
     if (node.children.length === 0) {
       return;
     }
 
+    // If the node as a single child but no parent (e.g. it's the root node), we can
+    // simply set the angle of the child to 0 and the start and end angles to a full
+    // circle.
+    if (node.children.length === 1 && isNaN(node.angle)) {
+      node.children[0].angle = node.children[0].angle || 0;
+      node.children[0].startAngle = 0;
+      node.children[0].endAngle = 360;
+      return;
+    }
+
+    // For all other cases, we have to compute the angles of the children. First, we
+    // compute the angle towards the parent node.
     const parentAngle = (node.angle + 180) % 360;
     const angles = computeItemAngles(node.children, parentAngle);
 
+    // Now we have to compute the separators between the children. We do this by sorting
+    // the angles and computing the middle between each pair of angles. We also have to
+    // add the angle towards the parent node if the node has a parent.
+    const allAngles = angles.slice();
+    if (!isNaN(parentAngle)) {
+      allAngles.push(parentAngle);
+    }
+    allAngles.sort((a, b) => a - b);
+
+    const separators = [];
+    for (let i = 0; i < allAngles.length; ++i) {
+      if (i === allAngles.length - 1) {
+        separators.push((allAngles[i] + allAngles[0] + 360) / 2);
+      } else {
+        separators.push((allAngles[i] + allAngles[i + 1]) / 2);
+      }
+    }
+
+    // Now we search for the separators before and after each child and assign the
+    // corresponding angles to the child.
     for (let i = 0; i < node.children.length; ++i) {
-      let previousAngle = angles[(i - 1 + angles.length) % angles.length];
-      let nextAngle = angles[(i + 1) % angles.length];
-
-      // Make sure we wrap around.
-      if (nextAngle < previousAngle) {
-        nextAngle += 360;
-      }
-
-      if (angles[i] < previousAngle) {
-        nextAngle -= 360;
-        previousAngle -= 360;
-      }
-
-      if (previousAngle < parentAngle && parentAngle < angles[i]) {
-        previousAngle = parentAngle;
-      } else if (previousAngle < parentAngle + 360 && parentAngle + 360 < angles[i]) {
-        previousAngle = parentAngle + 360;
-      } else if (angles[i] < parentAngle && parentAngle < nextAngle) {
-        nextAngle = parentAngle;
-      } else if (angles[i] < parentAngle + 360 && parentAngle + 360 < nextAngle) {
-        nextAngle = parentAngle + 360;
-      }
-
       const child = node.children[i];
       child.angle = angles[i];
-      child.startAngle = (child.angle + previousAngle) / 2;
-      child.endAngle = (child.angle + nextAngle) / 2;
+
+      const wedgeIndex = separators.findIndex((s) => s > child.angle);
+
+      child.startAngle =
+        wedgeIndex == 0
+          ? separators[separators.length - 1] - 360
+          : separators[wedgeIndex - 1];
+      child.endAngle = separators[wedgeIndex];
+
       this.setupAngles(child);
     }
   }
