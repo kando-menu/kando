@@ -16,10 +16,12 @@ $material-icons-font-path: '~material-icons/iconfont/';
 $root-size: 100px;
 $child-size: 50px;
 $grandchild-size: 15px;
+$connector-size: 10px;
 $item-color: rgb(255, 255, 255);
 $icon-color: rgb(66, 66, 66);
 $hovered-item-color: rgb(255, 200, 200);
 $border-color: rgb(109, 109, 109);
+$connector-color: rgb(109, 109, 109);
 
 $transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
 
@@ -96,4 +98,28 @@ $transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
   height: $grandchild-size;
   background-color: $border-color;
   z-index: 0;
+}
+
+// Connectors.
+.connector {
+  transition: $transition;
+  position: absolute;
+  width: 0px;
+  height: $connector-size;
+  background-color: $connector-color;
+  left: 0;
+  top: calc(-1 * $connector-size / 2);
+  transform-origin: 0% 50%;
+  z-index: -1;
+  display: none;
+}
+
+.node.parent > .connector,
+.node.active > .connector,
+.node.active:has(> .node.dragged) > .connector {
+  display: block;
+}
+
+.node.active:has(> .node.dragged) > .connector {
+  transition: none;
 }

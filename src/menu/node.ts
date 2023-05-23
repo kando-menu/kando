@@ -57,5 +57,17 @@ export interface INode {
    * The visual representation of this menu item. This is a div element which is created
    * when the menu is opened.
    */
-  div?: HTMLElement;
+  itemDiv?: HTMLElement;
+
+  /**
+   * The visual representation of the connector between this menu item and its active
+   * child. Only items with child items will have a connector.
+   */
+  connectorDiv?: HTMLElement;
+
+  /**
+   * The rotation of the connectors is transitioned using CSS. In order to avoid 360°
+   * flips, we store an accumulated rotation here.
+   */
+  lastConnectorRotation?: number;
 }
