@@ -126,6 +126,11 @@ export class Menu {
     });
   }
 
+  /**
+   * This method is called when the menu is shown. Currently, it just creates a test menu.
+   *
+   * @param position The position of the mouse cursor when the menu was opened.
+   */
   public show(position: IVec2) {
     this.relativeMousePosition = { x: 0, y: 0 };
     this.absoluteMousePosition = { x: position.x, y: position.y };
@@ -199,20 +204,24 @@ export class Menu {
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(node: INode, container: HTMLElement) {
-    node.div = document.createElement('div');
-    node.div.classList.add('node');
+    node.itemDiv = document.createElement('div');
+    node.itemDiv.classList.add('node');
 
     const item = document.createElement('i');
     item.classList.add('item');
     item.classList.add('material-icons-round');
     item.innerHTML = node.icon;
 
-    container.appendChild(node.div);
-    node.div.appendChild(item);
+    container.appendChild(node.itemDiv);
+    node.itemDiv.appendChild(item);
 
     if (node.children) {
+      node.connectorDiv = document.createElement('div');
+      node.connectorDiv.classList.add('connector');
+      node.itemDiv.appendChild(node.connectorDiv);
+
       for (const child of node.children) {
-        this.createNodeTree(child, node.div);
+        this.createNodeTree(child, node.itemDiv);
       }
     }
   }
@@ -260,6 +269,7 @@ export class Menu {
     return null;
   }
 
+  /** This method updates the transformation of all nodes in the menu. */
   private redraw() {
     this.hoverNode(this.computeHoveredNode());
 
@@ -280,7 +290,11 @@ export class Menu {
       this.dragNode(this.hoveredNode);
     }
 
-    this.updateTransform(this.root);
+    this.updateNodeTransform(this.root);
+
+    if (this.draggedNode) {
+      this.updateConnectors();
+    }
   }
 
   /**
@@ -291,12 +305,12 @@ export class Menu {
    * @param state The state of the given node. The transformation will be computed
    *   differently depending on the state.
    */
-  private updateTransform(node: INode) {
-    if (node.div.classList.contains('grandchild')) {
+  private updateNodeTransform(node: INode) {
+    if (node.itemDiv.classList.contains('grandchild')) {
       const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
       const y = this.GRANDCHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-      node.div.style.transform = `translate(${x}px, ${y}px)`;
-    } else if (node.div.classList.contains('child')) {
+      node.itemDiv.style.transform = `translate(${x}px, ${y}px)`;
+    } else if (node.itemDiv.classList.contains('child')) {
       let transform = '';
 
       // If the node is hovered, increase the scale a bit.
@@ -330,18 +344,53 @@ export class Menu {
 
       // Finally, apply the transformation to the node and update the transformation of
       // all its children.
-      node.div.style.transform = transform;
+      node.itemDiv.style.transform = transform;
 
       for (const child of node.children) {
-        this.updateTransform(child);
+        this.updateNodeTransform(child);
       }
     } else if (
-      node.div.classList.contains('active') ||
-      node.div.classList.contains('parent')
+      node.itemDiv.classList.contains('active') ||
+      node.itemDiv.classList.contains('parent')
     ) {
-      node.div.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
+      node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       for (const child of node.children) {
-        this.updateTransform(child);
+        this.updateNodeTransform(child);
+      }
+    }
+  }
+
+  /**
+   * Iterate over the selection chain and update the length (width) of all connector divs
+   * so that they connect consecutive nodes.
+   */
+  private updateConnectors() {
+    for (let i = 0; i < this.selectionChain.length; i++) {
+      const node = this.selectionChain[i];
+      const nextNode =
+        i === this.selectionChain.length - 1
+          ? this.draggedNode
+          : this.selectionChain[i + 1];
+
+      if (nextNode) {
+        const nodeRect = node.itemDiv.getBoundingClientRect();
+        const nextNodeRect = nextNode.itemDiv.getBoundingClientRect();
+
+        const length = Math.sqrt(
+          Math.pow(nodeRect.x - nextNodeRect.x, 2) +
+            Math.pow(nodeRect.y - nextNodeRect.y, 2)
+        );
+
+        const angle = Math.atan2(
+          nextNodeRect.y - nodeRect.y,
+          nextNodeRect.x - nodeRect.x
+        );
+
+        node.connectorDiv.style.width = `${length}px`;
+        node.connectorDiv.style.transform = `rotate(${angle}rad)`;
+        node.connectorDiv.classList.add('visible');
+      } else {
+        node.connectorDiv.classList.remove('visible');
       }
     }
   }
@@ -359,13 +408,13 @@ export class Menu {
     }
 
     if (this.draggedNode) {
-      this.draggedNode.div.classList.remove('dragged');
+      this.draggedNode.itemDiv.classList.remove('dragged');
       this.draggedNode = null;
     }
 
     if (node) {
       this.draggedNode = node;
-      this.draggedNode.div.classList.add('dragged');
+      this.draggedNode.itemDiv.classList.add('dragged');
     }
   }
 
@@ -381,13 +430,13 @@ export class Menu {
     }
 
     if (this.hoveredNode) {
-      this.hoveredNode.div.classList.remove('hovered');
+      this.hoveredNode.itemDiv.classList.remove('hovered');
       this.hoveredNode = null;
     }
 
     if (node) {
       this.hoveredNode = node;
-      this.hoveredNode.div.classList.add('hovered');
+      this.hoveredNode.itemDiv.classList.add('hovered');
     }
   }
 
@@ -476,20 +525,20 @@ export class Menu {
     for (let i = 0; i < this.selectionChain.length; ++i) {
       const node = this.selectionChain[i];
       if (i === this.selectionChain.length - 1) {
-        node.div.className = 'node active';
+        node.itemDiv.className = 'node active';
 
         for (const child of node.children) {
-          child.div.className = 'node child';
+          child.itemDiv.className = 'node child';
 
           for (const grandchild of child.children) {
-            grandchild.div.className = 'node grandchild';
+            grandchild.itemDiv.className = 'node grandchild';
           }
         }
       } else {
-        node.div.className = 'node parent';
+        node.itemDiv.className = 'node parent';
 
         for (const child of node.children) {
-          child.div.className = 'node grandchild';
+          child.itemDiv.className = 'node grandchild';
         }
       }
     }
