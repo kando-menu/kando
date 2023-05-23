@@ -9,13 +9,20 @@ on:
       - '**'
 
 jobs:
-  reuse:
-    name: Check REUSE
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: REUSE Compliance Check
-        uses: fsfe/reuse-action@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: |
+          sudo apt install libx11-dev
+          npm ci
+      - name: Run Tests
+        run: npm run test
 
   eslint:
     name: Check ESLint
@@ -46,3 +53,11 @@ jobs:
           npm ci
       - name: Run Prettier
         run: npm run prettier
+
+  reuse:
+    name: Check REUSE
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@v1

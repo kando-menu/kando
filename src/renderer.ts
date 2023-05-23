@@ -31,14 +31,14 @@ document.querySelector('#shortcut-button').addEventListener('click', () => {
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
     window.api.hideWindow();
-    menu.hide();
+    menu.clear();
   }
 });
 
 document.addEventListener('mouseup', (ev) => {
   if (ev.button === 2) {
     window.api.hideWindow();
-    menu.hide();
+    menu.clear();
   }
 });
 

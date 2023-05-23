@@ -12,7 +12,7 @@
 import './menu.scss';
 import './theme.scss';
 
-import { computeItemAngles, IVec2 } from './math';
+import * as math from './math';
 import { INode } from './node';
 
 /**
@@ -37,22 +37,60 @@ import { INode } from './node';
  */
 
 export class Menu {
+  // The container is the HTML element which contains the menu. It is used to attach
+  // event listeners.
   private container: HTMLElement = null;
+
+  // The root node is the node which is placed at the center of the menu. It is the
+  // parent of all other nodes. It will be created when the menu is shown and destroyed
+  // when the menu is hidden.
   private root: INode = null;
 
+  // The hovered node is the node which is currently hovered by the mouse. It is used
+  // to highlight the node under the mouse cursor. This will only be null if the mouse
+  // is over the center of the root node. If the center of an active child node is
+  // hovered, the hovered node will be the parent of the active child node.
   private hoveredNode: INode = null;
+
+  // The dragged node is the node which is currently dragged by the mouse.
   private draggedNode: INode = null;
+
+  // The selection chain is the chain of nodes from the root node to the currently
+  // selected node. The first element of the array is the root node, the last element
+  // is the currently selected node.
   private selectionChain: Array<INode> = [];
 
-  private dragStartPosition?: IVec2 = null;
-  private absoluteMousePosition: IVec2 = { x: 0, y: 0 };
-  private relativeMousePosition: IVec2 = { x: 0, y: 0 };
+  // The drag start position is the position where the mouse was when the user started
+  // dragging the dragged node.
+  private dragStartPosition?: math.IVec2 = null;
+
+  // The absolute mouse position is the position of the mouse in screen coordinates. It is
+  // always updated when the mouse moves.
+  private absoluteMousePosition: math.IVec2 = { x: 0, y: 0 };
+
+  // The relative mouse position is the position of the mouse relative to the currently
+  // selected node. It is always updated when the mouse moves.
+  private relativeMousePosition: math.IVec2 = { x: 0, y: 0 };
+
+  // The mouse angle is the angle of the mouse relative to the currently selected node.
+  // 0° is up, 90° is right, 180° is down and 270° is left. It is always updated when
+  // the mouse moves.
   private mouseAngle = 0;
+
+  // The mouse distance is the distance of the mouse to the center of the currently
+  // selected node. It is always updated when the mouse moves.
   private mouseDistance = 0;
 
+  // This is currently used to create the test menu. It defines the number of children
+  // per level. The first number is the number of children of the root node, the second
+  // number is the number of children of each child node and so on.
   private readonly CHILDREN_PER_LEVEL = [8, 5, 5];
+
+  // The following constants define the layout of the menu. They are all in pixels and should
+  // be configurable in the future.
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
+  private readonly PARENT_DISTANCE = 200;
   private readonly GRANDCHILD_DISTANCE = 25;
   private readonly DRAG_THRESHOLD = 5;
 
@@ -68,29 +106,19 @@ export class Menu {
       this.absoluteMousePosition = { x: e.clientX, y: e.clientY };
 
       if (this.root) {
-        const position = { x: this.root.position.x, y: this.root.position.y };
+        this.relativeMousePosition = {
+          x: e.clientX - this.root.position.x,
+          y: e.clientY - this.root.position.y,
+        };
 
         for (let i = 1; i < this.selectionChain.length; ++i) {
           const node = this.selectionChain[i];
-          position.x += node.position.x;
-          position.y += node.position.y;
+          this.relativeMousePosition.x -= node.position.x;
+          this.relativeMousePosition.y -= node.position.y;
         }
 
-        this.relativeMousePosition = {
-          x: e.clientX - position.x,
-          y: e.clientY - position.y,
-        };
-
-        this.mouseDistance = Math.sqrt(
-          this.relativeMousePosition.x * this.relativeMousePosition.x +
-            this.relativeMousePosition.y * this.relativeMousePosition.y
-        );
-        this.mouseAngle =
-          (Math.acos(this.relativeMousePosition.x / this.mouseDistance) * 180) / Math.PI;
-
-        if (this.relativeMousePosition.y < 0) {
-          this.mouseAngle = 360 - this.mouseAngle;
-        }
+        this.mouseDistance = math.getLength(this.relativeMousePosition);
+        this.mouseAngle = math.getAngle(this.relativeMousePosition);
 
         // Turn 0° up.
         this.mouseAngle = (this.mouseAngle + 90) % 360;
@@ -122,6 +150,10 @@ export class Menu {
         this.selectNode(this.draggedNode);
         this.dragNode(null);
         this.redraw();
+      } else if (this.hoveredNode && this.mouseDistance < this.CENTER_RADIUS) {
+        this.selectNode(this.hoveredNode);
+        this.hoverNode(null);
+        this.redraw();
       }
     });
   }
@@ -131,7 +163,9 @@ export class Menu {
    *
    * @param position The position of the mouse cursor when the menu was opened.
    */
-  public show(position: IVec2) {
+  public show(position: math.IVec2) {
+    this.clear();
+
     this.relativeMousePosition = { x: 0, y: 0 };
     this.absoluteMousePosition = { x: position.x, y: position.y };
 
@@ -169,7 +203,7 @@ export class Menu {
 
     addChildren(this.root, 0);
 
-    // Multiply all number in CHILDREN_PER_LEVEL by each other.
+    // Multiply all numbers in CHILDREN_PER_LEVEL by each other.
     const count = this.CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
     window.api.log(`Created ${count} children!`);
 
@@ -181,8 +215,8 @@ export class Menu {
   }
 
   /** Removes all DOM elements from the menu and resets the root node. */
-  public hide() {
-    window.api.log('Menu hide');
+  public clear() {
+    window.api.log('Menu clear');
 
     this.container.innerHTML = '';
     this.root = null;
@@ -290,7 +324,7 @@ export class Menu {
       this.dragNode(this.hoveredNode);
     }
 
-    this.updateNodeTransform(this.root);
+    this.updateTransform(this.root);
 
     if (this.draggedNode) {
       this.updateConnectors();
@@ -305,11 +339,10 @@ export class Menu {
    * @param state The state of the given node. The transformation will be computed
    *   differently depending on the state.
    */
-  private updateNodeTransform(node: INode) {
+  private updateTransform(node: INode) {
     if (node.itemDiv.classList.contains('grandchild')) {
-      const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y = this.GRANDCHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-      node.itemDiv.style.transform = `translate(${x}px, ${y}px)`;
+      const dir = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
+      node.itemDiv.style.transform = `translate(${dir.x}px, ${dir.y}px)`;
     } else if (node.itemDiv.classList.contains('child')) {
       let transform = '';
 
@@ -329,17 +362,14 @@ export class Menu {
       // If the node is dragged, move it to the mouse position.
       if (
         node === this.draggedNode &&
-        Math.sqrt(
-          Math.pow(this.absoluteMousePosition.x - this.dragStartPosition.x, 2) +
-            Math.pow(this.absoluteMousePosition.y - this.dragStartPosition.y, 2)
-        ) > this.DRAG_THRESHOLD
+        math.getDistance(this.absoluteMousePosition, this.dragStartPosition) >
+          this.DRAG_THRESHOLD
       ) {
         transform = `translate(${this.relativeMousePosition.x}px, ${this.relativeMousePosition.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
-        const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-        const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-        transform += `translate(${x}px, ${y}px)`;
+        const dir = math.getDirection(node.angle - 90, this.CHILD_DISTANCE);
+        transform += `translate(${dir.x}px, ${dir.y}px)`;
       }
 
       // Finally, apply the transformation to the node and update the transformation of
@@ -347,7 +377,7 @@ export class Menu {
       node.itemDiv.style.transform = transform;
 
       for (const child of node.children) {
-        this.updateNodeTransform(child);
+        this.updateTransform(child);
       }
     } else if (
       node.itemDiv.classList.contains('active') ||
@@ -355,7 +385,7 @@ export class Menu {
     ) {
       node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       for (const child of node.children) {
-        this.updateNodeTransform(child);
+        this.updateTransform(child);
       }
     }
   }
@@ -480,10 +510,13 @@ export class Menu {
         y: this.root.position.y + offset.y,
       };
     } else {
-      const x = this.mouseDistance * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y = this.mouseDistance * Math.sin(((node.angle - 90) * Math.PI) / 180);
-
-      node.position = { x, y };
+      // Compute the ideal position of the new node. The distance to the parent node is
+      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
+      // to the parent node.
+      node.position = math.getDirection(
+        node.angle - 90,
+        Math.max(this.PARENT_DISTANCE, this.mouseDistance)
+      );
 
       const offset = {
         x: this.relativeMousePosition.x - node.position.x,
@@ -551,12 +584,7 @@ export class Menu {
    * child's wedge. If the given node has an 'angle' property itself, the child wedges
    * leave a gap at the position towards the parent node.
    *
-   * For now, this method performs some expensive computations like sorting lists and
-   * searching for indices. This could be optimized in the future. I guess that there is a
-   * more analytical solution to this problem. However, for now this is good enough as it
-   * performs pretty well even for thousands of nodes.
-   *
-   * @param node The node to setup the angles for recursively.
+   * @param node The node for which to setup the children recursively.
    */
   private setupAngles(node: INode) {
     // If the node has no children, we can stop here.
@@ -564,53 +592,21 @@ export class Menu {
       return;
     }
 
-    // If the node as a single child but no parent (e.g. it's the root node), we can
-    // simply set the angle of the child to 0 and the start and end angles to a full
-    // circle.
-    if (node.children.length === 1 && isNaN(node.angle)) {
-      node.children[0].angle = node.children[0].angle || 0;
-      node.children[0].startAngle = 0;
-      node.children[0].endAngle = 360;
-      return;
-    }
-
     // For all other cases, we have to compute the angles of the children. First, we
-    // compute the angle towards the parent node.
+    // compute the angle towards the parent node. This will be undefined for the root
+    // node.
     const parentAngle = (node.angle + 180) % 360;
-    const angles = computeItemAngles(node.children, parentAngle);
+    const angles = math.computeItemAngles(node.children, parentAngle);
+    const wedges = math.computeItemWedges(angles, parentAngle);
 
-    // Now we have to compute the separators between the children. We do this by sorting
-    // the angles and computing the middle between each pair of angles. We also have to
-    // add the angle towards the parent node if the node has a parent.
-    const allAngles = angles.slice();
-    if (!isNaN(parentAngle)) {
-      allAngles.push(parentAngle);
-    }
-    allAngles.sort((a, b) => a - b);
-
-    const separators = [];
-    for (let i = 0; i < allAngles.length; ++i) {
-      if (i === allAngles.length - 1) {
-        separators.push((allAngles[i] + allAngles[0] + 360) / 2);
-      } else {
-        separators.push((allAngles[i] + allAngles[i + 1]) / 2);
-      }
-    }
-
-    // Now we search for the separators before and after each child and assign the
-    // corresponding angles to the child.
+    // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children.length; ++i) {
       const child = node.children[i];
       child.angle = angles[i];
+      child.startAngle = wedges[i].start;
+      child.endAngle = wedges[i].end;
 
-      const wedgeIndex = separators.findIndex((s) => s > child.angle);
-
-      child.startAngle =
-        wedgeIndex == 0
-          ? separators[separators.length - 1] - 360
-          : separators[wedgeIndex - 1];
-      child.endAngle = separators[wedgeIndex];
-
+      // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);
     }
   }
