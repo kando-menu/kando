@@ -148,12 +148,8 @@ export class Menu {
 
       if (this.draggedNode) {
         this.selectNode(this.draggedNode);
-        this.dragNode(null);
-        this.redraw();
       } else if (this.hoveredNode && this.mouseDistance < this.CENTER_RADIUS) {
         this.selectNode(this.hoveredNode);
-        this.hoverNode(null);
-        this.redraw();
       }
     });
   }
@@ -211,7 +207,6 @@ export class Menu {
     this.createNodeTree(this.root, this.container);
 
     this.selectNode(this.root);
-    this.redraw();
   }
 
   /** Removes all DOM elements from the menu and resets the root node. */
@@ -341,8 +336,8 @@ export class Menu {
    */
   private updateTransform(node: INode) {
     if (node.itemDiv.classList.contains('grandchild')) {
-      const dir = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
-      node.itemDiv.style.transform = `translate(${dir.x}px, ${dir.y}px)`;
+      node.position = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
+      node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
     } else if (node.itemDiv.classList.contains('child')) {
       let transform = '';
 
@@ -365,11 +360,12 @@ export class Menu {
         math.getDistance(this.absoluteMousePosition, this.dragStartPosition) >
           this.DRAG_THRESHOLD
       ) {
-        transform = `translate(${this.relativeMousePosition.x}px, ${this.relativeMousePosition.y}px)`;
+        node.position = this.relativeMousePosition;
+        transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
-        const dir = math.getDirection(node.angle - 90, this.CHILD_DISTANCE);
-        transform += `translate(${dir.x}px, ${dir.y}px)`;
+        node.position = math.getDirection(node.angle - 90, this.CHILD_DISTANCE);
+        transform += `translate(${node.position.x}px, ${node.position.y}px)`;
       }
 
       // Finally, apply the transformation to the node and update the transformation of
@@ -397,30 +393,26 @@ export class Menu {
   private updateConnectors() {
     for (let i = 0; i < this.selectionChain.length; i++) {
       const node = this.selectionChain[i];
-      const nextNode =
-        i === this.selectionChain.length - 1
-          ? this.draggedNode
-          : this.selectionChain[i + 1];
+      let nextNode = this.selectionChain[i + 1];
+
+      if (
+        i === this.selectionChain.length - 1 &&
+        !(
+          this.selectionChain.length > 1 &&
+          this.draggedNode === this.selectionChain[this.selectionChain.length - 2]
+        )
+      ) {
+        nextNode = this.draggedNode;
+      }
 
       if (nextNode) {
-        const nodeRect = node.itemDiv.getBoundingClientRect();
-        const nextNodeRect = nextNode.itemDiv.getBoundingClientRect();
-
-        const length = Math.sqrt(
-          Math.pow(nodeRect.x - nextNodeRect.x, 2) +
-            Math.pow(nodeRect.y - nextNodeRect.y, 2)
-        );
-
-        const angle = Math.atan2(
-          nextNodeRect.y - nodeRect.y,
-          nextNodeRect.x - nodeRect.x
-        );
+        const length = math.getLength(nextNode.position);
+        const angle = math.getAngle(nextNode.position);
 
         node.connectorDiv.style.width = `${length}px`;
-        node.connectorDiv.style.transform = `rotate(${angle}rad)`;
-        node.connectorDiv.classList.add('visible');
+        node.connectorDiv.style.transform = `rotate(${angle}deg)`;
       } else {
-        node.connectorDiv.classList.remove('visible');
+        node.connectorDiv.style.width = '0px';
       }
     }
   }
@@ -478,6 +470,16 @@ export class Menu {
    * @param node The newly selected node.
    */
   private selectNode(node: INode) {
+    // Make sure to un-hover the node if it was hovered before.
+    if (node === this.hoveredNode) {
+      this.hoverNode(null);
+    }
+
+    // Make sure to un-drag the node if it was hovered before.
+    if (node === this.draggedNode) {
+      this.dragNode(null);
+    }
+
     // If the node is already selected, do nothing.
     if (
       this.selectionChain.length > 0 &&
@@ -541,8 +543,11 @@ export class Menu {
     this.relativeMousePosition = { x: 0, y: 0 };
     this.mouseDistance = 0;
 
-    // Finally update the CSS classes of all nodes according to the new selection chain.
+    // Finally update the CSS classes of all nodes according to the new selection chain
+    // and update the connectors.
     this.updateCSSClasses();
+    this.updateConnectors();
+    this.redraw();
   }
 
   /**
