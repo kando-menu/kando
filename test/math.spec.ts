@@ -34,6 +34,6 @@ describe('computeItemAngles', () => {
   it('should leave some space for a parent item', () => {
     const items = [{}, {}, {}, {}, {}];
     const angles = computeItemAngles(items, 25);
-    assert.deepEqual(angles, [325, 85, 145, 205, 265);
+    assert.deepEqual(angles, [325, 85, 145, 205, 265]);
   });
 });
