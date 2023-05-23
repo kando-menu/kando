@@ -37,20 +37,57 @@ import { INode } from './node';
  */
 
 export class Menu {
+  // The container is the HTML element which contains the menu. It is used to attach
+  // event listeners.
   private container: HTMLElement = null;
+
+  // The root node is the node which is placed at the center of the menu. It is the
+  // parent of all other nodes. It will be created when the menu is shown and destroyed
+  // when the menu is hidden.
   private root: INode = null;
 
+  // The hovered node is the node which is currently hovered by the mouse. It is used
+  // to highlight the node under the mouse cursor. This will only be null if the mouse
+  // is over the center of the root node. If the center of an active child node is
+  // hovered, the hovered node will be the parent of the active child node.
   private hoveredNode: INode = null;
+
+  // The dragged node is the node which is currently dragged by the mouse.
   private draggedNode: INode = null;
+
+  // The selection chain is the chain of nodes from the root node to the currently
+  // selected node. The first element of the array is the root node, the last element
+  // is the currently selected node.
   private selectionChain: Array<INode> = [];
 
+  // The drag start position is the position where the mouse was when the user started
+  // dragging the dragged node.
   private dragStartPosition?: math.IVec2 = null;
+
+  // The absolute mouse position is the position of the mouse in screen coordinates. It is
+  // always updated when the mouse moves.
   private absoluteMousePosition: math.IVec2 = { x: 0, y: 0 };
+
+  // The relative mouse position is the position of the mouse relative to the currently
+  // selected node. It is always updated when the mouse moves.
   private relativeMousePosition: math.IVec2 = { x: 0, y: 0 };
+
+  // The mouse angle is the angle of the mouse relative to the currently selected node.
+  // 0° is up, 90° is right, 180° is down and 270° is left. It is always updated when
+  // the mouse moves.
   private mouseAngle = 0;
+
+  // The mouse distance is the distance of the mouse to the center of the currently
+  // selected node. It is always updated when the mouse moves.
   private mouseDistance = 0;
 
+  // This is currently used to create the test menu. It defines the number of children
+  // per level. The first number is the number of children of the root node, the second
+  // number is the number of children of each child node and so on.
   private readonly CHILDREN_PER_LEVEL = [8, 5, 5];
+
+  // The following constants define the layout of the menu. They are all in pixels and should
+  // be configurable in the future.
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
   private readonly GRANDCHILD_DISTANCE = 25;
