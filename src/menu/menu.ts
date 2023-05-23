@@ -150,6 +150,10 @@ export class Menu {
         this.selectNode(this.draggedNode);
         this.dragNode(null);
         this.redraw();
+      } else if (this.hoveredNode && this.mouseDistance < this.CENTER_RADIUS) {
+        this.selectNode(this.hoveredNode);
+        this.hoverNode(null);
+        this.redraw();
       }
     });
   }
