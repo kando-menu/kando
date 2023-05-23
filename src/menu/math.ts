@@ -19,6 +19,51 @@ export interface IVec2 {
   y: number;
 }
 
+/** This method converts radians to degrees. */
+export function toDegrees(radians: number): number {
+  return (radians * 180) / Math.PI;
+}
+
+/** This method converts degrees to radians. */
+export function toRadians(degrees: number): number {
+  return (degrees * Math.PI) / 180;
+}
+
+/** This method returns the length of the given vector. */
+export function getLength(vec: IVec2): number {
+  return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
+}
+
+/** This method returns the distance between the two given vectors. */
+export function getDistance(vec1: IVec2, vec2: IVec2): number {
+  return getLength({ x: vec1.x - vec2.x, y: vec1.y - vec2.y });
+}
+
+/**
+ * This method returns the angle of the given vector in degrees. 0° is on the right, 90°
+ * is on the bottom, 180° is on the left and 270° is on the top. The vector does not need
+ * to be normalized.
+ */
+export function getAngle(vec: IVec2): number {
+  const angle = toDegrees(Math.atan2(vec.y, vec.x));
+  if (angle < 0) {
+    return 360 + angle;
+  }
+  return angle;
+}
+
+/**
+ * This method returns the direction vector for the given angle and length. 0° is on the
+ * right, 90° is on the bottom, 180° is on the left and 270° is on the top.
+ */
+export function getDirection(angle: number, length: number): IVec2 {
+  const radians = toRadians(angle);
+  return {
+    x: Math.cos(radians) * length,
+    y: Math.sin(radians) * length,
+  };
+}
+
 /**
  * This method receives an array of objects, each representing an item in a menu level.
  * For each item it computes an angle defining the direction in which the item should be
@@ -184,7 +229,9 @@ export function computeItemAngles(
  * @param parentAngle The angle of the parent node. If given, there will be a gap towards
  *   the parent node. This should be in degrees and between 0° and 360°.
  * @returns A list of start and end angles for each item. Each item in the list
- *   corresponds to the item at the same index in the `itemAngles` list.
+ *   corresponds to the item at the same index in the `itemAngles` list. The start angle
+ *   will always be smaller than the end angle. Consequently, the start angle can be
+ *   negative and the end angle can be larger than 360°.
  */
 export function computeItemWedges(
   itemAngles: number[],

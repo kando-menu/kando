@@ -12,7 +12,7 @@
 import './menu.scss';
 import './theme.scss';
 
-import { computeItemAngles, computeItemWedges, IVec2 } from './math';
+import * as math from './math';
 import { INode } from './node';
 
 /**
@@ -44,9 +44,9 @@ export class Menu {
   private draggedNode: INode = null;
   private selectionChain: Array<INode> = [];
 
-  private dragStartPosition?: IVec2 = null;
-  private absoluteMousePosition: IVec2 = { x: 0, y: 0 };
-  private relativeMousePosition: IVec2 = { x: 0, y: 0 };
+  private dragStartPosition?: math.IVec2 = null;
+  private absoluteMousePosition: math.IVec2 = { x: 0, y: 0 };
+  private relativeMousePosition: math.IVec2 = { x: 0, y: 0 };
   private mouseAngle = 0;
   private mouseDistance = 0;
 
@@ -81,16 +81,8 @@ export class Menu {
           y: e.clientY - position.y,
         };
 
-        this.mouseDistance = Math.sqrt(
-          this.relativeMousePosition.x * this.relativeMousePosition.x +
-            this.relativeMousePosition.y * this.relativeMousePosition.y
-        );
-        this.mouseAngle =
-          (Math.acos(this.relativeMousePosition.x / this.mouseDistance) * 180) / Math.PI;
-
-        if (this.relativeMousePosition.y < 0) {
-          this.mouseAngle = 360 - this.mouseAngle;
-        }
+        this.mouseDistance = math.getLength(this.relativeMousePosition);
+        this.mouseAngle = math.getAngle(this.relativeMousePosition);
 
         // Turn 0° up.
         this.mouseAngle = (this.mouseAngle + 90) % 360;
@@ -126,7 +118,7 @@ export class Menu {
     });
   }
 
-  public show(position: IVec2) {
+  public show(position: math.IVec2) {
     this.relativeMousePosition = { x: 0, y: 0 };
     this.absoluteMousePosition = { x: position.x, y: position.y };
 
@@ -293,9 +285,8 @@ export class Menu {
    */
   private updateTransform(node: INode) {
     if (node.div.classList.contains('grandchild')) {
-      const x = this.GRANDCHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y = this.GRANDCHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-      node.div.style.transform = `translate(${x}px, ${y}px)`;
+      const dir = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
+      node.div.style.transform = `translate(${dir.x}px, ${dir.y}px)`;
     } else if (node.div.classList.contains('child')) {
       let transform = '';
 
@@ -315,17 +306,14 @@ export class Menu {
       // If the node is dragged, move it to the mouse position.
       if (
         node === this.draggedNode &&
-        Math.sqrt(
-          Math.pow(this.absoluteMousePosition.x - this.dragStartPosition.x, 2) +
-            Math.pow(this.absoluteMousePosition.y - this.dragStartPosition.y, 2)
-        ) > this.DRAG_THRESHOLD
+        math.getDistance(this.absoluteMousePosition, this.dragStartPosition) >
+          this.DRAG_THRESHOLD
       ) {
         transform = `translate(${this.relativeMousePosition.x}px, ${this.relativeMousePosition.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
-        const x = this.CHILD_DISTANCE * Math.cos(((node.angle - 90) * Math.PI) / 180);
-        const y = this.CHILD_DISTANCE * Math.sin(((node.angle - 90) * Math.PI) / 180);
-        transform += `translate(${x}px, ${y}px)`;
+        const dir = math.getDirection(node.angle - 90, this.CHILD_DISTANCE);
+        transform += `translate(${dir.x}px, ${dir.y}px)`;
       }
 
       // Finally, apply the transformation to the node and update the transformation of
@@ -431,10 +419,7 @@ export class Menu {
         y: this.root.position.y + offset.y,
       };
     } else {
-      const x = this.mouseDistance * Math.cos(((node.angle - 90) * Math.PI) / 180);
-      const y = this.mouseDistance * Math.sin(((node.angle - 90) * Math.PI) / 180);
-
-      node.position = { x, y };
+      node.position = math.getDirection(node.angle - 90, this.mouseDistance);
 
       const offset = {
         x: this.relativeMousePosition.x - node.position.x,
@@ -514,8 +499,8 @@ export class Menu {
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
     const parentAngle = (node.angle + 180) % 360;
-    const angles = computeItemAngles(node.children, parentAngle);
-    const wedges = computeItemWedges(angles, parentAngle);
+    const angles = math.computeItemAngles(node.children, parentAngle);
+    const wedges = math.computeItemWedges(angles, parentAngle);
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children.length; ++i) {
