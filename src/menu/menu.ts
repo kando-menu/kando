@@ -90,6 +90,7 @@ export class Menu {
   // be configurable in the future.
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
+  private readonly PARENT_DISTANCE = 200;
   private readonly GRANDCHILD_DISTANCE = 25;
   private readonly DRAG_THRESHOLD = 5;
 
@@ -456,7 +457,13 @@ export class Menu {
         y: this.root.position.y + offset.y,
       };
     } else {
-      node.position = math.getDirection(node.angle - 90, this.mouseDistance);
+      // Compute the ideal position of the new node. The distance to the parent node is
+      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
+      // to the parent node.
+      node.position = math.getDirection(
+        node.angle - 90,
+        Math.max(this.PARENT_DISTANCE, this.mouseDistance)
+      );
 
       const offset = {
         x: this.relativeMousePosition.x - node.position.x,
