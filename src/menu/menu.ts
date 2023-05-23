@@ -68,18 +68,16 @@ export class Menu {
       this.absoluteMousePosition = { x: e.clientX, y: e.clientY };
 
       if (this.root) {
-        const position = { x: this.root.position.x, y: this.root.position.y };
+        this.relativeMousePosition = {
+          x: e.clientX - this.root.position.x,
+          y: e.clientY - this.root.position.y,
+        };
 
         for (let i = 1; i < this.selectionChain.length; ++i) {
           const node = this.selectionChain[i];
-          position.x += node.position.x;
-          position.y += node.position.y;
+          this.relativeMousePosition.x -= node.position.x;
+          this.relativeMousePosition.y -= node.position.y;
         }
-
-        this.relativeMousePosition = {
-          x: e.clientX - position.x,
-          y: e.clientY - position.y,
-        };
 
         this.mouseDistance = math.getLength(this.relativeMousePosition);
         this.mouseAngle = math.getAngle(this.relativeMousePosition);
