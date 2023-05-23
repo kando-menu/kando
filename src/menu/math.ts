@@ -27,8 +27,8 @@ export interface IVec2 {
  * fixed angle and all others are distributed more ore less evenly around. This method
  * also reserves the required angular space for the back navigation link to the parent
  * item (if given). Angles in items are always in degrees, 0° is on the top, 90° on the
- * right, 180° on the bottom and so on. Fixed angles must be monotonically increasing. If
- * this is not the case, the smaller angle is ignored.
+ * right, 180° on the bottom and so on. Fixed input angles must be monotonically
+ * increasing. If this is not the case, the smaller angle is ignored.
  *
  * @param items The Items for which the angles should be computed. They may already have
  *   an angle property. If so, this is considered a fixed angle.
@@ -168,4 +168,77 @@ export function computeItemAngles(
   }
 
   return itemAngles;
+}
+
+/**
+ * Computes the start and end angles of the wedges for the given items. The parent angle
+ * is optional. If it is given, there will be a gap towards the parent node.
+ *
+ * For now, this method performs some expensive computations like sorting lists and
+ * searching for indices. This could be optimized in the future. I guess that there is a
+ * more analytical solution to this problem. However, for now this is good enough as it
+ * performs pretty well even for thousands of nodes.
+ *
+ * @param itemAngles A list of angles for each item. The angles are in degrees and between
+ *   0° and 360°.
+ * @param parentAngle The angle of the parent node. If given, there will be a gap towards
+ *   the parent node. This should be in degrees and between 0° and 360°.
+ * @returns A list of start and end angles for each item. Each item in the list
+ *   corresponds to the item at the same index in the `itemAngles` list.
+ */
+export function computeItemWedges(
+  itemAngles: number[],
+  parentAngle?: number
+): { start: number; end: number }[] {
+  // If the node has no children, we can stop here.
+  if (itemAngles.length === 0) {
+    return [];
+  }
+
+  // If the node as a single child but no parent (e.g. it's the root node), we can
+  // simply set the angle of the child to 0 and the start and end angles to a full
+  // circle.
+  if (itemAngles.length === 1 && isNaN(parentAngle)) {
+    return [
+      {
+        start: 0,
+        end: 360,
+      },
+    ];
+  }
+
+  // Now we have to compute the separators between the children. We do this by sorting
+  // the angles and computing the middle between each pair of angles. We also have to
+  // add the angle towards the parent node if the node has a parent.
+  const allAngles = itemAngles.slice();
+  if (!isNaN(parentAngle)) {
+    allAngles.push(parentAngle);
+  }
+  allAngles.sort((a, b) => a - b);
+
+  const separators = [];
+  for (let i = 0; i < allAngles.length; ++i) {
+    if (i === allAngles.length - 1) {
+      separators.push((allAngles[i] + allAngles[0] + 360) / 2);
+    } else {
+      separators.push((allAngles[i] + allAngles[i + 1]) / 2);
+    }
+  }
+
+  // Now we search for the separators before and after each child and assign the
+  // corresponding angles to the child.
+  const items = [];
+  for (let i = 0; i < itemAngles.length; ++i) {
+    const wedgeIndex = separators.findIndex((s) => s > itemAngles[i]);
+
+    items.push({
+      start:
+        wedgeIndex == 0
+          ? separators[separators.length - 1] - 360
+          : separators[wedgeIndex - 1],
+      end: separators[wedgeIndex],
+    });
+  }
+
+  return items;
 }

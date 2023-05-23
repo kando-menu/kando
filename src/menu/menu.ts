@@ -12,7 +12,7 @@
 import './menu.scss';
 import './theme.scss';
 
-import { computeItemAngles, IVec2 } from './math';
+import { computeItemAngles, computeItemWedges, IVec2 } from './math';
 import { INode } from './node';
 
 /**
@@ -502,12 +502,7 @@ export class Menu {
    * child's wedge. If the given node has an 'angle' property itself, the child wedges
    * leave a gap at the position towards the parent node.
    *
-   * For now, this method performs some expensive computations like sorting lists and
-   * searching for indices. This could be optimized in the future. I guess that there is a
-   * more analytical solution to this problem. However, for now this is good enough as it
-   * performs pretty well even for thousands of nodes.
-   *
-   * @param node The node to setup the angles for recursively.
+   * @param node The node for which to setup the children recursively.
    */
   private setupAngles(node: INode) {
     // If the node has no children, we can stop here.
@@ -515,53 +510,21 @@ export class Menu {
       return;
     }
 
-    // If the node as a single child but no parent (e.g. it's the root node), we can
-    // simply set the angle of the child to 0 and the start and end angles to a full
-    // circle.
-    if (node.children.length === 1 && isNaN(node.angle)) {
-      node.children[0].angle = node.children[0].angle || 0;
-      node.children[0].startAngle = 0;
-      node.children[0].endAngle = 360;
-      return;
-    }
-
     // For all other cases, we have to compute the angles of the children. First, we
-    // compute the angle towards the parent node.
+    // compute the angle towards the parent node. This will be undefined for the root
+    // node.
     const parentAngle = (node.angle + 180) % 360;
     const angles = computeItemAngles(node.children, parentAngle);
+    const wedges = computeItemWedges(angles, parentAngle);
 
-    // Now we have to compute the separators between the children. We do this by sorting
-    // the angles and computing the middle between each pair of angles. We also have to
-    // add the angle towards the parent node if the node has a parent.
-    const allAngles = angles.slice();
-    if (!isNaN(parentAngle)) {
-      allAngles.push(parentAngle);
-    }
-    allAngles.sort((a, b) => a - b);
-
-    const separators = [];
-    for (let i = 0; i < allAngles.length; ++i) {
-      if (i === allAngles.length - 1) {
-        separators.push((allAngles[i] + allAngles[0] + 360) / 2);
-      } else {
-        separators.push((allAngles[i] + allAngles[i + 1]) / 2);
-      }
-    }
-
-    // Now we search for the separators before and after each child and assign the
-    // corresponding angles to the child.
+    // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children.length; ++i) {
       const child = node.children[i];
       child.angle = angles[i];
+      child.startAngle = wedges[i].start;
+      child.endAngle = wedges[i].end;
 
-      const wedgeIndex = separators.findIndex((s) => s > child.angle);
-
-      child.startAngle =
-        wedgeIndex == 0
-          ? separators[separators.length - 1] - 360
-          : separators[wedgeIndex - 1];
-      child.endAngle = separators[wedgeIndex];
-
+      // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);
     }
   }
