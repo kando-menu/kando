@@ -119,6 +119,8 @@ export class Menu {
   }
 
   public show(position: math.IVec2) {
+    this.clear();
+
     this.relativeMousePosition = { x: 0, y: 0 };
     this.absoluteMousePosition = { x: position.x, y: position.y };
 
@@ -156,7 +158,7 @@ export class Menu {
 
     addChildren(this.root, 0);
 
-    // Multiply all number in CHILDREN_PER_LEVEL by each other.
+    // Multiply all numbers in CHILDREN_PER_LEVEL by each other.
     const count = this.CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
     window.api.log(`Created ${count} children!`);
 
@@ -168,8 +170,8 @@ export class Menu {
   }
 
   /** Removes all DOM elements from the menu and resets the root node. */
-  public hide() {
-    window.api.log('Menu hide');
+  public clear() {
+    window.api.log('Menu clear');
 
     this.container.innerHTML = '';
     this.root = null;
