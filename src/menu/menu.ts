@@ -553,6 +553,9 @@ export class Menu {
    * - 'parent' to all nodes in the selection chain except the last one.
    * - 'child' to all children of the last node in the selection chain.
    * - 'grandchild' to all children of parents and children.
+   *
+   * Children of grandchild nodes will not be updated, so they will keep their current CSS
+   * class. As they are not visible anyway, this is not a problem.
    */
   private updateCSSClasses() {
     for (let i = 0; i < this.selectionChain.length; ++i) {
