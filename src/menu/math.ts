@@ -38,7 +38,7 @@ export interface IVec2 {
  */
 export function computeItemAngles(
   items: { angle?: number }[],
-  parentAngle: number | undefined
+  parentAngle?: number
 ): number[] {
   const itemAngles: number[] = [];
 

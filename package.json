@@ -10,7 +10,8 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src",
-    "prettier": "prettier --check src"
+    "prettier": "prettier --check src",
+    "test": "ts-mocha test/**/*.spec.ts"
   },
   "keywords": [],
   "author": {
@@ -25,14 +26,18 @@
     "@electron-forge/maker-squirrel": "^6.1.1",
     "@electron-forge/maker-zip": "^6.1.1",
     "@electron-forge/plugin-webpack": "^6.1.1",
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "chai": "^4.3.7",
     "css-loader": "^6.7.4",
     "electron": "24.3.1",
     "eslint": "^8.41.0",
     "eslint-plugin-import": "^2.27.5",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "mocha": "^10.2.0",
     "node-loader": "^2.0.0",
     "prettier-plugin-jsdoc": "^0.4.2",
     "sass": "^1.62.1",
@@ -40,6 +45,7 @@
     "string-replace-loader": "^3.1.0",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.2",
+    "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "typescript": "~5.0.4"
   },
