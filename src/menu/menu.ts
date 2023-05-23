@@ -407,6 +407,9 @@ export class Menu {
       const node = this.selectionChain[i];
       let nextNode = this.selectionChain[i + 1];
 
+      // For the last element in the selection chain (which is the currently active node),
+      // we only draw a connector if on of its children is currently dragged around. We
+      // have to ensure that the dragged node is not the parent of the active node.
       if (
         i === this.selectionChain.length - 1 &&
         !this.isParentOfActiveNode(this.draggedNode)
@@ -416,7 +419,17 @@ export class Menu {
 
       if (nextNode) {
         const length = math.getLength(nextNode.position);
-        const angle = math.getAngle(nextNode.position);
+        let angle = math.getAngle(nextNode.position);
+
+        if (
+          node.lastConnectorRotation &&
+          Math.abs(node.lastConnectorRotation - angle) > 180
+        ) {
+          const fullTurns = Math.round((node.lastConnectorRotation - angle) / 360);
+          angle += fullTurns * 360;
+        }
+
+        node.lastConnectorRotation = angle;
 
         node.connectorDiv.style.width = `${length}px`;
         node.connectorDiv.style.transform = `rotate(${angle}deg)`;

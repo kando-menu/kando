@@ -64,4 +64,10 @@ export interface INode {
    * child. Only items with child items will have a connector.
    */
   connectorDiv?: HTMLElement;
+
+  /**
+   * The rotation of the connectors is transitioned using CSS. In order to avoid 360°
+   * flips, we store an accumulated rotation here.
+   */
+  lastConnectorRotation?: number;
 }
