@@ -64,6 +64,11 @@ export class Menu {
   // dragging the dragged node.
   private dragStartPosition?: math.IVec2 = null;
 
+  // This will be set to true once the left mouse button is clicked. If the mouse is moved
+  // more than DRAG_THRESHOLD pixels before the mouse button is released, this is set to
+  // false again.
+  private isClick = false;
+
   // The absolute mouse position is the position of the mouse in screen coordinates. It is
   // always updated when the mouse moves.
   private absoluteMousePosition: math.IVec2 = { x: 0, y: 0 };
@@ -99,11 +104,19 @@ export class Menu {
 
     this.container = document.getElementById('menu');
 
+    // When the mouse is moved, we store the absolute mouse position, as well as the mouse
+    // position, distance, and angle relative to the currently selected item.
     this.container.addEventListener('mousemove', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       this.absoluteMousePosition = { x: e.clientX, y: e.clientY };
+
+      if (this.isClick) {
+        this.isClick =
+          math.getDistance(this.absoluteMousePosition, this.dragStartPosition) <
+          this.DRAG_THRESHOLD;
+      }
 
       if (this.root) {
         this.relativeMousePosition = {
@@ -127,11 +140,14 @@ export class Menu {
       }
     });
 
+    // When the left mouse button is pressed, the currently hovered node becomes the
+    // dragged node.
     this.container.addEventListener('mousedown', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       this.dragStartPosition = { x: e.clientX, y: e.clientY };
+      this.isClick = true;
 
       if (this.hoveredNode) {
         this.dragNode(this.hoveredNode);
@@ -140,16 +156,16 @@ export class Menu {
       this.redraw();
     });
 
+    // When the left mouse button is released, the currently dragged node is selected.
     this.container.addEventListener('mouseup', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       this.dragStartPosition = null;
+      this.isClick = false;
 
       if (this.draggedNode) {
         this.selectNode(this.draggedNode);
-      } else if (this.hoveredNode && this.mouseDistance < this.CENTER_RADIUS) {
-        this.selectNode(this.hoveredNode);
       }
     });
   }
@@ -306,7 +322,7 @@ export class Menu {
       this.dragNode(this.hoveredNode);
     }
 
-    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS) {
+    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS && !this.isClick) {
       this.dragNode(null);
     }
 
@@ -355,11 +371,7 @@ export class Menu {
       }
 
       // If the node is dragged, move it to the mouse position.
-      if (
-        node === this.draggedNode &&
-        math.getDistance(this.absoluteMousePosition, this.dragStartPosition) >
-          this.DRAG_THRESHOLD
-      ) {
+      if (node === this.draggedNode && !this.isClick) {
         node.position = this.relativeMousePosition;
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
@@ -387,8 +399,8 @@ export class Menu {
   }
 
   /**
-   * Iterate over the selection chain and update the length (width) of all connector divs
-   * so that they connect consecutive nodes.
+   * Iterate over the selection chain and update the length (width) and rotation of all
+   * connector divs so that they connect consecutive nodes.
    */
   private updateConnectors() {
     for (let i = 0; i < this.selectionChain.length; i++) {
@@ -397,10 +409,7 @@ export class Menu {
 
       if (
         i === this.selectionChain.length - 1 &&
-        !(
-          this.selectionChain.length > 1 &&
-          this.draggedNode === this.selectionChain[this.selectionChain.length - 2]
-        )
+        !this.isParentOfActiveNode(this.draggedNode)
       ) {
         nextNode = this.draggedNode;
       }
@@ -489,9 +498,7 @@ export class Menu {
     }
 
     // Is the node the parent of the currently active node?
-    const selectedParent =
-      this.selectionChain.length > 1 &&
-      this.selectionChain[this.selectionChain.length - 2] === node;
+    const selectedParent = this.isParentOfActiveNode(node);
 
     // Now we have to position the root element of the menu at a position so that the
     // newly selected node is at the mouse position. For this, we first compute ideal
@@ -617,5 +624,19 @@ export class Menu {
       // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);
     }
+  }
+
+  /**
+   * This method returns true if the given node is the parent node of the currently
+   * selected node.
+   *
+   * @param node The potential parent node.
+   * @returns True if the given node is the parent node of the currently selected node.
+   */
+  private isParentOfActiveNode(node: INode) {
+    return (
+      this.selectionChain.length > 1 &&
+      this.selectionChain[this.selectionChain.length - 2] === node
+    );
   }
 }
