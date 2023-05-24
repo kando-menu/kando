@@ -44,7 +44,7 @@
     "sass-loader": "^13.3.0",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^3.3.3",
-    "ts-loader": "^9.4.2",
+    "ts-loader": "^9.4.3",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "typescript": "~5.0.4"
