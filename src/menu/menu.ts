@@ -425,6 +425,11 @@ export class Menu {
       }
     }
 
+    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS && !this.isClick) {
+      this.dragNode(null);
+      this.updateConnectors();
+    }
+
     if (
       this.dragStartPosition &&
       !this.draggedNode &&
