@@ -55,6 +55,14 @@ $transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
   transform: scale(0.9);
 }
 
+.node.active.hovered > .item {
+  background-color: $hovered-item-color;
+}
+
+.node.active.dragged > .item {
+  transform: scale(0.8);
+}
+
 .node.active:has(> .node.hovered) > .item {
   transform: scale(1);
   color: transparent;
