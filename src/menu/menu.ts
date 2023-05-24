@@ -272,6 +272,165 @@ export class Menu {
   }
 
   /**
+   * Selects the given node. This will either push the node to the list of selected nodes
+   * or pop the last node from the list of selected nodes if the newly selected node is
+   * the parent of the previously selected node.
+   *
+   * @param node The newly selected node.
+   */
+  private selectNode(node: INode) {
+    // Make sure to un-hover the node if it was hovered before.
+    if (node === this.hoveredNode) {
+      this.hoverNode(null);
+    }
+
+    // Make sure to un-drag the node if it was hovered before.
+    if (node === this.draggedNode) {
+      this.dragNode(null);
+    }
+
+    // If the node is already selected, do nothing.
+    if (
+      this.selectionChain.length > 0 &&
+      this.selectionChain[this.selectionChain.length - 1] === node
+    ) {
+      return;
+    }
+
+    // Is the node the parent of the currently active node?
+    const selectedParent = this.isParentOfActiveNode(node);
+
+    // Now we have to position the root element of the menu at a position so that the
+    // newly selected node is at the mouse position. For this, we first compute ideal
+    // position of the new node based on its angle and the mouse distance to the currently
+    // active node. There is the special case where we select the root node. In this case,
+    // we simply position the root element at the mouse position.
+    if (node === this.root) {
+      this.root.position = this.absoluteMousePosition;
+    } else if (selectedParent) {
+      const active = this.selectionChain[this.selectionChain.length - 1];
+      const offset = {
+        x: this.relativeMousePosition.x + active.position.x,
+        y: this.relativeMousePosition.y + active.position.y,
+      };
+
+      this.root.position = {
+        x: this.root.position.x + offset.x,
+        y: this.root.position.y + offset.y,
+      };
+    } else {
+      // Compute the ideal position of the new node. The distance to the parent node is
+      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
+      // to the parent node.
+      node.position = math.getDirection(
+        node.angle - 90,
+        Math.max(this.PARENT_DISTANCE, this.mouseDistance)
+      );
+
+      const offset = {
+        x: this.relativeMousePosition.x - node.position.x,
+        y: this.relativeMousePosition.y - node.position.y,
+      };
+
+      this.root.position = {
+        x: this.root.position.x + offset.x,
+        y: this.root.position.y + offset.y,
+      };
+    }
+
+    // If the node is the parent of the currently selected node, we have to pop the
+    // currently selected node from the list of selected nodes. If the node is a child of
+    // the currently selected node, we have to push it to the list of selected nodes.
+    if (selectedParent) {
+      this.selectionChain.pop();
+    } else {
+      this.selectionChain.push(node);
+    }
+
+    this.relativeMousePosition = { x: 0, y: 0 };
+    this.mouseDistance = 0;
+
+    // Finally update the CSS classes of all nodes according to the new selection chain
+    // and update the connectors.
+    this.updateCSSClasses();
+    this.updateConnectors();
+    this.redraw();
+  }
+
+  /**
+   * This will assign the CSS class 'dragged' to the given node's div element. It will
+   * also remove the class from the previously dragged node.
+   *
+   * @param node The node to drag. If null, the previously dragged node will be
+   *   un-dragged.
+   */
+  private dragNode(node?: INode) {
+    if (this.draggedNode === node) {
+      return;
+    }
+
+    if (this.draggedNode) {
+      this.draggedNode.itemDiv.classList.remove('dragged');
+      this.draggedNode = null;
+    }
+
+    if (node) {
+      this.draggedNode = node;
+      this.draggedNode.itemDiv.classList.add('dragged');
+    }
+  }
+
+  /**
+   * This will assign the CSS class 'hovered' to the given node's div element. It will
+   * also remove the class from the previously hovered node.
+   *
+   * @param node The node to hover. If null, the currently hovered node will be unhovered.
+   */
+  private hoverNode(node?: INode) {
+    if (this.hoveredNode === node) {
+      return;
+    }
+
+    if (this.hoveredNode) {
+      this.hoveredNode.itemDiv.classList.remove('hovered');
+      this.hoveredNode = null;
+    }
+
+    if (node) {
+      this.hoveredNode = node;
+      this.hoveredNode.itemDiv.classList.add('hovered');
+    }
+  }
+
+  /** This method updates the transformation of all nodes in the menu. */
+  private redraw() {
+    this.hoverNode(this.computeHoveredNode());
+
+    if (this.draggedNode && this.draggedNode !== this.hoveredNode) {
+      this.dragNode(this.hoveredNode);
+
+      if (!this.draggedNode) {
+        this.updateConnectors();
+      }
+    }
+
+    if (
+      this.dragStartPosition &&
+      !this.draggedNode &&
+      this.mouseDistance > this.CENTER_RADIUS &&
+      this.hoveredNode
+    ) {
+      this.dragNode(this.hoveredNode);
+    }
+
+    this.updateTransform(this.root);
+
+    if (this.draggedNode) {
+      this.updateConnectors();
+    }
+  }
+
+  /**
    * This method computes the node which is currently hovered by the mouse. This is either
    * one of the children of the currently selected item or the parent of the currently
    * selected item. The parent will be returned if the mouse pointer is either in the
@@ -312,34 +471,6 @@ export class Menu {
 
     // This should actually never happen.
     return null;
-  }
-
-  /** This method updates the transformation of all nodes in the menu. */
-  private redraw() {
-    this.hoverNode(this.computeHoveredNode());
-
-    if (this.draggedNode && this.draggedNode !== this.hoveredNode) {
-      this.dragNode(this.hoveredNode);
-
-      if (!this.draggedNode) {
-        this.updateConnectors();
-      }
-    }
-
-    if (
-      this.dragStartPosition &&
-      !this.draggedNode &&
-      this.mouseDistance > this.CENTER_RADIUS &&
-      this.hoveredNode
-    ) {
-      this.dragNode(this.hoveredNode);
-    }
-
-    this.updateTransform(this.root);
-
-    if (this.draggedNode) {
-      this.updateConnectors();
-    }
   }
 
   /**
@@ -437,137 +568,6 @@ export class Menu {
         node.connectorDiv.style.width = '0px';
       }
     }
-  }
-
-  /**
-   * This will assign the CSS class 'dragged' to the given node's div element. It will
-   * also remove the class from the previously dragged node.
-   *
-   * @param node The node to drag. If null, the previously dragged node will be
-   *   un-dragged.
-   */
-  private dragNode(node?: INode) {
-    if (this.draggedNode === node) {
-      return;
-    }
-
-    if (this.draggedNode) {
-      this.draggedNode.itemDiv.classList.remove('dragged');
-      this.draggedNode = null;
-    }
-
-    if (node) {
-      this.draggedNode = node;
-      this.draggedNode.itemDiv.classList.add('dragged');
-    }
-  }
-
-  /**
-   * This will assign the CSS class 'hovered' to the given node's div element. It will
-   * also remove the class from the previously hovered node.
-   *
-   * @param node The node to hover. If null, the currently hovered node will be unhovered.
-   */
-  private hoverNode(node?: INode) {
-    if (this.hoveredNode === node) {
-      return;
-    }
-
-    if (this.hoveredNode) {
-      this.hoveredNode.itemDiv.classList.remove('hovered');
-      this.hoveredNode = null;
-    }
-
-    if (node) {
-      this.hoveredNode = node;
-      this.hoveredNode.itemDiv.classList.add('hovered');
-    }
-  }
-
-  /**
-   * Selects the given node. This will either push the node to the list of selected nodes
-   * or pop the last node from the list of selected nodes if the newly selected node is
-   * the parent of the previously selected node.
-   *
-   * @param node The newly selected node.
-   */
-  private selectNode(node: INode) {
-    // Make sure to un-hover the node if it was hovered before.
-    if (node === this.hoveredNode) {
-      this.hoverNode(null);
-    }
-
-    // Make sure to un-drag the node if it was hovered before.
-    if (node === this.draggedNode) {
-      this.dragNode(null);
-    }
-
-    // If the node is already selected, do nothing.
-    if (
-      this.selectionChain.length > 0 &&
-      this.selectionChain[this.selectionChain.length - 1] === node
-    ) {
-      return;
-    }
-
-    // Is the node the parent of the currently active node?
-    const selectedParent = this.isParentOfActiveNode(node);
-
-    // Now we have to position the root element of the menu at a position so that the
-    // newly selected node is at the mouse position. For this, we first compute ideal
-    // position of the new node based on its angle and the mouse distance to the currently
-    // active node. There is the special case where we select the root node. In this case,
-    // we simply position the root element at the mouse position.
-    if (node === this.root) {
-      this.root.position = this.absoluteMousePosition;
-    } else if (selectedParent) {
-      const active = this.selectionChain[this.selectionChain.length - 1];
-      const offset = {
-        x: this.relativeMousePosition.x + active.position.x,
-        y: this.relativeMousePosition.y + active.position.y,
-      };
-
-      this.root.position = {
-        x: this.root.position.x + offset.x,
-        y: this.root.position.y + offset.y,
-      };
-    } else {
-      // Compute the ideal position of the new node. The distance to the parent node is
-      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
-      // to the parent node.
-      node.position = math.getDirection(
-        node.angle - 90,
-        Math.max(this.PARENT_DISTANCE, this.mouseDistance)
-      );
-
-      const offset = {
-        x: this.relativeMousePosition.x - node.position.x,
-        y: this.relativeMousePosition.y - node.position.y,
-      };
-
-      this.root.position = {
-        x: this.root.position.x + offset.x,
-        y: this.root.position.y + offset.y,
-      };
-    }
-
-    // If the node is the parent of the currently selected node, we have to pop the
-    // currently selected node from the list of selected nodes. If the node is a child of
-    // the currently selected node, we have to push it to the list of selected nodes.
-    if (selectedParent) {
-      this.selectionChain.pop();
-    } else {
-      this.selectionChain.push(node);
-    }
-
-    this.relativeMousePosition = { x: 0, y: 0 };
-    this.mouseDistance = 0;
-
-    // Finally update the CSS classes of all nodes according to the new selection chain
-    // and update the connectors.
-    this.updateCSSClasses();
-    this.updateConnectors();
-    this.redraw();
   }
 
   /**
