@@ -52,7 +52,7 @@
   "dependencies": {
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
-    "material-icons": "^1.13.6",
+    "material-icons": "^1.13.7",
     "node-addon-api": "^6.1.0"
   }
 }
