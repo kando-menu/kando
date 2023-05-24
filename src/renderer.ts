@@ -15,9 +15,14 @@ import { Menu } from './menu/menu';
 
 const menu = new Menu();
 
+menu.on('cancel', () => {
+  window.api.hideWindow();
+  menu.clear();
+});
+
 document.querySelector('#close-button').addEventListener('click', () => {
   window.api.hideWindow();
-  menu.hide();
+  menu.clear();
 });
 
 document.querySelector('#dev-tools-button').addEventListener('click', () => {

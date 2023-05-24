@@ -12,6 +12,8 @@
 import './menu.scss';
 import './theme.scss';
 
+import { EventEmitter } from 'events';
+
 import * as math from './math';
 import { INode } from './node';
 import { GestureDetection } from './gesture-detection';
@@ -37,7 +39,7 @@ import { GestureDetection } from './gesture-detection';
  * the .hovered css class. Dragged nodes will have the .dragged css class.
  */
 
-export class Menu {
+export class Menu extends EventEmitter {
   // The container is the HTML element which contains the menu. It is used to attach
   // event listeners.
   private container: HTMLElement = null;
@@ -104,6 +106,8 @@ export class Menu {
   private readonly DRAG_THRESHOLD = 5;
 
   constructor() {
+    super();
+
     window.api.log('Menu constructor');
 
     this.container = document.getElementById('menu');
@@ -170,6 +174,15 @@ export class Menu {
     this.container.addEventListener('mouseup', (event) => {
       event.preventDefault();
       event.stopPropagation();
+
+      if (
+        this.isClick &&
+        this.selectionChain.length === 1 &&
+        this.mouseDistance < this.CENTER_RADIUS
+      ) {
+        this.emit('cancel');
+        return;
+      }
 
       this.dragStartPosition = null;
       this.isClick = false;
@@ -240,9 +253,12 @@ export class Menu {
   public clear() {
     window.api.log('Menu clear');
 
+    this.gestureDetection.reset();
+
     this.container.innerHTML = '';
     this.root = null;
-
+    this.isClick = false;
+    this.dragStartPosition = null;
     this.hoveredNode = null;
     this.draggedNode = null;
     this.selectionChain = [];
@@ -415,6 +431,10 @@ export class Menu {
 
   /** This method updates the transformation of all nodes in the menu. */
   private redraw() {
+    if (!this.root) {
+      return;
+    }
+
     this.hoverNode(this.computeHoveredNode());
 
     if (this.draggedNode && this.draggedNode !== this.hoveredNode) {
@@ -462,7 +482,7 @@ export class Menu {
       if (this.selectionChain.length > 1) {
         return this.selectionChain[this.selectionChain.length - 2];
       }
-      return null;
+      return this.root;
     }
 
     // If the mouse is not in the center, check if it is in one of the children of the
@@ -559,7 +579,8 @@ export class Menu {
       // have to ensure that the dragged node is not the parent of the active node.
       if (
         i === this.selectionChain.length - 1 &&
-        !this.isParentOfActiveNode(this.draggedNode)
+        !this.isParentOfActiveNode(this.draggedNode) &&
+        this.draggedNode !== this.root
       ) {
         nextNode = this.draggedNode;
       }
