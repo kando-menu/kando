@@ -14,6 +14,7 @@ import './theme.scss';
 
 import * as math from './math';
 import { INode } from './node';
+import { GestureDetection } from './gesture-detection';
 
 /**
  * Child nodes are always placed on a circle around the parent node. Grandchild nodes are
@@ -60,9 +61,12 @@ export class Menu {
   // is the currently selected node.
   private selectionChain: Array<INode> = [];
 
+  // The gesture detection is used to detect node selections in marking mode.
+  private gestureDetection: GestureDetection = null;
+
   // The drag start position is the position where the mouse was when the user started
   // dragging the dragged node.
-  private dragStartPosition?: math.IVec2 = null;
+  private dragStartPosition: math.IVec2 = null;
 
   // This will be set to true once the left mouse button is clicked. If the mouse is moved
   // more than DRAG_THRESHOLD pixels before the mouse button is released, this is set to
@@ -91,8 +95,8 @@ export class Menu {
   // number is the number of children of each child node and so on.
   private readonly CHILDREN_PER_LEVEL = [8, 5, 5];
 
-  // The following constants define the layout of the menu. They are all in pixels and should
-  // be configurable in the future.
+  // The following constants define the layout of the menu. They are all in pixels and
+  // should be configurable in the future.
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
   private readonly PARENT_DISTANCE = 200;
@@ -104,49 +108,55 @@ export class Menu {
 
     this.container = document.getElementById('menu');
 
+    // This will be fed with motion events. If the pointer makes a turn or is stationary
+    // for some time, a selection event will be emitted.
+    this.gestureDetection = new GestureDetection();
+    this.gestureDetection.on('selection', (coords: math.IVec2) => {
+      // If there is a node currently dragged, select it. We only select nodes which have
+      // children in marking mode in order to prevent unwanted actions. This way the user
+      // can always check if the correct action was selected before executing it.
+      if (this.draggedNode && this.draggedNode.children.length > 0) {
+        // The selection event reports where the selection most likely occurred (e.g. the
+        // position where the mouse pointer actually made a turn). We pretend that the
+        // mouse pointer is currently at that position, so that the newly selected node
+        // will be moved to this position.
+        this.storeMousePosition(coords);
+        this.selectNode(this.draggedNode);
+      }
+    });
+
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.
-    this.container.addEventListener('mousemove', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    this.container.addEventListener('mousemove', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-      this.absoluteMousePosition = { x: e.clientX, y: e.clientY };
+      this.storeMousePosition({ x: event.clientX, y: event.clientY });
 
+      // If the mouse move too much, the current mousedown - mouseup event is not
+      // considered to be a click anymore.
       if (this.isClick) {
         this.isClick =
           math.getDistance(this.absoluteMousePosition, this.dragStartPosition) <
           this.DRAG_THRESHOLD;
       }
 
-      if (this.root) {
-        this.relativeMousePosition = {
-          x: e.clientX - this.root.position.x,
-          y: e.clientY - this.root.position.y,
-        };
-
-        for (let i = 1; i < this.selectionChain.length; ++i) {
-          const node = this.selectionChain[i];
-          this.relativeMousePosition.x -= node.position.x;
-          this.relativeMousePosition.y -= node.position.y;
-        }
-
-        this.mouseDistance = math.getLength(this.relativeMousePosition);
-        this.mouseAngle = math.getAngle(this.relativeMousePosition);
-
-        // Turn 0° up.
-        this.mouseAngle = (this.mouseAngle + 90) % 360;
-
-        this.redraw();
+      // If the mouse pointer is held down, forward the motion event to the gesture
+      // selection.
+      if (this.dragStartPosition) {
+        this.gestureDetection.onMotionEvent(this.absoluteMousePosition);
       }
+
+      this.redraw();
     });
 
     // When the left mouse button is pressed, the currently hovered node becomes the
     // dragged node.
-    this.container.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    this.container.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-      this.dragStartPosition = { x: e.clientX, y: e.clientY };
+      this.dragStartPosition = { x: event.clientX, y: event.clientY };
       this.isClick = true;
 
       if (this.hoveredNode) {
@@ -157,12 +167,13 @@ export class Menu {
     });
 
     // When the left mouse button is released, the currently dragged node is selected.
-    this.container.addEventListener('mouseup', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    this.container.addEventListener('mouseup', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
       this.dragStartPosition = null;
       this.isClick = false;
+      this.gestureDetection.reset();
 
       if (this.draggedNode) {
         this.selectNode(this.draggedNode);
@@ -284,7 +295,7 @@ export class Menu {
       this.hoverNode(null);
     }
 
-    // Make sure to un-drag the node if it was hovered before.
+    // Make sure to un-drag the node if it was dragged before.
     if (node === this.draggedNode) {
       this.dragNode(null);
     }
@@ -412,6 +423,11 @@ export class Menu {
       if (!this.draggedNode) {
         this.updateConnectors();
       }
+    }
+
+    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS && !this.isClick) {
+      this.dragNode(null);
+      this.updateConnectors();
     }
 
     if (
@@ -602,6 +618,35 @@ export class Menu {
           child.itemDiv.className = 'node grandchild';
         }
       }
+    }
+  }
+
+  /**
+   * Store the absolute mouse position, as well as the mouse position, distance, and angle
+   * relative to the currently selected item.
+   *
+   * @param position The absolute mouse position.
+   */
+  private storeMousePosition(position: math.IVec2) {
+    this.absoluteMousePosition = position;
+
+    if (this.root) {
+      this.relativeMousePosition = {
+        x: position.x - this.root.position.x,
+        y: position.y - this.root.position.y,
+      };
+
+      for (let i = 1; i < this.selectionChain.length; ++i) {
+        const node = this.selectionChain[i];
+        this.relativeMousePosition.x -= node.position.x;
+        this.relativeMousePosition.y -= node.position.y;
+      }
+
+      this.mouseDistance = math.getLength(this.relativeMousePosition);
+      this.mouseAngle = math.getAngle(this.relativeMousePosition);
+
+      // Turn 0° up.
+      this.mouseAngle = (this.mouseAngle + 90) % 360;
     }
   }
 
