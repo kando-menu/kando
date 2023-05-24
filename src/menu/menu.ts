@@ -320,10 +320,10 @@ export class Menu {
 
     if (this.draggedNode && this.draggedNode !== this.hoveredNode) {
       this.dragNode(this.hoveredNode);
-    }
 
-    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS && !this.isClick) {
-      this.dragNode(null);
+      if (!this.draggedNode) {
+        this.updateConnectors();
+      }
     }
 
     if (
