@@ -13,7 +13,10 @@ import './index.scss';
 
 import { Menu } from './menu/menu';
 
-const menu = new Menu();
+const container = document.getElementById('menu');
+container.classList.add('ken-do');
+container.classList.add('hidden');
+const menu = new Menu(container);
 
 menu.on('cancel', () => {
   window.api.hideWindow();

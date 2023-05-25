@@ -10,17 +10,19 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
 */
 
-.node {
-  position: absolute;
-  pointer-events: none;
-}
+.ken-do {
+  .node {
+    position: absolute;
+    pointer-events: none;
+  }
 
-.item {
-  position: absolute;
-  border-radius: 100%;
-}
+  .item {
+    position: absolute;
+    border-radius: 100%;
+  }
 
-// Hide deeper levels than grandchildren.
-.node.grandchild > .node {
-  display: none;
+  // Hide deeper levels than grandchildren.
+  .node.grandchild > .node {
+    display: none;
+  }
 }

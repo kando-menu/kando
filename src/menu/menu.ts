@@ -108,12 +108,12 @@ export class Menu extends EventEmitter {
   private readonly GRANDCHILD_DISTANCE = 25;
   private readonly DRAG_THRESHOLD = 5;
 
-  constructor() {
+  constructor(container: HTMLElement) {
     super();
 
     window.api.log('Menu constructor');
 
-    this.container = document.getElementById('menu');
+    this.container = container;
 
     // This will be fed with motion events. If the pointer makes a turn or is stationary
     // for some time, a selection event will be emitted.

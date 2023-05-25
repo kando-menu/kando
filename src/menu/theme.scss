@@ -13,144 +13,146 @@ SPDX-License-Identifier: MIT
 $material-icons-font-path: '~material-icons/iconfont/';
 @import 'material-icons/iconfont/round.scss';
 
-$root-size: 100px;
-$child-size: 50px;
-$grandchild-size: 15px;
-$connector-size: 10px;
-$item-color: rgb(255, 255, 255);
-$icon-color: rgb(66, 66, 66);
-$hovered-item-color: rgb(255, 200, 200);
-$border-color: rgb(109, 109, 109);
-$connector-color: rgb(109, 109, 109);
+.ken-do {
+  $root-size: 100px;
+  $child-size: 50px;
+  $grandchild-size: 15px;
+  $connector-size: 10px;
+  $item-color: rgb(255, 255, 255);
+  $icon-color: rgb(66, 66, 66);
+  $hovered-item-color: rgb(255, 200, 200);
+  $border-color: rgb(109, 109, 109);
+  $connector-color: rgb(109, 109, 109);
 
-$transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
-$opacity-transition: opacity 250ms ease;
+  $transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+  $opacity-transition: opacity 250ms ease;
 
-.node {
-  transition: $transition;
-}
+  .node {
+    transition: $transition;
+  }
 
-.item {
-  transition: $transition;
-  border: 1px solid $border-color;
-  color: transparent;
+  .item {
+    transition: $transition;
+    border: 1px solid $border-color;
+    color: transparent;
 
-  // Center text.
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-}
+    // Center text.
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+  }
 
-// Active item.
-.node.active > .item {
-  top: calc(-1 * $root-size / 2);
-  left: calc(-1 * $root-size / 2);
-  width: $root-size;
-  height: $root-size;
-  background-color: $item-color;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-  color: $icon-color;
-  font-size: 80px;
+  // Active item.
+  .node.active > .item {
+    top: calc(-1 * $root-size / 2);
+    left: calc(-1 * $root-size / 2);
+    width: $root-size;
+    height: $root-size;
+    background-color: $item-color;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    color: $icon-color;
+    font-size: 80px;
 
-  transform: scale(0.9);
-}
+    transform: scale(0.9);
+  }
 
-.node.active.hovered > .item {
-  background-color: $hovered-item-color;
-}
+  .node.active.hovered > .item {
+    background-color: $hovered-item-color;
+  }
 
-.node.active.dragged > .item {
-  transform: scale(0.8);
-}
+  .node.active.dragged > .item {
+    transform: scale(0.8);
+  }
 
-.node.active:has(> .node.hovered) > .item {
-  transform: scale(1);
-  color: transparent;
-}
+  .node.active:has(> .node.hovered) > .item {
+    transform: scale(1);
+    color: transparent;
+  }
 
-// Child items.
-.node.parent > .item,
-.node.child > .item {
-  top: calc(-1 * $child-size / 2);
-  left: calc(-1 * $child-size / 2);
-  width: $child-size;
-  height: $child-size;
-  background-color: $item-color;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  color: $icon-color;
+  // Child items.
+  .node.parent > .item,
+  .node.child > .item {
+    top: calc(-1 * $child-size / 2);
+    left: calc(-1 * $child-size / 2);
+    width: $child-size;
+    height: $child-size;
+    background-color: $item-color;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    color: $icon-color;
 
-  transform: scale(1);
-}
+    transform: scale(1);
+  }
 
-.node.parent.hovered > .item,
-.node.child.hovered > .item {
-  transform: scale(1.1);
-  background-color: $hovered-item-color;
-}
+  .node.parent.hovered > .item,
+  .node.child.hovered > .item {
+    transform: scale(1.1);
+    background-color: $hovered-item-color;
+  }
 
-.node.parent.dragged > .item,
-.node.child.dragged > .item {
-  transform: scale(1);
-}
+  .node.parent.dragged > .item,
+  .node.child.dragged > .item {
+    transform: scale(1);
+  }
 
-.node.dragged {
-  transition: none;
-}
+  .node.dragged {
+    transition: none;
+  }
 
-// Grandchild items.
-.node.grandchild > .item {
-  top: calc(-1 * $grandchild-size / 2);
-  left: calc(-1 * $grandchild-size / 2);
-  width: $grandchild-size;
-  height: $grandchild-size;
-  background-color: $border-color;
-  z-index: 0;
-}
+  // Grandchild items.
+  .node.grandchild > .item {
+    top: calc(-1 * $grandchild-size / 2);
+    left: calc(-1 * $grandchild-size / 2);
+    width: $grandchild-size;
+    height: $grandchild-size;
+    background-color: $border-color;
+    z-index: 0;
+  }
 
-// Connectors.
-.connector {
-  transition: $transition;
-  position: absolute;
-  width: 0px;
-  height: $connector-size;
-  background-color: $connector-color;
-  left: 0;
-  top: calc(-1 * $connector-size / 2);
-  transform-origin: 0% 50%;
-  z-index: -1;
-  display: none;
-}
+  // Connectors.
+  .connector {
+    transition: $transition;
+    position: absolute;
+    width: 0px;
+    height: $connector-size;
+    background-color: $connector-color;
+    left: 0;
+    top: calc(-1 * $connector-size / 2);
+    transform-origin: 0% 50%;
+    z-index: -1;
+    display: none;
+  }
 
-.node.parent > .connector,
-.node.active > .connector,
-.node.active:has(> .node.dragged) > .connector {
-  display: block;
-}
+  .node.parent > .connector,
+  .node.active > .connector,
+  .node.active:has(> .node.dragged) > .connector {
+    display: block;
+  }
 
-.node.active:has(> .node.dragged) > .connector {
-  transition: none;
-}
+  .node.active:has(> .node.dragged) > .connector {
+    transition: none;
+  }
 
-// Center text
-.center-text {
-  position: absolute;
-  width: $root-size;
-  height: $root-size;
-  top: calc(-1 * $root-size / 2);
-  left: calc(-1 * $root-size / 2);
-  color: $icon-color;
-  transition: $opacity-transition;
-  z-index: 3;
+  // Center text
+  .center-text {
+    position: absolute;
+    width: $root-size;
+    height: $root-size;
+    top: calc(-1 * $root-size / 2);
+    left: calc(-1 * $root-size / 2);
+    color: $icon-color;
+    transition: $opacity-transition;
+    z-index: 3;
 
-  // Center text.
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+    // Center text.
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
 
-  &.hidden {
-    opacity: 0;
+    &.hidden {
+      opacity: 0;
+    }
   }
 }
