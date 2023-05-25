@@ -20,7 +20,14 @@ export class KenDoApp {
   // The backend is responsible for all the system interaction. It is implemented
   // differently for each platform.
   private backend: Backend = getBackend();
+
+  // The window is the main window of the application. It is a transparent window
+  // which covers the whole screen. It is always on top and has no frame. It is used
+  // to display the pie menu.
   private window: BrowserWindow = null;
+
+  // This timeout is used to hide the window after the fade-out animation.
+  private hideTimeout: NodeJS.Timeout = null;
 
   public async init() {
     await this.backend.init();
@@ -78,8 +85,16 @@ export class KenDoApp {
       this.window.webContents.openDevTools();
     });
 
+    // We do not hide the window immediately when the user clicks on an item. Instead
+    // we wait for the fade-out animation to finish. We also make the window click-through
+    // by ignoring any input events during the fade-out animation.
     ipcMain.on('hide-window', () => {
-      this.window.hide();
+      this.window.setFocusable(false);
+      this.window.setIgnoreMouseEvents(true);
+      this.hideTimeout = setTimeout(() => {
+        this.window.hide();
+        this.hideTimeout = null;
+      }, 150);
     });
 
     ipcMain.on('item-selected', () => {
@@ -106,8 +121,15 @@ export class KenDoApp {
   private showMenu() {
     Promise.all([this.backend.getFocusedWindow(), this.backend.getPointer()])
       .then(([window, pointer]) => {
+        // Abort any ongoing hide animation.
+        if (this.hideTimeout) {
+          clearTimeout(this.hideTimeout);
+        }
+
         this.window.webContents.send('set-window-info', window);
         this.window.webContents.send('show-menu', pointer);
+        this.window.setFocusable(true);
+        this.window.setIgnoreMouseEvents(false);
         this.window.show();
       })
       .catch((err) => {
