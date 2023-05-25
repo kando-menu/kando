@@ -11,7 +11,7 @@
 
 export interface IElectronAPI {
   loadPreferences: () => void;
-  hideWindow: () => void;
+  hideWindow: (delay: number) => void;
   showDevTools: () => void;
   simulateShortcut: () => void;
   itemSelected: () => void;

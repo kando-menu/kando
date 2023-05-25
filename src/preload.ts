@@ -13,8 +13,8 @@ import { ipcRenderer, contextBridge } from 'electron';
 
 // Expose a bridged API to the renderer process.
 contextBridge.exposeInMainWorld('api', {
-  hideWindow: function () {
-    ipcRenderer.send('hide-window');
+  hideWindow: function (delay: number) {
+    ipcRenderer.send('hide-window', delay);
   },
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');

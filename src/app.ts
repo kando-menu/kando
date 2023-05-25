@@ -88,13 +88,13 @@ export class KenDoApp {
     // We do not hide the window immediately when the user clicks on an item. Instead
     // we wait for the fade-out animation to finish. We also make the window click-through
     // by ignoring any input events during the fade-out animation.
-    ipcMain.on('hide-window', () => {
+    ipcMain.on('hide-window', (event, delay) => {
       this.window.setFocusable(false);
       this.window.setIgnoreMouseEvents(true);
       this.hideTimeout = setTimeout(() => {
         this.window.hide();
         this.hideTimeout = null;
-      }, 150);
+      }, delay);
     });
 
     ipcMain.on('item-selected', () => {

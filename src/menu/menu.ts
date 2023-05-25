@@ -263,6 +263,8 @@ export class Menu extends EventEmitter {
   public clear() {
     window.api.log('Menu clear');
 
+    this.container.className = 'ken-do container hidden';
+
     this.gestureDetection.reset();
 
     this.container.innerHTML = '';
@@ -400,6 +402,11 @@ export class Menu extends EventEmitter {
     this.updateCSSClasses();
     this.updateConnectors();
     this.redraw();
+
+    if (node.children.length === 0) {
+      this.container.classList.add('selected');
+      this.emit('select');
+    }
   }
 
   /**

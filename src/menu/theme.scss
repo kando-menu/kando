@@ -50,7 +50,13 @@ $material-icons-font-path: '~material-icons/iconfont/';
 
   // The selected leaf node is scaled up to show that it has been selected.
   &.hidden .node.active:not(:has(.node)) > .item {
-    transform: scale(1.2) !important;
+    transform: scale(1) !important;
+  }
+
+  // We want to delay the transition of the selected leaf node to leave time for
+  // the position transition.
+  &.hidden.selected .node.active:not(:has(.node)) > .item {
+    transition-delay: 100ms;
   }
 
   // Active item.

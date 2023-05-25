@@ -17,6 +17,12 @@ SPDX-License-Identifier: MIT
     &.hidden {
       opacity: 0;
     }
+
+    // We want to delay the fade-out animation if a node is selected. Else the
+    // selected node would disappear before the position transition is finished.
+    &.selected {
+      transition-delay: 150ms;
+    }
   }
 
   .node {
