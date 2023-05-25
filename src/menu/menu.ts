@@ -242,14 +242,21 @@ export class Menu extends EventEmitter {
 
     addChildren(this.root, 0);
 
-    // Multiply all numbers in CHILDREN_PER_LEVEL by each other.
+    // Print some statistics.
     const count = this.CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
     window.api.log(`Created ${count} children!`);
 
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
-
     this.selectNode(this.root);
+
+    // Finally, show the menu.
+    this.container.classList.remove('hidden');
+  }
+
+  /** Hides the menu. */
+  public hide() {
+    this.container.classList.add('hidden');
   }
 
   /** Removes all DOM elements from the menu and resets the root node. */

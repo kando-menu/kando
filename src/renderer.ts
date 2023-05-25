@@ -16,16 +16,17 @@ import { Menu } from './menu/menu';
 const container = document.getElementById('menu');
 container.classList.add('ken-do');
 container.classList.add('hidden');
+container.classList.add('container');
 const menu = new Menu(container);
 
 menu.on('cancel', () => {
   window.api.hideWindow();
-  menu.clear();
+  menu.hide();
 });
 
 document.querySelector('#close-button').addEventListener('click', () => {
   window.api.hideWindow();
-  menu.clear();
+  menu.hide();
 });
 
 document.querySelector('#dev-tools-button').addEventListener('click', () => {
@@ -39,14 +40,14 @@ document.querySelector('#shortcut-button').addEventListener('click', () => {
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
     window.api.hideWindow();
-    menu.clear();
+    menu.hide();
   }
 });
 
 document.addEventListener('mouseup', (ev) => {
   if (ev.button === 2) {
     window.api.hideWindow();
-    menu.clear();
+    menu.hide();
   }
 });
 
