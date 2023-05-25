@@ -63,6 +63,9 @@ export class Menu extends EventEmitter {
   // is the currently selected node.
   private selectionChain: Array<INode> = [];
 
+  // This shows the name of the currently hovered child on the center item.
+  private centerText: HTMLElement = null;
+
   // The gesture detection is used to detect node selections in marking mode.
   private gestureDetection: GestureDetection = null;
 
@@ -95,7 +98,7 @@ export class Menu extends EventEmitter {
   // This is currently used to create the test menu. It defines the number of children
   // per level. The first number is the number of children of the root node, the second
   // number is the number of children of each child node and so on.
-  private readonly CHILDREN_PER_LEVEL = [8, 5, 5];
+  private readonly CHILDREN_PER_LEVEL = [8, 7, 7];
 
   // The following constants define the layout of the menu. They are all in pixels and
   // should be configurable in the future.
@@ -206,7 +209,7 @@ export class Menu extends EventEmitter {
     this.absoluteMousePosition = { x: position.x, y: position.y };
 
     this.root = {
-      name: 'Root',
+      name: 'Node',
       icon: 'open_with',
       children: [],
     };
@@ -227,7 +230,7 @@ export class Menu extends EventEmitter {
         parent.children = [];
         for (let i = 0; i < this.CHILDREN_PER_LEVEL[level]; ++i) {
           const node: INode = {
-            name: `Item ${level}.${i}`,
+            name: `${parent.name} ${i}`,
             icon: TEST_ICONS[i % TEST_ICONS.length],
             children: [],
           };
@@ -257,6 +260,7 @@ export class Menu extends EventEmitter {
 
     this.container.innerHTML = '';
     this.root = null;
+    this.centerText = null;
     this.isClick = false;
     this.dragStartPosition = null;
     this.hoveredNode = null;
@@ -295,6 +299,13 @@ export class Menu extends EventEmitter {
       for (const child of node.children) {
         this.createNodeTree(child, node.itemDiv);
       }
+    }
+
+    if (node === this.root) {
+      this.centerText = document.createElement('div');
+      this.centerText.classList.add('center-text');
+      this.centerText.classList.add('hidden');
+      node.itemDiv.appendChild(this.centerText);
     }
   }
 
@@ -435,7 +446,23 @@ export class Menu extends EventEmitter {
       return;
     }
 
-    this.hoverNode(this.computeHoveredNode());
+    const newHoveredNode = this.computeHoveredNode();
+
+    if (newHoveredNode !== this.hoveredNode) {
+      this.hoverNode(newHoveredNode);
+
+      if (this.isParentOfActiveNode(newHoveredNode) || newHoveredNode === this.root) {
+        this.centerText.classList.add('hidden');
+      } else {
+        this.centerText.innerText = newHoveredNode.name;
+        this.centerText.classList.remove('hidden');
+
+        const position = this.getActiveNodePosition();
+        position.x -= this.root.position.x;
+        position.y -= this.root.position.y;
+        this.centerText.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      }
+    }
 
     if (this.draggedNode && this.draggedNode !== this.hoveredNode) {
       this.dragNode(this.hoveredNode);
@@ -652,16 +679,11 @@ export class Menu extends EventEmitter {
     this.absoluteMousePosition = position;
 
     if (this.root) {
+      const activeNodePosition = this.getActiveNodePosition();
       this.relativeMousePosition = {
-        x: position.x - this.root.position.x,
-        y: position.y - this.root.position.y,
+        x: position.x - activeNodePosition.x,
+        y: position.y - activeNodePosition.y,
       };
-
-      for (let i = 1; i < this.selectionChain.length; ++i) {
-        const node = this.selectionChain[i];
-        this.relativeMousePosition.x -= node.position.x;
-        this.relativeMousePosition.y -= node.position.y;
-      }
 
       this.mouseDistance = math.getLength(this.relativeMousePosition);
       this.mouseAngle = math.getAngle(this.relativeMousePosition);
@@ -717,5 +739,25 @@ export class Menu extends EventEmitter {
       this.selectionChain.length > 1 &&
       this.selectionChain[this.selectionChain.length - 2] === node
     );
+  }
+
+  /**
+   * Computes the absolute position of the currently selected menu node.
+   *
+   * @returns The position of the currently active node.
+   */
+  private getActiveNodePosition() {
+    const position = {
+      x: this.root.position.x,
+      y: this.root.position.y,
+    };
+
+    for (let i = 1; i < this.selectionChain.length; ++i) {
+      const node = this.selectionChain[i];
+      position.x += node.position.x;
+      position.y += node.position.y;
+    }
+
+    return position;
   }
 }
