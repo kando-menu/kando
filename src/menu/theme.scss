@@ -24,6 +24,7 @@ $border-color: rgb(109, 109, 109);
 $connector-color: rgb(109, 109, 109);
 
 $transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+$opacity-transition: opacity 250ms ease;
 
 .node {
   transition: $transition;
@@ -130,4 +131,26 @@ $transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
 
 .node.active:has(> .node.dragged) > .connector {
   transition: none;
+}
+
+// Center text
+.center-text {
+  position: absolute;
+  width: $root-size;
+  height: $root-size;
+  top: calc(-1 * $root-size / 2);
+  left: calc(-1 * $root-size / 2);
+  color: $icon-color;
+  transition: $opacity-transition;
+  z-index: 3;
+
+  // Center text.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+
+  &.hidden {
+    opacity: 0;
+  }
 }
