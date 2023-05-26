@@ -17,28 +17,43 @@ SPDX-License-Identifier: MIT
     <title>Ken-Do</title>
   </head>
 
-  <body>
-    <div id="menu"></div>
+  <body class="hidden">
+    <div id="menu-container"></div>
 
-    <div class="intro">
-      <h1>Welcome to Ken-Do!</h1>
+    <div id="show-editor-button" class="editor-circle-button hidden">
+      <i class="material-icons-round">info</i>
+    </div>
+
+    <div id="editor-left">
+      <div id="hide-editor-button" class="editor-circle-button">
+        <i class="material-icons-round">close</i>
+      </div>
+
+      <h2>Welcome to Ken Do.</h2>
       <p>
-        You just opened the prototype's test window. Below are three buttons which you can
-        use to interact with the window. The first one closes the window, the second one
-        opens the dev tools and the third one simulates a hard-coded shortcut.
+        This prototype is not yet a functional menu, but you can already test the
+        different interactions modes!
       </p>
+      <ul>
+        <li>Clicking inside an item's wedge will select the item.</li>
+        <li>Clicking in the center will navigate back one level.</li>
+        <li>
+          Drag over an item to enter marking mode. If you pause the pointer movement or
+          make a turn, the currently dragged item will be selected.
+        </li>
+        <li>
+          Close the menu by pressing <code>ESC</code> or by clicking on the root item's
+          center.
+        </li>
+      </ul>
 
-      <input type="button" id="close-button" value="Close" />
-      <input type="button" id="dev-tools-button" value="Show Dev Tools" />
-      <input type="button" id="shortcut-button" value="Simulate Shortcut" />
+      <div id="dev-tools-button" class="editor-circle-button">
+        <i class="material-icons-round">code</i> Show Developer Tools
+      </div>
 
-      <p>
-        You can already test some limited interaction with the menu. Close this window by
-        pressing <code>ESC</code>.
-      </p>
-
-      <p>Window Class: <span id="window-class"></span></p>
-      <p>Window Name: <span id="window-name"></span></p>
+      <div id="shortcut-button" class="editor-circle-button">
+        <i class="material-icons-round">keyboard</i> Simulate a Shortcut
+      </div>
     </div>
   </body>
 </html>

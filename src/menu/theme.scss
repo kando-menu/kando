@@ -19,7 +19,7 @@ $material-icons-font-path: '~material-icons/iconfont/';
   $grandchild-size: 15px;
   $connector-size: 10px;
   $item-color: rgb(255, 255, 255);
-  $icon-color: rgb(66, 66, 66);
+  $text-color: rgb(66, 66, 66);
   $hovered-item-color: rgb(255, 200, 200);
   $border-color: rgb(109, 109, 109);
   $connector-color: rgb(109, 109, 109);
@@ -67,7 +67,7 @@ $material-icons-font-path: '~material-icons/iconfont/';
     height: $root-size;
     background-color: $item-color;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-    color: $icon-color;
+    color: $text-color;
     font-size: 80px;
 
     transform: scale(0.9);
@@ -96,7 +96,7 @@ $material-icons-font-path: '~material-icons/iconfont/';
     background-color: $item-color;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
     z-index: 1;
-    color: $icon-color;
+    color: $text-color;
 
     transform: scale(1);
   }
@@ -157,7 +157,7 @@ $material-icons-font-path: '~material-icons/iconfont/';
     height: $root-size;
     top: calc(-1 * $root-size / 2);
     left: calc(-1 * $root-size / 2);
-    color: $icon-color;
+    color: $text-color;
     transition: $text-opacity-transition;
     z-index: 3;
 

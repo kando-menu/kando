@@ -11,18 +11,16 @@ SPDX-License-Identifier: MIT
 */
 
 .ken-do {
-  &.container {
-    transition: opacity 150ms ease;
+  transition: opacity 150ms ease;
 
-    &.hidden {
-      opacity: 0;
-    }
+  &.hidden {
+    opacity: 0;
+  }
 
-    // We want to delay the fade-out animation if a node is selected. Else the
-    // selected node would disappear before the position transition is finished.
-    &.selected {
-      transition-delay: 150ms;
-    }
+  // We want to delay the fade-out animation if a node is selected. Else the
+  // selected node would disappear before the position transition is finished.
+  &.selected {
+    transition-delay: 150ms;
   }
 
   .node {

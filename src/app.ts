@@ -126,7 +126,8 @@ export class KenDoApp {
           clearTimeout(this.hideTimeout);
         }
 
-        this.window.webContents.send('set-window-info', window);
+        console.log('Currently focused window: ' + window.wmClass);
+
         this.window.webContents.send('show-menu', pointer);
         this.window.setFocusable(true);
         this.window.setIgnoreMouseEvents(false);
