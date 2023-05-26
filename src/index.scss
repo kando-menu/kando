@@ -57,6 +57,7 @@ body.hidden #editor-left {
   left: 10px;
   top: 10px;
   background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
 
   &:hover {
     background-color: rgba(50, 50, 50, 0.7);
@@ -79,7 +80,6 @@ body.hidden #show-editor-button {
   min-width: 40px;
   height: 40px;
   background-color: rgba(50, 50, 50, 0.7);
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
   color: white;
   border-radius: 20px;
   transition: all 150ms ease;
