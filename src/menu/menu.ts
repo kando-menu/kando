@@ -244,7 +244,7 @@ export class Menu extends EventEmitter {
 
     // Print some statistics.
     const count = this.CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
-    window.api.log(`Created ${count} children!`);
+    window.api.log(`Created ${count} menu nodes!`);
 
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
@@ -261,9 +261,7 @@ export class Menu extends EventEmitter {
 
   /** Removes all DOM elements from the menu and resets the root node. */
   public clear() {
-    window.api.log('Menu clear');
-
-    this.container.className = 'ken-do container hidden';
+    this.container.className = 'ken-do hidden';
 
     this.gestureDetection.reset();
 
