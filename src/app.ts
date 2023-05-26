@@ -31,7 +31,7 @@ export class KenDoApp {
 
   public async init() {
     await this.backend.init();
-    await this.backend.bindShortcut('Shift+CommandOrControl+K', () => {
+    await this.backend.bindShortcut('CommandOrControl+Space', () => {
       this.showMenu();
     });
 
