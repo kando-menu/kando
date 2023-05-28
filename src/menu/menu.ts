@@ -68,31 +68,35 @@ export class Menu extends EventEmitter {
   // The gesture detection is used to detect node selections in marking mode.
   private gestureDetection: GestureDetection = null;
 
-  // The drag start position is the position where the mouse was when the user started
-  // dragging the dragged node.
-  private dragStartPosition: math.IVec2 = null;
+  // This object contains all information on the current mouse state. Is it updated
+  // whenever the mouse is moved or a button is pressed.
+  private mouse = {
+    // This will be set to true once the left mouse button is clicked. If the mouse is
+    // moved more than DRAG_THRESHOLD pixels before the mouse button is released, this is
+    // set to false again.
+    isClick: false,
 
-  // This will be set to true once the left mouse button is clicked. If the mouse is moved
-  // more than DRAG_THRESHOLD pixels before the mouse button is released, this is set to
-  // false again.
-  private isClick = false;
+    // The absolute mouse position is the position of the mouse in screen coordinates. It
+    // is always updated when the mouse moves.
+    absolutePosition: { x: 0, y: 0 },
 
-  // The absolute mouse position is the position of the mouse in screen coordinates. It is
-  // always updated when the mouse moves.
-  private absoluteMousePosition: math.IVec2 = { x: 0, y: 0 };
+    // The relative mouse position is the position of the mouse relative to the currently
+    // selected node. It is always updated when the mouse moves.
+    relativePosition: { x: 0, y: 0 },
 
-  // The relative mouse position is the position of the mouse relative to the currently
-  // selected node. It is always updated when the mouse moves.
-  private relativeMousePosition: math.IVec2 = { x: 0, y: 0 };
+    // The mouse angle is the angle of the mouse relative to the currently selected node.
+    // 0° is up, 90° is right, 180° is down and 270° is left. It is always updated when
+    // the mouse moves.
+    angle: 0,
 
-  // The mouse angle is the angle of the mouse relative to the currently selected node.
-  // 0° is up, 90° is right, 180° is down and 270° is left. It is always updated when
-  // the mouse moves.
-  private mouseAngle = 0;
+    // The mouse distance is the distance of the mouse to the center of the currently
+    // selected node. It is always updated when the mouse moves.
+    distance: 0,
 
-  // The mouse distance is the distance of the mouse to the center of the currently
-  // selected node. It is always updated when the mouse moves.
-  private mouseDistance = 0;
+    // The drag start position is the position where the mouse was when the user started
+    // dragging the dragged node.
+    dragStartPosition: <math.IVec2>null,
+  };
 
   // This is currently used to create the test menu. It defines the number of children
   // per level. The first number is the number of children of the root node, the second
@@ -126,7 +130,7 @@ export class Menu extends EventEmitter {
         // position where the mouse pointer actually made a turn). We pretend that the
         // mouse pointer is currently at that position, so that the newly selected node
         // will be moved to this position.
-        this.storeMousePosition(coords);
+        this.updateMouseInfo(coords);
         this.selectNode(this.draggedNode);
       }
     });
@@ -137,20 +141,22 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      this.storeMousePosition({ x: event.clientX, y: event.clientY });
+      this.updateMouseInfo({ x: event.clientX, y: event.clientY });
 
       // If the mouse move too much, the current mousedown - mouseup event is not
       // considered to be a click anymore.
-      if (this.isClick) {
-        this.isClick =
-          math.getDistance(this.absoluteMousePosition, this.dragStartPosition) <
+      if (this.mouse.isClick) {
+        this.mouse.isClick =
+          math.getDistance(this.mouse.absolutePosition, this.mouse.dragStartPosition) <
           this.DRAG_THRESHOLD;
       }
 
       // If the mouse pointer is held down, forward the motion event to the gesture
       // selection.
-      if (this.dragStartPosition) {
-        this.gestureDetection.onMotionEvent(this.absoluteMousePosition);
+      if (this.mouse.dragStartPosition) {
+        this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
+      } else if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
       }
 
       this.redraw();
@@ -162,8 +168,9 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      this.dragStartPosition = { x: event.clientX, y: event.clientY };
-      this.isClick = true;
+      this.mouse.dragStartPosition = { x: event.clientX, y: event.clientY };
+      this.mouse.isClick = true;
+      this.gestureDetection.reset();
 
       if (this.hoveredNode) {
         this.dragNode(this.hoveredNode);
@@ -178,16 +185,16 @@ export class Menu extends EventEmitter {
       event.stopPropagation();
 
       if (
-        this.isClick &&
+        this.mouse.isClick &&
         this.selectionChain.length === 1 &&
-        this.mouseDistance < this.CENTER_RADIUS
+        this.mouse.distance < this.CENTER_RADIUS
       ) {
         this.emit('cancel');
         return;
       }
 
-      this.dragStartPosition = null;
-      this.isClick = false;
+      this.mouse.dragStartPosition = null;
+      this.mouse.isClick = false;
       this.gestureDetection.reset();
 
       if (this.draggedNode) {
@@ -204,8 +211,8 @@ export class Menu extends EventEmitter {
   public show(position: math.IVec2) {
     this.clear();
 
-    this.relativeMousePosition = { x: 0, y: 0 };
-    this.absoluteMousePosition = { x: position.x, y: position.y };
+    this.mouse.relativePosition = { x: 0, y: 0 };
+    this.mouse.absolutePosition = { x: position.x, y: position.y };
 
     this.root = {
       name: 'Node',
@@ -267,8 +274,8 @@ export class Menu extends EventEmitter {
     this.container.innerHTML = '';
     this.root = null;
     this.centerText = null;
-    this.isClick = false;
-    this.dragStartPosition = null;
+    this.mouse.isClick = false;
+    this.mouse.dragStartPosition = null;
     this.hoveredNode = null;
     this.draggedNode = null;
     this.selectionChain = [];
@@ -350,12 +357,12 @@ export class Menu extends EventEmitter {
     // active node. There is the special case where we select the root node. In this case,
     // we simply position the root element at the mouse position.
     if (node === this.root) {
-      this.root.position = this.absoluteMousePosition;
+      this.root.position = this.mouse.absolutePosition;
     } else if (selectedParent) {
       const active = this.selectionChain[this.selectionChain.length - 1];
       const offset = {
-        x: this.relativeMousePosition.x + active.position.x,
-        y: this.relativeMousePosition.y + active.position.y,
+        x: this.mouse.relativePosition.x + active.position.x,
+        y: this.mouse.relativePosition.y + active.position.y,
       };
 
       this.root.position = {
@@ -368,12 +375,12 @@ export class Menu extends EventEmitter {
       // to the parent node.
       node.position = math.getDirection(
         node.angle - 90,
-        Math.max(this.PARENT_DISTANCE, this.mouseDistance)
+        Math.max(this.PARENT_DISTANCE, this.mouse.distance)
       );
 
       const offset = {
-        x: this.relativeMousePosition.x - node.position.x,
-        y: this.relativeMousePosition.y - node.position.y,
+        x: this.mouse.relativePosition.x - node.position.x,
+        y: this.mouse.relativePosition.y - node.position.y,
       };
 
       this.root.position = {
@@ -391,8 +398,8 @@ export class Menu extends EventEmitter {
       this.selectionChain.push(node);
     }
 
-    this.relativeMousePosition = { x: 0, y: 0 };
-    this.mouseDistance = 0;
+    this.mouse.relativePosition = { x: 0, y: 0 };
+    this.mouse.distance = 0;
 
     // Finally update the CSS classes of all nodes according to the new selection chain
     // and update the connectors.
@@ -483,15 +490,19 @@ export class Menu extends EventEmitter {
       }
     }
 
-    if (this.draggedNode && this.mouseDistance < this.CENTER_RADIUS && !this.isClick) {
+    if (
+      this.draggedNode &&
+      this.mouse.distance < this.CENTER_RADIUS &&
+      !this.mouse.isClick
+    ) {
       this.dragNode(null);
       this.updateConnectors();
     }
 
     if (
-      this.dragStartPosition &&
+      this.mouse.dragStartPosition &&
       !this.draggedNode &&
-      this.mouseDistance > this.CENTER_RADIUS &&
+      this.mouse.distance > this.CENTER_RADIUS &&
       this.hoveredNode
     ) {
       this.dragNode(this.hoveredNode);
@@ -516,7 +527,7 @@ export class Menu extends EventEmitter {
   private computeHoveredNode(): INode {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected node.
-    if (this.mouseDistance < this.CENTER_RADIUS) {
+    if (this.mouse.distance < this.CENTER_RADIUS) {
       if (this.selectionChain.length > 1) {
         return this.selectionChain[this.selectionChain.length - 2];
       }
@@ -527,11 +538,11 @@ export class Menu extends EventEmitter {
     // currently selected node.
     for (const child of this.selectionChain[this.selectionChain.length - 1].children) {
       if (
-        (this.mouseAngle > child.startAngle && this.mouseAngle <= child.endAngle) ||
-        (this.mouseAngle - 360 > child.startAngle &&
-          this.mouseAngle - 360 <= child.endAngle) ||
-        (this.mouseAngle + 360 > child.startAngle &&
-          this.mouseAngle + 360 <= child.endAngle)
+        (this.mouse.angle > child.startAngle && this.mouse.angle <= child.endAngle) ||
+        (this.mouse.angle - 360 > child.startAngle &&
+          this.mouse.angle - 360 <= child.endAngle) ||
+        (this.mouse.angle + 360 > child.startAngle &&
+          this.mouse.angle + 360 <= child.endAngle)
       ) {
         return child;
       }
@@ -563,8 +574,8 @@ export class Menu extends EventEmitter {
       let transform = '';
 
       // If the node is hovered, increase the scale a bit.
-      if (this.mouseDistance > this.CENTER_RADIUS) {
-        const angleDiff = Math.abs(node.angle - this.mouseAngle);
+      if (this.mouse.distance > this.CENTER_RADIUS) {
+        const angleDiff = Math.abs(node.angle - this.mouse.angle);
         let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
 
         // If the node is hovered, increase the scale a bit more.
@@ -576,8 +587,8 @@ export class Menu extends EventEmitter {
       }
 
       // If the node is dragged, move it to the mouse position.
-      if (node === this.draggedNode && !this.isClick) {
-        node.position = this.relativeMousePosition;
+      if (node === this.draggedNode && !this.mouse.isClick) {
+        node.position = this.mouse.relativePosition;
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
@@ -686,21 +697,21 @@ export class Menu extends EventEmitter {
    *
    * @param position The absolute mouse position.
    */
-  private storeMousePosition(position: math.IVec2) {
-    this.absoluteMousePosition = position;
+  private updateMouseInfo(position: math.IVec2) {
+    this.mouse.absolutePosition = position;
 
     if (this.root) {
       const activeNodePosition = this.getActiveNodePosition();
-      this.relativeMousePosition = {
+      this.mouse.relativePosition = {
         x: position.x - activeNodePosition.x,
         y: position.y - activeNodePosition.y,
       };
 
-      this.mouseDistance = math.getLength(this.relativeMousePosition);
-      this.mouseAngle = math.getAngle(this.relativeMousePosition);
+      this.mouse.distance = math.getLength(this.mouse.relativePosition);
+      this.mouse.angle = math.getAngle(this.mouse.relativePosition);
 
       // Turn 0° up.
-      this.mouseAngle = (this.mouseAngle + 90) % 360;
+      this.mouse.angle = (this.mouse.angle + 90) % 360;
     }
   }
 
