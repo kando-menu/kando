@@ -17,6 +17,12 @@ import * as math from './math';
 import { INode } from './node';
 import { GestureDetection } from './gesture-detection';
 
+enum MouseState {
+  RELEASED,
+  CLICKED,
+  DRAGGED,
+}
+
 /**
  * Child nodes are always placed on a circle around the parent node. Grandchild nodes are
  * placed on a circle around the child node.
@@ -71,10 +77,10 @@ export class Menu extends EventEmitter {
   // This object contains all information on the current mouse state. Is it updated
   // whenever the mouse is moved or a button is pressed.
   private mouse = {
-    // This will be set to true once the left mouse button is clicked. If the mouse is
+    // This will be set to CLICKED once the left mouse button is pressed. If the mouse is
     // moved more than DRAG_THRESHOLD pixels before the mouse button is released, this is
-    // set to false again.
-    isClick: false,
+    // set to DRAGGED. When the mouse button is released, this is set to RELEASED.
+    state: MouseState.RELEASED,
 
     // The absolute mouse position is the position of the mouse in screen coordinates. It
     // is always updated when the mouse moves.
@@ -84,6 +90,9 @@ export class Menu extends EventEmitter {
     // selected node. It is always updated when the mouse moves.
     relativePosition: { x: 0, y: 0 },
 
+    // The position where the mouse was when the user started dragging the dragged node.
+    clickPosition: <math.IVec2>null,
+
     // The mouse angle is the angle of the mouse relative to the currently selected node.
     // 0° is up, 90° is right, 180° is down and 270° is left. It is always updated when
     // the mouse moves.
@@ -92,10 +101,6 @@ export class Menu extends EventEmitter {
     // The mouse distance is the distance of the mouse to the center of the currently
     // selected node. It is always updated when the mouse moves.
     distance: 0,
-
-    // The drag start position is the position where the mouse was when the user started
-    // dragging the dragged node.
-    dragStartPosition: <math.IVec2>null,
   };
 
   // This is currently used to create the test menu. It defines the number of children
@@ -145,15 +150,17 @@ export class Menu extends EventEmitter {
 
       // If the mouse move too much, the current mousedown - mouseup event is not
       // considered to be a click anymore.
-      if (this.mouse.isClick) {
-        this.mouse.isClick =
-          math.getDistance(this.mouse.absolutePosition, this.mouse.dragStartPosition) <
-          this.DRAG_THRESHOLD;
+      if (
+        this.mouse.state === MouseState.CLICKED &&
+        math.getDistance(this.mouse.absolutePosition, this.mouse.clickPosition) >
+          this.DRAG_THRESHOLD
+      ) {
+        this.mouse.state = MouseState.DRAGGED;
       }
 
       // If the mouse pointer is held down, forward the motion event to the gesture
       // selection.
-      if (this.mouse.dragStartPosition) {
+      if (this.mouse.clickPosition) {
         this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
       } else if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
         this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
@@ -168,8 +175,8 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      this.mouse.dragStartPosition = { x: event.clientX, y: event.clientY };
-      this.mouse.isClick = true;
+      this.mouse.clickPosition = { x: event.clientX, y: event.clientY };
+      this.mouse.state = MouseState.CLICKED;
       this.gestureDetection.reset();
 
       if (this.hoveredNode) {
@@ -185,7 +192,7 @@ export class Menu extends EventEmitter {
       event.stopPropagation();
 
       if (
-        this.mouse.isClick &&
+        this.mouse.state === MouseState.CLICKED &&
         this.selectionChain.length === 1 &&
         this.mouse.distance < this.CENTER_RADIUS
       ) {
@@ -193,8 +200,8 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      this.mouse.dragStartPosition = null;
-      this.mouse.isClick = false;
+      this.mouse.clickPosition = null;
+      this.mouse.state = MouseState.RELEASED;
       this.gestureDetection.reset();
 
       if (this.draggedNode) {
@@ -274,8 +281,8 @@ export class Menu extends EventEmitter {
     this.container.innerHTML = '';
     this.root = null;
     this.centerText = null;
-    this.mouse.isClick = false;
-    this.mouse.dragStartPosition = null;
+    this.mouse.state = MouseState.RELEASED;
+    this.mouse.clickPosition = null;
     this.hoveredNode = null;
     this.draggedNode = null;
     this.selectionChain = [];
@@ -326,6 +333,11 @@ export class Menu extends EventEmitter {
    * Selects the given node. This will either push the node to the list of selected nodes
    * or pop the last node from the list of selected nodes if the newly selected node is
    * the parent of the previously selected node.
+   *
+   * Also, the root node is repositioned so that the given node is positioned at the mouse
+   * cursor.
+   *
+   * If the given node is a leaf node, the "select" event is emitted.
    *
    * @param node The newly selected node.
    */
@@ -493,14 +505,14 @@ export class Menu extends EventEmitter {
     if (
       this.draggedNode &&
       this.mouse.distance < this.CENTER_RADIUS &&
-      !this.mouse.isClick
+      this.mouse.state === MouseState.DRAGGED
     ) {
       this.dragNode(null);
       this.updateConnectors();
     }
 
     if (
-      this.mouse.dragStartPosition &&
+      this.mouse.clickPosition &&
       !this.draggedNode &&
       this.mouse.distance > this.CENTER_RADIUS &&
       this.hoveredNode
@@ -587,7 +599,7 @@ export class Menu extends EventEmitter {
       }
 
       // If the node is dragged, move it to the mouse position.
-      if (node === this.draggedNode && !this.mouse.isClick) {
+      if (node === this.draggedNode && this.mouse.state === MouseState.DRAGGED) {
         node.position = this.mouse.relativePosition;
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
@@ -624,7 +636,7 @@ export class Menu extends EventEmitter {
       let nextNode = this.selectionChain[i + 1];
 
       // For the last element in the selection chain (which is the currently active node),
-      // we only draw a connector if on of its children is currently dragged around. We
+      // we only draw a connector if one of its children is currently dragged around. We
       // have to ensure that the dragged node is not the parent of the active node.
       if (
         i === this.selectionChain.length - 1 &&
