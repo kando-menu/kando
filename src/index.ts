@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                 //
-//     . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.     //
-//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,21 +26,21 @@ if (!gotTheLock) {
 }
 
 // Start the app.
-import kendo = require('./app');
-const kenDo = new kendo.KenDoApp();
+import { KandoApp } from './app';
+const kando = new KandoApp();
 
 app
   .whenReady()
-  .then(() => kenDo.init())
+  .then(() => kando.init())
   .then(() =>
-    console.log('Ken-Do is ready! Press <Ctrl>+<Space> to open the prototype menu.')
+    console.log('Kando is ready! Press <Ctrl>+<Space> to open the prototype menu.')
   )
   .catch((err) => {
-    console.error('Failed to initialize Ken-Do: ' + err);
+    console.error('Failed to initialize Kando: ' + err);
     app.quit();
   });
 
 app.on('will-quit', async () => {
-  await kenDo.quit();
+  await kando.quit();
   console.log('Good-Pie :)');
 });

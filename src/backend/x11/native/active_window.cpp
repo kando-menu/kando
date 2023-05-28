@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                 //
-//     . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.     //
-//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
+//   _  _ ____ _  _ ___  ____ //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform
+//   // | \_ |  | | \| |__/ |__|    pie menu. Read more on
+//   github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,18 +21,18 @@
 extern "C" {
 #define MAXSTR 1000
 unsigned long window;
-unsigned char* prop;
-Display* display;
+unsigned char *prop;
+Display *display;
 
-unsigned char* get_string_property(char* property_name) {
+unsigned char *get_string_property(char *property_name) {
   Atom actual_type, filter_atom;
   int actual_format, status;
   unsigned long nitems, bytes_after;
 
   filter_atom = XInternAtom(display, property_name, True);
-  status =
-    XGetWindowProperty(display, window, filter_atom, 0, MAXSTR, False, AnyPropertyType,
-                       &actual_type, &actual_format, &nitems, &bytes_after, &prop);
+  status = XGetWindowProperty(display, window, filter_atom, 0, MAXSTR, False,
+                              AnyPropertyType, &actual_type, &actual_format,
+                              &nitems, &bytes_after, &prop);
 
   if (status != Success) {
     return 0;
@@ -41,24 +41,24 @@ unsigned char* get_string_property(char* property_name) {
   return prop;
 }
 
-unsigned long get_long_property(char* property_name) {
-  unsigned char* prop = get_string_property(property_name);
+unsigned long get_long_property(char *property_name) {
+  unsigned char *prop = get_string_property(property_name);
 
   if (prop == 0) {
     return 0;
   }
 
   unsigned long long_property =
-    prop[0] + (prop[1] << 8) + (prop[2] << 16) + (prop[3] << 24);
+      prop[0] + (prop[1] << 8) + (prop[2] << 16) + (prop[3] << 24);
   return long_property;
 }
 }
 
 namespace active_window {
-bool getActiveWindow(Napi::Object& obj) {
-  display    = XOpenDisplay(nullptr);
+bool getActiveWindow(Napi::Object &obj) {
+  display = XOpenDisplay(nullptr);
   int screen = XDefaultScreen(display);
-  window     = RootWindow(display, screen);
+  window = RootWindow(display, screen);
 
   if (!window) {
     return false;
@@ -70,15 +70,15 @@ bool getActiveWindow(Napi::Object& obj) {
     return false;
   }
 
-  char* wm_class = reinterpret_cast<char*>(get_string_property("WM_CLASS"));
+  char *wm_class = reinterpret_cast<char *>(get_string_property("WM_CLASS"));
 
   // Workaround for null values
-  unsigned char* net_wm_name = get_string_property("_NET_WM_NAME");
+  unsigned char *net_wm_name = get_string_property("_NET_WM_NAME");
 
-  char* wm_name = "";
+  char *wm_name = "";
 
   if (net_wm_name != NULL) {
-    wm_name = reinterpret_cast<char*>(get_string_property("_NET_WM_NAME"));
+    wm_name = reinterpret_cast<char *>(get_string_property("_NET_WM_NAME"));
   }
 
   obj.Set("wmClass", wm_class);
@@ -89,7 +89,7 @@ bool getActiveWindow(Napi::Object& obj) {
   return true;
 }
 
-Napi::Value getActiveWindowWrapped(const Napi::CallbackInfo& info) {
+Napi::Value getActiveWindowWrapped(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   Napi::Object obj = Napi::Object::New(env);
@@ -101,9 +101,10 @@ Napi::Value getActiveWindowWrapped(const Napi::CallbackInfo& info) {
 }
 
 Napi::Object init(Napi::Env env, Napi::Object exports) {
-  exports.Set("getActiveWindow", Napi::Function::New(env, getActiveWindowWrapped));
+  exports.Set("getActiveWindow",
+              Napi::Function::New(env, getActiveWindowWrapped));
 
   return exports;
 }
 
-}  // namespace active_window
+} // namespace active_window
