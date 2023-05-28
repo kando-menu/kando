@@ -10,7 +10,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 _:construction: This project is currently in a very early stage of development. For now, I use this repository mainly for testing things. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans)._
 
-**Ken-Do** will be a pie menu for the desktop.
+**Kando** will be a pie menu for the desktop.
 It will be highly customizable and will allow you to create your own menus and actions.
 For instance, you can use it to control your music player, to open your favorite websites or to simulate shortcuts.
 It will be available for Windows, Linux and maybe macOS.
@@ -23,7 +23,7 @@ I have been working on Fly-Pie for more than 3 years now and I am very happy wit
 However, I have always wanted to create a similar application for the desktop in general.
 This is why I started this project.
 
-**Ken-Do will be very similar to Fly-Pie in terms of interaction and appearance.
+**Kando will be very similar to Fly-Pie in terms of interaction and appearance.
 At the same time, there will be some major differences.
 You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!**
 
@@ -43,10 +43,10 @@ It currently demonstrates the following core features:
 
 1. Uses a `powershell` script to simulate key presses. This is not ideal, as it fails to simulate the <kbd>Super</kbd> key. In future, we will require a native module using [`SendInput()`](https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-sendinput) from the Windows API.
 1. Uses a `xdotool` script to simulate key presses for now. Maybe we should use a native module here as well.
-1. For now, this only works on GNOME using an [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is the [global shortcuts portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.GlobalShortcuts) which may solve this for all Wayland compositors.
-1. This is more difficult than it appears. On Wayland, clients seem to get the current mouse pointer position only when the user moves the pointer over the window for the first time. So if the mouse pointer is stationary while the window opens, the window will not receive any mouse input events. I made this work on GNOME by using an [extension]((https://github.com/ken-do-menu/gnome-shell-integration)) which reports the current mouse position to the client over DBus. Maybe something similar can be done for other compositors.
-1. For now, this also only works on GNOME using the [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is a request for a [corresponding portal](https://github.com/flatpak/xdg-desktop-portal/issues/304) which may solve this for all Wayland compositors.
-1. For now, this also only works on GNOME using the [extension](https://github.com/ken-do-menu/gnome-shell-integration). However, there is the [remote desktop portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) which may solve this for all Wayland compositors.
+1. For now, this only works on GNOME using an [extension](https://github.com/kando-menu/gnome-shell-integration). However, there is the [global shortcuts portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.GlobalShortcuts) which may solve this for all Wayland compositors.
+1. This is more difficult than it appears. On Wayland, clients seem to get the current mouse pointer position only when the user moves the pointer over the window for the first time. So if the mouse pointer is stationary while the window opens, the window will not receive any mouse input events. I made this work on GNOME by using an [extension]((https://github.com/kando-menu/gnome-shell-integration)) which reports the current mouse position to the client over DBus. Maybe something similar can be done for other compositors.
+1. For now, this also only works on GNOME using the [extension](https://github.com/kando-menu/gnome-shell-integration). However, there is a request for a [corresponding portal](https://github.com/flatpak/xdg-desktop-portal/issues/304) which may solve this for all Wayland compositors.
+1. For now, this also only works on GNOME using the [extension](https://github.com/kando-menu/gnome-shell-integration). However, there is the [remote desktop portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) which may solve this for all Wayland compositors.
 
 ## Installing Dependencies
 
@@ -76,7 +76,7 @@ On Debian-based distributions you can install them with:
 sudo apt install libx11-dev xdotool
 ```
 
-On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/ken-do-menu/gnome-shell-integration).
+On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
 
 ## Running the Prototype
 
@@ -96,8 +96,8 @@ To create a distributable zip file, just run `npm run make`.
 ## :octocat: I want to contribute!
 
 That's great!
-If you like the idea of Ken-Do, you can help in many ways:
-* **Discuss the idea!** Tell me what you think about Ken-Do and what features you would like to see. You can do this by [opening a discussion](https://github.com/ken-do-menu/ken-do/discussions).
-* **Spread the word!** Tell your friends about Ken-Do and share this post on social media.
+If you like the idea of Kando, you can help in many ways:
+* **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions).
+* **Spread the word!** Tell your friends about Kando and share this post on social media.
 * **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement.
-* **Sponsor the development!** Time is by far the most limiting factor. If you like the idea, you can also support me financially. You can do this either on [Ko-fi](https://ko-fi.com/schneegans) or by [sponsoring me on GitHub](https://github.com/sponsors/Schneegans). **If enough people do this, I will be able to spend much more time on Ken-Do and make it a reality.**
+* **Sponsor the development!** Time is by far the most limiting factor. If you like the idea, you can also support me financially. You can do this either on [Ko-fi](https://ko-fi.com/schneegans) or by [sponsoring me on GitHub](https://github.com/sponsors/Schneegans). **If enough people do this, I will be able to spend much more time on Kando and make it a reality.**

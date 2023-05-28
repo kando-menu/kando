@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                 //
-//     . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.     //
-//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +15,7 @@ import { Backend, getBackend } from './backend';
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-export class KenDoApp {
+export class KandoApp {
   // The backend is responsible for all the system interaction. It is implemented
   // differently for each platform.
   private backend: Backend = getBackend();

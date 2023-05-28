@@ -22,9 +22,9 @@ const config: ForgeConfig = {
     new MakerRpm({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
       options: {
-        productName: 'Ken-Do',
+        productName: 'Kando',
         icon: 'icons/icon.svg',
-        homepage: 'https://github.com/ken-do-menu/ken-do',
+        homepage: 'https://github.com/kando-menu/kando',
         requires: ['xdotool'],
         categories: ['Utility'],
       },
@@ -32,9 +32,9 @@ const config: ForgeConfig = {
     new MakerDeb({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
       options: {
-        productName: 'Ken-Do',
+        productName: 'Kando',
         icon: 'icons/icon.svg',
-        homepage: 'https://github.com/ken-do-menu/ken-do',
+        homepage: 'https://github.com/kando-menu/kando',
         depends: ['xdotool'],
         categories: ['Utility'],
       },

@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                 //
-//     . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.     //
-//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +20,7 @@ export class GnomeBackend implements Backend {
   }
 
   // Initializes the backend. This method must be called before any other method is
-  // called. It connects to the DBus interface of the Ken-Do GNOME Shell integration
+  // called. It connects to the DBus interface of the Kando GNOME Shell integration
   // extension.
   public async init() {
     if (this.interface) {
@@ -32,10 +31,10 @@ export class GnomeBackend implements Backend {
 
     const obj = await bus.getProxyObject(
       'org.gnome.Shell',
-      '/org/gnome/shell/extensions/KenDoIntegration'
+      '/org/gnome/shell/extensions/KandoIntegration'
     );
 
-    this.interface = obj.getInterface('org.gnome.Shell.Extensions.KenDoIntegration');
+    this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
 
     this.interface.on('ShortcutPressed', (shortcut: string) => {
       this.callbacks[shortcut]();

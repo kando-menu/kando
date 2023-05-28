@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-//     |  /  __|   \ |       _ \   _ \     This file belongs to Ken-Do,                 //
-//     . <   _|   .  | ____| |  | (   |    the open-source cross-platform pie menu.     //
-//    _|\_\ ___| _|\_|      ___/ \___/     Read more on github.com/ken-do-menu/ken-do   //
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -261,7 +260,7 @@ export class Menu extends EventEmitter {
 
   /** Removes all DOM elements from the menu and resets the root node. */
   public clear() {
-    this.container.className = 'ken-do hidden';
+    this.container.className = 'kando hidden';
 
     this.gestureDetection.reset();
 
