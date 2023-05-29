@@ -647,7 +647,7 @@ export class Menu extends EventEmitter {
       }
 
       // If the node is dragged, move it to the mouse position.
-      if (node === this.draggedNode) {
+      if (node === this.draggedNode && this.mouse.state === MouseState.DRAGGING) {
         node.position = this.mouse.relativePosition;
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
