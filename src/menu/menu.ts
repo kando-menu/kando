@@ -17,10 +17,16 @@ import * as math from './math';
 import { INode } from './node';
 import { GestureDetection } from './gesture-detection';
 
+/**
+ * The menu stores the logical state of the mouse. This will be set to CLICKED once the
+ * left mouse button is pressed. If the mouse is moved more than a couple of pixels before
+ * the mouse button is released, it is set to DRAGGING. When the mouse button is released,
+ * it is set to RELEASED.
+ */
 enum MouseState {
   RELEASED,
   CLICKED,
-  DRAGGED,
+  DRAGGING,
 }
 
 /**
@@ -79,7 +85,7 @@ export class Menu extends EventEmitter {
   private mouse = {
     // This will be set to CLICKED once the left mouse button is pressed. If the mouse is
     // moved more than DRAG_THRESHOLD pixels before the mouse button is released, this is
-    // set to DRAGGED. When the mouse button is released, this is set to RELEASED.
+    // set to DRAGGING. When the mouse button is released, this is set to RELEASED.
     state: MouseState.RELEASED,
 
     // The absolute mouse position is the position of the mouse in screen coordinates. It
@@ -90,8 +96,9 @@ export class Menu extends EventEmitter {
     // selected node. It is always updated when the mouse moves.
     relativePosition: { x: 0, y: 0 },
 
-    // The position where the mouse was when the user started dragging the dragged node.
-    clickPosition: <math.IVec2>null,
+    // The position where the mouse was when the user pressed the left mouse button the
+    // last time.
+    clickPosition: { x: 0, y: 0 },
 
     // The mouse angle is the angle of the mouse relative to the currently selected node.
     // 0° is up, 90° is right, 180° is down and 270° is left. It is always updated when
@@ -155,12 +162,12 @@ export class Menu extends EventEmitter {
         math.getDistance(this.mouse.absolutePosition, this.mouse.clickPosition) >
           this.DRAG_THRESHOLD
       ) {
-        this.mouse.state = MouseState.DRAGGED;
+        this.mouse.state = MouseState.DRAGGING;
       }
 
       // If the mouse pointer is held down, forward the motion event to the gesture
       // selection.
-      if (this.mouse.clickPosition) {
+      if (this.mouse.state === MouseState.DRAGGING) {
         this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
       } else if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
         this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
@@ -191,6 +198,7 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
+      // If we clicked the center of the root menu, the "cancel" signal is emitted.
       if (
         this.mouse.state === MouseState.CLICKED &&
         this.selectionChain.length === 1 &&
@@ -200,7 +208,6 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      this.mouse.clickPosition = null;
       this.mouse.state = MouseState.RELEASED;
       this.gestureDetection.reset();
 
@@ -282,7 +289,6 @@ export class Menu extends EventEmitter {
     this.root = null;
     this.centerText = null;
     this.mouse.state = MouseState.RELEASED;
-    this.mouse.clickPosition = null;
     this.hoveredNode = null;
     this.draggedNode = null;
     this.selectionChain = [];
@@ -502,17 +508,9 @@ export class Menu extends EventEmitter {
       }
     }
 
+    // If the mouse is dragged over a node, make that node the dragged node.
     if (
-      this.draggedNode &&
-      this.mouse.distance < this.CENTER_RADIUS &&
-      this.mouse.state === MouseState.DRAGGED
-    ) {
-      this.dragNode(null);
-      this.updateConnectors();
-    }
-
-    if (
-      this.mouse.clickPosition &&
+      this.mouse.state === MouseState.DRAGGING &&
       !this.draggedNode &&
       this.mouse.distance > this.CENTER_RADIUS &&
       this.hoveredNode
@@ -520,8 +518,17 @@ export class Menu extends EventEmitter {
       this.dragNode(this.hoveredNode);
     }
 
+    // Abort node-dragging when dragging the node over the center of the currently active
+    // menu.
+    if (this.draggedNode && this.mouse.distance < this.CENTER_RADIUS) {
+      this.dragNode(null);
+      this.updateConnectors();
+    }
+
+    // Update all transformations.
     this.updateTransform(this.root);
 
+    // If there is a node dragged around, we also have to redraw the connectors.
     if (this.draggedNode) {
       this.updateConnectors();
     }
@@ -599,7 +606,7 @@ export class Menu extends EventEmitter {
       }
 
       // If the node is dragged, move it to the mouse position.
-      if (node === this.draggedNode && this.mouse.state === MouseState.DRAGGED) {
+      if (node === this.draggedNode) {
         node.position = this.mouse.relativePosition;
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
