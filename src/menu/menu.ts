@@ -156,7 +156,8 @@ export class Menu extends EventEmitter {
       this.updateMouseInfo({ x: event.clientX, y: event.clientY });
 
       // If the mouse move too much, the current mousedown - mouseup event is not
-      // considered to be a click anymore.
+      // considered to be a click anymore. Set the current mouse state to
+      // MouseState.DRAGGING
       if (
         this.mouse.state === MouseState.CLICKED &&
         math.getDistance(this.mouse.absolutePosition, this.mouse.clickPosition) >
@@ -165,11 +166,18 @@ export class Menu extends EventEmitter {
         this.mouse.state = MouseState.DRAGGING;
       }
 
-      // If the mouse pointer is held down, forward the motion event to the gesture
-      // selection.
+      // If a modifier key is pressed, this is handled basically as if the left mouse
+      // button is pressed. This allows for node selections without having to press a
+      // mouse button if the menu was opened with a keyboard shortcut.
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        this.mouse.state = MouseState.DRAGGING;
+      } else if (this.mouse.state === MouseState.DRAGGING && event.buttons === 0) {
+        this.mouse.state = MouseState.RELEASED;
+      }
+
+      // If the mouse pointer (or a modifier key) is held down, forward the motion event
+      // to the gesture selection.
       if (this.mouse.state === MouseState.DRAGGING) {
-        this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
-      } else if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
         this.gestureDetection.onMotionEvent(this.mouse.absolutePosition);
       }
 
@@ -213,6 +221,29 @@ export class Menu extends EventEmitter {
 
       if (this.draggedNode) {
         this.selectNode(this.draggedNode);
+      }
+    });
+
+    // If the last modifier is released while a node is dragged around, we select it. This
+    // enables selections in "Turbo-Mode", where nodes are selected with modifier buttons
+    // pressed instead of the left mouse button.
+    document.addEventListener('keyup', (event) => {
+      if (this.mouse.state === MouseState.DRAGGING) {
+        const modifierReleased =
+          event.key === 'Control' ||
+          event.key === 'Shift' ||
+          event.key === 'Alt' ||
+          event.key === 'Meta';
+        const stillAnyModifierPressed =
+          event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+
+        if (modifierReleased && !stillAnyModifierPressed) {
+          this.mouse.state = MouseState.RELEASED;
+          this.gestureDetection.reset();
+          if (this.draggedNode) {
+            this.selectNode(this.draggedNode);
+          }
+        }
       }
     });
   }
@@ -525,6 +556,12 @@ export class Menu extends EventEmitter {
       this.draggedNode &&
       this.mouse.distance < this.CENTER_RADIUS
     ) {
+      this.dragNode(null);
+      this.updateConnectors();
+    }
+
+    // Abort node dragging if the mouse button was released.
+    if (this.mouse.state === MouseState.RELEASED && this.draggedNode) {
       this.dragNode(null);
       this.updateConnectors();
     }
