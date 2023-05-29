@@ -520,7 +520,11 @@ export class Menu extends EventEmitter {
 
     // Abort node-dragging when dragging the node over the center of the currently active
     // menu.
-    if (this.draggedNode && this.mouse.distance < this.CENTER_RADIUS) {
+    if (
+      this.mouse.state === MouseState.DRAGGING &&
+      this.draggedNode &&
+      this.mouse.distance < this.CENTER_RADIUS
+    ) {
       this.dragNode(null);
       this.updateConnectors();
     }
