@@ -41,7 +41,7 @@
     "node-loader": "^2.0.0",
     "prettier-plugin-jsdoc": "^0.4.2",
     "sass": "^1.62.1",
-    "sass-loader": "^13.3.0",
+    "sass-loader": "^13.3.1",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.3",
