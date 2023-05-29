@@ -149,11 +149,18 @@ export class Menu extends EventEmitter {
 
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.
-    this.container.addEventListener('mousemove', (event) => {
+    const onMotionEvent = (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
-      this.updateMouseInfo({ x: event.clientX, y: event.clientY });
+      if (event instanceof MouseEvent) {
+        this.updateMouseInfo({ x: event.clientX, y: event.clientY });
+      } else {
+        this.updateMouseInfo({
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY,
+        });
+      }
 
       // If the mouse move too much, the current mousedown - mouseup event is not
       // considered to be a click anymore. Set the current mouse state to
@@ -171,7 +178,11 @@ export class Menu extends EventEmitter {
       // mouse button if the menu was opened with a keyboard shortcut.
       if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
         this.mouse.state = MouseState.DRAGGING;
-      } else if (this.mouse.state === MouseState.DRAGGING && event.buttons === 0) {
+      } else if (
+        event instanceof MouseEvent &&
+        this.mouse.state === MouseState.DRAGGING &&
+        event.buttons === 0
+      ) {
         this.mouse.state = MouseState.RELEASED;
       }
 
@@ -182,15 +193,23 @@ export class Menu extends EventEmitter {
       }
 
       this.redraw();
-    });
+    };
 
     // When the left mouse button is pressed, the currently hovered node becomes the
     // dragged node.
-    this.container.addEventListener('mousedown', (event) => {
+    const onPointerDownEvent = (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
-      this.mouse.clickPosition = { x: event.clientX, y: event.clientY };
+      if (event instanceof MouseEvent) {
+        this.mouse.clickPosition = { x: event.clientX, y: event.clientY };
+      } else {
+        this.mouse.clickPosition = {
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY,
+        };
+      }
+
       this.mouse.state = MouseState.CLICKED;
       this.gestureDetection.reset();
 
@@ -198,11 +217,11 @@ export class Menu extends EventEmitter {
         this.dragNode(this.hoveredNode);
       }
 
-      this.redraw();
-    });
+      onMotionEvent(event);
+    };
 
     // When the left mouse button is released, the currently dragged node is selected.
-    this.container.addEventListener('mouseup', (event) => {
+    const onPointerUpEvent = () => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -222,7 +241,14 @@ export class Menu extends EventEmitter {
       if (this.draggedNode) {
         this.selectNode(this.draggedNode);
       }
-    });
+    };
+
+    this.container.addEventListener('mousedown', onPointerDownEvent);
+    this.container.addEventListener('mousemove', onMotionEvent);
+    this.container.addEventListener('mouseup', onPointerUpEvent);
+    this.container.addEventListener('touchstart', onPointerDownEvent);
+    this.container.addEventListener('touchmove', onMotionEvent);
+    this.container.addEventListener('touchend', onPointerUpEvent);
 
     // If the last modifier is released while a node is dragged around, we select it. This
     // enables selections in "Turbo-Mode", where nodes are selected with modifier buttons
