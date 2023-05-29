@@ -22,6 +22,12 @@ import { GestureDetection } from './gesture-detection';
  * left mouse button is pressed. If the mouse is moved more than a couple of pixels before
  * the mouse button is released, it is set to DRAGGING. When the mouse button is released,
  * it is set to RELEASED.
+ *
+ * At a higher level, Kando does not differentiate between mouse, touch and pen input.
+ * Despite its name, this enum is actually used for all input devices. There is even the
+ * possibility of the "Turbo Mode" which allows the user to select items by moving the
+ * mouse while a modifier key is pressed. In this case, the mouse state will also be set
+ * to DRAGGING, even though the mouse button is not pressed.
  */
 enum MouseState {
   RELEASED,
@@ -30,6 +36,13 @@ enum MouseState {
 }
 
 /**
+ * The menu is the main class of Kando. It stores a tree of nodes which is used to render
+ * the menu. The menu is shown by calling the show() method and hidden by calling the
+ * hide() method. The menu will be rendered into the given container element.
+ *
+ * When the user selects a node, the menu will emit a "select" event. If the user cancels
+ * the selection, the menu will emit a "cancel" event.
+ *
  * Child nodes are always placed on a circle around the parent node. Grandchild nodes are
  * placed on a circle around the child node.
  *
