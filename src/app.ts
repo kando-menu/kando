@@ -125,9 +125,22 @@ export class KandoApp {
           clearTimeout(this.hideTimeout);
         }
 
+        // Move the window to the monitor which contains the pointer.
+        const workarea = screen.getDisplayNearestPoint(pointer).workArea;
+        this.window.setBounds({
+          x: workarea.x,
+          y: workarea.y,
+          width: workarea.width + 1,
+          height: workarea.height + 1,
+        });
+
         console.log('Currently focused window: ' + window.wmClass);
 
-        this.window.webContents.send('show-menu', pointer);
+        this.window.webContents.send('show-menu', {
+          x: pointer.x - workarea.x,
+          y: pointer.y - workarea.y,
+        });
+
         this.window.setFocusable(true);
         this.window.setIgnoreMouseEvents(false);
         this.window.show();
