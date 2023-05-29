@@ -147,32 +147,12 @@ export class Menu extends EventEmitter {
       }
     });
 
-    // When the left mouse button is pressed, the currently hovered node becomes the
-    // dragged node.
-    const onPointerDownEvent = (event: MouseEvent | TouchEvent) => {
-      if (event instanceof MouseEvent) {
-        this.mouse.clickPosition = { x: event.clientX, y: event.clientY };
-      } else {
-        this.mouse.clickPosition = {
-          x: event.touches[0].clientX,
-          y: event.touches[0].clientY,
-        };
-      }
-
-      this.mouse.state = MouseState.CLICKED;
-      this.gestureDetection.reset();
-
-      if (this.hoveredNode) {
-        this.dragNode(this.hoveredNode);
-      }
-
-      this.redraw();
-    };
-
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.
     const onMotionEvent = (event: MouseEvent | TouchEvent) => {
-      window.api.log('Menu onMotionEvent');
+      event.preventDefault();
+      event.stopPropagation();
+
       if (event instanceof MouseEvent) {
         this.updateMouseInfo({ x: event.clientX, y: event.clientY });
       } else {
@@ -215,8 +195,36 @@ export class Menu extends EventEmitter {
       this.redraw();
     };
 
+    // When the left mouse button is pressed, the currently hovered node becomes the
+    // dragged node.
+    const onPointerDownEvent = (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (event instanceof MouseEvent) {
+        this.mouse.clickPosition = { x: event.clientX, y: event.clientY };
+      } else {
+        this.mouse.clickPosition = {
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY,
+        };
+      }
+
+      this.mouse.state = MouseState.CLICKED;
+      this.gestureDetection.reset();
+
+      if (this.hoveredNode) {
+        this.dragNode(this.hoveredNode);
+      }
+
+      onMotionEvent(event);
+    };
+
     // When the left mouse button is released, the currently dragged node is selected.
     const onPointerUpEvent = () => {
+      event.preventDefault();
+      event.stopPropagation();
+
       // If we clicked the center of the root menu, the "cancel" signal is emitted.
       if (
         this.mouse.state === MouseState.CLICKED &&
