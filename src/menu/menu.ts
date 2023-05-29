@@ -139,8 +139,6 @@ export class Menu extends EventEmitter {
   constructor(container: HTMLElement) {
     super();
 
-    window.api.log('Menu constructor');
-
     this.container = container;
 
     // This will be fed with motion events. If the pointer makes a turn or is stationary
@@ -234,7 +232,7 @@ export class Menu extends EventEmitter {
     };
 
     // When the left mouse button is released, the currently dragged node is selected.
-    const onPointerUpEvent = () => {
+    const onPointerUpEvent = (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -486,8 +484,24 @@ export class Menu extends EventEmitter {
       this.selectionChain.push(node);
     }
 
-    this.mouse.relativePosition = { x: 0, y: 0 };
-    this.mouse.distance = 0;
+    // Clamp the position of the newly selected submenu to the viewport.
+    if (node.children.length > 0) {
+      const position = this.getActiveNodePosition();
+      const clampedPosition = this.clampToMonitor(position, 10);
+
+      const offset = {
+        x: clampedPosition.x - position.x,
+        y: clampedPosition.y - position.y,
+      };
+
+      this.root.position = {
+        x: this.root.position.x + offset.x,
+        y: this.root.position.y + offset.y,
+      };
+    }
+
+    // Update the mouse info based on the newly selected node's position.
+    this.updateMouseInfo(this.mouse.absolutePosition);
 
     // Finally update the CSS classes of all nodes according to the new selection chain
     // and update the connectors.
@@ -880,5 +894,32 @@ export class Menu extends EventEmitter {
     }
 
     return position;
+  }
+
+  /**
+   * Given the center coordinates of a node, this method returns a new position which
+   * ensures that the node and all of its children and grandchildren are inside the
+   * current monitor's bounds, including the specified margin.
+   *
+   * @param position The center position of the node.
+   * @param margin The margin to the monitor's bounds.
+   * @returns The clamped position.
+   */
+  private clampToMonitor(position: math.IVec2, margin: number): math.IVec2 {
+    // Compute the maximum radius of the node, including children and grandchildren. The
+    // magic number 1.4 accounts for the hover effect. This could be made configurable.
+    const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4;
+
+    const size = margin + maxRadius;
+    const minX = size;
+    const minY = size;
+    const maxX = window.innerWidth - size;
+    const maxY = window.innerHeight - size;
+
+    const posX = Math.min(Math.max(position.x, minX), maxX);
+    const posY = Math.min(Math.max(position.y, minY), maxY);
+
+    // Ensure integer position.
+    return { x: Math.floor(posX), y: Math.floor(posY) };
   }
 }
