@@ -57,3 +57,5 @@ window.api.showMenu((pos) => {
   document.querySelector('body').classList.remove('hidden');
   menu.show(pos);
 });
+
+window.api.log("Successfully loaded Kando's renderer process.");
