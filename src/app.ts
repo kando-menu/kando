@@ -113,6 +113,10 @@ export class KandoApp {
         this.backend.simulateShortcut('Ctrl+Alt+Right');
       }
     });
+
+    ipcMain.on('move-pointer', (event, pos) => {
+      this.backend.movePointer(pos.x, pos.y);
+    });
   }
 
   // This is called when the user presses the shortcut. It will get the current

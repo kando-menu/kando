@@ -27,6 +27,10 @@ menu.on('select', () => {
   menu.hide();
 });
 
+menu.on('move-pointer', (pos) => {
+  window.api.movePointer(pos);
+});
+
 document.querySelector('#show-editor-button').addEventListener('click', () => {
   document.querySelector('#show-editor-button').classList.add('hidden');
   document.querySelector('#editor-left').classList.remove('hidden');

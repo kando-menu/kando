@@ -14,6 +14,9 @@ export interface Backend {
   // Returns the current pointer position and the currently pressed modifier keys.
   getPointer: () => Promise<{ x: number; y: number; mods: number }>;
 
+  // Moves the pointer to the given position.
+  movePointer: (x: number, y: number) => Promise<void>;
+
   // Returns the name and the WM_CLASS of the currently focused window.
   getFocusedWindow: () => Promise<{ name: string; wmClass: string }>;
 

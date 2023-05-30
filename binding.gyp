@@ -14,7 +14,11 @@
            }
          ],
          ['OS=="win"', {
-           'sources': ["src/backend/win32/native/main.cpp", "src/backend/win32/native/active_window.cpp"]
+           'sources': [
+                "src/backend/win32/native/main.cpp",
+                "src/backend/win32/native/active_window.cpp",
+                "src/backend/win32/native/move_pointer.cpp"
+              ]
             }
          ],
       ],

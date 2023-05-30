@@ -12,8 +12,8 @@
 #include "active_window.hpp"
 
 #include <windows.h>
+
 #include <stringapiset.h>
-#include <windows.h>
 
 #include <codecvt>
 #include <string>
