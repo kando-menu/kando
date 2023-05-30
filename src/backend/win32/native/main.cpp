@@ -13,7 +13,8 @@
 #include "active_window.hpp"
 
 Napi::Object init(Napi::Env env, Napi::Object exports) {
-  return active_window::init(env, exports);
+  active_window::init(env, exports);
+  return exports;
 }
 
 NODE_API_MODULE(NODE_GYP_MODULE_NAME, init)
