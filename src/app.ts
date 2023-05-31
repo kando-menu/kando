@@ -115,7 +115,8 @@ export class KandoApp {
     });
 
     ipcMain.on('move-pointer', (event, pos) => {
-      this.backend.movePointer(pos.x, pos.y);
+      const windowPos = this.window.getPosition();
+      this.backend.movePointer(pos.x + windowPos[0], pos.y + windowPos[1]);
     });
   }
 
