@@ -494,14 +494,19 @@ export class Menu extends EventEmitter {
         y: clampedPosition.y - position.y,
       };
 
-      this.root.position = {
-        x: this.root.position.x + offset.x,
-        y: this.root.position.y + offset.y,
-      };
+      if (offset.x !== 0 || offset.y !== 0) {
+        this.emit('move-pointer', clampedPosition);
+
+        this.root.position = {
+          x: this.root.position.x + offset.x,
+          y: this.root.position.y + offset.y,
+        };
+      }
     }
 
     // Update the mouse info based on the newly selected node's position.
-    this.updateMouseInfo(this.mouse.absolutePosition);
+    this.mouse.relativePosition = { x: 0, y: 0 };
+    this.mouse.distance = 0;
 
     // Finally update the CSS classes of all nodes according to the new selection chain
     // and update the connectors.

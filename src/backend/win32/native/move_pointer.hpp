@@ -8,11 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export interface Native {
-  getActiveWindow(): { wmClass: string; name: string };
-  movePointer(x: number, y: number): void;
+#include <napi.h>
+
+namespace move_pointer {
+void init(Napi::Env env, Napi::Object exports);
 }
-
-const native: Native = require('./../../../../build/Release/native.node');
-
-export { native };

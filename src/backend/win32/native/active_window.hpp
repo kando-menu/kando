@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//   _  _ ____ _  _ ___  ____ //
-//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform
-//   // | \_ |  | | \| |__/ |__|    pie menu. Read more on
-//   github.com/kando-menu/kando     //
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,5 +11,5 @@
 #include <napi.h>
 
 namespace active_window {
-Napi::Object init(Napi::Env env, Napi::Object exports);
+void init(Napi::Env env, Napi::Object exports);
 }

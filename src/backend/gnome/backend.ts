@@ -47,6 +47,11 @@ export class GnomeBackend implements Backend {
     return { x: x, y: y, mods: mods };
   }
 
+  // Moves the pointer to the given position.
+  public async movePointer(x: number, y: number) {
+    await this.interface.MovePointer(x, y);
+  }
+
   // Returns the name and the WM_CLASS of the currently focused window.
   public async getFocusedWindow() {
     const [name, wmClass] = await this.interface.GetFocusedWindow();

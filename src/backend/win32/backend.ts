@@ -28,6 +28,11 @@ export class Win32Backend implements Backend {
     return { x: pos.x, y: pos.y, mods: 0 };
   }
 
+  // Moves the pointer to the given position.
+  public async movePointer(x: number, y: number) {
+    native.movePointer(x, y);
+  }
+
   // Returns the name and class of the currently focused window.
   public async getFocusedWindow() {
     const w = native.getActiveWindow();

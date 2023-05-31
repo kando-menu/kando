@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//   _  _ ____ _  _ ___  ____ //
-//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform
-//   // | \_ |  | | \| |__/ |__|    pie menu. Read more on
-//   github.com/kando-menu/kando     //
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,8 +12,8 @@
 #include "active_window.hpp"
 
 #include <windows.h>
+
 #include <stringapiset.h>
-#include <windows.h>
 
 #include <codecvt>
 #include <string>
@@ -64,11 +63,9 @@ Napi::Object getActiveWindowWrapped(const Napi::CallbackInfo &info) {
   return obj;
 }
 
-Napi::Object init(Napi::Env env, Napi::Object exports) {
+void init(Napi::Env env, Napi::Object exports) {
   exports.Set("getActiveWindow",
               Napi::Function::New(env, getActiveWindowWrapped));
-
-  return exports;
 }
 
 } // namespace active_window

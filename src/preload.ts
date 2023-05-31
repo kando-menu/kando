@@ -21,6 +21,9 @@ contextBridge.exposeInMainWorld('api', {
   simulateShortcut: function () {
     ipcRenderer.send('simulate-shortcut');
   },
+  movePointer: function (pos: { x: number; y: number }) {
+    ipcRenderer.send('move-pointer', pos);
+  },
   itemSelected: function () {
     ipcRenderer.send('item-selected');
   },
