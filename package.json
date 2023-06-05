@@ -34,7 +34,7 @@
     "chai": "^4.3.7",
     "css-loader": "^6.8.1",
     "electron": "25.0.0",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "eslint-plugin-import": "^2.27.5",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "mocha": "^10.2.0",
