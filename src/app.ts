@@ -139,7 +139,11 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
-        console.log('Currently focused window: ' + window.wmClass);
+        if (window) {
+          console.log('Currently focused window: ' + window.wmClass);
+        } else {
+          console.log('Currently no window is focused.');
+        }
 
         this.window.webContents.send('show-menu', {
           x: pointer.x - workarea.x,
