@@ -20,7 +20,7 @@ export class KDEX11Backend extends X11Backend {
    *
    * @returns 'toolbar'
    */
-  public getWindowType() {
+  public override getWindowType() {
     return 'toolbar';
   }
 }
