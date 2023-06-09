@@ -29,6 +29,10 @@ export class KandoApp {
   private hideTimeout: NodeJS.Timeout = null;
 
   public async init() {
+    if (this.backend === null) {
+      throw new Error('No backend found.');
+    }
+
     await this.backend.init();
     await this.backend.bindShortcut('CommandOrControl+Space', () => {
       this.showMenu();
@@ -41,7 +45,9 @@ export class KandoApp {
 
   // This is called when the app is closed. It will unbind all shortcuts.
   public async quit() {
-    await this.backend.unbindAllShortcuts();
+    if (this.backend != null) {
+      await this.backend.unbindAllShortcuts();
+    }
   }
 
   // This creates the main window. It is a transparent window which covers the whole
