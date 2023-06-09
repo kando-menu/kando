@@ -7,7 +7,6 @@ module.exports = {
   semi : true,
   singleQuote : true,
   useTabs : false,
-  singleLines : 'never',
   tabWidth : 2,
   plugins : ['prettier-plugin-jsdoc'],
   jsdocSingleLineComment : false,
