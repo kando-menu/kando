@@ -23,13 +23,6 @@ import { Backend } from '../../backend';
  */
 export class X11Backend implements Backend {
   /**
-   * Creates a new X11 backend.
-   */
-  constructor() {
-    console.log('X11 backend created.');
-  }
-
-  /**
    * Override this if another type is more suitable for your desktop environment.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
    *

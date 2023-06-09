@@ -25,13 +25,6 @@ export class GnomeBackend implements Backend {
   private interface: DBus.ClientInterface;
 
   /**
-   * Creates a new GNOME backend.
-   */
-  constructor() {
-    console.log('GNOME backend created.');
-  }
-
-  /**
    * On GNOME Shell, we use a dock window. This creates a floating window which is always
    * on top of all other windows. It even stays visible during workspace switching.
    *
