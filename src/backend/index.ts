@@ -14,6 +14,19 @@ import { Backend } from './backend';
 
 export { Backend };
 
+/**
+ * Based on the current platform, this function returns the backend which can be used to
+ * interact with the system. If no suitable backend is available, null is returned.
+ *
+ * There are several backends available for different platforms. On Windows, there is only
+ * one backend which uses the Win32 API. On Linux, the backend depends on the desktop
+ * environment and the session type. There is a generic X11 backend which should work on
+ * most desktop environments. However, it is also possible to implement derived X11
+ * backends for specific desktop environments. On Wayland, it is not possible to create a
+ * generic backend, so there are only a few backends for selected desktop environments.
+ *
+ * @returns The backend for the current platform or null if no backend is available.
+ */
 export function getBackend(): Backend | null {
   if (os.platform() === 'linux') {
     console.log(
@@ -21,10 +34,10 @@ export function getBackend(): Backend | null {
     );
 
     if (process.env.XDG_SESSION_TYPE === 'x11') {
-      const { X11Backend } = require('./x11/backend');
+      const { X11Backend } = require('./linux/x11/backend');
       return new X11Backend();
     } else if (process.env.XDG_SESSION_TYPE === 'wayland') {
-      const { GnomeBackend } = require('./gnome/backend');
+      const { GnomeBackend } = require('./linux/gnome/wayland/backend');
       return new GnomeBackend();
     } else {
       console.log('Unknown session type!');
@@ -35,6 +48,6 @@ export function getBackend(): Backend | null {
     return new Win32Backend();
   } else if (os.platform() === 'darwin') {
     console.log('MacOS is not yet supported!');
-    return null;
   }
+  return null;
 }

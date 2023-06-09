@@ -50,7 +50,7 @@ export class KandoApp {
     const display = screen.getPrimaryDisplay();
 
     const windowTypes = new Map<string, string>([
-      ['linux', 'dock'],
+      ['linux', 'toolbar'],
       ['win32', 'toolbar'],
       ['darwin', 'panel'],
     ]);
