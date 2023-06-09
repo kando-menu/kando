@@ -55,12 +55,6 @@ export class KandoApp {
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
 
-    const windowTypes = new Map<string, string>([
-      ['linux', 'toolbar'],
-      ['win32', 'toolbar'],
-      ['darwin', 'panel'],
-    ]);
-
     const window = new BrowserWindow({
       webPreferences: {
         contextIsolation: true,
@@ -75,7 +69,7 @@ export class KandoApp {
       y: display.workArea.y,
       width: display.workArea.width + 1,
       height: display.workArea.height + 1,
-      type: windowTypes.get(os.platform()),
+      type: this.backend.getWindowType(),
       show: false,
     });
 
