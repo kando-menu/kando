@@ -29,25 +29,36 @@ export { Backend };
  */
 export function getBackend(): Backend | null {
   if (os.platform() === 'linux') {
-    console.log(
-      `Running on Linux (${process.env.XDG_CURRENT_DESKTOP} on ${process.env.XDG_SESSION_TYPE}).`
-    );
+    const desktop = process.env.XDG_CURRENT_DESKTOP;
+    const session = process.env.XDG_SESSION_TYPE;
 
-    if (process.env.XDG_SESSION_TYPE === 'x11') {
-      const { X11Backend } = require('./linux/x11/backend');
-      return new X11Backend();
-    } else if (process.env.XDG_SESSION_TYPE === 'wayland') {
+    console.log(`Running on Linux (${desktop} on ${session}).`);
+
+    if (desktop === 'GNOME' && session === 'wayland') {
       const { GnomeBackend } = require('./linux/gnome/wayland/backend');
       return new GnomeBackend();
-    } else {
-      console.log('Unknown session type!');
     }
-  } else if (os.platform() === 'win32') {
+
+    if (session === 'x11') {
+      const { X11Backend } = require('./linux/x11/backend');
+      return new X11Backend();
+    }
+
+    console.log('This is an unsupported combination! Kando will not work here :(');
+    return null;
+  }
+
+  if (os.platform() === 'win32') {
     console.log(`Running on Windows ${os.release()}.`);
     const { Win32Backend } = require('./win32/backend');
     return new Win32Backend();
-  } else if (os.platform() === 'darwin') {
-    console.log('MacOS is not yet supported!');
   }
+
+  if (os.platform() === 'darwin') {
+    console.log('MacOS is not yet supported!');
+    return null;
+  }
+
+  console.log(`Unsupported platform "${os.platform()}"! Kando will not work here :(`);
   return null;
 }
