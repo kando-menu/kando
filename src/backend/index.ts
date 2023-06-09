@@ -39,6 +39,11 @@ export function getBackend(): Backend | null {
       return new GnomeBackend();
     }
 
+    if (desktop === 'kde' && session === 'x11') {
+      const { KDEX11Backend } = require('./linux/kde/x11/backend');
+      return new KDEX11Backend();
+    }
+
     if (session === 'x11') {
       const { X11Backend } = require('./linux/x11/backend');
       return new X11Backend();
