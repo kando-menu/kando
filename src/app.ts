@@ -106,7 +106,7 @@ export class KandoApp {
     ipcMain.on('simulate-shortcut', () => {
       this.window.hide();
 
-      this.backend.simulateShortcut('Meta+E');
+      this.backend.simulateShortcut('Super+A');
     });
 
     ipcMain.on('move-pointer', (event, pos) => {
