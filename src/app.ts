@@ -9,8 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { screen, BrowserWindow, ipcMain } from 'electron';
-import os from 'node:os';
-import { Backend, getBackend } from './backend';
+import { Backend, getBackend } from './backends';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -29,6 +28,10 @@ export class KandoApp {
   private hideTimeout: NodeJS.Timeout = null;
 
   public async init() {
+    if (this.backend === null) {
+      throw new Error('No backend found.');
+    }
+
     await this.backend.init();
     await this.backend.bindShortcut('CommandOrControl+Space', () => {
       this.showMenu();
@@ -41,19 +44,15 @@ export class KandoApp {
 
   // This is called when the app is closed. It will unbind all shortcuts.
   public async quit() {
-    await this.backend.unbindAllShortcuts();
+    if (this.backend != null) {
+      await this.backend.unbindAllShortcuts();
+    }
   }
 
   // This creates the main window. It is a transparent window which covers the whole
   // screen. It is always on top and has no frame. It is used to display the pie menu.
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
-
-    const windowTypes = new Map<string, string>([
-      ['linux', 'dock'],
-      ['win32', 'toolbar'],
-      ['darwin', 'panel'],
-    ]);
 
     const window = new BrowserWindow({
       webPreferences: {
@@ -69,7 +68,7 @@ export class KandoApp {
       y: display.workArea.y,
       width: display.workArea.width + 1,
       height: display.workArea.height + 1,
-      type: windowTypes.get(os.platform()),
+      type: this.backend.getWindowType(),
       show: false,
     });
 
@@ -107,11 +106,7 @@ export class KandoApp {
     ipcMain.on('simulate-shortcut', () => {
       this.window.hide();
 
-      if (os.platform() === 'win32') {
-        this.backend.simulateShortcut('Ctrl+Alt+Tab');
-      } else {
-        this.backend.simulateShortcut('Ctrl+Alt+Right');
-      }
+      this.backend.simulateShortcut('Super+A');
     });
 
     ipcMain.on('move-pointer', (event, pos) => {

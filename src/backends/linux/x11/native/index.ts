@@ -12,6 +12,6 @@ export interface Native {
   getActiveWindow(): { wmClass: string; name: string };
 }
 
-const native: Native = require('./../../../../build/Release/native.node');
+const native: Native = require('./../../../../../build/Release/native.node');
 
 export { native };

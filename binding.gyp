@@ -7,7 +7,10 @@
       "target_name": "native",
       'conditions': [
          ['OS=="linux"', {
-           'sources': ["src/backend/x11/native/main.cpp", "src/backend/x11/native/active_window.cpp"],
+           'sources': [
+                "src/backends/linux/x11/native/main.cpp",
+                "src/backends/linux/x11/native/active_window.cpp"
+              ],
            'libraries': [
                "-lX11"
              ]
@@ -15,9 +18,9 @@
          ],
          ['OS=="win"', {
            'sources': [
-                "src/backend/win32/native/main.cpp",
-                "src/backend/win32/native/active_window.cpp",
-                "src/backend/win32/native/move_pointer.cpp"
+                "src/backends/win32/native/main.cpp",
+                "src/backends/win32/native/active_window.cpp",
+                "src/backends/win32/native/move_pointer.cpp"
               ]
             }
          ],

@@ -13,34 +13,65 @@ import { exec } from 'node:child_process';
 import { native } from './native';
 import { Backend } from '../backend';
 
+/**
+ * This backend is used on Windows. It uses the native Win32 API to simulate key presses
+ * and mouse movements. It also uses the Win32 API to get the currently focused window.
+ */
 export class Win32Backend implements Backend {
-  constructor() {
-    console.log('Win32 backend created.');
+  /**
+   * On Windows, the 'toolbar' window type is used. This is actually the only window type
+   * supported by Electron on Windows.
+   *
+   * @returns 'toolbar'
+   */
+  public getWindowType() {
+    return 'toolbar';
   }
 
-  // This is called when the backend is created. Currently, this this does nothing on
-  // Windows.
+  /**
+   * This is called when the backend is created. Currently, this this does nothing on
+   * Windows.
+   */
   public async init() {}
 
-  // Returns the current pointer position. For now, it does not return the modifiers.
+  /**
+   * This simply uses Electron's screen module to get the current pointer position. On
+   * Windows, this works perfectly fine.
+   *
+   * @returns The current pointer position. For now, it does not return the modifiers.
+   */
   public async getPointer() {
     const pos = screen.getCursorScreenPoint();
     return { x: pos.x, y: pos.y, mods: 0 };
   }
 
-  // Moves the pointer to the given position.
+  /**
+   * Moves the pointer to the given position using the Win32 API.
+   *
+   * @param x The x coordinate to move the pointer to.
+   * @param y The y coordinate to move the pointer to.
+   */
   public async movePointer(x: number, y: number) {
     native.movePointer(x, y);
   }
 
-  // Returns the name and class of the currently focused window.
+  /**
+   * This uses the Win23 API to get the name and class of the currently focused window.
+   *
+   * @returns The name and class of the currently focused window.
+   */
   public async getFocusedWindow() {
     const w = native.getActiveWindow();
     console.log(w);
     return w;
   }
 
-  // This simulates a shortcut by sending the keys to the currently focused window.
+  /**
+   * This simulates a shortcut using a powershell command.
+   *
+   * @param shortcut The shortcut to simulate.
+   * @todo: Add information about the string format of the shortcut.
+   */
   public async simulateShortcut(shortcut: string) {
     return new Promise<void>((resolve, reject) => {
       try {
@@ -63,25 +94,44 @@ export class Win32Backend implements Backend {
     });
   }
 
-  // This binds a shortcut to a callback. The callback is called when the shortcut is pressed.
+  /**
+   * This binds a shortcut to a callback function. The callback function is called when
+   * the shortcut is pressed. On Windows, this uses Electron's globalShortcut module.
+   *
+   * @param shortcut The shortcut to simulate.
+   * @returns A promise which resolves when the shortcut has been simulated.
+   * @todo: Add information about the string format of the shortcut.
+   */
   public async bindShortcut(shortcut: string, callback: () => void) {
     if (!globalShortcut.register(shortcut, callback)) {
       throw new Error('Shortcut is already in use.');
     }
   }
 
-  // This unbinds a shortcut.
+  /**
+   * This unbinds a previously bound shortcut.
+   *
+   * @param shortcut The shortcut to unbind.
+   */
   public async unbindShortcut(shortcut: string) {
     globalShortcut.unregister(shortcut);
   }
 
-  // This unbinds all shortcuts.
+  /**
+   * This unbinds all previously bound shortcuts.
+   */
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }
 
-  // This converts a shortcut from the format used by Electron to the format used by
-  // PowerShell.
+  /**
+   * This converts a shortcut from the format used by Electron to the format used by
+   * PowerShell.
+   *
+   * @param shortcut The shortcut to translate.
+   * @returns The translated shortcut.
+   * @todo: Add information about the string format of the shortcut.
+   */
   private toPowershellAccelerator(shortcut: string) {
     if (shortcut.includes('Option')) {
       throw new Error('Shortcuts including Option are not yet supported on GNOME.');
