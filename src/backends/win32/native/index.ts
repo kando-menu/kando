@@ -13,6 +13,6 @@ export interface Native {
   movePointer(x: number, y: number): void;
 }
 
-const native: Native = require('./../../../../build/Release/native.node');
+const native: Native = require('./../../../../build/Release/NativeWin32.node');
 
 export { native };
