@@ -51,11 +51,7 @@ It currently demonstrates the following core features:
 ## Installing Dependencies
 
 If you want to test the prototype, you will have to install `node` and `npm`.
-You will also need `node-gyp` for building the native backends:
-
-```
-npm install -g node-gyp
-```
+You will also need `cmake` for building the native backends.
 
 ### Windows
 
@@ -69,7 +65,7 @@ npm install -g windows-build-tools
 ### Linux
 
 On Linux, `gcc` should already be installed.
-However, some additional packages may be required for the native backend module.
+However, some additional packages may be required for the native backend modules.
 On Debian-based distributions you can install them with:
 
 ```
