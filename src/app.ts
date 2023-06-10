@@ -9,8 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { screen, BrowserWindow, ipcMain } from 'electron';
-import os from 'node:os';
-import { Backend, getBackend } from './backend';
+import { Backend, getBackend } from './backends';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
