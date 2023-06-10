@@ -5,6 +5,7 @@
   "copyright": "Copyright © 2023 Simon Schneegans",
   "main": ".webpack/main",
   "scripts": {
+    "install": "cmake-js compile",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -32,6 +33,7 @@
     "@typescript-eslint/parser": "^5.59.9",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "chai": "^4.3.7",
+    "cmake-js": "^7.2.1",
     "css-loader": "^6.8.1",
     "electron": "25.1.0",
     "eslint": "^8.42.0",
