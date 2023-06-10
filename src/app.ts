@@ -106,11 +106,7 @@ export class KandoApp {
     ipcMain.on('simulate-shortcut', () => {
       this.window.hide();
 
-      if (os.platform() === 'win32') {
-        this.backend.simulateShortcut('Ctrl+Alt+Tab');
-      } else {
-        this.backend.simulateShortcut('Ctrl+Alt+Right');
-      }
+      this.backend.simulateShortcut('Meta+E');
     });
 
     ipcMain.on('move-pointer', (event, pos) => {
