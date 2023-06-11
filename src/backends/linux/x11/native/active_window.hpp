@@ -11,5 +11,5 @@
 #include <napi.h>
 
 namespace active_window {
-Napi::Object init(Napi::Env env, Napi::Object exports);
+void init(Napi::Env env, Napi::Object exports);
 }
