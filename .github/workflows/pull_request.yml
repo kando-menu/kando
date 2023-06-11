@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  linux:
+    name: Test Deploy for Linux
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: |
+          sudo apt install libx11-dev
+          npm ci
+      - name: Create Release
+        run: |
+          npm run make
+
+  windows:
+    name: Test Deploy for Windows
+    runs-on: windows-2019
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: |
+          npm ci
+      - name: Create Release
+        run: |
+          npm run make
