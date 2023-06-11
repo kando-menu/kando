@@ -99,11 +99,9 @@ Napi::Value getActiveWindowWrapped(const Napi::CallbackInfo &info) {
   return env.Null();
 }
 
-Napi::Object init(Napi::Env env, Napi::Object exports) {
+void init(Napi::Env env, Napi::Object exports) {
   exports.Set("getActiveWindow",
               Napi::Function::New(env, getActiveWindowWrapped));
-
-  return exports;
 }
 
 } // namespace active_window

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#include "active_window.hpp"
+#include "move_pointer.hpp"
 
 #include <windows.h>
 #include <winuser.h>
