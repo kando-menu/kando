@@ -499,7 +499,7 @@ export class Menu extends EventEmitter {
       };
 
       if (offset.x !== 0 || offset.y !== 0) {
-        this.emit('move-pointer', clampedPosition);
+        this.emit('move-pointer', offset);
 
         this.root.position = {
           x: this.root.position.x + offset.x,

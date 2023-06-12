@@ -27,8 +27,8 @@ menu.on('select', () => {
   menu.hide();
 });
 
-menu.on('move-pointer', (pos) => {
-  window.api.movePointer(pos);
+menu.on('move-pointer', (dist) => {
+  window.api.movePointer(dist);
 });
 
 document.querySelector('#show-editor-button').addEventListener('click', () => {

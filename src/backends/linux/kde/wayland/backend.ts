@@ -149,12 +149,12 @@ export class KDEWaylandBackend extends X11Backend {
   }
 
   /**
-   * Moves the pointer to the given position.
+   * Moves the pointer by the given amount.
    *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
    */
-  public async movePointer(x: number, y: number) {
-    await this.portal.setPointer(x, y);
+  public override async movePointer(dx: number, dy: number) {
+    await this.portal.setPointer(dx, dy);
   }
 }

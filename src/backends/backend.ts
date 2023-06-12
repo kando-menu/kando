@@ -51,13 +51,13 @@ export interface Backend {
   }>;
 
   /**
-   * Each backend must provide a way to move the pointer to a given position.
+   * Each backend must provide a way to move the pointer.
    *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
    * @returns A promise which resolves when the pointer has been moved.
    */
-  movePointer: (x: number, y: number) => Promise<void>;
+  movePointer: (dx: number, dy: number) => Promise<void>;
 
   /**
    * Each backend must provide a way to simulate a keyboard shortcut. This is used to

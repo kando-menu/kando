@@ -109,9 +109,8 @@ export class KandoApp {
       this.backend.simulateShortcut('Super+A');
     });
 
-    ipcMain.on('move-pointer', (event, pos) => {
-      const windowPos = this.window.getPosition();
-      this.backend.movePointer(pos.x + windowPos[0], pos.y + windowPos[1]);
+    ipcMain.on('move-pointer', (event, dist) => {
+      this.backend.movePointer(dist.x, dist.y);
     });
   }
 

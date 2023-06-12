@@ -56,13 +56,13 @@ export class X11Backend implements Backend {
   }
 
   /**
-   * Moves the pointer to the given position using xdotool.
+   * Moves the pointer by the given amount using xdotool.
    *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
    */
-  public async movePointer(x: number, y: number) {
-    exec(`xdotool mousemove ${x} ${y}`);
+  public async movePointer(dx: number, dy: number) {
+    exec(`xdotool mousemove_relative ${dx} ${dy}`);
   }
 
   /**

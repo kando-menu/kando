@@ -53,13 +53,13 @@ export class Win32Backend implements Backend {
   }
 
   /**
-   * Moves the pointer to the given position using the Win32 API.
+   * Moves the pointer by the given amount using the Win32 API.
    *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
    */
-  public async movePointer(x: number, y: number) {
-    native.movePointer(x, y);
+  public async movePointer(dx: number, dy: number) {
+    native.movePointer(dx, dy);
   }
 
   /**
