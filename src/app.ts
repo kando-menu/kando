@@ -109,7 +109,7 @@ export class KandoApp {
     });
 
     ipcMain.on('move-pointer', (event, dist) => {
-      this.backend.movePointer(dist.x, dist.y);
+      this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
     });
   }
 
