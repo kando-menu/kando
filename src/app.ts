@@ -87,7 +87,6 @@ export class KandoApp {
     // we wait for the fade-out animation to finish. We also make the window click-through
     // by ignoring any input events during the fade-out animation.
     ipcMain.on('hide-window', (event, delay) => {
-      this.window.setFocusable(false);
       this.window.setIgnoreMouseEvents(true);
       this.hideTimeout = setTimeout(() => {
         this.window.hide();
@@ -148,7 +147,6 @@ export class KandoApp {
           y: info.pointerY - workarea.y,
         });
 
-        this.window.setFocusable(true);
         this.window.setIgnoreMouseEvents(false);
         this.window.show();
       })
