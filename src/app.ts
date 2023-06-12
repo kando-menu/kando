@@ -118,15 +118,19 @@ export class KandoApp {
   // This is called when the user presses the shortcut. It will get the current
   // window and pointer position and send them to the renderer process.
   private showMenu() {
-    Promise.all([this.backend.getFocusedWindow(), this.backend.getPointer()])
-      .then(([window, pointer]) => {
+    this.backend
+      .getWMInfo()
+      .then((info) => {
         // Abort any ongoing hide animation.
         if (this.hideTimeout) {
           clearTimeout(this.hideTimeout);
         }
 
         // Move the window to the monitor which contains the pointer.
-        const workarea = screen.getDisplayNearestPoint(pointer).workArea;
+        const workarea = screen.getDisplayNearestPoint({
+          x: info.pointerX,
+          y: info.pointerY,
+        }).workArea;
         this.window.setBounds({
           x: workarea.x,
           y: workarea.y,
@@ -134,15 +138,15 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
-        if (window) {
-          console.log('Currently focused window: ' + window.wmClass);
+        if (info.windowClass) {
+          console.log('Currently focused window: ' + info.windowClass);
         } else {
           console.log('Currently no window is focused.');
         }
 
         this.window.webContents.send('show-menu', {
-          x: pointer.x - workarea.x,
-          y: pointer.y - workarea.y,
+          x: info.pointerX - workarea.x,
+          y: info.pointerY - workarea.y,
         });
 
         this.window.setFocusable(true);

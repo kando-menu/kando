@@ -38,14 +38,21 @@ export class X11Backend implements Backend {
   public async init() {}
 
   /**
-   * This simply uses Electron's screen module to get the current pointer position. On
-   * X11, this works perfectly fine.
+   * This uses the X11 library to get the name and class of the currently focused window.
+   * In addition, it uses Electron's screen module to get the current pointer position.
    *
-   * @returns The current pointer position. For now, it does not return the modifiers.
+   * @returns The name and class of the currently focused window as well as the current
+   *   pointer position.
    */
-  public async getPointer() {
-    const pos = screen.getCursorScreenPoint();
-    return { x: pos.x, y: pos.y, mods: 0 };
+  public async getWMInfo() {
+    const window = native.getActiveWindow();
+    const pointer = screen.getCursorScreenPoint();
+    return {
+      windowName: window.name,
+      windowClass: window.wmClass,
+      pointerX: pointer.x,
+      pointerY: pointer.y,
+    };
   }
 
   /**
@@ -56,17 +63,6 @@ export class X11Backend implements Backend {
    */
   public async movePointer(x: number, y: number) {
     exec(`xdotool mousemove ${x} ${y}`);
-  }
-
-  /**
-   * This uses the X11 library to get the name and class of the currently focused window.
-   *
-   * @returns The name and class of the currently focused window.
-   */
-  public async getFocusedWindow() {
-    const w = native.getActiveWindow();
-    console.log(w);
-    return w;
   }
 
   /**

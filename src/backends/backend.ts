@@ -37,13 +37,18 @@ export interface Backend {
   getWindowType: () => string;
 
   /**
-   * Each backend must provide the current pointer position via this method.
+   * Each backend must provide a way to get the name and class of the currently focused
+   * application window as well as the current pointer position.
    *
-   * @returns A promise which resolves to the current pointer position and the currently
-   *   pressed modifier keys.
-   * @todo: Add information about the modifier keys.
+   * @returns A promise which resolves to the name and class of the currently focused
+   *   window as well as to the current pointer position.
    */
-  getPointer: () => Promise<{ x: number; y: number; mods: number }>;
+  getWMInfo: () => Promise<{
+    windowName: string;
+    windowClass: string;
+    pointerX: number;
+    pointerY: number;
+  }>;
 
   /**
    * Each backend must provide a way to move the pointer to a given position.
@@ -53,15 +58,6 @@ export interface Backend {
    * @returns A promise which resolves when the pointer has been moved.
    */
   movePointer: (x: number, y: number) => Promise<void>;
-
-  /**
-   * Each backend must provide a way to get the name and class of the currently focused
-   * application window.
-   *
-   * @returns A promise which resolves to the name and class of the currently focused
-   *   window.
-   */
-  getFocusedWindow: () => Promise<{ name: string; wmClass: string }>;
 
   /**
    * Each backend must provide a way to simulate a keyboard shortcut. This is used to

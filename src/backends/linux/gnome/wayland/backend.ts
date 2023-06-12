@@ -58,11 +58,22 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Returns the current pointer position and the currently pressed modifier keys.
+   * This uses the DBus interface of the Kando GNOME Shell integration extension to get
+   * the name and class of the currently focused window as well as the current pointer
+   * position.
+   *
+   * @returns The name and class of the currently focused window as well as the current
+   *   pointer position.
    */
-  public async getPointer() {
-    const [x, y, mods] = await this.interface.GetPointer();
-    return { x: x, y: y, mods: mods };
+  public async getWMInfo() {
+    const [x, y] = await this.interface.GetPointer();
+    const [name, wmClass] = await this.interface.GetFocusedWindow();
+    return {
+      windowName: name,
+      windowClass: wmClass,
+      pointerX: x,
+      pointerY: y,
+    };
   }
 
   /**
@@ -73,17 +84,6 @@ export class GnomeBackend implements Backend {
    */
   public async movePointer(x: number, y: number) {
     await this.interface.MovePointer(x, y);
-  }
-
-  /**
-   * This uses the DBus interface of the Kando GNOME Shell integration extension to
-   * retrieve the name and class of the currently focused window.
-   *
-   * @returns The name and class of the currently focused window.
-   */
-  public async getFocusedWindow() {
-    const [name, wmClass] = await this.interface.GetFocusedWindow();
-    return { name: name, wmClass: wmClass };
   }
 
   /**
