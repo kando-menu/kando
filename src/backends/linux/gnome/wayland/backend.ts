@@ -66,13 +66,12 @@ export class GnomeBackend implements Backend {
    *   pointer position.
    */
   public async getWMInfo() {
-    const [x, y] = await this.interface.GetPointer();
-    const [name, wmClass] = await this.interface.GetFocusedWindow();
+    const info = await this.interface.GetWMInfo();
     return {
-      windowName: name,
-      windowClass: wmClass,
-      pointerX: x,
-      pointerY: y,
+      windowName: info[0],
+      windowClass: info[1],
+      pointerX: info[2],
+      pointerY: info[3],
     };
   }
 
