@@ -47,6 +47,10 @@ export class X11Backend implements Backend {
   public async getWMInfo() {
     const window = native.getActiveWindow();
     const pointer = screen.getCursorScreenPoint();
+
+    // For some reason, this makes the method much faster. For now, I have no idea why.
+    process.nextTick(() => {});
+
     return {
       windowName: window.name,
       windowClass: window.wmClass,

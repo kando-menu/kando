@@ -12,24 +12,23 @@ import os from 'os';
 import fs from 'fs';
 import DBus from 'dbus-final';
 
+import { WMInfo } from '../../../backend';
 import { X11Backend } from '../../x11/backend';
 import { RemoteDesktop } from '../../../portals/remote-desktop';
 
 class KWinScriptInterface extends DBus.interface.Interface {
-  private callback: (
+  private callback: (info: WMInfo) => void;
+
+  public SendInfo(
     windowName: string,
     windowClass: string,
-    x: number,
-    y: number
-  ) => void;
-
-  public SendInfo(windowName: string, windowClass: string, x: number, y: number) {
-    this.callback(windowName, windowClass, x, y);
+    pointerX: number,
+    pointerY: number
+  ) {
+    this.callback({ windowName, windowClass, pointerX, pointerY });
   }
 
-  public setCallback(
-    callback: (windowName: string, windowClass: string, x: number, y: number) => void
-  ) {
+  public setCallback(callback: (info: WMInfo) => void) {
     this.callback = callback;
   }
 }
@@ -101,16 +100,7 @@ export class KDEWaylandBackend extends X11Backend {
     pointerY: number;
   }> {
     return new Promise((resolve, reject) => {
-      this.scriptInterface.setCallback(
-        (windowName: string, windowClass: string, pointerX: number, pointerY: number) => {
-          resolve({
-            windowName: windowName,
-            windowClass: windowClass,
-            pointerX: pointerX,
-            pointerY: pointerY,
-          });
-        }
-      );
+      this.scriptInterface.setCallback(resolve);
 
       setTimeout(() => {
         reject('Did not receive an answer by the Kando KWin script.');

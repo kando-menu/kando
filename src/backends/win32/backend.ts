@@ -45,8 +45,8 @@ export class Win32Backend implements Backend {
     const window = native.getActiveWindow();
     const pointer = screen.getCursorScreenPoint();
 
-    // For some reason, this log makes the method much faster. For now, I have no idea why.
-    console.log(window);
+    // For some reason, this makes the method much faster. For now, I have no idea why.
+    process.nextTick(() => {});
 
     return {
       windowName: window.name,

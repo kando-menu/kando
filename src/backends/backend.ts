@@ -8,6 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+export interface WMInfo {
+  windowName: string;
+  windowClass: string;
+  pointerX: number;
+  pointerY: number;
+}
+
 /**
  * This interface must be implemented by all backends. A backend is responsible for
  * communicating with the operating system. It provides methods to move the mouse pointer,
@@ -43,12 +50,7 @@ export interface Backend {
    * @returns A promise which resolves to the name and class of the currently focused
    *   window as well as to the current pointer position.
    */
-  getWMInfo: () => Promise<{
-    windowName: string;
-    windowClass: string;
-    pointerX: number;
-    pointerY: number;
-  }>;
+  getWMInfo: () => Promise<WMInfo>;
 
   /**
    * Each backend must provide a way to move the pointer.
