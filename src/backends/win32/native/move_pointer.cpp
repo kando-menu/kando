@@ -16,8 +16,9 @@
 namespace move_pointer {
 
 void movePointer(int dx, int dy) {
-    auto* p = GetCursorPos();
-    SetCursorPos(x + p->x, y + p->y);
+  POINT p;
+  GetCursorPos(&p);
+  SetCursorPos(dx + p.x, dy + p.y);
 }
 
 Napi::Object movePointerWrapped(const Napi::CallbackInfo &info) {
