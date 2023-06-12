@@ -134,19 +134,19 @@ export class Win32Backend implements Backend {
    */
   private toPowershellAccelerator(shortcut: string) {
     if (shortcut.includes('Option')) {
-      throw new Error('Shortcuts including Option are not yet supported on GNOME.');
+      throw new Error('Shortcuts including Option are not yet supported on Windows.');
     }
 
     if (shortcut.includes('AltGr')) {
-      throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
+      throw new Error('Shortcuts including AltGr are not yet supported on Windows.');
     }
 
     if (shortcut.includes('Meta')) {
-      throw new Error('Shortcuts including Meta are not yet supported on GNOME.');
+      throw new Error('Shortcuts including Meta are not yet supported on Windows.');
     }
 
     if (shortcut.includes('Super')) {
-      throw new Error('Shortcuts including Super are not yet supported on GNOME.');
+      throw new Error('Shortcuts including Super are not yet supported on Windows.');
     }
 
     shortcut = shortcut.replace('^', '{^}');
