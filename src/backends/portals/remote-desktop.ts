@@ -15,9 +15,9 @@ export class RemoteDesktop extends DesktopPortal {
   private interface: DBus.ClientInterface;
   private session: { token: string; path: string };
 
-  public async setPointer(x: number, y: number) {
+  public async movePointer(dx: number, dy: number) {
     await this.connect();
-    this.interface.NotifyPointerMotion(this.session.path, {}, x, y);
+    this.interface.NotifyPointerMotion(this.session.path, {}, dx, dy);
   }
 
   private async connect() {
