@@ -8,6 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+/**
+ * This interface is used to transfer information required from the window manager when
+ * opening the pie menu. It contains the name and class of the currently focused window as
+ * well as the current pointer position.
+ *
+ * How to get the name and class of the currently focused window depends on the operating
+ * system and the window manager.
+ */
 export interface WMInfo {
   windowName: string;
   windowClass: string;
