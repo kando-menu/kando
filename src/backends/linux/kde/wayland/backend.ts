@@ -15,43 +15,58 @@ import DBus from 'dbus-final';
 import { Backend, WMInfo } from '../../../backend';
 import { RemoteDesktop } from '../../../portals/remote-desktop';
 
-class KWinScriptInterface extends DBus.interface.Interface {
-  private wmInfoCallback: (info: WMInfo) => void;
-  private triggerCallback: () => void;
-
-  public SendWMInfo(
-    windowName: string,
-    windowClass: string,
-    pointerX: number,
-    pointerY: number
-  ) {
-    this.wmInfoCallback({ windowName, windowClass, pointerX, pointerY });
-  }
-
-  public Trigger() {
-    this.triggerCallback();
-  }
-
-  public setWMInfoCallback(callback: (info: WMInfo) => void) {
-    this.wmInfoCallback = callback;
-  }
-
-  public setTriggerCallback(callback: () => void) {
-    this.triggerCallback = callback;
-  }
-}
-
 /**
- * This backend is used on KDE with X11.
+ * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind
+ * global keyboard shortcuts and to get information about the currently focused window as
+ * well as the current pointer position. Mouse and keyboard events are simulated using the
+ * RemoteDesktop portal.
+ *
+ * Using the KWin scripting interface is a bit hacky, but for now it seems to be the only
+ * way to get information on the focused window and the mouse pointer position! Also, the
+ * scripting interface seems to be the only viable way to bind global keyboard shortcuts
+ * for now. Here are alternative approaches which I considered:
+ *
+ * Getting the name and class of the focused window:
+ *
+ * - There is a request for a corresponding desktop portal:
+ *   https://github.com/flatpak/xdg-desktop-portal/issues/304
+ *
+ * Binding global keyboard shortcuts:
+ *
+ * - We could omit automatic binding of global shortcuts on KDE Wayland and let the users
+ *   configure their own key bindings in the system settings.
+ * - There is a corresponding desktop portal, but it is very new and not yet available
+ *   ubiquitously: https://github.com/flatpak/xdg-desktop-portal/issues/624. At some
+ *   point, Electron will probably support it, so we could maybe wait a couple of months.
+ *   https://github.com/electron/electron/issues/38288
+ * - There is KGlobaAccel. Directly using the D-Bus interface is not possible, because it
+ *   uses some serialized Qt types. The only approach would be a native module which links
+ *   against Qt. While this could be possible, it would introduce a lot of complexity.
+ *
+ * The current approach is limited to a single, hard-coded trigger shortcut. For now, this
+ * can be considered a proof of concept only. While it could be possible to add more
+ * shortcuts, it will get even more ugly. I would rather wait for the desktop portal to be
+ * available everywhere.
  */
 export class KDEWaylandBackend implements Backend {
-  private portal: RemoteDesktop = new RemoteDesktop();
+  // The remote desktop portal is used to simulate mouse and keyboard events.
+  private remoteDesktop: RemoteDesktop = new RemoteDesktop();
 
-  private kwinScripting: DBus.ClientInterface;
-  private scriptInterface: KWinScriptInterface;
+  // The KWin scripting interface is used to load custom JavaScript code into KWin. The
+  // scripts will acquire the required information for Kando (mouse pointer position and
+  // name and class of the currently focused window) and send it to Kando via D-Bus.
+  private scriptingInterface: DBus.ClientInterface;
 
+  // This is the interface which is exposed by Kando for the KWin script to talk to.
+  private kandoInterface: CustomInterface;
+
+  // KWin can only load scripts from files. Hence, we need to store the scripts in a
+  // temporary directory. Here we store the paths to the files.
   private wmInfoScriptPath: string;
   private tiggerScriptPath: string;
+
+  // The trigger script is unloaded when Kando is closed. We need to store the script ID
+  // to be able to unload it.
   private triggerScriptID: number;
 
   /**
@@ -64,10 +79,19 @@ export class KDEWaylandBackend implements Backend {
     return 'toolbar';
   }
 
+  /**
+   * This initializes the backend. It will create and store the two KWin scripts in a
+   * temporary directory and load the trigger-script into KWin in order to register the
+   * global shortcut.
+   *
+   * In addition, it will set up the D-Bus interface which is used by the KWin scripts to
+   * communicate with Kando.
+   */
   public async init() {
-    // Create the KWin script.
+    // Create the KWin script which will send information about the currently focused
+    // window and the mouse pointer position to Kando.
     this.wmInfoScriptPath = this.storeScript(
-      'sendWMInfo.js',
+      'get-info.js',
       `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
                'org.kandomenu.kando', 'SendWMInfo',
                workspace.activeClient.caption,
@@ -81,26 +105,26 @@ export class KDEWaylandBackend implements Backend {
     `
     );
 
-    // Create the KWin script.
+    // Create the KWin script which will register the global shortcut.
     this.tiggerScriptPath = this.storeScript(
-      'trigger.js',
+      'global-shortcut.js',
       `const success = registerShortcut('Kando', 'Trigger Kando Prototype', 'Ctrl+Space', () => {
          console.log('Kando: Triggered.');
          callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
                   'org.kandomenu.kando', 'Trigger');
-       });
+      });
 
-       if (success) {
-         console.log('Kando: Set up trigger.');
-       } else {
-          console.log('Kando: Failed to set up trigger.');
-       }
+      if (success) {
+        console.log('Kando: Set up trigger.');
+      } else {
+        console.log('Kando: Failed to set up trigger.');
+      }
     `
     );
 
-    // Create the D-Bus interface for the script to communicate with.
-    this.scriptInterface = new KWinScriptInterface('org.kandomenu.kando');
-    KWinScriptInterface.configureMembers({
+    // Create the D-Bus interface for the KWin script to communicate with.
+    this.kandoInterface = new CustomInterface('org.kandomenu.kando');
+    CustomInterface.configureMembers({
       methods: {
         SendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
         Trigger: { inSignature: '', outSignature: '', noReply: false },
@@ -110,15 +134,23 @@ export class KDEWaylandBackend implements Backend {
     const bus = DBus.sessionBus();
 
     await bus.requestName('org.kandomenu.kando', 0);
-    bus.export('/org/kandomenu/kando', this.scriptInterface);
+    bus.export('/org/kandomenu/kando', this.kandoInterface);
 
     // Acquire the KWin scripting interface to run the scripts.
     const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
-    this.kwinScripting = obj.getInterface('org.kde.kwin.Scripting');
+    this.scriptingInterface = obj.getInterface('org.kde.kwin.Scripting');
 
+    // Finally bind the global shortcut by running the trigger script.
     this.triggerScriptID = await this.startScript(this.tiggerScriptPath);
   }
 
+  /**
+   * This uses a KWin script to get the name and class of the currently focused window as
+   * well as the current pointer position.
+   *
+   * @returns The name and class of the currently focused window as well as the current
+   *   pointer position.
+   */
   public async getWMInfo(): Promise<{
     windowName: string;
     windowClass: string;
@@ -126,12 +158,13 @@ export class KDEWaylandBackend implements Backend {
     pointerY: number;
   }> {
     return new Promise((resolve, reject) => {
-      this.scriptInterface.setWMInfoCallback(resolve);
+      this.kandoInterface.wmInfoCallback = resolve;
 
       setTimeout(() => {
         reject('Did not receive an answer by the Kando KWin script.');
       }, 1000);
 
+      // Stop the script right after it completed.
       this.startScript(this.wmInfoScriptPath).then((id) => {
         this.stopScript(id);
       });
@@ -139,13 +172,14 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * Moves the pointer by the given amount.
+   * Moves the pointer by the given amount. This uses the remote desktop portal. As such,
+   * it may present a dialog to the user, asking for permission to control the pointer.
    *
    * @param dx The amount of horizontal movement.
    * @param dy The amount of vertical movement.
    */
   public async movePointer(dx: number, dy: number) {
-    await this.portal.movePointer(dx, dy);
+    await this.remoteDesktop.movePointer(dx, dy);
   }
 
   public async simulateShortcut(shortcut: string): Promise<void> {
@@ -169,19 +203,38 @@ export class KDEWaylandBackend implements Backend {
    * @todo: Add information about the string format of the shortcut.
    */
   public async bindShortcut(shortcut: string, callback: () => void) {
-    this.scriptInterface.setTriggerCallback(callback);
+    this.kandoInterface.triggerCallback = callback;
   }
 
+  /**
+   * Unbinds a keyboard shortcut. For now, this function stops the background KWIn script
+   * which registered the shortcut. As only one keyboard shortcut is currently supported,
+   * the parameter is ignored.
+   *
+   * @param shortcut The shortcut to unbind.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async unbindShortcut(shortcut: string) {
-    this.scriptInterface.setTriggerCallback(() => {});
+    this.kandoInterface.triggerCallback = () => {};
     this.stopScript(this.triggerScriptID);
   }
 
+  /**
+   * Unbinds all keyboard shortcuts. For now, this function stops the background KWIn
+   * script which registered the shortcut.
+   */
   public async unbindAllShortcuts() {
-    this.scriptInterface.setTriggerCallback(() => {});
+    this.kandoInterface.triggerCallback = () => {};
     this.stopScript(this.triggerScriptID);
   }
 
+  /**
+   * Stores the given script in a temporary directory and returns the full path to it.
+   *
+   * @param name File name of the script, without directory.
+   * @param script JavaScript code of the script.
+   * @returns The full path to the script.
+   */
   private storeScript(name: string, script: string) {
     const tmpDir = os.tmpdir() + '/kando';
     fs.mkdirSync(tmpDir, { recursive: true });
@@ -192,8 +245,14 @@ export class KDEWaylandBackend implements Backend {
     return scriptPath;
   }
 
+  /**
+   * Starts a KWin script.
+   *
+   * @param scriptPath Full path to a JavaScript file.
+   * @returns An ID which can be used to stop the script.
+   */
   private async startScript(scriptPath: string) {
-    const id = await this.kwinScripting.loadScript(scriptPath);
+    const id = await this.scriptingInterface.loadScript(scriptPath);
     await DBus.sessionBus().call(
       new DBus.Message({
         destination: 'org.kde.KWin',
@@ -206,6 +265,11 @@ export class KDEWaylandBackend implements Backend {
     return id;
   }
 
+  /**
+   * Stops a KWin script.
+   *
+   * @param scriptID The ID of the script to stop.
+   */
   private async stopScript(scriptID: number) {
     await DBus.sessionBus().call(
       new DBus.Message({
@@ -215,5 +279,31 @@ export class KDEWaylandBackend implements Backend {
         member: 'stop',
       })
     );
+  }
+}
+
+// This class is available via DBus in the KWin script.
+class CustomInterface extends DBus.interface.Interface {
+  // These callbacks are set by the KDEWaylandBackend class above.
+  public wmInfoCallback: (info: WMInfo) => void;
+  public triggerCallback: () => void;
+
+  // This is called by the get-info KWin script.
+  public SendWMInfo(
+    windowName: string,
+    windowClass: string,
+    pointerX: number,
+    pointerY: number
+  ) {
+    if (this.wmInfoCallback) {
+      this.wmInfoCallback({ windowName, windowClass, pointerX, pointerY });
+    }
+  }
+
+  // This is called by the global-shortcut KWin script whenever the trigger shortcut is pressed.
+  public Trigger() {
+    if (this.triggerCallback) {
+      this.triggerCallback();
+    }
   }
 }
