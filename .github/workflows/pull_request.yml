@@ -22,7 +22,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt install libx11-dev
-          npm ci
+          npm install
       - name: Create Release
         run: |
           npm run make
@@ -39,7 +39,7 @@ jobs:
           node-version: 18
       - name: Install Dependencies
         run: |
-          npm ci
+          npm install
       - name: Create Release
         run: |
           npm run make
