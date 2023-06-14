@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'os';
+
 import { screen, BrowserWindow, ipcMain } from 'electron';
 import { Backend, getBackend } from './backends';
 
@@ -33,8 +35,13 @@ export class KandoApp {
     }
 
     await this.backend.init();
-    await this.backend.bindShortcut('CommandOrControl+Space', () => {
-      this.showMenu();
+    await this.backend.bindShortcut({
+      id: 'prototype_trigger',
+      description: 'Trigger the Kando prototype',
+      accelerator: 'CommandOrControl+Space',
+      action: () => {
+        this.showMenu();
+      },
     });
 
     this.window = await this.initWindow();
@@ -62,8 +69,8 @@ export class KandoApp {
       },
       transparent: true,
       resizable: false,
+      skipTaskbar: true,
       frame: false,
-      alwaysOnTop: true,
       x: display.workArea.x,
       y: display.workArea.y,
       width: display.workArea.width + 1,
@@ -87,7 +94,6 @@ export class KandoApp {
     // we wait for the fade-out animation to finish. We also make the window click-through
     // by ignoring any input events during the fade-out animation.
     ipcMain.on('hide-window', (event, delay) => {
-      this.window.setFocusable(false);
       this.window.setIgnoreMouseEvents(true);
       this.hideTimeout = setTimeout(() => {
         this.window.hide();
@@ -106,27 +112,34 @@ export class KandoApp {
     ipcMain.on('simulate-shortcut', () => {
       this.window.hide();
 
-      this.backend.simulateShortcut('Super+A');
+      if (os.platform() === 'win32') {
+        this.backend.simulateShortcut('Ctrl+Alt+Tab');
+      } else {
+        this.backend.simulateShortcut('Super+A');
+      }
     });
 
-    ipcMain.on('move-pointer', (event, pos) => {
-      const windowPos = this.window.getPosition();
-      this.backend.movePointer(pos.x + windowPos[0], pos.y + windowPos[1]);
+    ipcMain.on('move-pointer', (event, dist) => {
+      this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
     });
   }
 
   // This is called when the user presses the shortcut. It will get the current
   // window and pointer position and send them to the renderer process.
   private showMenu() {
-    Promise.all([this.backend.getFocusedWindow(), this.backend.getPointer()])
-      .then(([window, pointer]) => {
+    this.backend
+      .getWMInfo()
+      .then((info) => {
         // Abort any ongoing hide animation.
         if (this.hideTimeout) {
           clearTimeout(this.hideTimeout);
         }
 
         // Move the window to the monitor which contains the pointer.
-        const workarea = screen.getDisplayNearestPoint(pointer).workArea;
+        const workarea = screen.getDisplayNearestPoint({
+          x: info.pointerX,
+          y: info.pointerY,
+        }).workArea;
         this.window.setBounds({
           x: workarea.x,
           y: workarea.y,
@@ -134,18 +147,17 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
-        if (window) {
-          console.log('Currently focused window: ' + window.wmClass);
+        if (info.windowClass) {
+          console.log('Currently focused window: ' + info.windowClass);
         } else {
           console.log('Currently no window is focused.');
         }
 
         this.window.webContents.send('show-menu', {
-          x: pointer.x - workarea.x,
-          y: pointer.y - workarea.y,
+          x: info.pointerX - workarea.x,
+          y: info.pointerY - workarea.y,
         });
 
-        this.window.setFocusable(true);
         this.window.setIgnoreMouseEvents(false);
         this.window.show();
       })

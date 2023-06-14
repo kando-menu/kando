@@ -9,6 +9,34 @@
 // SPDX-License-Identifier: MIT
 
 /**
+ * This interface is used to transfer information required from the window manager when
+ * opening the pie menu. It contains the name and class of the currently focused window as
+ * well as the current pointer position.
+ *
+ * How to get the name and class of the currently focused window depends on the operating
+ * system and the window manager.
+ */
+export interface WMInfo {
+  windowName: string;
+  windowClass: string;
+  pointerX: number;
+  pointerY: number;
+}
+
+/**
+ * This interface is used to describe a keyboard shortcut. It contains a unique id, a
+ * description and the actual shortcut.
+ *
+ * @todo: Add information about the string format of the shortcut.
+ */
+export interface Shortcut {
+  id: string;
+  description: string;
+  accelerator: string;
+  action: () => void;
+}
+
+/**
  * This interface must be implemented by all backends. A backend is responsible for
  * communicating with the operating system. It provides methods to move the mouse pointer,
  * simulate keyboard shortcuts and get information about the currently focused window.
@@ -37,31 +65,22 @@ export interface Backend {
   getWindowType: () => string;
 
   /**
-   * Each backend must provide the current pointer position via this method.
-   *
-   * @returns A promise which resolves to the current pointer position and the currently
-   *   pressed modifier keys.
-   * @todo: Add information about the modifier keys.
-   */
-  getPointer: () => Promise<{ x: number; y: number; mods: number }>;
-
-  /**
-   * Each backend must provide a way to move the pointer to a given position.
-   *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
-   * @returns A promise which resolves when the pointer has been moved.
-   */
-  movePointer: (x: number, y: number) => Promise<void>;
-
-  /**
    * Each backend must provide a way to get the name and class of the currently focused
-   * application window.
+   * application window as well as the current pointer position.
    *
    * @returns A promise which resolves to the name and class of the currently focused
-   *   window.
+   *   window as well as to the current pointer position.
    */
-  getFocusedWindow: () => Promise<{ name: string; wmClass: string }>;
+  getWMInfo: () => Promise<WMInfo>;
+
+  /**
+   * Each backend must provide a way to move the pointer.
+   *
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
+   * @returns A promise which resolves when the pointer has been moved.
+   */
+  movePointer: (dx: number, dy: number) => Promise<void>;
 
   /**
    * Each backend must provide a way to simulate a keyboard shortcut. This is used to
@@ -74,23 +93,20 @@ export interface Backend {
   simulateShortcut: (shortcut: string) => Promise<void>;
 
   /**
-   * Each backend must provide a way to bind a callback to a keyboard shortcut. The
-   * callback should be called whenever the shortcut is pressed.
+   * Each backend must provide a way to bind an action to a keyboard shortcut.
    *
    * @param shortcut The shortcut to bind.
-   * @param callback The method to call when the shortcut is pressed.
    * @returns A promise which resolves when the shortcut has been bound.
-   * @todo: Add information about the string format of the shortcut.
    */
-  bindShortcut: (shortcut: string, callback: () => void) => Promise<void>;
+  bindShortcut: (shortcut: Shortcut) => Promise<void>;
 
   /**
    * Each backend must provide a way to unbind a previously bound keyboard shortcut.
    *
-   * @param shortcut The shortcut to unbind.
+   * @param shortcut The ID of the shortcut to unbind.
    * @returns A promise which resolves when the shortcut has been unbound.
    */
-  unbindShortcut: (shortcut: string) => Promise<void>;
+  unbindShortcut: (shortcut: Shortcut) => Promise<void>;
 
   /**
    * Each backend must provide a way to unbind all previously bound keyboard shortcuts.

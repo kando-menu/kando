@@ -121,6 +121,10 @@ export class Menu extends EventEmitter {
     // The mouse distance is the distance of the mouse to the center of the currently
     // selected node. It is always updated when the mouse moves.
     distance: 0,
+
+    // If set to a value greater than 0, this will be decremented by 1 every time the
+    // the mouse moves and the corresponding event is ignored.
+    ignoreMotionEvents: 0,
   };
 
   // This is currently used to create the test menu. It defines the number of children
@@ -161,6 +165,12 @@ export class Menu extends EventEmitter {
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.
     const onMotionEvent = (event: MouseEvent | TouchEvent) => {
+      // Ignore mouse motion events if requested.
+      if (this.mouse.ignoreMotionEvents > 0) {
+        this.mouse.ignoreMotionEvents--;
+        return;
+      }
+
       event.preventDefault();
       event.stopPropagation();
 
@@ -293,6 +303,12 @@ export class Menu extends EventEmitter {
   public show(position: math.IVec2) {
     this.clear();
 
+    // On some wayland compositors (for instance KWin), one or two initial mouse motion
+    // events are sent containing wrong coordinates. They seem to be the coordinates of
+    // the last mouse motion event over any XWayland surface before Kando's window was
+    // opened. We simply ignore these events. This code is currently used on all platforms
+    // but I think it's not an issue.
+    this.mouse.ignoreMotionEvents = 2;
     this.mouse.relativePosition = { x: 0, y: 0 };
     this.mouse.absolutePosition = { x: position.x, y: position.y };
 
@@ -499,7 +515,7 @@ export class Menu extends EventEmitter {
       };
 
       if (offset.x !== 0 || offset.y !== 0) {
-        this.emit('move-pointer', clampedPosition);
+        this.emit('move-pointer', offset);
 
         this.root.position = {
           x: this.root.position.x + offset.x,

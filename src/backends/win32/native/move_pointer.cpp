@@ -15,8 +15,10 @@
 
 namespace move_pointer {
 
-void movePointer(int x, int y) {
-    SetCursorPos(x, y);
+void movePointer(int dx, int dy) {
+  POINT p;
+  GetCursorPos(&p);
+  SetCursorPos(dx + p.x, dy + p.y);
 }
 
 Napi::Object movePointerWrapped(const Napi::CallbackInfo &info) {
@@ -25,10 +27,10 @@ Napi::Object movePointerWrapped(const Napi::CallbackInfo &info) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
   }
 
-  Napi::Number x = info[0].As<Napi::Number>();
-  Napi::Number y = info[1].As<Napi::Number>();
+  Napi::Number dx = info[0].As<Napi::Number>();
+  Napi::Number dy = info[1].As<Napi::Number>();
 
-  movePointer(x.Int32Value(), y.Int32Value());
+  movePointer(dx.Int32Value(), dy.Int32Value());
 
   return Napi::Object::New(env);
 }

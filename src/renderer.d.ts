@@ -13,7 +13,7 @@ export interface IElectronAPI {
   hideWindow: (delay: number) => void;
   showDevTools: () => void;
   simulateShortcut: () => void;
-  movePointer: (pos: { x: number; y: number }) => void;
+  movePointer: (dist: { x: number; y: number }) => void;
   itemSelected: () => void;
   log: (message: string) => void;
   showMenu: (func: (pos: { x: number; y: number }) => void) => void;

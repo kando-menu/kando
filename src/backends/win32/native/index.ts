@@ -10,7 +10,7 @@
 
 export interface Native {
   getActiveWindow(): { wmClass: string; name: string };
-  movePointer(x: number, y: number): void;
+  movePointer(dx: number, dy: number): void;
 }
 
 const native: Native = require('./../../../../build/Release/NativeWin32.node');

@@ -11,7 +11,7 @@
 import { screen, globalShortcut } from 'electron';
 import { exec } from 'node:child_process';
 import { native } from './native';
-import { Backend } from '../backend';
+import { Backend, Shortcut } from '../backend';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -35,35 +35,35 @@ export class Win32Backend implements Backend {
   public async init() {}
 
   /**
-   * This simply uses Electron's screen module to get the current pointer position. On
-   * Windows, this works perfectly fine.
+   * This uses the Win23 API to get the name and class of the currently focused window. In
+   * addition, it uses Electron's screen module to get the current pointer position.
    *
-   * @returns The current pointer position. For now, it does not return the modifiers.
+   * @returns The name and class of the currently focused window as well as the current
+   *   pointer position.
    */
-  public async getPointer() {
-    const pos = screen.getCursorScreenPoint();
-    return { x: pos.x, y: pos.y, mods: 0 };
+  public async getWMInfo() {
+    const window = native.getActiveWindow();
+    const pointer = screen.getCursorScreenPoint();
+
+    // For some reason, this makes the method much faster. For now, I have no idea why.
+    process.nextTick(() => {});
+
+    return {
+      windowName: window.name,
+      windowClass: window.wmClass,
+      pointerX: pointer.x,
+      pointerY: pointer.y,
+    };
   }
 
   /**
-   * Moves the pointer to the given position using the Win32 API.
+   * Moves the pointer by the given amount using the Win32 API.
    *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
    */
-  public async movePointer(x: number, y: number) {
-    native.movePointer(x, y);
-  }
-
-  /**
-   * This uses the Win23 API to get the name and class of the currently focused window.
-   *
-   * @returns The name and class of the currently focused window.
-   */
-  public async getFocusedWindow() {
-    const w = native.getActiveWindow();
-    console.log(w);
-    return w;
+  public async movePointer(dx: number, dy: number) {
+    native.movePointer(dx, dy);
   }
 
   /**
@@ -95,15 +95,14 @@ export class Win32Backend implements Backend {
   }
 
   /**
-   * This binds a shortcut to a callback function. The callback function is called when
-   * the shortcut is pressed. On Windows, this uses Electron's globalShortcut module.
+   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
+   * Windows, this uses Electron's globalShortcut module.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been simulated.
-   * @todo: Add information about the string format of the shortcut.
    */
-  public async bindShortcut(shortcut: string, callback: () => void) {
-    if (!globalShortcut.register(shortcut, callback)) {
+  public async bindShortcut(shortcut: Shortcut) {
+    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
       throw new Error('Shortcut is already in use.');
     }
   }
@@ -113,8 +112,8 @@ export class Win32Backend implements Backend {
    *
    * @param shortcut The shortcut to unbind.
    */
-  public async unbindShortcut(shortcut: string) {
-    globalShortcut.unregister(shortcut);
+  public async unbindShortcut(shortcut: Shortcut) {
+    globalShortcut.unregister(shortcut.accelerator);
   }
 
   /**
@@ -134,19 +133,19 @@ export class Win32Backend implements Backend {
    */
   private toPowershellAccelerator(shortcut: string) {
     if (shortcut.includes('Option')) {
-      throw new Error('Shortcuts including Option are not yet supported on GNOME.');
+      throw new Error('Shortcuts including Option are not yet supported on Windows.');
     }
 
     if (shortcut.includes('AltGr')) {
-      throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
+      throw new Error('Shortcuts including AltGr are not yet supported on Windows.');
     }
 
     if (shortcut.includes('Meta')) {
-      throw new Error('Shortcuts including Meta are not yet supported on GNOME.');
+      throw new Error('Shortcuts including Meta are not yet supported on Windows.');
     }
 
     if (shortcut.includes('Super')) {
-      throw new Error('Shortcuts including Super are not yet supported on GNOME.');
+      throw new Error('Shortcuts including Super are not yet supported on Windows.');
     }
 
     shortcut = shortcut.replace('^', '{^}');

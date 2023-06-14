@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import DBus from 'dbus-final';
-import { Backend } from '../../../backend';
+import { Backend, Shortcut } from '../../../backend';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -52,38 +52,37 @@ export class GnomeBackend implements Backend {
 
     this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
 
-    this.interface.on('ShortcutPressed', (shortcut: string) => {
-      this.callbacks[shortcut]();
+    this.interface.on('ShortcutPressed', (accelerator: string) => {
+      this.callbacks[accelerator]();
     });
   }
 
   /**
-   * Returns the current pointer position and the currently pressed modifier keys.
+   * This uses the DBus interface of the Kando GNOME Shell integration extension to get
+   * the name and class of the currently focused window as well as the current pointer
+   * position.
+   *
+   * @returns The name and class of the currently focused window as well as the current
+   *   pointer position.
    */
-  public async getPointer() {
-    const [x, y, mods] = await this.interface.GetPointer();
-    return { x: x, y: y, mods: mods };
+  public async getWMInfo() {
+    const info = await this.interface.GetWMInfo();
+    return {
+      windowName: info[0],
+      windowClass: info[1],
+      pointerX: info[2],
+      pointerY: info[3],
+    };
   }
 
   /**
-   * Moves the pointer to the given position.
+   * Moves the pointer by the given amount.
    *
-   * @param x The x coordinate to move the pointer to.
-   * @param y The y coordinate to move the pointer to.
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
    */
-  public async movePointer(x: number, y: number) {
-    await this.interface.MovePointer(x, y);
-  }
-
-  /**
-   * This uses the DBus interface of the Kando GNOME Shell integration extension to
-   * retrieve the name and class of the currently focused window.
-   *
-   * @returns The name and class of the currently focused window.
-   */
-  public async getFocusedWindow() {
-    const [name, wmClass] = await this.interface.GetFocusedWindow();
-    return { name: name, wmClass: wmClass };
+  public async movePointer(dx: number, dy: number) {
+    await this.interface.MovePointer(dx, dy);
   }
 
   /**
@@ -103,23 +102,22 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Binds a callback to a keyboard shortcut. The callback is called whenever the shortcut
-   * is pressed.
+   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
+   * GNOME Wayland, this uses the DBus interface of the Kando GNOME Shell integration.
    *
    * @param shortcut The shortcut to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
-   * @todo: Add information about the string format of the shortcut.
    */
-  public async bindShortcut(shortcut: string, callback: () => void) {
-    shortcut = this.toGdkAccelerator(shortcut);
+  public async bindShortcut(shortcut: Shortcut) {
+    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
 
-    const success = await this.interface.BindShortcut(shortcut);
+    const success = await this.interface.BindShortcut(accelerator);
 
     if (!success) {
       throw new Error('Shortcut is already in use.');
     }
 
-    this.callbacks[shortcut] = callback;
+    this.callbacks[accelerator] = shortcut.action;
   }
 
   /**
@@ -127,10 +125,12 @@ export class GnomeBackend implements Backend {
    *
    * @param shortcut The shortcut to unbind.
    */
-  public async unbindShortcut(shortcut: string) {
-    shortcut = this.toGdkAccelerator(shortcut);
+  public async unbindShortcut(shortcut: Shortcut) {
+    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
 
-    const success = await this.interface.UnbindShortcut(shortcut);
+    const success = await this.interface.UnbindShortcut(accelerator);
+
+    delete this.callbacks[accelerator];
 
     if (!success) {
       throw new Error('Shortcut was not bound.');
