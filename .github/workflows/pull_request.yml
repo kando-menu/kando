@@ -39,6 +39,8 @@ jobs:
           node-version: 18
       - name: Install Dependencies
         run: |
+          npm install cmake-js -g
+          npx cmake-js install
           npm install
       - name: Create Release
         run: |
