@@ -149,7 +149,7 @@ export class KDEWaylandBackend implements Backend {
         reject('Did not receive an answer by the Kando KWin script.');
       }, 1000);
 
-      // Stop the script right after it completed.
+      // Run the script. We can stop the script again right after it completed.
       this.startScript(this.wmInfoScriptPath).then((id) => {
         this.stopScript(id);
       });
@@ -181,11 +181,10 @@ export class KDEWaylandBackend implements Backend {
 
   /**
    * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * KDE Wayland, this uses the a KWin script.
+   * KDE Wayland, this uses a KWin script.
    *
    * @param shortcut The shortcut to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
-   * @todo: Add information about the string format of the shortcut.
    */
   public async bindShortcut(shortcut: Shortcut) {
     this.shortcuts.push(shortcut);
@@ -194,8 +193,8 @@ export class KDEWaylandBackend implements Backend {
 
   /**
    * Unbinds a keyboard shortcut. For now, this function stops the background KWIn script
-   * which registered the shortcut. As only one keyboard shortcut is currently supported,
-   * the parameter is ignored.
+   * which registered the shortcut. A new script is started which re-registers all
+   * remaining shortcuts.
    *
    * @param shortcut The shortcut to unbind.
    */
@@ -205,8 +204,8 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * Unbinds all keyboard shortcuts. For now, this function stops the background KWIn
-   * script which registered the shortcut.
+   * Unbinds all keyboard shortcuts. This function stops the background KWIn script which
+   * registered all the shortcut.
    */
   public async unbindAllShortcuts() {
     this.shortcuts = [];
