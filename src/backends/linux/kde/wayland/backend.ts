@@ -12,8 +12,7 @@ import os from 'os';
 import fs from 'fs';
 import DBus from 'dbus-final';
 
-import { WMInfo } from '../../../backend';
-import { X11Backend } from '../../x11/backend';
+import { Backend, WMInfo } from '../../../backend';
 import { RemoteDesktop } from '../../../portals/remote-desktop';
 
 class KWinScriptInterface extends DBus.interface.Interface {
@@ -45,7 +44,7 @@ class KWinScriptInterface extends DBus.interface.Interface {
 /**
  * This backend is used on KDE with X11.
  */
-export class KDEWaylandBackend extends X11Backend {
+export class KDEWaylandBackend implements Backend {
   private portal: RemoteDesktop = new RemoteDesktop();
 
   private kwinScripting: DBus.ClientInterface;
@@ -53,6 +52,7 @@ export class KDEWaylandBackend extends X11Backend {
 
   private wmInfoScriptPath: string;
   private tiggerScriptPath: string;
+  private triggerScriptID: number;
 
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
@@ -60,13 +60,11 @@ export class KDEWaylandBackend extends X11Backend {
    *
    * @returns 'toolbar'
    */
-  public override getWindowType() {
+  public getWindowType() {
     return 'toolbar';
   }
 
-  public override async init() {
-    await super.init();
-
+  public async init() {
     // Create the KWin script.
     this.wmInfoScriptPath = this.storeScript(
       'sendWMInfo.js',
@@ -118,10 +116,10 @@ export class KDEWaylandBackend extends X11Backend {
     const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
     this.kwinScripting = obj.getInterface('org.kde.kwin.Scripting');
 
-    await this.runScript(this.tiggerScriptPath, false);
+    this.triggerScriptID = await this.startScript(this.tiggerScriptPath);
   }
 
-  public override async getWMInfo(): Promise<{
+  public async getWMInfo(): Promise<{
     windowName: string;
     windowClass: string;
     pointerX: number;
@@ -134,7 +132,9 @@ export class KDEWaylandBackend extends X11Backend {
         reject('Did not receive an answer by the Kando KWin script.');
       }, 1000);
 
-      this.runScript(this.wmInfoScriptPath, true);
+      this.startScript(this.wmInfoScriptPath).then((id) => {
+        this.stopScript(id);
+      });
     });
   }
 
@@ -144,8 +144,20 @@ export class KDEWaylandBackend extends X11Backend {
    * @param dx The amount of horizontal movement.
    * @param dy The amount of vertical movement.
    */
-  public override async movePointer(dx: number, dy: number) {
+  public async movePointer(dx: number, dy: number) {
     await this.portal.movePointer(dx, dy);
+  }
+
+  public async simulateShortcut(shortcut: string): Promise<void> {
+    // console.log('Control_L+X', native.convertShortcut('Control_L+X'));
+    // console.log('F', native.convertShortcut('F'));
+    // console.log('F+Alt_L', native.convertShortcut('F+Alt_L'));
+    // console.log('Alt_L', native.convertShortcut('Alt_L'));
+    // console.log('Alt_L+Shift_L+Q', native.convertShortcut('Alt_L+Shift_L+Q'));
+    // console.log('+', native.convertShortcut('+'));
+    // console.log('Alt_L++', native.convertShortcut('Alt_L++'));
+    // console.log('Alt_L+++', native.convertShortcut('Alt_L+++'));
+    // console.log('+++', native.convertShortcut('+++'));
   }
 
   /**
@@ -156,8 +168,18 @@ export class KDEWaylandBackend extends X11Backend {
    * @returns A promise which resolves when the shortcut has been simulated.
    * @todo: Add information about the string format of the shortcut.
    */
-  public override async bindShortcut(shortcut: string, callback: () => void) {
+  public async bindShortcut(shortcut: string, callback: () => void) {
     this.scriptInterface.setTriggerCallback(callback);
+  }
+
+  public async unbindShortcut(shortcut: string) {
+    this.scriptInterface.setTriggerCallback(() => {});
+    this.stopScript(this.triggerScriptID);
+  }
+
+  public async unbindAllShortcuts() {
+    this.scriptInterface.setTriggerCallback(() => {});
+    this.stopScript(this.triggerScriptID);
   }
 
   private storeScript(name: string, script: string) {
@@ -170,7 +192,7 @@ export class KDEWaylandBackend extends X11Backend {
     return scriptPath;
   }
 
-  private async runScript(scriptPath: string, doStop: boolean) {
+  private async startScript(scriptPath: string) {
     const id = await this.kwinScripting.loadScript(scriptPath);
     await DBus.sessionBus().call(
       new DBus.Message({
@@ -181,15 +203,17 @@ export class KDEWaylandBackend extends X11Backend {
       })
     );
 
-    if (doStop) {
-      await DBus.sessionBus().call(
-        new DBus.Message({
-          destination: 'org.kde.KWin',
-          path: '/' + id,
-          interface: 'org.kde.kwin.Script',
-          member: 'stop',
-        })
-      );
-    }
+    return id;
+  }
+
+  private async stopScript(scriptID: number) {
+    await DBus.sessionBus().call(
+      new DBus.Message({
+        destination: 'org.kde.KWin',
+        path: '/' + scriptID,
+        interface: 'org.kde.kwin.Script',
+        member: 'stop',
+      })
+    );
   }
 }
