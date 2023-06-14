@@ -42,11 +42,6 @@ import { RemoteDesktop } from '../../portals/remote-desktop';
  * - There is KGlobaAccel. Directly using the D-Bus interface is not possible, because it
  *   uses some serialized Qt types. The only approach would be a native module which links
  *   against Qt. While this could be possible, it would introduce a lot of complexity.
- *
- * The current approach is limited to a single, hard-coded trigger shortcut. For now, this
- * can be considered a proof of concept only. While it could be possible to add more
- * shortcuts, it will get even more ugly. I would rather wait for the desktop portal to be
- * available everywhere.
  */
 export class KDEWaylandBackend implements Backend {
   // The remote desktop portal is used to simulate mouse and keyboard events.
@@ -60,14 +55,16 @@ export class KDEWaylandBackend implements Backend {
   // This is the interface which is exposed by Kando for the KWin script to talk to.
   private kandoInterface: CustomInterface;
 
-  // KWin can only load scripts from files. Hence, we need to store the scripts in a
-  // temporary directory. Here we store the paths to the files.
+  // KWin can only load scripts from files. Hence, we need to store the script in a
+  // temporary directory.
   private wmInfoScriptPath: string;
-  private tiggerScriptPath: string;
 
-  // The trigger script is unloaded when Kando is closed. We need to store the script ID
-  // to be able to unload it.
-  private triggerScriptID: number;
+  // The trigger script is reloaded whenever a new shortcut is bound. We need to store the
+  // script ID to be able to unload it.
+  private triggerScriptID = -1;
+
+  // Here we store all shortcuts which are currently bound.
+  private shortcuts: Shortcut[] = [];
 
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
@@ -105,31 +102,22 @@ export class KDEWaylandBackend implements Backend {
     `
     );
 
-    // Create the KWin script which will register the global shortcut.
-    this.tiggerScriptPath = this.storeScript(
-      'global-shortcut.js',
-      `const success = registerShortcut('Kando', 'Trigger Kando Prototype', 'Ctrl+Space', () => {
-         console.log('Kando: Triggered.');
-         callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
-                  'org.kandomenu.kando', 'Trigger');
-      });
-
-      if (success) {
-        console.log('Kando: Set up trigger.');
-      } else {
-        console.log('Kando: Failed to set up trigger.');
-      }
-    `
-    );
-
     // Create the D-Bus interface for the KWin script to communicate with.
     this.kandoInterface = new CustomInterface('org.kandomenu.kando');
     CustomInterface.configureMembers({
       methods: {
         SendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
-        Trigger: { inSignature: '', outSignature: '', noReply: false },
+        Trigger: { inSignature: 's', outSignature: '', noReply: false },
       },
     });
+
+    // Execute the trigger action whenever the KWin script sends a signal.
+    this.kandoInterface.triggerCallback = (shortcutID: string) => {
+      const shortcut = this.shortcuts.find((s) => s.id === shortcutID);
+      if (shortcut) {
+        shortcut.action();
+      }
+    };
 
     const bus = DBus.sessionBus();
 
@@ -139,9 +127,6 @@ export class KDEWaylandBackend implements Backend {
     // Acquire the KWin scripting interface to run the scripts.
     const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
     this.scriptingInterface = obj.getInterface('org.kde.kwin.Scripting');
-
-    // Finally bind the global shortcut by running the trigger script.
-    this.triggerScriptID = await this.startScript(this.tiggerScriptPath);
   }
 
   /**
@@ -203,7 +188,8 @@ export class KDEWaylandBackend implements Backend {
    * @todo: Add information about the string format of the shortcut.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    this.kandoInterface.triggerCallback = shortcut.action;
+    this.shortcuts.push(shortcut);
+    this.updateShortcuts();
   }
 
   /**
@@ -213,10 +199,9 @@ export class KDEWaylandBackend implements Backend {
    *
    * @param shortcut The shortcut to unbind.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async unbindShortcut(shortcut: Shortcut) {
-    this.kandoInterface.triggerCallback = () => {};
-    this.stopScript(this.triggerScriptID);
+    this.shortcuts = this.shortcuts.filter((s) => s.id !== shortcut.id);
+    this.updateShortcuts();
   }
 
   /**
@@ -224,8 +209,40 @@ export class KDEWaylandBackend implements Backend {
    * script which registered the shortcut.
    */
   public async unbindAllShortcuts() {
-    this.kandoInterface.triggerCallback = () => {};
-    this.stopScript(this.triggerScriptID);
+    this.shortcuts = [];
+    this.updateShortcuts();
+  }
+
+  /**
+   * Creates and runs a KWin script which registers all configured shortcuts. Any
+   * previously registered shortcuts are unregistered.
+   */
+  private async updateShortcuts() {
+    // First disable all shortcuts by stopping the script.
+    if (this.triggerScriptID > 0) {
+      await this.stopScript(this.triggerScriptID);
+    }
+
+    // If there are no shortcuts, we are done.
+    if (this.shortcuts.length === 0) {
+      return;
+    }
+
+    // Then create a new script which registers all shortcuts.
+    const script = this.shortcuts
+      .map((shortcut) => {
+        return `
+          registerShortcut('${shortcut.id}', '${shortcut.description}', '${shortcut.accelerator}', () => {
+            callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 'org.kandomenu.kando', 'Trigger', '${shortcut.id}');
+          });
+        `;
+      })
+      .join('\n');
+
+    const scriptPath = this.storeScript('global-shortcuts.js', script);
+
+    // Finally bind the global shortcut by running the trigger script.
+    this.triggerScriptID = await this.startScript(scriptPath);
   }
 
   /**
@@ -286,7 +303,7 @@ export class KDEWaylandBackend implements Backend {
 class CustomInterface extends DBus.interface.Interface {
   // These callbacks are set by the KDEWaylandBackend class above.
   public wmInfoCallback: (info: WMInfo) => void;
-  public triggerCallback: () => void;
+  public triggerCallback: (shortcutID: string) => void;
 
   // This is called by the get-info KWin script.
   public SendWMInfo(
@@ -301,9 +318,9 @@ class CustomInterface extends DBus.interface.Interface {
   }
 
   // This is called by the global-shortcut KWin script whenever the trigger shortcut is pressed.
-  public Trigger() {
+  public Trigger(shortcutID: string) {
     if (this.triggerCallback) {
-      this.triggerCallback();
+      this.triggerCallback(shortcutID);
     }
   }
 }
