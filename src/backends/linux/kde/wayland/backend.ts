@@ -13,7 +13,7 @@ import fs from 'fs';
 import DBus from 'dbus-final';
 
 import { Backend, WMInfo } from '../../../backend';
-import { RemoteDesktop } from '../../../portals/remote-desktop';
+import { RemoteDesktop } from '../../portals/remote-desktop';
 
 /**
  * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind
