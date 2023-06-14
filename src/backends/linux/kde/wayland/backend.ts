@@ -188,7 +188,7 @@ export class KDEWaylandBackend implements Backend {
    */
   public async bindShortcut(shortcut: Shortcut) {
     this.shortcuts.push(shortcut);
-    this.updateShortcuts();
+    await this.updateShortcuts();
   }
 
   /**
@@ -200,7 +200,7 @@ export class KDEWaylandBackend implements Backend {
    */
   public async unbindShortcut(shortcut: Shortcut) {
     this.shortcuts = this.shortcuts.filter((s) => s.id !== shortcut.id);
-    this.updateShortcuts();
+    await this.updateShortcuts();
   }
 
   /**
@@ -209,7 +209,7 @@ export class KDEWaylandBackend implements Backend {
    */
   public async unbindAllShortcuts() {
     this.shortcuts = [];
-    this.updateShortcuts();
+    await this.updateShortcuts();
   }
 
   /**
@@ -218,8 +218,9 @@ export class KDEWaylandBackend implements Backend {
    */
   private async updateShortcuts() {
     // First disable all shortcuts by stopping the script.
-    if (this.triggerScriptID > 0) {
+    if (this.triggerScriptID >= 0) {
       await this.stopScript(this.triggerScriptID);
+      this.triggerScriptID = -1;
     }
 
     // If there are no shortcuts, we are done.
@@ -230,10 +231,18 @@ export class KDEWaylandBackend implements Backend {
     // Then create a new script which registers all shortcuts.
     const script = this.shortcuts
       .map((shortcut) => {
+        const accelerator = this.toKWinAccelerator(shortcut.accelerator);
         return `
-          registerShortcut('${shortcut.id}', '${shortcut.description}', '${shortcut.accelerator}', () => {
-            callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 'org.kandomenu.kando', 'Trigger', '${shortcut.id}');
-          });
+          if(registerShortcut('${shortcut.id}', '${shortcut.description}', '${accelerator}',
+            () => {
+              console.log('Kando: Triggered.');
+              callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
+                       'org.kandomenu.kando', 'Trigger', '${shortcut.id}',
+                       () => console.log('Kando: Triggered.'));
+            }
+          )) {
+            console.log('Kando: Registered shortcut ${accelerator}')
+          }
         `;
       })
       .join('\n');
@@ -295,6 +304,25 @@ export class KDEWaylandBackend implements Backend {
         member: 'stop',
       })
     );
+  }
+
+  /**
+   * Translates a shortcut from the Electron format to something which can be used by
+   * KWIn.
+   *
+   * @param shortcut The shortcut to translate.
+   * @returns The translated shortcut.
+   * @todo: This is only a very basic implementation. It does not support all possible
+   *       shortcuts.
+   */
+  private toKWinAccelerator(shortcut: string) {
+    shortcut = shortcut.replace('CommandOrControl+', 'Ctrl+');
+    shortcut = shortcut.replace('CmdOrCtrl+', 'Ctrl+');
+    shortcut = shortcut.replace('Command+', 'Ctrl+');
+    shortcut = shortcut.replace('Control+', 'Ctrl+');
+    shortcut = shortcut.replace('Cmd+', 'Ctrl+');
+
+    return shortcut;
   }
 }
 

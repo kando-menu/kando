@@ -36,7 +36,7 @@ export class KandoApp {
 
     await this.backend.init();
     await this.backend.bindShortcut({
-      id: 'kando',
+      id: 'prototype_trigger',
       description: 'Trigger the Kando prototype',
       accelerator: 'CommandOrControl+Space',
       action: () => {
