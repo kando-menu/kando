@@ -167,16 +167,12 @@ export class KDEWaylandBackend implements Backend {
     await this.remoteDesktop.movePointer(dx, dy);
   }
 
+  /**
+   * @todo Todo :)
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async simulateShortcut(shortcut: string): Promise<void> {
-    // console.log('Control_L+X', native.convertShortcut('Control_L+X'));
-    // console.log('F', native.convertShortcut('F'));
-    // console.log('F+Alt_L', native.convertShortcut('F+Alt_L'));
-    // console.log('Alt_L', native.convertShortcut('Alt_L'));
-    // console.log('Alt_L+Shift_L+Q', native.convertShortcut('Alt_L+Shift_L+Q'));
-    // console.log('+', native.convertShortcut('+'));
-    // console.log('Alt_L++', native.convertShortcut('Alt_L++'));
-    // console.log('Alt_L+++', native.convertShortcut('Alt_L+++'));
-    // console.log('+++', native.convertShortcut('+++'));
+    console.log('Simulating shortcuts is not yet implemented for KDE on Wayland.');
   }
 
   /**
