@@ -11,7 +11,7 @@
 import { screen, globalShortcut } from 'electron';
 import { exec } from 'node:child_process';
 import { native } from './native';
-import { Backend } from '../backend';
+import { Backend, Shortcut } from '../backend';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -95,15 +95,14 @@ export class Win32Backend implements Backend {
   }
 
   /**
-   * This binds a shortcut to a callback function. The callback function is called when
-   * the shortcut is pressed. On Windows, this uses Electron's globalShortcut module.
+   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
+   * Windows, this uses Electron's globalShortcut module.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been simulated.
-   * @todo: Add information about the string format of the shortcut.
    */
-  public async bindShortcut(shortcut: string, callback: () => void) {
-    if (!globalShortcut.register(shortcut, callback)) {
+  public async bindShortcut(shortcut: Shortcut) {
+    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
       throw new Error('Shortcut is already in use.');
     }
   }
@@ -113,8 +112,8 @@ export class Win32Backend implements Backend {
    *
    * @param shortcut The shortcut to unbind.
    */
-  public async unbindShortcut(shortcut: string) {
-    globalShortcut.unregister(shortcut);
+  public async unbindShortcut(shortcut: Shortcut) {
+    globalShortcut.unregister(shortcut.accelerator);
   }
 
   /**

@@ -12,7 +12,7 @@ import os from 'os';
 import fs from 'fs';
 import DBus from 'dbus-final';
 
-import { Backend, WMInfo } from '../../../backend';
+import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 
 /**
@@ -195,15 +195,15 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * Binds a callback to a keyboard shortcut. The callback is called whenever the shortcut
-   * is pressed.
+   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
+   * KDE Wayland, this uses the a KWin script.
    *
    * @param shortcut The shortcut to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
    * @todo: Add information about the string format of the shortcut.
    */
-  public async bindShortcut(shortcut: string, callback: () => void) {
-    this.kandoInterface.triggerCallback = callback;
+  public async bindShortcut(shortcut: Shortcut) {
+    this.kandoInterface.triggerCallback = shortcut.action;
   }
 
   /**
@@ -214,7 +214,7 @@ export class KDEWaylandBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async unbindShortcut(shortcut: string) {
+  public async unbindShortcut(shortcut: Shortcut) {
     this.kandoInterface.triggerCallback = () => {};
     this.stopScript(this.triggerScriptID);
   }

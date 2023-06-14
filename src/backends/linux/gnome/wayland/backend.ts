@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import DBus from 'dbus-final';
-import { Backend } from '../../../backend';
+import { Backend, Shortcut } from '../../../backend';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -52,8 +52,8 @@ export class GnomeBackend implements Backend {
 
     this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
 
-    this.interface.on('ShortcutPressed', (shortcut: string) => {
-      this.callbacks[shortcut]();
+    this.interface.on('ShortcutPressed', (accelerator: string) => {
+      this.callbacks[accelerator]();
     });
   }
 
@@ -102,23 +102,22 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Binds a callback to a keyboard shortcut. The callback is called whenever the shortcut
-   * is pressed.
+   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
+   * GNOME Wayland, this uses the DBus interface of the Kando GNOME Shell integration.
    *
    * @param shortcut The shortcut to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
-   * @todo: Add information about the string format of the shortcut.
    */
-  public async bindShortcut(shortcut: string, callback: () => void) {
-    shortcut = this.toGdkAccelerator(shortcut);
+  public async bindShortcut(shortcut: Shortcut) {
+    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
 
-    const success = await this.interface.BindShortcut(shortcut);
+    const success = await this.interface.BindShortcut(accelerator);
 
     if (!success) {
       throw new Error('Shortcut is already in use.');
     }
 
-    this.callbacks[shortcut] = callback;
+    this.callbacks[accelerator] = shortcut.action;
   }
 
   /**
@@ -126,10 +125,12 @@ export class GnomeBackend implements Backend {
    *
    * @param shortcut The shortcut to unbind.
    */
-  public async unbindShortcut(shortcut: string) {
-    shortcut = this.toGdkAccelerator(shortcut);
+  public async unbindShortcut(shortcut: Shortcut) {
+    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
 
-    const success = await this.interface.UnbindShortcut(shortcut);
+    const success = await this.interface.UnbindShortcut(accelerator);
+
+    delete this.callbacks[accelerator];
 
     if (!success) {
       throw new Error('Shortcut was not bound.');
