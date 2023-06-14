@@ -17,19 +17,28 @@ import { X11Backend } from '../../x11/backend';
 import { RemoteDesktop } from '../../../portals/remote-desktop';
 
 class KWinScriptInterface extends DBus.interface.Interface {
-  private callback: (info: WMInfo) => void;
+  private wmInfoCallback: (info: WMInfo) => void;
+  private triggerCallback: () => void;
 
-  public SendInfo(
+  public SendWMInfo(
     windowName: string,
     windowClass: string,
     pointerX: number,
     pointerY: number
   ) {
-    this.callback({ windowName, windowClass, pointerX, pointerY });
+    this.wmInfoCallback({ windowName, windowClass, pointerX, pointerY });
   }
 
-  public setCallback(callback: (info: WMInfo) => void) {
-    this.callback = callback;
+  public Trigger() {
+    this.triggerCallback();
+  }
+
+  public setWMInfoCallback(callback: (info: WMInfo) => void) {
+    this.wmInfoCallback = callback;
+  }
+
+  public setTriggerCallback(callback: () => void) {
+    this.triggerCallback = callback;
   }
 }
 
@@ -41,6 +50,9 @@ export class KDEWaylandBackend extends X11Backend {
 
   private kwinScripting: DBus.ClientInterface;
   private scriptInterface: KWinScriptInterface;
+
+  private wmInfoScriptPath: string;
+  private tiggerScriptPath: string;
 
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
@@ -56,9 +68,10 @@ export class KDEWaylandBackend extends X11Backend {
     await super.init();
 
     // Create the KWin script.
-    const script = `
-      callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
-               'org.kandomenu.kando', 'SendInfo',
+    this.wmInfoScriptPath = this.storeScript(
+      'sendWMInfo.js',
+      `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
+               'org.kandomenu.kando', 'SendWMInfo',
                workspace.activeClient.caption,
                workspace.activeClient.resourceClass,
                workspace.cursorPos.x, workspace.cursorPos.y,
@@ -67,19 +80,32 @@ export class KDEWaylandBackend extends X11Backend {
                }
       );
       console.log('Kando: Received data request.');
-    `;
+    `
+    );
 
-    const tmpDir = os.tmpdir() + '/kando';
-    fs.mkdirSync(tmpDir, { recursive: true });
+    // Create the KWin script.
+    this.tiggerScriptPath = this.storeScript(
+      'trigger.js',
+      `const success = registerShortcut('Kando', 'Trigger Kando Prototype', 'Ctrl+Space', () => {
+         console.log('Kando: Triggered.');
+         callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
+                  'org.kandomenu.kando', 'Trigger');
+       });
 
-    const scriptPath = tmpDir + '/waylandSupport.js';
-    fs.writeFileSync(scriptPath, script);
+       if (success) {
+         console.log('Kando: Set up trigger.');
+       } else {
+          console.log('Kando: Failed to set up trigger.');
+       }
+    `
+    );
 
     // Create the D-Bus interface for the script to communicate with.
     this.scriptInterface = new KWinScriptInterface('org.kandomenu.kando');
     KWinScriptInterface.configureMembers({
       methods: {
-        SendInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
+        SendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
+        Trigger: { inSignature: '', outSignature: '', noReply: false },
       },
     });
 
@@ -88,9 +114,11 @@ export class KDEWaylandBackend extends X11Backend {
     await bus.requestName('org.kandomenu.kando', 0);
     bus.export('/org/kandomenu/kando', this.scriptInterface);
 
-    // Acquire the KWin scripting interface to run the script.
+    // Acquire the KWin scripting interface to run the scripts.
     const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
     this.kwinScripting = obj.getInterface('org.kde.kwin.Scripting');
+
+    await this.runScript(this.tiggerScriptPath, false);
   }
 
   public override async getWMInfo(): Promise<{
@@ -100,41 +128,13 @@ export class KDEWaylandBackend extends X11Backend {
     pointerY: number;
   }> {
     return new Promise((resolve, reject) => {
-      this.scriptInterface.setCallback(resolve);
+      this.scriptInterface.setWMInfoCallback(resolve);
 
       setTimeout(() => {
         reject('Did not receive an answer by the Kando KWin script.');
       }, 1000);
 
-      const scriptPath = os.tmpdir() + '/kando/waylandSupport.js';
-      this.kwinScripting.loadScript(scriptPath).then((id: number) => {
-        DBus.sessionBus()
-          .call(
-            new DBus.Message({
-              destination: 'org.kde.KWin',
-              path: '/' + id,
-              interface: 'org.kde.kwin.Script',
-              member: 'run',
-            })
-          )
-          .then(() => {
-            DBus.sessionBus()
-              .call(
-                new DBus.Message({
-                  destination: 'org.kde.KWin',
-                  path: '/' + id,
-                  interface: 'org.kde.kwin.Script',
-                  member: 'stop',
-                })
-              )
-              .catch((error) => {
-                reject(error);
-              });
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+      this.runScript(this.wmInfoScriptPath, true);
     });
   }
 
@@ -145,6 +145,51 @@ export class KDEWaylandBackend extends X11Backend {
    * @param dy The amount of vertical movement.
    */
   public override async movePointer(dx: number, dy: number) {
-    await this.portal.setPointer(dx, dy);
+    await this.portal.movePointer(dx, dy);
+  }
+
+  /**
+   * Binds a callback to a keyboard shortcut. The callback is called whenever the shortcut
+   * is pressed.
+   *
+   * @param shortcut The shortcut to simulate.
+   * @returns A promise which resolves when the shortcut has been simulated.
+   * @todo: Add information about the string format of the shortcut.
+   */
+  public override async bindShortcut(shortcut: string, callback: () => void) {
+    this.scriptInterface.setTriggerCallback(callback);
+  }
+
+  private storeScript(name: string, script: string) {
+    const tmpDir = os.tmpdir() + '/kando';
+    fs.mkdirSync(tmpDir, { recursive: true });
+
+    const scriptPath = tmpDir + '/' + name;
+    fs.writeFileSync(scriptPath, script);
+
+    return scriptPath;
+  }
+
+  private async runScript(scriptPath: string, doStop: boolean) {
+    const id = await this.kwinScripting.loadScript(scriptPath);
+    await DBus.sessionBus().call(
+      new DBus.Message({
+        destination: 'org.kde.KWin',
+        path: '/' + id,
+        interface: 'org.kde.kwin.Script',
+        member: 'run',
+      })
+    );
+
+    if (doStop) {
+      await DBus.sessionBus().call(
+        new DBus.Message({
+          destination: 'org.kde.KWin',
+          path: '/' + id,
+          interface: 'org.kde.kwin.Script',
+          member: 'stop',
+        })
+      );
+    }
   }
 }
