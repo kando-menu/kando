@@ -10,7 +10,7 @@
 
 import os from 'os';
 
-import { screen, BrowserWindow, ipcMain } from 'electron';
+import { screen, BrowserWindow, ipcMain, shell } from 'electron';
 import { Backend, getBackend } from './backends';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
