@@ -122,6 +122,11 @@ export class KandoApp {
     ipcMain.on('move-pointer', (event, dist) => {
       this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
     });
+
+    ipcMain.on('open-uri', (event, uri) => {
+      this.window.hide();
+      shell.openExternal(uri);
+    });
   }
 
   // This is called when the user presses the shortcut. It will get the current

@@ -47,12 +47,26 @@ SPDX-License-Identifier: MIT
         </li>
       </ul>
 
-      <div id="dev-tools-button" class="editor-circle-button">
-        <i class="material-icons-round">code</i> Show Developer Tools
-      </div>
+      <div id="editor-buttons-grid">
+        <div
+          id="dev-tools-button"
+          class="editor-circle-button"
+          style="grid-column-start: 1; grid-column-end: 3"
+        >
+          <i class="material-icons-round">code</i> Show Developer Tools
+        </div>
 
-      <div id="shortcut-button" class="editor-circle-button">
-        <i class="material-icons-round">keyboard</i> Simulate a Shortcut
+        <div id="shortcut-button" class="editor-circle-button">
+          <i class="material-icons-round">keyboard</i> Fake Shortcut
+        </div>
+
+        <div id="url-button" class="editor-circle-button">
+          <i class="material-icons-round">public</i> Open URL
+        </div>
+
+        <div id="uri-button" class="editor-circle-button">
+          <i class="material-icons-round">folder_open</i> Open Folder
+        </div>
       </div>
     </div>
   </body>

@@ -24,6 +24,9 @@ contextBridge.exposeInMainWorld('api', {
   movePointer: function (dist: { x: number; y: number }) {
     ipcRenderer.send('move-pointer', dist);
   },
+  openURI: function (uri: string) {
+    ipcRenderer.send('open-uri', uri);
+  },
   itemSelected: function () {
     ipcRenderer.send('item-selected');
   },

@@ -14,6 +14,7 @@ export interface IElectronAPI {
   showDevTools: () => void;
   simulateShortcut: () => void;
   movePointer: (dist: { x: number; y: number }) => void;
+  openURI: (uri: string) => void;
   itemSelected: () => void;
   log: (message: string) => void;
   showMenu: (func: (pos: { x: number; y: number }) => void) => void;
