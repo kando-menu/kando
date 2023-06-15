@@ -35,6 +35,11 @@ export class KandoApp {
     }
 
     await this.backend.init();
+
+    this.window = await this.initWindow();
+
+    this.initRenderer();
+
     await this.backend.bindShortcut({
       id: 'prototype_trigger',
       description: 'Trigger the Kando prototype',
@@ -43,10 +48,6 @@ export class KandoApp {
         this.showMenu();
       },
     });
-
-    this.window = await this.initWindow();
-
-    this.initRenderer();
   }
 
   // This is called when the app is closed. It will unbind all shortcuts.
