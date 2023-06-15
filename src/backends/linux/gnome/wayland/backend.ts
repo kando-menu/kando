@@ -25,8 +25,9 @@ export class GnomeBackend implements Backend {
   private interface: DBus.ClientInterface;
 
   /**
-   * On GNOME Shell, we use a dock window. This creates a floating window which is always
-   * on top of all other windows. It even stays visible during workspace switching.
+   * Dock On GNOME Shell, we use a dock window. This creates a floating window which is
+   * always on top of all other windows. It even stays visible during workspace
+   * switching.
    *
    * @returns 'dock'
    */
