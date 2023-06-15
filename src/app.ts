@@ -95,7 +95,6 @@ export class KandoApp {
     // we wait for the fade-out animation to finish. We also make the window click-through
     // by ignoring any input events during the fade-out animation.
     ipcMain.on('hide-window', (event, delay) => {
-      this.window.setIgnoreMouseEvents(true);
       this.hideTimeout = setTimeout(() => {
         this.window.hide();
         this.hideTimeout = null;
@@ -164,8 +163,13 @@ export class KandoApp {
           y: info.pointerY - workarea.y,
         });
 
-        this.window.setIgnoreMouseEvents(false);
         this.window.show();
+
+        // There seems to be an issue with GNOME Shell 44.1 where the window does not
+        // get focus when it is shown. This is a workaround for that issue.
+        setTimeout(() => {
+          this.window.focus();
+        }, 100);
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
