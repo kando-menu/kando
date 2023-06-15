@@ -10,7 +10,7 @@
 
 import os from 'os';
 
-import { screen, BrowserWindow, ipcMain } from 'electron';
+import { screen, BrowserWindow, ipcMain, shell } from 'electron';
 import { Backend, getBackend } from './backends';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -121,6 +121,11 @@ export class KandoApp {
 
     ipcMain.on('move-pointer', (event, dist) => {
       this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
+    });
+
+    ipcMain.on('open-uri', (event, uri) => {
+      this.window.hide();
+      shell.openExternal(uri);
     });
   }
 

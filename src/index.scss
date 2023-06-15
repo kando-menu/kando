@@ -75,6 +75,13 @@ body.hidden #show-editor-button {
   opacity: 0;
 }
 
+#editor-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+  margin-top: 10px;
+}
+
 .editor-circle-button {
   min-width: 40px;
   height: 40px;
@@ -83,6 +90,7 @@ body.hidden #show-editor-button {
   border-radius: 20px;
   transition: all 150ms ease;
   margin-bottom: 5px;
+  font-weight: bold;
 
   // Center text.
   display: flex;

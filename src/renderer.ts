@@ -49,6 +49,14 @@ document.querySelector('#shortcut-button').addEventListener('click', () => {
   window.api.simulateShortcut();
 });
 
+document.querySelector('#url-button').addEventListener('click', () => {
+  window.api.openURI('https://github.com/kando-menu/kando');
+});
+
+document.querySelector('#uri-button').addEventListener('click', () => {
+  window.api.openURI('file:///');
+});
+
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
     document.querySelector('body').classList.add('hidden');
