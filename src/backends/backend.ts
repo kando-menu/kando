@@ -85,12 +85,11 @@ export interface Backend {
   movePointer: (dx: number, dy: number) => Promise<void>;
 
   /**
-   * Each backend must provide a way to simulate a keyboard shortcut. This is used to
-   * execute the actions of the pie menu.
+   * Each backend must provide a way to simulate a key sequence. This is used to execute
+   * the actions of the pie menu.
    *
    * @param keys The keys to simulate.
-   * @returns A promise which resolves when the shortcut has been simulated.
-   * @todo: Add information about the string format of the shortcut.
+   * @returns A promise which resolves when the key sequence has been simulated.
    */
   simulateKeys: (keys: IKeySequence) => Promise<void>;
 
