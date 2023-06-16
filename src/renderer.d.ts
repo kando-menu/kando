@@ -12,7 +12,7 @@ export interface IElectronAPI {
   loadPreferences: () => void;
   hideWindow: (delay: number) => void;
   showDevTools: () => void;
-  simulateShortcut: () => void;
+  simulateKeys: () => void;
   movePointer: (dist: { x: number; y: number }) => void;
   openURI: (uri: string) => void;
   itemSelected: () => void;

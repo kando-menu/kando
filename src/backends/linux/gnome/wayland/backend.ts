@@ -92,10 +92,10 @@ export class GnomeBackend implements Backend {
    * @param shortcut The shortcut to simulate.
    * @todo: Add information about the string format of the shortcut.
    */
-  public async simulateShortcut(shortcut: string) {
+  public async simulateKeys(shortcut: string) {
     shortcut = this.toGdkAccelerator(shortcut);
 
-    const success = await this.interface.SimulateShortcut(shortcut);
+    const success = await this.interface.simulateKeys(shortcut);
 
     if (!success) {
       throw new Error('Failed to simulate shortcut.');

@@ -109,13 +109,13 @@ export class KandoApp {
       console.log(message);
     });
 
-    ipcMain.on('simulate-shortcut', () => {
+    ipcMain.on('simulate-keys', () => {
       this.window.hide();
 
       if (os.platform() === 'win32') {
-        this.backend.simulateShortcut('Ctrl+Alt+Tab');
+        this.backend.simulateKeys('Ctrl+Alt+Tab');
       } else {
-        this.backend.simulateShortcut('Super+A');
+        this.backend.simulateKeys('Super+A');
       }
     });
 

@@ -72,7 +72,7 @@ export class Win32Backend implements Backend {
    * @param shortcut The shortcut to simulate.
    * @todo: Add information about the string format of the shortcut.
    */
-  public async simulateShortcut(shortcut: string) {
+  public async simulateKeys(shortcut: string) {
     return new Promise<void>((resolve, reject) => {
       try {
         shortcut = this.toPowershellAccelerator(shortcut);

@@ -90,7 +90,7 @@ export interface Backend {
    * @returns A promise which resolves when the shortcut has been simulated.
    * @todo: Add information about the string format of the shortcut.
    */
-  simulateShortcut: (shortcut: string) => Promise<void>;
+  simulateKeys: (shortcut: string) => Promise<void>;
 
   /**
    * Each backend must provide a way to bind an action to a keyboard shortcut.

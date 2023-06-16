@@ -46,7 +46,7 @@ document.querySelector('#dev-tools-button').addEventListener('click', () => {
 });
 
 document.querySelector('#shortcut-button').addEventListener('click', () => {
-  window.api.simulateShortcut();
+  window.api.simulateKeys();
 });
 
 document.querySelector('#url-button').addEventListener('click', () => {

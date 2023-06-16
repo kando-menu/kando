@@ -171,7 +171,7 @@ export class KDEWaylandBackend implements Backend {
    * @todo Todo :)
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async simulateShortcut(shortcut: string): Promise<void> {
+  public async simulateKeys(shortcut: string): Promise<void> {
     console.log('Simulating shortcuts is not yet implemented for KDE on Wayland.');
   }
 
