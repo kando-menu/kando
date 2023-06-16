@@ -14,6 +14,8 @@ import DBus from 'dbus-final';
 
 import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
+import { IKeySequence } from '../../../../common';
+import { native } from '../../x11/native';
 
 /**
  * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind
@@ -168,11 +170,35 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * @todo Todo :)
+   * Simulates a sequence of key presses using the remote desktop portal. If one of the
+   * given keys in the sequence is not known, an exception will be thrown.
+   *
+   * @param shortcut The keys to simulate.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async simulateKeys(shortcut: string): Promise<void> {
-    console.log('Simulating shortcuts is not yet implemented for KDE on Wayland.');
+  public async simulateKeys(keys: IKeySequence): Promise<void> {
+    // The remote desktop portal expects keyvals, so we first need to convert the key
+    // names to keyvals. We do this using XLib wrapped in a native module. First, collect
+    // all required key names.
+    const keyNames = keys.map((key) => key.name);
+
+    // Then convert all of them in one go.
+    const keySyms = native.convertKeys(keyNames);
+
+    // Now simulate the key presses.
+    for (let i = 0; i < keyNames.length; i++) {
+      if (keySyms[i] < 0) {
+        throw new Error(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
+      }
+
+      // Wait a couple of milliseconds if the key has a delay specified.
+      if (keys[i].delay > 0) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, keys[i].delay);
+        });
+      }
+
+      this.remoteDesktop.notifyKeyboardKeysym(keySyms[i], keys[i].down);
+    }
   }
 
   /**
