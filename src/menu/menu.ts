@@ -14,6 +14,7 @@ import './theme.scss';
 import { EventEmitter } from 'events';
 
 import * as math from './math';
+import { IVec2 } from '../common';
 import { INode } from './node';
 import { GestureDetection } from './gesture-detection';
 
@@ -148,7 +149,7 @@ export class Menu extends EventEmitter {
     // This will be fed with motion events. If the pointer makes a turn or is stationary
     // for some time, a selection event will be emitted.
     this.gestureDetection = new GestureDetection();
-    this.gestureDetection.on('selection', (coords: math.IVec2) => {
+    this.gestureDetection.on('selection', (coords: IVec2) => {
       // If there is a node currently dragged, select it. We only select nodes which have
       // children in marking mode in order to prevent unwanted actions. This way the user
       // can always check if the correct action was selected before executing it.
@@ -300,7 +301,7 @@ export class Menu extends EventEmitter {
    *
    * @param position The position of the mouse cursor when the menu was opened.
    */
-  public show(position: math.IVec2) {
+  public show(position: IVec2) {
     this.clear();
 
     // On some wayland compositors (for instance KWin), one or two initial mouse motion
@@ -837,7 +838,7 @@ export class Menu extends EventEmitter {
    *
    * @param position The absolute mouse position.
    */
-  private updateMouseInfo(position: math.IVec2) {
+  private updateMouseInfo(position: IVec2) {
     this.mouse.absolutePosition = position;
 
     if (this.root) {
@@ -932,7 +933,7 @@ export class Menu extends EventEmitter {
    * @param margin The margin to the monitor's bounds.
    * @returns The clamped position.
    */
-  private clampToMonitor(position: math.IVec2, margin: number): math.IVec2 {
+  private clampToMonitor(position: IVec2, margin: number): IVec2 {
     // Compute the maximum radius of the node, including children and grandchildren. The
     // magic number 1.4 accounts for the hover effect. This could be made configurable.
     const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4;
