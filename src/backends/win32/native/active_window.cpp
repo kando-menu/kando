@@ -22,9 +22,9 @@
 
 namespace active_window {
 
-void getActiveWindow(Napi::Object &obj) {
+void getActiveWindow(Napi::Object& obj) {
   WCHAR window_title[256];
-  HWND foreground_window = GetForegroundWindow();
+  HWND  foreground_window = GetForegroundWindow();
   GetWindowTextW(foreground_window, window_title, 256);
 
   DWORD pid;
@@ -33,9 +33,8 @@ void getActiveWindow(Napi::Object &obj) {
   TCHAR process_filename[MAX_PATH];
   DWORD charsCarried = MAX_PATH;
 
-  HANDLE hProc =
-      OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_QUERY_INFORMATION,
-                  false, pid);
+  HANDLE hProc = OpenProcess(
+      PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_QUERY_INFORMATION, false, pid);
 
   QueryFullProcessImageNameA(hProc, 0, process_filename, &charsCarried);
 
@@ -47,14 +46,14 @@ void getActiveWindow(Napi::Object &obj) {
     fullpath.erase(0, last_slash_idx + 1);
   }
 
-  std::wstring ws(window_title);
+  std::wstring                                     ws(window_title);
   std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
 
   obj.Set("wmClass", fullpath);
   obj.Set("name", myconv.to_bytes(ws));
 }
 
-Napi::Object getActiveWindowWrapped(const Napi::CallbackInfo &info) {
+Napi::Object getActiveWindowWrapped(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
   Napi::Object obj = Napi::Object::New(env);
@@ -64,8 +63,7 @@ Napi::Object getActiveWindowWrapped(const Napi::CallbackInfo &info) {
 }
 
 void init(Napi::Env env, Napi::Object exports) {
-  exports.Set("getActiveWindow",
-              Napi::Function::New(env, getActiveWindowWrapped));
+  exports.Set("getActiveWindow", Napi::Function::New(env, getActiveWindowWrapped));
 }
 
 } // namespace active_window

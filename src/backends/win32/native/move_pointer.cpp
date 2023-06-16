@@ -21,7 +21,7 @@ void movePointer(int dx, int dy) {
   SetCursorPos(dx + p.x, dy + p.y);
 }
 
-Napi::Object movePointerWrapped(const Napi::CallbackInfo &info) {
+Napi::Object movePointerWrapped(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
     Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
@@ -36,8 +36,7 @@ Napi::Object movePointerWrapped(const Napi::CallbackInfo &info) {
 }
 
 void init(Napi::Env env, Napi::Object exports) {
-  exports.Set("movePointer",
-              Napi::Function::New(env, movePointerWrapped));
+  exports.Set("movePointer", Napi::Function::New(env, movePointerWrapped));
 }
 
 } // namespace move_pointer
