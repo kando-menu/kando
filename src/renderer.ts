@@ -12,6 +12,24 @@ import './index.scss';
 
 import { Menu } from './menu/menu';
 
+interface IElectronAPI {
+  loadPreferences: () => void;
+  hideWindow: (delay: number) => void;
+  showDevTools: () => void;
+  simulateKeys: () => void;
+  movePointer: (dist: { x: number; y: number }) => void;
+  openURI: (uri: string) => void;
+  itemSelected: () => void;
+  log: (message: string) => void;
+  showMenu: (func: (pos: { x: number; y: number }) => void) => void;
+}
+
+declare global {
+  interface Window {
+    api: IElectronAPI;
+  }
+}
+
 const container = document.getElementById('menu-container');
 const menu = new Menu(container);
 

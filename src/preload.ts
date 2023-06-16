@@ -18,8 +18,8 @@ contextBridge.exposeInMainWorld('api', {
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');
   },
-  simulateShortcut: function () {
-    ipcRenderer.send('simulate-shortcut');
+  simulateKeys: function () {
+    ipcRenderer.send('simulate-keys');
   },
   movePointer: function (dist: { x: number; y: number }) {
     ipcRenderer.send('move-pointer', dist);
