@@ -23,6 +23,15 @@ export interface Native {
    *   https://linux.die.net/man/3/xstringtokeysym
    */
   convertKeys(keys: string[]): number[];
+
+  /**
+   * This simulates a key press or release.
+   *
+   * @param keysym The keyval (or keysym) to simulate. This is the return value of
+   *   convertKeys().
+   * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
+   */
+  simulateKey(keysym: number, down: boolean): void;
 }
 
 const native: Native = require('./../../../../../build/Release/NativeX11.node');

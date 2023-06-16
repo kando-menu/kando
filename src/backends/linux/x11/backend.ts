@@ -12,6 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { exec } from 'node:child_process';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
+import { IKeySequence } from '../../../common';
 
 /**
  * This backend uses the xdotool command line tool to simulate key presses and mouse
@@ -70,22 +71,36 @@ export class X11Backend implements Backend {
   }
 
   /**
-   * This simulates a shortcut by sending the keys to the currently focused window using
-   * xdotool.
+   * This simulates a key sequence by sending the keys to the currently focused window
+   * using the XTest X11 extension.
    *
    * @param shortcut The shortcut to simulate.
    * @todo: Add information about the string format of the shortcut.
    */
-  public async simulateKeys(shortcut: string) {
-    return new Promise<void>((resolve, reject) => {
-      exec(`xdotool key ${shortcut}`, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+  public async simulateKeys(keys: IKeySequence) {
+    // The simulateKey() expects a keyval, so we first need to convert the key names to
+    // keyvals. We do this using XLib wrapped in a native module. First, collect all
+    // required key names.
+    const keyNames = keys.map((key) => key.name);
+
+    // Then convert all of them in one go.
+    const keySyms = native.convertKeys(keyNames);
+
+    // Now simulate the key presses.
+    for (let i = 0; i < keyNames.length; i++) {
+      if (keySyms[i] < 0) {
+        throw new Error(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
+      }
+
+      // Wait a couple of milliseconds if the key has a delay specified.
+      if (keys[i].delay > 0) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, keys[i].delay);
+        });
+      }
+
+      native.simulateKey(keySyms[i], keys[i].down);
+    }
   }
 
   /**
