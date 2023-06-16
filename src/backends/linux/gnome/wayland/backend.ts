@@ -108,7 +108,7 @@ export class GnomeBackend implements Backend {
     const translatedKeys = [];
     for (let i = 0; i < keyNames.length; ++i) {
       if (keySyms[i] < 0) {
-        console.warn(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
+        throw new Error(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
       }
 
       translatedKeys.push([keySyms[i], keys[i].down, keys[i].delay]);
