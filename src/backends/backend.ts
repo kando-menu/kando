@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { IKeySequence } from '../common';
+
 /**
  * This interface is used to transfer information required from the window manager when
  * opening the pie menu. It contains the name and class of the currently focused window as
@@ -86,11 +88,11 @@ export interface Backend {
    * Each backend must provide a way to simulate a keyboard shortcut. This is used to
    * execute the actions of the pie menu.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param keys The keys to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
    * @todo: Add information about the string format of the shortcut.
    */
-  simulateKeys: (shortcut: string) => Promise<void>;
+  simulateKeys: (keys: IKeySequence) => Promise<void>;
 
   /**
    * Each backend must provide a way to bind an action to a keyboard shortcut.

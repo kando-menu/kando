@@ -8,23 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export interface Native {
-  /**
-   * This uses XLib calls to get the name and the class of the currently focused
-   * application window. This only works on X11.
-   */
-  getActiveWindow(): { wmClass: string; name: string };
-
-  /**
-   * This converts a list of key names to their corresponding keyvals (or keysyms as they
-   * are called in X11). This also works on Wayland.
-   *
-   * @param keys A list of key names, as described here:
-   *   https://linux.die.net/man/3/xstringtokeysym
-   */
-  convertKeys(keys: string[]): number[];
+/**
+ * A simple 2D vector.
+ *
+ * Maybe we should turn this into a class and add some operations.
+ */
+export interface IVec2 {
+  x: number;
+  y: number;
 }
 
-const native: Native = require('./../../../../../build/Release/NativeX11.node');
+export interface IKeyStroke {
+  name: string;
+  down: boolean;
+  delay: number;
+}
 
-export { native };
+export type IKeySequence = Array<IKeyStroke>;

@@ -8,23 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export interface Native {
-  /**
-   * This uses XLib calls to get the name and the class of the currently focused
-   * application window. This only works on X11.
-   */
-  getActiveWindow(): { wmClass: string; name: string };
+#include <napi.h>
 
-  /**
-   * This converts a list of key names to their corresponding keyvals (or keysyms as they
-   * are called in X11). This also works on Wayland.
-   *
-   * @param keys A list of key names, as described here:
-   *   https://linux.die.net/man/3/xstringtokeysym
-   */
-  convertKeys(keys: string[]): number[];
+namespace convert_keys {
+void init(Napi::Env env, Napi::Object exports);
 }
-
-const native: Native = require('./../../../../../build/Release/NativeX11.node');
-
-export { native };

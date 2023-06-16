@@ -10,6 +10,8 @@
 
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
+import { IKeySequence } from '../../../../common';
+import { native } from '../../x11/native';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -87,19 +89,32 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Simulates a keyboard shortcut.
+   * Simulates a sequence of key presses using the GNOME Shell extension. If one of the
+   * given keys in the sequence is not known, an exception will be thrown.
    *
-   * @param shortcut The shortcut to simulate.
-   * @todo: Add information about the string format of the shortcut.
+   * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(shortcut: string) {
-    shortcut = this.toGdkAccelerator(shortcut);
+  public async simulateKeys(keys: IKeySequence) {
+    // The GNOME Shell integration extension expects keyvals, so we first need to convert
+    // the key names to keyvals. We do this using XLib wrapped in a native module. First,
+    // collect all required key names.
+    const keyNames = keys.map((key) => key.name);
 
-    const success = await this.interface.simulateKeys(shortcut);
+    // Then convert all of them in one go.
+    const keySyms = native.convertKeys(keyNames);
 
-    if (!success) {
-      throw new Error('Failed to simulate shortcut.');
+    // Now we create a list of tuples, each containing the information required for one
+    // key event.
+    const translatedKeys = [];
+    for (let i = 0; i < keyNames.length; ++i) {
+      if (keySyms[i] < 0) {
+        console.warn(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
+      }
+
+      translatedKeys.push([keySyms[i], keys[i].down, keys[i].delay]);
     }
+
+    await this.interface.SimulateKeys(translatedKeys);
   }
 
   /**

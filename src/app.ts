@@ -109,14 +109,9 @@ export class KandoApp {
       console.log(message);
     });
 
-    ipcMain.on('simulate-keys', () => {
+    ipcMain.on('simulate-keys', (event, keys) => {
       this.window.hide();
-
-      if (os.platform() === 'win32') {
-        this.backend.simulateKeys('Ctrl+Alt+Tab');
-      } else {
-        this.backend.simulateKeys('Super+A');
-      }
+      this.backend.simulateKeys(keys);
     });
 
     ipcMain.on('move-pointer', (event, dist) => {

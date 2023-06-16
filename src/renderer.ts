@@ -11,17 +11,18 @@
 import './index.scss';
 
 import { Menu } from './menu/menu';
+import { IKeySequence, IVec2 } from './common';
 
 interface IElectronAPI {
   loadPreferences: () => void;
   hideWindow: (delay: number) => void;
   showDevTools: () => void;
-  simulateKeys: () => void;
-  movePointer: (dist: { x: number; y: number }) => void;
+  simulateKeys: (keys: IKeySequence) => void;
+  movePointer: (dist: IVec2) => void;
   openURI: (uri: string) => void;
   itemSelected: () => void;
   log: (message: string) => void;
-  showMenu: (func: (pos: { x: number; y: number }) => void) => void;
+  showMenu: (func: (pos: IVec2) => void) => void;
 }
 
 declare global {
@@ -63,8 +64,74 @@ document.querySelector('#dev-tools-button').addEventListener('click', () => {
   window.api.showDevTools();
 });
 
-document.querySelector('#shortcut-button').addEventListener('click', () => {
-  window.api.simulateKeys();
+document.querySelector('#shortcut-button-1').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'Control_L',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Alt_L',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Right',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Right',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Alt_L',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Control_L',
+      down: false,
+      delay: 0,
+    },
+  ]);
+});
+
+document.querySelector('#shortcut-button-2').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'Alt_L',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Tab',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Tab',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Tab',
+      down: true,
+      delay: 1000,
+    },
+    {
+      name: 'Tab',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Alt_L',
+      down: false,
+      delay: 1000,
+    },
+  ]);
 });
 
 document.querySelector('#url-button').addEventListener('click', () => {
