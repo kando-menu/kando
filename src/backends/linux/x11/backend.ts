@@ -61,7 +61,7 @@ export class X11Backend implements Backend {
   }
 
   /**
-   * Moves the pointer by the given amount using xdotool.
+   * Moves the pointer by the given amount using the native module.
    *
    * @param dx The amount of horizontal movement.
    * @param dy The amount of vertical movement.
