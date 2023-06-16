@@ -14,6 +14,7 @@ import { DesktopPortal } from './desktop-portal';
 export class RemoteDesktop extends DesktopPortal {
   private interface: DBus.ClientInterface;
   private session: { token: string; path: string };
+  private connectPromise: Promise<void>;
 
   public async movePointer(dx: number, dy: number) {
     await this.connect();
@@ -22,20 +23,26 @@ export class RemoteDesktop extends DesktopPortal {
 
   public async notifyKeyboardKeysym(keysym: number, down: boolean) {
     await this.connect();
-    this.interface.notifyKeyboardKeysym(this.session.path, {}, keysym, down ? 1 : 0);
+    this.interface.NotifyKeyboardKeysym(this.session.path, {}, keysym, down ? 1 : 0);
   }
 
   private async connect() {
-    if (!this.interface) {
-      await super.init();
-
-      this.interface = this.portals.getInterface('org.freedesktop.portal.RemoteDesktop');
-      this.session = this.generateToken('session');
-
-      await this.createSession();
-      await this.requestDevices();
-      await this.start();
+    if (!this.connectPromise) {
+      this.connectPromise = this.connectImpl();
     }
+
+    await this.connectPromise;
+  }
+
+  private async connectImpl() {
+    await super.init();
+
+    this.interface = this.portals.getInterface('org.freedesktop.portal.RemoteDesktop');
+    this.session = this.generateToken('session');
+
+    await this.createSession();
+    await this.requestDevices();
+    await this.start();
   }
 
   private async createSession() {
