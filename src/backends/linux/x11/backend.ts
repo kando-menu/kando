@@ -67,7 +67,7 @@ export class X11Backend implements Backend {
    * @param dy The amount of vertical movement.
    */
   public async movePointer(dx: number, dy: number) {
-    exec(`xdotool mousemove_relative ${dx} ${dy}`);
+    native.movePointer(dx, dy);
   }
 
   /**

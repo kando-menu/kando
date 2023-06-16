@@ -25,6 +25,14 @@ export interface Native {
   convertKeys(keys: string[]): number[];
 
   /**
+   * This simulates a mouse movement.
+   *
+   * @param dx The horizontal movement in pixels.
+   * @param dy The vertical movement in pixels.
+   */
+  movePointer(dx: number, dy: number): void;
+
+  /**
    * This simulates a key press or release.
    *
    * @param keysym The keyval (or keysym) to simulate. This is the return value of
