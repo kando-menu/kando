@@ -9,9 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import { screen, globalShortcut } from 'electron';
-import { exec } from 'node:child_process';
 import { native } from './native';
 import { Backend, Shortcut } from '../backend';
+import { IKeySequence } from '../../common';
+import { WindowsKeyNames } from './keys';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -67,31 +68,29 @@ export class Win32Backend implements Backend {
   }
 
   /**
-   * This simulates a shortcut using a powershell command.
+   * This simulates a key sequence using the Windows API.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param keys The keys to simulate.
    * @todo: Add information about the string format of the shortcut.
    */
-  public async simulateKeys(shortcut: string) {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        shortcut = this.toPowershellAccelerator(shortcut);
-      } catch (err) {
-        reject(err);
-        return;
+  public async simulateKeys(keys: IKeySequence) {
+    // The native module expects windows virtual key names, so we first need to convert
+    // the given DOM key names. This is done using the table in keys.ts.
+
+    // Collect all required key names and convert them to X11 key names.
+    const keyNames = keys.map((key) => WindowsKeyNames.get(key.name) ?? key.name);
+
+    // Now simulate the key presses.
+    for (let i = 0; i < keys.length; i++) {
+      // Wait a couple of milliseconds if the key has a delay specified.
+      if (keys[i].delay > 0) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, keys[i].delay);
+        });
       }
 
-      exec(
-        `powershell -command "$wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('${shortcut}')"`,
-        (err: Error) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
-      );
-    });
+      native.simulateKey(keyNames[i], keys[i].down);
+    }
   }
 
   /**
