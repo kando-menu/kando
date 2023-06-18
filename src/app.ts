@@ -8,8 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import os from 'os';
-
 import { screen, BrowserWindow, ipcMain, shell } from 'electron';
 import { Backend, getBackend } from './backends';
 
