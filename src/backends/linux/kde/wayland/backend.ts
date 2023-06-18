@@ -16,6 +16,7 @@ import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { IKeySequence } from '../../../../common';
 import { native } from '../../x11/native';
+import { LinuxKeyNames } from '../../keys';
 
 /**
  * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind
@@ -176,10 +177,12 @@ export class KDEWaylandBackend implements Backend {
    * @param shortcut The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence): Promise<void> {
-    // The remote desktop portal expects keyvals, so we first need to convert the key
-    // names to keyvals. We do this using XLib wrapped in a native module. First, collect
-    // all required key names.
-    const keyNames = keys.map((key) => key.name);
+    // The remote desktop portal expects keyvals, so we first need to convert the given
+    // DOM key names to X11 key names and then to X11 keyvals. The first conversion is
+    // done using the table in keys.ts, the second is wrapped in a native module.
+
+    // Collect all required key names and convert them to X11 key names.
+    const keyNames = keys.map((key) => LinuxKeyNames.get(key.name) ?? key.name);
 
     // Then convert all of them in one go.
     const keySyms = native.convertKeys(keyNames);
