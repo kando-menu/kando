@@ -67,12 +67,12 @@ document.querySelector('#dev-tools-button').addEventListener('click', () => {
 document.querySelector('#shortcut-button-1').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'Control_L',
+      name: 'Control',
       down: true,
       delay: 0,
     },
     {
-      name: 'Alt_L',
+      name: 'Alt',
       down: true,
       delay: 0,
     },
@@ -87,12 +87,12 @@ document.querySelector('#shortcut-button-1').addEventListener('click', () => {
       delay: 0,
     },
     {
-      name: 'Alt_L',
+      name: 'Alt',
       down: false,
       delay: 0,
     },
     {
-      name: 'Control_L',
+      name: 'Control',
       down: false,
       delay: 0,
     },
@@ -102,7 +102,7 @@ document.querySelector('#shortcut-button-1').addEventListener('click', () => {
 document.querySelector('#shortcut-button-2').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'Alt_L',
+      name: 'Alt',
       down: true,
       delay: 0,
     },
@@ -127,7 +127,7 @@ document.querySelector('#shortcut-button-2').addEventListener('click', () => {
       delay: 0,
     },
     {
-      name: 'Alt_L',
+      name: 'Alt',
       down: false,
       delay: 1000,
     },
