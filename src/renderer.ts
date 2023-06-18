@@ -77,12 +77,12 @@ document.querySelector('#shortcut-button-1').addEventListener('click', () => {
       delay: 0,
     },
     {
-      name: 'Right',
+      name: 'ArrowRight',
       down: true,
       delay: 0,
     },
     {
-      name: 'Right',
+      name: 'ArrowRight',
       down: false,
       delay: 0,
     },
