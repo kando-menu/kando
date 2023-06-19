@@ -104,21 +104,21 @@ export class GnomeBackend implements Backend {
     // Collect all required key names and convert them to X11 key names.
     const keyNames = keys.map((key) => LinuxKeyNames.get(key.name) ?? key.name);
 
-    // Then convert all of them in one go.
-    const keySyms = native.convertKeys(keyNames);
+    try {
+      // Then convert all of them in one go.
+      const keySyms = native.convertKeys(keyNames);
 
-    // Now we create a list of tuples, each containing the information required for one
-    // key event.
-    const translatedKeys = [];
-    for (let i = 0; i < keyNames.length; ++i) {
-      if (keySyms[i] < 0) {
-        throw new Error(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
+      // Now we create a list of tuples, each containing the information required for one
+      // key event.
+      const translatedKeys = [];
+      for (let i = 0; i < keyNames.length; ++i) {
+        translatedKeys.push([keySyms[i], keys[i].down, keys[i].delay]);
       }
 
-      translatedKeys.push([keySyms[i], keys[i].down, keys[i].delay]);
+      await this.interface.SimulateKeys(translatedKeys);
+    } catch (e) {
+      console.error('Failed to simulate key sequence: ' + e);
     }
-
-    await this.interface.SimulateKeys(translatedKeys);
   }
 
   /**

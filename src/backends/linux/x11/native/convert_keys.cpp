@@ -36,13 +36,15 @@ Napi::Value convertKeys(const Napi::CallbackInfo& info) {
       KeySym keysym = XStringToKeysym(key.c_str());
 
       if (keysym == NoSymbol) {
-        output.Set(i, -1);
+        Napi::TypeError::New(env, "Unknown key '" + key + "'!")
+            .ThrowAsJavaScriptException();
       } else {
         output.Set(i, keysym);
       }
 
     } else {
-      output.Set(i, -1);
+      Napi::TypeError::New(env, "Key array must contain only strings!")
+          .ThrowAsJavaScriptException();
     }
   }
 
