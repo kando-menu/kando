@@ -36,7 +36,7 @@
     "cmake-js": "^7.2.1",
     "css-loader": "^6.8.1",
     "electron": "25.1.1",
-    "eslint": "^8.42.0",
+    "eslint": "^8.43.0",
     "eslint-plugin-import": "^2.27.5",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "mocha": "^10.2.0",
