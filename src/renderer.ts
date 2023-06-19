@@ -134,6 +134,96 @@ document.querySelector('#shortcut-button-2').addEventListener('click', () => {
   ]);
 });
 
+document.querySelector('#shortcut-button-3').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'Control',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'c',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'c',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Control',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'ArrowRight',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'ArrowRight',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Control',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'v',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'v',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Control',
+      down: false,
+      delay: 0,
+    },
+  ]);
+});
+
+document.querySelector('#shortcut-button-4').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'a',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'a',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'A',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'A',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'odiaeresis',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'odiaeresis',
+      down: false,
+      delay: 0,
+    },
+  ]);
+});
+
 document.querySelector('#url-button').addEventListener('click', () => {
   window.api.openURI('https://github.com/kando-menu/kando');
 });
