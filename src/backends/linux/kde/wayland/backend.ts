@@ -198,7 +198,7 @@ export class KDEWaylandBackend implements Backend {
         });
       }
 
-      this.remoteDesktop.notifyKeyboardKey(keyCodes[i], keys[i].down);
+      this.remoteDesktop.notifyKeyboardKeycode(keyCodes[i], keys[i].down);
     }
   }
 
