@@ -192,7 +192,7 @@ document.querySelector('#shortcut-button-3').addEventListener('click', () => {
 document.querySelector('#shortcut-button-4').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'MetaLseft',
+      name: 'MetaLeft',
       down: true,
       delay: 0,
     },
