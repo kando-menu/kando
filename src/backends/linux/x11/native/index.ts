@@ -16,15 +16,6 @@ export interface Native {
   getActiveWindow(): { wmClass: string; name: string };
 
   /**
-   * This converts a list of key names to their corresponding keyvals (or keysyms as they
-   * are called in X11). This also works on Wayland.
-   *
-   * @param keys A list of key names, as described here:
-   *   https://linux.die.net/man/3/xstringtokeysym
-   */
-  convertKeys(keys: string[]): number[];
-
-  /**
    * This simulates a mouse movement.
    *
    * @param dx The horizontal movement in pixels.
@@ -35,11 +26,11 @@ export interface Native {
   /**
    * This simulates a key press or release.
    *
-   * @param keysym The keyval (or keysym) to simulate. This is the return value of
+   * @param keycode The X11 scan code to simulate. This is the return value of
    *   convertKeys().
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
-  simulateKey(keysym: number, down: boolean): void;
+  simulateKey(keycode: number, down: boolean): void;
 }
 
 const native: Native = require('./../../../../../build/Release/NativeX11.node');

@@ -12,7 +12,7 @@ import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../common';
 import { native } from '../../x11/native';
-import { LinuxKeyNames } from '../../keys';
+import { LinuxKeyCodes } from '../../keys';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -96,29 +96,26 @@ export class GnomeBackend implements Backend {
    * @param shortcut The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence) {
-    // The GNOME Shell integration extension expects keyvals, so we first need to convert
-    // the given DOM key names to X11 key names and then to X11 keyvals. The first
-    // conversion is done using the table in keys.ts, the second is wrapped in a native
-    // module.
+    // We first need to convert the given DOM key names to X11 key codes. If a key code is
+    // not found, we throw an error.
+    const keyCodes = keys.map((key) => {
+      const code = LinuxKeyCodes.get(key.name);
 
-    // Collect all required key names and convert them to X11 key names.
-    const keyNames = keys.map((key) => LinuxKeyNames.get(key.name) ?? key.name);
-
-    try {
-      // Then convert all of them in one go.
-      const keySyms = native.convertKeys(keyNames);
-
-      // Now we create a list of tuples, each containing the information required for one
-      // key event.
-      const translatedKeys = [];
-      for (let i = 0; i < keyNames.length; ++i) {
-        translatedKeys.push([keySyms[i], keys[i].down, keys[i].delay]);
+      if (code === undefined) {
+        throw new Error(`Unknown key: ${key.name}`);
       }
 
-      await this.interface.SimulateKeys(translatedKeys);
-    } catch (e) {
-      console.error('Failed to simulate key sequence: ' + e);
+      return code;
+    });
+
+    // Now we create a list of tuples, each containing the information required for one
+    // key event.
+    const translatedKeys = [];
+    for (let i = 0; i < keyCodes.length; ++i) {
+      translatedKeys.push([keyCodes[i], keys[i].down, keys[i].delay]);
     }
+
+    await this.interface.SimulateKeys(translatedKeys);
   }
 
   /**

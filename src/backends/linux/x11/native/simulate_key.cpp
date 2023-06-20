@@ -19,7 +19,6 @@
 
 namespace simulate_key {
 
-// This converts key names to keyvals. See index.ts for more explanation.
 void simulateKey(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
@@ -28,8 +27,7 @@ void simulateKey(const Napi::CallbackInfo& info) {
   }
 
   auto    display = XOpenDisplay(nullptr);
-  KeySym  keysym  = info[0].As<Napi::Number>().Int32Value();
-  KeyCode keycode = XKeysymToKeycode(display, keysym);
+  KeyCode keycode = info[0].As<Napi::Number>().Int32Value();
   bool    press   = info[1].As<Napi::Boolean>().Value();
 
   XTestFakeKeyEvent(display, keycode, press, CurrentTime);

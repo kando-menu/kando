@@ -9,112 +9,144 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * This is a mapping from the DOM key names to the Win32 virtual key names. This is based
- * on this list:
- * https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
- *
- * The Alt key is not included in this list, because it is handled separately.
- *
- * @todo: Is VK_APPS correct for the context menu key? Shouldn't it be VK_MENU?
+ * This is a mapping from the DOM key names to the Win32 key codes. This is based on this
+ * list:
+ * https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values
  */
-export const WindowsKeyNames = new Map<string, string>([
-  ['Attn', 'VK_ATTN'], // (0xF6)
-  ['CapsLock', 'VK_CAPITAL'], // (0x14)
-  ['Cancel', 'VK_CANCEL'], // (0x03)
-  ['Control', 'VK_CONTROL'], // (0x11)
-  ['Meta', 'VK_LWIN'], // (0x5B)
-  ['NumLock', 'VK_NUMLOCK'], // (0x90)
-  ['ScrollLock', 'VK_SCROLL'], // (0x91)
-  ['Shift', 'VK_SHIFT'], // (0x10)
-  ['Enter', 'VK_RETURN'], // (0x0D)
-  ['Tab', 'VK_TAB'], // (0x09)
-  [' ', 'VK_SPACE'], // (0x20)
-  ['ArrowDown', 'VK_DOWN'], // (0x28)
-  ['ArrowLeft', 'VK_LEFT'], // (0x25)
-  ['ArrowRight', 'VK_RIGHT'], // (0x27)
-  ['ArrowUp', 'VK_UP'], // (0x26)
-  ['End', 'VK_END'], // (0x23)
-  ['Home', 'VK_HOME'], // (0x24)
-  ['PageDown', 'VK_NEXT'], // (0x22)
-  ['PageUp', 'VK_PRIOR'], // (0x21)
-  ['Backspace', 'VK_BACK'], // (0x08)
-  ['Clear', 'VK_CLEAR'], // (0x0C)
-  ['CrSel', 'VK_CRSEL'], // (0xF7)
-  ['Delete', 'VK_DELETE'], // (0x2E)
-  ['EraseEof', 'VK_EREOF'], // (0xF9)
-  ['ExSel', 'VK_EXSEL'], // (0xF8)
-  ['Insert', 'VK_INSERT'], // (0x2D)
-  ['Accept', 'VK_ACCEPT'], // (0x1E)
-  ['Attn', 'VK_OEM_ATTN'], // (0xF0)
-  ['ContextMenu', 'VK_APPS'], // (0x5D)
-  ['Escape', 'VK_ESCAPE'], // (0x1B)
-  ['Execute', 'VK_EXECUTE'], // (0x2B)
-  ['Finish', 'VK_OEM_FINISH'], // (0xF1)
-  ['Help', 'VK_HELP'], // (0x2F)
-  ['Pause', 'VK_PAUSE'], // (0x13)
-  ['Play', 'VK_PLAY'], // (0xFA)
-  ['Select', 'VK_SELECT'], // (0x29)
-  ['PrintScreen', 'VK_SNAPSHOT'], // (0x2C)
-  ['Standby', 'VK_SLEEP'], // (0x5F)
-  ['Alphanumeric', 'VK_OEM_ATTN'], // (0xF0)
-  ['Convert', 'VK_CONVERT'], // (0x1C)
-  ['FinalMode', 'VK_FINAL'], // (0x18)
-  ['ModeChange', 'VK_MODECHANGE'], // (0x1F)
-  ['NonConvert', 'VK_NONCONVERT'], // (0x1D)
-  ['Process', 'VK_PROCESSKEY'], // (0xE5)
-  ['HangulMode', 'VK_HANGUL'], // (0x15)
-  ['HanjaMode', 'VK_HANJA'], // (0x19)
-  ['JunjaMode', 'VK_JUNJA'], // (0x17)
-  ['Hankaku', 'VK_OEM_AUTO'], // (0xF3)
-  ['Hiragana', 'VK_OEM_COPY'], // (0xF2)
-  ['KanaMode', 'VK_KANA'], // (0x15)
-  ['KanjiMode', 'VK_KANJI'], // (0x19)
-  ['Katakana', 'VK_OEM_FINISH'], // (0xF1)
-  ['Romaji', 'VK_OEM_BACKTAB'], // (0xF5)
-  ['Zenkaku', 'VK_OEM_ENLW'], // (0xF4)
-  ['F1', 'VK_F1'], // (0x70)
-  ['F2', 'VK_F2'], // (0x71)
-  ['F3', 'VK_F3'], // (0x72)
-  ['F4', 'VK_F4'], // (0x73)
-  ['F5', 'VK_F5'], // (0x74)
-  ['F6', 'VK_F6'], // (0x75)
-  ['F7', 'VK_F7'], // (0x76)
-  ['F8', 'VK_F8'], // (0x77)
-  ['F9', 'VK_F9'], // (0x78)
-  ['F10', 'VK_F10'], // (0x79)
-  ['F11', 'VK_F11'], // (0x7A)
-  ['F12', 'VK_F12'], // (0x7B)
-  ['F13', 'VK_F13'], // (0x7C)
-  ['F14', 'VK_F14'], // (0x7D)
-  ['F15', 'VK_F15'], // (0x7E)
-  ['F16', 'VK_F16'], // (0x7F)
-  ['F17', 'VK_F17'], // (0x80)
-  ['F18', 'VK_F18'], // (0x81)
-  ['F19', 'VK_F19'], // (0x82)
-  ['F20', 'VK_F20'], // (0x83)
-  ['MediaPlayPause', 'VK_MEDIA_PLAY_PAUSE'], // (0xB3)
-  ['MediaStop', 'VK_MEDIA_STOP'], // (0xB2)
-  ['MediaTrackNext', 'VK_MEDIA_NEXT_TRACK'], // (0xB0)
-  ['MediaTrackPrevious', 'VK_MEDIA_PREV_TRACK'], // (0xB1)
-  ['AudioVolumeDown', 'VK_VOLUME_DOWN'], // (0xAE)
-  ['AudioVolumeMute', 'VK_VOLUME_MUTE'], // (0xAD)
-  ['AudioVolumeUp', 'VK_VOLUME_UP'], // (0xAF)
-  ['ZoomToggle', 'VK_ZOOM'], // (0xFB)
-  ['LaunchMail', 'VK_LAUNCH_MAIL'], // (0xB4)
-  ['LaunchMediaPlayer', 'VK_LAUNCH_MEDIA_SELECT'], // (0xB5)
-  ['LaunchApplication1', 'VK_LAUNCH_APP1'], // (0xB6)
-  ['LaunchApplication2', 'VK_LAUNCH_APP2'], // (0xB7)
-  ['BrowserBack', 'VK_BROWSER_BACK'], // (0xA6)
-  ['BrowserFavorites', 'VK_BROWSER_FAVORITES'], // (0xAB)
-  ['BrowserForward', 'VK_BROWSER_FORWARD'], // (0xA7)
-  ['BrowserHome', 'VK_BROWSER_HOME'], // (0xAC)
-  ['BrowserRefresh', 'VK_BROWSER_REFRESH'], // (0xA8)
-  ['BrowserSearch', 'VK_BROWSER_SEARCH'], // (0xAA)
-  ['BrowserStop', 'VK_BROWSER_STOP'], // (0xA9)
-  ['Decimal', 'VK_DECIMAL'], // (0x6E)
-  ['Multiply', 'VK_MULTIPLY'], // (0x6A)
-  ['Add', 'VK_ADD'], // (0x6B)
-  ['Divide', 'VK_DIVIDE'], // (0x6F)
-  ['Subtract', 'VK_SUBTRACT'], // (0x6D)
-  ['Separator', 'VK_SEPARATOR'], // (0x6C)
+export const WindowsKeyCodes = new Map<string, number>([
+  ['Escape', 0x0001],
+  ['Digit1', 0x0002],
+  ['Digit2', 0x0003],
+  ['Digit3', 0x0004],
+  ['Digit4', 0x0005],
+  ['Digit5', 0x0006],
+  ['Digit6', 0x0007],
+  ['Digit7', 0x0008],
+  ['Digit8', 0x0009],
+  ['Digit9', 0x000a],
+  ['Digit0', 0x000b],
+  ['Minus', 0x000c],
+  ['Equal', 0x000d],
+  ['Backspace', 0x000e],
+  ['Tab', 0x000f],
+  ['KeyQ', 0x0010],
+  ['KeyW', 0x0011],
+  ['KeyE', 0x0012],
+  ['KeyR', 0x0013],
+  ['KeyT', 0x0014],
+  ['KeyY', 0x0015],
+  ['KeyU', 0x0016],
+  ['KeyI', 0x0017],
+  ['KeyO', 0x0018],
+  ['KeyP', 0x0019],
+  ['BracketLeft', 0x001a],
+  ['BracketRight', 0x001b],
+  ['Enter', 0x001c],
+  ['ControlLeft', 0x001d],
+  ['KeyA', 0x001e],
+  ['KeyS', 0x001f],
+  ['KeyD', 0x0020],
+  ['KeyF', 0x0021],
+  ['KeyG', 0x0022],
+  ['KeyH', 0x0023],
+  ['KeyJ', 0x0024],
+  ['KeyK', 0x0025],
+  ['KeyL', 0x0026],
+  ['Semicolon', 0x0027],
+  ['Quote', 0x0028],
+  ['Backquote', 0x0029],
+  ['ShiftLeft', 0x002a],
+  ['Backslash', 0x002b],
+  ['KeyZ', 0x002c],
+  ['KeyX', 0x002d],
+  ['KeyC', 0x002e],
+  ['KeyV', 0x002f],
+  ['KeyB', 0x0030],
+  ['KeyN', 0x0031],
+  ['KeyM', 0x0032],
+  ['Comma', 0x0033],
+  ['Period', 0x0034],
+  ['Slash', 0x0035],
+  ['ShiftRight', 0x0036],
+  ['NumpadMultiply', 0x0037],
+  ['AltLeft', 0x0038],
+  ['Space', 0x0039],
+  ['CapsLock', 0x003a],
+  ['F1', 0x003b],
+  ['F2', 0x003c],
+  ['F3', 0x003d],
+  ['F4', 0x003e],
+  ['F5', 0x003f],
+  ['F6', 0x0040],
+  ['F7', 0x0041],
+  ['F8', 0x0042],
+  ['F9', 0x0043],
+  ['F10', 0x0044],
+  ['Pause', 0x0045],
+  ['ScrollLock', 0x0046],
+  ['Numpad7', 0x0047],
+  ['Numpad8', 0x0048],
+  ['Numpad9', 0x0049],
+  ['NumpadSubtract', 0x004a],
+  ['Numpad4', 0x004b],
+  ['Numpad5', 0x004c],
+  ['Numpad6', 0x004d],
+  ['NumpadAdd', 0x004e],
+  ['Numpad1', 0x004f],
+  ['Numpad2', 0x0050],
+  ['Numpad3', 0x0051],
+  ['Numpad0', 0x0052],
+  ['NumpadDecimal', 0x0053],
+  ['IntlBackslash', 0x0056],
+  ['F11', 0x0057],
+  ['F12', 0x0058],
+  ['F13', 0x0064],
+  ['F14', 0x0065],
+  ['F15', 0x0066],
+  ['F16', 0x0067],
+  ['F17', 0x0068],
+  ['F18', 0x0069],
+  ['F19', 0x006a],
+  ['F20', 0x006b],
+  ['IntlYen', 0x007d],
+  ['Undo', 0xe008],
+  ['Paste', 0xe00a],
+  ['MediaTrackPrevious', 0xe010],
+  ['Cut', 0xe017],
+  ['Copy', 0xe018],
+  ['MediaTrackNext', 0xe019],
+  ['NumpadEnter', 0xe01c],
+  ['ControlRight', 0xe01d],
+  ['AudioVolumeMute', 0xe020],
+  ['MediaPlayPause', 0xe022],
+  ['MediaStop', 0xe024],
+  ['Eject', 0xe02c],
+  ['AudioVolumeDown', 0xe02e],
+  ['AudioVolumeUp', 0xe030],
+  ['BrowserHome', 0xe032],
+  ['NumpadDivide', 0xe035],
+  ['PrintScreen', 0xe037],
+  ['AltRight', 0xe038],
+  ['Help', 0xe03b],
+  ['NumLock', 0xe045],
+  ['Pause', 0xe046],
+  ['Home', 0xe047],
+  ['ArrowUp', 0xe048],
+  ['PageUp', 0xe049],
+  ['ArrowLeft', 0xe04b],
+  ['ArrowRight', 0xe04d],
+  ['End', 0xe04f],
+  ['ArrowDown', 0xe050],
+  ['PageDown', 0xe051],
+  ['Insert', 0xe052],
+  ['Delete', 0xe053],
+  ['MetaLeft', 0xe05b],
+  ['MetaRight', 0xe05c],
+  ['ContextMenu', 0xe05d],
+  ['BrowserSearch', 0xe065],
+  ['BrowserFavorites', 0xe066],
+  ['BrowserRefresh', 0xe067],
+  ['BrowserStop', 0xe068],
+  ['BrowserForward', 0xe069],
+  ['BrowserBack', 0xe06a],
 ]);

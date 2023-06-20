@@ -9,168 +9,159 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * This is a mapping from the DOM key names to the X11 virtual key codes. This is based on
- * this list:
- * https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+ * This is a mapping from the DOM key names to the X11 scan codes. This is based on this
+ * list:
+ * https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values
  */
-export const LinuxKeyNames = new Map<string, string>([
-  ['Alt', 'Alt_L'], // (0xFFE9), "Alt_R" (0xFFEA)
-  ['AltGraph', 'Mode_switch'], // (0xFF7E), "ISO_Level3_Shift" (0xFE03), "ISO_Level3_Latch" (0xFE04), "ISO_Level3_Lock" (0xFE05), "ISO_Level5_Shift" (0xFE11), "ISO_Level5_Latch" (0xFE12), "ISO_Level5_Lock" (0xFE13)
-  ['CapsLock', 'Caps_Lock'], // (0xFFE5)
-  ['Control', 'Control_L'], // (0xFFE3), "Control_R" (0xFFE4)
-  ['Hyper', 'Hyper_L'], // (0xFFED), "Hyper_R" (0xFFEE)
-  ['Meta', 'Meta_L'], // (0xFFE7), "Meta_R" (0xFFE8)
-  ['NumLock', 'Num_Lock'], // (0xFF7F)
-  ['ScrollLock', 'Scroll_Lock'], // (0xFF14)
-  ['Shift', 'Shift_L'], // (0xFFE1), "Shift_R" (0xFFE2)
-  ['Super', 'Super_L'], // (0xFFEB), "Super_R" (0xFFEC)
-  ['Enter', 'Return'], // (0xFF0D), "KP_Enter" (0xFF8D), "ISO_Enter" (0xFE34), "3270_Enter" (0xFD1E)
-  ['Tab', 'Tab'], // (0xFF09), "KP_Tab" (0xFF89), "ISO_Left_Tab" (0xFE20)
-  [' ', 'space'], // (0x0020), "KP_Space" (0xFF80)
-  ['ArrowDown', 'Down'], // (0xFF54), "KP_Down" (0xFF99)
-  ['ArrowLeft', 'Left'], // (0xFF51), "KP_Left" (0xFF96)
-  ['ArrowRight', 'Right'], // (0xFF53), "KP_Right" (0xFF98)
-  ['ArrowUp', 'Up'], // (0xFF52), "KP_Up" (0xFF97)
-  ['End', 'End'], // (0xFF57), "KP_End" (0xFF9C)
-  ['Home', 'Home'], // (0xFF50), "KP_Home" (0xFF95)
-  ['PageDown', 'Page_Down'], // (0xFF56), "KP_Page_Down" (0xFF9B)
-  ['PageUp', 'Page_Up'], // (0xFF55), "KP_Page_Up" (0xFF9A)
-  ['Backspace', 'BackSpace'], // (0xFF08)
-  ['Clear', 'Clear'], // (0xFF0B)
-  ['Copy', 'Copy'], // (0x1008FF57)
-  ['CrSel', '3270_CursorSelect'], // (0xFD1C)
-  ['Cut', 'Cut'], // (0x1008FF58)
-  ['Delete', 'Delete'], // (0xFFFF), "KP_Delete" (0xFF9F)
-  ['EraseEof', '3270_ExSelect'], // (0xFD1B)
-  ['ExSel', '3270_ExSelect'], // (0xFD1B)
-  ['Insert', 'Insert'], // (0xFF63), "KP_Insert" (0xFF9E)
-  ['Paste', 'Paste'], // (0x1008FF6D)
-  ['Redo', 'Redo'], // (0xFF66)
-  ['Undo', 'Undo'], // (0xFF65)
-  ['Again', 'Redo'], // (0xFF66)
-  ['Attn', '3270_Attn'], // (0xFD0E)
-  ['Cancel', 'Cancel'], // (0xFF69)
-  ['ContextMenu', 'Menu'], // (0xFF67)
-  ['Escape', 'Escape'], // (0xFF1B)
-  ['Find', 'Find'], // (0xFF68)
-  ['Help', 'Help'], // (0xFF6A)
-  ['Pause', 'Pause'], // (0xFF13), "Break" (0xFF6B)
-  ['Play', '3270_Play'], // (0xFD16)
-  ['Select', 'Select'], // (0xFF60)
-  ['ZoomIn', 'ZoomIn'], // (0x1008FF8B)
-  ['ZoomOut', 'ZoomOut'], // (0x1008FF8C)
-  ['BrightnessDown', 'MonBrightnessDown'], // (0x1008FF03)
-  ['BrightnessUp', 'MonBrightnessUp'], // (0x1008FF02)
-  ['Eject', 'Eject'], // (0x1008FF2C)
-  ['LogOff', 'LogOff'], // (0x1008FF61)
-  ['PowerOff', 'PowerDown'], // (0x1008FF21), "PowerOff" (0x1008FF2A)
-  ['PrintScreen', '3270_PrintScreen'], // (0xFD1D), "Print" (0xFF61), "Sys_Req" (0xFF15)
-  ['Hibernate', 'Hibernate'], // (0x1008FFA8)
-  ['Standby', 'Standby'], // (0x1008FF10), "Suspend" (0x1008FFA7), "Sleep" (0x1008FF2F)
-  ['WakeUp', 'WakeUp'], // (0x1008FF2B)
-  ['AllCandidates', 'MultipleCandidate'], // (0xFF3D
-  ['Alphanumeric', 'Eisu_Shift'], // (0xFF2F), "Eisu_toggle" (0xFF30)
-  ['CodeInput', 'Codeinput'], // (0xFF37)
-  ['Compose', 'Multi_key'], // (0xFF20) [1]
-  ['Convert', 'Henkan'], // (0xFF23)
-  ['GroupFirst', 'ISO_First_Group'], // (0xFE0C)
-  ['GroupLast', 'ISO_Last_Group'], // (0xFE0E)
-  ['GroupNext', 'ISO_Next_Group'], // (0xFE08)
-  ['GroupPrevious', 'ISO_Prev_Group'], // (0xFE0A)
-  ['ModeChange', 'Mode_switch'], // (0xFF7E), "script_switch" (0xFF7E)
-  ['NonConvert', 'Muhenkan'], // (0xFF22)
-  ['PreviousCandidate', 'PreviousCandidate'], // (0xFF3E)
-  ['SingleCandidate', 'SingleCandidate'], // (0xFF3C)
-  ['HangulMode', 'Hangul'], // (0xFF31)
-  ['HanjaMode', 'Hangul_Hanja'], // (0xFF34)
-  ['JunjaMode', 'Hangul_Jeonja'], // (0xFF38)
-  ['Eisu', 'Eisu_toggle'], // (0xFF2F)
-  ['Hankaku', 'Hankaku'], // (0xFF29)
-  ['Hiragana', 'Hiragana'], // (0xFF25)
-  ['HiraganaKatakana', 'Hiragana_Katakana'], // (0xFF27)
-  ['KanaMode', 'Kana_Lock'], // (0xFF2D), "Kana_Shift" (0xFF2E)
-  ['KanjiMode', 'Kanji'], // (0xFF21)
-  ['Katakana', 'Katakana'], // (0xFF26)
-  ['Romaji', 'Romaji'], // (0xFF24)
-  ['Zenkaku', 'Zenkaku'], // (0xFF28)
-  ['ZenkakuHanaku', 'Zenkaku_Hankaku'], // (0xFF2A)
-  ['F1', 'F1'], // (0xFFBE), "KP_F1" (0xFF91)
-  ['F2', 'F2'], // (0xFFBF), "KP_F2" (0xFF92)
-  ['F3', 'F3'], // (0xFFC0), "KP_F3" (0xFF93)
-  ['F4', 'F4'], // (0xFFC1), "KP_F4" (0xFF94)
-  ['F5', 'F5'], // (0xFFC2)
-  ['F6', 'F6'], // (0xFFC3)
-  ['F7', 'F7'], // (0xFFC4)
-  ['F8', 'F8'], // (0xFFC5)
-  ['F9', 'F9'], // (0xFFC6)
-  ['F10', 'F10'], // (0xFFC7)
-  ['F11', 'F11'], // (0xFFC8)
-  ['F12', 'F12'], // (0xFFC9)
-  ['F13', 'F13'], // (0xFFCA)
-  ['F14', 'F14'], // (0xFFCB)
-  ['F15', 'F15'], // (0xFFCC)
-  ['F16', 'F16'], // (0xFFCD)
-  ['F17', 'F17'], // (0xFFCE)
-  ['F18', 'F18'], // (0xFFCF)
-  ['F19', 'F19'], // (0xFFD0)
-  ['F20', 'F20'], // (0xFFD1)
-  ['MediaFastForward', 'AudioForward'], // (0x1008FF97)
-  ['MediaPause', 'AudioPause'], // (0x1008FF31)
-  ['MediaPlay', 'AudioPlay'], // (0x1008FF14)
-  ['MediaRecord', 'AudioRecord'], // (0x1008FF1C)
-  ['MediaRewind', 'AudioRewind'], // (0x1008FF3E)
-  ['MediaStop', 'AudioStop'], // (0x1008FF15)
-  ['MediaTrackNext', 'AudioNext'], // (0x1008FF17)
-  ['MediaTrackPrevious', 'AudioPrev'], // (0x1008FF16)
-  ['AudioVolumeDown', 'AudioLowerVolume'], // (0x1008FF11)
-  ['AudioVolumeMute', 'AudioMute'], // (0x1008FF12)
-  ['AudioVolumeUp', 'AudioRaiseVolume'], // (0x1008FF13)
-  ['MicrophoneVolumeMute', 'AudioMicMute'], // (0x1008FFB2)
-  ['Dimmer', 'BrightnessAdjust'], // (0x1008FF3B)
-  ['MediaAudioTrack', 'AudioCycleTrack'], // (0x1008FF9B)
-  ['RandomToggle', 'AudioRandomPlay'], // (0x1008FF99)
-  ['SplitScreenToggle', 'SplitScreen'], // (0x1008FF7D)
-  ['Subtitle', 'Subtitle'], // (0x1008FF9A)
-  ['VideoModeNext', 'Next_VMode'], // (0x1008FE22)
-  ['LaunchCalculator', 'Calculator'], // (0x1008FF1D)
-  ['LaunchCalendar', 'Calendar'], // (0x1008FF20)
-  ['LaunchMail', 'Mail'], // (0x1008FF19)
-  ['LaunchMediaPlayer', 'CD'], // (0x1008FF53), "Video" (0x1008FF87), "AudioMedia" (0x1008FF32)
-  ['LaunchMusicPlayer', 'Music'], // (0x1008FF92)
-  ['LaunchMyComputer', 'MyComputer'], // (0x1008FF33), "Explorer" (0x1008FF5D)
-  ['LaunchPhone', 'Phone'], // (0x1008FF6E)
-  ['LaunchScreenSaver', 'ScreenSaver'], // (0x1008FF2D)
-  ['LaunchSpreadsheet', 'Excel'], // (0x1008FF5C)
-  ['LaunchWebBrowser', 'WWW'], // (0x1008FF2E)
-  ['LaunchWebCam', 'WebCam'], // (0x1008FF8F)
-  ['LaunchWordProcessor', 'Word'], // (0x1008FF89)
-  ['LaunchApplication1', 'Launch0'], // (0x1008FF40)
-  ['LaunchApplication2', 'Launch1'], // (0x1008FF41)
-  ['LaunchApplication3', 'Launch2'], // (0x1008FF42)
-  ['LaunchApplication4', 'Launch3'], // (0x1008FF43)
-  ['LaunchApplication5', 'Launch4'], // (0x1008FF44)
-  ['LaunchApplication6', 'Launch5'], // (0x1008FF45)
-  ['LaunchApplication7', 'Launch6'], // (0x1008FF46)
-  ['LaunchApplication8', 'Launch7'], // (0x1008FF47)
-  ['LaunchApplication9', 'Launch8'], // (0x1008FF48)
-  ['LaunchApplication10', 'Launch9'], // (0x1008FF49)
-  ['LaunchApplication11', 'LaunchA'], // (0x1008FF4A)
-  ['LaunchApplication12', 'LaunchB'], // (0x1008FF4B)
-  ['LaunchApplication13', 'LaunchC'], // (0x1008FF4C)
-  ['LaunchApplication14', 'LaunchD'], // (0x1008FF4D)
-  ['LaunchApplication15', 'LaunchE'], // (0x1008FF4E)
-  ['LaunchApplication16', 'LaunchF'], // (0x1008FF4F)
-  ['BrowserBack', 'Back'], // (0x1008FF26)
-  ['BrowserFavorites', 'Favorites'], // (0x1008FF30), "MySites" (0x1008FF67)
-  ['BrowserForward', 'Forward'], // (0x1008FF27)
-  ['BrowserHome', 'HomePage'], // (0x1008FF18)
-  ['BrowserRefresh', 'Refresh'], // (0x1008FF29), "Reload" (0x1008FF73)
-  ['BrowserSearch', 'Search'], // (0x1008FF1B)
-  ['BrowserStop', 'Stop'], // (0x1008FF28)
-  ['Decimal', 'KP_Decimal'], // (0xFFAE)
-  ['Multiply', 'KP_Multiply'], // (0xFFAA)
-  ['Add', 'KP_Add'], // (0xFFAB)
-  ['Divide', 'KP_Divide'], // (0xFFAF)
-  ['Subtract', 'KP_Subtract'], // (0xFFAD)
-  ['Separator', 'KP_Separator'], // (0xFFAC)
+export const LinuxKeyCodes = new Map<string, number>([
+  ['Escape', 0x0009],
+  ['Digit1', 0x000a],
+  ['Digit2', 0x000b],
+  ['Digit3', 0x000c],
+  ['Digit4', 0x000d],
+  ['Digit5', 0x000e],
+  ['Digit6', 0x000f],
+  ['Digit7', 0x0010],
+  ['Digit8', 0x0011],
+  ['Digit9', 0x0012],
+  ['Digit0', 0x0013],
+  ['Minus', 0x0014],
+  ['Equal', 0x0015],
+  ['Backspace', 0x0016],
+  ['Tab', 0x0017],
+  ['KeyQ', 0x0018],
+  ['KeyW', 0x0019],
+  ['KeyE', 0x001a],
+  ['KeyR', 0x001b],
+  ['KeyT', 0x001c],
+  ['KeyY', 0x001d],
+  ['KeyU', 0x001e],
+  ['KeyI', 0x001f],
+  ['KeyO', 0x0020],
+  ['KeyP', 0x0021],
+  ['BracketLeft', 0x0022],
+  ['BracketRight', 0x0023],
+  ['Enter', 0x0024],
+  ['ControlLeft', 0x0025],
+  ['KeyA', 0x0026],
+  ['KeyS', 0x0027],
+  ['KeyD', 0x0028],
+  ['KeyF', 0x0029],
+  ['KeyG', 0x002a],
+  ['KeyH', 0x002b],
+  ['KeyJ', 0x002c],
+  ['KeyK', 0x002d],
+  ['KeyL', 0x002e],
+  ['Semicolon', 0x002f],
+  ['Quote', 0x0030],
+  ['Backquote', 0x0031],
+  ['ShiftLeft', 0x0032],
+  ['Backslash', 0x0033],
+  ['KeyZ', 0x0034],
+  ['KeyX', 0x0035],
+  ['KeyC', 0x0036],
+  ['KeyV', 0x0037],
+  ['KeyB', 0x0038],
+  ['KeyN', 0x0039],
+  ['KeyM', 0x003a],
+  ['Comma', 0x003b],
+  ['Period', 0x003c],
+  ['Slash', 0x003d],
+  ['ShiftRight', 0x003e],
+  ['NumpadMultiply', 0x003f],
+  ['AltLeft', 0x0040],
+  ['Space', 0x0041],
+  ['CapsLock', 0x0042],
+  ['F1', 0x0043],
+  ['F2', 0x0044],
+  ['F3', 0x0045],
+  ['F4', 0x0046],
+  ['F5', 0x0047],
+  ['F6', 0x0048],
+  ['F7', 0x0049],
+  ['F8', 0x004a],
+  ['F9', 0x004b],
+  ['F10', 0x004c],
+  ['NumLock', 0x004d],
+  ['ScrollLock', 0x004e],
+  ['Numpad7', 0x004f],
+  ['Numpad8', 0x0050],
+  ['Numpad9', 0x0051],
+  ['NumpadSubtract', 0x0052],
+  ['Numpad4', 0x0053],
+  ['Numpad5', 0x0054],
+  ['Numpad6', 0x0055],
+  ['NumpadAdd', 0x0056],
+  ['Numpad1', 0x0057],
+  ['Numpad2', 0x0058],
+  ['Numpad3', 0x0059],
+  ['Numpad0', 0x005a],
+  ['NumpadDecimal', 0x005b],
+  ['IntlBackslash', 0x005e],
+  ['F11', 0x005f],
+  ['F12', 0x0060],
+  ['IntlRo', 0x0061],
+  ['Lang3', 0x0062],
+  ['Lang4', 0x0063],
+  ['Convert', 0x0064],
+  ['KanaMode', 0x0065],
+  ['NonConvert', 0x0066],
+  ['NumpadEnter', 0x0068],
+  ['ControlRight', 0x0069],
+  ['NumpadDivide', 0x006a],
+  ['PrintScreen', 0x006b],
+  ['AltRight', 0x006c],
+  ['Home', 0x006e],
+  ['ArrowUp', 0x006f],
+  ['PageUp', 0x0070],
+  ['ArrowLeft', 0x0071],
+  ['ArrowRight', 0x0072],
+  ['End', 0x0073],
+  ['ArrowDown', 0x0074],
+  ['PageDown', 0x0075],
+  ['Insert', 0x0076],
+  ['Delete', 0x0077],
+  ['AudioVolumeMute', 0x0079],
+  ['AudioVolumeDown', 0x007a],
+  ['AudioVolumeUp', 0x007b],
+  ['Power', 0x007c],
+  ['NumpadEqual', 0x007d],
+  ['Pause', 0x007f],
+  ['NumpadComma', 0x0081],
+  ['Lang1', 0x0082],
+  ['Lang2', 0x0083],
+  ['IntlYen', 0x0084],
+  ['MetaLeft', 0x0085],
+  ['MetaRight', 0x0086],
+  ['ContextMenu', 0x0087],
+  ['BrowserStop', 0x0088],
+  ['Again', 0x0089],
+  ['Undo', 0x008b],
+  ['Copy', 0x008d],
+  ['Paste', 0x008f],
+  ['Find', 0x0090],
+  ['Cut', 0x0091],
+  ['Help', 0x0092],
+  ['LaunchApp2', 0x0094],
+  ['Sleep', 0x0096],
+  ['WakeUp', 0x0097],
+  ['BrowserFavorites', 0x00a4],
+  ['BrowserBack', 0x00a6],
+  ['BrowserForward', 0x00a7],
+  ['BrowserRefresh', 0x00b5],
+  ['NumpadParenLeft', 0x00bb],
+  ['NumpadParenRight', 0x00bc],
+  ['F13', 0x00bf],
+  ['F14', 0x00c0],
+  ['F15', 0x00c1],
+  ['F16', 0x00c2],
+  ['F17', 0x00c3],
+  ['F18', 0x00c4],
+  ['F19', 0x00c5],
+  ['F20', 0x00c6],
+  ['F21', 0x00c7],
+  ['F22', 0x00c8],
+  ['F23', 0x00c9],
+  ['F24', 0x00ca],
+  ['BrowserSearch', 0x00e1],
 ]);

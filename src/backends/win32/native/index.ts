@@ -26,10 +26,10 @@ export interface Native {
   /**
    * This simulates a key press or release.
    *
-   * @param name The name of the key to simulate.
+   * @param keycode The Win32 key code of the key to simulate.
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
-  simulateKey(name: string, down: boolean): void;
+  simulateKey(keycode: number, down: boolean): void;
 }
 
 const native: Native = require('./../../../../build/Release/NativeWin32.node');

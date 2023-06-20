@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../common';
-import { LinuxKeyNames } from '../keys';
+import { LinuxKeyCodes } from '../keys';
 
 /**
  * This backend uses the xdotool command line tool to simulate key presses and mouse
@@ -72,36 +72,34 @@ export class X11Backend implements Backend {
 
   /**
    * This simulates a key sequence by sending the keys to the currently focused window
-   * using the XTest X11 extension.
+   * using the XTest X11 extension. If one of the given keys in the sequence is not known,
+   * an exception will be thrown.
    *
-   * @param shortcut The shortcut to simulate.
-   * @todo: Add information about the string format of the shortcut.
+   * @param shortcut The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence) {
-    // The simulateKey() expects a keyval, so we first need to convert the given DOM key
-    // names to X11 key names and then to X11 keyvals. The first conversion is done using
-    // the table in keys.ts, the second is wrapped in a native module.
+    // We first need to convert the given DOM key names to X11 key codes. If a key code is
+    // not found, we throw an error.
+    const keyCodes = keys.map((key) => {
+      const code = LinuxKeyCodes.get(key.name);
 
-    // Collect all required key names and convert them to X11 key names.
-    const keyNames = keys.map((key) => LinuxKeyNames.get(key.name) ?? key.name);
-
-    // Then convert all of them in one go.
-    const keySyms = native.convertKeys(keyNames);
-
-    // Now simulate the key presses.
-    for (let i = 0; i < keyNames.length; i++) {
-      if (keySyms[i] < 0) {
-        throw new Error(`Failed to simulate key sequence: Unknown key '${keyNames[i]}'.`);
+      if (code === undefined) {
+        throw new Error(`Unknown key: ${key.name}`);
       }
 
-      // Wait a couple of milliseconds if the key has a delay specified.
+      return code;
+    });
+
+    // Now simulate the key presses. We wait a couple of milliseconds if the key has a
+    // delay specified.
+    for (let i = 0; i < keyCodes.length; i++) {
       if (keys[i].delay > 0) {
         await new Promise((resolve) => {
           setTimeout(resolve, keys[i].delay);
         });
       }
 
-      native.simulateKey(keySyms[i], keys[i].down);
+      native.simulateKey(keyCodes[i], keys[i].down);
     }
   }
 

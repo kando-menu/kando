@@ -11,13 +11,11 @@
 #include <napi.h>
 
 #include "active_window.hpp"
-#include "convert_keys.hpp"
 #include "move_pointer.hpp"
 #include "simulate_key.hpp"
 
 Napi::Object init(Napi::Env env, Napi::Object exports) {
   active_window::init(env, exports);
-  convert_keys::init(env, exports);
   move_pointer::init(env, exports);
   simulate_key::init(env, exports);
   return exports;

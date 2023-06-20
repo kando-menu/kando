@@ -67,12 +67,12 @@ document.querySelector('#dev-tools-button').addEventListener('click', () => {
 document.querySelector('#shortcut-button-1').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'Control',
+      name: 'ControlLeft',
       down: true,
       delay: 0,
     },
     {
-      name: 'Alt',
+      name: 'AltLeft',
       down: true,
       delay: 0,
     },
@@ -87,12 +87,12 @@ document.querySelector('#shortcut-button-1').addEventListener('click', () => {
       delay: 0,
     },
     {
-      name: 'Alt',
+      name: 'AltLeft',
       down: false,
       delay: 0,
     },
     {
-      name: 'Control',
+      name: 'ControlLeft',
       down: false,
       delay: 0,
     },
@@ -102,7 +102,7 @@ document.querySelector('#shortcut-button-1').addEventListener('click', () => {
 document.querySelector('#shortcut-button-2').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'Alt',
+      name: 'AltLeft',
       down: true,
       delay: 0,
     },
@@ -127,7 +127,7 @@ document.querySelector('#shortcut-button-2').addEventListener('click', () => {
       delay: 0,
     },
     {
-      name: 'Alt',
+      name: 'AltLeft',
       down: false,
       delay: 1000,
     },
@@ -137,22 +137,22 @@ document.querySelector('#shortcut-button-2').addEventListener('click', () => {
 document.querySelector('#shortcut-button-3').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'Control',
+      name: 'ControlLeft',
+      down: true,
+      delay: 100,
+    },
+    {
+      name: 'KeyC',
       down: true,
       delay: 0,
     },
     {
-      name: 'c',
-      down: true,
-      delay: 0,
-    },
-    {
-      name: 'c',
+      name: 'KeyC',
       down: false,
       delay: 0,
     },
     {
-      name: 'Control',
+      name: 'ControlLeft',
       down: false,
       delay: 0,
     },
@@ -167,22 +167,22 @@ document.querySelector('#shortcut-button-3').addEventListener('click', () => {
       delay: 0,
     },
     {
-      name: 'Control',
+      name: 'ControlLeft',
       down: true,
       delay: 0,
     },
     {
-      name: 'v',
+      name: 'KeyV',
       down: true,
       delay: 0,
     },
     {
-      name: 'v',
+      name: 'KeyV',
       down: false,
       delay: 0,
     },
     {
-      name: 'Control',
+      name: 'ControlLeft',
       down: false,
       delay: 0,
     },
@@ -192,32 +192,12 @@ document.querySelector('#shortcut-button-3').addEventListener('click', () => {
 document.querySelector('#shortcut-button-4').addEventListener('click', () => {
   window.api.simulateKeys([
     {
-      name: 'a',
+      name: 'MetaLseft',
       down: true,
       delay: 0,
     },
     {
-      name: 'a',
-      down: false,
-      delay: 0,
-    },
-    {
-      name: 'A',
-      down: true,
-      delay: 0,
-    },
-    {
-      name: 'A',
-      down: false,
-      delay: 0,
-    },
-    {
-      name: 'odiaeresis',
-      down: true,
-      delay: 0,
-    },
-    {
-      name: 'odiaeresis',
+      name: 'MetaLeft',
       down: false,
       delay: 0,
     },
