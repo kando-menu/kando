@@ -18,7 +18,6 @@
 
 namespace move_pointer {
 
-// This converts key names to keyvals. See index.ts for more explanation.
 void movePointer(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
