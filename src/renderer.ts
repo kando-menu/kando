@@ -69,7 +69,7 @@ document.querySelector('#shortcut-button-1').addEventListener('click', () => {
     {
       name: 'ControlLeft',
       down: true,
-      delay: 0,
+      delay: 100,
     },
     {
       name: 'AltLeft',
