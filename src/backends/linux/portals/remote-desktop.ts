@@ -21,7 +21,7 @@ export class RemoteDesktop extends DesktopPortal {
     this.interface.NotifyPointerMotion(this.session.path, {}, dx, dy);
   }
 
-  public async notifyKeyboardKeycode(keycode: number, down: boolean) {
+  public async simulateKey(keycode: number, down: boolean) {
     await this.connect();
     this.interface.NotifyKeyboardKeycode(
       this.session.path,
