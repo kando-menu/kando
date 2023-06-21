@@ -8,31 +8,35 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#include "move_pointer.hpp"
+#include "simulate_key.hpp"
 
-#include <windows.h>
-#include <winuser.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/XTest.h>
+#include <X11/keysym.h>
 
-namespace move_pointer {
+#include <iostream>
+#include <string>
 
-Napi::Object movePointer(const Napi::CallbackInfo& info) {
+namespace simulate_key {
+
+void simulateKey(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  if (info.Length() < 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
-    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+
+  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsBoolean()) {
+    Napi::TypeError::New(env, "Number and Boolean expected").ThrowAsJavaScriptException();
   }
 
-  int dx = info[0].As<Napi::Number>().Int32Value();
-  int dy = info[1].As<Napi::Number>().Int32Value();
+  auto    display = XOpenDisplay(nullptr);
+  KeyCode keycode = info[0].As<Napi::Number>().Int32Value();
+  bool    press   = info[1].As<Napi::Boolean>().Value();
 
-  POINT p;
-  GetCursorPos(&p);
-  SetCursorPos(dx + p.x, dy + p.y);
+  XTestFakeKeyEvent(display, keycode, press, CurrentTime);
 
-  return Napi::Object::New(env);
+  XCloseDisplay(display);
 }
 
 void init(Napi::Env env, Napi::Object exports) {
-  exports.Set("movePointer", Napi::Function::New(env, movePointer));
+  exports.Set("simulateKey", Napi::Function::New(env, simulateKey));
 }
 
-} // namespace move_pointer
+} // namespace simulate_key

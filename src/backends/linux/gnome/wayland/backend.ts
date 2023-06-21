@@ -10,6 +10,8 @@
 
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
+import { IKeySequence } from '../../../../common';
+import { LinuxKeyCodes } from '../../keys';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -87,19 +89,32 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Simulates a keyboard shortcut.
+   * Simulates a sequence of key presses using the GNOME Shell extension. If one of the
+   * given keys in the sequence is not known, an exception will be thrown.
    *
-   * @param shortcut The shortcut to simulate.
-   * @todo: Add information about the string format of the shortcut.
+   * @param shortcut The keys to simulate.
    */
-  public async simulateShortcut(shortcut: string) {
-    shortcut = this.toGdkAccelerator(shortcut);
+  public async simulateKeys(keys: IKeySequence) {
+    // We first need to convert the given DOM key names to X11 key codes. If a key code is
+    // not found, we throw an error.
+    const keyCodes = keys.map((key) => {
+      const code = LinuxKeyCodes.get(key.name);
 
-    const success = await this.interface.SimulateShortcut(shortcut);
+      if (code === undefined) {
+        throw new Error(`Unknown key: ${key.name}`);
+      }
 
-    if (!success) {
-      throw new Error('Failed to simulate shortcut.');
+      return code;
+    });
+
+    // Now we create a list of tuples, each containing the information required for one
+    // key event.
+    const translatedKeys = [];
+    for (let i = 0; i < keyCodes.length; ++i) {
+      translatedKeys.push([keyCodes[i], keys[i].down, keys[i].delay]);
     }
+
+    await this.interface.SimulateKeys(translatedKeys);
   }
 
   /**

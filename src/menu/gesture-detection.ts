@@ -11,6 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as math from './math';
+import { IVec2 } from '../common';
 
 /**
  * This class detects gestures. It is used to detect marking mode selections in the menu.
@@ -21,10 +22,10 @@ import * as math from './math';
 export class GestureDetection extends EventEmitter {
   // This will be initialized with the coordinates of the first motion event after the
   // last reset() call.
-  private strokeStart: math.IVec2 = null;
+  private strokeStart: IVec2 = null;
 
   // This will be updated with each motion event.
-  private strokeEnd: math.IVec2 = null;
+  private strokeEnd: IVec2 = null;
 
   // This timer is used to detect pause-events where the pointer was stationary for some
   // time. These events also lead to selections.
@@ -61,7 +62,7 @@ export class GestureDetection extends EventEmitter {
    *
    * @param event
    */
-  public onMotionEvent(coords: math.IVec2): void {
+  public onMotionEvent(coords: IVec2): void {
     if (this.strokeStart === null) {
       // It's the first event of this gesture, so we store the current mouse position as
       // start and end. There is nothing more to be done.

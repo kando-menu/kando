@@ -11,6 +11,25 @@
 import './index.scss';
 
 import { Menu } from './menu/menu';
+import { IKeySequence, IVec2 } from './common';
+
+interface IElectronAPI {
+  loadPreferences: () => void;
+  hideWindow: (delay: number) => void;
+  showDevTools: () => void;
+  simulateKeys: (keys: IKeySequence) => void;
+  movePointer: (dist: IVec2) => void;
+  openURI: (uri: string) => void;
+  itemSelected: () => void;
+  log: (message: string) => void;
+  showMenu: (func: (pos: IVec2) => void) => void;
+}
+
+declare global {
+  interface Window {
+    api: IElectronAPI;
+  }
+}
 
 const container = document.getElementById('menu-container');
 const menu = new Menu(container);
@@ -45,8 +64,144 @@ document.querySelector('#dev-tools-button').addEventListener('click', () => {
   window.api.showDevTools();
 });
 
-document.querySelector('#shortcut-button').addEventListener('click', () => {
-  window.api.simulateShortcut();
+document.querySelector('#shortcut-button-1').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'ControlLeft',
+      down: true,
+      delay: 100,
+    },
+    {
+      name: 'AltLeft',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'ArrowRight',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'ArrowRight',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'AltLeft',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'ControlLeft',
+      down: false,
+      delay: 0,
+    },
+  ]);
+});
+
+document.querySelector('#shortcut-button-2').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'AltLeft',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Tab',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'Tab',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'Tab',
+      down: true,
+      delay: 1000,
+    },
+    {
+      name: 'Tab',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'AltLeft',
+      down: false,
+      delay: 1000,
+    },
+  ]);
+});
+
+document.querySelector('#shortcut-button-3').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'ControlLeft',
+      down: true,
+      delay: 100,
+    },
+    {
+      name: 'KeyC',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'KeyC',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'ControlLeft',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'ArrowRight',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'ArrowRight',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'ControlLeft',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'KeyV',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'KeyV',
+      down: false,
+      delay: 0,
+    },
+    {
+      name: 'ControlLeft',
+      down: false,
+      delay: 0,
+    },
+  ]);
+});
+
+document.querySelector('#shortcut-button-4').addEventListener('click', () => {
+  window.api.simulateKeys([
+    {
+      name: 'MetaLeft',
+      down: true,
+      delay: 0,
+    },
+    {
+      name: 'MetaLeft',
+      down: false,
+      delay: 0,
+    },
+  ]);
 });
 
 document.querySelector('#url-button').addEventListener('click', () => {

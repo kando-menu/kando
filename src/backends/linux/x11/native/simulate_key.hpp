@@ -8,13 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#ifndef KANDO_ACTIVE_WINDOW_HPP_INCLUDED
-#define KANDO_ACTIVE_WINDOW_HPP_INCLUDED
+#ifndef KANDO_SIMULATE_KEY_HPP_INCLUDED
+#define KANDO_SIMULATE_KEY_HPP_INCLUDED
 
 #include <napi.h>
 
-namespace active_window {
+namespace simulate_key {
 void init(Napi::Env env, Napi::Object exports);
 }
 
-#endif // KANDO_ACTIVE_WINDOW_HPP_INCLUDED
+#endif // KANDO_SIMULATE_KEY_HPP_INCLUDED

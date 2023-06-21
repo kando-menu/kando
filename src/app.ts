@@ -8,8 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import os from 'os';
-
 import { screen, BrowserWindow, ipcMain, shell } from 'electron';
 import { Backend, getBackend } from './backends';
 
@@ -109,14 +107,9 @@ export class KandoApp {
       console.log(message);
     });
 
-    ipcMain.on('simulate-shortcut', () => {
+    ipcMain.on('simulate-keys', (event, keys) => {
       this.window.hide();
-
-      if (os.platform() === 'win32') {
-        this.backend.simulateShortcut('Ctrl+Alt+Tab');
-      } else {
-        this.backend.simulateShortcut('Super+A');
-      }
+      this.backend.simulateKeys(keys);
     });
 
     ipcMain.on('move-pointer', (event, dist) => {

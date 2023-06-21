@@ -10,25 +10,29 @@
 
 #include "move_pointer.hpp"
 
-#include <windows.h>
-#include <winuser.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/XTest.h>
+
+#include <iostream>
+#include <string>
 
 namespace move_pointer {
 
-Napi::Object movePointer(const Napi::CallbackInfo& info) {
+void movePointer(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  if (info.Length() < 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
-    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+
+  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
+    Napi::TypeError::New(env, "Two Numbers expected").ThrowAsJavaScriptException();
   }
 
-  int dx = info[0].As<Napi::Number>().Int32Value();
-  int dy = info[1].As<Napi::Number>().Int32Value();
+  auto display = XOpenDisplay(nullptr);
 
-  POINT p;
-  GetCursorPos(&p);
-  SetCursorPos(dx + p.x, dy + p.y);
+  auto dx = info[0].As<Napi::Number>().Int32Value();
+  auto dy = info[1].As<Napi::Number>().Int32Value();
 
-  return Napi::Object::New(env);
+  XTestFakeRelativeMotionEvent(display, dx, dy, CurrentTime);
+
+  XCloseDisplay(display);
 }
 
 void init(Napi::Env env, Napi::Object exports) {

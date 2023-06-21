@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
+import { IKeySequence, IVec2 } from './common';
 
 // Expose a bridged API to the renderer process.
 contextBridge.exposeInMainWorld('api', {
@@ -18,10 +19,10 @@ contextBridge.exposeInMainWorld('api', {
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');
   },
-  simulateShortcut: function () {
-    ipcRenderer.send('simulate-shortcut');
+  simulateKeys: function (keys: IKeySequence) {
+    ipcRenderer.send('simulate-keys', keys);
   },
-  movePointer: function (dist: { x: number; y: number }) {
+  movePointer: function (dist: IVec2) {
     ipcRenderer.send('move-pointer', dist);
   },
   openURI: function (uri: string) {
@@ -33,7 +34,7 @@ contextBridge.exposeInMainWorld('api', {
   log: function (message: string) {
     ipcRenderer.send('log', message);
   },
-  showMenu: function (callback: (pos: { x: number; y: number }) => void) {
+  showMenu: function (callback: (pos: IVec2) => void) {
     ipcRenderer.on('show-menu', (event, pos) => callback(pos));
   },
 });

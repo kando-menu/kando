@@ -23,7 +23,7 @@ unsigned long  window;
 unsigned char* prop;
 Display*       display;
 
-unsigned char* get_string_property(char* property_name) {
+unsigned char* get_string_property(const char* property_name) {
   Atom          actual_type, filter_atom;
   int           actual_format, status;
   unsigned long nitems, bytes_after;
@@ -39,7 +39,7 @@ unsigned char* get_string_property(char* property_name) {
   return prop;
 }
 
-unsigned long get_long_property(char* property_name) {
+unsigned long get_long_property(const char* property_name) {
   unsigned char* prop = get_string_property(property_name);
 
   if (prop == 0) {
@@ -73,10 +73,10 @@ bool getActiveWindow(Napi::Object& obj) {
   // Workaround for null values
   unsigned char* net_wm_name = get_string_property("_NET_WM_NAME");
 
-  char* wm_name = "";
+  const char* wm_name = "";
 
   if (net_wm_name != NULL) {
-    wm_name = reinterpret_cast<char*>(get_string_property("_NET_WM_NAME"));
+    wm_name = reinterpret_cast<const char*>(get_string_property("_NET_WM_NAME"));
   }
 
   obj.Set("wmClass", wm_class);

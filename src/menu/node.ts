@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from './math';
+import { IVec2 } from '../common';
 
 /**
  * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
