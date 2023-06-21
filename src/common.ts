@@ -18,10 +18,19 @@ export interface IVec2 {
   y: number;
 }
 
+/**
+ * This interface is used to describe an element of a key sequence. It contains the DOM
+ * name of the key, a boolean indicating whether the key is pressed or released and a
+ * delay in milliseconds.
+ */
 export interface IKeyStroke {
   name: string;
   down: boolean;
   delay: number;
 }
 
+/**
+ * This type is used to describe a sequence of key strokes. It is used to simulate
+ * keyboard shortcuts.
+ */
 export type IKeySequence = Array<IKeyStroke>;
