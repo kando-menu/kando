@@ -11,7 +11,6 @@
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../common';
-import { native } from '../../x11/native';
 import { LinuxKeyCodes } from '../../keys';
 
 /**
