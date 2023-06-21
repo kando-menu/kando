@@ -17,21 +17,6 @@
 
 namespace simulate_key {
 
-// I am not sure if this is the best way to do this, but it works for now. On Windows, it
-// seems that there is the concept of a "scan code" and a "virtual key code" which roughly
-// correspond to the "code" and "key" in the DOM or to the "keycode" and "keysym" in X11.
-// The former is a hardware code that represents the physical location of the key on the
-// keyboard, while the latter is a logical code that represents the meaning of the key.
-// In Kando, we want to use the logical code, but the Windows API seems to not fully
-// support all keys here. For example, the "Alt" key is not supported, but the "Menu" key
-// is. So here's what we do:
-// 1. If the key is a single character, we use VkKeyScan to get the virtual key code and
-//    then MapVirtualKey to get the scan code.
-// 2. If the key is not a single character, we use the WindowsKeyCodes above table to get
-//    the virtual key code and then MapVirtualKey to get the scan code.
-// 3. If the key is not in the KEY_CODES table, we search in the SCAN_CODES table for the
-//    scan code and use that.
-// 4. If the key is not in the SCAN_CODES table, we throw an error.
 Napi::Object simulateKey(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2 || !info[0].IsNumber() || !info[1].IsBoolean()) {
