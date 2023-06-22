@@ -68,10 +68,16 @@ npm install -g windows-build-tools
 
 On Linux, `gcc` should already be installed.
 However, some additional packages may be required for the native backend modules.
-On Debian-based distributions you can install them with:
+On **Debian-based** distributions you can install them with:
 
 ```
 sudo apt install cmake libx11-dev libxtst-dev
+```
+
+On **Arch-based** distributions you can install them with:
+
+```
+sudo pacman -S cmake libx11 libxtst
 ```
 
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
