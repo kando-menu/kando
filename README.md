@@ -22,11 +22,16 @@ I have been working on Fly-Pie for more than 3 years now and I am very happy wit
 However, I have always wanted to create a similar application for the desktop in general.
 This is why I started this project.
 
-**Kando will be very similar to Fly-Pie in terms of interaction and appearance.
+**Kando is very similar to Fly-Pie in terms of interaction and appearance.
 At the same time, there will be some major differences.
 You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!**
 
 # The Prototype
+
+<p align="center">
+  <img src="docs/img/kando.gif"/>
+</p>
+
 
 The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
 It currently supports the following platforms:
