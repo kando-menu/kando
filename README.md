@@ -8,7 +8,7 @@ SPDX-License-Identifier: CC-BY-4.0
 </p>
 
 
-_:construction: This project is currently in a very early stage of development. For now, I use this repository mainly for testing things. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans)._
+_:construction: This project is currently in a very early stage of development. Kando is not yet a functional menu but rather a prototype which demonstrates the feasibility of the concept. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans)._
 
 **Kando** will be a pie menu for the desktop.
 It will be highly customizable and will allow you to create your own menus and actions.
@@ -16,7 +16,6 @@ For instance, you can use it to control your music player, to open your favorite
 It will be available for Windows, Linux and maybe macOS.
 
 # The Vision
-
 
 I am the developer of [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), which is a similar project but limited to the GNOME desktop.
 I have been working on Fly-Pie for more than 3 years now and I am very happy with the result.
@@ -29,24 +28,22 @@ You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-
 
 # The Prototype
 
-This project is in a very early stage of development.
-I am currently working on a prototype which allows me to test some core concepts.
-It currently demonstrates the following core features:
+The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
+It currently supports the following platforms:
 
-| Key Feature | Windows | Linux (X11) | Linux (Wayland) |
-|-------------|---------|-------------|-----------------|
-| Opening a transparent top-level window | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Listening to global hotkeys | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (3) |
-| Drawing something at the mouse position | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (4) |
-| Get the name and class of the currently focused application window | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: (5) |
-| Simulating key presses | :heavy_check_mark: (1) | :heavy_check_mark: (2) | :heavy_minus_sign: (6) |
+* Windows
+* Linux (X11)
+* Linux (GNOME under Wayland)
+* Linux (KDE under Wayland)
 
-1. Uses a `powershell` script to simulate key presses. This is not ideal, as it fails to simulate the <kbd>Super</kbd> key. In future, we will require a native module using [`SendInput()`](https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-sendinput) from the Windows API.
-1. Uses a `xdotool` script to simulate key presses for now. Maybe we should use a native module here as well.
-1. For now, this only works on GNOME using an [extension](https://github.com/kando-menu/gnome-shell-integration). However, there is the [global shortcuts portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.GlobalShortcuts) which may solve this for all Wayland compositors.
-1. This is more difficult than it appears. On Wayland, clients seem to get the current mouse pointer position only when the user moves the pointer over the window for the first time. So if the mouse pointer is stationary while the window opens, the window will not receive any mouse input events. I made this work on GNOME by using an [extension]((https://github.com/kando-menu/gnome-shell-integration)) which reports the current mouse position to the client over DBus. Maybe something similar can be done for other compositors.
-1. For now, this also only works on GNOME using the [extension](https://github.com/kando-menu/gnome-shell-integration). However, there is a request for a [corresponding portal](https://github.com/flatpak/xdg-desktop-portal/issues/304) which may solve this for all Wayland compositors.
-1. For now, this also only works on GNOME using the [extension](https://github.com/kando-menu/gnome-shell-integration). However, there is the [remote desktop portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) which may solve this for all Wayland compositors.
+The X11 backend should work on most X11-based Linux desktop environments, but has been tested only on GNOME and KDE so far.
+
+Implementing a menu like Kando is pretty hard on Wayland due to the client isolation.
+Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not possible.
+
+For Wayland support on GNOME, I have created a [GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with. On KDE, I have used the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.
+
+With a similar approach, Kando could also be made to work on other Wayland-based desktop environments.
 
 ## Installing Dependencies
 
