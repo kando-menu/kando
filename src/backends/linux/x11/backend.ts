@@ -53,8 +53,8 @@ export class X11Backend implements Backend {
     process.nextTick(() => {});
 
     return {
-      windowName: window.name,
-      windowClass: window.wmClass,
+      windowName: window ? window.name : '',
+      windowClass: window ? window.wmClass : '',
       pointerX: pointer.x,
       pointerY: pointer.y,
     };
