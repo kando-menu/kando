@@ -50,7 +50,7 @@ For Wayland support on GNOME, I have created a [GNOME Shell extension](https://g
 
 With a similar approach, Kando could also be made to work on other Wayland-based desktop environments.
 
-## Installing Dependencies
+## :arrow_down: Installing Dependencies
 
 If you want to test the prototype, you will have to install `node` and `npm`.
 You will also need `cmake` for building the native backends.
@@ -82,7 +82,7 @@ sudo pacman -S cmake libx11 libxtst
 
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
 
-## Running the Prototype
+## :rocket: Running the Prototype
 
 Once these dependencies are installed, only these two commands are required:
 
@@ -93,11 +93,20 @@ npm start
 
 Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to open the test window.
 
-To create a distributable zip file, just run `npm run make`.
+## :package: Creating a Distributable Package
 
+To create a distributable archive, just run 
 
+```
+npm install
+npm run make
+```
 
-## :octocat: I want to contribute!
+This will create several packages in the `out/` directory.
+On Windows, it will create a squirrel installer and a portable zip archive.
+On Linux, it will create Debian, an RPM and a portable zip archive.
+
+## :revolving_hearts: I want to contribute!
 
 That's great!
 If you like the idea of Kando, you can help in many ways:
