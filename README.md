@@ -93,9 +93,20 @@ npm start
 
 Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to open the test window.
 
-## :package: Creating a Distributable Package
+## :package: Creating a Release Executable
 
-To create a distributable archive, just run 
+To create an executable compiled in release mode, run this: 
+
+```
+npm install
+npm run package
+```
+
+This will create a directory in the `out/` directory containing the `kando` executable.
+
+## :ship: Creating a Distributable Package
+
+To create a distributable archive, just run this:
 
 ```
 npm install
@@ -106,7 +117,7 @@ This will create several packages in the `out/` directory.
 On Windows, it will create a squirrel installer and a portable zip archive.
 On Linux, it will create Debian, an RPM and a portable zip archive.
 
-## :revolving_hearts: I want to contribute!
+# :revolving_hearts: I want to contribute!
 
 That's great!
 If you like the idea of Kando, you can help in many ways:
