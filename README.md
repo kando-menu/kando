@@ -34,14 +34,14 @@ You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-
 
 
 The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
-It currently supports the following platforms:
+It currently comes with support for the following platforms:
 
-* Windows
-* Linux (X11)
-* Linux (GNOME under Wayland)
-* Linux (KDE under Wayland)
-
-The X11 backend should work on most X11-based Linux desktop environments, but has been tested only on GNOME and KDE so far.
+- [x] **Windows** 10 / 11
+- [x] **Linux**
+  - There is an **X11** backend which should work on many Linux desktop environments. For now, it has been tested on GNOME and KDE only.
+  - There is a specific backend for **GNOME** under Wayland.
+  - There is a specific backend for **KDE** under Wayland.
+- [ ] macOS is not yet supported, but I plan to add support for it in the future.
 
 Implementing a menu like Kando is pretty hard on Wayland due to the client isolation.
 Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not possible.
