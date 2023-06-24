@@ -80,6 +80,12 @@ On **Arch-based** distributions you can install them with:
 sudo pacman -S cmake libx11 libxtst
 ```
 
+On **RPM-based** distributions you can install them with:
+
+```
+sudo dnf install cmake libX11-devel libXtst-devel
+```
+
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
 
 ## :rocket: Running the Prototype
