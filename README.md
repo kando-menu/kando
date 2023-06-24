@@ -38,7 +38,7 @@ It currently comes with support for the following platforms:
 
 - [x] **Windows** 10 / 11
 - [x] **Linux**
-  - There is an **X11** backend which should work on many Linux desktop environments. For now, it has been tested on GNOME and KDE only.
+  - There is an **X11** backend which should work on many Linux desktop environments. For now, it has been tested on GNOME, KDE, and XFCE.
   - There is a specific backend for **GNOME** under Wayland.
   - There is a specific backend for **KDE** under Wayland.
 - [ ] macOS is not yet supported, but I plan to add support for it in the future.
