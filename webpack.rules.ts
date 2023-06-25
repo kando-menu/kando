@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 import type { ModuleOptions } from 'webpack';
+import path from 'path';
 
 export const rules: Required<ModuleOptions>['rules'] = [
   // Add support for native node modules
@@ -12,7 +13,7 @@ export const rules: Required<ModuleOptions>['rules'] = [
     use: 'node-loader',
   },
   {
-    test : /[/\\](node_modules|build)[/\\].+\.(m?js|node)$/,
+    test: /[/\\](node_modules|build)[/\\].+\.(m?js|node)$/,
     parser: { amd: false },
     use: {
       loader: '@vercel/webpack-asset-relocator-loader',
@@ -24,15 +25,14 @@ export const rules: Required<ModuleOptions>['rules'] = [
   {
     // The dbus-final module imports some native modules which are not actually used. We
     // can safely ignore them.
-    test : /[/\\]node_modules[/\\]dbus-final[/\\]lib[/\\].+\.js$/,
-    use : {
-      loader : 'string-replace-loader',
-      options : {
-        multiple :
-        [
-          {search : 'require\\(\'usocket\'\\)', replace : 'undefined', flags : 'g'},
-          {search : 'require\\(\'x11\'\\)', replace : 'undefined', flags : 'g'}
-        ]
+    test: /[/\\]node_modules[/\\]dbus-final[/\\]lib[/\\].+\.js$/,
+    use: {
+      loader: 'string-replace-loader',
+      options: {
+        multiple: [
+          { search: "require\\('usocket'\\)", replace: 'undefined', flags: 'g' },
+          { search: "require\\('x11'\\)", replace: 'undefined', flags: 'g' },
+        ],
       },
     },
   },
@@ -44,6 +44,14 @@ export const rules: Required<ModuleOptions>['rules'] = [
       options: {
         transpileOnly: true,
       },
+    },
+  },
+  {
+    test: /\.(png|svg|jpg|jpeg|gif|mp4)$/i,
+    include: path.resolve(__dirname, 'src'),
+    type: 'asset/resource',
+    generator: {
+      filename: 'assets/[name][ext]',
     },
   },
 ];
