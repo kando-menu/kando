@@ -16,68 +16,268 @@ SPDX-License-Identifier: MIT
     <title>Kando</title>
   </head>
 
-  <body class="hidden">
+  <body class="sidebar-visible" data-bs-theme="kando">
     <div id="menu-container"></div>
 
-    <div id="show-editor-button" class="editor-circle-button hidden">
-      <i class="material-icons-round">info</i>
+    <div id="button-container">
+      <button id="show-sidebar-button" class="btn dark-glass">
+        <i class="material-icons-round">info</i>
+      </button>
     </div>
 
-    <div id="editor-left">
-      <div id="hide-editor-button" class="editor-circle-button">
+    <div id="sidebar">
+      <button id="hide-sidebar-button" class="btn dark-glass rounded-end-circle">
         <i class="material-icons-round">close</i>
+      </button>
+
+      <div class="sidebar-item p-3">
+        <h1 class="display-5">Welcome to Kando!</h1>
+        <p class="mb-0">
+          This prototype is not yet a functional menu, but you can already test the
+          interaction! Selecting something in the menu has no effect yet. So feel free to
+          play around! Close the menu by pressing <code>ESC</code> or by clicking on the
+          root item's center.
+        </p>
       </div>
 
-      <h2>Welcome to Kando.</h2>
-      <p>
-        This prototype is not yet a functional menu, but you can already test the
-        interaction! Selecting something in the menu has no effect yet. So feel free to
-        play around 😀
-      </p>
-      <ul>
-        <li>Clicking inside an item's wedge will select the item.</li>
-        <li>Clicking in the center will navigate back one level.</li>
-        <li>
-          Drag over an item to enter marking mode. If you pause the pointer movement or
-          make a turn, the currently dragged item will be selected.
-        </li>
-        <li>
-          Close the menu by pressing <code>ESC</code> or by clicking on the root item's
-          center.
-        </li>
-      </ul>
-
-      <div id="editor-buttons-grid">
-        <div
-          id="dev-tools-button"
-          class="editor-circle-button"
-          style="grid-column-start: 1; grid-column-end: 3"
-        >
-          <i class="material-icons-round">code</i> Show Developer Tools
+      <div class="sidebar-item accordion accordion-flush">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#tutorial"
+            >
+              <span class="fs-5"
+                ><i class="material-icons-round">school</i> Getting Started</span
+              >
+            </button>
+          </div>
+          <div
+            id="tutorial"
+            class="accordion-collapse collapse carousel slide overflow-hidden"
+          >
+            <div>
+              <div class="carousel-indicators">
+                <button
+                  type="button"
+                  data-bs-target="#tutorial"
+                  data-bs-slide-to="0"
+                  class="active"
+                  aria-current="true"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#tutorial"
+                  data-bs-slide-to="1"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#tutorial"
+                  data-bs-slide-to="2"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#tutorial"
+                  data-bs-slide-to="3"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#tutorial"
+                  data-bs-slide-to="4"
+                ></button>
+              </div>
+              <div class="carousel-inner rounded-1">
+                <div class="carousel-item active">
+                  <div class="carousel-caption">
+                    <p>
+                      <strong>Click Anywhere:</strong> You do not have to exactly click on
+                      an item, you just have to click somewhere into its wedge!
+                    </p>
+                  </div>
+                  <video id="tutorial-video-1" class="img-fluid" />
+                </div>
+                <div class="carousel-item">
+                  <div class="carousel-caption">
+                    <p>
+                      <strong>Go Back:</strong> Quickly navigate one level up by clicking
+                      the center item.
+                    </p>
+                  </div>
+                  <video id="tutorial-video-2" class="img-fluid" />
+                </div>
+                <div class="carousel-item">
+                  <div class="carousel-caption">
+                    <p>
+                      <strong>Marking Mode:</strong> Drag over an item to enter marking
+                      mode. If you pause the pointer movement or make a turn, the
+                      currently dragged submenu will be opened.
+                    </p>
+                  </div>
+                  <video id="tutorial-video-3" class="img-fluid" />
+                </div>
+                <div class="carousel-item">
+                  <div class="carousel-caption">
+                    <p>
+                      <strong>Turbo Mode:</strong> If you keep <code>Ctrl</code> pressed
+                      after opening the menu, you can perform selections by just moving
+                      the pointer. This is the fastest way to select items!
+                    </p>
+                  </div>
+                  <video id="tutorial-video-4" class="img-fluid" />
+                </div>
+                <div class="carousel-item">
+                  <div class="carousel-caption">
+                    <p>
+                      <strong>No accidental selections:</strong> Final items are only
+                      selected as soon as you release your mouse button in
+                      <em>Marking Mode</em> or <code>Ctrl</code> in <em>Turbo Mode</em>.
+                      Use this to explore the menu!
+                    </p>
+                  </div>
+                  <video id="tutorial-video-5" class="img-fluid" />
+                </div>
+              </div>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#tutorial"
+                data-bs-slide="prev"
+              >
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#tutorial"
+                data-bs-slide="next"
+              >
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div id="shortcut-button-1" class="editor-circle-button">
-          <i class="material-icons-round">keyboard</i> Ctrl+Alt+Right
+      <div class="sidebar-item accordion accordion-flush">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#example-actions"
+            >
+              <span class="fs-5"
+                ><i class="material-icons-round">ads_click</i> Example Actions</span
+              >
+            </button>
+          </div>
+          <div id="example-actions" class="accordion-collapse collapse">
+            <div>
+              <p>
+                Here are some action buttons which show what the menu could do in the
+                future.
+              </p>
+
+              <div class="row g-2">
+                <span class="col-6">
+                  <button
+                    id="shortcut-button-1"
+                    class="btn btn-secondary w-100"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="This shortcut changes to the next virtual workspace on some Linux desktops."
+                  >
+                    <i class="material-icons-round">keyboard</i> Ctrl+Alt+Right
+                  </button>
+                </span>
+
+                <span class="col-6">
+                  <button
+                    id="shortcut-button-2"
+                    class="btn btn-secondary w-100"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="On most desktops this will change the active window. This action uses delays between the individual key press events."
+                  >
+                    <i class="material-icons-round">keyboard</i> Alt+Tab
+                  </button>
+                </span>
+
+                <span class="col-6">
+                  <button
+                    id="shortcut-button-3"
+                    class="btn btn-secondary w-100"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="This will duplicate any selected text. For this, it copies the currently selected text, moves the cursor to the right and finally pastes the text."
+                  >
+                    <i class="material-icons-round">keyboard</i> Ctrl+C Ctrl+V
+                  </button>
+                </span>
+
+                <span class="col-6">
+                  <button
+                    id="shortcut-button-4"
+                    class="btn btn-secondary w-100"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="This will a main menu on many desktop environments."
+                  >
+                    <i class="material-icons-round">keyboard</i> Meta
+                  </button>
+                </span>
+
+                <span class="col-6">
+                  <button
+                    id="url-button"
+                    class="btn btn-secondary w-100"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="This opens the homepage of Kando."
+                  >
+                    <i class="material-icons-round">public</i> Open URL
+                  </button>
+                </span>
+
+                <span class="col-6">
+                  <button
+                    id="uri-button"
+                    class="btn btn-secondary w-100"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="This opens a file explorer."
+                  >
+                    <i class="material-icons-round">folder_open</i> Open Folder
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div id="shortcut-button-2" class="editor-circle-button">
-          <i class="material-icons-round">keyboard</i> Alt+Tab
-        </div>
-
-        <div id="shortcut-button-3" class="editor-circle-button">
-          <i class="material-icons-round">keyboard</i> Ctrl+C Ctrl+V
-        </div>
-
-        <div id="shortcut-button-4" class="editor-circle-button">
-          <i class="material-icons-round">keyboard</i> Meta
-        </div>
-
-        <div id="url-button" class="editor-circle-button">
-          <i class="material-icons-round">public</i> Open URL
-        </div>
-
-        <div id="uri-button" class="editor-circle-button">
-          <i class="material-icons-round">folder_open</i> Open Folder
+      <div class="sidebar-item accordion accordion-flush">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#debugging"
+            >
+              <span class="fs-5"
+                ><i class="material-icons-round">bug_report</i> Debugging</span
+              >
+            </button>
+          </div>
+          <div id="debugging" class="accordion-collapse collapse">
+            <div>
+              <div class="container">
+                <div class="row">
+                  <div id="dev-tools-button" class="btn btn-secondary col-12">
+                    <i class="material-icons-round">code</i> Show Developer Tools
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
