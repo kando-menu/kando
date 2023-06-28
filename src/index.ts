@@ -10,13 +10,18 @@
 
 import { app } from 'electron';
 
+/**
+ * This file is the main entry point for Kando's host process. It is responsible for
+ * handling the lifecycle of the app.
+ */
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
   throw '';
 }
 
-// Prevent multiple instances of the app. In the future, we may want to show the
+// Prevent multiple instances of the app. In the future, we may want to show some kind of
 // preferences window instead.
 // app.on('second-instance', (event, commandLine, workingDirectory) => {});
 const gotTheLock = app.requestSingleInstanceLock();
@@ -25,10 +30,12 @@ if (!gotTheLock) {
   throw '';
 }
 
-// Start the app.
+// Start the app. We import the KandoApp class here make the code above as fast as
+// possible.
 import { KandoApp } from './app';
 const kando = new KandoApp();
 
+// Show a message when the app is ready.
 app
   .whenReady()
   .then(() => kando.init())
@@ -40,6 +47,7 @@ app
     app.quit();
   });
 
+// Show a nifty message when the app is about to quit.
 app.on('will-quit', async () => {
   await kando.quit();
   console.log('Good-Pie :)');

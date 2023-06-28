@@ -10,6 +10,8 @@
 
 import './index.scss';
 
+import { Tooltip } from 'bootstrap';
+
 import { Menu } from './menu/menu';
 import { IKeySequence, IVec2 } from './common';
 
@@ -35,14 +37,14 @@ const container = document.getElementById('menu-container');
 const menu = new Menu(container);
 
 menu.on('cancel', () => {
-  document.querySelector('body').classList.add('hidden');
-  window.api.hideWindow(150);
+  document.querySelector('body').classList.remove('menu-visible');
+  window.api.hideWindow(300);
   menu.hide();
 });
 
 menu.on('select', () => {
-  document.querySelector('body').classList.add('hidden');
-  window.api.hideWindow(300);
+  document.querySelector('body').classList.remove('menu-visible');
+  window.api.hideWindow(400);
   menu.hide();
 });
 
@@ -50,14 +52,28 @@ menu.on('move-pointer', (dist) => {
   window.api.movePointer(dist);
 });
 
-document.querySelector('#show-editor-button').addEventListener('click', () => {
-  document.querySelector('#show-editor-button').classList.add('hidden');
-  document.querySelector('#editor-left').classList.remove('hidden');
+// Initialize all tooltips.
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+tooltipTriggerList.forEach((tooltipTriggerEl) => {
+  new Tooltip(tooltipTriggerEl, {
+    delay: { show: 500, hide: 0 },
+  });
 });
 
-document.querySelector('#hide-editor-button').addEventListener('click', () => {
-  document.querySelector('#show-editor-button').classList.remove('hidden');
-  document.querySelector('#editor-left').classList.add('hidden');
+// Add the tutorial videos.
+for (let i = 1; i <= 5; ++i) {
+  const video = document.querySelector(`#tutorial-video-${i}`) as HTMLVideoElement;
+  video.src = require(`./assets/videos/tutorial-${i}.mp4`);
+  video.loop = true;
+  video.autoplay = true;
+}
+
+document.querySelector('#show-sidebar-button').addEventListener('click', () => {
+  document.querySelector('body').classList.add('sidebar-visible');
+});
+
+document.querySelector('#hide-sidebar-button').addEventListener('click', () => {
+  document.querySelector('body').classList.remove('sidebar-visible');
 });
 
 document.querySelector('#dev-tools-button').addEventListener('click', () => {
@@ -214,14 +230,14 @@ document.querySelector('#uri-button').addEventListener('click', () => {
 
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
-    document.querySelector('body').classList.add('hidden');
-    window.api.hideWindow(150);
+    document.querySelector('body').classList.remove('menu-visible');
+    window.api.hideWindow(300);
     menu.hide();
   }
 });
 
 window.api.showMenu((pos) => {
-  document.querySelector('body').classList.remove('hidden');
+  document.querySelector('body').classList.add('menu-visible');
   menu.show(pos);
 });
 

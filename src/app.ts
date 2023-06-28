@@ -14,6 +14,12 @@ import { Backend, getBackend } from './backends';
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
+/**
+ * This class contains the main host process logic of Kando. It is responsible for
+ * creating the transparent window and for handling IPC communication with the renderer
+ * process. It also creates the backend which is responsible for all low-level system
+ * interaction.
+ */
 export class KandoApp {
   // The backend is responsible for all the system interaction. It is implemented
   // differently for each platform.
