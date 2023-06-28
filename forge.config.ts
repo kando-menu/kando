@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 import type { ForgeConfig } from '@electron-forge/shared-types';
-// import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
@@ -17,7 +17,7 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    //new MakerSquirrel({}),
+    new MakerSquirrel({}),
     new MakerZIP({}),
     new MakerRpm({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html

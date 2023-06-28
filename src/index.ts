@@ -33,6 +33,9 @@ if (!gotTheLock) {
 // Start the app. We import the KandoApp class here make the code above as fast as
 // possible.
 import { KandoApp } from './app';
+import { Notification } from 'electron';
+import path from 'path';
+
 const kando = new KandoApp();
 
 // Show a message when the app is ready.
@@ -43,6 +46,17 @@ app
     console.log('Kando is ready! Press <Ctrl>+<Space> to open the prototype menu.')
   )
   .catch((err) => {
+    // Show a notification when the app fails to start.
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: 'Kando failed to start.',
+        body: 'Please check the console for more information.',
+        icon: path.join(__dirname, require('./assets/icons/icon.png')),
+      });
+
+      notification.show();
+    }
+
     console.error('Failed to initialize Kando: ' + err);
     app.quit();
   });
