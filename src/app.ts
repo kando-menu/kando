@@ -8,8 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, BrowserWindow, ipcMain, shell } from 'electron';
+import { screen, BrowserWindow, ipcMain, shell, Tray, Menu } from 'electron';
 import { Backend, getBackend } from './backends';
+import path from 'path';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -28,10 +29,14 @@ export class KandoApp {
   // The window is the main window of the application. It is a transparent window
   // which covers the whole screen. It is always on top and has no frame. It is used
   // to display the pie menu.
-  private window: BrowserWindow = null;
+  private window: BrowserWindow;
 
   // This timeout is used to hide the window after the fade-out animation.
-  private hideTimeout: NodeJS.Timeout = null;
+  private hideTimeout: NodeJS.Timeout;
+
+  // This is the tray icon which is displayed in the system tray. In the future it
+  // will be possible to disable this icon.
+  private tray: Tray;
 
   public async init() {
     if (this.backend === null) {
@@ -43,6 +48,19 @@ export class KandoApp {
     this.window = await this.initWindow();
 
     this.initRenderer();
+
+    // Add a tray icon to the system tray. This icon can be used to open the pie menu
+    // and to quit the application.
+    this.tray = new Tray(path.join(__dirname, require('./assets/icons/icon.png')));
+    this.tray.setToolTip('Kando');
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Open (Control + Space)',
+        click: () => this.showMenu(),
+      },
+      { label: 'Quit', role: 'quit' },
+    ]);
+    this.tray.setContextMenu(contextMenu);
 
     await this.backend.bindShortcut({
       id: 'prototype_trigger',
