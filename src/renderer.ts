@@ -52,6 +52,7 @@ menu.on('move-pointer', (dist) => {
   window.api.movePointer(dist);
 });
 
+// Initialize all tooltips.
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 tooltipTriggerList.forEach((tooltipTriggerEl) => {
   new Tooltip(tooltipTriggerEl, {
@@ -59,7 +60,7 @@ tooltipTriggerList.forEach((tooltipTriggerEl) => {
   });
 });
 
-// Add video element
+// Add the tutorial videos.
 for (let i = 1; i <= 5; ++i) {
   const video = document.querySelector(`#tutorial-video-${i}`) as HTMLVideoElement;
   video.src = require(`./assets/videos/tutorial-${i}.mp4`);

@@ -9,22 +9,32 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
 */
 
+/**
+ * All UI of Kando except for the pie menu itself is based on Bootstrap 5. This file
+ * imports the Bootstrap styles and adds some customizations.
+ */
+
+// Bootstrap uses CSS variables for colors. We define some colors here and use them
+// throughout the application.
 $kando-text-color: #c4c4c4;
 $kando-highlight-color: rgb(255, 200, 200);
 
-// These are the colors used for the previous- / next- buttons in the tutorial. I think
+// These are the colors used for the previous- / next-buttons in the tutorial. I think
 // they cannot be via bootstrap CSS variables, so we have to do it here.
 $accordion-icon-color: white;
 $accordion-icon-active-color: rgb(255, 200, 200);
 
 @import '../node_modules/bootstrap/scss/bootstrap';
 
+// We use a custom theme for Bootstrap. It's mostly about changing the colors.
 [data-bs-theme='kando'] {
   --bs-body-color: #{$kando-text-color};
   --bs-heading-color: #{$kando-text-color};
   --bs-code-color: #{$kando-highlight-color};
   --bs-border-radius: 0.75rem;
 
+  // The secondary button is used most of the time. We want it to be a bit darker than
+  // the default.
   .btn-secondary {
     --bs-btn-bg: #{rgba($gray-900, 0.8)};
     --bs-btn-hover-bg: #{lighten(rgba($gray-900, 0.8), 5%)};
@@ -59,11 +69,13 @@ $accordion-icon-active-color: rgb(255, 200, 200);
     --bs-carousel-caption-spacer: 0.25rem;
   }
 
+  // We make the tooltip background a bit darker.
   .tooltip {
     --bs-tooltip-bg: #{rgba($gray-700, 0.99)};
   }
 }
 
+// Make buttons respond to clicks by moving down a bit.
 .btn {
   &:active {
     transform: translateY(1px);
@@ -74,6 +86,7 @@ $accordion-icon-active-color: rgb(255, 200, 200);
   }
 }
 
+// Add a hover effect to the accordion's header.
 .accordion-header {
   transition: background-color 250ms ease;
 
@@ -96,6 +109,7 @@ $accordion-icon-active-color: rgb(255, 200, 200);
   padding-right: 0.2rem;
 }
 
+// Tweak the color and size of the carousel's indicators.
 .carousel-indicators {
   top: 0.5rem;
   bottom: auto;
