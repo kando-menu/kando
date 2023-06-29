@@ -32,7 +32,7 @@ if (!gotTheLock) {
 
 // Start the app. We import the KandoApp class here make the code above as fast as
 // possible.
-import { KandoApp } from './app';
+import { KandoApp } from './main/app';
 import { Notification } from 'electron';
 import path from 'path';
 

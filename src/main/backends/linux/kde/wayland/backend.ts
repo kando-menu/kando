@@ -14,7 +14,7 @@ import DBus from 'dbus-final';
 
 import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
-import { IKeySequence } from '../../../../common';
+import { IKeySequence } from '../../../../../common';
 import { LinuxKeyCodes } from '../../keys';
 
 /**

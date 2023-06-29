@@ -20,9 +20,9 @@ string(REGEX REPLACE "[\r\n\"]" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
 # Build platform specific backends.
 if (WIN32)
-  add_subdirectory(src/backends/win32/native)
+  add_subdirectory(src/main/backends/win32/native)
 endif ()
 
 if (UNIX AND NOT APPLE)
-  add_subdirectory(src/backends/linux/x11/native)
+  add_subdirectory(src/main/backends/linux/x11/native)
 endif ()

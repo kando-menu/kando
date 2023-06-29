@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IKeySequence } from '../common';
+import { IKeySequence } from '../../common';
 
 /**
  * This interface is used to transfer information required from the window manager when

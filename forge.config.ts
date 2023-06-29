@@ -25,7 +25,7 @@ const config: ForgeConfig = {
         productName: 'Kando',
         icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
-        requires: ['xdotool'],
+        requires: ['libXtst'],
         categories: ['Utility'],
       },
     }),
@@ -35,7 +35,7 @@ const config: ForgeConfig = {
         productName: 'Kando',
         icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
-        depends: ['xdotool'],
+        depends: ['libxtst6'],
         categories: ['Utility'],
       },
     }),
@@ -47,11 +47,11 @@ const config: ForgeConfig = {
         config: rendererConfig,
         entryPoints: [
           {
-            html: './src/index.html',
+            html: './src/renderer/index.html',
             js: './src/renderer.ts',
             name: 'main_window',
             preload: {
-              js: './src/preload.ts',
+              js: './src/renderer/preload.ts',
             },
           },
         ],

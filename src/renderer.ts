@@ -8,11 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import './index.scss';
+import './renderer/index.scss';
 
 import { Tooltip } from 'bootstrap';
 
-import { Menu } from './menu/menu';
+import { Menu } from './renderer/menu/menu';
 import { IKeySequence, IVec2 } from './common';
 
 interface IElectronAPI {

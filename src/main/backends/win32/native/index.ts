@@ -32,6 +32,6 @@ export interface Native {
   simulateKey(keycode: number, down: boolean): void;
 }
 
-const native: Native = require('./../../../../build/Release/NativeWin32.node');
+const native: Native = require('./../../../../../build/Release/NativeWin32.node');
 
 export { native };

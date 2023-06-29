@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2 } from './common';
+import { IKeySequence, IVec2 } from '../common';
 
 // Expose a bridged API to the renderer process.
 contextBridge.exposeInMainWorld('api', {

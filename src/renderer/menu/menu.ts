@@ -14,7 +14,7 @@ import './theme.scss';
 import { EventEmitter } from 'events';
 
 import * as math from './math';
-import { IVec2 } from '../common';
+import { IVec2 } from '../../common';
 import { INode } from './node';
 import { GestureDetection } from './gesture-detection';
 

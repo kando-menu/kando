@@ -33,6 +33,6 @@ export interface Native {
   simulateKey(keycode: number, down: boolean): void;
 }
 
-const native: Native = require('./../../../../../build/Release/NativeX11.node');
+const native: Native = require('./../../../../../../build/Release/NativeX11.node');
 
 export { native };
