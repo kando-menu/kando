@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../common';
+import { IVec2 } from '../../common';
 
 /**
  * This method converts radians to degrees.

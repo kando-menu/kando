@@ -51,7 +51,7 @@ export class KandoApp {
 
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
-    this.tray = new Tray(path.join(__dirname, require('./assets/icons/icon.png')));
+    this.tray = new Tray(path.join(__dirname, require('../../assets/icons/icon.png')));
     this.tray.setToolTip('Kando');
     const contextMenu = Menu.buildFromTemplate([
       {

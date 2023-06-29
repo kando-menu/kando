@@ -10,7 +10,7 @@
 
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
-import { IKeySequence } from '../../../../common';
+import { IKeySequence } from '../../../../../common';
 import { LinuxKeyCodes } from '../../keys';
 
 /**

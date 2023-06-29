@@ -13,7 +13,7 @@ import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    icon: 'src/assets/icons/icon',
+    icon: 'assets/icons/icon',
   },
   rebuildConfig: {},
   makers: [
@@ -23,9 +23,10 @@ const config: ForgeConfig = {
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
       options: {
         productName: 'Kando',
-        icon: 'src/assets/icons/icon.svg',
+        genericName: 'Pie Menu',
+        icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
-        requires: ['xdotool'],
+        requires: ['libXtst'],
         categories: ['Utility'],
       },
     }),
@@ -33,9 +34,10 @@ const config: ForgeConfig = {
       // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
       options: {
         productName: 'Kando',
-        icon: 'src/assets/icons/icon.svg',
+        genericName: 'Pie Menu',
+        icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
-        depends: ['xdotool'],
+        depends: ['libxtst6'],
         categories: ['Utility'],
       },
     }),
@@ -47,11 +49,11 @@ const config: ForgeConfig = {
         config: rendererConfig,
         entryPoints: [
           {
-            html: './src/index.html',
+            html: './src/renderer/index.html',
             js: './src/renderer.ts',
             name: 'main_window',
             preload: {
-              js: './src/preload.ts',
+              js: './src/renderer/preload.ts',
             },
           },
         ],

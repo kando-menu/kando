@@ -32,7 +32,7 @@ if (!gotTheLock) {
 
 // Start the app. We import the KandoApp class here make the code above as fast as
 // possible.
-import { KandoApp } from './app';
+import { KandoApp } from './main/app';
 import { Notification } from 'electron';
 import path from 'path';
 
@@ -51,7 +51,7 @@ app
       const notification = new Notification({
         title: 'Kando failed to start.',
         body: 'Please check the console for more information.',
-        icon: path.join(__dirname, require('./assets/icons/icon.png')),
+        icon: path.join(__dirname, require('../assets/icons/icon.png')),
       });
 
       notification.show();

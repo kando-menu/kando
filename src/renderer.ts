@@ -8,11 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import './index.scss';
+import './renderer/index.scss';
 
 import { Tooltip } from 'bootstrap';
 
-import { Menu } from './menu/menu';
+import { Menu } from './renderer/menu/menu';
 import { IKeySequence, IVec2 } from './common';
 
 interface IElectronAPI {
@@ -63,7 +63,7 @@ tooltipTriggerList.forEach((tooltipTriggerEl) => {
 // Add the tutorial videos.
 for (let i = 1; i <= 5; ++i) {
   const video = document.querySelector(`#tutorial-video-${i}`) as HTMLVideoElement;
-  video.src = require(`./assets/videos/tutorial-${i}.mp4`);
+  video.src = require(`../assets/videos/tutorial-${i}.mp4`);
   video.loop = true;
   video.autoplay = true;
 }

@@ -11,7 +11,7 @@
 import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
-import { IKeySequence } from '../../../common';
+import { IKeySequence } from '../../../../common';
 import { LinuxKeyCodes } from '../keys';
 
 /**

@@ -24,7 +24,7 @@ $kando-highlight-color: rgb(255, 200, 200);
 $accordion-icon-color: white;
 $accordion-icon-active-color: rgb(255, 200, 200);
 
-@import '../node_modules/bootstrap/scss/bootstrap';
+@import '../../node_modules/bootstrap/scss/bootstrap';
 
 // We use a custom theme for Bootstrap. It's mostly about changing the colors.
 [data-bs-theme='kando'] {
