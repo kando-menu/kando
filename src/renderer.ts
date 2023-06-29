@@ -63,7 +63,7 @@ tooltipTriggerList.forEach((tooltipTriggerEl) => {
 // Add the tutorial videos.
 for (let i = 1; i <= 5; ++i) {
   const video = document.querySelector(`#tutorial-video-${i}`) as HTMLVideoElement;
-  video.src = require(`./assets/videos/tutorial-${i}.mp4`);
+  video.src = require(`../assets/videos/tutorial-${i}.mp4`);
   video.loop = true;
   video.autoplay = true;
 }

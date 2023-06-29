@@ -13,7 +13,7 @@ import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    icon: 'src/assets/icons/icon',
+    icon: 'assets/icons/icon',
   },
   rebuildConfig: {},
   makers: [
@@ -23,7 +23,7 @@ const config: ForgeConfig = {
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
       options: {
         productName: 'Kando',
-        icon: 'src/assets/icons/icon.svg',
+        icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
         requires: ['xdotool'],
         categories: ['Utility'],
@@ -33,7 +33,7 @@ const config: ForgeConfig = {
       // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
       options: {
         productName: 'Kando',
-        icon: 'src/assets/icons/icon.svg',
+        icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
         depends: ['xdotool'],
         categories: ['Utility'],
