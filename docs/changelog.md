@@ -12,9 +12,8 @@ Security   - in case of vulnerabilities.
 
 # Changelog of Kando
 
+Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
-Once the 1.0.0 milestone is reached, this project will follow [semantic versioning](https://semver.org).
-Until then, also minor releases may contain breaking changes.
 
 
 ## [Kando 0.1.0](https://github.com/kando-menu/kando/releases/tag/v0.1.0)
