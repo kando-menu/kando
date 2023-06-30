@@ -10,6 +10,10 @@ SPDX-License-Identifier: CC-BY-4.0
 
 _:construction: This project is currently in a very early stage of development. Kando is not yet a functional menu but rather a prototype which demonstrates the feasibility of the concept. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans)._
 
+<a href="https://github.com/kando-menu/kando/actions"><img src="https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main" /></a>
+<a href="https://api.reuse.software/info/github.com/kando-menu/kando"><img src="https://api.reuse.software/badge/github.com/kando-menu/kando" /></a>
+<a href="LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-blue.svg?labelColor=303030" /></a>
+
 **Kando** will be a pie menu for the desktop.
 It will be highly customizable and will allow you to create your own menus and actions.
 For instance, you can use it to control your music player, to open your favorite websites or to simulate shortcuts.
