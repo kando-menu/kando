@@ -53,7 +53,8 @@ app
     app.on('second-instance', () => kando.showMenu());
 
     // Finally, show a message that the app is ready.
-    console.log('Kando is ready! Press <Ctrl>+<Space> to open the prototype menu.');
+    console.log(`Kando ${app.getVersion()} is ready.`);
+    console.log('Press <Ctrl>+<Space> to open the prototype menu!');
   })
   .catch((err) => {
     // Show a notification when the app fails to start.
