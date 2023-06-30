@@ -52,6 +52,6 @@ jobs:
       - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
-          file: out/make/zip/win32/x64/*.zip
+          file: out/make/**/win32/x64/*
           tag: ${{ github.ref }}
           file_glob: true
