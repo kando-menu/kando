@@ -18,7 +18,7 @@ import { app } from 'electron';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
-  throw '';
+  process.exit(0);
 }
 
 // Prevent multiple instances of the app. In the future, we may want to show some kind of
@@ -27,7 +27,7 @@ if (require('electron-squirrel-startup')) {
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
-  throw '';
+  process.exit(0);
 }
 
 // Start the app. We import the KandoApp class here make the code above as fast as
