@@ -21,9 +21,9 @@ if (require('electron-squirrel-startup')) {
   process.exit(0);
 }
 
-// Prevent multiple instances of the app. In the future, we may want to show some kind of
-// preferences window instead.
-// app.on('second-instance', (event, commandLine, workingDirectory) => {});
+// Prevent multiple instances of the app. If another instance is started, we just quit
+// this one. The first instance will get notified via the second-instance event and
+// will show the menu.
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
@@ -42,9 +42,13 @@ const kando = new KandoApp();
 app
   .whenReady()
   .then(() => kando.init())
-  .then(() =>
-    console.log('Kando is ready! Press <Ctrl>+<Space> to open the prototype menu.')
-  )
+  .then(() => {
+    // Show the menu when the user starts the app for a second time.
+    app.on('second-instance', () => kando.showMenu());
+
+    // Finally, show a message that the app is ready.
+    console.log('Kando is ready! Press <Ctrl>+<Space> to open the prototype menu.');
+  })
   .catch((err) => {
     // Show a notification when the app fails to start.
     if (Notification.isSupported()) {
