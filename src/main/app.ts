@@ -79,6 +79,53 @@ export class KandoApp {
     }
   }
 
+  // This is usually called when the user presses the shortcut. It will get the current
+  // window and pointer position and send them to the renderer process.
+  public showMenu() {
+    this.backend
+      .getWMInfo()
+      .then((info) => {
+        // Abort any ongoing hide animation.
+        if (this.hideTimeout) {
+          clearTimeout(this.hideTimeout);
+        }
+
+        // Move the window to the monitor which contains the pointer.
+        const workarea = screen.getDisplayNearestPoint({
+          x: info.pointerX,
+          y: info.pointerY,
+        }).workArea;
+        this.window.setBounds({
+          x: workarea.x,
+          y: workarea.y,
+          width: workarea.width + 1,
+          height: workarea.height + 1,
+        });
+
+        if (info.windowClass) {
+          console.log('Currently focused window: ' + info.windowClass);
+        } else {
+          console.log('Currently no window is focused.');
+        }
+
+        this.window.webContents.send('show-menu', {
+          x: info.pointerX - workarea.x,
+          y: info.pointerY - workarea.y,
+        });
+
+        this.window.show();
+
+        // There seems to be an issue with GNOME Shell 44.1 where the window does not
+        // get focus when it is shown. This is a workaround for that issue.
+        setTimeout(() => {
+          this.window.focus();
+        }, 100);
+      })
+      .catch((err) => {
+        console.error('Failed to show menu: ' + err);
+      });
+  }
+
   // This creates the main window. It is a transparent window which covers the whole
   // screen. It is always on top and has no frame. It is used to display the pie menu.
   private async initWindow() {
@@ -144,52 +191,5 @@ export class KandoApp {
       this.window.hide();
       shell.openExternal(uri);
     });
-  }
-
-  // This is called when the user presses the shortcut. It will get the current
-  // window and pointer position and send them to the renderer process.
-  private showMenu() {
-    this.backend
-      .getWMInfo()
-      .then((info) => {
-        // Abort any ongoing hide animation.
-        if (this.hideTimeout) {
-          clearTimeout(this.hideTimeout);
-        }
-
-        // Move the window to the monitor which contains the pointer.
-        const workarea = screen.getDisplayNearestPoint({
-          x: info.pointerX,
-          y: info.pointerY,
-        }).workArea;
-        this.window.setBounds({
-          x: workarea.x,
-          y: workarea.y,
-          width: workarea.width + 1,
-          height: workarea.height + 1,
-        });
-
-        if (info.windowClass) {
-          console.log('Currently focused window: ' + info.windowClass);
-        } else {
-          console.log('Currently no window is focused.');
-        }
-
-        this.window.webContents.send('show-menu', {
-          x: info.pointerX - workarea.x,
-          y: info.pointerY - workarea.y,
-        });
-
-        this.window.show();
-
-        // There seems to be an issue with GNOME Shell 44.1 where the window does not
-        // get focus when it is shown. This is a workaround for that issue.
-        setTimeout(() => {
-          this.window.focus();
-        }, 100);
-      })
-      .catch((err) => {
-        console.error('Failed to show menu: ' + err);
-      });
   }
 }
