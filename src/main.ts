@@ -43,6 +43,12 @@ app
   .whenReady()
   .then(() => kando.init())
   .then(() => {
+    // Show a nifty message when the app is about to quit.
+    app.on('will-quit', async () => {
+      await kando.quit();
+      console.log('Good-Pie :)');
+    });
+
     // Show the menu when the user starts the app for a second time.
     app.on('second-instance', () => kando.showMenu());
 
@@ -67,9 +73,3 @@ app
     // Make sure the app quits with a non-zero exit code.
     process.exitCode = 1;
   });
-
-// Show a nifty message when the app is about to quit.
-app.on('will-quit', async () => {
-  await kando.quit();
-  console.log('Good-Pie :)');
-});

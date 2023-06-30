@@ -46,18 +46,24 @@ export class GnomeBackend implements Backend {
       return;
     }
 
-    const bus = DBus.sessionBus();
+    try {
+      const bus = DBus.sessionBus();
 
-    const obj = await bus.getProxyObject(
-      'org.gnome.Shell',
-      '/org/gnome/shell/extensions/KandoIntegration'
-    );
+      const obj = await bus.getProxyObject(
+        'org.gnome.Shell',
+        '/org/gnome/shell/extensions/KandoIntegration'
+      );
 
-    this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
+      this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
 
-    this.interface.on('ShortcutPressed', (accelerator: string) => {
-      this.callbacks[accelerator]();
-    });
+      this.interface.on('ShortcutPressed', (accelerator: string) => {
+        this.callbacks[accelerator]();
+      });
+    } catch (e) {
+      throw new Error(
+        'Could not connect to Kando Integration GNOME Shell extension. Is it installed?'
+      );
+    }
   }
 
   /**
