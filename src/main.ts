@@ -59,6 +59,9 @@ app
 
     console.error('Failed to initialize Kando: ' + err);
     app.quit();
+
+    // Make sure the app quits with a non-zero exit code.
+    process.exitCode = 1;
   });
 
 // Show a nifty message when the app is about to quit.
