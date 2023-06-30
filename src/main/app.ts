@@ -170,10 +170,6 @@ export class KandoApp {
       }, delay);
     });
 
-    ipcMain.on('item-selected', () => {
-      console.log('Red circle was clicked!');
-    });
-
     ipcMain.on('log', (event, message) => {
       console.log(message);
     });

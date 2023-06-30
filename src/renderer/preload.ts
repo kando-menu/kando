@@ -28,9 +28,6 @@ contextBridge.exposeInMainWorld('api', {
   openURI: function (uri: string) {
     ipcRenderer.send('open-uri', uri);
   },
-  itemSelected: function () {
-    ipcRenderer.send('item-selected');
-  },
   log: function (message: string) {
     ipcRenderer.send('log', message);
   },
