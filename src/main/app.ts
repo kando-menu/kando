@@ -38,16 +38,19 @@ export class KandoApp {
   // will be possible to disable this icon.
   private tray: Tray;
 
+  /**
+   * This is called when the app is started. It initializes the backend and the window.
+   */
   public async init() {
     if (this.backend === null) {
       throw new Error('No backend found.');
     }
 
+    // Initialize the backend, the window and the IPC communication to the renderer
+    // process.
     await this.backend.init();
-
-    this.window = await this.initWindow();
-
-    this.initRenderer();
+    await this.initWindow();
+    this.initRendererIPC();
 
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
@@ -62,6 +65,9 @@ export class KandoApp {
     ]);
     this.tray.setContextMenu(contextMenu);
 
+    // Bind the shortcut which opens the pie menu. This shortcut is currently hardcoded
+    // to CommandOrControl+Space. In the future it will be possible to change this
+    // shortcut.
     await this.backend.bindShortcut({
       id: 'prototype_trigger',
       description: 'Trigger the Kando prototype',
@@ -72,15 +78,20 @@ export class KandoApp {
     });
   }
 
-  // This is called when the app is closed. It will unbind all shortcuts.
+  /**
+   * This is called when the app is closed. It will unbind all shortcuts.
+   */
   public async quit() {
     if (this.backend != null) {
       await this.backend.unbindAllShortcuts();
     }
   }
 
-  // This is usually called when the user presses the shortcut. It will get the current
-  // window and pointer position and send them to the renderer process.
+  /**
+   * This is usually called when the user presses the shortcut. However, it can also be
+   * called for other reasons, e.g. when the user runs the app a second time. It will get
+   * the current window and pointer position and send them to the renderer process.
+   */
   public showMenu() {
     this.backend
       .getWMInfo()
@@ -126,8 +137,10 @@ export class KandoApp {
       });
   }
 
-  // This creates the main window. It is a transparent window which covers the whole
-  // screen. It is always on top and has no frame. It is used to display the pie menu.
+  /**
+   * This creates the main window. It is a transparent window which covers the whole
+   * screen. It is always on top and has no frame. It is used to display the pie menu.
+   */
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
 
@@ -151,11 +164,13 @@ export class KandoApp {
 
     await window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-    return window;
+    this.window = window;
   }
 
-  // Setup IPC communication with the renderer process.
-  private initRenderer() {
+  /**
+   * Setup IPC communication with the renderer process.
+   */
+  private initRendererIPC() {
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
     });
