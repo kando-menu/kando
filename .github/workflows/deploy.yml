@@ -26,7 +26,7 @@ jobs:
       - name: Create Release
         run: |
           npm run make
-      - name: Upload
+      - name: Upload Packages
         uses: svenstaro/upload-release-action@v2
         with:
           file: out/make/**/x64/*
@@ -49,9 +49,15 @@ jobs:
       - name: Create Release
         run: |
           npm run make
-      - name: Upload
+      - name: Upload Zip
         uses: svenstaro/upload-release-action@v2
         with:
-          file: out/make/**/win32/x64/*
+          file: out/make/zip/win32/x64/*
+          tag: ${{ github.ref }}
+          file_glob: true
+      - name: Upload Squirrel Installer
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: out/make/squirrel.windows/x64/*.exe
           tag: ${{ github.ref }}
           file_glob: true
