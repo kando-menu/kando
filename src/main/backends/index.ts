@@ -34,7 +34,7 @@ export function getBackend(): Backend | null {
 
     console.log(`Running on Linux (${desktop} on ${session}).`);
 
-    if (desktop === 'GNOME' && session === 'wayland') {
+    if ((desktop === 'GNOME' || desktop === 'Unity') && session === 'wayland') {
       const { GnomeBackend } = require('./linux/gnome/wayland/backend');
       return new GnomeBackend();
     }
