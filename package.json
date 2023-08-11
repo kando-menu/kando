@@ -25,7 +25,7 @@
     "@electron-forge/maker-deb": "^6.3.0",
     "@electron-forge/maker-rpm": "^6.2.1",
     "@electron-forge/maker-squirrel": "^6.3.0",
-    "@electron-forge/maker-zip": "^6.2.1",
+    "@electron-forge/maker-zip": "^6.3.0",
     "@electron-forge/plugin-webpack": "^6.3.0",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
