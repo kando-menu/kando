@@ -21,7 +21,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^6.2.1",
+    "@electron-forge/cli": "^6.3.0",
     "@electron-forge/maker-deb": "^6.3.0",
     "@electron-forge/maker-rpm": "^6.3.0",
     "@electron-forge/maker-squirrel": "^6.3.0",
