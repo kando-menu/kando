@@ -149,11 +149,11 @@ $material-icons-font-path: '~material-icons/iconfont/';
   }
 
   .node.hovered > .connector {
-   background-color: $connector-color-hover;
+    background-color: $connector-color-hover;
   }
 
   .node.active > .connector {
-   background-color: $connector-color-active;
+    background-color: $connector-color-active;
   }
 
   .node.active:has(> .node.dragged) > .connector {
