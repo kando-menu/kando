@@ -54,14 +54,18 @@ For Wayland support on GNOME, I have created a [GNOME Shell extension](https://g
 
 With a similar approach, Kando could also be made to work on other Wayland-based desktop environments.
 
-## :arrow_down: Installing Dependencies
+# :arrow_down: Installation
 
-If you want to test the prototype, you will have to install `node` and `npm`.
+**You can either [download a pre-built package from the releases page](https://github.com/kando-menu/kando/releases) or build the prototype yourself.**
+
+## Manual Compilation
+
+If you want to test the latest development version of the prototype, you will have to install `node` and `npm`.
 You will also need `cmake` for building the native backends.
+Additionally, you will need a C++ toolchain.
 
 ### Windows
 
-Additionally, you will need a C++ toolchain.
 On Windows, you can install either Visual Studio or run this:
 
 ```
