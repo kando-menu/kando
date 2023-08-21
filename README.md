@@ -56,7 +56,10 @@ With a similar approach, Kando could also be made to work on other Wayland-based
 
 # :arrow_down: Installation
 
-**You can either [download a pre-built package from the releases page](https://github.com/kando-menu/kando/releases) or build the prototype yourself.**
+You can either [download a pre-built package from the releases page](https://github.com/kando-menu/kando/releases) or build the prototype yourself.
+With a pre-built package, you can just run the executable; no installation is required.
+
+:warning: **If you are using GNOME under Wayland, you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration)!**
 
 ## Manual Compilation
 
