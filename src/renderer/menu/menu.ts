@@ -15,7 +15,7 @@ import { EventEmitter } from 'events';
 
 import * as math from '../math';
 import { IVec2 } from '../../common';
-import { IRenderNode } from './node';
+import { IRenderNode } from './render-node';
 import { GestureDetection } from './gesture-detection';
 
 /**
