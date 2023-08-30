@@ -32,6 +32,8 @@ declare global {
   }
 }
 
+// Set up the menu -----------------------------------------------------------------------
+
 const container = document.getElementById('menu-container');
 const menu = new Menu(container);
 
@@ -51,12 +53,30 @@ menu.on('move-pointer', (dist) => {
   window.api.movePointer(dist);
 });
 
-// Initialize all tooltips.
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-tooltipTriggerList.forEach((tooltipTriggerEl) => {
-  new Tooltip(tooltipTriggerEl, {
-    delay: { show: 500, hide: 0 },
-  });
+// Hide the menu when the user presses escape.
+document.addEventListener('keyup', (ev) => {
+  if (ev.key === 'Escape') {
+    document.querySelector('body').classList.remove('menu-visible');
+    window.api.hideWindow(300);
+    menu.hide();
+  }
+});
+
+// Show the menu when the main process requests it.
+window.api.showMenu((pos) => {
+  document.querySelector('body').classList.add('menu-visible');
+  menu.show(pos);
+});
+
+// Set up the sidebar --------------------------------------------------------------------
+
+// Add functionality to show and hide the sidebar.
+document.querySelector('#show-sidebar-button').addEventListener('click', () => {
+  document.querySelector('body').classList.add('sidebar-visible');
+});
+
+document.querySelector('#hide-sidebar-button').addEventListener('click', () => {
+  document.querySelector('body').classList.remove('sidebar-visible');
 });
 
 // Add the tutorial videos.
@@ -67,18 +87,12 @@ for (let i = 1; i <= 5; ++i) {
   video.autoplay = true;
 }
 
-document.querySelector('#show-sidebar-button').addEventListener('click', () => {
-  document.querySelector('body').classList.add('sidebar-visible');
-});
-
-document.querySelector('#hide-sidebar-button').addEventListener('click', () => {
-  document.querySelector('body').classList.remove('sidebar-visible');
-});
-
+// Show the dev tools if the button is clicked.
 document.querySelector('#dev-tools-button').addEventListener('click', () => {
   window.api.showDevTools();
 });
 
+// Initialize all the example actio buttons.
 document.querySelector('#shortcut-button-1').addEventListener('click', () => {
   window.api.simulateKeys([
     {
@@ -227,17 +241,16 @@ document.querySelector('#uri-button').addEventListener('click', () => {
   window.api.openURI('file:///');
 });
 
-document.addEventListener('keyup', (ev) => {
-  if (ev.key === 'Escape') {
-    document.querySelector('body').classList.remove('menu-visible');
-    window.api.hideWindow(300);
-    menu.hide();
-  }
+// Miscellaneous -------------------------------------------------------------------------
+
+// Initialize all tooltips.
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+tooltipTriggerList.forEach((tooltipTriggerEl) => {
+  new Tooltip(tooltipTriggerEl, {
+    delay: { show: 500, hide: 0 },
+  });
 });
 
-window.api.showMenu((pos) => {
-  document.querySelector('body').classList.add('menu-visible');
-  menu.show(pos);
-});
-
+// This is helpful during development as it shows us when the renderer process has
+// finished reloading.
 window.api.log("Successfully loaded Kando's renderer process.");
