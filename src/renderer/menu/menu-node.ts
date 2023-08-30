@@ -13,9 +13,10 @@ import { IVec2, INode } from '../../common';
 /**
  * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
  * represent submenus, leaf nodes represent actual menu items. This interface extends the
- * INode interface with properties which are only used in the renderer process.
+ * INode interface with properties which are only used by the Menu class in the renderer
+ * process.
  */
-export interface IRenderNode extends INode {
+export interface IMenuNode extends INode {
   /**
    * The beginning of the menu item's angular wedge in degrees. This will be computed and
    * set once the menu is opened.
