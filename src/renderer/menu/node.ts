@@ -8,36 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../../common';
+import { IVec2, INode } from '../../common';
 
 /**
  * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
- * represent submenus, leaf nodes represent actual menu items.
+ * represent submenus, leaf nodes represent actual menu items. This interface extends the
+ * INode interface with properties which are only used in the renderer process.
  */
-export interface INode {
-  /**
-   * The name of the menu item. This may be displayed with some kind of label.
-   */
-  name: string;
-
-  /**
-   * The icon of the menu item. For now, this can be one of the material icon names.
-   */
-  icon: string;
-
-  /**
-   * The child nodes of this menu item. If this contains items, the node represents a
-   * submenu.
-   */
-  children: Array<INode>;
-
-  /**
-   * The direction of the menu item in degrees. If not set, it will be computed when the
-   * menu is opened. If set, it is considered to be a "fixed angle" and all siblings will
-   * be distributed more or less evenly around.
-   */
-  angle?: number;
-
+export interface IRenderNode extends INode {
   /**
    * The beginning of the menu item's angular wedge in degrees. This will be computed and
    * set once the menu is opened.

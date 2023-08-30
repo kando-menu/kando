@@ -13,7 +13,7 @@ import './renderer/index.scss';
 import { Tooltip } from 'bootstrap';
 
 import { Menu } from './renderer/menu/menu';
-import { IKeySequence, IVec2 } from './common';
+import { IKeySequence, IVec2, INode } from './common';
 
 interface IElectronAPI {
   loadPreferences: () => void;
@@ -23,7 +23,7 @@ interface IElectronAPI {
   movePointer: (dist: IVec2) => void;
   openURI: (uri: string) => void;
   log: (message: string) => void;
-  showMenu: (func: (pos: IVec2) => void) => void;
+  showMenu: (func: (root: INode, pos: IVec2) => void) => void;
 }
 
 declare global {
@@ -63,9 +63,9 @@ document.addEventListener('keyup', (ev) => {
 });
 
 // Show the menu when the main process requests it.
-window.api.showMenu((pos) => {
+window.api.showMenu((root, pos) => {
   document.querySelector('body').classList.add('menu-visible');
-  menu.show(pos);
+  menu.show(root, pos);
 });
 
 // Set up the sidebar --------------------------------------------------------------------
