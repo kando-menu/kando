@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { computeItemAngles, computeItemWedges } from '../src/renderer/menu/math';
+import { computeItemAngles, computeItemWedges } from '../src/renderer/math';
 import { expect } from 'chai';
 
 describe('computeItemAngles', () => {
