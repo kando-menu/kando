@@ -130,3 +130,23 @@ body.menu-visible.sidebar-visible #hide-sidebar-button {
 #sidebar .material-icons-round {
   font-size: 1.25rem !important;
 }
+
+// Editor --------------------------------------------------------------------------------
+
+#show-editor-button {
+  transform: translateY(20px);
+  border-top-left-radius: 50%;
+  opacity: 0;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+
+  i {
+    transform: none;
+  }
+}
+
+body.menu-visible:not(.editor-visible) #show-editor-button {
+  transform: translateX(0px);
+  opacity: 1;
+}
