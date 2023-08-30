@@ -13,6 +13,8 @@ import './renderer/index.scss';
 import { Tooltip } from 'bootstrap';
 
 import { Menu } from './renderer/menu/menu';
+import { Editor } from './renderer/editor/editor';
+
 import { IKeySequence, IVec2, INode } from './common';
 
 interface IElectronAPI {
@@ -36,6 +38,7 @@ declare global {
 
 const container = document.getElementById('menu-container');
 const menu = new Menu(container);
+const editor = new Editor(container);
 
 menu.on('cancel', () => {
   document.querySelector('body').classList.remove('menu-visible');
