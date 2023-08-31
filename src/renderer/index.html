@@ -22,16 +22,39 @@ SPDX-License-Identifier: MIT
     content creation.
   -->
   <body class="sidebar-visible" data-bs-theme="kando">
+    <!-- 
+      This is the main container for the menu. It will be filled with the menu's
+      content by the renderer process.
+     -->
     <div id="menu-container"></div>
 
-    <button id="show-sidebar-button" class="btn dark-glass">
-      <i class="material-icons-round">info</i>
-    </button>
-
+    <!--
+      This is the button in the lower right corner which opens the editor.
+    -->
     <button id="show-editor-button" class="btn dark-glass">
       <i class="material-icons-round">settings</i>
     </button>
 
+    <!--
+      This is the editor. It contains some settings which can be changed at runtime.
+    -->
+    <div id="editor">
+      <button id="hide-editor-button" class="btn dark-glass rounded-end-circle">
+        <i class="material-icons-round">close</i>
+      </button>
+    </div>
+
+    <!--
+      This is the button in the upper left corner which opens the sidebar.
+    -->
+    <button id="show-sidebar-button" class="btn dark-glass">
+      <i class="material-icons-round">info</i>
+    </button>
+
+    <!--
+      This is the sidebar. It contains some information about the prototype and
+      some example actions.
+    -->
     <div id="sidebar">
       <button id="hide-sidebar-button" class="btn dark-glass rounded-end-circle">
         <i class="material-icons-round">close</i>

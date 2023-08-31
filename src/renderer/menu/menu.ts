@@ -14,7 +14,7 @@ import './theme.scss';
 import { EventEmitter } from 'events';
 
 import * as math from '../math';
-import { IVec2 } from '../../common';
+import { IVec2, INode } from '../../common';
 import { IMenuNode } from './menu-node';
 import { GestureDetection } from './gesture-detection';
 
@@ -339,6 +339,36 @@ export class Menu extends EventEmitter {
     this.hoveredNode = null;
     this.draggedNode = null;
     this.selectionChain = [];
+  }
+
+  /**
+   * When the menu editor is opened, the actual menu is hidden. We apply a short
+   * transition in which the menu is faded out and moved to the center of the screen.
+   * Also, the menu is set to pointer-events: none, so that the user can interact with the
+   * editor.
+   */
+  public enterEditMode() {
+    this.container.classList.add('pe-none', 'hidden');
+
+    const position = this.getActiveNodePosition();
+
+    // Compute center of screen.
+    const diff = {
+      x: window.innerWidth / 2 - position.x,
+      y: window.innerHeight / 2 - position.y,
+    };
+
+    this.selectionChain[0].position.x += diff.x;
+    this.selectionChain[0].position.y += diff.y;
+
+    this.updateTransform(this.root);
+  }
+
+  /**
+   * When the menu editor is closed, the menu is faded in again.
+   */
+  public exitEditMode() {
+    this.container.classList.remove('pe-none', 'hidden');
   }
 
   // --------------------------------------------------------------------- private methods

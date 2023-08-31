@@ -8,3 +8,25 @@
 SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
 */
+
+body {
+  transition: background 150ms ease;
+
+  &.editor-visible {
+    background-color: rgb(30, 55, 80);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 2px, transparent 1px),
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size:
+      100px 100px,
+      100px 100px,
+      20px 20px,
+      20px 20px;
+    background-position:
+      -1px -1px,
+      -1px -1px,
+      0px 0px,
+      0px 0px;
+  }
+}

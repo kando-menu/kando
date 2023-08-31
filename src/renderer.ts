@@ -59,8 +59,9 @@ menu.on('move-pointer', (dist) => {
 // Hide the menu when the user presses escape.
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
-    document.querySelector('body').classList.remove('menu-visible');
+    document.querySelector('body').classList.remove('menu-visible', 'editor-visible');
     window.api.hideWindow(300);
+    menu.exitEditMode();
     menu.hide();
   }
 });
@@ -69,6 +70,18 @@ document.addEventListener('keyup', (ev) => {
 window.api.showMenu((root, pos) => {
   document.querySelector('body').classList.add('menu-visible');
   menu.show(root, pos);
+});
+
+// Set up the editor ---------------------------------------------------------------------
+
+document.querySelector('#show-editor-button').addEventListener('click', () => {
+  menu.enterEditMode();
+  document.querySelector('body').classList.add('editor-visible');
+});
+
+document.querySelector('#hide-editor-button').addEventListener('click', () => {
+  menu.exitEditMode();
+  document.querySelector('body').classList.remove('editor-visible');
 });
 
 // Set up the sidebar --------------------------------------------------------------------
