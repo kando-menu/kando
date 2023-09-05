@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
 
   <!--
     For now, all the prototype's sidebar content is in this file to keep things simple.
-    In the future, we will move this to a separate files and use templates for the
+    In the future, we will move this to separate files and use templates for the
     content creation.
   -->
   <body class="sidebar-visible" data-bs-theme="kando">
@@ -27,6 +27,12 @@ SPDX-License-Identifier: MIT
       content by the renderer process.
      -->
     <div id="menu-container"></div>
+
+    <!--
+      This is the main container for the menu's editor. It will be filled with the
+      editor's content by the renderer process.
+    -->
+    <div id="editor-container"></div>
 
     <!--
       This is the button in the lower right corner which opens the editor.

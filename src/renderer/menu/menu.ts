@@ -14,7 +14,7 @@ import './theme.scss';
 import { EventEmitter } from 'events';
 
 import * as math from '../math';
-import { IVec2, INode } from '../../common';
+import { IVec2 } from '../../common';
 import { IMenuNode } from './menu-node';
 import { GestureDetection } from './gesture-detection';
 
@@ -348,8 +348,6 @@ export class Menu extends EventEmitter {
    * editor.
    */
   public enterEditMode() {
-    this.container.classList.add('pe-none', 'hidden');
-
     const position = this.getActiveNodePosition();
 
     // Compute center of screen.
@@ -367,9 +365,7 @@ export class Menu extends EventEmitter {
   /**
    * When the menu editor is closed, the menu is faded in again.
    */
-  public exitEditMode() {
-    this.container.classList.remove('pe-none', 'hidden');
-  }
+  public exitEditMode() {}
 
   // --------------------------------------------------------------------- private methods
 

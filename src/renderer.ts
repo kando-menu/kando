@@ -36,9 +36,8 @@ declare global {
 
 // Set up the menu -----------------------------------------------------------------------
 
-const container = document.getElementById('menu-container');
-const menu = new Menu(container);
-const editor = new Editor(container);
+const menu = new Menu(document.getElementById('menu-container'));
+const editor = new Editor(document.getElementById('editor-container'));
 
 menu.on('cancel', () => {
   document.querySelector('body').classList.remove('menu-visible');
@@ -70,12 +69,14 @@ document.addEventListener('keyup', (ev) => {
 window.api.showMenu((root, pos) => {
   document.querySelector('body').classList.add('menu-visible');
   menu.show(root, pos);
+  editor.setMenu(root);
 });
 
 // Set up the editor ---------------------------------------------------------------------
 
 document.querySelector('#show-editor-button').addEventListener('click', () => {
   menu.enterEditMode();
+  editor.show();
   document.querySelector('body').classList.add('editor-visible');
 });
 

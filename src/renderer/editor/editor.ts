@@ -30,9 +30,11 @@ export class Editor extends EventEmitter {
     this.container = container;
   }
 
-  public show(root: IEditorNode) {
+  public setMenu(root: IEditorNode) {
     this.root = root;
   }
+
+  public show() {}
 
   public hide() {
     this.root = null;

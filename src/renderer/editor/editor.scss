@@ -9,6 +9,22 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
 */
 
+#editor-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+body.editor-visible #editor-container {
+  pointer-events: all;
+  opacity: 1;
+}
+
 #show-editor-button,
 #hide-editor-button {
   transform: translateY(20px);
