@@ -21,13 +21,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^6.4.1",
-    "@electron-forge/maker-deb": "^6.4.1",
-    "@electron-forge/maker-rpm": "^6.4.1",
-    "@electron-forge/maker-squirrel": "^6.4.1",
-    "@electron-forge/maker-zip": "^6.4.1",
-    "@electron-forge/plugin-webpack": "^6.4.1",
-    "@types/chai": "^4.3.5",
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-webpack": "^6.4.2",
+    "@types/chai": "^4.3.6",
     "@types/mocha": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -35,7 +35,7 @@
     "chai": "^4.3.8",
     "cmake-js": "^7.2.1",
     "css-loader": "^6.8.1",
-    "electron": "26.1.0",
+    "electron": "26.2.0",
     "eslint": "^8.48.0",
     "eslint-plugin-import": "^2.28.1",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
@@ -58,7 +58,7 @@
     "bootstrap": "^5.3.1",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
-    "material-icons": "^1.13.10",
+    "material-icons": "^1.13.11",
     "node-addon-api": "^7.0.0"
   }
 }
