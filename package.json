@@ -32,13 +32,13 @@
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
-    "chai": "^4.3.8",
+    "chai": "^4.3.10",
     "cmake-js": "^7.2.1",
     "css-loader": "^6.8.1",
-    "electron": "26.2.1",
-    "eslint": "^8.48.0",
+    "electron": "26.3.0",
+    "eslint": "^8.50.0",
     "eslint-plugin-import": "^2.28.1",
-    "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.0",
     "mocha": "^10.2.0",
     "node-loader": "^2.0.0",
     "prettier": "^3.0.3",
@@ -58,7 +58,7 @@
     "bootstrap": "^5.3.1",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
-    "material-icons": "^1.13.11",
+    "material-icons": "^1.13.12",
     "node-addon-api": "^7.0.0"
   }
 }
