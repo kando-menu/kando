@@ -60,12 +60,41 @@ tooltipTriggerList.forEach((tooltipTriggerEl) => {
 });
 
 // Add the tutorial videos.
-for (let i = 1; i <= 5; ++i) {
-  const video = document.querySelector(`#tutorial-video-${i}`) as HTMLVideoElement;
-  video.src = require(`../assets/videos/tutorial-${i}.mp4`);
-  video.loop = true;
-  video.autoplay = true;
-}
+const videos: HTMLVideoElement[] = [];
+let lastVisibleVideo = 0;
+
+document.querySelector('#getting-started-tab').addEventListener(
+  'show.bs.collapse',
+  () => {
+    for (let i = 0; i < 5; ++i) {
+      videos[i] = document.querySelector(`#tutorial-video-${i + 1}`) as HTMLVideoElement;
+      videos[i].src = require(`../assets/videos/tutorial-${i + 1}.mp4`);
+      videos[i].loop = true;
+    }
+  },
+  { once: true }
+);
+
+document
+  .querySelector('#getting-started-tab')
+  .addEventListener('shown.bs.collapse', () => {
+    videos[lastVisibleVideo].currentTime = 0;
+    videos[lastVisibleVideo].play();
+  });
+
+document
+  .querySelector('#getting-started-tab')
+  .addEventListener('hidden.bs.collapse', () => {
+    videos[lastVisibleVideo].pause();
+  });
+
+document.querySelector('#tutorial').addEventListener('slide.bs.carousel', (e) => {
+  videos[lastVisibleVideo].pause();
+  videos[e.to].currentTime = 0;
+  videos[e.to].play();
+
+  lastVisibleVideo = e.to;
+});
 
 document.querySelector('#show-sidebar-button').addEventListener('click', () => {
   document.querySelector('body').classList.add('sidebar-visible');
