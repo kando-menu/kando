@@ -159,9 +159,7 @@ export class GnomeBackend implements Backend {
     }
   }
 
-  /**
-   * This unbinds all previously bound shortcuts.
-   */
+  /** This unbinds all previously bound shortcuts. */
   public async unbindAllShortcuts() {
     await this.interface.UnbindAllShortcuts();
   }

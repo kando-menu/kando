@@ -15,14 +15,10 @@ import { IVec2 } from '../../common';
  * represent submenus, leaf nodes represent actual menu items.
  */
 export interface INode {
-  /**
-   * The name of the menu item. This may be displayed with some kind of label.
-   */
+  /** The name of the menu item. This may be displayed with some kind of label. */
   name: string;
 
-  /**
-   * The icon of the menu item. For now, this can be one of the material icon names.
-   */
+  /** The icon of the menu item. For now, this can be one of the material icon names. */
   icon: string;
 
   /**

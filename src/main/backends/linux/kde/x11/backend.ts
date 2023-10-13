@@ -10,9 +10,7 @@
 
 import { X11Backend } from '../../x11/backend';
 
-/**
- * This backend is used on KDE with X11.
- */
+/** This backend is used on KDE with X11. */
 export class KDEX11Backend extends X11Backend {
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
