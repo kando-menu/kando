@@ -8,7 +8,7 @@ SPDX-License-Identifier: CC-BY-4.0
 </p>
 
 
-> [!IMPORTANT]
+> [!WARNING]
 > This project is currently in a very early stage of development. Kando is not yet a functional menu but rather a prototype which demonstrates the feasibility of the concept. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
 
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
@@ -61,7 +61,8 @@ With a similar approach, Kando could also be made to work on other Wayland-based
 You can either [download a pre-built package from the releases page](https://github.com/kando-menu/kando/releases) or build the prototype yourself.
 With a pre-built package, you can just run the executable; no installation is required.
 
-:warning: **If you are using GNOME under Wayland, you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration)!**
+> [!IMPORTANT]
+> If you are using GNOME under Wayland, you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration)!
 
 ## Manual Compilation
 
