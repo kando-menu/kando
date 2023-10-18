@@ -39,9 +39,7 @@ export class KandoApp {
   // will be possible to disable this icon.
   private tray: Tray;
 
-  /**
-   * This is called when the app is started. It initializes the backend and the window.
-   */
+  /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
     if (this.backend === null) {
       throw new Error('No backend found.');
@@ -79,9 +77,7 @@ export class KandoApp {
     });
   }
 
-  /**
-   * This is called when the app is closed. It will unbind all shortcuts.
-   */
+  /** This is called when the app is closed. It will unbind all shortcuts. */
   public async quit() {
     if (this.backend != null) {
       await this.backend.unbindAllShortcuts();
@@ -211,9 +207,7 @@ export class KandoApp {
     this.window = window;
   }
 
-  /**
-   * Setup IPC communication with the renderer process.
-   */
+  /** Setup IPC communication with the renderer process. */
   private initRendererIPC() {
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();

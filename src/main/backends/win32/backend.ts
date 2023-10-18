@@ -121,9 +121,7 @@ export class Win32Backend implements Backend {
     globalShortcut.unregister(shortcut.accelerator);
   }
 
-  /**
-   * This unbinds all previously bound shortcuts.
-   */
+  /** This unbinds all previously bound shortcuts. */
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }

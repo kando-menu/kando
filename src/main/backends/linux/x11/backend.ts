@@ -33,9 +33,7 @@ export class X11Backend implements Backend {
     return 'dock';
   }
 
-  /**
-   * This is called when the backend is created. Currently, this this does nothing on X11.
-   */
+  /** This is called when the backend is created. Currently, this this does nothing on X11. */
   public async init() {}
 
   /**
@@ -125,9 +123,7 @@ export class X11Backend implements Backend {
     globalShortcut.unregister(shortcut.accelerator);
   }
 
-  /**
-   * This unbinds all previously bound shortcuts.
-   */
+  /** This unbinds all previously bound shortcuts. */
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }

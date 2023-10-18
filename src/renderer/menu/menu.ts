@@ -317,16 +317,12 @@ export class Menu extends EventEmitter {
     this.container.classList.remove('hidden');
   }
 
-  /**
-   * Hides the menu.
-   */
+  /** Hides the menu. */
   public hide() {
     this.container.classList.add('hidden');
   }
 
-  /**
-   * Removes all DOM elements from the menu and resets the root node.
-   */
+  /** Removes all DOM elements from the menu and resets the root node. */
   public clear() {
     this.container.className = 'kando hidden';
 
@@ -570,9 +566,7 @@ export class Menu extends EventEmitter {
     }
   }
 
-  /**
-   * This method updates the transformation of all nodes in the menu.
-   */
+  /** This method updates the transformation of all nodes in the menu. */
   private redraw() {
     if (!this.root) {
       return;

@@ -10,30 +10,22 @@
 
 import { IVec2 } from '../../common';
 
-/**
- * This method converts radians to degrees.
- */
+/** This method converts radians to degrees. */
 export function toDegrees(radians: number): number {
   return (radians * 180) / Math.PI;
 }
 
-/**
- * This method converts degrees to radians.
- */
+/** This method converts degrees to radians. */
 export function toRadians(degrees: number): number {
   return (degrees * Math.PI) / 180;
 }
 
-/**
- * This method returns the length of the given vector.
- */
+/** This method returns the length of the given vector. */
 export function getLength(vec: IVec2): number {
   return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
-/**
- * This method returns the distance between the two given vectors.
- */
+/** This method returns the distance between the two given vectors. */
 export function getDistance(vec1: IVec2, vec2: IVec2): number {
   return getLength({ x: vec1.x - vec2.x, y: vec1.y - vec2.y });
 }
