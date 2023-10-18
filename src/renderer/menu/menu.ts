@@ -358,9 +358,7 @@ export class Menu extends EventEmitter {
     this.updateTransform(this.root);
   }
 
-  /**
-   * When the menu editor is closed, the menu is faded in again.
-   */
+  /** When the menu editor is closed, the menu is faded in again. */
   public exitEditMode() {}
 
   // --------------------------------------------------------------------- private methods
