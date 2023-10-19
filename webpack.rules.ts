@@ -47,7 +47,7 @@ export const rules: Required<ModuleOptions>['rules'] = [
     },
   },
   {
-    test: /\.(png|svg|jpg|jpeg|gif|mp4)$/i,
+    test: /\.(png|svg|jpg|jpeg|gif|mp4|ttf)$/i,
     include: path.resolve(__dirname, 'assets'),
     type: 'asset/resource',
     generator: {

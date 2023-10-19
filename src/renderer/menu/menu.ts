@@ -321,7 +321,7 @@ export class Menu extends EventEmitter {
 
   /** Removes all DOM elements from the menu and resets the root node. */
   public clear() {
-    this.container.className = 'kando hidden';
+    this.container.className = 'hidden';
 
     this.gestureDetection.reset();
 

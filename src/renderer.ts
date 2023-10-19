@@ -36,17 +36,17 @@ declare global {
 
 // Set up the menu -----------------------------------------------------------------------
 
-const menu = new Menu(document.getElementById('menu-container'));
-const editor = new Editor(document.getElementById('editor-container'));
+const menu = new Menu(document.getElementById('kando-menu-container'));
+const editor = new Editor(document.getElementById('kando-editor-container'));
 
 menu.on('cancel', () => {
-  document.querySelector('body').classList.remove('menu-visible');
+  document.querySelector('#kando').classList.remove('menu-visible');
   window.api.hideWindow(300);
   menu.hide();
 });
 
 menu.on('select', () => {
-  document.querySelector('body').classList.remove('menu-visible');
+  document.querySelector('#kando').classList.remove('menu-visible');
   window.api.hideWindow(400);
   menu.hide();
 });
@@ -58,7 +58,7 @@ menu.on('move-pointer', (dist) => {
 // Hide the menu when the user presses escape.
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
-    document.querySelector('body').classList.remove('menu-visible', 'editor-visible');
+    document.querySelector('#kando').classList.remove('menu-visible', 'editor-visible');
     window.api.hideWindow(300);
     menu.exitEditMode();
     menu.hide();
@@ -67,7 +67,7 @@ document.addEventListener('keyup', (ev) => {
 
 // Show the menu when the main process requests it.
 window.api.showMenu((root, pos) => {
-  document.querySelector('body').classList.add('menu-visible');
+  document.querySelector('#kando').classList.add('menu-visible');
   menu.show(root, pos);
   editor.setMenu(root);
 });
@@ -77,23 +77,24 @@ window.api.showMenu((root, pos) => {
 document.querySelector('#show-editor-button').addEventListener('click', () => {
   menu.enterEditMode();
   editor.show();
-  document.querySelector('body').classList.add('editor-visible');
+  document.querySelector('#kando').classList.add('editor-visible');
+  document.querySelector('#kando').classList.remove('sidebar-visible');
 });
 
 document.querySelector('#hide-editor-button').addEventListener('click', () => {
   menu.exitEditMode();
-  document.querySelector('body').classList.remove('editor-visible');
+  document.querySelector('#kando').classList.remove('editor-visible');
 });
 
 // Set up the sidebar --------------------------------------------------------------------
 
 // Add functionality to show and hide the sidebar.
 document.querySelector('#show-sidebar-button').addEventListener('click', () => {
-  document.querySelector('body').classList.add('sidebar-visible');
+  document.querySelector('#kando').classList.add('sidebar-visible');
 });
 
 document.querySelector('#hide-sidebar-button').addEventListener('click', () => {
-  document.querySelector('body').classList.remove('sidebar-visible');
+  document.querySelector('#kando').classList.remove('sidebar-visible');
 });
 
 // Add the tutorial videos.
