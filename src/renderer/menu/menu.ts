@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import './menu.scss';
-import './theme.scss';
-
 import { EventEmitter } from 'events';
 
 import * as math from '../math';

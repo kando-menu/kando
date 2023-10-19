@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import './editor.scss';
-import './theme.scss';
-
 import { EventEmitter } from 'events';
 
 import { IEditorNode } from './editor-node';

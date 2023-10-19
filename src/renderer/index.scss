@@ -9,7 +9,18 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: MIT
 */
 
-@import './bootstrap.scss';
+/**
+ * All UI of Kando except for the pie menu itself is based on Bootstrap 5. This file
+ * imports the Bootstrap styles and adds some customizations.
+ */
+
+@import '../../node_modules/bootstrap/scss/bootstrap';
+
+@import './menu/menu.scss';
+@import './menu/theme.scss';
+
+@import './editor/editor.scss';
+@import './editor/theme.scss';
 
 body {
   background: transparent;
