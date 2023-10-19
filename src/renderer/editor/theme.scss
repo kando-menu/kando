@@ -66,6 +66,12 @@ $kando-highlight-color: #ffc8c8;
   .tooltip {
     --bs-tooltip-bg: #{rgba(220, 220, 220, 0.99)};
   }
+
+  .nav-tabs {
+    --bs-nav-tabs-link-active-color: white;
+    --bs-nav-link-color: #{$kando-text-color};
+    --bs-link-hover-color: white;
+  }
 }
 
 // We use the Neucha font for the tutorial.
@@ -237,6 +243,21 @@ $kando-highlight-color: #ffc8c8;
     0px 0px,
     0px 0px,
     0px 0px;
+}
+
+#kando-editor-toolbar {
+  .nav-tabs {
+    font-size: 1.5rem;
+
+    .nav-link {
+      margin-right: 5px;
+      background-color: rgba(0, 0, 0, 0.3);
+
+      &.active {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+    }
+  }
 }
 
 #kando-editor-toolbar-content {

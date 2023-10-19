@@ -318,51 +318,80 @@ SPDX-License-Identifier: MIT
           </button>
 
           <ul
-            class="nav nav-tabs kando-font display-6"
+            class="nav nav-tabs kando-font"
             id="kando-editor-toolbar-tabs"
             role="tablist"
           >
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
               <button
                 class="nav-link active"
-                id="home-tab"
                 data-bs-toggle="tab"
-                data-bs-target="#home"
+                data-bs-target="#kando-menus-tab"
                 type="button"
-                role="tab"
               >
                 Menus
               </button>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
               <button
                 class="nav-link"
-                id="profile-tab"
                 data-bs-toggle="tab"
-                data-bs-target="#profile"
+                data-bs-target="#kando-menu-themes-tab"
                 type="button"
-                role="tab"
               >
                 Menu Themes
               </button>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
               <button
                 class="nav-link"
-                id="contact-tab"
                 data-bs-toggle="tab"
-                data-bs-target="#contact"
+                data-bs-target="#kando-editor-themes-tab"
                 type="button"
-                role="tab"
               >
                 Editor Themes
               </button>
             </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-add-items-tab"
+                type="button"
+              >
+                Add Menu Items
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-stash-tab"
+                type="button"
+              >
+                Stash
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-trash-tab"
+                type="button"
+              >
+                Trash
+              </button>
+            </li>
           </ul>
           <div class="tab-content" id="kando-editor-toolbar-content">
-            <div class="tab-pane show active" id="home" role="tabpanel">Lorem</div>
-            <div class="tab-pane" id="profile" role="tabpanel">Ipsum</div>
-            <div class="tab-pane" id="contact" role="tabpanel">Dolor</div>
+            <div class="tab-pane show active" id="kando-menus-tab" role="tabpanel">
+              Lorem
+            </div>
+            <div class="tab-pane" id="kando-menu-themes-tab" role="tabpanel">Ipsum</div>
+            <div class="tab-pane" id="kando-editor-themes-tab" role="tabpanel">Dolor</div>
+            <div class="tab-pane" id="kando-add-items-tab" role="tabpanel">Items</div>
+            <div class="tab-pane" id="kando-stash-tab" role="tabpanel">Stash</div>
+            <div class="tab-pane" id="kando-trash-tab" role="tabpanel">Trash</div>
           </div>
         </div>
       </div>
