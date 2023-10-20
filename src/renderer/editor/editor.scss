@@ -42,29 +42,21 @@
 
 // Positioning and animations of the show- and hide-sidebar buttons.
 
-#show-sidebar-button {
-  transform: translateX(-20px);
-  opacity: 0;
+#show-sidebar-button,
+#hide-sidebar-button {
   position: absolute;
+  opacity: 0;
+  font-size: 1.5rem;
+  transform: translateX(-20px);
 
   i {
-    transform: none;
+    top: 0;
   }
 }
 
 #kando.menu-visible:not(.sidebar-visible) #show-sidebar-button {
   transform: translateX(0px);
   opacity: 1;
-}
-
-#hide-sidebar-button {
-  transform: translateX(-20px);
-  opacity: 0;
-  position: absolute;
-
-  i {
-    transform: none;
-  }
 }
 
 #kando.menu-visible.sidebar-visible #hide-sidebar-button {
@@ -107,12 +99,13 @@
 
 #show-editor-button,
 #hide-editor-button {
-  transform: translateY(20px);
-  opacity: 0;
   position: absolute;
+  opacity: 0;
+  font-size: 1.5rem;
+  transform: translateY(20px);
 
   i {
-    transform: none;
+    top: 0;
   }
 }
 
@@ -152,6 +145,14 @@
   transition:
     transform 150ms ease,
     opacity 150ms ease;
+
+  .nav-tabs {
+    gap: 8px;
+
+    .nav-link {
+      padding-bottom: 0;
+    }
+  }
 }
 
 #kando.menu-visible.editor-visible #kando-editor-toolbar {
@@ -161,8 +162,4 @@
 
 #kando-editor-toolbar-content {
   height: 200px;
-}
-
-#kando-editor-sidebar .material-symbols-rounded {
-  font-size: 1.25rem !important;
 }

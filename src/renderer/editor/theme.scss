@@ -130,10 +130,6 @@ $kando-highlight-color: #ffc8c8;
   &:active {
     transform: translateY(1px);
   }
-
-  i {
-    transform: translateY(0.2rem);
-  }
 }
 
 // The Sidebar ---------------------------------------------------------------------------
@@ -181,7 +177,6 @@ $kando-highlight-color: #ffc8c8;
   }
 
   .accordion-button i {
-    transform: translateY(0.1rem);
     padding-right: 0.2rem;
   }
 
@@ -250,7 +245,6 @@ $kando-highlight-color: #ffc8c8;
     font-size: 1.5rem;
 
     .nav-link {
-      margin-right: 5px;
       background-color: rgba(0, 0, 0, 0.3);
 
       &.active {
