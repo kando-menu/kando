@@ -375,7 +375,7 @@ export class Menu extends EventEmitter {
 
     const item = document.createElement('i');
     item.classList.add('item');
-    item.classList.add('material-icons-round');
+    item.classList.add('material-symbols-rounded');
     item.innerHTML = node.icon;
 
     container.appendChild(node.itemDiv);

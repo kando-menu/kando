@@ -11,6 +11,9 @@
 // All UI of Kando except for the pie menu itself is based on Bootstrap 5.
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols';
+
 // The menu.css contains the basic CSS layout of the pie menu. The theme.css is used for
 // styling only, that is colors, shadows, borders and simialr things.
 @import './menu/menu.scss';
