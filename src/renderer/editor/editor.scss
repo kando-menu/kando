@@ -139,10 +139,13 @@
   left: 10%;
   width: 80%;
   opacity: 0;
+  height: 250px;
 
   transform: translateY(20px);
 
   transition:
+    height 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+    bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
     transform 150ms ease,
     opacity 150ms ease;
 
@@ -153,15 +156,16 @@
       padding-bottom: 0;
     }
   }
+
+  &.large {
+    height: 80vh;
+    bottom: 10vh;
+  }
 }
 
 #kando.menu-visible.editor-visible #kando-editor-toolbar {
   transform: none;
   opacity: 1;
-}
-
-#kando-editor-toolbar-content {
-  height: 200px;
 }
 
 // Other Editor Components ---------------------------------------------------------------

@@ -25,6 +25,27 @@ export class Editor extends EventEmitter {
     super();
 
     this.container = container;
+
+    const tabs = [
+      { id: 'kando-editor-themes-tab', large: true },
+      { id: 'kando-menu-themes-tab', large: true },
+      { id: 'kando-menus-tab', large: false },
+      { id: 'kando-add-items-tab', large: false },
+      { id: 'kando-stash-tab', large: false },
+      { id: 'kando-trash-tab', large: false },
+    ];
+
+    for (const tab of tabs) {
+      console.log(tab);
+      const element = document.querySelector(`button[data-bs-target="#${tab.id}"]`);
+      element.addEventListener('shown.bs.tab', () => {
+        if (tab.large) {
+          document.querySelector('#kando-editor-toolbar').classList.add('large');
+        } else {
+          document.querySelector('#kando-editor-toolbar').classList.remove('large');
+        }
+      });
+    }
   }
 
   public setMenu(root: IEditorNode) {
