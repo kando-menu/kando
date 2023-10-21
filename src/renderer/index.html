@@ -23,7 +23,7 @@ SPDX-License-Identifier: MIT
   -->
 
   <body data-bs-theme="kando">
-    <div id="kando" class="sidebar-visible">
+    <div id="kando" class="editor-visible">
       <!-- 
         This is the main container for the menu. It will be filled with the menu's
         content by the renderer process.
@@ -309,6 +309,7 @@ SPDX-License-Identifier: MIT
                 data-bs-target="#kando-stash-tab">
                 <i class="material-symbols-rounded">content_paste</i>
                 <span>Stash</span>
+                <span id="kando-stash-counter" class="counter">0</span>
               </button>
             </li>
             <li class="nav-item">
@@ -318,6 +319,7 @@ SPDX-License-Identifier: MIT
                 data-bs-target="#kando-trash-tab">
                 <i class="material-symbols-rounded">delete</i>
                 <span>Trash</span>
+                <span id="kando-trash-counter" class="counter">0</span>
               </button>
               <li class="nav-item" style="margin-left: auto;">
                 <button
@@ -340,12 +342,68 @@ SPDX-License-Identifier: MIT
             </li>
           </ul>
           <div class="tab-content" id="kando-editor-toolbar-content">
-            <div class="tab-pane show active" id="kando-menus-tab">Lorem</div>
-            <div class="tab-pane" id="kando-menu-themes-tab">Ipsum</div>
-            <div class="tab-pane" id="kando-editor-themes-tab">Dolor</div>
-            <div class="tab-pane" id="kando-add-items-tab">Items</div>
-            <div class="tab-pane" id="kando-stash-tab">Stash</div>
-            <div class="tab-pane" id="kando-trash-tab">Trash</div>
+
+            <div class="tab-pane h-100 show active" id="kando-menus-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">Here will be a list of all of your menus!</div>
+                <div class="text-center kando-font fs-5">You can add new menus or delete existing ones.</div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+           
+            
+            <div class="tab-pane h-100" id="kando-add-items-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">Here will be a list of things which you can add to your menus!</div>
+                <div class="text-center kando-font fs-5">In the future, you can simply drag them to the editor above.</div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-stash-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">In the future, you can temporarily store menu items here!</div>
+                <div class="text-center kando-font fs-5">This is especially useful if you want to reorganize your menus.</div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="kando-trash-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">In the future, you can delete items by dropping them here!</div>
+                <div class="text-center kando-font fs-5">When you start Kando the next time, they will be gone.</div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-menu-themes-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">Here will be a list of available menu themes!</div>
+                <div class="text-center kando-font fs-5">There will be preview images and the possibility to download new themes from the web.</div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-editor-themes-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">Here will be a list of available editor themes!</div>
+                <div class="text-center kando-font fs-5">In the future, it will be possible to theme the entire menu editor.</div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

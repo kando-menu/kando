@@ -132,6 +132,14 @@ $kando-highlight-color: #ffc8c8;
   }
 }
 
+.counter {
+  font-size: 0.85em;
+  border-radius: 30%;
+  padding: 0.2em 0.2em 0 0.2em;
+  margin: 0 0.2em;
+  background-color: rgba(80, 80, 80, 0.8);
+}
+
 // The Sidebar ---------------------------------------------------------------------------
 
 #hide-sidebar-button,

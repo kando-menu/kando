@@ -163,3 +163,12 @@
 #kando-editor-toolbar-content {
   height: 200px;
 }
+
+// Other Editor Components ---------------------------------------------------------------
+
+.swirl {
+  display: inline-block;
+  background-image: url(../../assets/images/swirl.svg);
+  width: 160px;
+  height: 14px;
+}
