@@ -6,6 +6,8 @@ module.exports = {
   printWidth: 90,
   semi: true,
   singleQuote: true,
+  bracketSameLine: true,
+  singleAttributePerLine: false,
   useTabs: false,
   tabWidth: 2,
   plugins: ['prettier-plugin-jsdoc'],

@@ -8,14 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import './menu.scss';
-import './theme.scss';
-
 import { EventEmitter } from 'events';
 
-import * as math from './math';
+import * as math from '../math';
 import { IVec2 } from '../../common';
-import { INode } from './node';
+import { IMenuNode } from './menu-node';
 import { GestureDetection } from './gesture-detection';
 
 /**
@@ -72,21 +69,21 @@ export class Menu extends EventEmitter {
   // The root node is the node which is placed at the center of the menu. It is the
   // parent of all other nodes. It will be created when the menu is shown and destroyed
   // when the menu is hidden.
-  private root: INode = null;
+  private root: IMenuNode = null;
 
   // The hovered node is the node which is currently hovered by the mouse. It is used
   // to highlight the node under the mouse cursor. This will only be null if the mouse
   // is over the center of the root node. If the center of an active child node is
   // hovered, the hovered node will be the parent of the active child node.
-  private hoveredNode: INode = null;
+  private hoveredNode: IMenuNode = null;
 
   // The dragged node is the node which is currently dragged by the mouse.
-  private draggedNode: INode = null;
+  private draggedNode: IMenuNode = null;
 
   // The selection chain is the chain of nodes from the root node to the currently
   // selected node. The first element of the array is the root node, the last element
   // is the currently selected node.
-  private selectionChain: Array<INode> = [];
+  private selectionChain: Array<IMenuNode> = [];
 
   // This shows the name of the currently hovered child on the center item.
   private centerText: HTMLElement = null;
@@ -127,11 +124,6 @@ export class Menu extends EventEmitter {
     // the mouse moves and the corresponding event is ignored.
     ignoreMotionEvents: 0,
   };
-
-  // This is currently used to create the test menu. It defines the number of children
-  // per level. The first number is the number of children of the root node, the second
-  // number is the number of children of each child node and so on.
-  private readonly CHILDREN_PER_LEVEL = [8, 7, 7];
 
   // The following constants define the layout of the menu. They are all in pixels and
   // should be configurable in the future.
@@ -301,7 +293,7 @@ export class Menu extends EventEmitter {
    *
    * @param position The position of the mouse cursor when the menu was opened.
    */
-  public show(position: IVec2) {
+  public show(root: IMenuNode, position: IVec2) {
     this.clear();
 
     // On some wayland compositors (for instance KWin), one or two initial mouse motion
@@ -313,44 +305,7 @@ export class Menu extends EventEmitter {
     this.mouse.relativePosition = { x: 0, y: 0 };
     this.mouse.absolutePosition = { x: position.x, y: position.y };
 
-    this.root = {
-      name: 'Node',
-      icon: 'open_with',
-      children: [],
-    };
-
-    const TEST_ICONS = [
-      'play_circle',
-      'public',
-      'arrow_circle_right',
-      'terminal',
-      'settings',
-      'apps',
-      'arrow_circle_left',
-      'fullscreen',
-    ];
-
-    const addChildren = (parent: INode, level: number) => {
-      if (level < this.CHILDREN_PER_LEVEL.length) {
-        parent.children = [];
-        for (let i = 0; i < this.CHILDREN_PER_LEVEL[level]; ++i) {
-          const node: INode = {
-            name: `${parent.name} ${i}`,
-            icon: TEST_ICONS[i % TEST_ICONS.length],
-            children: [],
-          };
-          parent.children.push(node);
-          addChildren(node, level + 1);
-        }
-      }
-    };
-
-    addChildren(this.root, 0);
-
-    // Print some statistics.
-    const count = this.CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
-    window.api.log(`Created ${count} menu nodes!`);
-
+    this.root = root;
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
     this.selectNode(this.root);
@@ -366,7 +321,7 @@ export class Menu extends EventEmitter {
 
   /** Removes all DOM elements from the menu and resets the root node. */
   public clear() {
-    this.container.className = 'kando hidden';
+    this.container.className = 'hidden';
 
     this.gestureDetection.reset();
 
@@ -379,6 +334,30 @@ export class Menu extends EventEmitter {
     this.selectionChain = [];
   }
 
+  /**
+   * When the menu editor is opened, the actual menu is hidden. We apply a short
+   * transition in which the menu is faded out and moved to the center of the screen.
+   * Also, the menu is set to pointer-events: none, so that the user can interact with the
+   * editor.
+   */
+  public enterEditMode() {
+    const position = this.getActiveNodePosition();
+
+    // Compute center of screen.
+    const diff = {
+      x: window.innerWidth / 2 - position.x,
+      y: window.innerHeight / 2 - position.y,
+    };
+
+    this.selectionChain[0].position.x += diff.x;
+    this.selectionChain[0].position.y += diff.y;
+
+    this.updateTransform(this.root);
+  }
+
+  /** When the menu editor is closed, the menu is faded in again. */
+  public exitEditMode() {}
+
   // --------------------------------------------------------------------- private methods
 
   /**
@@ -390,13 +369,13 @@ export class Menu extends EventEmitter {
    * @param node The node to create the DOM tree for.
    * @param container The container to append the DOM tree to.
    */
-  private createNodeTree(node: INode, container: HTMLElement) {
+  private createNodeTree(node: IMenuNode, container: HTMLElement) {
     node.itemDiv = document.createElement('div');
     node.itemDiv.classList.add('node');
 
     const item = document.createElement('i');
     item.classList.add('item');
-    item.classList.add('material-icons-round');
+    item.classList.add('material-symbols-rounded');
     item.innerHTML = node.icon;
 
     container.appendChild(node.itemDiv);
@@ -432,7 +411,7 @@ export class Menu extends EventEmitter {
    *
    * @param node The newly selected node.
    */
-  private selectNode(node: INode) {
+  private selectNode(node: IMenuNode) {
     // Make sure to un-hover the node if it was hovered before.
     if (node === this.hoveredNode) {
       this.hoverNode(null);
@@ -544,7 +523,7 @@ export class Menu extends EventEmitter {
    * @param node The node to drag. If null, the previously dragged node will be
    *   un-dragged.
    */
-  private dragNode(node?: INode) {
+  private dragNode(node?: IMenuNode) {
     if (this.draggedNode === node) {
       return;
     }
@@ -566,7 +545,7 @@ export class Menu extends EventEmitter {
    *
    * @param node The node to hover. If null, the currently hovered node will be unhovered.
    */
-  private hoverNode(node?: INode) {
+  private hoverNode(node?: IMenuNode) {
     if (this.hoveredNode === node) {
       return;
     }
@@ -659,7 +638,7 @@ export class Menu extends EventEmitter {
    * @returns The node that is currently hovered by the mouse. Can be null if the center
    *   of the root menu is hovered.
    */
-  private computeHoveredNode(): INode {
+  private computeHoveredNode(): IMenuNode {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected node.
     if (this.mouse.distance < this.CENTER_RADIUS) {
@@ -671,7 +650,8 @@ export class Menu extends EventEmitter {
 
     // If the mouse is not in the center, check if it is in one of the children of the
     // currently selected node.
-    for (const child of this.selectionChain[this.selectionChain.length - 1].children) {
+    for (const child of this.selectionChain[this.selectionChain.length - 1]
+      .children as IMenuNode[]) {
       if (
         (this.mouse.angle > child.startAngle && this.mouse.angle <= child.endAngle) ||
         (this.mouse.angle - 360 > child.startAngle &&
@@ -701,7 +681,7 @@ export class Menu extends EventEmitter {
    * @param state The state of the given node. The transformation will be computed
    *   differently depending on the state.
    */
-  private updateTransform(node: INode) {
+  private updateTransform(node: IMenuNode) {
     if (node.itemDiv.classList.contains('grandchild')) {
       node.position = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
       node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
@@ -809,17 +789,17 @@ export class Menu extends EventEmitter {
       if (i === this.selectionChain.length - 1) {
         node.itemDiv.className = 'node active';
 
-        for (const child of node.children) {
+        for (const child of node.children as IMenuNode[]) {
           child.itemDiv.className = 'node child';
 
-          for (const grandchild of child.children) {
+          for (const grandchild of child.children as IMenuNode[]) {
             grandchild.itemDiv.className = 'node grandchild';
           }
         }
       } else {
         node.itemDiv.className = 'node parent';
 
-        for (const child of node.children) {
+        for (const child of node.children as IMenuNode[]) {
           child.itemDiv.className = 'node grandchild';
         }
       }
@@ -859,7 +839,7 @@ export class Menu extends EventEmitter {
    *
    * @param node The node for which to setup the children recursively.
    */
-  private setupAngles(node: INode) {
+  private setupAngles(node: IMenuNode) {
     // If the node has no children, we can stop here.
     if (node.children.length === 0) {
       return;
@@ -874,7 +854,7 @@ export class Menu extends EventEmitter {
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children.length; ++i) {
-      const child = node.children[i];
+      const child = node.children[i] as IMenuNode;
       child.angle = angles[i];
       child.startAngle = wedges[i].start;
       child.endAngle = wedges[i].end;
@@ -891,7 +871,7 @@ export class Menu extends EventEmitter {
    * @param node The potential parent node.
    * @returns True if the given node is the parent node of the currently selected node.
    */
-  private isParentOfActiveNode(node: INode) {
+  private isParentOfActiveNode(node: IMenuNode) {
     return (
       this.selectionChain.length > 1 &&
       this.selectionChain[this.selectionChain.length - 2] === node

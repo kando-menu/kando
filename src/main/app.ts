@@ -10,6 +10,7 @@
 
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu } from 'electron';
 import { Backend, getBackend } from './backends';
+import { INode } from '../common';
 import path from 'path';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -115,7 +116,50 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        this.window.webContents.send('show-menu', {
+        const root: INode = {
+          name: 'Node',
+          icon: 'open_with',
+          children: [],
+        };
+
+        // This is currently used to create the test menu. It defines the number of children
+        // per level. The first number is the number of children of the root node, the second
+        // number is the number of children of each child node and so on.
+        const CHILDREN_PER_LEVEL = [8, 7, 7];
+
+        const TEST_ICONS = [
+          'play_circle',
+          'public',
+          'arrow_circle_right',
+          'terminal',
+          'settings',
+          'apps',
+          'arrow_circle_left',
+          'fullscreen',
+        ];
+
+        const addChildren = (parent: INode, level: number) => {
+          if (level < CHILDREN_PER_LEVEL.length) {
+            parent.children = [];
+            for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
+              const node: INode = {
+                name: `${parent.name} ${i}`,
+                icon: TEST_ICONS[i % TEST_ICONS.length],
+                children: [],
+              };
+              parent.children.push(node);
+              addChildren(node, level + 1);
+            }
+          }
+        };
+
+        addChildren(root, 0);
+
+        // Print some statistics.
+        const count = CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
+        console.log(`Created ${count} menu nodes!`);
+
+        this.window.webContents.send('show-menu', root, {
           x: info.pointerX - workarea.x,
           y: info.pointerY - workarea.y,
         });

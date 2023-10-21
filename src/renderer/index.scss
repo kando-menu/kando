@@ -1,15 +1,26 @@
-/* ------------------------------------------------------------------------------------- #
-#    _  _ ____ _  _ ___  ____                                                            #
-#    |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform          #
-#    | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando      #
-#                                                                                        #
-# -------------------------------------------------------------------------------------- #
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
 
-SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
-SPDX-License-Identifier: MIT
-*/
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
 
-@import './bootstrap.scss';
+// All UI of Kando except for the pie menu itself is based on Bootstrap 5.
+@import '../../node_modules/bootstrap/scss/bootstrap';
+
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols';
+
+// The menu.css contains the basic CSS layout of the pie menu. The theme.css is used for
+// styling only, that is colors, shadows, borders and simialr things.
+@import './menu/menu.scss';
+@import './menu/theme.scss';
+
+@import './editor/editor.scss';
+@import './editor/theme.scss';
 
 body {
   background: transparent;
@@ -17,7 +28,8 @@ body {
   user-select: none;
 }
 
-#menu-container {
+#kando-menu-container,
+#kando-editor-container {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -25,108 +37,10 @@ body {
   right: 0px;
 }
 
-#sidebar {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  width: 500px;
-  pointer-events: none;
-  resize: horizontal;
-}
-
-body.menu-visible.sidebar-visible #sidebar > * {
-  pointer-events: all;
-}
-
-.sidebar-item {
-  overflow: hidden;
-  border-radius: var(--bs-border-radius);
-  margin: 15px;
-  background-color: rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-
-  opacity: 0;
-  transform: translateX(-20px);
-
-  transition:
-    transform 150ms ease,
-    opacity 150ms ease;
-}
-
-.btn.dark-glass {
-  background-color: rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-
-  width: 45px;
-  height: 45px;
-
-  transition:
-    transform 150ms ease,
-    opacity 150ms ease;
-
-  // Center text.
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background-color: rgba(20, 20, 20, 0.8);
-  }
-
-  &:active {
-    border: none;
-    transform: translateY(1px);
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-}
-
-@for $i from 1 through 10 {
-  .sidebar-item:nth-child(#{$i}) {
-    transition-delay: #{($i - 1) * 30}ms;
-  }
-}
-
-body.menu-visible.sidebar-visible .sidebar-item {
-  opacity: 1;
-  transform: translateX(0px);
-}
-
-#show-sidebar-button {
-  transform: translateX(-20px);
-  border-bottom-right-radius: 50%;
-  opacity: 0;
-  position: absolute;
-  left: 10px;
-  top: 10px;
-
-  i {
-    transform: none;
-  }
-}
-
-body.menu-visible:not(.sidebar-visible) #show-sidebar-button {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-#hide-sidebar-button {
-  transform: translateX(-20px);
-  opacity: 0;
-  position: absolute;
-  right: -40px;
-  top: 15px;
-
-  i {
-    transform: none;
-  }
-}
-
-body.menu-visible.sidebar-visible #hide-sidebar-button {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-#sidebar .material-icons-round {
-  font-size: 1.25rem !important;
+.material-symbols-rounded {
+  font-size: unset;
+  line-height: unset;
+  position: relative;
+  vertical-align: middle;
+  top: -0.1em;
 }

@@ -18,267 +18,422 @@ SPDX-License-Identifier: MIT
 
   <!--
     For now, all the prototype's sidebar content is in this file to keep things simple.
-    In the future, we will move this to a separate files and use templates for the
+    In the future, we will move this to separate files and use templates for the
     content creation.
   -->
-  <body class="sidebar-visible" data-bs-theme="kando">
-    <div id="menu-container"></div>
 
-    <div id="button-container">
-      <button id="show-sidebar-button" class="btn dark-glass">
-        <i class="material-icons-round">info</i>
-      </button>
-    </div>
+  <body data-bs-theme="kando">
+    <div id="kando" class="sidebar-visible">
+      <!-- 
+        This is the main container for the menu. It will be filled with the menu's
+        content by the renderer process.
+      -->
+      <div id="kando-menu-container"></div>
 
-    <div id="sidebar">
-      <button id="hide-sidebar-button" class="btn dark-glass rounded-end-circle">
-        <i class="material-icons-round">close</i>
-      </button>
+      <!--
+        This is the main container for the menu's editor. It will be filled with the
+        editor's content by the renderer process.
+      -->
+      <div id="kando-editor-container">
+        <div id="kando-editor-background"></div>
+        <!--
+          This is the button in the lower right corner which opens the editor.
+        -->
+        <button id="show-editor-button" class="btn dark">
+          <i class="material-symbols-rounded">settings</i>
+        </button>
 
-      <div class="sidebar-item p-3">
-        <h1 class="display-5">Welcome to Kando!</h1>
-        <p class="mb-0">
-          This prototype is not yet a functional menu, but you can already test the
-          interaction! Selecting something in the menu has no effect yet. So feel free to
-          play around! Close the menu by pressing <code>ESC</code> or by clicking on the
-          root item's center.
-        </p>
-      </div>
+        <!--
+          This is the button in the upper left corner which opens the sidebar.
+        -->
+        <button id="show-sidebar-button" class="btn dark">
+          <i class="material-symbols-rounded">info</i>
+        </button>
 
-      <div class="sidebar-item accordion accordion-flush" id="getting-started-tab">
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#tutorial"
-            >
-              <span class="fs-5"
-                ><i class="material-icons-round">school</i> Getting Started</span
-              >
-            </button>
-          </div>
-          <div
-            id="tutorial"
-            class="accordion-collapse collapse carousel slide overflow-hidden"
-          >
-            <div>
-              <div class="carousel-indicators">
-                <button
-                  type="button"
-                  data-bs-target="#tutorial"
-                  data-bs-slide-to="0"
-                  class="active"
-                  aria-current="true"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#tutorial"
-                  data-bs-slide-to="1"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#tutorial"
-                  data-bs-slide-to="2"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#tutorial"
-                  data-bs-slide-to="3"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#tutorial"
-                  data-bs-slide-to="4"
-                ></button>
-              </div>
-              <div class="carousel-inner rounded-1">
-                <div class="carousel-item active">
-                  <div class="carousel-caption">
-                    <p>
-                      <strong>Click Anywhere:</strong> You do not have to exactly click on
-                      an item, you just have to click somewhere into its wedge!
-                    </p>
-                  </div>
-                  <video id="tutorial-video-1" class="img-fluid" />
-                </div>
-                <div class="carousel-item">
-                  <div class="carousel-caption">
-                    <p>
-                      <strong>Go Back:</strong> Quickly navigate one level up by clicking
-                      the center item.
-                    </p>
-                  </div>
-                  <video id="tutorial-video-2" class="img-fluid" />
-                </div>
-                <div class="carousel-item">
-                  <div class="carousel-caption">
-                    <p>
-                      <strong>Marking Mode:</strong> Drag over an item to enter marking
-                      mode. If you pause the pointer movement or make a turn, the
-                      currently dragged submenu will be opened.
-                    </p>
-                  </div>
-                  <video id="tutorial-video-3" class="img-fluid" />
-                </div>
-                <div class="carousel-item">
-                  <div class="carousel-caption">
-                    <p>
-                      <strong>Turbo Mode:</strong> If you keep <code>Ctrl</code> pressed
-                      after opening the menu, you can perform selections by just moving
-                      the pointer. This is the fastest way to select items!
-                    </p>
-                  </div>
-                  <video id="tutorial-video-4" class="img-fluid" />
-                </div>
-                <div class="carousel-item">
-                  <div class="carousel-caption">
-                    <p>
-                      <strong>No accidental selections:</strong> Final items are only
-                      selected as soon as you release your mouse button in
-                      <em>Marking Mode</em> or <code>Ctrl</code> in <em>Turbo Mode</em>.
-                      Use this to explore the menu!
-                    </p>
-                  </div>
-                  <video id="tutorial-video-5" class="img-fluid" />
-                </div>
-              </div>
-              <button
-                class="carousel-control-prev"
-                type="button"
-                data-bs-target="#tutorial"
-                data-bs-slide="prev"
-              >
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              </button>
-              <button
-                class="carousel-control-next"
-                type="button"
-                data-bs-target="#tutorial"
-                data-bs-slide="next"
-              >
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              </button>
+        <!--
+          This is the sidebar. It contains some information about the prototype and
+          some example actions.
+        -->
+        <div id="kando-editor-sidebar">
+          <button id="hide-sidebar-button" class="btn dark rounded-end-circle">
+            <i class="material-symbols-rounded">close</i>
+          </button>
+
+          <div class="sidebar-item p-3">
+            <h1 class="display-5 kando-font">Welcome to Kando!</h1>
+            <p>
+              This prototype is not yet a functional menu, but you can already test the
+              interaction! Selecting something in the menu has no effect yet. So feel free
+              to play around! Close the menu by pressing <code>ESC</code> or by clicking
+              on the root item's center.
+            </p>
+            <p>
+              This version contains some initial elements of the future menu editor. You
+              can open it by clicking on the small gear icon in the lower right corner.
+            </p>
+
+            <div id="blog-post-button" class="btn btn-secondary w-100">
+              <i class="material-symbols-rounded">open_in_new</i> Read more about the
+              future editor!
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="sidebar-item accordion accordion-flush">
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#example-actions"
-            >
-              <span class="fs-5"
-                ><i class="material-icons-round">ads_click</i> Example Actions</span
-              >
-            </button>
-          </div>
-          <div id="example-actions" class="accordion-collapse collapse">
-            <div>
-              <p>
-                Here are some action buttons which show what the menu could do in the
-                future. Check out the button's tooltips for more information!
-              </p>
-
-              <div class="row g-2">
-                <span class="col-6">
-                  <button
-                    id="shortcut-button-1"
-                    class="btn btn-secondary w-100"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="This shortcut changes to the next virtual workspace on some Linux desktops."
+          <div class="sidebar-item accordion accordion-flush" id="getting-started-tab">
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#tutorial">
+                  <span class="fs-5"
+                    ><i class="material-symbols-rounded">school</i> Getting Started</span
                   >
-                    <i class="material-icons-round">keyboard</i> Ctrl+Alt+Right
-                  </button>
-                </span>
-
-                <span class="col-6">
+                </button>
+              </div>
+              <div
+                id="tutorial"
+                class="accordion-collapse collapse carousel slide overflow-hidden">
+                <div>
+                  <div class="carousel-indicators">
+                    <button
+                      data-bs-target="#tutorial"
+                      data-bs-slide-to="0"
+                      class="active"></button>
+                    <button data-bs-target="#tutorial" data-bs-slide-to="1"></button>
+                    <button data-bs-target="#tutorial" data-bs-slide-to="2"></button>
+                    <button data-bs-target="#tutorial" data-bs-slide-to="3"></button>
+                    <button data-bs-target="#tutorial" data-bs-slide-to="4"></button>
+                  </div>
+                  <div class="carousel-inner rounded-1">
+                    <div class="carousel-item active">
+                      <div class="carousel-caption">
+                        <p>
+                          <strong>Click Anywhere:</strong> You do not have to exactly
+                          click on an item, you just have to click somewhere into its
+                          wedge!
+                        </p>
+                      </div>
+                      <video id="tutorial-video-1" class="img-fluid" />
+                    </div>
+                    <div class="carousel-item">
+                      <div class="carousel-caption">
+                        <p>
+                          <strong>Go Back:</strong> Quickly navigate one level up by
+                          clicking the center item.
+                        </p>
+                      </div>
+                      <video id="tutorial-video-2" class="img-fluid" />
+                    </div>
+                    <div class="carousel-item">
+                      <div class="carousel-caption">
+                        <p>
+                          <strong>Marking Mode:</strong> Drag over an item to enter
+                          marking mode. If you pause the pointer movement or make a turn,
+                          the currently dragged submenu will be opened.
+                        </p>
+                      </div>
+                      <video id="tutorial-video-3" class="img-fluid" />
+                    </div>
+                    <div class="carousel-item">
+                      <div class="carousel-caption">
+                        <p>
+                          <strong>Turbo Mode:</strong> If you keep
+                          <code>Ctrl</code> pressed after opening the menu, you can
+                          perform selections by just moving the pointer. This is the
+                          fastest way to select items!
+                        </p>
+                      </div>
+                      <video id="tutorial-video-4" class="img-fluid" />
+                    </div>
+                    <div class="carousel-item">
+                      <div class="carousel-caption">
+                        <p>
+                          <strong>No accidental selections:</strong> Final items are only
+                          selected as soon as you release your mouse button in
+                          <em>Marking Mode</em> or <code>Ctrl</code> in
+                          <em>Turbo Mode</em>. Use this to explore the menu!
+                        </p>
+                      </div>
+                      <video id="tutorial-video-5" class="img-fluid" />
+                    </div>
+                  </div>
                   <button
-                    id="shortcut-button-2"
-                    class="btn btn-secondary w-100"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="On most desktops this will change the active window. This action uses delays between the individual key press events."
-                  >
-                    <i class="material-icons-round">keyboard</i> Alt+Tab
+                    class="carousel-control-prev"
+                    data-bs-target="#tutorial"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
                   </button>
-                </span>
-
-                <span class="col-6">
                   <button
-                    id="shortcut-button-3"
-                    class="btn btn-secondary w-100"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="This will duplicate any selected text. For this, it copies the currently selected text, moves the cursor to the right and finally pastes the text."
-                  >
-                    <i class="material-icons-round">keyboard</i> Ctrl+C Ctrl+V
+                    class="carousel-control-next"
+                    data-bs-target="#tutorial"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
                   </button>
-                </span>
-
-                <span class="col-6">
-                  <button
-                    id="shortcut-button-4"
-                    class="btn btn-secondary w-100"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="This will a main menu on many desktop environments."
-                  >
-                    <i class="material-icons-round">keyboard</i> Meta
-                  </button>
-                </span>
-
-                <span class="col-6">
-                  <button
-                    id="url-button"
-                    class="btn btn-secondary w-100"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="This opens the homepage of Kando."
-                  >
-                    <i class="material-icons-round">public</i> Open URL
-                  </button>
-                </span>
-
-                <span class="col-6">
-                  <button
-                    id="uri-button"
-                    class="btn btn-secondary w-100"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="This opens a file explorer."
-                  >
-                    <i class="material-icons-round">folder_open</i> Open Folder
-                  </button>
-                </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="sidebar-item accordion accordion-flush">
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#debugging"
-            >
-              <span class="fs-5"
-                ><i class="material-icons-round">bug_report</i> Debugging</span
-              >
-            </button>
-          </div>
-          <div id="debugging" class="accordion-collapse collapse">
-            <div>
-              <div class="container">
-                <div class="row">
-                  <div id="dev-tools-button" class="btn btn-secondary col-12">
-                    <i class="material-icons-round">code</i> Show Developer Tools
+          <div class="sidebar-item accordion accordion-flush">
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#example-actions">
+                  <span class="fs-5"
+                    ><i class="material-symbols-rounded">ads_click</i> Example
+                    Actions</span
+                  >
+                </button>
+              </div>
+              <div id="example-actions" class="accordion-collapse collapse">
+                <div>
+                  <p>
+                    Here are some action buttons which show what the menu could do in the
+                    future. Check out the button's tooltips for more information!
+                  </p>
+
+                  <div class="row g-2">
+                    <span class="col-6">
+                      <button
+                        id="shortcut-button-1"
+                        class="btn btn-secondary w-100"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This shortcut changes to the next virtual workspace on some Linux desktops.">
+                        <i class="material-symbols-rounded">keyboard</i> Ctrl+Alt+Right
+                      </button>
+                    </span>
+
+                    <span class="col-6">
+                      <button
+                        id="shortcut-button-2"
+                        class="btn btn-secondary w-100"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="On most desktops this will change the active window. This action uses delays between the individual key press events.">
+                        <i class="material-symbols-rounded">keyboard</i> Alt+Tab
+                      </button>
+                    </span>
+
+                    <span class="col-6">
+                      <button
+                        id="shortcut-button-3"
+                        class="btn btn-secondary w-100"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This will duplicate any selected text. For this, it copies the currently selected text, moves the cursor to the right and finally pastes the text.">
+                        <i class="material-symbols-rounded">keyboard</i> Ctrl+C Ctrl+V
+                      </button>
+                    </span>
+
+                    <span class="col-6">
+                      <button
+                        id="shortcut-button-4"
+                        class="btn btn-secondary w-100"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This will a main menu on many desktop environments.">
+                        <i class="material-symbols-rounded">keyboard</i> Meta
+                      </button>
+                    </span>
+
+                    <span class="col-6">
+                      <button
+                        id="url-button"
+                        class="btn btn-secondary w-100"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This opens the homepage of Kando.">
+                        <i class="material-symbols-rounded">public</i> Open URL
+                      </button>
+                    </span>
+
+                    <span class="col-6">
+                      <button
+                        id="uri-button"
+                        class="btn btn-secondary w-100"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This opens a file explorer.">
+                        <i class="material-symbols-rounded">folder_open</i> Open Folder
+                      </button>
+                    </span>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-item accordion accordion-flush">
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#debugging">
+                  <span class="fs-5"
+                    ><i class="material-symbols-rounded">bug_report</i> Debugging</span
+                  >
+                </button>
+              </div>
+              <div id="debugging" class="accordion-collapse collapse">
+                <div>
+                  <div class="container">
+                    <div class="row">
+                      <div id="dev-tools-button" class="btn btn-secondary col-12">
+                        <i class="material-symbols-rounded">code</i> Show Developer Tools
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="kando-editor-toolbar" class="d-flex flex-column">
+          <button id="hide-editor-button" class="btn dark rounded-end-circle">
+            <i class="material-symbols-rounded">close</i>
+          </button>
+
+          <ul class="nav nav-tabs kando-font">
+            <li class="nav-item">
+              <button
+                class="nav-link active"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-menus-tab">
+                <i class="material-symbols-rounded">apps</i>
+                <span>Menus</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-add-items-tab">
+                <i class="material-symbols-rounded">add</i>
+                <span>Menu Items</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-stash-tab">
+                <i class="material-symbols-rounded">content_paste</i>
+                <span>Stash</span>
+                <span id="kando-stash-counter" class="counter">0</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-trash-tab">
+                <i class="material-symbols-rounded">delete</i>
+                <span>Trash</span>
+                <span id="kando-trash-counter" class="counter">0</span>
+              </button>
+            </li>
+
+            <li class="nav-item" style="margin-left: auto">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-menu-themes-tab">
+                <i class="material-symbols-rounded">palette</i>
+                <span>Menu Themes</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#kando-editor-themes-tab">
+                <i class="material-symbols-rounded">palette</i>
+                <span>Editor Themes</span>
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content flex-grow-1" id="kando-editor-toolbar-content">
+            <div class="tab-pane h-100 show active" id="kando-menus-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">
+                  Here will be a list of all of your menus!
+                </div>
+                <div class="text-center kando-font fs-5">
+                  You can add new menus or delete existing ones.
+                </div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-add-items-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">
+                  Here will be a list of things which you can add to your menus!
+                </div>
+                <div class="text-center kando-font fs-5">
+                  In the future, you can simply drag them to the editor above.
+                </div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-stash-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">
+                  In the future, you can temporarily store menu items here!
+                </div>
+                <div class="text-center kando-font fs-5">
+                  This is especially useful if you want to reorganize your menus.
+                </div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-trash-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">
+                  In the future, you can delete items by dropping them here!
+                </div>
+                <div class="text-center kando-font fs-5">
+                  When you start Kando the next time, they will be gone.
+                </div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-menu-themes-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">
+                  Here will be a list of available menu themes!
+                </div>
+                <div class="text-center kando-font fs-5">
+                  There will be preview images and the possibility to download new themes
+                  from the web.
+                </div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane h-100" id="kando-editor-themes-tab">
+              <div class="d-flex flex-column justify-content-center h-100">
+                <div class="text-center kando-font fs-3">
+                  Here will be a list of available editor themes!
+                </div>
+                <div class="text-center kando-font fs-5">
+                  In the future, it will be possible to theme the entire menu editor.
+                </div>
+                <div class="text-center mb-4">
+                  <span class="swirl"></span>
                 </div>
               </div>
             </div>

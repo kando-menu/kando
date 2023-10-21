@@ -13,7 +13,9 @@ import './renderer/index.scss';
 import { Tooltip } from 'bootstrap';
 
 import { Menu } from './renderer/menu/menu';
-import { IKeySequence, IVec2 } from './common';
+import { Editor } from './renderer/editor/editor';
+
+import { IKeySequence, IVec2, INode } from './common';
 
 interface IElectronAPI {
   loadPreferences: () => void;
@@ -23,7 +25,7 @@ interface IElectronAPI {
   movePointer: (dist: IVec2) => void;
   openURI: (uri: string) => void;
   log: (message: string) => void;
-  showMenu: (func: (pos: IVec2) => void) => void;
+  showMenu: (func: (root: INode, pos: IVec2) => void) => void;
 }
 
 declare global {
@@ -32,17 +34,19 @@ declare global {
   }
 }
 
-const container = document.getElementById('menu-container');
-const menu = new Menu(container);
+// Set up the menu -----------------------------------------------------------------------
+
+const menu = new Menu(document.getElementById('kando-menu-container'));
+const editor = new Editor(document.getElementById('kando-editor-container'));
 
 menu.on('cancel', () => {
-  document.querySelector('body').classList.remove('menu-visible');
+  document.querySelector('#kando').classList.remove('menu-visible');
   window.api.hideWindow(300);
   menu.hide();
 });
 
 menu.on('select', () => {
-  document.querySelector('body').classList.remove('menu-visible');
+  document.querySelector('#kando').classList.remove('menu-visible');
   window.api.hideWindow(400);
   menu.hide();
 });
@@ -51,12 +55,46 @@ menu.on('move-pointer', (dist) => {
   window.api.movePointer(dist);
 });
 
-// Initialize all tooltips.
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-tooltipTriggerList.forEach((tooltipTriggerEl) => {
-  new Tooltip(tooltipTriggerEl, {
-    delay: { show: 500, hide: 0 },
-  });
+// Hide the menu when the user presses escape.
+document.addEventListener('keyup', (ev) => {
+  if (ev.key === 'Escape') {
+    document.querySelector('#kando').classList.remove('menu-visible', 'editor-visible');
+    window.api.hideWindow(300);
+    menu.exitEditMode();
+    menu.hide();
+  }
+});
+
+// Show the menu when the main process requests it.
+window.api.showMenu((root, pos) => {
+  document.querySelector('#kando').classList.add('menu-visible');
+  menu.show(root, pos);
+  editor.setMenu(root);
+});
+
+// Set up the editor ---------------------------------------------------------------------
+
+document.querySelector('#show-editor-button').addEventListener('click', () => {
+  menu.enterEditMode();
+  editor.show();
+  document.querySelector('#kando').classList.add('editor-visible');
+  document.querySelector('#kando').classList.remove('sidebar-visible');
+});
+
+document.querySelector('#hide-editor-button').addEventListener('click', () => {
+  menu.exitEditMode();
+  document.querySelector('#kando').classList.remove('editor-visible');
+});
+
+// Set up the sidebar --------------------------------------------------------------------
+
+// Add functionality to show and hide the sidebar.
+document.querySelector('#show-sidebar-button').addEventListener('click', () => {
+  document.querySelector('#kando').classList.add('sidebar-visible');
+});
+
+document.querySelector('#hide-sidebar-button').addEventListener('click', () => {
+  document.querySelector('#kando').classList.remove('sidebar-visible');
 });
 
 // Add the tutorial videos.
@@ -96,18 +134,12 @@ document.querySelector('#tutorial').addEventListener('slide.bs.carousel', (e) =>
   lastVisibleVideo = e.to;
 });
 
-document.querySelector('#show-sidebar-button').addEventListener('click', () => {
-  document.querySelector('body').classList.add('sidebar-visible');
-});
-
-document.querySelector('#hide-sidebar-button').addEventListener('click', () => {
-  document.querySelector('body').classList.remove('sidebar-visible');
-});
-
+// Show the dev tools if the button is clicked.
 document.querySelector('#dev-tools-button').addEventListener('click', () => {
   window.api.showDevTools();
 });
 
+// Initialize all the example actio buttons.
 document.querySelector('#shortcut-button-1').addEventListener('click', () => {
   window.api.simulateKeys([
     {
@@ -248,6 +280,10 @@ document.querySelector('#shortcut-button-4').addEventListener('click', () => {
   ]);
 });
 
+document.querySelector('#blog-post-button').addEventListener('click', () => {
+  window.api.openURI('https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8');
+});
+
 document.querySelector('#url-button').addEventListener('click', () => {
   window.api.openURI('https://github.com/kando-menu/kando');
 });
@@ -256,17 +292,16 @@ document.querySelector('#uri-button').addEventListener('click', () => {
   window.api.openURI('file:///');
 });
 
-document.addEventListener('keyup', (ev) => {
-  if (ev.key === 'Escape') {
-    document.querySelector('body').classList.remove('menu-visible');
-    window.api.hideWindow(300);
-    menu.hide();
-  }
+// Miscellaneous -------------------------------------------------------------------------
+
+// Initialize all tooltips.
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+tooltipTriggerList.forEach((tooltipTriggerEl) => {
+  new Tooltip(tooltipTriggerEl, {
+    delay: { show: 500, hide: 0 },
+  });
 });
 
-window.api.showMenu((pos) => {
-  document.querySelector('body').classList.add('menu-visible');
-  menu.show(pos);
-});
-
+// This is helpful during development as it shows us when the renderer process has
+// finished reloading.
 window.api.log("Successfully loaded Kando's renderer process.");

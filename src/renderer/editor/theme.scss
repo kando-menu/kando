@@ -1,0 +1,274 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// Bootstrap uses CSS variables for colors. We define some colors here and use them
+// throughout the application.
+$kando-text-color: #c4c4c4;
+$kando-highlight-color: #ffc8c8;
+
+// We use a custom theme for Bootstrap. It's mostly about changing the colors.
+[data-bs-theme='kando'] {
+  --bs-body-color: #{$kando-text-color};
+  --bs-heading-color: #{$kando-text-color};
+  --bs-code-color: #{$kando-highlight-color};
+  --bs-border-radius: 0.75rem;
+  --bs-border-width: 0;
+  --bs-body-bg: rgba(0, 0, 0, 0.8);
+  --bs-emphasis-color: rgba(255, 255, 255);
+  --bs-link-color: #{$kando-highlight-color};
+
+  // The secondary button is used most of the time. We want it to be a bit darker than
+  // the default.
+  .btn-secondary {
+    --bs-btn-bg: #{rgba(70, 70, 70, 0.8)};
+    --bs-btn-hover-bg: #{lighten(rgba(70, 70, 70, 0.8), 5%)};
+    --bs-btn-active-bg: #{lighten(rgba(70, 70, 70, 0.8), 10%)};
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-border-color: transparent;
+  }
+
+  // We use the accordion in the sidebar, so we need to make it look good there. It's
+  // mostly about removing borders and backgrounds.
+  .accordion {
+    --bs-accordion-padding-x: 1rem;
+    --bs-accordion-padding-y: 0.75rem;
+    --bs-accordion-btn-padding-x: 1rem;
+    --bs-accordion-btn-padding-y: 0.75rem;
+    --bs-accordion-border-width: 0;
+    --bs-accordion-btn-color: var(--bs-heading-color);
+    --bs-accordion-bg: transparent;
+    --bs-accordion-active-bg: transparent;
+    --bs-accordion-active-color: var(--bs-code-color);
+    --bs-accordion-btn-focus-border-color-dark: transparent;
+    --bs-accordion-btn-focus-border-color: transparent;
+    --bs-accordion-btn-focus-box-shadow: none;
+    --bs-accordion-btn-bg: transparent;
+    --bs-accordion-btn-active-icon: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23ffc8c8%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e');
+    --bs-accordion-btn-icon: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23c4c4c4%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e');
+  }
+
+  // The carousel is used for the tutorial. As it's displayed in a pretty small window, we
+  // need to reduce the padding and the caption size.
+  .carousel {
+    --bs-carousel-caption-padding-y: 0.25rem;
+    --bs-carousel-caption-spacer: 0.25rem;
+  }
+
+  // We make the tooltip background a bit darker.
+  .tooltip {
+    --bs-tooltip-bg: #{rgba(220, 220, 220, 0.99)};
+  }
+
+  .nav-tabs {
+    --bs-nav-tabs-link-active-color: white;
+    --bs-nav-link-color: #{$kando-text-color};
+    --bs-link-hover-color: white;
+  }
+}
+
+// We use the Neucha font for the tutorial.
+@font-face {
+  font-family: 'Neucha';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../assets/fonts/Neucha-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cantarell';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../assets/fonts/Cantarell-Regular.ttf') format('truetype');
+}
+
+#kando {
+  font-family: 'Cantarell', sans-serif;
+}
+
+.kando-font {
+  font-family: 'Neucha', cursive;
+}
+
+// General styling for the editor UI -----------------------------------------------------
+
+// Make buttons respond to clicks by moving down a bit.
+.btn {
+  &.dark {
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
+
+    // Center text.
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: rgba(20, 20, 20, 0.8);
+    }
+
+    &:active {
+      border: none;
+      transform: translateY(1px);
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.counter {
+  font-size: 0.85em;
+  border-radius: 30%;
+  padding: 0.2em 0.2em 0 0.2em;
+  margin: 0 0.2em;
+  background-color: rgba(80, 80, 80, 0.8);
+}
+
+// The Sidebar ---------------------------------------------------------------------------
+
+#hide-sidebar-button,
+#show-sidebar-button {
+  width: 45px;
+  height: 45px;
+}
+
+#show-sidebar-button {
+  border-bottom-right-radius: 50%;
+  left: 10px;
+  top: 10px;
+}
+
+#hide-sidebar-button {
+  right: -40px;
+  top: 15px;
+}
+
+#kando-editor-sidebar {
+  .sidebar-item {
+    border-radius: var(--bs-border-radius);
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  }
+
+  // Add a hover effect to the accordion's header.
+  .accordion-header {
+    transition: background-color 250ms ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  .accordion-collapse > div {
+    padding: 0 var(--bs-accordion-btn-padding-x) var(--bs-accordion-btn-padding-y)
+      var(--bs-accordion-btn-padding-x);
+  }
+
+  .accordion-button i {
+    padding-right: 0.2rem;
+  }
+
+  // Tweak the color and size of the carousel's indicators.
+  .carousel-indicators {
+    top: 0.5rem;
+    bottom: auto;
+  }
+
+  .carousel-caption {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 50%, transparent);
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 2rem 1rem 0 1rem;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: none !important;
+  }
+}
+
+// The Editor ----------------------------------------------------------------------------
+
+#hide-editor-button,
+#show-editor-button {
+  width: 45px;
+  height: 45px;
+}
+
+#show-editor-button {
+  border-top-left-radius: 50%;
+  right: 10px;
+  bottom: 10px;
+}
+
+#hide-editor-button {
+  right: -55px;
+  top: 0px;
+}
+
+#kando-editor-background {
+  background-color: rgb(29, 103, 187);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 2px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 50%, transparent 0px, rgba(0, 0, 0, 0.5) 100%);
+  background-size:
+    100px 100px,
+    100px 100px,
+    20px 20px,
+    20px 20px,
+    100% 100%;
+  background-position:
+    -1px -1px,
+    -1px -1px,
+    0px 0px,
+    0px 0px,
+    0px 0px;
+
+  border-image-source: url('../../assets/images/border.svg');
+  border-image-slice: 40% fill;
+  border-image-width: 70px 70px;
+  border-image-outset: 0;
+}
+
+#kando-editor-toolbar {
+  .nav-tabs {
+    font-size: 1.5rem;
+
+    .nav-link {
+      background-color: rgba(0, 0, 0, 0.3);
+
+      &.active {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+    }
+  }
+}
+
+#kando-editor-toolbar-content {
+  border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+}

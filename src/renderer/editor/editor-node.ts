@@ -8,31 +8,17 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-menu-container {
-  transition: opacity 150ms ease;
+import { INode } from '../../common';
 
-  &.hidden {
-    opacity: 0;
-  }
-
-  // We want to delay the fade-out animation if a node is selected. Else the
-  // selected node would disappear before the position transition is finished.
-  &.selected {
-    transition-delay: 150ms;
-  }
-
-  .node {
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .item {
-    position: absolute;
-    border-radius: 50%;
-  }
-
-  // Hide deeper levels than grandchildren.
-  .node.grandchild > .node {
-    display: none;
-  }
+/**
+ * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
+ * represent submenus, leaf nodes represent actual menu items. This interface extends the
+ * INode interface with properties which are only used in the menu editor.
+ */
+export interface IEditorNode extends INode {
+  /**
+   * The visual representation of this menu item. This is a div element which is created
+   * when the editor is opened.
+   */
+  itemDiv?: HTMLElement;
 }

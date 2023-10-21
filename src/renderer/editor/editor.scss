@@ -1,0 +1,178 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// The menu editor consists of several components:
+// * The info-sidebar is shown alongside the pie menu and can be shown or hidden
+//   independently from the main editor. It is shown if the main #kando container has
+//   the classes 'menu-visible' and 'sidebar-visible'.
+// * The other editor components such as the editor-toolbar at the bottom of the screen
+//   or the menu configuration widgets in the screen's center. These are drawn on top of
+//   the actual pie menu, effectively hiding it during editing. These UI elements are
+//   shown if the main #kando container has the classes 'menu-visible' and
+//   'editor-visible'.
+
+// Handle pointer events -----------------------------------------------------------------
+
+// First, let's take care of the user input. As the editor UI elements are drawn on top of
+// the actual pie menu, we have to make sure that they do not intercept pointer events
+// if the editor is hidden. An exception are the buttons for showing the sidebar or for
+// entering the edit mode.
+#kando-editor-container,
+#kando.menu-visible.editor-visible:not(.sidebar-visible) #kando-editor-sidebar,
+#kando.menu-visible.editor-visible:not(.sidebar-visible) #kando-editor-sidebar > *,
+#kando.menu-visible.editor-visible #show-editor-button {
+  pointer-events: none;
+}
+
+#kando.menu-visible.editor-visible #kando-editor-container,
+#kando.menu-visible.sidebar-visible #kando-editor-sidebar > *,
+#kando.menu-visible:not(.sidebar-visible) #show-sidebar-button,
+#kando.menu-visible:not(.editor-visible) #show-editor-button {
+  pointer-events: all;
+}
+
+// The Sidebar ---------------------------------------------------------------------------
+
+// Positioning and animations of the show- and hide-sidebar buttons.
+
+#show-sidebar-button,
+#hide-sidebar-button {
+  position: absolute;
+  opacity: 0;
+  font-size: 1.5rem;
+  transform: translateX(-20px);
+
+  i {
+    top: 0;
+  }
+}
+
+#kando.menu-visible:not(.sidebar-visible) #show-sidebar-button {
+  transform: translateX(0px);
+  opacity: 1;
+}
+
+#kando.menu-visible.sidebar-visible #hide-sidebar-button {
+  transform: translateX(0px);
+  opacity: 1;
+}
+
+#kando-editor-sidebar {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 500px;
+
+  .sidebar-item {
+    overflow: hidden;
+    margin: 15px;
+
+    opacity: 0;
+    transform: translateX(-20px);
+
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
+  }
+
+  @for $i from 1 through 10 {
+    .sidebar-item:nth-child(#{$i}) {
+      transition-delay: #{($i - 1) * 30}ms;
+    }
+  }
+}
+
+#kando.menu-visible.sidebar-visible .sidebar-item {
+  opacity: 1;
+  transform: translateX(0px);
+}
+
+// The Edit Mode -------------------------------------------------------------------------
+
+#show-editor-button,
+#hide-editor-button {
+  position: absolute;
+  opacity: 0;
+  font-size: 1.5rem;
+  transform: translateY(20px);
+
+  i {
+    top: 0;
+  }
+}
+
+#kando.menu-visible:not(.editor-visible) #show-editor-button {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+#kando.menu-visible.editor-visible #hide-editor-button {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+#kando-editor-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 250ms ease;
+  opacity: 0;
+}
+
+.editor-visible #kando-editor-background {
+  opacity: 1;
+}
+
+#kando-editor-toolbar {
+  position: absolute;
+  bottom: 10px;
+  left: 10%;
+  width: 80%;
+  opacity: 0;
+  height: 250px;
+
+  transform: translateY(20px);
+
+  transition:
+    height 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+    bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+    transform 150ms ease,
+    opacity 150ms ease;
+
+  .nav-tabs {
+    gap: 8px;
+
+    .nav-link {
+      padding-bottom: 0;
+    }
+  }
+
+  &.large {
+    height: 80vh;
+    bottom: 10vh;
+  }
+}
+
+#kando.menu-visible.editor-visible #kando-editor-toolbar {
+  transform: none;
+  opacity: 1;
+}
+
+// Other Editor Components ---------------------------------------------------------------
+
+.swirl {
+  display: inline-block;
+  background-image: url(../../assets/images/swirl.svg);
+  width: 160px;
+  height: 14px;
+}
