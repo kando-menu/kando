@@ -280,6 +280,10 @@ document.querySelector('#shortcut-button-4').addEventListener('click', () => {
   ]);
 });
 
+document.querySelector('#blog-post-button').addEventListener('click', () => {
+  window.api.openURI('https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8');
+});
+
 document.querySelector('#url-button').addEventListener('click', () => {
   window.api.openURI('https://github.com/kando-menu/kando');
 });
