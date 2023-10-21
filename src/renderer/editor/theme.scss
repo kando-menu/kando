@@ -246,6 +246,11 @@ $kando-highlight-color: #ffc8c8;
     0px 0px,
     0px 0px,
     0px 0px;
+
+  border-image-source: url('../../assets/images/border.svg');
+  border-image-slice: 40% fill;
+  border-image-width: 70px 70px;
+  border-image-outset: 0;
 }
 
 #kando-editor-toolbar {
