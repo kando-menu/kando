@@ -58,6 +58,7 @@
     "bootstrap": "^5.3.1",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.1.0",
     "material-symbols": "^0.13.1",
     "node-addon-api": "^7.0.0"
   }
