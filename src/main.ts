@@ -30,18 +30,18 @@ if (!gotTheLock) {
   process.exit(0);
 }
 
+// Start the app. We import the KandoApp class here make the code above as fast as
+// possible.
+import { KandoApp } from './main/app';
+import { Notification } from 'electron';
+import path from 'path';
+
 // It is not very nice that electron stores all its cache data in the user's config
 // directory. Until https://github.com/electron/electron/pull/34337 is merged, we
 // move most of the stuff to a separate directory to make it easier to clean up.
 app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
 app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
 app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
-
-// Start the app. We import the KandoApp class here make the code above as fast as
-// possible.
-import { KandoApp } from './main/app';
-import { Notification } from 'electron';
-import path from 'path';
 
 const kando = new KandoApp();
 
