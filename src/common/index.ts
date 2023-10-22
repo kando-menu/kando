@@ -43,8 +43,11 @@ export interface INode {
   /** The name of the menu item. This may be displayed with some kind of label. */
   name: string;
 
-  /** The icon of the menu item. For now, this can be one of the material icon names. */
+  /** The icon of the menu item. */
   icon: string;
+
+  /** The theme from which the above icon should be used. */
+  iconTheme: string;
 
   /**
    * The child nodes of this menu item. If this contains items, the node represents a
