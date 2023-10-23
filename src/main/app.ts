@@ -9,10 +9,11 @@
 // SPDX-License-Identifier: MIT
 
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu } from 'electron';
-import { Backend, getBackend } from './backends';
-import { INode } from '../common';
-const Settings = require('electron-store');
 import path from 'path';
+
+import { Backend, getBackend } from './backends';
+import { INode, IMenuSettings, IAppSettings } from '../common';
+import { Settings } from './settings';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -40,11 +41,21 @@ export class KandoApp {
   // will be possible to disable this icon.
   private tray: Tray;
 
+  private appSettings = new Settings<IAppSettings>({
+    file: 'config.json',
+    defaults: {
+      menuTheme: 'foo',
+      editorTheme: 'bar',
+    },
+  });
+
   // This is the settings object which is used to store the settings in the
   // user's home directory.
-  private menuSettings = new Settings({
-    name: 'menus',
-    defaults: { menus: [] },
+  private menuSettings = new Settings<IMenuSettings>({
+    file: 'menus.json',
+    defaults: {
+      menus: [],
+    },
   });
 
   /** This is called when the app is started. It initializes the backend and the window. */
@@ -54,8 +65,16 @@ export class KandoApp {
     }
 
     if (this.menuSettings.get('menus').length === 0) {
-      this.menuSettings.set('menus', [this.createExampleMenu()]);
+      this.menuSettings.set({ menus: [this.createExampleMenu()] });
     }
+
+    this.appSettings.onChange('menuTheme', (newValue, oldValue) => {
+      console.log('Menu theme changed from ' + oldValue + ' to ' + newValue);
+    });
+
+    this.appSettings.onChange('editorTheme', (newValue, oldValue) => {
+      console.log('Editor theme changed from ' + oldValue + ' to ' + newValue);
+    });
 
     // Initialize the backend, the window and the IPC communication to the renderer
     // process.
@@ -128,9 +147,9 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        const root = this.menuSettings.get('menus')[0];
+        const menu = this.menuSettings.get('menus')[0];
 
-        this.window.webContents.send('show-menu', root, {
+        this.window.webContents.send('show-menu', menu.nodes, {
           x: info.pointerX - workarea.x,
           y: info.pointerY - workarea.y,
         });
@@ -255,6 +274,10 @@ export class KandoApp {
 
     addChildren(root, 0);
 
-    return root;
+    return {
+      nodes: root,
+      shortcut: 'Control+Space',
+      centered: false,
+    };
   }
 }
