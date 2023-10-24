@@ -70,14 +70,6 @@ export class KandoApp {
       this.menuSettings.set({ menus: [this.createExampleMenu()] });
     }
 
-    this.appSettings.onChange('menuTheme', (newValue, oldValue) => {
-      console.log('Menu theme changed from ' + oldValue + ' to ' + newValue);
-    });
-
-    this.appSettings.onChange('editorTheme', (newValue, oldValue) => {
-      console.log('Editor theme changed from ' + oldValue + ' to ' + newValue);
-    });
-
     // Initialize the backend, the window and the IPC communication to the renderer
     // process.
     await this.backend.init();
