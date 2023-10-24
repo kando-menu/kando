@@ -11,6 +11,7 @@
 import { app } from 'electron';
 import * as fs from 'fs-extra';
 import chokidar from 'chokidar';
+import isEqual from 'lodash.isequal';
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -210,7 +211,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     for (const key in newSettings) {
       if (
         Object.prototype.hasOwnProperty.call(newSettings, key) &&
-        newSettings[key] !== oldSettings[key]
+        !isEqual(newSettings[key], oldSettings[key])
       ) {
         this.emit(key, this.settings[key], oldSettings[key]);
       }
