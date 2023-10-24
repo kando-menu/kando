@@ -70,11 +70,7 @@ interface Options<T> {
  *
  * @example
  *   ```ts
- *   interface MyOptions {
- *   foo: string;
- *   }
- *
- *   const settings = new Settings<MyOptions>({defaults: { foo: 'bar' }});
+ *   const settings = new Settings({defaults: { foo: 'bar' }});
  *
  *   settings.onChange('foo', (newValue, oldValue) => {
  *   console.log(`foo changed from ${oldValue} to ${newValue}`);
