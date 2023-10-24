@@ -45,8 +45,8 @@ export class KandoApp {
     file: 'config.json',
     directory: app.getPath('userData'),
     defaults: {
-      menuTheme: 'foo',
-      editorTheme: 'bar',
+      menuTheme: 'none',
+      editorTheme: 'none',
     },
   });
 
@@ -62,10 +62,12 @@ export class KandoApp {
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
+    // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
     }
 
+    // Create a default menu if no menu is defined yet.
     if (this.menuSettings.get('menus').length === 0) {
       this.menuSettings.set({ menus: [this.createExampleMenu()] });
     }
@@ -144,6 +146,7 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
+        // For now we only show the example menu.
         const menu = this.menuSettings.get('menus')[0];
 
         this.window.webContents.send('show-menu', menu.nodes, {
@@ -229,6 +232,7 @@ export class KandoApp {
     });
   }
 
+  /** This creates an example menu which can be used for testing. */
   private createExampleMenu() {
     const root: INode = {
       name: 'Node',
