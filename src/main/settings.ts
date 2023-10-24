@@ -21,6 +21,15 @@ type PropertyChangeEvents<T> = {
 };
 
 /**
+ * This type is used to make all properties of an object readonly. It is used to make sure
+ * that the settings object cannot be modified from outside of the class except through
+ * the `set()` method.
+ */
+type DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];
+};
+
+/**
  * This class is used to emit events when a property of the Settings object changes. The
  * main purpose of this class is to provide type safety when connecting to events: The
  * `onChange()` method only accepts keys from `T` and the listener function must take two
@@ -121,9 +130,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    *   is returned.
    * @returns The current settings object or the value of a single property.
    */
-  public get(): Readonly<T>;
-  public get<K extends keyof T>(key: K): Readonly<T[K]>;
-  public get<K extends keyof T>(key?: K): Readonly<T> | Readonly<T[K]> {
+  public get(): DeepReadonly<T>;
+  public get<K extends keyof T>(key: K): DeepReadonly<T[K]>;
+  public get<K extends keyof T>(key?: K): DeepReadonly<T> | DeepReadonly<T[K]> {
     if (key === undefined) {
       return this.settings;
     } else {
