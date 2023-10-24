@@ -43,8 +43,11 @@ export interface INode {
   /** The name of the menu item. This may be displayed with some kind of label. */
   name: string;
 
-  /** The icon of the menu item. For now, this can be one of the material icon names. */
+  /** The icon of the menu item. */
   icon: string;
+
+  /** The theme from which the above icon should be used. */
+  iconTheme: string;
 
   /**
    * The child nodes of this menu item. If this contains items, the node represents a
@@ -58,4 +61,45 @@ export interface INode {
    * be distributed more or less evenly around.
    */
   angle?: number;
+}
+
+/**
+ * This interface describes a menu. It contains the root node of the menu, the shortcut to
+ * open the menu and a flag indicating whether the menu should be opened in the center of
+ * the screen or at the mouse pointer.
+ *
+ * This interface is used to describe one of the configured menus in the settings file.
+ */
+export interface IMenu {
+  /** The root node of the menu. */
+  nodes: INode;
+
+  /** The shortcut to open the menu. */
+  shortcut: string;
+
+  /**
+   * If true, the menu will open in the screen's center. Else it will open at the mouse
+   * pointer.
+   */
+  centered: boolean;
+}
+
+/**
+ * This interface describes the content of the menu settings file. It contains the
+ * configured menus.
+ */
+export interface IMenuSettings {
+  menus: Array<IMenu>;
+}
+
+/**
+ * This interface describes the content of the app settings file. It contains the names of
+ * the themes to use for the menu and the editor.
+ */
+export interface IAppSettings {
+  /** The name of the theme to use for the menu. */
+  menuTheme: string;
+
+  /** The name of the theme to use for the editor. */
+  editorTheme: string;
 }

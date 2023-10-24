@@ -8,10 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, BrowserWindow, ipcMain, shell, Tray, Menu } from 'electron';
-import { Backend, getBackend } from './backends';
-import { INode } from '../common';
+import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
+
+import { Backend, getBackend } from './backends';
+import { INode, IMenuSettings, IAppSettings } from '../common';
+import { Settings } from './settings';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -39,10 +41,35 @@ export class KandoApp {
   // will be possible to disable this icon.
   private tray: Tray;
 
+  private appSettings = new Settings<IAppSettings>({
+    file: 'config.json',
+    directory: app.getPath('userData'),
+    defaults: {
+      menuTheme: 'none',
+      editorTheme: 'none',
+    },
+  });
+
+  // This is the settings object which is used to store the settings in the
+  // user's home directory.
+  private menuSettings = new Settings<IMenuSettings>({
+    file: 'menus.json',
+    directory: app.getPath('userData'),
+    defaults: {
+      menus: [],
+    },
+  });
+
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
+    // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
+    }
+
+    // Create a default menu if no menu is defined yet.
+    if (this.menuSettings.get('menus').length === 0) {
+      this.menuSettings.set({ menus: [this.createExampleMenu()] });
     }
 
     // Initialize the backend, the window and the IPC communication to the renderer
@@ -82,6 +109,9 @@ export class KandoApp {
     if (this.backend != null) {
       await this.backend.unbindAllShortcuts();
     }
+
+    this.appSettings.close();
+    this.menuSettings.close();
   }
 
   /**
@@ -116,50 +146,10 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        const root: INode = {
-          name: 'Node',
-          icon: 'open_with',
-          children: [],
-        };
+        // For now we only show the example menu.
+        const menu = this.menuSettings.get('menus')[0];
 
-        // This is currently used to create the test menu. It defines the number of children
-        // per level. The first number is the number of children of the root node, the second
-        // number is the number of children of each child node and so on.
-        const CHILDREN_PER_LEVEL = [8, 7, 7];
-
-        const TEST_ICONS = [
-          'play_circle',
-          'public',
-          'arrow_circle_right',
-          'terminal',
-          'settings',
-          'apps',
-          'arrow_circle_left',
-          'fullscreen',
-        ];
-
-        const addChildren = (parent: INode, level: number) => {
-          if (level < CHILDREN_PER_LEVEL.length) {
-            parent.children = [];
-            for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
-              const node: INode = {
-                name: `${parent.name} ${i}`,
-                icon: TEST_ICONS[i % TEST_ICONS.length],
-                children: [],
-              };
-              parent.children.push(node);
-              addChildren(node, level + 1);
-            }
-          }
-        };
-
-        addChildren(root, 0);
-
-        // Print some statistics.
-        const count = CHILDREN_PER_LEVEL.reduce((a, b) => a * b, 1);
-        console.log(`Created ${count} menu nodes!`);
-
-        this.window.webContents.send('show-menu', root, {
+        this.window.webContents.send('show-menu', menu.nodes, {
           x: info.pointerX - workarea.x,
           y: info.pointerY - workarea.y,
         });
@@ -240,5 +230,55 @@ export class KandoApp {
       this.window.hide();
       shell.openExternal(uri);
     });
+  }
+
+  /** This creates an example menu which can be used for testing. */
+  private createExampleMenu() {
+    const root: INode = {
+      name: 'Node',
+      icon: 'open_with',
+      iconTheme: 'material-symbols-rounded',
+      children: [],
+    };
+
+    // This is currently used to create the test menu. It defines the number of children
+    // per level. The first number is the number of children of the root node, the second
+    // number is the number of children of each child node and so on.
+    const CHILDREN_PER_LEVEL = [8, 7, 7];
+
+    const TEST_ICONS = [
+      'play_circle',
+      'public',
+      'arrow_circle_right',
+      'terminal',
+      'settings',
+      'apps',
+      'arrow_circle_left',
+      'fullscreen',
+    ];
+
+    const addChildren = (parent: INode, level: number) => {
+      if (level < CHILDREN_PER_LEVEL.length) {
+        parent.children = [];
+        for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
+          const node: INode = {
+            name: `${parent.name} ${i}`,
+            icon: TEST_ICONS[i % TEST_ICONS.length],
+            iconTheme: 'material-symbols-rounded',
+            children: [],
+          };
+          parent.children.push(node);
+          addChildren(node, level + 1);
+        }
+      }
+    };
+
+    addChildren(root, 0);
+
+    return {
+      nodes: root,
+      shortcut: 'Control+Space',
+      centered: false,
+    };
   }
 }
