@@ -113,6 +113,9 @@ export class KandoApp {
     if (this.backend != null) {
       await this.backend.unbindAllShortcuts();
     }
+
+    this.appSettings.close();
+    this.menuSettings.close();
   }
 
   /**

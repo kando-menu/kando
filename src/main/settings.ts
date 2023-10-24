@@ -151,16 +151,19 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * @param newSettings The new settings object.
    */
   public set(newSettings: Partial<T>) {
-    const oldSettings = { ...this.settings };
-    this.settings = { ...this.settings, ...newSettings };
-    this.saveSettings(this.settings);
-    this.emitEvents(this.settings, oldSettings);
+    if (this.watcher) {
+      const oldSettings = { ...this.settings };
+      this.settings = { ...this.settings, ...newSettings };
+      this.saveSettings(this.settings);
+      this.emitEvents(this.settings, oldSettings);
+    }
   }
 
   /** Closes the watcher and stops listening for changes. */
-  public destroy() {
+  public close() {
     if (this.watcher) {
       this.watcher.close();
+      this.watcher = null;
     }
   }
 
