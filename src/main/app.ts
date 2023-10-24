@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, BrowserWindow, ipcMain, shell, Tray, Menu } from 'electron';
+import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
 
 import { Backend, getBackend } from './backends';
@@ -43,6 +43,7 @@ export class KandoApp {
 
   private appSettings = new Settings<IAppSettings>({
     file: 'config.json',
+    directory: app.getPath('userData'),
     defaults: {
       menuTheme: 'foo',
       editorTheme: 'bar',
@@ -53,6 +54,7 @@ export class KandoApp {
   // user's home directory.
   private menuSettings = new Settings<IMenuSettings>({
     file: 'menus.json',
+    directory: app.getPath('userData'),
     defaults: {
       menus: [],
     },

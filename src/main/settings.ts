@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { app } from 'electron';
 import * as fs from 'fs-extra';
 import chokidar from 'chokidar';
 import isEqual from 'lodash.isequal';
@@ -58,8 +57,8 @@ class PropertyChangeEmitter<T> {
  * Settings class below for details.
  */
 interface Options<T> {
-  directory?: string;
-  file?: string;
+  file: string;
+  directory: string;
   defaults: T;
 }
 
@@ -108,10 +107,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   constructor(options: Options<T>) {
     super();
 
-    const directory = options.directory || app.getPath('userData');
-    const file = options.file || 'settings.json';
-
-    this.filePath = directory + '/' + file;
+    this.filePath = options.directory + '/' + options.file;
     this.defaults = options.defaults;
     this.settings = this.loadSettings(this.defaults);
 
