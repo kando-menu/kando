@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import chokidar from 'chokidar';
 import isEqual from 'lodash.isequal';
 
