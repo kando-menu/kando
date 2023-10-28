@@ -15,8 +15,8 @@ import { IKeySequence } from '../../../../common';
 import { LinuxKeyCodes } from '../keys';
 
 /**
- * This backend uses the xdotool command line tool to simulate key presses and mouse
- * movements. It also uses the X11 library to get the currently focused window.
+ * This backend uses the XTest extension via native C++ code to simulate key presses and
+ * mouse movements. It also uses the X11 library to get the currently focused window.
  *
  * This backend is the default on X11-based Linux desktops. It should work on most desktop
  * environments, but you could also create derived backends for your specific desktop
