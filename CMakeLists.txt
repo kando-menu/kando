@@ -25,4 +25,5 @@ endif ()
 
 if (UNIX AND NOT APPLE)
   add_subdirectory(src/main/backends/linux/x11/native)
+  add_subdirectory(src/main/backends/linux/wlroots/native)
 endif ()

@@ -49,6 +49,11 @@ export function getBackend(): Backend | null {
       return new KDEWaylandBackend();
     }
 
+    if (desktop === 'Hyprland') {
+      const { WLRBackend } = require('./linux/wlroots/backend');
+      return new WLRBackend();
+    }
+
     if (session === 'x11') {
       const { X11Backend } = require('./linux/x11/backend');
       return new X11Backend();
