@@ -40,21 +40,30 @@ You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-
 
 
 The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
+
+Implementing a menu like Kando is pretty hard on Wayland.
+Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not easily possible.
+
+Nevertheless, I have managed to implement the prototype for several Wayland-based desktop environments.
 I have tested it on the following platforms:
 
-- [x] **Windows** 10 / 11
-- [x] **Linux**
-  - GNOME (X11 and Wayland¹)
-  - KDE (X11 and Wayland¹)
-  - XFCE
-  - MATE
-  - Budgie
-- [ ] macOS is not yet supported, but I plan to add support for it in the future.
+OS | Status | Notes
+--- | --- | ---
+Windows 10 | :heavy_check_mark: |
+Windows 11 | :heavy_check_mark: |
+MacOS | :x: | Not yet supported, but I plan to add support for it in the future.
+GNOME (X11) | :heavy_check_mark: |
+GNOME (Wayland) | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
+KDE (X11) | :heavy_check_mark: |
+KDE (Wayland) | :heavy_check_mark: | Uses the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.
+XFCE | :heavy_check_mark: |
+MATE | :heavy_check_mark: |
+Budgie | :heavy_check_mark: |
+Cinnamon | :heavy_check_mark: |
+LXQt | :heavy_check_mark: |
+LXDE | :x: | Does not support compositing by default.
+Openbox | :x: | Does not support compositing by default.
 
-¹ Implementing a menu like Kando is pretty hard on Wayland due to the client isolation.
-Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not possible.
-**For Wayland support on GNOME, I have created a [GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with. On KDE, I have used the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.**
-With a similar approach, Kando could also be made to work on other Wayland-based desktop environments.
 
 # :arrow_down: Installation
 
