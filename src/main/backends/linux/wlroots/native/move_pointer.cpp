@@ -69,8 +69,8 @@ void movePointer(const Napi::CallbackInfo& info) {
     return;
   }
 
-  auto dx = info[0].As<Napi::Number>().Int32Value();
-  auto dy = info[1].As<Napi::Number>().Int32Value();
+  wl_fixed_t dx = info[0].As<Napi::Number>().Int32Value();
+  wl_fixed_t dy = info[1].As<Napi::Number>().Int32Value();
 
   std::cout << "Moving pointer by " << dx << ", " << dy << std::endl;
 
