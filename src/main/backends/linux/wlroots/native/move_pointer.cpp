@@ -120,8 +120,10 @@ void movePointer(const Napi::CallbackInfo& info) {
   std::cout << "Moved pointer." << std::endl;
 }
 
-// This function is called when the module is loaded in Node.js. It registers the
-// movePointer function.
+/**
+ * This function is called when the module is loaded in Node.js. It registers the
+ * movePointer function.
+ */
 void init(Napi::Env env, Napi::Object exports) {
   exports.Set("movePointer", Napi::Function::New(env, movePointer));
 }
