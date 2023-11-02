@@ -69,8 +69,8 @@ void movePointer(const Napi::CallbackInfo& info) {
     return;
   }
 
-  wl_fixed_t dx = info[0].As<Napi::Number>().Int32Value();
-  wl_fixed_t dy = info[1].As<Napi::Number>().Int32Value();
+  int32_t dx = info[0].As<Napi::Number>().Int32Value();
+  int32_t dy = info[1].As<Napi::Number>().Int32Value();
 
   std::cout << "Moving pointer by " << dx << ", " << dy << std::endl;
 
@@ -107,8 +107,9 @@ void movePointer(const Napi::CallbackInfo& info) {
   // Create a virtual pointer device and move the pointer.
   wdata.pointer =
       zwlr_virtual_pointer_manager_v1_create_virtual_pointer(wdata.manager, wdata.seat);
-
-  zwlr_virtual_pointer_v1_motion(wdata.pointer, 0, dx, dy);
+  zwlr_virtual_pointer_v1_motion(
+      wdata.pointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
+  zwlr_virtual_pointer_v1_frame(wdata.pointer);
   wl_display_roundtrip(display);
 
   // Clean up.
