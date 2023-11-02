@@ -47,22 +47,22 @@ Things like getting the mouse position before opening a window, simulating key p
 Nevertheless, I have managed to implement the prototype for several Wayland-based desktop environments.
 I have tested it on the following platforms:
 
-OS | Status | Notes
---- | --- | ---
-Windows 10 | :heavy_check_mark: |
-Windows 11 | :heavy_check_mark: |
-MacOS | :x: | Not yet supported, but I plan to add support for it in the future.
-GNOME (X11) | :heavy_check_mark: |
-GNOME (Wayland) | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
-KDE (X11) | :heavy_check_mark: |
-KDE (Wayland) | :heavy_check_mark: | Uses the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.
-XFCE | :heavy_check_mark: |
-MATE | :heavy_check_mark: |
-Budgie | :heavy_check_mark: |
-Cinnamon | :heavy_check_mark: |
-LXQt | :heavy_check_mark: |
-LXDE | :x: | Does not support compositing by default.
-Openbox | :x: | Does not support compositing by default.
+Tested Environment | Status | Notes
+:-- | :---: | ---
+<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 10 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 11 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> MacOS | :x: | Not yet supported, but I plan to add support for it in the future.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Uses the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> XFCE | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> MATE | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Budgie | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Cinnamon | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXQt | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :x: | Does not support compositing by default.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :x: | Does not support compositing by default.
 
 
 # :arrow_down: Installation
@@ -164,3 +164,7 @@ While direct contributions are the most awesome way to support the development, 
 **These awesome people have already donated to the development of my open-source projects:**
 
 [![Sponsors](https://schneegans.github.io/sponsors/sponsors.svg)](https://schneegans.github.io/sponsors/)
+
+## Credits
+
+This README uses icons from [Simple Icons](https://simpleicons.org/).
