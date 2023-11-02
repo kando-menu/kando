@@ -70,7 +70,7 @@ export class WLRBackend implements Backend {
    * @param dy The amount of vertical movement.
    */
   public async movePointer(dx: number, dy: number) {
-    // native.movePointer(dx, dy);
+    native.movePointer(dx, dy);
   }
 
   /**

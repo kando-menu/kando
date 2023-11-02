@@ -21,12 +21,12 @@
 
 namespace simulate_key {
 
-static void handle_global(void *data, struct wl_registry *registry,
-		uint32_t name, const char *interface, uint32_t version) {
+static void handle_global(void* data, struct wl_registry* registry, uint32_t name,
+    const char* interface, uint32_t version) {
 }
 
-static void handle_global_remove(void *data, struct wl_registry *registry,
-		uint32_t name) {
+static void handle_global_remove(
+    void* data, struct wl_registry* registry, uint32_t name) {
 }
 
 void simulateKey(const Napi::CallbackInfo& info) {
@@ -40,19 +40,19 @@ void simulateKey(const Napi::CallbackInfo& info) {
   bool    press   = info[1].As<Napi::Boolean>().Value();
 
   struct wl_display* display = wl_display_connect(nullptr);
-	if (display == nullptr) {
-		Napi::TypeError::New(env, "Failed to get Wayland display").ThrowAsJavaScriptException();
-	}
-
+  if (display == nullptr) {
+    Napi::TypeError::New(env, "Failed to get Wayland display")
+        .ThrowAsJavaScriptException();
+  }
 
   static const struct wl_registry_listener registry_listener = {
-	.global = handle_global,
-	.global_remove = handle_global_remove,
-};
+      .global        = handle_global,
+      .global_remove = handle_global_remove,
+  };
 
-  struct wl_registry *registry = wl_display_get_registry(display);
-	wl_registry_add_listener(registry, &registry_listener, NULL);
-	wl_display_roundtrip(display);
+  struct wl_registry* registry = wl_display_get_registry(display);
+  wl_registry_add_listener(registry, &registry_listener, NULL);
+  wl_display_roundtrip(display);
 }
 
 void init(Napi::Env env, Napi::Object exports) {

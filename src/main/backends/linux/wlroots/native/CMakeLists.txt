@@ -7,13 +7,20 @@ find_program(WAYLAND_SCANNER NAMES wayland-scanner)
 
 message(STATUS "Found wayland-scanner: ${WAYLAND_SCANNER}")
 
-add_custom_command(
-  OUTPUT virtual-keyboard-unstable-v1.h virtual-keyboard-unstable-v1.c
-  COMMAND ${WAYLAND_SCANNER} client-header ${CMAKE_CURRENT_SOURCE_DIR}/protocols/virtual-keyboard-unstable-v1.xml virtual-keyboard-unstable-v1.h
-  COMMAND ${WAYLAND_SCANNER} private-code ${CMAKE_CURRENT_SOURCE_DIR}/protocols/virtual-keyboard-unstable-v1.xml virtual-keyboard-unstable-v1.c
-  COMMENT "Generating virtual-keyboard-unstable-v1 protocol files")
+file(GLOB PROTOCOLS "${CMAKE_CURRENT_SOURCE_DIR}/protocols/*.xml")
 
-add_library(NativeWLR SHARED ${SOURCE_FILES} virtual-keyboard-unstable-v1.c ${CMAKE_JS_SRC})
+foreach(PROTOCOL ${PROTOCOLS})
+  get_filename_component(BASENAME ${PROTOCOL} NAME_WE)
+  add_custom_command(
+    OUTPUT ${BASENAME}.h ${BASENAME}.c
+    COMMAND ${WAYLAND_SCANNER} client-header ${PROTOCOL} ${BASENAME}.h
+    COMMAND ${WAYLAND_SCANNER} private-code ${PROTOCOL} ${BASENAME}.c
+    COMMENT "Generating ${BASENAME} protocol files"
+  )
+  list(APPEND SOURCE_FILES ${BASENAME}.c)
+endforeach()
+
+add_library(NativeWLR SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 
 set_target_properties(NativeWLR PROPERTIES PREFIX "" SUFFIX ".node")
 target_link_libraries(NativeWLR ${CMAKE_JS_LIB})

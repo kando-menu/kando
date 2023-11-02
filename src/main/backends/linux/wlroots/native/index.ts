@@ -21,7 +21,7 @@ export interface Native {
    * @param dx The horizontal movement in pixels.
    * @param dy The vertical movement in pixels.
    */
-  // movePointer(dx: number, dy: number): void;
+  movePointer(dx: number, dy: number): void;
 
   /**
    * This simulates a key press or release.
