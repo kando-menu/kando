@@ -40,21 +40,30 @@ You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-
 
 
 The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
+
+Implementing a menu like Kando is pretty hard on Wayland.
+Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not easily possible.
+
+Nevertheless, I have managed to implement the prototype for several Wayland-based desktop environments.
 I have tested it on the following platforms:
 
-- [x] **Windows** 10 / 11
-- [x] **Linux**
-  - GNOME (X11 and Wayland¹)
-  - KDE (X11 and Wayland¹)
-  - XFCE
-  - MATE
-  - Budgie
-- [ ] macOS is not yet supported, but I plan to add support for it in the future.
+Tested Environment | Status | Notes
+:-- | :---: | ---
+<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 10 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 11 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> MacOS | :x: | Not yet supported, but I plan to add support for it in the future.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Uses the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> XFCE | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> MATE | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Budgie | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Cinnamon | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXQt | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :x: | Does not support compositing by default.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :x: | Does not support compositing by default.
 
-¹ Implementing a menu like Kando is pretty hard on Wayland due to the client isolation.
-Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not possible.
-**For Wayland support on GNOME, I have created a [GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with. On KDE, I have used the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.**
-With a similar approach, Kando could also be made to work on other Wayland-based desktop environments.
 
 # :arrow_down: Installation
 
@@ -155,3 +164,7 @@ While direct contributions are the most awesome way to support the development, 
 **These awesome people have already donated to the development of my open-source projects:**
 
 [![Sponsors](https://schneegans.github.io/sponsors/sponsors.svg)](https://schneegans.github.io/sponsors/)
+
+## Credits
+
+This README uses icons from [Simple Icons](https://simpleicons.org/).
