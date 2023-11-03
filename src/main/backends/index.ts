@@ -50,8 +50,8 @@ export function getBackend(): Backend | null {
     }
 
     if (desktop === 'Hyprland') {
-      const { WLRBackend } = require('./linux/wlroots/backend');
-      return new WLRBackend();
+      const { HyprBackend } = require('./linux/hyprland/backend');
+      return new HyprBackend();
     }
 
     if (session === 'x11') {

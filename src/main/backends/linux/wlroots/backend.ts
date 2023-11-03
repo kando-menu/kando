@@ -8,15 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../../common';
 import { LinuxKeyCodes } from '../keys';
 
 /**
- * This backend uses wlr wayland protocols via native C++ code to implement the required
- * functionality. This backend is the default on wlroots-based Linux desktops.
+ * This is a partial implementation of the Backend interface for wlroots-based Wayland
+ * compositors. It can be used as a base class for other wlroots-based backends. It
+ * provides the following functionality:
+ *
+ * - Get the active window's name and class using the
+ *   wlr-foreign-toplevel-management-unstable-v1 protocol.
+ * - Move the mouse pointer using the wlr-virtual-pointer-unstable-v1 protocol.
+ * - Send key input using the virtual-keyboard-unstable-v1 protocol.
  */
 export class WLRBackend implements Backend {
   /**
@@ -35,31 +40,23 @@ export class WLRBackend implements Backend {
   public async init() {}
 
   /**
-   * This uses the X11 library to get the name and class of the currently focused window.
-   * In addition, it uses Electron's screen module to get the current pointer position.
+   * This uses the Wlr-foreign-toplevel-management-unstable-v1 Wayland protocol to get the
+   * name and class of the currently focused window.
    *
-   * @returns The name and class of the currently focused window as well as the current
-   *   pointer position.
+   * ATTENTION: This does not return the pointer position. This is because there is no
+   * Wayland protocol to get the pointer position. This has to be implemented in a
+   * compositor-specific derived backend.
+   *
+   * @returns The name and class of the currently focused window.
    */
   public async getWMInfo() {
     const window = native.getActiveWindow();
-    // const pointer = screen.getCursorScreenPoint();
-
-    // For some reason, this makes the method much faster. For now, I have no idea why.
-    // process.nextTick(() => {});
-
-    // return {
-    //   windowName: window ? window.name : '',
-    //   windowClass: window ? window.wmClass : '',
-    //   pointerX: pointer.x,
-    //   pointerY: pointer.y,
-    // };
 
     return {
       windowName: window ? window.name : '',
       windowClass: window ? window.wmClass : '',
-      pointerX: 500,
-      pointerY: 500,
+      pointerX: 0,
+      pointerY: 0,
     };
   }
 
@@ -111,31 +108,31 @@ export class WLRBackend implements Backend {
   }
 
   /**
-   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * X11, this uses Electron's globalShortcut module.
+   * This has to be implemented by a derived class. There is no compositer-agnostic way to
+   * handle shortcuts.
    *
    * @param shortcut The shortcut to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    /*
-    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
-      throw new Error('Shortcut is already in use.');
-    }
-    */
+    throw new Error('Not implemented.');
   }
 
   /**
-   * This unbinds a previously bound shortcut.
+   * This has to be implemented by a derived class. There is no compositer-agnostic way to
+   * handle shortcuts.
    *
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    // globalShortcut.unregister(shortcut.accelerator);
+    throw new Error('Not implemented.');
   }
 
-  /** This unbinds all previously bound shortcuts. */
+  /**
+   * This has to be implemented by a derived class. There is no compositer-agnostic way to
+   * handle shortcuts.
+   */
   public async unbindAllShortcuts() {
-    // globalShortcut.unregisterAll();
+    throw new Error('Not implemented.');
   }
 }
