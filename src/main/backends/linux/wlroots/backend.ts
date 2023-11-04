@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { native } from './native';
-import { Backend, Shortcut } from '../../backend';
+import { Backend, Shortcut, WMInfo } from '../../backend';
 import { IKeySequence } from '../../../../common';
 import { LinuxKeyCodes } from '../keys';
 
@@ -18,50 +18,13 @@ import { LinuxKeyCodes } from '../keys';
  * compositors. It can be used as a base class for other wlroots-based backends. It
  * provides the following functionality:
  *
- * - Get the active window's name and class using the
- *   wlr-foreign-toplevel-management-unstable-v1 protocol.
- * - Move the mouse pointer using the wlr-virtual-pointer-unstable-v1 protocol.
- * - Send key input using the virtual-keyboard-unstable-v1 protocol.
+ * - Moving the mouse pointer using the wlr-virtual-pointer-unstable-v1 protocol.
+ * - Sending key input using the virtual-keyboard-unstable-v1 protocol.
  */
-export class WLRBackend implements Backend {
+export abstract class WLRBackend implements Backend {
   /**
-   * Override this if another type is more suitable for your desktop environment.
-   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   *
-   * 'splash' seems to be a good choice for Hyprland.
-   *
-   * @returns 'splash'
-   */
-  public getWindowType() {
-    return 'normal';
-  }
-
-  /** This is called when the backend is created. Currently, this this does nothing. */
-  public async init() {}
-
-  /**
-   * This uses the Wlr-foreign-toplevel-management-unstable-v1 Wayland protocol to get the
-   * name and class of the currently focused window.
-   *
-   * ATTENTION: This does not return the pointer position. This is because there is no
-   * Wayland protocol to get the pointer position. This has to be implemented in a
-   * compositor-specific derived backend.
-   *
-   * @returns The name and class of the currently focused window.
-   */
-  public async getWMInfo() {
-    const window = native.getActiveWindow();
-
-    return {
-      windowName: window ? window.name : '',
-      windowClass: window ? window.wmClass : '',
-      pointerX: 0,
-      pointerY: 0,
-    };
-  }
-
-  /**
-   * Moves the pointer by the given amount using the native module.
+   * Moves the pointer by the given amount using the native module which uses the
+   * wlr-virtual-pointer-unstable-v1 Wayland protocol.
    *
    * @param dx The amount of horizontal movement.
    * @param dy The amount of vertical movement.
@@ -76,8 +39,8 @@ export class WLRBackend implements Backend {
 
   /**
    * This simulates a key sequence by sending the keys to the currently focused window
-   * using the XTest X11 extension. If one of the given keys in the sequence is not known,
-   * an exception will be thrown.
+   * using the virtual-keyboard-unstable-v1 Wayland protocol. If one of the given keys in
+   * the sequence is not known, an exception will be thrown.
    *
    * @param shortcut The keys to simulate.
    */
@@ -107,32 +70,12 @@ export class WLRBackend implements Backend {
     }
   }
 
-  /**
-   * This has to be implemented by a derived class. There is no compositer-agnostic way to
-   * handle shortcuts.
-   *
-   * @param shortcut The shortcut to simulate.
-   * @returns A promise which resolves when the shortcut has been simulated.
-   */
-  public async bindShortcut(shortcut: Shortcut) {
-    throw new Error('Not implemented.');
-  }
-
-  /**
-   * This has to be implemented by a derived class. There is no compositer-agnostic way to
-   * handle shortcuts.
-   *
-   * @param shortcut The shortcut to unbind.
-   */
-  public async unbindShortcut(shortcut: Shortcut) {
-    throw new Error('Not implemented.');
-  }
-
-  /**
-   * This has to be implemented by a derived class. There is no compositer-agnostic way to
-   * handle shortcuts.
-   */
-  public async unbindAllShortcuts() {
-    throw new Error('Not implemented.');
-  }
+  // These methods are abstract and need to be implemented by subclasses. See the docs
+  // of the methods in the Backend interface for more information.
+  abstract init(): Promise<void>;
+  abstract getWindowType(): string;
+  abstract getWMInfo(): Promise<WMInfo>;
+  abstract bindShortcut(shortcut: Shortcut): Promise<void>;
+  abstract unbindShortcut(shortcut: Shortcut): Promise<void>;
+  abstract unbindAllShortcuts(): Promise<void>;
 }

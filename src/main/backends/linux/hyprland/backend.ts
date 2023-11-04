@@ -11,7 +11,7 @@
 import { exec } from 'child_process';
 
 import { WLRBackend } from '../wlroots/backend';
-import { WMInfo, Shortcut } from '../../backend';
+import { Shortcut } from '../../backend';
 
 /**
  * This backend is used on Hyprland. It uses the generic wlroots backend and adds
@@ -19,6 +19,21 @@ import { WMInfo, Shortcut } from '../../backend';
  * utility.
  */
 export class HyprBackend extends WLRBackend {
+  /** This is called when the backend is created. Currently, this this does nothing. */
+  public async init() {}
+
+  /**
+   * Override this if another type is more suitable for your desktop environment.
+   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
+   *
+   * 'splash' seems to be a good choice for Hyprland.
+   *
+   * @returns 'splash'
+   */
+  public getWindowType() {
+    return 'splash';
+  }
+
   /**
    * This uses the hyprctl commandline tool to get the current pointer position relative
    * to the currently focused monitor. The name and class of the currently focused window
@@ -27,9 +42,9 @@ export class HyprBackend extends WLRBackend {
    * @returns The name and class of the currently focused window as well as the current
    *   pointer position.
    */
-  public override async getWMInfo(): Promise<WMInfo> {
-    const [info, activeworkspace, monitors, cursorpos] = await Promise.all([
-      super.getWMInfo(),
+  public async getWMInfo() {
+    const [activewindow, activeworkspace, monitors, cursorpos] = await Promise.all([
+      this.hyprctl('activewindow'),
       this.hyprctl('activeworkspace'),
       this.hyprctl('monitors'),
       this.hyprctl('cursorpos'),
@@ -44,7 +59,12 @@ export class HyprBackend extends WLRBackend {
     const x = cursorpos['x'] - monitor['x'];
     const y = cursorpos['y'] - monitor['y'];
 
-    return { ...info, pointerX: x, pointerY: y };
+    return {
+      windowName: activewindow['initialTitle'] || '',
+      windowClass: activewindow['initialClass'] || '',
+      pointerX: x,
+      pointerY: y,
+    };
   }
 
   /**
@@ -54,7 +74,7 @@ export class HyprBackend extends WLRBackend {
    * @param shortcut The shortcut to simulate.
    * @returns A promise which resolves when the shortcut has been simulated.
    */
-  public override async bindShortcut(shortcut: Shortcut) {
+  public async bindShortcut(shortcut: Shortcut) {
     /*
     if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
       throw new Error('Shortcut is already in use.');
@@ -67,12 +87,12 @@ export class HyprBackend extends WLRBackend {
    *
    * @param shortcut The shortcut to unbind.
    */
-  public override async unbindShortcut(shortcut: Shortcut) {
+  public async unbindShortcut(shortcut: Shortcut) {
     // globalShortcut.unregister(shortcut.accelerator);
   }
 
   /** This unbinds all previously bound shortcuts. */
-  public override async unbindAllShortcuts() {
+  public async unbindAllShortcuts() {
     // globalShortcut.unregisterAll();
   }
 
