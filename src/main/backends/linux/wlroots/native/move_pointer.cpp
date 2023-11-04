@@ -72,8 +72,6 @@ void movePointer(const Napi::CallbackInfo& info) {
   int32_t dx = info[0].As<Napi::Number>().Int32Value();
   int32_t dy = info[1].As<Napi::Number>().Int32Value();
 
-  std::cout << "Moving pointer by " << dx << ", " << dy << std::endl;
-
   // Connect to the Wayland display.
   wl_display* display = wl_display_connect(nullptr);
   if (!display) {
@@ -117,8 +115,6 @@ void movePointer(const Napi::CallbackInfo& info) {
   wl_seat_release(wdata.seat);
   wl_registry_destroy(registry);
   wl_display_disconnect(display);
-
-  std::cout << "Moved pointer." << std::endl;
 }
 
 /**
