@@ -10,12 +10,6 @@
 
 export interface Native {
   /**
-   * This uses XLib calls to get the name and the class of the currently focused
-   * application window. This only works on X11.
-   */
-  getActiveWindow(): { wmClass: string; name: string };
-
-  /**
    * This simulates a mouse movement.
    *
    * @param dx The horizontal movement in pixels.
