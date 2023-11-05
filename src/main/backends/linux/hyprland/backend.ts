@@ -14,19 +14,16 @@ import { WLRBackend } from '../wlroots/backend';
 import { Shortcut } from '../../backend';
 
 /**
- * This backend is used on Hyprland. It uses the generic wlroots backend and adds
- * pointer-location handling and shortcut handling using the hyprctl command line
- * utility.
+ * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
+ * missing functionality using the hyprctl command line utility.
  */
 export class HyprBackend extends WLRBackend {
   /** This is called when the backend is created. Currently, this this does nothing. */
   public async init() {}
 
   /**
-   * Override this if another type is more suitable for your desktop environment.
+   * 'splash' seems to be a good choice for Hyprland. See:
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   *
-   * 'splash' seems to be a good choice for Hyprland.
    *
    * @returns 'splash'
    */

@@ -11,7 +11,7 @@
 export interface Native {
   /**
    * This uses XLib calls to get the name and the class of the currently focused
-   * application window. This only works on X11.
+   * application window.
    */
   getActiveWindow(): { wmClass: string; name: string };
 
@@ -26,8 +26,7 @@ export interface Native {
   /**
    * This simulates a key press or release.
    *
-   * @param keycode The X11 scan code to simulate. This is the return value of
-   *   convertKeys().
+   * @param keycode The X11 scan code to simulate.
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
