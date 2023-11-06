@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#ifndef NATIVE_WLR_HPP
-#define NATIVE_WLR_HPP
+#ifndef NATIVE_HPP
+#define NATIVE_HPP
 
 #include "virtual-keyboard-unstable-v1.h"
 #include "wlr-virtual-pointer-unstable-v1.h"
@@ -29,10 +29,10 @@
  * pressed. This is done using the xkbcommon library using the keymap we can get from the
  * real keyboard.
  */
-class NativeWLR : public Napi::Addon<NativeWLR> {
+class Native : public Napi::Addon<Native> {
  public:
-  NativeWLR(Napi::Env env, Napi::Object exports);
-  virtual ~NativeWLR();
+  Native(Napi::Env env, Napi::Object exports);
+  virtual ~Native();
 
  protected:
   /**
@@ -60,7 +60,7 @@ class NativeWLR : public Napi::Addon<NativeWLR> {
    * If something goes wrong, it throws a JavaScript exception.
    *
    * @param info The arguments passed to the simulateKey function. It should contain a
-   *            number and a boolean.
+   *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
 
@@ -80,4 +80,4 @@ class NativeWLR : public Napi::Addon<NativeWLR> {
   WaylandData mData{};
 };
 
-#endif // NATIVE_WLR_HPP
+#endif // NATIVE_HPP

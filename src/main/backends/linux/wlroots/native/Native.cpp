@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#include "NativeWLR.hpp"
+#include "Native.hpp"
 
 #include <iostream>
 #include <sys/mman.h>
@@ -16,31 +16,52 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-NativeWLR::NativeWLR(Napi::Env env, Napi::Object exports) {
+Native::Native(Napi::Env env, Napi::Object exports) {
   DefineAddon(exports, {
-                           InstanceMethod("movePointer", &NativeWLR::movePointer),
-                           InstanceMethod("simulateKey", &NativeWLR::simulateKey),
+                           InstanceMethod("movePointer", &Native::movePointer),
+                           InstanceMethod("simulateKey", &Native::simulateKey),
                        });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-NativeWLR::~NativeWLR() {
-  zwlr_virtual_pointer_v1_destroy(mData.mPointer);
-  zwp_virtual_keyboard_v1_destroy(mData.mKeyboard);
+Native::~Native() {
+  if (mData.mPointer) {
+    zwlr_virtual_pointer_v1_destroy(mData.mPointer);
+  }
 
-  wl_seat_release(mData.mSeat);
-  wl_registry_destroy(mData.mRegistry);
-  wl_display_disconnect(mData.mDisplay);
+  if (mData.mKeyboard) {
+    zwp_virtual_keyboard_v1_destroy(mData.mKeyboard);
+  }
 
-  xkb_context_unref(mData.mXkbContext);
-  xkb_keymap_unref(mData.mXkbKeymap);
-  xkb_state_unref(mData.mXkbState);
+  if (mData.mSeat) {
+    wl_seat_release(mData.mSeat);
+  }
+
+  if (mData.mRegistry) {
+    wl_registry_destroy(mData.mRegistry);
+  }
+
+  if (mData.mDisplay) {
+    wl_display_disconnect(mData.mDisplay);
+  }
+
+  if (mData.mXkbContext) {
+    xkb_context_unref(mData.mXkbContext);
+  }
+
+  if (mData.mXkbKeymap) {
+    xkb_keymap_unref(mData.mXkbKeymap);
+  }
+
+  if (mData.mXkbState) {
+    xkb_state_unref(mData.mXkbState);
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-void NativeWLR::init(Napi::Env const& env) {
+void Native::init(Napi::Env const& env) {
   if (mData.mDisplay) {
     return;
   }
@@ -166,7 +187,7 @@ void NativeWLR::init(Napi::Env const& env) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-void NativeWLR::movePointer(const Napi::CallbackInfo& info) {
+void Native::movePointer(const Napi::CallbackInfo& info) {
 
   // We need to check the number of arguments and their types. If something is wrong, we
   // throw a JavaScript exception.
@@ -192,7 +213,7 @@ void NativeWLR::movePointer(const Napi::CallbackInfo& info) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-void NativeWLR::simulateKey(const Napi::CallbackInfo& info) {
+void Native::simulateKey(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
   // We need to check the number of arguments and their types. If something is wrong, we
@@ -231,6 +252,6 @@ void NativeWLR::simulateKey(const Napi::CallbackInfo& info) {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // This generates the addon and makes it available to JavaScript.
-NODE_API_ADDON(NativeWLR)
+NODE_API_ADDON(Native)
 
 //////////////////////////////////////////////////////////////////////////////////////////
