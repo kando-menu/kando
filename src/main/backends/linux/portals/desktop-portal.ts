@@ -53,7 +53,7 @@ export class DesktopPortal {
   protected async makeRequest(
     method: (request: { token: string; path: string }) => void
   ) {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<DBus.Message>((resolve, reject) => {
       const request = this.generateToken('request');
 
       const responseListener = (message: DBus.Message) => {
@@ -63,7 +63,7 @@ export class DesktopPortal {
           }
 
           this.bus.removeListener('message', responseListener);
-          resolve();
+          resolve(message);
         }
       };
 
