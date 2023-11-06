@@ -124,11 +124,12 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * GNOME Wayland, this uses the DBus interface of the Kando GNOME Shell integration.
+   * This binds a shortcut. The action callback of the shortcut is called when the
+   * shortcut is pressed. On GNOME Wayland, this uses the DBus interface of the Kando
+   * GNOME Shell integration.
    *
    * @param shortcut The shortcut to simulate.
-   * @returns A promise which resolves when the shortcut has been simulated.
+   * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
     const accelerator = this.toGdkAccelerator(shortcut.accelerator);
