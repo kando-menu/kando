@@ -9,17 +9,65 @@
 // SPDX-License-Identifier: MIT
 
 import { exec } from 'child_process';
-
 import { WLRBackend } from '../wlroots/backend';
 import { Shortcut } from '../../backend';
+import { GlobalShortcutsHyprland } from '../portals/global-shortcuts-hyprland';
 
 /**
  * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
  * missing functionality using the hyprctl command line utility.
+ *
+ * Getting global shortcuts to work is pretty painful. In theory, we have at least three
+ * options:
+ *
+ * - Rely on X11 global shortcuts and pass them through to the application using custom
+ *   binding rules of Hyprland. However, this approach is not working as Kando does not
+ *   have an open window when the hotkey is pressed.
+ * - Use the xdg-desktop-portal to register global shortcuts. This should work, but
+ *   Hyprland's portal implementation is very far from the standard. See:
+ *   https://github.com/hyprwm/xdg-desktop-portal-hyprland/issues/56. Here you can see how
+ *   the interface should look like:
+ *   https://flatpak.github.io/xdg-desktop-portal/docs/#gdbus-org.freedesktop.portal.GlobalShortcuts
+ *   And here is the Hyprland implementation:
+ *   https://github.com/hyprwm/xdg-desktop-portal-hyprland/blob/master/src/portals/GlobalShortcuts.cpp#L199
+ *   Besides, it also does not support the "preferred_trigger" property and hence the user
+ *   would have to enter the shortcut in the Hyprland config.
+ * - Hyprland comes with a custom Wayland protocol which allows to register global
+ *   shortcuts. As this is at least well-defined, we use it here. See:
+ *   https://github.com/hyprwm/hyprland-protocols/blob/main/protocols/hyprland-global-shortcuts-v1.xml
+ *
+ * As a consequence, there are some caveats:
+ *
+ * - Keybindings have to be set up manually. Like this:
+ * - For now, the "turbo mode" does not work properly as the initial modifier-release seems
+ *   not to be forwarded to the application.
+ * - Some window rules need to be set up manually. Like this:
+ *
+ * @example
+ *   ```
+ *    windowrule = noblur, kando
+ *    windowrule = size 100% 100%, kando
+ *    windowrule = noborder, kando
+ *    windowrule = noanim, kando
+ *   ```;
  */
 export class HyprBackend extends WLRBackend {
-  /** This is called when the backend is created. Currently, this this does nothing. */
-  public async init() {}
+  private globalShortcuts = new GlobalShortcutsHyprland();
+
+  /**
+   * This is called when the backend is created. We use it to print a warning, as the user
+   * still needs to set up some window rules and bind the shortcuts.
+   */
+  public async init() {
+    console.log(
+      `
+The Hyprland backend is still a bit experimental!
+You have to perform some manual steps to make Kando work properly.
+See https://github.com/kando-menu/kando/issues/234#issuecomment-1789650666
+for more information.
+`
+    );
+  }
 
   /**
    * 'splash' seems to be a good choice for Hyprland. See:
@@ -65,18 +113,14 @@ export class HyprBackend extends WLRBackend {
   }
 
   /**
-   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * X11, this uses Electron's globalShortcut module.
+   * This binds a shortcut. The action callback of the shortcut is called when the
+   * shortcut is pressed.
    *
    * @param shortcut The shortcut to simulate.
-   * @returns A promise which resolves when the shortcut has been simulated.
+   * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    /*
-    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
-      throw new Error('Shortcut is already in use.');
-    }
-    */
+    await this.globalShortcuts.bind(shortcut);
   }
 
   /**
@@ -85,12 +129,12 @@ export class HyprBackend extends WLRBackend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    // globalShortcut.unregister(shortcut.accelerator);
+    // native.unbindShortcut(shortcut);
   }
 
   /** This unbinds all previously bound shortcuts. */
   public async unbindAllShortcuts() {
-    // globalShortcut.unregisterAll();
+    // native.unbindAllShortcuts();
   }
 
   /**
