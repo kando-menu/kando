@@ -102,11 +102,11 @@ export class X11Backend implements Backend {
   }
 
   /**
-   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * X11, this uses Electron's globalShortcut module.
+   * This binds a shortcut. The action callback of the shortcut is called when the
+   * shortcut is pressed. On X11, this uses Electron's globalShortcut module.
    *
    * @param shortcut The shortcut to simulate.
-   * @returns A promise which resolves when the shortcut has been simulated.
+   * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
     if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {

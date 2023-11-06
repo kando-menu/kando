@@ -47,7 +47,7 @@ import { LinuxKeyCodes } from '../../keys';
  */
 export class KDEWaylandBackend implements Backend {
   // The remote desktop portal is used to simulate mouse and keyboard events.
-  private remoteDesktop: RemoteDesktop = new RemoteDesktop();
+  private remoteDesktop = new RemoteDesktop();
 
   // The KWin scripting interface is used to load custom JavaScript code into KWin. The
   // scripts will acquire the required information for Kando (mouse pointer position and
@@ -202,11 +202,11 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * KDE Wayland, this uses a KWin script.
+   * This binds a shortcut. The action callback of the shortcut is called when the
+   * shortcut is pressed. On KDE Wayland, this uses a KWin script.
    *
    * @param shortcut The shortcut to simulate.
-   * @returns A promise which resolves when the shortcut has been simulated.
+   * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
     this.shortcuts.push(shortcut);

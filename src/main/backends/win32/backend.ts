@@ -100,11 +100,11 @@ export class Win32Backend implements Backend {
   }
 
   /**
-   * This binds a shortcut. The action callback is called when the shortcut is pressed. On
-   * Windows, this uses Electron's globalShortcut module.
+   * This binds a shortcut. The action callback of the shortcut is called when the
+   * shortcut is pressed. On Windows, this uses Electron's globalShortcut module.
    *
    * @param shortcut The shortcut to bind.
-   * @returns A promise which resolves when the shortcut has been simulated.
+   * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
     if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
