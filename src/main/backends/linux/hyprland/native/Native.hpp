@@ -14,6 +14,8 @@
 #include "hyprland-global-shortcuts-v1.h"
 
 #include <napi.h>
+#include <unordered_map>
+#include <uv.h>
 
 /**
  */
@@ -27,6 +29,8 @@ class Native : public Napi::Addon<Native> {
     wl_registry* mRegistry = nullptr;
 
     hyprland_global_shortcuts_manager_v1* mManager = nullptr;
+
+    std::unordered_map<std::string, Napi::FunctionReference> mActions;
   };
 
  protected:
@@ -66,6 +70,8 @@ class Native : public Napi::Addon<Native> {
   bool isShortcutObject(Napi::Object const& obj) const;
 
   WaylandData mData{};
+
+  uv_poll_t mPoller{};
 };
 
 #endif // NATIVE_HPP

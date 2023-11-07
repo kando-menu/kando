@@ -27,17 +27,21 @@ void handleGlobal(void* userData, wl_registry* registry, uint32_t name,
   }
 };
 
-void handlePressed(void* data, hyprland_global_shortcut_v1* hyprland_global_shortcut_v1,
-    uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec) {
-  std::cout << "Pressed " << std::endl;
+void handlePressed(void*, hyprland_global_shortcut_v1* hyprland_global_shortcut, uint32_t,
+    uint32_t, uint32_t) {
+
+  Napi::FunctionReference* action = static_cast<Napi::FunctionReference*>(
+      hyprland_global_shortcut_v1_get_user_data(hyprland_global_shortcut));
+
+  action->Call({});
 }
 
-void handleReleased(void* data, hyprland_global_shortcut_v1* hyprland_global_shortcut_v1,
-    uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec) {
+void handleReleased(
+    void*, hyprland_global_shortcut_v1* shortcut, uint32_t, uint32_t, uint32_t) {
   std::cout << "Released " << std::endl;
 }
 
-const hyprland_global_shortcut_v1_listener shortcut_listener = {
+const hyprland_global_shortcut_v1_listener shortcutListener = {
     .pressed  = handlePressed,
     .released = handleReleased,
 };
@@ -100,6 +104,19 @@ void Native::init(Napi::Env const& env) {
     Napi::Error::New(env, "No global shortcuts protocol!").ThrowAsJavaScriptException();
     return;
   }
+
+  // We have to ensure that the Wayland display is polled regularly in order to receive
+  // shortcuts events. We use libuv for this as this is the same library that is used by
+  // Node.js.
+  int fd = wl_display_get_fd(mData.mDisplay);
+
+  uv_loop_t* loop = uv_default_loop();
+  uv_poll_init(loop, &mPoller, fd);
+  mPoller.data = &mData;
+  uv_poll_start(&mPoller, UV_READABLE, [](uv_poll_t* handle, int status, int events) {
+    Native::WaylandData* data = static_cast<Native::WaylandData*>(handle->data);
+    wl_display_dispatch(data->mDisplay);
+  });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -121,17 +138,16 @@ void Native::bindShortcut(const Napi::CallbackInfo& info) {
 
   std::string id          = info[0].As<Napi::Object>().Get("id").ToString();
   std::string description = info[0].As<Napi::Object>().Get("description").ToString();
+  mData.mActions[id] =
+      Napi::Persistent(info[0].As<Napi::Object>().Get("action").As<Napi::Function>());
 
-  wl_display_roundtrip(mData.mDisplay);
   auto shortcut = hyprland_global_shortcuts_manager_v1_register_shortcut(
       mData.mManager, id.c_str(), "kando", description.c_str(), "");
 
-  wl_display_roundtrip(mData.mDisplay);
-  hyprland_global_shortcut_v1_add_listener(shortcut, &shortcut_listener, &mData);
+  hyprland_global_shortcut_v1_add_listener(shortcut, &shortcutListener, nullptr);
+  hyprland_global_shortcut_v1_set_user_data(shortcut, &mData.mActions[id]);
 
   wl_display_roundtrip(mData.mDisplay);
-
-  std::cout << "Done" << std::endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
