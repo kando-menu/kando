@@ -21,7 +21,7 @@ jobs:
           node-version: 18
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-bin
+          sudo apt install libx11-dev libxtst-dev libwayland-dev
           npm install
       - name: Create Release
         run: |
