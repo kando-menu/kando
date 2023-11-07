@@ -12,47 +12,6 @@
 
 #include <iostream>
 
-namespace {
-
-// This function will be called whenever a new global Wayland object is available. We
-// use it to find the seat and the virtual pointer manager.
-void handleGlobal(void* userData, wl_registry* registry, uint32_t name,
-    const char* interface, uint32_t version) {
-  Native::WaylandData* data = static_cast<Native::WaylandData*>(userData);
-
-  // Store the global shortcuts manager.
-  if (!std::strcmp(interface, hyprland_global_shortcuts_manager_v1_interface.name)) {
-    data->mManager = static_cast<hyprland_global_shortcuts_manager_v1*>(wl_registry_bind(
-        registry, name, &hyprland_global_shortcuts_manager_v1_interface, 1));
-  }
-};
-
-void handlePressed(void*, hyprland_global_shortcut_v1* hyprland_global_shortcut, uint32_t,
-    uint32_t, uint32_t) {
-
-  Napi::FunctionReference* action = static_cast<Napi::FunctionReference*>(
-      hyprland_global_shortcut_v1_get_user_data(hyprland_global_shortcut));
-
-  action->Call({});
-}
-
-void handleReleased(
-    void*, hyprland_global_shortcut_v1* shortcut, uint32_t, uint32_t, uint32_t) {
-  std::cout << "Released " << std::endl;
-}
-
-const hyprland_global_shortcut_v1_listener shortcutListener = {
-    .pressed  = handlePressed,
-    .released = handleReleased,
-};
-
-const wl_registry_listener registryListener = {
-    .global        = handleGlobal,
-    .global_remove = [](void*, wl_registry*, uint32_t) {},
-};
-
-} // namespace
-
 //////////////////////////////////////////////////////////////////////////////////////////
 
 Native::Native(Napi::Env env, Napi::Object exports) {
@@ -79,6 +38,10 @@ Native::~Native() {
   if (mData.mDisplay) {
     wl_display_disconnect(mData.mDisplay);
   }
+
+  // Stop polling the Wayland display.
+  uv_poll_stop(&mPoller);
+  uv_close(reinterpret_cast<uv_handle_t*>(&mPoller), nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -95,8 +58,28 @@ void Native::init(Napi::Env const& env) {
     return;
   }
 
+  // The 'global' callback will be called whenever a new global Wayland object is
+  // available. We use it to find the global shortcuts manager.
+  mData.mRegistryListener = {
+      .global =
+          [](void* userData, wl_registry* registry, uint32_t name, const char* interface,
+              uint32_t version) {
+            if (!std::strcmp(
+                    interface, hyprland_global_shortcuts_manager_v1_interface.name)) {
+              Native::WaylandData* data = static_cast<Native::WaylandData*>(userData);
+              data->mManager = static_cast<hyprland_global_shortcuts_manager_v1*>(
+                  wl_registry_bind(registry, name,
+                      &hyprland_global_shortcuts_manager_v1_interface, version));
+            }
+          },
+      .global_remove =
+          [](void*, wl_registry*, uint32_t) {
+            // We don't care about this.
+          },
+  };
+
   mData.mRegistry = wl_display_get_registry(mData.mDisplay);
-  wl_registry_add_listener(mData.mRegistry, &registryListener, &mData);
+  wl_registry_add_listener(mData.mRegistry, &mData.mRegistryListener, &mData);
   wl_display_roundtrip(mData.mDisplay);
 
   // Check if everything worked.
@@ -105,11 +88,24 @@ void Native::init(Napi::Env const& env) {
     return;
   }
 
+  // This contains the callback functions which will be called when a shortcut is pressed
+  // or released. We use it to call the JavaScript function which was passed to the
+  // bindShortcut function.
+  mData.mShortcutListener = {
+      .pressed =
+          [](void*, hyprland_global_shortcut_v1* shortcut, uint32_t, uint32_t, uint32_t) {
+            Napi::FunctionReference* action = static_cast<Napi::FunctionReference*>(
+                hyprland_global_shortcut_v1_get_user_data(shortcut));
+            action->Call({});
+          },
+      .released = [](void*, hyprland_global_shortcut_v1*, uint32_t, uint32_t,
+                      uint32_t) { std::cout << "released" << std::endl; },
+  };
+
   // We have to ensure that the Wayland display is polled regularly in order to receive
   // shortcuts events. We use libuv for this as this is the same library that is used by
   // Node.js.
-  int fd = wl_display_get_fd(mData.mDisplay);
-
+  int        fd   = wl_display_get_fd(mData.mDisplay);
   uv_loop_t* loop = uv_default_loop();
   uv_poll_init(loop, &mPoller, fd);
   mPoller.data = &mData;
@@ -136,18 +132,24 @@ void Native::bindShortcut(const Napi::CallbackInfo& info) {
   // Make sure that we are connected to the Wayland display.
   init(env);
 
+  // Get the shortcut data from the JavaScript object. We store the action function in a
+  // Napi::Persistent object to make sure that it is not garbage collected.
   std::string id          = info[0].As<Napi::Object>().Get("id").ToString();
   std::string description = info[0].As<Napi::Object>().Get("description").ToString();
-  mData.mActions[id] =
+  mShortcuts[id].mAction =
       Napi::Persistent(info[0].As<Napi::Object>().Get("action").As<Napi::Function>());
 
+  // Register the shortcut with the Wayland display.
   auto shortcut = hyprland_global_shortcuts_manager_v1_register_shortcut(
       mData.mManager, id.c_str(), "kando", description.c_str(), "");
 
-  hyprland_global_shortcut_v1_add_listener(shortcut, &shortcutListener, nullptr);
-  hyprland_global_shortcut_v1_set_user_data(shortcut, &mData.mActions[id]);
-
+  // Add the callback functions to the shortcut.
+  hyprland_global_shortcut_v1_add_listener(shortcut, &mData.mShortcutListener, nullptr);
+  hyprland_global_shortcut_v1_set_user_data(shortcut, &mShortcuts[id].mAction);
   wl_display_roundtrip(mData.mDisplay);
+
+  // Store the shortcut in our map so that we can destroy it later.
+  mShortcuts[id].mShortcut = shortcut;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -163,12 +165,18 @@ void Native::unbindShortcut(const Napi::CallbackInfo& info) {
     return;
   }
 
-  std::string id = info[0].As<Napi::Object>().Get("id").ToString();
-
-  std::cout << "Unbinding shortcut " << id << std::endl;
-
   // Make sure that we are connected to the Wayland display.
   init(env);
+
+  std::string id = info[0].As<Napi::Object>().Get("id").ToString();
+
+  auto it = mShortcuts.find(id);
+  if (it != mShortcuts.end()) {
+    hyprland_global_shortcut_v1_destroy(it->second.mShortcut);
+    mShortcuts.erase(it);
+  }
+
+  wl_display_roundtrip(mData.mDisplay);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -182,10 +190,16 @@ void Native::unbindAllShortcuts(const Napi::CallbackInfo& info) {
     Napi::TypeError::New(env, "No argument expected").ThrowAsJavaScriptException();
   }
 
-  std::cout << "Unbinding all shortcuts" << std::endl;
-
   // Make sure that we are connected to the Wayland display.
   init(env);
+
+  for (auto& it : mShortcuts) {
+    hyprland_global_shortcut_v1_destroy(it.second.mShortcut);
+  }
+
+  mShortcuts.clear();
+
+  wl_display_roundtrip(mData.mDisplay);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

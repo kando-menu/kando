@@ -18,20 +18,13 @@
 #include <uv.h>
 
 /**
+ * This native addon provides a way to register global shortcuts on Hyprland. It uses
+ * the hyprland-global-shortcuts-v1 Wayland protocol for this.
  */
 class Native : public Napi::Addon<Native> {
  public:
   Native(Napi::Env env, Napi::Object exports);
   virtual ~Native();
-
-  struct WaylandData {
-    wl_display*  mDisplay  = nullptr;
-    wl_registry* mRegistry = nullptr;
-
-    hyprland_global_shortcuts_manager_v1* mManager = nullptr;
-
-    std::unordered_map<std::string, Napi::FunctionReference> mActions;
-  };
 
  protected:
   /**
@@ -46,7 +39,7 @@ class Native : public Napi::Addon<Native> {
    * This function is called when the bindShortcut function is called from JavaScript.
    *
    * @param info The arguments passed to the bindShortcut function. It should contain a
-   *             Shortcut object.
+   *             Shortcut object as defined in the base Backend interface.
    */
   void bindShortcut(const Napi::CallbackInfo& info);
 
@@ -54,7 +47,7 @@ class Native : public Napi::Addon<Native> {
    * This function is called when the unbindShortcut function is called from JavaScript.
    *
    * @param info The arguments passed to the unbindShortcut function. It should contain a
-   *             Shortcut object.
+   *             Shortcut object as defined in the base Backend interface.
    */
   void unbindShortcut(const Napi::CallbackInfo& info);
 
@@ -69,8 +62,30 @@ class Native : public Napi::Addon<Native> {
 
   bool isShortcutObject(Napi::Object const& obj) const;
 
-  WaylandData mData{};
+  /**
+   * This struct contains all the data required to communicate with the Wayland display.
+   */
+  struct WaylandData {
+    wl_display*          mDisplay  = nullptr;
+    wl_registry*         mRegistry = nullptr;
+    wl_registry_listener mRegistryListener{};
 
+    hyprland_global_shortcuts_manager_v1* mManager = nullptr;
+    hyprland_global_shortcut_v1_listener  mShortcutListener{};
+  };
+
+  /**
+   * This struct contains all the data required to handle a single shortcut.
+   */
+  struct ShortcutData {
+    hyprland_global_shortcut_v1* mShortcut;
+    Napi::FunctionReference      mAction;
+  };
+
+  WaylandData                                   mData{};
+  std::unordered_map<std::string, ShortcutData> mShortcuts;
+
+  // This is used to listen for Wayland events in a non-blocking way.
   uv_poll_t mPoller{};
 };
 
