@@ -15,41 +15,8 @@ import { Shortcut } from '../../backend';
 
 /**
  * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
- * missing functionality using the hyprctl command line utility.
- *
- * Getting global shortcuts to work is pretty painful. In theory, we have at least three
- * options:
- *
- * - Rely on X11 global shortcuts and pass them through to the application using custom
- *   binding rules of Hyprland. However, this approach is not working as Kando does not
- *   have an open window when the hotkey is pressed.
- * - Use the xdg-desktop-portal to register global shortcuts. This should work, but
- *   Hyprland's portal implementation is very far from the standard. See:
- *   https://github.com/hyprwm/xdg-desktop-portal-hyprland/issues/56. Here you can see how
- *   the interface should look like:
- *   https://flatpak.github.io/xdg-desktop-portal/docs/#gdbus-org.freedesktop.portal.GlobalShortcuts
- *   And here is the Hyprland implementation:
- *   https://github.com/hyprwm/xdg-desktop-portal-hyprland/blob/master/src/portals/GlobalShortcuts.cpp#L199
- *   Besides, it also does not support the "preferred_trigger" property and hence the user
- *   would have to enter the shortcut in the Hyprland config.
- * - Hyprland comes with a custom Wayland protocol which allows to register global
- *   shortcuts. As this is at least well-defined, we use it here. See:
- *   https://github.com/hyprwm/hyprland-protocols/blob/main/protocols/hyprland-global-shortcuts-v1.xml
- *
- * As a consequence, there are some caveats:
- *
- * - Keybindings have to be set up manually. Like this:
- * - For now, the "turbo mode" does not work properly as the initial modifier-release seems
- *   not to be forwarded to the application.
- * - Some window rules need to be set up manually. Like this:
- *
- * @example
- *   ```
- *    windowrule = noblur, kando
- *    windowrule = size 100% 100%, kando
- *    windowrule = noborder, kando
- *    windowrule = noanim, kando
- *   ```;
+ * missing functionality using the hyprctl command line utility and the
+ * hyprland-global-shortcuts-v1 Wayland protocol.
  */
 export class HyprBackend extends WLRBackend {
   /**
@@ -79,13 +46,14 @@ for more information.
 
   /**
    * This uses the hyprctl commandline tool to get the current pointer position relative
-   * to the currently focused monitor. The name and class of the currently focused window
-   * are provided by the base class.
+   * to the currently focused monitor as well as name and class of the currently focused
+   * window.
    *
    * @returns The name and class of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
+    // We need to call hyprctl multiple times to get all the information we need.
     const [activewindow, activeworkspace, monitors, cursorpos] = await Promise.all([
       this.hyprctl('activewindow'),
       this.hyprctl('activeworkspace'),
@@ -115,7 +83,6 @@ for more information.
    * shortcut is pressed.
    *
    * @param shortcut The shortcut to simulate.
-   * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
     native.bindShortcut(shortcut);
