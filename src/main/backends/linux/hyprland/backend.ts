@@ -54,27 +54,16 @@ for more information.
    */
   public async getWMInfo() {
     // We need to call hyprctl multiple times to get all the information we need.
-    const [activewindow, activeworkspace, monitors, cursorpos] = await Promise.all([
+    const [activewindow, cursorpos] = await Promise.all([
       this.hyprctl('activewindow'),
-      this.hyprctl('activeworkspace'),
-      this.hyprctl('monitors'),
       this.hyprctl('cursorpos'),
     ]);
-
-    // Find the monitor which contains the cursor.
-    const monitor = (monitors as Array<never>).find(
-      (m) => m['name'] === activeworkspace['monitor']
-    );
-
-    // Calculate the pointer position relative to the monitor.
-    const x = cursorpos['x'] - monitor['x'];
-    const y = cursorpos['y'] - monitor['y'];
 
     return {
       windowName: activewindow['initialTitle'] || '',
       windowClass: activewindow['initialClass'] || '',
-      pointerX: x,
-      pointerY: y,
+      pointerX: cursorpos['x'],
+      pointerY: cursorpos['y'],
     };
   }
 
