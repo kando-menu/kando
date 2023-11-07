@@ -63,7 +63,7 @@ for more information.
 
     // Find the monitor which contains the cursor.
     const monitor = (monitors as Array<never>).find(
-      (m) => m['id'] === activeworkspace['monitorID']
+      (m) => m['name'] === activeworkspace['monitor']
     );
 
     // Calculate the pointer position relative to the monitor.
