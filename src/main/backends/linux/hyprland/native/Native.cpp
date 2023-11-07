@@ -99,7 +99,7 @@ void Native::init(Napi::Env const& env) {
             action->Call({});
           },
       .released = [](void*, hyprland_global_shortcut_v1*, uint32_t, uint32_t,
-                      uint32_t) { std::cout << "released" << std::endl; },
+                      uint32_t) {},
   };
 
   // We have to ensure that the Wayland display is polled regularly in order to receive
