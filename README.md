@@ -94,19 +94,19 @@ However, some additional packages may be required for the native backend modules
 On **Debian-based** distributions you can install them with:
 
 ```
-sudo apt install cmake libx11-dev libxtst-dev libwayland-bin
+sudo apt install cmake libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
 ```
 
 On **Arch-based** distributions you can install them with:
 
 ```
-sudo pacman -S cmake libx11 libxtst wayland
+sudo pacman -S cmake libx11 libxtst wayland libxkbcommon
 ```
 
 On **RPM-based** distributions you can install them with:
 
 ```
-sudo dnf install cmake libX11-devel libXtst-devel wayland-devel
+sudo dnf install cmake libX11-devel libXtst-devel wayland-devel libxkbcommon-devel
 ```
 
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
