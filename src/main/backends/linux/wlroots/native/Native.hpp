@@ -69,6 +69,8 @@ class Native : public Napi::Addon<Native> {
     wl_registry* mRegistry = nullptr;
     wl_seat*     mSeat     = nullptr;
 
+    wl_registry_listener mRegistryListener{};
+
     zwlr_virtual_pointer_v1* mPointer  = nullptr;
     zwp_virtual_keyboard_v1* mKeyboard = nullptr;
 

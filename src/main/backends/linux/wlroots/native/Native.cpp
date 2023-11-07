@@ -158,13 +158,13 @@ void Native::init(Napi::Env const& env) {
 
   // We register the above lambda as a listener for global objects. The roundtrip below
   // will call the lambda for all currently available global objects.
-  wl_registry_listener registryListener = {
+  mData.mRegistryListener = {
       .global        = handleGlobal,
       .global_remove = [](void*, wl_registry*, uint32_t) {},
   };
 
   mData.mRegistry = wl_display_get_registry(mData.mDisplay);
-  wl_registry_add_listener(mData.mRegistry, &registryListener, &mData);
+  wl_registry_add_listener(mData.mRegistry, &mData.mRegistryListener, &mData);
   wl_display_roundtrip(mData.mDisplay);
   wl_display_dispatch(mData.mDisplay);
 
