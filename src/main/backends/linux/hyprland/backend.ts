@@ -10,8 +10,8 @@
 
 import { exec } from 'child_process';
 import { WLRBackend } from '../wlroots/backend';
+import { native } from './native';
 import { Shortcut } from '../../backend';
-import { GlobalShortcutsHyprland } from '../portals/global-shortcuts-hyprland';
 
 /**
  * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
@@ -52,8 +52,6 @@ import { GlobalShortcutsHyprland } from '../portals/global-shortcuts-hyprland';
  *   ```;
  */
 export class HyprBackend extends WLRBackend {
-  private globalShortcuts = new GlobalShortcutsHyprland();
-
   /**
    * This is called when the backend is created. We use it to print a warning, as the user
    * still needs to set up some window rules and bind the shortcuts.
@@ -120,7 +118,7 @@ for more information.
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    await this.globalShortcuts.bind(shortcut);
+    native.bindShortcut(shortcut);
   }
 
   /**
@@ -129,12 +127,12 @@ for more information.
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    // native.unbindShortcut(shortcut);
+    native.unbindShortcut(shortcut);
   }
 
   /** This unbinds all previously bound shortcuts. */
   public async unbindAllShortcuts() {
-    // native.unbindAllShortcuts();
+    native.unbindAllShortcuts();
   }
 
   /**
