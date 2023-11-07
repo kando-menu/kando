@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <protocol name="hyprland_global_shortcuts_v1">
   <copyright>
+    SPDX-License-Identifier: BSD-3-Clause
+
     Copyright © 2022 Vaxry
     All rights reserved.
 
@@ -8,15 +10,15 @@
     modification, are permitted provided that the following conditions are met:
 
     1. Redistributions of source code must retain the above copyright notice, this
-       list of conditions and the following disclaimer.
+    list of conditions and the following disclaimer.
 
     2. Redistributions in binary form must reproduce the above copyright notice,
-       this list of conditions and the following disclaimer in the documentation
-       and/or other materials provided with the distribution.
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
 
     3. Neither the name of the copyright holder nor the names of its
-       contributors may be used to endorse or promote products derived from
-       this software without specific prior written permission.
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
     AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -50,11 +52,11 @@
 
         In the case of a duplicate app_id + id combination, the already_taken protocol error is raised.
       </description>
-      <arg name="shortcut" type="new_id" interface="hyprland_global_shortcut_v1"/>
-      <arg name="id" type="string" summary="a unique id for the shortcut"/>
-      <arg name="app_id" type="string" summary="the app_id of the application requesting the shortcut"/>
-      <arg name="description" type="string" summary="user-readable text describing what the shortcut does."/>
-      <arg name="trigger_description" type="string" summary="user-readable text describing how to trigger the shortcut for the client to render."/>
+      <arg name="shortcut" type="new_id" interface="hyprland_global_shortcut_v1" />
+      <arg name="id" type="string" summary="a unique id for the shortcut" />
+      <arg name="app_id" type="string" summary="the app_id of the application requesting the shortcut" />
+      <arg name="description" type="string" summary="user-readable text describing what the shortcut does." />
+      <arg name="trigger_description" type="string" summary="user-readable text describing how to trigger the shortcut for the client to render." />
     </request>
 
     <request name="destroy" type="destructor">
@@ -66,7 +68,7 @@
 
     <enum name="error">
       <entry name="already_taken" value="0"
-        summary="the app_id + id combination has already been registered."/>
+        summary="the app_id + id combination has already been registered." />
     </enum>
   </interface>
 
@@ -82,11 +84,11 @@
         tv_ values hold the timestamp of the occurrence.
       </description>
       <arg name="tv_sec_hi" type="uint"
-           summary="high 32 bits of the seconds part of the timestamp"/>
+        summary="high 32 bits of the seconds part of the timestamp" />
       <arg name="tv_sec_lo" type="uint"
-           summary="low 32 bits of the seconds part of the timestamp"/>
+        summary="low 32 bits of the seconds part of the timestamp" />
       <arg name="tv_nsec" type="uint"
-           summary="nanoseconds part of the timestamp"/>
+        summary="nanoseconds part of the timestamp" />
     </event>
 
     <event name="released">
@@ -96,11 +98,11 @@
         tv_ values hold the timestamp of the occurrence.
       </description>
       <arg name="tv_sec_hi" type="uint"
-           summary="high 32 bits of the seconds part of the timestamp"/>
+        summary="high 32 bits of the seconds part of the timestamp" />
       <arg name="tv_sec_lo" type="uint"
-           summary="low 32 bits of the seconds part of the timestamp"/>
+        summary="low 32 bits of the seconds part of the timestamp" />
       <arg name="tv_nsec" type="uint"
-           summary="nanoseconds part of the timestamp"/>
+        summary="nanoseconds part of the timestamp" />
     </event>
 
     <request name="destroy" type="destructor">
