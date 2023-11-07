@@ -8,30 +8,29 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { Shortcut } from '../../../backend';
+
 export interface Native {
   /**
-   * This uses XLib calls to get the name and the class of the currently focused
-   * application window.
+   * This binds a shortcut. The action callback of the shortcut is called when the
+   * shortcut is pressed.
+   *
+   * @param shortcut The shortcut to simulate.
+   * @returns A promise which resolves when the shortcut has been bound.
    */
-  getActiveWindow(): { wmClass: string; name: string };
+  bindShortcut(shortcut: Shortcut): void;
 
   /**
-   * This simulates a mouse movement.
+   * This unbinds a previously bound shortcut.
    *
-   * @param dx The horizontal movement in pixels.
-   * @param dy The vertical movement in pixels.
+   * @param shortcut The shortcut to unbind.
    */
-  movePointer(dx: number, dy: number): void;
+  unbindShortcut(shortcut: Shortcut): void;
 
-  /**
-   * This simulates a key press or release.
-   *
-   * @param keycode The X11 scan code to simulate.
-   * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
-   */
-  simulateKey(keycode: number, down: boolean): void;
+  /** This unbinds all previously bound shortcuts. */
+  unbindAllShortcuts(): void;
 }
 
-const native: Native = require('./../../../../../../build/Release/NativeX11.node');
+const native: Native = require('./../../../../../../build/Release/NativeHypr.node');
 
 export { native };

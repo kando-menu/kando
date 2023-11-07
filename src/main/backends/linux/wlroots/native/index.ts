@@ -10,12 +10,6 @@
 
 export interface Native {
   /**
-   * This uses XLib calls to get the name and the class of the currently focused
-   * application window.
-   */
-  getActiveWindow(): { wmClass: string; name: string };
-
-  /**
    * This simulates a mouse movement.
    *
    * @param dx The horizontal movement in pixels.
@@ -32,6 +26,6 @@ export interface Native {
   simulateKey(keycode: number, down: boolean): void;
 }
 
-const native: Native = require('./../../../../../../build/Release/NativeX11.node');
+const native: Native = require('./../../../../../../build/Release/NativeWLR.node');
 
 export { native };

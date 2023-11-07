@@ -56,6 +56,7 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Uses the [KWin Scripting API](https://techbase.kde.org/Development/Tutorials/KWin/Scripting) and the [Remote-Desktop Portal](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.RemoteDesktop) to implement the required functionality.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Hyprland | :heavy_check_mark: | Uses some [wlroots Wayland protocols](src/main/backends/linux/wlroots/native/protocols), the `hyprctl` command line tool and the [Hyprland Global Shortcuts](src/main/backends/linux/hyprland/native/protocols/hyprland-global-shortcuts-v1.xml) protocol to implement the required functionality.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> XFCE | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> MATE | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Budgie | :heavy_check_mark: |
@@ -94,19 +95,19 @@ However, some additional packages may be required for the native backend modules
 On **Debian-based** distributions you can install them with:
 
 ```
-sudo apt install cmake libx11-dev libxtst-dev
+sudo apt install cmake libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
 ```
 
 On **Arch-based** distributions you can install them with:
 
 ```
-sudo pacman -S cmake libx11 libxtst
+sudo pacman -S cmake libx11 libxtst wayland libxkbcommon
 ```
 
 On **RPM-based** distributions you can install them with:
 
 ```
-sudo dnf install cmake libX11-devel libXtst-devel
+sudo dnf install cmake libX11-devel libXtst-devel wayland-devel libxkbcommon-devel
 ```
 
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).

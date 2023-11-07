@@ -8,7 +8,7 @@ cmake_policy(SET CMP0042 NEW)
 # build the native modules. See the README.md for more information.
 project(kando-native)
 
-add_definitions(-DNAPI_VERSION=3)
+add_definitions(-DNAPI_VERSION=6)
 set(CMAKE_CXX_STANDARD 11)
 
 # Include Node-API wrappers.
@@ -24,5 +24,7 @@ if (WIN32)
 endif ()
 
 if (UNIX AND NOT APPLE)
-  add_subdirectory(src/main/backends/linux/x11/native)
+add_subdirectory(src/main/backends/linux/hyprland/native)
+add_subdirectory(src/main/backends/linux/wlroots/native)
+add_subdirectory(src/main/backends/linux/x11/native)
 endif ()
