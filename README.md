@@ -62,8 +62,9 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Budgie | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Cinnamon | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXQt | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :x: | Does not support compositing by default.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :x: | Does not support compositing by default.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :heavy_check_mark: | Requires a compositor for the transparency to work.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> i3 | :x: | Could actually work, but I haven't managed to properly get the transparency to work even with a compositor.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :x: | Could actually work, but I haven't managed to properly install a compositor for the transparency.
 
 
 # :arrow_down: Installation
