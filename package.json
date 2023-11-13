@@ -55,7 +55,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.8",
-    "@types/lodash.isequal": "^4.5.7",
+    "@types/lodash.isequal": "^4.5.8",
     "bootstrap": "^5.3.1",
     "chokidar": "^3.5.3",
     "dbus-final": "github:Jelmerro/dbus-final",
