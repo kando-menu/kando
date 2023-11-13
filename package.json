@@ -28,7 +28,7 @@
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-webpack": "^6.4.2",
     "@types/chai": "^4.3.9",
-    "@types/mocha": "^10.0.3",
+    "@types/mocha": "^10.0.4",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
