@@ -61,7 +61,7 @@
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
     "lodash.isequal": "^4.5.0",
-    "material-symbols": "^0.13.2",
+    "material-symbols": "^0.14.0",
     "node-addon-api": "^7.0.0"
   }
 }
