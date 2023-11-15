@@ -36,7 +36,6 @@ export class Editor extends EventEmitter {
     ];
 
     for (const tab of tabs) {
-      console.log(tab);
       const element = document.querySelector(`button[data-bs-target="#${tab.id}"]`);
       element.addEventListener('shown.bs.tab', () => {
         if (tab.large) {
