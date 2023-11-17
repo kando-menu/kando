@@ -20,6 +20,7 @@
 
 @import './sidebar/sidebar.scss';
 @import './toolbar/toolbar.scss';
+@import './background/background.scss';
 
 // Handle pointer events -----------------------------------------------------------------
 
@@ -62,21 +63,5 @@
 
 #kando.menu-visible.editor-visible #hide-editor-button {
   transform: translateY(0px);
-  opacity: 1;
-}
-
-// The Editor Background -----------------------------------------------------------------
-
-#kando-editor-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transition: opacity 250ms ease;
-  opacity: 0;
-}
-
-.editor-visible #kando-editor-background {
   opacity: 1;
 }

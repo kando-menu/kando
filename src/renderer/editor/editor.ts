@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 import { IEditorNode } from './editor-node';
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
+import { Background } from './background/background';
 
 export class Editor extends EventEmitter {
   // The container is the HTML element which contains the menu editor.
@@ -22,6 +23,10 @@ export class Editor extends EventEmitter {
   // parent of all other nodes. It will be created when the menu is shown and destroyed
   // when the menu is hidden.
   private root: IEditorNode = null;
+
+  // The background is an opaque div which is shown when the editor is open. It effectively
+  // hides the normal menu.
+  private background: Background = null;
 
   // The sidebar is displayed on the left screen edge. It contains some information
   // about Kando in general.
@@ -35,6 +40,10 @@ export class Editor extends EventEmitter {
     super();
 
     this.container = container;
+
+    // Initialize the background.
+    this.background = new Background();
+    this.container.appendChild(this.background.getContainer());
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
