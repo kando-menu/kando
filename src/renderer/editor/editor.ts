@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import { IEditorNode } from './editor-node';
-import { Sidebar } from './sidebar';
+import { Sidebar } from './sidebar/sidebar';
 
 export class Editor extends EventEmitter {
   // The container is the HTML element which contains the menu editor.
@@ -22,13 +22,18 @@ export class Editor extends EventEmitter {
   // when the menu is hidden.
   private root: IEditorNode = null;
 
+  // The sidebar is displayed on the left screen edge. It contains some information
+  // about Kando in general.
+  private sidebar: Sidebar = null;
+
   constructor(container: HTMLElement) {
     super();
 
     this.container = container;
 
-    // Load templates/sidebar.hbs and insert it into the container.
-    const sidebar = new Sidebar(this.container);
+    // Initialize the sidebar.
+    this.sidebar = new Sidebar();
+    this.container.appendChild(this.sidebar.getContainer());
 
     const tabs = [
       { id: 'kando-editor-themes-tab', large: true },

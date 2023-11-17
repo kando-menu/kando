@@ -18,6 +18,8 @@
 //   shown if the main #kando container has the classes 'menu-visible' and
 //   'editor-visible'.
 
+@import './sidebar/sidebar.scss';
+
 // Handle pointer events -----------------------------------------------------------------
 
 // First, let's take care of the user input. As the editor UI elements are drawn on top of
@@ -36,63 +38,6 @@
 #kando.menu-visible:not(.sidebar-visible) #show-sidebar-button,
 #kando.menu-visible:not(.editor-visible) #show-editor-button {
   pointer-events: all;
-}
-
-// The Sidebar ---------------------------------------------------------------------------
-
-// Positioning and animations of the show- and hide-sidebar buttons.
-
-#show-sidebar-button,
-#hide-sidebar-button {
-  position: absolute;
-  opacity: 0;
-  font-size: 1.5rem;
-  transform: translateX(-20px);
-
-  i {
-    top: 0;
-  }
-}
-
-#kando.menu-visible:not(.sidebar-visible) #show-sidebar-button {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-#kando.menu-visible.sidebar-visible #hide-sidebar-button {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-#kando-editor-sidebar {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  width: 500px;
-
-  .sidebar-item {
-    overflow: hidden;
-    margin: 15px;
-
-    opacity: 0;
-    transform: translateX(-20px);
-
-    transition:
-      transform 150ms ease,
-      opacity 150ms ease;
-  }
-
-  @for $i from 1 through 10 {
-    .sidebar-item:nth-child(#{$i}) {
-      transition-delay: #{($i - 1) * 30}ms;
-    }
-  }
-}
-
-#kando.menu-visible.sidebar-visible .sidebar-item {
-  opacity: 1;
-  transform: translateX(0px);
 }
 
 // The Edit Mode -------------------------------------------------------------------------

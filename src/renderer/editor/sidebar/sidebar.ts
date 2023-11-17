@@ -10,18 +10,35 @@
 
 import Handlebars from 'handlebars';
 
+/**
+ * This class is responsible for the sidebar on the left screen edge. It contains some
+ * information about Kando in general.
+ */
 export class Sidebar {
-  private element: HTMLElement = null;
+  // The container is the HTML element which contains the sidebar. It is created in the
+  // constructor and returned by the getContainer() method.
+  private container: HTMLElement = null;
+
+  // The videos are the tutorial videos which are shown in the tutorial tab. We store
+  // them here so that we can pause and play them when the tab is shown and hidden.
   private videos: HTMLVideoElement[] = [];
+
+  // This variable stores the index of the last visible video. We use it to pause the
+  // video when the tab is hidden.
   private lastVisibleVideo = 0;
 
-  constructor(container: HTMLElement) {
+  /**
+   * This constructor creates the HTML elements for the sidebar and wires up all the
+   * functionality.
+   */
+  constructor() {
+    // Load all the required templates.
     const tutorial = Handlebars.compile(require('./templates/tutorial-tab.hbs').default);
     const buttonTab = Handlebars.compile(require('./templates/button-tab.hbs').default);
     const sidebar = Handlebars.compile(require('./templates/sidebar.hbs').default);
 
-    this.element = document.createElement('div');
-    this.element.innerHTML = sidebar({
+    this.container = document.createElement('div');
+    this.container.innerHTML = sidebar({
       items: [
         {
           id: 'sidebar-tab-tutorial',
@@ -104,23 +121,23 @@ export class Sidebar {
     });
 
     // Add functionality to show and hide the sidebar.
-    this.element.querySelector('#show-sidebar-button').addEventListener('click', () => {
+    this.container.querySelector('#show-sidebar-button').addEventListener('click', () => {
       document.querySelector('#kando').classList.add('sidebar-visible');
     });
 
-    this.element.querySelector('#hide-sidebar-button').addEventListener('click', () => {
+    this.container.querySelector('#hide-sidebar-button').addEventListener('click', () => {
       document.querySelector('#kando').classList.remove('sidebar-visible');
     });
 
     // Add the tutorial videos.
-    this.element.querySelector('#sidebar-tab-tutorial').addEventListener(
+    this.container.querySelector('#sidebar-tab-tutorial').addEventListener(
       'show.bs.collapse',
       () => {
         for (let i = 0; i < 5; ++i) {
-          this.videos[i] = this.element.querySelector(
+          this.videos[i] = this.container.querySelector(
             `#tutorial-slides-video-${i + 1}`
           ) as HTMLVideoElement;
-          this.videos[i].src = require(`../../../assets/videos/tutorial-${i + 1}.mp4`);
+          this.videos[i].src = require(`../../../../assets/videos/tutorial-${i + 1}.mp4`);
           this.videos[i].loop = true;
         }
       },
@@ -128,7 +145,7 @@ export class Sidebar {
     );
 
     // Start playing a video when the tutorial tab is shown.
-    this.element
+    this.container
       .querySelector('#sidebar-tab-tutorial')
       .addEventListener('shown.bs.collapse', () => {
         this.videos[this.lastVisibleVideo].currentTime = 0;
@@ -136,14 +153,14 @@ export class Sidebar {
       });
 
     // Pause the last visible video when the tutorial tab is hidden.
-    this.element
+    this.container
       .querySelector('#sidebar-tab-tutorial')
       .addEventListener('hidden.bs.collapse', () => {
         this.videos[this.lastVisibleVideo].pause();
       });
 
     // Start playing a video when its slide is shown and pause the last visible video.
-    this.element
+    this.container
       .querySelector('#sidebar-tab-tutorial-content')
       .addEventListener('slide.bs.carousel', (e) => {
         this.videos[this.lastVisibleVideo].pause();
@@ -154,12 +171,12 @@ export class Sidebar {
       });
 
     // Show the dev tools if the button is clicked.
-    this.element.querySelector('#dev-tools-button').addEventListener('click', () => {
+    this.container.querySelector('#dev-tools-button').addEventListener('click', () => {
       window.api.showDevTools();
     });
 
     // Initialize all the example action buttons.
-    this.element.querySelector('#shortcut-button-1').addEventListener('click', () => {
+    this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
       window.api.simulateKeys([
         {
           name: 'ControlLeft',
@@ -194,7 +211,7 @@ export class Sidebar {
       ]);
     });
 
-    this.element.querySelector('#shortcut-button-2').addEventListener('click', () => {
+    this.container.querySelector('#shortcut-button-2').addEventListener('click', () => {
       window.api.simulateKeys([
         {
           name: 'AltLeft',
@@ -229,7 +246,7 @@ export class Sidebar {
       ]);
     });
 
-    this.element.querySelector('#shortcut-button-3').addEventListener('click', () => {
+    this.container.querySelector('#shortcut-button-3').addEventListener('click', () => {
       window.api.simulateKeys([
         {
           name: 'ControlLeft',
@@ -284,7 +301,7 @@ export class Sidebar {
       ]);
     });
 
-    this.element.querySelector('#shortcut-button-4').addEventListener('click', () => {
+    this.container.querySelector('#shortcut-button-4').addEventListener('click', () => {
       window.api.simulateKeys([
         {
           name: 'MetaLeft',
@@ -299,19 +316,21 @@ export class Sidebar {
       ]);
     });
 
-    this.element.querySelector('#blog-post-button').addEventListener('click', () => {
+    this.container.querySelector('#blog-post-button').addEventListener('click', () => {
       window.api.openURI('https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8');
     });
 
-    this.element.querySelector('#url-button').addEventListener('click', () => {
+    this.container.querySelector('#url-button').addEventListener('click', () => {
       window.api.openURI('https://github.com/kando-menu/kando');
     });
 
-    this.element.querySelector('#uri-button').addEventListener('click', () => {
+    this.container.querySelector('#uri-button').addEventListener('click', () => {
       window.api.openURI('file:///');
     });
+  }
 
-    // Finally, add the sidebar to the container.
-    container.appendChild(this.element);
+  /** This method returns the container of the sidebar. */
+  public getContainer(): HTMLElement {
+    return this.container;
   }
 }
