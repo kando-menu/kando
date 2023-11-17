@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IEditorNode } from './editor-node';
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
@@ -61,8 +60,6 @@ export class Editor {
     });
     this.container.appendChild(this.toolbar.getContainer());
   }
-
-  public setMenu(root: IEditorNode) {}
 
   public show() {
     this.container.classList.add('visible');
