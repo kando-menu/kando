@@ -72,20 +72,6 @@ window.api.showMenu((root, pos) => {
   editor.setMenu(root);
 });
 
-// Set up the editor ---------------------------------------------------------------------
-
-document.querySelector('#show-editor-button').addEventListener('click', () => {
-  menu.enterEditMode();
-  editor.show();
-  document.querySelector('#kando').classList.add('editor-visible');
-  document.querySelector('#kando').classList.remove('sidebar-visible');
-});
-
-document.querySelector('#hide-editor-button').addEventListener('click', () => {
-  menu.exitEditMode();
-  document.querySelector('#kando').classList.remove('editor-visible');
-});
-
 // Miscellaneous -------------------------------------------------------------------------
 
 // Initialize all tooltips.

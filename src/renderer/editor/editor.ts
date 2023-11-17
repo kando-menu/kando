@@ -12,6 +12,7 @@ import { EventEmitter } from 'events';
 
 import { IEditorNode } from './editor-node';
 import { Sidebar } from './sidebar/sidebar';
+import { Toolbar } from './toolbar/toolbar';
 
 export class Editor extends EventEmitter {
   // The container is the HTML element which contains the menu editor.
@@ -26,6 +27,10 @@ export class Editor extends EventEmitter {
   // about Kando in general.
   private sidebar: Sidebar = null;
 
+  // The toolbar is displayed on the bottom of the screen. It allows the user to
+  // switch between different menus, add new items, etc.
+  private toolbar: Toolbar = null;
+
   constructor(container: HTMLElement) {
     super();
 
@@ -35,25 +40,9 @@ export class Editor extends EventEmitter {
     this.sidebar = new Sidebar();
     this.container.appendChild(this.sidebar.getContainer());
 
-    const tabs = [
-      { id: 'kando-editor-themes-tab', large: true },
-      { id: 'kando-menu-themes-tab', large: true },
-      { id: 'kando-menus-tab', large: false },
-      { id: 'kando-add-items-tab', large: false },
-      { id: 'kando-stash-tab', large: false },
-      { id: 'kando-trash-tab', large: false },
-    ];
-
-    for (const tab of tabs) {
-      const element = document.querySelector(`button[data-bs-target="#${tab.id}"]`);
-      element.addEventListener('shown.bs.tab', () => {
-        if (tab.large) {
-          document.querySelector('#kando-editor-toolbar').classList.add('large');
-        } else {
-          document.querySelector('#kando-editor-toolbar').classList.remove('large');
-        }
-      });
-    }
+    // Initialize the toolbar.
+    this.toolbar = new Toolbar();
+    this.container.appendChild(this.toolbar.getContainer());
   }
 
   public setMenu(root: IEditorNode) {

@@ -39,12 +39,40 @@ export class Sidebar {
 
     this.container = document.createElement('div');
     this.container.innerHTML = sidebar({
-      items: [
+      tabs: [
         {
           id: 'sidebar-tab-tutorial',
           icon: 'school',
           title: 'Tutorial',
-          content: tutorial({ id: 'tutorial-slides' }),
+          content: tutorial({
+            id: 'tutorial-slides',
+            slides: [
+              {
+                heading: 'Click Anywhere:',
+                subheading:
+                  'You do not have to exactly click on an item, you just have to click somewhere into its wedge!',
+              },
+              {
+                heading: 'Go Back:',
+                subheading: 'Quickly navigate one level up by clicking the center item.',
+              },
+              {
+                heading: 'Marking Mode:',
+                subheading:
+                  'Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.',
+              },
+              {
+                heading: 'Turbo Mode:',
+                subheading:
+                  'If you keep Ctrl pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!',
+              },
+              {
+                heading: 'No accidental selections:',
+                subheading:
+                  'Final items are only selected as soon as you release your mouse button in "Marking Mode" or Ctrl in "Turbo Mode". Use this to explore the menu!',
+              },
+            ],
+          }),
         },
         {
           id: 'sidebar-tab-example-actions',
@@ -129,13 +157,13 @@ export class Sidebar {
       document.querySelector('#kando').classList.remove('sidebar-visible');
     });
 
-    // Add the tutorial videos.
+    // Add the tutorial videos. We do this here because else webpack will not pick them up.
     this.container.querySelector('#sidebar-tab-tutorial').addEventListener(
       'show.bs.collapse',
       () => {
         for (let i = 0; i < 5; ++i) {
           this.videos[i] = this.container.querySelector(
-            `#tutorial-slides-video-${i + 1}`
+            `#tutorial-slides-video-${i}`
           ) as HTMLVideoElement;
           this.videos[i].src = require(`../../../../assets/videos/tutorial-${i + 1}.mp4`);
           this.videos[i].loop = true;
