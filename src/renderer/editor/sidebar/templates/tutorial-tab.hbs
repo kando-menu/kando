@@ -15,7 +15,8 @@
 <div id='{{id}}' class='carousel slide overflow-hidden'>
   <div class='carousel-indicators'>
     {{#each slides}}
-    <button data-bs-target='#{{../id}}' data-bs-slide-to='{{@index}}' {{#if @first}} class='active' {{/if}}></button>
+      <button data-bs-target='#{{../id}}' data-bs-slide-to='{{@index}}'
+              {{#if @first}} class='active' {{/if}}></button>
     {{/each}}
   </div>
   <div class='carousel-inner rounded-1'>
