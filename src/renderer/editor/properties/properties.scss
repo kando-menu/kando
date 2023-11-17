@@ -1,0 +1,21 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+#kando-editor-container.edit-mode {
+  #kando-menu-properties {
+    background-color: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: calc(10vh + 40px);
+    bottom: max(10vh, 250px + 40px); // 250px is the height of the toolbar.
+    right: 10vw;
+
+    left: calc(60vw + 10px);
+  }
+}

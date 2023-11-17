@@ -14,6 +14,7 @@ import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
+import { Properties } from './properties/properties';
 
 export class Editor {
   // The container is the HTML element which contains the menu editor.
@@ -23,6 +24,14 @@ export class Editor {
   // hides the normal menu.
   private background: Background = null;
 
+  // The preview is shown in the center of the screen. It allows the user to edit
+  // one level of the menu.
+  private preview: Preview = null;
+
+  // The properties view is shown on the right side of the screen. It allows the user to
+  // edit the properties of the currently selected menu item.
+  private properties: Properties = null;
+
   // The sidebar is displayed on the left screen edge. It contains some information
   // about Kando in general.
   private sidebar: Sidebar = null;
@@ -30,10 +39,6 @@ export class Editor {
   // The toolbar is displayed on the bottom of the screen. It allows the user to
   // switch between different menus, add new items, etc.
   private toolbar: Toolbar = null;
-
-  // The preview is shown in the center of the screen. It allows the user to edit
-  // one level of the menu.
-  private preview: Preview = null;
 
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
@@ -46,6 +51,14 @@ export class Editor {
     this.background = new Background();
     this.container.appendChild(this.background.getContainer());
 
+    // Initialize the preview.
+    this.preview = new Preview();
+    this.container.appendChild(this.preview.getContainer());
+
+    // Initialize the properties view.
+    this.properties = new Properties();
+    this.container.appendChild(this.properties.getContainer());
+
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
     this.container.appendChild(this.sidebar.getContainer());
@@ -57,16 +70,14 @@ export class Editor {
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
     this.container.appendChild(this.toolbar.getContainer());
 
-    // Initialize the preview.
-    this.preview = new Preview();
-    this.container.appendChild(this.preview.getContainer());
-
     // Initialize all tooltips.
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
       new Tooltip(elem, {
         delay: { show: 500, hide: 0 },
       });
     });
+
+    this.enterEditMode();
   }
 
   /**
