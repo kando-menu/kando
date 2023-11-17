@@ -41,7 +41,7 @@
   pointer-events: all;
 }
 
-// The Edit Mode -------------------------------------------------------------------------
+// The Show- / Hide-Editor Buttons -------------------------------------------------------
 
 #show-editor-button,
 #hide-editor-button {
@@ -65,6 +65,8 @@
   opacity: 1;
 }
 
+// The Editor Background -----------------------------------------------------------------
+
 #kando-editor-background {
   position: absolute;
   top: 0;
@@ -77,13 +79,4 @@
 
 .editor-visible #kando-editor-background {
   opacity: 1;
-}
-
-// Other Editor Components ---------------------------------------------------------------
-
-.swirl {
-  display: inline-block;
-  background-image: url(../../assets/images/swirl.svg);
-  width: 160px;
-  height: 14px;
 }

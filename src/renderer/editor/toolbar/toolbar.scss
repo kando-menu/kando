@@ -36,6 +36,13 @@
     height: 80vh;
     bottom: 10vh;
   }
+
+  .swirl {
+    display: inline-block;
+    background-image: url(../../assets/images/swirl.svg);
+    width: 160px;
+    height: 14px;
+  }
 }
 
 #kando.menu-visible.editor-visible #kando-editor-toolbar {
