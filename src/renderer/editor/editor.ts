@@ -11,6 +11,7 @@
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
+import { Preview } from './preview/preview';
 
 export class Editor {
   // The container is the HTML element which contains the menu editor.
@@ -27,6 +28,10 @@ export class Editor {
   // The toolbar is displayed on the bottom of the screen. It allows the user to
   // switch between different menus, add new items, etc.
   private toolbar: Toolbar = null;
+
+  // The preview is shown in the center of the screen. It allows the user to edit
+  // one level of the menu.
+  private preview: Preview = null;
 
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
@@ -59,6 +64,11 @@ export class Editor {
       this.container.classList.remove('toolbar-visible');
     });
     this.container.appendChild(this.toolbar.getContainer());
+
+    // Initialize the preview.
+    this.preview = new Preview();
+    this.container.appendChild(this.preview.getContainer());
+
   }
 
   public show() {
