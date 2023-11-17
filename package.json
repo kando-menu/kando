@@ -43,6 +43,7 @@
     "node-loader": "^2.0.0",
     "prettier": "^3.1.0",
     "prettier-plugin-jsdoc": "^1.0.1",
+    "raw-loader": "^4.0.2",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
     "string-replace-loader": "^3.1.0",
@@ -60,6 +61,7 @@
     "chokidar": "^3.5.3",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
+    "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
     "material-symbols": "^0.14.0",
     "node-addon-api": "^7.0.0"

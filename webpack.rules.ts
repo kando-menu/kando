@@ -54,4 +54,8 @@ export const rules: Required<ModuleOptions>['rules'] = [
       filename: 'assets/[name][ext]',
     },
   },
+  {
+    test: /\.hbs$/i,
+    use: 'raw-loader',
+  },
 ];

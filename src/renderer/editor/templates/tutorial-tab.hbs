@@ -1,0 +1,72 @@
+<div id="{{id}}" class='carousel slide overflow-hidden'>
+  <div class='carousel-indicators'>
+    <button data-bs-target='#{{id}}' data-bs-slide-to='0' class='active'></button>
+    <button data-bs-target='#{{id}}' data-bs-slide-to='1'></button>
+    <button data-bs-target='#{{id}}' data-bs-slide-to='2'></button>
+    <button data-bs-target='#{{id}}' data-bs-slide-to='3'></button>
+    <button data-bs-target='#{{id}}' data-bs-slide-to='4'></button>
+  </div>
+  <div class='carousel-inner rounded-1'>
+    <div class='carousel-item active'>
+      <div class='carousel-caption'>
+        <p>
+          <strong>Click Anywhere:</strong>
+          You do not have to exactly click on an item, you just have to click somewhere
+          into its wedge!
+        </p>
+      </div>
+      <video id='{{id}}-video-1' class='img-fluid' />
+    </div>
+    <div class='carousel-item'>
+      <div class='carousel-caption'>
+        <p>
+          <strong>Go Back:</strong>
+          Quickly navigate one level up by clicking the center item.
+        </p>
+      </div>
+      <video id='{{id}}-video-2' class='img-fluid' />
+    </div>
+    <div class='carousel-item'>
+      <div class='carousel-caption'>
+        <p>
+          <strong>Marking Mode:</strong>
+          Drag over an item to enter marking mode. If you pause the pointer movement or
+          make a turn, the currently dragged submenu will be opened.
+        </p>
+      </div>
+      <video id='{{id}}-video-3' class='img-fluid' />
+    </div>
+    <div class='carousel-item'>
+      <div class='carousel-caption'>
+        <p>
+          <strong>Turbo Mode:</strong>
+          If you keep
+          <code>Ctrl</code>
+          pressed after opening the menu, you can perform selections by just moving the
+          pointer. This is the fastest way to select items!
+        </p>
+      </div>
+      <video id='{{id}}-video-4' class='img-fluid' />
+    </div>
+    <div class='carousel-item'>
+      <div class='carousel-caption'>
+        <p>
+          <strong>No accidental selections:</strong>
+          Final items are only selected as soon as you release your mouse button in
+          <em>Marking Mode</em>
+          or
+          <code>Ctrl</code>
+          in
+          <em>Turbo Mode</em>. Use this to explore the menu!
+        </p>
+      </div>
+      <video id='{{id}}-video-5' class='img-fluid' />
+    </div>
+  </div>
+  <button class='carousel-control-prev' data-bs-target='#{{id}}' data-bs-slide='prev'>
+    <span class='carousel-control-prev-icon'></span>
+  </button>
+  <button class='carousel-control-next' data-bs-target='#{{id}}' data-bs-slide='next'>
+    <span class='carousel-control-next-icon'></span>
+  </button>
+</div>

@@ -1,0 +1,19 @@
+<div>
+  <p>
+    {{intro}}
+  </p>
+  <div class='row g-2'>
+    {{#each buttons}}
+      <span class='{{class}}'>
+        <button
+          id='{{id}}'
+          class='btn btn-secondary w-100'
+          data-bs-toggle='tooltip'
+          data-bs-title='{{tooltip}}'
+        >
+          <i class='material-symbols-rounded'>{{icon}}</i>
+          {{title}}
+        </button></span>
+    {{/each}}
+  </div>
+</div>
