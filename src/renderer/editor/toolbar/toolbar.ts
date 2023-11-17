@@ -96,12 +96,12 @@ export class Toolbar extends EventEmitter {
 
     // Wire up the buttons.
     this.container
-      .querySelector('#show-toolbar-button')
-      .addEventListener('click', () => this.emit('show'));
+      .querySelector('#enter-edit-mode-button')
+      .addEventListener('click', () => this.emit('enter-edit-mode'));
 
     this.container
-      .querySelector('#hide-toolbar-button')
-      .addEventListener('click', () => this.emit('hide'));
+      .querySelector('#leave-edit-mode-button')
+      .addEventListener('click', () => this.emit('leave-edit-mode'));
 
     // Some of the tabs should cover the entire editor.
     const tabs = [

@@ -74,8 +74,8 @@ menu.on('select', () => {
 // Hide the menu when the user presses escape.
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
-    if (editor.isToolbarVisible()) {
-      editor.hideToolbar();
+    if (editor.isInEditMode()) {
+      editor.leaveEditMode();
     } else {
       window.api.hideWindow(300);
       menu.hide();

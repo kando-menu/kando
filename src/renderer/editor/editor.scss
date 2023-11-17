@@ -24,15 +24,14 @@
 
 // Handle pointer events -----------------------------------------------------------------
 
-// First, let's take care of the user input. As the editor UI elements are drawn on top of
-// the actual pie menu, we have to make sure that they do not intercept pointer events
-// if the editor is hidden. An exception are the buttons for showing the sidebar or for
-// entering the edit mode.
-#kando-editor-container,
-#kando-editor-container.toolbar-visible #show-toolbar-button {
+// First, let's take care of the user input. As the editor UI elements are always drawn on
+// top of the actual pie menu, we have to make sure that they do not intercept pointer
+// events if the editor is not in edit-mode. The sidebar and the show-toolbar button make
+// sure to receive pointer events themselves.
+#kando-editor-container {
   pointer-events: none;
-}
 
-#kando-editor-container.toolbar-visible {
-  pointer-events: all;
+  &.edit-mode {
+    pointer-events: all;
+  }
 }

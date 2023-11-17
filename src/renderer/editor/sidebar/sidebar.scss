@@ -60,6 +60,10 @@
     }
   }
 
+  &.visible #kando-editor-sidebar:not(.visible) {
+    pointer-events: none;
+  }
+
   &.visible #kando-editor-sidebar.visible .sidebar-item {
     pointer-events: all;
     opacity: 1;

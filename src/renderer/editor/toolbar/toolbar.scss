@@ -9,8 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 #kando-editor-container {
-  #show-toolbar-button,
-  #hide-toolbar-button {
+  #enter-edit-mode-button,
+  #leave-edit-mode-button {
     position: absolute;
     opacity: 0;
     font-size: 1.5rem;
@@ -21,12 +21,14 @@
     }
   }
 
-  &.visible:not(.toolbar-visible) #show-toolbar-button {
+  &.visible:not(.edit-mode) #enter-edit-mode-button {
+    pointer-events: all;
     transform: translateY(0px);
     opacity: 1;
   }
 
-  &.visible.toolbar-visible #hide-toolbar-button {
+  &.visible.edit-mode #leave-edit-mode-button {
+    pointer-events: all;
     transform: translateY(0px);
     opacity: 1;
   }
@@ -68,7 +70,7 @@
     }
   }
 
-  &.visible.toolbar-visible #kando-editor-toolbar {
+  &.visible.edit-mode #kando-editor-toolbar {
     transform: none;
     opacity: 1;
   }
