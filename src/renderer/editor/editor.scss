@@ -19,6 +19,7 @@
 //   'editor-visible'.
 
 @import './sidebar/sidebar.scss';
+@import './toolbar/toolbar.scss';
 
 // Handle pointer events -----------------------------------------------------------------
 
@@ -75,41 +76,6 @@
 }
 
 .editor-visible #kando-editor-background {
-  opacity: 1;
-}
-
-#kando-editor-toolbar {
-  position: absolute;
-  bottom: 10px;
-  left: 10%;
-  width: 80%;
-  opacity: 0;
-  height: 250px;
-
-  transform: translateY(20px);
-
-  transition:
-    height 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
-    bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
-    transform 150ms ease,
-    opacity 150ms ease;
-
-  .nav-tabs {
-    gap: 8px;
-
-    .nav-link {
-      padding-bottom: 0;
-    }
-  }
-
-  &.large {
-    height: 80vh;
-    bottom: 10vh;
-  }
-}
-
-#kando.menu-visible.editor-visible #kando-editor-toolbar {
-  transform: none;
   opacity: 1;
 }
 
