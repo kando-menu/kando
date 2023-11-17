@@ -81,9 +81,8 @@ interface Options<T> {
  *
  * @template T The type of the settings object.
  * @param options The options object.
- * @param options.directory The directory in which the settings file should be stored. If
- *   not set, the user's config directory is used.
- * @param options.file The name of the settings file. If not set, `settings.json` is used.
+ * @param options.directory The directory in which the settings file should be stored.
+ * @param options.file The name of the settings file.
  * @param options.defaults The default settings object. This object is used when the
  *   settings file does not exist yet.
  */

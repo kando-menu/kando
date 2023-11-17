@@ -1,0 +1,66 @@
+{{! //////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+}}
+
+<!--
+  This is the button in the upper left corner which opens the sidebar.
+-->
+<button id='show-sidebar-button' class='btn dark'>
+  <i class='material-symbols-rounded'>info</i>
+</button>
+
+<!--
+  This is the sidebar. It contains some information about the prototype and
+  some example actions.
+-->
+<div id='kando-editor-sidebar'>
+  <button id='hide-sidebar-button' class='btn dark rounded-end-circle'>
+    <i class='material-symbols-rounded'>close</i>
+  </button>
+
+  <div class='sidebar-item p-3'>
+    <h1 class='display-5 kando-font'>Welcome to Kando!</h1>
+    <p>
+      This prototype is not yet a functional menu, but you can already test the
+      interaction! Selecting something in the menu has no effect yet. So feel free to play
+      around! Close the menu by pressing
+      <code>ESC</code>
+      or by clicking on the root item's center.
+    </p>
+    <p>
+      This version contains some initial elements of the future menu editor. You can open
+      it by clicking on the small gear icon in the lower right corner.
+    </p>
+
+    <div id='blog-post-button' class='btn btn-secondary w-100'>
+      <i class='material-symbols-rounded'>open_in_new</i>
+      Read more about the future editor!
+    </div>
+  </div>
+
+  {{#each tabs}}
+    <div id='{{id}}' class='sidebar-item accordion accordion-flush'>
+      <div class='accordion-item'>
+        <div class='accordion-header'>
+          <button class='accordion-button collapsed' data-bs-toggle='collapse'
+                  data-bs-target='#{{id}}-content'>
+            <span class='fs-5'>
+              <i class='material-symbols-rounded'>{{icon}}</i>
+              {{title}}
+            </span>
+          </button>
+        </div>
+        <div id='{{id}}-content' class='accordion-collapse collapse'>
+          {{{content}}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>

@@ -11,6 +11,9 @@
 import { EventEmitter } from 'events';
 
 import { IEditorNode } from './editor-node';
+import { Sidebar } from './sidebar/sidebar';
+import { Toolbar } from './toolbar/toolbar';
+import { Background } from './background/background';
 
 export class Editor extends EventEmitter {
   // The container is the HTML element which contains the menu editor.
@@ -21,31 +24,34 @@ export class Editor extends EventEmitter {
   // when the menu is hidden.
   private root: IEditorNode = null;
 
+  // The background is an opaque div which is shown when the editor is open. It effectively
+  // hides the normal menu.
+  private background: Background = null;
+
+  // The sidebar is displayed on the left screen edge. It contains some information
+  // about Kando in general.
+  private sidebar: Sidebar = null;
+
+  // The toolbar is displayed on the bottom of the screen. It allows the user to
+  // switch between different menus, add new items, etc.
+  private toolbar: Toolbar = null;
+
   constructor(container: HTMLElement) {
     super();
 
     this.container = container;
 
-    const tabs = [
-      { id: 'kando-editor-themes-tab', large: true },
-      { id: 'kando-menu-themes-tab', large: true },
-      { id: 'kando-menus-tab', large: false },
-      { id: 'kando-add-items-tab', large: false },
-      { id: 'kando-stash-tab', large: false },
-      { id: 'kando-trash-tab', large: false },
-    ];
+    // Initialize the background.
+    this.background = new Background();
+    this.container.appendChild(this.background.getContainer());
 
-    for (const tab of tabs) {
-      console.log(tab);
-      const element = document.querySelector(`button[data-bs-target="#${tab.id}"]`);
-      element.addEventListener('shown.bs.tab', () => {
-        if (tab.large) {
-          document.querySelector('#kando-editor-toolbar').classList.add('large');
-        } else {
-          document.querySelector('#kando-editor-toolbar').classList.remove('large');
-        }
-      });
-    }
+    // Initialize the sidebar.
+    this.sidebar = new Sidebar();
+    this.container.appendChild(this.sidebar.getContainer());
+
+    // Initialize the toolbar.
+    this.toolbar = new Toolbar();
+    this.container.appendChild(this.toolbar.getContainer());
   }
 
   public setMenu(root: IEditorNode) {

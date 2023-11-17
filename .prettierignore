@@ -3,3 +3,7 @@
 
 # Do not format Markdown files
 *.md
+
+# We ignore Handlebars templates because they contain things such as the ../ parent
+# context slector which the used Glimmer parser does not understand.
+*.hbs
