@@ -19,7 +19,7 @@
     opacity: 0;
   }
 
-  &.visible.toolbar-visible #kando-editor-background {
+  &.visible.edit-mode #kando-editor-background {
     opacity: 1;
   }
 }

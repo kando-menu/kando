@@ -22,12 +22,14 @@
     }
   }
 
-  &.visible:not(.sidebar-visible) #show-sidebar-button {
+  &.visible #show-sidebar-button.visible {
+    pointer-events: all;
     transform: translateX(0px);
     opacity: 1;
   }
 
-  &.visible.sidebar-visible #hide-sidebar-button {
+  &.visible #hide-sidebar-button.visible {
+    pointer-events: all;
     transform: translateX(0px);
     opacity: 1;
   }
@@ -58,7 +60,12 @@
     }
   }
 
-  &.visible.sidebar-visible #kando-editor-sidebar .sidebar-item {
+  &.visible #kando-editor-sidebar:not(.visible) {
+    pointer-events: none;
+  }
+
+  &.visible #kando-editor-sidebar.visible .sidebar-item {
+    pointer-events: all;
     opacity: 1;
     transform: translateX(0px);
   }

@@ -48,15 +48,13 @@ export class Editor {
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
-    this.sidebar.on('show', () => this.container.classList.add('sidebar-visible'));
-    this.sidebar.on('hide', () => this.container.classList.remove('sidebar-visible'));
     this.container.appendChild(this.sidebar.getContainer());
 
-    // Initialize the toolbar.
+    // Initialize the toolbar. The toolbar also brings the buttons for entering and
+    // leaving edit mode. We wire up the corresponding events here.
     this.toolbar = new Toolbar();
-    this.toolbar.on('show', () => this.container.classList.add('toolbar-visible'));
-    this.toolbar.on('show', () => this.container.classList.remove('sidebar-visible'));
-    this.toolbar.on('hide', () => this.container.classList.remove('toolbar-visible'));
+    this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
+    this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
     this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize the preview.
@@ -71,19 +69,42 @@ export class Editor {
     });
   }
 
+  /**
+   * This is used to show the entire editor. Most likely, this will only show the sidebar,
+   * the other components are hidden by default and will only be shown when
+   * enterEditMode() is called.
+   */
   public show() {
     this.container.classList.add('visible');
   }
 
+  /**
+   * This is used to hide the entire editor. If the sidebar was visible, it will be shown
+   * again when show() is called.
+   */
   public hide() {
-    this.container.classList.remove('visible', 'toolbar-visible');
+    this.container.classList.remove('visible', 'edit-mode');
   }
 
-  public hideToolbar() {
-    this.container.classList.remove('toolbar-visible');
+  /**
+   * This shows the other components of the editor, such as the toolbar and the
+   * background. To make sure that enough space is available, the sidebar is hidden.
+   */
+  public enterEditMode() {
+    this.container.classList.add('edit-mode');
+    this.sidebar.hide();
   }
 
-  public isToolbarVisible(): boolean {
-    return this.container.classList.contains('toolbar-visible');
+  /**
+   * This hides the edit-mode components of the editor, such as the toolbar and the
+   * background. The sidebar will remain visible if it is currently shown.
+   */
+  public leaveEditMode() {
+    this.container.classList.remove('edit-mode');
+  }
+
+  /** This method returns true if the editor is currently in edit mode. */
+  public isInEditMode(): boolean {
+    return this.container.classList.contains('edit-mode');
   }
 }
