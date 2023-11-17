@@ -197,8 +197,12 @@ export class KandoApp {
     this.window = window;
   }
 
-  /** Setup IPC communication with the renderer process. */
+  /**
+   * Setup IPC communication with the renderer process. See ../renderer/preload.ts for
+   * more information on the exposed functionality.
+   */
   private initRendererIPC() {
+    // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
     });
@@ -213,19 +217,23 @@ export class KandoApp {
       }, delay);
     });
 
+    // Print a message to the console of the host process.
     ipcMain.on('log', (event, message) => {
       console.log(message);
     });
 
+    // Simulate a key press.
     ipcMain.on('simulate-keys', (event, keys) => {
       this.window.hide();
       this.backend.simulateKeys(keys);
     });
 
+    // Move the mouse pointer.
     ipcMain.on('move-pointer', (event, dist) => {
       this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
     });
 
+    // Open an URI with the default application.
     ipcMain.on('open-uri', (event, uri) => {
       this.window.hide();
       shell.openExternal(uri);
