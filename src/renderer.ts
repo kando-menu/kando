@@ -60,7 +60,6 @@ document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
     document.querySelector('#kando').classList.remove('menu-visible', 'editor-visible');
     window.api.hideWindow(300);
-    menu.exitEditMode();
     menu.hide();
   }
 });
