@@ -334,30 +334,6 @@ export class Menu extends EventEmitter {
     this.selectionChain = [];
   }
 
-  /**
-   * When the menu editor is opened, the actual menu is hidden. We apply a short
-   * transition in which the menu is faded out and moved to the center of the screen.
-   * Also, the menu is set to pointer-events: none, so that the user can interact with the
-   * editor.
-   */
-  public enterEditMode() {
-    const position = this.getActiveNodePosition();
-
-    // Compute center of screen.
-    const diff = {
-      x: window.innerWidth / 2 - position.x,
-      y: window.innerHeight / 2 - position.y,
-    };
-
-    this.selectionChain[0].position.x += diff.x;
-    this.selectionChain[0].position.y += diff.y;
-
-    this.updateTransform(this.root);
-  }
-
-  /** When the menu editor is closed, the menu is faded in again. */
-  public exitEditMode() {}
-
   // --------------------------------------------------------------------- private methods
 
   /**
