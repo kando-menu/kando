@@ -91,17 +91,19 @@ export class Toolbar {
       ],
     });
 
+    // Wire up the buttons. We initially hide the sidebar when the editor is shown in
+    // order to make some space for the editor. The user can still show the sidebar by
+    // clicking the button.
     this.container.querySelector('#show-editor-button').addEventListener('click', () => {
-      // menu.enterEditMode();
       document.querySelector('#kando').classList.add('editor-visible');
       document.querySelector('#kando').classList.remove('sidebar-visible');
     });
 
     this.container.querySelector('#hide-editor-button').addEventListener('click', () => {
-      // menu.exitEditMode();
       document.querySelector('#kando').classList.remove('editor-visible');
     });
 
+    // Some of the tabs should cover the entire editor.
     const tabs = [
       { id: 'kando-menus-tab', large: false },
       { id: 'kando-add-items-tab', large: false },
@@ -123,7 +125,7 @@ export class Toolbar {
     }
   }
 
-  /** This method returns the container of the sidebar. */
+  /** This method returns the container of the editor toolbar. */
   public getContainer(): HTMLElement {
     return this.container;
   }

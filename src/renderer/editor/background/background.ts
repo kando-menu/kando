@@ -20,7 +20,7 @@ export class Background {
     this.container.id = 'kando-editor-background';
   }
 
-  /** This method returns the container of the sidebar. */
+  /** This method returns the background container. */
   public getContainer(): HTMLElement {
     return this.container;
   }
