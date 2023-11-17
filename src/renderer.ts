@@ -10,8 +10,6 @@
 
 import './renderer/index.scss';
 
-import { Tooltip } from 'bootstrap';
-
 import { Menu } from './renderer/menu/menu';
 import { Editor } from './renderer/editor/editor';
 
@@ -72,16 +70,6 @@ document.addEventListener('keyup', (ev) => {
 window.api.showMenu((root, pos) => {
   menu.show(root, pos);
   editor.show();
-});
-
-// Miscellaneous -------------------------------------------------------------------------
-
-// Initialize all tooltips.
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-tooltipTriggerList.forEach((tooltipTriggerEl) => {
-  new Tooltip(tooltipTriggerEl, {
-    delay: { show: 500, hide: 0 },
-  });
 });
 
 // This is helpful during development as it shows us when the renderer process has

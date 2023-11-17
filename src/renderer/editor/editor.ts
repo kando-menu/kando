@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { Tooltip } from 'bootstrap';
+
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
@@ -41,24 +43,23 @@ export class Editor {
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
-    this.sidebar.on('show', () => {
-      this.container.classList.add('sidebar-visible');
-    });
-    this.sidebar.on('hide', () => {
-      this.container.classList.remove('sidebar-visible');
-    });
+    this.sidebar.on('show', () => this.container.classList.add('sidebar-visible'));
+    this.sidebar.on('hide', () => this.container.classList.remove('sidebar-visible'));
     this.container.appendChild(this.sidebar.getContainer());
 
     // Initialize the toolbar.
     this.toolbar = new Toolbar();
-    this.toolbar.on('show', () => {
-      this.container.classList.add('toolbar-visible');
-      this.container.classList.remove('sidebar-visible');
-    });
-    this.toolbar.on('hide', () => {
-      this.container.classList.remove('toolbar-visible');
-    });
+    this.toolbar.on('show', () => this.container.classList.add('toolbar-visible'));
+    this.toolbar.on('show', () => this.container.classList.remove('sidebar-visible'));
+    this.toolbar.on('hide', () => this.container.classList.remove('toolbar-visible'));
     this.container.appendChild(this.toolbar.getContainer());
+
+    // Initialize all tooltips.
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
+      new Tooltip(elem, {
+        delay: { show: 500, hide: 0 },
+      });
+    });
   }
 
   public show() {
