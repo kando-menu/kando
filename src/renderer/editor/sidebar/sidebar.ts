@@ -9,13 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
-import { EventEmitter } from 'events';
 
 /**
  * This class is responsible for the sidebar on the left screen edge. It contains some
  * information about Kando in general.
  */
-export class Sidebar extends EventEmitter {
+export class Sidebar {
   // The container is the HTML element which contains the sidebar. It is created in the
   // constructor and returned by the getContainer() method.
   private container: HTMLElement = null;
@@ -33,8 +32,6 @@ export class Sidebar extends EventEmitter {
    * functionality.
    */
   constructor() {
-    super();
-
     // Load all the required templates.
     const tutorial = Handlebars.compile(require('./templates/tutorial-tab.hbs').default);
     const buttonTab = Handlebars.compile(require('./templates/button-tab.hbs').default);
@@ -154,11 +151,11 @@ export class Sidebar extends EventEmitter {
     // Add functionality to show and hide the sidebar.
     this.container
       .querySelector('#show-sidebar-button')
-      .addEventListener('click', () => this.emit('show'));
+      .addEventListener('click', () => this.show());
 
     this.container
       .querySelector('#hide-sidebar-button')
-      .addEventListener('click', () => this.emit('hide'));
+      .addEventListener('click', () => this.hide());
 
     // Add the tutorial videos. We do this here because else webpack will not pick them up.
     this.container.querySelector('#sidebar-tab-tutorial').addEventListener(
@@ -358,6 +355,23 @@ export class Sidebar extends EventEmitter {
     this.container.querySelector('#uri-button').addEventListener('click', () => {
       window.api.openURI('file:///');
     });
+
+    // Initially, we show the sidebar.
+    this.show();
+  }
+
+  /** This method shows the sidebar. */
+  public show() {
+    this.container.querySelector('#kando-editor-sidebar').classList.add('visible');
+    this.container.querySelector('#hide-sidebar-button').classList.add('visible');
+    this.container.querySelector('#show-sidebar-button').classList.remove('visible');
+  }
+
+  /** This method hides the sidebar. */
+  public hide() {
+    this.container.querySelector('#kando-editor-sidebar').classList.remove('visible');
+    this.container.querySelector('#hide-sidebar-button').classList.remove('visible');
+    this.container.querySelector('#show-sidebar-button').classList.add('visible');
   }
 
   /** This method returns the container of the sidebar. */

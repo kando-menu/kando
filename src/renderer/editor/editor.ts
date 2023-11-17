@@ -43,14 +43,12 @@ export class Editor {
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
-    this.sidebar.on('show', () => this.container.classList.add('sidebar-visible'));
-    this.sidebar.on('hide', () => this.container.classList.remove('sidebar-visible'));
     this.container.appendChild(this.sidebar.getContainer());
 
     // Initialize the toolbar.
     this.toolbar = new Toolbar();
     this.toolbar.on('show', () => this.container.classList.add('toolbar-visible'));
-    this.toolbar.on('show', () => this.container.classList.remove('sidebar-visible'));
+    this.toolbar.on('show', () => this.sidebar.hide());
     this.toolbar.on('hide', () => this.container.classList.remove('toolbar-visible'));
     this.container.appendChild(this.toolbar.getContainer());
 

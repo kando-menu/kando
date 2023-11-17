@@ -9,17 +9,18 @@
 // SPDX-License-Identifier: MIT
 
 // The menu editor consists of several components:
-// * The info-sidebar is shown alongside the pie menu and can be shown or hidden
-//   independently from the main editor. It is shown if the main #kando-editor-container
-//   has the 'sidebar-visible' class.
+// * The background is drawn behind all other editor components but in front of the
+//   actual pie menu. It basically hides the pie menu while editing.
+// * The sidebar is shown alongside the pie menu and can be shown or hidden
+//   independently from the main editor. However, it is actually part of the editor
+//   and is drawn inside the #kando-editor-container.
 // * The other editor components such as the editor-toolbar at the bottom of the screen
-//   or the menu configuration widgets in the screen's center. These are drawn on top of
-//   the actual pie menu, effectively hiding it during editing. These UI elements are
-//   shown if the main #kando-editor-container has the class 'toolbar-visible'.
+//   or the menu configuration widgets in the screen's center. They are visible when
+//   the editor is in 'edit-mode'.
 
+@import './background/background.scss';
 @import './sidebar/sidebar.scss';
 @import './toolbar/toolbar.scss';
-@import './background/background.scss';
 
 // Handle pointer events -----------------------------------------------------------------
 
@@ -28,15 +29,10 @@
 // if the editor is hidden. An exception are the buttons for showing the sidebar or for
 // entering the edit mode.
 #kando-editor-container,
-#kando-editor-container.toolbar-visible:not(.sidebar-visible) #kando-editor-sidebar,
-#kando-editor-container.toolbar-visible:not(.sidebar-visible) #kando-editor-sidebar > *,
 #kando-editor-container.toolbar-visible #show-toolbar-button {
   pointer-events: none;
 }
 
-#kando-editor-container.toolbar-visible,
-#kando-editor-container.sidebar-visible #kando-editor-sidebar > *,
-#kando-editor-container:not(.sidebar-visible) #show-sidebar-button,
-#kando-editor-container:not(.toolbar-visible) #show-toolbar-button {
+#kando-editor-container.toolbar-visible {
   pointer-events: all;
 }
