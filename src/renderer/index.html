@@ -16,24 +16,22 @@ SPDX-License-Identifier: MIT
     <title>Kando</title>
   </head>
 
+  <!-- 
+    The body covers the whole window and contains the menu and the editor. Most parts of
+    the editor are hidden by default and will be drawn on top of the menu when it is
+    opened.
+   -->
   <body data-bs-theme="kando">
-    <!-- 
-      The #kando element is the main container for the application. It covers the
-      whole window and contains the menu and the editor. The editor is hidden by
-      default and will be drawn on top of the menu when it is opened.
-     -->
-    <div id="kando" class="sidebar-visible">
-      <!-- 
-        This is the main container for the menu. It will be filled with the menu's
-        content by the renderer process.
-      -->
-      <div id="kando-menu-container"></div>
+    <!--
+      This is the main container for the menu. It will be filled with the menu's
+      content by the renderer process.
+    -->
+    <div id="kando-menu-container"></div>
 
-      <!--
-        This is the main container for the menu's editor. It will be filled with the
-        editor's content by the renderer process.
-      -->
-      <div id="kando-editor-container"></div>
-    </div>
+    <!--
+      This is the main container for the menu's editor. It will be filled with the
+      editor's content by the renderer process.
+    -->
+    <div id="kando-editor-container" class="sidebar-visible"></div>
   </body>
 </html>

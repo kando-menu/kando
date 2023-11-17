@@ -40,15 +40,15 @@ const menu = new Menu(document.getElementById('kando-menu-container'));
 const editor = new Editor(document.getElementById('kando-editor-container'));
 
 menu.on('cancel', () => {
-  document.querySelector('#kando').classList.remove('menu-visible');
   window.api.hideWindow(300);
   menu.hide();
+  editor.hide();
 });
 
 menu.on('select', () => {
-  document.querySelector('#kando').classList.remove('menu-visible');
   window.api.hideWindow(400);
   menu.hide();
+  editor.hide();
 });
 
 menu.on('move-pointer', (dist) => {
@@ -58,17 +58,20 @@ menu.on('move-pointer', (dist) => {
 // Hide the menu when the user presses escape.
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
-    document.querySelector('#kando').classList.remove('menu-visible', 'editor-visible');
-    window.api.hideWindow(300);
-    menu.hide();
+    if (editor.isToolbarVisible()) {
+      editor.hideToolbar();
+    } else {
+      window.api.hideWindow(300);
+      menu.hide();
+      editor.hide();
+    }
   }
 });
 
 // Show the menu when the main process requests it.
 window.api.showMenu((root, pos) => {
-  document.querySelector('#kando').classList.add('menu-visible');
   menu.show(root, pos);
-  editor.setMenu(root);
+  editor.show();
 });
 
 // Miscellaneous -------------------------------------------------------------------------

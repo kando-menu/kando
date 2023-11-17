@@ -8,21 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { EventEmitter } from 'events';
-
 import { IEditorNode } from './editor-node';
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 
-export class Editor extends EventEmitter {
+export class Editor {
   // The container is the HTML element which contains the menu editor.
   private container: HTMLElement = null;
-
-  // The root node is the node which is placed at the center of the menu. It is the
-  // parent of all other nodes. It will be created when the menu is shown and destroyed
-  // when the menu is hidden.
-  private root: IEditorNode = null;
 
   // The background is an opaque div which is shown when the editor is open. It effectively
   // hides the normal menu.
@@ -36,9 +29,11 @@ export class Editor extends EventEmitter {
   // switch between different menus, add new items, etc.
   private toolbar: Toolbar = null;
 
+  /**
+   * This constructor creates the HTML elements for the menu editor and wires up all the
+   * functionality.
+   */
   constructor(container: HTMLElement) {
-    super();
-
     this.container = container;
 
     // Initialize the background.
@@ -47,20 +42,43 @@ export class Editor extends EventEmitter {
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
+    this.sidebar.on('show', () => {
+      this.container.classList.add('sidebar-visible');
+    });
+    this.sidebar.on('hide', () => {
+      this.container.classList.remove('sidebar-visible');
+    });
     this.container.appendChild(this.sidebar.getContainer());
 
     // Initialize the toolbar.
     this.toolbar = new Toolbar();
+    this.toolbar.on('show', () => {
+      this.container.classList.add('toolbar-visible');
+      this.container.classList.remove('sidebar-visible');
+    });
+    this.toolbar.on('hide', () => {
+      this.container.classList.remove('toolbar-visible');
+    });
     this.container.appendChild(this.toolbar.getContainer());
   }
 
   public setMenu(root: IEditorNode) {
-    this.root = root;
+    this.preview.setMenu(root);
   }
 
-  public show() {}
+  public show() {
+    this.container.classList.add('visible');
+  }
 
   public hide() {
-    this.root = null;
+    this.container.classList.remove('visible', 'toolbar-visible');
+  }
+
+  public hideToolbar() {
+    this.container.classList.remove('toolbar-visible');
+  }
+
+  public isToolbarVisible(): boolean {
+    return this.container.classList.contains('toolbar-visible');
   }
 }

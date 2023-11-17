@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-/** This is the opaque background which is shown when the editor is open. */
+/** This is the opaque background which is shown when the editor tools are open. */
 export class Background {
   // The container is the HTML element which contains the background. It is created in the
   // constructor and returned by the getContainer() method.

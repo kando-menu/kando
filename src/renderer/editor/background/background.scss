@@ -8,16 +8,18 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-editor-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transition: opacity 250ms ease;
-  opacity: 0;
-}
+#kando-editor-container {
+  #kando-editor-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: opacity 250ms ease;
+    opacity: 0;
+  }
 
-.editor-visible #kando-editor-background {
-  opacity: 1;
+  &.visible.toolbar-visible #kando-editor-background {
+    opacity: 1;
+  }
 }

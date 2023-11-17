@@ -8,44 +8,68 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-editor-toolbar {
-  position: absolute;
-  bottom: 10px;
-  left: 10%;
-  width: 80%;
-  opacity: 0;
-  height: 250px;
+#kando-editor-container {
+  #show-toolbar-button,
+  #hide-toolbar-button {
+    position: absolute;
+    opacity: 0;
+    font-size: 1.5rem;
+    transform: translateY(20px);
 
-  transform: translateY(20px);
-
-  transition:
-    height 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
-    bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
-    transform 150ms ease,
-    opacity 150ms ease;
-
-  .nav-tabs {
-    gap: 8px;
-
-    .nav-link {
-      padding-bottom: 0;
+    i {
+      top: 0;
     }
   }
 
-  &.large {
-    height: 80vh;
-    bottom: 10vh;
+  &.visible:not(.toolbar-visible) #show-toolbar-button {
+    transform: translateY(0px);
+    opacity: 1;
   }
 
-  .swirl {
-    display: inline-block;
-    background-image: url(../../assets/images/swirl.svg);
-    width: 160px;
-    height: 14px;
+  &.visible.toolbar-visible #hide-toolbar-button {
+    transform: translateY(0px);
+    opacity: 1;
   }
-}
 
-#kando.menu-visible.editor-visible #kando-editor-toolbar {
-  transform: none;
-  opacity: 1;
+  #kando-editor-toolbar {
+    position: absolute;
+    bottom: 10px;
+    left: 10%;
+    width: 80%;
+    opacity: 0;
+    height: 250px;
+
+    transform: translateY(20px);
+
+    transition:
+      height 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+      bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+      transform 150ms ease,
+      opacity 150ms ease;
+
+    .nav-tabs {
+      gap: 8px;
+
+      .nav-link {
+        padding-bottom: 0;
+      }
+    }
+
+    &.large {
+      height: 80vh;
+      bottom: 10vh;
+    }
+
+    .swirl {
+      display: inline-block;
+      background-image: url(../../assets/images/swirl.svg);
+      width: 160px;
+      height: 14px;
+    }
+  }
+
+  &.visible.toolbar-visible #kando-editor-toolbar {
+    transform: none;
+    opacity: 1;
+  }
 }

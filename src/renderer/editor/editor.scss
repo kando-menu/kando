@@ -10,17 +10,17 @@
 
 // The menu editor consists of several components:
 // * The info-sidebar is shown alongside the pie menu and can be shown or hidden
-//   independently from the main editor. It is shown if the main #kando container has
-//   the classes 'menu-visible' and 'sidebar-visible'.
+//   independently from the main editor. It is shown if the main #kando-editor-container
+//   has the 'sidebar-visible' class.
 // * The other editor components such as the editor-toolbar at the bottom of the screen
 //   or the menu configuration widgets in the screen's center. These are drawn on top of
 //   the actual pie menu, effectively hiding it during editing. These UI elements are
-//   shown if the main #kando container has the classes 'menu-visible' and
-//   'editor-visible'.
+//   shown if the main #kando-editor-container has the class 'toolbar-visible'.
 
 @import './sidebar/sidebar.scss';
 @import './toolbar/toolbar.scss';
 @import './background/background.scss';
+@import './preview/preview.scss';
 
 // Handle pointer events -----------------------------------------------------------------
 
@@ -29,39 +29,15 @@
 // if the editor is hidden. An exception are the buttons for showing the sidebar or for
 // entering the edit mode.
 #kando-editor-container,
-#kando.menu-visible.editor-visible:not(.sidebar-visible) #kando-editor-sidebar,
-#kando.menu-visible.editor-visible:not(.sidebar-visible) #kando-editor-sidebar > *,
-#kando.menu-visible.editor-visible #show-editor-button {
+#kando-editor-container.toolbar-visible:not(.sidebar-visible) #kando-editor-sidebar,
+#kando-editor-container.toolbar-visible:not(.sidebar-visible) #kando-editor-sidebar > *,
+#kando-editor-container.toolbar-visible #show-toolbar-button {
   pointer-events: none;
 }
 
-#kando.menu-visible.editor-visible #kando-editor-container,
-#kando.menu-visible.sidebar-visible #kando-editor-sidebar > *,
-#kando.menu-visible:not(.sidebar-visible) #show-sidebar-button,
-#kando.menu-visible:not(.editor-visible) #show-editor-button {
+#kando-editor-container.toolbar-visible,
+#kando-editor-container.sidebar-visible #kando-editor-sidebar > *,
+#kando-editor-container:not(.sidebar-visible) #show-sidebar-button,
+#kando-editor-container:not(.toolbar-visible) #show-toolbar-button {
   pointer-events: all;
-}
-
-// The Show- / Hide-Editor Buttons -------------------------------------------------------
-
-#show-editor-button,
-#hide-editor-button {
-  position: absolute;
-  opacity: 0;
-  font-size: 1.5rem;
-  transform: translateY(20px);
-
-  i {
-    top: 0;
-  }
-}
-
-#kando.menu-visible:not(.editor-visible) #show-editor-button {
-  transform: translateY(0px);
-  opacity: 1;
-}
-
-#kando.menu-visible.editor-visible #hide-editor-button {
-  transform: translateY(0px);
-  opacity: 1;
 }

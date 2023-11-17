@@ -9,9 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
+import { EventEmitter } from 'events';
 
 /** This class is responsible for the toolbar on the bottom of the editor screen. */
-export class Toolbar {
+export class Toolbar extends EventEmitter {
   // The container is the HTML element which contains the toolbar. It is created in the
   // constructor and returned by the getContainer() method.
   private container: HTMLElement = null;
@@ -21,6 +22,8 @@ export class Toolbar {
    * functionality.
    */
   constructor() {
+    super();
+
     // Load all the required templates.
     const empty = Handlebars.compile(require('./templates/empty-tab.hbs').default);
     const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
@@ -91,17 +94,14 @@ export class Toolbar {
       ],
     });
 
-    // Wire up the buttons. We initially hide the sidebar when the editor is shown in
-    // order to make some space for the editor. The user can still show the sidebar by
-    // clicking the button.
-    this.container.querySelector('#show-editor-button').addEventListener('click', () => {
-      document.querySelector('#kando').classList.add('editor-visible');
-      document.querySelector('#kando').classList.remove('sidebar-visible');
-    });
+    // Wire up the buttons.
+    this.container
+      .querySelector('#show-toolbar-button')
+      .addEventListener('click', () => this.emit('show'));
 
-    this.container.querySelector('#hide-editor-button').addEventListener('click', () => {
-      document.querySelector('#kando').classList.remove('editor-visible');
-    });
+    this.container
+      .querySelector('#hide-toolbar-button')
+      .addEventListener('click', () => this.emit('hide'));
 
     // Some of the tabs should cover the entire editor.
     const tabs = [

@@ -210,19 +210,19 @@ $kando-highlight-color: #ffc8c8;
 
 // The Editor ----------------------------------------------------------------------------
 
-#hide-editor-button,
-#show-editor-button {
+#hide-toolbar-button,
+#show-toolbar-button {
   width: 45px;
   height: 45px;
 }
 
-#show-editor-button {
+#show-toolbar-button {
   border-top-left-radius: 50%;
   right: 10px;
   bottom: 10px;
 }
 
-#hide-editor-button {
+#hide-toolbar-button {
   right: -55px;
   top: 0px;
 }
