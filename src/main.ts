@@ -12,7 +12,8 @@ import { app } from 'electron';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
- * handling the lifecycle of the app.
+ * handling the lifecycle of the app. The drawing of the menu and the editor is done in
+ * the renderer process (see renderer.ts).
  */
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -30,7 +31,7 @@ if (!gotTheLock) {
   process.exit(0);
 }
 
-// Start the app. We import the KandoApp class here make the code above as fast as
+// Start the app. We import the KandoApp class here to make the code above as fast as
 // possible.
 import { KandoApp } from './main/app';
 import { Notification } from 'electron';
@@ -43,9 +44,9 @@ app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
 app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
 app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
+// Create the app and initialize it as soon as electron is ready.
 const kando = new KandoApp();
 
-// Show a message when the app is ready.
 app
   .whenReady()
   .then(() => kando.init())
