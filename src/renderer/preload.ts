@@ -11,27 +11,69 @@
 import { ipcRenderer, contextBridge } from 'electron';
 import { IKeySequence, IVec2, INode } from '../common';
 
-// Expose a bridged API to the renderer process.
+/**
+ * There is a well-defined API between the host process and the renderer process. The
+ * renderer process can call the functions below to interact with the host process or
+ * register callbacks to be called by the host process.
+ */
 contextBridge.exposeInMainWorld('api', {
+  /**
+   * This will hide the application window after the given delay.
+   *
+   * @param delay The delay in milliseconds.
+   */
   hideWindow: function (delay: number) {
     ipcRenderer.send('hide-window', delay);
   },
+
+  /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');
   },
-  simulateKeys: function (keys: IKeySequence) {
-    ipcRenderer.send('simulate-keys', keys);
-  },
-  movePointer: function (dist: IVec2) {
-    ipcRenderer.send('move-pointer', dist);
-  },
-  openURI: function (uri: string) {
-    ipcRenderer.send('open-uri', uri);
-  },
+
+  /**
+   * This will print the given message to the console of the host process.
+   *
+   * @param message The message to print.
+   */
   log: function (message: string) {
     ipcRenderer.send('log', message);
   },
+
+  /**
+   * This will be called by the host process when a new menu should be shown.
+   *
+   * @param callback This callback will be called with the root node of the menu and the
+   *   position of the mouse cursor.
+   */
   showMenu: function (callback: (root: INode, pos: IVec2) => void) {
     ipcRenderer.on('show-menu', (event, root, pos) => callback(root, pos));
+  },
+
+  /**
+   * This can be used to warp the mouse pointer to a different position.
+   *
+   * @param dist The distance to move the mouse pointer.
+   */
+  movePointer: function (dist: IVec2) {
+    ipcRenderer.send('move-pointer', dist);
+  },
+
+  /**
+   * This can be used to open an URI with the default application.
+   *
+   * @param uri The URI to open. For instance, this can be a file path or a web address.
+   */
+  openURI: function (uri: string) {
+    ipcRenderer.send('open-uri', uri);
+  },
+
+  /**
+   * This can be used to simulate a key press.
+   *
+   * @param keys The keys to press.
+   */
+  simulateKeys: function (keys: IKeySequence) {
+    ipcRenderer.send('simulate-keys', keys);
   },
 });
