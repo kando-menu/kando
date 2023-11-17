@@ -62,9 +62,7 @@ export class Editor {
     this.container.appendChild(this.toolbar.getContainer());
   }
 
-  public setMenu(root: IEditorNode) {
-    this.preview.setMenu(root);
-  }
+  public setMenu(root: IEditorNode) {}
 
   public show() {
     this.container.classList.add('visible');
