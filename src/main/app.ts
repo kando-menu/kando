@@ -243,6 +243,7 @@ export class KandoApp {
   /** This creates an example menu which can be used for testing. */
   private createExampleMenu() {
     const root: INode = {
+      type: 'submenu',
       name: 'Node',
       icon: 'open_with',
       iconTheme: 'material-symbols-rounded',
@@ -270,6 +271,7 @@ export class KandoApp {
         parent.children = [];
         for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
           const node: INode = {
+            type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'item',
             name: `${parent.name} ${i}`,
             icon: TEST_ICONS[i % TEST_ICONS.length],
             iconTheme: 'material-symbols-rounded',
