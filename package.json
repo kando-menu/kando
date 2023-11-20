@@ -63,7 +63,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
-    "material-symbols": "^0.14.0",
+    "material-symbols": "^0.14.1",
     "node-addon-api": "^7.0.0"
   }
 }
