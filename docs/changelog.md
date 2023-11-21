@@ -16,7 +16,7 @@ Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
 
-## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
+## Kando 0.2.0 [unreleased]
 
 **Release Date:** TBD
 
