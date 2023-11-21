@@ -18,6 +18,14 @@ import { IVec2, INode } from '../../common';
  */
 export interface IMenuNode extends INode {
   /**
+   * The chain of indices to get to this node. This will be computed and set once the menu
+   * is opened. It is stored here to avoid recomputation during emission of events. It
+   * will be '/' for the root node and something like '/0/1/2' for a node which is the
+   * third child of the second child of the first child of the root node.
+   */
+  path?: string;
+
+  /**
    * The beginning of the menu item's angular wedge in degrees. This will be computed and
    * set once the menu is opened.
    */

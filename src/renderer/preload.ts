@@ -51,6 +51,41 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   /**
+   * This will be called by the render process when the user hovers a menu item.
+   *
+   * @param path The path of the hovered menu item.
+   */
+  hoverItem: function (path: string) {
+    ipcRenderer.send('hover-item', path);
+  },
+
+  /**
+   * This will be called by the render process when the user unhovers a menu item.
+   *
+   * @param path The path of the unhovered menu item.
+   */
+  unhoverItem: function (path: string) {
+    ipcRenderer.send('unhover-item', path);
+  },
+
+  /**
+   * This will be called by the render process when the user selects a menu item.
+   *
+   * @param path The path of the selected menu item.
+   */
+  selectItem: function (path: string) {
+    ipcRenderer.send('select-item', path);
+  },
+
+  /**
+   * This will be called by the render process when the user cancels a selection in the
+   * menu.
+   */
+  cancelSelection: function () {
+    ipcRenderer.send('cancel-selection');
+  },
+
+  /**
    * This can be used to warp the mouse pointer to a different position.
    *
    * @param dist The distance to move the mouse pointer.

@@ -30,6 +30,10 @@ interface IElectronAPI {
   openURI: (uri: string) => void;
   log: (message: string) => void;
   showMenu: (func: (root: INode, pos: IVec2) => void) => void;
+  hoverItem: (path: string) => void;
+  unhoverItem: (path: string) => void;
+  selectItem: (path: string) => void;
+  cancelSelection: () => void;
 }
 
 declare global {
@@ -59,17 +63,22 @@ menu.on('move-pointer', (dist) => {
 // Hide Kando's window when the user aborts a selection.
 menu.on('cancel', () => {
   window.api.hideWindow(300);
+  window.api.cancelSelection();
   menu.hide();
   editor.hide();
 });
 
-// For now, we just hide the window when the user selects an item. In the future, we
-// might want to do something else here :)
-menu.on('select', () => {
+// Hide Kando's window when the user selects an item and notify the main process.
+menu.on('select', (path) => {
   window.api.hideWindow(400);
+  window.api.selectItem(path);
   menu.hide();
   editor.hide();
 });
+
+// Report hover and unhover events to the main process.
+menu.on('hover', (path) => window.api.hoverItem(path));
+menu.on('unhover', (path) => window.api.unhoverItem(path));
 
 // Hide the menu when the user presses escape.
 document.addEventListener('keyup', (ev) => {
@@ -78,6 +87,7 @@ document.addEventListener('keyup', (ev) => {
       editor.leaveEditMode();
     } else {
       window.api.hideWindow(300);
+      window.api.cancelSelection();
       menu.hide();
       editor.hide();
     }
