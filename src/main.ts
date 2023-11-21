@@ -49,7 +49,10 @@ const kando = new KandoApp();
 
 app
   .whenReady()
-  .then(() => kando.init())
+  .then(() => {
+    console.log('Initializing Kando...');
+    kando.init();
+  })
   .then(() => {
     // Show a nifty message when the app is about to quit.
     app.on('will-quit', async () => {
