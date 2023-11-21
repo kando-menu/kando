@@ -9,9 +9,8 @@ updates:
       interval: weekly
     open-pull-requests-limit: 99
     versioning-strategy: increase
-
-groups:
-  minor-updates:
-    update-types:
-      - 'minor'
-      - 'patch'
+    groups:
+      minor-updates:
+        update-types:
+          - 'minor'
+          - 'patch'
