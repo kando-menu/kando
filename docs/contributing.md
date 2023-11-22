@@ -20,7 +20,7 @@ Similarly, bugfixes are implemented in `fix/*` branches, where the `*` is usuall
 
 ### Git Commit Messages
 
-Commits should start with a Capital letter and should be written in present tense (e.g. __:tada: Add cool new feature__ instead of __:tada: Added cool new feature__).
+Commits should start with a Capital letter and should be written in imperative mood (e.g. __:tada: Add cool new feature__ instead of __:tada: Added cool new feature__).
 It's a great idea to start the commit message with an applicable emoji.
 This does not only look great but also makes you rethink what to add to a commit:
 Commits should be small and focused on a single task.
