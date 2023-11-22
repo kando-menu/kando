@@ -121,14 +121,13 @@ $kando-highlight-color: #ffc8c8;
     }
 
     &:active {
-      border: none;
-      transform: translateY(1px);
-      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+      background-color: rgba(0, 0, 0, 0.9);
     }
   }
 
   &:active {
-    transform: translateY(1px);
+    transform: translateY(1px) !important;
   }
 }
 
@@ -262,6 +261,11 @@ $kando-highlight-color: #ffc8c8;
 
       &.active {
         background-color: rgba(0, 0, 0, 0.8);
+        cursor: default;
+      }
+
+      &:not(.active):active {
+        transform: translateY(1px);
       }
     }
   }
