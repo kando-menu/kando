@@ -26,16 +26,17 @@ This does not only look great but also makes you rethink what to add to a commit
 Commits should be small and focused on a single task.
 Therefore, only one emoji should be used per commit.
 * :tada: `:tada:` when adding a cool new feature.
+* :bug: `:bug:` when fixing a bug.
 * :wrench: `:wrench:` when adding or improving a small piece of code.
 * :recycle: `:recycle:` when refactoring the code.
+* :fire: `:fire:` when removing files or code.
+* :truck: `:truck:` when moving / renaming files or classes.
 * :sparkles: `:sparkles:` when formatting the code.
 * :art: `:art:` improving or adding assets like themes or fonts.
 * :lipstick: `:lipstick:` when working on the UI styling.
-* :rocket: `:rocket:` when improving performance.
 * :memo: `:memo:` when writing docs.
-* :bug: `:bug:` when fixing a bug.
-* :fire: `:fire:` when removing files or code.
-* :truck: `:truck:` when moving / renaming files or classes.
+* :globe_with_meridians: `:globe_with_meridians:` when working on localization.
+* :revolving_hearts: `:revolving_hearts:` when updating credits.
 * :heavy_check_mark: `:heavy_check_mark:` when working on tests.
 * :arrow_up_small: `:arrow_up_small:` when adding / upgrading dependencies.
 * :arrow_down_small: `:arrow_down_small:` when removing / downgrading dependencies.
