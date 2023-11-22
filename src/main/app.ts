@@ -133,6 +133,7 @@ export class KandoApp {
           x: info.pointerX,
           y: info.pointerY,
         }).workArea;
+
         this.window.setBounds({
           x: workarea.x,
           y: workarea.y,
@@ -146,9 +147,8 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        // For now we only show the example menu.
+        // For now, we only show the example menu.
         const menu = this.menuSettings.get('menus')[0];
-
         this.window.webContents.send('show-menu', menu.nodes, {
           x: info.pointerX - workarea.x,
           y: info.pointerY - workarea.y,
@@ -169,7 +169,8 @@ export class KandoApp {
 
   /**
    * This creates the main window. It is a transparent window which covers the whole
-   * screen. It is always on top and has no frame. It is used to display the pie menu.
+   * screen. It is not shown in any task bar and has no frame. It is used to display the
+   * pie menu and potentially other UI elements such as the menu editor.
    */
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
