@@ -39,7 +39,8 @@ enum MouseState {
  * hide() method. The menu will be rendered into the given container element.
  *
  * When the user selects a node, the menu will emit a "select" event. If the user cancels
- * the selection, the menu will emit a "cancel" event.
+ * the selection, the menu will emit a "cancel" event. If nodes are hovered or unhovered,
+ * the menu will emit "hover" and "unhover" events.
  *
  * Child nodes are always placed on a circle around the parent node. Grandchild nodes are
  * placed on a circle around the child node.
@@ -306,6 +307,7 @@ export class Menu extends EventEmitter {
     this.mouse.absolutePosition = { x: position.x, y: position.y };
 
     this.root = root;
+    this.setupPaths(this.root);
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
     this.selectNode(this.root);
@@ -488,7 +490,7 @@ export class Menu extends EventEmitter {
 
     if (node.children.length === 0) {
       this.container.classList.add('selected');
-      this.emit('select');
+      this.emit('select', node.path);
     }
   }
 
@@ -527,6 +529,7 @@ export class Menu extends EventEmitter {
     }
 
     if (this.hoveredNode) {
+      this.emit('unhover', this.hoveredNode.path);
       this.hoveredNode.itemDiv.classList.remove('hovered');
       this.hoveredNode = null;
     }
@@ -534,6 +537,7 @@ export class Menu extends EventEmitter {
     if (node) {
       this.hoveredNode = node;
       this.hoveredNode.itemDiv.classList.add('hovered');
+      this.emit('hover', this.hoveredNode.path);
     }
   }
 
@@ -807,13 +811,30 @@ export class Menu extends EventEmitter {
   }
 
   /**
+   * This method computes the 'path' property for the given node and all its children.
+   * This is the path from the root node to the given node. It is a string in the form of
+   * '/0/1/2'. This example would indicate a node which is the third child of the second
+   * child of the first child of the root node. The root node has the path '/'.
+   *
+   * @param node The node for which to setup the path recursively.
+   */
+  private setupPaths(node: IMenuNode, path = '') {
+    node.path = path === '' ? '/' : path;
+
+    for (let i = 0; i < node.children.length; ++i) {
+      const child = node.children[i] as IMenuNode;
+      this.setupPaths(child, `${path}/${i}`);
+    }
+  }
+
+  /**
    * This method computes the 'angle', 'startAngle' and 'endAngle' properties for the
    * children of the given node. The 'angle' property is the angle of the child relative
    * itself, the 'startAngle' and 'endAngle' properties are the angular bounds of the
    * child's wedge. If the given node has an 'angle' property itself, the child wedges
    * leave a gap at the position towards the parent node.
    *
-   * @param node The node for which to setup the children recursively.
+   * @param node The node for which to setup the angles recursively.
    */
   private setupAngles(node: IMenuNode) {
     // If the node has no children, we can stop here.

@@ -238,6 +238,17 @@ export class KandoApp {
       this.window.hide();
       shell.openExternal(uri);
     });
+
+    // Print some messages when the user hovers or selects an item.
+    ipcMain.on('hover-item', (event, path) => {
+      console.log('Hover item: ' + path);
+    });
+    ipcMain.on('select-item', (event, path) => {
+      console.log('Select item: ' + path);
+    });
+    ipcMain.on('cancel-selection', () => {
+      console.log('Cancel selection.');
+    });
   }
 
   /** This creates an example menu which can be used for testing. */
