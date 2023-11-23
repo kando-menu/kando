@@ -40,6 +40,12 @@ export type IKeySequence = Array<IKeyStroke>;
  * represent submenus, leaf nodes represent actual menu items.
  */
 export interface INode {
+  /**
+   * The type of the menu item. This is primarily used in the editor, but themes may also
+   * use it to style different types of menu items differently.
+   */
+  type: string;
+
   /** The name of the menu item. This may be displayed with some kind of label. */
   name: string;
 
@@ -102,4 +108,14 @@ export interface IAppSettings {
 
   /** The name of the theme to use for the editor. */
   editorTheme: string;
+}
+
+/**
+ * This interface describes the data which is shared between the main and the renderer
+ * process when the editor is opened.
+ */
+export interface IEditorData {
+  menuSettings: IMenuSettings;
+  appSettings: IAppSettings;
+  currentMenu: number;
 }

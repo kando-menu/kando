@@ -118,8 +118,10 @@ export class Toolbar extends EventEmitter {
       element.addEventListener('shown.bs.tab', () => {
         if (tab.large) {
           this.container.querySelector('#kando-editor-toolbar').classList.add('large');
+          this.emit('expand');
         } else {
           this.container.querySelector('#kando-editor-toolbar').classList.remove('large');
+          this.emit('collapse');
         }
       });
     }

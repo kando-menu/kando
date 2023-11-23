@@ -133,6 +133,7 @@ export class KandoApp {
           x: info.pointerX,
           y: info.pointerY,
         }).workArea;
+
         this.window.setBounds({
           x: workarea.x,
           y: workarea.y,
@@ -146,9 +147,8 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        // For now we only show the example menu.
+        // For now, we only show the example menu.
         const menu = this.menuSettings.get('menus')[0];
-
         this.window.webContents.send('show-menu', menu.nodes, {
           x: info.pointerX - workarea.x,
           y: info.pointerY - workarea.y,
@@ -169,7 +169,8 @@ export class KandoApp {
 
   /**
    * This creates the main window. It is a transparent window which covers the whole
-   * screen. It is always on top and has no frame. It is used to display the pie menu.
+   * screen. It is not shown in any task bar and has no frame. It is used to display the
+   * pie menu and potentially other UI elements such as the menu editor.
    */
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
@@ -249,12 +250,22 @@ export class KandoApp {
     ipcMain.on('cancel-selection', () => {
       console.log('Cancel selection.');
     });
+
+    // Send the current settings to the renderer process when the editor is opened.
+    ipcMain.handle('get-editor-data', () => {
+      return {
+        menuSettings: this.menuSettings.get(),
+        appSettings: this.appSettings.get(),
+        currentMenu: 0,
+      };
+    });
   }
 
   /** This creates an example menu which can be used for testing. */
   private createExampleMenu() {
     const root: INode = {
-      name: 'Node',
+      type: 'submenu',
+      name: 'Prototype Menu',
       icon: 'open_with',
       iconTheme: 'material-symbols-rounded',
       children: [],
@@ -276,23 +287,24 @@ export class KandoApp {
       'fullscreen',
     ];
 
-    const addChildren = (parent: INode, level: number) => {
+    const addChildren = (parent: INode, name: string, level: number) => {
       if (level < CHILDREN_PER_LEVEL.length) {
         parent.children = [];
         for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
           const node: INode = {
-            name: `${parent.name} ${i}`,
+            type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'item',
+            name: `${name} ${i}`,
             icon: TEST_ICONS[i % TEST_ICONS.length],
             iconTheme: 'material-symbols-rounded',
             children: [],
           };
           parent.children.push(node);
-          addChildren(node, level + 1);
+          addChildren(node, node.name, level + 1);
         }
       }
     };
 
-    addChildren(root, 0);
+    addChildren(root, 'Node', 0);
 
     return {
       nodes: root,

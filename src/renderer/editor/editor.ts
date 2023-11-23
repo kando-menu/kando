@@ -13,6 +13,8 @@ import { Tooltip } from 'bootstrap';
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
+import { Preview } from './preview/preview';
+import { Properties } from './properties/properties';
 
 export class Editor {
   // The container is the HTML element which contains the menu editor.
@@ -21,6 +23,14 @@ export class Editor {
   // The background is an opaque div which is shown when the editor is open. It effectively
   // hides the normal menu.
   private background: Background = null;
+
+  // The preview is shown in the center of the screen. It allows the user to edit
+  // one level of the menu.
+  private preview: Preview = null;
+
+  // The properties view is shown on the right side of the screen. It allows the user to
+  // edit the properties of the currently selected menu item.
+  private properties: Properties = null;
 
   // The sidebar is displayed on the left screen edge. It contains some information
   // about Kando in general.
@@ -41,6 +51,14 @@ export class Editor {
     this.background = new Background();
     this.container.appendChild(this.background.getContainer());
 
+    // Initialize the preview.
+    this.preview = new Preview();
+    this.container.appendChild(this.preview.getContainer());
+
+    // Initialize the properties view.
+    this.properties = new Properties();
+    this.container.appendChild(this.properties.getContainer());
+
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
     this.container.appendChild(this.sidebar.getContainer());
@@ -50,6 +68,14 @@ export class Editor {
     this.toolbar = new Toolbar();
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
+    this.toolbar.on('expand', () => {
+      this.preview.hide();
+      this.properties.hide();
+    });
+    this.toolbar.on('collapse', () => {
+      this.preview.show();
+      this.properties.show();
+    });
     this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
@@ -84,6 +110,16 @@ export class Editor {
   public enterEditMode() {
     this.container.classList.add('edit-mode');
     this.sidebar.hide();
+
+    // Show that we received the event.
+    window.api.getMenuEditorData().then((data) => {
+      window.api.log(
+        'Editing ' +
+          JSON.stringify(
+            data.menuSettings.menus.map((m) => `${m.nodes.name} (${m.shortcut})`)
+          )
+      );
+    });
   }
 
   /**

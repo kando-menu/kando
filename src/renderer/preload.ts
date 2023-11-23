@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2, INode } from '../common';
+import { IKeySequence, IVec2, INode, IEditorData } from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -83,6 +83,14 @@ contextBridge.exposeInMainWorld('api', {
    */
   cancelSelection: function () {
     ipcRenderer.send('cancel-selection');
+  },
+
+  /**
+   * This will be called by the render process when the user opens the menu editor. The
+   * returned promise will resolve to the data required to initialize the editor.
+   */
+  getMenuEditorData: async function (): Promise<IEditorData> {
+    return ipcRenderer.invoke('get-editor-data');
   },
 
   /**
