@@ -256,7 +256,7 @@ export class KandoApp {
   private createExampleMenu() {
     const root: INode = {
       type: 'submenu',
-      name: 'Node',
+      name: 'Prototype Menu',
       icon: 'open_with',
       iconTheme: 'material-symbols-rounded',
       children: [],
@@ -278,24 +278,24 @@ export class KandoApp {
       'fullscreen',
     ];
 
-    const addChildren = (parent: INode, level: number) => {
+    const addChildren = (parent: INode, name: string, level: number) => {
       if (level < CHILDREN_PER_LEVEL.length) {
         parent.children = [];
         for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
           const node: INode = {
             type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'item',
-            name: `${parent.name} ${i}`,
+            name: `${name} ${i}`,
             icon: TEST_ICONS[i % TEST_ICONS.length],
             iconTheme: 'material-symbols-rounded',
             children: [],
           };
           parent.children.push(node);
-          addChildren(node, level + 1);
+          addChildren(node, node.name, level + 1);
         }
       }
     };
 
-    addChildren(root, 0);
+    addChildren(root, 'Node', 0);
 
     return {
       nodes: root,
