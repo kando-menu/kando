@@ -76,8 +76,6 @@ export class Editor {
         delay: { show: 500, hide: 0 },
       });
     });
-
-    this.enterEditMode();
   }
 
   /**
@@ -104,6 +102,16 @@ export class Editor {
   public enterEditMode() {
     this.container.classList.add('edit-mode');
     this.sidebar.hide();
+
+    // Show that we received the event.
+    window.api.getMenuEditorData().then((data) => {
+      window.api.log(
+        'Editing ' +
+          JSON.stringify(
+            data.menuSettings.menus.map((m) => `${m.nodes.name} (${m.shortcut})`)
+          )
+      );
+    });
   }
 
   /**

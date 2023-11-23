@@ -109,3 +109,13 @@ export interface IAppSettings {
   /** The name of the theme to use for the editor. */
   editorTheme: string;
 }
+
+/**
+ * This interface describes the data which is shared between the main and the renderer
+ * process when the editor is opened.
+ */
+export interface IEditorData {
+  menuSettings: IMenuSettings;
+  appSettings: IAppSettings;
+  currentMenu: number;
+}

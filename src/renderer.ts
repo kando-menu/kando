@@ -12,7 +12,7 @@ import './renderer/index.scss';
 
 import { Menu } from './renderer/menu/menu';
 import { Editor } from './renderer/editor/editor';
-import { IKeySequence, IVec2, INode } from './common';
+import { IKeySequence, IVec2, INode, IEditorData } from './common';
 
 /**
  * This file is the main entry point for Kando's renderer process. It is responsible for
@@ -34,6 +34,7 @@ interface IElectronAPI {
   unhoverItem: (path: string) => void;
   selectItem: (path: string) => void;
   cancelSelection: () => void;
+  getMenuEditorData: () => Promise<IEditorData>;
 }
 
 declare global {

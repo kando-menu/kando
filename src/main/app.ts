@@ -250,6 +250,15 @@ export class KandoApp {
     ipcMain.on('cancel-selection', () => {
       console.log('Cancel selection.');
     });
+
+    // Send the current settings to the renderer process when the editor is opened.
+    ipcMain.handle('get-editor-data', () => {
+      return {
+        menuSettings: this.menuSettings.get(),
+        appSettings: this.appSettings.get(),
+        currentMenu: 0,
+      };
+    });
   }
 
   /** This creates an example menu which can be used for testing. */
