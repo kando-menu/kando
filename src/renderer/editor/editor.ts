@@ -68,6 +68,14 @@ export class Editor {
     this.toolbar = new Toolbar();
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
+    this.toolbar.on('expand', () => {
+      this.preview.hide();
+      this.properties.hide();
+    });
+    this.toolbar.on('collapse', () => {
+      this.preview.show();
+      this.properties.show();
+    });
     this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
