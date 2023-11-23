@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-editor-container.edit-mode {
+#kando-editor-container {
   #kando-menu-preview {
     background-color: rgba(255, 255, 255, 0.1);
     position: absolute;
@@ -16,5 +16,12 @@
     bottom: max(10vh, 250px + 40px); // 250px is the height of the toolbar.
     left: 10vw;
     right: calc(40vw + 10px);
+
+    transition: opacity 150ms ease;
+    opacity: 0;
+  }
+
+  &.edit-mode #kando-menu-preview.visible {
+    opacity: 1;
   }
 }
