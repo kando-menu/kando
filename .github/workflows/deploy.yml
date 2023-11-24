@@ -44,8 +44,13 @@ jobs:
         with:
           node-version: 18
       - name: Install Dependencies
+        # A simple npm install should be sufficient, but for some reason cmake.js
+        # sometimes skips the build step in CI on Windows in this case. So we install
+        # and execute cmake.js manually.
         run: |
-          npm ci
+          npm install cmake-js -g
+          npx cmake-js install
+          npm install
       - name: Create Release
         run: |
           npm run make
