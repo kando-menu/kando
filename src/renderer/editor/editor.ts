@@ -96,11 +96,13 @@ export class Editor {
   }
 
   /**
-   * This is used to hide the entire editor. If the sidebar was visible, it will be shown
-   * again when show() is called.
+   * This is used to hide the entire editor, including the sidebar. We also leave edit
+   * mode if it is currently active. Else, the editor would be shown right away when the
+   * user opens the menu again.
    */
   public hide() {
-    this.container.classList.remove('visible', 'edit-mode');
+    this.container.classList.remove('visible');
+    this.leaveEditMode();
   }
 
   /**

@@ -35,10 +35,18 @@ export class Preview {
     return this.container;
   }
 
+  /**
+   * This method shows the menu preview. This is used when the toolbar of the editor is
+   * collapsed again.
+   */
   public show() {
     this.container.classList.add('visible');
   }
 
+  /**
+   * This method hides the menu preview. This is used when the toolbar of the editor is
+   * expanded.
+   */
   public hide() {
     this.container.classList.remove('visible');
   }
