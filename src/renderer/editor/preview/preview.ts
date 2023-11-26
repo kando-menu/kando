@@ -96,9 +96,12 @@ export class Preview {
         div.innerHTML = child.name;
 
         // If the node is not dragged, move it to its position on the circle.
-        const position = math.getDirection(child.angle - 90, 40);
-        div.style.left = `calc(50% - 10% + ${position.x}%)`;
-        div.style.top = `calc(50% - 10% + ${position.y}%)`;
+        const itemDistance = 25;
+        const itemSize = 15;
+        const position = math.getDirection(child.angle - 90, itemDistance);
+        div.style.width = `${itemSize}%`;
+        div.style.left = `calc(50% - ${itemSize / 2}% + ${position.x}%)`;
+        div.style.top = `calc(50% - ${itemSize / 2}% + ${position.y}%)`;
 
         this.canvas.appendChild(div);
       });
