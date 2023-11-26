@@ -10,14 +10,17 @@
 
 #kando-editor-container {
   #kando-menu-properties {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
     position: absolute;
-    top: 5vh;
-    right: 10vw;
+    top: $editor-padding-top;
+    right: $editor-padding-right;
 
     // Full height - 5vh top margin - 250px toolbar height - 40px gap.
-    height: calc(100vh - 5vh - 250px - 40px);
-    width: 25vw;
+    height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
+    width: calc(
+      (100vw - $editor-padding-left - $editor-padding-right) *
+        (1 - $preview-properties-ratio)
+    );
 
     transition: opacity 150ms ease;
     opacity: 0;

@@ -11,17 +11,16 @@
 #kando-editor-container {
   #kando-menu-preview-container {
     position: absolute;
-    top: 5vh;
-    left: 10vw;
+    top: $editor-padding-top;
+    left: $editor-padding-left;
     transition: opacity 150ms ease;
     opacity: 0;
     background-color: rgba(255, 255, 255, 0.1);
 
-    // Full width - 20vw left/right margin - 25vw properties width - 10px gap.
-    width: calc(100vw - 20vw - 25vw - 10px);
-
-    // Full height - 5vh top margin - 250px toolbar height - 40px gap.
-    height: calc(100vh - 5vh - 250px - 40px);
+    width: calc(
+      (100vw - $editor-padding-left - $editor-padding-right) * $preview-properties-ratio
+    );
+    height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
 
     .aspect-width-box {
       position: relative;

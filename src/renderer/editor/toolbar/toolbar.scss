@@ -35,11 +35,11 @@
 
   #kando-editor-toolbar {
     position: absolute;
-    bottom: 10px;
-    left: 10%;
-    width: 80%;
+    bottom: $toolbar-padding;
+    left: $editor-padding-left;
+    right: $editor-padding-right;
+    height: $toolbar-height;
     opacity: 0;
-    height: 250px;
 
     transform: translateY(20px);
 
@@ -58,8 +58,8 @@
     }
 
     &.large {
-      height: 80vh;
-      bottom: 10vh;
+      height: calc(100vh - $editor-padding-top - $editor-padding-bottom);
+      bottom: $editor-padding-bottom;
     }
 
     .swirl {

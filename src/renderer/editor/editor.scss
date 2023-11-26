@@ -18,6 +18,14 @@
 //   or the menu configuration widgets in the screen's center. They are visible when
 //   the editor is in 'edit-mode'.
 
+$editor-padding-left: 7vw;
+$editor-padding-right: 7vw;
+$editor-padding-top: 7vh;
+$editor-padding-bottom: 7vh;
+$preview-properties-ratio: 0.7;
+$toolbar-height: max(250px, 20vh);
+$toolbar-padding: 10px;
+
 @import './background/background.scss';
 @import './preview/preview.scss';
 @import './properties/properties.scss';
