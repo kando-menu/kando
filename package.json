@@ -1,6 +1,6 @@
 {
   "name": "kando",
-  "version": "0.2.0",
+  "version": "0.3.0-dev",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2023 Simon Schneegans",
   "main": ".webpack/main",
