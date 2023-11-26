@@ -830,9 +830,9 @@ export class Menu extends EventEmitter {
   /**
    * This method computes the 'angle', 'startAngle' and 'endAngle' properties for the
    * children of the given node. The 'angle' property is the angle of the child relative
-   * itself, the 'startAngle' and 'endAngle' properties are the angular bounds of the
-   * child's wedge. If the given node has an 'angle' property itself, the child wedges
-   * leave a gap at the position towards the parent node.
+   * to its parent, the 'startAngle' and 'endAngle' properties are the angular bounds of
+   * the child's wedge. If the given node has an 'angle' property itself, the child wedges
+   * will leave a gap at the position towards the parent node.
    *
    * @param node The node for which to setup the angles recursively.
    */
