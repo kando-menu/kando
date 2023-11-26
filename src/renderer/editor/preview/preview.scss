@@ -10,15 +10,32 @@
 
 #kando-editor-container {
   #kando-menu-preview {
-    background-color: rgba(255, 255, 255, 0.1);
     position: absolute;
-    top: calc(5vh + 40px);
-    bottom: max(10vh, 250px + 40px); // 250px is the height of the toolbar.
+    top: 5vh;
     left: 10vw;
-    right: calc(40vw + 10px);
-
     transition: opacity 150ms ease;
     opacity: 0;
+
+    // Full width - 20vw left/right margin - 25vw properties width - 10px gap.
+    width: calc(100vw - 20vw - 25vw - 10px);
+
+    // Full height - 5vh top margin - 250px toolbar height - 40px gap.
+    height: calc(100vh - 5vh - 250px - 40px);
+
+    .aspect-width-box {
+      position: relative;
+      aspect-ratio: 1.6 / 0.9;
+      width: 100%;
+      max-height: 100%;
+    }
+
+    .aspect-height-box {
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.1);
+      aspect-ratio: 1.6 / 0.9;
+      height: 100%;
+      max-height: 100%;
+    }
 
     .kando-menu-preview-item {
       position: absolute;
@@ -26,8 +43,7 @@
       width: 10%;
       height: 10%;
       background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+      border: 2px solid rgb(255, 255, 255);
       transition: transform 150ms ease;
       transform-origin: center center;
     }

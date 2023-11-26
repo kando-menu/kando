@@ -12,10 +12,12 @@
   #kando-menu-properties {
     background-color: rgba(255, 255, 255, 0.1);
     position: absolute;
-    top: calc(5vh + 40px);
-    bottom: max(10vh, 250px + 40px); // 250px is the height of the toolbar.
+    top: 5vh;
     right: 10vw;
-    left: calc(60vw + 10px);
+
+    // Full height - 5vh top margin - 250px toolbar height - 40px gap.
+    height: calc(100vh - 5vh - 250px - 40px);
+    width: 25vw;
 
     transition: opacity 150ms ease;
     opacity: 0;

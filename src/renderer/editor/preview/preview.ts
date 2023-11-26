@@ -70,7 +70,7 @@ export class Preview {
     this.root = menu;
     this.selectionChain = [];
     this.setupAngles(this.root);
-    this.update();
+    //this.update();
   }
 
   /**
