@@ -18,6 +18,8 @@ export class Preview {
   // the constructor and returned by the getContainer() method.
   private container: HTMLElement = null;
 
+  private canvas: HTMLElement = null;
+
   // The root of the menu which is currently displayed in the preview.
   private root: IEditorNode = null;
 
@@ -35,10 +37,14 @@ export class Preview {
 
     const div = document.createElement('div');
     div.innerHTML = template({
-      id: 'kando-menu-preview',
+      containerId: 'kando-menu-preview-container',
+      canvasId: 'kando-menu-preview-canvas',
     });
 
     this.container = div.firstElementChild as HTMLElement;
+    this.canvas = this.container.querySelector(
+      '#kando-menu-preview-canvas'
+    ) as HTMLElement;
   }
 
   /** This method returns the container of the menu preview. */
@@ -70,7 +76,7 @@ export class Preview {
     this.root = menu;
     this.selectionChain = [];
     this.setupAngles(this.root);
-    //this.update();
+    this.update();
   }
 
   /**
@@ -79,7 +85,7 @@ export class Preview {
    * used to indicate the change.
    */
   private update() {
-    this.container.innerHTML = '';
+    this.canvas.innerHTML = '';
 
     const menu = this.getSelected();
 
@@ -90,11 +96,11 @@ export class Preview {
         div.innerHTML = child.name;
 
         // If the node is not dragged, move it to its position on the circle.
-        const position = math.getDirection(child.angle - 90, 200);
-        div.style.left = position.x + 'px';
-        div.style.top = position.y + 'px';
+        const position = math.getDirection(child.angle - 90, 40);
+        div.style.left = `calc(50% - 10% + ${position.x}%)`;
+        div.style.top = `calc(50% - 10% + ${position.y}%)`;
 
-        this.container.appendChild(div);
+        this.canvas.appendChild(div);
       });
     }
   }

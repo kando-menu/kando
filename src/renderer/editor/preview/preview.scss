@@ -9,12 +9,13 @@
 // SPDX-License-Identifier: MIT
 
 #kando-editor-container {
-  #kando-menu-preview {
+  #kando-menu-preview-container {
     position: absolute;
     top: 5vh;
     left: 10vw;
     transition: opacity 150ms ease;
     opacity: 0;
+    background-color: rgba(255, 255, 255, 0.1);
 
     // Full width - 20vw left/right margin - 25vw properties width - 10px gap.
     width: calc(100vw - 20vw - 25vw - 10px);
@@ -24,6 +25,7 @@
 
     .aspect-width-box {
       position: relative;
+      background-color: rgba(255, 255, 255, 0.1);
       aspect-ratio: 1.6 / 0.9;
       width: 100%;
       max-height: 100%;
@@ -37,19 +39,27 @@
       max-height: 100%;
     }
 
+    .aspect-square-box {
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.1);
+      aspect-ratio: 1 / 1;
+      height: 100%;
+      padding: 5%;
+    }
+
     .kando-menu-preview-item {
       position: absolute;
       border-radius: 50%;
-      width: 10%;
-      height: 10%;
+      width: 20%;
       background-color: rgba(255, 255, 255, 0.1);
       border: 2px solid rgb(255, 255, 255);
       transition: transform 150ms ease;
-      transform-origin: center center;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
     }
   }
 
-  &.edit-mode #kando-menu-preview.visible {
+  &.edit-mode #kando-menu-preview-container.visible {
     opacity: 1;
   }
 }
