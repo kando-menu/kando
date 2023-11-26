@@ -113,14 +113,10 @@ export class Editor {
     this.container.classList.add('edit-mode');
     this.sidebar.hide();
 
-    // Show that we received the event.
+    // Get the current settings from the main process and pass them to the respective
+    // components.
     window.api.getMenuEditorData().then((data) => {
-      window.api.log(
-        'Editing ' +
-          JSON.stringify(
-            data.menuSettings.menus.map((m) => `${m.nodes.name} (${m.shortcut})`)
-          )
-      );
+      this.preview.setMenu(data.menuSettings.menus[data.currentMenu].nodes);
     });
   }
 
