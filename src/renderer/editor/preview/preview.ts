@@ -90,22 +90,61 @@ export class Preview {
     const menu = this.getSelected();
 
     if (menu) {
+      const centerSize = 22;
+      const childDistance = 25;
+      const childSize = 14;
+
+      const div = document.createElement('div');
+      div.classList.add('kando-menu-preview-center');
+      div.style.width = `${centerSize}%`;
+      div.style.left = `calc(50% - ${centerSize / 2}%`;
+      div.style.top = `calc(50% - ${centerSize / 2}%`;
+      this.canvas.appendChild(div);
+
+      // Create a new svg element with a text element inside.
+      const icon = this.createIcon(menu.icon, menu.iconTheme);
+      div.appendChild(icon);
+
       menu.children.forEach((child) => {
         const div = document.createElement('div');
-        div.classList.add('kando-menu-preview-item');
-        div.innerHTML = child.name;
+        div.classList.add('kando-menu-preview-child');
 
         // If the node is not dragged, move it to its position on the circle.
-        const itemDistance = 25;
-        const itemSize = 15;
-        const position = math.getDirection(child.angle - 90, itemDistance);
-        div.style.width = `${itemSize}%`;
-        div.style.left = `calc(50% - ${itemSize / 2}% + ${position.x}%)`;
-        div.style.top = `calc(50% - ${itemSize / 2}% + ${position.y}%)`;
+        const position = math.getDirection(child.angle - 90, childDistance);
+        div.style.width = `${childSize}%`;
+        div.style.left = `calc(50% - ${childSize / 2}% + ${position.x}%)`;
+        div.style.top = `calc(50% - ${childSize / 2}% + ${position.y}%)`;
+
+        const icon = this.createIcon(child.icon, child.iconTheme);
+        div.appendChild(icon);
 
         this.canvas.appendChild(div);
       });
     }
+  }
+
+  /**
+   * This method creates a new SVG element with a text element inside. The text element
+   * contains the given icon.
+   *
+   * @param icon The icon name to display.
+   * @param theme The theme of the icon.
+   * @returns A new SVG element with the given icon.
+   */
+  private createIcon(icon: string, theme: string) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    svg.setAttribute('width', '100');
+    svg.setAttribute('height', '100');
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', '50');
+    text.setAttribute('y', '50');
+    text.setAttribute('class', theme);
+    text.textContent = icon;
+    svg.appendChild(text);
+
+    return svg;
   }
 
   /**

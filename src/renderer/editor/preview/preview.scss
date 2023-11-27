@@ -46,15 +46,41 @@
       padding: 5%;
     }
 
-    .kando-menu-preview-item {
+    .kando-menu-preview-center,
+    .kando-menu-preview-child {
       position: absolute;
       border-radius: 50%;
-      width: 10%;
       background-color: rgba(255, 255, 255, 0.1);
       border: 2px solid rgb(255, 255, 255);
       transition: transform 150ms ease;
       aspect-ratio: 1 / 1;
-      overflow: hidden;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 75%;
+        height: 75%;
+        fill: rgb(255, 255, 255);
+
+        text {
+          font-size: 100px;
+          alignment-baseline: central;
+          text-anchor: middle;
+        }
+      }
+
+      &:hover::before {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 2px dashed rgb(255, 255, 255);
+      }
     }
   }
 
