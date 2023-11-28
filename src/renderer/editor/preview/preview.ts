@@ -108,6 +108,7 @@ export class Preview {
       menu.children.forEach((child) => {
         const div = document.createElement('div');
         div.classList.add('kando-menu-preview-child');
+        div.style.setProperty('--rotation', child.angle - 90 + 'deg');
 
         // If the node is not dragged, move it to its position on the circle.
         const position = math.getDirection(child.angle - 90, childDistance);

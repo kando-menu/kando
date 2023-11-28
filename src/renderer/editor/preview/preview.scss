@@ -82,6 +82,15 @@
         border: 2px dashed rgb(255, 255, 255);
       }
     }
+
+    .kando-menu-preview-child::after {
+      content: '';
+      position: absolute;
+      height: 1px;
+      width: 100%;
+      border-bottom: 2px dashed rgb(255, 255, 255);
+      transform: rotate(var(--rotation)) translateX(100%) translateX(10px);
+    }
   }
 
   &.edit-mode #kando-menu-preview-container.visible {
