@@ -90,36 +90,38 @@ export class Preview {
     const menu = this.getSelected();
 
     if (menu) {
-      const centerSize = 22;
-      const childDistance = 25;
-      const childSize = 14;
+      const centerDiv = document.createElement('div');
+      centerDiv.classList.add('kando-menu-preview-center');
+      this.canvas.appendChild(centerDiv);
 
-      const div = document.createElement('div');
-      div.classList.add('kando-menu-preview-center');
-      div.style.width = `${centerSize}%`;
-      div.style.left = `calc(50% - ${centerSize / 2}%`;
-      div.style.top = `calc(50% - ${centerSize / 2}%`;
-      this.canvas.appendChild(div);
-
-      // Create a new svg element with a text element inside.
       const icon = this.createIcon(menu.icon, menu.iconTheme);
-      div.appendChild(icon);
+      centerDiv.appendChild(icon);
 
       menu.children.forEach((child) => {
-        const div = document.createElement('div');
-        div.classList.add('kando-menu-preview-child');
-        div.style.setProperty('--rotation', child.angle - 90 + 'deg');
-
-        // If the node is not dragged, move it to its position on the circle.
-        const position = math.getDirection(child.angle - 90, childDistance);
-        div.style.width = `${childSize}%`;
-        div.style.left = `calc(50% - ${childSize / 2}% + ${position.x}%)`;
-        div.style.top = `calc(50% - ${childSize / 2}% + ${position.y}%)`;
+        const position = math.getDirection(child.angle - 90, 1.0);
+        const childDiv = document.createElement('div');
+        childDiv.classList.add('kando-menu-preview-child');
+        childDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        childDiv.style.setProperty('--dir-x', position.x + '');
+        childDiv.style.setProperty('--dir-y', position.y + '');
+        this.canvas.appendChild(childDiv);
 
         const icon = this.createIcon(child.icon, child.iconTheme);
-        div.appendChild(icon);
+        childDiv.appendChild(icon);
 
-        this.canvas.appendChild(div);
+        if (child.children.length > 0) {
+          const grandChildContainer = document.createElement('div');
+          grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
+          childDiv.appendChild(grandChildContainer);
+
+          child.children.forEach((grandChild) => {
+            const grandChildDiv = document.createElement('div');
+            grandChildDiv.classList.add('kando-menu-preview-grandchild');
+            grandChildDiv.style.setProperty('--rotation', grandChild.angle - 90 + 'deg');
+
+            grandChildContainer.appendChild(grandChildDiv);
+          });
+        }
       });
     }
   }

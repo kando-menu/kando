@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use 'sass:math';
+
 #kando-editor-container {
   #kando-menu-preview-container {
     position: absolute;
@@ -44,6 +46,10 @@
       aspect-ratio: 1 / 1;
       height: 100%;
       padding: 5%;
+    }
+
+    #kando-menu-preview-canvas {
+      z-index: 0;
     }
 
     .kando-menu-preview-center,
@@ -83,13 +89,56 @@
       }
     }
 
-    .kando-menu-preview-child::after {
-      content: '';
+    .kando-menu-preview-center {
+      width: $preview-center-size;
+      left: calc(50% - $preview-center-size / 2);
+      top: calc(50% - $preview-center-size / 2);
+    }
+
+    .kando-menu-preview-child {
+      width: $preview-child-size;
+      left: calc(50% - $preview-child-size / 2 + var(--dir-x) * $preview-child-distance);
+      top: calc(50% - $preview-child-size / 2 + var(--dir-y) * $preview-child-distance);
+
+      &::after {
+        content: '';
+        position: absolute;
+        height: 1px;
+        width: 100%;
+        border-bottom: 2px dashed rgb(255, 255, 255);
+        transform: rotate(var(--rotation)) translateX(100%) translateX(10px);
+      }
+    }
+
+    .kando-menu-preview-grandchild-container {
       position: absolute;
-      height: 1px;
-      width: 100%;
-      border-bottom: 2px dashed rgb(255, 255, 255);
-      transform: rotate(var(--rotation)) translateX(100%) translateX(10px);
+      width: 200%;
+      height: 200%;
+      z-index: -1;
+      pointer-events: none;
+
+      // inverse circle clipping
+      -webkit-mask-image: radial-gradient(
+        circle at 50%,
+        transparent 0%,
+        transparent 35%,
+        black 45%,
+        black 100%
+      );
+    }
+
+    .kando-menu-preview-grandchild {
+      $size: calc(0.5 * 100% * $preview-grandchild-size / $preview-child-size);
+      $offset: calc(50% * $preview-child-size / $preview-grandchild-size);
+      position: absolute;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 0.5);
+      transition: transform 150ms ease;
+      width: $size;
+      height: $size;
+      left: calc(50% - $size / 2);
+      top: calc(50% - $size / 2);
+      transform: rotate(var(--rotation)) translateX($offset);
     }
   }
 
