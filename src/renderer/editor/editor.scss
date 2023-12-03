@@ -24,10 +24,13 @@ $editor-padding-top: 7vh;
 $editor-padding-bottom: 7vh;
 
 $preview-properties-ratio: 0.7;
-$preview-center-size: 25%;
-$preview-child-size: 14%;
+$preview-center-size: 22%;
+$preview-child-size: 12%;
 $preview-child-distance: 25%;
 $preview-grandchild-size: 3%;
+$preview-label-distance: 20%;
+$preview-label-connector-length: 70%;
+$preview-label-max-size: 30%;
 
 $toolbar-height: max(250px, 20vh);
 $toolbar-padding: 10px;

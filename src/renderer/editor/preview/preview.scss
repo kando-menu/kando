@@ -17,7 +17,6 @@
     left: $editor-padding-left;
     transition: opacity 150ms ease;
     opacity: 0;
-    background-color: rgba(255, 255, 255, 0.1);
 
     width: calc(
       (100vw - $editor-padding-left - $editor-padding-right) * $preview-properties-ratio
@@ -26,23 +25,20 @@
 
     .aspect-width-box {
       position: relative;
-      background-color: rgba(255, 255, 255, 0.1);
-      aspect-ratio: 1.6 / 0.9;
+      aspect-ratio: 1.5 / 1;
       width: 100%;
       max-height: 100%;
     }
 
     .aspect-height-box {
       position: relative;
-      background-color: rgba(255, 255, 255, 0.1);
-      aspect-ratio: 1.6 / 0.9;
+      aspect-ratio: 1.5 / 1;
       height: 100%;
       max-height: 100%;
     }
 
     .aspect-square-box {
       position: relative;
-      background-color: rgba(255, 255, 255, 0.1);
       aspect-ratio: 1 / 1;
       height: 100%;
       padding: 5%;
@@ -81,10 +77,10 @@
         content: '';
         border-radius: 50%;
         position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
         border: 2px dashed rgb(255, 255, 255);
       }
     }
@@ -99,15 +95,6 @@
       width: $preview-child-size;
       left: calc(50% - $preview-child-size / 2 + var(--dir-x) * $preview-child-distance);
       top: calc(50% - $preview-child-size / 2 + var(--dir-y) * $preview-child-distance);
-
-      &::after {
-        content: '';
-        position: absolute;
-        height: 1px;
-        width: 100%;
-        border-bottom: 2px dashed rgb(255, 255, 255);
-        transform: rotate(var(--rotation)) translateX(100%) translateX(10px);
-      }
     }
 
     .kando-menu-preview-grandchild-container {
@@ -139,6 +126,86 @@
       left: calc(50% - $size / 2);
       top: calc(50% - $size / 2);
       transform: rotate(var(--rotation)) translateX($offset);
+    }
+
+    .kando-menu-preview-label-container {
+      $size: calc(100% * $preview-label-max-size / $preview-child-size);
+      $offset: calc(100% * $preview-label-distance / $preview-label-max-size);
+      position: absolute;
+      width: $size;
+      height: $size;
+      pointer-events: none;
+      display: flex;
+      align-items: end;
+
+      &::before {
+        $length: calc($preview-label-connector-length / 100% * $offset);
+        content: '';
+        position: absolute;
+        transform: rotate(calc(var(--rotation) + 180deg));
+        transform-origin: left;
+        width: $length;
+        height: 1px;
+        left: 0;
+        bottom: 0;
+        border-bottom: 2px dashed rgb(255, 255, 255);
+      }
+
+      .kando-menu-preview-label {
+        color: white;
+        white-space: nowrap;
+        border-bottom: 2px dashed rgb(255, 255, 255);
+        pointer-events: all;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding: 0 1rem;
+      }
+
+      &.left {
+        justify-content: end;
+        transform: translate(-50%, -50%)
+          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+
+        &::before {
+          transform: rotate(calc(var(--rotation)));
+          transform-origin: right;
+          left: auto;
+          right: 0;
+        }
+      }
+
+      &.right {
+        transform: translate(50%, -50%)
+          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+      }
+
+      &.top {
+        justify-content: center;
+        transform: translate(0%, -50%)
+          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+
+        &::before {
+          left: 50%;
+        }
+      }
+
+      &.bottom {
+        align-items: start;
+        justify-content: center;
+        transform: translate(0%, 50%)
+          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+
+        &::before {
+          left: 50%;
+          bottom: auto;
+          top: 0;
+        }
+
+        .kando-menu-preview-label {
+          border-top: 2px dashed rgb(255, 255, 255);
+          border-bottom: none;
+        }
+      }
     }
   }
 

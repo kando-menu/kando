@@ -122,6 +122,31 @@ export class Preview {
             grandChildContainer.appendChild(grandChildDiv);
           });
         }
+
+        const labelDivContainer = document.createElement('div');
+        labelDivContainer.classList.add('kando-menu-preview-label-container');
+        labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        childDiv.style.setProperty('--dir-x', position.x + '');
+        childDiv.style.setProperty('--dir-y', position.y + '');
+
+        if (position.x < -0.001) {
+          labelDivContainer.classList.add('left');
+        } else if (position.x > 0.001) {
+          labelDivContainer.classList.add('right');
+        } else if (position.y < 0) {
+          labelDivContainer.classList.add('top');
+        } else {
+          labelDivContainer.classList.add('bottom');
+        }
+
+        childDiv.appendChild(labelDivContainer);
+
+        const labelDiv = document.createElement('div');
+        labelDiv.classList.add('kando-menu-preview-label');
+        labelDiv.classList.add('kando-font');
+        labelDiv.classList.add('fs-3');
+        labelDiv.textContent = child.name;
+        labelDivContainer.appendChild(labelDiv);
       });
     }
   }
