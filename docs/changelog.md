@@ -15,6 +15,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## Kando 0.3.0 [Unreleased]
+
+**Release Date:** TBD
+
+#### Added
+
+- An example action which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
+
 ## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
 
 **Release Date:** 2023-11-24

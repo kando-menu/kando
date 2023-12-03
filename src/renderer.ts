@@ -28,6 +28,7 @@ interface IElectronAPI {
   simulateKeys: (keys: IKeySequence) => void;
   movePointer: (dist: IVec2) => void;
   openURI: (uri: string) => void;
+  runCommand: (command: string) => void;
   log: (message: string) => void;
   showMenu: (func: (root: INode, pos: IVec2) => void) => void;
   hoverItem: (path: string) => void;

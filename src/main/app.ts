@@ -10,6 +10,8 @@
 
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
+import { exec } from 'child_process';
+import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
 import { INode, IMenuSettings, IAppSettings } from '../common';
@@ -238,6 +240,28 @@ export class KandoApp {
     ipcMain.on('open-uri', (event, uri) => {
       this.window.hide();
       shell.openExternal(uri);
+    });
+
+    // Run a shell command.
+    ipcMain.on('run-command', (event, command) => {
+      this.window.hide();
+      exec(command, (error) => {
+        // Print an error if the command fails to start.
+        if (error) {
+          console.error('Failed to execute action: ' + error);
+
+          // Show a notification if possible.
+          if (Notification.isSupported()) {
+            const notification = new Notification({
+              title: 'Failed to execute action.',
+              body: error.message,
+              icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+            });
+
+            notification.show();
+          }
+        }
+      });
     });
 
     // Print some messages when the user hovers or selects an item.

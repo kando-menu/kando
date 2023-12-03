@@ -119,4 +119,13 @@ contextBridge.exposeInMainWorld('api', {
   simulateKeys: function (keys: IKeySequence) {
     ipcRenderer.send('simulate-keys', keys);
   },
+
+  /**
+   * This can be used to run a shell command.
+   *
+   * @param command The command to run.
+   */
+  runCommand: function (command: string) {
+    ipcRenderer.send('run-command', command);
+  },
 });
