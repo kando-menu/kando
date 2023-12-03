@@ -101,6 +101,7 @@ export class Preview {
     const menu = this.getSelected();
 
     if (menu) {
+      // The big center div shows the icon of the currently selected menu.
       const centerDiv = document.createElement('div');
       centerDiv.classList.add('kando-menu-preview-center');
       this.canvas.appendChild(centerDiv);
@@ -108,8 +109,13 @@ export class Preview {
       const icon = this.createIcon(menu.icon, menu.iconTheme);
       centerDiv.appendChild(icon);
 
+      // Add the children of the currently selected menu in a circle around the center.
       menu.children.forEach((child) => {
+        // Compute the direction towards the child.
         const position = math.getDirection(child.angle - 90, 1.0);
+
+        // Create a div for the child and set the CSS variables for the position and
+        // rotation.
         const childDiv = document.createElement('div');
         childDiv.classList.add('kando-menu-preview-child');
         childDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
@@ -117,9 +123,11 @@ export class Preview {
         childDiv.style.setProperty('--dir-y', position.y + '');
         this.canvas.appendChild(childDiv);
 
+        // Add the icon of the child.
         const icon = this.createIcon(child.icon, child.iconTheme);
         childDiv.appendChild(icon);
 
+        // If the child has children, we add little grandchild divs to the child div.
         if (child.children.length > 0) {
           const grandChildContainer = document.createElement('div');
           grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
@@ -134,6 +142,8 @@ export class Preview {
           });
         }
 
+        // Add a label to the child div. This is used to display the name of the menu
+        // item. The label shows a connector line to the child div.
         const labelDivContainer = document.createElement('div');
         labelDivContainer.classList.add('kando-menu-preview-label-container');
         labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
@@ -152,6 +162,8 @@ export class Preview {
 
         childDiv.appendChild(labelDivContainer);
 
+        // The actual label is in a nested div. This is used to ellipsize the text if
+        // it is too long.
         const labelDiv = document.createElement('div');
         labelDiv.classList.add('kando-menu-preview-label');
         labelDiv.classList.add('kando-font');
