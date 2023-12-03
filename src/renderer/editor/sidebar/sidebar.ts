@@ -128,6 +128,15 @@ export class Sidebar {
                 tooltip: 'This opens a file explorer.',
               },
             ],
+            entries: [
+              {
+                id: 'command-action',
+                class: 'col-12',
+                icon: 'send',
+                placeholder: 'Run Command',
+                tooltip: 'This runs the given shell command.',
+              },
+            ],
           }),
         },
         {
@@ -355,6 +364,29 @@ export class Sidebar {
     this.container.querySelector('#uri-button').addEventListener('click', () => {
       window.api.openURI('file:///');
     });
+
+    // Initialize the command action button + entry.
+    const runCommand = () => {
+      const input = this.container.querySelector(
+        '#command-action-entry'
+      ) as HTMLInputElement;
+      window.api.runCommand(input.value);
+      input.value = '';
+    };
+
+    // Run command on button click.
+    this.container
+      .querySelector('#command-action-button')
+      .addEventListener('click', runCommand);
+
+    // Run command on enter.
+    this.container
+      .querySelector('#command-action-entry')
+      .addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') {
+          runCommand();
+        }
+      });
 
     // Initially, we show the sidebar.
     this.show();
