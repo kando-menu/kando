@@ -13,11 +13,19 @@ import Handlebars from 'handlebars';
 import * as math from '../../math';
 import { IEditorNode } from '../editor-node';
 
+/**
+ * This class is responsible for displaying the menu preview of the editor. It supports
+ * navigation through the menu hierarchy by clicking on the menu items in the preview. It
+ * also supports the reordering of the menu items by drag'n'drop.
+ */
 export class Preview {
   // The container is the HTML element which contains the menu preview. It is created in
   // the constructor and returned by the getContainer() method.
   private container: HTMLElement = null;
 
+  // The canvas is the HTML element which contains the menu items. It is a sub-element
+  // of the container. The intermediate elements are used to center the preview and to
+  // create a fixed aspect ratio.
   private canvas: HTMLElement = null;
 
   // The root of the menu which is currently displayed in the preview.
@@ -42,6 +50,9 @@ export class Preview {
     });
 
     this.container = div.firstElementChild as HTMLElement;
+
+    // Keep a reference to the 'canvas' element. It is not the HTML5 canvas element, but
+    // the element into which the menu items are rendered using HTML and CSS.
     this.canvas = this.container.querySelector(
       '#kando-menu-preview-canvas'
     ) as HTMLElement;
@@ -54,7 +65,7 @@ export class Preview {
 
   /**
    * This method shows the menu preview. This is used when the toolbar of the editor is
-   * collapsed again.
+   * collapsed.
    */
   public show() {
     this.container.classList.add('visible');
