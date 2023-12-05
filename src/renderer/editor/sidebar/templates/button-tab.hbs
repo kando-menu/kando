@@ -20,7 +20,17 @@
                 data-bs-title='{{tooltip}}'>
           <i class='material-symbols-rounded'>{{icon}}</i>
           {{title}}
-        </button></span>
+        </button>
+      </span>
+    {{/each}}
+    {{#each entries}}
+      <span class='input-group {{class}}'>
+        <input id='{{id}}-entry' type="text" class="form-control" placeholder="{{placeholder}}">
+        <button id='{{id}}-button' class='btn btn-secondary' data-bs-toggle='tooltip'
+                data-bs-title='{{tooltip}}'>
+          <i class='material-symbols-rounded'>{{icon}}</i>
+        </button>
+      </span>
     {{/each}}
   </div>
 </div>

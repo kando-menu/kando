@@ -20,7 +20,8 @@ $kando-highlight-color: #ffc8c8;
   --bs-code-color: #{$kando-highlight-color};
   --bs-border-radius: 0.75rem;
   --bs-border-width: 0;
-  --bs-body-bg: rgba(0, 0, 0, 0.8);
+  --bs-body-bg: rgba(40, 40, 40);
+  --bs-secondary-color: rgb(100, 100, 100);
   --bs-emphasis-color: rgba(255, 255, 255);
   --bs-link-color: #{$kando-highlight-color};
 
@@ -71,6 +72,10 @@ $kando-highlight-color: #ffc8c8;
     --bs-nav-tabs-link-active-color: white;
     --bs-nav-link-color: #{$kando-text-color};
     --bs-link-hover-color: white;
+  }
+
+  .form-control:focus {
+    box-shadow: 0 0 0.25rem 0 rgba(255, 255, 255, 0.7);
   }
 }
 
