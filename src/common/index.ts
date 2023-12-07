@@ -46,6 +46,12 @@ export interface INode {
    */
   type: string;
 
+  /**
+   * The data of the menu item. What this contains depends on the type. Usually, only leaf
+   * nodes will have this field.
+   */
+  data?: unknown;
+
   /** The name of the menu item. This may be displayed with some kind of label. */
   name: string;
 

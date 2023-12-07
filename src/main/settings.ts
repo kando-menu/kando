@@ -25,7 +25,7 @@ type PropertyChangeEvents<T> = {
  * that the settings object cannot be modified from outside of the class except through
  * the `set()` method.
  */
-type DeepReadonly<T> = {
+export type DeepReadonly<T> = {
   readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];
 };
 

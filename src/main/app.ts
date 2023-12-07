@@ -15,7 +15,7 @@ import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
 import { INode, IMenuSettings, IAppSettings } from '../common';
-import { Settings } from './settings';
+import { Settings, DeepReadonly } from './settings';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -245,32 +245,30 @@ export class KandoApp {
     // Run a shell command.
     ipcMain.on('run-command', (event, command) => {
       this.window.hide();
-      exec(command, (error) => {
-        // Print an error if the command fails to start.
-        if (error) {
-          console.error('Failed to execute action: ' + error);
-
-          // Show a notification if possible.
-          if (Notification.isSupported()) {
-            const notification = new Notification({
-              title: 'Failed to execute action.',
-              body: error.message,
-              icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-            });
-
-            notification.show();
-          }
-        }
-      });
+      this.exec(command);
     });
 
     // Print some messages when the user hovers or selects an item.
     ipcMain.on('hover-item', (event, path) => {
       console.log('Hover item: ' + path);
     });
+
     ipcMain.on('select-item', (event, path) => {
       console.log('Select item: ' + path);
+
+      // For now, we only have one example menu.
+      const menu = this.menuSettings.get('menus')[0];
+
+      // Find the selected item.
+      const node = this.getNodeAtPath(menu.nodes, path);
+
+      // We hard-code a command action here. In the future, we will have a more
+      // sophisticated action system.
+      if (node.type === 'command') {
+        this.exec(node.data as string);
+      }
     });
+
     ipcMain.on('cancel-selection', () => {
       console.log('Cancel selection.');
     });
@@ -282,6 +280,50 @@ export class KandoApp {
         appSettings: this.appSettings.get(),
         currentMenu: 0,
       };
+    });
+  }
+
+  /**
+   * This returns the node at the given path from the given root node. The path is a
+   * string of numbers separated by slashes. Each number is the index of the child node to
+   * select. For example, the path "0/2/1" would select the second child of the third
+   * child of the first child of the root node.
+   */
+  private getNodeAtPath(root: DeepReadonly<INode>, path: string) {
+    let node = root;
+    const indices = path
+      .substring(1)
+      .split('/')
+      .map((x: string) => parseInt(x));
+
+    for (const index of indices) {
+      node = node.children[index];
+    }
+
+    return node;
+  }
+
+  /**
+   * A small helper function to execute a shell command. It will show a notification if
+   * the command fails to start.
+   */
+  private exec(command: string) {
+    exec(command, (error) => {
+      // Print an error if the command fails to start.
+      if (error) {
+        console.error('Failed to execute command: ' + error);
+
+        // Show a notification if possible.
+        if (Notification.isSupported()) {
+          const notification = new Notification({
+            title: 'Failed to execute command.',
+            body: error.message,
+            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+          });
+
+          notification.show();
+        }
+      }
     });
   }
 
