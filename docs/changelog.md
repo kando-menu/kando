@@ -24,6 +24,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - An example action which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
 - The possibility to run a command when a menu item is selected. This is the first step towards making Kando actually useful! To use this, you will have to edit your menu configuration file at `~/.config/kando/menus.json` or `%appdata%\kando\menus.json`. Change the `type` of an item to `command` and add a `data` field with the command you want to run. Kando will automatically reload the menu configuration file when you save it. If your items in the menu configuration file have no `type` field, just remove the file and restart Kando. It will then create a new one with the current default configuration.
 
+#### Fixed
+
+- Loading invalid menu configuration files no longer crashes Kando. Instead, it will now show an error message and fall back to the default configuration.
+- Invalid menu configuration files are not overwritten anymore. Kando will not touch the file but use the default configuration instead.
+
 ## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
 
 **Release Date:** 2023-11-24

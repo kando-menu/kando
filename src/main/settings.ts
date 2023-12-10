@@ -172,17 +172,25 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   /**
    * Loads the settings from disk. If the settings file does not exist yet, the given
    * default settings are used. If the settings file exists but does not contain all
-   * properties, the missing properties are added from the default settings.
+   * properties, the missing properties are added from the default settings. If the
+   * settings file contains a syntax error, the default settings are returned.
    *
    * @param defaultSettings The default settings object.
    * @returns The current settings object.
    */
   private loadSettings(defaultSettings: T): T {
     try {
+      console.log('Loading settings from', this.filePath);
       const data = fs.readJSONSync(this.filePath);
       return { ...defaultSettings, ...data };
     } catch (error) {
-      this.saveSettings(defaultSettings);
+      if (error.code === 'ENOENT') {
+        // The settings file does not exist yet. Create it.
+        this.saveSettings(defaultSettings);
+      } else {
+        console.warn(`${error}`);
+      }
+
       return defaultSettings;
     }
   }

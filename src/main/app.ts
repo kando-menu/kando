@@ -58,7 +58,7 @@ export class KandoApp {
     file: 'menus.json',
     directory: app.getPath('userData'),
     defaults: {
-      menus: [],
+      menus: [this.createExampleMenu()],
     },
   });
 
@@ -67,11 +67,6 @@ export class KandoApp {
     // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
-    }
-
-    // Create a default menu if no menu is defined yet.
-    if (this.menuSettings.get('menus').length === 0) {
-      this.menuSettings.set({ menus: [this.createExampleMenu()] });
     }
 
     // Initialize the backend, the window and the IPC communication to the renderer
