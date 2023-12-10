@@ -257,13 +257,20 @@ export class KandoApp {
       // Find the selected item.
       const node = this.getNodeAtPath(menu.nodes, path);
 
-      // We hard-code a command action here. In the future, we will have a more
+      // We hard-code some actions here. In the future, we will have a more
       // sophisticated action system.
       if (node.type === 'command') {
         interface INodeData {
           command: string;
         }
         this.exec((node.data as INodeData).command);
+      }
+
+      if (node.type === 'uri') {
+        interface INodeData {
+          uri: string;
+        }
+        shell.openExternal((node.data as INodeData).uri);
       }
     });
 

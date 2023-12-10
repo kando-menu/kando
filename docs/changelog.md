@@ -22,7 +22,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Added
 
 - An example action which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
-- The possibility to run a command when a menu item is selected. This is the first step towards making Kando actually useful! To use this, you will have to edit your menu configuration file at `~/.config/kando/menus.json` or `%appdata%\kando\menus.json`. Change the `type` of an item to `command` and add a `"data": {"command": "..."}` object with the command you want to run. Kando will automatically reload the menu configuration file when you save it. If your items in the menu configuration file have no `type` field, just remove the file and restart Kando. It will then create a new one with the current default configuration.
+- The possibility to execute some specific actions when a menu item is selected. This is the first step towards making Kando actually useful! To use this, you will have to edit your menu configuration file for now. This is located at `~/.config/kando/menus.json` (Linux) or `%appdata%\kando\menus.json` (Windows). Change the `type` of an item to one of the options below and add a `"data": { ... }` object with additional parameters. Kando will automatically reload the menu configuration file when you save it.
+  - `"type": "command"`: This will execute a shell command. The command is specified in the `"data"` object. For instance, you can use `"data": { "command": "firefox" }` to open Firefox on Linux.
+  - `"type": "uri"`: This will open a URI. The URI is specified in the `"data"` object. For instance, you can use `"data": { "uri": "https://github.com/kando-menu/kando" }` to open the Kando website.
 
 #### Fixed
 
