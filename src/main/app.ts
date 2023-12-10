@@ -260,7 +260,10 @@ export class KandoApp {
       // We hard-code a command action here. In the future, we will have a more
       // sophisticated action system.
       if (node.type === 'command') {
-        this.exec(node.data as string);
+        interface INodeData {
+          command: string;
+        }
+        this.exec((node.data as INodeData).command);
       }
     });
 
