@@ -41,7 +41,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "mocha": "^10.2.0",
     "node-loader": "^2.0.0",
-    "prettier": "^3.1.0",
+    "prettier": "^3.1.1",
     "prettier-plugin-jsdoc": "^1.0.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.69.5",
@@ -50,8 +50,8 @@
     "style-loader": "^3.3.3",
     "ts-loader": "^9.5.0",
     "ts-mocha": "^10.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -63,7 +63,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
-    "material-symbols": "^0.14.0",
+    "material-symbols": "^0.14.2",
     "node-addon-api": "^7.0.0"
   }
 }
