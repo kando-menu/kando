@@ -35,7 +35,7 @@
     "chai": "^4.3.10",
     "cmake-js": "^7.2.1",
     "css-loader": "^6.8.1",
-    "electron": "27.1.2",
+    "electron": "28.0.0",
     "eslint": "^8.55.0",
     "eslint-plugin-import": "^2.29.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
