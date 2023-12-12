@@ -151,8 +151,6 @@ export class KandoApp {
           y: info.pointerY - workarea.y,
         });
 
-        this.window.setFocusable(true);
-        this.window.setIgnoreMouseEvents(false);
         this.window.show();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
@@ -241,12 +239,8 @@ export class KandoApp {
     });
 
     // We do not hide the window immediately when the user selects an item. Instead, we
-    // wait for the fade-out animation to finish. We also make the window click-through
-    // by ignoring any input events during the fade-out animation.
+    // wait for the fade-out animation to finish.
     ipcMain.on('select-item', (event, path) => {
-      this.window.setFocusable(false);
-      this.window.setIgnoreMouseEvents(true);
-
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual key
       // presses) are not captured by the window.
@@ -334,21 +328,17 @@ export class KandoApp {
           // Finally, we simulate the key presses using the backend.
           this.backend.simulateKeys(keys);
         }
-      }, 300);
+      }, 400);
     });
 
     // We do not hide the window immediately when the user aborts a selection. Instead, we
-    // wait for the fade-out animation to finish. We also make the window click-through
-    // by ignoring any input events during the fade-out animation.
+    // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
-      this.window.setFocusable(false);
-      this.window.setIgnoreMouseEvents(true);
-
       this.hideTimeout = setTimeout(() => {
         console.log('Cancel selection.');
         this.window.hide();
         this.hideTimeout = null;
-      }, 200);
+      }, 300);
     });
 
     // Send the current settings to the renderer process when the editor is opened.

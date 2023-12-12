@@ -63,16 +63,16 @@ menu.on('move-pointer', (dist) => {
 
 // Hide Kando's window when the user aborts a selection.
 menu.on('cancel', () => {
-  window.api.cancelSelection();
   menu.hide();
   editor.hide();
+  window.api.cancelSelection();
 });
 
 // Hide Kando's window when the user selects an item and notify the main process.
 menu.on('select', (path) => {
-  window.api.selectItem(path);
   menu.hide();
   editor.hide();
+  window.api.selectItem(path);
 });
 
 // Report hover and unhover events to the main process.
@@ -85,9 +85,9 @@ document.addEventListener('keyup', (ev) => {
     if (editor.isInEditMode()) {
       editor.leaveEditMode();
     } else {
-      window.api.cancelSelection();
       menu.hide();
       editor.hide();
+      window.api.cancelSelection();
     }
   }
 });
