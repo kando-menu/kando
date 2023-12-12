@@ -280,6 +280,60 @@ export class KandoApp {
           }
           shell.openExternal((node.data as INodeData).uri);
         }
+
+        // If the node is a hotkey action, we simulate the key press. For now, the
+        // hotkey is a string which is composed of key names separated by a plus sign.
+        // All keys will be pressed and then released again.
+        if (node.type === 'hotkey') {
+          interface INodeData {
+            hotkey: string;
+          }
+
+          // We convert some common key names to the corresponding left key names.
+          const keyNames = (node.data as INodeData).hotkey.split('+').map((name) => {
+            // There are many different names for the Control key. We convert them all
+            // to "ControlLeft".
+            if (
+              name === 'CommandOrControl' ||
+              name === 'CmdOrCtrl' ||
+              name === 'Command' ||
+              name === 'Control' ||
+              name === 'Cmd' ||
+              name === 'Ctrl'
+            ) {
+              return 'ControlLeft';
+            }
+
+            if (name === 'Shift') return 'ShiftLeft';
+            if (name === 'Meta' || name === 'Super') return 'MetaLeft';
+            if (name === 'Alt') return 'AltLeft';
+
+            // If the key name is only one character long, we assume that it is a
+            // single character which should be pressed. In this case, we prefix it
+            // with "Key".
+            if (name.length === 1) return 'Key' + name.toUpperCase();
+
+            return name;
+          });
+
+          // We simulate the key press by first pressing all keys and then releasing
+          // them again. We add a small delay between the key presses to make sure
+          // that the keys are pressed in the correct order.
+          const keys: IKeySequence = [];
+
+          // First press all keys.
+          for (const key of keyNames) {
+            keys.push({ name: key, down: true, delay: 10 });
+          }
+
+          // Then release all keys.
+          for (const key of keyNames) {
+            keys.push({ name: key, down: false, delay: 10 });
+          }
+
+          // Finally, we simulate the key presses using the backend.
+          this.backend.simulateKeys(keys);
+        }
       }, 300);
     });
 
