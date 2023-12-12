@@ -247,6 +247,9 @@ export class KandoApp {
       this.window.setFocusable(false);
       this.window.setIgnoreMouseEvents(true);
 
+      // Also wait with the execution of the selected action until the fade-out
+      // animation is finished to make sure that any resulting events (such as virtual key
+      // presses) are not captured by the window.
       this.hideTimeout = setTimeout(() => {
         console.log('Select item: ' + path);
 
@@ -261,6 +264,8 @@ export class KandoApp {
 
         // We hard-code some actions here. In the future, we will have a more
         // sophisticated action system.
+
+        // If the node is a command action, we execute the command.
         if (node.type === 'command') {
           interface INodeData {
             command: string;
@@ -268,6 +273,7 @@ export class KandoApp {
           this.exec((node.data as INodeData).command);
         }
 
+        // If the node is an URI action, we open the URI.
         if (node.type === 'uri') {
           interface INodeData {
             uri: string;
