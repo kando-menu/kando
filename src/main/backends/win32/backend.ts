@@ -125,44 +125,4 @@ export class Win32Backend implements Backend {
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }
-
-  /**
-   * This converts a shortcut from the format used by Electron to the format used by
-   * PowerShell.
-   *
-   * @param shortcut The shortcut to translate.
-   * @returns The translated shortcut.
-   * @todo: Add information about the string format of the shortcut.
-   */
-  private toPowershellAccelerator(shortcut: string) {
-    if (shortcut.includes('Option')) {
-      throw new Error('Shortcuts including Option are not yet supported on Windows.');
-    }
-
-    if (shortcut.includes('AltGr')) {
-      throw new Error('Shortcuts including AltGr are not yet supported on Windows.');
-    }
-
-    if (shortcut.includes('Meta')) {
-      throw new Error('Shortcuts including Meta are not yet supported on Windows.');
-    }
-
-    if (shortcut.includes('Super')) {
-      throw new Error('Shortcuts including Super are not yet supported on Windows.');
-    }
-
-    shortcut = shortcut.replace('^', '{^}');
-    shortcut = shortcut.replace('%', '{%}');
-    shortcut = shortcut.replace('CommandOrControl+', '^');
-    shortcut = shortcut.replace('CmdOrCtrl+', '^');
-    shortcut = shortcut.replace('Command+', '^');
-    shortcut = shortcut.replace('Control+', '^');
-    shortcut = shortcut.replace('Cmd+', '^');
-    shortcut = shortcut.replace('Ctrl+', '^');
-    shortcut = shortcut.replace('Alt+', '%');
-    shortcut = shortcut.replace('Shift+', '+');
-    shortcut = shortcut.replace('Tab', '{tab}');
-
-    return shortcut;
-  }
 }

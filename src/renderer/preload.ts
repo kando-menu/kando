@@ -17,15 +17,6 @@ import { IKeySequence, IVec2, INode, IEditorData } from '../common';
  * register callbacks to be called by the host process.
  */
 contextBridge.exposeInMainWorld('api', {
-  /**
-   * This will hide the application window after the given delay.
-   *
-   * @param delay The delay in milliseconds.
-   */
-  hideWindow: function (delay: number) {
-    ipcRenderer.send('hide-window', delay);
-  },
-
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');
