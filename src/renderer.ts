@@ -23,7 +23,6 @@ import { IKeySequence, IVec2, INode, IEditorData } from './common';
 
 interface IElectronAPI {
   loadPreferences: () => void;
-  hideWindow: (delay: number) => void;
   showDevTools: () => void;
   simulateKeys: (keys: IKeySequence) => void;
   movePointer: (dist: IVec2) => void;
@@ -64,7 +63,6 @@ menu.on('move-pointer', (dist) => {
 
 // Hide Kando's window when the user aborts a selection.
 menu.on('cancel', () => {
-  window.api.hideWindow(300);
   window.api.cancelSelection();
   menu.hide();
   editor.hide();
@@ -72,7 +70,6 @@ menu.on('cancel', () => {
 
 // Hide Kando's window when the user selects an item and notify the main process.
 menu.on('select', (path) => {
-  window.api.hideWindow(400);
   window.api.selectItem(path);
   menu.hide();
   editor.hide();
@@ -88,7 +85,6 @@ document.addEventListener('keyup', (ev) => {
     if (editor.isInEditMode()) {
       editor.leaveEditMode();
     } else {
-      window.api.hideWindow(300);
       window.api.cancelSelection();
       menu.hide();
       editor.hide();

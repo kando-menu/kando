@@ -14,7 +14,7 @@ import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { INode, IMenuSettings, IAppSettings } from '../common';
+import { INode, IMenuSettings, IAppSettings, IKeySequence } from '../common';
 import { Settings, DeepReadonly } from './settings';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -151,6 +151,8 @@ export class KandoApp {
           y: info.pointerY - workarea.y,
         });
 
+        this.window.setFocusable(true);
+        this.window.setIgnoreMouseEvents(false);
         this.window.show();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
@@ -205,16 +207,6 @@ export class KandoApp {
       this.window.webContents.openDevTools();
     });
 
-    // We do not hide the window immediately when the user clicks on an item. Instead
-    // we wait for the fade-out animation to finish. We also make the window click-through
-    // by ignoring any input events during the fade-out animation.
-    ipcMain.on('hide-window', (event, delay) => {
-      this.hideTimeout = setTimeout(() => {
-        this.window.hide();
-        this.hideTimeout = null;
-      }, delay);
-    });
-
     // Print a message to the console of the host process.
     ipcMain.on('log', (event, message) => {
       console.log(message);
@@ -248,34 +240,55 @@ export class KandoApp {
       console.log('Hover item: ' + path);
     });
 
+    // We do not hide the window immediately when the user selects an item. Instead, we
+    // wait for the fade-out animation to finish. We also make the window click-through
+    // by ignoring any input events during the fade-out animation.
     ipcMain.on('select-item', (event, path) => {
-      console.log('Select item: ' + path);
+      this.window.setFocusable(false);
+      this.window.setIgnoreMouseEvents(true);
 
-      // For now, we only have one example menu.
-      const menu = this.menuSettings.get('menus')[0];
+      this.hideTimeout = setTimeout(() => {
+        console.log('Select item: ' + path);
 
-      // Find the selected item.
-      const node = this.getNodeAtPath(menu.nodes, path);
+        this.window.hide();
+        this.hideTimeout = null;
 
-      // We hard-code some actions here. In the future, we will have a more
-      // sophisticated action system.
-      if (node.type === 'command') {
-        interface INodeData {
-          command: string;
+        // For now, we only have one example menu.
+        const menu = this.menuSettings.get('menus')[0];
+
+        // Find the selected item.
+        const node = this.getNodeAtPath(menu.nodes, path);
+
+        // We hard-code some actions here. In the future, we will have a more
+        // sophisticated action system.
+        if (node.type === 'command') {
+          interface INodeData {
+            command: string;
+          }
+          this.exec((node.data as INodeData).command);
         }
-        this.exec((node.data as INodeData).command);
-      }
 
-      if (node.type === 'uri') {
-        interface INodeData {
-          uri: string;
+        if (node.type === 'uri') {
+          interface INodeData {
+            uri: string;
+          }
+          shell.openExternal((node.data as INodeData).uri);
         }
-        shell.openExternal((node.data as INodeData).uri);
-      }
+      }, 300);
     });
 
+    // We do not hide the window immediately when the user aborts a selection. Instead, we
+    // wait for the fade-out animation to finish. We also make the window click-through
+    // by ignoring any input events during the fade-out animation.
     ipcMain.on('cancel-selection', () => {
-      console.log('Cancel selection.');
+      this.window.setFocusable(false);
+      this.window.setIgnoreMouseEvents(true);
+
+      this.hideTimeout = setTimeout(() => {
+        console.log('Cancel selection.');
+        this.window.hide();
+        this.hideTimeout = null;
+      }, 200);
     });
 
     // Send the current settings to the renderer process when the editor is opened.
