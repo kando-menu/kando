@@ -34,6 +34,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Overwriting invalid menu configuration files. Instead of overwriting with the default settings, Kando will not touch invalid configuration files anymore.
 - Alignment of the text on the center item. Before, it used to be left aligned if the text wrapped to multiple lines. Now, it is always centered.
 
+#### Removed
+
+- Showing the prototype menu when launching a second instance of Kando. As we now support multiple menus, this is no longer useful. In the future, there will be an alternative way to open menus from the command line.
+
 ## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
 
 **Release Date:** 2023-11-24
