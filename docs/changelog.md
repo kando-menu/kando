@@ -25,6 +25,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - `"type": "command"`: This will execute a shell command. The command is specified in the `"data"` object. For instance, you can use `"data": { "command": "firefox" }` to open Firefox on Linux.
   - `"type": "uri"`: This will open a URI. The URI is specified in the `"data"` object. For instance, you can use `"data": { "uri": "https://github.com/kando-menu/kando" }` to open the Kando website.
   - `"type": "hotkey"`: This will simulate the given keyboard shortcut. The keys are given in the `"data"` object. For instance, you can use `"data": { "hotkey": "Control+V" }` to paste your clipboard content.
+- Support for multiple menus. You can now add multiple menu configurations to the `menus.json` file with different shortcuts each. Each menu has to have a unique name. 
 - An example action in the sidebar which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
 
 #### Fixed
@@ -32,6 +33,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Loading of invalid menu configuration files. This no longer crashes Kando, but shows an error message in the console instead. Kando will fall back to the default configuration in this case.
 - Overwriting invalid menu configuration files. Instead of overwriting with the default settings, Kando will not touch invalid configuration files anymore.
 - Alignment of the text on the center item. Before, it used to be left aligned if the text wrapped to multiple lines. Now, it is always centered.
+
+#### Removed
+
+- Showing the prototype menu when launching a second instance of Kando. As we now support multiple menus, this is no longer useful. In the future, there will be an alternative way to open menus from the command line.
 
 ## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
 

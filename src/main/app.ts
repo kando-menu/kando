@@ -14,7 +14,7 @@ import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { INode, IMenuSettings, IAppSettings, IKeySequence } from '../common';
+import { INode, IMenu, IMenuSettings, IAppSettings, IKeySequence } from '../common';
 import { Settings, DeepReadonly } from './settings';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -42,6 +42,10 @@ export class KandoApp {
   // This is the tray icon which is displayed in the system tray. In the future it
   // will be possible to disable this icon.
   private tray: Tray;
+
+  // This contains the last menu which was shown. It is used to execute the selected
+  // action.
+  private lastVisibleMenu?: DeepReadonly<IMenu>;
 
   private appSettings = new Settings<IAppSettings>({
     file: 'config.json',
@@ -75,29 +79,20 @@ export class KandoApp {
     await this.initWindow();
     this.initRendererIPC();
 
+    // Bind the shortcuts for all menus.
+    await this.bindShortcuts();
+
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
     this.tray = new Tray(path.join(__dirname, require('../../assets/icons/icon.png')));
     this.tray.setToolTip('Kando');
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: 'Open (Control + Space)',
-        click: () => this.showMenu(),
-      },
-      { label: 'Quit', role: 'quit' },
-    ]);
-    this.tray.setContextMenu(contextMenu);
+    this.updateTrayMenu();
 
-    // Bind the shortcut which opens the pie menu. This shortcut is currently hardcoded
-    // to CommandOrControl+Space. In the future it will be possible to change this
-    // shortcut.
-    await this.backend.bindShortcut({
-      id: 'prototype_trigger',
-      description: 'Trigger the Kando prototype',
-      accelerator: 'CommandOrControl+Space',
-      action: () => {
-        this.showMenu();
-      },
+    // When the menu settings change, we need to rebind the shortcuts and update the
+    // tray menu.
+    this.menuSettings.onChange('menus', async () => {
+      await this.bindShortcuts();
+      this.updateTrayMenu();
     });
   }
 
@@ -116,7 +111,7 @@ export class KandoApp {
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
    */
-  public showMenu() {
+  public showMenu(menu: DeepReadonly<IMenu>) {
     this.backend
       .getWMInfo()
       .then((info) => {
@@ -144,9 +139,10 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        // For now, we only show the example menu.
-        const menu = this.menuSettings.get('menus')[0];
-        this.window.webContents.send('show-menu', menu.nodes, {
+        // Store a reference to the menu so that we can execute the selected action
+        // later. Then send the menu to the renderer process.
+        this.lastVisibleMenu = menu;
+        this.window.webContents.send('show-menu', this.lastVisibleMenu.nodes, {
           x: info.pointerX - workarea.x,
           y: info.pointerY - workarea.y,
         });
@@ -250,11 +246,8 @@ export class KandoApp {
         this.window.hide();
         this.hideTimeout = null;
 
-        // For now, we only have one example menu.
-        const menu = this.menuSettings.get('menus')[0];
-
         // Find the selected item.
-        const node = this.getNodeAtPath(menu.nodes, path);
+        const node = this.getNodeAtPath(this.lastVisibleMenu.nodes, path);
 
         // We hard-code some actions here. In the future, we will have a more
         // sophisticated action system.
@@ -349,6 +342,51 @@ export class KandoApp {
         currentMenu: 0,
       };
     });
+  }
+
+  /**
+   * This binds the shortcuts for all menus. It will unbind all shortcuts first. This
+   * method is called when the menu settings change.
+   */
+  private async bindShortcuts() {
+    // First, we unbind all shortcuts.
+    await this.backend.unbindAllShortcuts();
+
+    // Then, we bind the shortcuts for all menus.
+    for (const menu of this.menuSettings.get('menus')) {
+      await this.backend.bindShortcut({
+        id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
+        description: `Trigger the Kando's ${menu.nodes.name} menu`,
+        accelerator: menu.shortcut,
+        action: () => {
+          this.showMenu(menu);
+        },
+      });
+    }
+  }
+
+  /** This updates the menu of the tray icon. It is called when the menu settings change. */
+  private updateTrayMenu() {
+    const template: Array<Electron.MenuItemConstructorOptions> = [];
+
+    // Add an entry for each menu.
+    for (const menu of this.menuSettings.get('menus')) {
+      template.push({
+        label: `${menu.nodes.name} (${menu.shortcut})`,
+        click: () => this.showMenu(menu),
+      });
+    }
+
+    template.push({ type: 'separator' });
+
+    // Add an entry to quit the application.
+    template.push({
+      label: 'Quit',
+      role: 'quit',
+    });
+
+    const contextMenu = Menu.buildFromTemplate(template);
+    this.tray.setContextMenu(contextMenu);
   }
 
   /**
