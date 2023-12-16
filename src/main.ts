@@ -57,9 +57,6 @@ app
       console.log('Good-Pie :)');
     });
 
-    // Show the menu when the user starts the app for a second time.
-    app.on('second-instance', () => kando.showMenu());
-
     // Finally, show a message that the app is ready.
     console.log(`Kando ${app.getVersion()} is ready.`);
     console.log('Press <Ctrl>+<Space> to open the prototype menu!');
