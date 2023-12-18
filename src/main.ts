@@ -34,7 +34,7 @@ program
   .version(app.getVersion())
   .option('-m, --menu <menu>', 'show the menu with the given name');
 
-program.parse(process.argv);
+program.parse();
 const options = program.opts() as Options;
 
 // Prevent multiple instances of the app. If an instance of the app is already running,
