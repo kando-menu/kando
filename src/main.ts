@@ -29,7 +29,7 @@ interface Options {
 }
 
 program
-  .name('Kando')
+  .name('kando')
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
   .option('--menu <menu>', 'show the menu with the given name');
