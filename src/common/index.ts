@@ -41,10 +41,10 @@ export type IKeySequence = Array<IKeyStroke>;
  */
 export interface INode {
   /**
-   * The type of the menu item. This is primarily used in the editor, but themes may also
-   * use it to style different types of menu items differently.
+   * The type of the menu item. This is primarily used to specify the action of this item,
+   * but themes may also use it to style different types of menu items differently.
    */
-  type: string;
+  type: 'empty' | 'command' | 'uri' | 'hotkey' | 'submenu';
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf
