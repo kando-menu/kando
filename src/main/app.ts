@@ -133,6 +133,8 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
+        // Later, we will support application-specific menus. For now, we just print
+        // the currently focused window.
         if (info.windowClass) {
           console.log('Currently focused window: ' + info.windowClass);
         } else {
@@ -142,11 +144,16 @@ export class KandoApp {
         // Store a reference to the menu so that we can execute the selected action
         // later. Then send the menu to the renderer process.
         this.lastVisibleMenu = menu;
-        this.window.webContents.send('show-menu', this.lastVisibleMenu.nodes, {
-          x: info.pointerX - workarea.x,
-          y: info.pointerY - workarea.y,
-        });
 
+        // Usually, the menu is shown at the pointer position. However, if the menu is
+        // centered, we show it in the center of the screen.
+        const pos = {
+          x: menu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
+          y: menu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
+        };
+
+        // Send the menu to the renderer process.
+        this.window.webContents.send('show-menu', this.lastVisibleMenu.nodes, pos);
         this.window.show();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
