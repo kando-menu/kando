@@ -32,7 +32,7 @@ program
   .name('kando')
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
-  .option('--menu <menu>', 'show the menu with the given name');
+  .option('-m, --menu <menu>', 'show the menu with the given name');
 
 program.parse(process.argv);
 const options = program.opts() as Options;
