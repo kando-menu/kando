@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { app } from 'electron';
+import { program } from 'commander';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -22,10 +23,23 @@ if (require('electron-squirrel-startup')) {
   process.exit(0);
 }
 
-// Prevent multiple instances of the app. If another instance is started, we just quit
-// this one. The first instance will get notified via the second-instance event and
-// will show the menu.
-const gotTheLock = app.requestSingleInstanceLock();
+// Parse command line arguments.
+interface Options {
+  menu?: string;
+}
+
+program
+  .name('kando')
+  .description('The cross-platform pie menu.')
+  .version(app.getVersion())
+  .option('-m, --menu <menu>', 'show the menu with the given name');
+
+program.parse();
+const options = program.opts() as Options;
+
+// Prevent multiple instances of the app. If an instance of the app is already running,
+// we just quit this one and let the other instance handle the command line arguments.
+const gotTheLock = app.requestSingleInstanceLock(options);
 if (!gotTheLock) {
   app.quit();
   process.exit(0);
@@ -57,9 +71,21 @@ app
       console.log('Good-Pie :)');
     });
 
+    // Show the menu passed via --menu when a second instance is started.
+    app.on('second-instance', (e, argv, pwd, options: Options) => {
+      if (options.menu) {
+        kando.showMenu(options.menu);
+      }
+    });
+
     // Finally, show a message that the app is ready.
     console.log(`Kando ${app.getVersion()} is ready.`);
     console.log('Press <Ctrl>+<Space> to open the prototype menu!');
+
+    // Show the menu passed via --menu.
+    if (options.menu) {
+      kando.showMenu(options.menu);
+    }
   })
   .catch((err) => {
     // Show a notification when the app fails to start.

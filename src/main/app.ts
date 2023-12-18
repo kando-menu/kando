@@ -45,7 +45,7 @@ export class KandoApp {
 
   // This contains the last menu which was shown. It is used to execute the selected
   // action.
-  private lastVisibleMenu?: DeepReadonly<IMenu>;
+  private lastMenu?: DeepReadonly<IMenu>;
 
   private appSettings = new Settings<IAppSettings>({
     file: 'config.json',
@@ -110,8 +110,10 @@ export class KandoApp {
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
+   *
+   * @param menu The menu to show or the name of the menu to show.
    */
-  public showMenu(menu: DeepReadonly<IMenu>) {
+  public showMenu(menu: DeepReadonly<IMenu> | string) {
     this.backend
       .getWMInfo()
       .then((info) => {
@@ -141,19 +143,28 @@ export class KandoApp {
           console.log('Currently no window is focused.');
         }
 
-        // Store a reference to the menu so that we can execute the selected action
-        // later. Then send the menu to the renderer process.
-        this.lastVisibleMenu = menu;
+        // If the menu is a string, we need to find the corresponding menu in the
+        // settings.
+        if (typeof menu === 'string') {
+          this.lastMenu = this.menuSettings
+            .get('menus')
+            .find((m) => m.nodes.name === menu);
+          if (!this.lastMenu) {
+            throw new Error(`Menu "${menu}" not found.`);
+          }
+        } else {
+          this.lastMenu = menu;
+        }
 
         // Usually, the menu is shown at the pointer position. However, if the menu is
         // centered, we show it in the center of the screen.
         const pos = {
-          x: menu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
-          y: menu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
+          x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
+          y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
         };
 
         // Send the menu to the renderer process.
-        this.window.webContents.send('show-menu', this.lastVisibleMenu.nodes, pos);
+        this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
         this.window.show();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
@@ -254,7 +265,7 @@ export class KandoApp {
         this.hideTimeout = null;
 
         // Find the selected item.
-        const node = this.getNodeAtPath(this.lastVisibleMenu.nodes, path);
+        const node = this.getNodeAtPath(this.lastMenu.nodes, path);
 
         // We hard-code some actions here. In the future, we will have a more
         // sophisticated action system.

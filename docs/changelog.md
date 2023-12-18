@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - `"type": "hotkey"`: This will simulate the given keyboard shortcut. The keys are given in the `"data"` object. For instance, you can use `"data": { "hotkey": "Control+V" }` to paste your clipboard content.
 - Support for multiple menus. You can now add multiple menu configurations to the `menus.json` file with different shortcuts each. Each menu has to have a unique name. 
 - Support for the `centered` property in the menu configuration. If this is set to `true`, the menu will be opened in the center of the screen instead of at the mouse pointer.
+- The possibility to open a specific menu from the command line. You can use `kando --menu <name>` to open a specific menu. This also works when Kando is already running. In this case, a message will be sent to the running instance of Kando which will then open the requested menu.
 - An example action in the sidebar which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
 
 #### Fixed
@@ -37,7 +38,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Removed
 
-- Showing the prototype menu when launching a second instance of Kando. As we now support multiple menus, this is no longer useful. In the future, there will be an alternative way to open menus from the command line.
+- Showing the prototype menu when launching a second instance of Kando. As we now support multiple menus, this is no longer useful. Instead, you can now use the `--menu <name>` command line argument to open a specific menu.
 
 ## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
 
