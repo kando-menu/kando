@@ -26,6 +26,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - `"type": "uri"`: This will open a URI. The URI is specified in the `"data"` object. For instance, you can use `"data": { "uri": "https://github.com/kando-menu/kando" }` to open the Kando website.
   - `"type": "hotkey"`: This will simulate the given keyboard shortcut. The keys are given in the `"data"` object. For instance, you can use `"data": { "hotkey": "Control+V" }` to paste your clipboard content.
 - Support for multiple menus. You can now add multiple menu configurations to the `menus.json` file with different shortcuts each. Each menu has to have a unique name. 
+- Support for the `centered` property in the menu configuration. If this is set to `true`, the menu will be opened in the center of the screen instead of at the mouse pointer.
 - An example action in the sidebar which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
 
 #### Fixed
