@@ -17,6 +17,13 @@ import { program } from 'commander';
  * the renderer process (see renderer.ts).
  */
 
+/** This interface is used to pass command line arguments to the app. */
+interface CLIOptions {
+  // This optional parameter is specified using the --menu option. It is used to show a
+  // menu when the app or a second instance of the app is started.
+  menu?: string;
+}
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -24,10 +31,6 @@ if (require('electron-squirrel-startup')) {
 }
 
 // Parse command line arguments.
-interface Options {
-  menu?: string;
-}
-
 program
   .name('kando')
   .description('The cross-platform pie menu.')
@@ -35,7 +38,7 @@ program
   .option('-m, --menu <menu>', 'show the menu with the given name');
 
 program.parse();
-const options = program.opts() as Options;
+const options = program.opts() as CLIOptions;
 
 // Prevent multiple instances of the app. If an instance of the app is already running,
 // we just quit this one and let the other instance handle the command line arguments.
@@ -72,7 +75,7 @@ app
     });
 
     // Show the menu passed via --menu when a second instance is started.
-    app.on('second-instance', (e, argv, pwd, options: Options) => {
+    app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
       if (options.menu) {
         kando.showMenu(options.menu);
       }
