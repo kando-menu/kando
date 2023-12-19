@@ -77,10 +77,53 @@ describe('settings', () => {
     });
 
     settings.set({ foo: 'newFoo', bar: 789, nested: { answer: 48 } });
+    settings.disconnectAll();
 
     expect(fooCalled).to.be.true;
     expect(barCalled).to.be.true;
     expect(nestedCalled).to.be.true;
+  });
+
+  it('should support multiple onChange callbacks', () => {
+    let called1 = false;
+    let called2 = false;
+
+    settings.onChange('foo', () => {
+      called1 = true;
+    });
+
+    settings.onChange('foo', () => {
+      called2 = true;
+    });
+
+    settings.set({ foo: 'bar' });
+    settings.disconnectAll();
+
+    expect(called1).to.be.true;
+    expect(called2).to.be.true;
+  });
+
+  it('should not call onChange callbacks if they were disconnected', () => {
+    let called1 = false;
+    let called2 = false;
+
+    const listener1 = () => {
+      called1 = true;
+    };
+
+    const listener2 = () => {
+      called2 = true;
+    };
+
+    settings.onChange('foo', listener1);
+    settings.onChange('foo', listener2);
+    settings.disconnect('foo', listener1);
+
+    settings.set({ foo: 'foofoo' });
+    settings.disconnectAll();
+
+    expect(called1).to.be.false;
+    expect(called2).to.be.true;
   });
 
   it('should not call onChange callbacks if the value did not change', () => {
@@ -92,6 +135,7 @@ describe('settings', () => {
 
     settings.set({ nested: { answer: 48 } });
     settings.set({ nested: { answer: 48 } });
+    settings.disconnectAll();
 
     expect(called).to.be.false;
   });
@@ -105,6 +149,7 @@ describe('settings', () => {
 
     settings.close();
     settings.set({ foo: 'finally!' });
+    settings.disconnectAll();
 
     expect(called).to.be.false;
   });
