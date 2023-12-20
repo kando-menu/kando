@@ -214,6 +214,28 @@ export class KandoApp {
    * more information on the exposed functionality.
    */
   private initRendererIPC() {
+    // Allow the renderer to access the app settings. We do this by exposing the
+    // a setter, a getter, and an on-change event for each key in the settings object.
+    for (const k of Object.keys(this.appSettings.defaults)) {
+      const key = k as keyof IAppSettings;
+
+      // Allow the renderer process to read the value of this setting.
+      ipcMain.handle(`app-settings-get-${key}`, () => this.appSettings.get(key));
+
+      // Allow the renderer process to set the value of this setting.
+      ipcMain.on(`app-settings-set-${key}`, (event, value) =>
+        this.appSettings.set({ [key]: value } as Partial<IAppSettings>)
+      );
+
+      // Notify the renderer process when a setting changes.
+      this.appSettings.onChange(
+        key,
+        (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
+          this.window.webContents.send(`app-settings-changed-${key}`, newValue, oldValue);
+        }
+      );
+    }
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();

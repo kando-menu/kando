@@ -12,34 +12,40 @@ import './renderer/index.scss';
 
 import { Menu } from './renderer/menu/menu';
 import { Editor } from './renderer/editor/editor';
-import { IKeySequence, IVec2, INode, IEditorData } from './common';
+import { IKeySequence, IVec2, INode, IEditorData, IAppSettings } from './common';
 
 /**
  * This file is the main entry point for Kando's renderer process. It is responsible for
  * drawing the menu and the editor, as well as handling user input.
  */
 
-// Declare the API to the host process (see preload.ts) ----------------------------------
-
-interface IElectronAPI {
-  loadPreferences: () => void;
-  showDevTools: () => void;
-  simulateKeys: (keys: IKeySequence) => void;
-  movePointer: (dist: IVec2) => void;
-  openURI: (uri: string) => void;
-  runCommand: (command: string) => void;
-  log: (message: string) => void;
-  showMenu: (func: (root: INode, pos: IVec2) => void) => void;
-  hoverItem: (path: string) => void;
-  unhoverItem: (path: string) => void;
-  selectItem: (path: string) => void;
-  cancelSelection: () => void;
-  getMenuEditorData: () => Promise<IEditorData>;
-}
-
+// Declare the API to the host process. See preload.ts for more information on the exposed
+// functions. The API has to be declared here again, because the TypeScript compiler
+// does not know about preload.ts.
 declare global {
   interface Window {
-    api: IElectronAPI;
+    api: {
+      appSettings: {
+        get: <K extends keyof IAppSettings>(key: K) => Promise<IAppSettings[K]>;
+        set: <K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) => void;
+        onChange: <K extends keyof IAppSettings>(
+          key: K,
+          callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
+        ) => void;
+      };
+      showDevTools: () => void;
+      simulateKeys: (keys: IKeySequence) => void;
+      movePointer: (dist: IVec2) => void;
+      openURI: (uri: string) => void;
+      runCommand: (command: string) => void;
+      log: (message: string) => void;
+      showMenu: (func: (root: INode, pos: IVec2) => void) => void;
+      hoverItem: (path: string) => void;
+      unhoverItem: (path: string) => void;
+      selectItem: (path: string) => void;
+      cancelSelection: () => void;
+      getMenuEditorData: () => Promise<IEditorData>;
+    };
   }
 }
 

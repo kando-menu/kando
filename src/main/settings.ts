@@ -144,7 +144,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
 
   // This is the default settings object. It is used when the settings file does not
   // exist yet or when it does not contain all properties.
-  private readonly defaults: T;
+  public readonly defaults: T;
 
   /** Creates a new settings object. See documentation of the class for details. */
   constructor(options: Options<T>) {
