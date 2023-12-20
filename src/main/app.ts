@@ -268,6 +268,9 @@ export class KandoApp {
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
     ipcMain.on('select-item', (event, path) => {
+      // Find the selected item.
+      const node = this.getNodeAtPath(this.lastMenu.nodes, path);
+
       // We hard-code some actions here. In the future, we will have a more sophisticated
       // and more modular action system.
 
@@ -354,12 +357,12 @@ export class KandoApp {
         },
       };
 
-      // Find the selected item.
-      const node = this.getNodeAtPath(this.lastMenu.nodes, path);
+      // Get the node type. If the type is unknown, we fall back to the empty action.
+      const type = node.type in actions ? node.type : 'empty';
 
       // If the action is not delayed, we execute it immediately.
-      if (!executeDelayed[node.type]) {
-        actions[node.type](node.data);
+      if (!executeDelayed[type]) {
+        actions[type](node.data);
       }
 
       // Also wait with the execution of the selected action until the fade-out
@@ -372,8 +375,8 @@ export class KandoApp {
         this.hideTimeout = null;
 
         // If the action is delayed, we execute it after the window is hidden.
-        if (executeDelayed[node.type]) {
-          actions[node.type](node.data);
+        if (executeDelayed[type]) {
+          actions[type](node.data);
         }
       }, 400);
     });
