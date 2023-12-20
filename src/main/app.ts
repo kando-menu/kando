@@ -74,11 +74,13 @@ export class KandoApp {
       throw new Error('No backend found.');
     }
 
-    // Initialize the backend, the window and the IPC communication to the renderer
-    // process.
     await this.backend.init();
-    await this.initWindow();
+
+    // Initialize the IPC communication to the renderer process.
     this.initRendererIPC();
+
+    // Create and load the main window.
+    await this.initWindow();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -187,7 +189,7 @@ export class KandoApp {
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
 
-    const window = new BrowserWindow({
+    this.window = new BrowserWindow({
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
@@ -205,9 +207,7 @@ export class KandoApp {
       show: false,
     });
 
-    await window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-    this.window = window;
+    await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
 
   /**
@@ -232,7 +232,13 @@ export class KandoApp {
       this.appSettings.onChange(
         key,
         (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
-          this.window.webContents.send(`app-settings-changed-${key}`, newValue, oldValue);
+          if (this.window) {
+            this.window.webContents.send(
+              `app-settings-changed-${key}`,
+              newValue,
+              oldValue
+            );
+          }
         }
       );
     }
