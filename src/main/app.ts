@@ -53,6 +53,7 @@ export class KandoApp {
     defaults: {
       menuTheme: 'none',
       editorTheme: 'none',
+      sidebarVisible: true,
     },
   });
 

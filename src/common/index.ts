@@ -114,6 +114,9 @@ export interface IAppSettings {
 
   /** The name of the theme to use for the editor. */
   editorTheme: string;
+
+  /** Whether the sidebar should be shown in the editor. */
+  sidebarVisible: boolean;
 }
 
 /**
