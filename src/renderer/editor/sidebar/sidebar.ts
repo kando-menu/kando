@@ -19,6 +19,11 @@ export class Sidebar {
   // constructor and returned by the getContainer() method.
   private container: HTMLElement = null;
 
+  // This variable stores the current visibility of the sidebar. This is also stored in
+  // the app settings of the main process. We store it here so that we can avoid
+  // unnecessary state changes.
+  private visible = true;
+
   // The videos are the tutorial videos which are shown in the tutorial tab. We store
   // them here so that we can pause and play them when the tab is shown and hidden.
   private videos: HTMLVideoElement[] = [];
@@ -160,11 +165,21 @@ export class Sidebar {
     // Add functionality to show and hide the sidebar.
     this.container
       .querySelector('#show-sidebar-button')
-      .addEventListener('click', () => this.show());
+      .addEventListener('click', () => this.setVisibility(true));
 
     this.container
       .querySelector('#hide-sidebar-button')
-      .addEventListener('click', () => this.hide());
+      .addEventListener('click', () => this.setVisibility(false));
+
+    // Update of the visibility when the app settings are changed from somewhere else.
+    window.api.appSettings.onChange('sidebarVisible', (visible) => {
+      this.setVisibility(visible);
+    });
+
+    // Initialize the visibility from the app settings.
+    window.api.appSettings.get('sidebarVisible').then((visible) => {
+      this.setVisibility(visible);
+    });
 
     // Add the tutorial videos. We do this here because else webpack will not pick them up.
     this.container.querySelector('#sidebar-tab-tutorial').addEventListener(
@@ -387,23 +402,29 @@ export class Sidebar {
           runCommand();
         }
       });
-
-    // Initially, we show the sidebar.
-    this.show();
   }
 
-  /** This method shows the sidebar. */
-  public show() {
-    this.container.querySelector('#kando-editor-sidebar').classList.add('visible');
-    this.container.querySelector('#hide-sidebar-button').classList.add('visible');
-    this.container.querySelector('#show-sidebar-button').classList.remove('visible');
-  }
+  /**
+   * This method sets the visibility of the sidebar. If saveState is true, the new state
+   * will be saved to the app settings.
+   *
+   * @param visible Whether the sidebar should be visible.
+   */
+  public setVisibility(visible: boolean) {
+    if (this.visible !== visible) {
+      if (visible) {
+        this.container.querySelector('#kando-editor-sidebar').classList.add('visible');
+        this.container.querySelector('#hide-sidebar-button').classList.add('visible');
+        this.container.querySelector('#show-sidebar-button').classList.remove('visible');
+      } else {
+        this.container.querySelector('#kando-editor-sidebar').classList.remove('visible');
+        this.container.querySelector('#hide-sidebar-button').classList.remove('visible');
+        this.container.querySelector('#show-sidebar-button').classList.add('visible');
+      }
 
-  /** This method hides the sidebar. */
-  public hide() {
-    this.container.querySelector('#kando-editor-sidebar').classList.remove('visible');
-    this.container.querySelector('#hide-sidebar-button').classList.remove('visible');
-    this.container.querySelector('#show-sidebar-button').classList.add('visible');
+      this.visible = visible;
+      window.api.appSettings.set('sidebarVisible', visible);
+    }
   }
 
   /** This method returns the container of the sidebar. */
