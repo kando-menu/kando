@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2, INode, IEditorData } from '../common';
+import { IKeySequence, IVec2, INode, IEditorData, IAppSettings } from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -17,6 +17,28 @@ import { IKeySequence, IVec2, INode, IEditorData } from '../common';
  * register callbacks to be called by the host process.
  */
 contextBridge.exposeInMainWorld('api', {
+  /**
+   * The appSettings object can be used to read and write the app settings. The settings
+   * are persisted in the host process. When a setting is changed, the host process will
+   * notify the renderer process.
+   */
+  appSettings: {
+    get<K extends keyof IAppSettings>(key: K): Promise<IAppSettings[K]> {
+      return ipcRenderer.invoke(`app-settings-get-${key}`);
+    },
+    set<K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) {
+      ipcRenderer.send(`app-settings-set-${key}`, value);
+    },
+    onChange<K extends keyof IAppSettings>(
+      key: K,
+      callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
+    ) {
+      ipcRenderer.on(`app-settings-changed-${key}`, (event, newValue, oldValue) => {
+        callback(newValue, oldValue);
+      });
+    },
+  },
+
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');

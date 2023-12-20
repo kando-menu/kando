@@ -109,7 +109,7 @@ export class Editor {
    */
   public enterEditMode() {
     this.container.classList.add('edit-mode');
-    this.sidebar.hide();
+    this.sidebar.setVisibility(false);
 
     // Show that we received the event.
     window.api.getMenuEditorData().then((data) => {

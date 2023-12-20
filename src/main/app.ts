@@ -53,6 +53,7 @@ export class KandoApp {
     defaults: {
       menuTheme: 'none',
       editorTheme: 'none',
+      sidebarVisible: true,
     },
   });
 
@@ -73,11 +74,13 @@ export class KandoApp {
       throw new Error('No backend found.');
     }
 
-    // Initialize the backend, the window and the IPC communication to the renderer
-    // process.
     await this.backend.init();
-    await this.initWindow();
+
+    // Initialize the IPC communication to the renderer process.
     this.initRendererIPC();
+
+    // Create and load the main window.
+    await this.initWindow();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -186,7 +189,7 @@ export class KandoApp {
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
 
-    const window = new BrowserWindow({
+    this.window = new BrowserWindow({
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
@@ -204,9 +207,7 @@ export class KandoApp {
       show: false,
     });
 
-    await window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-    this.window = window;
+    await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
 
   /**
@@ -214,6 +215,34 @@ export class KandoApp {
    * more information on the exposed functionality.
    */
   private initRendererIPC() {
+    // Allow the renderer to access the app settings. We do this by exposing the
+    // a setter, a getter, and an on-change event for each key in the settings object.
+    for (const k of Object.keys(this.appSettings.defaults)) {
+      const key = k as keyof IAppSettings;
+
+      // Allow the renderer process to read the value of this setting.
+      ipcMain.handle(`app-settings-get-${key}`, () => this.appSettings.get(key));
+
+      // Allow the renderer process to set the value of this setting.
+      ipcMain.on(`app-settings-set-${key}`, (event, value) =>
+        this.appSettings.set({ [key]: value } as Partial<IAppSettings>)
+      );
+
+      // Notify the renderer process when a setting changes.
+      this.appSettings.onChange(
+        key,
+        (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
+          if (this.window) {
+            this.window.webContents.send(
+              `app-settings-changed-${key}`,
+              newValue,
+              oldValue
+            );
+          }
+        }
+      );
+    }
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -239,6 +268,9 @@ export class KandoApp {
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
     ipcMain.on('select-item', (event, path) => {
+      // Find the selected item.
+      const node = this.getNodeAtPath(this.lastMenu.nodes, path);
+
       // We hard-code some actions here. In the future, we will have a more sophisticated
       // and more modular action system.
 
@@ -325,12 +357,12 @@ export class KandoApp {
         },
       };
 
-      // Find the selected item.
-      const node = this.getNodeAtPath(this.lastMenu.nodes, path);
+      // Get the node type. If the type is unknown, we fall back to the empty action.
+      const type = node.type in actions ? node.type : 'empty';
 
       // If the action is not delayed, we execute it immediately.
-      if (!executeDelayed[node.type]) {
-        actions[node.type](node.data);
+      if (!executeDelayed[type]) {
+        actions[type](node.data);
       }
 
       // Also wait with the execution of the selected action until the fade-out
@@ -343,8 +375,8 @@ export class KandoApp {
         this.hideTimeout = null;
 
         // If the action is delayed, we execute it after the window is hidden.
-        if (executeDelayed[node.type]) {
-          actions[node.type](node.data);
+        if (executeDelayed[type]) {
+          actions[type](node.data);
         }
       }, 400);
     });
