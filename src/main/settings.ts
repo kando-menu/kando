@@ -242,12 +242,15 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   }
 
   /**
-   * Saves the given settings to disk.
+   * Saves the given settings to disk. During this operation, the watcher is stopped and
+   * restarted afterwards so that this does not trigger reloads.
    *
    * @param updatedSettings The new settings object.
    */
   private saveSettings(updatedSettings: T) {
+    this.watcher?.unwatch(this.filePath);
     fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+    this.watcher?.add(this.filePath);
   }
 
   /**
