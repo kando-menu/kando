@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - `"type": "hotkey"`: This will simulate the given keyboard shortcut. The keys are given in the `"data"` object. For instance, you can use `"data": { "hotkey": "Control+V" }` to paste your clipboard content.
 - Support for multiple menus. You can now add multiple menu configurations to the `menus.json` file with different shortcuts each. Each menu has to have a unique name. 
 - Support for the `centered` property in the menu configuration. If this is set to `true`, the menu will be opened in the center of the screen instead of at the mouse pointer.
+- A new icon theme: [Simple Icons](https://simpleicons.org/). This is a huge collection of icons for many different applications. You can use them in your menu configuration like this: `"icon": "firefox", "iconTheme": "simple-icons"`.
 - The possibility to open a specific menu from the command line. You can use `kando --menu <name>` to open a specific menu. This also works when Kando is already running. In this case, a message will be sent to the running instance of Kando which will then open the requested menu.
 - The visibility of the sidebar is now stored in the application settings. This means that the sidebar will remain hidden when you restart Kando.
 - An example action in the sidebar which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
