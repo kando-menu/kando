@@ -164,4 +164,8 @@ export const LinuxKeyCodes = new Map<string, number>([
   ['F23', 0x00c9],
   ['F24', 0x00ca],
   ['BrowserSearch', 0x00e1],
+  ['MediaTrackPrevious', 0x00ad],
+  ['MediaTrackNext', 0x00ab],
+  ['MediaPlayPause', 0x00ac],
+  ['MediaStop', 0x00ae],
 ]);
