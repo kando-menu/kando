@@ -353,8 +353,14 @@ export class Menu extends EventEmitter {
 
     const item = document.createElement('i');
     item.classList.add('item');
-    item.classList.add(node.iconTheme);
-    item.innerHTML = node.icon;
+
+    if (node.iconTheme === 'material-symbols-rounded') {
+      item.classList.add(node.iconTheme);
+      item.innerHTML = node.icon;
+    } else if (node.iconTheme === 'simple-icons') {
+      item.classList.add('si');
+      item.classList.add('si-' + node.icon);
+    }
 
     container.appendChild(node.itemDiv);
     node.itemDiv.appendChild(item);

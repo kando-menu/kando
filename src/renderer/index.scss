@@ -11,8 +11,12 @@
 // All UI of Kando except for the pie menu itself is based on Bootstrap 5.
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
+// For now, we support two different (hard-coded) icon themes. The first one is the
+// Material Design Icons font, the second one is the Simple Icons font. Both are
+// available as npm packages.
 $material-symbols-font-path: '~material-symbols/';
-@import 'material-symbols';
+@import 'material-symbols/rounded';
+@import '../../node_modules/simple-icons-font/font/simple-icons.css';
 
 // The menu.css contains the basic CSS layout of the pie menu. The theme.css is used for
 // styling only, that is colors, shadows, borders and simialr things.
