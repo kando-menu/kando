@@ -275,16 +275,18 @@ export class KandoApp {
         // We hard-code some actions here. In the future, we will have a more
         // sophisticated and more modular action system.
 
-        // For now, the hotkey action is the only action to be executed after the fade-out
-        // animation is finished. This is because the hotkey action might trigger a
-        // virtual key press which should not be captured by the window.
-        const executeDelayed = {
-          uri: false,
-          command: false,
-          hotkey: true,
-          empty: false,
-          submenu: false,
-        };
+        // For now, the hotkey action is the only action which may have to be executed
+        // after the fade-out animation is finished. This is because the hotkey action
+        // might trigger a virtual key press which should not be captured by the window.
+        let executeDelayed = false;
+        if (node.type === 'hotkey') {
+          interface INodeData {
+            hotkey: string;
+            delayed: boolean;
+          }
+
+          executeDelayed = (node.data as INodeData).delayed;
+        }
 
         const actions = {
           empty: () => {},
@@ -309,6 +311,7 @@ export class KandoApp {
           hotkey: (data: unknown) => {
             interface INodeData {
               hotkey: string;
+              delayed: boolean;
             }
 
             // We convert some common key names to the corresponding left key names.
@@ -362,7 +365,7 @@ export class KandoApp {
         const type = node.type in actions ? node.type : 'empty';
 
         // If the action is not delayed, we execute it immediately.
-        if (!executeDelayed[type]) {
+        if (!executeDelayed) {
           actions[type](node.data);
         }
 
@@ -376,7 +379,7 @@ export class KandoApp {
           this.hideTimeout = null;
 
           // If the action is delayed, we execute it after the window is hidden.
-          if (executeDelayed[type]) {
+          if (executeDelayed) {
             actions[type](node.data);
           }
         }, 400);
