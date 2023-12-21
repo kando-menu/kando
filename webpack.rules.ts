@@ -51,7 +51,7 @@ export const rules: Required<ModuleOptions>['rules'] = [
     include: path.resolve(__dirname, 'assets'),
     type: 'asset/resource',
     generator: {
-      filename: 'assets/[name][ext]',
+      filename: 'assets/[name].[hash:8][ext]',
     },
   },
   {
