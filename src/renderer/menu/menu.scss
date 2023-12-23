@@ -33,6 +33,6 @@
 
   // Hide deeper levels than grandchildren.
   .node.grandchild > .node {
-    display: none;
+    opacity: 0;
   }
 }
