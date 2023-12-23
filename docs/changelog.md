@@ -15,6 +15,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## Kando 0.4.0 [Unreleased]
+
+**Release Date:** TBD
+
+#### Fixed
+
+- The transition of grandchild nodes in the menu. They are now smoothly faded in and out.
+
 ## [Kando 0.3.0](https://github.com/kando-menu/kando/releases/tag/v0.3.0)
 
 **Release Date:** 2023-12-22
