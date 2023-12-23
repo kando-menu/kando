@@ -5,6 +5,7 @@ import type { Configuration } from 'webpack';
 
 import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
+import { ignores } from './webpack.ignores';
 
 rules.push({
   test: /\.s[ac]ss$/i,
@@ -16,6 +17,7 @@ export const rendererConfig: Configuration = {
     rules,
   },
   plugins,
+  externals: ignores,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
   },

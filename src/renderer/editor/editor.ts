@@ -111,7 +111,7 @@ export class Editor {
    */
   public enterEditMode() {
     this.container.classList.add('edit-mode');
-    this.sidebar.hide();
+    this.sidebar.setVisibility(false);
 
     // Get the current settings from the main process and pass them to the respective
     // components.

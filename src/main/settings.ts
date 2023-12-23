@@ -38,16 +38,60 @@ export type DeepReadonly<T> = {
  * @template T The type of the object which contains the properties.
  */
 class PropertyChangeEmitter<T> {
-  private events: Partial<PropertyChangeEvents<T>> = {};
+  private events: Partial<Record<keyof T, Array<PropertyChangeEvents<T>[keyof T]>>> = {};
 
+  /**
+   * Connects the given listener to the given event. The listener will be called whenever
+   * the given event is emitted.
+   *
+   * @param event The event to listen to. This must be a key of `T`.
+   * @param listener The listener function which will be called when the event is emitted.
+   *   The function must take two arguments of the same type as the property corresponding
+   *   to the given event. The first argument is the new value, the second argument is the
+   *   old value.
+   */
   public onChange<K extends keyof T>(event: K, listener: PropertyChangeEvents<T>[K]) {
-    this.events[event] = listener;
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+
+    this.events[event].push(listener);
   }
 
+  /**
+   * Disconnects the given listener from the given event. The listener will no longer be
+   * called when the event is emitted.
+   *
+   * @param event The event to disconnect from. This must be a key of `T`.
+   * @param listener The listener function to disconnect.
+   */
+  public disconnect<K extends keyof T>(event: K, listener: PropertyChangeEvents<T>[K]) {
+    const listeners = this.events[event];
+    if (listeners) {
+      const index = listeners.indexOf(listener);
+      if (index >= 0) {
+        listeners.splice(index, 1);
+      }
+    }
+  }
+
+  /** Disconnects all listeners from all events. */
+  public disconnectAll() {
+    this.events = {};
+  }
+
+  /**
+   * Emits the given event. This will call all listeners which are connected to the given
+   * event. It is called automatically by the `set()` method of the Settings class.
+   *
+   * @param event The event to emit. This must be a key of `T`.
+   * @param newValue The new value of the property.
+   * @param oldValue The old value of the property.
+   */
   protected emit<K extends keyof T>(event: K, newValue: T[K], oldValue: T[K]) {
-    const listener = this.events[event];
-    if (listener) {
-      listener(newValue, oldValue);
+    const listeners = this.events[event];
+    if (listeners) {
+      listeners.forEach((listener) => listener(newValue, oldValue));
     }
   }
 }
@@ -100,7 +144,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
 
   // This is the default settings object. It is used when the settings file does not
   // exist yet or when it does not contain all properties.
-  private readonly defaults: T;
+  public readonly defaults: T;
 
   /** Creates a new settings object. See documentation of the class for details. */
   constructor(options: Options<T>) {
@@ -157,6 +201,8 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       this.watcher.close();
       this.watcher = null;
     }
+
+    this.disconnectAll();
   }
 
   /** Sets up the watcher to watch the settings file for changes. */
@@ -196,12 +242,15 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   }
 
   /**
-   * Saves the given settings to disk.
+   * Saves the given settings to disk. During this operation, the watcher is stopped and
+   * restarted afterwards so that this does not trigger reloads.
    *
    * @param updatedSettings The new settings object.
    */
   private saveSettings(updatedSettings: T) {
+    this.watcher?.unwatch(this.filePath);
     fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+    this.watcher?.add(this.filePath);
   }
 
   /**

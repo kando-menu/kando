@@ -146,7 +146,7 @@ export class Menu extends EventEmitter {
       // If there is a node currently dragged, select it. We only select nodes which have
       // children in marking mode in order to prevent unwanted actions. This way the user
       // can always check if the correct action was selected before executing it.
-      if (this.draggedNode && this.draggedNode.children.length > 0) {
+      if (this.draggedNode && this.draggedNode.children?.length > 0) {
         // The selection event reports where the selection most likely occurred (e.g. the
         // position where the mouse pointer actually made a turn). We pretend that the
         // mouse pointer is currently at that position, so that the newly selected node
@@ -353,8 +353,14 @@ export class Menu extends EventEmitter {
 
     const item = document.createElement('i');
     item.classList.add('item');
-    item.classList.add(node.iconTheme);
-    item.innerHTML = node.icon;
+
+    if (node.iconTheme === 'material-symbols-rounded') {
+      item.classList.add(node.iconTheme);
+      item.innerHTML = node.icon;
+    } else if (node.iconTheme === 'simple-icons') {
+      item.classList.add('si');
+      item.classList.add('si-' + node.icon);
+    }
 
     container.appendChild(node.itemDiv);
     node.itemDiv.appendChild(item);
@@ -459,7 +465,7 @@ export class Menu extends EventEmitter {
     }
 
     // Clamp the position of the newly selected submenu to the viewport.
-    if (node.children.length > 0) {
+    if (node.children?.length > 0) {
       const position = this.getActiveNodePosition();
       const clampedPosition = this.clampToMonitor(position, 10);
 
@@ -488,7 +494,7 @@ export class Menu extends EventEmitter {
     this.updateConnectors();
     this.redraw();
 
-    if (node.children.length === 0) {
+    if (!node.children || node.children.length === 0) {
       this.container.classList.add('selected');
       this.emit('select', node.path);
     }
@@ -630,16 +636,18 @@ export class Menu extends EventEmitter {
 
     // If the mouse is not in the center, check if it is in one of the children of the
     // currently selected node.
-    for (const child of this.selectionChain[this.selectionChain.length - 1]
-      .children as IMenuNode[]) {
-      if (
-        (this.mouse.angle > child.startAngle && this.mouse.angle <= child.endAngle) ||
-        (this.mouse.angle - 360 > child.startAngle &&
-          this.mouse.angle - 360 <= child.endAngle) ||
-        (this.mouse.angle + 360 > child.startAngle &&
-          this.mouse.angle + 360 <= child.endAngle)
-      ) {
-        return child;
+    const currentNode = this.selectionChain[this.selectionChain.length - 1];
+    if (currentNode.children) {
+      for (const child of currentNode.children as IMenuNode[]) {
+        if (
+          (this.mouse.angle > child.startAngle && this.mouse.angle <= child.endAngle) ||
+          (this.mouse.angle - 360 > child.startAngle &&
+            this.mouse.angle - 360 <= child.endAngle) ||
+          (this.mouse.angle + 360 > child.startAngle &&
+            this.mouse.angle + 360 <= child.endAngle)
+        ) {
+          return child;
+        }
       }
     }
 
@@ -695,16 +703,20 @@ export class Menu extends EventEmitter {
       // all its children.
       node.itemDiv.style.transform = transform;
 
-      for (const child of node.children) {
-        this.updateTransform(child);
+      if (node.children) {
+        for (const child of node.children) {
+          this.updateTransform(child);
+        }
       }
     } else if (
       node.itemDiv.classList.contains('active') ||
       node.itemDiv.classList.contains('parent')
     ) {
       node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
-      for (const child of node.children) {
-        this.updateTransform(child);
+      if (node.children) {
+        for (const child of node.children) {
+          this.updateTransform(child);
+        }
       }
     }
   }
@@ -729,24 +741,26 @@ export class Menu extends EventEmitter {
         nextNode = this.draggedNode;
       }
 
-      if (nextNode) {
-        const length = math.getLength(nextNode.position);
-        let angle = math.getAngle(nextNode.position);
+      if (node.connectorDiv) {
+        if (nextNode) {
+          const length = math.getLength(nextNode.position);
+          let angle = math.getAngle(nextNode.position);
 
-        if (
-          node.lastConnectorRotation &&
-          Math.abs(node.lastConnectorRotation - angle) > 180
-        ) {
-          const fullTurns = Math.round((node.lastConnectorRotation - angle) / 360);
-          angle += fullTurns * 360;
+          if (
+            node.lastConnectorRotation &&
+            Math.abs(node.lastConnectorRotation - angle) > 180
+          ) {
+            const fullTurns = Math.round((node.lastConnectorRotation - angle) / 360);
+            angle += fullTurns * 360;
+          }
+
+          node.lastConnectorRotation = angle;
+
+          node.connectorDiv.style.width = `${length}px`;
+          node.connectorDiv.style.transform = `rotate(${angle}deg)`;
+        } else {
+          node.connectorDiv.style.width = '0px';
         }
-
-        node.lastConnectorRotation = angle;
-
-        node.connectorDiv.style.width = `${length}px`;
-        node.connectorDiv.style.transform = `rotate(${angle}deg)`;
-      } else {
-        node.connectorDiv.style.width = '0px';
       }
     }
   }
@@ -769,18 +783,24 @@ export class Menu extends EventEmitter {
       if (i === this.selectionChain.length - 1) {
         node.itemDiv.className = 'node active';
 
-        for (const child of node.children as IMenuNode[]) {
-          child.itemDiv.className = 'node child';
+        if (node.children) {
+          for (const child of node.children as IMenuNode[]) {
+            child.itemDiv.className = 'node child';
 
-          for (const grandchild of child.children as IMenuNode[]) {
-            grandchild.itemDiv.className = 'node grandchild';
+            if (child.children) {
+              for (const grandchild of child.children as IMenuNode[]) {
+                grandchild.itemDiv.className = 'node grandchild';
+              }
+            }
           }
         }
       } else {
         node.itemDiv.className = 'node parent';
 
-        for (const child of node.children as IMenuNode[]) {
-          child.itemDiv.className = 'node grandchild';
+        if (node.children) {
+          for (const child of node.children as IMenuNode[]) {
+            child.itemDiv.className = 'node grandchild';
+          }
         }
       }
     }
@@ -821,7 +841,7 @@ export class Menu extends EventEmitter {
   private setupPaths(node: IMenuNode, path = '') {
     node.path = path === '' ? '/' : path;
 
-    for (let i = 0; i < node.children.length; ++i) {
+    for (let i = 0; i < node.children?.length; ++i) {
       const child = node.children[i] as IMenuNode;
       this.setupPaths(child, `${path}/${i}`);
     }
@@ -838,7 +858,7 @@ export class Menu extends EventEmitter {
    */
   private setupAngles(node: IMenuNode) {
     // If the node has no children, we can stop here.
-    if (node.children.length === 0) {
+    if (!node.children || node.children.length === 0) {
       return;
     }
 

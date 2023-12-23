@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: CC0-1.0
 
 import type { ModuleOptions } from 'webpack';
-import path from 'path';
 
 export const rules: Required<ModuleOptions>['rules'] = [
   // Add support for native node modules
@@ -47,11 +46,10 @@ export const rules: Required<ModuleOptions>['rules'] = [
     },
   },
   {
-    test: /\.(png|svg|jpg|jpeg|gif|mp4|ttf)$/i,
-    include: path.resolve(__dirname, 'assets'),
+    test: /\.(png|svg|jpg|jpeg|gif|mp4|ttf|woff2)$/i,
     type: 'asset/resource',
     generator: {
-      filename: 'assets/[name][ext]',
+      filename: 'assets/[name].[hash:8][ext]',
     },
   },
   {

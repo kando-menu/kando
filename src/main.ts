@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { app } from 'electron';
+import { program } from 'commander';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -16,16 +17,32 @@ import { app } from 'electron';
  * the renderer process (see renderer.ts).
  */
 
+/** This interface is used to pass command line arguments to the app. */
+interface CLIOptions {
+  // This optional parameter is specified using the --menu option. It is used to show a
+  // menu when the app or a second instance of the app is started.
+  menu?: string;
+}
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
   process.exit(0);
 }
 
-// Prevent multiple instances of the app. If another instance is started, we just quit
-// this one. The first instance will get notified via the second-instance event and
-// will show the menu.
-const gotTheLock = app.requestSingleInstanceLock();
+// Parse command line arguments.
+program
+  .name('kando')
+  .description('The cross-platform pie menu.')
+  .version(app.getVersion())
+  .option('-m, --menu <menu>', 'show the menu with the given name');
+
+program.parse();
+const options = program.opts() as CLIOptions;
+
+// Prevent multiple instances of the app. If an instance of the app is already running,
+// we just quit this one and let the other instance handle the command line arguments.
+const gotTheLock = app.requestSingleInstanceLock(options);
 if (!gotTheLock) {
   app.quit();
   process.exit(0);
@@ -57,9 +74,21 @@ app
       console.log('Good-Pie :)');
     });
 
+    // Show the menu passed via --menu when a second instance is started.
+    app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
+      if (options.menu) {
+        kando.showMenu(options.menu);
+      }
+    });
+
     // Finally, show a message that the app is ready.
     console.log(`Kando ${app.getVersion()} is ready.`);
     console.log('Press <Ctrl>+<Space> to open the prototype menu!');
+
+    // Show the menu passed via --menu.
+    if (options.menu) {
+      kando.showMenu(options.menu);
+    }
   })
   .catch((err) => {
     // Show a notification when the app fails to start.

@@ -45,7 +45,7 @@ export class KandoApp {
 
   // This contains the last menu which was shown. It is used to execute the selected
   // action.
-  private lastVisibleMenu?: DeepReadonly<IMenu>;
+  private lastMenu?: DeepReadonly<IMenu>;
 
   private appSettings = new Settings<IAppSettings>({
     file: 'config.json',
@@ -53,6 +53,7 @@ export class KandoApp {
     defaults: {
       menuTheme: 'none',
       editorTheme: 'none',
+      sidebarVisible: true,
     },
   });
 
@@ -73,11 +74,13 @@ export class KandoApp {
       throw new Error('No backend found.');
     }
 
-    // Initialize the backend, the window and the IPC communication to the renderer
-    // process.
     await this.backend.init();
-    await this.initWindow();
+
+    // Initialize the IPC communication to the renderer process.
     this.initRendererIPC();
+
+    // Create and load the main window.
+    await this.initWindow();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -110,8 +113,10 @@ export class KandoApp {
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
+   *
+   * @param menu The menu to show or the name of the menu to show.
    */
-  public showMenu(menu: DeepReadonly<IMenu>) {
+  public showMenu(menu: DeepReadonly<IMenu> | string) {
     this.backend
       .getWMInfo()
       .then((info) => {
@@ -133,20 +138,36 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
+        // Later, we will support application-specific menus. For now, we just print
+        // the currently focused window.
         if (info.windowClass) {
           console.log('Currently focused window: ' + info.windowClass);
         } else {
           console.log('Currently no window is focused.');
         }
 
-        // Store a reference to the menu so that we can execute the selected action
-        // later. Then send the menu to the renderer process.
-        this.lastVisibleMenu = menu;
-        this.window.webContents.send('show-menu', this.lastVisibleMenu.nodes, {
-          x: info.pointerX - workarea.x,
-          y: info.pointerY - workarea.y,
-        });
+        // If the menu is a string, we need to find the corresponding menu in the
+        // settings.
+        if (typeof menu === 'string') {
+          this.lastMenu = this.menuSettings
+            .get('menus')
+            .find((m) => m.nodes.name === menu);
+          if (!this.lastMenu) {
+            throw new Error(`Menu "${menu}" not found.`);
+          }
+        } else {
+          this.lastMenu = menu;
+        }
 
+        // Usually, the menu is shown at the pointer position. However, if the menu is
+        // centered, we show it in the center of the screen.
+        const pos = {
+          x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
+          y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
+        };
+
+        // Send the menu to the renderer process.
+        this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
         this.window.show();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
@@ -168,7 +189,7 @@ export class KandoApp {
   private async initWindow() {
     const display = screen.getPrimaryDisplay();
 
-    const window = new BrowserWindow({
+    this.window = new BrowserWindow({
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
@@ -186,9 +207,7 @@ export class KandoApp {
       show: false,
     });
 
-    await window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-    this.window = window;
+    await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
 
   /**
@@ -196,6 +215,34 @@ export class KandoApp {
    * more information on the exposed functionality.
    */
   private initRendererIPC() {
+    // Allow the renderer to access the app settings. We do this by exposing the
+    // a setter, a getter, and an on-change event for each key in the settings object.
+    for (const k of Object.keys(this.appSettings.defaults)) {
+      const key = k as keyof IAppSettings;
+
+      // Allow the renderer process to read the value of this setting.
+      ipcMain.handle(`app-settings-get-${key}`, () => this.appSettings.get(key));
+
+      // Allow the renderer process to set the value of this setting.
+      ipcMain.on(`app-settings-set-${key}`, (event, value) =>
+        this.appSettings.set({ [key]: value } as Partial<IAppSettings>)
+      );
+
+      // Notify the renderer process when a setting changes.
+      this.appSettings.onChange(
+        key,
+        (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
+          if (this.window) {
+            this.window.webContents.send(
+              `app-settings-changed-${key}`,
+              newValue,
+              oldValue
+            );
+          }
+        }
+      );
+    }
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -206,27 +253,10 @@ export class KandoApp {
       console.log(message);
     });
 
-    // Simulate a key press.
-    ipcMain.on('simulate-keys', (event, keys) => {
-      this.window.hide();
-      this.backend.simulateKeys(keys);
-    });
-
-    // Move the mouse pointer.
+    // Move the mouse pointer. This is used to move the pointer to the center of the
+    // menu when the menu is opened too close to the screen edge.
     ipcMain.on('move-pointer', (event, dist) => {
       this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
-    });
-
-    // Open an URI with the default application.
-    ipcMain.on('open-uri', (event, uri) => {
-      this.window.hide();
-      shell.openExternal(uri);
-    });
-
-    // Run a shell command.
-    ipcMain.on('run-command', (event, command) => {
-      this.window.hide();
-      this.exec(command);
     });
 
     // Print some messages when the user hovers or selects an item.
@@ -234,94 +264,128 @@ export class KandoApp {
       console.log('Hover item: ' + path);
     });
 
-    // We do not hide the window immediately when the user selects an item. Instead, we
-    // wait for the fade-out animation to finish.
+    // When the user selects an item, we execute the corresponding action. Depending on
+    // the action, we might need to wait for the fade-out animation to finish before we
+    // execute the action.
     ipcMain.on('select-item', (event, path) => {
-      // Also wait with the execution of the selected action until the fade-out
-      // animation is finished to make sure that any resulting events (such as virtual key
-      // presses) are not captured by the window.
-      this.hideTimeout = setTimeout(() => {
-        console.log('Select item: ' + path);
-
-        this.window.hide();
-        this.hideTimeout = null;
-
+      try {
         // Find the selected item.
-        const node = this.getNodeAtPath(this.lastVisibleMenu.nodes, path);
+        const node = this.getNodeAtPath(this.lastMenu.nodes, path);
 
         // We hard-code some actions here. In the future, we will have a more
-        // sophisticated action system.
+        // sophisticated and more modular action system.
 
-        // If the node is a command action, we execute the command.
-        if (node.type === 'command') {
-          interface INodeData {
-            command: string;
-          }
-          this.exec((node.data as INodeData).command);
-        }
-
-        // If the node is an URI action, we open the URI.
-        if (node.type === 'uri') {
-          interface INodeData {
-            uri: string;
-          }
-          shell.openExternal((node.data as INodeData).uri);
-        }
-
-        // If the node is a hotkey action, we simulate the key press. For now, the
-        // hotkey is a string which is composed of key names separated by a plus sign.
-        // All keys will be pressed and then released again.
+        // For now, the hotkey action is the only action which may have to be executed
+        // after the fade-out animation is finished. This is because the hotkey action
+        // might trigger a virtual key press which should not be captured by the window.
+        let executeDelayed = false;
         if (node.type === 'hotkey') {
           interface INodeData {
             hotkey: string;
+            delayed: boolean;
           }
 
-          // We convert some common key names to the corresponding left key names.
-          const keyNames = (node.data as INodeData).hotkey.split('+').map((name) => {
-            // There are many different names for the Control key. We convert them all
-            // to "ControlLeft".
-            if (
-              name === 'CommandOrControl' ||
-              name === 'CmdOrCtrl' ||
-              name === 'Command' ||
-              name === 'Control' ||
-              name === 'Cmd' ||
-              name === 'Ctrl'
-            ) {
-              return 'ControlLeft';
+          executeDelayed = (node.data as INodeData).delayed;
+        }
+
+        const actions = {
+          empty: () => {},
+          submenu: () => {},
+          // If the node is an URI action, we open the URI with the default application.
+          uri: (data: unknown) => {
+            interface INodeData {
+              uri: string;
+            }
+            shell.openExternal((data as INodeData).uri);
+          },
+          // If the node is a command action, we execute the command.
+          command: (data: unknown) => {
+            interface INodeData {
+              command: string;
+            }
+            this.exec((data as INodeData).command);
+          },
+          // If the node is a hotkey action, we simulate the key press. For now, the
+          // hotkey is a string which is composed of key names separated by a plus sign.
+          // All keys will be pressed and then released again.
+          hotkey: (data: unknown) => {
+            interface INodeData {
+              hotkey: string;
+              delayed: boolean;
             }
 
-            if (name === 'Shift') return 'ShiftLeft';
-            if (name === 'Meta' || name === 'Super') return 'MetaLeft';
-            if (name === 'Alt') return 'AltLeft';
+            // We convert some common key names to the corresponding left key names.
+            const keyNames = (data as INodeData).hotkey.split('+').map((name) => {
+              // There are many different names for the Control key. We convert them all
+              // to "ControlLeft".
+              if (
+                name === 'CommandOrControl' ||
+                name === 'CmdOrCtrl' ||
+                name === 'Command' ||
+                name === 'Control' ||
+                name === 'Cmd' ||
+                name === 'Ctrl'
+              ) {
+                return 'ControlLeft';
+              }
 
-            // If the key name is only one character long, we assume that it is a
-            // single character which should be pressed. In this case, we prefix it
-            // with "Key".
-            if (name.length === 1) return 'Key' + name.toUpperCase();
+              if (name === 'Shift') return 'ShiftLeft';
+              if (name === 'Meta' || name === 'Super') return 'MetaLeft';
+              if (name === 'Alt') return 'AltLeft';
 
-            return name;
-          });
+              // If the key name is only one character long, we assume that it is a
+              // single character which should be pressed. In this case, we prefix it
+              // with "Key".
+              if (name.length === 1) return 'Key' + name.toUpperCase();
 
-          // We simulate the key press by first pressing all keys and then releasing
-          // them again. We add a small delay between the key presses to make sure
-          // that the keys are pressed in the correct order.
-          const keys: IKeySequence = [];
+              return name;
+            });
 
-          // First press all keys.
-          for (const key of keyNames) {
-            keys.push({ name: key, down: true, delay: 10 });
-          }
+            // We simulate the key press by first pressing all keys and then releasing
+            // them again. We add a small delay between the key presses to make sure
+            // that the keys are pressed in the correct order.
+            const keys: IKeySequence = [];
 
-          // Then release all keys.
-          for (const key of keyNames) {
-            keys.push({ name: key, down: false, delay: 10 });
-          }
+            // First press all keys.
+            for (const key of keyNames) {
+              keys.push({ name: key, down: true, delay: 10 });
+            }
 
-          // Finally, we simulate the key presses using the backend.
-          this.backend.simulateKeys(keys);
+            // Then release all keys.
+            for (const key of keyNames) {
+              keys.push({ name: key, down: false, delay: 10 });
+            }
+
+            // Finally, we simulate the key presses using the backend.
+            this.backend.simulateKeys(keys);
+          },
+        };
+
+        // Get the node type. If the type is unknown, we fall back to the empty action.
+        const type = node.type in actions ? node.type : 'empty';
+
+        // If the action is not delayed, we execute it immediately.
+        if (!executeDelayed) {
+          actions[type](node.data);
         }
-      }, 400);
+
+        // Also wait with the execution of the selected action until the fade-out
+        // animation is finished to make sure that any resulting events (such as virtual
+        // key presses) are not captured by the window.
+        this.hideTimeout = setTimeout(() => {
+          console.log('Select item: ' + path);
+
+          this.window.hide();
+          this.hideTimeout = null;
+
+          // If the action is delayed, we execute it after the window is hidden.
+          if (executeDelayed) {
+            actions[type](node.data);
+          }
+        }, 400);
+      } catch (err) {
+        console.error('Failed to select item: ' + err);
+      }
     });
 
     // We do not hide the window immediately when the user aborts a selection. Instead, we
@@ -341,6 +405,27 @@ export class KandoApp {
         appSettings: this.appSettings.get(),
         currentMenu: 0,
       };
+    });
+
+    // The callbacks below are only used for the example actions. They will be removed
+    // in the future.
+
+    // Open an URI with the default application.
+    ipcMain.on('open-uri', (event, uri) => {
+      this.window.hide();
+      shell.openExternal(uri);
+    });
+
+    // Run a shell command.
+    ipcMain.on('run-command', (event, command) => {
+      this.window.hide();
+      this.exec(command);
+    });
+
+    // Simulate a key press.
+    ipcMain.on('simulate-keys', (event, keys) => {
+      this.window.hide();
+      this.backend.simulateKeys(keys);
     });
   }
 
@@ -394,6 +479,11 @@ export class KandoApp {
    * string of numbers separated by slashes. Each number is the index of the child node to
    * select. For example, the path "0/2/1" would select the second child of the third
    * child of the first child of the root node.
+   *
+   * @param root The root node of the menu.
+   * @param path The path to the node to select.
+   * @returns The node at the given path.
+   * @throws If the path is invalid.
    */
   private getNodeAtPath(root: DeepReadonly<INode>, path: string) {
     let node = root;
@@ -403,6 +493,10 @@ export class KandoApp {
       .map((x: string) => parseInt(x));
 
     for (const index of indices) {
+      if (!node.children || index >= node.children.length) {
+        throw new Error(`Invalid path "${path}".`);
+      }
+
       node = node.children[index];
     }
 
@@ -464,11 +558,10 @@ export class KandoApp {
         parent.children = [];
         for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
           const node: INode = {
-            type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'item',
+            type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'empty',
             name: `${name} ${i}`,
             icon: TEST_ICONS[i % TEST_ICONS.length],
             iconTheme: 'material-symbols-rounded',
-            children: [],
           };
           parent.children.push(node);
           addChildren(node, node.name, level + 1);

@@ -1,6 +1,6 @@
 {
   "name": "kando",
-  "version": "0.3.0-dev",
+  "version": "0.4.0-dev",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2023 Simon Schneegans",
   "main": ".webpack/main",
@@ -29,15 +29,15 @@
     "@electron-forge/plugin-webpack": "^7.2.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "chai": "^4.3.10",
     "cmake-js": "^7.2.1",
     "css-loader": "^6.8.1",
     "electron": "28.0.0",
-    "eslint": "^8.55.0",
-    "eslint-plugin-import": "^2.29.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "mocha": "^10.2.0",
     "node-loader": "^2.0.0",
@@ -59,11 +59,13 @@
     "@types/lodash.isequal": "^4.5.8",
     "bootstrap": "^5.3.1",
     "chokidar": "^3.5.3",
+    "commander": "^11.1.0",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
     "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
-    "material-symbols": "^0.14.2",
-    "node-addon-api": "^7.0.0"
+    "material-symbols": "^0.14.3",
+    "node-addon-api": "^7.0.0",
+    "simple-icons-font": "^10.3.0"
   }
 }

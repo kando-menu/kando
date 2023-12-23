@@ -41,10 +41,10 @@ export type IKeySequence = Array<IKeyStroke>;
  */
 export interface INode {
   /**
-   * The type of the menu item. This is primarily used in the editor, but themes may also
-   * use it to style different types of menu items differently.
+   * The type of the menu item. This is primarily used to specify the action of this item,
+   * but themes may also use it to style different types of menu items differently.
    */
-  type: string;
+  type: 'empty' | 'command' | 'uri' | 'hotkey' | 'submenu';
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf
@@ -62,10 +62,10 @@ export interface INode {
   iconTheme: string;
 
   /**
-   * The child nodes of this menu item. If this contains items, the node represents a
+   * The child nodes of this menu item. If this property is set, the node represents a
    * submenu.
    */
-  children: Array<INode>;
+  children?: Array<INode>;
 
   /**
    * The direction of the menu item in degrees. If not set, it will be computed when the
@@ -114,6 +114,9 @@ export interface IAppSettings {
 
   /** The name of the theme to use for the editor. */
   editorTheme: string;
+
+  /** Whether the sidebar should be shown in the editor. */
+  sidebarVisible: boolean;
 }
 
 /**
