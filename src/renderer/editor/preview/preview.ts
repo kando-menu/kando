@@ -128,7 +128,7 @@ export class Preview {
         childDiv.appendChild(icon);
 
         // If the child has children, we add little grandchild divs to the child div.
-        if (child.children.length > 0) {
+        if (child.children?.length > 0) {
           const grandChildContainer = document.createElement('div');
           grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
           childDiv.appendChild(grandChildContainer);
@@ -208,7 +208,7 @@ export class Preview {
     let menu = this.root;
 
     for (const index of this.selectionChain) {
-      if (menu.children.length <= index) {
+      if (menu.children?.length <= index) {
         return null;
       }
 
@@ -226,7 +226,7 @@ export class Preview {
    */
   private setupAngles(node: IEditorNode) {
     // If the node has no children, we can stop here.
-    if (node.children.length === 0) {
+    if (!node.children || node.children.length === 0) {
       return;
     }
 
@@ -237,7 +237,7 @@ export class Preview {
     const angles = math.computeItemAngles(node.children, parentAngle);
 
     // Now we assign the corresponding angles to the children.
-    for (let i = 0; i < node.children.length; ++i) {
+    for (let i = 0; i < node.children?.length; ++i) {
       const child = node.children[i];
       child.angle = angles[i];
 
