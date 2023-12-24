@@ -10,6 +10,8 @@ Fixed      - for any bug fixes.
 Security   - in case of vulnerabilities.
 -->
 
+<img src="img/banner01.jpg"></img>
+
 # Changelog of Kando
 
 Kando uses [semantic versioning](https://semver.org).
