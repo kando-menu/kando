@@ -3,6 +3,7 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
+<img src="img/banner04.jpg"></img>
 
 # Contributing to Kando
 
