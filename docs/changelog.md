@@ -19,6 +19,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## Kando 0.4.0 [Unreleased]
 
+
 **Release Date:** TBD
 
 #### Fixed
@@ -26,6 +27,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The transition of grandchild nodes in the menu. They are now smoothly faded in and out.
 
 ## [Kando 0.3.0](https://github.com/kando-menu/kando/releases/tag/v0.3.0)
+
+<a href="https://www.youtube.com/watch?v=7vVdJ9LORAM">
+<img align="right" width="400px" src="img/player03.jpg"></img>
+</a>
 
 **Release Date:** 2023-12-22
 
@@ -56,6 +61,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [Kando 0.2.0](https://github.com/kando-menu/kando/releases/tag/v0.2.0)
 
+<a href="https://www.youtube.com/watch?v=hQGNSvu8IXY">
+<img align="right" width="400px" src="img/player02.jpg"></img>
+</a>
+
 **Release Date:** 2023-11-24
 
 #### Added
@@ -70,6 +79,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Large parts of the code have been refactored. For instance, by using the template engine [Handlebars](https://handlebarsjs.com/), the code is now much more readable and maintainable. 
 
 ## [Kando 0.1.0](https://github.com/kando-menu/kando/releases/tag/v0.1.0)
+
+<a href="https://www.youtube.com/watch?v=ZTdfnUDMO9k">
+<img align="right" width="400px" src="img/player01.jpg"></img>
+</a>
 
 **Release Date:** 2023-08-21
 
