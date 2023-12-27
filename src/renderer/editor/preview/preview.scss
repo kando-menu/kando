@@ -46,6 +46,28 @@
 
     #kando-menu-preview-canvas {
       z-index: 0;
+
+      .kando-menu-preview-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition:
+          opacity 250ms ease,
+          transform 250ms ease;
+
+        transform: translate(
+          calc(var(--dir-x) * $preview-child-distance),
+          calc(var(--dir-y) * $preview-child-distance)
+        );
+
+        &.visible {
+          opacity: 1;
+          transform: none !important;
+        }
+      }
     }
 
     .kando-menu-preview-center,

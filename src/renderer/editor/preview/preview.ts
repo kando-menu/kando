@@ -93,6 +93,7 @@ export class Preview extends EventEmitter {
    * initially from the editor for the root menu.
    */
   public setMenu(root: IEditorNode) {
+    this.selectionChain = [];
     this.setupAngles(root);
     this.selectNode(root);
   }
@@ -102,125 +103,148 @@ export class Preview extends EventEmitter {
    * displayed menu items are removed and the new ones are added. A subtle animation is
    * used to indicate the change.
    */
-  private update() {
-    this.canvas.innerHTML = '';
+  private update(transitionAngle: number) {
+    if (this.selectionChain.length === 0) {
+      return;
+    }
 
-    const menu =
-      this.selectionChain.length > 0
-        ? this.selectionChain[this.selectionChain.length - 1]
-        : null;
+    const centerItem = this.selectionChain[this.selectionChain.length - 1];
+    const transitionDirection = math.getDirection(transitionAngle + 90, 1.0);
 
-    if (menu) {
-      // The big center div shows the icon of the currently selected menu.
-      menu.itemDiv = document.createElement('div');
-      menu.itemDiv.classList.add('kando-menu-preview-center');
-      this.canvas.appendChild(menu.itemDiv);
+    // First fade out all currently displayed menu items.
+    this.canvas.childNodes.forEach((c) => {
+      const child = c as HTMLElement;
 
-      // If the center is selected, push its index to the selection chain.
-      menu.itemDiv.addEventListener('click', () => {
-        this.selectNode(menu);
+      if (c instanceof HTMLElement && child.classList.contains('visible')) {
+        child.classList.remove('visible');
+        child.style.setProperty('--dir-x', transitionDirection.x + '');
+        child.style.setProperty('--dir-y', transitionDirection.y + '');
+
+        console.log(transitionDirection);
+
+        setTimeout(() => {
+          c.remove();
+        }, 500);
+      }
+    });
+
+    const container = document.createElement('div');
+    container.classList.add('kando-menu-preview-container');
+    container.style.setProperty('--dir-x', -transitionDirection.x + '');
+    container.style.setProperty('--dir-y', -transitionDirection.y + '');
+    this.canvas.appendChild(container);
+
+    // The big center div shows the icon of the currently selected menu.
+    centerItem.itemDiv = document.createElement('div');
+    centerItem.itemDiv.classList.add('kando-menu-preview-center');
+    container.appendChild(centerItem.itemDiv);
+
+    // If the center is selected, push its index to the selection chain.
+    centerItem.itemDiv.addEventListener('click', () => {
+      this.selectNode(centerItem);
+    });
+
+    const icon = this.createIcon(centerItem.icon, centerItem.iconTheme);
+    centerItem.itemDiv.appendChild(icon);
+
+    // Add the children of the currently selected menu in a circle around the center.
+    if (centerItem.children?.length > 0) {
+      centerItem.children.forEach((c) => {
+        const child = c as IEditorNode;
+
+        // Compute the direction towards the child.
+        const position = math.getDirection(child.angle - 90, 1.0);
+
+        // Create a div for the child and set the CSS variables for the position and
+        // rotation.
+        child.itemDiv = document.createElement('div');
+        child.itemDiv.classList.add('kando-menu-preview-child');
+        child.itemDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        child.itemDiv.style.setProperty('--dir-x', position.x + '');
+        child.itemDiv.style.setProperty('--dir-y', position.y + '');
+        container.appendChild(child.itemDiv);
+
+        // If the child is selected, push its index to the selection chain.
+        child.itemDiv.addEventListener('click', () => {
+          this.selectNode(child);
+        });
+
+        // Add the icon of the child.
+        const icon = this.createIcon(child.icon, child.iconTheme);
+        child.itemDiv.appendChild(icon);
+
+        // If the child has children, we add little grandchild divs to the child div.
+        if (child.children?.length > 0) {
+          const grandChildContainer = document.createElement('div');
+          grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
+          child.itemDiv.appendChild(grandChildContainer);
+
+          child.children.forEach((grandChild) => {
+            const grandChildDiv = document.createElement('div');
+            grandChildDiv.classList.add('kando-menu-preview-grandchild');
+            grandChildDiv.style.setProperty('--rotation', grandChild.angle - 90 + 'deg');
+
+            grandChildContainer.appendChild(grandChildDiv);
+          });
+        }
+
+        // Add a label to the child div. This is used to display the name of the menu
+        // item. The label shows a connector line to the child div.
+        const labelDivContainer = document.createElement('div');
+        labelDivContainer.classList.add('kando-menu-preview-label-container');
+        labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        child.itemDiv.style.setProperty('--dir-x', position.x + '');
+        child.itemDiv.style.setProperty('--dir-y', position.y + '');
+
+        if (position.x < -0.001) {
+          labelDivContainer.classList.add('left');
+        } else if (position.x > 0.001) {
+          labelDivContainer.classList.add('right');
+        } else if (position.y < 0) {
+          labelDivContainer.classList.add('top');
+        } else {
+          labelDivContainer.classList.add('bottom');
+        }
+
+        child.itemDiv.appendChild(labelDivContainer);
+
+        // The actual label is in a nested div. This is used to ellipsize the text if
+        // it is too long.
+        const labelDiv = document.createElement('div');
+        labelDiv.classList.add('kando-menu-preview-label');
+        labelDiv.classList.add('kando-font');
+        labelDiv.classList.add('fs-3');
+        labelDiv.textContent = child.name;
+        labelDivContainer.appendChild(labelDiv);
+      });
+    }
+
+    // If we are currently showing a submenu, we add the back navigation link towards
+    // the direction of the parent menu.
+    if (this.selectionChain.length > 1) {
+      const parent = this.selectionChain[this.selectionChain.length - 2];
+
+      const position = math.getDirection(centerItem.angle - 90, 1.0);
+
+      const backDiv = document.createElement('div');
+      backDiv.classList.add('kando-menu-preview-backlink');
+      backDiv.style.setProperty('--rotation', centerItem.angle - 90 + 'deg');
+      backDiv.style.setProperty('--dir-x', position.x + '');
+      backDiv.style.setProperty('--dir-y', position.y + '');
+      container.appendChild(backDiv);
+
+      backDiv.addEventListener('click', () => {
+        this.selectNode(parent);
       });
 
-      const icon = this.createIcon(menu.icon, menu.iconTheme);
-      menu.itemDiv.appendChild(icon);
-
-      // Add the children of the currently selected menu in a circle around the center.
-      if (menu.children?.length > 0) {
-        menu.children.forEach((c) => {
-          const child = c as IEditorNode;
-
-          // Compute the direction towards the child.
-          const position = math.getDirection(child.angle - 90, 1.0);
-
-          // Create a div for the child and set the CSS variables for the position and
-          // rotation.
-          child.itemDiv = document.createElement('div');
-          child.itemDiv.classList.add('kando-menu-preview-child');
-          child.itemDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
-          child.itemDiv.style.setProperty('--dir-x', position.x + '');
-          child.itemDiv.style.setProperty('--dir-y', position.y + '');
-          this.canvas.appendChild(child.itemDiv);
-
-          // If the child is selected, push its index to the selection chain.
-          child.itemDiv.addEventListener('click', () => {
-            this.selectNode(child);
-          });
-
-          // Add the icon of the child.
-          const icon = this.createIcon(child.icon, child.iconTheme);
-          child.itemDiv.appendChild(icon);
-
-          // If the child has children, we add little grandchild divs to the child div.
-          if (child.children?.length > 0) {
-            const grandChildContainer = document.createElement('div');
-            grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
-            child.itemDiv.appendChild(grandChildContainer);
-
-            child.children.forEach((grandChild) => {
-              const grandChildDiv = document.createElement('div');
-              grandChildDiv.classList.add('kando-menu-preview-grandchild');
-              grandChildDiv.style.setProperty(
-                '--rotation',
-                grandChild.angle - 90 + 'deg'
-              );
-
-              grandChildContainer.appendChild(grandChildDiv);
-            });
-          }
-
-          // Add a label to the child div. This is used to display the name of the menu
-          // item. The label shows a connector line to the child div.
-          const labelDivContainer = document.createElement('div');
-          labelDivContainer.classList.add('kando-menu-preview-label-container');
-          labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
-          child.itemDiv.style.setProperty('--dir-x', position.x + '');
-          child.itemDiv.style.setProperty('--dir-y', position.y + '');
-
-          if (position.x < -0.001) {
-            labelDivContainer.classList.add('left');
-          } else if (position.x > 0.001) {
-            labelDivContainer.classList.add('right');
-          } else if (position.y < 0) {
-            labelDivContainer.classList.add('top');
-          } else {
-            labelDivContainer.classList.add('bottom');
-          }
-
-          child.itemDiv.appendChild(labelDivContainer);
-
-          // The actual label is in a nested div. This is used to ellipsize the text if
-          // it is too long.
-          const labelDiv = document.createElement('div');
-          labelDiv.classList.add('kando-menu-preview-label');
-          labelDiv.classList.add('kando-font');
-          labelDiv.classList.add('fs-3');
-          labelDiv.textContent = child.name;
-          labelDivContainer.appendChild(labelDiv);
-        });
-      }
-
-      // If we are currently showing a submenu, we add the back navigation link towards
-      // the direction of the parent menu.
-      if (this.selectionChain.length > 1) {
-        const parent = this.selectionChain[this.selectionChain.length - 2];
-
-        const position = math.getDirection(menu.angle - 90, 1.0);
-
-        const backDiv = document.createElement('div');
-        backDiv.classList.add('kando-menu-preview-backlink');
-        backDiv.style.setProperty('--rotation', menu.angle - 90 + 'deg');
-        backDiv.style.setProperty('--dir-x', position.x + '');
-        backDiv.style.setProperty('--dir-y', position.y + '');
-        this.canvas.appendChild(backDiv);
-
-        backDiv.addEventListener('click', () => {
-          this.selectNode(parent);
-        });
-
-        const icon = this.createIcon('arrow_back', 'material-symbols-rounded');
-        backDiv.appendChild(icon);
-      }
+      const icon = this.createIcon('arrow_back', 'material-symbols-rounded');
+      backDiv.appendChild(icon);
     }
+
+    // Finally, we fade in all menu items.
+    setTimeout(() => {
+      container.classList.add('visible');
+    }, 0);
   }
 
   /**
@@ -238,11 +262,12 @@ export class Preview extends EventEmitter {
       // nodes after it. If it is not in the selection chain at all, we add it to the end.
       const index = this.selectionChain.indexOf(node);
       if (index >= 0 && index < this.selectionChain.length - 1) {
+        const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
-        this.update();
+        this.update(lastSelected.angle + 180);
       } else if (index === -1) {
         this.selectionChain.push(node);
-        this.update();
+        this.update(node.angle);
       }
     }
 
