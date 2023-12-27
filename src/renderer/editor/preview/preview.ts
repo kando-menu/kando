@@ -198,6 +198,28 @@ export class Preview extends EventEmitter {
           labelDivContainer.appendChild(labelDiv);
         });
       }
+
+      // If we are currently showing a submenu, we add the back navigation link towards
+      // the direction of the parent menu.
+      if (this.selectionChain.length > 1) {
+        const parent = this.selectionChain[this.selectionChain.length - 2];
+
+        const position = math.getDirection(menu.angle - 90, 1.0);
+
+        const backDiv = document.createElement('div');
+        backDiv.classList.add('kando-menu-preview-backlink');
+        backDiv.style.setProperty('--rotation', menu.angle - 90 + 'deg');
+        backDiv.style.setProperty('--dir-x', position.x + '');
+        backDiv.style.setProperty('--dir-y', position.y + '');
+        this.canvas.appendChild(backDiv);
+
+        backDiv.addEventListener('click', () => {
+          this.selectNode(parent);
+        });
+
+        const icon = this.createIcon('arrow_back', 'material-symbols-rounded');
+        backDiv.appendChild(icon);
+      }
     }
   }
 
