@@ -73,6 +73,7 @@
     .kando-menu-preview-center,
     .kando-menu-preview-child,
     .kando-menu-preview-backlink {
+      container-type: inline-size;
       position: absolute;
       border-radius: 50%;
       background-color: rgba(255, 255, 255, 0.1);
@@ -84,18 +85,6 @@
       align-items: center;
       justify-content: center;
 
-      svg {
-        width: 75%;
-        height: 75%;
-        fill: rgb(255, 255, 255);
-
-        text {
-          font-size: 100px;
-          alignment-baseline: central;
-          text-anchor: middle;
-        }
-      }
-
       // Scale slightly down when the user clicks on the item.
       &:active {
         transform: scale(0.9);
@@ -103,6 +92,12 @@
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      i {
+        position: absolute;
+        font-size: 75cqi;
+        color: white;
       }
     }
 

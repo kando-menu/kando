@@ -281,34 +281,18 @@ export class Preview extends EventEmitter {
     this.emit('select', node);
   }
 
-  /**
-   * This method creates a new SVG element with a text element inside. The text element
-   * contains the given icon.
-   *
-   * @param icon The icon name to display.
-   * @param theme The theme of the icon.
-   * @returns A new SVG element with the given icon.
-   */
   private createIcon(icon: string, theme: string) {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 100 100');
-    svg.setAttribute('width', '100');
-    svg.setAttribute('height', '100');
-
-    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', '50');
-    text.setAttribute('y', '50');
+    const iconDiv = document.createElement('i');
 
     if (theme === 'material-symbols-rounded') {
-      text.setAttribute('class', theme);
-      text.textContent = icon;
+      iconDiv.classList.add(theme);
+      iconDiv.innerHTML = icon;
     } else if (theme === 'simple-icons') {
-      text.setAttribute('class', 'si si-' + icon);
+      iconDiv.classList.add('si');
+      iconDiv.classList.add('si-' + icon);
     }
 
-    svg.appendChild(text);
-
-    return svg;
+    return iconDiv;
   }
 
   /**
