@@ -73,15 +73,34 @@
         }
       }
 
-      &:hover::before {
+      // Scale slightly down when the user clicks on the item.
+      &:active {
+        transform: scale(0.9);
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &::before {
         content: '';
         border-radius: 50%;
         position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        border: 2px dashed rgb(255, 255, 255);
+        opacity: 0;
+        transition: all 150ms ease;
+      }
+
+      &.active::before {
         top: -20px;
         left: -20px;
         right: -20px;
         bottom: -20px;
-        border: 2px dashed rgb(255, 255, 255);
+        opacity: 1;
       }
     }
 
@@ -139,7 +158,7 @@
       align-items: end;
 
       &::before {
-        $length: calc($preview-label-connector-length / 100% * $offset);
+        $length: calc($preview-label-connector-length / 100% * $offset - 20px);
         content: '';
         position: absolute;
         transform: rotate(calc(var(--rotation) + 180deg));
