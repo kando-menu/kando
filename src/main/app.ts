@@ -199,6 +199,7 @@ export class KandoApp {
       resizable: false,
       skipTaskbar: true,
       frame: false,
+      hasShadow: false,
       x: display.workArea.x,
       y: display.workArea.y,
       width: display.workArea.width + 1,
