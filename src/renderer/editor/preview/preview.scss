@@ -297,6 +297,39 @@
         );
       }
     }
+
+    #kando-menu-preview-breadcrumbs {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: rgba(255, 255, 255, 0.5);
+
+      .kando-menu-preview-breadcrumb {
+        display: inline-block;
+        margin-right: 0.5em;
+
+        &:hover {
+          color: rgb(255, 255, 255);
+        }
+
+        &:last-child {
+          color: rgb(255, 255, 255);
+          border-bottom: 2px dashed rgb(255, 255, 255);
+          pointer-events: none;
+        }
+
+        &:not(:last-child) {
+          cursor: pointer;
+
+          &::after {
+            content: '»';
+            margin-left: 0.5em;
+            color: rgba(255, 255, 255, 0.5) !important;
+          }
+        }
+      }
+    }
   }
 
   &.edit-mode #kando-menu-preview-container.visible {
