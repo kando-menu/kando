@@ -68,6 +68,14 @@
       width: 160px;
       height: 14px;
     }
+
+    .material-symbols-rounded {
+      font-size: unset;
+      line-height: unset;
+      position: relative;
+      vertical-align: middle;
+      top: -0.1em;
+    }
   }
 
   &.visible.edit-mode #kando-editor-toolbar {
