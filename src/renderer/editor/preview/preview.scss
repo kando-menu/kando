@@ -12,6 +12,7 @@
 
 #kando-editor-container {
   #kando-menu-preview-container {
+    container-type: size;
     position: absolute;
     top: $editor-padding-top;
     left: $editor-padding-left;
@@ -23,31 +24,14 @@
     );
     height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
 
-    .aspect-width-box {
-      position: relative;
-      aspect-ratio: 1.5 / 1;
-      width: 100%;
-      max-height: 100%;
-    }
-
-    .aspect-height-box {
-      position: relative;
-      aspect-ratio: 1.5 / 1;
-      height: 100%;
-      max-height: 100%;
-    }
-
-    .aspect-square-box {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      height: 100%;
-      padding: 5%;
-    }
-
     #kando-menu-preview-canvas {
       z-index: 0;
+      position: relative;
+      aspect-ratio: 1.5 / 1;
+      width: min(150cqh, 100cqw);
 
       .kando-menu-preview-container {
+        container-type: size;
         position: absolute;
         top: 0;
         left: 0;
@@ -73,7 +57,6 @@
     .kando-menu-preview-center,
     .kando-menu-preview-child,
     .kando-menu-preview-backlink {
-      container-type: inline-size;
       position: absolute;
       border-radius: 50%;
       background-color: rgba(255, 255, 255, 0.1);
@@ -94,10 +77,20 @@
         background-color: rgba(255, 255, 255, 0.2);
       }
 
-      i {
-        position: absolute;
-        font-size: 75cqi;
-        color: white;
+      .kando-menu-preview-icon-container {
+        container-type: size;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          position: absolute;
+          font-size: 75cqi;
+          color: white;
+        }
       }
     }
 
@@ -155,36 +148,31 @@
     }
 
     .kando-menu-preview-grandchild {
-      $size: calc(0.5 * 100% * $preview-grandchild-size / $preview-child-size);
-      $offset: calc(50% * $preview-child-size / $preview-grandchild-size);
       position: absolute;
       border-radius: 100%;
       background-color: rgba(255, 255, 255, 0.5);
       transition: transform 150ms ease;
-      width: $size;
-      height: $size;
-      left: calc(50% - $size / 2);
-      top: calc(50% - $size / 2);
-      transform: rotate(var(--rotation)) translateX($offset);
+      width: $preview-grandchild-size;
+      height: $preview-grandchild-size;
+      left: calc(50% - $preview-grandchild-size / 2);
+      top: calc(50% - $preview-grandchild-size / 2);
+      transform: rotate(var(--rotation)) translateX(calc($preview-child-size / 2));
     }
 
     .kando-menu-preview-label-container {
-      $size: calc(100% * $preview-label-max-size / $preview-child-size);
-      $offset: calc(100% * $preview-label-distance / $preview-label-max-size);
       position: absolute;
-      width: $size;
-      height: $size;
+      width: $preview-label-max-size;
+      height: $preview-label-max-size;
       pointer-events: none;
       display: flex;
       align-items: end;
 
       &::before {
-        $length: calc($preview-label-connector-length / 100% * $offset - 20px);
         content: '';
         position: absolute;
         transform: rotate(calc(var(--rotation) + 180deg));
         transform-origin: left;
-        width: $length;
+        width: calc($preview-label-distance - $preview-child-size / 2 - 20px);
         height: 1px;
         left: 0;
         bottom: 0;
@@ -204,7 +192,10 @@
       &.left {
         justify-content: end;
         transform: translate(-50%, -50%)
-          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
 
         &::before {
           transform: rotate(calc(var(--rotation)));
@@ -216,13 +207,19 @@
 
       &.right {
         transform: translate(50%, -50%)
-          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
       }
 
       &.top {
         justify-content: center;
         transform: translate(0%, -50%)
-          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
 
         &::before {
           left: 50%;
@@ -233,7 +230,10 @@
         align-items: start;
         justify-content: center;
         transform: translate(0%, 50%)
-          translate(calc(var(--dir-x) * $offset), calc(var(--dir-y) * $offset));
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
 
         &::before {
           left: 50%;
@@ -266,14 +266,13 @@
       &::after {
         content: '';
         position: absolute;
-        height: calc(100% * $preview-backlink-width / $preview-child-size);
+        height: $preview-backlink-width;
       }
 
       // The inner part.
       &::before {
-        $length: calc(100% / $preview-child-size * $preview-backlink-inner-length);
-        width: $length;
-        right: -$length;
+        width: $preview-backlink-inner-length;
+        right: -$preview-backlink-inner-length;
 
         background: linear-gradient(
           to left,
@@ -286,10 +285,8 @@
 
       // The outer part.
       &::after {
-        $length: calc(100% / $preview-child-size * $preview-backlink-outer-length);
-
-        width: $length;
-        left: -$length;
+        width: $preview-backlink-outer-length;
+        left: -$preview-backlink-outer-length;
 
         background: linear-gradient(
           to left,

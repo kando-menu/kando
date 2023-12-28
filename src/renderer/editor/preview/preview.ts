@@ -282,7 +282,11 @@ export class Preview extends EventEmitter {
   }
 
   private createIcon(icon: string, theme: string) {
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('kando-menu-preview-icon-container');
+
     const iconDiv = document.createElement('i');
+    containerDiv.appendChild(iconDiv);
 
     if (theme === 'material-symbols-rounded') {
       iconDiv.classList.add(theme);
@@ -292,7 +296,7 @@ export class Preview extends EventEmitter {
       iconDiv.classList.add('si-' + icon);
     }
 
-    return iconDiv;
+    return containerDiv;
   }
 
   /**
