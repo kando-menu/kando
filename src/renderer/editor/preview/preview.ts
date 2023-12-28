@@ -102,32 +102,40 @@ export class Preview extends EventEmitter {
    * This method is called whenever a new (sub-)menu should be displayed. All currently
    * displayed menu items are removed and the new ones are added. A subtle animation is
    * used to indicate the change.
+   *
+   * @param transitionAngle The existing menu items are faded out and slighly moved in the
+   *   direction of this angle. The new menu items are faded in and moved in the from the
+   *   opposite direction.
    */
   private update(transitionAngle: number) {
+    // Sanity check: If the selection chain is empty, we do nothing.
     if (this.selectionChain.length === 0) {
       return;
     }
 
+    // This node is drawn in the center of the preview.
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+    // First, fade out all currently displayed menu items.
     const transitionDirection = math.getDirection(transitionAngle + 90, 1.0);
 
-    // First fade out all currently displayed menu items.
     this.canvas.childNodes.forEach((c) => {
       const child = c as HTMLElement;
-
-      if (c instanceof HTMLElement && child.classList.contains('visible')) {
+      if (
+        c instanceof HTMLElement &&
+        child.classList.contains('visible') &&
+        child.classList.contains('kando-menu-preview-container')
+      ) {
         child.classList.remove('visible');
         child.style.setProperty('--dir-x', transitionDirection.x + '');
         child.style.setProperty('--dir-y', transitionDirection.y + '');
 
-        console.log(transitionDirection);
-
-        setTimeout(() => {
-          c.remove();
-        }, 500);
+        // After the animation is finished, we remove the menu item from the DOM.
+        setTimeout(() => c.remove(), 500);
       }
     });
 
+    // Now we create a new container for the new menu items.
     const container = document.createElement('div');
     container.classList.add('kando-menu-preview-container');
     container.style.setProperty('--dir-x', -transitionDirection.x + '');
@@ -137,15 +145,13 @@ export class Preview extends EventEmitter {
     // The big center div shows the icon of the currently selected menu.
     centerItem.itemDiv = document.createElement('div');
     centerItem.itemDiv.classList.add('kando-menu-preview-center');
+    centerItem.itemDiv.appendChild(
+      this.createIcon(centerItem.icon, centerItem.iconTheme)
+    );
     container.appendChild(centerItem.itemDiv);
 
-    // If the center is selected, push its index to the selection chain.
-    centerItem.itemDiv.addEventListener('click', () => {
-      this.selectNode(centerItem);
-    });
-
-    const icon = this.createIcon(centerItem.icon, centerItem.iconTheme);
-    centerItem.itemDiv.appendChild(icon);
+    // Make the center item selectable.
+    centerItem.itemDiv.addEventListener('click', () => this.selectNode(centerItem));
 
     // Add the children of the currently selected menu in a circle around the center.
     if (centerItem.children?.length > 0) {
@@ -165,13 +171,10 @@ export class Preview extends EventEmitter {
         container.appendChild(child.itemDiv);
 
         // If the child is selected, push its index to the selection chain.
-        child.itemDiv.addEventListener('click', () => {
-          this.selectNode(child);
-        });
+        child.itemDiv.addEventListener('click', () => this.selectNode(child));
 
         // Add the icon of the child.
-        const icon = this.createIcon(child.icon, child.iconTheme);
-        child.itemDiv.appendChild(icon);
+        child.itemDiv.appendChild(this.createIcon(child.icon, child.iconTheme));
 
         // If the child has children, we add little grandchild divs to the child div.
         if (child.children?.length > 0) {
@@ -183,7 +186,6 @@ export class Preview extends EventEmitter {
             const grandChildDiv = document.createElement('div');
             grandChildDiv.classList.add('kando-menu-preview-grandchild');
             grandChildDiv.style.setProperty('--rotation', grandChild.angle - 90 + 'deg');
-
             grandChildContainer.appendChild(grandChildDiv);
           });
         }
@@ -196,15 +198,10 @@ export class Preview extends EventEmitter {
         child.itemDiv.style.setProperty('--dir-x', position.x + '');
         child.itemDiv.style.setProperty('--dir-y', position.y + '');
 
-        if (position.x < -0.001) {
-          labelDivContainer.classList.add('left');
-        } else if (position.x > 0.001) {
-          labelDivContainer.classList.add('right');
-        } else if (position.y < 0) {
-          labelDivContainer.classList.add('top');
-        } else {
-          labelDivContainer.classList.add('bottom');
-        }
+        if (position.x < -0.001) labelDivContainer.classList.add('left');
+        else if (position.x > 0.001) labelDivContainer.classList.add('right');
+        else if (position.y < 0) labelDivContainer.classList.add('top');
+        else labelDivContainer.classList.add('bottom');
 
         child.itemDiv.appendChild(labelDivContainer);
 
@@ -223,7 +220,6 @@ export class Preview extends EventEmitter {
     // the direction of the parent menu.
     if (this.selectionChain.length > 1) {
       const parent = this.selectionChain[this.selectionChain.length - 2];
-
       const position = math.getDirection(centerItem.angle - 90, 1.0);
 
       const backDiv = document.createElement('div');
@@ -231,20 +227,15 @@ export class Preview extends EventEmitter {
       backDiv.style.setProperty('--rotation', centerItem.angle - 90 + 'deg');
       backDiv.style.setProperty('--dir-x', position.x + '');
       backDiv.style.setProperty('--dir-y', position.y + '');
+      backDiv.appendChild(this.createIcon('arrow_back', 'material-symbols-rounded'));
       container.appendChild(backDiv);
 
-      backDiv.addEventListener('click', () => {
-        this.selectNode(parent);
-      });
-
-      const icon = this.createIcon('arrow_back', 'material-symbols-rounded');
-      backDiv.appendChild(icon);
+      // Make the back link selectable.
+      backDiv.addEventListener('click', () => this.selectNode(parent));
     }
 
     // Finally, we fade in all menu items.
-    setTimeout(() => {
-      container.classList.add('visible');
-    }, 0);
+    setTimeout(() => container.classList.add('visible'), 0);
   }
 
   /**
@@ -281,6 +272,14 @@ export class Preview extends EventEmitter {
     this.emit('select', node);
   }
 
+  /**
+   * This method creates a div which contains an icon. The icon is created using the
+   * 'material-symbols-rounded' or 'simple-icons' font.
+   *
+   * @param icon The name of the icon to create.
+   * @param theme The name of the icon theme to use.
+   * @returns A HTML element which contains the icon.
+   */
   private createIcon(icon: string, theme: string) {
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('kando-menu-preview-icon-container');
