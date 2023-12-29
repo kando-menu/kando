@@ -66,3 +66,37 @@ jobs:
           file: out/make/squirrel.windows/x64/*.exe
           tag: ${{ github.ref }}
           file_glob: true
+
+  macos:
+    name: Deploy for macOS
+    runs-on: macos-11
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - # macOS: appears to fix https://github.com/electron/forge/issues/2807
+        name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Dependencies
+        run: |
+          npm ci
+      - name: Create Release
+        run: |
+          npm run make
+      - name: Upload DMG
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: out/make/*.dmg
+          tag: ${{ github.ref }}
+          file_glob: true
+      - name: Upload Zip
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: out/make/zip/darwin/x64/*
+          tag: ${{ github.ref }}
+          file_glob: true
