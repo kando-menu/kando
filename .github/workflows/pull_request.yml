@@ -48,3 +48,20 @@ jobs:
       - name: Create Release
         run: |
           npm run make
+
+  macos:
+    name: Test Deploy for macOS
+    runs-on: macos-11
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: |
+          npm install
+      - name: Create Release
+        run: |
+          npm run make
