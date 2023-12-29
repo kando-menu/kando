@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { native } from './native';
 import { screen, globalShortcut, app } from 'electron';
 import { Backend, Shortcut } from '../backend';
 import { IKeySequence } from '../../../common';
@@ -56,7 +57,11 @@ export class MacosBackend implements Backend {
    * @param dy The amount of vertical movement.
    */
   public async movePointer(dx: number, dy: number) {
-    // TODO: Implement this.
+    try {
+      native.movePointer(dx, dy);
+    } catch (e) {
+      console.error('Failed to move mouse pointer: ' + e.message);
+    }
   }
 
   /**
@@ -65,7 +70,29 @@ export class MacosBackend implements Backend {
    * @param shortcut The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence) {
-    // TODO: Implement this.
+    // We first need to convert the given DOM key names to Apple key codes. If a key code
+    // is not found, we throw an error.
+    const keyCodes = keys.map((key) => {
+      const code = MacosKeyNames.get(key.name);
+
+      if (code === undefined) {
+        throw new Error(`Unknown key: ${key.name}`);
+      }
+
+      return code;
+    });
+
+    // Now simulate the key presses. We wait a couple of milliseconds if the key has a
+    // delay specified.
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i].delay > 0) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, keys[i].delay);
+        });
+      }
+
+      native.simulateKey(keyCodes[i], keys[i].down);
+    }
   }
 
   /**
