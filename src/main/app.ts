@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'node:os';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
 import { exec } from 'child_process';
@@ -87,8 +88,6 @@ export class KandoApp {
 
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
-    this.tray = new Tray(path.join(__dirname, require('../../assets/icons/icon.png')));
-    this.tray.setToolTip('Kando');
     this.updateTrayMenu();
 
     // When the menu settings change, we need to rebind the shortcuts and update the
@@ -457,6 +456,19 @@ export class KandoApp {
 
   /** This updates the menu of the tray icon. It is called when the menu settings change. */
   private updateTrayMenu() {
+    if (!this.tray) {
+      if (os.platform() === 'darwin') {
+        this.tray = new Tray(
+          path.join(__dirname, require('../../assets/icons/trayTemplate.png'))
+        );
+      } else {
+        this.tray = new Tray(
+          path.join(__dirname, require('../../assets/icons/icon.png'))
+        );
+      }
+      this.tray.setToolTip('Kando');
+    }
+
     const template: Array<Electron.MenuItemConstructorOptions> = [];
 
     // Add an entry for each menu.
