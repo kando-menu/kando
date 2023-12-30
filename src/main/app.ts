@@ -208,6 +208,10 @@ export class KandoApp {
       show: false,
     });
 
+    // We set the window to be always on top. This way, Kando will be visible even on
+    // fullscreen applications.
+    this.window.setAlwaysOnTop(true, 'screen-saver');
+
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
 
