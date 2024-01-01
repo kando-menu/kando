@@ -46,10 +46,10 @@ for more information.
 
   /**
    * This uses the hyprctl commandline tool to get the current pointer position relative
-   * to the currently focused monitor as well as name and class of the currently focused
+   * to the currently focused monitor as well as name and app of the currently focused
    * window.
    *
-   * @returns The name and class of the currently focused window as well as the current
+   * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
@@ -61,7 +61,7 @@ for more information.
 
     return {
       windowName: activewindow['initialTitle'] || '',
-      windowClass: activewindow['initialClass'] || '',
+      appName: activewindow['initialClass'] || '',
       pointerX: cursorpos['x'],
       pointerY: cursorpos['y'],
     };

@@ -79,7 +79,7 @@ bool getActiveWindow(Napi::Object& obj) {
     wm_name = reinterpret_cast<const char*>(get_string_property("_NET_WM_NAME"));
   }
 
-  obj.Set("wmClass", wm_class);
+  obj.Set("app", wm_class);
   obj.Set("name", wm_name);
 
   XCloseDisplay(display);
