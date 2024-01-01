@@ -38,14 +38,14 @@ export class MacosBackend implements Backend {
    */
   public async getWMInfo() {
     const pointer = screen.getCursorScreenPoint();
-    const { name, wmClass } = native.getActiveWindow();
+    const { name, app } = native.getActiveWindow();
 
     // For some reason, this makes the method much faster. For now, I have no idea why.
     process.nextTick(() => {});
 
     return {
       windowName: name,
-      windowClass: wmClass,
+      appName: app,
       pointerX: pointer.x,
       pointerY: pointer.y,
     };

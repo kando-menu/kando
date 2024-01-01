@@ -49,7 +49,7 @@ void getActiveWindow(Napi::Object& obj) {
   std::wstring                                     ws(window_title);
   std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
 
-  obj.Set("wmClass", fullpath);
+  obj.Set("app", fullpath);
   obj.Set("name", myconv.to_bytes(ws));
 }
 

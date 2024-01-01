@@ -139,8 +139,8 @@ export class KandoApp {
 
         // Later, we will support application-specific menus. For now, we just print
         // the currently focused window.
-        if (info.windowClass) {
-          console.log(`Currently focused: ${info.windowClass} (${info.windowName})`);
+        if (info.appName) {
+          console.log(`Currently focused: ${info.appName} (${info.windowName})`);
         } else {
           console.log('Currently no window is focused.');
         }

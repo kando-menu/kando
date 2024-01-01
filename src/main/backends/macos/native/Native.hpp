@@ -46,8 +46,8 @@ class Native : public Napi::Addon<Native> {
 
   /**
    * This function is called when the getActiveWindow function is called from JavaScript.
-   * It returns the name and class of the currently active window.
-   * 
+   * It returns the app and class of the currently active window.
+   *
    * @param info The arguments passed to the getActiveWindow function. It should contain
    *            no arguments.
    */

@@ -37,10 +37,10 @@ export class X11Backend implements Backend {
   public async init() {}
 
   /**
-   * This uses the X11 library to get the name and class of the currently focused window.
-   * In addition, it uses Electron's screen module to get the current pointer position.
+   * This uses the X11 library to get the name and app of the currently focused window. In
+   * addition, it uses Electron's screen module to get the current pointer position.
    *
-   * @returns The name and class of the currently focused window as well as the current
+   * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
@@ -52,7 +52,7 @@ export class X11Backend implements Backend {
 
     return {
       windowName: window ? window.name : '',
-      windowClass: window ? window.wmClass : '',
+      appName: window ? window.app : '',
       pointerX: pointer.x,
       pointerY: pointer.y,
     };

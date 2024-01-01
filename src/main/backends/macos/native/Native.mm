@@ -85,7 +85,7 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
   // Set default values.
   Napi::Object result = Napi::Object::New(env);
   result.Set("name", Napi::String::New(env, ""));
-  result.Set("wmClass", Napi::String::New(env, ""));
+  result.Set("app", Napi::String::New(env, ""));
 
   // We get the PID of the frontmost application and then iterate over all windows to
   // find the first one with the same PID.
@@ -95,7 +95,7 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
 
     // We use the bundle identifier as application name.
     std::string appName(app.bundleIdentifier.UTF8String);
-    result.Set("wmClass", Napi::String::New(env, appName));
+    result.Set("app", Napi::String::New(env, appName));
 
     // Now we iterate over all windows and find the first one with the same PID.
     CFArrayRef windows =

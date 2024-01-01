@@ -26,11 +26,11 @@ export interface Native {
   simulateKey(keycode: number, down: boolean): void;
 
   /**
-   * This retrieves the name and class of the currently focused window.
+   * This retrieves the app and class of the currently focused window.
    *
-   * @returns The name and class of the currently focused window.
+   * @returns The app and class of the currently focused window.
    */
-  getActiveWindow(): { wmClass: string; name: string };
+  getActiveWindow(): { app: string; name: string };
 }
 
 const native: Native = require('./../../../../../build/Release/NativeMacOS.node');
