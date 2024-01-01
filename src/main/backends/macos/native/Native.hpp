@@ -43,6 +43,15 @@ class Native : public Napi::Addon<Native> {
    *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
+
+  /**
+   * This function is called when the getActiveWindow function is called from JavaScript.
+   * It returns the name and class of the currently active window.
+   * 
+   * @param info The arguments passed to the getActiveWindow function. It should contain
+   *            no arguments.
+   */
+  Napi::Value getActiveWindow(const Napi::CallbackInfo& info);
 };
 
 #endif // NATIVE_HPP

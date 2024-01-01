@@ -10,6 +10,7 @@
 
 #include "Native.hpp"
 
+#include <AppKit/AppKit.h>
 #include <ApplicationServices/ApplicationServices.h>
 
 #include <iostream>
@@ -22,6 +23,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
   DefineAddon(exports, {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
+                           InstanceMethod("getActiveWindow", &Native::getActiveWindow),
                        });
 }
 
@@ -73,6 +75,55 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   CGEventRef event = CGEventCreateKeyboardEvent(NULL, keycode, press);
   CGEventPost(kCGHIDEventTap, event);
   CFRelease(event);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  // Set default values.
+  Napi::Object result = Napi::Object::New(env);
+  result.Set("name", Napi::String::New(env, ""));
+  result.Set("wmClass", Napi::String::New(env, ""));
+
+  // We get the PID of the frontmost application and then iterate over all windows to
+  // find the first one with the same PID.
+  auto app = NSWorkspace.sharedWorkspace.frontmostApplication;
+
+  if (app) {
+
+    // We use the bundle identifier as application name.
+    std::string appName(app.bundleIdentifier.UTF8String);
+    result.Set("wmClass", Napi::String::New(env, appName));
+
+    // Now we iterate over all windows and find the first one with the same PID.
+    CFArrayRef windowList =
+        CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+
+    for (NSMutableDictionary* entry in (NSArray*)windowList) {
+      NSInteger ownerPID = [[entry objectForKey:(id)kCGWindowOwnerPID] integerValue];
+
+      if (ownerPID == app.processIdentifier) {
+        NSString* name = [entry objectForKey:(id)kCGWindowName];
+
+        if (name) {
+          result.Set("name", Napi::String::New(env, name.UTF8String));
+        } else {
+          std::cout
+              << "Failed to get window name for app " << appName
+              << ". Maybe you need to enable screen recording permissions for Kando?"
+              << std::endl;
+        }
+
+        break;
+      }
+    }
+
+    CFRelease(windowList);
+  }
+
+  return result;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

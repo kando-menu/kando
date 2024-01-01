@@ -24,6 +24,13 @@ export interface Native {
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
+
+  /**
+   * This retrieves the name and class of the currently focused window.
+   *
+   * @returns The name and class of the currently focused window.
+   */
+  getActiveWindow(): { wmClass: string; name: string };
 }
 
 const native: Native = require('./../../../../../build/Release/NativeMacOS.node');

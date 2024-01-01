@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 # SPDX-License-Identifier: MIT
 
-file(GLOB SOURCE_FILES "*.cpp")
+file(GLOB SOURCE_FILES "*.mm")
+
+enable_language(OBJCXX)
 
 add_library(NativeMacOS SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 
