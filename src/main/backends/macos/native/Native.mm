@@ -98,13 +98,13 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
     result.Set("wmClass", Napi::String::New(env, appName));
 
     // Now we iterate over all windows and find the first one with the same PID.
-    CFArrayRef windowList =
+    CFArrayRef windows =
         CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
 
-    for (NSMutableDictionary* entry in (NSArray*)windowList) {
-      NSInteger ownerPID = [[entry objectForKey:(id)kCGWindowOwnerPID] integerValue];
+    for (NSMutableDictionary* entry in (NSArray*)windows) {
+      NSInteger pid = [[entry objectForKey:(id)kCGWindowOwnerPID] integerValue];
 
-      if (ownerPID == app.processIdentifier) {
+      if (pid == app.processIdentifier) {
         NSString* name = [entry objectForKey:(id)kCGWindowName];
 
         if (name) {
@@ -120,7 +120,7 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
       }
     }
 
-    CFRelease(windowList);
+    CFRelease(windows);
   }
 
   return result;
