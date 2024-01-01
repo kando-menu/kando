@@ -12,15 +12,15 @@ import { IKeySequence } from '../../common';
 
 /**
  * This interface is used to transfer information required from the window manager when
- * opening the pie menu. It contains the name and class of the currently focused window as
+ * opening the pie menu. It contains the name of the currently focused app / window as
  * well as the current pointer position.
  *
- * How to get the name and class of the currently focused window depends on the operating
- * system and the window manager.
+ * How to get the app name and the window name depends on the operating system and the
+ * window manager.
  */
 export interface WMInfo {
   windowName: string;
-  windowClass: string;
+  appName: string;
   pointerX: number;
   pointerY: number;
 }
@@ -67,11 +67,11 @@ export interface Backend {
   getWindowType: () => string;
 
   /**
-   * Each backend must provide a way to get the name and class of the currently focused
-   * application window as well as the current pointer position.
+   * Each backend must provide a way to get the name and app of the currently focused
+   * window as well as the current pointer position.
    *
-   * @returns A promise which resolves to the name and class of the currently focused
-   *   window as well as to the current pointer position.
+   * @returns A promise which resolves to the name and app of the currently focused window
+   *   as well as to the current pointer position.
    */
   getWMInfo: () => Promise<WMInfo>;
 

@@ -13,7 +13,7 @@ export interface Native {
    * This uses Win32 API calls to get the name and the class of the currently focused
    * application window.
    */
-  getActiveWindow(): { wmClass: string; name: string };
+  getActiveWindow(): { app: string; name: string };
 
   /**
    * This simulates a mouse movement.
