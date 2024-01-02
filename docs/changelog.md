@@ -22,6 +22,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### Changed
+
+- The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
+
 #### Fixed
 
 - The transition of grandchild nodes in the menu. They are now smoothly faded in and out.
