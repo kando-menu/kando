@@ -15,6 +15,11 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {
     icon: 'assets/icons/icon',
+
+    // This makes sure that the app is not shown in the dock on macOS.
+    extendInfo: {
+      LSUIElement: true,
+    },
   },
   rebuildConfig: {},
   makers: [
