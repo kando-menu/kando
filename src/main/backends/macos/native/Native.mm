@@ -12,6 +12,7 @@
 
 #include <AppKit/AppKit.h>
 #include <ApplicationServices/ApplicationServices.h>
+#include <Carbon/Carbon.h>
 
 #include <iostream>
 #include <sys/mman.h>
@@ -71,36 +72,39 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   int32_t keycode = info[0].As<Napi::Number>().Int32Value();
   bool    press   = info[1].As<Napi::Boolean>().Value();
 
-  // Update our internal modifier mask accordingly.
-  if (keycode == 0x36 || keycode == 0x37) {
-    if (press) {
-      mCurrentModifierMask |= kCGEventFlagMaskCommand;
+  auto setOrReleaseBit = [](uint32_t& mask, uint32_t bit, bool set) {
+    if (set) {
+      mask |= bit;
     } else {
-      mCurrentModifierMask &= ~kCGEventFlagMaskCommand;
+      mask &= ~bit;
     }
-  } else if (keycode == 0x38 || keycode == 0x3c) {
-    if (press) {
-      mCurrentModifierMask |= kCGEventFlagMaskShift;
-    } else {
-      mCurrentModifierMask &= ~kCGEventFlagMaskShift;
-    }
-  } else if (keycode == 0x3b || keycode == 0x3e) {
-    if (press) {
-      mCurrentModifierMask |= kCGEventFlagMaskControl;
-    } else {
-      mCurrentModifierMask &= ~kCGEventFlagMaskControl;
-    }
-  } else if (keycode == 0x3a || keycode == 0x3d) {
-    if (press) {
-      mCurrentModifierMask |= kCGEventFlagMaskAlternate;
-    } else {
-      mCurrentModifierMask &= ~kCGEventFlagMaskAlternate;
-    }
+  };
+
+  // If this is a modifier key, we need to update our internal modifier mask.
+  if (keycode == kVK_Command) {
+    setOrReleaseBit(mLeftModifierMask, kCGEventFlagMaskCommand, press);
+  } else if (keycode == kVK_RightCommand) {
+    setOrReleaseBit(mRightModifierMask, kCGEventFlagMaskCommand, press);
+  } else if (keycode == kVK_Shift) {
+    setOrReleaseBit(mLeftModifierMask, kCGEventFlagMaskShift, press);
+  } else if (keycode == kVK_RightShift) {
+    setOrReleaseBit(mRightModifierMask, kCGEventFlagMaskShift, press);
+  } else if (keycode == kVK_Control) {
+    setOrReleaseBit(mLeftModifierMask, kCGEventFlagMaskControl, press);
+  } else if (keycode == kVK_RightControl) {
+    setOrReleaseBit(mRightModifierMask, kCGEventFlagMaskControl, press);
+  } else if (keycode == kVK_Option) {
+    setOrReleaseBit(mLeftModifierMask, kCGEventFlagMaskAlternate, press);
+  } else if (keycode == kVK_RightOption) {
+    setOrReleaseBit(mRightModifierMask, kCGEventFlagMaskAlternate, press);
   }
 
+  std::cout << "Simulating key " << keycode << " with mask " << mLeftModifierMask << " / "
+            << mRightModifierMask << std::endl;
+
   // Create a key event.
-  CGEventRef event = CGEventCreateKeyboardEvent(NULL, keycode, press);
-  CGEventSetFlags(event, mCurrentModifierMask);
+  CGEventRef event = CGEventCreateKeyboardEvent(nullptr, keycode, press);
+  CGEventSetFlags(event, mLeftModifierMask | mRightModifierMask);
   CGEventPost(kCGHIDEventTap, event);
   CFRelease(event);
 }

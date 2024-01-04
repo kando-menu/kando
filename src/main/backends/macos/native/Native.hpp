@@ -58,7 +58,8 @@ class Native : public Napi::Addon<Native> {
 
   // We have to keep track of the current modifier mask to be able to simulate key
   // presses.
-  int mCurrentModifierMask = 0;
+  uint32_t mLeftModifierMask  = 0;
+  uint32_t mRightModifierMask = 0;
 };
 
 #endif // NATIVE_HPP

@@ -230,7 +230,7 @@ export class Sidebar {
       const keyList = keys.map((key) => ({
         name: key,
         down: true,
-        delay: 0,
+        delay: 10,
       }));
 
       // Release the keys in reverse order.
@@ -238,8 +238,8 @@ export class Sidebar {
         ...keys
           .map((key) => ({
             name: key,
-            down: true,
-            delay: 0,
+            down: false,
+            delay: 10,
           }))
           .reverse()
       );
