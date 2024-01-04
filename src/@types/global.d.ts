@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IKeySequence, IVec2, INode, IEditorData, IAppSettings } from './common';
+import { IKeySequence, IVec2, INode, IEditorData, IAppSettings } from '../common';
 
 // Declare the API to the host process. See preload.ts for more information on the exposed
 // functions. The API has to be declared here again, because the TypeScript compiler
