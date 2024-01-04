@@ -16,6 +16,9 @@
 /**
  * This class allows moving the mouse pointer and simulating key presses on macOS. It uses
  * the core graphics framework for this.
+ *
+ * For simulation of key presses, we have to keep track of the current modifier mask. This
+ * is done by the mCurrentModifierMask member variable.
  */
 class Native : public Napi::Addon<Native> {
  public:
@@ -52,6 +55,10 @@ class Native : public Napi::Addon<Native> {
    *            no arguments.
    */
   Napi::Value getActiveWindow(const Napi::CallbackInfo& info);
+
+  // We have to keep track of the current modifier mask to be able to simulate key
+  // presses.
+  int mCurrentModifierMask = 0;
 };
 
 #endif // NATIVE_HPP

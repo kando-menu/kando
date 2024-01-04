@@ -71,8 +71,36 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   int32_t keycode = info[0].As<Napi::Number>().Int32Value();
   bool    press   = info[1].As<Napi::Boolean>().Value();
 
+  // Update our internal modifier mask accordingly.
+  if (keycode == 0x36 || keycode == 0x37) {
+    if (press) {
+      mCurrentModifierMask |= kCGEventFlagMaskCommand;
+    } else {
+      mCurrentModifierMask &= ~kCGEventFlagMaskCommand;
+    }
+  } else if (keycode == 0x38 || keycode == 0x3c) {
+    if (press) {
+      mCurrentModifierMask |= kCGEventFlagMaskShift;
+    } else {
+      mCurrentModifierMask &= ~kCGEventFlagMaskShift;
+    }
+  } else if (keycode == 0x3b || keycode == 0x3e) {
+    if (press) {
+      mCurrentModifierMask |= kCGEventFlagMaskControl;
+    } else {
+      mCurrentModifierMask &= ~kCGEventFlagMaskControl;
+    }
+  } else if (keycode == 0x3a || keycode == 0x3d) {
+    if (press) {
+      mCurrentModifierMask |= kCGEventFlagMaskAlternate;
+    } else {
+      mCurrentModifierMask &= ~kCGEventFlagMaskAlternate;
+    }
+  }
+
   // Create a key event.
   CGEventRef event = CGEventCreateKeyboardEvent(NULL, keycode, press);
+  CGEventSetFlags(event, mCurrentModifierMask);
   CGEventPost(kCGHIDEventTap, event);
   CFRelease(event);
 }
