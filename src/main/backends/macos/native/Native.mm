@@ -65,7 +65,7 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
   // Make sure we have access to the event tap.
   if (!CGRequestPostEventAccess()) {
-    Napi::Error::New(env, "Failed to get post event access!")
+    Napi::Error::New(env, "Please give accessibility permissions to Kando!")
         .ThrowAsJavaScriptException();
     return;
   }
