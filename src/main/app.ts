@@ -168,6 +168,7 @@ export class KandoApp {
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
         this.window.show();
+        this.window.restore();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
         // get focus when it is shown. This is a workaround for that issue.
@@ -556,12 +557,20 @@ export class KandoApp {
   }
 
   /**
-   * This hides the window and tries to restore input focus to the topmost application on
-   * platforms where this doesn't happen automatically.
+   * This hides the window. When Electron windows are hidden, input focus is not
+   * necessarily returned to the topmost window on Windows and macOS. There we have to
+   * minimize the window or hide the app respectively.
+   *
+   * See: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
   private hideWindow() {
+    if (process.platform === 'win32') {
+      this.window.minimize();
+    } else if (process.platform === 'darwin') {
+      app.hide();
+    }
+
     this.window.hide();
-    this.backend.restoreFocus();
   }
 
   /** This creates an example menu which can be used for testing. */
