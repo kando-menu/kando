@@ -56,6 +56,11 @@ class Native : public Napi::Addon<Native> {
    */
   Napi::Value getActiveWindow(const Napi::CallbackInfo& info);
 
+  /**
+   * This gives input focus to the topmost window.
+   */
+  void restoreFocus(const Napi::CallbackInfo& info);
+
   // We have to keep track of the current modifier mask to be able to simulate key
   // presses.
   uint32_t mLeftModifierMask  = 0;

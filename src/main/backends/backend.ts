@@ -115,4 +115,13 @@ export interface Backend {
    * @returns A promise which resolves when all shortcuts have been unbound.
    */
   unbindAllShortcuts: () => Promise<void>;
+
+  /**
+   * On some platforms, the window which had focus before the pie menu was opened will not
+   * regain focus automatically. This method can be used to restore the focus to the
+   * previously focused window. It will be called after the pie menu has been closed.
+   *
+   * @returns A promise which resolves when the focus has been restored.
+   */
+  restoreFocus: () => Promise<void>;
 }

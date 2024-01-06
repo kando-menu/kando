@@ -31,6 +31,9 @@ export interface Native {
    * @returns The app and class of the currently focused window.
    */
   getActiveWindow(): { app: string; name: string };
+
+  /** This gives input focus to the topmost window after Kando has been closed. */
+  restoreFocus(): void;
 }
 
 const native: Native = require('./../../../../../build/Release/NativeMacOS.node');

@@ -122,4 +122,13 @@ export class MacosBackend implements Backend {
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }
+
+  /**
+   * On macOS, the window which had focus before the pie menu was opened will not regain
+   * focus automatically. This method is used to restore the focus to the previously
+   * focused window. It will be called after the pie menu has been closed.
+   */
+  public async restoreFocus() {
+    native.restoreFocus();
+  }
 }

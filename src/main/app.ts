@@ -379,7 +379,7 @@ export class KandoApp {
         this.hideTimeout = setTimeout(() => {
           console.log('Select item: ' + path);
 
-          this.window.hide();
+          this.hideWindow();
           this.hideTimeout = null;
 
           // If the action is delayed, we execute it after the window is hidden.
@@ -397,7 +397,7 @@ export class KandoApp {
     ipcMain.on('cancel-selection', () => {
       this.hideTimeout = setTimeout(() => {
         console.log('Cancel selection.');
-        this.window.hide();
+        this.hideWindow();
         this.hideTimeout = null;
       }, 300);
     });
@@ -416,20 +416,22 @@ export class KandoApp {
 
     // Open an URI with the default application.
     ipcMain.on('open-uri', (event, uri) => {
-      this.window.hide();
+      this.hideWindow();
       shell.openExternal(uri);
     });
 
     // Run a shell command.
     ipcMain.on('run-command', (event, command) => {
-      this.window.hide();
+      this.hideWindow();
       this.exec(command);
     });
 
     // Simulate a key press.
     ipcMain.on('simulate-keys', (event, keys) => {
-      this.window.hide();
-      this.backend.simulateKeys(keys);
+      this.hideWindow();
+      this.backend.simulateKeys(keys).catch((err) => {
+        this.showError('Failed to simulate keys', err.message);
+      });
     });
   }
 
@@ -528,20 +530,38 @@ export class KandoApp {
     exec(command, (error) => {
       // Print an error if the command fails to start.
       if (error) {
-        console.error('Failed to execute command: ' + error);
-
-        // Show a notification if possible.
-        if (Notification.isSupported()) {
-          const notification = new Notification({
-            title: 'Failed to execute command.',
-            body: error.message,
-            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-          });
-
-          notification.show();
-        }
+        this.showError('Failed to execute command', error.message);
       }
     });
+  }
+
+  /**
+   * This prints an error message to the console and shows a notification if possible.
+   *
+   * @param message The message to show.
+   * @param error The error to show.
+   */
+  private showError(message: string, error: string) {
+    console.error(message + ': ' + error);
+
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: message + '.',
+        body: error,
+        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+      });
+
+      notification.show();
+    }
+  }
+
+  /**
+   * This hides the window and tries to restore input focus to the topmost application on
+   * platforms where this doesn't happen automatically.
+   */
+  private hideWindow() {
+    this.window.hide();
+    this.backend.restoreFocus();
   }
 
   /** This creates an example menu which can be used for testing. */
