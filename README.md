@@ -49,9 +49,8 @@ I have tested it on the following platforms:
 
 Tested Environment | Status | Notes
 :-- | :---: | ---
-<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 10 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 11 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> MacOS | :x: | Not yet supported, but I plan to add support for it in the future.
+<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows | :heavy_check_mark: | Tested on Windows 11.
+<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> macOS | :heavy_check_mark: | Tested on macOS 11.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
