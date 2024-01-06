@@ -70,12 +70,6 @@ export abstract class WLRBackend implements Backend {
     }
   }
 
-  /**
-   * On Wayland, the window which had focus before the pie menu was opened will usually
-   * regain focus automatically. So this method does nothing.
-   */
-  public async restoreFocus() {}
-
   // These methods are abstract and need to be implemented by subclasses. See the docs
   // of the methods in the Backend interface for more information.
   abstract init(): Promise<void>;

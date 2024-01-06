@@ -25,7 +25,6 @@ Native::Native(Napi::Env env, Napi::Object exports) {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
                            InstanceMethod("getActiveWindow", &Native::getActiveWindow),
-                           InstanceMethod("restoreFocus", &Native::restoreFocus),
                        });
 }
 
@@ -164,39 +163,6 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
   }
 
   return result;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-void Native::restoreFocus(const Napi::CallbackInfo& info) {
-
-  // Iterate over all windows and give input focus to the first window with layer 0. I
-  // guess that there could be windows on higher layers which accept input, but I have
-  // no idea how to decide which one used to have focus.
-  CFArrayRef windows = CGWindowListCopyWindowInfo(
-      kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,
-      kCGNullWindowID);
-
-  for (NSMutableDictionary* entry in (NSArray*)windows) {
-    NSInteger layer = [[entry objectForKey:(id)kCGWindowLayer] integerValue];
-
-    if (layer == 0) {
-      NSInteger pid = [[entry objectForKey:(id)kCGWindowOwnerPID] integerValue];
-
-      // Iterate over all apps and find the one with the same PID and activate it.
-      for (NSRunningApplication* app in NSWorkspace.sharedWorkspace.runningApplications) {
-        if (app.processIdentifier == pid) {
-          std::cout << "Restoring focus to " << app.localizedName.UTF8String << std::endl;
-          [app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-          break;
-        }
-      }
-
-      break;
-    }
-  }
-
-  CFRelease(windows);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

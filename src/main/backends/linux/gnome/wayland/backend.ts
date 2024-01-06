@@ -166,12 +166,6 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * On GNOME, the window which had focus before the pie menu was opened will regain focus
-   * automatically. So this method does nothing.
-   */
-  public async restoreFocus() {}
-
-  /**
    * Translates a shortcut from the Electron format to the GDK format.
    *
    * @param shortcut The shortcut to translate.

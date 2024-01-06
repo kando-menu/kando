@@ -127,10 +127,4 @@ export class X11Backend implements Backend {
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }
-
-  /**
-   * On X11, the window which had focus before the pie menu was opened will regain focus
-   * automatically. So this method does nothing.
-   */
-  public async restoreFocus() {}
 }

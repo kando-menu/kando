@@ -235,12 +235,6 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * On KDE, the window which had focus before the pie menu was opened will regain focus
-   * automatically. So this method does nothing.
-   */
-  public async restoreFocus() {}
-
-  /**
    * Creates and runs a KWin script which registers all configured shortcuts. Any
    * previously registered shortcuts are unregistered.
    */
