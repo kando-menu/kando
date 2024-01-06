@@ -169,6 +169,7 @@ export class KandoApp {
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
         this.window.show();
+        this.window.restore();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
         // get focus when it is shown. This is a workaround for that issue.
@@ -375,7 +376,7 @@ export class KandoApp {
         this.hideTimeout = setTimeout(() => {
           console.log('Select item: ' + path);
 
-          this.window.hide();
+          this.hideWindow();
           this.hideTimeout = null;
 
           // If the action is delayed, we execute it after the window is hidden.
@@ -393,7 +394,7 @@ export class KandoApp {
     ipcMain.on('cancel-selection', () => {
       this.hideTimeout = setTimeout(() => {
         console.log('Cancel selection.');
-        this.window.hide();
+        this.hideWindow();
         this.hideTimeout = null;
       }, 300);
     });
@@ -412,19 +413,19 @@ export class KandoApp {
 
     // Open an URI with the default application.
     ipcMain.on('open-uri', (event, uri) => {
-      this.window.hide();
+      this.hideWindow();
       shell.openExternal(uri);
     });
 
     // Run a shell command.
     ipcMain.on('run-command', (event, command) => {
-      this.window.hide();
+      this.hideWindow();
       this.exec(command);
     });
 
     // Simulate a key press.
     ipcMain.on('simulate-keys', (event, keys) => {
-      this.window.hide();
+      this.hideWindow();
       this.backend.simulateKeys(keys);
     });
   }
@@ -525,6 +526,23 @@ export class KandoApp {
         }
       }
     });
+  }
+
+  /**
+   * This hides the window. When Electron windows are hidden, input focus is not
+   * necessarily returned to the topmost window on Windows and macOS. There we have to
+   * minimize the window or hide the app respectively.
+   *
+   * See: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
+   */
+  private hideWindow() {
+    if (process.platform === 'win32') {
+      this.window.minimize();
+    } else if (process.platform === 'darwin') {
+      app.hide();
+    }
+
+    this.window.hide();
   }
 
   /** This creates an example menu which can be used for testing. */
