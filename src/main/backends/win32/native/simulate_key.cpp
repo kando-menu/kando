@@ -31,6 +31,10 @@ Napi::Object simulateKey(const Napi::CallbackInfo& info) {
   input.ki.dwFlags = (down ? 0 : KEYEVENTF_KEYUP) | KEYEVENTF_SCANCODE;
   input.ki.wScan   = code;
 
+  if (code > 255) {
+    input.ki.dwFlags |= KEYEVENTF_EXTENDEDKEY;
+  }
+
   UINT uSent = SendInput(1, &input, sizeof(INPUT));
   if (uSent != 1) {
     Napi::TypeError::New(env, "Failed to simulate keys!").ThrowAsJavaScriptException();
