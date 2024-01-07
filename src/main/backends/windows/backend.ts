@@ -18,7 +18,7 @@ import { WindowsKeyCodes } from './keys';
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
  * and mouse movements. It also uses the Win32 API to get the currently focused window.
  */
-export class Win32Backend implements Backend {
+export class WindowsBackend implements Backend {
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
