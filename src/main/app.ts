@@ -540,9 +540,9 @@ export class KandoApp {
       this.window.minimize();
     } else if (process.platform === 'darwin') {
       app.hide();
+    } else {
+      this.window.hide();
     }
-
-    this.window.hide();
   }
 
   /** This creates an example menu which can be used for testing. */
