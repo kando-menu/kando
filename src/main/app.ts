@@ -168,7 +168,6 @@ export class KandoApp {
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
         this.window.show();
-        this.window.restore();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
         // get focus when it is shown. This is a workaround for that issue.
@@ -568,9 +567,9 @@ export class KandoApp {
       this.window.minimize();
     } else if (process.platform === 'darwin') {
       app.hide();
+    } else {
+      this.window.hide();
     }
-
-    this.window.hide();
   }
 
   /** This creates an example menu which can be used for testing. */

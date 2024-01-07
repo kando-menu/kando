@@ -22,13 +22,20 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### Added
+
+- **A new backend for macOS!** This new native backend uses Objective-C++ and supports all required features for Kando. It can be used to synthesize keyboard and mouse events and to get the name and application of the currently focused window. I am still very new to macOS development, so please let me know if you encounter any issues!
+
 #### Changed
 
 - The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
+- The Windows backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
+- On Windows, the menu window is now minimized instead of hidden when the menu is closed. This allows for a smoother transition when opening the menu again.
 
 #### Fixed
 
 - Input focus after closing the menu on Windows. Now, the window which had focus before opening the menu will regain focus. Thanks to [@mmikeww](https://github.com/mmikeww) for this fix!
+- Synthesizing key events on Windows which have _extended scan codes_ like for instance the <kbd>Win</kbd> key.
 - The transition of grandchild nodes in the menu. They are now smoothly faded in and out.
 
 ## [Kando 0.3.0](https://github.com/kando-menu/kando/releases/tag/v0.3.0)
