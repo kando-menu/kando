@@ -71,4 +71,25 @@ const config: ForgeConfig = {
   ],
 };
 
+// If the environment variable KANDO_OSX_SIGN is set, we sign the macOS app. This requires
+// certivicates to be installed on the build machine.
+if (process.env.KANDO_OSX_SIGN === 'true') {
+  if (config.packagerConfig) {
+    config.packagerConfig.osxSign = {};
+  }
+}
+
+// If the environment variable KANDO_OSX_NOTARIZE is set, we notarize the macOS app. This
+// requires your Apple Developer Account ID and an app specific password to be set for
+// your account.
+if (process.env.KANDO_OSX_NOTARIZE === 'true') {
+  if (config.packagerConfig) {
+    config.packagerConfig.osxNotarize = {
+      appleId: process.env.OSX_APP_SPECIFIC_ID || '',
+      appleIdPassword: process.env.OSX_APP_SPECIFIC_PASSWORD || '',
+      teamId: process.env.OSX_TEAM_ID || '',
+    };
+  }
+}
+
 export default config;

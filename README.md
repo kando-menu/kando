@@ -173,8 +173,9 @@ npm run make
 ```
 
 This will create several packages in the `out/` directory.
-On Windows, it will create a squirrel installer and a portable zip archive.
-On Linux, it will create Debian, an RPM and a portable zip archive.
+* On Windows, it will create a Squirrel installer and a portable zip archive.
+* On Linux, it will create Debian, an RPM and a portable zip archive.
+* On macOS, it will create a DMG file and a portable zip archive. If the environment variables `KANDO_OSX_SIGN` and `KANDO_OSX_NOTARIZE` are set to `true`, the build process will try to sign and notarize the application.
 
 # :revolving_hearts: I want to contribute!
 
