@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
 # This script is used to import the codesigning certificate and key into the
 # macOS keychain. It is used by the GitHub Action workflows. It is based on
 # the following article:
