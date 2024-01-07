@@ -15,8 +15,7 @@
 
 /**
  * This class allows moving the mouse pointer, simulating key presses, and getting the
- * active window's name and class. Using Xlib calls, this is pretty straight-forward to
- * implement.
+ * active window's name and app on Windows.
  */
 class Native : public Napi::Addon<Native> {
  public:
