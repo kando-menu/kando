@@ -67,6 +67,18 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
+      - name: Add macOS certificates
+        env:
+          OSX_CERTIFICATE: ${{ secrets.OSX_CERTIFICATE }}
+          OSX_CERTIFICATE_PASSWORD: ${{ secrets.OSX_CERTIFICATE_PASSWORD }}
+        run: |
+          .github/osx_certificates.sh
       - name: Create Release
+        env:
+          KANDO_OSX_SIGN: true
+          KANDO_OSX_NOTARIZE: true
+          OSX_APP_SPECIFIC_ID: ${{ secrets.OSX_APP_SPECIFIC_ID }}
+          OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
+          OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
         run: |
           npm run make
