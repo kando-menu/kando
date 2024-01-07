@@ -14,16 +14,9 @@
 #include <napi.h>
 
 /**
- * This class allows moving the mouse pointer and simulating key presses on Wayland. For
- * this, it uses the virtual-pointer and virtual-keyboard protocols. See index.ts for more
- * information regarding the exposed functions.
- *
- * The sending of key events is a little bit more complicated than I would like it to be.
- * As far as I understand, the virtual-keyboard protocol requires that the client (we)
- * keeps track of the current modifier state. This means, we have to somehow check which
- * scan codes map to which modifier keys and keep track of which modifiers are currently
- * pressed. This is done using the xkbcommon library using the keymap we can get from the
- * real keyboard.
+ * This class allows moving the mouse pointer, simulating key presses, and getting the
+ * active window's name and class. Using Xlib calls, this is pretty straight-forward to
+ * implement.
  */
 class Native : public Napi::Addon<Native> {
  public:
