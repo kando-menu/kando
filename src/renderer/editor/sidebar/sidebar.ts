@@ -115,7 +115,7 @@ export class Sidebar {
                 class: 'col-6',
                 icon: 'keyboard',
                 title: 'Meta',
-                tooltip: 'This will a main menu on many desktop environments.',
+                tooltip: 'This will open a main menu on many desktop environments.',
               },
               {
                 id: 'url-button',
@@ -226,36 +226,68 @@ export class Sidebar {
       window.api.showDevTools();
     });
 
-    const pressKeys = (keys: string[]) => {
-      const keyList = keys.map((key) => ({
-        name: key,
-        down: true,
-        delay: 10,
-      }));
-
-      // Release the keys in reverse order.
-      keyList.push(
-        ...keys
-          .map((key) => ({
-            name: key,
-            down: false,
-            delay: 10,
-          }))
-          .reverse()
-      );
-
-      window.api.simulateKeys(keyList);
-    };
-
-    // Initialize all the example action buttons.
+    // Initialize the switch-to-right workspace button.
     this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
       if (cIsMac) {
-        pressKeys(['ControlLeft', 'ArrowRight']);
+        window.api.simulateKeys([
+          {
+            name: 'ControlLeft',
+            down: true,
+            delay: 100,
+          },
+          {
+            name: 'ArrowRight',
+            down: true,
+            delay: 0,
+          },
+          {
+            name: 'ArrowRight',
+            down: false,
+            delay: 0,
+          },
+          {
+            name: 'ControlLeft',
+            down: false,
+            delay: 0,
+          },
+        ]);
       } else {
-        pressKeys(['ControlLeft', 'AltLeft', 'ArrowRight']);
+        window.api.simulateKeys([
+          {
+            name: 'ControlLeft',
+            down: true,
+            delay: 100,
+          },
+          {
+            name: 'AltLeft',
+            down: true,
+            delay: 0,
+          },
+          {
+            name: 'ArrowRight',
+            down: true,
+            delay: 0,
+          },
+          {
+            name: 'ArrowRight',
+            down: false,
+            delay: 0,
+          },
+          {
+            name: 'AltLeft',
+            down: false,
+            delay: 0,
+          },
+          {
+            name: 'ControlLeft',
+            down: false,
+            delay: 0,
+          },
+        ]);
       }
     });
 
+    // Initialize the alt-tab button.
     this.container.querySelector('#shortcut-button-2').addEventListener('click', () => {
       const modifier = cIsMac ? 'MetaLeft' : 'AltLeft';
       window.api.simulateKeys([
@@ -292,6 +324,7 @@ export class Sidebar {
       ]);
     });
 
+    // Initialize the ctrl-c ctrl-v button.
     this.container.querySelector('#shortcut-button-3').addEventListener('click', () => {
       const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
       window.api.simulateKeys([
@@ -348,6 +381,7 @@ export class Sidebar {
       ]);
     });
 
+    // Initialize the meta button.
     this.container.querySelector('#shortcut-button-4').addEventListener('click', () => {
       window.api.simulateKeys([
         {
