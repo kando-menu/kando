@@ -91,7 +91,11 @@ export class Sidebar {
                 id: 'shortcut-button-1',
                 class: 'col-6',
                 icon: 'keyboard',
-                title: cIsLinux ? 'Ctrl+Alt+Right' : 'Command+Ctrl+Right',
+                title: cIsLinux
+                  ? 'Ctrl+Alt+Right'
+                  : cIsWindows
+                    ? 'Ctrl+Meta+Right'
+                    : 'Command+Ctrl+Right',
                 tooltip: 'This shortcut changes to the next virtual workspace.',
               },
               {
@@ -230,7 +234,7 @@ export class Sidebar {
 
     // Initialize the switch-to-right workspace button.
     this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
-      const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
+      const modifier = cIsLinux ? 'AltLeft' : 'MetaLeft';
       window.api.simulateKeys([
         {
           name: modifier,
@@ -238,7 +242,7 @@ export class Sidebar {
           delay: 100,
         },
         {
-          name: 'AltLeft',
+          name: 'ControlLeft',
           down: true,
           delay: 0,
         },
@@ -253,7 +257,7 @@ export class Sidebar {
           delay: 0,
         },
         {
-          name: 'AltLeft',
+          name: 'ControlLeft',
           down: false,
           delay: 0,
         },
