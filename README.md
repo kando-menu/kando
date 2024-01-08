@@ -41,7 +41,7 @@ You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-
 
 The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
 
-Implementing a menu like Kando is pretty hard on Wayland.
+Implementing a menu like Kando is pretty hard on Linux with Wayland.
 Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not easily possible.
 
 Nevertheless, I have managed to implement the prototype for several Wayland-based desktop environments.
@@ -49,9 +49,8 @@ I have tested it on the following platforms:
 
 Tested Environment | Status | Notes
 :-- | :---: | ---
-<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 10 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows 11 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> MacOS | :x: | Not yet supported, but I plan to add support for it in the future.
+<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows | :heavy_check_mark: | Tested on Windows 11.
+<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> macOS | :heavy_check_mark: | Tested on macOS 11.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
@@ -81,39 +80,68 @@ If you want to test the latest development version of the prototype, you will ha
 You will also need `cmake` for building the native backends.
 Additionally, you will need a C++ toolchain.
 
-### Windows
+---
 
-On Windows, you can install either Visual Studio or run this:
+<details>
+<summary><img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows Dependencies</summary>
+
+On Windows, you can install either Visual Studio or run this to get the build tools:
 
 ```
 npm install -g windows-build-tools
 ```
 
-### Linux
+To get `node` and `npm`, you can follow the [official instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+</details>
+
+---
+
+<details>
+<summary><img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS Dependencies</summary>
+
+On macOS, you will need the Xcode Commandline Tools and CMake.
+The latter can easily be installed with [Homebrew](https://brew.sh/):
+
+```
+brew install cmake
+```
+
+To get `node` and `npm`, you can use [nvm](https://github.com/nvm-sh/nvm).
+
+</details>
+
+---
+
+<details>
+<summary><img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Linux Dependencies</summary>
 
 On Linux, `gcc` should already be installed.
 However, some additional packages may be required for the native backend modules.
 On **Debian-based** distributions you can install them with:
 
 ```
-sudo apt install cmake libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+sudo apt install nodejs cmake libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
 ```
 
 On **Arch-based** distributions you can install them with:
 
 ```
-sudo pacman -S cmake libx11 libxtst wayland libxkbcommon
+sudo pacman -S nodejs npm cmake libx11 libxtst wayland libxkbcommon
 ```
 
 On **RPM-based** distributions you can install them with:
 
 ```
-sudo dnf install cmake libX11-devel libXtst-devel wayland-devel libxkbcommon-devel
+sudo dnf install nodejs cmake libX11-devel libXtst-devel wayland-devel libxkbcommon-devel
 ```
 
 On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
+</details>
 
-## :rocket: Running the Prototype
+---
+
+### :rocket: Running the Prototype
 
 Once these dependencies are installed, only these two commands are required:
 
@@ -124,7 +152,7 @@ npm start
 
 Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to open the test window.
 
-## :package: Creating a Release Executable
+### :package: Creating a Release Executable
 
 To create an executable compiled in release mode, run this: 
 
@@ -135,7 +163,7 @@ npm run package
 
 This will create a directory in the `out/` directory containing the `kando` executable.
 
-## :ship: Creating a Distributable Package
+### :ship: Creating a Distributable Package
 
 To create a distributable archive, just run this:
 
@@ -145,8 +173,9 @@ npm run make
 ```
 
 This will create several packages in the `out/` directory.
-On Windows, it will create a squirrel installer and a portable zip archive.
-On Linux, it will create Debian, an RPM and a portable zip archive.
+* On Windows, it will create a Squirrel installer and a portable zip archive.
+* On Linux, it will create Debian, an RPM and a portable zip archive.
+* On macOS, it will create a DMG file and a portable zip archive. If the environment variables `KANDO_OSX_SIGN` and `KANDO_OSX_NOTARIZE` are set to `true`, the build process will try to sign and notarize the application.
 
 # :revolving_hearts: I want to contribute!
 

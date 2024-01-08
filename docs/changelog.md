@@ -22,6 +22,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### Added
+
+- **A new backend for macOS!** This new native backend uses Objective-C++ and supports all required features for Kando. It can be used to synthesize keyboard and mouse events and to get the name and application of the currently focused window. I am still very new to macOS development, so please let me know if you encounter any issues!
+
 #### Changed
 
 - The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.

@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'node:os';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
 import { exec } from 'child_process';
@@ -87,8 +88,6 @@ export class KandoApp {
 
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
-    this.tray = new Tray(path.join(__dirname, require('../../assets/icons/icon.png')));
-    this.tray.setToolTip('Kando');
     this.updateTrayMenu();
 
     // When the menu settings change, we need to rebind the shortcuts and update the
@@ -141,7 +140,7 @@ export class KandoApp {
         // Later, we will support application-specific menus. For now, we just print
         // the currently focused window.
         if (info.appName) {
-          console.log('Currently focused window: ' + info.appName);
+          console.log(`Currently focused: ${info.appName} (${info.windowName})`);
         } else {
           console.log('Currently no window is focused.');
         }
@@ -199,6 +198,7 @@ export class KandoApp {
       resizable: false,
       skipTaskbar: true,
       frame: false,
+      hasShadow: false,
       x: display.workArea.x,
       y: display.workArea.y,
       width: display.workArea.width + 1,
@@ -206,6 +206,10 @@ export class KandoApp {
       type: this.backend.getWindowType(),
       show: false,
     });
+
+    // We set the window to be always on top. This way, Kando will be visible even on
+    // fullscreen applications.
+    this.window.setAlwaysOnTop(true, 'screen-saver');
 
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
@@ -425,7 +429,9 @@ export class KandoApp {
     // Simulate a key press.
     ipcMain.on('simulate-keys', (event, keys) => {
       this.hideWindow();
-      this.backend.simulateKeys(keys);
+      this.backend.simulateKeys(keys).catch((err) => {
+        this.showError('Failed to simulate keys', err.message);
+      });
     });
   }
 
@@ -452,6 +458,19 @@ export class KandoApp {
 
   /** This updates the menu of the tray icon. It is called when the menu settings change. */
   private updateTrayMenu() {
+    if (!this.tray) {
+      if (os.platform() === 'darwin') {
+        this.tray = new Tray(
+          path.join(__dirname, require('../../assets/icons/trayTemplate.png'))
+        );
+      } else {
+        this.tray = new Tray(
+          path.join(__dirname, require('../../assets/icons/icon.png'))
+        );
+      }
+      this.tray.setToolTip('Kando');
+    }
+
     const template: Array<Electron.MenuItemConstructorOptions> = [];
 
     // Add an entry for each menu.
@@ -511,20 +530,29 @@ export class KandoApp {
     exec(command, (error) => {
       // Print an error if the command fails to start.
       if (error) {
-        console.error('Failed to execute command: ' + error);
-
-        // Show a notification if possible.
-        if (Notification.isSupported()) {
-          const notification = new Notification({
-            title: 'Failed to execute command.',
-            body: error.message,
-            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-          });
-
-          notification.show();
-        }
+        this.showError('Failed to execute command', error.message);
       }
     });
+  }
+
+  /**
+   * This prints an error message to the console and shows a notification if possible.
+   *
+   * @param message The message to show.
+   * @param error The error to show.
+   */
+  private showError(message: string, error: string) {
+    console.error(message + ': ' + error);
+
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: message + '.',
+        body: error,
+        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+      });
+
+      notification.show();
+    }
   }
 
   /**

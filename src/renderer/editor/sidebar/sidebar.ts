@@ -91,17 +91,20 @@ export class Sidebar {
                 id: 'shortcut-button-1',
                 class: 'col-6',
                 icon: 'keyboard',
-                title: 'Ctrl+Alt+Right',
-                tooltip:
-                  'This shortcut changes to the next virtual workspace on some Linux desktops.',
+                title: cIsLinux
+                  ? 'Ctrl+Alt+Right'
+                  : cIsWindows
+                    ? 'Ctrl+Meta+Right'
+                    : 'Command+Ctrl+Right',
+                tooltip: 'This shortcut changes to the next virtual workspace.',
               },
               {
                 id: 'shortcut-button-2',
                 class: 'col-6',
                 icon: 'keyboard',
-                title: 'Alt+Tab',
+                title: cIsMac ? 'Command+Tab' : 'Alt+Tab',
                 tooltip:
-                  'On most desktops this will change the active window. This action uses delays between the individual key press events.',
+                  'This will change the active window. This action uses delays between the individual key press events.',
               },
               {
                 id: 'shortcut-button-3',
@@ -115,8 +118,10 @@ export class Sidebar {
                 id: 'shortcut-button-4',
                 class: 'col-6',
                 icon: 'keyboard',
-                title: 'Meta',
-                tooltip: 'This will a main menu on many desktop environments.',
+                title: cIsMac ? 'Command+Space' : 'Meta',
+                tooltip: cIsMac
+                  ? 'This will open the Spotlight Search.'
+                  : 'This will open a main menu on many desktop environments.',
               },
               {
                 id: 'url-button',
@@ -227,16 +232,17 @@ export class Sidebar {
       window.api.showDevTools();
     });
 
-    // Initialize all the example action buttons.
+    // Initialize the switch-to-right workspace button.
     this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
+      const modifier = cIsLinux ? 'AltLeft' : 'MetaLeft';
       window.api.simulateKeys([
         {
-          name: 'ControlLeft',
+          name: modifier,
           down: true,
           delay: 100,
         },
         {
-          name: 'AltLeft',
+          name: 'ControlLeft',
           down: true,
           delay: 0,
         },
@@ -247,26 +253,28 @@ export class Sidebar {
         },
         {
           name: 'ArrowRight',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: 'AltLeft',
           down: false,
           delay: 0,
         },
         {
           name: 'ControlLeft',
+          down: false,
+          delay: 0,
+        },
+        {
+          name: modifier,
           down: false,
           delay: 0,
         },
       ]);
     });
 
+    // Initialize the alt-tab button.
     this.container.querySelector('#shortcut-button-2').addEventListener('click', () => {
+      const modifier = cIsMac ? 'MetaLeft' : 'AltLeft';
       window.api.simulateKeys([
         {
-          name: 'AltLeft',
+          name: modifier,
           down: true,
           delay: 0,
         },
@@ -291,17 +299,19 @@ export class Sidebar {
           delay: 0,
         },
         {
-          name: 'AltLeft',
+          name: modifier,
           down: false,
           delay: 1000,
         },
       ]);
     });
 
+    // Initialize the ctrl-c ctrl-v button.
     this.container.querySelector('#shortcut-button-3').addEventListener('click', () => {
+      const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
       window.api.simulateKeys([
         {
-          name: 'ControlLeft',
+          name: modifier,
           down: true,
           delay: 100,
         },
@@ -316,7 +326,7 @@ export class Sidebar {
           delay: 0,
         },
         {
-          name: 'ControlLeft',
+          name: modifier,
           down: false,
           delay: 0,
         },
@@ -331,7 +341,7 @@ export class Sidebar {
           delay: 0,
         },
         {
-          name: 'ControlLeft',
+          name: modifier,
           down: true,
           delay: 0,
         },
@@ -346,26 +356,52 @@ export class Sidebar {
           delay: 0,
         },
         {
-          name: 'ControlLeft',
+          name: modifier,
           down: false,
           delay: 0,
         },
       ]);
     });
 
+    // Initialize the meta button.
     this.container.querySelector('#shortcut-button-4').addEventListener('click', () => {
-      window.api.simulateKeys([
-        {
-          name: 'MetaLeft',
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'MetaLeft',
-          down: false,
-          delay: 0,
-        },
-      ]);
+      if (cIsMac) {
+        window.api.simulateKeys([
+          {
+            name: 'MetaLeft',
+            down: true,
+            delay: 0,
+          },
+          {
+            name: 'Space',
+            down: true,
+            delay: 0,
+          },
+          {
+            name: 'Space',
+            down: false,
+            delay: 0,
+          },
+          {
+            name: 'MetaLeft',
+            down: false,
+            delay: 0,
+          },
+        ]);
+      } else {
+        window.api.simulateKeys([
+          {
+            name: 'MetaLeft',
+            down: true,
+            delay: 0,
+          },
+          {
+            name: 'MetaLeft',
+            down: false,
+            delay: 0,
+          },
+        ]);
+      }
     });
 
     this.container.querySelector('#blog-post-button').addEventListener('click', () => {

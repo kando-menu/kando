@@ -70,8 +70,9 @@ export function getBackend(): Backend | null {
   }
 
   if (os.platform() === 'darwin') {
-    console.log('MacOS is not yet supported!');
-    return null;
+    console.log(`Running on MacOS ${os.release()}.`);
+    const { MacosBackend } = require('./macos/backend');
+    return new MacosBackend();
   }
 
   console.log(`Unsupported platform "${os.platform()}"! Kando will not work here :(`);
