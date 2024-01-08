@@ -106,9 +106,6 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
     setOrReleaseBit(mRightModifierMask, kCGEventFlagMaskAlternate, press);
   }
 
-  std::cout << "Simulating key " << keycode << " with mask " << mLeftModifierMask << " / "
-            << mRightModifierMask << std::endl;
-
   // Create a key event.
   CGEventRef event = CGEventCreateKeyboardEvent(nullptr, keycode, press);
   CGEventSetFlags(event, mLeftModifierMask | mRightModifierMask);
