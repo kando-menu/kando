@@ -228,7 +228,7 @@ export class Sidebar {
       window.api.showDevTools();
     });
 
-    // Initialize the switch-to-right workspace button.
+    // Initialize the undo button.
     this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
       const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
       window.api.simulateKeys([
