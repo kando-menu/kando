@@ -31,6 +31,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
 - The Windows backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
 - On Windows, the menu window is now minimized instead of hidden when the menu is closed. This allows for a smoother transition when opening the menu again.
+- Replaced the switch-virtual-desktop example action with a <kbd>Ctrl</kbd>+<kbd>Z</kbd> example action.
 
 #### Fixed
 
