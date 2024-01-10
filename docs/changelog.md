@@ -29,6 +29,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Changed
 
+- When installed, the app is now called "Kando" instead of "kando".
 - The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
 - The Windows backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
 - On Windows, the menu window is now minimized instead of hidden when the menu is closed. This allows for a smoother transition when opening the menu again.
