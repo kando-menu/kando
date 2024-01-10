@@ -15,6 +15,7 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {
     icon: 'assets/icons/icon',
+    executableName: 'kando',
 
     // This makes sure that the app is not shown in the dock on macOS.
     extendInfo: {
@@ -31,7 +32,6 @@ const config: ForgeConfig = {
     new MakerRpm({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
       options: {
-        productName: 'Kando',
         genericName: 'Pie Menu',
         icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
@@ -42,7 +42,6 @@ const config: ForgeConfig = {
     new MakerDeb({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
       options: {
-        productName: 'Kando',
         genericName: 'Pie Menu',
         icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
