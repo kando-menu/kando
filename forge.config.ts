@@ -90,8 +90,8 @@ if (process.env.KANDO_OSX_NOTARIZE === 'true') {
   }
 }
 
-// On Linux, we need to set the executable name to "kando".
-if (process.platform === 'linux') {
+// On Windows and Linux, we need to set the executable name to "kando".
+if (process.platform !== 'darwin') {
   if (config.packagerConfig) {
     config.packagerConfig.executableName = 'kando';
   }
