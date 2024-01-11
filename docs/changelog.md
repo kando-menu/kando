@@ -24,7 +24,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
-- **A new backend for macOS!** This new native backend uses Objective-C++ and supports all required features for Kando. It can be used to synthesize keyboard and mouse events and to get the name and application of the currently focused window. I am still very new to macOS development, so please let me know if you encounter any issues!
+- **A new backend for macOS!**
+  - This new native backend uses Objective-C++ and supports all required features for Kando. It can be used to synthesize keyboard and mouse events and to get the name and application of the currently focused window.
+  - There are signed and notarized binaries for x86_64 and arm64 available on the [releases page](https://github.com/kando-menu/kando/releases). For now, I cannot test the arm64 version, so please let me know if it works for you!
+  - I am still very new to macOS development, so please let me know if you encounter any issues!
 - CodeQL analysis. This is a static analysis tool which is used to find bugs and security vulnerabilities in the code. It is now integrated into the CI pipeline and will run on every commit.
 
 #### Changed

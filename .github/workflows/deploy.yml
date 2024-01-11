@@ -99,7 +99,8 @@ jobs:
           OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
           OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
         run: |
-          npm run make
+          npm run make -- --arch=x64
+          npm run make -- --arch=arm64
       - name: Upload DMG
         uses: svenstaro/upload-release-action@v2
         with:
@@ -109,6 +110,6 @@ jobs:
       - name: Upload Zip
         uses: svenstaro/upload-release-action@v2
         with:
-          file: out/make/zip/darwin/x64/*
+          file: out/make/zip/darwin/**/*.zip
           tag: ${{ github.ref }}
           file_glob: true
