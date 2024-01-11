@@ -39,7 +39,6 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Input focus after closing the menu on Windows. Now, the window which had focus before opening the menu will regain focus. Thanks to [@mmikeww](https://github.com/mmikeww) for this fix!
 - Synthesizing key events on Windows which have _extended scan codes_ like for instance the <kbd>Win</kbd> key.
-- The transition of grandchild nodes in the menu. They are now smoothly faded in and out.
 
 ## [Kando 0.3.0](https://github.com/kando-menu/kando/releases/tag/v0.3.0)
 
