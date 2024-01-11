@@ -470,8 +470,8 @@ export class Menu extends EventEmitter {
       const clampedPosition = this.clampToMonitor(position, 10);
 
       const offset = {
-        x: clampedPosition.x - position.x,
-        y: clampedPosition.y - position.y,
+        x: Math.trunc(clampedPosition.x - position.x),
+        y: Math.trunc(clampedPosition.y - position.y),
       };
 
       if (offset.x !== 0 || offset.y !== 0) {
