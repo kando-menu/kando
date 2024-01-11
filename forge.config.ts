@@ -15,7 +15,6 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {
     icon: 'assets/icons/icon',
-    executableName: 'kando',
 
     // This makes sure that the app is not shown in the dock on macOS.
     extendInfo: {
@@ -88,6 +87,13 @@ if (process.env.KANDO_OSX_NOTARIZE === 'true') {
       appleIdPassword: process.env.OSX_APP_SPECIFIC_PASSWORD || '',
       teamId: process.env.OSX_TEAM_ID || '',
     };
+  }
+}
+
+// On Windows and Linux, we need to set the executable name to "kando".
+if (process.platform !== 'darwin') {
+  if (config.packagerConfig) {
+    config.packagerConfig.executableName = 'kando';
   }
 }
 
