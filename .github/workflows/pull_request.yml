@@ -69,7 +69,7 @@ jobs:
           npm install
       - name: Create x64 Release
         run: |
-          npm run make
+          npm run make -- --arch=x64
       - name: Create arm64 Release
         run: |
-          npm run make -- --arch=x64
+          npm run make -- --arch=arm64
