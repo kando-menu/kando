@@ -54,6 +54,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-11, macos-13-xlarge]
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: write
     steps:
