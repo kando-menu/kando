@@ -69,7 +69,10 @@ jobs:
 
   macos:
     name: Deploy for macOS
-    runs-on: macos-11
+    strategy:
+      matrix:
+        os: [macos-11, macos-13-xlarge]
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: write
     steps:
@@ -99,8 +102,7 @@ jobs:
           OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
           OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
         run: |
-          npm run make -- --arch=x64
-          npm run make -- --arch=arm64
+          npm run make
       - name: Upload DMG
         uses: svenstaro/upload-release-action@v2
         with:
