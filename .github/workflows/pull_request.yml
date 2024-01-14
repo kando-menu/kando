@@ -51,10 +51,7 @@ jobs:
 
   macos:
     name: Test Deploy for macOS
-    strategy:
-      matrix:
-        os: [macos-11, macos-13-xlarge]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-11
     permissions:
       contents: write
     steps:
