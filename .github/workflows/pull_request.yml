@@ -51,7 +51,9 @@ jobs:
 
   macos:
     name: Test Deploy for macOS
-    runs-on: macos-11
+    strategy:
+      matrix:
+        os: [macos-11, macos-13-xlarge]
     permissions:
       contents: write
     steps:
@@ -67,9 +69,6 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-      - name: Create x64 Release
+      - name: Create Release
         run: |
-          npm run make -- --arch=x64
-      - name: Create arm64 Release
-        run: |
-          npm run make -- --arch=arm64
+          npm run make
