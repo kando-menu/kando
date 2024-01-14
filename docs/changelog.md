@@ -17,6 +17,15 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## Kando 0.4.1 [Unreleased]
+
+**Release Date:** TBD
+
+#### Fixed
+
+- The macOS M1 binaries are now created on one of GitHub's [large macOS runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/about-larger-runners) which run on actual M1 hardware. This should fix the issue where the arm64 binaries did not work on M1 Macs.
+
+
 ## [Kando 0.4.0](https://github.com/kando-menu/kando/releases/tag/v0.4.0)
 
 <a href="https://www.youtube.com/watch?v=GdbM-YxesC8">
