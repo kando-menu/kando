@@ -447,7 +447,7 @@ export class KandoApp {
     for (const menu of this.menuSettings.get('menus')) {
       await this.backend.bindShortcut({
         id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
-        description: `Trigger the Kando's ${menu.nodes.name} menu`,
+        description: `Kando - ${menu.nodes.name}`,
         accelerator: menu.shortcut,
         action: () => {
           this.showMenu(menu);
