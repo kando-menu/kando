@@ -254,16 +254,20 @@ export class KDEWaylandBackend implements Backend {
     const script = this.shortcuts
       .map((shortcut) => {
         const accelerator = this.toKWinAccelerator(shortcut.accelerator);
+        const id = shortcut.id.replace(/'/g, "\\'");
+        const description = shortcut.description.replace(/'/g, "\\'");
         return `
-          if(registerShortcut('${shortcut.id}', '${shortcut.description}', '${accelerator}',
+          if(registerShortcut('${id}', '${description}', '${accelerator}',
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
-                       'org.kandomenu.kando', 'Trigger', '${shortcut.id}',
+                       'org.kandomenu.kando', 'Trigger', '${id}',
                        () => console.log('Kando: Triggered.'));
             }
           )) {
-            console.log('Kando: Registered shortcut ${accelerator}')
+            console.log('Kando: Registered shortcut ${accelerator}');
+          } else {
+            console.log('Kando: Failed to registered shortcut ${accelerator}');
           }
         `;
       })
