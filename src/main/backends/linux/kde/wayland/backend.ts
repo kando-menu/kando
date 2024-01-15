@@ -93,8 +93,8 @@ export class KDEWaylandBackend implements Backend {
       'get-info.js',
       `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
                'org.kandomenu.kando', 'SendWMInfo',
-               workspace.activeClient.caption,
-               workspace.activeClient.resourceClass,
+               workspace.activeClient ? workspace.activeClient.caption : "",
+               workspace.activeClient ? workspace.activeClient.resourceClass : "",
                workspace.cursorPos.x, workspace.cursorPos.y,
                () => {
                  console.log('Kando: Successfully transmitted the data.');
