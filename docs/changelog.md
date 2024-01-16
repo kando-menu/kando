@@ -23,7 +23,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Fixed
 
-- Global shortcuts on KDE Wayland.
+- Global shortcuts on KDE Wayland which were broken due to a regression.
+- Opening the menu on KDE Wayland when no window was focused.
 
 ## [Kando 0.4.1](https://github.com/kando-menu/kando/releases/tag/v0.4.1)
 
