@@ -17,6 +17,15 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Fixed
+
+- Global shortcuts on KDE Wayland which were broken due to a regression.
+- Opening the menu on KDE Wayland when no window was focused.
+
 ## [Kando 0.4.1](https://github.com/kando-menu/kando/releases/tag/v0.4.1)
 
 **Release Date:** 2024-01-15
