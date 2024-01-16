@@ -57,4 +57,4 @@ When a new version is released, this section will be marked as released and a ta
 [Github Actions](https://github.com/kando-menu/kando/actions) are used for continuous integration.
 * For **each commit**, several checks are performed. These include code formatting, linting, [REUSE](https://reuse.software/) compliance and unit tests.
 * For **pull requests**, it is checked in addition that the application can be packaged for Linux and Windows.
-* When a **new tag** is created, the application is packaged for Linux and Windows and uploaded to the [releases page](https://github.com/kando-menu/kando/releases).
+* When a **new tag** is created, the application is packaged for Linux, macOS, and Windows and uploaded to the [releases page](https://github.com/kando-menu/kando/releases).
