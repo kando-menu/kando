@@ -188,7 +188,7 @@ This will create several packages in the `out/` directory.
 That's great!
 If you like the idea of Kando, you can help in many ways:
 * **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions).
-* **Spread the word!** Tell your friends about Kando and share this post on social media.
+* **Spread the word!** Tell your friends about Kando and share the project on social media.
 * **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement. Please read the [contributing guidelines](docs/contributing.md) for more information!
 
 While direct contributions are the most awesome way to support the development, donations will encourage me to invest my spare time for developing free and open-source software.
