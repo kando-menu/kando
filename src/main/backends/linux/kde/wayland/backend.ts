@@ -93,8 +93,8 @@ export class KDEWaylandBackend implements Backend {
       'get-info.js',
       `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
                'org.kandomenu.kando', 'SendWMInfo',
-               workspace.activeClient.caption,
-               workspace.activeClient.resourceClass,
+               workspace.activeClient ? workspace.activeClient.caption : "",
+               workspace.activeClient ? workspace.activeClient.resourceClass : "",
                workspace.cursorPos.x, workspace.cursorPos.y,
                () => {
                  console.log('Kando: Successfully transmitted the data.');
@@ -254,16 +254,23 @@ export class KDEWaylandBackend implements Backend {
     const script = this.shortcuts
       .map((shortcut) => {
         const accelerator = this.toKWinAccelerator(shortcut.accelerator);
+
+        // Escape any ' or \ in the ID or description.
+        const id = this.escapeString(shortcut.id);
+        const description = this.escapeString(shortcut.description);
+
         return `
-          if(registerShortcut('${shortcut.id}', '${shortcut.description}', '${accelerator}',
+          if(registerShortcut('${id}', '${description}', '${accelerator}',
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
-                       'org.kandomenu.kando', 'Trigger', '${shortcut.id}',
+                       'org.kandomenu.kando', 'Trigger', '${id}',
                        () => console.log('Kando: Triggered.'));
             }
           )) {
-            console.log('Kando: Registered shortcut ${accelerator}')
+            console.log('Kando: Registered shortcut ${accelerator}');
+          } else {
+            console.log('Kando: Failed to registered shortcut ${accelerator}');
           }
         `;
       })
@@ -345,6 +352,16 @@ export class KDEWaylandBackend implements Backend {
     shortcut = shortcut.replace('Cmd+', 'Ctrl+');
 
     return shortcut;
+  }
+
+  /**
+   * Escapes a string so that it can be used in a JavaScript string.
+   *
+   * @param str The string to escape.
+   * @returns The escaped string.
+   */
+  private escapeString(str: string): string {
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   }
 }
 
