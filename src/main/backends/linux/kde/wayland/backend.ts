@@ -254,8 +254,11 @@ export class KDEWaylandBackend implements Backend {
     const script = this.shortcuts
       .map((shortcut) => {
         const accelerator = this.toKWinAccelerator(shortcut.accelerator);
-        const id = shortcut.id.replace(/'/g, "\\'");
-        const description = shortcut.description.replace(/'/g, "\\'");
+
+        // Escape any ' or \ in the ID or description.
+        const id = this.escapeString(shortcut.id);
+        const description = this.escapeString(shortcut.description);
+
         return `
           if(registerShortcut('${id}', '${description}', '${accelerator}',
             () => {
@@ -349,6 +352,16 @@ export class KDEWaylandBackend implements Backend {
     shortcut = shortcut.replace('Cmd+', 'Ctrl+');
 
     return shortcut;
+  }
+
+  /**
+   * Escapes a string so that it can be used in a JavaScript string.
+   *
+   * @param str The string to escape.
+   * @returns The escaped string.
+   */
+  private escapeString(str: string): string {
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   }
 }
 
