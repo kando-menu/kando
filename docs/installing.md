@@ -45,7 +45,7 @@ To get `node` and `npm`, you can use [nvm](https://github.com/nvm-sh/nvm).
 ---
 
 <details>
-<summary><img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Linux Dependencies</summary>
+<summary><img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux Dependencies</summary>
 
 On Linux, `gcc` should already be installed.
 However, some additional packages may be required for the native backend modules.
