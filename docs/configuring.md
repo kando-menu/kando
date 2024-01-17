@@ -7,6 +7,11 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Configuring Kando
 
+> [!WARNING]
+> This project is currently in a very early stage of development. There is not yet a graphical configuration tool and the configuration file format is not yet stable. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans)!
+
+<p align="center"><img src ="img/hr.svg" /></p>
+
 <p align="center">
   <img src="img/nav-space.svg"/>
   <a href="installing.md"><img src ="img/left-arrow.png"/> Building Kando</a>
