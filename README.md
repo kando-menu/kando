@@ -70,7 +70,7 @@ Tested Environment | Status | Notes
 
 # :package: Installation
 
-You can either [:arrow_down: download a pre-built package](https://github.com/kando-menu/kando/releases) from the releases page or [:rocket: build the prototype yourself](docs/installing.md).
+You can either [:arrow_down: download a pre-built package](https://github.com/kando-menu/kando/releases) from the releases page or [:rocket: compile Kando yourself](docs/installing.md).
 With a pre-built package, you can just run the executable; no installation is required.
 
 > [!IMPORTANT]
