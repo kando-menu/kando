@@ -17,7 +17,6 @@ SPDX-License-Identifier: CC-BY-4.0
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
 [![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
 [![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
-[![license](https://img.shields.io/badge/License-MIT-blue.svg?labelColor=303030)](LICENSE.md)
 
 **Kando** will be a pie menu for the desktop.
 It will be highly customizable and will allow you to create your own menus and actions.
