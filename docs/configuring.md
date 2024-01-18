@@ -85,6 +85,7 @@ Property | Default Value | Description
 #### Node Types
 
 For now, the `type` property of a node can be one of the following values.
+New types will be added in the future.
 
 **`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the node must contain a list of child nodes.
 
