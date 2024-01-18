@@ -30,6 +30,16 @@ export function getDistance(vec1: IVec2, vec2: IVec2): number {
   return getLength({ x: vec1.x - vec2.x, y: vec1.y - vec2.y });
 }
 
+/** This adds two IVec2 together. */
+export function add(vec1: IVec2, vec2: IVec2): IVec2 {
+  return { x: vec1.x + vec2.x, y: vec1.y + vec2.y };
+}
+
+/** This subtracts vec2 from vec1. */
+export function subtract(vec1: IVec2, vec2: IVec2): IVec2 {
+  return { x: vec1.x - vec2.x, y: vec1.y - vec2.y };
+}
+
 /**
  * This method returns the angle of the given vector in degrees. 0° is on the right, 90°
  * is on the bottom, 180° is on the left and 270° is on the top. The vector does not need
