@@ -11,7 +11,13 @@
 import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
-/** This class is responsible for the toolbar on the bottom of the editor screen. */
+/**
+ * This class is responsible for the toolbar on the bottom of the editor screen. It is an
+ * event emitter which emits the following events:
+ *
+ * - 'enter-edit-mode': This event is emitted when the user enters edit mode.
+ * - 'leave-edit-mode': This event is emitted when the user leaves edit mode.
+ */
 export class Toolbar extends EventEmitter {
   // The container is the HTML element which contains the toolbar. It is created in the
   // constructor and returned by the getContainer() method.
@@ -24,7 +30,18 @@ export class Toolbar extends EventEmitter {
   constructor() {
     super();
 
-    // Load all the required templates.
+    this.loadContent();
+    this.initVisibility();
+    this.initTabs();
+  }
+
+  /** This method returns the container of the editor toolbar. */
+  public getContainer(): HTMLElement {
+    return this.container;
+  }
+
+  /** This method loads the HTML content of the toolbar. */
+  private loadContent() {
     const empty = Handlebars.compile(require('./templates/empty-tab.hbs').default);
     const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
 
@@ -93,8 +110,13 @@ export class Toolbar extends EventEmitter {
         },
       ],
     });
+  }
 
-    // Wire up the buttons.
+  /**
+   * There are two buttons in the toolbar which are used to enter and leave edit mode.
+   * This method wires up the functionality of these buttons.
+   */
+  private initVisibility() {
     this.container
       .querySelector('#enter-edit-mode-button')
       .addEventListener('click', () => this.emit('enter-edit-mode'));
@@ -102,8 +124,13 @@ export class Toolbar extends EventEmitter {
     this.container
       .querySelector('#leave-edit-mode-button')
       .addEventListener('click', () => this.emit('leave-edit-mode'));
+  }
 
-    // Some of the tabs should cover the entire editor.
+  /**
+   * Some of the tabs should cover the entire editor. This method wires up the
+   * functionality which makes this possible.
+   */
+  private initTabs() {
     const tabs = [
       { id: 'kando-menus-tab', large: false },
       { id: 'kando-add-items-tab', large: false },
@@ -125,10 +152,5 @@ export class Toolbar extends EventEmitter {
         }
       });
     }
-  }
-
-  /** This method returns the container of the editor toolbar. */
-  public getContainer(): HTMLElement {
-    return this.container;
   }
 }

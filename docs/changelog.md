@@ -25,6 +25,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
 
+#### Changed
+
+- Some parts of the rendering code have been refactored. This should not change anything for the user, but it makes the code more readable and maintainable.
+
 #### Fixed
 
 - Global shortcuts on KDE Wayland which were broken due to a regression.

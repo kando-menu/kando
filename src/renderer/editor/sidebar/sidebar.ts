@@ -37,11 +37,47 @@ export class Sidebar {
    * functionality.
    */
   constructor() {
-    // Load all the required templates.
+    this.loadContent();
+    this.initVisibility();
+    this.initTutorialVideos();
+    this.initExampleActions();
+  }
+
+  /**
+   * This method sets the visibility of the sidebar. If saveState is true, the new state
+   * will be saved to the app settings.
+   *
+   * @param visible Whether the sidebar should be visible.
+   */
+  public setVisibility(visible: boolean) {
+    if (this.visible !== visible) {
+      if (visible) {
+        this.container.querySelector('#kando-editor-sidebar').classList.add('visible');
+        this.container.querySelector('#hide-sidebar-button').classList.add('visible');
+        this.container.querySelector('#show-sidebar-button').classList.remove('visible');
+      } else {
+        this.container.querySelector('#kando-editor-sidebar').classList.remove('visible');
+        this.container.querySelector('#hide-sidebar-button').classList.remove('visible');
+        this.container.querySelector('#show-sidebar-button').classList.add('visible');
+      }
+
+      this.visible = visible;
+      window.api.appSettings.set('sidebarVisible', visible);
+    }
+  }
+
+  /** This method returns the container of the sidebar. */
+  public getContainer(): HTMLElement {
+    return this.container;
+  }
+
+  /** This method loads the HTML content of the sidebar. */
+  private loadContent() {
     const tutorial = Handlebars.compile(require('./templates/tutorial-tab.hbs').default);
     const buttonTab = Handlebars.compile(require('./templates/button-tab.hbs').default);
     const sidebar = Handlebars.compile(require('./templates/sidebar.hbs').default);
 
+    // Initialize the sidebar content.
     this.container = document.createElement('div');
     this.container.innerHTML = sidebar({
       tabs: [
@@ -162,12 +198,19 @@ export class Sidebar {
         },
       ],
     });
+  }
 
-    // Add functionality to show and hide the sidebar.
+  /**
+   * This method initializes the visibility of the sidebar. There's a button to show the
+   * sidebar, a button to hide it and the visibility is also stored in the app settings.
+   */
+  private initVisibility() {
+    // Add functionality to show the sidebar.
     this.container
       .querySelector('#show-sidebar-button')
       .addEventListener('click', () => this.setVisibility(true));
 
+    // Add functionality to hide the sidebar.
     this.container
       .querySelector('#hide-sidebar-button')
       .addEventListener('click', () => this.setVisibility(false));
@@ -181,7 +224,15 @@ export class Sidebar {
     window.api.appSettings.get('sidebarVisible').then((visible) => {
       this.setVisibility(visible);
     });
+  }
 
+  /**
+   * This method initializes the tutorial videos. The videos are loaded from the assets
+   * folder and played when the tutorial tab is shown. When the tab is hidden, the last
+   * visible video is paused. Also, only the video of the currently visible slide is
+   * played.
+   */
+  private initTutorialVideos() {
     // Add the tutorial videos. We do this here because else webpack will not pick them up.
     this.container.querySelector('#sidebar-tab-tutorial').addEventListener(
       'show.bs.collapse',
@@ -222,12 +273,13 @@ export class Sidebar {
 
         this.lastVisibleVideo = e.to;
       });
+  }
 
-    // Show the dev tools if the button is clicked.
-    this.container.querySelector('#dev-tools-button').addEventListener('click', () => {
-      window.api.showDevTools();
-    });
-
+  /**
+   * This method initializes the example actions. These are buttons which show what the
+   * menu could do in the future.
+   */
+  private initExampleActions() {
     // Initialize the undo button.
     this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
       const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
@@ -390,10 +442,6 @@ export class Sidebar {
       }
     });
 
-    this.container.querySelector('#blog-post-button').addEventListener('click', () => {
-      window.api.openURI('https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8');
-    });
-
     this.container.querySelector('#url-button').addEventListener('click', () => {
       window.api.openURI('https://github.com/kando-menu/kando');
     });
@@ -424,33 +472,16 @@ export class Sidebar {
           runCommand();
         }
       });
-  }
 
-  /**
-   * This method sets the visibility of the sidebar. If saveState is true, the new state
-   * will be saved to the app settings.
-   *
-   * @param visible Whether the sidebar should be visible.
-   */
-  public setVisibility(visible: boolean) {
-    if (this.visible !== visible) {
-      if (visible) {
-        this.container.querySelector('#kando-editor-sidebar').classList.add('visible');
-        this.container.querySelector('#hide-sidebar-button').classList.add('visible');
-        this.container.querySelector('#show-sidebar-button').classList.remove('visible');
-      } else {
-        this.container.querySelector('#kando-editor-sidebar').classList.remove('visible');
-        this.container.querySelector('#hide-sidebar-button').classList.remove('visible');
-        this.container.querySelector('#show-sidebar-button').classList.add('visible');
-      }
+    // Show the dev tools if the button is clicked.
+    this.container.querySelector('#dev-tools-button').addEventListener('click', () => {
+      window.api.showDevTools();
+    });
 
-      this.visible = visible;
-      window.api.appSettings.set('sidebarVisible', visible);
-    }
-  }
-
-  /** This method returns the container of the sidebar. */
-  public getContainer(): HTMLElement {
-    return this.container;
+    // Currently, there is also a blog post button which links to the blog post about the
+    // editor mockups. This will be removed in the future.
+    this.container.querySelector('#blog-post-button').addEventListener('click', () => {
+      window.api.openURI('https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8');
+    });
   }
 }
