@@ -47,6 +47,10 @@ export class Preview extends EventEmitter {
   // the preview and its properties are drawn in the property editor on the right.
   private activeNode?: IEditorNode = null;
 
+  // This is the threshold in pixels which is used to differentiate between a click
+  // and a drag.
+  private readonly DRAG_THRESHOLD = 5;
+
   /**
    * This constructor creates the HTML elements for the menu preview and wires up all the
    * functionality.
@@ -164,21 +168,14 @@ export class Preview extends EventEmitter {
     // Make the center item selectable.
     centerItem.itemDiv.addEventListener('click', () => this.selectNode(centerItem));
 
-    // Add the children of the currently selected menu in a circle around the center.
+    // Add the children of the currently selected menu.
     if (centerItem.children?.length > 0) {
       centerItem.children.forEach((c) => {
         const child = c as IEditorNode;
 
-        // Compute the direction towards the child.
-        const position = math.getDirection(child.angle - 90, 1.0);
-
-        // Create a div for the child and set the CSS variables for the position and
-        // rotation.
+        // Create a div for the child.
         child.itemDiv = document.createElement('div');
         child.itemDiv.classList.add('kando-menu-preview-child');
-        child.itemDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
-        child.itemDiv.style.setProperty('--dir-x', position.x + '');
-        child.itemDiv.style.setProperty('--dir-y', position.y + '');
         container.appendChild(child.itemDiv);
 
         // If the child is selected, push its index to the selection chain.
@@ -193,10 +190,9 @@ export class Preview extends EventEmitter {
           grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
           child.itemDiv.appendChild(grandChildContainer);
 
-          child.children.forEach((grandChild) => {
+          child.children.forEach(() => {
             const grandChildDiv = document.createElement('div');
             grandChildDiv.classList.add('kando-menu-preview-grandchild');
-            grandChildDiv.style.setProperty('--rotation', grandChild.angle - 90 + 'deg');
             grandChildContainer.appendChild(grandChildDiv);
           });
         }
@@ -205,15 +201,6 @@ export class Preview extends EventEmitter {
         // item. The label shows a connector line to the child div.
         const labelDivContainer = document.createElement('div');
         labelDivContainer.classList.add('kando-menu-preview-label-container');
-        labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
-        child.itemDiv.style.setProperty('--dir-x', position.x + '');
-        child.itemDiv.style.setProperty('--dir-y', position.y + '');
-
-        if (position.x < -0.001) labelDivContainer.classList.add('left');
-        else if (position.x > 0.001) labelDivContainer.classList.add('right');
-        else if (position.y < 0) labelDivContainer.classList.add('top');
-        else labelDivContainer.classList.add('bottom');
-
         child.itemDiv.appendChild(labelDivContainer);
 
         // The actual label is in a nested div. This is used to ellipsize the text if
@@ -224,6 +211,41 @@ export class Preview extends EventEmitter {
         labelDiv.classList.add('fs-3');
         labelDiv.textContent = child.name;
         labelDivContainer.appendChild(labelDiv);
+
+        // Make the child draggable.
+        child.itemDiv.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const dragStart = { x: e.clientX, y: e.clientY };
+
+          const onMouseMove = (e2: MouseEvent) => {
+            e2.preventDefault();
+            e2.stopPropagation();
+
+            const dragCurrent = { x: e2.clientX, y: e2.clientY };
+            const offset = math.subtract(dragCurrent, dragStart);
+
+            if (math.getLength(offset) > this.DRAG_THRESHOLD) {
+              child.itemDiv.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(0.9)`;
+              child.itemDiv.classList.add('dragging');
+            }
+          };
+
+          const onMouseUp = (e2: MouseEvent) => {
+            e2.preventDefault();
+            e2.stopPropagation();
+
+            child.itemDiv.style.transform = '';
+            child.itemDiv.classList.remove('dragging');
+
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+          };
+
+          window.addEventListener('mousemove', onMouseMove);
+          window.addEventListener('mouseup', onMouseUp);
+        });
       });
     }
 
@@ -245,8 +267,11 @@ export class Preview extends EventEmitter {
       backDiv.addEventListener('click', () => this.selectNode(parent));
     }
 
-    // Finally, we fade in all menu items.
-    setTimeout(() => container.classList.add('visible'), 0);
+    // Now we update the angles of all children.
+    this.updateItemAngles();
+
+    // Finally, we fade in all menu items with a little delay.
+    setTimeout(() => container.classList.add('visible'), 50);
   }
 
   /**
@@ -265,6 +290,59 @@ export class Preview extends EventEmitter {
 
       breadcrumb.addEventListener('click', () => this.selectNode(node));
     });
+  }
+
+  private updateItemAngles() {
+    // This node is drawn in the center of the preview.
+    const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+    // Add the children of the currently selected menu in a circle around the center.
+    if (centerItem.children?.length > 0) {
+      centerItem.children.forEach((c) => {
+        const child = c as IEditorNode;
+
+        // Compute the direction towards the child.
+        const position = math.getDirection(child.angle - 90, 1.0);
+
+        // Set the CSS variables for the position and
+        // rotation.
+        child.itemDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        child.itemDiv.style.setProperty('--dir-x', position.x + '');
+        child.itemDiv.style.setProperty('--dir-y', position.y + '');
+
+        const labelDivContainer = child.itemDiv.querySelector(
+          '.kando-menu-preview-label-container'
+        ) as HTMLElement;
+
+        labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
+
+        // Remove all previous position classes.
+        labelDivContainer.classList.remove('left');
+        labelDivContainer.classList.remove('right');
+        labelDivContainer.classList.remove('top');
+        labelDivContainer.classList.remove('bottom');
+
+        // Add the correct position class.
+        if (position.x < -0.001) labelDivContainer.classList.add('left');
+        else if (position.x > 0.001) labelDivContainer.classList.add('right');
+        else if (position.y < 0) labelDivContainer.classList.add('top');
+        else labelDivContainer.classList.add('bottom');
+
+        // If the child has children, we add little grandchild divs to the child div.
+        if (child.children?.length > 0) {
+          const grandChildrenDivs = child.itemDiv.querySelectorAll(
+            '.kando-menu-preview-grandchild'
+          ) as NodeListOf<HTMLElement>;
+
+          child.children.forEach((grandChild, i) => {
+            grandChildrenDivs[i].style.setProperty(
+              '--rotation',
+              grandChild.angle - 90 + 'deg'
+            );
+          });
+        }
+      });
+    }
   }
 
   /**
