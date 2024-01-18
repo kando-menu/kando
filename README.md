@@ -73,9 +73,17 @@ You can either [:arrow_down: download a pre-built package](https://github.com/ka
 With a pre-built package, you can just run the executable; no installation is required.
 
 > [!IMPORTANT]
-> If you are using GNOME under Wayland, you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration)!
+> If you are using GNOME under Wayland, you will also need to install the [:shell: adapter extension](https://github.com/kando-menu/gnome-shell-integration)!
 
 Manual compilation is only required if you want to test the latest development version of the prototype or if you want to contribute to the project.
+
+# :rocket: Getting Started
+
+For now, the prototype only comes with an example menu which does not do anything useful.
+However, if you want to get your hands dirty, you can already **create custom menus and actions by editing the config files**!
+This way, the prototype can do something useful already.
+You can read more about this in the [:memo: documentation](docs/configuring.md).
+
 
 # :revolving_hearts: I want to contribute!
 
