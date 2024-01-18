@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### Added
+
+- Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
+
 #### Fixed
 
 - Global shortcuts on KDE Wayland which were broken due to a regression.
