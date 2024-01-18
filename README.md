@@ -13,8 +13,10 @@ SPDX-License-Identifier: CC-BY-4.0
 
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
 [![codeql](https://github.com/kando-menu/kando/workflows/CodeQL/badge.svg)](https://github.com/kando-menu/kando/actions)
-[![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
+[![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
+[![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
+[![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
 [![license](https://img.shields.io/badge/License-MIT-blue.svg?labelColor=303030)](LICENSE.md)
 
 **Kando** will be a pie menu for the desktop.
@@ -33,8 +35,6 @@ This is why I started this project.
 At the same time, there will be some major differences.
 You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!**
 
-# The Prototype
-
 <p align="center">
   <img src="docs/img/kando.gif"/>
 </p>
@@ -42,11 +42,12 @@ You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-
 
 The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
 
-Implementing a menu like Kando is pretty hard on Linux with Wayland.
-Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window is not easily possible.
+# Platform Support
 
-Nevertheless, I have managed to implement the prototype for several Wayland-based desktop environments.
-I have tested it on the following platforms:
+Implementing a menu like Kando in a cross-platform manner is not exactly easy.
+Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window has to be implemented differently on each platform.
+
+For now, I have tested Kando on the following platforms:
 
 Tested Environment | Status | Notes
 :-- | :---: | ---
@@ -67,116 +68,15 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> i3 | :heavy_check_mark: | Requires a compositor for the transparency to work.
 
 
-# :arrow_down: Installation
+# :package: Installation
 
-You can either [download a pre-built package from the releases page](https://github.com/kando-menu/kando/releases) or build the prototype yourself.
+You can either [:arrow_down: download a pre-built package](https://github.com/kando-menu/kando/releases) from the releases page or [:rocket: compile Kando yourself](docs/installing.md).
 With a pre-built package, you can just run the executable; no installation is required.
 
 > [!IMPORTANT]
 > If you are using GNOME under Wayland, you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration)!
 
-## Manual Compilation
-
-If you want to test the latest development version of the prototype, you will have to install `node` and `npm`.
-You will also need `cmake` for building the native backends.
-Additionally, you will need a C++ toolchain.
-
----
-
-<details>
-<summary><img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows Dependencies</summary>
-
-On Windows, you can install either Visual Studio or run this to get the build tools:
-
-```
-npm install -g windows-build-tools
-```
-
-To get `node` and `npm`, you can follow the [official instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
-
-</details>
-
----
-
-<details>
-<summary><img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS Dependencies</summary>
-
-On macOS, you will need the Xcode Commandline Tools and CMake.
-The latter can easily be installed with [Homebrew](https://brew.sh/):
-
-```
-brew install cmake
-```
-
-To get `node` and `npm`, you can use [nvm](https://github.com/nvm-sh/nvm).
-
-</details>
-
----
-
-<details>
-<summary><img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Linux Dependencies</summary>
-
-On Linux, `gcc` should already be installed.
-However, some additional packages may be required for the native backend modules.
-On **Debian-based** distributions you can install them with:
-
-```
-sudo apt install nodejs cmake libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
-```
-
-On **Arch-based** distributions you can install them with:
-
-```
-sudo pacman -S nodejs npm cmake libx11 libxtst wayland libxkbcommon
-```
-
-On **RPM-based** distributions you can install them with:
-
-```
-sudo dnf install nodejs cmake libX11-devel libXtst-devel wayland-devel libxkbcommon-devel
-```
-
-On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
-</details>
-
----
-
-### :rocket: Running the Prototype
-
-Once these dependencies are installed, only these two commands are required:
-
-```
-npm install
-npm start
-```
-
-Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to open the test window.
-
-### :package: Creating a Release Executable
-
-To create an executable compiled in release mode, run this: 
-
-```
-npm install
-npm run package
-```
-
-This will create a directory in the `out/` directory containing the `kando` executable.
-
-### :ship: Creating a Distributable Package
-
-To create a distributable archive, just run this:
-
-```
-npm install
-npm run make
-```
-
-This will create several packages in the `out/` directory.
-* On Windows, it will create a Squirrel installer and a portable zip archive.
-* On Linux, it will create Debian, an RPM and a portable zip archive.
-* On macOS, it will create a DMG file and a portable zip archive. If the environment variables `KANDO_OSX_SIGN` and `KANDO_OSX_NOTARIZE` are set to `true`, the build process will try to sign and notarize the application.
+Manual compilation is only required if you want to test the latest development version of the prototype or if you want to contribute to the project.
 
 # :revolving_hearts: I want to contribute!
 
@@ -188,7 +88,7 @@ This will create several packages in the `out/` directory.
 That's great!
 If you like the idea of Kando, you can help in many ways:
 * **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions).
-* **Spread the word!** Tell your friends about Kando and share this post on social media.
+* **Spread the word!** Tell your friends about Kando and share the project on social media.
 * **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement. Please read the [contributing guidelines](docs/contributing.md) for more information!
 
 While direct contributions are the most awesome way to support the development, donations will encourage me to invest my spare time for developing free and open-source software.
@@ -200,3 +100,5 @@ While direct contributions are the most awesome way to support the development, 
 ## Credits
 
 This README uses icons from [Simple Icons](https://simpleicons.org/).
+
+<p align="center"><img src ="docs/img/hr.svg" /></p>

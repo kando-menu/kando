@@ -132,3 +132,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - Navigation in the menu using point-and-click.
   - Navigation in the menu using mouse gestures.
   - A short tutorial explaining the basic concepts.
+
+<p align="center"><img src ="img/hr.svg" /></p>
+
+<p align="center">
+  <img src="img/nav-space.svg"/>
+  <img src="img/nav-space.svg"/>
+  <img src="img/nav-space.svg"/>
+  <a href="README.md"><img src ="img/home.png"/> Index</a>
+  <img src="img/nav-space.svg"/>
+  <a href="contributing.md">Contributing Guidelines <img src ="img/right-arrow.png"/></a>
+</p>
