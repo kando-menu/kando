@@ -48,3 +48,25 @@ jobs:
       - name: Create Release
         run: |
           npm run make
+
+  macos:
+    name: Test Deploy for macOS
+    runs-on: macos-11
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - # macOS: appears to fix https://github.com/electron/forge/issues/2807
+        name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Dependencies
+        run: |
+          npm install
+      - name: Create Release
+        run: |
+          npm run make

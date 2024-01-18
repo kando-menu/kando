@@ -18,7 +18,7 @@ import { WindowsKeyCodes } from './keys';
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
  * and mouse movements. It also uses the Win32 API to get the currently focused window.
  */
-export class Win32Backend implements Backend {
+export class WindowsBackend implements Backend {
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
@@ -36,10 +36,10 @@ export class Win32Backend implements Backend {
   public async init() {}
 
   /**
-   * This uses the Win23 API to get the name and class of the currently focused window. In
+   * This uses the Win23 API to get the name and app of the currently focused window. In
    * addition, it uses Electron's screen module to get the current pointer position.
    *
-   * @returns The name and class of the currently focused window as well as the current
+   * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
@@ -51,7 +51,7 @@ export class Win32Backend implements Backend {
 
     return {
       windowName: window.name,
-      windowClass: window.wmClass,
+      appName: window.app,
       pointerX: pointer.x,
       pointerY: pointer.y,
     };

@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'node:os';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
 import { exec } from 'child_process';
@@ -87,8 +88,6 @@ export class KandoApp {
 
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
-    this.tray = new Tray(path.join(__dirname, require('../../assets/icons/icon.png')));
-    this.tray.setToolTip('Kando');
     this.updateTrayMenu();
 
     // When the menu settings change, we need to rebind the shortcuts and update the
@@ -140,8 +139,8 @@ export class KandoApp {
 
         // Later, we will support application-specific menus. For now, we just print
         // the currently focused window.
-        if (info.windowClass) {
-          console.log('Currently focused window: ' + info.windowClass);
+        if (info.appName) {
+          console.log(`Currently focused: ${info.appName} (${info.windowName})`);
         } else {
           console.log('Currently no window is focused.');
         }
@@ -199,6 +198,7 @@ export class KandoApp {
       resizable: false,
       skipTaskbar: true,
       frame: false,
+      hasShadow: false,
       x: display.workArea.x,
       y: display.workArea.y,
       width: display.workArea.width + 1,
@@ -206,6 +206,10 @@ export class KandoApp {
       type: this.backend.getWindowType(),
       show: false,
     });
+
+    // We set the window to be always on top. This way, Kando will be visible even on
+    // fullscreen applications.
+    this.window.setAlwaysOnTop(true, 'screen-saver');
 
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
@@ -375,7 +379,7 @@ export class KandoApp {
         this.hideTimeout = setTimeout(() => {
           console.log('Select item: ' + path);
 
-          this.window.hide();
+          this.hideWindow();
           this.hideTimeout = null;
 
           // If the action is delayed, we execute it after the window is hidden.
@@ -393,7 +397,7 @@ export class KandoApp {
     ipcMain.on('cancel-selection', () => {
       this.hideTimeout = setTimeout(() => {
         console.log('Cancel selection.');
-        this.window.hide();
+        this.hideWindow();
         this.hideTimeout = null;
       }, 300);
     });
@@ -412,20 +416,22 @@ export class KandoApp {
 
     // Open an URI with the default application.
     ipcMain.on('open-uri', (event, uri) => {
-      this.window.hide();
+      this.hideWindow();
       shell.openExternal(uri);
     });
 
     // Run a shell command.
     ipcMain.on('run-command', (event, command) => {
-      this.window.hide();
+      this.hideWindow();
       this.exec(command);
     });
 
     // Simulate a key press.
     ipcMain.on('simulate-keys', (event, keys) => {
-      this.window.hide();
-      this.backend.simulateKeys(keys);
+      this.hideWindow();
+      this.backend.simulateKeys(keys).catch((err) => {
+        this.showError('Failed to simulate keys', err.message);
+      });
     });
   }
 
@@ -441,7 +447,7 @@ export class KandoApp {
     for (const menu of this.menuSettings.get('menus')) {
       await this.backend.bindShortcut({
         id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
-        description: `Trigger the Kando's ${menu.nodes.name} menu`,
+        description: `Kando - ${menu.nodes.name}`,
         accelerator: menu.shortcut,
         action: () => {
           this.showMenu(menu);
@@ -452,6 +458,19 @@ export class KandoApp {
 
   /** This updates the menu of the tray icon. It is called when the menu settings change. */
   private updateTrayMenu() {
+    if (!this.tray) {
+      if (os.platform() === 'darwin') {
+        this.tray = new Tray(
+          path.join(__dirname, require('../../assets/icons/trayTemplate.png'))
+        );
+      } else {
+        this.tray = new Tray(
+          path.join(__dirname, require('../../assets/icons/icon.png'))
+        );
+      }
+      this.tray.setToolTip('Kando');
+    }
+
     const template: Array<Electron.MenuItemConstructorOptions> = [];
 
     // Add an entry for each menu.
@@ -511,20 +530,46 @@ export class KandoApp {
     exec(command, (error) => {
       // Print an error if the command fails to start.
       if (error) {
-        console.error('Failed to execute command: ' + error);
-
-        // Show a notification if possible.
-        if (Notification.isSupported()) {
-          const notification = new Notification({
-            title: 'Failed to execute command.',
-            body: error.message,
-            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-          });
-
-          notification.show();
-        }
+        this.showError('Failed to execute command', error.message);
       }
     });
+  }
+
+  /**
+   * This prints an error message to the console and shows a notification if possible.
+   *
+   * @param message The message to show.
+   * @param error The error to show.
+   */
+  private showError(message: string, error: string) {
+    console.error(message + ': ' + error);
+
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: message + '.',
+        body: error,
+        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+      });
+
+      notification.show();
+    }
+  }
+
+  /**
+   * This hides the window. When Electron windows are hidden, input focus is not
+   * necessarily returned to the topmost window on Windows and macOS. There we have to
+   * minimize the window or hide the app respectively.
+   *
+   * See: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
+   */
+  private hideWindow() {
+    if (process.platform === 'win32') {
+      this.window.minimize();
+    } else if (process.platform === 'darwin') {
+      app.hide();
+    } else {
+      this.window.hide();
+    }
   }
 
   /** This creates an example menu which can be used for testing. */

@@ -17,14 +17,56 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## Kando 0.4.0 [Unreleased]
-
+## [unreleased]
 
 **Release Date:** TBD
 
+#### Added
+
+- Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
+
 #### Fixed
 
-- The transition of grandchild nodes in the menu. They are now smoothly faded in and out.
+- Global shortcuts on KDE Wayland which were broken due to a regression.
+- Opening the menu on KDE Wayland when no window was focused.
+
+## [Kando 0.4.1](https://github.com/kando-menu/kando/releases/tag/v0.4.1)
+
+**Release Date:** 2024-01-15
+
+#### Fixed
+
+- The macOS M1 binaries are now created on one of GitHub's [large macOS runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/about-larger-runners) which run on actual M1 hardware. This should fix the issue where the arm64 binaries did not work on M1 Macs.
+
+
+## [Kando 0.4.0](https://github.com/kando-menu/kando/releases/tag/v0.4.0)
+
+<a href="https://www.youtube.com/watch?v=GdbM-YxesC8">
+<img align="right" width="400px" src="img/player04.jpg"></img>
+</a>
+
+**Release Date:** 2024-01-11
+
+#### Added
+
+- **A new backend for macOS!**
+  - This new native backend uses Objective-C++ and supports all required features for Kando. It can be used to synthesize keyboard and mouse events and to get the name and application of the currently focused window.
+  - There are signed and notarized binaries for x86_64 and arm64 available on the [releases page](https://github.com/kando-menu/kando/releases). For now, I cannot test the arm64 version, so please let me know if it works for you!
+  - I am still very new to macOS development, so please let me know if you encounter any issues!
+- CodeQL analysis. This is a static analysis tool which is used to find bugs and security vulnerabilities in the code. It is now integrated into the CI pipeline and will run on every commit.
+
+#### Changed
+
+- When installed, the app is now called "Kando" instead of "kando".
+- The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
+- The Windows backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
+- On Windows, the menu window is now minimized instead of hidden when the menu is closed. This allows for a smoother transition when opening the menu again.
+- Replaced the switch-virtual-desktop example action with a <kbd>Ctrl</kbd>+<kbd>Z</kbd> example action.
+
+#### Fixed
+
+- Input focus after closing the menu on Windows. Now, the window which had focus before opening the menu will regain focus. Thanks to [@mmikeww](https://github.com/mmikeww) for this fix!
+- Synthesizing key events on Windows which have _extended scan codes_ like for instance the <kbd>Win</kbd> key.
 
 ## [Kando 0.3.0](https://github.com/kando-menu/kando/releases/tag/v0.3.0)
 
@@ -94,3 +136,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - Navigation in the menu using point-and-click.
   - Navigation in the menu using mouse gestures.
   - A short tutorial explaining the basic concepts.
+
+<p align="center"><img src ="img/hr.svg" /></p>
+
+<p align="center">
+  <img src="img/nav-space.svg"/>
+  <img src="img/nav-space.svg"/>
+  <img src="img/nav-space.svg"/>
+  <a href="README.md"><img src ="img/home.png"/> Index</a>
+  <img src="img/nav-space.svg"/>
+  <a href="contributing.md">Contributing Guidelines <img src ="img/right-arrow.png"/></a>
+</p>

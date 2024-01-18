@@ -68,17 +68,17 @@ export class GnomeBackend implements Backend {
 
   /**
    * This uses the DBus interface of the Kando GNOME Shell integration extension to get
-   * the name and class of the currently focused window as well as the current pointer
+   * the name and app of the currently focused window as well as the current pointer
    * position.
    *
-   * @returns The name and class of the currently focused window as well as the current
+   * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
     const info = await this.interface.GetWMInfo();
     return {
       windowName: info[0],
-      windowClass: info[1],
+      appName: info[1],
       pointerX: info[2],
       pointerY: info[3],
     };

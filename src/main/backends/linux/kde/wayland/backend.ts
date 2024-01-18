@@ -28,7 +28,7 @@ import { LinuxKeyCodes } from '../../keys';
  * scripting interface seems to be the only viable way to bind global keyboard shortcuts
  * for now. Here are alternative approaches which I considered:
  *
- * Getting the name and class of the focused window:
+ * Getting the name and app of the focused window:
  *
  * - There is a request for a corresponding desktop portal:
  *   https://github.com/flatpak/xdg-desktop-portal/issues/304
@@ -51,7 +51,7 @@ export class KDEWaylandBackend implements Backend {
 
   // The KWin scripting interface is used to load custom JavaScript code into KWin. The
   // scripts will acquire the required information for Kando (mouse pointer position and
-  // name and class of the currently focused window) and send it to Kando via D-Bus.
+  // name and app of the currently focused window) and send it to Kando via D-Bus.
   private scriptingInterface: DBus.ClientInterface;
 
   // This is the interface which is exposed by Kando for the KWin script to talk to.
@@ -93,8 +93,8 @@ export class KDEWaylandBackend implements Backend {
       'get-info.js',
       `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
                'org.kandomenu.kando', 'SendWMInfo',
-               workspace.activeClient.caption,
-               workspace.activeClient.resourceClass,
+               workspace.activeClient ? workspace.activeClient.caption : "",
+               workspace.activeClient ? workspace.activeClient.resourceClass : "",
                workspace.cursorPos.x, workspace.cursorPos.y,
                () => {
                  console.log('Kando: Successfully transmitted the data.');
@@ -132,15 +132,15 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * This uses a KWin script to get the name and class of the currently focused window as
+   * This uses a KWin script to get the name and app of the currently focused window as
    * well as the current pointer position.
    *
-   * @returns The name and class of the currently focused window as well as the current
+   * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo(): Promise<{
     windowName: string;
-    windowClass: string;
+    appName: string;
     pointerX: number;
     pointerY: number;
   }> {
@@ -254,16 +254,23 @@ export class KDEWaylandBackend implements Backend {
     const script = this.shortcuts
       .map((shortcut) => {
         const accelerator = this.toKWinAccelerator(shortcut.accelerator);
+
+        // Escape any ' or \ in the ID or description.
+        const id = this.escapeString(shortcut.id);
+        const description = this.escapeString(shortcut.description);
+
         return `
-          if(registerShortcut('${shortcut.id}', '${shortcut.description}', '${accelerator}',
+          if(registerShortcut('${id}', '${description}', '${accelerator}',
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
-                       'org.kandomenu.kando', 'Trigger', '${shortcut.id}',
+                       'org.kandomenu.kando', 'Trigger', '${id}',
                        () => console.log('Kando: Triggered.'));
             }
           )) {
-            console.log('Kando: Registered shortcut ${accelerator}')
+            console.log('Kando: Registered shortcut ${accelerator}');
+          } else {
+            console.log('Kando: Failed to registered shortcut ${accelerator}');
           }
         `;
       })
@@ -346,6 +353,16 @@ export class KDEWaylandBackend implements Backend {
 
     return shortcut;
   }
+
+  /**
+   * Escapes a string so that it can be used in a JavaScript string.
+   *
+   * @param str The string to escape.
+   * @returns The escaped string.
+   */
+  private escapeString(str: string): string {
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  }
 }
 
 // This class is available via DBus in the KWin script.
@@ -357,12 +374,12 @@ class CustomInterface extends DBus.interface.Interface {
   // This is called by the get-info KWin script.
   public SendWMInfo(
     windowName: string,
-    windowClass: string,
+    appName: string,
     pointerX: number,
     pointerY: number
   ) {
     if (this.wmInfoCallback) {
-      this.wmInfoCallback({ windowName, windowClass, pointerX, pointerY });
+      this.wmInfoCallback({ windowName, appName, pointerX, pointerY });
     }
   }
 

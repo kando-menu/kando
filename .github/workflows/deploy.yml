@@ -66,3 +66,52 @@ jobs:
           file: out/make/squirrel.windows/x64/*.exe
           tag: ${{ github.ref }}
           file_glob: true
+
+  macos:
+    name: Deploy for macOS
+    strategy:
+      matrix:
+        os: [macos-11, macos-13-xlarge]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - # macOS: appears to fix https://github.com/electron/forge/issues/2807
+        name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Dependencies
+        run: |
+          npm ci
+      - name: Add macOS certificates
+        env:
+          OSX_CERTIFICATE: ${{ secrets.OSX_CERTIFICATE }}
+          OSX_CERTIFICATE_PASSWORD: ${{ secrets.OSX_CERTIFICATE_PASSWORD }}
+        run: |
+          .github/osx_certificates.sh
+      - name: Create Release
+        env:
+          KANDO_OSX_SIGN: true
+          KANDO_OSX_NOTARIZE: true
+          OSX_APP_SPECIFIC_ID: ${{ secrets.OSX_APP_SPECIFIC_ID }}
+          OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
+          OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
+        run: |
+          npm run make
+      - name: Upload DMG
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: out/make/*.dmg
+          tag: ${{ github.ref }}
+          file_glob: true
+      - name: Upload Zip
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: out/make/zip/darwin/**/*.zip
+          tag: ${{ github.ref }}
+          file_glob: true

@@ -10,12 +10,6 @@
 
 export interface Native {
   /**
-   * This uses XLib calls to get the name and the class of the currently focused
-   * application window.
-   */
-  getActiveWindow(): { app: string; name: string };
-
-  /**
    * This simulates a mouse movement.
    *
    * @param dx The horizontal movement in pixels.
@@ -30,8 +24,15 @@ export interface Native {
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
+
+  /**
+   * This retrieves the app and class of the currently focused window.
+   *
+   * @returns The app and class of the currently focused window.
+   */
+  getActiveWindow(): { app: string; name: string };
 }
 
-const native: Native = require('./../../../../../../build/Release/NativeX11.node');
+const native: Native = require('./../../../../../build/Release/NativeMacOS.node');
 
 export { native };

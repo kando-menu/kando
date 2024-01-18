@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 import type IForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { NormalModuleReplacementPlugin } from 'webpack';
+import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -18,4 +18,12 @@ export const plugins = [
     /SimpleIcons\.(otf|ttf|eot|woff)$/,
     'SimpleIcons.woff2'
   ),
+  // We use this in order to know in the renderer process which operating system we are
+  // running on.
+  new DefinePlugin({
+    // output from process.platform is the same as os.platform()
+    cIsMac: process.platform === 'darwin',
+    cIsWindows: process.platform === 'win32',
+    cIsLinux: process.platform === 'linux',
+  }),
 ];
