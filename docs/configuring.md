@@ -40,7 +40,7 @@ Property | Default Value | Description
 This file contains the configuration of the individual menus.
 The top-level JSON object is called `menus` and contains a list of menu descriptions:
 
-```json
+```js
 {
   "menus": [
     {
