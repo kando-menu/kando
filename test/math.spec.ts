@@ -8,7 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { computeItemAngles, computeItemWedges } from '../src/renderer/math';
+import {
+  computeItemAngles,
+  computeItemWedges,
+  isAngleBetween,
+} from '../src/renderer/math';
 import { expect } from 'chai';
 
 describe('computeItemAngles', () => {
@@ -117,5 +121,29 @@ describe('computeItemWedges', () => {
       { start: 45, end: 135 },
       { start: 225, end: 315 },
     ]);
+  });
+});
+
+describe('isAngleBetween', () => {
+  it('should return true for angles between start and end', () => {
+    expect(isAngleBetween(0.1, 0, 90)).to.be.true;
+    expect(isAngleBetween(45, 0, 90)).to.be.true;
+    expect(isAngleBetween(90, 0, 90)).to.be.true;
+    expect(isAngleBetween(45, 40 + 360, 50 + 360)).to.be.true;
+    expect(isAngleBetween(45, 40 - 360, 50 - 360)).to.be.true;
+    expect(isAngleBetween(80 + 360, 0, 90)).to.be.true;
+    expect(isAngleBetween(80 - 360, 0, 90)).to.be.true;
+    expect(isAngleBetween(89.5, 89, 90)).to.be.true;
+    expect(isAngleBetween(-30, 0, 360)).to.be.true;
+    expect(isAngleBetween(445, 0, 360)).to.be.true;
+  });
+
+  it('should return false for angles outside of start and end', () => {
+    expect(isAngleBetween(0, 0, 90)).to.be.false;
+    expect(isAngleBetween(45, 90, 180)).to.be.false;
+    expect(isAngleBetween(45, 90 + 360, 180 + 360)).to.be.false;
+    expect(isAngleBetween(45, 90 - 360, 180 - 360)).to.be.false;
+    expect(isAngleBetween(45 + 360, 90, 180)).to.be.false;
+    expect(isAngleBetween(45 - 360, 90, 180)).to.be.false;
   });
 });

@@ -518,13 +518,7 @@ export class Menu extends EventEmitter {
     const currentNode = this.selectionChain[this.selectionChain.length - 1];
     if (currentNode.children) {
       for (const child of currentNode.children as IMenuNode[]) {
-        if (
-          (this.input.angle > child.startAngle && this.input.angle <= child.endAngle) ||
-          (this.input.angle - 360 > child.startAngle &&
-            this.input.angle - 360 <= child.endAngle) ||
-          (this.input.angle + 360 > child.startAngle &&
-            this.input.angle + 360 <= child.endAngle)
-        ) {
+        if (math.isAngleBetween(this.input.angle, child.startAngle, child.endAngle)) {
           return child;
         }
       }

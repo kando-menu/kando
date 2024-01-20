@@ -290,3 +290,20 @@ export function computeItemWedges(
 
   return items;
 }
+
+/**
+ * This method returns true if the given angle is between the given start and end angles.
+ * The angles are in degrees and start should be smaller than end. The method also works
+ * if the angle and the start and end angles are negative or larger than 360°.
+ *
+ * @param angle The angle to check.
+ * @param start The start angle.
+ * @param end The end angle.
+ */
+export function isAngleBetween(angle: number, start: number, end: number): boolean {
+  return (
+    (angle > start && angle <= end) ||
+    (angle - 360 > start && angle - 360 <= end) ||
+    (angle + 360 > start && angle + 360 <= end)
+  );
+}
