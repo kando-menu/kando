@@ -21,4 +21,12 @@ export interface IEditorNode extends INode {
    * when the editor is opened.
    */
   itemDiv?: HTMLElement;
+
+  /**
+   * This specifies the angle at which this node is displayed in the editor. This is
+   * computed by the editor and will not be saved. Only the 'angle' property of the INode
+   * interface will be saved. The 'angle' property is considered to be a fixed angle and
+   * if it is set, the 'computedAngle' will be identical to it.
+   */
+  computedAngle?: number;
 }

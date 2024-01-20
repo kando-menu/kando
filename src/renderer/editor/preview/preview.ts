@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 
 import * as math from '../../math';
 import { IEditorNode } from '../editor-node';
+import { ItemDragger } from '../common/item-dragger';
 
 /**
  * This class is responsible for displaying the menu preview of the editor. It supports
@@ -47,9 +48,7 @@ export class Preview extends EventEmitter {
   // the preview and its properties are drawn in the property editor on the right.
   private activeNode?: IEditorNode = null;
 
-  // This is the threshold in pixels which is used to differentiate between a click
-  // and a drag.
-  private readonly DRAG_THRESHOLD = 5;
+  private itemDragger = new ItemDragger();
 
   /**
    * This constructor creates the HTML elements for the menu preview and wires up all the
@@ -80,6 +79,30 @@ export class Preview extends EventEmitter {
     this.breadcrumbs = this.container.querySelector(
       '#kando-menu-preview-breadcrumbs'
     ) as HTMLElement;
+
+    this.itemDragger.on('drag-start', (node) => {
+      // This node is drawn in the center of the preview.
+      const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+      // Remove the child from parent's children.
+      const index = centerItem.children.indexOf(node);
+
+      if (index >= 0) {
+        centerItem.children.splice(index, 1);
+
+        // Update the angles of the children.
+        this.setupAngles(centerItem);
+        this.updateItemAngles();
+      }
+    });
+
+    this.itemDragger.on('drag-end', (node, div) => {
+      div.style.transform = '';
+    });
+
+    this.itemDragger.on('drag-move', (node, div, offset) => {
+      div.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(0.9)`;
+    });
   }
 
   /** This method returns the container of the menu preview. */
@@ -158,15 +181,8 @@ export class Preview extends EventEmitter {
     this.canvas.appendChild(container);
 
     // The big center div shows the icon of the currently selected menu.
-    centerItem.itemDiv = document.createElement('div');
-    centerItem.itemDiv.classList.add('kando-menu-preview-center');
-    centerItem.itemDiv.appendChild(
-      this.createIcon(centerItem.icon, centerItem.iconTheme)
-    );
+    centerItem.itemDiv = this.createCenterDiv(centerItem);
     container.appendChild(centerItem.itemDiv);
-
-    // Make the center item selectable.
-    centerItem.itemDiv.addEventListener('click', () => this.selectNode(centerItem));
 
     // Add the children of the currently selected menu.
     if (centerItem.children?.length > 0) {
@@ -174,78 +190,11 @@ export class Preview extends EventEmitter {
         const child = c as IEditorNode;
 
         // Create a div for the child.
-        child.itemDiv = document.createElement('div');
-        child.itemDiv.classList.add('kando-menu-preview-child');
+        child.itemDiv = this.createChildDiv(child);
         container.appendChild(child.itemDiv);
 
-        // If the child is selected, push its index to the selection chain.
-        child.itemDiv.addEventListener('click', () => this.selectNode(child));
-
-        // Add the icon of the child.
-        child.itemDiv.appendChild(this.createIcon(child.icon, child.iconTheme));
-
-        // If the child has children, we add little grandchild divs to the child div.
-        if (child.children?.length > 0) {
-          const grandChildContainer = document.createElement('div');
-          grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
-          child.itemDiv.appendChild(grandChildContainer);
-
-          child.children.forEach(() => {
-            const grandChildDiv = document.createElement('div');
-            grandChildDiv.classList.add('kando-menu-preview-grandchild');
-            grandChildContainer.appendChild(grandChildDiv);
-          });
-        }
-
-        // Add a label to the child div. This is used to display the name of the menu
-        // item. The label shows a connector line to the child div.
-        const labelDivContainer = document.createElement('div');
-        labelDivContainer.classList.add('kando-menu-preview-label-container');
-        child.itemDiv.appendChild(labelDivContainer);
-
-        // The actual label is in a nested div. This is used to ellipsize the text if
-        // it is too long.
-        const labelDiv = document.createElement('div');
-        labelDiv.classList.add('kando-menu-preview-label');
-        labelDiv.classList.add('kando-font');
-        labelDiv.classList.add('fs-3');
-        labelDiv.textContent = child.name;
-        labelDivContainer.appendChild(labelDiv);
-
-        // Make the child draggable.
-        child.itemDiv.addEventListener('mousedown', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const dragStart = { x: e.clientX, y: e.clientY };
-
-          const onMouseMove = (e2: MouseEvent) => {
-            e2.preventDefault();
-            e2.stopPropagation();
-
-            const dragCurrent = { x: e2.clientX, y: e2.clientY };
-            const offset = math.subtract(dragCurrent, dragStart);
-
-            if (math.getLength(offset) > this.DRAG_THRESHOLD) {
-              child.itemDiv.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(0.9)`;
-              child.itemDiv.classList.add('dragging');
-            }
-          };
-
-          const onMouseUp = (e2: MouseEvent) => {
-            e2.preventDefault();
-            e2.stopPropagation();
-
-            child.itemDiv.style.transform = '';
-            child.itemDiv.classList.remove('dragging');
-
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseup', onMouseUp);
-          };
-
-          window.addEventListener('mousemove', onMouseMove);
-          window.addEventListener('mouseup', onMouseUp);
-        });
+        // Make the child div draggable.
+        this.itemDragger.addDraggable(child.itemDiv, child);
       });
     }
 
@@ -253,11 +202,11 @@ export class Preview extends EventEmitter {
     // the direction of the parent menu.
     if (this.selectionChain.length > 1) {
       const parent = this.selectionChain[this.selectionChain.length - 2];
-      const position = math.getDirection(centerItem.angle - 90, 1.0);
+      const position = math.getDirection(centerItem.computedAngle - 90, 1.0);
 
       const backDiv = document.createElement('div');
       backDiv.classList.add('kando-menu-preview-backlink');
-      backDiv.style.setProperty('--rotation', centerItem.angle - 90 + 'deg');
+      backDiv.style.setProperty('--rotation', centerItem.computedAngle - 90 + 'deg');
       backDiv.style.setProperty('--dir-x', position.x + '');
       backDiv.style.setProperty('--dir-y', position.y + '');
       backDiv.appendChild(this.createIcon('arrow_back', 'material-symbols-rounded'));
@@ -292,31 +241,38 @@ export class Preview extends EventEmitter {
     });
   }
 
+  /**
+   * This method updates the CSS variables for the position and rotation of all currently
+   * visible menu items.
+   */
   private updateItemAngles() {
     // This node is drawn in the center of the preview.
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
 
-    // Add the children of the currently selected menu in a circle around the center.
+    // Position the children of the currently selected menu in a circle around the center.
     if (centerItem.children?.length > 0) {
       centerItem.children.forEach((c) => {
         const child = c as IEditorNode;
 
         // Compute the direction towards the child.
-        const position = math.getDirection(child.angle - 90, 1.0);
+        const position = math.getDirection(child.computedAngle - 90, 1.0);
 
-        // Set the CSS variables for the position and
-        // rotation.
-        child.itemDiv.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        // Set the CSS variables for the position and rotation of the child.
+        child.itemDiv.style.setProperty('--rotation', child.computedAngle - 90 + 'deg');
         child.itemDiv.style.setProperty('--dir-x', position.x + '');
         child.itemDiv.style.setProperty('--dir-y', position.y + '');
 
+        // Set the CSS variables for the position and rotation of the label.
         const labelDivContainer = child.itemDiv.querySelector(
           '.kando-menu-preview-label-container'
         ) as HTMLElement;
 
-        labelDivContainer.style.setProperty('--rotation', child.angle - 90 + 'deg');
+        labelDivContainer.style.setProperty(
+          '--rotation',
+          child.computedAngle - 90 + 'deg'
+        );
 
-        // Remove all previous position classes.
+        // Remove all previous position classes from the label div container.
         labelDivContainer.classList.remove('left');
         labelDivContainer.classList.remove('right');
         labelDivContainer.classList.remove('top');
@@ -328,7 +284,7 @@ export class Preview extends EventEmitter {
         else if (position.y < 0) labelDivContainer.classList.add('top');
         else labelDivContainer.classList.add('bottom');
 
-        // If the child has children, we add little grandchild divs to the child div.
+        // If the child has children, also position them in a circle around the child.
         if (child.children?.length > 0) {
           const grandChildrenDivs = child.itemDiv.querySelectorAll(
             '.kando-menu-preview-grandchild'
@@ -337,7 +293,7 @@ export class Preview extends EventEmitter {
           child.children.forEach((grandChild, i) => {
             grandChildrenDivs[i].style.setProperty(
               '--rotation',
-              grandChild.angle - 90 + 'deg'
+              (grandChild as IEditorNode).computedAngle - 90 + 'deg'
             );
           });
         }
@@ -362,11 +318,11 @@ export class Preview extends EventEmitter {
       if (index >= 0 && index < this.selectionChain.length - 1) {
         const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
-        this.redrawMenu(lastSelected.angle + 180);
+        this.redrawMenu(lastSelected.computedAngle + 180);
         this.redrawBreadcrumbs();
       } else if (index === -1) {
         this.selectionChain.push(node);
-        this.redrawMenu(node.angle);
+        this.redrawMenu(node.computedAngle);
         this.redrawBreadcrumbs();
       }
     }
@@ -408,8 +364,74 @@ export class Preview extends EventEmitter {
   }
 
   /**
-   * This method computes the 'angle' properties for the children of the given node. The
-   * 'angle' property is the angle of the child relative to its parent.
+   * This method creates the big center div which shows the icon of the currently selected
+   * menu.
+   *
+   * @param node The node for which to create the center div.
+   */
+  private createCenterDiv(node: IEditorNode) {
+    const div = document.createElement('div');
+    div.classList.add('kando-menu-preview-center');
+    div.appendChild(this.createIcon(node.icon, node.iconTheme));
+
+    // Make the center item selectable.
+    div.addEventListener('click', () => this.selectNode(node));
+
+    return div;
+  }
+
+  /**
+   * This method creates a div visualizing a child node. It contains an icon, potentially
+   * grandchildren, and a label.
+   *
+   * @param node The node for which to create the child div.
+   */
+  private createChildDiv(node: IEditorNode) {
+    const div = document.createElement('div');
+    div.classList.add('kando-menu-preview-child');
+
+    // If the child is selected, push its index to the selection chain.
+    div.addEventListener('click', () => this.selectNode(node));
+
+    // Add the icon of the child.
+    div.appendChild(this.createIcon(node.icon, node.iconTheme));
+
+    // If the child has children, we add little grandchild divs to the child div.
+    if (node.children?.length > 0) {
+      const grandChildContainer = document.createElement('div');
+      grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
+      div.appendChild(grandChildContainer);
+
+      node.children.forEach(() => {
+        const grandChildDiv = document.createElement('div');
+        grandChildDiv.classList.add('kando-menu-preview-grandchild');
+        grandChildContainer.appendChild(grandChildDiv);
+      });
+    }
+
+    // Add a label to the child div. This is used to display the name of the menu
+    // item. The label shows a connector line to the child div.
+    const labelDivContainer = document.createElement('div');
+    labelDivContainer.classList.add('kando-menu-preview-label-container');
+    div.appendChild(labelDivContainer);
+
+    // The actual label is in a nested div. This is used to ellipsize the text if
+    // it is too long.
+    const labelDiv = document.createElement('div');
+    labelDiv.classList.add('kando-menu-preview-label');
+    labelDiv.classList.add('kando-font');
+    labelDiv.classList.add('fs-3');
+    labelDiv.textContent = node.name;
+    labelDivContainer.appendChild(labelDiv);
+
+    return div;
+  }
+
+  /**
+   * This method computes the `computedAngle` properties for the children of the given
+   * node. The `computedAngle` property is the angle of the child relative to its parent.
+   * It is computed from the `computedAngle` property of the parent and the optional
+   * "fixed" `angle` properties of itself and its siblings.
    *
    * @param node The node for which to setup the angles recursively.
    */
@@ -422,13 +444,13 @@ export class Preview extends EventEmitter {
     // For all other cases, we have to compute the angles of the children. First, we
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
-    const parentAngle = (node.angle + 180) % 360;
+    const parentAngle = (node.computedAngle + 180) % 360;
     const angles = math.computeItemAngles(node.children, parentAngle);
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children?.length; ++i) {
-      const child = node.children[i];
-      child.angle = angles[i];
+      const child = node.children[i] as IEditorNode;
+      child.computedAngle = angles[i];
 
       // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);
