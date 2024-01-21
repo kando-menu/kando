@@ -331,7 +331,7 @@ export class Menu extends EventEmitter {
       // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
       // to the parent node.
       node.position = math.getDirection(
-        node.angle - 90,
+        node.angle,
         Math.max(this.PARENT_DISTANCE, this.input.distance)
       );
 
@@ -544,7 +544,7 @@ export class Menu extends EventEmitter {
    */
   private updateTransform(node: IMenuNode) {
     if (node.itemDiv.classList.contains('grandchild')) {
-      node.position = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
+      node.position = math.getDirection(node.angle, this.GRANDCHILD_DISTANCE);
       node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
     } else if (node.itemDiv.classList.contains('child')) {
       let transform = '';
@@ -568,7 +568,7 @@ export class Menu extends EventEmitter {
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
-        node.position = math.getDirection(node.angle - 90, this.CHILD_DISTANCE);
+        node.position = math.getDirection(node.angle, this.CHILD_DISTANCE);
         transform += `translate(${node.position.x}px, ${node.position.y}px)`;
       }
 
@@ -630,7 +630,7 @@ export class Menu extends EventEmitter {
           node.lastConnectorRotation = angle;
 
           node.connectorDiv.style.width = `${length}px`;
-          node.connectorDiv.style.transform = `rotate(${angle}deg)`;
+          node.connectorDiv.style.transform = `rotate(${angle - 90}deg)`;
         } else {
           node.connectorDiv.style.width = '0px';
         }

@@ -155,7 +155,7 @@ export class Preview extends EventEmitter {
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
 
     // First, fade out all currently displayed menu items.
-    const transitionDirection = math.getDirection(transitionAngle + 90, 1.0);
+    const transitionDirection = math.getDirection(transitionAngle, 1.0);
 
     this.canvas.childNodes.forEach((c) => {
       const child = c as HTMLElement;
@@ -202,11 +202,11 @@ export class Preview extends EventEmitter {
     // the direction of the parent menu.
     if (this.selectionChain.length > 1) {
       const parent = this.selectionChain[this.selectionChain.length - 2];
-      const position = math.getDirection(centerItem.computedAngle - 90, 1.0);
+      const position = math.getDirection(centerItem.computedAngle, 1.0);
 
       const backDiv = document.createElement('div');
       backDiv.classList.add('kando-menu-preview-backlink');
-      backDiv.style.setProperty('--rotation', centerItem.computedAngle - 90 + 'deg');
+      backDiv.style.setProperty('--rotation', centerItem.computedAngle + 'deg');
       backDiv.style.setProperty('--dir-x', position.x + '');
       backDiv.style.setProperty('--dir-y', position.y + '');
       backDiv.appendChild(this.createIcon('arrow_back', 'material-symbols-rounded'));
@@ -255,10 +255,10 @@ export class Preview extends EventEmitter {
         const child = c as IEditorNode;
 
         // Compute the direction towards the child.
-        const position = math.getDirection(child.computedAngle - 90, 1.0);
+        const position = math.getDirection(child.computedAngle, 1.0);
 
         // Set the CSS variables for the position and rotation of the child.
-        child.itemDiv.style.setProperty('--rotation', child.computedAngle - 90 + 'deg');
+        child.itemDiv.style.setProperty('--rotation', child.computedAngle + 'deg');
         child.itemDiv.style.setProperty('--dir-x', position.x + '');
         child.itemDiv.style.setProperty('--dir-y', position.y + '');
 
@@ -267,10 +267,7 @@ export class Preview extends EventEmitter {
           '.kando-menu-preview-label-container'
         ) as HTMLElement;
 
-        labelDivContainer.style.setProperty(
-          '--rotation',
-          child.computedAngle - 90 + 'deg'
-        );
+        labelDivContainer.style.setProperty('--rotation', child.computedAngle + 'deg');
 
         // Remove all previous position classes from the label div container.
         labelDivContainer.classList.remove('left');
@@ -293,7 +290,7 @@ export class Preview extends EventEmitter {
           child.children.forEach((grandChild, i) => {
             grandChildrenDivs[i].style.setProperty(
               '--rotation',
-              (grandChild as IEditorNode).computedAngle - 90 + 'deg'
+              (grandChild as IEditorNode).computedAngle + 'deg'
             );
           });
         }

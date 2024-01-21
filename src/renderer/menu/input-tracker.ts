@@ -205,9 +205,6 @@ export class InputTracker extends EventEmitter {
     this._relativePosition = math.subtract(position, activeNodePosition);
     this._distance = math.getLength(this._relativePosition);
     this._angle = math.getAngle(this._relativePosition);
-
-    // Turn 0° up.
-    this._angle = (this.angle + 90) % 360;
   }
 
   /**

@@ -41,24 +41,25 @@ export function subtract(vec1: IVec2, vec2: IVec2): IVec2 {
 }
 
 /**
- * This method returns the angle of the given vector in degrees. 0° is on the right, 90°
- * is on the bottom, 180° is on the left and 270° is on the top. The vector does not need
+ * This method returns the angle of the given vector in degrees. 0° is on the top, 90° is
+ * on the right, 180° is on the bottom and 270° is on the right. The vector does not need
  * to be normalized.
  */
 export function getAngle(vec: IVec2): number {
-  const angle = toDegrees(Math.atan2(vec.y, vec.x));
+  const angle = (toDegrees(Math.atan2(vec.y, vec.x)) + 90) % 360;
   if (angle < 0) {
     return 360 + angle;
   }
+
   return angle;
 }
 
 /**
  * This method returns the direction vector for the given angle and length. 0° is on the
- * right, 90° is on the bottom, 180° is on the left and 270° is on the top.
+ * top, 90° is on the right, 180° is on the bottom and 270° is on the right.
  */
 export function getDirection(angle: number, length: number): IVec2 {
-  const radians = toRadians(angle);
+  const radians = toRadians(angle - 90);
   return {
     x: Math.cos(radians) * length,
     y: Math.sin(radians) * length,

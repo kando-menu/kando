@@ -166,7 +166,8 @@
       height: $preview-grandchild-size;
       left: calc(50% - $preview-grandchild-size / 2);
       top: calc(50% - $preview-grandchild-size / 2);
-      transform: rotate(var(--rotation)) translateX(calc($preview-child-size / 2));
+      transform: rotate(calc(var(--rotation) - 90deg))
+        translateX(calc($preview-child-size / 2));
     }
 
     .kando-menu-preview-label-container {
@@ -183,7 +184,7 @@
       &::before {
         content: '';
         position: absolute;
-        transform: rotate(calc(var(--rotation) + 180deg));
+        transform: rotate(calc(var(--rotation) + 90deg));
         transform-origin: left;
         width: calc($preview-label-distance - $preview-child-size / 2 - 20px);
         height: 1px;
@@ -211,7 +212,7 @@
           );
 
         &::before {
-          transform: rotate(calc(var(--rotation)));
+          transform: rotate(calc(var(--rotation) - 90deg));
           transform-origin: right;
           left: auto;
           right: 0;
@@ -267,12 +268,12 @@
       left: calc(50% - $preview-child-size / 2 - var(--dir-x) * $preview-child-distance);
       top: calc(50% - $preview-child-size / 2 - var(--dir-y) * $preview-child-distance);
 
-      transform: rotate(var(--rotation));
+      transform: rotate(calc(var(--rotation) - 90deg));
 
       border: none;
 
       &:active {
-        transform: rotate(var(--rotation)) scale(0.9);
+        transform: rotate(calc(var(--rotation) - 90deg)) scale(0.9);
       }
 
       &::before,
