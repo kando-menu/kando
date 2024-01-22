@@ -66,6 +66,13 @@ export class ItemDragger extends EventEmitter {
       'mousedown',
       (e) => {
         const dragStart = { x: e.clientX, y: e.clientY };
+        const rect = div.getBoundingClientRect();
+        const parentRect = div.parentElement.getBoundingClientRect();
+
+        const startPos = {
+          x: rect.left - parentRect.left,
+          y: rect.top - parentRect.top,
+        };
 
         const onMouseMove = (e2: MouseEvent) => {
           const dragCurrent = { x: e2.clientX, y: e2.clientY };
@@ -81,7 +88,13 @@ export class ItemDragger extends EventEmitter {
               this.emit('drag-start', node, div);
             }
 
-            this.emit('drag-move', node, div, offset);
+            this.emit(
+              'drag-move',
+              node,
+              div,
+              { x: startPos.x + offset.x, y: startPos.y + offset.y },
+              { x: e2.x, y: e2.y }
+            );
           }
         };
 

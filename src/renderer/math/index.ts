@@ -218,6 +218,60 @@ export function computeItemAngles(
 }
 
 /**
+ * This variant of the computeItemAngles method is used during drag-and-drop operations in
+ * the menu editor. It behaves similar to the computeItemAngles method, but it allows to
+ * pass additional information. This is required to compute the angles correctly during
+ * drag-and-drop operations.
+ *
+ * First, you can pass the index of the item which is currently dragged around. This item
+ * will then receive the same angle as its successor and all other angles will be computed
+ * as if the dragged item was not there.
+ *
+ * Furthermore, it is possible to pass the index of the location where something is about
+ * to be dropped. If this is given, the angles will leave an gap for the to-be-dropped
+ * item.
+ *
+ * @param items The Items for which the angles should be computed. They may already have
+ *   an angle property. If so, this is considered a fixed angle.
+ * @param parentAngle The angle of the parent item. If given, there will be some reserved
+ *   space.
+ * @param dragIndex The index of the item which is currently dragged around. If given, the
+ *   angles will be computed as if the dragged item was not there.
+ * @param dropIndex The index of the location where something is about to be dropped. If
+ *   given, the angles will leave an additional gap for the dropped item.
+ * @returns An array of angles in degrees and the angle for the to-be-dropped item (if
+ *   given).
+ */
+export function computeItemAnglesDnD(
+  items: { angle?: number }[],
+  parentAngle?: number,
+  dropIndex?: number
+): { itemAngles: number[]; dropAngle?: number } {
+  // Create a copy of the items array.
+  const itemsCopy = items.slice();
+
+  // Add an additional artificial item if something is about to be dropped.
+  if (dropIndex != null) {
+    itemsCopy.splice(dropIndex, 0, {});
+  }
+
+  // Now compute the angles as usual.
+  const itemAngles = computeItemAngles(itemsCopy, parentAngle);
+
+  // We will also return the angle for the to-be-dropped item (if given).
+  let dropAngle = null;
+
+  // If we added an artificial item to leave an angular gap for the to-be-dropped item, we
+  // have to remove this again from the list of item angles as there is no real item at
+  // this position. We only wanted to affect the angles for the adjacent items.
+  if (dropIndex != null) {
+    dropAngle = itemAngles.splice(dropIndex, 1)[0];
+  }
+
+  return { itemAngles, dropAngle };
+}
+
+/**
  * Computes the start and end angles of the wedges for the given items. The parent angle
  * is optional. If it is given, there will be a gap towards the parent node.
  *
@@ -307,4 +361,40 @@ export function isAngleBetween(angle: number, start: number, end: number): boole
     (angle - 360 > start && angle - 360 <= end) ||
     (angle + 360 > start && angle + 360 <= end)
   );
+}
+
+export function computeDropIndex(itemAngles: number[], dragAngle: number): number {
+  // We compute the drop index by comparing the dragAngle with the itemAngles. There are a
+  // few special cases when there are only a few items in the menu.
+  if (itemAngles.length === 0) {
+    // If there is no current item, it's easy: We simply drop at index zero.
+    return 0;
+  } else if (itemAngles.length === 1) {
+    // If there is one current item, we have to decide whether to drop before / or after.
+    return dragAngle - itemAngles[0] < 90 || dragAngle - itemAngles[0] > 270 ? 0 : 1;
+  } else {
+    // All other cases can be handled with a loop through the drop zone wedges between the
+    // items. For each wedge, we decide whether the pointer is inside the wedge.
+    for (let i = 0; i < itemAngles.length; i++) {
+      const wedgeStart = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
+      let wedgeCenter = itemAngles[i];
+      let wedgeEnd = itemAngles[(i + 1) % itemAngles.length];
+
+      // Wrap around.
+      if (wedgeCenter < wedgeStart) {
+        wedgeCenter += 360;
+      }
+
+      if (wedgeEnd < wedgeCenter) {
+        wedgeEnd += 360;
+      }
+
+      const dropZoneStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
+      const dropZoneEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
+
+      if (isAngleBetween(dragAngle, dropZoneStart, dropZoneEnd)) {
+        return i;
+      }
+    }
+  }
 }

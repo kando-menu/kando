@@ -56,6 +56,7 @@
 
     .kando-menu-preview-center,
     .kando-menu-preview-child,
+    .kando-menu-preview-drop-indicator,
     .kando-menu-preview-backlink {
       position: absolute;
       border-radius: 50%;
@@ -134,7 +135,8 @@
       top: calc(50% - $preview-center-size / 2);
     }
 
-    .kando-menu-preview-child {
+    .kando-menu-preview-child,
+    .kando-menu-preview-drop-indicator {
       width: $preview-child-size;
       left: calc(50% - $preview-child-size / 2 + var(--dir-x) * $preview-child-distance);
       top: calc(50% - $preview-child-size / 2 + var(--dir-y) * $preview-child-distance);
@@ -309,6 +311,18 @@
           rgba(255, 255, 255, 0.1) 75%,
           rgba(255, 255, 255, 0) 100%
         );
+      }
+    }
+
+    .kando-menu-preview-drop-indicator {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px dashed rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      opacity: 0;
+      transition: all 150ms ease;
+
+      &.visible {
+        opacity: 1;
       }
     }
 

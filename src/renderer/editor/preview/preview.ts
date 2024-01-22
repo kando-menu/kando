@@ -14,6 +14,7 @@ import { EventEmitter } from 'events';
 import * as math from '../../math';
 import { IEditorNode } from '../editor-node';
 import { ItemDragger } from '../common/item-dragger';
+import { IVec2 } from '../../../common';
 
 /**
  * This class is responsible for displaying the menu preview of the editor. It supports
@@ -50,6 +51,10 @@ export class Preview extends EventEmitter {
 
   private itemDragger = new ItemDragger();
 
+  private dropIndicator: HTMLElement = null;
+
+  private previewCenter?: IVec2 = null;
+
   /**
    * This constructor creates the HTML elements for the menu preview and wires up all the
    * functionality.
@@ -80,29 +85,10 @@ export class Preview extends EventEmitter {
       '#kando-menu-preview-breadcrumbs'
     ) as HTMLElement;
 
-    this.itemDragger.on('drag-start', (node) => {
-      // This node is drawn in the center of the preview.
-      const centerItem = this.selectionChain[this.selectionChain.length - 1];
+    // When the window is resized, we have to recompute the preview center.
+    window.addEventListener('resize', () => this.computePreviewCenter());
 
-      // Remove the child from parent's children.
-      const index = centerItem.children.indexOf(node);
-
-      if (index >= 0) {
-        centerItem.children.splice(index, 1);
-
-        // Update the angles of the children.
-        this.setupAngles(centerItem);
-        this.updateItemAngles();
-      }
-    });
-
-    this.itemDragger.on('drag-end', (node, div) => {
-      div.style.transform = '';
-    });
-
-    this.itemDragger.on('drag-move', (node, div, offset) => {
-      div.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(0.9)`;
-    });
+    this.initDragAndDrop();
   }
 
   /** This method returns the container of the menu preview. */
@@ -134,6 +120,78 @@ export class Preview extends EventEmitter {
     this.selectionChain = [];
     this.setupAngles(root);
     this.selectNode(root);
+    this.computePreviewCenter();
+  }
+
+  private initDragAndDrop() {
+    let dropIndex: number | null = null;
+    let dropAngles: number[] = [];
+    let inDropZone = true;
+
+    const dragEnter = () => {
+      inDropZone = true;
+      this.dropIndicator.classList.add('visible');
+    };
+
+    const dragLeave = () => {
+      inDropZone = false;
+      this.dropIndicator.classList.remove('visible');
+    };
+
+    this.itemDragger.on('drag-start', (node) => {
+      // This node is drawn in the center of the preview.
+      const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+      dropAngles = centerItem.children.map((c) => (c as IEditorNode).computedAngle);
+
+      // Remove the child from parent's children.
+      const index = centerItem.children.indexOf(node);
+      centerItem.children.splice(index, 1);
+
+      this.dropIndicator.classList.add('visible');
+
+      this.canvas.addEventListener('pointerenter', dragEnter);
+      this.canvas.addEventListener('pointerleave', dragLeave);
+    });
+
+    this.itemDragger.on('drag-end', (node, div) => {
+      // This node is drawn in the center of the preview.
+      const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+      div.style.left = '';
+      div.style.top = '';
+
+      // If the node has been dropped on the canvas, we add it to the children of the
+      // center item.
+      if (dropIndex !== null) {
+        centerItem.children.splice(dropIndex, 0, node);
+      }
+
+      this.setupAngles(centerItem);
+      this.updateItemAngles();
+
+      this.dropIndicator.classList.remove('visible');
+
+      this.canvas.removeEventListener('pointerenter', dragEnter);
+      this.canvas.removeEventListener('pointerleave', dragLeave);
+    });
+
+    this.itemDragger.on('drag-move', (node, div, relative, absolute) => {
+      // Update the angles of the children.
+      const relativePosition = math.subtract(absolute, this.previewCenter);
+      const dragAngle = math.getAngle(relativePosition);
+
+      // This node is drawn in the center of the preview.
+      const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+      dropIndex = math.computeDropIndex(dropAngles, dragAngle);
+
+      const dropAngle = this.setupAngles(centerItem, inDropZone ? dropIndex : undefined);
+      this.updateItemAngles(inDropZone ? dropAngle : undefined);
+
+      div.style.left = `${relative.x}px`;
+      div.style.top = `${relative.y}px`;
+    });
   }
 
   /**
@@ -216,6 +274,12 @@ export class Preview extends EventEmitter {
       backDiv.addEventListener('click', () => this.selectNode(parent));
     }
 
+    // We also add a little div which becomes visible when something is dragged over
+    // the preview. This is used to indicate where the dragged item would be dropped.
+    this.dropIndicator = document.createElement('div');
+    this.dropIndicator.classList.add('kando-menu-preview-drop-indicator');
+    container.appendChild(this.dropIndicator);
+
     // Now we update the angles of all children.
     this.updateItemAngles();
 
@@ -245,7 +309,7 @@ export class Preview extends EventEmitter {
    * This method updates the CSS variables for the position and rotation of all currently
    * visible menu items.
    */
-  private updateItemAngles() {
+  private updateItemAngles(dropIndicatorAngle?: number) {
     // This node is drawn in the center of the preview.
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
 
@@ -296,6 +360,14 @@ export class Preview extends EventEmitter {
         }
       });
     }
+
+    if (dropIndicatorAngle !== undefined) {
+      const position = math.getDirection(dropIndicatorAngle, 1.0);
+
+      // Set the CSS variables for the position and rotation of the child.
+      this.dropIndicator.style.setProperty('--dir-x', position.x + '');
+      this.dropIndicator.style.setProperty('--dir-y', position.y + '');
+    }
   }
 
   /**
@@ -315,11 +387,11 @@ export class Preview extends EventEmitter {
       if (index >= 0 && index < this.selectionChain.length - 1) {
         const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
-        this.redrawMenu(lastSelected.computedAngle + 180);
+        this.redrawMenu(lastSelected.computedAngle);
         this.redrawBreadcrumbs();
       } else if (index === -1) {
         this.selectionChain.push(node);
-        this.redrawMenu(node.computedAngle);
+        this.redrawMenu(node.computedAngle + 180);
         this.redrawBreadcrumbs();
       }
     }
@@ -432,7 +504,7 @@ export class Preview extends EventEmitter {
    *
    * @param node The node for which to setup the angles recursively.
    */
-  private setupAngles(node: IEditorNode) {
+  private setupAngles(node: IEditorNode, dropIndex?: number) {
     // If the node has no children, we can stop here.
     if (!node.children || node.children.length === 0) {
       return;
@@ -442,15 +514,31 @@ export class Preview extends EventEmitter {
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
     const parentAngle = (node.computedAngle + 180) % 360;
-    const angles = math.computeItemAngles(node.children, parentAngle);
+    const { itemAngles, dropAngle } = math.computeItemAnglesDnD(
+      node.children,
+      parentAngle,
+      dropIndex
+    );
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children?.length; ++i) {
       const child = node.children[i] as IEditorNode;
-      child.computedAngle = angles[i];
+      child.computedAngle = itemAngles[i];
 
       // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);
     }
+
+    return dropAngle;
+  }
+
+  /**
+   * This method computes the position of the preview center. The preview center is the
+   * position of the center item in the preview. It is used to compute the angles of the
+   * menu items during drag'n'drop.
+   */
+  private computePreviewCenter() {
+    const rect = this.canvas.getBoundingClientRect();
+    this.previewCenter = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
   }
 }
