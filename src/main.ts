@@ -44,6 +44,9 @@ const options = program.opts() as CLIOptions;
 // we just quit this one and let the other instance handle the command line arguments.
 const gotTheLock = app.requestSingleInstanceLock(options);
 if (!gotTheLock) {
+  console.log(
+    'Kando is already running. You can use the -m option to make the other instance show a menu.'
+  );
   app.quit();
   process.exit(0);
 }

@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Added
 
 - Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
+- A console message when a second instance of Kando is launched. Before, the second instance would just silently quit.
 
 #### Changed
 
