@@ -15,7 +15,7 @@ SPDX-License-Identifier: CC-BY-4.0
 For now, Kando uses **two configuration files**. `config.json` stores the general configuration of the application and `menus.json` stores the configuration of the individual menus.
 Depending on your platform, the configuration files are located in different directories:
 
-* <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\Roaming\kando\`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/Kando/`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/Kando/`
 
