@@ -49,10 +49,15 @@ export class Preview extends EventEmitter {
   // the preview and its properties are drawn in the property editor on the right.
   private activeNode?: IEditorNode = null;
 
+  // This is used to drag'n'drop menu items.
   private itemDragger = new ItemDragger();
 
+  // This is a little div which becomes visible when something is dragged over the
+  // preview. This is used to indicate where the dragged item would be dropped.
   private dropIndicator: HTMLElement = null;
 
+  // This is the position of the preview center. It is used to compute the angles of the
+  // menu items during drag'n'drop.
   private previewCenter?: IVec2 = null;
 
   /**
@@ -85,8 +90,11 @@ export class Preview extends EventEmitter {
       '#kando-menu-preview-breadcrumbs'
     ) as HTMLElement;
 
-    // When the window is resized, we have to recompute the preview center.
-    window.addEventListener('resize', () => this.computePreviewCenter());
+    // When the window is resized, we have to recompute the preview center. It is used
+    // to compute the angles of the menu items during drag'n'drop.
+    window.addEventListener('resize', () => {
+      this.previewCenter = Preview.computeCenter(this.canvas);
+    });
 
     this.initDragAndDrop();
   }
@@ -118,79 +126,94 @@ export class Preview extends EventEmitter {
    */
   public setMenu(root: IEditorNode) {
     this.selectionChain = [];
-    this.setupAngles(root);
+    this.computeItemAnglesRecursively(root);
     this.selectNode(root);
-    this.computePreviewCenter();
+
+    // This actually has to be done only once after the menu preview has been added to
+    // the DOM. However, we do not have a good place for this, so we do it here.
+    this.previewCenter = Preview.computeCenter(this.canvas);
   }
 
+  /** This method initializes the drag'n'drop functionality of the menu preview. */
   private initDragAndDrop() {
     let dropIndex: number | null = null;
     let dropAngles: number[] = [];
-    let inDropZone = true;
 
     const dragEnter = () => {
-      inDropZone = true;
       this.dropIndicator.classList.add('visible');
     };
 
     const dragLeave = () => {
-      inDropZone = false;
       this.dropIndicator.classList.remove('visible');
     };
 
+    // This is called when a menu item is started to be dragged.
     this.itemDragger.on('drag-start', (node) => {
-      // This node is drawn in the center of the preview.
+      // Store a list of the angles of the children of the center item. One of them will
+      // be the drop angle.
       const centerItem = this.selectionChain[this.selectionChain.length - 1];
-
       dropAngles = centerItem.children.map((c) => (c as IEditorNode).computedAngle);
 
-      // Remove the child from parent's children.
+      // Remove the dragged child from parent's children.
       const index = centerItem.children.indexOf(node);
       centerItem.children.splice(index, 1);
 
+      // Show the drop indicator.
       this.dropIndicator.classList.add('visible');
-
       this.canvas.addEventListener('pointerenter', dragEnter);
       this.canvas.addEventListener('pointerleave', dragLeave);
     });
 
-    this.itemDragger.on('drag-end', (node, div) => {
-      // This node is drawn in the center of the preview.
-      const centerItem = this.selectionChain[this.selectionChain.length - 1];
+    // This is called when a menu item is dragged around.
+    this.itemDragger.on('drag-move', (node, div, relative, absolute) => {
+      // Update the position of the dragged div.
+      div.style.left = `${relative.x}px`;
+      div.style.top = `${relative.y}px`;
 
+      // If the drop indicator is currently visible, we compute the drop index and the
+      // drop angle.
+      if (this.dropIndicator.classList.contains('visible')) {
+        // Compute the angle towards the dragged item.
+        const relativePosition = math.subtract(absolute, this.previewCenter);
+        const dragAngle = math.getAngle(relativePosition);
+
+        // Choose the drop index from the drop angles.
+        dropIndex = Preview.computeDropIndex(dropAngles, dragAngle);
+
+        // Recompute the angles of the children with an additional item at the drop index.
+        // This method also returns the angle of the to-be-dropped item. We use this to
+        // position the drop indicator.
+        const dropAngle = this.recomputeItemAngles(dropIndex);
+        this.updateDropIndicatorPosition(dropAngle);
+      } else {
+        this.recomputeItemAngles();
+      }
+
+      this.updateItemPositions();
+    });
+
+    // This is called when a menu item is dropped.
+    this.itemDragger.on('drag-end', (node, div) => {
+      // Reset the position of the dragged div.
       div.style.left = '';
       div.style.top = '';
 
       // If the node has been dropped on the canvas, we add it to the children of the
-      // center item.
+      // center item at the correct position.
       if (dropIndex !== null) {
+        const centerItem = this.selectionChain[this.selectionChain.length - 1];
         centerItem.children.splice(dropIndex, 0, node);
+        dropIndex = null;
       }
 
-      this.setupAngles(centerItem);
-      this.updateItemAngles();
+      // In any case, we redraw the menu.
+      this.recomputeItemAngles();
+      this.updateItemPositions();
 
+      // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
-
       this.canvas.removeEventListener('pointerenter', dragEnter);
       this.canvas.removeEventListener('pointerleave', dragLeave);
-    });
-
-    this.itemDragger.on('drag-move', (node, div, relative, absolute) => {
-      // Update the angles of the children.
-      const relativePosition = math.subtract(absolute, this.previewCenter);
-      const dragAngle = math.getAngle(relativePosition);
-
-      // This node is drawn in the center of the preview.
-      const centerItem = this.selectionChain[this.selectionChain.length - 1];
-
-      dropIndex = math.computeDropIndex(dropAngles, dragAngle);
-
-      const dropAngle = this.setupAngles(centerItem, inDropZone ? dropIndex : undefined);
-      this.updateItemAngles(inDropZone ? dropAngle : undefined);
-
-      div.style.left = `${relative.x}px`;
-      div.style.top = `${relative.y}px`;
     });
   }
 
@@ -256,6 +279,9 @@ export class Preview extends EventEmitter {
       });
     }
 
+    // Now we update the angles of all children.
+    this.updateItemPositions();
+
     // If we are currently showing a submenu, we add the back navigation link towards
     // the direction of the parent menu.
     if (this.selectionChain.length > 1) {
@@ -279,9 +305,6 @@ export class Preview extends EventEmitter {
     this.dropIndicator = document.createElement('div');
     this.dropIndicator.classList.add('kando-menu-preview-drop-indicator');
     container.appendChild(this.dropIndicator);
-
-    // Now we update the angles of all children.
-    this.updateItemAngles();
 
     // Finally, we fade in all menu items with a little delay.
     setTimeout(() => container.classList.add('visible'), 50);
@@ -309,7 +332,7 @@ export class Preview extends EventEmitter {
    * This method updates the CSS variables for the position and rotation of all currently
    * visible menu items.
    */
-  private updateItemAngles(dropIndicatorAngle?: number) {
+  private updateItemPositions() {
     // This node is drawn in the center of the preview.
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
 
@@ -360,14 +383,17 @@ export class Preview extends EventEmitter {
         }
       });
     }
+  }
 
-    if (dropIndicatorAngle !== undefined) {
-      const position = math.getDirection(dropIndicatorAngle, 1.0);
-
-      // Set the CSS variables for the position and rotation of the child.
-      this.dropIndicator.style.setProperty('--dir-x', position.x + '');
-      this.dropIndicator.style.setProperty('--dir-y', position.y + '');
-    }
+  /**
+   * This method updates the CSS variables for the position of the drop indicator.
+   *
+   * @param angle The angle of the to-be-dropped item.
+   */
+  private updateDropIndicatorPosition(angle: number) {
+    const position = math.getDirection(angle, 1.0);
+    this.dropIndicator.style.setProperty('--dir-x', position.x + '');
+    this.dropIndicator.style.setProperty('--dir-y', position.y + '');
   }
 
   /**
@@ -504,7 +530,7 @@ export class Preview extends EventEmitter {
    *
    * @param node The node for which to setup the angles recursively.
    */
-  private setupAngles(node: IEditorNode, dropIndex?: number) {
+  private computeItemAnglesRecursively(node: IEditorNode) {
     // If the node has no children, we can stop here.
     if (!node.children || node.children.length === 0) {
       return;
@@ -514,11 +540,7 @@ export class Preview extends EventEmitter {
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
     const parentAngle = (node.computedAngle + 180) % 360;
-    const { itemAngles, dropAngle } = math.computeItemAnglesDnD(
-      node.children,
-      parentAngle,
-      dropIndex
-    );
+    const itemAngles = math.computeItemAngles(node.children, parentAngle);
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children?.length; ++i) {
@@ -526,7 +548,51 @@ export class Preview extends EventEmitter {
       child.computedAngle = itemAngles[i];
 
       // Finally, we recursively setup the angles for the children of the child.
-      this.setupAngles(child);
+      this.computeItemAnglesRecursively(child);
+    }
+  }
+
+  /**
+   * This method is similar to the computeItemAnglesRecursively method. However, it always
+   * acts on the children of the currently selected node. In addition, it allows to pass
+   * an additional drop index. The computed item angles will leave a gap for the
+   * to-be-dropped item. If a drop index is given, the method also returns the angle of
+   * the to-be-dropped item.
+   *
+   * @param dropIndex The index of the location where something is about to be dropped.
+   * @returns The angle of the to-be-dropped item.
+   */
+  private recomputeItemAngles(dropIndex?: number) {
+    const centerItem = this.selectionChain[this.selectionChain.length - 1];
+
+    // If the node has no children, we can stop here.
+    if (!centerItem.children || centerItem.children.length === 0) {
+      return;
+    }
+
+    // If no drop index is given, we simply compute the angles as usual.
+    if (dropIndex === undefined) {
+      this.computeItemAnglesRecursively(centerItem);
+      return;
+    }
+
+    // For all other cases, we have to compute the angles of the children. First, we
+    // compute the angle towards the parent node. This will be undefined for the root
+    // node.
+    const parentAngle = (centerItem.computedAngle + 180) % 360;
+    const { itemAngles, dropAngle } = Preview.computeItemAnglesWithDropIndex(
+      centerItem.children,
+      dropIndex,
+      parentAngle
+    );
+
+    // Now we assign the corresponding angles to the children.
+    for (let i = 0; i < centerItem.children?.length; ++i) {
+      const child = centerItem.children[i] as IEditorNode;
+      child.computedAngle = itemAngles[i];
+
+      // Finally, we recursively setup the angles for the children of the child.
+      this.computeItemAnglesRecursively(child);
     }
 
     return dropAngle;
@@ -537,8 +603,80 @@ export class Preview extends EventEmitter {
    * position of the center item in the preview. It is used to compute the angles of the
    * menu items during drag'n'drop.
    */
-  private computePreviewCenter() {
-    const rect = this.canvas.getBoundingClientRect();
-    this.previewCenter = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  private static computeCenter(div: HTMLElement) {
+    const rect = div.getBoundingClientRect();
+    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  }
+
+  private static computeDropIndex(itemAngles: number[], dragAngle: number): number {
+    // We compute the drop index by comparing the dragAngle with the itemAngles. There are a
+    // few special cases when there are only a few items in the menu.
+    if (itemAngles.length === 0) {
+      // If there is no current item, it's easy: We simply drop at index zero.
+      return 0;
+    } else if (itemAngles.length === 1) {
+      // If there is one current item, we have to decide whether to drop before / or after.
+      return dragAngle - itemAngles[0] < 90 || dragAngle - itemAngles[0] > 270 ? 0 : 1;
+    } else {
+      // All other cases can be handled with a loop through the drop zone wedges between the
+      // items. For each wedge, we decide whether the pointer is inside the wedge.
+      for (let i = 0; i < itemAngles.length; i++) {
+        const wedgeStart = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
+        let wedgeCenter = itemAngles[i];
+        let wedgeEnd = itemAngles[(i + 1) % itemAngles.length];
+
+        // Wrap around.
+        if (wedgeCenter < wedgeStart) {
+          wedgeCenter += 360;
+        }
+
+        if (wedgeEnd < wedgeCenter) {
+          wedgeEnd += 360;
+        }
+
+        const dropZoneStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
+        const dropZoneEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
+
+        if (math.isAngleBetween(dragAngle, dropZoneStart, dropZoneEnd)) {
+          return i;
+        }
+      }
+    }
+  }
+
+  /**
+   * This is basically a variant of the math.computeItemAngles() method which is used
+   * during drag-and-drop operations. It behaves similar to the computeItemAngles method,
+   * but it allows to pass an additional drop index. The computed item angles will leave a
+   * gap for the to-be-dropped item.
+   *
+   * @param items The Items for which the angles should be computed. They may already have
+   *   an angle property. If so, this is considered a fixed angle.
+   * @param dropIndex The index of the location where something is about to be dropped.
+   * @param parentAngle The angle of the parent item. If given, there will be some
+   *   reserved space.
+   * @returns An array of angles in degrees and the angle for the to-be-dropped item.
+   */
+  private static computeItemAnglesWithDropIndex(
+    items: { angle?: number }[],
+    dropIndex: number,
+    parentAngle?: number
+  ): { itemAngles: number[]; dropAngle: number } {
+    // Create a copy of the items array.
+    const itemsCopy = items.slice();
+
+    // Add an artificial item at the position where something is about to be dropped.
+    itemsCopy.splice(dropIndex, 0, {});
+
+    // Now compute the angles as usual.
+    const itemAngles = math.computeItemAngles(itemsCopy, parentAngle);
+
+    // We added an artificial item to leave an angular gap for the to-be-dropped item. We
+    // have to remove this again from the list of item angles as there is no real item at
+    // this position. We only wanted to affect the angles for the adjacent items.
+    // We will also return the angle for the to-be-dropped item (if given).
+    const dropAngle = itemAngles.splice(dropIndex, 1)[0];
+
+    return { itemAngles, dropAngle };
   }
 }
