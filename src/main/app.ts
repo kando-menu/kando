@@ -13,6 +13,7 @@ import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron
 import path from 'path';
 import { exec } from 'child_process';
 import { Notification } from 'electron';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Backend, getBackend } from './backends';
 import { INode, IMenu, IMenuSettings, IAppSettings, IKeySequence } from '../common';
@@ -96,6 +97,8 @@ export class KandoApp {
       await this.bindShortcuts();
       this.updateTrayMenu();
     });
+
+    this.migrateSettings();
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */
@@ -572,6 +575,27 @@ export class KandoApp {
     }
   }
 
+  /** This migrates the settings from older versions of Kando. */
+  private migrateSettings() {
+    // For backwards compatibility, we need to assign uuids to all menus which do not
+    // have one yet.
+    const menus = this.menuSettings.getMutable('menus');
+
+    let changed = false;
+
+    for (const menu of menus) {
+      if (!menu.uuid) {
+        menu.uuid = uuidv4();
+        changed = true;
+      }
+    }
+
+    // If the menus have changed, we write them back to the settings file.
+    if (changed) {
+      this.menuSettings.set({ menus: menus });
+    }
+  }
+
   /** This creates an example menu which can be used for testing. */
   private createExampleMenu() {
     const root: INode = {
@@ -617,6 +641,7 @@ export class KandoApp {
     addChildren(root, 'Node', 0);
 
     return {
+      uuid: uuidv4(),
       nodes: root,
       shortcut: 'Control+Space',
       centered: false,

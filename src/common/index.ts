@@ -83,6 +83,9 @@ export interface INode {
  * This interface is used to describe one of the configured menus in the settings file.
  */
 export interface IMenu {
+  /** A unique identifier for this menu. */
+  uuid: string;
+
   /** The root node of the menu. */
   nodes: INode;
 
