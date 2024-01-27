@@ -137,7 +137,8 @@ export class Preview extends EventEmitter {
   /** This method initializes the drag'n'drop functionality of the menu preview. */
   private initDragAndDrop() {
     let dropIndex: number | null = null;
-    let dropAngles: number[] = [];
+
+    let dropWedges: { start: number; end: number }[] = [];
 
     const dragEnter = () => {
       this.dropIndicator.classList.add('visible');
@@ -152,7 +153,11 @@ export class Preview extends EventEmitter {
       // Store a list of the angles of the children of the center item. One of them will
       // be the drop angle.
       const centerItem = this.selectionChain[this.selectionChain.length - 1];
-      dropAngles = centerItem.children.map((c) => (c as IEditorNode).computedAngle);
+
+      // Compute the wedge angles for the drop zones.
+      const parentAngle = (centerItem.computedAngle + 180) % 360;
+      const angles = centerItem.children.map((c) => (c as IEditorNode).computedAngle);
+      dropWedges = math.computeItemWedges(angles, parentAngle);
 
       // Remove the dragged child from parent's children.
       const index = centerItem.children.indexOf(node);
@@ -178,13 +183,17 @@ export class Preview extends EventEmitter {
         const dragAngle = math.getAngle(relativePosition);
 
         // Choose the drop index from the drop angles.
-        dropIndex = Preview.computeDropIndex(dropAngles, dragAngle);
+        dropIndex = Preview.computeDropIndex(dropWedges, dragAngle);
 
-        // Recompute the angles of the children with an additional item at the drop index.
-        // This method also returns the angle of the to-be-dropped item. We use this to
-        // position the drop indicator.
-        const dropAngle = this.recomputeItemAngles(dropIndex);
-        this.updateDropIndicatorPosition(dropAngle);
+        if (dropIndex >= 0) {
+          // Recompute the angles of the children with an additional item at the drop index.
+          // This method also returns the angle of the to-be-dropped item. We use this to
+          // position the drop indicator.
+          const dropAngle = this.recomputeItemAngles(dropIndex);
+          this.updateDropIndicatorPosition(dropAngle);
+        } else {
+          this.recomputeItemAngles();
+        }
       } else {
         this.recomputeItemAngles();
       }
@@ -608,40 +617,35 @@ export class Preview extends EventEmitter {
     return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
   }
 
-  private static computeDropIndex(itemAngles: number[], dragAngle: number): number {
-    // We compute the drop index by comparing the dragAngle with the itemAngles. There are a
-    // few special cases when there are only a few items in the menu.
-    if (itemAngles.length === 0) {
-      // If there is no current item, it's easy: We simply drop at index zero.
+  private static computeDropIndex(
+    dropWedges: { start: number; end: number }[],
+    dragAngle: number
+  ): number {
+    // We compute the drop index by comparing the dragAngle with the possible candidates
+    // which we stored when the drag operation was started. There are a few special cases
+    // when there are only a few items in the menu.
+    // If there is no current item, it's easy: We simply drop at index zero.
+    if (dropWedges.length === 0) {
       return 0;
-    } else if (itemAngles.length === 1) {
-      // If there is one current item, we have to decide whether to drop before / or after.
-      return dragAngle - itemAngles[0] < 90 || dragAngle - itemAngles[0] > 270 ? 0 : 1;
-    } else {
-      // All other cases can be handled with a loop through the drop zone wedges between the
-      // items. For each wedge, we decide whether the pointer is inside the wedge.
-      for (let i = 0; i < itemAngles.length; i++) {
-        const wedgeStart = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
-        let wedgeCenter = itemAngles[i];
-        let wedgeEnd = itemAngles[(i + 1) % itemAngles.length];
-
-        // Wrap around.
-        if (wedgeCenter < wedgeStart) {
-          wedgeCenter += 360;
-        }
-
-        if (wedgeEnd < wedgeCenter) {
-          wedgeEnd += 360;
-        }
-
-        const dropZoneStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
-        const dropZoneEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
-
-        if (math.isAngleBetween(dragAngle, dropZoneStart, dropZoneEnd)) {
+    }
+    // If there is one current item, we have to decide whether to drop before / or after.
+    else if (dropWedges.length === 1) {
+      return dragAngle - dropWedges[0].start < 90 || dragAngle - dropWedges[0].end > 270
+        ? 0
+        : 1;
+    }
+    // All other cases can be handled with a loop through the drop zone wedges between the
+    // items. For each wedge, we decide whether the pointer is inside the wedge.
+    else {
+      for (let i = 0; i < dropWedges.length; i++) {
+        if (math.isAngleBetween(dragAngle, dropWedges[i].start, dropWedges[i].end)) {
           return i;
         }
       }
     }
+
+    // This should never happen.
+    return -1;
   }
 
   /**
