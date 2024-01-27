@@ -157,7 +157,10 @@ export class Preview extends EventEmitter {
       // Compute the wedge angles for the drop zones.
       const parentAngle = (centerItem.computedAngle + 180) % 360;
       const angles = centerItem.children.map((c) => (c as IEditorNode).computedAngle);
-      dropWedges = math.computeItemWedges(angles, parentAngle);
+      dropWedges = math.computeItemWedges(
+        angles,
+        !isNaN(parentAngle) ? parentAngle : undefined
+      );
 
       // Remove the dragged child from parent's children.
       const index = centerItem.children.indexOf(node);

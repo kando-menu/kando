@@ -122,6 +122,17 @@ describe('computeItemWedges', () => {
       { start: 225, end: 315 },
     ]);
   });
+
+  it('should handle multiple items with a parent at the top correctly', () => {
+    const itemAngles = [90, 180, 270];
+    const parentAngle = 0;
+    const wedges = computeItemWedges(itemAngles, parentAngle);
+    expect(wedges).to.deep.equal([
+      { start: 45, end: 135 },
+      { start: 135, end: 225 },
+      { start: 225, end: 315 },
+    ]);
+  });
 });
 
 describe('isAngleBetween', () => {

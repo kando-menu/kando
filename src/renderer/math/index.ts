@@ -221,11 +221,6 @@ export function computeItemAngles(
  * Computes the start and end angles of the wedges for the given items. The parent angle
  * is optional. If it is given, there will be a gap towards the parent node.
  *
- * For now, this method performs some expensive computations like sorting lists and
- * searching for indices. This could be optimized in the future. I guess that there is a
- * more analytical solution to this problem. However, for now this is good enough as it
- * performs pretty well even for thousands of nodes.
- *
  * @param itemAngles A list of angles for each item. The angles are in degrees and between
  *   0° and 360°.
  * @param parentAngle The angle of the parent node. If given, there will be a gap towards
@@ -239,15 +234,14 @@ export function computeItemWedges(
   itemAngles: number[],
   parentAngle?: number
 ): { start: number; end: number }[] {
-  // If the node has no children, we can stop here.
-  if (itemAngles.length === 0) {
+  // This should never happen, but who knows...
+  if (itemAngles.length === 0 && parentAngle === undefined) {
     return [];
   }
 
-  // If the node as a single child but no parent (e.g. it's the root node), we can
-  // simply set the angle of the child to 0 and the start and end angles to a full
-  // circle.
-  if (itemAngles.length === 1 && isNaN(parentAngle)) {
+  // If the node has a single child but no parent (e.g. it's the root node), we can
+  // simply return a full circle.
+  if (itemAngles.length === 1 && parentAngle === undefined) {
     return [
       {
         start: 0,
@@ -256,40 +250,81 @@ export function computeItemWedges(
     ];
   }
 
-  // Now we have to compute the separators between the children. We do this by sorting
-  // the angles and computing the middle between each pair of angles. We also have to
-  // add the angle towards the parent node if the node has a parent.
-  const allAngles = itemAngles.slice();
-  if (!isNaN(parentAngle)) {
-    allAngles.push(parentAngle);
-  }
-  allAngles.sort((a, b) => a - b);
+  // If the node has a single child and a parent, we can set the start and end
+  // angles to the center angles.
+  if (itemAngles.length === 1 && parentAngle !== undefined) {
+    let wedgeStart = parentAngle;
+    let wedgeCenter = itemAngles[0];
+    let wedgeEnd = parentAngle + 360;
 
-  const separators = [];
-  for (let i = 0; i < allAngles.length; ++i) {
-    if (i === allAngles.length - 1) {
-      separators.push((allAngles[i] + allAngles[0] + 360) / 2);
-    } else {
-      separators.push((allAngles[i] + allAngles[i + 1]) / 2);
+    [wedgeStart, wedgeCenter, wedgeEnd] = ensureIncreasing(
+      wedgeStart,
+      wedgeCenter,
+      wedgeEnd
+    );
+
+    wedgeStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
+    wedgeEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
+
+    if (wedgeStart > itemAngles[0]) {
+      wedgeStart -= 360;
+      wedgeEnd -= 360;
     }
+
+    return [
+      {
+        start: wedgeStart,
+        end: wedgeEnd,
+      },
+    ];
   }
 
-  // Now we search for the separators before and after each child and assign the
-  // corresponding angles to the child.
-  const items = [];
-  for (let i = 0; i < itemAngles.length; ++i) {
-    const wedgeIndex = separators.findIndex((s) => s > itemAngles[i]);
+  // In all other cases, we loop through the items and compute the wedges. If the parent
+  // angle happens to be inside a wedge, we crop the wedge accordingly.
+  const wedges: { start: number; end: number }[] = [];
 
-    items.push({
-      start:
-        wedgeIndex == 0
-          ? separators[separators.length - 1] - 360
-          : separators[wedgeIndex - 1],
-      end: separators[wedgeIndex],
+  for (let i = 0; i < itemAngles.length; i++) {
+    let wedgeStart = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
+    let wedgeCenter = itemAngles[i];
+    let wedgeEnd = itemAngles[(i + 1) % itemAngles.length];
+
+    [wedgeStart, wedgeCenter, wedgeEnd] = ensureIncreasing(
+      wedgeStart,
+      wedgeCenter,
+      wedgeEnd
+    );
+
+    if (parentAngle !== undefined) {
+      if (isAngleBetween(parentAngle, wedgeStart, wedgeCenter)) {
+        wedgeStart = parentAngle < wedgeStart ? parentAngle + 360 : parentAngle;
+      }
+
+      if (isAngleBetween(parentAngle, wedgeCenter, wedgeEnd)) {
+        wedgeEnd = parentAngle > wedgeEnd ? parentAngle - 360 : parentAngle;
+      }
+
+      [wedgeStart, wedgeCenter, wedgeEnd] = ensureIncreasing(
+        wedgeStart,
+        wedgeCenter,
+        wedgeEnd
+      );
+    }
+
+    wedgeStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
+    wedgeEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
+
+    if (wedgeStart > itemAngles[i]) {
+      wedgeStart -= 360;
+      wedgeEnd -= 360;
+    }
+
+    wedges.push({
+      start: wedgeStart,
+      end: wedgeEnd,
     });
   }
 
-  return items;
+  return wedges;
 }
 
 /**
@@ -307,4 +342,26 @@ export function isAngleBetween(angle: number, start: number, end: number): boole
     (angle - 360 > start && angle - 360 <= end) ||
     (angle + 360 > start && angle + 360 <= end)
   );
+}
+
+/**
+ * This method ensures that the given angles are increasing. If angleB is smaller than
+ * angleA, it is increased by 360°. If angleC is smaller than angleB, it is increased by
+ * 360°. The angles are returned in an array.
+ *
+ * @param angleA The first angle.
+ * @param angleB The second angle.
+ * @param angleC The third angle.
+ * @returns An array of three angles.
+ */
+function ensureIncreasing(angleA: number, angleB: number, angleC: number) {
+  if (angleB < angleA) {
+    angleB += 360;
+  }
+
+  if (angleC < angleB) {
+    angleC += 360;
+  }
+
+  return [angleA, angleB, angleC];
 }

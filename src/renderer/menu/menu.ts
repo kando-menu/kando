@@ -716,7 +716,10 @@ export class Menu extends EventEmitter {
     // node.
     const parentAngle = (node.angle + 180) % 360;
     const angles = math.computeItemAngles(node.children, parentAngle);
-    const wedges = math.computeItemWedges(angles, parentAngle);
+    const wedges = math.computeItemWedges(
+      angles,
+      !isNaN(parentAngle) ? parentAngle : undefined
+    );
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children.length; ++i) {
