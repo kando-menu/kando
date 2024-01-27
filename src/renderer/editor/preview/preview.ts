@@ -14,7 +14,7 @@ import { EventEmitter } from 'events';
 import * as math from '../../math';
 import { IEditorNode } from '../editor-node';
 import { ItemDragger } from '../common/item-dragger';
-import { IVec2 } from '../../../common';
+import { IVec2, IMenu } from '../../../common';
 
 /**
  * This class is responsible for displaying the menu preview of the editor. It supports
@@ -23,8 +23,8 @@ import { IVec2 } from '../../../common';
  *
  * It will emit the following events:
  *
- * - 'select': This is emitted when a menu item is selected. The event data is the selected
- *   menu item.
+ * - 'select-item': This is emitted when a menu item is selected. The event data is the
+ *   selected menu item.
  */
 export class Preview extends EventEmitter {
   // The container is the HTML element which contains the menu preview. It is created in
@@ -124,10 +124,10 @@ export class Preview extends EventEmitter {
    * This method is called when the menu preview should display a new menu. It is called
    * initially from the editor for the root menu.
    */
-  public setMenu(root: IEditorNode) {
+  public setMenu(menu: IMenu) {
     this.selectionChain = [];
-    this.computeItemAnglesRecursively(root);
-    this.selectNode(root);
+    this.computeItemAnglesRecursively(menu.nodes);
+    this.selectNode(menu.nodes);
 
     // This actually has to be done only once after the menu preview has been added to
     // the DOM. However, we do not have a good place for this, so we do it here.
@@ -429,7 +429,7 @@ export class Preview extends EventEmitter {
     this.activeNode = node;
     node.itemDiv.classList.add('active');
 
-    this.emit('select', node);
+    this.emit('select-item', node);
   }
 
   /**

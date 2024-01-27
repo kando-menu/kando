@@ -15,6 +15,8 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
+import { IMenuSettings } from '../../common';
+import { toINode } from './editor-node';
 
 export class Editor {
   // The container is the HTML element which contains the menu editor.
@@ -39,6 +41,11 @@ export class Editor {
   // The toolbar is displayed on the bottom of the screen. It allows the user to
   // switch between different menus, add new items, etc.
   private toolbar: Toolbar = null;
+
+  // These are the current menu settings. They are retrieved from the main process when
+  // the user enters edit mode. It will modified by the user and then sent back to the
+  // main process when the user leaves edit mode.
+  private menuSettings: IMenuSettings = null;
 
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
@@ -115,17 +122,35 @@ export class Editor {
 
     // Get the current settings from the main process and pass them to the respective
     // components.
-    window.api.getMenuEditorData().then((data) => {
-      this.preview.setMenu(data.menuSettings.menus[data.currentMenu].nodes);
+    Promise.all([
+      window.api.menuSettings.get(),
+      window.api.menuSettings.getCurrentMenu(),
+    ]).then(([settings, currentMenu]) => {
+      this.menuSettings = settings;
+      this.preview.setMenu(settings.menus[currentMenu]);
     });
   }
 
   /**
    * This hides the edit-mode components of the editor, such as the toolbar and the
-   * background. The sidebar will remain visible if it is currently shown.
+   * background. The sidebar will remain visible if it is currently shown. The current
+   * menu settings will be sent back to the main process and saved to disc over there.
    */
   public leaveEditMode() {
     this.container.classList.remove('edit-mode');
+    if (this.menuSettings) {
+      // Before sending the menu settings back to the main process, we have to make sure
+      // that the menu nodes are converted back to INode objects. This is because
+      // IEditorNode objects contain properties (such as DOM nodes) which neither need to
+      // be saved to disc nor can they be cloned using the structured clone algorithm
+      // which is used by Electron for IPC.
+      this.menuSettings.menus.forEach((menu) => {
+        menu.nodes = toINode(menu.nodes);
+      });
+
+      window.api.menuSettings.set(this.menuSettings);
+      this.menuSettings = null;
+    }
   }
 
   /** This method returns true if the editor is currently in edit mode. */

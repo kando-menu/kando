@@ -247,6 +247,22 @@ export class KandoApp {
       );
     }
 
+    // Allow the renderer to retrieve the menu settings.
+    ipcMain.handle('menu-settings-get', () => {
+      return this.menuSettings.get();
+    });
+
+    // Allow the renderer to alter the menu settings.
+    ipcMain.on('menu-settings-set', (event, settings) => {
+      this.menuSettings.set(settings);
+    });
+
+    // This should return the index of the currently selected menu. However, we only
+    // support one menu for now.
+    ipcMain.handle('menu-settings-get-current-menu', () => {
+      return 0;
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -400,15 +416,6 @@ export class KandoApp {
         this.hideWindow();
         this.hideTimeout = null;
       }, 300);
-    });
-
-    // Send the current settings to the renderer process when the editor is opened.
-    ipcMain.handle('get-editor-data', () => {
-      return {
-        menuSettings: this.menuSettings.get(),
-        appSettings: this.appSettings.get(),
-        currentMenu: 0,
-      };
     });
 
     // The callbacks below are only used for the example actions. They will be removed

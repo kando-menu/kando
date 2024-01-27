@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IKeySequence, IVec2, INode, IEditorData, IAppSettings } from '../common';
+import { IKeySequence, IVec2, INode, IAppSettings, IMenuSettings } from '../common';
 
 // Declare the API to the host process. See preload.ts for more information on the exposed
 // functions. The API has to be declared here again, because the TypeScript compiler
@@ -24,6 +24,11 @@ declare global {
           callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
         ) => void;
       };
+      menuSettings: {
+        get: () => Promise<IMenuSettings>;
+        set: (data: IMenuSettings) => void;
+        getCurrentMenu: () => Promise<number>;
+      };
       showDevTools: () => void;
       simulateKeys: (keys: IKeySequence) => void;
       movePointer: (dist: IVec2) => void;
@@ -35,7 +40,6 @@ declare global {
       unhoverItem: (path: string) => void;
       selectItem: (path: string) => void;
       cancelSelection: () => void;
-      getMenuEditorData: () => Promise<IEditorData>;
     };
   }
 

@@ -30,3 +30,22 @@ export interface IEditorNode extends INode {
    */
   computedAngle?: number;
 }
+
+/**
+ * This function can be used to strip all properties from an IEditorNode which are not
+ * present in an INode. This is used before saving the menu settings.
+ *
+ * @param node The node to convert.
+ * @returns The converted node.
+ */
+export function toINode(node: IEditorNode): INode {
+  return {
+    type: node.type,
+    data: node.data,
+    name: node.name,
+    icon: node.icon,
+    iconTheme: node.iconTheme,
+    children: node.children?.map(toINode),
+    angle: node.angle,
+  };
+}
