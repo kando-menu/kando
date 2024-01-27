@@ -137,15 +137,15 @@ export class Preview extends EventEmitter {
   /** This method initializes the drag'n'drop functionality of the menu preview. */
   private initDragAndDrop() {
     let dropIndex: number | null = null;
-
     let dropWedges: { start: number; end: number }[] = [];
+    let dragOverPreview = false;
 
     const dragEnter = () => {
-      this.dropIndicator.classList.add('visible');
+      dragOverPreview = true;
     };
 
     const dragLeave = () => {
-      this.dropIndicator.classList.remove('visible');
+      dragOverPreview = false;
     };
 
     // This is called when a menu item is started to be dragged.
@@ -163,8 +163,7 @@ export class Preview extends EventEmitter {
       const index = centerItem.children.indexOf(node);
       centerItem.children.splice(index, 1);
 
-      // Show the drop indicator.
-      this.dropIndicator.classList.add('visible');
+      dragOverPreview = true;
       this.canvas.addEventListener('pointerenter', dragEnter);
       this.canvas.addEventListener('pointerleave', dragLeave);
     });
@@ -177,25 +176,30 @@ export class Preview extends EventEmitter {
 
       // If the drop indicator is currently visible, we compute the drop index and the
       // drop angle.
-      if (this.dropIndicator.classList.contains('visible')) {
+      if (dragOverPreview) {
         // Compute the angle towards the dragged item.
         const relativePosition = math.subtract(absolute, this.previewCenter);
         const dragAngle = math.getAngle(relativePosition);
 
-        // Choose the drop index from the drop angles.
-        dropIndex = Preview.computeDropIndex(dropWedges, dragAngle);
+        // Choose the drop index from the drop wedges.
+        const newDropIndex = Preview.computeDropIndex(dropWedges, dragAngle);
 
-        if (dropIndex >= 0) {
+        if (newDropIndex >= 0) {
           // Recompute the angles of the children with an additional item at the drop index.
           // This method also returns the angle of the to-be-dropped item. We use this to
           // position the drop indicator.
+          dropIndex = newDropIndex;
           const dropAngle = this.recomputeItemAngles(dropIndex);
           this.updateDropIndicatorPosition(dropAngle);
-        } else {
-          this.recomputeItemAngles();
         }
       } else {
         this.recomputeItemAngles();
+      }
+
+      if (dragOverPreview && dropIndex !== null) {
+        this.dropIndicator.classList.add('visible');
+      } else {
+        this.dropIndicator.classList.remove('visible');
       }
 
       this.updateItemPositions();
