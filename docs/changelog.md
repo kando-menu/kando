@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Changed
 
+- The menu is now hidden when the user exits the menu editor.
 - Some parts of the rendering code have been refactored. This should not change anything for the user, but it makes the code more readable and maintainable.
 
 #### Fixed
