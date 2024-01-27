@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Tooltip } from 'bootstrap';
+import { EventEmitter } from 'events';
 
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
@@ -18,7 +19,15 @@ import { Properties } from './properties/properties';
 import { IMenuSettings } from '../../common';
 import { toINode } from './editor-node';
 
-export class Editor {
+/**
+ * This class is responsible for the entire editor. It contains the preview, the
+ * properties view, the sidebar and the toolbar. It is an event emitter and will emit the
+ * following events:
+ *
+ * - 'enter-edit-mode': This is emitted when the user enters edit mode.
+ * - 'leave-edit-mode': This is emitted when the user leaves edit mode.
+ */
+export class Editor extends EventEmitter {
   // The container is the HTML element which contains the menu editor.
   private container: HTMLElement = null;
 
@@ -52,6 +61,8 @@ export class Editor {
    * functionality.
    */
   constructor(container: HTMLElement) {
+    super();
+
     this.container = container;
 
     // Initialize the background.
@@ -117,6 +128,10 @@ export class Editor {
    * background. To make sure that enough space is available, the sidebar is hidden.
    */
   public enterEditMode() {
+    if (this.isInEditMode()) {
+      return;
+    }
+
     this.container.classList.add('edit-mode');
     this.sidebar.setVisibility(false);
 
@@ -129,6 +144,8 @@ export class Editor {
       this.menuSettings = settings;
       this.preview.setMenu(settings.menus[currentMenu]);
     });
+
+    this.emit('enter-edit-mode');
   }
 
   /**
@@ -137,7 +154,12 @@ export class Editor {
    * menu settings will be sent back to the main process and saved to disc over there.
    */
   public leaveEditMode() {
+    if (!this.isInEditMode()) {
+      return;
+    }
+
     this.container.classList.remove('edit-mode');
+
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure
       // that the menu nodes are converted back to INode objects. This is because
@@ -151,6 +173,8 @@ export class Editor {
       window.api.menuSettings.set(this.menuSettings);
       this.menuSettings = null;
     }
+
+    this.emit('leave-edit-mode');
   }
 
   /** This method returns true if the editor is currently in edit mode. */

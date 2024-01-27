@@ -54,16 +54,23 @@ menu.on('select', (path) => {
 menu.on('hover', (path) => window.api.hoverItem(path));
 menu.on('unhover', (path) => window.api.unhoverItem(path));
 
-// Hide the menu when the user presses escape.
+// Hide the menu when the user enters edit mode.
+editor.on('enter-edit-mode', () => {
+  menu.hide();
+});
+
+// Hide Kando's window when the user leaves edit mode.
+editor.on('leave-edit-mode', () => {
+  editor.hide();
+  window.api.cancelSelection();
+});
+
+// Hide the menu or the editor when the user presses escape.
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
-    if (editor.isInEditMode()) {
-      editor.leaveEditMode();
-    } else {
-      menu.hide();
-      editor.hide();
-      window.api.cancelSelection();
-    }
+    menu.hide();
+    editor.hide();
+    window.api.cancelSelection();
   }
 });
 
