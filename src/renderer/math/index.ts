@@ -242,41 +242,20 @@ export function computeItemWedges(
   // If the node has a single child but no parent (e.g. it's the root node), we can
   // simply return a full circle.
   if (itemAngles.length === 1 && parentAngle === undefined) {
-    return [
-      {
-        start: 0,
-        end: 360,
-      },
-    ];
+    return [{ start: 0, end: 360 }];
   }
 
   // If the node has a single child and a parent, we can set the start and end
   // angles to the center angles.
   if (itemAngles.length === 1 && parentAngle !== undefined) {
-    let wedgeStart = parentAngle;
-    let wedgeCenter = itemAngles[0];
-    let wedgeEnd = parentAngle + 360;
+    let start = parentAngle;
+    let center = itemAngles[0];
+    let end = parentAngle + 360;
 
-    [wedgeStart, wedgeCenter, wedgeEnd] = ensureIncreasing(
-      wedgeStart,
-      wedgeCenter,
-      wedgeEnd
-    );
+    [start, center, end] = normalizeConsequtiveAngles(start, center, end);
+    [start, end] = shrinkWedge(start, center, end, 0.5);
 
-    wedgeStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
-    wedgeEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
-
-    if (wedgeStart > itemAngles[0]) {
-      wedgeStart -= 360;
-      wedgeEnd -= 360;
-    }
-
-    return [
-      {
-        start: wedgeStart,
-        end: wedgeEnd,
-      },
-    ];
+    return [{ start: start, end: end }];
   }
 
   // In all other cases, we loop through the items and compute the wedges. If the parent
@@ -284,44 +263,20 @@ export function computeItemWedges(
   const wedges: { start: number; end: number }[] = [];
 
   for (let i = 0; i < itemAngles.length; i++) {
-    let wedgeStart = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
-    let wedgeCenter = itemAngles[i];
-    let wedgeEnd = itemAngles[(i + 1) % itemAngles.length];
+    let start = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
+    let center = itemAngles[i];
+    let end = itemAngles[(i + 1) % itemAngles.length];
 
-    [wedgeStart, wedgeCenter, wedgeEnd] = ensureIncreasing(
-      wedgeStart,
-      wedgeCenter,
-      wedgeEnd
-    );
+    [start, center, end] = normalizeConsequtiveAngles(start, center, end);
 
     if (parentAngle !== undefined) {
-      if (isAngleBetween(parentAngle, wedgeStart, wedgeCenter)) {
-        wedgeStart = parentAngle < wedgeStart ? parentAngle + 360 : parentAngle;
-      }
-
-      if (isAngleBetween(parentAngle, wedgeCenter, wedgeEnd)) {
-        wedgeEnd = parentAngle > wedgeEnd ? parentAngle - 360 : parentAngle;
-      }
-
-      [wedgeStart, wedgeCenter, wedgeEnd] = ensureIncreasing(
-        wedgeStart,
-        wedgeCenter,
-        wedgeEnd
-      );
+      [start, end] = cropWedge(start, center, end, parentAngle);
+      [start, center, end] = normalizeConsequtiveAngles(start, center, end);
     }
 
-    wedgeStart = wedgeCenter - (wedgeCenter - wedgeStart) * 0.5;
-    wedgeEnd = wedgeCenter + (wedgeEnd - wedgeCenter) * 0.5;
+    [start, end] = shrinkWedge(start, center, end, 0.5);
 
-    if (wedgeStart > itemAngles[i]) {
-      wedgeStart -= 360;
-      wedgeEnd -= 360;
-    }
-
-    wedges.push({
-      start: wedgeStart,
-      end: wedgeEnd,
-    });
+    wedges.push({ start: start, end: end });
   }
 
   return wedges;
@@ -345,23 +300,73 @@ export function isAngleBetween(angle: number, start: number, end: number): boole
 }
 
 /**
- * This method ensures that the given angles are increasing. If angleB is smaller than
- * angleA, it is increased by 360°. If angleC is smaller than angleB, it is increased by
- * 360°. The angles are returned in an array.
+ * This method ensures that the given angles have increasing values. To ensure this, they
+ * will be increased or decreased by 360° if necessary. The center angle will be between
+ * 0° and 360°. The start angle may be negative and the end angle may be larger than 360°.
+ * But their mutual difference will be less than 360°.
  *
- * @param angleA The first angle.
- * @param angleB The second angle.
- * @param angleC The third angle.
+ * @param start The first angle.
+ * @param center The second angle.
+ * @param end The third angle.
  * @returns An array of three angles.
  */
-function ensureIncreasing(angleA: number, angleB: number, angleC: number) {
-  if (angleB < angleA) {
-    angleB += 360;
+function normalizeConsequtiveAngles(start: number, center: number, end: number) {
+  while (center < start) {
+    center += 360;
   }
 
-  if (angleC < angleB) {
-    angleC += 360;
+  while (end < center) {
+    end += 360;
   }
 
-  return [angleA, angleB, angleC];
+  while (center >= 360) {
+    start -= 360;
+    center -= 360;
+    end -= 360;
+  }
+
+  return [start, center, end];
+}
+
+/**
+ * This method crops the given wedge if the given angle is inside it. The wedge is defined
+ * by the start and end angles and the center angle. If the given crop angle is between
+ * the start and center angle, the start angle will be set to the crop angle. If the crop
+ * angle is between the center and end angle, the end angle will be set to the crop
+ * angle.
+ *
+ * @param start The start angle of the wedge.
+ * @param center The center angle of the wedge.
+ * @param end The end angle of the wedge.
+ * @param cropAngle The angle to crop the wedge with.
+ * @returns The new start and end angles of the wedge.
+ */
+function cropWedge(start: number, center: number, end: number, cropAngle: number) {
+  if (isAngleBetween(cropAngle, start, center)) {
+    start = cropAngle;
+  }
+
+  if (isAngleBetween(cropAngle, center, end)) {
+    end = cropAngle;
+  }
+
+  return [start, end];
+}
+
+/**
+ * This method shrinks the given wedge by the given amount. The wedge is defined by the
+ * start and end angles and the center angle. The amount should be between 0.0 and 1.0.
+ * The start and end angles will be moved towards the center angle by the given amount.
+ *
+ * @param start The start angle of the wedge.
+ * @param center The center angle of the wedge.
+ * @param end The end angle of the wedge.
+ * @param amount The amount to shrink the wedge by (0.0 to 1.0).
+ * @returns The new start and end angles of the wedge.
+ */
+function shrinkWedge(start: number, center: number, end: number, amount: number) {
+  start = center - (center - start) * (1.0 - amount);
+  end = center + (end - center) * (1.0 - amount);
+
+  return [start, end];
 }
