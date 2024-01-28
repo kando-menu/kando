@@ -37,6 +37,10 @@ export class Preview extends EventEmitter {
   // create a fixed aspect ratio.
   private canvas: HTMLElement = null;
 
+  // The backlink is the HTML element which contains the button to navigate back to the
+  // parent menu.
+  private backlink: HTMLElement = null;
+
   // The breadcrumbs are the HTML element which contains the breadcrumbs for the current
   // selection chain. It is a sub-element of the container.
   private breadcrumbs: HTMLElement = null;
@@ -266,10 +270,71 @@ export class Preview extends EventEmitter {
     });
 
     // This is called when a menu item is dropped.
-    this.itemDragger.on('drag-end', (node, div) => {
+    this.itemDragger.on('drag-end', (node, itemDiv, targetDiv) => {
       // Reset the position of the dragged div.
-      div.style.left = '';
-      div.style.top = '';
+      itemDiv.style.left = '';
+      itemDiv.style.top = '';
+
+      dropWedges = null;
+
+      // Hide the drop indicator.
+      this.dropIndicator.classList.remove('visible');
+      this.canvas.removeEventListener('pointerenter', dragEnter);
+      this.canvas.removeEventListener('pointerleave', dragLeave);
+
+      // Check whether the target div is a submenu item. If it is, we drop the dragged
+      // item into the submenu. We do this by searching for a parent div of the target div
+      // which has the class 'kando-menu-preview-child'.
+      const targetItemDiv = utils.getParentWithClass(
+        targetDiv,
+        'kando-menu-preview-child'
+      );
+
+      if (targetItemDiv) {
+        const targetNode = this.getCenterItem().children.find(
+          (c) => (c as IEditorNode).itemDiv === targetItemDiv
+        ) as IEditorNode;
+
+        // If the target node is a submenu, we add the dragged item to its children.
+        if (targetNode.type === 'submenu') {
+          targetNode.children.push(node);
+
+          // Remove the dragged item from the DOM.
+          itemDiv.remove();
+
+          dropIndex = null;
+          dragIndex = null;
+
+          // In any case, we redraw the menu.
+          this.recomputeItemAngles();
+          this.updateAllPositions();
+
+          return;
+        }
+      }
+
+      // Next, we check whether the target div is a back link. If it is, append the
+      // dragged item to the parent of the current center item.
+      const targetLinkDiv = utils.getParentWithClass(
+        targetDiv,
+        'kando-menu-preview-backlink'
+      );
+
+      if (targetLinkDiv) {
+        const parent = this.selectionChain[this.selectionChain.length - 2];
+        parent.children.push(node);
+
+        // Remove the dragged item from the DOM.
+        itemDiv.remove();
+
+        dropIndex = null;
+        dragIndex = null;
+
+        this.computeItemAnglesRecursively(parent);
+        this.updateAllPositions();
+
+        return;
+      }
 
       // If the node has been dropped on the canvas, we add it to the children of the
       // center item at the correct position. If there is currently no drop index, we
@@ -280,16 +345,9 @@ export class Preview extends EventEmitter {
         dragIndex = null;
       }
 
-      dropWedges = null;
-
       // In any case, we redraw the menu.
       this.recomputeItemAngles();
       this.updateAllPositions();
-
-      // Hide the drop indicator.
-      this.dropIndicator.classList.remove('visible');
-      this.canvas.removeEventListener('pointerenter', dragEnter);
-      this.canvas.removeEventListener('pointerleave', dragLeave);
     });
   }
 
@@ -361,25 +419,21 @@ export class Preview extends EventEmitter {
       });
     }
 
-    // Now we update the angles of all children.
-    this.updateAllPositions();
-
     // If we are currently showing a submenu, we add the back navigation link towards
     // the direction of the parent menu.
     if (this.selectionChain.length > 1) {
       const parent = this.selectionChain[this.selectionChain.length - 2];
-      const position = math.getDirection(centerItem.computedAngle, 1.0);
-
-      const backDiv = document.createElement('div');
-      backDiv.classList.add('kando-menu-preview-backlink');
-      backDiv.style.setProperty('--rotation', centerItem.computedAngle + 'deg');
-      backDiv.style.setProperty('--dir-x', position.x + '');
-      backDiv.style.setProperty('--dir-y', position.y + '');
-      backDiv.appendChild(utils.createIcon('arrow_back', 'material-symbols-rounded'));
-      container.appendChild(backDiv);
+      this.backlink = document.createElement('div');
+      this.backlink.classList.add('kando-menu-preview-backlink');
+      this.backlink.appendChild(
+        utils.createIcon('arrow_back', 'material-symbols-rounded')
+      );
+      container.appendChild(this.backlink);
 
       // Make the back link selectable.
-      backDiv.addEventListener('click', () => this.selectNode(parent));
+      this.backlink.addEventListener('click', () => this.selectNode(parent));
+    } else {
+      this.backlink = null;
     }
 
     // We also add a little div which becomes visible when something is dragged over
@@ -387,6 +441,9 @@ export class Preview extends EventEmitter {
     this.dropIndicator = document.createElement('div');
     this.dropIndicator.classList.add('kando-menu-preview-drop-indicator');
     container.appendChild(this.dropIndicator);
+
+    // Now we update the angles of all children.
+    this.updateAllPositions();
 
     // Finally, we fade in all menu items with a little delay.
     setTimeout(() => container.classList.add('visible'), 50);
@@ -412,7 +469,7 @@ export class Preview extends EventEmitter {
 
   /**
    * This method updates the CSS variables for the position and rotation of all currently
-   * visible menu items.
+   * visible menu items, including the back link div.
    */
   private updateAllPositions() {
     const centerItem = this.getCenterItem();
@@ -420,6 +477,13 @@ export class Preview extends EventEmitter {
       centerItem.children.forEach((child) => {
         this.updateChildPosition(child);
       });
+    }
+
+    if (this.backlink) {
+      const position = math.getDirection(centerItem.computedAngle, 1.0);
+      this.backlink.style.setProperty('--rotation', centerItem.computedAngle + 'deg');
+      this.backlink.style.setProperty('--dir-x', position.x + '');
+      this.backlink.style.setProperty('--dir-y', position.y + '');
     }
   }
 
@@ -454,13 +518,23 @@ export class Preview extends EventEmitter {
     else labelDivContainer.classList.add('bottom');
 
     // If the child has grandchildren, also position them in a circle around the child.
-    if (child.children?.length > 0) {
-      const grandChildrenDivs = child.itemDiv.querySelectorAll(
-        '.kando-menu-preview-grandchild'
-      ) as NodeListOf<HTMLElement>;
+    if (child.type === 'submenu') {
+      const grandChildContainer = child.itemDiv.querySelector(
+        '.kando-menu-preview-grandchild-container'
+      ) as HTMLElement;
+
+      while (grandChildContainer.childElementCount < child.children.length) {
+        const grandChildDiv = document.createElement('div');
+        grandChildDiv.classList.add('kando-menu-preview-grandchild');
+        grandChildContainer.appendChild(grandChildDiv);
+      }
+
+      while (grandChildContainer.childElementCount > child.children.length) {
+        grandChildContainer.lastChild.remove();
+      }
 
       child.children.forEach((grandChild, i) => {
-        grandChildrenDivs[i].style.setProperty(
+        (grandChildContainer.childNodes[i] as HTMLElement).style.setProperty(
           '--rotation',
           (grandChild as IEditorNode).computedAngle + 'deg'
         );

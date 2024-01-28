@@ -36,6 +36,25 @@ export function computeCenter(div: HTMLElement) {
 }
 
 /**
+ * This function returns the closest parent div which has the given class name. If no
+ * parent div has the given class name, it returns null.
+ *
+ * @param div The HTML element for which to find the parent.
+ * @param className The class name of the parent to find.
+ * @returns The closest parent div with the given class name or null.
+ */
+export function getParentWithClass(div: HTMLElement, className: string) {
+  let parent = div.parentElement;
+  while (parent) {
+    if (parent.classList.contains(className)) {
+      return parent;
+    }
+    parent = parent.parentElement;
+  }
+  return null;
+}
+
+/**
  * This is used to compute the drop index during drag-and-drop operations in the menu
  * preview. It computes the drop index by comparing the dragAngle with the possible
  * candidate drop zones.
@@ -162,17 +181,13 @@ export function createChildDiv(node: IEditorNode) {
   // Add the icon of the child.
   div.appendChild(this.createIcon(node.icon, node.iconTheme));
 
-  // If the child has children, we add little grandchild divs to the child div.
-  if (node.children?.length > 0) {
+  // If the child can have children, we add container for the grandchildren. The actual
+  // grandchildren divs are added on demand as their number may change if items are
+  // dropped into the menu.
+  if (node.type === 'submenu') {
     const grandChildContainer = document.createElement('div');
     grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
     div.appendChild(grandChildContainer);
-
-    node.children.forEach(() => {
-      const grandChildDiv = document.createElement('div');
-      grandChildDiv.classList.add('kando-menu-preview-grandchild');
-      grandChildContainer.appendChild(grandChildDiv);
-    });
   }
 
   // Add a label to the child div. This is used to display the name of the menu
