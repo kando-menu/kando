@@ -228,16 +228,12 @@ export function computeItemAngles(
 
 /**
  * Computes the start and end angles of the wedges for the given items. The parent angle
- * is optional. If it is given, there will be a gap towards the parent node. This method
- * also provides an option to scale the wedges. If this is set to a value smaller than 1.0
- * the wedges will be shrunk towards their center leaving gaps between the items.
+ * is optional. If it is given, there will be a gap towards the parent node.
  *
  * @param itemAngles A list of angles for each item. The angles are in degrees and between
  *   0° and 360°.
  * @param parentAngle The angle of the parent node. If given, there will be a gap towards
  *   the parent node. This should be in degrees and between 0° and 360°.
- * @param wedgeScale The amount to scale the wedges by. This should be between 0.0 and
- *   1.0. If set to 1.0, the wedges will touch each other.
  * @returns A list of start and end angles for each item. Each item in the list
  *   corresponds to the item at the same index in the `itemAngles` list. The start angle
  *   will always be smaller than the end angle. Consequently, the start angle can be
@@ -245,8 +241,7 @@ export function computeItemAngles(
  */
 export function computeItemWedges(
   itemAngles: number[],
-  parentAngle?: number,
-  wedgeScale: number = 1.0
+  parentAngle?: number
 ): { start: number; end: number }[] {
   // This should never happen, but who knows...
   if (itemAngles.length === 0 && parentAngle === undefined) {
@@ -267,7 +262,7 @@ export function computeItemWedges(
     let end = parentAngle + 360;
 
     [start, center, end] = normalizeConsequtiveAngles(start, center, end);
-    [start, end] = scaleWedge(start, center, end, 0.5 * wedgeScale);
+    [start, end] = scaleWedge(start, center, end, 0.5);
 
     return [{ start: start, end: end }];
   }
@@ -288,7 +283,7 @@ export function computeItemWedges(
       [start, center, end] = normalizeConsequtiveAngles(start, center, end);
     }
 
-    [start, end] = scaleWedge(start, center, end, 0.5 * wedgeScale);
+    [start, end] = scaleWedge(start, center, end, 0.5);
 
     wedges.push({ start: start, end: end });
   }
