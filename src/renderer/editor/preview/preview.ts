@@ -12,6 +12,7 @@ import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import * as math from '../../math';
+import * as utils from './utils';
 import { IEditorNode } from '../editor-node';
 import { ItemDragger } from '../common/item-dragger';
 import { IVec2, IMenu } from '../../../common';
@@ -93,7 +94,7 @@ export class Preview extends EventEmitter {
     // When the window is resized, we have to recompute the preview center. It is used
     // to compute the angles of the menu items during drag'n'drop.
     window.addEventListener('resize', () => {
-      this.previewCenter = Preview.computeCenter(this.canvas);
+      this.previewCenter = utils.computeCenter(this.canvas);
     });
 
     this.initDragAndDrop();
@@ -131,7 +132,7 @@ export class Preview extends EventEmitter {
 
     // This actually has to be done only once after the menu preview has been added to
     // the DOM. However, we do not have a good place for this, so we do it here.
-    this.previewCenter = Preview.computeCenter(this.canvas);
+    this.previewCenter = utils.computeCenter(this.canvas);
   }
 
   /**
@@ -205,7 +206,7 @@ export class Preview extends EventEmitter {
 
           dropWedges = math.computeItemWedges(
             childAngles,
-            Preview.getParentAngle(centerItem)
+            utils.getParentAngle(centerItem)
           );
 
           // In order to allow dropping into submenus, we reduce the size of the drop-zone
@@ -236,7 +237,7 @@ export class Preview extends EventEmitter {
 
         // Choose the drop index from the drop wedges. This will be negative if the
         // pointer is not inside any of the wedges.
-        const newDropIndex = Preview.computeDropIndex(dropWedges, dragAngle);
+        const newDropIndex = utils.computeDropIndex(dropWedges, dragAngle);
 
         if (newDropIndex >= 0 && newDropIndex !== dropIndex) {
           dropIndex = newDropIndex;
@@ -337,8 +338,11 @@ export class Preview extends EventEmitter {
     this.canvas.appendChild(container);
 
     // The big center div shows the icon of the currently selected menu.
-    centerItem.itemDiv = this.createCenterDiv(centerItem);
+    centerItem.itemDiv = utils.createCenterDiv(centerItem);
     container.appendChild(centerItem.itemDiv);
+
+    // Make the center item selectable.
+    centerItem.itemDiv.addEventListener('click', () => this.selectNode(centerItem));
 
     // Add the children of the currently selected menu.
     if (centerItem.children?.length > 0) {
@@ -346,8 +350,11 @@ export class Preview extends EventEmitter {
         const child = c as IEditorNode;
 
         // Create a div for the child.
-        child.itemDiv = this.createChildDiv(child);
+        child.itemDiv = utils.createChildDiv(child);
         container.appendChild(child.itemDiv);
+
+        // If the child is selected, push its index to the selection chain.
+        child.itemDiv.addEventListener('click', () => this.selectNode(child));
 
         // Make the child div draggable.
         this.itemDragger.addDraggable(child.itemDiv, child);
@@ -368,7 +375,7 @@ export class Preview extends EventEmitter {
       backDiv.style.setProperty('--rotation', centerItem.computedAngle + 'deg');
       backDiv.style.setProperty('--dir-x', position.x + '');
       backDiv.style.setProperty('--dir-y', position.y + '');
-      backDiv.appendChild(this.createIcon('arrow_back', 'material-symbols-rounded'));
+      backDiv.appendChild(utils.createIcon('arrow_back', 'material-symbols-rounded'));
       container.appendChild(backDiv);
 
       // Make the back link selectable.
@@ -509,96 +516,6 @@ export class Preview extends EventEmitter {
   }
 
   /**
-   * This method creates a div which contains an icon. The icon is created using the
-   * 'material-symbols-rounded' or 'simple-icons' font.
-   *
-   * @param icon The name of the icon to create.
-   * @param theme The name of the icon theme to use.
-   * @returns A HTML element which contains the icon.
-   */
-  private createIcon(icon: string, theme: string) {
-    const containerDiv = document.createElement('div');
-    containerDiv.classList.add('kando-menu-preview-icon-container');
-
-    const iconDiv = document.createElement('i');
-    containerDiv.appendChild(iconDiv);
-
-    if (theme === 'material-symbols-rounded') {
-      iconDiv.classList.add(theme);
-      iconDiv.innerHTML = icon;
-    } else if (theme === 'simple-icons') {
-      iconDiv.classList.add('si');
-      iconDiv.classList.add('si-' + icon);
-    }
-
-    return containerDiv;
-  }
-
-  /**
-   * This method creates the big center div which shows the icon of the currently selected
-   * menu.
-   *
-   * @param node The node for which to create the center div.
-   */
-  private createCenterDiv(node: IEditorNode) {
-    const div = document.createElement('div');
-    div.classList.add('kando-menu-preview-center');
-    div.appendChild(this.createIcon(node.icon, node.iconTheme));
-
-    // Make the center item selectable.
-    div.addEventListener('click', () => this.selectNode(node));
-
-    return div;
-  }
-
-  /**
-   * This method creates a div visualizing a child node. It contains an icon, potentially
-   * grandchildren, and a label.
-   *
-   * @param node The node for which to create the child div.
-   */
-  private createChildDiv(node: IEditorNode) {
-    const div = document.createElement('div');
-    div.classList.add('kando-menu-preview-child');
-
-    // If the child is selected, push its index to the selection chain.
-    div.addEventListener('click', () => this.selectNode(node));
-
-    // Add the icon of the child.
-    div.appendChild(this.createIcon(node.icon, node.iconTheme));
-
-    // If the child has children, we add little grandchild divs to the child div.
-    if (node.children?.length > 0) {
-      const grandChildContainer = document.createElement('div');
-      grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
-      div.appendChild(grandChildContainer);
-
-      node.children.forEach(() => {
-        const grandChildDiv = document.createElement('div');
-        grandChildDiv.classList.add('kando-menu-preview-grandchild');
-        grandChildContainer.appendChild(grandChildDiv);
-      });
-    }
-
-    // Add a label to the child div. This is used to display the name of the menu
-    // item. The label shows a connector line to the child div.
-    const labelDivContainer = document.createElement('div');
-    labelDivContainer.classList.add('kando-menu-preview-label-container');
-    div.appendChild(labelDivContainer);
-
-    // The actual label is in a nested div. This is used to ellipsize the text if
-    // it is too long.
-    const labelDiv = document.createElement('div');
-    labelDiv.classList.add('kando-menu-preview-label');
-    labelDiv.classList.add('kando-font');
-    labelDiv.classList.add('fs-3');
-    labelDiv.textContent = node.name;
-    labelDivContainer.appendChild(labelDiv);
-
-    return div;
-  }
-
-  /**
    * This method computes the `computedAngle` properties for the children of the given
    * node. The `computedAngle` property is the angle of the child relative to its parent.
    * It is computed from the `computedAngle` property of the parent and the optional
@@ -615,10 +532,7 @@ export class Preview extends EventEmitter {
     // For all other cases, we have to compute the angles of the children. First, we
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
-    const itemAngles = math.computeItemAngles(
-      node.children,
-      Preview.getParentAngle(node)
-    );
+    const itemAngles = math.computeItemAngles(node.children, utils.getParentAngle(node));
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < node.children?.length; ++i) {
@@ -657,10 +571,10 @@ export class Preview extends EventEmitter {
     // For all other cases, we have to compute the angles of the children. First, we
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
-    const { itemAngles, dropAngle } = Preview.computeItemAnglesWithDropIndex(
+    const { itemAngles, dropAngle } = utils.computeItemAnglesWithDropIndex(
       centerItem.children,
       dropIndex,
-      Preview.getParentAngle(centerItem)
+      utils.getParentAngle(centerItem)
     );
 
     // Now we assign the corresponding angles to the children.
@@ -673,98 +587,5 @@ export class Preview extends EventEmitter {
     }
 
     return dropAngle;
-  }
-
-  /**
-   * This method returns the direction towards the parent of the given node. If the node
-   * has no parent (e.g. it is the root menu), it returns undefined.
-   *
-   * @param node The node for which to compute the parent angle.
-   * @returns The angle towards the parent of the given node.
-   */
-  private static getParentAngle(node: IEditorNode) {
-    if (node.computedAngle === undefined) {
-      return undefined;
-    }
-
-    return (node.computedAngle + 180) % 360;
-  }
-
-  /**
-   * This method computes the position of the preview center. The preview center is the
-   * position of the center item in the preview. It is used to compute the angles of the
-   * menu items during drag'n'drop.
-   */
-  private static computeCenter(div: HTMLElement) {
-    const rect = div.getBoundingClientRect();
-    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
-  }
-
-  private static computeDropIndex(
-    dropWedges: { start: number; end: number }[],
-    dragAngle: number
-  ): number {
-    // We compute the drop index by comparing the dragAngle with the possible candidates
-    // which we stored when the drag operation was started. There are a few special cases
-    // when there are only a few items in the menu.
-    // If there is no current item, it's easy: We simply drop at index zero.
-    if (dropWedges.length === 0) {
-      return 0;
-    }
-
-    // If there is one current item, we have to decide whether to drop before / or after.
-    if (dropWedges.length === 1) {
-      return dragAngle - dropWedges[0].start < 90 || dragAngle - dropWedges[0].end > 270
-        ? 0
-        : 1;
-    }
-
-    // All other cases can be handled with a loop through the drop zone wedges between the
-    // items. For each wedge, we decide whether the pointer is inside the wedge.
-    for (let i = 0; i < dropWedges.length; i++) {
-      if (math.isAngleBetween(dragAngle, dropWedges[i].start, dropWedges[i].end)) {
-        return i;
-      }
-    }
-
-    // This happens if the pointer is not inside any of the wedges. This is for example
-    // the case when the pointer is in the area of a back link.
-    return -1;
-  }
-
-  /**
-   * This is basically a variant of the math.computeItemAngles() method which is used
-   * during drag-and-drop operations. It behaves similar to the computeItemAngles method,
-   * but it allows to pass an additional drop index. The computed item angles will leave a
-   * gap for the to-be-dropped item.
-   *
-   * @param items The Items for which the angles should be computed. They may already have
-   *   an angle property. If so, this is considered a fixed angle.
-   * @param dropIndex The index of the location where something is about to be dropped.
-   * @param parentAngle The angle of the parent item. If given, there will be some
-   *   reserved space.
-   * @returns An array of angles in degrees and the angle for the to-be-dropped item.
-   */
-  private static computeItemAnglesWithDropIndex(
-    items: { angle?: number }[],
-    dropIndex: number,
-    parentAngle?: number
-  ): { itemAngles: number[]; dropAngle: number } {
-    // Create a copy of the items array.
-    const itemsCopy = items.slice();
-
-    // Add an artificial item at the position where something is about to be dropped.
-    itemsCopy.splice(dropIndex, 0, {});
-
-    // Now compute the angles as usual.
-    const itemAngles = math.computeItemAngles(itemsCopy, parentAngle);
-
-    // We added an artificial item to leave an angular gap for the to-be-dropped item. We
-    // have to remove this again from the list of item angles as there is no real item at
-    // this position. We only wanted to affect the angles for the adjacent items.
-    // We will also return the angle for the to-be-dropped item (if given).
-    const dropAngle = itemAngles.splice(dropIndex, 1)[0];
-
-    return { itemAngles, dropAngle };
   }
 }
