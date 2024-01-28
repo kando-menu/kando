@@ -136,22 +136,17 @@ export function computeItemAngles(
 
   // If no item has a fixed angle, we assign one to the first item. If there is no
   // parent item, this is on the top (0°). Else, the angular space will be evenly
-  // distributed to all child items and the first item will be the one closest to the
-  // top.
+  // distributed to all child items and the first item will be at the first possible
+  // location with an angle > 0.
   if (fixedAngles.length == 0) {
     let firstAngle = 0;
     if (parentAngle != undefined) {
       const wedgeSize = 360 / (items.length + 1);
-      let minAngleDiff = 360;
+      let minAngle = 360;
       for (let i = 0; i < items.length; i++) {
-        const angle = (parentAngle + (i + 1) * wedgeSize) % 360;
-        const angleDiff = Math.min(angle, 360 - angle);
-
-        if (angleDiff < minAngleDiff) {
-          minAngleDiff = angleDiff;
-          firstAngle = (angle + 360) % 360;
-        }
+        minAngle = Math.min(minAngle, (parentAngle + (i + 1) * wedgeSize) % 360);
       }
+      firstAngle = minAngle;
     }
     fixedAngles.push({ angle: firstAngle, index: 0 });
     itemAngles[0] = firstAngle;
