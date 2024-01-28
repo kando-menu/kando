@@ -10,6 +10,11 @@
 
 import { IVec2 } from '../../common';
 
+/** This method returns the the given value clamped to the given range. */
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
 /** This method converts radians to degrees. */
 export function toDegrees(radians: number): number {
   return (radians * 180) / Math.PI;

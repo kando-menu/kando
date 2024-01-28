@@ -787,8 +787,8 @@ export class Menu extends EventEmitter {
     const maxX = window.innerWidth - size;
     const maxY = window.innerHeight - size;
 
-    const posX = Math.min(Math.max(position.x, minX), maxX);
-    const posY = Math.min(Math.max(position.y, minY), maxY);
+    const posX = math.clamp(position.x, minX, maxX);
+    const posY = math.clamp(position.y, minY, maxY);
 
     // Ensure integer position.
     return { x: Math.floor(posX), y: Math.floor(posY) };
