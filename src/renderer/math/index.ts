@@ -219,12 +219,16 @@ export function computeItemAngles(
 
 /**
  * Computes the start and end angles of the wedges for the given items. The parent angle
- * is optional. If it is given, there will be a gap towards the parent node.
+ * is optional. If it is given, there will be a gap towards the parent node. This method
+ * also provides an option to scale the wedges. If this is set to a value smaller than 1.0
+ * the wedges will be shrunk towards their center leaving gaps between the items.
  *
  * @param itemAngles A list of angles for each item. The angles are in degrees and between
  *   0° and 360°.
  * @param parentAngle The angle of the parent node. If given, there will be a gap towards
  *   the parent node. This should be in degrees and between 0° and 360°.
+ * @param wedgeScale The amount to scale the wedges by. This should be between 0.0 and
+ *   1.0. If set to 1.0, the wedges will touch each other.
  * @returns A list of start and end angles for each item. Each item in the list
  *   corresponds to the item at the same index in the `itemAngles` list. The start angle
  *   will always be smaller than the end angle. Consequently, the start angle can be
@@ -232,7 +236,8 @@ export function computeItemAngles(
  */
 export function computeItemWedges(
   itemAngles: number[],
-  parentAngle?: number
+  parentAngle?: number,
+  wedgeScale: number = 1.0
 ): { start: number; end: number }[] {
   // This should never happen, but who knows...
   if (itemAngles.length === 0 && parentAngle === undefined) {
@@ -253,7 +258,7 @@ export function computeItemWedges(
     let end = parentAngle + 360;
 
     [start, center, end] = normalizeConsequtiveAngles(start, center, end);
-    [start, end] = shrinkWedge(start, center, end, 0.5);
+    [start, end] = scaleWedge(start, center, end, 0.5 * wedgeScale);
 
     return [{ start: start, end: end }];
   }
@@ -274,7 +279,7 @@ export function computeItemWedges(
       [start, center, end] = normalizeConsequtiveAngles(start, center, end);
     }
 
-    [start, end] = shrinkWedge(start, center, end, 0.5);
+    [start, end] = scaleWedge(start, center, end, 0.5 * wedgeScale);
 
     wedges.push({ start: start, end: end });
   }
@@ -354,19 +359,19 @@ function cropWedge(start: number, center: number, end: number, cropAngle: number
 }
 
 /**
- * This method shrinks the given wedge by the given amount. The wedge is defined by the
- * start and end angles and the center angle. The amount should be between 0.0 and 1.0.
- * The start and end angles will be moved towards the center angle by the given amount.
+ * This method scales the given wedge by the given amount. The wedge is defined by the
+ * start and end angles and the center angle. The scale should be between 0.0 and 1.0. The
+ * start and end angles will be moved towards the center angle by the given amount.
  *
  * @param start The start angle of the wedge.
  * @param center The center angle of the wedge.
  * @param end The end angle of the wedge.
- * @param amount The amount to shrink the wedge by (0.0 to 1.0).
+ * @param scale The amount to scales the wedge by (0.0 to 1.0).
  * @returns The new start and end angles of the wedge.
  */
-function shrinkWedge(start: number, center: number, end: number, amount: number) {
-  start = center - (center - start) * (1.0 - amount);
-  end = center + (end - center) * (1.0 - amount);
+function scaleWedge(start: number, center: number, end: number, scale: number) {
+  start = center - (center - start) * scale;
+  end = center + (end - center) * scale;
 
   return [start, end];
 }
