@@ -46,6 +46,15 @@ export function subtract(vec1: IVec2, vec2: IVec2): IVec2 {
 }
 
 /**
+ * This returns the angular difference between the two given angles using the shortest
+ * path. The result will always be between 0° and 180°.
+ */
+export function getAngularDifference(angle1: number, angle2: number): number {
+  const diff = Math.abs((angle1 % 360) - (angle2 % 360));
+  return Math.min(diff, 360 - diff);
+}
+
+/**
  * This method returns the angle of the given vector in degrees. 0° is on the top, 90° is
  * on the right, 180° is on the bottom and 270° is on the right. The vector does not need
  * to be normalized.

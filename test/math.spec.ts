@@ -11,9 +11,41 @@
 import {
   computeItemAngles,
   computeItemWedges,
+  getAngularDifference,
   isAngleBetween,
 } from '../src/renderer/math';
 import { expect } from 'chai';
+
+describe('getAngularDifference', () => {
+  it('should work for angles between 0 and 360', () => {
+    expect(getAngularDifference(0, 0)).to.equal(0);
+    expect(getAngularDifference(0, 1)).to.equal(1);
+    expect(getAngularDifference(10, 350)).to.equal(20);
+    expect(getAngularDifference(350, 10)).to.equal(20);
+    expect(getAngularDifference(350, 350)).to.equal(0);
+    expect(getAngularDifference(350, 360)).to.equal(10);
+  });
+
+  it('should work for angles outside of 0 and 360', () => {
+    expect(getAngularDifference(-10, 10)).to.equal(20);
+    expect(getAngularDifference(10, -10)).to.equal(20);
+    expect(getAngularDifference(-10, -10)).to.equal(0);
+    expect(getAngularDifference(-10, 370)).to.equal(20);
+    expect(getAngularDifference(370, -10)).to.equal(20);
+    expect(getAngularDifference(370, 10)).to.equal(0);
+    expect(getAngularDifference(10, 370)).to.equal(0);
+  });
+
+  it('should work for angles which are multiples of 360', () => {
+    expect(getAngularDifference(0, 360)).to.equal(0);
+    expect(getAngularDifference(360, 0)).to.equal(0);
+    expect(getAngularDifference(360, 360)).to.equal(0);
+    expect(getAngularDifference(360, 720)).to.equal(0);
+    expect(getAngularDifference(720, 360)).to.equal(0);
+    expect(getAngularDifference(710, 0)).to.equal(10);
+    expect(getAngularDifference(10, 720)).to.equal(10);
+  });
+});
 
 describe('computeItemAngles', () => {
   it('should return an empty array for an empty list of items', () => {
