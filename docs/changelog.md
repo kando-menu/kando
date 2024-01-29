@@ -23,7 +23,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
-- The first component of the menu editor: **The menu preview!** This shows a preview of the menu which is currently being edited. For now, it can be used to reorder the menu items. The changes will be saved to the menu configuration file when the editor is closed.
+- The first component of the menu editor: **The menu preview!** This shows a preview of the menu which is currently being edited. For now, it can be used to...
+  * Reorder menu items.
+  * Drop menu items into submenus.
+  * Move menu items to the parent level.
+  * Any changes will be saved to the menu configuration file when the editor is closed.
 - Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
 - A console message when a second instance of Kando is launched. Before, the second instance would just silently quit.
 
