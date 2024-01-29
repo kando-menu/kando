@@ -18,6 +18,25 @@
 //   or the menu configuration widgets in the screen's center. They are visible when
 //   the editor is in 'edit-mode'.
 
+$editor-padding-left: 7vw;
+$editor-padding-right: 7vw;
+$editor-padding-top: 7vh;
+$editor-padding-bottom: 7vh;
+
+$preview-properties-ratio: 0.7;
+$preview-center-size: 22cqmin;
+$preview-child-size: 12cqmin;
+$preview-child-distance: 25cqmin;
+$preview-grandchild-size: 3cqmin;
+$preview-backlink-width: 4cqmin;
+$preview-backlink-inner-length: 8cqmin;
+$preview-backlink-outer-length: 30cqmin;
+$preview-label-distance: 20cqmin;
+$preview-label-max-size: 30cqmin;
+
+$toolbar-height: max(250px, 20vh);
+$toolbar-padding: 10px;
+
 @import './background/background.scss';
 @import './preview/preview.scss';
 @import './properties/properties.scss';

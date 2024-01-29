@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2, INode, IEditorData, IAppSettings } from '../common';
+import { IKeySequence, IVec2, INode, IAppSettings, IMenuSettings } from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -36,6 +36,25 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.on(`app-settings-changed-${key}`, (event, newValue, oldValue) => {
         callback(newValue, oldValue);
       });
+    },
+  },
+
+  /**
+   * The menuSettings object can be used to read and write the menu settings. This is
+   * primarily used by the menu editor. When a menu should be shown, the host process will
+   * call the showMenu callback further below. For now, it is not forseen that the menu
+   * editor reloads the menu settings when they change on disc. Hence, there is no
+   * onChange callback.
+   */
+  menuSettings: {
+    get(): Promise<IMenuSettings> {
+      return ipcRenderer.invoke('menu-settings-get');
+    },
+    set(data: IMenuSettings) {
+      ipcRenderer.send('menu-settings-set', data);
+    },
+    getCurrentMenu(): Promise<number> {
+      return ipcRenderer.invoke('menu-settings-get-current-menu');
     },
   },
 
@@ -96,14 +115,6 @@ contextBridge.exposeInMainWorld('api', {
    */
   cancelSelection: function () {
     ipcRenderer.send('cancel-selection');
-  },
-
-  /**
-   * This will be called by the render process when the user opens the menu editor. The
-   * returned promise will resolve to the data required to initialize the editor.
-   */
-  getMenuEditorData: async function (): Promise<IEditorData> {
-    return ipcRenderer.invoke('get-editor-data');
   },
 
   /**

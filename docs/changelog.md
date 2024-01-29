@@ -23,11 +23,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
+- The first component of the menu editor: **The menu preview!** This shows a preview of the menu which is currently being edited. For now, it can be used to reorder the menu items. The changes will be saved to the menu configuration file when the editor is closed.
 - Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
 - A console message when a second instance of Kando is launched. Before, the second instance would just silently quit.
 
 #### Changed
 
+- The item positioning code has been slightly changed: If no fixed angle is given, the first child will now be positioned at the first valid position counting clockwise from the top. Before, it was positioned at the position closest to the top, which could have been slightly counter-clockwise as well.
+- The menu is now hidden when the user exits the menu editor.
 - Some parts of the rendering code have been refactored. This should not change anything for the user, but it makes the code more readable and maintainable.
 
 #### Fixed

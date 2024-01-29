@@ -18,7 +18,7 @@
     transform: translateX(-20px);
 
     i {
-      top: 0;
+      top: 0 !important;
     }
   }
 
@@ -57,6 +57,14 @@
       .sidebar-item:nth-child(#{$i}) {
         transition-delay: #{($i - 1) * 30}ms;
       }
+    }
+
+    .material-symbols-rounded {
+      font-size: unset;
+      line-height: unset;
+      position: relative;
+      vertical-align: middle;
+      top: -0.1em;
     }
   }
 

@@ -331,7 +331,7 @@ export class Menu extends EventEmitter {
       // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
       // to the parent node.
       node.position = math.getDirection(
-        node.angle - 90,
+        node.angle,
         Math.max(this.PARENT_DISTANCE, this.input.distance)
       );
 
@@ -518,13 +518,7 @@ export class Menu extends EventEmitter {
     const currentNode = this.selectionChain[this.selectionChain.length - 1];
     if (currentNode.children) {
       for (const child of currentNode.children as IMenuNode[]) {
-        if (
-          (this.input.angle > child.startAngle && this.input.angle <= child.endAngle) ||
-          (this.input.angle - 360 > child.startAngle &&
-            this.input.angle - 360 <= child.endAngle) ||
-          (this.input.angle + 360 > child.startAngle &&
-            this.input.angle + 360 <= child.endAngle)
-        ) {
+        if (math.isAngleBetween(this.input.angle, child.startAngle, child.endAngle)) {
           return child;
         }
       }
@@ -550,7 +544,7 @@ export class Menu extends EventEmitter {
    */
   private updateTransform(node: IMenuNode) {
     if (node.itemDiv.classList.contains('grandchild')) {
-      node.position = math.getDirection(node.angle - 90, this.GRANDCHILD_DISTANCE);
+      node.position = math.getDirection(node.angle, this.GRANDCHILD_DISTANCE);
       node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
     } else if (node.itemDiv.classList.contains('child')) {
       let transform = '';
@@ -574,7 +568,7 @@ export class Menu extends EventEmitter {
         transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       } else {
         // If the node is not dragged, move it to its position on the circle.
-        node.position = math.getDirection(node.angle - 90, this.CHILD_DISTANCE);
+        node.position = math.getDirection(node.angle, this.CHILD_DISTANCE);
         transform += `translate(${node.position.x}px, ${node.position.y}px)`;
       }
 
@@ -636,7 +630,7 @@ export class Menu extends EventEmitter {
           node.lastConnectorRotation = angle;
 
           node.connectorDiv.style.width = `${length}px`;
-          node.connectorDiv.style.transform = `rotate(${angle}deg)`;
+          node.connectorDiv.style.transform = `rotate(${angle - 90}deg)`;
         } else {
           node.connectorDiv.style.width = '0px';
         }
@@ -705,9 +699,9 @@ export class Menu extends EventEmitter {
   /**
    * This method computes the 'angle', 'startAngle' and 'endAngle' properties for the
    * children of the given node. The 'angle' property is the angle of the child relative
-   * itself, the 'startAngle' and 'endAngle' properties are the angular bounds of the
-   * child's wedge. If the given node has an 'angle' property itself, the child wedges
-   * leave a gap at the position towards the parent node.
+   * to its parent, the 'startAngle' and 'endAngle' properties are the angular bounds of
+   * the child's wedge. If the given node has an 'angle' property itself, the child wedges
+   * will leave a gap at the position towards the parent node.
    *
    * @param node The node for which to setup the angles recursively.
    */
@@ -720,7 +714,7 @@ export class Menu extends EventEmitter {
     // For all other cases, we have to compute the angles of the children. First, we
     // compute the angle towards the parent node. This will be undefined for the root
     // node.
-    const parentAngle = (node.angle + 180) % 360;
+    const parentAngle = node.angle == undefined ? undefined : (node.angle + 180) % 360;
     const angles = math.computeItemAngles(node.children, parentAngle);
     const wedges = math.computeItemWedges(angles, parentAngle);
 
@@ -790,8 +784,8 @@ export class Menu extends EventEmitter {
     const maxX = window.innerWidth - size;
     const maxY = window.innerHeight - size;
 
-    const posX = Math.min(Math.max(position.x, minX), maxX);
-    const posY = Math.min(Math.max(position.y, minY), maxY);
+    const posX = math.clamp(position.x, minX, maxX);
+    const posY = math.clamp(position.y, minY, maxY);
 
     // Ensure integer position.
     return { x: Math.floor(posX), y: Math.floor(posY) };

@@ -9,14 +9,25 @@
 // SPDX-License-Identifier: MIT
 
 import { Tooltip } from 'bootstrap';
+import { EventEmitter } from 'events';
 
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
+import { IMenuSettings } from '../../common';
+import { toINode } from './editor-node';
 
-export class Editor {
+/**
+ * This class is responsible for the entire editor. It contains the preview, the
+ * properties view, the sidebar and the toolbar. It is an event emitter and will emit the
+ * following events:
+ *
+ * - 'enter-edit-mode': This is emitted when the user enters edit mode.
+ * - 'leave-edit-mode': This is emitted when the user leaves edit mode.
+ */
+export class Editor extends EventEmitter {
   // The container is the HTML element which contains the menu editor.
   private container: HTMLElement = null;
 
@@ -40,11 +51,18 @@ export class Editor {
   // switch between different menus, add new items, etc.
   private toolbar: Toolbar = null;
 
+  // These are the current menu settings. They are retrieved from the main process when
+  // the user enters edit mode. It will modified by the user and then sent back to the
+  // main process when the user leaves edit mode.
+  private menuSettings: IMenuSettings = null;
+
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
   constructor(container: HTMLElement) {
+    super();
+
     this.container = container;
 
     // Initialize the background.
@@ -96,11 +114,13 @@ export class Editor {
   }
 
   /**
-   * This is used to hide the entire editor. If the sidebar was visible, it will be shown
-   * again when show() is called.
+   * This is used to hide the entire editor, including the sidebar. We also leave edit
+   * mode if it is currently active. Else, the editor would be shown right away when the
+   * user opens the menu again.
    */
   public hide() {
-    this.container.classList.remove('visible', 'edit-mode');
+    this.container.classList.remove('visible');
+    this.leaveEditMode();
   }
 
   /**
@@ -108,26 +128,53 @@ export class Editor {
    * background. To make sure that enough space is available, the sidebar is hidden.
    */
   public enterEditMode() {
+    if (this.isInEditMode()) {
+      return;
+    }
+
     this.container.classList.add('edit-mode');
     this.sidebar.setVisibility(false);
 
-    // Show that we received the event.
-    window.api.getMenuEditorData().then((data) => {
-      window.api.log(
-        'Editing ' +
-          JSON.stringify(
-            data.menuSettings.menus.map((m) => `${m.nodes.name} (${m.shortcut})`)
-          )
-      );
+    // Get the current settings from the main process and pass them to the respective
+    // components.
+    Promise.all([
+      window.api.menuSettings.get(),
+      window.api.menuSettings.getCurrentMenu(),
+    ]).then(([settings, currentMenu]) => {
+      this.menuSettings = settings;
+      this.preview.setMenu(settings.menus[currentMenu]);
     });
+
+    this.emit('enter-edit-mode');
   }
 
   /**
    * This hides the edit-mode components of the editor, such as the toolbar and the
-   * background. The sidebar will remain visible if it is currently shown.
+   * background. The sidebar will remain visible if it is currently shown. The current
+   * menu settings will be sent back to the main process and saved to disc over there.
    */
   public leaveEditMode() {
+    if (!this.isInEditMode()) {
+      return;
+    }
+
     this.container.classList.remove('edit-mode');
+
+    if (this.menuSettings) {
+      // Before sending the menu settings back to the main process, we have to make sure
+      // that the menu nodes are converted back to INode objects. This is because
+      // IEditorNode objects contain properties (such as DOM nodes) which neither need to
+      // be saved to disc nor can they be cloned using the structured clone algorithm
+      // which is used by Electron for IPC.
+      this.menuSettings.menus.forEach((menu) => {
+        menu.nodes = toINode(menu.nodes);
+      });
+
+      window.api.menuSettings.set(this.menuSettings);
+      this.menuSettings = null;
+    }
+
+    this.emit('leave-edit-mode');
   }
 
   /** This method returns true if the editor is currently in edit mode. */

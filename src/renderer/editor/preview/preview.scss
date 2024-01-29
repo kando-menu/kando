@@ -8,20 +8,360 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-editor-container {
-  #kando-menu-preview {
-    background-color: rgba(255, 255, 255, 0.1);
-    position: absolute;
-    top: calc(5vh + 40px);
-    bottom: max(10vh, 250px + 40px); // 250px is the height of the toolbar.
-    left: 10vw;
-    right: calc(40vw + 10px);
+@use 'sass:math';
 
+#kando-editor-container {
+  #kando-menu-preview-container {
+    container-type: size;
+    position: absolute;
+    top: $editor-padding-top;
+    left: $editor-padding-left;
     transition: opacity 150ms ease;
     opacity: 0;
+
+    width: calc(
+      (100vw - $editor-padding-left - $editor-padding-right) * $preview-properties-ratio
+    );
+    height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
+
+    #kando-menu-preview-canvas {
+      z-index: 0;
+      position: relative;
+      aspect-ratio: 1.5 / 1;
+      width: min(150cqh, 100cqw);
+
+      .kando-menu-preview-container {
+        container-type: size;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition:
+          opacity 250ms ease,
+          transform 350ms cubic-bezier(0.45, 1.45, 0.55, 1);
+
+        transform: translate(
+          calc(var(--dir-x) * $preview-child-distance),
+          calc(var(--dir-y) * $preview-child-distance)
+        );
+
+        &.visible {
+          opacity: 1;
+          transform: none !important;
+        }
+      }
+    }
+
+    .kando-menu-preview-center,
+    .kando-menu-preview-child,
+    .kando-menu-preview-drop-indicator,
+    .kando-menu-preview-backlink {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgb(255, 255, 255);
+      transition: all 150ms ease;
+      aspect-ratio: 1 / 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      // Scale slightly down when the user clicks on the item.
+      &:active {
+        transform: scale(0.9);
+      }
+
+      &:hover,
+      &.dragging {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &.dragging {
+        transition: none;
+        pointer-events: none;
+
+        .kando-menu-preview-label-container {
+          opacity: 0;
+        }
+      }
+
+      .kando-menu-preview-icon-container {
+        container-type: size;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          position: absolute;
+          font-size: 75cqi;
+          color: white;
+        }
+      }
+    }
+
+    .kando-menu-preview-center,
+    .kando-menu-preview-child {
+      &::before {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        border: 2px dashed rgb(255, 255, 255);
+        opacity: 0;
+        transition: all 150ms ease;
+      }
+
+      &.active::before {
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        opacity: 1;
+      }
+    }
+
+    .kando-menu-preview-center {
+      width: $preview-center-size;
+      left: calc(50% - $preview-center-size / 2);
+      top: calc(50% - $preview-center-size / 2);
+    }
+
+    .kando-menu-preview-child,
+    .kando-menu-preview-drop-indicator {
+      width: $preview-child-size;
+      left: calc(50% - $preview-child-size / 2 + var(--dir-x) * $preview-child-distance);
+      top: calc(50% - $preview-child-size / 2 + var(--dir-y) * $preview-child-distance);
+    }
+
+    .kando-menu-preview-grandchild-container {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      z-index: -1;
+      pointer-events: none;
+
+      // inverse circle clipping
+      -webkit-mask-image: radial-gradient(
+        circle at 50%,
+        transparent 0%,
+        transparent 35%,
+        black 45%,
+        black 100%
+      );
+    }
+
+    .kando-menu-preview-grandchild {
+      position: absolute;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 0.5);
+      transition: transform 150ms ease;
+      width: $preview-grandchild-size;
+      height: $preview-grandchild-size;
+      left: calc(50% - $preview-grandchild-size / 2);
+      top: calc(50% - $preview-grandchild-size / 2);
+      transform: rotate(calc(var(--rotation) - 90deg))
+        translateX(calc($preview-child-size / 2));
+    }
+
+    .kando-menu-preview-label-container {
+      position: absolute;
+      width: $preview-label-max-size;
+      height: $preview-label-max-size;
+      pointer-events: none;
+      display: flex;
+      align-items: end;
+      opacity: 1;
+
+      transition: opacity 150ms ease;
+
+      &::before {
+        content: '';
+        position: absolute;
+        transform: rotate(calc(var(--rotation) + 90deg));
+        transform-origin: left;
+        width: calc($preview-label-distance - $preview-child-size / 2 - 20px);
+        height: 1px;
+        left: 0;
+        bottom: 0;
+        border-bottom: 2px dashed rgb(255, 255, 255);
+      }
+
+      .kando-menu-preview-label {
+        pointer-events: all;
+        color: white;
+        white-space: nowrap;
+        border-bottom: 2px dashed rgb(255, 255, 255);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding: 0 1rem;
+      }
+
+      &.left {
+        justify-content: end;
+        transform: translate(-50%, -50%)
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
+
+        &::before {
+          transform: rotate(calc(var(--rotation) - 90deg));
+          transform-origin: right;
+          left: auto;
+          right: 0;
+        }
+      }
+
+      &.right {
+        transform: translate(50%, -50%)
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
+      }
+
+      &.top {
+        justify-content: center;
+        transform: translate(0%, -50%)
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
+
+        &::before {
+          left: 50%;
+        }
+      }
+
+      &.bottom {
+        align-items: start;
+        justify-content: center;
+        transform: translate(0%, 50%)
+          translate(
+            calc(var(--dir-x) * $preview-label-distance),
+            calc(var(--dir-y) * $preview-label-distance)
+          );
+
+        &::before {
+          left: 50%;
+          bottom: auto;
+          top: 0;
+        }
+
+        .kando-menu-preview-label {
+          border-top: 2px dashed rgb(255, 255, 255);
+          border-bottom: none;
+        }
+      }
+    }
+
+    .kando-menu-preview-backlink {
+      width: $preview-child-size;
+      height: $preview-child-size;
+      left: calc(50% - $preview-child-size / 2 - var(--dir-x) * $preview-child-distance);
+      top: calc(50% - $preview-child-size / 2 - var(--dir-y) * $preview-child-distance);
+
+      transform: rotate(calc(var(--rotation) - 90deg));
+
+      border: none;
+
+      &:active {
+        transform: rotate(calc(var(--rotation) - 90deg)) scale(0.9);
+      }
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        height: $preview-backlink-width;
+      }
+
+      // The inner part.
+      &::before {
+        width: $preview-backlink-inner-length;
+        right: -$preview-backlink-inner-length;
+
+        background: linear-gradient(
+          to left,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.1) 25%,
+          rgba(255, 255, 255, 0.1) 85%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+
+      // The outer part.
+      &::after {
+        width: $preview-backlink-outer-length;
+        left: -$preview-backlink-outer-length;
+
+        background: linear-gradient(
+          to left,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.1) 4%,
+          rgba(255, 255, 255, 0.1) 75%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+    }
+
+    .kando-menu-preview-drop-indicator {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px dashed rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      opacity: 0;
+      transition: all 150ms ease;
+
+      &.visible {
+        opacity: 1;
+      }
+    }
+
+    #kando-menu-preview-breadcrumbs {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: rgba(255, 255, 255, 0.5);
+
+      .kando-menu-preview-breadcrumb {
+        display: inline-block;
+        margin-right: 0.5em;
+
+        &:hover {
+          color: rgb(255, 255, 255);
+        }
+
+        &:last-child {
+          color: rgb(255, 255, 255);
+          border-bottom: 2px dashed rgb(255, 255, 255);
+          pointer-events: none;
+        }
+
+        &:not(:last-child) {
+          cursor: pointer;
+
+          &::after {
+            content: '»';
+            margin-left: 0.5em;
+            color: rgba(255, 255, 255, 0.5) !important;
+          }
+        }
+      }
+    }
   }
 
-  &.edit-mode #kando-menu-preview.visible {
+  &.edit-mode #kando-menu-preview-container.visible {
     opacity: 1;
   }
 }

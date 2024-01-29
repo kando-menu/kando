@@ -10,6 +10,11 @@
 
 import { IVec2 } from '../../common';
 
+/** This method returns the the given value clamped to the given range. */
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
 /** This method converts radians to degrees. */
 export function toDegrees(radians: number): number {
   return (radians * 180) / Math.PI;
@@ -41,24 +46,34 @@ export function subtract(vec1: IVec2, vec2: IVec2): IVec2 {
 }
 
 /**
- * This method returns the angle of the given vector in degrees. 0° is on the right, 90°
- * is on the bottom, 180° is on the left and 270° is on the top. The vector does not need
+ * This returns the angular difference between the two given angles using the shortest
+ * path. The result will always be between 0° and 180°.
+ */
+export function getAngularDifference(angle1: number, angle2: number): number {
+  const diff = Math.abs((angle1 % 360) - (angle2 % 360));
+  return Math.min(diff, 360 - diff);
+}
+
+/**
+ * This method returns the angle of the given vector in degrees. 0° is on the top, 90° is
+ * on the right, 180° is on the bottom and 270° is on the right. The vector does not need
  * to be normalized.
  */
 export function getAngle(vec: IVec2): number {
-  const angle = toDegrees(Math.atan2(vec.y, vec.x));
+  const angle = (toDegrees(Math.atan2(vec.y, vec.x)) + 90) % 360;
   if (angle < 0) {
     return 360 + angle;
   }
+
   return angle;
 }
 
 /**
  * This method returns the direction vector for the given angle and length. 0° is on the
- * right, 90° is on the bottom, 180° is on the left and 270° is on the top.
+ * top, 90° is on the right, 180° is on the bottom and 270° is on the right.
  */
 export function getDirection(angle: number, length: number): IVec2 {
-  const radians = toRadians(angle);
+  const radians = toRadians(angle - 90);
   return {
     x: Math.cos(radians) * length,
     y: Math.sin(radians) * length,
@@ -130,22 +145,17 @@ export function computeItemAngles(
 
   // If no item has a fixed angle, we assign one to the first item. If there is no
   // parent item, this is on the top (0°). Else, the angular space will be evenly
-  // distributed to all child items and the first item will be the one closest to the
-  // top.
+  // distributed to all child items and the first item will be at the first possible
+  // location with an angle > 0.
   if (fixedAngles.length == 0) {
     let firstAngle = 0;
     if (parentAngle != undefined) {
       const wedgeSize = 360 / (items.length + 1);
-      let minAngleDiff = 360;
+      let minAngle = 360;
       for (let i = 0; i < items.length; i++) {
-        const angle = (parentAngle + (i + 1) * wedgeSize) % 360;
-        const angleDiff = Math.min(angle, 360 - angle);
-
-        if (angleDiff < minAngleDiff) {
-          minAngleDiff = angleDiff;
-          firstAngle = (angle + 360) % 360;
-        }
+        minAngle = Math.min(minAngle, (parentAngle + (i + 1) * wedgeSize) % 360);
       }
+      firstAngle = minAngle;
     }
     fixedAngles.push({ angle: firstAngle, index: 0 });
     itemAngles[0] = firstAngle;
@@ -220,11 +230,6 @@ export function computeItemAngles(
  * Computes the start and end angles of the wedges for the given items. The parent angle
  * is optional. If it is given, there will be a gap towards the parent node.
  *
- * For now, this method performs some expensive computations like sorting lists and
- * searching for indices. This could be optimized in the future. I guess that there is a
- * more analytical solution to this problem. However, for now this is good enough as it
- * performs pretty well even for thousands of nodes.
- *
  * @param itemAngles A list of angles for each item. The angles are in degrees and between
  *   0° and 360°.
  * @param parentAngle The angle of the parent node. If given, there will be a gap towards
@@ -238,55 +243,139 @@ export function computeItemWedges(
   itemAngles: number[],
   parentAngle?: number
 ): { start: number; end: number }[] {
-  // If the node has no children, we can stop here.
-  if (itemAngles.length === 0) {
+  // This should never happen, but who knows...
+  if (itemAngles.length === 0 && parentAngle === undefined) {
     return [];
   }
 
-  // If the node as a single child but no parent (e.g. it's the root node), we can
-  // simply set the angle of the child to 0 and the start and end angles to a full
-  // circle.
-  if (itemAngles.length === 1 && isNaN(parentAngle)) {
-    return [
-      {
-        start: 0,
-        end: 360,
-      },
-    ];
+  // If the node has a single child but no parent (e.g. it's the root node), we can
+  // simply return a full circle.
+  if (itemAngles.length === 1 && parentAngle === undefined) {
+    return [{ start: 0, end: 360 }];
   }
 
-  // Now we have to compute the separators between the children. We do this by sorting
-  // the angles and computing the middle between each pair of angles. We also have to
-  // add the angle towards the parent node if the node has a parent.
-  const allAngles = itemAngles.slice();
-  if (!isNaN(parentAngle)) {
-    allAngles.push(parentAngle);
-  }
-  allAngles.sort((a, b) => a - b);
+  // If the node has a single child and a parent, we can set the start and end
+  // angles to the center angles.
+  if (itemAngles.length === 1 && parentAngle !== undefined) {
+    let start = parentAngle;
+    let center = itemAngles[0];
+    let end = parentAngle + 360;
 
-  const separators = [];
-  for (let i = 0; i < allAngles.length; ++i) {
-    if (i === allAngles.length - 1) {
-      separators.push((allAngles[i] + allAngles[0] + 360) / 2);
-    } else {
-      separators.push((allAngles[i] + allAngles[i + 1]) / 2);
+    [start, center, end] = normalizeConsequtiveAngles(start, center, end);
+    [start, end] = scaleWedge(start, center, end, 0.5);
+
+    return [{ start: start, end: end }];
+  }
+
+  // In all other cases, we loop through the items and compute the wedges. If the parent
+  // angle happens to be inside a wedge, we crop the wedge accordingly.
+  const wedges: { start: number; end: number }[] = [];
+
+  for (let i = 0; i < itemAngles.length; i++) {
+    let start = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
+    let center = itemAngles[i];
+    let end = itemAngles[(i + 1) % itemAngles.length];
+
+    [start, center, end] = normalizeConsequtiveAngles(start, center, end);
+
+    if (parentAngle !== undefined) {
+      [start, end] = cropWedge(start, center, end, parentAngle);
+      [start, center, end] = normalizeConsequtiveAngles(start, center, end);
     }
+
+    [start, end] = scaleWedge(start, center, end, 0.5);
+
+    wedges.push({ start: start, end: end });
   }
 
-  // Now we search for the separators before and after each child and assign the
-  // corresponding angles to the child.
-  const items = [];
-  for (let i = 0; i < itemAngles.length; ++i) {
-    const wedgeIndex = separators.findIndex((s) => s > itemAngles[i]);
+  return wedges;
+}
 
-    items.push({
-      start:
-        wedgeIndex == 0
-          ? separators[separators.length - 1] - 360
-          : separators[wedgeIndex - 1],
-      end: separators[wedgeIndex],
-    });
+/**
+ * This method returns true if the given angle is between the given start and end angles.
+ * The angles are in degrees and start should be smaller than end. The method also works
+ * if the angle and the start and end angles are negative or larger than 360°.
+ *
+ * @param angle The angle to check.
+ * @param start The start angle.
+ * @param end The end angle.
+ */
+export function isAngleBetween(angle: number, start: number, end: number): boolean {
+  return (
+    (angle > start && angle <= end) ||
+    (angle - 360 > start && angle - 360 <= end) ||
+    (angle + 360 > start && angle + 360 <= end)
+  );
+}
+
+/**
+ * This method ensures that the given angles have increasing values. To ensure this, they
+ * will be increased or decreased by 360° if necessary. The center angle will be between
+ * 0° and 360°. The start angle may be negative and the end angle may be larger than 360°.
+ * But their mutual difference will be less than 360°.
+ *
+ * @param start The first angle.
+ * @param center The second angle.
+ * @param end The third angle.
+ * @returns An array of three angles.
+ */
+function normalizeConsequtiveAngles(start: number, center: number, end: number) {
+  while (center < start) {
+    center += 360;
   }
 
-  return items;
+  while (end < center) {
+    end += 360;
+  }
+
+  while (center >= 360) {
+    start -= 360;
+    center -= 360;
+    end -= 360;
+  }
+
+  return [start, center, end];
+}
+
+/**
+ * This method crops the given wedge if the given angle is inside it. The wedge is defined
+ * by the start and end angles and the center angle. If the given crop angle is between
+ * the start and center angle, the start angle will be set to the crop angle. If the crop
+ * angle is between the center and end angle, the end angle will be set to the crop
+ * angle.
+ *
+ * @param start The start angle of the wedge.
+ * @param center The center angle of the wedge.
+ * @param end The end angle of the wedge.
+ * @param cropAngle The angle to crop the wedge with.
+ * @returns The new start and end angles of the wedge.
+ */
+function cropWedge(start: number, center: number, end: number, cropAngle: number) {
+  if (isAngleBetween(cropAngle, start, center)) {
+    start = cropAngle;
+  }
+
+  if (isAngleBetween(cropAngle, center, end)) {
+    end = cropAngle;
+  }
+
+  return [start, end];
+}
+
+/**
+ * This method scales the given wedge by the given amount. The wedge is defined by the
+ * start and end angles and the center angle. The scale should be between 0.0 and 1.0. The
+ * start and end angles will be moved towards the center angle by the given amount.
+ *
+ * @param start The start angle of the wedge.
+ * @param center The center angle of the wedge.
+ * @param end The end angle of the wedge.
+ * @param scale The amount to scales the wedge by (0.0 to 1.0).
+ * @returns The new start and end angles of the wedge.
+ */
+function scaleWedge(start: number, center: number, end: number, scale: number) {
+  start = center - (center - start) * scale;
+  end = center + (end - center) * scale;
+
+  return [start, end];
 }

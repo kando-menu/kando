@@ -21,4 +21,31 @@ export interface IEditorNode extends INode {
    * when the editor is opened.
    */
   itemDiv?: HTMLElement;
+
+  /**
+   * This specifies the angle at which this node is displayed in the editor. This is
+   * computed by the editor and will not be saved. Only the 'angle' property of the INode
+   * interface will be saved. The 'angle' property is considered to be a fixed angle and
+   * if it is set, the 'computedAngle' will be identical to it.
+   */
+  computedAngle?: number;
+}
+
+/**
+ * This function can be used to strip all properties from an IEditorNode which are not
+ * present in an INode. This is used before saving the menu settings.
+ *
+ * @param node The node to convert.
+ * @returns The converted node.
+ */
+export function toINode(node: IEditorNode): INode {
+  return {
+    type: node.type,
+    data: node.data,
+    name: node.name,
+    icon: node.icon,
+    iconTheme: node.iconTheme,
+    children: node.children?.map(toINode),
+    angle: node.angle,
+  };
 }

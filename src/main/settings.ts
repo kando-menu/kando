@@ -169,6 +169,22 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   public get(): DeepReadonly<T>;
   public get<K extends keyof T>(key: K): DeepReadonly<T[K]>;
   public get<K extends keyof T>(key?: K): DeepReadonly<T> | DeepReadonly<T[K]> {
+    return this.getMutable(key);
+  }
+
+  /**
+   * This method is similar to `get()`, but it returns a mutable version of the settings
+   * object. This method is provided for convenience, but it should be used with care.
+   * Changing the returned object does not trigger any events and does not save the
+   * settings to disk.
+   *
+   * @param key The key of the property to return. If not set, the whole settings object
+   *   is returned.
+   * @returns The current settings object or the value of a single property.
+   */
+  public getMutable(): T;
+  public getMutable<K extends keyof T>(key: K): T[K];
+  public getMutable<K extends keyof T>(key?: K): T | T[K] {
     if (key === undefined) {
       return this.settings;
     } else {

@@ -8,8 +8,44 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { computeItemAngles, computeItemWedges } from '../src/renderer/math';
+import {
+  computeItemAngles,
+  computeItemWedges,
+  getAngularDifference,
+  isAngleBetween,
+} from '../src/renderer/math';
 import { expect } from 'chai';
+
+describe('getAngularDifference', () => {
+  it('should work for angles between 0 and 360', () => {
+    expect(getAngularDifference(0, 0)).to.equal(0);
+    expect(getAngularDifference(0, 1)).to.equal(1);
+    expect(getAngularDifference(10, 350)).to.equal(20);
+    expect(getAngularDifference(350, 10)).to.equal(20);
+    expect(getAngularDifference(350, 350)).to.equal(0);
+    expect(getAngularDifference(350, 360)).to.equal(10);
+  });
+
+  it('should work for angles outside of 0 and 360', () => {
+    expect(getAngularDifference(-10, 10)).to.equal(20);
+    expect(getAngularDifference(10, -10)).to.equal(20);
+    expect(getAngularDifference(-10, -10)).to.equal(0);
+    expect(getAngularDifference(-10, 370)).to.equal(20);
+    expect(getAngularDifference(370, -10)).to.equal(20);
+    expect(getAngularDifference(370, 10)).to.equal(0);
+    expect(getAngularDifference(10, 370)).to.equal(0);
+  });
+
+  it('should work for angles which are multiples of 360', () => {
+    expect(getAngularDifference(0, 360)).to.equal(0);
+    expect(getAngularDifference(360, 0)).to.equal(0);
+    expect(getAngularDifference(360, 360)).to.equal(0);
+    expect(getAngularDifference(360, 720)).to.equal(0);
+    expect(getAngularDifference(720, 360)).to.equal(0);
+    expect(getAngularDifference(710, 0)).to.equal(10);
+    expect(getAngularDifference(10, 720)).to.equal(10);
+  });
+});
 
 describe('computeItemAngles', () => {
   it('should return an empty array for an empty list of items', () => {
@@ -117,5 +153,40 @@ describe('computeItemWedges', () => {
       { start: 45, end: 135 },
       { start: 225, end: 315 },
     ]);
+  });
+
+  it('should handle multiple items with a parent at the top correctly', () => {
+    const itemAngles = [90, 180, 270];
+    const parentAngle = 0;
+    const wedges = computeItemWedges(itemAngles, parentAngle);
+    expect(wedges).to.deep.equal([
+      { start: 45, end: 135 },
+      { start: 135, end: 225 },
+      { start: 225, end: 315 },
+    ]);
+  });
+});
+
+describe('isAngleBetween', () => {
+  it('should return true for angles between start and end', () => {
+    expect(isAngleBetween(0.1, 0, 90)).to.be.true;
+    expect(isAngleBetween(45, 0, 90)).to.be.true;
+    expect(isAngleBetween(90, 0, 90)).to.be.true;
+    expect(isAngleBetween(45, 40 + 360, 50 + 360)).to.be.true;
+    expect(isAngleBetween(45, 40 - 360, 50 - 360)).to.be.true;
+    expect(isAngleBetween(80 + 360, 0, 90)).to.be.true;
+    expect(isAngleBetween(80 - 360, 0, 90)).to.be.true;
+    expect(isAngleBetween(89.5, 89, 90)).to.be.true;
+    expect(isAngleBetween(-30, 0, 360)).to.be.true;
+    expect(isAngleBetween(445, 0, 360)).to.be.true;
+  });
+
+  it('should return false for angles outside of start and end', () => {
+    expect(isAngleBetween(0, 0, 90)).to.be.false;
+    expect(isAngleBetween(45, 90, 180)).to.be.false;
+    expect(isAngleBetween(45, 90 + 360, 180 + 360)).to.be.false;
+    expect(isAngleBetween(45, 90 - 360, 180 - 360)).to.be.false;
+    expect(isAngleBetween(45 + 360, 90, 180)).to.be.false;
+    expect(isAngleBetween(45 - 360, 90, 180)).to.be.false;
   });
 });
