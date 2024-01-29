@@ -92,6 +92,7 @@ export class ItemDragger extends EventEmitter {
               'drag-move',
               node,
               div,
+              e2.target,
               { x: startPos.x + offset.x, y: startPos.y + offset.y },
               { x: e2.x, y: e2.y }
             );

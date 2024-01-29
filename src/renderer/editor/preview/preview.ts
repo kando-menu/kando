@@ -197,10 +197,10 @@ export class Preview extends EventEmitter {
     });
 
     // This is called when a menu item is dragged around.
-    this.itemDragger.on('drag-move', (node, div, relative, absolute) => {
+    this.itemDragger.on('drag-move', (node, itemDiv, targetDiv, relative, absolute) => {
       // Update the position of the dragged div.
-      div.style.left = `${relative.x}px`;
-      div.style.top = `${relative.y}px`;
+      itemDiv.style.left = `${relative.x}px`;
+      itemDiv.style.top = `${relative.y}px`;
 
       // Compute the angle towards the dragged item.
       const relativePosition = math.subtract(absolute, this.previewCenter);
@@ -264,7 +264,6 @@ export class Preview extends EventEmitter {
           dropWedges = null;
 
           node.computedAngle = this.recomputeItemAngles(dropIndex);
-          this.updateDropIndicatorPosition(node.computedAngle);
           this.computeItemAnglesRecursively(node);
 
           // Make sure that the grand children of the dragged item are also updated.
@@ -274,8 +273,21 @@ export class Preview extends EventEmitter {
         this.recomputeItemAngles();
       }
 
+      // Move the drop indicator either to the submenu, to the back-navigation link, or to
+      // the drop index position.
+      const submenuNode = this.belongsToSubmenu(targetDiv);
+      const parentNode = this.belongsToBacklink(targetDiv);
+
+      if (submenuNode) {
+        this.updateDropIndicatorPosition(submenuNode.computedAngle);
+      } else if (parentNode) {
+        this.updateDropIndicatorPosition(utils.getParentAngle(this.getCenterItem()));
+      } else {
+        this.updateDropIndicatorPosition(node.computedAngle);
+      }
+
       // We show the drop indicator if something is dragged over the preview and if there
-      // is a valid drop potential drop location.
+      // is a potential drop location.
       if (dragOverPreview && dropIndex !== null) {
         this.dropIndicator.classList.add('visible');
       } else {
@@ -557,7 +569,7 @@ export class Preview extends EventEmitter {
         (c) => (c as IEditorNode).itemDiv === targetItemDiv
       ) as IEditorNode;
 
-      if (targetNode.type === 'submenu') {
+      if (targetNode && targetNode.type === 'submenu') {
         return targetNode;
       }
     }
