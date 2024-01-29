@@ -298,55 +298,26 @@ export class Preview extends EventEmitter {
       this.canvas.removeEventListener('pointerenter', dragEnter);
       this.canvas.removeEventListener('pointerleave', dragLeave);
 
-      // Check whether the target div is a submenu item. If it is, we drop the dragged
-      // item into the submenu. We do this by searching for a parent div of the target div
-      // which has the class 'kando-menu-preview-child'.
-      const targetItemDiv = utils.getParentWithClass(
-        targetDiv,
-        'kando-menu-preview-child'
-      );
+      // Check whether the target div is a submenu item or the back-navigation link. If
+      // so, we drop the dragged item into the submenu or the parent menu respectively.
+      const submenuNode = this.belongsToSubmenu(targetDiv);
+      const parentNode = this.belongsToBacklink(targetDiv);
 
-      if (targetItemDiv) {
-        const targetNode = this.getCenterItem().children.find(
-          (c) => (c as IEditorNode).itemDiv === targetItemDiv
-        ) as IEditorNode;
-
-        // If the target node is a submenu, we add the dragged item to its children.
-        if (targetNode.type === 'submenu') {
-          targetNode.children.push(node);
-
-          // Remove the dragged item from the DOM.
-          itemDiv.remove();
-
-          dropIndex = null;
-          dragIndex = null;
-
-          // In any case, we redraw the menu.
-          this.recomputeItemAngles();
-          this.updateAllPositions();
-
-          return;
-        }
+      if (submenuNode) {
+        submenuNode.children.push(node);
+        this.recomputeItemAngles();
+      } else if (parentNode) {
+        parentNode.children.push(node);
+        this.computeItemAnglesRecursively(parentNode);
       }
 
-      // Next, we check whether the target div is a back link. If it is, append the
-      // dragged item to the parent of the current center item.
-      const targetLinkDiv = utils.getParentWithClass(
-        targetDiv,
-        'kando-menu-preview-backlink'
-      );
-
-      if (targetLinkDiv) {
-        const parent = this.selectionChain[this.selectionChain.length - 2];
-        parent.children.push(node);
-
+      if (submenuNode || parentNode) {
         // Remove the dragged item from the DOM.
         itemDiv.remove();
 
         dropIndex = null;
         dragIndex = null;
 
-        this.computeItemAnglesRecursively(parent);
         this.updateAllPositions();
 
         return;
@@ -567,6 +538,46 @@ export class Preview extends EventEmitter {
     const position = math.getDirection(angle, 1.0);
     this.dropIndicator.style.setProperty('--dir-x', position.x + '');
     this.dropIndicator.style.setProperty('--dir-y', position.y + '');
+  }
+
+  /**
+   * This method is called during drag'n'drop to find whether a div below the cursor
+   * belongs to an menu item which represents a submenu. If so, the corresponding node is
+   * returned.
+   *
+   * @param div A div which is potentially nested inside a submenu item.
+   * @returns The node which represents the submenu item or null if the div is not nested
+   *   inside a submenu item.
+   */
+  private belongsToSubmenu(div: HTMLElement): IEditorNode {
+    const targetItemDiv = utils.getParentWithClass(div, 'kando-menu-preview-child');
+
+    if (targetItemDiv) {
+      const targetNode = this.getCenterItem().children.find(
+        (c) => (c as IEditorNode).itemDiv === targetItemDiv
+      ) as IEditorNode;
+
+      if (targetNode.type === 'submenu') {
+        return targetNode;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * This method is called during drag'n'drop to find whether a div below the cursor
+   * belongs to the back link. If so, the parent node is returned.
+   *
+   * @param div A div which is potentially nested inside the back link.
+   * @returns The parent node or null if the div is not nested inside the back link.
+   */
+  private belongsToBacklink(div: HTMLElement): IEditorNode {
+    if (utils.getParentWithClass(div, 'kando-menu-preview-backlink') !== null) {
+      return this.selectionChain[this.selectionChain.length - 2];
+    }
+
+    return null;
   }
 
   /**
