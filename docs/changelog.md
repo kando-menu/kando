@@ -19,6 +19,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [unreleased]
 
+<a href="https://www.youtube.com/watch?v=rLJ1-z9i3cI">
+<img align="right" width="400px" src="img/player05.jpg"></img>
+</a>
+
 **Release Date:** TBD
 
 #### Added
