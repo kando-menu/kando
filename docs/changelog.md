@@ -17,6 +17,19 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Added
+
+- A subtle pulse animation to the drop indicator in the menu editor's preview.
+
+#### Changed
+
+- The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
+
+
 ## [Kando 0.5.0](https://github.com/kando-menu/kando/releases/tag/v0.5.0)
 
 <a href="https://www.youtube.com/watch?v=rLJ1-z9i3cI">
