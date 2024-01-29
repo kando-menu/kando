@@ -28,32 +28,44 @@ import { toINode } from './editor-node';
  * - 'leave-edit-mode': This is emitted when the user leaves edit mode.
  */
 export class Editor extends EventEmitter {
-  // The container is the HTML element which contains the menu editor.
+  /** The container is the HTML element which contains the menu editor. */
   private container: HTMLElement = null;
 
-  // The background is an opaque div which is shown when the editor is open. It effectively
-  // hides the normal menu.
+  /**
+   * The background is an opaque div which is shown when the editor is open. It
+   * effectively hides the normal menu.
+   */
   private background: Background = null;
 
-  // The preview is shown in the center of the screen. It allows the user to edit
-  // one level of the menu.
+  /**
+   * The preview is shown in the center of the screen. It allows the user to edit one
+   * level of the menu.
+   */
   private preview: Preview = null;
 
-  // The properties view is shown on the right side of the screen. It allows the user to
-  // edit the properties of the currently selected menu item.
+  /**
+   * The properties view is shown on the right side of the screen. It allows the user to
+   * edit the properties of the currently selected menu item.
+   */
   private properties: Properties = null;
 
-  // The sidebar is displayed on the left screen edge. It contains some information
-  // about Kando in general.
+  /**
+   * The sidebar is displayed on the left screen edge. It contains some information about
+   * Kando in general.
+   */
   private sidebar: Sidebar = null;
 
-  // The toolbar is displayed on the bottom of the screen. It allows the user to
-  // switch between different menus, add new items, etc.
+  /**
+   * The toolbar is displayed on the bottom of the screen. It allows the user to switch
+   * between different menus, add new items, etc.
+   */
   private toolbar: Toolbar = null;
 
-  // These are the current menu settings. They are retrieved from the main process when
-  // the user enters edit mode. It will modified by the user and then sent back to the
-  // main process when the user leaves edit mode.
+  /**
+   * These are the current menu settings. They are retrieved from the main process when
+   * the user enters edit mode. It will modified by the user and then sent back to the
+   * main process when the user leaves edit mode.
+   */
   private menuSettings: IMenuSettings = null;
 
   /**

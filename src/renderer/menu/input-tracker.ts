@@ -37,26 +37,32 @@ export enum InputState {
  * and angle relative to the currently selected item.
  */
 export class InputTracker extends EventEmitter {
-  // See the documentation of the corresponding getters for more information.
+  /** See the documentation of the corresponding getters for more information. */
   private _state = InputState.RELEASED;
   private _absolutePosition = { x: 0, y: 0 };
   private _relativePosition = { x: 0, y: 0 };
   private _angle = 0;
   private _distance = 0;
 
-  // The position where the mouse was when the user pressed the left mouse button the
-  // last time.
+  /**
+   * The position where the mouse was when the user pressed the left mouse button the last
+   * time.
+   */
   private clickPosition = { x: 0, y: 0 };
 
-  // If set to a value greater than 0, this will be decremented by 1 every time the
-  // the mouse moves and the corresponding event is ignored. This is used to ignore
-  // the first couple of mouse motion events after the menu is opened. See the
-  // documentation of the reset() method for more information.
+  /**
+   * If set to a value greater than 0, this will be decremented by 1 every time the the
+   * mouse moves and the corresponding event is ignored. This is used to ignore the first
+   * couple of mouse motion events after the menu is opened. See the documentation of the
+   * reset() method for more information.
+   */
   private ignoreMotionEvents = 0;
 
-  // This is the threshold in pixels which is used to differentiate between a click
-  // and a drag. If the mouse is moved more than this threshold before the mouse
-  // button is released, the current mouse state is set to DRAGGING.
+  /**
+   * This is the threshold in pixels which is used to differentiate between a click and a
+   * drag. If the mouse is moved more than this threshold before the mouse button is
+   * released, the current mouse state is set to DRAGGING.
+   */
   private readonly DRAG_THRESHOLD = 5;
 
   /**

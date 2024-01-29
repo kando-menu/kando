@@ -19,15 +19,19 @@ import { DesktopPortal } from './desktop-portal';
  * @see https://flatpak.github.io/xdg-desktop-portal/docs/#gdbus-org.freedesktop.portal.RemoteDesktop
  */
 export class RemoteDesktop extends DesktopPortal {
-  // This is the proxy object for the org.freedesktop.portal.RemoteDesktop interface.
+  /** This is the proxy object for the org.freedesktop.portal.RemoteDesktop interface. */
   private interface: DBus.ClientInterface;
 
-  // This is the token which is used to identify the session. It is generated when the
-  // first method is called.
+  /**
+   * This is the token which is used to identify the session. It is generated when the
+   * first method is called.
+   */
   private session: { token: string; path: string };
 
-  // As the connection to the portal is established lazily, we need to make sure that
-  // only one connection is established at a time. This promise is used to achieve this.
+  /**
+   * As the connection to the portal is established lazily, we need to make sure that only
+   * one connection is established at a time. This promise is used to achieve this.
+   */
   private connectPromise: Promise<void>;
 
   /**

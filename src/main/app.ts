@@ -28,26 +28,38 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
  * interaction.
  */
 export class KandoApp {
-  // The backend is responsible for all the system interaction. It is implemented
-  // differently for each platform.
+  /**
+   * The backend is responsible for all the system interaction. It is implemented
+   * differently for each platform.
+   */
   private backend: Backend = getBackend();
 
-  // The window is the main window of the application. It is a transparent window
-  // which covers the whole screen. It is always on top and has no frame. It is used
-  // to display the pie menu.
+  /**
+   * The window is the main window of the application. It is a transparent window which
+   * covers the whole screen. It is always on top and has no frame. It is used to display
+   * the pie menu.
+   */
   private window: BrowserWindow;
 
-  // This timeout is used to hide the window after the fade-out animation.
+  /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
 
-  // This is the tray icon which is displayed in the system tray. In the future it
-  // will be possible to disable this icon.
+  /**
+   * This is the tray icon which is displayed in the system tray. In the future it will be
+   * possible to disable this icon.
+   */
   private tray: Tray;
 
-  // This contains the last menu which was shown. It is used to execute the selected
-  // action.
+  /**
+   * This contains the last menu which was shown. It is used to execute the selected
+   * action.
+   */
   private lastMenu?: DeepReadonly<IMenu>;
 
+  /**
+   * This is the settings object which is used to store the general application settings
+   * in the user's home directory.
+   */
   private appSettings = new Settings<IAppSettings>({
     file: 'config.json',
     directory: app.getPath('userData'),
@@ -58,8 +70,10 @@ export class KandoApp {
     },
   });
 
-  // This is the settings object which is used to store the settings in the
-  // user's home directory.
+  /**
+   * This is the settings object which is used to store the configured menus in the user's
+   * home directory.
+   */
   private menuSettings = new Settings<IMenuSettings>({
     file: 'menus.json',
     directory: app.getPath('userData'),

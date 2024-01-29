@@ -15,21 +15,29 @@ import Handlebars from 'handlebars';
  * information about Kando in general.
  */
 export class Sidebar {
-  // The container is the HTML element which contains the sidebar. It is created in the
-  // constructor and returned by the getContainer() method.
+  /**
+   * The container is the HTML element which contains the sidebar. It is created in the
+   * constructor and returned by the getContainer() method.
+   */
   private container: HTMLElement = null;
 
-  // This variable stores the current visibility of the sidebar. This is also stored in
-  // the app settings of the main process. We store it here so that we can avoid
-  // unnecessary state changes.
+  /**
+   * This variable stores the current visibility of the sidebar. This is also stored in
+   * the app settings of the main process. We store it here so that we can avoid
+   * unnecessary state changes.
+   */
   private visible = true;
 
-  // The videos are the tutorial videos which are shown in the tutorial tab. We store
-  // them here so that we can pause and play them when the tab is shown and hidden.
+  /**
+   * The videos are the tutorial videos which are shown in the tutorial tab. We store them
+   * here so that we can pause and play them when the tab is shown and hidden.
+   */
   private videos: HTMLVideoElement[] = [];
 
-  // This variable stores the index of the last visible video. We use it to pause the
-  // video when the tab is hidden.
+  /**
+   * This variable stores the index of the last visible video. We use it to pause the
+   * video when the tab is hidden.
+   */
   private lastVisibleVideo = 0;
 
   /**

@@ -20,10 +20,10 @@ import { LinuxKeyCodes } from '../../keys';
  * preferred on X11 as it does not require any extensions.
  */
 export class GnomeBackend implements Backend {
-  // This maps GDK accelerator strings to the registered shortcuts.
+  /** This maps GDK accelerator strings to the registered shortcuts. */
   private callbacks: { [shortcut: string]: () => void } = {};
 
-  // This is the DBus interface of the Kando GNOME Shell integration extension.
+  /** This is the DBus interface of the Kando GNOME Shell integration extension. */
   private interface: DBus.ClientInterface;
 
   /**

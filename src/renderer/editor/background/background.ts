@@ -10,8 +10,10 @@
 
 /** This is the opaque background which is shown when the editor tools are open. */
 export class Background {
-  // The container is the HTML element which contains the background. It is created in the
-  // constructor and returned by the getContainer() method.
+  /**
+   * The container is the HTML element which contains the background. It is created in the
+   * constructor and returned by the getContainer() method.
+   */
   private container: HTMLElement = null;
 
   /** This constructor creates the HTML div for the background. */

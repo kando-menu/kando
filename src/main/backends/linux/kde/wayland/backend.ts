@@ -46,26 +46,32 @@ import { LinuxKeyCodes } from '../../keys';
  *   against Qt. While this could be possible, it would introduce a lot of complexity.
  */
 export class KDEWaylandBackend implements Backend {
-  // The remote desktop portal is used to simulate mouse and keyboard events.
+  /** The remote desktop portal is used to simulate mouse and keyboard events. */
   private remoteDesktop = new RemoteDesktop();
 
-  // The KWin scripting interface is used to load custom JavaScript code into KWin. The
-  // scripts will acquire the required information for Kando (mouse pointer position and
-  // name and app of the currently focused window) and send it to Kando via D-Bus.
+  /**
+   * The KWin scripting interface is used to load custom JavaScript code into KWin. The
+   * scripts will acquire the required information for Kando (mouse pointer position and
+   * name and app of the currently focused window) and send it to Kando via D-Bus.
+   */
   private scriptingInterface: DBus.ClientInterface;
 
-  // This is the interface which is exposed by Kando for the KWin script to talk to.
+  /** This is the interface which is exposed by Kando for the KWin script to talk to. */
   private kandoInterface: CustomInterface;
 
-  // KWin can only load scripts from files. Hence, we need to store the script in a
-  // temporary directory.
+  /**
+   * KWin can only load scripts from files. Hence, we need to store the script in a
+   * temporary directory.
+   */
   private wmInfoScriptPath: string;
 
-  // The trigger script is reloaded whenever a new shortcut is bound. We need to store the
-  // script ID to be able to unload it.
+  /**
+   * The trigger script is reloaded whenever a new shortcut is bound. We need to store the
+   * script ID to be able to unload it.
+   */
   private triggerScriptID = -1;
 
-  // Here we store all shortcuts which are currently bound.
+  /** Here we store all shortcuts which are currently bound. */
   private shortcuts: Shortcut[] = [];
 
   /**

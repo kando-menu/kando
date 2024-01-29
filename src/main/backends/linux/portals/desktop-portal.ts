@@ -25,8 +25,10 @@ interface NamedMessageBus extends DBus.MessageBus {
 export class DesktopPortal {
   private bus = DBus.sessionBus() as NamedMessageBus;
 
-  // This is the proxy object for the org.freedesktop.portal.Desktop interface. It should
-  // be used by derived classes to retrieve the actual portal methods.
+  /**
+   * This is the proxy object for the org.freedesktop.portal.Desktop interface. It should
+   * be used by derived classes to retrieve the actual portal methods.
+   */
   protected portals: DBus.ProxyObject;
 
   /**

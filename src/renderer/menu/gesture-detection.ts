@@ -20,28 +20,34 @@ import { IVec2 } from '../../common';
  * event contains the coordinates of the location where the selection event occurred.
  */
 export class GestureDetection extends EventEmitter {
-  // This will be initialized with the coordinates of the first motion event after the
-  // last reset() call.
+  /**
+   * This will be initialized with the coordinates of the first motion event after the
+   * last reset() call.
+   */
   private strokeStart: IVec2 = null;
 
-  // This will be updated with each motion event.
+  /** This will be updated with each motion event. */
   private strokeEnd: IVec2 = null;
 
-  // This timer is used to detect pause-events where the pointer was stationary for some
-  // time. These events also lead to selections.
+  /**
+   * This timer is used to detect pause-events where the pointer was stationary for some
+   * time. These events also lead to selections.
+   */
   private pauseTimeout: NodeJS.Timeout = null;
 
-  // Shorter gestures will not lead to selections.
+  /** Shorter gestures will not lead to selections. */
   private readonly MIN_STROKE_LENGTH = 150;
 
-  // Smaller turns will not lead to selections.
+  /** Smaller turns will not lead to selections. */
   private readonly MIN_STROKE_ANGLE = 20;
 
-  // Smaller movements will not be considered.
+  /** Smaller movements will not be considered. */
   private readonly JITTER_THRESHOLD = 10;
 
-  // If the pointer is stationary for this many milliseconds, the current item will be
-  // selected.
+  /**
+   * If the pointer is stationary for this many milliseconds, the current item will be
+   * selected.
+   */
   private readonly PAUSE_TIMEOUT = 100;
 
   /**

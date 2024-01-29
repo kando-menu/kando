@@ -28,41 +28,57 @@ import { IVec2, IMenu } from '../../../common';
  *   selected menu item.
  */
 export class Preview extends EventEmitter {
-  // The container is the HTML element which contains the menu preview. It is created in
-  // the constructor and returned by the getContainer() method.
+  /**
+   * The container is the HTML element which contains the menu preview. It is created in
+   * the constructor and returned by the getContainer() method.
+   */
   private container: HTMLElement = null;
 
-  // The canvas is the HTML element which contains the menu items. It is a sub-element
-  // of the container. The intermediate elements are used to center the preview and to
-  // create a fixed aspect ratio.
+  /**
+   * The canvas is the HTML element which contains the menu items. It is a sub-element of
+   * the container. The intermediate elements are used to center the preview and to create
+   * a fixed aspect ratio.
+   */
   private canvas: HTMLElement = null;
 
-  // The backlink is the HTML element which contains the button to navigate back to the
-  // parent menu.
+  /**
+   * The backlink is the HTML element which contains the button to navigate back to the
+   * parent menu.
+   */
   private backlink: HTMLElement = null;
 
-  // The breadcrumbs are the HTML element which contains the breadcrumbs for the current
-  // selection chain. It is a sub-element of the container.
+  /**
+   * The breadcrumbs are the HTML element which contains the breadcrumbs for the current
+   * selection chain. It is a sub-element of the container.
+   */
   private breadcrumbs: HTMLElement = null;
 
-  // This array contains the chain of selected menu items up to the item which is
-  // currently shown in the center. The first element is the menu's root, the second
-  // element is the selected child of the root (if any), and so on.
+  /**
+   * This array contains the chain of selected menu items up to the item which is
+   * currently shown in the center. The first element is the menu's root, the second
+   * element is the selected child of the root (if any), and so on.
+   */
   private selectionChain: Array<IEditorNode> = [];
 
-  // The menu item which has been selected last time. This node has a special style in
-  // the preview and its properties are drawn in the property editor on the right.
+  /**
+   * The menu item which has been selected last time. This node has a special style in the
+   * preview and its properties are drawn in the property editor on the right.
+   */
   private activeNode?: IEditorNode = null;
 
-  // This is used to drag'n'drop menu items.
+  /** This is used to drag'n'drop menu items. */
   private itemDragger = new ItemDragger();
 
-  // This is a little div which becomes visible when something is dragged over the
-  // preview. This is used to indicate where the dragged item would be dropped.
+  /**
+   * This is a little div which becomes visible when something is dragged over the
+   * preview. This is used to indicate where the dragged item would be dropped.
+   */
   private dropIndicator: HTMLElement = null;
 
-  // This is the position of the preview center. It is used to compute the angles of the
-  // menu items during drag'n'drop.
+  /**
+   * This is the position of the preview center. It is used to compute the angles of the
+   * menu items during drag'n'drop.
+   */
   private previewCenter?: IVec2 = null;
 
   /**

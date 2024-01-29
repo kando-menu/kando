@@ -46,41 +46,53 @@ import { InputState, InputTracker } from './input-tracker';
  */
 
 export class Menu extends EventEmitter {
-  // The container is the HTML element which contains the menu. It is used to attach
-  // event listeners.
+  /**
+   * The container is the HTML element which contains the menu. It is used to attach event
+   * listeners.
+   */
   private container: HTMLElement = null;
 
-  // The root node is the node which is placed at the center of the menu. It is the
-  // parent of all other nodes. It will be created when the menu is shown and destroyed
-  // when the menu is hidden.
+  /**
+   * The root node is the node which is placed at the center of the menu. It is the parent
+   * of all other nodes. It will be created when the menu is shown and destroyed when the
+   * menu is hidden.
+   */
   private root: IMenuNode = null;
 
-  // The hovered node is the node which is currently hovered by the mouse. It is used
-  // to highlight the node under the mouse cursor. This will only be null if the mouse
-  // is over the center of the root node. If the center of an active child node is
-  // hovered, the hovered node will be the parent of the active child node.
+  /**
+   * The hovered node is the node which is currently hovered by the mouse. It is used to
+   * highlight the node under the mouse cursor. This will only be null if the mouse is
+   * over the center of the root node. If the center of an active child node is hovered,
+   * the hovered node will be the parent of the active child node.
+   */
   private hoveredNode: IMenuNode = null;
 
-  // The dragged node is the node which is currently dragged by the mouse.
+  /** The dragged node is the node which is currently dragged by the mouse. */
   private draggedNode: IMenuNode = null;
 
-  // The selection chain is the chain of nodes from the root node to the currently
-  // selected node. The first element of the array is the root node, the last element
-  // is the currently selected node.
+  /**
+   * The selection chain is the chain of nodes from the root node to the currently
+   * selected node. The first element of the array is the root node, the last element is
+   * the currently selected node.
+   */
   private selectionChain: Array<IMenuNode> = [];
 
-  // This shows the name of the currently hovered child on the center item.
+  /** This shows the name of the currently hovered child on the center item. */
   private centerText: HTMLElement = null;
 
-  // The gesture detection is used to detect node selections in marking mode.
+  /** The gesture detection is used to detect node selections in marking mode. */
   private gestures: GestureDetection = new GestureDetection();
 
-  // This object contains all information on the current mouse state. Is it updated
-  // whenever the mouse is moved or a button is pressed.
+  /**
+   * This object contains all information on the current mouse state. Is it updated
+   * whenever the mouse is moved or a button is pressed.
+   */
   private input: InputTracker = new InputTracker();
 
-  // The following constants define the layout of the menu. They are all in pixels and
-  // should be configurable in the future.
+  /**
+   * The following constants define the layout of the menu. They are all in pixels and
+   * should be configurable in the future.
+   */
   private readonly CENTER_RADIUS = 50;
   private readonly CHILD_DISTANCE = 100;
   private readonly PARENT_DISTANCE = 200;

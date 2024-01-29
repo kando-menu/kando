@@ -19,8 +19,10 @@ import { EventEmitter } from 'events';
  * - 'leave-edit-mode': This event is emitted when the user leaves edit mode.
  */
 export class Toolbar extends EventEmitter {
-  // The container is the HTML element which contains the toolbar. It is created in the
-  // constructor and returned by the getContainer() method.
+  /**
+   * The container is the HTML element which contains the toolbar. It is created in the
+   * constructor and returned by the getContainer() method.
+   */
   private container: HTMLElement = null;
 
   /**

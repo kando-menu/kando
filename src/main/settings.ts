@@ -131,19 +131,23 @@ interface Options<T> {
  *   settings file does not exist yet.
  */
 export class Settings<T extends object> extends PropertyChangeEmitter<T> {
-  // This is the path to the settings file.
+  /** This is the path to the settings file. */
   private readonly filePath: string;
 
-  // This is the watcher which is used to watch the settings file for changes.
+  /** This is the watcher which is used to watch the settings file for changes. */
   private watcher: chokidar.FSWatcher | null;
 
-  // This is the current settings object. It is loaded from the settings file when the
-  // class is instantiated. It is updated when the `set()` method is called or when the
-  // settings file changes on disk.
+  /**
+   * This is the current settings object. It is loaded from the settings file when the
+   * class is instantiated. It is updated when the `set()` method is called or when the
+   * settings file changes on disk.
+   */
   private settings: T;
 
-  // This is the default settings object. It is used when the settings file does not
-  // exist yet or when it does not contain all properties.
+  /**
+   * This is the default settings object. It is used when the settings file does not exist
+   * yet or when it does not contain all properties.
+   */
   public readonly defaults: T;
 
   /** Creates a new settings object. See documentation of the class for details. */
