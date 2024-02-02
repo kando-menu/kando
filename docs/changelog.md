@@ -28,6 +28,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Changed
 
 - The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
+- The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 
 
 ## [Kando 0.5.0](https://github.com/kando-menu/kando/releases/tag/v0.5.0)
