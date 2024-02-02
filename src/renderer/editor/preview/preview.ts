@@ -180,8 +180,7 @@ export class Preview extends EventEmitter {
       dropIndex = null;
     };
 
-    // This is called when a menu item is started to be dragged.
-    this.itemDragger.on('drag-start', (node) => {
+      document.body.style.cursor = 'grabbing';
       // Store the index of the dragged child. We need this to re-add the child to the
       // correct position when the drag operation is aborted.
       const centerItem = this.getCenterItem();
@@ -299,6 +298,7 @@ export class Preview extends EventEmitter {
 
     // This is called when a menu item is dropped.
     this.itemDragger.on('drag-end', (node, itemDiv, targetDiv) => {
+      document.body.style.cursor = '';
       // Reset the position of the dragged div.
       itemDiv.style.left = '';
       itemDiv.style.top = '';
