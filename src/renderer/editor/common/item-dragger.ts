@@ -18,15 +18,13 @@ import * as math from '../../math';
  * the `Preview` class. However, also the `Toolbar` uses it to make new menu items
  * draggable.
  *
- * During a drag, the given `div` will have the class `.dragging` added. This can be used
- * to style the `div` differently during a drag.
- *
  * The class is an `EventEmitter` and emits the following events:
  *
  * @fires drag-start - When a drag starts, this event is emitted with the dragged node.
  * @fires drag-move - When a drag moves, this event is emitted with the dragged node and
  *   the current offset.
  * @fires drag-end - When a drag ends, this event is emitted with the dragged node.
+ * @fires click - When a click is detected, this event is emitted with the clicked node.
  */
 export class ItemDragger extends EventEmitter {
   /**
@@ -84,7 +82,6 @@ export class ItemDragger extends EventEmitter {
 
             if (this.draggedItem === null) {
               this.draggedItem = { div, node };
-              div.classList.add('dragging');
               this.emit('drag-start', node, div);
             }
 
@@ -102,8 +99,9 @@ export class ItemDragger extends EventEmitter {
         const onMouseUp = (e: MouseEvent) => {
           if (this.draggedItem) {
             this.emit('drag-end', this.draggedItem.node, this.draggedItem.div, e.target);
-            this.draggedItem.div.classList.remove('dragging');
             this.draggedItem = null;
+          } else {
+            this.emit('click', node);
           }
 
           window.removeEventListener('mousemove', onMouseMove);

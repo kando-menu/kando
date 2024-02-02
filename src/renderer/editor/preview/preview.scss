@@ -81,7 +81,6 @@
 
       &.dragging {
         transition: none;
-        pointer-events: none;
 
         .kando-menu-preview-label-container {
           opacity: 0;
