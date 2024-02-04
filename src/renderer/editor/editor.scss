@@ -26,13 +26,15 @@ $editor-padding-bottom: 7vh;
 $preview-properties-ratio: 0.7;
 $preview-center-size: 22cqmin;
 $preview-child-size: 12cqmin;
-$preview-child-distance: 25cqmin;
+$preview-child-distance: 26cqmin;
 $preview-grandchild-size: 3cqmin;
+$preview-active-outline-offset: 1.5cqmin;
 $preview-backlink-width: 4cqmin;
 $preview-backlink-inner-length: 8cqmin;
 $preview-backlink-outer-length: 30cqmin;
-$preview-label-distance: 20cqmin;
+$preview-label-distance: 19cqmin;
 $preview-label-max-size: 30cqmin;
+$preview-lock-size: 5cqmin;
 
 $toolbar-height: max(250px, 20vh);
 $toolbar-padding: 10px;

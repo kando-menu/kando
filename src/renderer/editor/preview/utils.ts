@@ -207,3 +207,47 @@ export function createChildDiv(node: IEditorNode) {
 
   return div;
 }
+
+/**
+ * This method creates a div which contains a lock icon. This is used to fix the angle of
+ * the child.
+ *
+ * @returns A div which contains a lock icon.
+ */
+export function createLockDiv(
+  initiallyLocked: boolean,
+  onChange: (locked: boolean) => void
+) {
+  const div = document.createElement('div');
+  div.classList.add('kando-menu-preview-lock');
+
+  if (initiallyLocked) {
+    div.classList.add('locked');
+  }
+
+  const icon = this.createIcon(
+    initiallyLocked ? 'lock' : 'lock_open',
+    'material-symbols-rounded'
+  );
+  div.appendChild(icon);
+
+  div.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+  });
+
+  div.addEventListener('mouseup', () => {
+    const i = icon.querySelector('i');
+    const wasLocked = i.textContent === 'lock';
+    i.innerHTML = wasLocked ? 'lock_open' : 'lock';
+
+    if (wasLocked) {
+      div.classList.remove('locked');
+    } else {
+      div.classList.add('locked');
+    }
+
+    onChange(!wasLocked);
+  });
+
+  return div;
+}
