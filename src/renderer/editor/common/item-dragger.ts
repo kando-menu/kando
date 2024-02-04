@@ -25,6 +25,11 @@ import * as math from '../../math';
  *   the current offset.
  * @fires drag-end - When a drag ends, this event is emitted with the dragged node.
  * @fires click - When a click is detected, this event is emitted with the clicked node.
+ *   When the drag threshold is exceeded, no click event is emitted.
+ * @fires mouse-down - When a mouse down event is detected, this event is emitted with the
+ *   clicked node.
+ * @fires mouse-up - When a mouse up event is detected, this event is emitted with the
+ *   clicked node. It will be emitted before either the `click` or `drag-end` event.
  */
 export class ItemDragger extends EventEmitter {
   /**
@@ -72,6 +77,8 @@ export class ItemDragger extends EventEmitter {
           y: rect.top - parentRect.top,
         };
 
+        this.emit('mouse-down', node, div);
+
         const onMouseMove = (e2: MouseEvent) => {
           const dragCurrent = { x: e2.clientX, y: e2.clientY };
           const offset = math.subtract(dragCurrent, dragStart);
@@ -97,11 +104,13 @@ export class ItemDragger extends EventEmitter {
         };
 
         const onMouseUp = (e: MouseEvent) => {
+          this.emit('mouse-up', node, div);
+
           if (this.draggedItem) {
             this.emit('drag-end', this.draggedItem.node, this.draggedItem.div, e.target);
             this.draggedItem = null;
           } else {
-            this.emit('click', node);
+            this.emit('click', node, div);
           }
 
           window.removeEventListener('mousemove', onMouseMove);
