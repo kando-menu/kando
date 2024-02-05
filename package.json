@@ -61,7 +61,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "bootstrap": "^5.3.1",
     "chokidar": "^3.5.3",
-    "commander": "^11.1.0",
+    "commander": "^12.0.0",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
     "handlebars": "^4.7.8",
