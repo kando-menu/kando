@@ -106,28 +106,26 @@
         position: absolute;
         width: $preview-lock-size;
 
-        $middle-distance: calc(
-          $preview-child-size / 4 + $preview-child-distance / 2 - $preview-center-size / 4
+        $center-child-gap-width: calc(
+          $preview-child-distance - $preview-center-size / 2 - $preview-child-size / 2
         );
-        left: calc(50% - $preview-lock-size / 2 - var(--dir-x) * $middle-distance);
-        top: calc(50% - $preview-lock-size / 2 - var(--dir-y) * $middle-distance);
+        $offset: calc($preview-child-size / 2 + $center-child-gap-width / 2);
+        left: calc(50% - $preview-lock-size / 2 - var(--dir-x) * $offset);
+        top: calc(50% - $preview-lock-size / 2 - var(--dir-y) * $offset);
 
         transition: all 150ms ease;
-
         border-radius: 50%;
         background-color: transparent;
-
         aspect-ratio: 1 / 1;
-
-        // display: flex;
-        // align-items: center;
-        // justify-content: center;
-
         opacity: 0.2;
 
         &.locked {
-          background-color: rgba(255, 255, 255, 0.5);
-          opacity: 0.8;
+          background-color: rgba(255, 255, 255, 0.1);
+          opacity: 1;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+          }
         }
 
         &:hover {
@@ -135,7 +133,7 @@
         }
 
         &:active {
-          transform: scale(0.9);
+          transform: scale(0.8);
         }
       }
 
