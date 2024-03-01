@@ -69,19 +69,17 @@
       align-items: center;
       justify-content: center;
 
-      // Scale slightly down when the user clicks on the item.
-      &:active {
-        transform: scale(0.9);
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
       }
 
-      &:hover,
-      &.dragging {
-        background-color: rgba(255, 255, 255, 0.2);
+      // Scale slightly down when the user clicks on the item.
+      &.clicking {
+        transform: scale(0.9);
       }
 
       &.dragging {
         transition: none;
-        pointer-events: none;
 
         .kando-menu-preview-label-container {
           opacity: 0;
@@ -103,6 +101,45 @@
           color: white;
         }
       }
+
+      .kando-menu-preview-lock {
+        position: absolute;
+        width: $preview-lock-size;
+
+        $center-child-gap-width: calc(
+          $preview-child-distance - $preview-center-size / 2 - $preview-child-size / 2
+        );
+        $offset: calc($preview-child-size / 2 + $center-child-gap-width / 2);
+        left: calc(50% - $preview-lock-size / 2 - var(--dir-x) * $offset);
+        top: calc(50% - $preview-lock-size / 2 - var(--dir-y) * $offset);
+
+        transition: all 150ms ease;
+        border-radius: 50%;
+        background-color: transparent;
+        aspect-ratio: 1 / 1;
+        opacity: 0.2;
+
+        &.locked {
+          background-color: rgba(255, 255, 255, 0.1);
+          opacity: 1;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+          }
+        }
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &:active {
+          transform: scale(0.8);
+        }
+      }
+
+      &.dragging .kando-menu-preview-lock {
+        opacity: 0;
+      }
     }
 
     .kando-menu-preview-center,
@@ -121,10 +158,10 @@
       }
 
       &.active::before {
-        top: -20px;
-        left: -20px;
-        right: -20px;
-        bottom: -20px;
+        top: -$preview-active-outline-offset;
+        left: -$preview-active-outline-offset;
+        right: -$preview-active-outline-offset;
+        bottom: -$preview-active-outline-offset;
         opacity: 1;
       }
     }
@@ -188,7 +225,10 @@
         position: absolute;
         transform: rotate(calc(var(--rotation) + 90deg));
         transform-origin: left;
-        width: calc($preview-label-distance - $preview-child-size / 2 - 20px);
+        width: calc(
+          $preview-label-distance - $preview-child-size / 2 -
+            $preview-active-outline-offset
+        );
         height: 1px;
         left: 0;
         bottom: 0;

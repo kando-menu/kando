@@ -180,8 +180,27 @@ export class Preview extends EventEmitter {
       dropIndex = null;
     };
 
-    // This is called when a menu item is started to be dragged.
-    this.itemDragger.on('drag-start', (node) => {
+    this.itemDragger.on('mouse-down', (node, itemDiv) => {
+      itemDiv.classList.add('clicking');
+    });
+
+    this.itemDragger.on('mouse-up', (node, itemDiv) => {
+      itemDiv.classList.remove('clicking');
+    });
+
+    // This is called when a menu item is started to be dragged. Menu items without fixed
+    // angles can be dragged freely around and will be detached from the parent menu
+    // during the drag. Items with fixed angles cannot be dragged freely but will only
+    // rotate around the parent menu item.
+    this.itemDragger.on('drag-start', (node, itemDiv) => {
+      document.body.style.cursor = 'grabbing';
+
+      // If the node has a fixed angle, we do nothing. In this case, the item will be
+      // rotated during the drag-move listener further down.
+      if (node.angle !== undefined) {
+        return;
+      }
+
       // Store the index of the dragged child. We need this to re-add the child to the
       // correct position when the drag operation is aborted.
       const centerItem = this.getCenterItem();
@@ -191,20 +210,33 @@ export class Preview extends EventEmitter {
       const index = centerItem.children.indexOf(node);
       centerItem.children.splice(index, 1);
 
+      itemDiv.classList.add('dragging');
+
       dragOverPreview = true;
       this.canvas.addEventListener('pointerenter', dragEnter);
       this.canvas.addEventListener('pointerleave', dragLeave);
     });
 
-    // This is called when a menu item is dragged around.
+    // This is called when a menu item is dragged around. Menu items without fixed angles
+    // will be moved around freely. If the item has a fixed angle, it will be rotated
+    // around the parent menu item.
     this.itemDragger.on('drag-move', (node, itemDiv, targetDiv, relative, absolute) => {
-      // Update the position of the dragged div.
-      itemDiv.style.left = `${relative.x}px`;
-      itemDiv.style.top = `${relative.y}px`;
-
       // Compute the angle towards the dragged item.
       const relativePosition = math.subtract(absolute, this.previewCenter);
       const dragAngle = math.getAngle(relativePosition);
+
+      // If the node has no fixed angle, we can move it around freely. We compute the
+      // potential drop index and update the position of the drop indicator.
+      if (node.angle !== undefined) {
+        node.angle = Math.round(dragAngle / 15) * 15;
+        this.recomputeItemAngles();
+        this.updateAllPositions();
+        return;
+      }
+
+      // Update the position of the dragged div.
+      itemDiv.style.left = `${relative.x}px`;
+      itemDiv.style.top = `${relative.y}px`;
 
       // If something is dragged over the preview, we compute the index where the item
       // would be dropped. The child items will be re-arranged to leave a gap for the
@@ -299,9 +331,18 @@ export class Preview extends EventEmitter {
 
     // This is called when a menu item is dropped.
     this.itemDragger.on('drag-end', (node, itemDiv, targetDiv) => {
+      document.body.style.cursor = '';
+
+      // If the node has a fixed angle, we do nothing. In this case, the item was only
+      // rotated during the drag operation but not removed from the parent menu.
+      if (node.angle !== undefined) {
+        return;
+      }
+
       // Reset the position of the dragged div.
       itemDiv.style.left = '';
       itemDiv.style.top = '';
+      itemDiv.classList.remove('dragging');
 
       dropWedges = null;
 
@@ -347,6 +388,11 @@ export class Preview extends EventEmitter {
       // In any case, we redraw the menu.
       this.recomputeItemAngles();
       this.updateAllPositions();
+    });
+
+    // Select a node when it is clicked.
+    this.itemDragger.on('click', (node) => {
+      this.selectNode(node);
     });
   }
 
@@ -400,6 +446,13 @@ export class Preview extends EventEmitter {
 
     // Make the center item selectable.
     centerItem.itemDiv.addEventListener('click', () => this.selectNode(centerItem));
+    centerItem.itemDiv.addEventListener('mousedown', () => {
+      centerItem.itemDiv.classList.add('clicking');
+    });
+
+    centerItem.itemDiv.addEventListener('mouseup', () => {
+      centerItem.itemDiv.classList.remove('clicking');
+    });
 
     // Add the children of the currently selected menu.
     if (centerItem.children?.length > 0) {
@@ -410,10 +463,19 @@ export class Preview extends EventEmitter {
         child.itemDiv = utils.createChildDiv(child);
         container.appendChild(child.itemDiv);
 
-        // If the child is selected, push its index to the selection chain.
-        child.itemDiv.addEventListener('click', () => this.selectNode(child));
+        // Create the fixed-angle lock.
+        const lock = utils.createLockDiv(child.angle !== undefined, (locked) => {
+          if (locked) {
+            child.angle = child.computedAngle;
+          } else {
+            child.angle = undefined;
+            this.recomputeItemAngles();
+            this.updateAllPositions();
+          }
+        });
+        child.itemDiv.appendChild(lock);
 
-        // Make the child div draggable.
+        // Make the child div selectable and draggable.
         this.itemDragger.addDraggable(child.itemDiv, child);
       });
     }
