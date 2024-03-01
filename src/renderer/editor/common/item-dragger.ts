@@ -96,18 +96,17 @@ export class ItemDragger extends EventEmitter {
               'drag-move',
               node,
               div,
-              e2.target,
               { x: startPos.x + offset.x, y: startPos.y + offset.y },
               { x: e2.x, y: e2.y }
             );
           }
         };
 
-        const onMouseUp = (e: MouseEvent) => {
+        const onMouseUp = () => {
           this.emit('mouse-up', node, div);
 
           if (this.draggedItem) {
-            this.emit('drag-end', this.draggedItem.node, this.draggedItem.div, e.target);
+            this.emit('drag-end', this.draggedItem.node, this.draggedItem.div);
             this.draggedItem = null;
           } else {
             this.emit('click', node, div);
