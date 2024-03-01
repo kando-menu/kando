@@ -224,11 +224,43 @@ export class Preview extends EventEmitter {
       // Compute the angle towards the dragged item.
       const relativePosition = math.subtract(absolute, this.previewCenter);
       const dragAngle = math.getAngle(relativePosition);
+      const centerItem = this.getCenterItem();
 
-      // If the node has no fixed angle, we can move it around freely. We compute the
-      // potential drop index and update the position of the drop indicator.
+      // If the node has a fixed angle, we cannot move it around freely. Instead, we
+      // update its fixed angle when it's dragged around. For now, we limit the movement
+      // to 15 degree steps.
       if (node.angle !== undefined) {
         node.angle = Math.round(dragAngle / 15) * 15;
+
+        // Within the list of children, the fixed angles must by monotonically increasing.
+        // That means that we may have to reorder the children if the node is dragged
+        // beyond the next or previous child with a fixed angle.
+        let index = centerItem.children.indexOf(node);
+
+        // First, we search for the child with the largest fixed angle which is smaller
+        // than the angle of the dragged node. For this, we iterate the children list from
+        // the back. If we find any, we have to move the dragged node to the next position.
+        for (let i = centerItem.children.length - 1; i > index; --i) {
+          const child = centerItem.children[i];
+          if (child.angle !== undefined && child.angle < node.angle) {
+            centerItem.children.splice(index, 1);
+            centerItem.children.splice(i, 0, node);
+            index = i;
+            break;
+          }
+        }
+
+        // Second, we search for the child with the smallest fixed angle which is larger
+        // than the angle of the dragged node.
+        for (let i = 0; i < index; ++i) {
+          const child = centerItem.children[i];
+          if (child.angle !== undefined && child.angle > node.angle) {
+            centerItem.children.splice(index, 1);
+            centerItem.children.splice(i, 0, node);
+            break;
+          }
+        }
+
         this.recomputeItemAngles();
         this.updateAllPositions();
         return;
