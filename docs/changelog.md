@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Added
 
 - A subtle pulse animation to the drop indicator in the menu editor's preview.
+- The possibility to lock item positions in the menu preview of the editor. Locked items cannot be reordered but moved to a fixed angle instead.
 
 #### Changed
 
