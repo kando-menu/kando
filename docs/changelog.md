@@ -28,6 +28,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Changed
 
+- Significantly improved the algorithm which calculates the drop location when dragging an item in the menu editor's preview. There are still some weird edge cases especially in the presence of fixed angles, but it should work much better now.
 - The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 
