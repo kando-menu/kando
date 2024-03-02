@@ -55,42 +55,80 @@ export function getParentWithClass(div: HTMLElement, className: string) {
 }
 
 /**
- * This is used to compute the drop index during drag-and-drop operations in the menu
- * preview. It computes the drop index by comparing the dragAngle with the possible
- * candidate drop zones.
+ * This is used to compute the drop target during drag-and-drop operations in the menu
+ * preview. It computes the drop index by testing all possible indices and choosing the
+ * one which results in the smallest angle between the dragged item and the drop
+ * position.
  *
- * @param dropWedges The possible drop zones.
+ * It is also possible to drop the dragged item into a submenu. In this case, the drop
+ * target will be the submenu and the drop index will be 0.
+ *
+ * Finally, if the dragged item is about to be dropped into the back-navigation link, the
+ * drop target will be null and drop index will 0.
+ *
+ * @param centerItem The menu item into which the dragged item is about to be dropped.
  * @param dragAngle The angle of the dragged item.
- * @returns The index of the drop zone where the dragged item should be dropped.
+ * @returns The node to drop the item into and the index where to drop it.
  */
-export function computeDropIndex(
-  dropWedges: { start: number; end: number }[],
+export function computeDropTarget(
+  centerItem: IEditorNode,
   dragAngle: number
-): number {
+): {
+  dropTarget: IEditorNode;
+  dropIndex: number;
+} {
   // There are a few special cases when there are only a few items in the menu.
-  // If there is no current item, it's easy: We simply drop at index zero.
-  if (dropWedges.length === 0) {
-    return 0;
+  // If there are no other children, it's easy: We simply drop at index zero.
+  if (!centerItem.children || centerItem.children.length === 0) {
+    return { dropTarget: centerItem, dropIndex: 0 };
   }
 
-  // If there is one current item, we have to decide whether to drop before / or after.
-  if (dropWedges.length === 1) {
-    return dragAngle - dropWedges[0].start < 90 || dragAngle - dropWedges[0].end > 270
-      ? 0
-      : 1;
-  }
+  // First, we iterate over all possible drop indices and compute the angle between the
+  // dragged item and the drop position candidate. We choose the index which results in
+  // the smallest angle.
+  const parentAngle = getParentAngle(centerItem);
+  let bestIndex = 0;
+  let bestDiff = 180;
+  let dropTarget = centerItem;
 
-  // All other cases can be handled with a loop through the drop zone wedges between the
-  // items. For each wedge, we decide whether the pointer is inside the wedge.
-  for (let i = 0; i < dropWedges.length; i++) {
-    if (math.isAngleBetween(dragAngle, dropWedges[i].start, dropWedges[i].end)) {
-      return i;
+  for (let i = 0; i <= centerItem.children.length; i++) {
+    const { dropAngle } = computeItemAnglesWithDropIndex(
+      centerItem.children,
+      i,
+      parentAngle
+    );
+
+    const diff = math.getAngularDifference(dragAngle, dropAngle);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      bestIndex = i;
     }
   }
 
-  // This happens if the pointer is not inside any of the wedges. This is for example
-  // the case when the pointer is in the area of a back link.
-  return -1;
+  // We check whether the back-navigation link is closer.
+  if (math.getAngularDifference(dragAngle, parentAngle) < bestDiff) {
+    return { dropTarget: null, dropIndex: 0 };
+  }
+
+  // Finally, we check whether a submenu is closer. There are some weird edge cases where
+  // it's not possible to drop something into a submenu (e.g. when the submenu is at the
+  // top of the menu). As a workaround, we add a small 5 degree region around each
+  // submenu. If the dragged item is within this region, we consider the submenu as the
+  // drop target.
+  const itemAngles = math.computeItemAngles(centerItem.children, parentAngle);
+  for (let i = 0; i < centerItem.children.length; i++) {
+    const child = centerItem.children[i] as IEditorNode;
+    if (child.type === 'submenu') {
+      const diff = math.getAngularDifference(dragAngle, itemAngles[i]);
+      if (diff < bestDiff || diff < 5) {
+        dropTarget = child;
+        bestDiff = diff;
+        bestIndex = 0;
+      }
+    }
+  }
+
+  return { dropTarget, dropIndex: bestIndex };
 }
 
 /**
