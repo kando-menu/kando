@@ -159,20 +159,22 @@
   // Center text
   .center-text {
     position: absolute;
-    width: $root-size;
-    height: $root-size;
-    top: calc(-1 * $root-size / 2);
-    left: calc(-1 * $root-size / 2);
+    width: calc($root-size - $root-size * 0.2);
+    height: calc($root-size - $root-size * 0.2);
+    top: calc($root-size * 0.1 - $root-size * 0.5);
+    left: calc($root-size * 0.1 - $root-size * 0.5);
     color: $text-color;
     transition: $text-opacity-transition;
     z-index: 3;
 
-    // Center text.
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     font-size: 16px;
+
+    overflow: hidden;
+    word-break: break-word;
 
     &.hidden {
       opacity: 0;
