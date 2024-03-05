@@ -60,6 +60,9 @@
     &.large {
       height: calc(100vh - $editor-padding-top - $editor-padding-bottom);
       bottom: $editor-padding-bottom;
+
+      // Draw above the menu preview.
+      z-index: 2;
     }
 
     .swirl {

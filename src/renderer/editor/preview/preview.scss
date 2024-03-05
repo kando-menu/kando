@@ -19,13 +19,15 @@
     transition: opacity 150ms ease;
     opacity: 0;
 
+    // This is set so that dragged items are drawn on top of the toolbar.
+    z-index: 1;
+
     width: calc(
       (100vw - $editor-padding-left - $editor-padding-right) * $preview-properties-ratio
     );
     height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
 
     #kando-menu-preview-canvas {
-      z-index: 0;
       position: relative;
       aspect-ratio: 1.5 / 1;
       width: min(150cqh, 100cqw);
