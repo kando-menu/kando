@@ -41,6 +41,9 @@
     left: 0px;
     width: 500px;
 
+    // Position the sidebar above any dragged menu items.
+    z-index: 10;
+
     .sidebar-item {
       overflow: hidden;
       margin: 15px;
