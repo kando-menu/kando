@@ -357,7 +357,7 @@ export class Preview extends EventEmitter {
       // added to the children of the drop target.
       const centerItem = this.getCenterItem();
 
-      if (dropTarget !== centerItem) {
+      if (dropTarget && dropTarget !== centerItem) {
         dropTarget.children.push(node);
         this.computeItemAnglesRecursively(dropTarget);
 
