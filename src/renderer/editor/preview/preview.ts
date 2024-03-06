@@ -224,8 +224,8 @@ export class Preview extends EventEmitter {
       itemDiv.classList.add('dragging');
 
       dragOverPreview = true;
-      this.canvas.addEventListener('pointerenter', dragEnter);
-      this.canvas.addEventListener('pointerleave', dragLeave);
+      this.container.addEventListener('pointerenter', dragEnter);
+      this.container.addEventListener('pointerleave', dragLeave);
     });
 
     // This is called when a menu item is dragged around. Menu items without fixed angles
@@ -349,8 +349,8 @@ export class Preview extends EventEmitter {
 
       // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
-      this.canvas.removeEventListener('pointerenter', dragEnter);
-      this.canvas.removeEventListener('pointerleave', dragLeave);
+      this.container.removeEventListener('pointerenter', dragEnter);
+      this.container.removeEventListener('pointerleave', dragLeave);
 
       // We check whether the node has been dropped into a submenu, or into the parent
       // node. In both cases, the node div is removed from the DOM and the menu item is
