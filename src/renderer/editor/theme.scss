@@ -20,7 +20,7 @@ $kando-highlight-color: #ffc8c8;
   --bs-code-color: #{$kando-highlight-color};
   --bs-border-radius: 0.75rem;
   --bs-border-width: 0;
-  --bs-body-bg: rgba(40, 40, 40);
+  --bs-body-bg: rgba(35, 35, 35);
   --bs-secondary-color: rgb(100, 100, 100);
   --bs-emphasis-color: rgba(255, 255, 255);
   --bs-link-color: #{$kando-highlight-color};
@@ -28,9 +28,9 @@ $kando-highlight-color: #ffc8c8;
   // The secondary button is used most of the time. We want it to be a bit darker than
   // the default.
   .btn-secondary {
-    --bs-btn-bg: #{rgba(70, 70, 70, 0.8)};
-    --bs-btn-hover-bg: #{lighten(rgba(70, 70, 70, 0.8), 5%)};
-    --bs-btn-active-bg: #{lighten(rgba(70, 70, 70, 0.8), 10%)};
+    --bs-btn-bg: #{rgba(70, 70, 70, 0.6)};
+    --bs-btn-hover-bg: #{lighten(rgba(70, 70, 70, 0.6), 5%)};
+    --bs-btn-active-bg: #{lighten(rgba(70, 70, 70, 0.6), 10%)};
     --bs-btn-border-color: transparent;
     --bs-btn-hover-border-color: transparent;
     --bs-btn-active-border-color: transparent;
@@ -129,6 +129,16 @@ $kando-highlight-color: #ffc8c8;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
       background-color: rgba(0, 0, 0, 0.9);
     }
+  }
+
+  &.disabled {
+    background: repeating-linear-gradient(
+      -45deg,
+      #363636,
+      #363636 10px,
+      #3f3e3b 10px,
+      #3f3e3b 20px
+    );
   }
 
   &:active {
