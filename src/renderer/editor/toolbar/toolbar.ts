@@ -10,6 +10,7 @@
 
 import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
+import { IMenu } from '../../../common';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -42,9 +43,18 @@ export class Toolbar extends EventEmitter {
     return this.container;
   }
 
+  public setMenus(menus: Array<IMenu>, currentMenu: number) {
+    window.api.log('Toolbar.setMenus ' + menus.length + ' ' + currentMenu);
+
+    const menuTab = this.container.querySelector('#kando-menus-tab');
+
+    const button = Handlebars.compile(require('./templates/menu-button.hbs').default);
+  }
+
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
-    const empty = Handlebars.compile(require('./templates/empty-tab.hbs').default);
+    const emptyTab = Handlebars.compile(require('./templates/empty-tab.hbs').default);
+    const menusTab = Handlebars.compile(require('./templates/menus-tab.hbs').default);
     const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
 
     this.container = document.createElement('div');
@@ -55,16 +65,13 @@ export class Toolbar extends EventEmitter {
           icon: 'apps',
           title: 'Menus',
           active: true,
-          content: empty({
-            heading: 'Here will be a list of all of your menus!',
-            subheading: 'You can add new menus or delete existing ones.',
-          }),
+          content: menusTab({}),
         },
         {
           id: 'kando-add-items-tab',
           icon: 'add',
           title: 'Menu Items',
-          content: empty({
+          content: emptyTab({
             heading: 'Here will be a list of things which you can add to your menus!',
             subheading: 'In the future, you can simply drag them to the editor above.',
           }),
@@ -74,7 +81,7 @@ export class Toolbar extends EventEmitter {
           icon: 'content_paste',
           title: 'Stash',
           hasCounter: true,
-          content: empty({
+          content: emptyTab({
             heading: 'In the future, you can temporarily store menu items here!',
             subheading: 'This is especially useful if you want to reorganize your menus.',
           }),
@@ -84,7 +91,7 @@ export class Toolbar extends EventEmitter {
           icon: 'delete',
           title: 'Trash',
           hasCounter: true,
-          content: empty({
+          content: emptyTab({
             heading: 'In the future, you can delete items by dropping them here!',
             subheading: 'When you start Kando the next time, they will be gone.',
           }),
@@ -94,7 +101,7 @@ export class Toolbar extends EventEmitter {
           icon: 'palette',
           title: 'Menu Themes',
           gapBefore: true,
-          content: empty({
+          content: emptyTab({
             heading: 'Here will be a list of available menu themes!',
             subheading:
               'There will be preview images and the possibility to download new themes from the web.',
@@ -104,7 +111,7 @@ export class Toolbar extends EventEmitter {
           id: 'kando-editor-themes-tab',
           icon: 'palette',
           title: 'Editor Themes',
-          content: empty({
+          content: emptyTab({
             heading: 'Here will be a list of available editor themes!',
             subheading:
               'In the future, it will be possible to theme the entire menu editor.',
