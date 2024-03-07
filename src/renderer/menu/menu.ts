@@ -118,6 +118,7 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
+      // If there is a hovered node, it now becomes a dragged node.
       if (this.hoveredNode) {
         this.dragNode(this.hoveredNode);
       }
@@ -131,7 +132,13 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      // If we clicked the center of the root menu, the "cancel" signal is emitted.
+      // Hide the menu on right click events.
+      if (this.input.state === InputState.CLICKED && (event as MouseEvent).button === 2) {
+        this.emit('cancel');
+        return;
+      }
+
+      // Hide the menu if we clicked the center of the root menu.
       if (
         this.input.state === InputState.CLICKED &&
         this.selectionChain.length === 1 &&
