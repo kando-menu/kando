@@ -46,15 +46,21 @@ export class Toolbar extends EventEmitter {
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
     window.api.log('Toolbar.setMenus ' + menus.length + ' ' + currentMenu);
 
-    const menuTab = this.container.querySelector('#kando-menus-tab');
+    const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
+    const menusTab = this.container.querySelector('#kando-menus-tab');
 
-    const button = Handlebars.compile(require('./templates/menu-button.hbs').default);
+    const data = menus.map((menu, index) => ({
+      name: menu.nodes.name,
+      active: index === currentMenu,
+      index,
+    }));
+
+    menusTab.innerHTML = template({ menus: data });
   }
 
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
     const emptyTab = Handlebars.compile(require('./templates/empty-tab.hbs').default);
-    const menusTab = Handlebars.compile(require('./templates/menus-tab.hbs').default);
     const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
 
     this.container = document.createElement('div');
@@ -65,7 +71,7 @@ export class Toolbar extends EventEmitter {
           icon: 'apps',
           title: 'Menus',
           active: true,
-          content: menusTab({}),
+          content: '',
         },
         {
           id: 'kando-add-items-tab',
@@ -118,6 +124,14 @@ export class Toolbar extends EventEmitter {
           }),
         },
       ],
+    });
+
+    const menusTab = this.container.querySelector('#kando-menus-tab');
+    menusTab.addEventListener('click', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target && target.name === 'menu-selection-button') {
+        console.log('select menu', target.dataset.index);
+      }
     });
   }
 

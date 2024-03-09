@@ -91,4 +91,14 @@
     transform: none;
     opacity: 1;
   }
+
+  .menu-selection-button {
+    input {
+      display: none;
+    }
+
+    &:has(input:checked) {
+      border: 2px solid white;
+    }
+  }
 }

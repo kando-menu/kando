@@ -13,8 +13,18 @@
   This tab displays a grid of buttons which can be used to select the active menu.
 -->
 
-<div class='d-flex h-100'>
-  <div class='flex-grow-1' id='menu-buttons-list'></div>
+<div class='d-flex h-100 kando-font'>
+  <div class='flex-grow-1 row' id='menu-buttons-list'>
+    {{#each menus}}
+      <label class="col-3 btn btn-secondary menu-selection-button">
+        <input type="radio"
+               name="menu-selection-button"
+               data-index="{{index}}"
+               {{#if active}} checked {{/if}}/>
+        {{name}}
+      </label>
+    {{/each}}
+  </div>
   <div class='swirl vertical align-self-center mx-2'></div>
   <div class='d-flex flex-column m-2'>
     <button class='btn btn-secondary text-start disabled pe-5 my-1'>
