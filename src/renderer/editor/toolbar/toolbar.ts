@@ -11,6 +11,7 @@
 import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
+import * as themedIcon from '../common/themed-icon';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -52,6 +53,8 @@ export class Toolbar extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
+      shortcut: menu.shortcut,
+      icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
       index,
     }));
 

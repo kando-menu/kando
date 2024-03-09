@@ -33,9 +33,9 @@ $kando-highlight-color: #ffc8c8;
   // The secondary button is used most of the time. We want it to be a bit darker than
   // the default.
   .btn-secondary {
-    --bs-btn-bg: #{rgba(70, 70, 70, 0.6)};
-    --bs-btn-hover-bg: #{lighten(rgba(70, 70, 70, 0.6), 5%)};
-    --bs-btn-active-bg: #{lighten(rgba(70, 70, 70, 0.6), 10%)};
+    --bs-btn-bg: #{rgba(50, 50, 50, 0.4)};
+    --bs-btn-hover-bg: #{lighten(rgba(50, 50, 50, 0.4), 5%)};
+    --bs-btn-active-bg: #{lighten(rgba(50, 50, 50, 0.4), 15%)};
     --bs-btn-border-color: transparent;
     --bs-btn-hover-border-color: transparent;
     --bs-btn-active-border-color: transparent;
@@ -113,21 +113,6 @@ $kando-highlight-color: #ffc8c8;
 
 // Make buttons respond to clicks by moving down a bit.
 .btn {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-
-  transition:
-    transform 150ms ease,
-    opacity 150ms ease;
-
-  // Center text.
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:active {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-  }
-
   &.disabled {
     background: repeating-linear-gradient(
       -45deg,

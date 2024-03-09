@@ -14,14 +14,16 @@
 -->
 
 <div class='d-flex h-100 kando-font'>
-  <div class='flex-grow-1 row' id='menu-buttons-list'>
+  <div class='flex-grow-1' id='menu-buttons-list'>
     {{#each menus}}
-      <label class="col-3 btn btn-secondary menu-selection-button">
+      <label class="btn btn-secondary menu-selection-button">
         <input type="radio"
                name="menu-selection-button"
                data-index="{{index}}"
                {{#if active}} checked {{/if}}/>
-        {{name}}
+               {{{icon}}}
+        <span class="name">{{name}}</span>
+        <span class="shortcut">{{shortcut}}</span>
       </label>
     {{/each}}
   </div>

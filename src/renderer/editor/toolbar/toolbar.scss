@@ -97,8 +97,14 @@
       display: none;
     }
 
+    display: inline-flex;
+    margin: 10px;
+    width: 200px;
+    height: 60px;
+
     &:has(input:checked) {
-      border: 2px solid white;
+      border: 2px dashed rgba(255, 255, 255, 0.5);
+      background: var(--bs-btn-active-bg);
     }
   }
 }
