@@ -12,6 +12,7 @@ import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import * as math from '../../math';
+import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
 import { IEditorNode } from '../editor-node';
 import { ItemDragger } from '../common/item-dragger';
@@ -483,7 +484,7 @@ export class Preview extends EventEmitter {
       this.backlink = document.createElement('div');
       this.backlink.classList.add('kando-menu-preview-backlink');
       this.backlink.appendChild(
-        utils.createIcon('arrow_back', 'material-symbols-rounded')
+        themedIcon.createDiv('arrow_back', 'material-symbols-rounded')
       );
       container.appendChild(this.backlink);
 

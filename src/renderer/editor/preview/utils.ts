@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../math';
+import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../editor-node';
 
 /**
@@ -168,32 +169,6 @@ export function computeItemAnglesWithDropIndex(
 }
 
 /**
- * This method creates a div which contains an icon. The icon is created using the
- * 'material-symbols-rounded' or 'simple-icons' font.
- *
- * @param icon The name of the icon to create.
- * @param theme The name of the icon theme to use.
- * @returns A HTML element which contains the icon.
- */
-export function createIcon(icon: string, theme: string) {
-  const containerDiv = document.createElement('div');
-  containerDiv.classList.add('kando-menu-preview-icon-container');
-
-  const iconDiv = document.createElement('i');
-  containerDiv.appendChild(iconDiv);
-
-  if (theme === 'material-symbols-rounded') {
-    iconDiv.classList.add(theme);
-    iconDiv.innerHTML = icon;
-  } else if (theme === 'simple-icons') {
-    iconDiv.classList.add('si');
-    iconDiv.classList.add('si-' + icon);
-  }
-
-  return containerDiv;
-}
-
-/**
  * This method creates the big center div which shows the icon of the currently selected
  * menu.
  *
@@ -202,7 +177,7 @@ export function createIcon(icon: string, theme: string) {
 export function createCenterDiv(node: IEditorNode) {
   const div = document.createElement('div');
   div.classList.add('kando-menu-preview-center');
-  div.appendChild(this.createIcon(node.icon, node.iconTheme));
+  div.appendChild(themedIcon.createDiv(node.icon, node.iconTheme));
   return div;
 }
 
@@ -217,7 +192,7 @@ export function createChildDiv(node: IEditorNode) {
   div.classList.add('kando-menu-preview-child');
 
   // Add the icon of the child.
-  div.appendChild(this.createIcon(node.icon, node.iconTheme));
+  div.appendChild(themedIcon.createDiv(node.icon, node.iconTheme));
 
   // If the child can have children, we add container for the grandchildren. The actual
   // grandchildren divs are added on demand as their number may change if items are
@@ -263,7 +238,7 @@ export function createLockDiv(
     div.classList.add('locked');
   }
 
-  const icon = this.createIcon(
+  const icon = themedIcon.createDiv(
     initiallyLocked ? 'lock' : 'lock_open',
     'material-symbols-rounded'
   );

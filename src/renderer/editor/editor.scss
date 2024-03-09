@@ -58,3 +58,19 @@ $toolbar-padding: 10px;
     pointer-events: all;
   }
 }
+
+#kando-editor-container .icon-container {
+  container-type: size;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    position: absolute;
+    font-size: 75cqi;
+    color: white;
+  }
+}

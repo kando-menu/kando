@@ -89,22 +89,6 @@
         }
       }
 
-      .kando-menu-preview-icon-container {
-        container-type: size;
-        width: 100%;
-        aspect-ratio: 1 / 1;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        i {
-          position: absolute;
-          font-size: 75cqi;
-          color: white;
-        }
-      }
-
       .kando-menu-preview-lock {
         position: absolute;
         width: $preview-lock-size;
