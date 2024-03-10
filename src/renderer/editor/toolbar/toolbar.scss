@@ -89,17 +89,19 @@
     opacity: 1;
   }
 
+  .add-menu-button,
   .menu-selection-button {
     input {
       display: none;
     }
 
     position: relative;
-    display: inline-flex;
+    display: inline-block;
     margin: 10px 0 0 10px;
-    width: 260px;
+    width: 300px;
     height: 75px;
     border: 2px dashed rgba(255, 255, 255, 0);
+    overflow: hidden;
 
     &:has(input:checked) {
       border-color: rgba(255, 255, 255, 0.5);
@@ -113,27 +115,64 @@
       background-color: white;
       border-radius: 50%;
       margin-right: var(--bs-btn-padding-x);
+      transition: background-color 150ms linear;
 
       i {
+        transition: color 150ms linear;
         color: black;
       }
     }
 
     .shortcut,
     .name {
+      position: absolute;
+      left: 85px;
       text-align: left;
-      overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .name {
-      margin-top: 3px;
+      top: 8px;
       font-size: 1.5rem;
     }
 
     .shortcut {
-      margin-top: -2px;
+      top: 42px;
       font-size: 1rem;
+    }
+  }
+
+  .add-menu-button {
+    transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+    width: calc(75px + 12px);
+
+    .name {
+      transition:
+        left 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+        opacity 150ms linear;
+      top: 20px;
+      left: 0;
+      opacity: 0;
+    }
+
+    &:not(:hover) {
+      .icon-container {
+        background-color: transparent;
+
+        i {
+          color: white;
+        }
+      }
+    }
+
+    &:hover {
+      width: 300px;
+
+      .name {
+        left: 85px;
+        opacity: 1;
+      }
     }
   }
 }
