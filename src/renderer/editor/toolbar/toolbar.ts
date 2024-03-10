@@ -19,6 +19,12 @@ import * as themedIcon from '../common/themed-icon';
  *
  * - 'enter-edit-mode': This event is emitted when the user enters edit mode.
  * - 'leave-edit-mode': This event is emitted when the user leaves edit mode.
+ * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
+ *   index of the selected menu is passed as the first argument.
+ * - 'expand': This event is emitted when a tab is selected which should cover the entire
+ *   editor.
+ * - 'collapse': This event is emitted when a tab is selected which should not cover the
+ *   entire editor.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -45,8 +51,6 @@ export class Toolbar extends EventEmitter {
   }
 
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    window.api.log('Toolbar.setMenus ' + menus.length + ' ' + currentMenu);
-
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
     const menusTab = this.container.querySelector('#kando-menus-tab');
 
@@ -133,7 +137,7 @@ export class Toolbar extends EventEmitter {
     menusTab.addEventListener('click', (event) => {
       const target = event.target as HTMLInputElement;
       if (target && target.name === 'menu-selection-button') {
-        console.log('select menu', target.dataset.index);
+        this.emit('select-menu', target.dataset.index);
       }
     });
   }

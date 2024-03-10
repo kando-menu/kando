@@ -106,6 +106,9 @@ export class Editor extends EventEmitter {
       this.preview.show();
       this.properties.show();
     });
+    this.toolbar.on('select-menu', (index: number) => {
+      this.preview.setMenu(this.menuSettings.menus[index]);
+    });
     this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
