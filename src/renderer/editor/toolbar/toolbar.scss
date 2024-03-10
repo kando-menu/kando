@@ -54,6 +54,11 @@
 
       .nav-link {
         padding-bottom: 0;
+
+        i {
+          position: relative;
+          top: -3px;
+        }
       }
     }
 
@@ -77,14 +82,6 @@
         background-image: url(../../assets/images/swirl-vertical.svg);
       }
     }
-
-    .material-symbols-rounded {
-      font-size: unset;
-      line-height: unset;
-      position: relative;
-      vertical-align: middle;
-      top: -0.1em;
-    }
   }
 
   &.visible.edit-mode #kando-editor-toolbar {
@@ -97,14 +94,44 @@
       display: none;
     }
 
+    position: relative;
     display: inline-flex;
-    margin: 10px;
-    width: 200px;
-    height: 60px;
+    margin: 10px 0 0 10px;
+    width: 220px;
+    height: 65px;
+    border: 2px dashed rgba(255, 255, 255, 0);
 
     &:has(input:checked) {
-      border: 2px dashed rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.5);
       background: var(--bs-btn-active-bg);
+    }
+
+    .icon-container {
+      aspect-ratio: 1 / 1;
+      height: 100%;
+      width: auto;
+      background-color: white;
+      border-radius: 50%;
+      margin-right: var(--bs-btn-padding-x);
+
+      i {
+        color: black;
+      }
+    }
+
+    .shortcut,
+    .name {
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .name {
+      font-size: 1.2rem;
+    }
+
+    .shortcut {
+      font-size: 0.8rem;
     }
   }
 }

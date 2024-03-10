@@ -21,22 +21,24 @@
                name="menu-selection-button"
                data-index="{{index}}"
                {{#if active}} checked {{/if}}/>
-               {{{icon}}}
-        <span class="name">{{name}}</span>
-        <span class="shortcut">{{shortcut}}</span>
+        {{{icon}}}
+        <div>
+          <div class="name">{{name}}</div>
+          <div class="shortcut">{{shortcut}}</div>
+        </div>
       </label>
     {{/each}}
   </div>
   <div class='swirl vertical align-self-center mx-2'></div>
   <div class='d-flex flex-column m-2'>
     <button class='btn btn-secondary text-start disabled pe-5 my-1'>
-      <i class='material-symbols-rounded mx-1'>cloud_download</i>Get Menus Online
+      <i class='material-symbols-rounded inline-icon mx-1'>cloud_download</i>Get Menus Online
     </button>
     <button class='btn btn-secondary text-start disabled pe-5 my-1'>
-      <i class='material-symbols-rounded mx-1'>upload</i>Export Menus
+      <i class='material-symbols-rounded inline-icon mx-1'>upload</i>Export Menus
     </button>
     <button class='btn btn-secondary text-start disabled pe-5 my-1'>
-      <i class='material-symbols-rounded mx-1'>download</i>Import Menus
+      <i class='material-symbols-rounded inline-icon mx-1'>download</i>Import Menus
     </button>
   </div>
 </div>
