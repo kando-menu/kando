@@ -23,9 +23,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
-- A subtle pulse animation to the drop indicator in the menu editor's preview.
+- The possibility to select the to-be-edited menu in the menu editor.
 - The possibility to lock item positions in the menu preview of the editor. Locked items cannot be reordered but moved to a fixed angle instead.
 - The possibility to close the menu with the right mouse button.
+- A subtle pulse animation to the drop indicator in the menu editor's preview.
 
 #### Changed
 
