@@ -769,6 +769,10 @@ export class Menu extends EventEmitter {
    * @returns The position of the currently active node.
    */
   private getActiveNodePosition() {
+    if (this.selectionChain.length === 0) {
+      return { x: 0, y: 0 };
+    }
+
     const position = {
       x: this.root.position.x,
       y: this.root.position.y,
