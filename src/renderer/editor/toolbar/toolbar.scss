@@ -97,8 +97,8 @@
     position: relative;
     display: inline-flex;
     margin: 10px 0 0 10px;
-    width: 220px;
-    height: 65px;
+    width: 260px;
+    height: 75px;
     border: 2px dashed rgba(255, 255, 255, 0);
 
     &:has(input:checked) {
@@ -127,11 +127,13 @@
     }
 
     .name {
-      font-size: 1.2rem;
+      margin-top: 3px;
+      font-size: 1.5rem;
     }
 
     .shortcut {
-      font-size: 0.8rem;
+      margin-top: -2px;
+      font-size: 1rem;
     }
   }
 }
