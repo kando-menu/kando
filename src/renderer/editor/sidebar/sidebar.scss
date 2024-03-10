@@ -35,11 +35,15 @@
   }
 
   #kando-editor-sidebar {
+    pointer-events: none;
     position: absolute;
     top: 0px;
     bottom: 0px;
     left: 0px;
     width: 500px;
+
+    // Position the sidebar above any dragged menu items.
+    z-index: 10;
 
     .sidebar-item {
       overflow: hidden;
@@ -58,18 +62,6 @@
         transition-delay: #{($i - 1) * 30}ms;
       }
     }
-
-    .material-symbols-rounded {
-      font-size: unset;
-      line-height: unset;
-      position: relative;
-      vertical-align: middle;
-      top: -0.1em;
-    }
-  }
-
-  &.visible #kando-editor-sidebar:not(.visible) {
-    pointer-events: none;
   }
 
   &.visible #kando-editor-sidebar.visible .sidebar-item {

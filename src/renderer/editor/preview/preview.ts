@@ -12,6 +12,7 @@ import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import * as math from '../../math';
+import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
 import { IEditorNode } from '../editor-node';
 import { ItemDragger } from '../common/item-dragger';
@@ -224,8 +225,8 @@ export class Preview extends EventEmitter {
       itemDiv.classList.add('dragging');
 
       dragOverPreview = true;
-      this.canvas.addEventListener('pointerenter', dragEnter);
-      this.canvas.addEventListener('pointerleave', dragLeave);
+      this.container.addEventListener('pointerenter', dragEnter);
+      this.container.addEventListener('pointerleave', dragLeave);
     });
 
     // This is called when a menu item is dragged around. Menu items without fixed angles
@@ -349,15 +350,15 @@ export class Preview extends EventEmitter {
 
       // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
-      this.canvas.removeEventListener('pointerenter', dragEnter);
-      this.canvas.removeEventListener('pointerleave', dragLeave);
+      this.container.removeEventListener('pointerenter', dragEnter);
+      this.container.removeEventListener('pointerleave', dragLeave);
 
       // We check whether the node has been dropped into a submenu, or into the parent
       // node. In both cases, the node div is removed from the DOM and the menu item is
       // added to the children of the drop target.
       const centerItem = this.getCenterItem();
 
-      if (dropTarget !== centerItem) {
+      if (dropTarget && dropTarget !== centerItem) {
         dropTarget.children.push(node);
         this.computeItemAnglesRecursively(dropTarget);
 
@@ -483,7 +484,7 @@ export class Preview extends EventEmitter {
       this.backlink = document.createElement('div');
       this.backlink.classList.add('kando-menu-preview-backlink');
       this.backlink.appendChild(
-        utils.createIcon('arrow_back', 'material-symbols-rounded')
+        themedIcon.createDiv('arrow_back', 'material-symbols-rounded')
       );
       container.appendChild(this.backlink);
 

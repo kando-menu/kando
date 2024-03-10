@@ -106,6 +106,9 @@ export class Editor extends EventEmitter {
       this.preview.show();
       this.properties.show();
     });
+    this.toolbar.on('select-menu', (index: number) => {
+      this.preview.setMenu(this.menuSettings.menus[index]);
+    });
     this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
@@ -155,6 +158,7 @@ export class Editor extends EventEmitter {
     ]).then(([settings, currentMenu]) => {
       this.menuSettings = settings;
       this.preview.setMenu(settings.menus[currentMenu]);
+      this.toolbar.setMenus(settings.menus, currentMenu);
     });
 
     this.emit('enter-edit-mode');

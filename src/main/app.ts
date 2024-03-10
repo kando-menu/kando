@@ -271,10 +271,14 @@ export class KandoApp {
       this.menuSettings.set(settings);
     });
 
-    // This should return the index of the currently selected menu. However, we only
-    // support one menu for now.
+    // This should return the index of the currently selected menu. For now, we just
+    // return the index of a menu with the same name as the last menu. If the user uses
+    // the same name for multiple menus, this will not work as expected.
     ipcMain.handle('menu-settings-get-current-menu', () => {
-      return 0;
+      const index = this.menuSettings
+        .get('menus')
+        .findIndex((m) => m.nodes.name === this.lastMenu.nodes.name);
+      return Math.max(index, 0);
     });
 
     // Show the web developer tools if requested.

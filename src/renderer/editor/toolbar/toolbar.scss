@@ -54,12 +54,20 @@
 
       .nav-link {
         padding-bottom: 0;
+
+        i {
+          position: relative;
+          top: -3px;
+        }
       }
     }
 
     &.large {
       height: calc(100vh - $editor-padding-top - $editor-padding-bottom);
       bottom: $editor-padding-bottom;
+
+      // Draw above the menu preview.
+      z-index: 2;
     }
 
     .swirl {
@@ -67,19 +75,65 @@
       background-image: url(../../assets/images/swirl.svg);
       width: 160px;
       height: 14px;
-    }
 
-    .material-symbols-rounded {
-      font-size: unset;
-      line-height: unset;
-      position: relative;
-      vertical-align: middle;
-      top: -0.1em;
+      &.vertical {
+        width: 14px;
+        height: 160px;
+        background-image: url(../../assets/images/swirl-vertical.svg);
+      }
     }
   }
 
   &.visible.edit-mode #kando-editor-toolbar {
     transform: none;
     opacity: 1;
+  }
+
+  .menu-selection-button {
+    input {
+      display: none;
+    }
+
+    position: relative;
+    display: inline-flex;
+    margin: 10px 0 0 10px;
+    width: 260px;
+    height: 75px;
+    border: 2px dashed rgba(255, 255, 255, 0);
+
+    &:has(input:checked) {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: var(--bs-btn-active-bg);
+    }
+
+    .icon-container {
+      aspect-ratio: 1 / 1;
+      height: 100%;
+      width: auto;
+      background-color: white;
+      border-radius: 50%;
+      margin-right: var(--bs-btn-padding-x);
+
+      i {
+        color: black;
+      }
+    }
+
+    .shortcut,
+    .name {
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .name {
+      margin-top: 3px;
+      font-size: 1.5rem;
+    }
+
+    .shortcut {
+      margin-top: -2px;
+      font-size: 1rem;
+    }
   }
 }

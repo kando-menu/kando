@@ -12,7 +12,7 @@
 <!--
   This is the button in the lower right corner which opens the editor.
 -->
-<button id='enter-edit-mode-button' class='btn dark'>
+<button id='enter-edit-mode-button' class='btn btn-dark'>
   <i class='material-symbols-rounded'>settings</i>
 </button>
 
@@ -25,7 +25,7 @@
   <!--
     This is the button which closes the editor.
   -->
-  <button id='leave-edit-mode-button' class='btn dark rounded-end-circle'>
+  <button id='leave-edit-mode-button' class='btn btn-dark rounded-end-circle'>
     <i class='material-symbols-rounded'>close</i>
   </button>
 
@@ -38,8 +38,8 @@
       <li class='nav-item' {{#if gapBefore}} style="margin-left: auto" {{/if}}>
         <button class='nav-link {{#if active}} active {{/if}}' data-bs-toggle='tab'
                 data-bs-target='#{{id}}'>
-          <i class='material-symbols-rounded'>{{icon}}</i>
-          <span>{{title}}</span>
+          <i class='material-symbols-rounded inline-icon'>{{icon}}</i>
+          {{title}}
           {{#if hasCounter}}
             <span id="{{id}}-counter" class="counter">0</span>
           {{/if}}

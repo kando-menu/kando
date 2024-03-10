@@ -1,0 +1,44 @@
+{{! //////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+}}
+
+<!--
+  This tab displays a grid of buttons which can be used to select the active menu.
+-->
+
+<div class='d-flex h-100 kando-font'>
+  <div class='flex-grow-1' id='menu-buttons-list'>
+    {{#each menus}}
+      <label class="btn btn-secondary menu-selection-button">
+        <input type="radio"
+               name="menu-selection-button"
+               data-index="{{index}}"
+               {{#if active}} checked {{/if}}/>
+        {{{icon}}}
+        <div>
+          <div class="name">{{name}}</div>
+          <div class="shortcut">{{shortcut}}</div>
+        </div>
+      </label>
+    {{/each}}
+  </div>
+  <div class='swirl vertical align-self-center mx-2'></div>
+  <div class='d-flex flex-column m-2'>
+    <button class='btn btn-secondary text-start disabled pe-5 my-1'>
+      <i class='material-symbols-rounded inline-icon mx-1'>cloud_download</i>Get Menus Online
+    </button>
+    <button class='btn btn-secondary text-start disabled pe-5 my-1'>
+      <i class='material-symbols-rounded inline-icon mx-1'>upload</i>Export Menus
+    </button>
+    <button class='btn btn-secondary text-start disabled pe-5 my-1'>
+      <i class='material-symbols-rounded inline-icon mx-1'>download</i>Import Menus
+    </button>
+  </div>
+</div>
