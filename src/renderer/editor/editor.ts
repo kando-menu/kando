@@ -16,7 +16,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenuSettings } from '../../common';
+import { IMenu, IMenuSettings } from '../../common';
 import { toINode } from './editor-node';
 
 /**
@@ -108,6 +108,23 @@ export class Editor extends EventEmitter {
     });
     this.toolbar.on('select-menu', (index: number) => {
       this.preview.setMenu(this.menuSettings.menus[index]);
+    });
+    this.toolbar.on('add-menu', () => {
+      const newMenu: IMenu = {
+        nodes: {
+          type: 'submenu',
+          name: 'New Menu',
+          icon: 'favorite',
+          iconTheme: 'material-symbols-rounded',
+          children: [],
+        },
+        shortcut: '',
+        centered: false,
+      };
+
+      this.menuSettings.menus.push(newMenu);
+      this.toolbar.setMenus(this.menuSettings.menus, this.menuSettings.menus.length - 1);
+      this.preview.setMenu(newMenu);
     });
     this.container.appendChild(this.toolbar.getContainer());
 

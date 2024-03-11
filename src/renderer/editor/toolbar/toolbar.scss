@@ -109,6 +109,7 @@
     }
 
     .icon-container {
+      pointer-events: none;
       aspect-ratio: 1 / 1;
       height: 100%;
       width: auto;
@@ -125,6 +126,7 @@
 
     .shortcut,
     .name {
+      pointer-events: none;
       position: absolute;
       left: 85px;
       text-align: left;

@@ -21,6 +21,7 @@ import * as themedIcon from '../common/themed-icon';
  * - 'leave-edit-mode': This event is emitted when the user leaves edit mode.
  * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
  *   index of the selected menu is passed as the first argument.
+ * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
  * - 'expand': This event is emitted when a tab is selected which should cover the entire
  *   editor.
  * - 'collapse': This event is emitted when a tab is selected which should not cover the
@@ -57,7 +58,7 @@ export class Toolbar extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      shortcut: menu.shortcut,
+      shortcut: menu.shortcut || 'Not bound',
       icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
       index,
     }));
@@ -135,9 +136,14 @@ export class Toolbar extends EventEmitter {
 
     const menusTab = this.container.querySelector('#kando-menus-tab');
     menusTab.addEventListener('click', (event) => {
-      const target = event.target as HTMLInputElement;
-      if (target && target.name === 'menu-selection-button') {
-        this.emit('select-menu', target.dataset.index);
+      const input = event.target as HTMLInputElement;
+      if (input && input.name === 'menu-selection-button') {
+        this.emit('select-menu', input.dataset.index);
+      }
+
+      const button = event.target as HTMLButtonElement;
+      if (button && button.classList.contains('add-menu-button')) {
+        this.emit('add-menu');
       }
     });
   }
