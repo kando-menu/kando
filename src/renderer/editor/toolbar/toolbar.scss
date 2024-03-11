@@ -51,9 +51,13 @@
 
     .nav-tabs {
       gap: 8px;
+      align-items: flex-end;
 
       .nav-link {
         padding-bottom: 0;
+        transition:
+          padding-bottom 250ms cubic-bezier(0.7, 2.21, 0.54, 1),
+          margin-top 250ms cubic-bezier(0.7, 2.21, 0.54, 1);
 
         i {
           position: relative;
@@ -80,6 +84,17 @@
         width: 14px;
         height: 160px;
         background-image: url(../../assets/images/swirl-vertical.svg);
+      }
+    }
+
+    &.dragging-deletable-item .nav-link[data-bs-target='#kando-trash-tab'],
+    &.dragging-stashable-item .nav-link[data-bs-target='#kando-stash-tab'] {
+      margin-top: -10px;
+      padding-bottom: 10px;
+
+      &:hover {
+        margin-top: -20px;
+        padding-bottom: 20px;
       }
     }
   }

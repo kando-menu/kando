@@ -159,17 +159,23 @@ export class Toolbar extends EventEmitter {
       }
     });
 
-    this.menuDragger.on('drag-start', (data, div) => {
+    this.menuDragger.on('drag-start', (index, div) => {
       div.classList.add('dragging');
+      document
+        .getElementById('kando-editor-toolbar')
+        .classList.add('dragging-deletable-item');
     });
 
-    this.menuDragger.on('drag-move', (data, div, relative, absolute, offset) => {
+    this.menuDragger.on('drag-move', (index, div, relative, absolute, offset) => {
       div.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
     });
 
-    this.menuDragger.on('drag-end', (data, div) => {
+    this.menuDragger.on('drag-end', (index, div) => {
       div.classList.remove('dragging');
       div.style.transform = '';
+      document
+        .getElementById('kando-editor-toolbar')
+        .classList.remove('dragging-deletable-item');
     });
   }
 
@@ -205,10 +211,10 @@ export class Toolbar extends EventEmitter {
       const element = this.container.querySelector(`button[data-bs-target="#${tab.id}"]`);
       element.addEventListener('shown.bs.tab', () => {
         if (tab.large) {
-          this.container.querySelector('#kando-editor-toolbar').classList.add('large');
+          document.getElementById('kando-editor-toolbar').classList.add('large');
           this.emit('expand');
         } else {
-          this.container.querySelector('#kando-editor-toolbar').classList.remove('large');
+          document.getElementById('kando-editor-toolbar').classList.remove('large');
           this.emit('collapse');
         }
       });
