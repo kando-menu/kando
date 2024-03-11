@@ -23,6 +23,7 @@ import * as themedIcon from '../common/themed-icon';
  * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
  *   index of the selected menu is passed as the first argument.
  * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
+ * - 'delete-menu': This event is emitted when the user drags a menu to the trash tab.
  * - 'expand': This event is emitted when a tab is selected which should cover the entire
  *   editor.
  * - 'collapse': This event is emitted when a tab is selected which should not cover the
@@ -176,6 +177,15 @@ export class Toolbar extends EventEmitter {
       document
         .getElementById('kando-editor-toolbar')
         .classList.remove('dragging-deletable-item');
+
+      // Check if the trash tab is hovered.
+      const tab = this.container.querySelector(
+        ".nav-link[data-bs-target='#kando-trash-tab']"
+      );
+
+      if (tab.matches(':hover')) {
+        this.emit('delete-menu', index);
+      }
     });
   }
 

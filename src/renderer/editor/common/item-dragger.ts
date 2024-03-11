@@ -133,7 +133,7 @@ export class ItemDragger<T> extends EventEmitter {
     const { data, abortController } = this.draggableDivs.get(div);
 
     // Make sure that the data is not dragged anymore.
-    if (data === this.draggedItem.data) {
+    if (this.draggedItem && data === this.draggedItem.data) {
       this.draggedItem = null;
     }
 

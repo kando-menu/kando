@@ -69,6 +69,12 @@ export class Editor extends EventEmitter {
   private menuSettings: IMenuSettings = null;
 
   /**
+   * This is the index of the currently selected menu. It is used to keep track of the
+   * current menu when the user switches between menus.
+   */
+  private currentMenu: number = 0;
+
+  /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
@@ -107,7 +113,14 @@ export class Editor extends EventEmitter {
       this.properties.show();
     });
     this.toolbar.on('select-menu', (index: number) => {
+      this.currentMenu = index;
       this.preview.setMenu(this.menuSettings.menus[index]);
+    });
+    this.toolbar.on('delete-menu', (index: number) => {
+      this.menuSettings.menus.splice(index, 1);
+      this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
+      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
+      this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
     });
     this.toolbar.on('add-menu', () => {
       // Choose a random icon for the new menu.
@@ -201,6 +214,7 @@ export class Editor extends EventEmitter {
       window.api.menuSettings.getCurrentMenu(),
     ]).then(([settings, currentMenu]) => {
       this.menuSettings = settings;
+      this.currentMenu = currentMenu;
       this.preview.setMenu(settings.menus[currentMenu]);
       this.toolbar.setMenus(settings.menus, currentMenu);
     });

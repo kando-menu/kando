@@ -56,8 +56,8 @@
       .nav-link {
         padding-bottom: 0;
         transition:
-          padding-bottom 250ms cubic-bezier(0.7, 2.21, 0.54, 1),
-          margin-top 250ms cubic-bezier(0.7, 2.21, 0.54, 1);
+          padding-bottom 150ms ease,
+          margin-top 150ms ease;
 
         i {
           position: relative;
