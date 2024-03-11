@@ -94,7 +94,8 @@ export class ItemDragger<T> extends EventEmitter {
               data,
               div,
               { x: startPos.x + offset.x, y: startPos.y + offset.y },
-              { x: e2.x, y: e2.y }
+              { x: e2.x, y: e2.y },
+              offset
             );
           }
         };

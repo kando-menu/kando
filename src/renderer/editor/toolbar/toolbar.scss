@@ -102,10 +102,17 @@
     height: 75px;
     border: 2px dashed rgba(255, 255, 255, 0);
     overflow: hidden;
+    transition: transform 150ms linear;
 
     &:has(input:checked) {
       border-color: rgba(255, 255, 255, 0.5);
       background: var(--bs-btn-active-bg);
+    }
+
+    &.dragging {
+      transition: none;
+      pointer-events: none;
+      z-index: 1;
     }
 
     .icon-container {

@@ -11,6 +11,7 @@
 import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
+import { ItemDragger } from '../common/item-dragger';
 import * as themedIcon from '../common/themed-icon';
 
 /**
@@ -34,6 +35,9 @@ export class Toolbar extends EventEmitter {
    */
   private container: HTMLElement = null;
 
+  /** This is used to drag'n'drop menus from the toolbar. */
+  private menuDragger = new ItemDragger();
+
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
    * functionality.
@@ -52,6 +56,8 @@ export class Toolbar extends EventEmitter {
   }
 
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
+    this.menuDragger.removeAllDraggables();
+
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
     const menusTab = this.container.querySelector('#kando-menus-tab');
 
@@ -64,6 +70,12 @@ export class Toolbar extends EventEmitter {
     }));
 
     menusTab.innerHTML = template({ menus: data });
+
+    for (const menu of data) {
+      const div = document.getElementById(`menu-button-${menu.index}`);
+      console.log('div', div);
+      this.menuDragger.addDraggable(div, menu.index);
+    }
   }
 
   /** This method loads the HTML content of the toolbar. */
@@ -145,6 +157,19 @@ export class Toolbar extends EventEmitter {
       if (button && button.classList.contains('add-menu-button')) {
         this.emit('add-menu');
       }
+    });
+
+    this.menuDragger.on('drag-start', (data, div) => {
+      div.classList.add('dragging');
+    });
+
+    this.menuDragger.on('drag-move', (data, div, relative, absolute, offset) => {
+      div.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+    });
+
+    this.menuDragger.on('drag-end', (data, div) => {
+      div.classList.remove('dragging');
+      div.style.transform = '';
     });
   }
 

@@ -16,7 +16,7 @@
 <div class='d-flex h-100 kando-font'>
   <div class='flex-grow-1' id='menu-buttons-list'>
     {{#each menus}}
-      <label class="btn btn-secondary menu-selection-button">
+      <label id="menu-button-{{index}}" class="btn btn-secondary menu-selection-button">
         <input type="radio"
                name="menu-selection-button"
                data-index="{{index}}"
