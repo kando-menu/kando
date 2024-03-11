@@ -110,11 +110,38 @@ export class Editor extends EventEmitter {
       this.preview.setMenu(this.menuSettings.menus[index]);
     });
     this.toolbar.on('add-menu', () => {
+      // Choose a random icon for the new menu.
+      const icons = [
+        'favorite',
+        'star',
+        'kid_star',
+        'home',
+        'cycle',
+        'public',
+        'rocket_launch',
+        'mood',
+        'sunny',
+        'target',
+      ];
+      const icon = icons[Math.floor(Math.random() * icons.length)];
+
+      // Choose a new name for the menu. We will start with "New Menu" and append a
+      // number if this name is already taken.
+      let name = 'New Menu';
+      let i = 1;
+
+      if (this.menuSettings.menus.find((menu) => menu.nodes.name === name)) {
+        do {
+          name = `New Menu ${i}`;
+          i++;
+        } while (this.menuSettings.menus.find((menu) => menu.nodes.name === name));
+      }
+
       const newMenu: IMenu = {
         nodes: {
           type: 'submenu',
-          name: 'New Menu',
-          icon: 'favorite',
+          name,
+          icon,
           iconTheme: 'material-symbols-rounded',
           children: [],
         },
