@@ -35,6 +35,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 - Any overflowing text in the menu's center item is now hidden.
 
+#### Fixed
+
+- An issue which prevented the app from starting if no shortcut was configured for a menu.
+
 
 ## [Kando 0.5.0](https://github.com/kando-menu/kando/releases/tag/v0.5.0)
 
