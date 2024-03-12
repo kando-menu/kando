@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Added
 
 - The possibility to select the to-be-edited menu in the menu editor.
+- The possibility to add new menus and delete existing ones in the menu editor. This is not yet very useful as there is no way to edit the menu items yet, but it's a first step towards a fully functional menu editor.
 - The possibility to lock item positions in the menu preview of the editor. Locked items cannot be reordered but moved to a fixed angle instead.
 - The possibility to close the menu with the right mouse button.
 - A subtle pulse animation to the drop indicator in the menu editor's preview.
@@ -34,6 +35,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 - Any overflowing text in the menu's center item is now hidden.
+
+#### Fixed
+
+- An issue which prevented the app from starting if no shortcut was configured for a menu.
 
 
 ## [Kando 0.5.0](https://github.com/kando-menu/kando/releases/tag/v0.5.0)

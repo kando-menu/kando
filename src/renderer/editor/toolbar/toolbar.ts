@@ -11,6 +11,7 @@
 import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
+import { ItemDragger } from '../common/item-dragger';
 import * as themedIcon from '../common/themed-icon';
 
 /**
@@ -21,6 +22,8 @@ import * as themedIcon from '../common/themed-icon';
  * - 'leave-edit-mode': This event is emitted when the user leaves edit mode.
  * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
  *   index of the selected menu is passed as the first argument.
+ * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
+ * - 'delete-menu': This event is emitted when the user drags a menu to the trash tab.
  * - 'expand': This event is emitted when a tab is selected which should cover the entire
  *   editor.
  * - 'collapse': This event is emitted when a tab is selected which should not cover the
@@ -32,6 +35,9 @@ export class Toolbar extends EventEmitter {
    * constructor and returned by the getContainer() method.
    */
   private container: HTMLElement = null;
+
+  /** This is used to drag'n'drop menus from the toolbar. */
+  private menuDragger = new ItemDragger();
 
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
@@ -51,18 +57,26 @@ export class Toolbar extends EventEmitter {
   }
 
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
+    this.menuDragger.removeAllDraggables();
+
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
     const menusTab = this.container.querySelector('#kando-menus-tab');
 
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      shortcut: menu.shortcut,
+      shortcut: menu.shortcut || 'Not bound',
       icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
       index,
     }));
 
     menusTab.innerHTML = template({ menus: data });
+
+    for (const menu of data) {
+      const div = document.getElementById(`menu-button-${menu.index}`);
+      console.log('div', div);
+      this.menuDragger.addDraggable(div, menu.index);
+    }
   }
 
   /** This method loads the HTML content of the toolbar. */
@@ -135,9 +149,42 @@ export class Toolbar extends EventEmitter {
 
     const menusTab = this.container.querySelector('#kando-menus-tab');
     menusTab.addEventListener('click', (event) => {
-      const target = event.target as HTMLInputElement;
-      if (target && target.name === 'menu-selection-button') {
-        this.emit('select-menu', target.dataset.index);
+      const input = event.target as HTMLInputElement;
+      if (input && input.name === 'menu-selection-button') {
+        this.emit('select-menu', input.dataset.index);
+      }
+
+      const button = event.target as HTMLButtonElement;
+      if (button && button.classList.contains('add-menu-button')) {
+        this.emit('add-menu');
+      }
+    });
+
+    this.menuDragger.on('drag-start', (index, div) => {
+      div.classList.add('dragging');
+      document
+        .getElementById('kando-editor-toolbar')
+        .classList.add('dragging-deletable-item');
+    });
+
+    this.menuDragger.on('drag-move', (index, div, relative, absolute, offset) => {
+      div.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+    });
+
+    this.menuDragger.on('drag-end', (index, div) => {
+      div.classList.remove('dragging');
+      div.style.transform = '';
+      document
+        .getElementById('kando-editor-toolbar')
+        .classList.remove('dragging-deletable-item');
+
+      // Check if the trash tab is hovered.
+      const tab = this.container.querySelector(
+        ".nav-link[data-bs-target='#kando-trash-tab']"
+      );
+
+      if (tab.matches(':hover')) {
+        this.emit('delete-menu', index);
       }
     });
   }
@@ -174,10 +221,10 @@ export class Toolbar extends EventEmitter {
       const element = this.container.querySelector(`button[data-bs-target="#${tab.id}"]`);
       element.addEventListener('shown.bs.tab', () => {
         if (tab.large) {
-          this.container.querySelector('#kando-editor-toolbar').classList.add('large');
+          document.getElementById('kando-editor-toolbar').classList.add('large');
           this.emit('expand');
         } else {
-          this.container.querySelector('#kando-editor-toolbar').classList.remove('large');
+          document.getElementById('kando-editor-toolbar').classList.remove('large');
           this.emit('collapse');
         }
       });

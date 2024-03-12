@@ -470,6 +470,10 @@ export class KandoApp {
 
     // Then, we bind the shortcuts for all menus.
     for (const menu of this.menuSettings.get('menus')) {
+      if (!menu.shortcut) {
+        continue;
+      }
+
       await this.backend.bindShortcut({
         id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
         description: `Kando - ${menu.nodes.name}`,

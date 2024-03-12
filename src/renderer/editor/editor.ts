@@ -16,7 +16,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenuSettings } from '../../common';
+import { IMenu, IMenuSettings } from '../../common';
 import { toINode } from './editor-node';
 
 /**
@@ -69,6 +69,12 @@ export class Editor extends EventEmitter {
   private menuSettings: IMenuSettings = null;
 
   /**
+   * This is the index of the currently selected menu. It is used to keep track of the
+   * current menu when the user switches between menus.
+   */
+  private currentMenu: number = 0;
+
+  /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
@@ -107,7 +113,58 @@ export class Editor extends EventEmitter {
       this.properties.show();
     });
     this.toolbar.on('select-menu', (index: number) => {
+      this.currentMenu = index;
       this.preview.setMenu(this.menuSettings.menus[index]);
+    });
+    this.toolbar.on('delete-menu', (index: number) => {
+      this.menuSettings.menus.splice(index, 1);
+      this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
+      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
+      this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
+    });
+    this.toolbar.on('add-menu', () => {
+      // Choose a random icon for the new menu.
+      const icons = [
+        'favorite',
+        'star',
+        'kid_star',
+        'home',
+        'cycle',
+        'public',
+        'rocket_launch',
+        'mood',
+        'sunny',
+        'target',
+      ];
+      const icon = icons[Math.floor(Math.random() * icons.length)];
+
+      // Choose a new name for the menu. We will start with "New Menu" and append a
+      // number if this name is already taken.
+      let name = 'New Menu';
+      let i = 1;
+
+      if (this.menuSettings.menus.find((menu) => menu.nodes.name === name)) {
+        do {
+          name = `New Menu ${i}`;
+          i++;
+        } while (this.menuSettings.menus.find((menu) => menu.nodes.name === name));
+      }
+
+      const newMenu: IMenu = {
+        nodes: {
+          type: 'submenu',
+          name,
+          icon,
+          iconTheme: 'material-symbols-rounded',
+          children: [],
+        },
+        shortcut: '',
+        centered: false,
+      };
+
+      this.menuSettings.menus.push(newMenu);
+      this.toolbar.setMenus(this.menuSettings.menus, this.menuSettings.menus.length - 1);
+      this.preview.setMenu(newMenu);
     });
     this.container.appendChild(this.toolbar.getContainer());
 
@@ -157,6 +214,7 @@ export class Editor extends EventEmitter {
       window.api.menuSettings.getCurrentMenu(),
     ]).then(([settings, currentMenu]) => {
       this.menuSettings = settings;
+      this.currentMenu = currentMenu;
       this.preview.setMenu(settings.menus[currentMenu]);
       this.toolbar.setMenus(settings.menus, currentMenu);
     });

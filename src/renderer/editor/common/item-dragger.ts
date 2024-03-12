@@ -10,7 +10,6 @@
 
 import { EventEmitter } from 'events';
 
-import { IEditorNode } from '../editor-node';
 import * as math from '../../math';
 
 /**
@@ -20,32 +19,30 @@ import * as math from '../../math';
  *
  * The class is an `EventEmitter` and emits the following events:
  *
- * @fires drag-start - When a drag starts, this event is emitted with the dragged node.
- * @fires drag-move - When a drag moves, this event is emitted with the dragged node and
- *   the current offset.
- * @fires drag-end - When a drag ends, this event is emitted with the dragged node.
- * @fires click - When a click is detected, this event is emitted with the clicked node.
- *   When the drag threshold is exceeded, no click event is emitted.
- * @fires mouse-down - When a mouse down event is detected, this event is emitted with the
- *   clicked node.
- * @fires mouse-up - When a mouse up event is detected, this event is emitted with the
- *   clicked node. It will be emitted before either the `click` or `drag-end` event.
+ * @fires drag-start - When a drag starts, this event is emitted.
+ * @fires drag-move - When an item is moved, this event is emitted with the current
+ *   offset.
+ * @fires drag-end - When a drag ends, this event is emitted.
+ * @fires click - When a click is detected, this event is emitted. When the drag threshold
+ *   is exceeded, no click event is emitted.
+ * @fires mouse-down - When a mouse down event is detected, this event is emitted.
+ * @fires mouse-up - When a mouse up event is detected, this event is emitted. It will be
+ *   emitted before either the `click` or `drag-end` event.
+ * @template T The type of the user data which is associated with the draggable divs.
  */
-export class ItemDragger extends EventEmitter {
+export class ItemDragger<T> extends EventEmitter {
   /**
-   * This is the item which is currently dragged. It is set to `null` when no node is
+   * This is the item which is currently dragged. It is set to `null` when no item is
    * dragged. `div` is the div which was passed to `addDraggable`.
    */
-  private draggedItem?: { div: HTMLElement; node: IEditorNode } = null;
+  private draggedItem?: { div: HTMLElement; data: T } = null;
 
   /**
-   * This map contains all draggable divs and their corresponding nodes. It is used to
+   * This map contains all draggable divs and their corresponding user data. It is used to
    * remove event listeners when a draggable is removed.
    */
-  private draggableDivs: Map<
-    HTMLElement,
-    { node: IEditorNode; abortController: AbortController }
-  > = new Map();
+  private draggableDivs: Map<HTMLElement, { data: T; abortController: AbortController }> =
+    new Map();
 
   /**
    * This is the threshold in pixels which is used to differentiate between a click and a
@@ -55,14 +52,14 @@ export class ItemDragger extends EventEmitter {
 
   /**
    * This method makes the given item draggable. It adds the necessary event listeners to
-   * the `div`. All resulting drag events will provide the `div` and the `node` which were
+   * the `div`. All resulting drag events will provide the `div` and the `data` which were
    * passed to this method.
    *
    * @param div The div which should listen to mouse events.
-   * @param node A node which is associated with the div. It is only forwarded to the
-   *   resulting drag events.
+   * @param data A user data object which is associated with the div. It is only forwarded
+   *   to the resulting drag events.
    */
-  public addDraggable(div: HTMLElement, node: IEditorNode) {
+  public addDraggable(div: HTMLElement, data: T) {
     const abortController = new AbortController();
 
     div.addEventListener(
@@ -77,7 +74,7 @@ export class ItemDragger extends EventEmitter {
           y: rect.top - parentRect.top,
         };
 
-        this.emit('mouse-down', node, div);
+        this.emit('mouse-down', data, div);
 
         const onMouseMove = (e2: MouseEvent) => {
           const dragCurrent = { x: e2.clientX, y: e2.clientY };
@@ -88,28 +85,29 @@ export class ItemDragger extends EventEmitter {
             e2.stopPropagation();
 
             if (this.draggedItem === null) {
-              this.draggedItem = { div, node };
-              this.emit('drag-start', node, div);
+              this.draggedItem = { div, data };
+              this.emit('drag-start', data, div);
             }
 
             this.emit(
               'drag-move',
-              node,
+              data,
               div,
               { x: startPos.x + offset.x, y: startPos.y + offset.y },
-              { x: e2.x, y: e2.y }
+              { x: e2.x, y: e2.y },
+              offset
             );
           }
         };
 
         const onMouseUp = () => {
-          this.emit('mouse-up', node, div);
+          this.emit('mouse-up', data, div);
 
           if (this.draggedItem) {
-            this.emit('drag-end', this.draggedItem.node, this.draggedItem.div);
+            this.emit('drag-end', this.draggedItem.data, this.draggedItem.div);
             this.draggedItem = null;
           } else {
-            this.emit('click', node, div);
+            this.emit('click', data, div);
           }
 
           window.removeEventListener('mousemove', onMouseMove);
@@ -122,7 +120,7 @@ export class ItemDragger extends EventEmitter {
       { signal: abortController.signal }
     );
 
-    this.draggableDivs.set(div, { node, abortController });
+    this.draggableDivs.set(div, { data, abortController });
   }
 
   /**
@@ -132,10 +130,10 @@ export class ItemDragger extends EventEmitter {
    * @param div The div which should no longer listen to mouse events.
    */
   public removeDraggable(div: HTMLElement) {
-    const { node, abortController } = this.draggableDivs.get(div);
+    const { data, abortController } = this.draggableDivs.get(div);
 
-    // Make sure that the node is not dragged anymore.
-    if (node === this.draggedItem.node) {
+    // Make sure that the data is not dragged anymore.
+    if (this.draggedItem && data === this.draggedItem.data) {
       this.draggedItem = null;
     }
 
