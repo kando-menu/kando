@@ -9,7 +9,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 
 > [!WARNING]
-> This project is currently in a very early stage of development. Kando is not yet a functional menu but rather a prototype which demonstrates the feasibility of the concept. You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
+> This project is currently in a very early stage of development. Especially, Kando does not have a fully functional menu editor yet. If you want to use Kando already today, you will have to [edit your menus in JSON files](docs/configuring.md). You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
 
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
 [![codeql](https://github.com/kando-menu/kando/workflows/CodeQL/badge.svg)](https://github.com/kando-menu/kando/actions)
@@ -21,7 +21,7 @@ SPDX-License-Identifier: CC-BY-4.0
 **Kando** will be a pie menu for the desktop.
 It will be highly customizable and will allow you to create your own menus and actions.
 For instance, you can use it to control your music player, to open your favorite websites or to simulate shortcuts.
-It will be available for Windows, Linux and maybe macOS.
+It will be available for Windows, Linux and macOS.
 
 # The Vision
 
