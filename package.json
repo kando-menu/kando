@@ -37,7 +37,7 @@
     "chai": "^4.3.10",
     "cmake-js": "^7.3.0",
     "css-loader": "^6.10.0",
-    "electron": "29.1.0",
+    "electron": "29.1.1",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
@@ -53,7 +53,7 @@
     "ts-loader": "^9.5.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -68,6 +68,6 @@
     "lodash.isequal": "^4.5.0",
     "material-symbols": "^0.16.0",
     "node-addon-api": "^7.1.0",
-    "simple-icons-font": "^11.5.0"
+    "simple-icons-font": "^11.8.0"
   }
 }
