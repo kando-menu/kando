@@ -67,7 +67,7 @@
     "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
     "material-symbols": "^0.16.0",
-    "node-addon-api": "^7.1.0",
+    "node-addon-api": "^8.0.0",
     "simple-icons-font": "^11.8.0"
   }
 }
