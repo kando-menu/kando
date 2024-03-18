@@ -13,38 +13,48 @@
   This tab displays a grid of buttons which can be used to select the active menu.
 -->
 
-<div class='d-flex h-100 kando-font'>
-  <div class='flex-grow-1' id='menu-buttons-list'>
-    {{#each menus}}
-      <label id="menu-button-{{index}}" class="btn btn-secondary menu-selection-button">
-        <input type="radio"
-               name="menu-selection-button"
-               data-index="{{index}}"
-               {{#if active}} checked {{/if}}/>
-        {{{icon}}}
-        <div>
-          <div class="name fs-3">{{name}}</div>
-          <div class="shortcut fs-5">{{shortcut}}</div>
-        </div>
-      </label>
-    {{/each}}
-    <button class='btn btn-secondary add-menu-button'>
-      <div class='icon-container'>
-        <i class='material-symbols-rounded inline-icon mx-1'>add</i>
-      </div>
-      <div class="name fs-3">Create a menu!</div>
-    </button>
-  </div>
-  <div class='swirl vertical align-self-center mx-2'></div>
-  <div class='d-flex flex-column m-2'>
-    <button class='btn btn-secondary text-start fs-5 disabled pe-5 my-1'>
+<div class='d-flex h-100 kando-font flex-column flex-lg-row-reverse'>
+
+   <div class='d-flex flex-lg-column m-2'>
+    <button class='btn btn-secondary text-start fs-6 disabled pe-5 m-1'>
       <i class='material-symbols-rounded inline-icon mx-1'>cloud_download</i>Get Menus Online
     </button>
-    <button class='btn btn-secondary text-start fs-5 disabled pe-5 my-1'>
+    <button class='btn btn-secondary text-start fs-6 disabled pe-5 m-1'>
       <i class='material-symbols-rounded inline-icon mx-1'>upload</i>Export Menus
     </button>
-    <button class='btn btn-secondary text-start fs-5 disabled pe-5 my-1'>
+    <button class='btn btn-secondary text-start fs-6 disabled pe-5 m-1'>
       <i class='material-symbols-rounded inline-icon mx-1'>download</i>Import Menus
     </button>
   </div>
+
+  <div class='swirl vertical align-self-center d-none d-lg-block mx-2'></div>
+
+  <div class='flex-grow-1 align-content-start m-2' id='menu-buttons-list'>
+    {{#each menus}}
+      <div>
+        <label id="menu-button-{{index}}" class="d-flex btn btn-secondary menu-selection-button">
+          <input type="radio"
+                name="menu-selection-button"
+                data-index="{{index}}"
+                {{#if active}} checked {{/if}}/>
+          <div>
+            {{{icon}}}
+          </div>
+          <div class="align-self-center">
+            <div class="name fs-4">{{name}}</div>
+            <div class="shortcut fs-6">{{shortcut}}</div>
+          </div>
+        </label>
+      </div>
+    {{/each}}
+    <div>
+      <button class='d-flex btn btn-secondary add-menu-button'>
+        <div class='icon-container'>
+          <i class='material-symbols-rounded inline-icon mx-1'>add</i>
+        </div>
+        <div class="name fs-4 align-self-center">Create a menu!</div>
+      </button>
+    </div>
+  </div>
+ 
 </div>
