@@ -14,6 +14,8 @@
     position: absolute;
     top: $editor-padding-top;
     right: $editor-padding-right;
+    padding-left: 1vw;
+    padding-bottom: 1vw;
 
     // Full height - 5vh top margin - 250px toolbar height - 40px gap.
     height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
@@ -21,6 +23,13 @@
       (100vw - $editor-padding-left - $editor-padding-right) *
         (1 - $preview-properties-ratio)
     );
+
+    & > div {
+      width: 100%;
+      height: 100%;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: var(--bs-border-radius);
+    }
 
     transition: opacity 150ms ease;
     opacity: 0;
