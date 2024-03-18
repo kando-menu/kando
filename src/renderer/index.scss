@@ -24,6 +24,7 @@ $material-symbols-font-path: '~material-symbols/';
 // based on the window size. We set the base value to a small number to make sure that
 // RFS is also applied to small things like padding and margin.
 $rfs-base-value: 0.1rem;
+$rfs-breakpoint: 1400px;
 
 @import '../../node_modules/bootstrap/scss/bootstrap';
 

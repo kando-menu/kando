@@ -113,6 +113,8 @@ $kando-highlight-color: #ffc8c8;
 
 // Make buttons respond to clicks by moving down a bit.
 .btn {
+  white-space: nowrap;
+
   &.disabled {
     background: repeating-linear-gradient(
       -45deg,
