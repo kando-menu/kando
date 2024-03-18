@@ -50,10 +50,13 @@
       opacity 150ms ease;
 
     .nav-tabs {
-      gap: 8px;
+      gap: rfs-fluid-value(0.5rem);
       align-items: flex-end;
 
       .nav-link {
+        padding-top: rfs-fluid-value(0.5rem);
+        padding-left: rfs-fluid-value(1rem);
+        padding-right: rfs-fluid-value(1rem);
         padding-bottom: 0;
         transition:
           padding-bottom 150ms ease,

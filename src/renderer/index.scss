@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// All UI of Kando except for the pie menu itself is based on Bootstrap 5.
-@import '../../node_modules/bootstrap/scss/bootstrap';
-
 // For now, we support two different (hard-coded) icon themes. The first one is the
 // Material Design Icons font, the second one is the Simple Icons font. Both are
 // available as npm packages.
@@ -19,9 +16,16 @@ $material-symbols-font-path: '~material-symbols/';
 @import '../../node_modules/simple-icons-font/font/simple-icons.css';
 
 // The menu.css contains the basic CSS layout of the pie menu. The theme.css is used for
-// styling only, that is colors, shadows, borders and simialr things.
+// styling only, that is colors, shadows, borders and similar things.
 @import './menu/menu.scss';
 @import './menu/theme.scss';
+
+// The menu editor of Kando uses Bootstrap 5. We use Bootstrap RFS to scale various things
+// based on the window size. We set the base value to a small number to make sure that
+// RFS is also applied to small things like padding and margin.
+$rfs-base-value: 0.1rem;
+
+@import '../../node_modules/bootstrap/scss/bootstrap';
 
 @import './editor/editor.scss';
 @import './editor/theme.scss';
