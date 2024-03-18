@@ -21,7 +21,8 @@
 $editor-padding-left: 7vw;
 $editor-padding-right: 7vw;
 $editor-padding-top: 7vh;
-$editor-padding-bottom: 7vh;
+$editor-padding-bottom-large: 7vh;
+$editor-padding-bottom-small: 1vh;
 
 $preview-properties-ratio: 0.7;
 $preview-center-size: 22cqmin;
@@ -37,7 +38,6 @@ $preview-label-max-size: 30cqmin;
 $preview-lock-size: 5cqmin;
 
 $toolbar-height: max(250px, 20vh);
-$toolbar-padding: 10px;
 
 @import './background/background.scss';
 @import './preview/preview.scss';

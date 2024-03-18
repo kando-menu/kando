@@ -10,7 +10,6 @@
 
 #kando-editor-container {
   #kando-menu-properties {
-    background-color: rgba(255, 255, 255, 0.15);
     position: absolute;
     top: $editor-padding-top;
     right: $editor-padding-right;
@@ -18,11 +17,25 @@
     padding-bottom: 1vw;
 
     // Full height - 5vh top margin - 250px toolbar height - 40px gap.
-    height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
+    height: calc(
+      100vh - $editor-padding-top - $editor-padding-bottom-small - $toolbar-height
+    );
     width: calc(
       (100vw - $editor-padding-left - $editor-padding-right) *
         (1 - $preview-properties-ratio)
     );
+
+    @media (max-aspect-ratio: 3/4) {
+      $width: calc(100vw - $editor-padding-left - $editor-padding-right);
+      $preview-height: calc($width * 2 / 3);
+      width: $width;
+      height: calc(
+        100vh - $editor-padding-top - $editor-padding-bottom-small - $toolbar-height -
+          $preview-height
+      );
+
+      padding-left: 0;
+    }
 
     & > div {
       width: 100%;

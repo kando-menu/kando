@@ -34,10 +34,11 @@
 
   #kando-editor-toolbar {
     position: absolute;
-    bottom: $toolbar-padding;
+    bottom: $editor-padding-bottom-small;
     left: $editor-padding-left;
     right: $editor-padding-right;
     height: $toolbar-height;
+    padding-top: 1vh;
     opacity: 0;
 
     transform: translateY(20px);
@@ -69,8 +70,8 @@
     }
 
     &.large {
-      height: calc(100vh - $editor-padding-top - $editor-padding-bottom);
-      bottom: $editor-padding-bottom;
+      height: calc(100vh - $editor-padding-top - $editor-padding-bottom-large);
+      bottom: $editor-padding-bottom-large;
 
       // Draw above the menu preview.
       z-index: 2;
