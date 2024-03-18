@@ -13,7 +13,6 @@
   #leave-edit-mode-button {
     position: absolute;
     opacity: 0;
-    font-size: 1.5rem;
     transform: translateY(20px);
 
     i {
@@ -161,12 +160,10 @@
 
     .name {
       top: 8px;
-      font-size: 1.5rem;
     }
 
     .shortcut {
       top: 42px;
-      font-size: 1rem;
     }
   }
 

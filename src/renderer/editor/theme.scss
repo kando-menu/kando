@@ -129,7 +129,6 @@ $kando-highlight-color: #ffc8c8;
 }
 
 .counter {
-  font-size: 0.85em;
   border-radius: 30%;
   padding: 0.2em 0.2em 0 0.2em;
   margin: 0 0.2em;
@@ -137,12 +136,6 @@ $kando-highlight-color: #ffc8c8;
 }
 
 // The Sidebar ---------------------------------------------------------------------------
-
-#hide-sidebar-button,
-#show-sidebar-button {
-  width: 45px;
-  height: 45px;
-}
 
 #show-sidebar-button {
   border-bottom-right-radius: 50%;
@@ -205,12 +198,6 @@ $kando-highlight-color: #ffc8c8;
 }
 
 // The Editor ----------------------------------------------------------------------------
-
-#leave-edit-mode-button,
-#enter-edit-mode-button {
-  width: 45px;
-  height: 45px;
-}
 
 #enter-edit-mode-button {
   border-top-left-radius: 50%;
