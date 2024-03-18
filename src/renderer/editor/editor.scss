@@ -80,3 +80,11 @@ $toolbar-padding: 10px;
   font-size: unset;
   vertical-align: top;
 }
+
+@for $i from 1 through 6 {
+  .fs-#{$i} {
+    font-size: calc(
+      #{0.4 + 0.075 * (6-$i+1)}rem + #{0.4 + 0.075 * (6-$i+1)}vw
+    ) !important;
+  }
+}
