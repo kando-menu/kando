@@ -34,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
-    "chai": "^4.3.10",
+    "chai": "^5.1.0",
     "cmake-js": "^7.3.0",
     "css-loader": "^6.10.0",
     "electron": "29.1.4",
