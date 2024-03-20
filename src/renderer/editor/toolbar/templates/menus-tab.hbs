@@ -13,7 +13,7 @@
   This tab displays a grid of buttons which can be used to select the active menu.
 -->
 
-<div class='d-flex h-100 kando-font flex-column flex-lg-row-reverse kand0-font'>
+<div class='d-flex h-100 kando-font flex-column flex-lg-row-reverse'>
 
   <div class='d-flex flex-lg-column m-3 gap-1'>
     <button class='btn btn-secondary text-start fs-6 disabled'>
@@ -33,7 +33,7 @@
     <div class="scrollbox-content">
       {{#each menus}}
         <div>
-          <label id="menu-button-{{index}}" class="d-flex btn btn-secondary menu-selection-button">
+          <label id="menu-button-{{index}}" class="d-flex kando-font btn btn-secondary menu-selection-button">
             <input type="radio"
                   name="menu-selection-button"
                   data-index="{{index}}"
@@ -49,7 +49,7 @@
         </div>
       {{/each}}
       <div>
-        <button class='d-flex btn btn-secondary add-menu-button'>
+        <button class='d-flex kando-font btn btn-secondary add-menu-button'>
           <div class='icon-container'>
             <i class='material-symbols-rounded inline-icon mx-1'>add</i>
           </div>
