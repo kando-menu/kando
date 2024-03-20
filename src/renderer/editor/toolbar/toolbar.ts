@@ -74,7 +74,6 @@ export class Toolbar extends EventEmitter {
 
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
-      console.log('div', div);
       this.menuDragger.addDraggable(div, menu.index);
     }
   }
