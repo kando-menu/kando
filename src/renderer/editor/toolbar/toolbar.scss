@@ -118,7 +118,7 @@
   }
 
   #menu-buttons-list {
-    .scroll-box-content {
+    .scrollbox-content {
       display: grid;
       gap: 10px;
       grid-template-columns: repeat(auto-fit, minmax(rfs-fluid-value(300px), 1fr));
@@ -146,8 +146,10 @@
 
         .icon-container {
           pointer-events: none;
-          @include rfs(75px, height);
           @include rfs(75px, width);
+          @include rfs(75px, height);
+          @include rfs(75px, min-width);
+          @include rfs(75px, min-height);
           background-color: white;
           border-radius: 50%;
           margin-right: var(--bs-btn-padding-x);
@@ -164,17 +166,19 @@
           pointer-events: none;
           text-align: left;
           text-overflow: ellipsis;
+          overflow: hidden;
           white-space: nowrap;
         }
       }
 
       .add-menu-button {
+        transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+
+        @include rfs(calc(75px + 1.5rem), width);
+
         .name {
-          transition:
-            width 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
-            opacity 150ms linear;
+          transition: opacity 150ms linear;
           opacity: 0;
-          width: 0;
         }
 
         &:not(:hover) {
@@ -188,8 +192,9 @@
         }
 
         &:hover {
+          width: 100%;
+
           .name {
-            width: 100%;
             opacity: 1;
           }
         }
