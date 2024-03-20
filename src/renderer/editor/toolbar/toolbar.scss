@@ -122,82 +122,86 @@
       display: grid;
       gap: 10px;
       grid-template-columns: repeat(auto-fit, minmax(rfs-fluid-value(300px), 1fr));
+    }
+  }
 
-      .add-menu-button,
-      .menu-selection-button {
-        input {
-          display: none;
-        }
+  .add-menu-button,
+  .menu-selection-button {
+    input {
+      display: none;
+    }
 
-        border: 2px dashed rgba(255, 255, 255, 0);
-        overflow: hidden;
-        transition: transform 150ms linear;
+    border: 2px dashed rgba(255, 255, 255, 0);
+    overflow: hidden;
+    transition: transform 150ms linear;
 
-        &:has(input:checked) {
-          border-color: rgba(255, 255, 255, 0.5);
-          background: var(--bs-btn-active-bg);
-        }
+    &:has(input:checked) {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: var(--bs-btn-active-bg);
+    }
 
-        &.dragging {
-          transition: none;
-          pointer-events: none;
-          z-index: 1;
-        }
+    &.dragging {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      transition: none;
+      pointer-events: none;
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
 
-        .icon-container {
-          pointer-events: none;
-          @include rfs(75px, width);
-          @include rfs(75px, height);
-          @include rfs(75px, min-width);
-          @include rfs(75px, min-height);
-          background-color: white;
-          border-radius: 50%;
-          margin-right: var(--bs-btn-padding-x);
-          transition: background-color 150ms linear;
+    .icon-container {
+      pointer-events: none;
+      @include rfs(75px, width);
+      @include rfs(75px, height);
+      @include rfs(75px, min-width);
+      @include rfs(75px, min-height);
+      background-color: white;
+      border-radius: 50%;
+      margin-right: var(--bs-btn-padding-x);
+      transition: background-color 150ms linear;
 
-          i {
-            transition: color 150ms linear;
-            color: black;
-          }
-        }
+      i {
+        transition: color 150ms linear;
+        color: black;
+      }
+    }
 
-        .shortcut,
-        .name {
-          pointer-events: none;
-          text-align: left;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
+    .shortcut,
+    .name {
+      pointer-events: none;
+      text-align: left;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  .add-menu-button {
+    transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+
+    @include rfs(calc(75px + 1.5rem), width);
+
+    .name {
+      transition: opacity 150ms linear;
+      opacity: 0;
+    }
+
+    &:not(:hover) {
+      .icon-container {
+        background-color: transparent;
+
+        i {
+          color: white;
         }
       }
+    }
 
-      .add-menu-button {
-        transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+    &:hover {
+      width: 100%;
 
-        @include rfs(calc(75px + 1.5rem), width);
-
-        .name {
-          transition: opacity 150ms linear;
-          opacity: 0;
-        }
-
-        &:not(:hover) {
-          .icon-container {
-            background-color: transparent;
-
-            i {
-              color: white;
-            }
-          }
-        }
-
-        &:hover {
-          width: 100%;
-
-          .name {
-            opacity: 1;
-          }
-        }
+      .name {
+        opacity: 1;
       }
     }
   }
