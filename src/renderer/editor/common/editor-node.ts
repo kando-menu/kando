@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode } from '../../common';
+import { INode } from '../../../common';
 
 /**
  * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes

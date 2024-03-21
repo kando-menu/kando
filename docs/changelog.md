@@ -36,6 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 - Any overflowing text in the menu's center item is now hidden.
+- The SCSS source code of Kando has received a major cleanup. It is now much better documented and structured.
 
 #### Fixed
 

@@ -10,411 +10,473 @@
 
 @use 'sass:math';
 
-#kando-editor-container {
-  #kando-menu-preview-container {
-    container-type: size;
-    position: absolute;
-    top: $editor-padding-top;
-    left: $editor-padding-left;
-    transition: opacity 150ms ease;
-    opacity: 0;
+#kando-menu-preview-area {
+  container-type: size;
+  position: absolute;
+  top: $editor-padding-top;
+  left: $editor-padding-left;
+  transition: opacity 150ms ease;
+  opacity: 0;
 
-    // This is set so that dragged items are drawn on top of the toolbar.
-    z-index: 1;
+  // This is set so that dragged items are drawn on top of the toolbar.
+  z-index: 1;
 
-    width: calc(
-      (100vw - $editor-padding-left - $editor-padding-right) * $preview-properties-ratio
-    );
-    height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
+  // Usually, the preview is shown in an area in the top left corner of the editor.
+  // However, when the window gets rather tall, we switch to a vertical layout with the
+  // preview in the center.
+  width: calc(
+    (100vw - $editor-padding-left - $editor-padding-right) * $preview-properties-ratio
+  );
+  height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
 
-    @media (max-aspect-ratio: 3/4) {
-      $width: calc(100vw - $editor-padding-left - $editor-padding-right);
-      width: $width;
-      height: calc($width * 2 / 3);
-      top: auto;
-      bottom: calc($editor-padding-bottom-small + $toolbar-height);
-    }
+  @media (max-aspect-ratio: $editor-aspect-breakpoint) {
+    $width: calc(100vw - $editor-padding-left - $editor-padding-right);
+    width: $width;
+    height: calc($width / $preview-aspect-ratio);
+    top: auto;
+    bottom: calc($editor-padding-bottom-small + $toolbar-height);
+  }
 
-    #kando-menu-preview-canvas {
-      position: relative;
-      aspect-ratio: 3 / 2;
-      width: min(150cqh, 100cqw);
+  // Inside this area, we place a container with a fixed aspect ratio. This container
+  // is centered in the area and will hold the actual preview.
+  #kando-menu-preview-canvas {
+    position: relative;
+    aspect-ratio: $preview-aspect-ratio;
+    width: min(calc(100cqh * $preview-aspect-ratio), 100cqw);
 
-      .kando-menu-preview-container {
-        container-type: size;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition:
-          opacity 250ms ease,
-          transform 350ms cubic-bezier(0.45, 1.45, 0.55, 1);
+    // The preview is nested one level deeper to allow for a nice transition effect.
+    // When the preview transitions from one submenu to another, the old preview
+    // container is faded out while the new one is faded in. In addition, both
+    // containers are moved in the direction of the new menu item to create a nice
+    // sliding effect.
+    .kando-menu-preview-container {
+      container-type: size;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition:
+        opacity 250ms ease,
+        transform 350ms cubic-bezier(0.45, 1.45, 0.55, 1);
 
-        transform: translate(
-          calc(var(--dir-x) * $preview-child-distance),
-          calc(var(--dir-y) * $preview-child-distance)
-        );
+      // The --dir-x and --dir-y variables are set by the preview component to
+      // indicate the direction in which the preview should move.
+      transform: translate(
+        calc(var(--dir-x) * $preview-child-distance),
+        calc(var(--dir-y) * $preview-child-distance)
+      );
 
-        &.visible {
-          opacity: 1;
-          transform: none !important;
-        }
+      // The currently shown preview will have this class. Removing it, will fade out
+      // the preview and move it slightly in the --dir-x, --dir-y direction.
+      &.visible {
+        opacity: 1;
+        transform: none !important;
       }
     }
+  }
 
-    .kando-menu-preview-center,
-    .kando-menu-preview-child,
-    .kando-menu-preview-drop-indicator,
-    .kando-menu-preview-backlink {
-      position: absolute;
+  // General Menu Layout -----------------------------------------------------------------
+
+  .kando-menu-preview-center,
+  .kando-menu-preview-child,
+  .kando-menu-preview-drop-indicator,
+  .kando-menu-preview-backlink {
+    color: white;
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgb(255, 255, 255);
+    transition: all 150ms ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.clicking {
+      transform: scale(0.9);
+    }
+
+    &.dragging {
+      transition: none;
+      pointer-events: none;
+
+      .kando-menu-preview-label-container {
+        opacity: 0;
+      }
+    }
+  }
+
+  // The ::before pseudo element is used to draw a dashed circle around the preview
+  // center and the child items. This circle is only visible when the item is active.
+  .kando-menu-preview-center,
+  .kando-menu-preview-child {
+    &::before {
+      content: '';
       border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgb(255, 255, 255);
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      border: 2px dashed rgb(255, 255, 255);
+      opacity: 0;
       transition: all 150ms ease;
-      aspect-ratio: 1 / 1;
+    }
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    &.active::before {
+      top: -$preview-active-outline-offset;
+      left: -$preview-active-outline-offset;
+      right: -$preview-active-outline-offset;
+      bottom: -$preview-active-outline-offset;
+      opacity: 1;
+    }
+  }
+
+  // Adjust the size of the center item.
+  .kando-menu-preview-center {
+    width: $preview-center-size;
+    left: calc(50% - $preview-center-size / 2);
+    top: calc(50% - $preview-center-size / 2);
+  }
+
+  // Adjust the size of the child items. They have the same size as the drop indicator.
+  .kando-menu-preview-child,
+  .kando-menu-preview-drop-indicator {
+    width: $preview-child-size;
+    left: calc(50% - $preview-child-size / 2 + var(--dir-x) * $preview-child-distance);
+    top: calc(50% - $preview-child-size / 2 + var(--dir-y) * $preview-child-distance);
+  }
+
+  // The grandchild items are drawn in a separate container to allow for a nice clipping
+  // effect. This container is positioned behind the child items and is clipped by a
+  // smooth circle. This way, the grandchild items are faded towards the child item.
+  .kando-menu-preview-grandchild-container {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+    pointer-events: none;
+
+    -webkit-mask-image: radial-gradient(
+      circle at 50%,
+      transparent 0%,
+      transparent 35%,
+      black 45%,
+      black 100%
+    );
+  }
+
+  // The grandchild items are positioned directly on the edge of the child item. Their
+  // position is determined by the --rotation variable which is set by the preview
+  // component.
+  .kando-menu-preview-grandchild {
+    position: absolute;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: transform 150ms ease;
+    width: $preview-grandchild-size;
+    height: $preview-grandchild-size;
+    left: calc(50% - $preview-grandchild-size / 2);
+    top: calc(50% - $preview-grandchild-size / 2);
+    transform: rotate(calc(var(--rotation) - 90deg))
+      translateX(calc($preview-child-size / 2));
+  }
+
+  // Child Item Locks --------------------------------------------------------------------
+
+  // Each .kando-menu-preview-child has a tiny lock associated with it. This lock can be
+  // clicked to lock the menu item in place. It is positioned between the center item and
+  // the child item.
+  .kando-menu-preview-lock {
+    position: absolute;
+    width: $preview-lock-size;
+
+    // Compute the distance between the center and the child item.
+    $center-child-gap-width: calc(
+      $preview-child-distance - $preview-center-size / 2 - $preview-child-size / 2
+    );
+
+    // Based on this, compute the offset for the lock relative to the center of the
+    // child item.
+    $offset: calc($preview-child-size / 2 + $center-child-gap-width / 2);
+
+    // The direction in which the lock should be placed is indicated by the --dir-x
+    // and --dir-y variables which are set by the preview component.
+    left: calc(50% - $preview-lock-size / 2 - var(--dir-x) * $offset);
+    top: calc(50% - $preview-lock-size / 2 - var(--dir-y) * $offset);
+
+    transition: all 150ms ease;
+    border-radius: 50%;
+    background-color: transparent;
+    aspect-ratio: 1 / 1;
+    opacity: 0.2;
+
+    &.locked {
+      background-color: rgba(255, 255, 255, 0.1);
+      opacity: 1;
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
       }
-
-      // Scale slightly down when the user clicks on the item.
-      &.clicking {
-        transform: scale(0.9);
-      }
-
-      &.dragging {
-        transition: none;
-        pointer-events: none;
-
-        .kando-menu-preview-label-container {
-          opacity: 0;
-        }
-      }
-
-      .kando-menu-preview-lock {
-        position: absolute;
-        width: $preview-lock-size;
-
-        $center-child-gap-width: calc(
-          $preview-child-distance - $preview-center-size / 2 - $preview-child-size / 2
-        );
-        $offset: calc($preview-child-size / 2 + $center-child-gap-width / 2);
-        left: calc(50% - $preview-lock-size / 2 - var(--dir-x) * $offset);
-        top: calc(50% - $preview-lock-size / 2 - var(--dir-y) * $offset);
-
-        transition: all 150ms ease;
-        border-radius: 50%;
-        background-color: transparent;
-        aspect-ratio: 1 / 1;
-        opacity: 0.2;
-
-        &.locked {
-          background-color: rgba(255, 255, 255, 0.1);
-          opacity: 1;
-
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-          }
-        }
-
-        &:hover {
-          opacity: 1;
-        }
-
-        &:active {
-          transform: scale(0.8);
-        }
-      }
-
-      &.dragging .kando-menu-preview-lock {
-        opacity: 0;
-      }
     }
 
-    .kando-menu-preview-center,
-    .kando-menu-preview-child {
-      &::before {
-        content: '';
-        border-radius: 50%;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
-        border: 2px dashed rgb(255, 255, 255);
-        opacity: 0;
-        transition: all 150ms ease;
-      }
-
-      &.active::before {
-        top: -$preview-active-outline-offset;
-        left: -$preview-active-outline-offset;
-        right: -$preview-active-outline-offset;
-        bottom: -$preview-active-outline-offset;
-        opacity: 1;
-      }
-    }
-
-    .kando-menu-preview-center {
-      width: $preview-center-size;
-      left: calc(50% - $preview-center-size / 2);
-      top: calc(50% - $preview-center-size / 2);
-    }
-
-    .kando-menu-preview-child,
-    .kando-menu-preview-drop-indicator {
-      width: $preview-child-size;
-      left: calc(50% - $preview-child-size / 2 + var(--dir-x) * $preview-child-distance);
-      top: calc(50% - $preview-child-size / 2 + var(--dir-y) * $preview-child-distance);
-    }
-
-    .kando-menu-preview-grandchild-container {
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      z-index: -1;
-      pointer-events: none;
-
-      // inverse circle clipping
-      -webkit-mask-image: radial-gradient(
-        circle at 50%,
-        transparent 0%,
-        transparent 35%,
-        black 45%,
-        black 100%
-      );
-    }
-
-    .kando-menu-preview-grandchild {
-      position: absolute;
-      border-radius: 100%;
-      background-color: rgba(255, 255, 255, 0.5);
-      transition: transform 150ms ease;
-      width: $preview-grandchild-size;
-      height: $preview-grandchild-size;
-      left: calc(50% - $preview-grandchild-size / 2);
-      top: calc(50% - $preview-grandchild-size / 2);
-      transform: rotate(calc(var(--rotation) - 90deg))
-        translateX(calc($preview-child-size / 2));
-    }
-
-    .kando-menu-preview-label-container {
-      position: absolute;
-      width: $preview-label-max-size;
-      height: $preview-label-max-size;
-      pointer-events: none;
-      display: flex;
-      align-items: end;
+    &:hover {
       opacity: 1;
+    }
 
-      transition: opacity 150ms ease;
+    &:active {
+      transform: scale(0.8);
+    }
+  }
+
+  // Hide the lock when dragging the menu item.
+  .kando-menu-preview-child.dragging .kando-menu-preview-lock {
+    opacity: 0;
+  }
+
+  // Child Item Labels -------------------------------------------------------------------
+
+  // Each child item has a label associated with it. This label is positioned in a
+  // separate container with a fixed width to allow for ellipsis overflow.
+  .kando-menu-preview-label-container {
+    position: absolute;
+    width: $preview-label-max-size;
+    height: $preview-label-max-size;
+    pointer-events: none;
+    display: flex;
+    align-items: end;
+
+    transition: opacity 150ms ease;
+
+    // Add the line from the child item's outline to the label.
+    &::before {
+      content: '';
+      position: absolute;
+      transform: rotate(calc(var(--rotation) + 90deg));
+      transform-origin: left;
+      width: calc(
+        $preview-label-distance - $preview-child-size / 2 - $preview-active-outline-offset
+      );
+      height: 1px;
+      left: 0;
+      bottom: 0;
+      border-bottom: 2px dashed rgb(255, 255, 255);
+    }
+
+    // The label has a dashed bottom border which attaches nicely to the connector line.
+    .kando-menu-preview-label {
+      pointer-events: all;
+      color: white;
+      white-space: nowrap;
+      border-bottom: 2px dashed rgb(255, 255, 255);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 0 1rem;
+    }
+
+    // If the item is on the left side of the menu preview, the label is positioned at the
+    // right side of the label container.
+    &.left {
+      justify-content: end;
+      transform: translate(-50%, -50%)
+        translate(
+          calc(var(--dir-x) * $preview-label-distance),
+          calc(var(--dir-y) * $preview-label-distance)
+        );
 
       &::before {
-        content: '';
-        position: absolute;
-        transform: rotate(calc(var(--rotation) + 90deg));
-        transform-origin: left;
-        width: calc(
-          $preview-label-distance - $preview-child-size / 2 -
-            $preview-active-outline-offset
+        transform: rotate(calc(var(--rotation) - 90deg));
+        transform-origin: right;
+        left: auto;
+        right: 0;
+      }
+    }
+
+    // If the item is on the right side of the menu preview, the label is positioned at
+    // the left side of the label container.
+    &.right {
+      transform: translate(50%, -50%)
+        translate(
+          calc(var(--dir-x) * $preview-label-distance),
+          calc(var(--dir-y) * $preview-label-distance)
         );
-        height: 1px;
-        left: 0;
-        bottom: 0;
-        border-bottom: 2px dashed rgb(255, 255, 255);
+    }
+
+    // If the item is exactly at the top of the menu preview, the label is centered.
+    &.top {
+      justify-content: center;
+      transform: translate(0%, -50%)
+        translate(
+          calc(var(--dir-x) * $preview-label-distance),
+          calc(var(--dir-y) * $preview-label-distance)
+        );
+
+      &::before {
+        left: 50%;
+      }
+    }
+
+    // At the menu's bottom, the label is centered as well. The dashed border is at the
+    // top of the label in this case.
+    &.bottom {
+      align-items: start;
+      justify-content: center;
+      transform: translate(0%, 50%)
+        translate(
+          calc(var(--dir-x) * $preview-label-distance),
+          calc(var(--dir-y) * $preview-label-distance)
+        );
+
+      &::before {
+        left: 50%;
+        bottom: auto;
+        top: 0;
       }
 
       .kando-menu-preview-label {
-        pointer-events: all;
-        color: white;
-        white-space: nowrap;
-        border-bottom: 2px dashed rgb(255, 255, 255);
-        text-overflow: ellipsis;
-        overflow: hidden;
-        padding: 0 1rem;
-      }
-
-      &.left {
-        justify-content: end;
-        transform: translate(-50%, -50%)
-          translate(
-            calc(var(--dir-x) * $preview-label-distance),
-            calc(var(--dir-y) * $preview-label-distance)
-          );
-
-        &::before {
-          transform: rotate(calc(var(--rotation) - 90deg));
-          transform-origin: right;
-          left: auto;
-          right: 0;
-        }
-      }
-
-      &.right {
-        transform: translate(50%, -50%)
-          translate(
-            calc(var(--dir-x) * $preview-label-distance),
-            calc(var(--dir-y) * $preview-label-distance)
-          );
-      }
-
-      &.top {
-        justify-content: center;
-        transform: translate(0%, -50%)
-          translate(
-            calc(var(--dir-x) * $preview-label-distance),
-            calc(var(--dir-y) * $preview-label-distance)
-          );
-
-        &::before {
-          left: 50%;
-        }
-      }
-
-      &.bottom {
-        align-items: start;
-        justify-content: center;
-        transform: translate(0%, 50%)
-          translate(
-            calc(var(--dir-x) * $preview-label-distance),
-            calc(var(--dir-y) * $preview-label-distance)
-          );
-
-        &::before {
-          left: 50%;
-          bottom: auto;
-          top: 0;
-        }
-
-        .kando-menu-preview-label {
-          border-top: 2px dashed rgb(255, 255, 255);
-          border-bottom: none;
-        }
+        border-top: 2px dashed rgb(255, 255, 255);
+        border-bottom: none;
       }
     }
+  }
 
-    .kando-menu-preview-backlink {
-      width: $preview-child-size;
-      height: $preview-child-size;
-      left: calc(50% - $preview-child-size / 2 - var(--dir-x) * $preview-child-distance);
-      top: calc(50% - $preview-child-size / 2 - var(--dir-y) * $preview-child-distance);
+  // Back Navigation Links ---------------------------------------------------------------
 
-      transform: rotate(calc(var(--rotation) - 90deg));
+  // The circular part of the backlink is drawn like a child item. The line is drawn using
+  // the ::before and ::after pseudo elements.
+  .kando-menu-preview-backlink {
+    width: $preview-child-size;
+    height: $preview-child-size;
+    left: calc(50% - $preview-child-size / 2 - var(--dir-x) * $preview-child-distance);
+    top: calc(50% - $preview-child-size / 2 - var(--dir-y) * $preview-child-distance);
 
-      border: none;
+    transform: rotate(calc(var(--rotation) - 90deg));
 
-      &:active {
-        transform: rotate(calc(var(--rotation) - 90deg)) scale(0.9);
-      }
+    border: none;
 
-      &::before,
-      &::after {
-        content: '';
-        position: absolute;
-        height: $preview-backlink-width;
-      }
-
-      // The inner part.
-      &::before {
-        width: $preview-backlink-inner-length;
-        right: -$preview-backlink-inner-length;
-
-        background: linear-gradient(
-          to left,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.1) 25%,
-          rgba(255, 255, 255, 0.1) 85%,
-          rgba(255, 255, 255, 0) 100%
-        );
-      }
-
-      // The outer part.
-      &::after {
-        width: $preview-backlink-outer-length;
-        left: -$preview-backlink-outer-length;
-
-        background: linear-gradient(
-          to left,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.1) 4%,
-          rgba(255, 255, 255, 0.1) 75%,
-          rgba(255, 255, 255, 0) 100%
-        );
-      }
+    &:active {
+      transform: rotate(calc(var(--rotation) - 90deg)) scale(0.9);
     }
 
-    .kando-menu-preview-drop-indicator {
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 2px dashed rgba(255, 255, 255, 0.5);
-      pointer-events: none;
-      opacity: 0;
-      transition: all 150ms ease;
-
-      &.visible {
-        opacity: 1;
-        animation: pulse 1s infinite;
-
-        @keyframes pulse {
-          0% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-          }
-
-          70% {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-          }
-
-          100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-          }
-        }
-      }
-    }
-
-    #kando-menu-preview-breadcrumbs {
+    // The ::before and ::after pseudo elements are used to draw the backlink line.
+    &::before,
+    &::after {
+      content: '';
       position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      width: 100%;
-      color: rgba(255, 255, 255, 0.5);
+      height: $preview-backlink-width;
+    }
 
-      .kando-menu-preview-breadcrumb {
-        display: inline-block;
-        margin-right: 0.5em;
+    // The inner part.
+    &::before {
+      width: $preview-backlink-inner-length;
+      right: -$preview-backlink-inner-length;
 
-        &:hover {
-          color: rgb(255, 255, 255);
+      background: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 25%,
+        rgba(255, 255, 255, 0.1) 85%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+
+    // The outer part.
+    &::after {
+      width: $preview-backlink-outer-length;
+      left: -$preview-backlink-outer-length;
+
+      background: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 4%,
+        rgba(255, 255, 255, 0.1) 75%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+  }
+
+  // Drop Indicator ----------------------------------------------------------------------
+
+  // The drop indicator is a dashed circle which is drawn at the position where a new
+  // child item would be added. It is only visible during drag and drop operations. It is
+  // styled similarly to the child items. It features a pulsing animation to make it more
+  // visible.
+  .kando-menu-preview-drop-indicator {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: all 150ms ease;
+    aspect-ratio: 1 / 1;
+
+    &.visible {
+      opacity: 1;
+      animation: pulse 1s infinite;
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
         }
 
-        &:last-child {
-          color: rgb(255, 255, 255);
-          border-bottom: 2px dashed rgb(255, 255, 255);
-          pointer-events: none;
+        70% {
+          transform: scale(1.1);
+          box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
         }
 
-        &:not(:last-child) {
-          cursor: pointer;
-
-          &::after {
-            content: '»';
-            margin-left: 0.5em;
-            color: rgba(255, 255, 255, 0.5) !important;
-          }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
         }
       }
     }
   }
 
-  &.edit-mode #kando-menu-preview-container.visible {
-    opacity: 1;
+  // Breadcrumbs -------------------------------------------------------------------------
+
+  // At some point, the breadcrumbs will be shown in the item properties area. For now,
+  // they are simply drawn at the top of the preview area.
+  #kando-menu-preview-breadcrumbs {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.5);
+
+    .kando-menu-preview-breadcrumb {
+      display: inline-block;
+      margin-right: 0.5em;
+
+      &:hover {
+        color: rgb(255, 255, 255);
+      }
+
+      &:last-child {
+        color: rgb(255, 255, 255);
+        border-bottom: 2px dashed rgb(255, 255, 255);
+        pointer-events: none;
+      }
+
+      &:not(:last-child) {
+        cursor: pointer;
+
+        &::after {
+          content: '»';
+          margin-left: 0.5em;
+          color: rgba(255, 255, 255, 0.5) !important;
+        }
+      }
+    }
   }
+}
+
+#kando-editor.edit-mode #kando-menu-preview-area.visible {
+  opacity: 1;
 }

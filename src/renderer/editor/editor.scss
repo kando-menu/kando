@@ -13,45 +13,32 @@
 //   actual pie menu. It basically hides the pie menu while editing.
 // * The sidebar is shown alongside the pie menu and can be shown or hidden
 //   independently from the main editor. However, it is actually part of the editor
-//   and is drawn inside the #kando-editor-container.
+//   and is drawn inside the #kando-editor.
 // * The other editor components such as the editor-toolbar at the bottom of the screen
 //   or the menu configuration widgets in the screen's center. They are visible when
 //   the editor is in 'edit-mode'.
 
-$editor-padding-left: 7vw;
-$editor-padding-right: 7vw;
-$editor-padding-top: 7vh;
-$editor-padding-bottom-large: 7vh;
-$editor-padding-bottom-small: 1vh;
+@import './common/variables.scss';
 
-$preview-properties-ratio: 0.7;
-$preview-center-size: 22cqmin;
-$preview-child-size: 12cqmin;
-$preview-child-distance: 26cqmin;
-$preview-grandchild-size: 3cqmin;
-$preview-active-outline-offset: 1.5cqmin;
-$preview-backlink-width: 4cqmin;
-$preview-backlink-inner-length: 8cqmin;
-$preview-backlink-outer-length: 30cqmin;
-$preview-label-distance: 19cqmin;
-$preview-label-max-size: 30cqmin;
-$preview-lock-size: 5cqmin;
+// The menu editor of Kando uses Bootstrap 5.
+@import '../../../node_modules/bootstrap/scss/bootstrap';
 
-$toolbar-height: max(250px, 20vh);
-
+@import './common/fonts.scss';
+@import './common/scrollbox.scss';
+@import './common/icon-container.scss';
 @import './background/background.scss';
-@import './preview/preview.scss';
-@import './properties/properties.scss';
 @import './sidebar/sidebar.scss';
 @import './toolbar/toolbar.scss';
+@import './preview/preview.scss';
+@import './properties/properties.scss';
 
 // Handle pointer events -----------------------------------------------------------------
 
-// First, let's take care of the user input. As the editor UI elements are always drawn on
-// top of the actual pie menu, we have to make sure that they do not intercept pointer
-// events if the editor is not in edit-mode. The sidebar and the show-toolbar button make
-// sure to receive pointer events themselves.
-#kando-editor-container {
+// As the editor UI elements are always drawn on top of the actual pie menu, we have to
+// make sure that they do not intercept pointer events if the editor is not in edit-mode.
+// The sidebar and the show-toolbar button make sure to receive pointer events themselves.
+
+#kando-editor {
   pointer-events: none;
 
   &.edit-mode {
@@ -59,79 +46,57 @@ $toolbar-height: max(250px, 20vh);
   }
 }
 
-// Icon Container ------------------------------------------------------------------------
+// Basic UI styling ----------------------------------------------------------------------
 
-#kando-editor-container .icon-container {
-  container-type: size;
-  width: 100%;
-  aspect-ratio: 1 / 1;
+#kando-editor {
+  color: #{$kando-text-color};
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  --bs-heading-color: #{$kando-text-color};
+  --bs-code-color: #{$kando-highlight-color};
+  --bs-border-radius: 0.75rem;
+  --bs-border-width: 0;
+  --bs-body-bg: rgba(35, 35, 35);
+  --bs-secondary-color: rgb(100, 100, 100);
+  --bs-emphasis-color: rgba(255, 255, 255);
+  --bs-link-color: #{$kando-highlight-color};
 
-  i {
-    position: absolute;
-    font-size: 75cqi;
-    color: white;
-  }
-}
+  // Make buttons respond to clicks by moving down a bit.
+  .btn {
+    white-space: nowrap;
 
-#kando-editor-container .inline-icon {
-  line-height: unset;
-  font-size: unset;
-  vertical-align: top;
-}
+    &.disabled {
+      background: repeating-linear-gradient(
+        -45deg,
+        #363636,
+        #363636 10px,
+        #3f3e3b 10px,
+        #3f3e3b 20px
+      );
+    }
 
-// Scroll Box ----------------------------------------------------------------------------
-
-.scrollbox {
-  -webkit-mask-image:
-    -webkit-linear-gradient(
-      rgba(255, 255, 255, 0) 0,
-      rgba(255, 255, 255, 1) 1rem,
-      rgba(255, 255, 255, 1) 40%,
-      rgba(255, 255, 255, 0) 49%
-    ),
-    -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 1rem, rgba(
-            255,
-            255,
-            255,
-            1
-          )
-          49%, rgba(255, 255, 255, 0) 49%),
-    -webkit-linear-gradient(rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 1) 40%, rgba(
-            255,
-            255,
-            255,
-            1
-          )
-          60%, rgba(255, 255, 255, 0) 70%);
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-    cursor: pointer;
+    &:active {
+      transform: translateY(1px);
+    }
   }
 
-  &::-webkit-scrollbar-track {
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
-    margin: 1rem 0;
+  .btn-dark {
+    --bs-btn-bg: #{rgba(0, 0, 0, 0.8)};
+    --bs-btn-hover-bg: #{rgba(30, 30, 30, 0.8)};
   }
 
-  &::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.6);
+  // The secondary button is used most of the time. We want it to be a bit darker than
+  // the default.
+  .btn-secondary {
+    --bs-btn-bg: #{rgba(50, 50, 50, 0.4)};
+    --bs-btn-hover-bg: #{lighten(rgba(50, 50, 50, 0.4), 5%)};
+    --bs-btn-active-bg: #{lighten(rgba(50, 50, 50, 0.4), 15%)};
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-border-color: transparent;
   }
 
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-  }
-
-  .scrollbox-content {
-    margin: 1rem 0;
-    padding-right: 1rem;
+  // We make the tooltip background a bit darker.
+  .tooltip {
+    --bs-tooltip-bg: #{rgba(220, 220, 220, 0.99)};
   }
 }

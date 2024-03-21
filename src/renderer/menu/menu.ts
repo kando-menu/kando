@@ -257,30 +257,30 @@ export class Menu extends EventEmitter {
 
   /**
    * This method creates the DOM tree for the given node and all its children. For each
-   * node, a div element with the class ".node" is created and appended to the given
+   * node, a div element with the class ".menu-node" is created and appended to the given
    * container. In addition to the child nodes, the div element contains a div with the
-   * class ".item" which contains the visual representation of the node.
+   * class ".menu-icon" which contains the visual representation of the node.
    *
    * @param node The node to create the DOM tree for.
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(node: IMenuNode, container: HTMLElement) {
     node.itemDiv = document.createElement('div');
-    node.itemDiv.classList.add('node');
+    node.itemDiv.classList.add('menu-node');
 
-    const item = document.createElement('i');
-    item.classList.add('item');
+    const icon = document.createElement('i');
+    icon.classList.add('menu-icon');
 
     if (node.iconTheme === 'material-symbols-rounded') {
-      item.classList.add(node.iconTheme);
-      item.innerHTML = node.icon;
+      icon.classList.add(node.iconTheme);
+      icon.innerHTML = node.icon;
     } else if (node.iconTheme === 'simple-icons') {
-      item.classList.add('si');
-      item.classList.add('si-' + node.icon);
+      icon.classList.add('si');
+      icon.classList.add('si-' + node.icon);
     }
 
     container.appendChild(node.itemDiv);
-    node.itemDiv.appendChild(item);
+    node.itemDiv.appendChild(icon);
 
     if (node.children) {
       node.connectorDiv = document.createElement('div');
@@ -673,25 +673,25 @@ export class Menu extends EventEmitter {
     for (let i = 0; i < this.selectionChain.length; ++i) {
       const node = this.selectionChain[i];
       if (i === this.selectionChain.length - 1) {
-        node.itemDiv.className = 'node active';
+        node.itemDiv.className = 'menu-node active';
 
         if (node.children) {
           for (const child of node.children as IMenuNode[]) {
-            child.itemDiv.className = 'node child';
+            child.itemDiv.className = 'menu-node child';
 
             if (child.children) {
               for (const grandchild of child.children as IMenuNode[]) {
-                grandchild.itemDiv.className = 'node grandchild';
+                grandchild.itemDiv.className = 'menu-node grandchild';
               }
             }
           }
         }
       } else {
-        node.itemDiv.className = 'node parent';
+        node.itemDiv.className = 'menu-node parent';
 
         if (node.children) {
           for (const child of node.children as IMenuNode[]) {
-            child.itemDiv.className = 'node grandchild';
+            child.itemDiv.className = 'menu-node grandchild';
           }
         }
       }

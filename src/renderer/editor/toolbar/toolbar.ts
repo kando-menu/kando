@@ -85,6 +85,7 @@ export class Toolbar extends EventEmitter {
 
     this.container = document.createElement('div');
     this.container.innerHTML = toolbar({
+      areaId: 'kando-editor-toolbar-area',
       tabs: [
         {
           id: 'kando-menus-tab',
@@ -163,7 +164,7 @@ export class Toolbar extends EventEmitter {
 
     this.menuDragger.on('drag-start', (index, div) => {
       document
-        .getElementById('kando-editor-toolbar')
+        .getElementById('kando-editor-toolbar-area')
         .classList.add('dragging-deletable-item');
 
       // Set fixed width and height for dragged item.
@@ -198,7 +199,7 @@ export class Toolbar extends EventEmitter {
       originalParent.appendChild(div);
 
       document
-        .getElementById('kando-editor-toolbar')
+        .getElementById('kando-editor-toolbar-area')
         .classList.remove('dragging-deletable-item');
 
       // Check if the trash tab is hovered.
@@ -244,10 +245,10 @@ export class Toolbar extends EventEmitter {
       const element = this.container.querySelector(`button[data-bs-target="#${tab.id}"]`);
       element.addEventListener('shown.bs.tab', () => {
         if (tab.large) {
-          document.getElementById('kando-editor-toolbar').classList.add('large');
+          document.getElementById('kando-editor-toolbar-area').classList.add('large');
           this.emit('expand');
         } else {
-          document.getElementById('kando-editor-toolbar').classList.remove('large');
+          document.getElementById('kando-editor-toolbar-area').classList.remove('large');
           this.emit('collapse');
         }
       });

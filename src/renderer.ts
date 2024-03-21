@@ -20,8 +20,8 @@ import { Editor } from './renderer/editor/editor';
 
 // Wire up the menu and the editor -------------------------------------------------------
 
-const menu = new Menu(document.getElementById('kando-menu-container'));
-const editor = new Editor(document.getElementById('kando-editor-container'));
+const menu = new Menu(document.getElementById('kando-menu'));
+const editor = new Editor(document.getElementById('kando-editor'));
 
 // Show the menu when the main process requests it.
 window.api.showMenu((root, pos) => {
