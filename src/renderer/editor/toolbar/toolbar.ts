@@ -74,7 +74,6 @@ export class Toolbar extends EventEmitter {
 
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
-      console.log('div', div);
       this.menuDragger.addDraggable(div, menu.index);
     }
   }
@@ -160,20 +159,44 @@ export class Toolbar extends EventEmitter {
       }
     });
 
+    let originalParent: HTMLElement;
+
     this.menuDragger.on('drag-start', (index, div) => {
-      div.classList.add('dragging');
       document
         .getElementById('kando-editor-toolbar')
         .classList.add('dragging-deletable-item');
+
+      // Set fixed width and height for dragged item.
+      const rect = div.getBoundingClientRect();
+      div.style.width = `${rect.width}px`;
+      div.style.height = `${rect.height}px`;
+
+      // Remember the original parent and the next sibling of the div
+      originalParent = div.parentNode;
+
+      // Append the div to the body.
+      div.classList.add('dragging');
+      this.container.appendChild(div);
     });
 
-    this.menuDragger.on('drag-move', (index, div, relative, absolute, offset) => {
-      div.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
-    });
+    this.menuDragger.on(
+      'drag-move',
+      (index, div, relative, absolute, offset, grabOffset) => {
+        div.style.transform = `translate(${absolute.x - grabOffset.x}px, ${absolute.y - grabOffset.y}px)`;
+      }
+    );
 
     this.menuDragger.on('drag-end', (index, div) => {
       div.classList.remove('dragging');
       div.style.transform = '';
+
+      // Clear the fixed width and height.
+      div.style.width = '';
+      div.style.height = '';
+
+      // Reinsert the div back to its original position.
+      originalParent.appendChild(div);
+
       document
         .getElementById('kando-editor-toolbar')
         .classList.remove('dragging-deletable-item');

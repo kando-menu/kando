@@ -74,6 +74,11 @@ export class ItemDragger<T> extends EventEmitter {
           y: rect.top - parentRect.top,
         };
 
+        const grapOffset = {
+          x: dragStart.x - rect.left,
+          y: dragStart.y - rect.top,
+        };
+
         this.emit('mouse-down', data, div);
 
         const onMouseMove = (e2: MouseEvent) => {
@@ -95,7 +100,8 @@ export class ItemDragger<T> extends EventEmitter {
               div,
               { x: startPos.x + offset.x, y: startPos.y + offset.y },
               { x: e2.x, y: e2.y },
-              offset
+              offset,
+              grapOffset
             );
           }
         };

@@ -27,9 +27,17 @@
     );
     height: calc(100vh - $editor-padding-top - $toolbar-height - 40px);
 
+    @media (max-aspect-ratio: 3/4) {
+      $width: calc(100vw - $editor-padding-left - $editor-padding-right);
+      width: $width;
+      height: calc($width * 2 / 3);
+      top: auto;
+      bottom: calc($editor-padding-bottom-small + $toolbar-height);
+    }
+
     #kando-menu-preview-canvas {
       position: relative;
-      aspect-ratio: 1.5 / 1;
+      aspect-ratio: 3 / 2;
       width: min(150cqh, 100cqw);
 
       .kando-menu-preview-container {

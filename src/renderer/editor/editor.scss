@@ -21,7 +21,8 @@
 $editor-padding-left: 7vw;
 $editor-padding-right: 7vw;
 $editor-padding-top: 7vh;
-$editor-padding-bottom: 7vh;
+$editor-padding-bottom-large: 7vh;
+$editor-padding-bottom-small: 1vh;
 
 $preview-properties-ratio: 0.7;
 $preview-center-size: 22cqmin;
@@ -37,7 +38,6 @@ $preview-label-max-size: 30cqmin;
 $preview-lock-size: 5cqmin;
 
 $toolbar-height: max(250px, 20vh);
-$toolbar-padding: 10px;
 
 @import './background/background.scss';
 @import './preview/preview.scss';
@@ -59,6 +59,8 @@ $toolbar-padding: 10px;
   }
 }
 
+// Icon Container ------------------------------------------------------------------------
+
 #kando-editor-container .icon-container {
   container-type: size;
   width: 100%;
@@ -79,4 +81,57 @@ $toolbar-padding: 10px;
   line-height: unset;
   font-size: unset;
   vertical-align: top;
+}
+
+// Scroll Box ----------------------------------------------------------------------------
+
+.scrollbox {
+  -webkit-mask-image:
+    -webkit-linear-gradient(
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 1) 1rem,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 255, 255, 0) 49%
+    ),
+    -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 1rem, rgba(
+            255,
+            255,
+            255,
+            1
+          )
+          49%, rgba(255, 255, 255, 0) 49%),
+    -webkit-linear-gradient(rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 1) 40%, rgba(
+            255,
+            255,
+            255,
+            1
+          )
+          60%, rgba(255, 255, 255, 0) 70%);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 1rem 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  .scrollbox-content {
+    margin: 1rem 0;
+    padding-right: 1rem;
+  }
 }

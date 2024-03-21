@@ -113,6 +113,8 @@ $kando-highlight-color: #ffc8c8;
 
 // Make buttons respond to clicks by moving down a bit.
 .btn {
+  white-space: nowrap;
+
   &.disabled {
     background: repeating-linear-gradient(
       -45deg,
@@ -129,7 +131,6 @@ $kando-highlight-color: #ffc8c8;
 }
 
 .counter {
-  font-size: 0.85em;
   border-radius: 30%;
   padding: 0.2em 0.2em 0 0.2em;
   margin: 0 0.2em;
@@ -137,12 +138,6 @@ $kando-highlight-color: #ffc8c8;
 }
 
 // The Sidebar ---------------------------------------------------------------------------
-
-#hide-sidebar-button,
-#show-sidebar-button {
-  width: 45px;
-  height: 45px;
-}
 
 #show-sidebar-button {
   border-bottom-right-radius: 50%;
@@ -206,12 +201,6 @@ $kando-highlight-color: #ffc8c8;
 
 // The Editor ----------------------------------------------------------------------------
 
-#leave-edit-mode-button,
-#enter-edit-mode-button {
-  width: 45px;
-  height: 45px;
-}
-
 #enter-edit-mode-button {
   border-top-left-radius: 50%;
   right: 10px;
@@ -220,7 +209,7 @@ $kando-highlight-color: #ffc8c8;
 
 #leave-edit-mode-button {
   right: -55px;
-  top: 0px;
+  top: 1vh;
 }
 
 #kando-editor-background {
@@ -251,8 +240,6 @@ $kando-highlight-color: #ffc8c8;
 
 #kando-editor-toolbar {
   .nav-tabs {
-    font-size: 1.5rem;
-
     .nav-link {
       background-color: rgba(0, 0, 0, 0.3);
 
