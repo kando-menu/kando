@@ -1,0 +1,34 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// There are many icons throughout the editor. We have to ensure that they all are scaled
+// and aligned properly even if they come from different icon themes. The flexbox-based
+// approach below seems to work quite well. The first class can be used to properly scale
+// and center icons in block divs; the second class is for inline icons.
+
+#kando-editor .icon-container {
+  container-type: size;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 75cqi;
+  }
+}
+
+#kando-editor .inline-icon {
+  line-height: unset;
+  font-size: unset;
+  vertical-align: top;
+}

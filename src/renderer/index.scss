@@ -15,21 +15,15 @@ $material-symbols-font-path: '~material-symbols/';
 @import 'material-symbols/rounded';
 @import '../../node_modules/simple-icons-font/font/simple-icons.css';
 
-// The menu.css contains the basic CSS layout of the pie menu. The theme.css is used for
-// styling only, that is colors, shadows, borders and similar things.
+// There are two main entry files for styling: menu.scss and editor.scss. They are
+// completely independent from each other and do not share any classes.
 @import './menu/menu.scss';
-@import './menu/theme.scss';
-
-// The menu editor of Kando uses Bootstrap 5. We use Bootstrap RFS to scale various things
-// based on the window size. We set the base value to a small number to make sure that
-// RFS is also applied to small things like padding and margin.
-$rfs-base-value: 0.1rem;
-$rfs-breakpoint: 1400px;
-
-@import '../../node_modules/bootstrap/scss/bootstrap';
-
 @import './editor/editor.scss';
-@import './editor/theme.scss';
+
+// General Styling -----------------------------------------------------------------------
+
+// We ensure that the window's background is transparent and that both, the menu and the
+// editor cover the entire viewport.
 
 body {
   background: transparent;
@@ -37,8 +31,8 @@ body {
   user-select: none;
 }
 
-#kando-menu-container,
-#kando-editor-container {
+#kando-menu,
+#kando-editor {
   position: absolute;
   top: 0px;
   left: 0px;

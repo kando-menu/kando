@@ -20,7 +20,7 @@
   This is the editor's toolbar. It contains the tabs for the different editor
   sections.
 -->
-<div id='kando-editor-toolbar' class='d-flex flex-column'>
+<div id='{{areaId}}' class='d-flex flex-column'>
 
   <!--
     This is the button which closes the editor.
@@ -51,7 +51,7 @@
   <!--
     This is the tab content. It contains the actual content of the tabs.
   -->
-  <div class='tab-content flex-grow-1' id='kando-editor-toolbar-content'>
+  <div class='tab-content flex-grow-1'>
     {{#each tabs}}
       <div class='tab-pane h-100 {{#if active}} active {{/if}}' id='{{id}}'>
         {{{content}}}

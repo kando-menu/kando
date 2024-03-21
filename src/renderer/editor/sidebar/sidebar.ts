@@ -60,11 +60,15 @@ export class Sidebar {
   public setVisibility(visible: boolean) {
     if (this.visible !== visible) {
       if (visible) {
-        this.container.querySelector('#kando-editor-sidebar').classList.add('visible');
+        this.container
+          .querySelector('#kando-editor-sidebar-area')
+          .classList.add('visible');
         this.container.querySelector('#hide-sidebar-button').classList.add('visible');
         this.container.querySelector('#show-sidebar-button').classList.remove('visible');
       } else {
-        this.container.querySelector('#kando-editor-sidebar').classList.remove('visible');
+        this.container
+          .querySelector('#kando-editor-sidebar-area')
+          .classList.remove('visible');
         this.container.querySelector('#hide-sidebar-button').classList.remove('visible');
         this.container.querySelector('#show-sidebar-button').classList.add('visible');
       }
@@ -88,6 +92,7 @@ export class Sidebar {
     // Initialize the sidebar content.
     this.container = document.createElement('div');
     this.container.innerHTML = sidebar({
+      areaId: 'kando-editor-sidebar-area',
       tabs: [
         {
           id: 'sidebar-tab-tutorial',

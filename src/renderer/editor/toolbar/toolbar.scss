@@ -8,202 +8,242 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-editor-container {
-  $tab-height: 40px;
-  $menu-button-icon-size: 65px;
+// Show- and hide-toolbar buttons --------------------------------------------------------
 
-  #enter-edit-mode-button,
-  #leave-edit-mode-button {
-    position: absolute;
-    opacity: 0;
-    transform: translateY(20px);
+#enter-edit-mode-button,
+#leave-edit-mode-button {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(20px);
 
-    i {
-      top: 0;
-    }
-  }
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease;
+}
 
-  &.visible:not(.edit-mode) #enter-edit-mode-button {
-    pointer-events: all;
-    transform: translateY(0px);
-    opacity: 1;
-  }
+#kando-editor.visible:not(.edit-mode) #enter-edit-mode-button,
+#kando-editor.visible.edit-mode #leave-edit-mode-button {
+  pointer-events: all;
+  transform: translateY(0px);
+  opacity: 1;
+}
 
-  &.visible.edit-mode #leave-edit-mode-button {
-    pointer-events: all;
-    transform: translateY(0px);
-    opacity: 1;
-  }
+#enter-edit-mode-button {
+  border-top-left-radius: 50%;
+  right: 10px;
+  bottom: 10px;
+}
 
-  #kando-editor-toolbar {
-    position: absolute;
-    bottom: $editor-padding-bottom-small;
-    left: $editor-padding-left;
-    right: $editor-padding-right;
-    padding-top: 1vh;
-    opacity: 0;
+#leave-edit-mode-button {
+  right: -55px;
+  top: 1vh;
+}
 
-    transform: translateY(20px);
+// The toolbar itself --------------------------------------------------------------------
 
-    transition:
-      bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
-      transform 150ms ease,
-      opacity 150ms ease;
+#kando-editor-toolbar-area {
+  position: absolute;
+  bottom: $editor-padding-bottom-small;
+  left: $editor-padding-left;
+  right: $editor-padding-right;
+  padding-top: 1vh;
+  opacity: 0;
 
-    .nav-tabs {
-      @include rfs(0.5rem, gap);
-      align-items: flex-end;
+  transform: translateY(20px);
 
-      .nav-link {
-        @include rfs(0.5rem, padding-top);
-        @include rfs(1rem, padding-left);
-        @include rfs(1rem, padding-right);
-        padding-bottom: 0;
-        transition:
-          padding-bottom 150ms ease,
-          margin-top 150ms ease;
+  transition:
+    bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+    transform 150ms ease,
+    opacity 150ms ease;
 
-        i {
-          position: relative;
-          top: -3px;
-        }
-      }
-    }
+  .nav-tabs {
+    --bs-nav-tabs-link-active-color: white;
+    --bs-nav-link-color: #{$kando-text-color};
+    --bs-link-hover-color: white;
 
-    .tab-content {
-      height: calc($toolbar-height - $tab-height);
-      transition: height 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
-    }
+    @include rfs(0.5rem, gap);
+    align-items: flex-end;
 
-    &.large {
-      bottom: $editor-padding-bottom-large;
-
-      // Draw above the menu preview.
-      z-index: 2;
-
-      .tab-content {
-        height: calc(
-          100vh - $editor-padding-top - $editor-padding-bottom-large - $tab-height
-        );
-      }
-    }
-
-    .swirl {
-      display: inline-block;
-      background-image: url(../../assets/images/swirl.svg);
-      width: 160px;
-      height: 14px;
-
-      &.vertical {
-        width: 14px;
-        height: 160px;
-        background-image: url(../../assets/images/swirl-vertical.svg);
-      }
-    }
-
-    &.dragging-deletable-item .nav-link[data-bs-target='#kando-trash-tab'],
-    &.dragging-stashable-item .nav-link[data-bs-target='#kando-stash-tab'] {
-      margin-top: -10px;
-      padding-bottom: 10px;
-
-      &:hover {
-        margin-top: -20px;
-        padding-bottom: 20px;
-      }
-    }
-  }
-
-  &.visible.edit-mode #kando-editor-toolbar {
-    transform: none;
-    opacity: 1;
-  }
-
-  #menu-buttons-list {
-    .scrollbox-content {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(rfs-fluid-value(300px), 1fr));
-    }
-  }
-
-  .add-menu-button,
-  .menu-selection-button {
-    input {
-      display: none;
-    }
-
-    border: 2px dashed rgba(255, 255, 255, 0);
-    overflow: hidden;
-    transition: transform 150ms linear;
-
-    &:has(input:checked) {
-      border-color: rgba(255, 255, 255, 0.5);
-      background: var(--bs-btn-active-bg);
-    }
-
-    &.dragging {
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      transition: none;
-      pointer-events: none;
-      z-index: 1;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .icon-container {
-      pointer-events: none;
-      @include rfs($menu-button-icon-size, width);
-      @include rfs($menu-button-icon-size, height);
-      @include rfs($menu-button-icon-size, min-width);
-      @include rfs($menu-button-icon-size, min-height);
-      background-color: white;
-      border-radius: 50%;
-      margin-right: var(--bs-btn-padding-x);
-      transition: background-color 150ms linear;
+    .nav-link {
+      @include rfs(0.5rem, padding-top);
+      @include rfs(1rem, padding-left);
+      @include rfs(1rem, padding-right);
+      padding-bottom: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      transition:
+        padding-bottom 150ms ease,
+        margin-top 150ms ease;
 
       i {
-        transition: color 150ms linear;
-        color: black;
+        position: relative;
+        top: -3px;
+      }
+
+      &.active {
+        background-color: rgba(0, 0, 0, 0.8);
+        cursor: default;
+      }
+
+      &:not(.active):active {
+        transform: translateY(1px);
       }
     }
 
-    .shortcut,
-    .name {
-      pointer-events: none;
-      text-align: left;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+    // Some tabs have a tiny counter which for instance displays the number of items in
+    // the trash or stash.
+    .counter {
+      border-radius: 30%;
+      padding: 0.2em 0.2em 0 0.2em;
+      margin: 0 0.2em;
+      background-color: rgba(80, 80, 80, 0.8);
     }
   }
 
-  .add-menu-button {
-    transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+  .tab-content {
+    height: calc($toolbar-height - $toolbar-tab-height);
+    border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    transition: height 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+  }
 
-    @include rfs(calc($menu-button-icon-size + 1.5rem), width);
+  &.large {
+    bottom: $editor-padding-bottom-large;
 
-    .name {
-      transition: opacity 150ms linear;
-      opacity: 0;
+    // Draw above the menu preview.
+    z-index: 2;
+
+    .tab-content {
+      height: calc(
+        100vh - $editor-padding-top - $editor-padding-bottom-large - $toolbar-tab-height
+      );
     }
+  }
 
-    &:not(:hover) {
-      .icon-container {
-        background-color: transparent;
+  .swirl {
+    display: inline-block;
+    background-image: url(../../assets/images/swirl.svg);
+    width: 160px;
+    height: 14px;
 
-        i {
-          color: white;
-        }
-      }
+    &.vertical {
+      width: 14px;
+      height: 160px;
+      background-image: url(../../assets/images/swirl-vertical.svg);
     }
+  }
+
+  &.dragging-deletable-item .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-stashable-item .nav-link[data-bs-target='#kando-stash-tab'] {
+    margin-top: -10px;
+    padding-bottom: 10px;
 
     &:hover {
-      width: 100%;
+      margin-top: -20px;
+      padding-bottom: 20px;
+    }
+  }
+}
 
-      .name {
-        opacity: 1;
+#kando-editor.visible.edit-mode #kando-editor-toolbar-area {
+  transform: none;
+  opacity: 1;
+}
+
+#menu-buttons-list {
+  .scrollbox-content {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(rfs-fluid-value(300px), 1fr));
+  }
+}
+
+// The menu tab buttons are attached to the #kando-editor container during drag-and-drop
+// operations. Therefore, we have to style them with this selector.
+#kando-editor .add-menu-button,
+#kando-editor .menu-selection-button {
+  // The buttons are actually radio buttons. We hide the input element and style the label
+  // instead. This way we get nice toggling behavior for free.
+  input {
+    display: none;
+  }
+
+  border: 2px dashed rgba(255, 255, 255, 0);
+  overflow: hidden;
+  transition: transform 150ms linear;
+
+  // If checked, we show a border and slightly different background color.
+  &:has(input:checked) {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--bs-btn-active-bg);
+  }
+
+  &.dragging {
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: none;
+    pointer-events: none;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  // The icons in the buttons are scaled based on the window size.
+  .icon-container {
+    pointer-events: none;
+    @include rfs($toolbar-menu-button-icon-size, width);
+    @include rfs($toolbar-menu-button-icon-size, height);
+    @include rfs($toolbar-menu-button-icon-size, min-width);
+    @include rfs($toolbar-menu-button-icon-size, min-height);
+    background-color: white;
+    border-radius: 50%;
+    margin-right: var(--bs-btn-padding-x);
+    transition: background-color 150ms linear;
+
+    i {
+      transition: color 150ms linear;
+      color: black;
+    }
+  }
+
+  .shortcut,
+  .name {
+    pointer-events: none;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+// The add-new-menu button is a special case. It features a nice transition when hovered.
+#kando-editor .add-menu-button {
+  transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+
+  // The collapsed state shows just the icon. We compute the width based on the icon size
+  // plus the default horizontal button padding by bootstrap.
+  @include rfs(calc($toolbar-menu-button-icon-size + 1.5rem), width);
+
+  .name {
+    transition: opacity 150ms linear;
+    opacity: 0;
+  }
+
+  &:not(:hover) {
+    .icon-container {
+      background-color: transparent;
+
+      i {
+        color: white;
       }
+    }
+  }
+
+  &:hover {
+    width: 100%;
+
+    .name {
+      opacity: 1;
     }
   }
 }

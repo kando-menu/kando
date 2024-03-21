@@ -10,7 +10,7 @@
 
 import * as math from '../../math';
 import * as themedIcon from '../common/themed-icon';
-import { IEditorNode } from '../editor-node';
+import { IEditorNode } from '../common/editor-node';
 
 /**
  * This function returns the direction towards the parent of the given node. If the node

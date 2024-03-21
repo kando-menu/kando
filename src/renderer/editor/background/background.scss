@@ -8,18 +8,42 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-editor-container {
-  #kando-editor-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transition: opacity 250ms ease;
-    opacity: 0;
-  }
+// The background simply covers the entire viewport and can be shown and and hidden.
 
-  &.visible.edit-mode #kando-editor-background {
-    opacity: 1;
-  }
+#kando-editor-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 250ms ease;
+  opacity: 0;
+
+  background-color: rgb(29, 103, 187);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 2px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 50%, transparent 0px, rgba(0, 0, 0, 0.5) 100%);
+  background-size:
+    100px 100px,
+    100px 100px,
+    20px 20px,
+    20px 20px,
+    100% 100%;
+  background-position:
+    -1px -1px,
+    -1px -1px,
+    0px 0px,
+    0px 0px,
+    0px 0px;
+
+  border-image-source: url('../../assets/images/border.svg');
+  border-image-slice: 40% fill;
+  border-image-width: 70px 70px;
+  border-image-outset: 0;
+}
+
+#kando-editor.visible.edit-mode #kando-editor-background {
+  opacity: 1;
 }

@@ -14,7 +14,7 @@ import { EventEmitter } from 'events';
 import * as math from '../../math';
 import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
-import { IEditorNode } from '../editor-node';
+import { IEditorNode } from '../common/editor-node';
 import { ItemDragger } from '../common/item-dragger';
 import { IVec2, IMenu } from '../../../common';
 
@@ -93,7 +93,7 @@ export class Preview extends EventEmitter {
 
     const div = document.createElement('div');
     div.innerHTML = template({
-      containerId: 'kando-menu-preview-container',
+      areaId: 'kando-menu-preview-area',
       canvasId: 'kando-menu-preview-canvas',
       breadcrumbsId: 'kando-menu-preview-breadcrumbs',
     });

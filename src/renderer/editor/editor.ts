@@ -17,7 +17,7 @@ import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import { IMenu, IMenuSettings } from '../../common';
-import { toINode } from './editor-node';
+import { toINode } from './common/editor-node';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the

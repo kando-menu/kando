@@ -25,7 +25,7 @@ export class Properties {
 
     const div = document.createElement('div');
     div.innerHTML = template({
-      id: 'kando-menu-properties',
+      areaId: 'kando-menu-properties-area',
     });
 
     this.container = div.firstElementChild as HTMLElement;
