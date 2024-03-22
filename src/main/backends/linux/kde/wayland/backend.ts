@@ -321,11 +321,12 @@ export class KDEWaylandBackend implements Backend {
    * @returns An ID which can be used to stop the script.
    */
   private async startScript(scriptPath: string) {
+    const scriptInterface = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
     const id = await this.scriptingInterface.loadScript(scriptPath);
     await DBus.sessionBus().call(
       new DBus.Message({
         destination: 'org.kde.KWin',
-        path: '/' + id,
+        path: scriptInterface + id,
         interface: 'org.kde.kwin.Script',
         member: 'run',
       })
@@ -340,11 +341,11 @@ export class KDEWaylandBackend implements Backend {
    * @param scriptID The ID of the script to stop.
    */
   private async stopScript(scriptID: number) {
-    const scriptPath = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
+    const scriptInterface = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
     await DBus.sessionBus().call(
       new DBus.Message({
         destination: 'org.kde.KWin',
-        path: scriptPath + scriptID,
+        path: scriptInterface + scriptID,
         interface: 'org.kde.kwin.Script',
         member: 'stop',
       })
