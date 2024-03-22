@@ -387,7 +387,7 @@ export class KDEWaylandBackend implements Backend {
    */
   private async getKWinVersion(): Promise<number[]> {
     return new Promise((resolve, reject) => {
-      exec('kwin --version', (error, stdout) => {
+      exec('kwin_wayland --version', (error, stdout) => {
         if (error) {
           reject(error);
           return;
