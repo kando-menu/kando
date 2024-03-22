@@ -99,7 +99,6 @@ export class KDEWaylandBackend implements Backend {
   public async init() {
     // Get the KWin version.
     this.kwinVersion = await this.getKWinVersion();
-    console.log('KWin version:', this.kwinVersion);
 
     // Create the KWin script which will send information about the currently focused
     // window and the mouse pointer position to Kando.
