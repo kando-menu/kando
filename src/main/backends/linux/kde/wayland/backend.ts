@@ -11,6 +11,7 @@
 import os from 'os';
 import fs from 'fs';
 import DBus from 'dbus-final';
+import { exec } from 'child_process';
 
 import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
@@ -46,6 +47,9 @@ import { LinuxKeyCodes } from '../../keys';
  *   against Qt. While this could be possible, it would introduce a lot of complexity.
  */
 export class KDEWaylandBackend implements Backend {
+  /** Here we store the current KWin version as [major, minor, patch]. */
+  private kwinVersion: number[];
+
   /** The remote desktop portal is used to simulate mouse and keyboard events. */
   private remoteDesktop = new RemoteDesktop();
 
@@ -93,14 +97,18 @@ export class KDEWaylandBackend implements Backend {
    * communicate with Kando.
    */
   public async init() {
+    // Get the KWin version.
+    this.kwinVersion = await this.getKWinVersion();
+
     // Create the KWin script which will send information about the currently focused
     // window and the mouse pointer position to Kando.
+    const property = this.kwinVersion[0] >= 6 ? 'activeWindow' : 'activeClient';
     this.wmInfoScriptPath = this.storeScript(
       'get-info.js',
       `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
                'org.kandomenu.kando', 'SendWMInfo',
-               workspace.activeClient ? workspace.activeClient.caption : "",
-               workspace.activeClient ? workspace.activeClient.resourceClass : "",
+               workspace.${property} ? workspace.${property}.caption : "",
+               workspace.${property} ? workspace.${property}.resourceClass : "",
                workspace.cursorPos.x, workspace.cursorPos.y,
                () => {
                  console.log('Kando: Successfully transmitted the data.');
@@ -312,11 +320,12 @@ export class KDEWaylandBackend implements Backend {
    * @returns An ID which can be used to stop the script.
    */
   private async startScript(scriptPath: string) {
+    const scriptInterface = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
     const id = await this.scriptingInterface.loadScript(scriptPath);
     await DBus.sessionBus().call(
       new DBus.Message({
         destination: 'org.kde.KWin',
-        path: '/' + id,
+        path: scriptInterface + id,
         interface: 'org.kde.kwin.Script',
         member: 'run',
       })
@@ -331,10 +340,11 @@ export class KDEWaylandBackend implements Backend {
    * @param scriptID The ID of the script to stop.
    */
   private async stopScript(scriptID: number) {
+    const scriptInterface = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
     await DBus.sessionBus().call(
       new DBus.Message({
         destination: 'org.kde.KWin',
-        path: '/' + scriptID,
+        path: scriptInterface + scriptID,
         interface: 'org.kde.kwin.Script',
         member: 'stop',
       })
@@ -368,6 +378,28 @@ export class KDEWaylandBackend implements Backend {
    */
   private escapeString(str: string): string {
     return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  }
+
+  /**
+   * This uses kwin --version to get the version of KWin.
+   *
+   * @returns A promise which resolves to [major, minor, patch].
+   */
+  private async getKWinVersion(): Promise<number[]> {
+    return new Promise((resolve, reject) => {
+      exec('kwin --version', (error, stdout) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        // The output of kwin --version is something like "kwin 5.21.4". We extract the
+        // version number.
+        const version = stdout.split(' ')[1].split('.');
+
+        resolve(version.map((v) => parseInt(v)));
+      });
+    });
   }
 }
 
