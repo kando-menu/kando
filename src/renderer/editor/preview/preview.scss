@@ -87,6 +87,7 @@
     position: absolute;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
     border: 2px solid rgb(255, 255, 255);
     transition: all 150ms ease;
 
@@ -105,6 +106,7 @@
     &.dragging {
       transition: none;
       pointer-events: none;
+      z-index: 99;
 
       .kando-menu-preview-label-container {
         opacity: 0;
@@ -355,6 +357,7 @@
     height: $preview-child-size;
     left: calc(50% - $preview-child-size / 2 - var(--dir-x) * $preview-child-distance);
     top: calc(50% - $preview-child-size / 2 - var(--dir-y) * $preview-child-distance);
+    z-index: -1;
 
     transform: rotate(calc(var(--rotation) - 90deg));
 
@@ -414,6 +417,8 @@
     opacity: 0;
     transition: all 150ms ease;
     aspect-ratio: 1 / 1;
+    backdrop-filter: none;
+    z-index: -1;
 
     &.visible {
       opacity: 1;

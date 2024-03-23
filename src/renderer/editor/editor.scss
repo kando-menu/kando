@@ -87,9 +87,9 @@
   // The secondary button is used most of the time. We want it to be a bit darker than
   // the default.
   .btn-secondary {
-    --bs-btn-bg: #{rgba(50, 50, 50, 0.4)};
-    --bs-btn-hover-bg: #{lighten(rgba(50, 50, 50, 0.4), 5%)};
-    --bs-btn-active-bg: #{lighten(rgba(50, 50, 50, 0.4), 15%)};
+    --bs-btn-bg: rgba(255, 255, 255, 0.1);
+    --bs-btn-hover-bg: rgba(255, 255, 255, 0.15);
+    --bs-btn-active-bg: rgba(255, 255, 255, 0.2);
     --bs-btn-border-color: transparent;
     --bs-btn-hover-border-color: transparent;
     --bs-btn-active-border-color: transparent;
