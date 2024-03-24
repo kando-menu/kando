@@ -91,6 +91,21 @@ export class KandoApp {
 
     await this.backend.init();
 
+    // We ensure that there is always a menu avaliable. If the user deletes all menus,
+    // we create a new example menu when Kando is started the next time.
+    if (this.menuSettings.get('menus').length === 0) {
+      this.menuSettings.set({
+        menus: [this.createExampleMenu()],
+      });
+    }
+
+    // When the menu settings change, we need to rebind the shortcuts and update the
+    // tray menu.
+    this.menuSettings.onChange('menus', async () => {
+      await this.bindShortcuts();
+      this.updateTrayMenu();
+    });
+
     // Initialize the IPC communication to the renderer process.
     this.initRendererIPC();
 
@@ -103,13 +118,6 @@ export class KandoApp {
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
     this.updateTrayMenu();
-
-    // When the menu settings change, we need to rebind the shortcuts and update the
-    // tray menu.
-    this.menuSettings.onChange('menus', async () => {
-      await this.bindShortcuts();
-      this.updateTrayMenu();
-    });
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */

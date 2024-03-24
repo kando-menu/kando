@@ -40,6 +40,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 - Any overflowing text in the menu's center item is now hidden.
 - The SCSS source code of Kando has received a major cleanup. It is now much better documented and structured.
+- If no menus are configured, Kando will recreate the default prototype menu on startup. This is useful if you accidentally removed all menus from the configuration file.
 
 #### Fixed
 
