@@ -55,7 +55,8 @@
   --bs-code-color: #{$kando-highlight-color};
   --bs-border-radius: 0.75rem;
   --bs-border-width: 0;
-  --bs-body-bg: rgba(35, 35, 35);
+  --bs-body-bg: rgba(0, 0, 0, 0.6);
+  --bs-body-color: #{$kando-text-color};
   --bs-secondary-color: rgb(100, 100, 100);
   --bs-emphasis-color: rgba(255, 255, 255);
   --bs-link-color: #{$kando-highlight-color};
@@ -80,8 +81,8 @@
   }
 
   .btn-dark {
-    --bs-btn-bg: #{rgba(0, 0, 0, 0.8)};
-    --bs-btn-hover-bg: #{rgba(30, 30, 30, 0.8)};
+    --bs-btn-bg: rgba(0, 0, 0, 0.8);
+    --bs-btn-hover-bg: rgba(30, 30, 30, 0.8);
   }
 
   // The secondary button is used most of the time. We want it to be a bit darker than
@@ -97,6 +98,6 @@
 
   // We make the tooltip background a bit darker.
   .tooltip {
-    --bs-tooltip-bg: #{rgba(220, 220, 220, 0.99)};
+    --bs-tooltip-bg: rgba(220, 220, 220, 0.99);
   }
 }
