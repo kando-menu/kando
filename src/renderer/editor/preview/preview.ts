@@ -144,15 +144,22 @@ export class Preview extends EventEmitter {
 
   /**
    * This method is called when the menu preview should display a new menu. It is called
-   * initially from the editor for the root menu.
+   * initially from the editor for the root menu. If no menu is given, the menu preview
+   * will be cleared.
    */
-  public setMenu(menu: IMenu) {
+  public setMenu(menu?: IMenu) {
     this.selectionChain = [];
-    this.computeItemAnglesRecursively(menu.nodes);
-    this.selectNode(menu.nodes);
+
+    if (menu) {
+      this.computeItemAnglesRecursively(menu.nodes);
+      this.selectNode(menu.nodes);
+    } else {
+      this.hideOldMenuItems();
+    }
 
     // This actually has to be done only once after the menu preview has been added to
-    // the DOM. However, we do not have a good place for this, so we do it here.
+    // the DOM and during window resize events. However, we do not have a good place for
+    // this, so we do it here.
     this.previewCenter = utils.computeCenter(this.canvas);
   }
 
@@ -413,22 +420,7 @@ export class Preview extends EventEmitter {
 
     // First, fade out all currently displayed menu items.
     const transitionDirection = math.getDirection(transitionAngle, 1.0);
-
-    this.canvas.childNodes.forEach((c) => {
-      const child = c as HTMLElement;
-      if (
-        c instanceof HTMLElement &&
-        child.classList.contains('visible') &&
-        child.classList.contains('kando-menu-preview-container')
-      ) {
-        child.classList.remove('visible');
-        child.style.setProperty('--dir-x', transitionDirection.x + '');
-        child.style.setProperty('--dir-y', transitionDirection.y + '');
-
-        // After the animation is finished, we remove the menu item from the DOM.
-        setTimeout(() => c.remove(), 500);
-      }
-    });
+    this.hideOldMenuItems(transitionDirection);
 
     // Now we create a new container for the new menu items.
     const container = document.createElement('div');
@@ -522,6 +514,34 @@ export class Preview extends EventEmitter {
       this.breadcrumbs.appendChild(breadcrumb);
 
       breadcrumb.addEventListener('click', () => this.selectNode(node));
+    });
+  }
+
+  /**
+   * This method fades out all currently visible menu items and removes them from the DOM.
+   * If a transition direction is given, the menu items are moved in this direction during
+   * the fade-out animation.
+   *
+   * @param transitionDirection The direction in which the old menu items should be moved.
+   */
+  private hideOldMenuItems(transitionDirection?: IVec2) {
+    this.canvas.childNodes.forEach((c) => {
+      const child = c as HTMLElement;
+      if (
+        c instanceof HTMLElement &&
+        child.classList.contains('visible') &&
+        child.classList.contains('kando-menu-preview-container')
+      ) {
+        child.classList.remove('visible');
+
+        if (transitionDirection) {
+          child.style.setProperty('--dir-x', transitionDirection.x + '');
+          child.style.setProperty('--dir-y', transitionDirection.y + '');
+        }
+
+        // After the animation is finished, we remove the menu item from the DOM.
+        setTimeout(() => c.remove(), 500);
+      }
     });
   }
 
