@@ -154,7 +154,7 @@
   .scrollbox-content {
     display: grid;
     gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(rfs-fluid-value(300px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(calc(100px + 10vw), 1fr));
   }
 }
 
