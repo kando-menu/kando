@@ -31,7 +31,7 @@ export class MenusTab extends EventEmitter {
   private tab: HTMLElement = null;
 
   /** This is used to drag'n'drop menus from the toolbar to the trash. */
-  private menuDragger = new ItemDragger();
+  private itemDragger = new ItemDragger();
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -68,7 +68,7 @@ export class MenusTab extends EventEmitter {
 
     let originalParent: HTMLElement;
 
-    this.menuDragger.on('drag-start', (index, div) => {
+    this.itemDragger.on('drag-start', (index, div) => {
       // Add a class to the toolbar area to indicate that we are dragging a deletable
       // item. This will make the trash tab more visible.
       document
@@ -89,14 +89,14 @@ export class MenusTab extends EventEmitter {
       this.container.appendChild(div);
     });
 
-    this.menuDragger.on(
+    this.itemDragger.on(
       'drag-move',
       (index, div, relative, absolute, offset, grabOffset) => {
         div.style.transform = `translate(${absolute.x - grabOffset.x}px, ${absolute.y - grabOffset.y}px)`;
       }
     );
 
-    this.menuDragger.on('drag-end', (index, div) => {
+    this.itemDragger.on('drag-end', (index, div) => {
       div.classList.remove('dragging');
       div.style.transform = '';
 
@@ -130,7 +130,7 @@ export class MenusTab extends EventEmitter {
    * @param currentMenu The index of the currently selected menu.
    */
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    this.menuDragger.removeAllDraggables();
+    this.itemDragger.removeAllDraggables();
 
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
 
@@ -148,7 +148,7 @@ export class MenusTab extends EventEmitter {
     // Add drag'n'drop logic to the menu buttons.
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
-      this.menuDragger.addDraggable(div, menu.index);
+      this.itemDragger.addDraggable(div, menu.index);
     }
   }
 }
