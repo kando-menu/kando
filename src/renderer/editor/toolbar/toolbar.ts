@@ -12,6 +12,8 @@ import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import { MenusTab } from './menus-tab';
+import { TrashTab } from './trash-tab';
+import { IEditorNode } from '../common/editor-node';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -41,6 +43,9 @@ export class Toolbar extends EventEmitter {
   /** This manages the first tab of the toolbar. */
   private menusTab: MenusTab = null;
 
+  /** This manages the trash tab of the toolbar. */
+  private trashTab: TrashTab = null;
+
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
    * functionality.
@@ -57,6 +62,10 @@ export class Toolbar extends EventEmitter {
     this.menusTab.on('add-menu', () => this.emit('add-menu'));
     this.menusTab.on('select-menu', (index) => this.emit('select-menu', index));
     this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
+
+    // Initialize the trash tab and forward its events.
+    this.trashTab = new TrashTab(this.container);
+    this.trashTab.on('restore-menu', (index) => this.emit('restore-menu', index));
   }
 
   /** This method returns the container of the editor toolbar. */
@@ -72,6 +81,10 @@ export class Toolbar extends EventEmitter {
    */
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
     this.menusTab.setMenus(menus, currentMenu);
+  }
+
+  public setTrashedItems(items: Array<IMenu | IEditorNode>) {
+    this.trashTab.setTrashedItems(items);
   }
 
   /** This method loads the HTML content of the toolbar. */
@@ -114,10 +127,7 @@ export class Toolbar extends EventEmitter {
           icon: 'delete',
           title: 'Trash',
           hasCounter: true,
-          content: emptyTab({
-            heading: 'In the future, you can delete items by dropping them here!',
-            subheading: 'When you start Kando the next time, they will be gone.',
-          }),
+          content: '',
         },
         {
           id: 'kando-menu-themes-tab',
