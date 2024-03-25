@@ -265,13 +265,16 @@ export class Menu extends EventEmitter {
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(node: IMenuNode, container: HTMLElement) {
-    node.itemDiv = document.createElement('div');
-    node.itemDiv.classList.add('menu-node');
+    node.nodeDiv = document.createElement('div');
+    node.nodeDiv.classList.add('menu-node');
+
+    const menuItem = document.createElement('div');
+    menuItem.classList.add('menu-item');
 
     const icon = document.createElement('i');
     icon.classList.add('menu-icon');
 
-    if (node.iconTheme === 'material-symbols-rounded') {
+    if (node.iconTheme === 'material-symbols-rounded' || node.iconTheme === 'text-icon') {
       icon.classList.add(node.iconTheme);
       icon.innerHTML = node.icon;
     } else if (node.iconTheme === 'simple-icons') {
@@ -279,16 +282,17 @@ export class Menu extends EventEmitter {
       icon.classList.add('si-' + node.icon);
     }
 
-    container.appendChild(node.itemDiv);
-    node.itemDiv.appendChild(icon);
+    container.appendChild(node.nodeDiv);
+    node.nodeDiv.appendChild(menuItem);
+    menuItem.appendChild(icon);
 
     if (node.children) {
       node.connectorDiv = document.createElement('div');
       node.connectorDiv.classList.add('connector');
-      node.itemDiv.appendChild(node.connectorDiv);
+      node.nodeDiv.appendChild(node.connectorDiv);
 
       for (const child of node.children) {
-        this.createNodeTree(child, node.itemDiv);
+        this.createNodeTree(child, node.nodeDiv);
       }
     }
 
@@ -296,7 +300,7 @@ export class Menu extends EventEmitter {
       this.centerText = document.createElement('div');
       this.centerText.classList.add('center-text');
       this.centerText.classList.add('hidden');
-      node.itemDiv.appendChild(this.centerText);
+      node.nodeDiv.appendChild(this.centerText);
     }
   }
 
@@ -411,13 +415,13 @@ export class Menu extends EventEmitter {
     }
 
     if (this.draggedNode) {
-      this.draggedNode.itemDiv.classList.remove('dragged');
+      this.draggedNode.nodeDiv.classList.remove('dragged');
       this.draggedNode = null;
     }
 
     if (node) {
       this.draggedNode = node;
-      this.draggedNode.itemDiv.classList.add('dragged');
+      this.draggedNode.nodeDiv.classList.add('dragged');
     }
   }
 
@@ -434,13 +438,13 @@ export class Menu extends EventEmitter {
 
     if (this.hoveredNode) {
       this.emit('unhover', this.hoveredNode.path);
-      this.hoveredNode.itemDiv.classList.remove('hovered');
+      this.hoveredNode.nodeDiv.classList.remove('hovered');
       this.hoveredNode = null;
     }
 
     if (node) {
       this.hoveredNode = node;
-      this.hoveredNode.itemDiv.classList.add('hovered');
+      this.hoveredNode.nodeDiv.classList.add('hovered');
       this.emit('hover', this.hoveredNode.path);
     }
   }
@@ -562,10 +566,10 @@ export class Menu extends EventEmitter {
    *   differently depending on the state.
    */
   private updateTransform(node: IMenuNode) {
-    if (node.itemDiv.classList.contains('grandchild')) {
+    if (node.nodeDiv.classList.contains('grandchild')) {
       node.position = math.getDirection(node.angle, this.GRANDCHILD_DISTANCE);
-      node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
-    } else if (node.itemDiv.classList.contains('child')) {
+      node.nodeDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
+    } else if (node.nodeDiv.classList.contains('child')) {
       let transform = '';
 
       // If the node is hovered, increase the scale a bit.
@@ -593,7 +597,7 @@ export class Menu extends EventEmitter {
 
       // Finally, apply the transformation to the node and update the transformation of
       // all its children.
-      node.itemDiv.style.transform = transform;
+      node.nodeDiv.style.transform = transform;
 
       if (node.children) {
         for (const child of node.children) {
@@ -601,10 +605,10 @@ export class Menu extends EventEmitter {
         }
       }
     } else if (
-      node.itemDiv.classList.contains('active') ||
-      node.itemDiv.classList.contains('parent')
+      node.nodeDiv.classList.contains('active') ||
+      node.nodeDiv.classList.contains('parent')
     ) {
-      node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
+      node.nodeDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       if (node.children) {
         for (const child of node.children) {
           this.updateTransform(child);
@@ -673,25 +677,25 @@ export class Menu extends EventEmitter {
     for (let i = 0; i < this.selectionChain.length; ++i) {
       const node = this.selectionChain[i];
       if (i === this.selectionChain.length - 1) {
-        node.itemDiv.className = 'menu-node active';
+        node.nodeDiv.className = 'menu-node active';
 
         if (node.children) {
           for (const child of node.children as IMenuNode[]) {
-            child.itemDiv.className = 'menu-node child';
+            child.nodeDiv.className = 'menu-node child';
 
             if (child.children) {
               for (const grandchild of child.children as IMenuNode[]) {
-                grandchild.itemDiv.className = 'menu-node grandchild';
+                grandchild.nodeDiv.className = 'menu-node grandchild';
               }
             }
           }
         }
       } else {
-        node.itemDiv.className = 'menu-node parent';
+        node.nodeDiv.className = 'menu-node parent';
 
         if (node.children) {
           for (const child of node.children as IMenuNode[]) {
-            child.itemDiv.className = 'menu-node grandchild';
+            child.nodeDiv.className = 'menu-node grandchild';
           }
         }
       }

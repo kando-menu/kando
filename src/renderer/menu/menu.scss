@@ -25,7 +25,7 @@
     // Only the selected leaf node is scaled up to show that it has been selected. We also
     // want to delay the transition of the selected leaf node to leave time for the
     // position transition.
-    &.selected .menu-node.active:not(:has(.menu-node)) > .menu-icon {
+    &.selected .menu-node.active:not(:has(.menu-node)) > .menu-item {
       transform: scale(1) !important;
       transition-delay: 100ms;
     }
@@ -44,54 +44,70 @@
     transition: $menu-transition;
     position: absolute;
 
-    .menu-icon {
+    .menu-item {
       position: absolute;
       border-radius: 50%;
-
       transition: $menu-transition;
       border: 1px solid $border-color;
-      color: transparent;
 
-      // Center text.
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: calc($grandchild-size * 0.75);
+      .menu-icon {
+        transition: $menu-transition;
+
+        font-style: normal;
+        color: transparent;
+
+        // Circle clipping.
+        clip-path: circle(45% at 50% 50%);
+
+        // Center text.
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: calc($grandchild-size * 0.75);
+      }
     }
 
     // The active menu node is currently displayed in the center of the menu.
-    &.active > .menu-icon {
+    &.active > .menu-item {
       top: calc(-1 * $root-size / 2);
       left: calc(-1 * $root-size / 2);
       width: $root-size;
       height: $root-size;
       background-color: $item-color;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      color: $text-color;
-      font-size: calc($root-size * 0.75);
       transform: scale(0.9);
+
+      & > .menu-icon {
+        color: $text-color;
+        font-size: calc($root-size * 0.75);
+      }
     }
 
     // If the center node is hovered, we want to highlight it.
-    &.active.hovered > .menu-icon {
+    &.active.hovered > .menu-item {
       background-color: $hovered-item-color;
     }
 
     // If the center node is clicked, we scale it down a bit.
-    &.active.dragged > .menu-icon {
+    &.active.dragged > .menu-item {
       transform: scale(0.8);
     }
 
     // If there is a hovered child node, we scale up the center a bit and hide its icon.
-    &.active:has(> .menu-node.hovered) > .menu-icon {
+    &.active:has(> .menu-node.hovered) > .menu-item {
       transform: scale(1);
-      color: transparent;
+
+      & > .menu-icon {
+        color: transparent;
+      }
     }
 
     // Child items are displayed around the active node. The parent node of the active
     // node is displayed in a similar style.
-    &.parent > .menu-icon,
-    &.child > .menu-icon {
+    &.parent > .menu-item,
+    &.child > .menu-item {
       top: calc(-1 * $child-size / 2);
       left: calc(-1 * $child-size / 2);
       width: $child-size;
@@ -99,22 +115,24 @@
       background-color: $item-color;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
       z-index: 1;
-      color: $text-color;
-      font-size: calc($child-size * 0.75);
-
       transform: scale(1);
+
+      & > .menu-icon {
+        color: $text-color;
+        font-size: calc($child-size * 0.75);
+      }
     }
 
     // Hovered child or parent items are highlighted.
-    &.parent.hovered > .menu-icon,
-    &.child.hovered > .menu-icon {
+    &.parent.hovered > .menu-item,
+    &.child.hovered > .menu-item {
       transform: scale(1.1);
       background-color: $hovered-item-color;
     }
 
     // If dragged around, child or parent items are scaled back to normal again.
-    &.parent.dragged > .menu-icon,
-    &.child.dragged > .menu-icon {
+    &.parent.dragged > .menu-item,
+    &.child.dragged > .menu-item {
       transform: scale(1);
     }
 
@@ -124,7 +142,7 @@
     }
 
     // Grandchild items are very small and drawn below the child items.
-    &.grandchild > .menu-icon {
+    &.grandchild > .menu-item {
       top: calc(-1 * $grandchild-size / 2);
       left: calc(-1 * $grandchild-size / 2);
       width: $grandchild-size;

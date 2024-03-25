@@ -47,7 +47,7 @@ export interface IMenuNode extends INode {
    * The visual representation of this menu item. This is a div element which is created
    * when the menu is opened.
    */
-  itemDiv?: HTMLElement;
+  nodeDiv?: HTMLElement;
 
   /**
    * The visual representation of the connector between this menu item and its active
