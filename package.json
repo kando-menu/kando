@@ -22,22 +22,22 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^7.2.0",
-    "@electron-forge/maker-deb": "^7.2.0",
-    "@electron-forge/maker-dmg": "^7.2.0",
-    "@electron-forge/maker-rpm": "^7.2.0",
-    "@electron-forge/maker-squirrel": "^7.2.0",
-    "@electron-forge/maker-zip": "^7.2.0",
-    "@electron-forge/plugin-webpack": "^7.2.0",
+    "@electron-forge/cli": "^7.3.1",
+    "@electron-forge/maker-deb": "^7.3.1",
+    "@electron-forge/maker-dmg": "^7.3.1",
+    "@electron-forge/maker-rpm": "^7.3.1",
+    "@electron-forge/maker-squirrel": "^7.3.1",
+    "@electron-forge/maker-zip": "^7.3.1",
+    "@electron-forge/plugin-webpack": "^7.3.1",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "chai": "^4.3.10",
     "cmake-js": "^7.3.0",
     "css-loader": "^6.10.0",
-    "electron": "29.1.4",
+    "electron": "29.1.5",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
@@ -53,7 +53,7 @@
     "ts-loader": "^9.5.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -66,8 +66,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
-    "material-symbols": "^0.17.0",
+    "material-symbols": "^0.17.1",
     "node-addon-api": "^8.0.0",
-    "simple-icons-font": "^11.9.0"
+    "simple-icons-font": "^11.10.0"
   }
 }
