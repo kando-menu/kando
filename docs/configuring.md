@@ -75,8 +75,8 @@ Each node is a JSON object with the following properties:
 Property | Default Value | Description
 -------- | ------------- | -----------
 `name` | `"undefined"` | The name of the node. This is shown in the center of the menu when the node is hovered. The name of the root node defines the name of the menu.
-`iconTheme` | `""` | For now, this can either be `"material-symbols-rounded"` or `"simple-icons"`. With the former, you can use icons from [Google's Material Symbols](https://fonts.google.com/icons). With the latter, you can use any icon from [Simple Icons](https://simpleicons.org/).
-`icon` | `""` | The name of the icon from the given icon theme.
+`iconTheme` | `""` | For now, this can either be `"material-symbols-rounded"`, `"simple-icons"`, or `"emoji"`. With the first, you can use icons from [Google's Material Symbols](https://fonts.google.com/icons). With the second, you can use any icon from [Simple Icons](https://simpleicons.org/).
+`icon` | `""` | The name of the icon from the given icon theme or an emoji like `"🚀"`.
 `angle` | _auto_ | If given, this defines the angle of the node in degrees. If this is not given, the angle is calculated automatically. 0° means that the node is at the top of the menu, 90° means that the node is on the right side of the menu, and so on. All sibling nodes are evenly distributed around the nodes with given angles.
 `type` | `"submenu"` | The type of the node. There are several types available. See below for details.
 `data` | `{}` | Depending on the type of the node, this can contain additional data. See below for details.
