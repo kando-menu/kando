@@ -198,19 +198,13 @@
   // The text in the center of the menu is wrapped in a square div with a 10% padding.
   .center-text {
     position: absolute;
-    width: calc($root-size - $root-size * 0.2);
-    height: calc($root-size - $root-size * 0.2);
-    top: calc($root-size * -0.4);
-    left: calc($root-size * -0.4);
     color: $text-color;
     transition: $text-opacity-transition;
     z-index: 3;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     font-size: 16px;
+    line-height: 22px;
 
     overflow: hidden;
     word-break: break-word;
