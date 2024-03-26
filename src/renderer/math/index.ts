@@ -379,3 +379,23 @@ function scaleWedge(start: number, center: number, end: number, scale: number) {
 
   return [start, end];
 }
+
+/**
+ * Given the center coordinates and maximum radius of a menu, this method returns a new
+ * position which ensures that the menu and all of its children and grandchildren are
+ * inside the current monitor's bounds.
+ *
+ * @param position The center position of the menu.
+ * @param radius The maximum radius of the menu.
+ * @returns The clamped position.
+ */
+export function clampToMonitor(position: IVec2, radius: number): IVec2 {
+  const maxX = window.innerWidth - radius;
+  const maxY = window.innerHeight - radius;
+
+  const posX = clamp(position.x, radius, maxX);
+  const posY = clamp(position.y, radius, maxY);
+
+  // Ensure integer position.
+  return { x: Math.floor(posX), y: Math.floor(posY) };
+}

@@ -26,6 +26,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The possibility to select the to-be-edited menu in the menu editor.
 - The possibility to add new menus and delete existing ones in the menu editor. This is not yet very useful as there is no way to edit the menu items yet, but it's a first step towards a fully functional menu editor. Also, deleted menus cannot be restored for now, so be careful when moving them to the trash. They will be gone forever!
 - The possibility to lock item positions in the menu preview of the editor. Locked items cannot be reordered but moved to a fixed angle instead.
+- The possibility to use emojis as menu item icons. Just use `"iconTheme": "emoji"` and for instance `"icon": "🚀"` in your `menus.json`.
 - The possibility to close the menu with the right mouse button.
 - A subtle pulse animation to the drop indicator in the menu editor's preview.
 - Support for Plasma 6.
@@ -36,7 +37,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Significantly improved the algorithm which calculates the drop location when dragging an item in the menu editor's preview. There are still some weird edge cases especially in the presence of fixed angles, but it should work much better now.
 - The sizing and layout of the editor components now depends on the window size. The menu editor will now look much better on small and large screens.
 - The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
-- The menu editor now uses some subtle backdrop blur for the preview items to avoid visual clutter when dragging them around.
+- The icons of the menu are now cropped to a circle with some small padding. This improves the look of menu icons which before touched the border of the item.
+- The menu editor now uses some subtle backdrop blur for the sidebar to reduce visual clutter#.
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 - Any overflowing text in the menu's center item is now hidden.
 - The SCSS source code of Kando has received a major cleanup. It is now much better documented and structured.
