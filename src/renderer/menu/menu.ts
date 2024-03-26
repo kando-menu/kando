@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 import * as math from '../math';
 import { IVec2 } from '../../common';
 import { IMenuNode } from './menu-node';
+import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
 
@@ -78,7 +79,7 @@ export class Menu extends EventEmitter {
   private selectionChain: Array<IMenuNode> = [];
 
   /** This shows the name of the currently hovered child on the center item. */
-  private centerText: HTMLElement = null;
+  private centerText: CenterText = null;
 
   /** The gesture detection is used to detect node selections in marking mode. */
   private gestures: GestureDetection = new GestureDetection();
@@ -302,10 +303,9 @@ export class Menu extends EventEmitter {
     }
 
     if (node === this.root) {
-      this.centerText = document.createElement('div');
-      this.centerText.classList.add('center-text');
-      this.centerText.classList.add('hidden');
-      node.nodeDiv.appendChild(this.centerText);
+      const maxCenterTextSize = this.CENTER_RADIUS * 2.0;
+      const padding = this.CENTER_RADIUS * 0.1;
+      this.centerText = new CenterText(node.nodeDiv, maxCenterTextSize - padding);
     }
   }
 
@@ -470,16 +470,18 @@ export class Menu extends EventEmitter {
     if (newHoveredNode !== this.hoveredNode) {
       this.hoverNode(newHoveredNode);
 
+      // If the mouse is over the center of a menu or over the parent of the current menu,
+      // hide the center text.
       if (this.isParentOfActiveNode(newHoveredNode) || newHoveredNode === this.root) {
-        this.centerText.classList.add('hidden');
+        this.centerText.hide();
       } else {
-        this.centerText.innerText = newHoveredNode.name;
-        this.centerText.classList.remove('hidden');
+        this.centerText.setText(newHoveredNode.name);
+        this.centerText.show();
 
         const position = this.getActiveNodePosition();
         position.x -= this.root.position.x;
         position.y -= this.root.position.y;
-        this.centerText.style.transform = `translate(${position.x}px, ${position.y}px)`;
+        this.centerText.setPosition(position);
       }
     }
 
