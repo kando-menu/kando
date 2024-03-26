@@ -374,7 +374,12 @@ export class Menu extends EventEmitter {
     // Clamp the position of the newly selected submenu to the viewport.
     if (node.children?.length > 0) {
       const position = this.getActiveNodePosition();
-      const clampedPosition = this.clampToMonitor(position, 10);
+
+      // Compute the maximum radius of the menu, including children and grandchildren. The
+      // magic number 1.4 accounts for the hover effect (which should be made
+      // configurable). The 10 is some additional margin.
+      const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4 + 10;
+      const clampedPosition = math.clampToMonitor(position, maxRadius);
 
       const offset = {
         x: Math.trunc(clampedPosition.x - position.x),
@@ -789,32 +794,5 @@ export class Menu extends EventEmitter {
     }
 
     return position;
-  }
-
-  /**
-   * Given the center coordinates of a node, this method returns a new position which
-   * ensures that the node and all of its children and grandchildren are inside the
-   * current monitor's bounds, including the specified margin.
-   *
-   * @param position The center position of the node.
-   * @param margin The margin to the monitor's bounds.
-   * @returns The clamped position.
-   */
-  private clampToMonitor(position: IVec2, margin: number): IVec2 {
-    // Compute the maximum radius of the node, including children and grandchildren. The
-    // magic number 1.4 accounts for the hover effect. This could be made configurable.
-    const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4;
-
-    const size = margin + maxRadius;
-    const minX = size;
-    const minY = size;
-    const maxX = window.innerWidth - size;
-    const maxY = window.innerHeight - size;
-
-    const posX = math.clamp(position.x, minX, maxX);
-    const posY = math.clamp(position.y, minY, maxY);
-
-    // Ensure integer position.
-    return { x: Math.floor(posX), y: Math.floor(posY) };
   }
 }
