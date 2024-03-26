@@ -24,7 +24,10 @@ export function createDiv(icon: string, theme: string) {
   containerDiv.appendChild(iconDiv);
 
   if (theme === 'material-symbols-rounded') {
-    iconDiv.classList.add(theme);
+    iconDiv.classList.add('material-symbols-rounded');
+    iconDiv.innerHTML = icon;
+  } else if (theme === 'emoji') {
+    iconDiv.classList.add('emoji-icon');
     iconDiv.innerHTML = icon;
   } else if (theme === 'simple-icons') {
     iconDiv.classList.add('si');

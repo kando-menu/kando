@@ -259,7 +259,9 @@ export class Menu extends EventEmitter {
    * This method creates the DOM tree for the given node and all its children. For each
    * node, a div element with the class ".menu-node" is created and appended to the given
    * container. In addition to the child nodes, the div element contains a div with the
-   * class ".menu-icon" which contains the visual representation of the node.
+   * class ".menu-item" which contains the visual representation of the node. The node's
+   * icon is rendered as an <i> element with the class ".menu-icon" as a child of the
+   * ".menu-item" element.
    *
    * @param node The node to create the DOM tree for.
    * @param container The container to append the DOM tree to.
@@ -274,8 +276,11 @@ export class Menu extends EventEmitter {
     const icon = document.createElement('i');
     icon.classList.add('menu-icon');
 
-    if (node.iconTheme === 'material-symbols-rounded' || node.iconTheme === 'text-icon') {
-      icon.classList.add(node.iconTheme);
+    if (node.iconTheme === 'material-symbols-rounded') {
+      icon.classList.add('material-symbols-rounded');
+      icon.innerHTML = node.icon;
+    } else if (node.iconTheme === 'emoji') {
+      icon.classList.add('emoji-icon');
       icon.innerHTML = node.icon;
     } else if (node.iconTheme === 'simple-icons') {
       icon.classList.add('si');
