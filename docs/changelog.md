@@ -38,7 +38,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The sizing and layout of the editor components now depends on the window size. The menu editor will now look much better on small and large screens.
 - The drop indicator in the menu editor's preview will now move to submenus or the back-navigation button when an item is dragged over them.
 - The icons of the menu are now cropped to a circle with some small padding. This improves the look of menu icons which before touched the border of the item.
-- The menu editor now uses some subtle backdrop blur for the sidebar to reduce visual clutter#.
+- The menu editor now uses some subtle backdrop blur for the sidebar to reduce visual clutter.
 - The mouse cursor will now change to a grabbing hand when moving an item in the menu editor's preview.
 - The word wrapping in the menu's center text has been improved, and any overflowing text is now hidden.
 - The SCSS source code of Kando has received a major cleanup. It is now much better documented and structured.
