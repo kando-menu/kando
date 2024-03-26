@@ -56,6 +56,10 @@ The top-level JSON object is called `menus` and contains a list of menu descript
 }
 ```
 
+> [!TIP]
+> You can have a look at a complete example configuration [here](https://gist.github.com/Schneegans/ebd385030bb7e15aa24d73f23abb4b53)!
+
+
 #### Menu Descriptions
 
 The items in the `menus` list are called menu descriptions.
