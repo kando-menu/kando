@@ -98,7 +98,7 @@ On GNOME under Wayland you will also need to install the [adapter extension](htt
 
 ### :rocket: Running the Prototype
 
-Once these dependencies are installed, only these two commands are required:
+Once these dependencies are installed, navigate into the Kando directory, then only these two commands are required:
 
 ```
 npm install
