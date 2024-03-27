@@ -190,7 +190,7 @@
   }
 
   // The icons in the buttons are scaled based on the window size.
-  .icon-container {
+  div:has(.icon-container) {
     pointer-events: none;
     @include rfs($toolbar-menu-button-icon-size, width);
     @include rfs($toolbar-menu-button-icon-size, height);
@@ -204,6 +204,11 @@
     i {
       transition: color 150ms linear;
       color: black;
+
+      // For some reason, the emoji icons are not properly aligned. This fixes it.
+      &.emoji-icon {
+        margin-top: 12cqi;
+      }
     }
   }
 
@@ -231,7 +236,7 @@
   }
 
   &:not(:hover) {
-    .icon-container {
+    div:has(.icon-container) {
       background-color: transparent;
 
       i {

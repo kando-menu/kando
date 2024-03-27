@@ -111,6 +111,11 @@
         opacity: 0;
       }
     }
+
+    // For some reason, the emoji icons are not properly aligned. This fixes it.
+    .icon-container .emoji-icon {
+      margin-top: -6cqi;
+    }
   }
 
   // The ::before pseudo element is used to draw a dashed circle around the preview
