@@ -15,6 +15,13 @@ import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../common/editor-node';
 
+/**
+ * This class represents the trash tab in the toolbar. Users can drop menus and menu items
+ * here to delete them. Dropped items are stored in the trash until the user restarts the
+ * application.
+ *
+ * TODO: Deletion of menu items from the preview is not yet implemented.
+ */
 export class TrashTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
@@ -92,19 +99,28 @@ export class TrashTab extends EventEmitter {
         .getElementById('kando-editor-toolbar-area')
         .classList.remove('dragging-menu-item');
 
-      // Check if the trash tab is hovered.
+      // Check if the menus tab is hovered.
       const tab = this.container.querySelector(
         ".nav-link[data-bs-target='#kando-menus-tab']"
       );
 
+      // If so, we emit a 'restore-menu' event. This event is handled by the toolbar
+      // which will restore the menu.
       if (tab.matches(':hover')) {
         this.emit('restore-menu', index);
       }
     });
 
+    // Initialize the trash tab with an empty list of trashed items.
     this.setTrashedItems([]);
   }
 
+  /**
+   * This method is called when the user drops a menu or a menu item on the trash tab. It
+   * completely updates the trash tab's content.
+   *
+   * @param items The items which are currently in the trash.
+   */
   public setTrashedItems(items: Array<IMenu | IEditorNode>) {
     this.itemDragger.removeAllDraggables();
 
@@ -135,6 +151,7 @@ export class TrashTab extends EventEmitter {
       };
     });
 
+    // Update the tab's content.
     this.tab.innerHTML = template({
       placeholderHeading: 'You can delete menus and menu items by dropping them here!',
       placeholderSubheading: 'When you start Kando the next time, they will be gone.',
