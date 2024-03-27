@@ -32,6 +32,11 @@ import { IEditorNode } from '../common/editor-node';
  *   index of the selected menu is passed as the first argument.
  * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
  * - 'delete-menu': This event is emitted when the user drags a menu to the trash tab.
+ *
+ * The following events are forwarded from the trash tab:
+ *
+ * - 'restore-menu': This event is emitted when the user drags a menu from the trash tab to
+ *   the menus tab.
  */
 export class Toolbar extends EventEmitter {
   /**

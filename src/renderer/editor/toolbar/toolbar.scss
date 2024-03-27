@@ -133,6 +133,7 @@
     }
   }
 
+  &.dragging-menu-item .nav-link[data-bs-target='#kando-menus-tab'],
   &.dragging-deletable-item .nav-link[data-bs-target='#kando-trash-tab'],
   &.dragging-stashable-item .nav-link[data-bs-target='#kando-stash-tab'] {
     margin-top: -10px;

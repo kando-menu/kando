@@ -54,7 +54,7 @@ export class TrashTab extends EventEmitter {
       // item. This will make the trash tab more visible.
       document
         .getElementById('kando-editor-toolbar-area')
-        .classList.add('dragging-deletable-item');
+        .classList.add('dragging-menu-item');
 
       // Set fixed width and height for dragged item.
       const rect = div.getBoundingClientRect();
@@ -90,7 +90,7 @@ export class TrashTab extends EventEmitter {
 
       document
         .getElementById('kando-editor-toolbar-area')
-        .classList.remove('dragging-deletable-item');
+        .classList.remove('dragging-menu-item');
 
       // Check if the trash tab is hovered.
       const tab = this.container.querySelector(
@@ -143,8 +143,12 @@ export class TrashTab extends EventEmitter {
 
     // Add drag'n'drop logic to the menu buttons.
     for (const item of data) {
-      const div = document.getElementById(`menu-button-${item.index}`);
+      const div = document.getElementById(`trash-item-${item.index}`);
       this.itemDragger.addDraggable(div, item.index);
     }
+
+    // Set the counter value.
+    const counter = this.container.querySelector('#kando-trash-tab-counter');
+    counter.textContent = items.length.toString();
   }
 }
