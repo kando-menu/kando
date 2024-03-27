@@ -491,10 +491,15 @@ export class Sidebar {
       window.api.showDevTools();
     });
 
-    // Currently, there is also a blog post button which links to the blog post about the
-    // editor mockups. This will be removed in the future.
-    this.container.querySelector('#blog-post-button').addEventListener('click', () => {
-      window.api.openURI('https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8');
+    // Currently, there are two buttons which lead to further information on the web. These will be removed in the future.
+    this.container.querySelector('#kofi-button').addEventListener('click', () => {
+      window.api.openURI('https://ko-fi.com/schneegans');
+    });
+
+    this.container.querySelector('#config-button').addEventListener('click', () => {
+      window.api.openURI(
+        'https://github.com/kando-menu/kando/blob/main/docs/configuring.md'
+      );
     });
   }
 }
