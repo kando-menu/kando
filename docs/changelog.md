@@ -24,7 +24,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Added
 
 - The possibility to select the to-be-edited menu in the menu editor.
-- The possibility to add new menus and delete existing ones in the menu editor. This is not yet very useful as there is no way to edit the menu items yet, but it's a first step towards a fully functional menu editor. Also, deleted menus cannot be restored for now, so be careful when moving them to the trash. They will be gone forever!
+- The possibility to add new menus in the editor. This is not yet very useful as there is no way to edit the menus yet, but it's a another step towards a fully functional menu editor.
+- The possibility to delete menus in the editor. Simply drag an item from the menu list to the trash tab in the toolbar! You can also restore deleted menus from the trash by dragging them back to the menu list. It's not yet possible to delete menu items from the preview.
 - The possibility to lock item positions in the menu preview of the editor. Locked items cannot be reordered but moved to a fixed angle instead.
 - The possibility to use emojis as menu item icons. Just use `"iconTheme": "emoji"` and for instance `"icon": "🚀"` in your `menus.json`.
 - The possibility to close the menu with the right mouse button.

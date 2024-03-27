@@ -13,24 +13,19 @@ import { ItemDragger } from '../common/item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
+import { IEditorNode } from '../common/editor-node';
 
-/**
- * This class is responsible for the menus tab in the toolbar. It is an event emitter
- * which emits the following events:
- *
- * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
- *   index of the selected menu is passed as the first argument.
- * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
- * - 'delete-menu': This event is emitted when the user drags a menu to the trash tab.
- */
-export class MenusTab extends EventEmitter {
+export class TrashTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
-  /** This is the HTML element which contains the menus tab's content. */
+  /** This is the HTML element which contains the trash tab's content. */
   private tab: HTMLElement = null;
 
-  /** This is used to drag'n'drop menus from the toolbar to the trash. */
+  /**
+   * This is used to drag'n'drop menus from the trash to the menus tab or to the menu
+   * preview.
+   */
   private itemDragger = new ItemDragger();
 
   /**
@@ -46,21 +41,7 @@ export class MenusTab extends EventEmitter {
     this.container = container;
 
     // The tab has been created in the toolbar's constructor.
-    this.tab = this.container.querySelector('#kando-menus-tab');
-
-    // If a menu button is clicked, we emit the 'select-menu' event. If the "Add Menu"
-    // button is clicked, we emit the 'add-menu' event.
-    this.tab.addEventListener('click', (event) => {
-      const input = event.target as HTMLInputElement;
-      if (input && input.name === 'menu-selection-button') {
-        this.emit('select-menu', input.dataset.index);
-      }
-
-      const button = event.target as HTMLButtonElement;
-      if (button && button.classList.contains('add-menu-button')) {
-        this.emit('add-menu');
-      }
-    });
+    this.tab = this.container.querySelector('#kando-trash-tab');
 
     // During drag'n'drop operations, we need to append the dragged div to the outer
     // container to be able to drag it outside of the scrollable area. Here we set up
@@ -73,7 +54,7 @@ export class MenusTab extends EventEmitter {
       // item. This will make the trash tab more visible.
       document
         .getElementById('kando-editor-toolbar-area')
-        .classList.add('dragging-deletable-item');
+        .classList.add('dragging-menu-item');
 
       // Set fixed width and height for dragged item.
       const rect = div.getBoundingClientRect();
@@ -109,46 +90,65 @@ export class MenusTab extends EventEmitter {
 
       document
         .getElementById('kando-editor-toolbar-area')
-        .classList.remove('dragging-deletable-item');
+        .classList.remove('dragging-menu-item');
 
       // Check if the trash tab is hovered.
       const tab = this.container.querySelector(
-        ".nav-link[data-bs-target='#kando-trash-tab']"
+        ".nav-link[data-bs-target='#kando-menus-tab']"
       );
 
       if (tab.matches(':hover')) {
-        this.emit('delete-menu', index);
+        this.emit('restore-menu', index);
       }
     });
+
+    this.setTrashedItems([]);
   }
 
-  /**
-   * This method is called by the toolbar whenever the list of menus changes. It
-   * completely rebuilds the menus tab.
-   *
-   * @param menus A list of menus.
-   * @param currentMenu The index of the currently selected menu.
-   */
-  public setMenus(menus: Array<IMenu>, currentMenu: number) {
+  public setTrashedItems(items: Array<IMenu | IEditorNode>) {
     this.itemDragger.removeAllDraggables();
 
-    const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
+    const template = Handlebars.compile(require('./templates/trash-tab.hbs').default);
 
     // Compile the data for the Handlebars template.
-    const data = menus.map((menu, index) => ({
-      name: menu.nodes.name,
-      active: index === currentMenu,
-      shortcut: menu.shortcut || 'Not bound',
-      icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
-      index,
-    }));
+    const data = items.map((item, index) => {
+      const menu = item as IMenu;
 
-    this.tab.innerHTML = template({ menus: data });
+      // If the item is a menu, we need to extract the name, the shortcut and the icon.
+      if (menu.nodes) {
+        return {
+          isMenu: true,
+          name: menu.nodes.name,
+          shortcut: menu.shortcut || 'Not bound',
+          icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
+          index,
+        };
+      }
+
+      // If the item is a menu node, we need to extract the name and the icon.
+      const node = item as IEditorNode;
+      return {
+        isMenu: false,
+        name: node.name,
+        icon: themedIcon.createDiv(node.icon, node.iconTheme).outerHTML,
+        index,
+      };
+    });
+
+    this.tab.innerHTML = template({
+      placeholderHeading: 'You can delete menus and menu items by dropping them here!',
+      placeholderSubheading: 'When you start Kando the next time, they will be gone.',
+      items: data,
+    });
 
     // Add drag'n'drop logic to the menu buttons.
-    for (const menu of data) {
-      const div = document.getElementById(`menu-button-${menu.index}`);
-      this.itemDragger.addDraggable(div, menu.index);
+    for (const item of data) {
+      const div = document.getElementById(`trash-item-${item.index}`);
+      this.itemDragger.addDraggable(div, item.index);
     }
+
+    // Set the counter value.
+    const counter = this.container.querySelector('#kando-trash-tab-counter');
+    counter.textContent = items.length.toString();
   }
 }

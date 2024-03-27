@@ -17,7 +17,7 @@ import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import { IMenu, IMenuSettings } from '../../common';
-import { toINode } from './common/editor-node';
+import { IEditorNode, toINode } from './common/editor-node';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the
@@ -75,6 +75,13 @@ export class Editor extends EventEmitter {
   private currentMenu: number = 0;
 
   /**
+   * This array is used to store items which have been deleted by the user. They can be
+   * restored by dragging them back to the menus tab or the menu preview. They will not be
+   * saved to disc.
+   */
+  private trashedItems: Array<IMenu | IEditorNode> = [];
+
+  /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
@@ -102,26 +109,34 @@ export class Editor extends EventEmitter {
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
     // leaving edit mode. We wire up the corresponding events here.
     this.toolbar = new Toolbar();
+
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
+
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
+
     this.toolbar.on('expand', () => {
       this.preview.hide();
       this.properties.hide();
     });
+
     this.toolbar.on('collapse', () => {
       this.preview.show();
       this.properties.show();
     });
+
     this.toolbar.on('select-menu', (index: number) => {
       this.currentMenu = index;
       this.preview.setMenu(this.menuSettings.menus[index]);
     });
+
     this.toolbar.on('delete-menu', (index: number) => {
-      this.menuSettings.menus.splice(index, 1);
+      this.trashedItems.push(this.menuSettings.menus.splice(index, 1)[0]);
       this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
       this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
       this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
+      this.toolbar.setTrashedItems(this.trashedItems);
     });
+
     this.toolbar.on('add-menu', () => {
       // Choose a random icon for the new menu.
       const icons = [
@@ -136,6 +151,7 @@ export class Editor extends EventEmitter {
         'sunny',
         'target',
       ];
+
       const icon = icons[Math.floor(Math.random() * icons.length)];
 
       // Choose a new name for the menu. We will start with "New Menu" and append a
@@ -166,6 +182,13 @@ export class Editor extends EventEmitter {
       this.toolbar.setMenus(this.menuSettings.menus, this.menuSettings.menus.length - 1);
       this.preview.setMenu(newMenu);
     });
+
+    this.toolbar.on('restore-menu', (index: number) => {
+      this.menuSettings.menus.push(this.trashedItems.splice(index, 1)[0] as IMenu);
+      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
+      this.toolbar.setTrashedItems(this.trashedItems);
+    });
+
     this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
