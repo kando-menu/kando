@@ -22,8 +22,13 @@
   align-items: center;
   justify-content: center;
 
+  // Circle clipping.
+  clip-path: circle(45% at 50% 50%);
+  white-space: nowrap;
+
   i {
     font-size: 75cqi;
+    font-style: normal;
   }
 }
 

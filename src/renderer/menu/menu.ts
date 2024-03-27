@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 import * as math from '../math';
 import { IVec2 } from '../../common';
 import { IMenuNode } from './menu-node';
+import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
 
@@ -78,7 +79,7 @@ export class Menu extends EventEmitter {
   private selectionChain: Array<IMenuNode> = [];
 
   /** This shows the name of the currently hovered child on the center item. */
-  private centerText: HTMLElement = null;
+  private centerText: CenterText = null;
 
   /** The gesture detection is used to detect node selections in marking mode. */
   private gestures: GestureDetection = new GestureDetection();
@@ -259,44 +260,52 @@ export class Menu extends EventEmitter {
    * This method creates the DOM tree for the given node and all its children. For each
    * node, a div element with the class ".menu-node" is created and appended to the given
    * container. In addition to the child nodes, the div element contains a div with the
-   * class ".menu-icon" which contains the visual representation of the node.
+   * class ".menu-item" which contains the visual representation of the node. The node's
+   * icon is rendered as an <i> element with the class ".menu-icon" as a child of the
+   * ".menu-item" element.
    *
    * @param node The node to create the DOM tree for.
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(node: IMenuNode, container: HTMLElement) {
-    node.itemDiv = document.createElement('div');
-    node.itemDiv.classList.add('menu-node');
+    node.nodeDiv = document.createElement('div');
+    node.nodeDiv.classList.add('menu-node');
+
+    const menuItem = document.createElement('div');
+    menuItem.classList.add('menu-item');
 
     const icon = document.createElement('i');
     icon.classList.add('menu-icon');
 
     if (node.iconTheme === 'material-symbols-rounded') {
-      icon.classList.add(node.iconTheme);
+      icon.classList.add('material-symbols-rounded');
+      icon.innerHTML = node.icon;
+    } else if (node.iconTheme === 'emoji') {
+      icon.classList.add('emoji-icon');
       icon.innerHTML = node.icon;
     } else if (node.iconTheme === 'simple-icons') {
       icon.classList.add('si');
       icon.classList.add('si-' + node.icon);
     }
 
-    container.appendChild(node.itemDiv);
-    node.itemDiv.appendChild(icon);
+    container.appendChild(node.nodeDiv);
+    node.nodeDiv.appendChild(menuItem);
+    menuItem.appendChild(icon);
 
     if (node.children) {
       node.connectorDiv = document.createElement('div');
       node.connectorDiv.classList.add('connector');
-      node.itemDiv.appendChild(node.connectorDiv);
+      node.nodeDiv.appendChild(node.connectorDiv);
 
       for (const child of node.children) {
-        this.createNodeTree(child, node.itemDiv);
+        this.createNodeTree(child, node.nodeDiv);
       }
     }
 
     if (node === this.root) {
-      this.centerText = document.createElement('div');
-      this.centerText.classList.add('center-text');
-      this.centerText.classList.add('hidden');
-      node.itemDiv.appendChild(this.centerText);
+      const maxCenterTextSize = this.CENTER_RADIUS * 2.0;
+      const padding = this.CENTER_RADIUS * 0.1;
+      this.centerText = new CenterText(node.nodeDiv, maxCenterTextSize - padding);
     }
   }
 
@@ -370,7 +379,12 @@ export class Menu extends EventEmitter {
     // Clamp the position of the newly selected submenu to the viewport.
     if (node.children?.length > 0) {
       const position = this.getActiveNodePosition();
-      const clampedPosition = this.clampToMonitor(position, 10);
+
+      // Compute the maximum radius of the menu, including children and grandchildren. The
+      // magic number 1.4 accounts for the hover effect (which should be made
+      // configurable). The 10 is some additional margin.
+      const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4 + 10;
+      const clampedPosition = math.clampToMonitor(position, maxRadius);
 
       const offset = {
         x: Math.trunc(clampedPosition.x - position.x),
@@ -411,13 +425,13 @@ export class Menu extends EventEmitter {
     }
 
     if (this.draggedNode) {
-      this.draggedNode.itemDiv.classList.remove('dragged');
+      this.draggedNode.nodeDiv.classList.remove('dragged');
       this.draggedNode = null;
     }
 
     if (node) {
       this.draggedNode = node;
-      this.draggedNode.itemDiv.classList.add('dragged');
+      this.draggedNode.nodeDiv.classList.add('dragged');
     }
   }
 
@@ -434,13 +448,13 @@ export class Menu extends EventEmitter {
 
     if (this.hoveredNode) {
       this.emit('unhover', this.hoveredNode.path);
-      this.hoveredNode.itemDiv.classList.remove('hovered');
+      this.hoveredNode.nodeDiv.classList.remove('hovered');
       this.hoveredNode = null;
     }
 
     if (node) {
       this.hoveredNode = node;
-      this.hoveredNode.itemDiv.classList.add('hovered');
+      this.hoveredNode.nodeDiv.classList.add('hovered');
       this.emit('hover', this.hoveredNode.path);
     }
   }
@@ -456,16 +470,18 @@ export class Menu extends EventEmitter {
     if (newHoveredNode !== this.hoveredNode) {
       this.hoverNode(newHoveredNode);
 
+      // If the mouse is over the center of a menu or over the parent of the current menu,
+      // hide the center text.
       if (this.isParentOfActiveNode(newHoveredNode) || newHoveredNode === this.root) {
-        this.centerText.classList.add('hidden');
+        this.centerText.hide();
       } else {
-        this.centerText.innerText = newHoveredNode.name;
-        this.centerText.classList.remove('hidden');
+        this.centerText.setText(newHoveredNode.name);
+        this.centerText.show();
 
         const position = this.getActiveNodePosition();
         position.x -= this.root.position.x;
         position.y -= this.root.position.y;
-        this.centerText.style.transform = `translate(${position.x}px, ${position.y}px)`;
+        this.centerText.setPosition(position);
       }
     }
 
@@ -562,10 +578,10 @@ export class Menu extends EventEmitter {
    *   differently depending on the state.
    */
   private updateTransform(node: IMenuNode) {
-    if (node.itemDiv.classList.contains('grandchild')) {
+    if (node.nodeDiv.classList.contains('grandchild')) {
       node.position = math.getDirection(node.angle, this.GRANDCHILD_DISTANCE);
-      node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
-    } else if (node.itemDiv.classList.contains('child')) {
+      node.nodeDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
+    } else if (node.nodeDiv.classList.contains('child')) {
       let transform = '';
 
       // If the node is hovered, increase the scale a bit.
@@ -593,7 +609,7 @@ export class Menu extends EventEmitter {
 
       // Finally, apply the transformation to the node and update the transformation of
       // all its children.
-      node.itemDiv.style.transform = transform;
+      node.nodeDiv.style.transform = transform;
 
       if (node.children) {
         for (const child of node.children) {
@@ -601,10 +617,10 @@ export class Menu extends EventEmitter {
         }
       }
     } else if (
-      node.itemDiv.classList.contains('active') ||
-      node.itemDiv.classList.contains('parent')
+      node.nodeDiv.classList.contains('active') ||
+      node.nodeDiv.classList.contains('parent')
     ) {
-      node.itemDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
+      node.nodeDiv.style.transform = `translate(${node.position.x}px, ${node.position.y}px)`;
       if (node.children) {
         for (const child of node.children) {
           this.updateTransform(child);
@@ -673,25 +689,25 @@ export class Menu extends EventEmitter {
     for (let i = 0; i < this.selectionChain.length; ++i) {
       const node = this.selectionChain[i];
       if (i === this.selectionChain.length - 1) {
-        node.itemDiv.className = 'menu-node active';
+        node.nodeDiv.className = 'menu-node active';
 
         if (node.children) {
           for (const child of node.children as IMenuNode[]) {
-            child.itemDiv.className = 'menu-node child';
+            child.nodeDiv.className = 'menu-node child';
 
             if (child.children) {
               for (const grandchild of child.children as IMenuNode[]) {
-                grandchild.itemDiv.className = 'menu-node grandchild';
+                grandchild.nodeDiv.className = 'menu-node grandchild';
               }
             }
           }
         }
       } else {
-        node.itemDiv.className = 'menu-node parent';
+        node.nodeDiv.className = 'menu-node parent';
 
         if (node.children) {
           for (const child of node.children as IMenuNode[]) {
-            child.itemDiv.className = 'menu-node grandchild';
+            child.nodeDiv.className = 'menu-node grandchild';
           }
         }
       }
@@ -785,32 +801,5 @@ export class Menu extends EventEmitter {
     }
 
     return position;
-  }
-
-  /**
-   * Given the center coordinates of a node, this method returns a new position which
-   * ensures that the node and all of its children and grandchildren are inside the
-   * current monitor's bounds, including the specified margin.
-   *
-   * @param position The center position of the node.
-   * @param margin The margin to the monitor's bounds.
-   * @returns The clamped position.
-   */
-  private clampToMonitor(position: IVec2, margin: number): IVec2 {
-    // Compute the maximum radius of the node, including children and grandchildren. The
-    // magic number 1.4 accounts for the hover effect. This could be made configurable.
-    const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4;
-
-    const size = margin + maxRadius;
-    const minX = size;
-    const minY = size;
-    const maxX = window.innerWidth - size;
-    const maxY = window.innerHeight - size;
-
-    const posX = math.clamp(position.x, minX, maxX);
-    const posY = math.clamp(position.y, minY, maxY);
-
-    // Ensure integer position.
-    return { x: Math.floor(posX), y: Math.floor(posY) };
   }
 }
