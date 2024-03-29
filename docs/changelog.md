@@ -19,15 +19,19 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [Kando 0.6.0](https://github.com/kando-menu/kando/releases/tag/v0.6.0)
 
+<a href="https://www.youtube.com/watch?v=8O5N6uS3cLo">
+<img align="right" width="400px" src="img/player06.jpg"></img>
+</a>
+
 **Release Date:** 2024-03-29
 
 #### Added
 
+- The possibility to use emojis as menu item icons. Just use `"iconTheme": "emoji"` and for instance `"icon": "🚀"` in your `menus.json`.
 - The possibility to select the to-be-edited menu in the menu editor.
 - The possibility to add new menus in the editor. This is not yet very useful as there is no way to edit the menus yet, but it's a another step towards a fully functional menu editor.
 - The possibility to delete menus in the editor. Simply drag an item from the menu list to the trash tab in the toolbar! You can also restore deleted menus from the trash by dragging them back to the menu list. It's not yet possible to delete menu items from the preview.
 - The possibility to lock item positions in the menu preview of the editor. Locked items cannot be reordered but moved to a fixed angle instead.
-- The possibility to use emojis as menu item icons. Just use `"iconTheme": "emoji"` and for instance `"icon": "🚀"` in your `menus.json`.
 - The possibility to close the menu with the right mouse button.
 - A subtle pulse animation to the drop indicator in the menu editor's preview.
 - Support for Plasma 6.
