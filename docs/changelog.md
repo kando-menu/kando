@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Fixed
 
 - Loosing menu items when pressing the <kbd>Escape</kbd> key in the menu editor during a drag operation. Now, the drag operation will be properly cancelled, and the menu editor will not be closed.
+- A weird issue on Windows where closing the menu left a small unclickable area in the bottom left of the screen. See [#375](https://github.com/kando-menu/kando/issues/375) for details. 
 
 ## [Kando 0.6.0](https://github.com/kando-menu/kando/releases/tag/v0.6.0)
 
