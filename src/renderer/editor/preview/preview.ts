@@ -340,17 +340,11 @@ export class Preview extends EventEmitter {
       this.updateAllPositions();
     });
 
-    // This is called when a menu item is dropped.
-    this.itemDragger.on('drag-end', (node, itemDiv) => {
-      document.body.style.cursor = '';
-
-      // If the node has a fixed angle, we do nothing. In this case, the item was only
-      // rotated during the drag operation but not removed from the parent menu.
-      if (node.angle !== undefined) {
-        return;
-      }
-
+    // This is called when a drag operation is finished. This happens either when the
+    // dragged item is dropped or when the drag operation is aborted.
+    const onDragEnd = (itemDiv: HTMLElement) => {
       // Reset the position of the dragged div.
+      document.body.style.cursor = '';
       itemDiv.style.left = '';
       itemDiv.style.top = '';
       itemDiv.classList.remove('dragging');
@@ -359,6 +353,18 @@ export class Preview extends EventEmitter {
       this.dropIndicator.classList.remove('visible');
       this.container.removeEventListener('pointerenter', dragEnter);
       this.container.removeEventListener('pointerleave', dragLeave);
+    };
+
+    // This is called when a menu item is dropped.
+    this.itemDragger.on('drag-end', (node, itemDiv) => {
+      // If the node has a fixed angle, we do nothing. In this case, the item was only
+      // rotated during the drag operation but not removed from the parent menu.
+      if (node.angle !== undefined) {
+        return;
+      }
+
+      // Reset the position of the dragged div and hide the drop indicator.
+      onDragEnd(itemDiv);
 
       // We check whether the node has been dropped into a submenu, or into the parent
       // node. In both cases, the node div is removed from the DOM and the menu item is
@@ -390,6 +396,30 @@ export class Preview extends EventEmitter {
       }
 
       // In any case, we redraw the menu.
+      this.recomputeItemAngles();
+      this.updateAllPositions();
+    });
+
+    // This is called when a drag operation is aborted. The dragged item is re-added to the
+    // parent menu.
+    this.itemDragger.on('drag-cancel', (node, itemDiv) => {
+      // If the node has a fixed angle, we do nothing. In this case, the item was only
+      // rotated during the drag operation but not removed from the parent menu.
+      if (node.angle !== undefined) {
+        return;
+      }
+
+      // Reset the position of the dragged div and hide the drop indicator.
+      onDragEnd(itemDiv);
+
+      // We simply drop the item where it was before.
+      if (dragIndex !== null) {
+        this.getCenterItem().children.splice(dragIndex, 0, node);
+        dropIndex = null;
+        dragIndex = null;
+      }
+
+      // Finally, redraw the menu.
       this.recomputeItemAngles();
       this.updateAllPositions();
     });
