@@ -84,7 +84,8 @@ export class TrashTab extends EventEmitter {
       }
     );
 
-    this.itemDragger.on('drag-end', (index, div) => {
+    // If the drag is canceled or ends, we need to clean up.
+    const onDragEnd = (index: number, div: HTMLElement) => {
       div.classList.remove('dragging');
       div.style.transform = '';
 
@@ -98,6 +99,14 @@ export class TrashTab extends EventEmitter {
       document
         .getElementById('kando-editor-toolbar-area')
         .classList.remove('dragging-menu-item');
+    };
+
+    this.itemDragger.on('drag-cancel', onDragEnd);
+
+    // If the drag ends successfully, we emit the 'restore-menu' event if the menus tab is
+    // hovered.
+    this.itemDragger.on('drag-end', (index, div) => {
+      onDragEnd(index, div);
 
       // Check if the menus tab is hovered.
       const tab = this.container.querySelector(

@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Fixed
+
+- Loosing menu items when pressing the <kbd>Escape</kbd> key in the menu editor during a drag operation. Now, the drag operation will be properly cancelled, and the menu editor will not be closed.
+
 ## [Kando 0.6.0](https://github.com/kando-menu/kando/releases/tag/v0.6.0)
 
 <a href="https://www.youtube.com/watch?v=8O5N6uS3cLo">

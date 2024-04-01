@@ -23,6 +23,8 @@ import * as math from '../../math';
  * @fires drag-move - When an item is moved, this event is emitted with the current
  *   offset.
  * @fires drag-end - When a drag ends, this event is emitted.
+ * @fires drag-cancel - When a drag is aborted (e.g. by hitting the ESC key), this event
+ *   is emitted.
  * @fires click - When a click is detected, this event is emitted. When the drag threshold
  *   is exceeded, no click event is emitted.
  * @fires mouse-down - When a mouse down event is detected, this event is emitted.
@@ -81,6 +83,8 @@ export class ItemDragger<T> extends EventEmitter {
 
         this.emit('mouse-down', data, div);
 
+        let clearListeners = () => {};
+
         const onMouseMove = (e2: MouseEvent) => {
           const dragCurrent = { x: e2.clientX, y: e2.clientY };
           const offset = math.subtract(dragCurrent, dragStart);
@@ -116,12 +120,30 @@ export class ItemDragger<T> extends EventEmitter {
             this.emit('click', data, div);
           }
 
+          clearListeners();
+        };
+
+        const onEsc = (e2: KeyboardEvent) => {
+          if (e2.key === 'Escape') {
+            if (this.draggedItem) {
+              this.emit('drag-cancel', this.draggedItem.data, this.draggedItem.div);
+              this.draggedItem = null;
+            }
+
+            clearListeners();
+            e2.stopPropagation();
+          }
+        };
+
+        clearListeners = () => {
           window.removeEventListener('mousemove', onMouseMove);
           window.removeEventListener('mouseup', onMouseUp);
+          window.removeEventListener('keyup', onEsc, true);
         };
 
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('keyup', onEsc, true);
       },
       { signal: abortController.signal }
     );
