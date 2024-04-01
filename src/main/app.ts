@@ -189,6 +189,14 @@ export class KandoApp {
 
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
+
+        // On Windows, we have to remove the ignore-mouse-events property when
+        // un-minimizing the window. See the hideWindow() method for more information on
+        // this workaround
+        if (process.platform === 'win32') {
+          this.window.setIgnoreMouseEvents(false);
+        }
+
         this.window.show();
 
         // There seems to be an issue with GNOME Shell 44.1 where the window does not
@@ -594,13 +602,20 @@ export class KandoApp {
 
   /**
    * This hides the window. When Electron windows are hidden, input focus is not
-   * necessarily returned to the topmost window on Windows and macOS. There we have to
-   * minimize the window or hide the app respectively.
+   * necessarily returned to the topmost window below the hidden window. This is a problem
+   * if we want to simulate key presses.
    *
-   * See: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
+   * - On Windows, we have to minimize the window instead. This leads to another issue:
+   *   https://github.com/kando-menu/kando/issues/375. To make this weird little window
+   *   really imperceptible, we make it ignore any mouse events.
+   * - On macOS, we have to "hide the app" in order to properly restore input focus.
+   * - On Linux, it seems to work with a simple window.hide().
+   *
+   * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
   private hideWindow() {
     if (process.platform === 'win32') {
+      this.window.setIgnoreMouseEvents(true);
       this.window.minimize();
     } else if (process.platform === 'darwin') {
       app.hide();
