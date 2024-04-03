@@ -102,7 +102,12 @@ While direct contributions are the most awesome way to support the development, 
 
 **These awesome people have already donated to the development of my open-source projects:**
 
-[![Sponsors](https://schneegans.github.io/sponsors/sponsors.svg)](https://schneegans.github.io/sponsors/)
+<a href="https://schneegans.github.io/sponsors/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://schneegans.github.io/sponsors/sponsors_dark_small.svg">
+    <img alt="Sponsors List" src="https://schneegans.github.io/sponsors/sponsors_light_small.svg#gh-light-mode-only">
+  </picture>
+</a>
 
 ## Credits
 
