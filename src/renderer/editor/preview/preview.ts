@@ -15,7 +15,7 @@ import * as math from '../../math';
 import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
 import { IEditorNode } from '../common/editor-node';
-import { Dragger } from '../common/dragger';
+import { ItemDragger } from '../common/item-dragger';
 import { IVec2, IMenu } from '../../../common';
 
 /**
@@ -68,7 +68,7 @@ export class Preview extends EventEmitter {
   private activeNode?: IEditorNode = null;
 
   /** This is used to drag'n'drop menu items. */
-  private dragger = new Dragger();
+  private dragger = new ItemDragger();
 
   /**
    * This is a little div which becomes visible when something is dragged over the

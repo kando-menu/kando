@@ -8,11 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Dragger } from './dragger';
+import { ItemDragger } from './item-dragger';
 
 /**
- * This class is a specialized Dragger which is used to drag toolbar items. It is used for
- * example by the trash tab to drag items from the trash back to the menus tab.
+ * This class is a specialized ItemDragger which is used to drag toolbar items. It is used
+ * for example by the trash tab to drag items from the trash back to the menus tab.
  *
  * The class is an `EventEmitter` and emits the following events:
  *
@@ -20,7 +20,7 @@ import { Dragger } from './dragger';
  *   emitted.
  * @template T The type of the user data which is associated with the draggable divs.
  */
-export class ToolbarItemDragger<T> extends Dragger<T> {
+export class ToolbarItemDragger<T> extends ItemDragger<T> {
   /**
    * This constructor creates a new ToolbarItemDragger. It takes a `dragContainer` which
    * is the container to which the dragged div will be appended during the drag operation.

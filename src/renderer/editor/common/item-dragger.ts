@@ -33,7 +33,7 @@ import * as math from '../../math';
  *   emitted before either the `click` or `drag-end` event.
  * @template T The type of the user data which is associated with the draggable divs.
  */
-export class Dragger<T> extends EventEmitter {
+export class ItemDragger<T> extends EventEmitter {
   /**
    * This is the item which is currently dragged. It is set to `null` when no item is
    * dragged. `div` is the div which was passed to `addDraggable`.
