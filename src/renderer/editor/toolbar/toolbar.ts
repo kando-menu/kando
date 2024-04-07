@@ -92,6 +92,10 @@ export class Toolbar extends EventEmitter {
     this.trashTab.setTrashedItems(items);
   }
 
+  public setStashedItems(items: Array<IEditorNode>) {
+    // this.stashTab.setStashedItems(items);
+  }
+
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
     const emptyTab = Handlebars.compile(require('./templates/empty-tab.hbs').default);

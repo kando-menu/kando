@@ -79,6 +79,7 @@ export class KandoApp {
     directory: app.getPath('userData'),
     defaults: {
       menus: [this.createExampleMenu()],
+      stash: [],
     },
   });
 

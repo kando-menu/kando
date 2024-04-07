@@ -98,10 +98,13 @@ export interface IMenu {
 
 /**
  * This interface describes the content of the menu settings file. It contains the
- * configured menus.
+ * configured menus as well as the currently stashed menus.
  */
 export interface IMenuSettings {
   menus: Array<IMenu>;
+
+  /** The currently stashed menu items. */
+  stash: Array<INode>;
 }
 
 /**
