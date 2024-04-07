@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
-import { ItemDragger } from '../common/item-dragger';
+import { Dragger } from '../common/dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
@@ -33,7 +33,7 @@ export class TrashTab extends EventEmitter {
    * This is used to drag'n'drop menus from the trash to the menus tab or to the menu
    * preview.
    */
-  private itemDragger = new ItemDragger();
+  private itemDragger = new Dragger();
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
