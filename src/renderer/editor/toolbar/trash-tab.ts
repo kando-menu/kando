@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
-import { Dragger } from '../common/dragger';
+import { ToolbarItemDragger } from '../common/toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
@@ -33,7 +33,7 @@ export class TrashTab extends EventEmitter {
    * This is used to drag'n'drop menus from the trash to the menus tab or to the menu
    * preview.
    */
-  private itemDragger = new Dragger();
+  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -47,78 +47,16 @@ export class TrashTab extends EventEmitter {
     // drag'n'drop operations.
     this.container = container;
 
+    // Initialize the dragger. During the drag operation, the container will get the given
+    // class name. This is used to highlight to the menus tab. When an item is dropped to
+    // the menus tab, we emit the 'restore-menu' event.
+    this.dragger = new ToolbarItemDragger(container, 'dragging-menu-item', [
+      this.container.querySelector(".nav-link[data-bs-target='#kando-menus-tab']"),
+    ]);
+    this.dragger.on('drop', (index) => this.emit('restore-menu', index));
+
     // The tab has been created in the toolbar's constructor.
     this.tab = this.container.querySelector('#kando-trash-tab');
-
-    // During drag'n'drop operations, we need to append the dragged div to the outer
-    // container to be able to drag it outside of the scrollable area. Here we set up
-    // the drag'n'drop logic.
-
-    let originalParent: HTMLElement;
-
-    this.itemDragger.on('drag-start', (index, div) => {
-      // Add a class to the toolbar area to indicate that we are dragging a deletable
-      // item. This will make the trash tab more visible.
-      document
-        .getElementById('kando-editor-toolbar-area')
-        .classList.add('dragging-menu-item');
-
-      // Set fixed width and height for dragged item.
-      const rect = div.getBoundingClientRect();
-      div.style.width = `${rect.width}px`;
-      div.style.height = `${rect.height}px`;
-
-      // Remember the original parent so that we can reinsert the div later.
-      originalParent = div.parentNode;
-
-      // Append the div to the outer container. This is necessary because the div is
-      // inside a scrollable container and we want to be able to drag it outside.
-      div.classList.add('dragging');
-      this.container.appendChild(div);
-    });
-
-    this.itemDragger.on(
-      'drag-move',
-      (index, div, relative, absolute, offset, grabOffset) => {
-        div.style.transform = `translate(${absolute.x - grabOffset.x}px, ${absolute.y - grabOffset.y}px)`;
-      }
-    );
-
-    // If the drag is canceled or ends, we need to clean up.
-    const onDragEnd = (index: number, div: HTMLElement) => {
-      div.classList.remove('dragging');
-      div.style.transform = '';
-
-      // Clear the fixed width and height.
-      div.style.width = '';
-      div.style.height = '';
-
-      // Reinsert the div back to its original position.
-      originalParent.appendChild(div);
-
-      document
-        .getElementById('kando-editor-toolbar-area')
-        .classList.remove('dragging-menu-item');
-    };
-
-    this.itemDragger.on('drag-cancel', onDragEnd);
-
-    // If the drag ends successfully, we emit the 'restore-menu' event if the menus tab is
-    // hovered.
-    this.itemDragger.on('drag-end', (index, div) => {
-      onDragEnd(index, div);
-
-      // Check if the menus tab is hovered.
-      const tab = this.container.querySelector(
-        ".nav-link[data-bs-target='#kando-menus-tab']"
-      );
-
-      // If so, we emit a 'restore-menu' event. This event is handled by the toolbar
-      // which will restore the menu.
-      if (tab.matches(':hover')) {
-        this.emit('restore-menu', index);
-      }
-    });
 
     // Initialize the trash tab with an empty list of trashed items.
     this.setTrashedItems([]);
@@ -131,7 +69,7 @@ export class TrashTab extends EventEmitter {
    * @param items The items which are currently in the trash.
    */
   public setTrashedItems(items: Array<IMenu | IEditorNode>) {
-    this.itemDragger.removeAllDraggables();
+    this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(require('./templates/trash-tab.hbs').default);
 
@@ -170,7 +108,7 @@ export class TrashTab extends EventEmitter {
     // Add drag'n'drop logic to the menu buttons.
     for (const item of data) {
       const div = document.getElementById(`trash-item-${item.index}`);
-      this.itemDragger.addDraggable(div, item.index);
+      this.dragger.addDraggable(div, item.index);
     }
 
     // Set the counter value.

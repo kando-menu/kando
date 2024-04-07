@@ -14,7 +14,8 @@ import * as math from '../../math';
 
 /**
  * This class is used to make menu items in the editor draggable. It is primarily used by
- * the `Preview` class. However, also the `Toolbar` uses it to make menus and menu items
+ * the `Preview` class. However, also servers as a base class for the more specific
+ * `ToolbarItemDragger` used by the tabs of the toolbar to make menus and menu items
  * draggable.
  *
  * The class is an `EventEmitter` and emits the following events:
