@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
-import { ItemDragger } from '../common/item-dragger';
+import { ToolbarItemDragger } from '../common/toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
@@ -31,7 +31,7 @@ export class MenusTab extends EventEmitter {
   private tab: HTMLElement = null;
 
   /** This is used to drag'n'drop menus from the toolbar to the trash. */
-  private itemDragger = new ItemDragger();
+  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -44,6 +44,14 @@ export class MenusTab extends EventEmitter {
     // Store a reference to the container. We will attach menu buttons divs to it during
     // drag'n'drop operations.
     this.container = container;
+
+    // Initialize the dragger. During the drag operation, the container will get the given
+    // class name. This is used to highlight to the trash tab. When an item is dropped to
+    // the trash tab, we emit the 'delete-menu' event.
+    this.dragger = new ToolbarItemDragger(container, 'dragging-deletable-item', [
+      this.container.querySelector(".nav-link[data-bs-target='#kando-trash-tab']"),
+    ]);
+    this.dragger.on('drop', (index) => this.emit('delete-menu', index));
 
     // The tab has been created in the toolbar's constructor.
     this.tab = this.container.querySelector('#kando-menus-tab');
@@ -61,74 +69,6 @@ export class MenusTab extends EventEmitter {
         this.emit('add-menu');
       }
     });
-
-    // During drag'n'drop operations, we need to append the dragged div to the outer
-    // container to be able to drag it outside of the scrollable area. Here we set up
-    // the drag'n'drop logic.
-
-    let originalParent: HTMLElement;
-
-    this.itemDragger.on('drag-start', (index, div) => {
-      // Add a class to the toolbar area to indicate that we are dragging a deletable
-      // item. This will make the trash tab more visible.
-      document
-        .getElementById('kando-editor-toolbar-area')
-        .classList.add('dragging-deletable-item');
-
-      // Set fixed width and height for dragged item.
-      const rect = div.getBoundingClientRect();
-      div.style.width = `${rect.width}px`;
-      div.style.height = `${rect.height}px`;
-
-      // Remember the original parent so that we can reinsert the div later.
-      originalParent = div.parentNode;
-
-      // Append the div to the outer container. This is necessary because the div is
-      // inside a scrollable container and we want to be able to drag it outside.
-      div.classList.add('dragging');
-      this.container.appendChild(div);
-    });
-
-    this.itemDragger.on(
-      'drag-move',
-      (index, div, relative, absolute, offset, grabOffset) => {
-        div.style.transform = `translate(${absolute.x - grabOffset.x}px, ${absolute.y - grabOffset.y}px)`;
-      }
-    );
-
-    // If the drag is canceled or ends, we need to clean up.
-    const onDragEnd = (index: number, div: HTMLElement) => {
-      div.classList.remove('dragging');
-      div.style.transform = '';
-
-      // Clear the fixed width and height.
-      div.style.width = '';
-      div.style.height = '';
-
-      // Reinsert the div back to its original position.
-      originalParent.appendChild(div);
-
-      document
-        .getElementById('kando-editor-toolbar-area')
-        .classList.remove('dragging-deletable-item');
-    };
-
-    this.itemDragger.on('drag-cancel', onDragEnd);
-
-    // If the drag ends successfully, we emit the 'delete-menu' event if the trash tab is
-    // hovered.
-    this.itemDragger.on('drag-end', (index, div) => {
-      onDragEnd(index, div);
-
-      // Check if the trash tab is hovered.
-      const tab = this.container.querySelector(
-        ".nav-link[data-bs-target='#kando-trash-tab']"
-      );
-
-      if (tab.matches(':hover')) {
-        this.emit('delete-menu', index);
-      }
-    });
   }
 
   /**
@@ -139,7 +79,7 @@ export class MenusTab extends EventEmitter {
    * @param currentMenu The index of the currently selected menu.
    */
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    this.itemDragger.removeAllDraggables();
+    this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
 
@@ -157,7 +97,7 @@ export class MenusTab extends EventEmitter {
     // Add drag'n'drop logic to the menu buttons.
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
-      this.itemDragger.addDraggable(div, menu.index);
+      this.dragger.addDraggable(div, menu.index);
     }
   }
 }

@@ -14,7 +14,8 @@ import * as math from '../../math';
 
 /**
  * This class is used to make menu items in the editor draggable. It is primarily used by
- * the `Preview` class. However, also the `Toolbar` uses it to make new menu items
+ * the `Preview` class. However, also servers as a base class for the more specific
+ * `ToolbarItemDragger` used by the tabs of the toolbar to make menus and menu items
  * draggable.
  *
  * The class is an `EventEmitter` and emits the following events:
@@ -37,13 +38,13 @@ export class ItemDragger<T> extends EventEmitter {
    * This is the item which is currently dragged. It is set to `null` when no item is
    * dragged. `div` is the div which was passed to `addDraggable`.
    */
-  private draggedItem?: { div: HTMLElement; data: T } = null;
+  private currentlyDragged?: { div: HTMLElement; data: T } = null;
 
   /**
    * This map contains all draggable divs and their corresponding user data. It is used to
    * remove event listeners when a draggable is removed.
    */
-  private draggableDivs: Map<HTMLElement, { data: T; abortController: AbortController }> =
+  private draggables: Map<HTMLElement, { data: T; abortController: AbortController }> =
     new Map();
 
   /**
@@ -93,8 +94,8 @@ export class ItemDragger<T> extends EventEmitter {
             e2.preventDefault();
             e2.stopPropagation();
 
-            if (this.draggedItem === null) {
-              this.draggedItem = { div, data };
+            if (this.currentlyDragged === null) {
+              this.currentlyDragged = { div, data };
               this.emit('drag-start', data, div);
             }
 
@@ -113,9 +114,9 @@ export class ItemDragger<T> extends EventEmitter {
         const onMouseUp = () => {
           this.emit('mouse-up', data, div);
 
-          if (this.draggedItem) {
-            this.emit('drag-end', this.draggedItem.data, this.draggedItem.div);
-            this.draggedItem = null;
+          if (this.currentlyDragged) {
+            this.emit('drag-end', this.currentlyDragged.data, this.currentlyDragged.div);
+            this.currentlyDragged = null;
           } else {
             this.emit('click', data, div);
           }
@@ -125,9 +126,13 @@ export class ItemDragger<T> extends EventEmitter {
 
         const onEsc = (e2: KeyboardEvent) => {
           if (e2.key === 'Escape') {
-            if (this.draggedItem) {
-              this.emit('drag-cancel', this.draggedItem.data, this.draggedItem.div);
-              this.draggedItem = null;
+            if (this.currentlyDragged) {
+              this.emit(
+                'drag-cancel',
+                this.currentlyDragged.data,
+                this.currentlyDragged.div
+              );
+              this.currentlyDragged = null;
             }
 
             clearListeners();
@@ -148,7 +153,7 @@ export class ItemDragger<T> extends EventEmitter {
       { signal: abortController.signal }
     );
 
-    this.draggableDivs.set(div, { data, abortController });
+    this.draggables.set(div, { data, abortController });
   }
 
   /**
@@ -158,18 +163,18 @@ export class ItemDragger<T> extends EventEmitter {
    * @param div The div which should no longer listen to mouse events.
    */
   public removeDraggable(div: HTMLElement) {
-    const { data, abortController } = this.draggableDivs.get(div);
+    const { data, abortController } = this.draggables.get(div);
 
     // Make sure that the data is not dragged anymore.
-    if (this.draggedItem && data === this.draggedItem.data) {
-      this.draggedItem = null;
+    if (this.currentlyDragged && data === this.currentlyDragged.data) {
+      this.currentlyDragged = null;
     }
 
     // Remove the event listener.
     abortController.abort();
 
     // Remove the div from the map.
-    this.draggableDivs.delete(div);
+    this.draggables.delete(div);
   }
 
   /**
@@ -177,7 +182,7 @@ export class ItemDragger<T> extends EventEmitter {
    * drags.
    */
   public removeAllDraggables() {
-    for (const [div] of this.draggableDivs) {
+    for (const [div] of this.draggables) {
       this.removeDraggable(div);
     }
   }
