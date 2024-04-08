@@ -41,7 +41,7 @@
 
 // The toolbar itself --------------------------------------------------------------------
 
-#kando-editor-toolbar-area {
+#kando-editor-toolbar {
   position: absolute;
   bottom: $editor-padding-bottom-small;
   left: $editor-padding-left;
@@ -107,6 +107,7 @@
     transition: height 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
   }
 
+  // Some tabs enlarge the toolbar. This is the case for instance for the themes tabs.
   &.large {
     bottom: $editor-padding-bottom-large;
 
@@ -132,7 +133,10 @@
       background-image: url(../../assets/images/swirl-vertical.svg);
     }
   }
+}
 
+// When dragging items, we highlight the potential drop targets.
+#kando-editor-toolbar-area {
   &.dragging-menu-item .nav-link[data-bs-target='#kando-menus-tab'],
   &.dragging-deletable-item .nav-link[data-bs-target='#kando-trash-tab'],
   &.dragging-stashable-item .nav-link[data-bs-target='#kando-stash-tab'] {
@@ -146,7 +150,7 @@
   }
 }
 
-#kando-editor.visible.edit-mode #kando-editor-toolbar-area {
+#kando-editor.visible.edit-mode #kando-editor-toolbar {
   transform: none;
   opacity: 1;
 }

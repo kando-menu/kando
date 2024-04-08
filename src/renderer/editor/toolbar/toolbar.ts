@@ -98,8 +98,8 @@ export class Toolbar extends EventEmitter {
     const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
 
     this.container = document.createElement('div');
+    this.container.id = 'kando-editor-toolbar-area';
     this.container.innerHTML = toolbar({
-      areaId: 'kando-editor-toolbar-area',
       tabs: [
         {
           id: 'kando-menus-tab',
@@ -191,10 +191,10 @@ export class Toolbar extends EventEmitter {
       const element = this.container.querySelector(`button[data-bs-target="#${tab.id}"]`);
       element.addEventListener('shown.bs.tab', () => {
         if (tab.large) {
-          document.getElementById('kando-editor-toolbar-area').classList.add('large');
+          document.getElementById('kando-editor-toolbar').classList.add('large');
           this.emit('expand');
         } else {
-          document.getElementById('kando-editor-toolbar-area').classList.remove('large');
+          document.getElementById('kando-editor-toolbar').classList.remove('large');
           this.emit('collapse');
         }
       });

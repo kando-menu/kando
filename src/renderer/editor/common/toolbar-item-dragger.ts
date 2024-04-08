@@ -43,7 +43,7 @@ export class ToolbarItemDragger<T> extends ItemDragger<T> {
 
     this.on('drag-start', (index, div) => {
       // Add a class to the container. This can be used to highlight the drop targets..
-      document.getElementById('kando-editor-toolbar-area').classList.add(dragClass);
+      dragContainer.classList.add(dragClass);
 
       // Set fixed width and height for dragged item.
       const rect = div.getBoundingClientRect();
@@ -77,7 +77,7 @@ export class ToolbarItemDragger<T> extends ItemDragger<T> {
       // Reinsert the div back to its original position.
       originalParent.appendChild(div);
 
-      document.getElementById('kando-editor-toolbar-area').classList.remove(dragClass);
+      dragContainer.classList.remove(dragClass);
     };
 
     this.on('drag-cancel', onDragEnd);
