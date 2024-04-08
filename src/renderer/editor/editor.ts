@@ -183,7 +183,7 @@ export class Editor extends EventEmitter {
       this.preview.setMenu(newMenu);
     });
 
-    this.toolbar.on('restore-menu', (index: number) => {
+    this.toolbar.on('restore-deleted-menu', (index: number) => {
       this.menuSettings.menus.push(this.trashedItems.splice(index, 1)[0] as IMenu);
       this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
       this.toolbar.setTrashedItems(this.trashedItems);

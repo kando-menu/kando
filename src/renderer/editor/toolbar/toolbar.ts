@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
+import { StashTab } from './stash-tab';
 import { IEditorNode } from '../common/editor-node';
 
 /**
@@ -35,8 +36,8 @@ import { IEditorNode } from '../common/editor-node';
  *
  * The following events are forwarded from the trash tab:
  *
- * - 'restore-menu': This event is emitted when the user drags a menu from the trash tab to
- *   the menus tab.
+ * - 'restore-deleted-menu': This event is emitted when the user drags a menu from the trash
+ *   tab to the menus tab.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -50,6 +51,9 @@ export class Toolbar extends EventEmitter {
 
   /** This manages the trash tab of the toolbar. */
   private trashTab: TrashTab = null;
+
+  /** This manages the stash tab of the toolbar. */
+  private stashTab: StashTab = null;
 
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
@@ -70,7 +74,11 @@ export class Toolbar extends EventEmitter {
 
     // Initialize the trash tab and forward its events.
     this.trashTab = new TrashTab(this.container);
-    this.trashTab.on('restore-menu', (index) => this.emit('restore-menu', index));
+    this.trashTab.on('restore-menu', (index) => this.emit('restore-deleted-menu', index));
+
+    // Initialize the stash tab and forward its events.
+    this.stashTab = new StashTab(this.container);
+    this.stashTab.on('restore-item', (index) => this.emit('restore-stashed-item', index));
   }
 
   /** This method returns the container of the editor toolbar. */
@@ -93,7 +101,7 @@ export class Toolbar extends EventEmitter {
   }
 
   public setStashedItems(items: Array<IEditorNode>) {
-    // this.stashTab.setStashedItems(items);
+    this.stashTab.setStashedItems(items);
   }
 
   /** This method loads the HTML content of the toolbar. */
@@ -126,10 +134,7 @@ export class Toolbar extends EventEmitter {
           icon: 'content_paste',
           title: 'Stash',
           hasCounter: true,
-          content: emptyTab({
-            heading: 'In the future, you can temporarily store menu items here!',
-            subheading: 'This is especially useful if you want to reorganize your menus.',
-          }),
+          content: '',
         },
         {
           id: 'kando-trash-tab',
