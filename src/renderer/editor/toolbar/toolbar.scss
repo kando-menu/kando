@@ -150,6 +150,8 @@
     padding-bottom: 10px;
 
     &:hover {
+      outline: 2px dashed rgba(255, 255, 255, 0.5);
+      outline-offset: -5px;
       margin-top: -20px;
       padding-bottom: 20px;
     }
