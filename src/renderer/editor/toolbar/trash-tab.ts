@@ -71,7 +71,9 @@ export class TrashTab extends EventEmitter {
   public setTrashedItems(items: Array<IMenu | IEditorNode>) {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(require('./templates/trash-tab.hbs').default);
+    const template = Handlebars.compile(
+      require('./templates/stash-trash-tab.hbs').default
+    );
 
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
@@ -100,6 +102,7 @@ export class TrashTab extends EventEmitter {
 
     // Update the tab's content.
     this.tab.innerHTML = template({
+      type: 'trash',
       placeholderHeading: 'You can delete menus and menu items by dropping them here!',
       placeholderSubheading: 'When you start Kando the next time, they will be gone.',
       items: data,

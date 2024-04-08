@@ -133,6 +133,12 @@
       background-image: url(../../assets/images/swirl-vertical.svg);
     }
   }
+
+  .toolbar-button-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(calc(100px + 10vw), 1fr));
+  }
 }
 
 // When dragging items, we highlight the potential drop targets.
@@ -155,20 +161,10 @@
   opacity: 1;
 }
 
-#trash-items-list,
-#menu-buttons-list {
-  .scrollbox-content {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(calc(100px + 10vw), 1fr));
-  }
-}
-
 // The menu tab buttons are attached to the #kando-editor container during drag-and-drop
 // operations. Therefore, we have to style them with this selector.
 #kando-editor .add-menu-button,
-#kando-editor .menu-selection-button,
-#kando-editor .trash-menu-button {
+#kando-editor .toolbar-menu-button {
   // The buttons are actually radio buttons. We hide the input element and style the label
   // instead. This way we get nice toggling behavior for free.
   input {

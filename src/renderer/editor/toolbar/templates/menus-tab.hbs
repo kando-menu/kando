@@ -29,11 +29,11 @@
 
   <div class='swirl vertical align-self-center d-none d-lg-block mx-3'></div>
 
-  <div class='flex-grow-1 align-content-start scrollbox mx-2' id='menu-buttons-list'>
-    <div class="scrollbox-content">
+  <div class='flex-grow-1 align-content-start scrollbox mx-2'>
+    <div class="scrollbox-content toolbar-button-grid">
       {{#each menus}}
         <div>
-          <label id="menu-button-{{index}}" class="d-flex kando-font btn btn-secondary menu-selection-button">
+          <label id="menu-button-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-menu-button">
             <input type="radio"
                   name="menu-selection-button"
                   data-index="{{index}}"
