@@ -46,7 +46,7 @@ export class StashTab extends EventEmitter {
     // Initialize the dragger. During the drag operation, the container will get the given
     // class name. This is used to highlight to the menus tab. When an item is dropped to
     // the menus tab, we emit the 'restore-menu' event.
-    this.dragger = new ToolbarItemDragger(container, 'dragging-menu-item', [
+    this.dragger = new ToolbarItemDragger(container, 'dragging-deletable-item', [
       this.container.querySelector(".nav-link[data-bs-target='#kando-trash-tab']"),
     ]);
     this.dragger.on('drop', (index) => this.emit('restore-item', index));
