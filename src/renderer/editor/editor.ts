@@ -96,6 +96,17 @@ export class Editor extends EventEmitter {
 
     // Initialize the preview.
     this.preview = new Preview();
+
+    this.preview.on('delete-item', (item) => {
+      this.trashedItems.push(item);
+      this.toolbar.setTrashedItems(this.trashedItems);
+    });
+
+    this.preview.on('stash-item', (item) => {
+      this.menuSettings.stash.push(item);
+      this.toolbar.setStashedItems(this.menuSettings.stash);
+    });
+
     this.container.appendChild(this.preview.getContainer());
 
     // Initialize the properties view.
@@ -267,6 +278,9 @@ export class Editor extends EventEmitter {
       this.menuSettings.menus.forEach((menu) => {
         menu.nodes = toINode(menu.nodes);
       });
+
+      // Also the stash needs to be converted back to INode objects.
+      this.menuSettings.stash = this.menuSettings.stash.map(toINode);
 
       window.api.menuSettings.set(this.menuSettings);
       this.menuSettings = null;

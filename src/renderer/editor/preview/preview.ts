@@ -25,8 +25,12 @@ import { IVec2, IMenu } from '../../../common';
  *
  * It will emit the following events:
  *
- * - 'select-item': This is emitted when a menu item is selected. The event data is the
- *   selected menu item.
+ * - @fires select-item - This is emitted when a menu item is selected. The event data is
+ *   the selected menu item.
+ * - @fires delete-item - This is emitted when a menu item is dragged to the trash tab. The
+ *   event data is the deleted menu item.
+ * - @fires stash-item - This is emitted when a menu item is dragged to the stash tab. The
+ *   event data is the stashed menu item.
  */
 export class Preview extends EventEmitter {
   /**
@@ -214,6 +218,12 @@ export class Preview extends EventEmitter {
     this.dragger.on('drag-start', (node, itemDiv) => {
       document.body.style.cursor = 'grabbing';
 
+      // We add a class to the toolbar to indicate that a deletable or stashable item is
+      // dragged. This is used to highlight the stash and trash tabs.
+      const toolbar = document.getElementById('kando-editor-toolbar-area');
+      toolbar.classList.add('dragging-deletable-item');
+      toolbar.classList.add('dragging-stashable-item');
+
       // If the node has a fixed angle, we do nothing. In this case, the item will be
       // rotated during the drag-move listener further down.
       if (node.angle !== undefined) {
@@ -349,6 +359,11 @@ export class Preview extends EventEmitter {
       itemDiv.style.top = '';
       itemDiv.classList.remove('dragging');
 
+      // Reset the toolbar class.
+      const toolbar = document.getElementById('kando-editor-toolbar-area');
+      toolbar.classList.remove('dragging-deletable-item');
+      toolbar.classList.remove('dragging-stashable-item');
+
       // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
       this.container.removeEventListener('pointerenter', dragEnter);
@@ -384,6 +399,21 @@ export class Preview extends EventEmitter {
         this.updateAllPositions();
 
         return;
+      }
+
+      // If the node has been dropped on the stash or trash tab, we emit the respective events.
+      const eventTargets = [
+        [".nav-link[data-bs-target='#kando-trash-tab']", 'delete-item'],
+        [".nav-link[data-bs-target='#kando-stash-tab']", 'stash-item'],
+      ];
+
+      for (const [selector, event] of eventTargets) {
+        const target = document.querySelector(selector);
+        if (target && target.matches(':hover')) {
+          this.emit(event, node);
+          itemDiv.remove();
+          return;
+        }
       }
 
       // If the node has been dropped on the canvas, we add it to the children of the
