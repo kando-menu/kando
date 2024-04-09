@@ -166,6 +166,7 @@
 // The menu tab buttons are attached to the #kando-editor container during drag-and-drop
 // operations. Therefore, we have to style them with this selector.
 #kando-editor .add-menu-button,
+#kando-editor .toolbar-item-button,
 #kando-editor .toolbar-menu-button {
   // The buttons are actually radio buttons. We hide the input element and style the label
   // instead. This way we get nice toggling behavior for free.

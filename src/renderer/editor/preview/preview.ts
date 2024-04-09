@@ -216,8 +216,6 @@ export class Preview extends EventEmitter {
     // during the drag. Items with fixed angles cannot be dragged freely but will only
     // rotate around the parent menu item.
     this.dragger.on('drag-start', (node, itemDiv) => {
-      document.body.style.cursor = 'grabbing';
-
       // We add a class to the toolbar to indicate that a deletable or stashable item is
       // dragged. This is used to highlight the stash and trash tabs.
       const toolbar = document.getElementById('kando-editor-toolbar-area');
@@ -354,7 +352,6 @@ export class Preview extends EventEmitter {
     // dragged item is dropped or when the drag operation is aborted.
     const onDragEnd = (itemDiv: HTMLElement) => {
       // Reset the position of the dragged div.
-      document.body.style.cursor = '';
       itemDiv.style.left = '';
       itemDiv.style.top = '';
       itemDiv.classList.remove('dragging');

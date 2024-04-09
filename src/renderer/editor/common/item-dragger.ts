@@ -96,6 +96,7 @@ export class ItemDragger<T> extends EventEmitter {
 
             if (this.currentlyDragged === null) {
               this.currentlyDragged = { div, data };
+              document.body.style.cursor = 'grabbing';
               this.emit('drag-start', data, div);
             }
 
@@ -115,6 +116,7 @@ export class ItemDragger<T> extends EventEmitter {
           this.emit('mouse-up', data, div);
 
           if (this.currentlyDragged) {
+            document.body.style.cursor = '';
             this.emit('drag-end', this.currentlyDragged.data, this.currentlyDragged.div);
             this.currentlyDragged = null;
           } else {
@@ -127,6 +129,7 @@ export class ItemDragger<T> extends EventEmitter {
         const onEsc = (e2: KeyboardEvent) => {
           if (e2.key === 'Escape') {
             if (this.currentlyDragged) {
+              document.body.style.cursor = '';
               this.emit(
                 'drag-cancel',
                 this.currentlyDragged.data,
