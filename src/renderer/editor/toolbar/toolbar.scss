@@ -228,6 +228,19 @@
   }
 }
 
+// The buttons in the trash and stash tabs are a bit special in that they can only be
+// dragged. We indicate this by changing the cursor and not changing the background color
+// on click.
+#kando-trash-tab .toolbar-menu-button,
+#kando-trash-tab .toolbar-item-button,
+#kando-stash-tab .toolbar-item-button {
+  cursor: grab;
+
+  &:active {
+    background-color: var(--bs-btn-hover-bg);
+  }
+}
+
 // The add-new-menu button is a special case. It features a nice transition when hovered.
 #kando-editor .add-menu-button {
   transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
