@@ -241,6 +241,52 @@
   }
 }
 
+// Menu item buttons are styled differently. They look like the items in the preview.
+#kando-editor .toolbar-item-button {
+  background: transparent !important;
+
+  &.dragging {
+    backdrop-filter: none;
+  }
+
+  .name {
+    border-bottom: 2px dashed white;
+  }
+
+  // Add the small connector line.
+  div:has(.name) {
+    @include rfs(1rem, margin-left);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform-origin: left;
+      @include rfs(1.5rem, width);
+      border-bottom: 2px dashed white;
+      transform: rotate(195deg);
+    }
+  }
+
+  // Invert the icon color.
+  div:has(.icon-container) {
+    background-color: transparent;
+    border: 2px solid white;
+    i {
+      color: white;
+    }
+  }
+
+  // Highlight the icon on hover.
+  &:hover {
+    div:has(.icon-container) {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
 // The add-new-menu button is a special case. It features a nice transition when hovered.
 #kando-editor .add-menu-button {
   transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
