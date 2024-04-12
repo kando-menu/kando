@@ -92,6 +92,8 @@
     // Some tabs have a tiny counter which for instance displays the number of items in
     // the trash or stash.
     .counter {
+      @include rfs(1.1rem, font-size);
+      vertical-align: text-bottom;
       border-radius: 30%;
       padding: 0.2em 0.2em 0 0.2em;
       margin: 0 0.2em;
