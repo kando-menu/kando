@@ -99,6 +99,10 @@
     }
   }
 
+  .tab-pane {
+    border-radius: var(--bs-border-radius);
+  }
+
   .tab-content {
     height: calc($toolbar-height - $toolbar-tab-height);
     border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
@@ -149,12 +153,16 @@
     margin-top: -10px;
     padding-bottom: 10px;
 
-    &:hover {
+    &:hover:not(.active) {
       outline: 2px dashed rgba(255, 255, 255, 0.5);
       outline-offset: -5px;
-      margin-top: -20px;
-      padding-bottom: 20px;
     }
+  }
+
+  &.dragging-stashable-item #kando-stash-tab:hover,
+  &.dragging-deletable-item #kando-trash-tab:hover {
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
+    outline-offset: -5px;
   }
 }
 

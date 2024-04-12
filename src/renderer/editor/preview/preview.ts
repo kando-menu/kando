@@ -402,6 +402,8 @@ export class Preview extends EventEmitter {
       const eventTargets = [
         [".nav-link[data-bs-target='#kando-trash-tab']", 'delete-item'],
         [".nav-link[data-bs-target='#kando-stash-tab']", 'stash-item'],
+        ['#kando-trash-tab', 'delete-item'],
+        ['#kando-stash-tab', 'stash-item'],
       ];
 
       for (const [selector, event] of eventTargets) {
