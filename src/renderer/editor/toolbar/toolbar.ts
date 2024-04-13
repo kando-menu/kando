@@ -20,24 +20,26 @@ import { IEditorNode } from '../common/editor-node';
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
  * event emitter which emits the following events:
  *
- * - 'enter-edit-mode': This event is emitted when the user enters edit mode.
- * - 'leave-edit-mode': This event is emitted when the user leaves edit mode.
- * - 'expand': This event is emitted when a tab is selected which should cover the entire
- *   editor.
- * - 'collapse': This event is emitted when a tab is selected which should not cover the
+ * @fires enter-edit-mode - This event is emitted when the user enters edit mode.
+ * @fires leave-edit-mode - This event is emitted when the user leaves edit mode.
+ * @fires expand - This event is emitted when a tab is selected which should cover the
  *   entire editor.
- *
- * The following events are forwarded from the menus tab:
- *
- * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
- *   index of the selected menu is passed as the first argument.
- * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
- * - 'delete-menu': This event is emitted when the user drags a menu to the trash tab.
- *
- * The following events are forwarded from the trash tab:
- *
- * - 'restore-deleted-menu': This event is emitted when the user drags a menu from the trash
- *   tab to the menus tab.
+ * @fires collapse - This event is emitted when a tab is selected which should not cover
+ *   the entire editor.
+ * @fires add-menu - This event is emitted when the user clicks the "Add Menu" button.
+ * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
+ *   The index of the selected menu is passed as the first argument.
+ * @fires delete-menu - This event is emitted when the user drags a menu to the trash tab.
+ * @fires restore-deleted-menu - This event is emitted when the user drags a menu from the
+ *   trash tab to the menus tab.
+ * @fires restore-deleted-item - This event is emitted when the user drags a menu item
+ *   from the trash tab to the preview area.
+ * @fires stash-deleted-item - This event is emitted when the user drags a menu item from
+ *   the trash tab to the stash tab.
+ * @fires restore-stashed-item - This event is emitted when the user drags a menu item
+ *   from the stash tab to the preview area.
+ * @fires delete-stashed-item - This event is emitted when the user drags a menu item from
+ *   the stash tab to the trash tab.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -75,10 +77,13 @@ export class Toolbar extends EventEmitter {
     // Initialize the trash tab and forward its events.
     this.trashTab = new TrashTab(this.container);
     this.trashTab.on('restore-menu', (index) => this.emit('restore-deleted-menu', index));
+    this.trashTab.on('restore-item', (index) => this.emit('restore-deleted-item', index));
+    this.trashTab.on('stash-item', (index) => this.emit('stash-deleted-item', index));
 
     // Initialize the stash tab and forward its events.
     this.stashTab = new StashTab(this.container);
     this.stashTab.on('restore-item', (index) => this.emit('restore-stashed-item', index));
+    this.stashTab.on('delete-item', (index) => this.emit('delete-stashed-item', index));
   }
 
   /** This method returns the container of the editor toolbar. */

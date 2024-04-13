@@ -148,10 +148,13 @@
 }
 
 // When dragging items, we highlight the potential drop targets.
-#kando-editor-toolbar-area {
-  &.dragging-menu-item .nav-link[data-bs-target='#kando-menus-tab'],
-  &.dragging-deletable-item .nav-link[data-bs-target='#kando-trash-tab'],
-  &.dragging-stashable-item .nav-link[data-bs-target='#kando-stash-tab'] {
+#kando-editor {
+  &.dragging-menu-from-trash-tab .nav-link[data-bs-target='#kando-menus-tab'],
+  &.dragging-menu-from-menus-tab .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-item-from-stash-tab .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-item-from-trash-tab .nav-link[data-bs-target='#kando-stash-tab'],
+  &.dragging-item-from-preview .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-item-from-preview .nav-link[data-bs-target='#kando-stash-tab'] {
     margin-top: -10px;
     padding-bottom: 10px;
 
@@ -161,8 +164,8 @@
     }
   }
 
-  &.dragging-stashable-item #kando-stash-tab:hover,
-  &.dragging-deletable-item #kando-trash-tab:hover {
+  &.dragging-item-from-preview #kando-stash-tab:hover,
+  &.dragging-item-from-preview #kando-trash-tab:hover {
     outline: 2px dashed rgba(255, 255, 255, 0.5);
     outline-offset: -5px;
   }

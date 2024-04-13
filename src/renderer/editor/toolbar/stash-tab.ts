@@ -16,7 +16,15 @@ import { IEditorNode } from '../common/editor-node';
 
 /**
  * This class represents the stash tab in the toolbar. Users can drop menu items here to
- * stash them for later use.
+ * stash them for later use. The class is an event emitter which emits the following
+ * events:
+ *
+ * @fires restore-item - This event is emitted when the user drags a menu item from the
+ *   stash tab to the preview area. The index of the restored item is passed as the first
+ *   argument.
+ * @fires delete-item - This event is emitted when the user drags a menu item from the
+ *   stash tab to the trash tab. The index of the deleted item is passed as the first
+ *   argument.
  */
 export class StashTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
@@ -29,7 +37,14 @@ export class StashTab extends EventEmitter {
    * This is used to drag'n'drop menus from the stash to the trash tab or the menus
    * preview.
    */
-  private dragger: ToolbarItemDragger<number> = null;
+  private dragger: ToolbarItemDragger = null;
+
+  /**
+   * These are all potential drop targets for dragged menu items. Menu items can be
+   * dropped to the trash tab or to the menu preview.
+   */
+  private trashTab: HTMLElement = null;
+  private preview: HTMLElement = null;
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -43,18 +58,29 @@ export class StashTab extends EventEmitter {
     // drag'n'drop operations.
     this.container = container;
 
-    // Initialize the dragger. During the drag operation, the container will get the given
-    // class name. This is used to highlight to the menus tab. When an item is dropped to
-    // the menus tab, we emit the 'restore-menu' event.
-    this.dragger = new ToolbarItemDragger(container, 'dragging-deletable-item', [
-      this.container.querySelector(".nav-link[data-bs-target='#kando-trash-tab']"),
-    ]);
-    this.dragger.on('drop', (index) => this.emit('restore-item', index));
+    // Store a reference to the potential drop targets.
+    this.trashTab = this.container.querySelector(
+      ".nav-link[data-bs-target='#kando-trash-tab']"
+    ) as HTMLElement;
+
+    this.preview = document.querySelector('#kando-menu-preview-area') as HTMLElement;
+
+    // Initialize the dragger. This will be used to make the item buttons draggable. When
+    // a menu item is dropped to the trash tab, we emit the 'delete-item' event. If a menu
+    // item is dropped to the preview area, we emit the 'restore-item' event.
+    this.dragger = new ToolbarItemDragger();
+    this.dragger.on('drop', (index, dropTarget) => {
+      if (dropTarget === this.preview) {
+        this.emit('restore-item', index);
+      } else {
+        this.emit('delete-item', index);
+      }
+    });
 
     // The tab has been created in the toolbar's constructor.
     this.tab = this.container.querySelector('#kando-stash-tab');
 
-    // Initialize the trash tab with an empty list of trashed items.
+    // Initialize the stash tab with an empty list of items.
     this.setStashedItems([]);
   }
 
@@ -90,10 +116,15 @@ export class StashTab extends EventEmitter {
       items: data,
     });
 
-    // Add drag'n'drop logic to the menu buttons.
+    // Add drag'n'drop logic to the menu buttons. The menu items can be dragged to the
+    // trash tab or to the menu preview.
     for (const item of data) {
       const div = document.getElementById(`stash-item-${item.index}`);
-      this.dragger.addDraggable(div, item.index);
+      this.dragger.addDraggable(div, {
+        index: item.index,
+        dragClass: 'dragging-item-from-stash-tab',
+        dropTargets: [this.trashTab, this.preview],
+      });
     }
 
     // Set the counter value.

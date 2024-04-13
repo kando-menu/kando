@@ -24,8 +24,8 @@ import { IEditorNode, toINode } from './common/editor-node';
  * properties view, the sidebar and the toolbar. It is an event emitter and will emit the
  * following events:
  *
- * - 'enter-edit-mode': This is emitted when the user enters edit mode.
- * - 'leave-edit-mode': This is emitted when the user leaves edit mode.
+ * @fires enter-edit-mode - This is emitted when the user enters edit mode.
+ * @fires leave-edit-mode - This is emitted when the user leaves edit mode.
  */
 export class Editor extends EventEmitter {
   /** The container is the HTML element which contains the menu editor. */
@@ -122,7 +122,6 @@ export class Editor extends EventEmitter {
     this.toolbar = new Toolbar();
 
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
-
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
 
     this.toolbar.on('expand', () => {
@@ -133,19 +132,6 @@ export class Editor extends EventEmitter {
     this.toolbar.on('collapse', () => {
       this.preview.show();
       this.properties.show();
-    });
-
-    this.toolbar.on('select-menu', (index: number) => {
-      this.currentMenu = index;
-      this.preview.setMenu(this.menuSettings.menus[index]);
-    });
-
-    this.toolbar.on('delete-menu', (index: number) => {
-      this.trashedItems.push(this.menuSettings.menus.splice(index, 1)[0]);
-      this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
-      this.toolbar.setTrashedItems(this.trashedItems);
     });
 
     this.toolbar.on('add-menu', () => {
@@ -194,10 +180,43 @@ export class Editor extends EventEmitter {
       this.preview.setMenu(newMenu);
     });
 
+    this.toolbar.on('select-menu', (index: number) => {
+      this.currentMenu = index;
+      this.preview.setMenu(this.menuSettings.menus[index]);
+    });
+
+    this.toolbar.on('delete-menu', (index: number) => {
+      this.trashedItems.push(this.menuSettings.menus.splice(index, 1)[0]);
+      this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
+      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
+      this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
+      this.toolbar.setTrashedItems(this.trashedItems);
+    });
+
     this.toolbar.on('restore-deleted-menu', (index: number) => {
       this.menuSettings.menus.push(this.trashedItems.splice(index, 1)[0] as IMenu);
       this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
       this.toolbar.setTrashedItems(this.trashedItems);
+    });
+
+    this.toolbar.on('restore-deleted-item', (index: number) => {
+      console.log('restore-deleted-item', index);
+    });
+
+    this.toolbar.on('stash-deleted-item', (index: number) => {
+      this.menuSettings.stash.push(this.trashedItems.splice(index, 1)[0] as IEditorNode);
+      this.toolbar.setTrashedItems(this.trashedItems);
+      this.toolbar.setStashedItems(this.menuSettings.stash);
+    });
+
+    this.toolbar.on('restore-stashed-item', (index: number) => {
+      console.log('restore-stashed-item', index);
+    });
+
+    this.toolbar.on('delete-stashed-item', (index: number) => {
+      this.trashedItems.push(this.menuSettings.stash.splice(index, 1)[0]);
+      this.toolbar.setTrashedItems(this.trashedItems);
+      this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
     this.container.appendChild(this.toolbar.getContainer());
