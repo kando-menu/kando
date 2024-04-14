@@ -81,6 +81,24 @@ export class Preview extends EventEmitter {
   private dropIndicator: HTMLElement = null;
 
   /**
+   * During drag'n'drop operations, this is the menu item where the dragged item would be
+   * dropped.
+   */
+  private dropTarget: IEditorNode | null = null;
+
+  /**
+   * During drag'n'drop operations, this is the index where the dragged item would be
+   * inserted into the children of the drop target.
+   */
+  private dropIndex: number | null = null;
+
+  /**
+   * This is the index of the dragged child. It is used to re-add the child to the correct
+   * position when the drag operation is aborted.
+   */
+  private dragIndex: number | null = null;
+
+  /**
    * This is the position of the preview center. It is used to compute the angles of the
    * menu items during drag'n'drop.
    */
@@ -200,7 +218,7 @@ export class Preview extends EventEmitter {
 
     const dragLeave = () => {
       dragOverPreview = false;
-      dropIndex = null;
+      this.dropIndex = null;
     };
 
     this.dragger.on('mouse-down', (node, itemDiv) => {
@@ -230,7 +248,7 @@ export class Preview extends EventEmitter {
       // Store the index of the dragged child. We need this to re-add the child to the
       // correct position when the drag operation is aborted.
       const centerItem = this.getCenterItem();
-      dragIndex = centerItem.children.indexOf(node);
+      this.dragIndex = centerItem.children.indexOf(node);
 
       // Remove the dragged child from parent's children.
       const index = centerItem.children.indexOf(node);
@@ -250,7 +268,6 @@ export class Preview extends EventEmitter {
       // Compute the angle towards the dragged item.
       const relativePosition = math.subtract(absolute, this.previewCenter);
       const dragAngle = math.getAngle(relativePosition);
-      const centerItem = this.getCenterItem();
 
       // If the node has a fixed angle, we cannot move it around freely. Instead, we
       // update its fixed angle when it's dragged around. For now, we limit the movement
@@ -261,6 +278,7 @@ export class Preview extends EventEmitter {
         // Within the list of children, the fixed angles must by monotonically increasing.
         // That means that we may have to reorder the children if the node is dragged
         // beyond the next or previous child with a fixed angle.
+        const centerItem = this.getCenterItem();
         let index = centerItem.children.indexOf(node);
 
         // First, we search for the child with the largest fixed angle which is smaller
@@ -296,6 +314,8 @@ export class Preview extends EventEmitter {
       itemDiv.style.left = `${relative.x}px`;
       itemDiv.style.top = `${relative.y}px`;
 
+      const centerItem = this.getCenterItem();
+
       // If something is dragged over the preview, we compute the index where the item
       // would be dropped. The child items will be re-arranged to leave a gap for the
       // to-be-dropped item.
@@ -311,12 +331,12 @@ export class Preview extends EventEmitter {
         newDropIndex = result.dropIndex;
       }
 
-      if (newDropTarget !== dropTarget || newDropIndex !== dropIndex) {
-        dropIndex = newDropIndex;
-        dropTarget = newDropTarget;
+      if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
+        this.dropIndex = newDropIndex;
+        this.dropTarget = newDropTarget;
 
-        if (dropTarget === centerItem) {
-          node.computedAngle = this.recomputeItemAngles(dropIndex);
+        if (this.dropTarget === centerItem) {
+          node.computedAngle = this.recomputeItemAngles(this.dropIndex);
           this.computeItemAnglesRecursively(node);
           this.updateChildPosition(node);
         } else {
@@ -328,17 +348,17 @@ export class Preview extends EventEmitter {
       // the drop index position.
       const parentItem = this.getParentItem();
 
-      if (dropTarget === parentItem) {
+      if (this.dropTarget === parentItem) {
         this.updateDropIndicatorPosition(utils.getParentAngle(centerItem));
-      } else if (dropTarget === centerItem) {
+      } else if (this.dropTarget === centerItem) {
         this.updateDropIndicatorPosition(node.computedAngle);
-      } else if (dropTarget !== null) {
-        this.updateDropIndicatorPosition(dropTarget.computedAngle);
+      } else if (this.dropTarget !== null) {
+        this.updateDropIndicatorPosition(this.dropTarget.computedAngle);
       }
 
       // We show the drop indicator if something is dragged over the preview and if there
       // is a potential drop location.
-      if (dragOverPreview && dropIndex !== null) {
+      if (dragOverPreview && this.dropIndex !== null) {
         this.dropIndicator.classList.add('visible');
       } else {
         this.dropIndicator.classList.remove('visible');
@@ -381,15 +401,15 @@ export class Preview extends EventEmitter {
       // added to the children of the drop target.
       const centerItem = this.getCenterItem();
 
-      if (dropTarget && dropTarget !== centerItem) {
-        dropTarget.children.push(node);
-        this.computeItemAnglesRecursively(dropTarget);
+      if (this.dropTarget && this.dropTarget !== centerItem) {
+        this.dropTarget.children.push(node);
+        this.computeItemAnglesRecursively(this.dropTarget);
 
         // Remove the dragged item from the DOM.
         itemDiv.remove();
 
-        dropIndex = null;
-        dragIndex = null;
+        this.dropIndex = null;
+        this.dragIndex = null;
 
         this.updateAllPositions();
 
@@ -416,10 +436,10 @@ export class Preview extends EventEmitter {
       // If the node has been dropped on the canvas, we add it to the children of the
       // center item at the correct position. If there is currently no drop index, we
       // drop the item where it was before.
-      if (dropIndex !== null || dragIndex !== null) {
-        centerItem.children.splice(dropIndex ?? dragIndex, 0, node);
-        dropIndex = null;
-        dragIndex = null;
+      if (this.dropIndex !== null || this.dragIndex !== null) {
+        centerItem.children.splice(this.dropIndex ?? this.dragIndex, 0, node);
+        this.dropIndex = null;
+        this.dragIndex = null;
       }
 
       // In any case, we redraw the menu.
@@ -440,10 +460,10 @@ export class Preview extends EventEmitter {
       onDragEnd(itemDiv);
 
       // We simply drop the item where it was before.
-      if (dragIndex !== null) {
-        this.getCenterItem().children.splice(dragIndex, 0, node);
-        dropIndex = null;
-        dragIndex = null;
+      if (this.dragIndex !== null) {
+        this.getCenterItem().children.splice(this.dragIndex, 0, node);
+        this.dropIndex = null;
+        this.dragIndex = null;
       }
 
       // Finally, redraw the menu.
