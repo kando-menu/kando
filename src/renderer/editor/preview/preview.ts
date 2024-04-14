@@ -359,9 +359,9 @@ export class Preview extends EventEmitter {
       // We show the drop indicator if something is dragged over the preview and if there
       // is a potential drop location.
       if (dragOverPreview && this.dropIndex !== null) {
-        this.dropIndicator.classList.add('visible');
+        this.showDropIndicator();
       } else {
-        this.dropIndicator.classList.remove('visible');
+        this.hideDropIndicator();
       }
 
       this.updateAllPositions();
@@ -379,8 +379,7 @@ export class Preview extends EventEmitter {
       const editor = document.getElementById('kando-editor');
       editor.classList.remove('dragging-item-from-preview');
 
-      // Hide the drop indicator.
-      this.dropIndicator.classList.remove('visible');
+      this.hideDropIndicator();
       this.container.removeEventListener('pointerenter', dragEnter);
       this.container.removeEventListener('pointerleave', dragLeave);
     };
@@ -695,6 +694,20 @@ export class Preview extends EventEmitter {
         );
       });
     }
+  }
+
+  /**
+   * This method shows the drop indicator. The drop indicator is a little div which
+   * becomes visible when something is dragged over the preview. This is used to indicate
+   * where the dragged item would be dropped.
+   */
+  private showDropIndicator() {
+    this.dropIndicator.classList.add('visible');
+  }
+
+  /** This method hides the drop indicator. */
+  private hideDropIndicator() {
+    this.dropIndicator.classList.remove('visible');
   }
 
   /**
