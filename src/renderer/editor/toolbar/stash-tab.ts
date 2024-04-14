@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
-import { ToolbarItemDragger } from '../common/toolbar-item-dragger';
+import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../common/editor-node';

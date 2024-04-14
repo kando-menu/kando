@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ItemDragger } from './item-dragger';
+import { ItemDragger } from '../common/item-dragger';
 
 /**
  * The `dragClass` is a class name which will be added to the #kando-editor during the
