@@ -31,7 +31,8 @@ export interface DraggedItemInfo {
  * for example by the trash tab to drag items from the trash back to the menus tab or back
  * to the preview area.
  *
- * The class is an `EventEmitter` and emits the following events:
+ * The class is an `EventEmitter` and emits the following events in addition to the events
+ * emitted by the `ItemDragger` class:
  *
  * @fires drop - When an item is successfully dropped onto a drop target, this event is
  *   emitted. The event data is the `index` which was passed to the `addDraggable` method
