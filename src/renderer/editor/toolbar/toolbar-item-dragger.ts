@@ -39,9 +39,8 @@ export interface DraggedItemInfo {
  */
 export class ToolbarItemDragger extends ItemDragger<DraggedItemInfo> {
   /**
-   * This constructor creates a new ToolbarItemDragger. It takes a `dragContainer` which
-   * is the container to which the dragged div will be appended during the drag
-   * operation.
+   * This constructor creates a new ToolbarItemDragger. It will store a reference to the
+   * #kando-editor element, so this element must exist when the constructor is called.
    */
   constructor() {
     super();
