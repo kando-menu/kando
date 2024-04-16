@@ -1,0 +1,320 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+import { IEditorNode } from '../common/editor-node';
+import { ItemDragger } from '../common/item-dragger';
+import * as utils from './utils';
+import * as math from '../../math';
+import { IVec2 } from '../../../common';
+
+/**
+ * This class is a specialized ItemDragger which is used to drag menu nodes in the
+ * editor's preview. In addition to making the given nodes draggable, it also adds support
+ * for drag and drop operations from the toolbar.
+ *
+ * While this class has access to the entire menu structure, it will not modify it.
+ * Instead, it will emit events which can be used to modify the menu structure from the
+ * outside. It emits the following events in addition to the events emitted by the
+ * `ItemDragger` class:
+ *
+ * @fires drag-node - When a node node is dragged over the preview. The event data is the
+ *   dragged node, the index of the dragged node (if it was an internal drag-and-drop
+ *   operation), the target node (if there is a valid drop target currently, else
+ *   undefined) and the index where the node should be inserted into the target node's
+ *   children.
+ * @fires drop-node - When a menu node is successfully dropped onto a drop target. The
+ *   event data is the dragged node, the index of the dragged node (if it was an internal
+ *   drag-and-drop operation), the target node and the index where the node should be
+ *   inserted into the target node's children.
+ * @fired update-fixed-angle - When a node with a fixed angle is dragged around. The event
+ *  data is the dragged node and the new angle.
+ */
+export class PreviewItemDragger extends ItemDragger<IEditorNode> {
+  /**
+   * The container is the HTML element which contains the menu preview. It is passed to
+   * the constructor.
+   */
+  private container: HTMLElement = null;
+
+  /** This is the current center node of the preview. */
+  private centerItem: IEditorNode = null;
+
+  /** This is the parent node of the center node. */
+  private parentItem: IEditorNode = null;
+
+  /**
+   * During drag'n'drop operations, this is the menu item where the dragged item would be
+   * dropped.
+   */
+  private dropTarget: IEditorNode | null = null;
+
+  /**
+   * During drag'n'drop operations, this is the index where the dragged item would be
+   * inserted into the children of the drop target.
+   */
+  private dropIndex: number | null = null;
+
+  /**
+   * This is the index of the dragged child. It is used to re-add the child to the correct
+   * position when the drag operation is aborted.
+   */
+  private dragIndex: number | null = null;
+
+  /**
+   * This is the position of the preview center. It is used to compute the angles of the
+   * menu items during drag'n'drop.
+   */
+  private previewCenter?: IVec2 = null;
+
+  constructor(container: HTMLElement) {
+    super();
+
+    this.container = container;
+
+    // When the window is resized, we have to recompute the preview center. It is used
+    // to compute the angles of the menu items during drag'n'drop.
+    window.addEventListener('resize', () => {
+      this.previewCenter = utils.computeCenter(this.container);
+    });
+
+    this.on('mouse-down', (node, itemDiv) => {
+      itemDiv.classList.add('clicking');
+    });
+
+    this.on('mouse-up', (node, itemDiv) => {
+      itemDiv.classList.remove('clicking');
+    });
+
+    this.initInternalDragging();
+    this.initExternalDragging();
+  }
+
+  /**
+   * This is called by the `Preview` class whenever a new menu is displayed.
+   *
+   * @param centerItem The menu node which is currently shown in preview.
+   * @param parentItem The parent menu of the centerNode. Will be `undefined` for the root
+   *   node.
+   */
+  public setCenterItem(centerItem: IEditorNode, parentItem: IEditorNode) {
+    this.centerItem = centerItem;
+    this.parentItem = parentItem;
+
+    // This actually has to be done only once after the menu preview has been added to
+    // the DOM and during window resize events. However, we do not have a good place for
+    // this, so we do it here.
+    this.previewCenter = utils.computeCenter(this.container);
+  }
+
+  public getLastDropTarget() {
+    return { dropTarget: this.dropTarget, dropIndex: this.dropIndex };
+  }
+
+  /** This methods sets up the logic required for reordering menu nodes in the preview. */
+  private initInternalDragging() {
+    // We keep track whether something is currently dragged over the preview area. This
+    // way we can reset the drop target if the dragged node leaves the preview area.
+    let dragOverPreview = false;
+
+    const dragEnter = () => {
+      dragOverPreview = true;
+    };
+
+    const dragLeave = () => {
+      dragOverPreview = false;
+    };
+
+    // This is called when a menu item is started to be dragged. Menu items without fixed
+    // angles can be dragged freely around and will be detached from the parent menu
+    // during the drag. Items with fixed angles cannot be dragged freely but will only
+    // rotate around the parent menu item.
+    this.on('drag-start', (node, itemDiv) => {
+      // If the node has a fixed angle, we do nothing. In this case, the item will be
+      // rotated during the drag-move listener further down.
+      if (node.angle !== undefined) {
+        return;
+      }
+
+      // We add a class to the editor to indicate that a menu item is currently dragged.
+      // This is used to highlight the stash and trash tabs.
+      const editor = document.getElementById('kando-editor');
+      editor.classList.add('dragging-item-from-preview');
+
+      // Store the index of the dragged child. We need to exclude it from all angle
+      // computations during the drag operation as it will be visually detached from the
+      // parent menu.
+      this.dragIndex = this.centerItem.children.indexOf(node);
+      this.dropIndex = null;
+      this.dropTarget = null;
+
+      itemDiv.classList.add('dragging');
+
+      dragOverPreview = true;
+      this.container.addEventListener('pointerenter', dragEnter);
+      this.container.addEventListener('pointerleave', dragLeave);
+    });
+
+    // This is called when a menu item is dragged around. Menu items without fixed angles
+    // will be moved around freely. If the item has a fixed angle, it will be rotated
+    // around the parent menu item.
+    this.on('drag-move', (node, itemDiv, relative, absolute) => {
+      // Compute the angle towards the dragged item.
+      const relativePosition = math.subtract(absolute, this.previewCenter);
+      const dragAngle = math.getAngle(relativePosition);
+
+      // If the node has a fixed angle, we cannot move it around freely. Instead, we
+      // update its fixed angle when it's dragged around. For now, we limit the movement
+      // to 15 degree steps.
+      if (node.angle !== undefined) {
+        const angle = Math.round(dragAngle / 15) * 15;
+        this.emit('update-fixed-angle', node, angle);
+        return;
+      }
+
+      // Update the position of the dragged div.
+      itemDiv.style.left = `${relative.x}px`;
+      itemDiv.style.top = `${relative.y}px`;
+
+      // If something is dragged over the preview, we compute the index where the item
+      // would be dropped. The child items will be re-arranged to leave a gap for the
+      // to-be-dropped item.
+      let newDropTarget = null;
+      let newDropIndex = null;
+
+      if (dragOverPreview) {
+        const result = utils.computeDropTarget(
+          this.centerItem,
+          dragAngle,
+          this.dragIndex
+        );
+
+        // If the returned drop target is null, it is supposed to be dropped on the
+        // parent item.
+        newDropTarget = result.dropTarget ?? this.parentItem;
+        newDropIndex = result.dropIndex;
+      }
+
+      if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
+        this.dropIndex = newDropIndex;
+        this.dropTarget = newDropTarget;
+
+        this.emit('drag-node', node, this.dragIndex, this.dropTarget, this.dropIndex);
+      }
+    });
+
+    // This is called when a drag operation is finished. This happens either when the
+    // dragged item is dropped or when the drag operation is aborted.
+    const onDragEnd = (itemDiv: HTMLElement) => {
+      // Reset the position of the dragged div.
+      itemDiv.style.left = '';
+      itemDiv.style.top = '';
+      itemDiv.classList.remove('dragging');
+
+      // Reset the toolbar class.
+      const editor = document.getElementById('kando-editor');
+      editor.classList.remove('dragging-item-from-preview');
+
+      this.container.removeEventListener('pointerenter', dragEnter);
+      this.container.removeEventListener('pointerleave', dragLeave);
+    };
+
+    // This is called when a menu item is dropped.
+    this.on('drag-end', (node, itemDiv) => {
+      // If the node has a fixed angle, we do nothing. In this case, the item was only
+      // rotated during the drag operation but not removed from the parent menu.
+      if (node.angle !== undefined) {
+        return;
+      }
+
+      this.emit('drop-node', node, this.dragIndex, this.dropTarget, this.dropIndex);
+
+      // Reset the position of the dragged div and hide the drop indicator.
+      onDragEnd(itemDiv);
+    });
+
+    // This is called when a drag operation is aborted. The dragged item is re-added to the
+    // parent menu.
+    this.on('drag-cancel', (node, itemDiv) => {
+      // If the node has a fixed angle, we do nothing. In this case, the item was only
+      // rotated during the drag operation but not removed from the parent menu.
+      if (node.angle !== undefined) {
+        return;
+      }
+
+      // Reset the position of the dragged div and hide the drop indicator.
+      onDragEnd(itemDiv);
+    });
+  }
+
+  /**
+   * This methods sets up the logic required for dragging nodes from the toolbar to the
+   * preview. We basically try to detect if something is dragged over the preview area and
+   * emit the `drag-node` event accordingly. We do not emit the `drop-node` signal.
+   * Instead, the editor will tell the preview when a node from the toolbar is dropped to
+   * the preview.
+   */
+  private initExternalDragging() {
+    let externalDragOngoing = false;
+    const editor = document.getElementById('kando-editor');
+
+    const dragEnter = (event: PointerEvent) => {
+      if (
+        event.buttons === 1 &&
+        (editor.classList.contains('dragging-item-from-stash-tab') ||
+          editor.classList.contains('dragging-item-from-trash-tab'))
+      ) {
+        externalDragOngoing = true;
+      }
+    };
+
+    const move = (event: PointerEvent) => {
+      if (!externalDragOngoing) {
+        return;
+      }
+
+      // Compute the angle towards the dragged item.
+      const relativePosition = math.subtract(
+        { x: event.clientX, y: event.clientY },
+        this.previewCenter
+      );
+      const dragAngle = math.getAngle(relativePosition);
+
+      // If something is dragged over the preview, we compute the index where the item
+      // would be dropped. The child items will be re-arranged to leave a gap for the
+      // to-be-dropped item.
+
+      const result = utils.computeDropTarget(this.centerItem, dragAngle);
+
+      // If the returned drop target is null, it is supposed to be dropped on the
+      // parent item.
+      const newDropTarget = result.dropTarget ?? this.parentItem;
+      const newDropIndex = result.dropIndex;
+
+      if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
+        this.dropIndex = newDropIndex;
+        this.dropTarget = newDropTarget;
+
+        this.emit('drag-node', null, null, this.dropTarget, this.dropIndex);
+      }
+    };
+
+    const cancel = () => {
+      if (externalDragOngoing) {
+        externalDragOngoing = false;
+        this.emit('drag-node', null, null, null, null);
+      }
+    };
+
+    this.container.addEventListener('pointerenter', dragEnter);
+    this.container.addEventListener('pointermove', move);
+    this.container.addEventListener('pointerleave', cancel);
+    this.container.addEventListener('pointerup', cancel);
+  }
+}

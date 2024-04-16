@@ -58,7 +58,7 @@ export function getParentWithClass(div: HTMLElement, className: string) {
 /**
  * This is used to compute the drop target during drag-and-drop operations in the menu
  * preview. It computes the drop index by testing all possible indices and choosing the
- * one which results in the smallest angle between the dragged item and the drop
+ * one which results in the smallest angle between the currently dragged item and the drop
  * position.
  *
  * It is also possible to drop the dragged item into a submenu. In this case, the drop
@@ -69,18 +69,28 @@ export function getParentWithClass(div: HTMLElement, className: string) {
  *
  * @param centerItem The menu item into which the dragged item is about to be dropped.
  * @param dragAngle The angle of the dragged item.
+ * @param dragIndex If the dragged item is a child of centerItem, this is the index of the
+ *   dragged item in centerItem.children. It will be excluded from the list of possible
+ *   drop targets and ignored when computing node angles.
  * @returns The node to drop the item into and the index where to drop it.
  */
 export function computeDropTarget(
   centerItem: IEditorNode,
-  dragAngle: number
+  dragAngle: number,
+  dragIndex?: number
 ): {
   dropTarget: IEditorNode;
   dropIndex: number;
 } {
   // There are a few special cases when there are only a few items in the menu.
-  // If there are no other children, it's easy: We simply drop at index zero.
+  // If there are no children, it's easy: We simply drop at index zero.
   if (!centerItem.children || centerItem.children.length === 0) {
+    return { dropTarget: centerItem, dropIndex: 0 };
+  }
+
+  // Also, if there is only one child and it's the one we are dragging, we drop at index
+  // zero.
+  if (centerItem.children.length === 1 && dragIndex === 0) {
     return { dropTarget: centerItem, dropIndex: 0 };
   }
 
@@ -88,16 +98,13 @@ export function computeDropTarget(
   // dragged item and the drop position candidate. We choose the index which results in
   // the smallest angle.
   const parentAngle = getParentAngle(centerItem);
+  const candidates = centerItem.children.filter((_, i) => i !== dragIndex);
   let bestIndex = 0;
   let bestDiff = 180;
   let dropTarget = centerItem;
 
   for (let i = 0; i <= centerItem.children.length; i++) {
-    const { dropAngle } = computeItemAnglesWithDropIndex(
-      centerItem.children,
-      i,
-      parentAngle
-    );
+    const { dropAngle } = computeItemAnglesWithDropIndex(candidates, i, parentAngle);
 
     const diff = math.getAngularDifference(dragAngle, dropAngle);
     if (diff < bestDiff) {
@@ -116,9 +123,9 @@ export function computeDropTarget(
   // top of the menu). As a workaround, we add a small 5 degree region around each
   // submenu. If the dragged item is within this region, we consider the submenu as the
   // drop target.
-  const itemAngles = math.computeItemAngles(centerItem.children, parentAngle);
-  for (let i = 0; i < centerItem.children.length; i++) {
-    const child = centerItem.children[i] as IEditorNode;
+  const itemAngles = math.computeItemAngles(candidates, parentAngle);
+  for (let i = 0; i < candidates.length; i++) {
+    const child = candidates[i] as IEditorNode;
     if (child.type === 'submenu') {
       const diff = math.getAngularDifference(dragAngle, itemAngles[i]);
       if (diff < bestDiff || diff < 5) {

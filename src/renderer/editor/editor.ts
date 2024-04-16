@@ -200,7 +200,9 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('restore-deleted-item', (index: number) => {
-      console.log('restore-deleted-item', index);
+      const node = this.trashedItems.splice(index, 1)[0] as IEditorNode;
+      this.preview.insertNode(node);
+      this.toolbar.setTrashedItems(this.trashedItems);
     });
 
     this.toolbar.on('stash-deleted-item', (index: number) => {
@@ -210,7 +212,9 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('restore-stashed-item', (index: number) => {
-      console.log('restore-stashed-item', index);
+      const node = this.menuSettings.stash.splice(index, 1)[0];
+      this.preview.insertNode(node);
+      this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
     this.toolbar.on('delete-stashed-item', (index: number) => {
