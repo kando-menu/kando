@@ -423,14 +423,12 @@ export class Preview extends EventEmitter {
     });
 
     // Add the children of the currently selected menu.
-    if (centerItem.children?.length > 0) {
-      centerItem.children.forEach((child) => {
-        this.redrawNode(child as IEditorNode, container);
-      });
+    centerItem.children?.forEach((child) => {
+      this.redrawNode(child as IEditorNode, container);
+    });
 
-      // Let the dragger know that we have a new center item.
-      this.dragger.setCenterItem(centerItem, this.getParentItem());
-    }
+    // Let the dragger know that we have a new center item.
+    this.dragger.setCenterItem(centerItem, this.getParentItem());
 
     // If we are currently showing a submenu, we add the back navigation link towards
     // the direction of the parent menu.
@@ -696,12 +694,12 @@ export class Preview extends EventEmitter {
 
     // If the node has no children, we can stop here.
     if (!centerItem.children || centerItem.children.length === 0) {
-      return centerItem.computedAngle;
+      return centerItem.computedAngle ?? 0;
     }
 
     // Also, if the only child is the dragged child, we can stop here.
     if (centerItem.children.length === 1 && dragIndex === 0) {
-      return centerItem.computedAngle;
+      return centerItem.computedAngle ?? 0;
     }
 
     // We do not need to recompute the angle of the dragged item.
