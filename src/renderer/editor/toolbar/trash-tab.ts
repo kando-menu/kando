@@ -152,6 +152,7 @@ export class TrashTab extends EventEmitter {
       const div = document.getElementById(`trash-item-${item.index}`);
       this.dragger.addDraggable(div, {
         index: item.index,
+        ghostMode: false,
         dragClass: item.isMenu
           ? 'dragging-menu-from-trash-tab'
           : 'dragging-item-from-trash-tab',

@@ -105,6 +105,7 @@ export class MenusTab extends EventEmitter {
       const div = document.getElementById(`menu-button-${menu.index}`);
       this.dragger.addDraggable(div, {
         index: menu.index,
+        ghostMode: false,
         dragClass: 'dragging-menu-from-menus-tab',
         dropTargets: [this.trashTab],
       });

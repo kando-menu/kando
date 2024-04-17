@@ -123,6 +123,7 @@ export class StashTab extends EventEmitter {
       const div = document.getElementById(`stash-item-${item.index}`);
       this.dragger.addDraggable(div, {
         index: item.index,
+        ghostMode: false,
         dragClass: 'dragging-item-from-stash-tab',
         dropTargets: [this.trashTab, this.preview],
       });
