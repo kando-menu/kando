@@ -10,16 +10,16 @@
 }}
 
 <!--
-  This tab displays a grid of buttons which represent deleted menus or menu items.
+  This tab displays a grid of buttons which represent deleted menus or stashed menu items.
 -->
 
 {{#if items}}
-  <div class='h-100 scrollbox mx-2' id='trash-items-list'>
-    <div class="scrollbox-content">
+  <div class='h-100 scrollbox mx-2'>
+    <div class="scrollbox-content toolbar-button-grid">
       {{#each items}}
         <div>
           {{#if isMenu}}
-            <div id="trash-item-{{index}}" class="d-flex kando-font btn btn-secondary trash-menu-button">
+            <div id="{{../type}}-item-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-menu-button">
               <div>
                 {{{icon}}}
               </div>
@@ -29,7 +29,7 @@
               </div>
             </div>
           {{else}}
-            <div id="trash-item-{{index}}" class="d-flex kando-font btn btn-secondary trash-node-button">
+            <div id="{{../type}}-item-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-item-button">
               <div>
                 {{{icon}}}
               </div>

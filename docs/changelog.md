@@ -21,6 +21,16 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### Added
+
+- The Stash! You can now temporarily store menu items in the stash and later move them back to the menu. This is useful if you want to reorganize your menus or move things from one menu to another.
+- The possibility to move menu items to the trash. They can be restored from the trash by dragging them back to the menu.
+
+#### Changed
+
+- Menu buttons in the toolbar of the menu editor have now a maximum width. They will not span the whole width of the toolbar anymore.
+- To support drag-and-drop operations from the toolbar to the menu preview, some code refactoring was necessary. This should not change anything for the user, but if you experience any issues in the menu editor, please let me know!
+
 #### Fixed
 
 - Loosing menu items when pressing the <kbd>Escape</kbd> key in the menu editor during a drag operation. Now, the drag operation will be properly cancelled, and the menu editor will not be closed.

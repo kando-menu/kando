@@ -8,42 +8,54 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ItemDragger } from './item-dragger';
+import { ItemDragger } from '../common/item-dragger';
+
+/**
+ * The `dragClass` is a class name which will be added to the #kando-editor during the
+ * drag operation. The `dropTargets` are the elements which are considered drop targets.
+ * If the dragged div is dropped onto one of these elements, the `drop` event is emitted.
+ */
+export interface DraggedItemInfo {
+  /** This is used to identify the dragged item. */
+  index: number;
+
+  /** The class name which will be added to the container during the drag operation. */
+  dragClass: string;
+
+  /** The elements which are considered drop targets. */
+  dropTargets: HTMLElement[];
+}
 
 /**
  * This class is a specialized ItemDragger which is used to drag toolbar items. It is used
- * for example by the trash tab to drag items from the trash back to the menus tab.
+ * for example by the trash tab to drag items from the trash back to the menus tab or back
+ * to the preview area.
  *
- * The class is an `EventEmitter` and emits the following events:
+ * The class is an `EventEmitter` and emits the following events in addition to the events
+ * emitted by the `ItemDragger` class:
  *
  * @fires drop - When an item is successfully dropped onto a drop target, this event is
- *   emitted.
- * @template T The type of the user data which is associated with the draggable divs.
+ *   emitted. The event data is the `index` which was passed to the `addDraggable` method
+ *   and the `dropTarget` which was hovered when the item was dropped.
  */
-export class ToolbarItemDragger<T> extends ItemDragger<T> {
+export class ToolbarItemDragger extends ItemDragger<DraggedItemInfo> {
   /**
-   * This constructor creates a new ToolbarItemDragger. It takes a `dragContainer` which
-   * is the container to which the dragged div will be appended during the drag operation.
-   * The `dragClass` is a class name which will be added to the container during the drag
-   * operation. The `dropTargets` are the elements which are considered drop targets. If
-   * the dragged div is dropped onto one of these elements, the `drop` event is emitted.
-   *
-   * @param dragContainer The container to which the dragged div will be appended during
-   *   the drag operation.
-   * @param dragClass The class name which will be added to the container during the drag
-   *   operation.
-   * @param dropTargets The elements which are considered drop targets.
+   * This constructor creates a new ToolbarItemDragger. It will store a reference to the
+   * #kando-editor element, so this element must exist when the constructor is called.
    */
-  constructor(dragContainer: HTMLElement, dragClass: string, dropTargets: HTMLElement[]) {
+  constructor() {
     super();
+
+    // Elements will be appended to this container during the drag operation.
+    const dragContainer = document.querySelector('#kando-editor') as HTMLElement;
 
     // During drag'n'drop operations, we need to append the dragged div to the outer
     // container to be able to drag it outside of any scrollable area.
     let originalParent: HTMLElement;
 
-    this.on('drag-start', (index, div) => {
+    this.on('drag-start', (info, div) => {
       // Add a class to the container. This can be used to highlight the drop targets..
-      dragContainer.classList.add(dragClass);
+      dragContainer.classList.add(info.dragClass);
 
       // Set fixed width and height for dragged item.
       const rect = div.getBoundingClientRect();
@@ -61,12 +73,12 @@ export class ToolbarItemDragger<T> extends ItemDragger<T> {
     });
 
     // During the drag operation, we need to move the div to the current mouse position.
-    this.on('drag-move', (index, div, relative, absolute, offset, grabOffset) => {
+    this.on('drag-move', (info, div, relative, absolute, offset, grabOffset) => {
       div.style.transform = `translate(${absolute.x - grabOffset.x}px, ${absolute.y - grabOffset.y}px)`;
     });
 
     // If the drag is canceled or ends, we need to clean up.
-    const onDragEnd = (index: number, div: HTMLElement) => {
+    const onDragEnd = (info: DraggedItemInfo, div: HTMLElement) => {
       div.classList.remove('dragging');
       div.style.transform = '';
 
@@ -77,19 +89,19 @@ export class ToolbarItemDragger<T> extends ItemDragger<T> {
       // Reinsert the div back to its original position.
       originalParent.appendChild(div);
 
-      dragContainer.classList.remove(dragClass);
+      dragContainer.classList.remove(info.dragClass);
     };
 
     this.on('drag-cancel', onDragEnd);
 
     // If the drag ends successfully, we emit the 'drop' event if one of the drop targets
     // is hovered.
-    this.on('drag-end', (index, div) => {
-      onDragEnd(index, div);
+    this.on('drag-end', (info, div) => {
+      onDragEnd(info, div);
 
-      dropTargets.forEach((element) => {
+      info.dropTargets.forEach((element: HTMLElement) => {
         if (element.matches(':hover')) {
-          this.emit('drop', index);
+          this.emit('drop', info.index, element);
         }
       });
     });

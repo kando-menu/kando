@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
-import { ToolbarItemDragger } from '../common/toolbar-item-dragger';
+import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
@@ -18,10 +18,10 @@ import * as themedIcon from '../common/themed-icon';
  * This class is responsible for the menus tab in the toolbar. It is an event emitter
  * which emits the following events:
  *
- * - 'select-menu': This event is emitted when the user selects a menu in the toolbar. The
- *   index of the selected menu is passed as the first argument.
- * - 'add-menu': This event is emitted when the user clicks the "Add Menu" button.
- * - 'delete-menu': This event is emitted when the user drags a menu to the trash tab.
+ * @fires add-menu - This event is emitted when the user clicks the "Add Menu" button.
+ * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
+ *   The index of the selected menu is passed as the first argument.
+ * @fires delete-menu - This event is emitted when the user drags a menu to the trash tab.
  */
 export class MenusTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
@@ -31,7 +31,10 @@ export class MenusTab extends EventEmitter {
   private tab: HTMLElement = null;
 
   /** This is used to drag'n'drop menus from the toolbar to the trash. */
-  private dragger: ToolbarItemDragger<number> = null;
+  private dragger: ToolbarItemDragger = null;
+
+  /** This is the only drop target for dragged menus. */
+  private trashTab: HTMLElement = null;
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -45,12 +48,14 @@ export class MenusTab extends EventEmitter {
     // drag'n'drop operations.
     this.container = container;
 
-    // Initialize the dragger. During the drag operation, the container will get the given
-    // class name. This is used to highlight to the trash tab. When an item is dropped to
-    // the trash tab, we emit the 'delete-menu' event.
-    this.dragger = new ToolbarItemDragger(container, 'dragging-deletable-item', [
-      this.container.querySelector(".nav-link[data-bs-target='#kando-trash-tab']"),
-    ]);
+    // Store a reference to the trash tab. This is the only drop target for dragged menus.
+    this.trashTab = this.container.querySelector(
+      ".nav-link[data-bs-target='#kando-trash-tab']"
+    ) as HTMLElement;
+
+    // Initialize the dragger. This will be used to make the menu buttons draggable. When
+    // a menu button is dropped to the trash tab, we emit the 'delete-menu' event.
+    this.dragger = new ToolbarItemDragger();
     this.dragger.on('drop', (index) => this.emit('delete-menu', index));
 
     // The tab has been created in the toolbar's constructor.
@@ -94,10 +99,15 @@ export class MenusTab extends EventEmitter {
 
     this.tab.innerHTML = template({ menus: data });
 
-    // Add drag'n'drop logic to the menu buttons.
+    // Add drag'n'drop logic to the menu buttons. The menus can only be dragged to the
+    // trash tab.
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
-      this.dragger.addDraggable(div, menu.index);
+      this.dragger.addDraggable(div, {
+        index: menu.index,
+        dragClass: 'dragging-menu-from-menus-tab',
+        dropTargets: [this.trashTab],
+      });
     }
   }
 }
