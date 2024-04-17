@@ -201,6 +201,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorNode> {
         newDropIndex = result.dropIndex;
       }
 
+      // If the drop target or index changed, we emit the `drag-node` event.
       if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
         this.dropIndex = newDropIndex;
         this.dropTarget = newDropTarget;
@@ -255,16 +256,19 @@ export class PreviewItemDragger extends ItemDragger<IEditorNode> {
 
   /**
    * This methods sets up the logic required for dragging nodes from the toolbar to the
-   * preview. We basically try to detect if something is dragged over the preview area and
+   * preview. We basically detect if something is dragged over the preview area by looking
+   * at the mouse pointer state and the CSS classes given to the #kando-editor element. We
    * emit the `drag-node` event accordingly. We do not emit the `drop-node` signal.
    * Instead, the editor will tell the preview when a node from the toolbar is dropped to
    * the preview.
    */
   private initExternalDragging() {
     let externalDragOngoing = false;
-    const editor = document.getElementById('kando-editor');
 
-    const dragEnter = (event: PointerEvent) => {
+    // When the pointer enters the preview area, we check if something is dragged from the
+    // stash or trash tab. If this is the case, we set `externalDragOngoing` to true.
+    this.container.addEventListener('pointerenter', (event: PointerEvent) => {
+      const editor = document.getElementById('kando-editor');
       if (
         event.buttons === 1 &&
         (editor.classList.contains('dragging-item-from-stash-tab') ||
@@ -272,49 +276,59 @@ export class PreviewItemDragger extends ItemDragger<IEditorNode> {
       ) {
         externalDragOngoing = true;
       }
-    };
+    });
 
-    const move = (event: PointerEvent) => {
-      if (!externalDragOngoing) {
-        return;
+    // When the pointer leaves the preview area, we reset `externalDragOngoing`. We also
+    // reset the drop target and index.
+    this.container.addEventListener('pointerleave', () => {
+      if (externalDragOngoing) {
+        externalDragOngoing = false;
+        this.dropTarget = null;
+        this.dropIndex = null;
+        this.emit('drag-node', null, null, null, null);
+      }
+    });
+
+    // If something is dragged over the preview, we compute the index where the item
+    // would be dropped. The child items will be re-arranged to leave a gap for the
+    // to-be-dropped item.
+    this.container.addEventListener('pointermove', (event: PointerEvent) => {
+      let newDropTarget = null;
+      let newDropIndex = null;
+
+      if (externalDragOngoing) {
+        // Compute the angle towards the dragged item.
+        const relativePosition = math.subtract(
+          { x: event.clientX, y: event.clientY },
+          this.previewCenter
+        );
+
+        const dragAngle = math.getAngle(relativePosition);
+        const result = utils.computeDropTarget(this.centerItem, dragAngle);
+
+        // If the returned drop target is null, it is supposed to be dropped on the
+        // parent item.
+        newDropTarget = result.dropTarget ?? this.parentItem;
+        newDropIndex = result.dropIndex;
       }
 
-      // Compute the angle towards the dragged item.
-      const relativePosition = math.subtract(
-        { x: event.clientX, y: event.clientY },
-        this.previewCenter
-      );
-      const dragAngle = math.getAngle(relativePosition);
-
-      // If something is dragged over the preview, we compute the index where the item
-      // would be dropped. The child items will be re-arranged to leave a gap for the
-      // to-be-dropped item.
-
-      const result = utils.computeDropTarget(this.centerItem, dragAngle);
-
-      // If the returned drop target is null, it is supposed to be dropped on the
-      // parent item.
-      const newDropTarget = result.dropTarget ?? this.parentItem;
-      const newDropIndex = result.dropIndex;
-
+      // If the drop target or index changed, we emit the `drag-node` event.
       if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
         this.dropIndex = newDropIndex;
         this.dropTarget = newDropTarget;
 
         this.emit('drag-node', null, null, this.dropTarget, this.dropIndex);
       }
-    };
+    });
 
-    const cancel = () => {
+    // When the pointer is released while something is dragged over the preview, we emit
+    // the `drag-node` event with null values to indicate that the drag operation is
+    // finished.
+    this.container.addEventListener('pointerup', () => {
       if (externalDragOngoing) {
         externalDragOngoing = false;
         this.emit('drag-node', null, null, null, null);
       }
-    };
-
-    this.container.addEventListener('pointerenter', dragEnter);
-    this.container.addEventListener('pointermove', move);
-    this.container.addEventListener('pointerleave', cancel);
-    this.container.addEventListener('pointerup', cancel);
+    });
   }
 }
