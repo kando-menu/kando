@@ -40,11 +40,8 @@ export type IKeySequence = Array<IKeyStroke>;
  * represent submenus, leaf nodes represent actual menu items.
  */
 export interface INode {
-  /**
-   * The type of the menu item. This is primarily used to specify the action of this item,
-   * but themes may also use it to style different types of menu items differently.
-   */
-  type: 'empty' | 'command' | 'uri' | 'hotkey' | 'submenu';
+  /** The type of the menu item. See INodeType. */
+  type: string;
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf
@@ -120,4 +117,40 @@ export interface IAppSettings {
 
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
+}
+
+/**
+ * This interface describes a type of a menu node. It is used to specify the action of a
+ * menu item.
+ */
+export interface INodeType {
+  /**
+   * The unique type ID for this type. This will be stored in the `type` field of the
+   * `INode`.
+   */
+  id: string;
+
+  /** Whether this type of menu item has children. */
+  hasChildren: boolean;
+
+  /** The default name of the menu item. */
+  defaultName: string;
+
+  /** The default icon of the menu item. */
+  defaultIcon: string;
+
+  /** The default icon theme of the menu item. */
+  defaultIconTheme: string;
+
+  /** The default data of the menu item. */
+  defaultData: unknown;
+
+  /** This should return a human-readable description of this type of menu item. */
+  genericDescription: string;
+
+  /** This should return a human-readable description of this specific menu item. */
+  getDescription(data: unknown): string;
+
+  /** This will be called when the menu item is executed. */
+  execute(data: unknown): void;
 }

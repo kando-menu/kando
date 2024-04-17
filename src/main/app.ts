@@ -343,85 +343,84 @@ export class KandoApp {
           executeDelayed = (node.data as INodeData).delayed;
         }
 
-        const actions = {
-          empty: () => {},
-          submenu: () => {},
-          // If the node is an URI action, we open the URI with the default application.
-          uri: (data: unknown) => {
-            interface INodeData {
-              uri: string;
-            }
-            shell.openExternal((data as INodeData).uri);
-          },
-          // If the node is a command action, we execute the command.
-          command: (data: unknown) => {
-            interface INodeData {
-              command: string;
-            }
-            this.exec((data as INodeData).command);
-          },
-          // If the node is a hotkey action, we simulate the key press. For now, the
-          // hotkey is a string which is composed of key names separated by a plus sign.
-          // All keys will be pressed and then released again.
-          hotkey: (data: unknown) => {
-            interface INodeData {
-              hotkey: string;
-              delayed: boolean;
-            }
+        const actions = new Map<string, (data: unknown) => void>();
+        actions.set('empty', () => {});
+        actions.set('submenu', () => {});
+        // If the node is an URI action, we open the URI with the default application.
+        actions.set('uri', (data: unknown) => {
+          interface INodeData {
+            uri: string;
+          }
+          shell.openExternal((data as INodeData).uri);
+        });
+        // If the node is a command action, we execute the command.
+        actions.set('command', (data: unknown) => {
+          interface INodeData {
+            command: string;
+          }
+          this.exec((data as INodeData).command);
+        });
+        // If the node is a hotkey action, we simulate the key press. For now, the
+        // hotkey is a string which is composed of key names separated by a plus sign.
+        // All keys will be pressed and then released again.
+        actions.set('hotkey', (data: unknown) => {
+          interface INodeData {
+            hotkey: string;
+            delayed: boolean;
+          }
 
-            // We convert some common key names to the corresponding left key names.
-            const keyNames = (data as INodeData).hotkey.split('+').map((name) => {
-              // There are many different names for the Control key. We convert them all
-              // to "ControlLeft".
-              if (
-                name === 'CommandOrControl' ||
-                name === 'CmdOrCtrl' ||
-                name === 'Command' ||
-                name === 'Control' ||
-                name === 'Cmd' ||
-                name === 'Ctrl'
-              ) {
-                return 'ControlLeft';
-              }
-
-              if (name === 'Shift') return 'ShiftLeft';
-              if (name === 'Meta' || name === 'Super') return 'MetaLeft';
-              if (name === 'Alt') return 'AltLeft';
-
-              // If the key name is only one character long, we assume that it is a
-              // single character which should be pressed. In this case, we prefix it
-              // with "Key".
-              if (name.length === 1) return 'Key' + name.toUpperCase();
-
-              return name;
-            });
-
-            // We simulate the key press by first pressing all keys and then releasing
-            // them again. We add a small delay between the key presses to make sure
-            // that the keys are pressed in the correct order.
-            const keys: IKeySequence = [];
-
-            // First press all keys.
-            for (const key of keyNames) {
-              keys.push({ name: key, down: true, delay: 10 });
+          // We convert some common key names to the corresponding left key names.
+          const keyNames = (data as INodeData).hotkey.split('+').map((name) => {
+            // There are many different names for the Control key. We convert them all
+            // to "ControlLeft".
+            if (
+              name === 'CommandOrControl' ||
+              name === 'CmdOrCtrl' ||
+              name === 'Command' ||
+              name === 'Control' ||
+              name === 'Cmd' ||
+              name === 'Ctrl'
+            ) {
+              return 'ControlLeft';
             }
 
-            // Then release all keys.
-            for (const key of keyNames) {
-              keys.push({ name: key, down: false, delay: 10 });
-            }
+            if (name === 'Shift') return 'ShiftLeft';
+            if (name === 'Meta' || name === 'Super') return 'MetaLeft';
+            if (name === 'Alt') return 'AltLeft';
 
-            // Finally, we simulate the key presses using the backend.
-            this.backend.simulateKeys(keys);
-          },
-        };
+            // If the key name is only one character long, we assume that it is a
+            // single character which should be pressed. In this case, we prefix it
+            // with "Key".
+            if (name.length === 1) return 'Key' + name.toUpperCase();
+
+            return name;
+          });
+
+          // We simulate the key press by first pressing all keys and then releasing
+          // them again. We add a small delay between the key presses to make sure
+          // that the keys are pressed in the correct order.
+          const keys: IKeySequence = [];
+
+          // First press all keys.
+          for (const key of keyNames) {
+            keys.push({ name: key, down: true, delay: 10 });
+          }
+
+          // Then release all keys.
+          for (const key of keyNames) {
+            keys.push({ name: key, down: false, delay: 10 });
+          }
+
+          // Finally, we simulate the key presses using the backend.
+          this.backend.simulateKeys(keys);
+        });
 
         // Get the node type. If the type is unknown, we fall back to the empty action.
-        const type = node.type in actions ? node.type : 'empty';
+        const type = actions.has(node.type) ? node.type : 'empty';
 
         // If the action is not delayed, we execute it immediately.
         if (!executeDelayed) {
-          actions[type](node.data);
+          actions.get(type)(node.data);
         }
 
         // Also wait with the execution of the selected action until the fade-out
@@ -435,7 +434,7 @@ export class KandoApp {
 
           // If the action is delayed, we execute it after the window is hidden.
           if (executeDelayed) {
-            actions[type](node.data);
+            actions.get(type)(node.data);
           }
         }, 400);
       } catch (err) {
