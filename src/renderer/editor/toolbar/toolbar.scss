@@ -217,7 +217,6 @@
     @include rfs($toolbar-menu-button-icon-size, min-height);
     background-color: white;
     border-radius: 50%;
-    margin-right: var(--bs-btn-padding-x);
     transition: background-color 150ms linear;
 
     i {
@@ -231,8 +230,10 @@
     }
   }
 
-  .shortcut,
+  .description,
   .name {
+    @include rfs(1rem, padding-left);
+    box-sizing: border-box;
     pointer-events: none;
     text-align: left;
     text-overflow: ellipsis;
@@ -260,23 +261,8 @@
 
   .name {
     border-bottom: 2px dashed white;
-  }
-
-  // Add the small connector line.
-  div:has(.name) {
-    @include rfs(1rem, margin-left);
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      transform-origin: left;
-      @include rfs(1.5rem, width);
-      border-bottom: 2px dashed white;
-      transform: rotate(195deg);
-    }
+    margin-bottom: 3px;
+    line-height: 1.2;
   }
 
   // Invert the icon color.

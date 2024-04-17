@@ -92,7 +92,7 @@ export class MenusTab extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      shortcut: menu.shortcut || 'Not bound',
+      description: menu.shortcut || 'Not bound',
       icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
       index,
     }));

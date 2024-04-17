@@ -119,7 +119,7 @@ export class TrashTab extends EventEmitter {
         return {
           isMenu: true,
           name: menu.nodes.name,
-          shortcut: menu.shortcut || 'Not bound',
+          description: menu.shortcut || 'Not bound',
           icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
           index,
         };
@@ -130,6 +130,7 @@ export class TrashTab extends EventEmitter {
       return {
         isMenu: false,
         name: node.name,
+        description: 'foo',
         icon: themedIcon.createDiv(node.icon, node.iconTheme).outerHTML,
         index,
       };

@@ -102,6 +102,7 @@ export class StashTab extends EventEmitter {
       return {
         isMenu: false,
         name: item.name,
+        description: 'foo',
         icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
         index,
       };
