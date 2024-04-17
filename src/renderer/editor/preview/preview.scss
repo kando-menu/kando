@@ -106,6 +106,7 @@
       transition: none;
       pointer-events: none;
       z-index: 99;
+      backdrop-filter: blur(5px);
 
       .kando-menu-preview-label-container {
         opacity: 0;
