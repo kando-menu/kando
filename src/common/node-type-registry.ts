@@ -8,12 +8,39 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INodeType, INode } from './index';
+import { INode } from './index';
 
 import { CommandNodeType } from './node-types/command-node-type';
 import { HotkeyNodeType } from './node-types/hotkey-node-type';
 import { SubmenuNodeType } from './node-types/submenu-node-type';
 import { URINodeType } from './node-types/uri-node-type';
+
+/**
+ * This interface describes a type of a menu node. It is used to specify the action of a
+ * menu item.
+ */
+export interface INodeType {
+  /** Whether this type of menu item has children. */
+  hasChildren: boolean;
+
+  /** The default name of the menu item. */
+  defaultName: string;
+
+  /** The default icon of the menu item. */
+  defaultIcon: string;
+
+  /** The default icon theme of the menu item. */
+  defaultIconTheme: string;
+
+  /** The default data of the menu item. */
+  defaultData: unknown;
+
+  /** This should return a human-readable description of this type of menu item. */
+  genericDescription: string;
+
+  /** This should return a human-readable description of this specific menu item. */
+  getDescription(node: INode): string;
+}
 
 export class NodeTypeRegistry {
   private static instance: NodeTypeRegistry = null;

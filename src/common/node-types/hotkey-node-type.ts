@@ -8,7 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INodeType, INode } from '../index';
+import { INode } from '../index';
+import { INodeType } from '../node-type-registry';
 
 interface INodeData {
   hotkey: string;

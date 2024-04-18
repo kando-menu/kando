@@ -118,38 +118,3 @@ export interface IAppSettings {
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
 }
-
-/**
- * This interface describes a type of a menu node. It is used to specify the action of a
- * menu item.
- */
-export interface INodeType {
-  /** Whether this type of menu item has children. */
-  hasChildren: boolean;
-
-  /** The default name of the menu item. */
-  defaultName: string;
-
-  /** The default icon of the menu item. */
-  defaultIcon: string;
-
-  /** The default icon theme of the menu item. */
-  defaultIconTheme: string;
-
-  /** The default data of the menu item. */
-  defaultData: unknown;
-
-  /** This should return a human-readable description of this type of menu item. */
-  genericDescription: string;
-
-  /** This should return a human-readable description of this specific menu item. */
-  getDescription(node: INode): string;
-}
-
-/** This interface describes the action of a menu item. */
-export interface INodeAction {
-  executeDelayed: boolean;
-
-  /** This will be called when the menu item is executed. */
-  execute(node: INode): void;
-}
