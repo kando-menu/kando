@@ -24,7 +24,7 @@ export class NodeTypeRegistry {
       defaultIconTheme: 'material-symbols-rounded',
       defaultData: {},
       genericDescription: 'Contains other menu items.',
-      getDescription: () => '',
+      getDescription: (node: INode) => `Contains ${node.children.length} menu items.`,
       execute: () => {},
     });
 
@@ -36,7 +36,12 @@ export class NodeTypeRegistry {
       defaultIconTheme: 'material-symbols-rounded',
       defaultData: {},
       genericDescription: 'Runs any command.',
-      getDescription: () => '',
+      getDescription: (node: INode) => {
+        interface INodeData {
+          command: string;
+        }
+        return `${(node.data as INodeData).command || 'Not configured.'}`;
+      },
       execute: () => {},
     });
 
@@ -48,7 +53,12 @@ export class NodeTypeRegistry {
       defaultIconTheme: 'material-symbols-rounded',
       defaultData: {},
       genericDescription: 'Opens files or websites.',
-      getDescription: () => '',
+      getDescription: (node: INode) => {
+        interface INodeData {
+          uri: string;
+        }
+        return `${(node.data as INodeData).uri || 'Not configured.'}`;
+      },
       execute: () => {},
     });
 
@@ -60,7 +70,13 @@ export class NodeTypeRegistry {
       defaultIconTheme: 'material-symbols-rounded',
       defaultData: {},
       genericDescription: 'Simulates key presses.',
-      getDescription: () => '',
+      getDescription: (node: INode) => {
+        interface INodeData {
+          hotkey: string;
+          delayed: boolean;
+        }
+        return `${(node.data as INodeData).hotkey || 'Not configured.'}`;
+      },
       execute: () => {},
     });
   }

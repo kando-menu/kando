@@ -149,8 +149,8 @@ export interface INodeType {
   genericDescription: string;
 
   /** This should return a human-readable description of this specific menu item. */
-  getDescription(data: unknown): string;
+  getDescription(node: INode): string;
 
   /** This will be called when the menu item is executed. */
-  execute(data: unknown): void;
+  execute(node: INode): void;
 }

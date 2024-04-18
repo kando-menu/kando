@@ -13,6 +13,7 @@ import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../common/editor-node';
+import { NodeTypeRegistry } from '../../../common/node-type-registry';
 
 /**
  * This class represents the stash tab in the toolbar. Users can drop menu items here to
@@ -99,10 +100,11 @@ export class StashTab extends EventEmitter {
 
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
+      const type = NodeTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
         name: item.name,
-        description: 'foo',
+        description: type.getDescription(item),
         icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
         index,
       };
