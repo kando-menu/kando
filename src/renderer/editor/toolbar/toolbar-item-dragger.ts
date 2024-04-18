@@ -15,9 +15,9 @@ import { ItemDragger } from '../common/item-dragger';
  * drag operation. The `dropTargets` are the elements which are considered drop targets.
  * If the dragged div is dropped onto one of these elements, the `drop` event is emitted.
  */
-export interface DraggedItemInfo {
+export interface DraggedItemInfo<T> {
   /** This is used to identify the dragged item. */
-  index: number;
+  data: T;
 
   /** The class name which will be added to the container during the drag operation. */
   dragClass: string;
@@ -38,10 +38,10 @@ export interface DraggedItemInfo {
  * emitted by the `ItemDragger` class:
  *
  * @fires drop - When an item is successfully dropped onto a drop target, this event is
- *   emitted. The event data is the `index` which was passed to the `addDraggable` method
+ *   emitted. The event data is the `data` which was passed to the `addDraggable` method
  *   and the `dropTarget` which was hovered when the item was dropped.
  */
-export class ToolbarItemDragger extends ItemDragger<DraggedItemInfo> {
+export class ToolbarItemDragger<T> extends ItemDragger<DraggedItemInfo<T>> {
   /**
    * This constructor creates a new ToolbarItemDragger. It will store a reference to the
    * #kando-editor element, so this element must exist when the constructor is called.
@@ -82,7 +82,7 @@ export class ToolbarItemDragger extends ItemDragger<DraggedItemInfo> {
 
     // If the drag is canceled or ends, we need to clean up.
 
-    const dragEnd = (info: DraggedItemInfo, div: HTMLElement, animate: boolean) => {
+    const dragEnd = (info: DraggedItemInfo<T>, div: HTMLElement, animate: boolean) => {
       dragContainer.classList.remove(info.dragClass);
       if (animate) {
         const rect = div.getBoundingClientRect();
@@ -110,7 +110,7 @@ export class ToolbarItemDragger extends ItemDragger<DraggedItemInfo> {
 
       info.dropTargets.forEach((element: HTMLElement) => {
         if (element.matches(':hover')) {
-          this.emit('drop', info.index, element);
+          this.emit('drop', info.data, element);
           success = true;
         }
       });

@@ -27,19 +27,16 @@ export class AddNodesTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
-  /** This is the HTML element which contains the stash tab's content. */
+  /** This is the HTML element which contains the tab's content. */
   private tab: HTMLElement = null;
 
   /**
-   * This is used to drag'n'drop menus from the stash to the trash tab or the menus
-   * preview.
+   * This is used to drag'n'drop new menu items from the tab or the menu preview. The
+   * template parameter is the type name of the dragged item.
    */
-  private dragger: ToolbarItemDragger = null;
+  private dragger: ToolbarItemDragger<string> = null;
 
-  /**
-   * These are all potential drop targets for dragged menu items. Menu items can be
-   * dropped to the trash tab or to the menu preview.
-   */
+  /** We store a reference to the preview as potential drop target. */
   private preview: HTMLElement = null;
 
   /**
@@ -50,7 +47,7 @@ export class AddNodesTab extends EventEmitter {
   constructor(container: HTMLElement) {
     super();
 
-    // Store a reference to the container. We will attach menu buttons divs to it during
+    // Store a reference to the container. We will attach divs to it during
     // drag'n'drop operations.
     this.container = container;
 
@@ -59,8 +56,8 @@ export class AddNodesTab extends EventEmitter {
 
     // Initialize the dragger. This will be used to make the item buttons draggable.
     this.dragger = new ToolbarItemDragger();
-    this.dragger.on('drop', (index) => {
-      this.emit('add-item', index);
+    this.dragger.on('drop', (typeName) => {
+      this.emit('add-item', typeName);
     });
 
     // The tab has been created in the toolbar's constructor.
@@ -79,13 +76,20 @@ export class AddNodesTab extends EventEmitter {
     const registry = NodeTypeRegistry.getInstance();
 
     // Compile the data for the Handlebars template.
-    const data = registry.getTypes().map((type, index) => {
-      return {
+    const data: Array<{
+      name: string;
+      description: string;
+      icon: string;
+      typeName: string;
+    }> = [];
+
+    registry.getTypes().forEach((type, typeName) => {
+      data.push({
         name: type.defaultName,
         description: type.genericDescription,
         icon: themedIcon.createDiv(type.defaultIcon, type.defaultIconTheme).outerHTML,
-        index,
-      };
+        typeName,
+      });
     });
 
     // Update the tab's content.
@@ -96,9 +100,9 @@ export class AddNodesTab extends EventEmitter {
     // Add drag'n'drop logic to the  buttons. The menu items can be dragged to the menu
     // preview.
     for (const item of data) {
-      const div = this.tab.querySelector(`#new-node-${item.index}`) as HTMLElement;
+      const div = this.tab.querySelector(`#new-node-${item.typeName}`) as HTMLElement;
       this.dragger.addDraggable(div, {
-        index: item.index,
+        data: item.typeName,
         ghostMode: true,
         dragClass: 'dragging-new-item-from-toolbar',
         dropTargets: [this.preview],

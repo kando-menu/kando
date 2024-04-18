@@ -124,12 +124,6 @@ export interface IAppSettings {
  * menu item.
  */
 export interface INodeType {
-  /**
-   * The unique type ID for this type. This will be stored in the `type` field of the
-   * `INode`.
-   */
-  id: string;
-
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -150,6 +144,11 @@ export interface INodeType {
 
   /** This should return a human-readable description of this specific menu item. */
   getDescription(node: INode): string;
+}
+
+/** This interface describes the action of a menu item. */
+export interface INodeAction {
+  executeDelayed: boolean;
 
   /** This will be called when the menu item is executed. */
   execute(node: INode): void;

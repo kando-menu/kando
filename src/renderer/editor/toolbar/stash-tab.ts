@@ -36,9 +36,10 @@ export class StashTab extends EventEmitter {
 
   /**
    * This is used to drag'n'drop menus from the stash to the trash tab or the menus
-   * preview.
+   * preview. The template argument is a number since the index of the dragged item is
+   * stored of in the data field.
    */
-  private dragger: ToolbarItemDragger = null;
+  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * These are all potential drop targets for dragged menu items. Menu items can be
@@ -124,7 +125,7 @@ export class StashTab extends EventEmitter {
     for (const item of data) {
       const div = document.getElementById(`stash-item-${item.index}`);
       this.dragger.addDraggable(div, {
-        index: item.index,
+        data: item.index,
         ghostMode: false,
         dragClass: 'dragging-item-from-stash-tab',
         dropTargets: [this.trashTab, this.preview],

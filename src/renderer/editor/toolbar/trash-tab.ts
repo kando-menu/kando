@@ -40,9 +40,10 @@ export class TrashTab extends EventEmitter {
 
   /**
    * This is used to drag'n'drop menus from the trash to the menus tab or to the menu
-   * preview.
+   * preview. The template argument is a number since the index of the dragged item is
+   * stored of in the data field.
    */
-  private dragger: ToolbarItemDragger = null;
+  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * These are all potential drop targets for dragged menus and menu items. Depending on
@@ -153,7 +154,7 @@ export class TrashTab extends EventEmitter {
     for (const item of data) {
       const div = document.getElementById(`trash-item-${item.index}`);
       this.dragger.addDraggable(div, {
-        index: item.index,
+        data: item.index,
         ghostMode: false,
         dragClass: item.isMenu
           ? 'dragging-menu-from-trash-tab'

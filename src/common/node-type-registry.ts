@@ -10,75 +10,21 @@
 
 import { INodeType, INode } from './index';
 
+import { CommandNodeType } from './node-types/command-node-type';
+import { HotkeyNodeType } from './node-types/hotkey-node-type';
+import { SubmenuNodeType } from './node-types/submenu-node-type';
+import { URINodeType } from './node-types/uri-node-type';
+
 export class NodeTypeRegistry {
   private static instance: NodeTypeRegistry = null;
 
   private types: Map<string, INodeType> = new Map();
 
   private constructor() {
-    this.registerType({
-      id: 'submenu',
-      hasChildren: true,
-      defaultName: 'Submenu',
-      defaultIcon: 'apps',
-      defaultIconTheme: 'material-symbols-rounded',
-      defaultData: {},
-      genericDescription: 'Contains other menu items.',
-      getDescription: (node: INode) => `Contains ${node.children.length} menu items.`,
-      execute: () => {},
-    });
-
-    this.registerType({
-      id: 'command',
-      hasChildren: false,
-      defaultName: 'Launch Application',
-      defaultIcon: 'terminal',
-      defaultIconTheme: 'material-symbols-rounded',
-      defaultData: {},
-      genericDescription: 'Runs any command.',
-      getDescription: (node: INode) => {
-        interface INodeData {
-          command: string;
-        }
-        return `${(node.data as INodeData).command || 'Not configured.'}`;
-      },
-      execute: () => {},
-    });
-
-    this.registerType({
-      id: 'uri',
-      hasChildren: false,
-      defaultName: 'Open URL',
-      defaultIcon: 'public',
-      defaultIconTheme: 'material-symbols-rounded',
-      defaultData: {},
-      genericDescription: 'Opens files or websites.',
-      getDescription: (node: INode) => {
-        interface INodeData {
-          uri: string;
-        }
-        return `${(node.data as INodeData).uri || 'Not configured.'}`;
-      },
-      execute: () => {},
-    });
-
-    this.registerType({
-      id: 'hotkey',
-      hasChildren: false,
-      defaultName: 'Simulate Hotkey',
-      defaultIcon: 'keyboard',
-      defaultIconTheme: 'material-symbols-rounded',
-      defaultData: {},
-      genericDescription: 'Simulates key presses.',
-      getDescription: (node: INode) => {
-        interface INodeData {
-          hotkey: string;
-          delayed: boolean;
-        }
-        return `${(node.data as INodeData).hotkey || 'Not configured.'}`;
-      },
-      execute: () => {},
-    });
+    this.registerType('command', new CommandNodeType());
+    this.registerType('hotkey', new HotkeyNodeType());
+    this.registerType('submenu', new SubmenuNodeType());
+    this.registerType('uri', new URINodeType());
   }
 
   public static getInstance(): NodeTypeRegistry {
@@ -92,10 +38,10 @@ export class NodeTypeRegistry {
     return this.types.get(id);
   }
 
-  public createNode(typeIndex: number): INode {
-    const type = this.getTypes()[typeIndex];
+  public createNode(typeName: string): INode {
+    const type = this.types.get(typeName);
     const node: INode = {
-      type: type.id,
+      type: typeName,
       data: type.defaultData,
       name: type.defaultName,
       icon: type.defaultIcon,
@@ -109,11 +55,11 @@ export class NodeTypeRegistry {
     return node;
   }
 
-  public getTypes(): Array<INodeType> {
-    return Array.from(this.types.values());
+  public getTypes() {
+    return this.types;
   }
 
-  private registerType(type: INodeType): void {
-    this.types.set(type.id, type);
+  private registerType(name: string, type: INodeType): void {
+    this.types.set(name, type);
   }
 }

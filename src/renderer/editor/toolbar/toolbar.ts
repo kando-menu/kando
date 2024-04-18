@@ -80,7 +80,7 @@ export class Toolbar extends EventEmitter {
 
     // Initialize the add-nodes tab and forward its events.
     this.addNodesTab = new AddNodesTab(this.container);
-    this.addNodesTab.on('add-item', (index) => this.emit('add-item', index));
+    this.addNodesTab.on('add-item', (typeName) => this.emit('add-item', typeName));
 
     // Initialize the trash tab and forward its events.
     this.trashTab = new TrashTab(this.container);

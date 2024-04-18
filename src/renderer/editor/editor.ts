@@ -181,8 +181,8 @@ export class Editor extends EventEmitter {
       this.preview.setMenu(newMenu);
     });
 
-    this.toolbar.on('add-item', (index: number) => {
-      const node = NodeTypeRegistry.getInstance().createNode(index);
+    this.toolbar.on('add-item', (typeName: string) => {
+      const node = NodeTypeRegistry.getInstance().createNode(typeName);
       this.preview.insertNode(node);
     });
 
