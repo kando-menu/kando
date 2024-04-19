@@ -23,15 +23,16 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
+- The Add-New-Item tab! You can now add new items to the menu by dragging them from the toolbar to the menu preview. It's not yet possible to edit the items, but this is the next major step towards a fully functional menu editor.
 - The Stash! You can now temporarily store menu items in the stash and later move them back to the menu. This is useful if you want to reorganize your menus or move things from one menu to another.
 - The possibility to move menu items to the trash. They can be restored from the trash by dragging them back to the menu.
 
 #### Changed
 
 - Menu buttons in the toolbar of the menu editor have now a maximum width. They will not span the whole width of the toolbar anymore.
-- To support drag-and-drop operations from the toolbar to the menu preview, some code refactoring was necessary. This should not change anything for the user, but if you experience any issues in the menu editor, please let me know!
 - Dragged menu items now have a subtle backdrop blur.
 - If a dragged item from the toolbar is not successfully dropped somewhere, there will now be an animation of the item moving back to its original position.
+- To support drag-and-drop operations from the toolbar to the menu preview, some code refactoring was necessary. Also, item types are now much less hard-coded and much more modular, which also involved much refactoring. Both changes should not be visible to the user, but if you experience any issues in the menu editor, please let me know!
 
 #### Fixed
 
