@@ -30,8 +30,12 @@ export class MenusTab extends EventEmitter {
   /** This is the HTML element which contains the menus tab's content. */
   private tab: HTMLElement = null;
 
-  /** This is used to drag'n'drop menus from the toolbar to the trash. */
-  private dragger: ToolbarItemDragger = null;
+  /**
+   * This is used to drag'n'drop menus from the toolbar to the trash. The template
+   * argument is a number since the index of the dragged item is stored of in the data
+   * field.
+   */
+  private dragger: ToolbarItemDragger<number> = null;
 
   /** This is the only drop target for dragged menus. */
   private trashTab: HTMLElement = null;
@@ -92,7 +96,7 @@ export class MenusTab extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      shortcut: menu.shortcut || 'Not bound',
+      description: menu.shortcut || 'Not bound.',
       icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
       index,
     }));
@@ -104,7 +108,8 @@ export class MenusTab extends EventEmitter {
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
       this.dragger.addDraggable(div, {
-        index: menu.index,
+        data: menu.index,
+        ghostMode: false,
         dragClass: 'dragging-menu-from-menus-tab',
         dropTargets: [this.trashTab],
       });

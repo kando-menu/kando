@@ -82,18 +82,6 @@ export function computeDropTarget(
   dropTarget: IEditorNode;
   dropIndex: number;
 } {
-  // There are a few special cases when there are only a few items in the menu.
-  // If there are no children, it's easy: We simply drop at index zero.
-  if (!centerItem.children || centerItem.children.length === 0) {
-    return { dropTarget: centerItem, dropIndex: 0 };
-  }
-
-  // Also, if there is only one child and it's the one we are dragging, we drop at index
-  // zero.
-  if (centerItem.children.length === 1 && dragIndex === 0) {
-    return { dropTarget: centerItem, dropIndex: 0 };
-  }
-
   // First, we iterate over all possible drop indices and compute the angle between the
   // dragged item and the drop position candidate. We choose the index which results in
   // the smallest angle.

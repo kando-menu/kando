@@ -14,6 +14,7 @@ import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../common/editor-node';
+import { ItemFactory } from '../../../common/item-factory';
 
 /**
  * This class represents the trash tab in the toolbar. Users can drop menus and menu items
@@ -39,9 +40,10 @@ export class TrashTab extends EventEmitter {
 
   /**
    * This is used to drag'n'drop menus from the trash to the menus tab or to the menu
-   * preview.
+   * preview. The template argument is a number since the index of the dragged item is
+   * stored of in the data field.
    */
-  private dragger: ToolbarItemDragger = null;
+  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * These are all potential drop targets for dragged menus and menu items. Depending on
@@ -119,7 +121,7 @@ export class TrashTab extends EventEmitter {
         return {
           isMenu: true,
           name: menu.nodes.name,
-          shortcut: menu.shortcut || 'Not bound',
+          description: menu.shortcut || 'Not bound.',
           icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
           index,
         };
@@ -127,9 +129,11 @@ export class TrashTab extends EventEmitter {
 
       // If the item is a menu node, we need to extract the name and the icon.
       const node = item as IEditorNode;
+      const typeInfo = ItemFactory.getInstance().getTypeInfo(node.type);
       return {
         isMenu: false,
         name: node.name,
+        description: typeInfo.getDescription(node),
         icon: themedIcon.createDiv(node.icon, node.iconTheme).outerHTML,
         index,
       };
@@ -150,7 +154,8 @@ export class TrashTab extends EventEmitter {
     for (const item of data) {
       const div = document.getElementById(`trash-item-${item.index}`);
       this.dragger.addDraggable(div, {
-        index: item.index,
+        data: item.index,
+        ghostMode: false,
         dragClass: item.isMenu
           ? 'dragging-menu-from-trash-tab'
           : 'dragging-item-from-trash-tab',

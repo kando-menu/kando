@@ -271,7 +271,8 @@ export class PreviewItemDragger extends ItemDragger<IEditorNode> {
       const editor = document.getElementById('kando-editor');
       if (
         event.buttons === 1 &&
-        (editor.classList.contains('dragging-item-from-stash-tab') ||
+        (editor.classList.contains('dragging-new-item-from-toolbar') ||
+          editor.classList.contains('dragging-item-from-stash-tab') ||
           editor.classList.contains('dragging-item-from-trash-tab'))
       ) {
         externalDragOngoing = true;

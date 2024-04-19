@@ -11,7 +11,7 @@
 /**
  * A simple 2D vector.
  *
- * Maybe we should turn this into a class and add some operations.
+ * You can find some vector math in the `src/renderer/math` directory.
  */
 export interface IVec2 {
   x: number;
@@ -40,11 +40,8 @@ export type IKeySequence = Array<IKeyStroke>;
  * represent submenus, leaf nodes represent actual menu items.
  */
 export interface INode {
-  /**
-   * The type of the menu item. This is primarily used to specify the action of this item,
-   * but themes may also use it to style different types of menu items differently.
-   */
-  type: 'empty' | 'command' | 'uri' | 'hotkey' | 'submenu';
+  /** The type of the menu item. See `ActionRegistry` and `ItemFactory`. */
+  type: string;
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf

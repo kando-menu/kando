@@ -30,6 +30,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Menu buttons in the toolbar of the menu editor have now a maximum width. They will not span the whole width of the toolbar anymore.
 - To support drag-and-drop operations from the toolbar to the menu preview, some code refactoring was necessary. This should not change anything for the user, but if you experience any issues in the menu editor, please let me know!
+- Dragged menu items now have a subtle backdrop blur.
+- If a dragged item from the toolbar is not successfully dropped somewhere, there will now be an animation of the item moving back to its original position.
 
 #### Fixed
 

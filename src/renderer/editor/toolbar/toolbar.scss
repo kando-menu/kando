@@ -143,7 +143,7 @@
   .toolbar-button-grid {
     display: grid;
     gap: 10px;
-    grid-template-columns: repeat(auto-fill, minmax(calc(100px + 10vw), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(calc(150px + 5vw), 1fr));
   }
 }
 
@@ -217,7 +217,6 @@
     @include rfs($toolbar-menu-button-icon-size, min-height);
     background-color: white;
     border-radius: 50%;
-    margin-right: var(--bs-btn-padding-x);
     transition: background-color 150ms linear;
 
     i {
@@ -231,8 +230,10 @@
     }
   }
 
-  .shortcut,
+  .description,
   .name {
+    @include rfs(1rem, padding-left);
+    box-sizing: border-box;
     pointer-events: none;
     text-align: left;
     text-overflow: ellipsis;
@@ -241,12 +242,13 @@
   }
 }
 
-// The buttons in the trash and stash tabs are a bit special in that they can only be
-// dragged. We indicate this by changing the cursor and not changing the background color
-// on click.
+// The buttons in the add-new-node, trash, and stash tabs are a bit special in that they
+// can only be dragged. We indicate this by changing the cursor and not changing the
+// background color on click.
 #kando-trash-tab .toolbar-menu-button,
 #kando-trash-tab .toolbar-item-button,
-#kando-stash-tab .toolbar-item-button {
+#kando-stash-tab .toolbar-item-button,
+#kando-add-nodes-tab .toolbar-item-button {
   cursor: grab;
 
   &:active {
@@ -258,29 +260,10 @@
 #kando-editor .toolbar-item-button {
   background: transparent !important;
 
-  &.dragging {
-    backdrop-filter: none;
-  }
-
   .name {
     border-bottom: 2px dashed white;
-  }
-
-  // Add the small connector line.
-  div:has(.name) {
-    @include rfs(1rem, margin-left);
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      transform-origin: left;
-      @include rfs(1.5rem, width);
-      border-bottom: 2px dashed white;
-      transform: rotate(195deg);
-    }
+    margin-bottom: 3px;
+    line-height: 1.2;
   }
 
   // Invert the icon color.
@@ -292,10 +275,16 @@
     }
   }
 
+  &.dragging {
+    backdrop-filter: none;
+  }
+
   // Highlight the icon on hover.
+  &.dragging,
   &:hover {
     div:has(.icon-container) {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: var(--bs-btn-active-bg);
+      backdrop-filter: blur(5px);
     }
   }
 }

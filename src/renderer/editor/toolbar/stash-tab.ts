@@ -13,6 +13,7 @@ import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../common/editor-node';
+import { ItemFactory } from '../../../common/item-factory';
 
 /**
  * This class represents the stash tab in the toolbar. Users can drop menu items here to
@@ -35,9 +36,10 @@ export class StashTab extends EventEmitter {
 
   /**
    * This is used to drag'n'drop menus from the stash to the trash tab or the menus
-   * preview.
+   * preview. The template argument is a number since the index of the dragged item is
+   * stored of in the data field.
    */
-  private dragger: ToolbarItemDragger = null;
+  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * These are all potential drop targets for dragged menu items. Menu items can be
@@ -99,9 +101,11 @@ export class StashTab extends EventEmitter {
 
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
+      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
       return {
         isMenu: false,
         name: item.name,
+        description: typeInfo.getDescription(item),
         icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
         index,
       };
@@ -121,7 +125,8 @@ export class StashTab extends EventEmitter {
     for (const item of data) {
       const div = document.getElementById(`stash-item-${item.index}`);
       this.dragger.addDraggable(div, {
-        index: item.index,
+        data: item.index,
+        ghostMode: false,
         dragClass: 'dragging-item-from-stash-tab',
         dropTargets: [this.trashTab, this.preview],
       });

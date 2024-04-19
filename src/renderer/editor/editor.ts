@@ -18,6 +18,7 @@ import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import { IMenu, IMenuSettings } from '../../common';
 import { IEditorNode, toINode } from './common/editor-node';
+import { ItemFactory } from '../../common/item-factory';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the
@@ -178,6 +179,11 @@ export class Editor extends EventEmitter {
       this.menuSettings.menus.push(newMenu);
       this.toolbar.setMenus(this.menuSettings.menus, this.menuSettings.menus.length - 1);
       this.preview.setMenu(newMenu);
+    });
+
+    this.toolbar.on('add-item', (typeName: string) => {
+      const node = ItemFactory.getInstance().createNode(typeName);
+      this.preview.insertNode(node);
     });
 
     this.toolbar.on('select-menu', (index: number) => {
