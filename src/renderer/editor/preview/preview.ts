@@ -227,7 +227,7 @@ export class Preview extends EventEmitter {
     // the drop index position when a node is dragged around. This will also be called
     // during drag-and-drop operations for new, deleted, and stashed nodes from the
     // toolbar. In this case, `node` and `dragIndex` will be null.
-    this.dragger.on('drag-node', (node, dragIndex, dropTarget, dropIndex) => {
+    this.dragger.on('drag-item', (node, dragIndex, dropTarget, dropIndex) => {
       const parentItem = this.getParentItem();
       const centerItem = this.getCenterItem();
       let indicatorAngle = null;
@@ -305,7 +305,7 @@ export class Preview extends EventEmitter {
     // This is called when a node is successfully dropped somewhere. This is not called
     // for drag-and-drop operations from the toolbar. In this case, the `insertNode()`
     // method will be called by the `Editor`.
-    this.dragger.on('drop-node', (node, dragIndex, dropTarget, dropIndex) => {
+    this.dragger.on('drop-item', (node, dragIndex, dropTarget, dropIndex) => {
       // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
 

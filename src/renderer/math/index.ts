@@ -228,12 +228,12 @@ export function computeItemAngles(
 
 /**
  * Computes the start and end angles of the wedges for the given items. The parent angle
- * is optional. If it is given, there will be a gap towards the parent node.
+ * is optional. If it is given, there will be a gap towards the parent item.
  *
  * @param itemAngles A list of angles for each item. The angles are in degrees and between
  *   0° and 360°.
- * @param parentAngle The angle of the parent node. If given, there will be a gap towards
- *   the parent node. This should be in degrees and between 0° and 360°.
+ * @param parentAngle The angle of the parent item. If given, there will be a gap towards
+ *   the parent item. This should be in degrees and between 0° and 360°.
  * @returns A list of start and end angles for each item. Each item in the list
  *   corresponds to the item at the same index in the `itemAngles` list. The start angle
  *   will always be smaller than the end angle. Consequently, the start angle can be
@@ -248,13 +248,13 @@ export function computeItemWedges(
     return [];
   }
 
-  // If the node has a single child but no parent (e.g. it's the root node), we can
+  // If the item has a single child but no parent (e.g. it's the root item), we can
   // simply return a full circle.
   if (itemAngles.length === 1 && parentAngle === undefined) {
     return [{ start: 0, end: 360 }];
   }
 
-  // If the node has a single child and a parent, we can set the start and end
+  // If the item has a single child and a parent, we can set the start and end
   // angles to the center angles.
   if (itemAngles.length === 1 && parentAngle !== undefined) {
     let start = parentAngle;

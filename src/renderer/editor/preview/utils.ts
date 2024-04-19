@@ -13,18 +13,18 @@ import * as themedIcon from '../common/themed-icon';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 
 /**
- * This function returns the direction towards the parent of the given node. If the node
- * has no parent (e.g. it is the root menu), it returns undefined.
+ * This function returns the direction towards the parent of the given menu item. If the
+ * item has no parent (e.g. it is the root menu), it returns undefined.
  *
- * @param node The node for which to compute the parent angle.
- * @returns The angle towards the parent of the given node.
+ * @param item The item for which to compute the parent angle.
+ * @returns The angle towards the parent of the given item.
  */
-export function getParentAngle(node: IEditorMenuItem) {
-  if (node.computedAngle === undefined) {
+export function getParentAngle(item: IEditorMenuItem) {
+  if (item.computedAngle === undefined) {
     return undefined;
   }
 
-  return (node.computedAngle + 180) % 360;
+  return (item.computedAngle + 180) % 360;
 }
 
 /**
@@ -71,8 +71,8 @@ export function getParentWithClass(div: HTMLElement, className: string) {
  * @param dragAngle The angle of the dragged item.
  * @param dragIndex If the dragged item is a child of centerItem, this is the index of the
  *   dragged item in centerItem.children. It will be excluded from the list of possible
- *   drop targets and ignored when computing node angles.
- * @returns The node to drop the item into and the index where to drop it.
+ *   drop targets and ignored when computing item angles.
+ * @returns The item to drop the item into and the index where to drop it.
  */
 export function computeDropTarget(
   centerItem: IEditorMenuItem,
@@ -167,32 +167,32 @@ export function computeItemAnglesWithDropIndex(
  * This method creates the big center div which shows the icon of the currently selected
  * menu.
  *
- * @param node The node for which to create the center div.
+ * @param item The menu item for which to create the center div.
  */
-export function createCenterDiv(node: IEditorMenuItem) {
+export function createCenterDiv(item: IEditorMenuItem) {
   const div = document.createElement('div');
   div.classList.add('kando-menu-preview-center');
-  div.appendChild(themedIcon.createDiv(node.icon, node.iconTheme));
+  div.appendChild(themedIcon.createDiv(item.icon, item.iconTheme));
   return div;
 }
 
 /**
- * This method creates a div visualizing a child node. It contains an icon, potentially
- * grandchildren, and a label.
+ * This method creates a div visualizing a child menu item. It contains an icon,
+ * potentially grandchildren, and a label.
  *
- * @param node The node for which to create the child div.
+ * @param item The item for which to create the child div.
  */
-export function createChildDiv(node: IEditorMenuItem) {
+export function createChildDiv(item: IEditorMenuItem) {
   const div = document.createElement('div');
   div.classList.add('kando-menu-preview-child');
 
   // Add the icon of the child.
-  div.appendChild(themedIcon.createDiv(node.icon, node.iconTheme));
+  div.appendChild(themedIcon.createDiv(item.icon, item.iconTheme));
 
   // If the child can have children, we add container for the grandchildren. The actual
   // grandchildren divs are added on demand as their number may change if items are
   // dropped into the menu.
-  if (node.type === 'submenu') {
+  if (item.type === 'submenu') {
     const grandChildContainer = document.createElement('div');
     grandChildContainer.classList.add('kando-menu-preview-grandchild-container');
     div.appendChild(grandChildContainer);
@@ -210,7 +210,7 @@ export function createChildDiv(node: IEditorMenuItem) {
   labelDiv.classList.add('kando-menu-preview-label');
   labelDiv.classList.add('kando-font');
   labelDiv.classList.add('fs-3');
-  labelDiv.textContent = node.name;
+  labelDiv.textContent = item.name;
   labelDivContainer.appendChild(labelDiv);
 
   return div;

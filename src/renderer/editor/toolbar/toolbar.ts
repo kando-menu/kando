@@ -109,8 +109,8 @@ export class Toolbar extends EventEmitter {
     this.menusTab.setMenus(menus, currentMenu);
   }
 
-  public setTrashedItems(items: Array<IMenu | IEditorMenuItem>) {
-    this.trashTab.setTrashedItems(items);
+  public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
+    this.trashTab.setTrashedThings(items);
   }
 
   public setStashedItems(items: Array<IEditorMenuItem>) {

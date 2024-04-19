@@ -100,7 +100,7 @@ export class AddNodesTab extends EventEmitter {
     // Add drag'n'drop logic to the  buttons. The menu items can be dragged to the menu
     // preview.
     for (const item of data) {
-      const div = this.tab.querySelector(`#new-node-${item.typeName}`) as HTMLElement;
+      const div = this.tab.querySelector(`#new-item-${item.typeName}`) as HTMLElement;
       this.dragger.addDraggable(div, {
         data: item.typeName,
         ghostMode: true,

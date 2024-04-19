@@ -15,26 +15,26 @@ import * as math from '../../math';
 import { IVec2 } from '../../../common';
 
 /**
- * This class is a specialized ItemDragger which is used to drag menu nodes in the
- * editor's preview. In addition to making the given nodes draggable, it also adds support
+ * This class is a specialized ItemDragger which is used to drag menu items in the
+ * editor's preview. In addition to making the given items draggable, it also adds support
  * for drag and drop operations from the toolbar.
  *
  * While this class has access to the entire menu structure, it will not modify it.
  * Instead, it will emit events which can be used to modify the menu structure from the
  * outside. It emits the following events in addition to the events emitted by the
- * `ItemDragger` class:
+ * `ItemDragger` base class:
  *
- * @fires drag-node - When a node node is dragged over the preview. The event data is the
- *   dragged node, the index of the dragged node (if it was an internal drag-and-drop
- *   operation), the target node (if there is a valid drop target currently, else
- *   undefined) and the index where the node should be inserted into the target node's
- *   children.
- * @fires drop-node - When a menu node is successfully dropped onto a drop target. The
- *   event data is the dragged node, the index of the dragged node (if it was an internal
- *   drag-and-drop operation), the target node and the index where the node should be
- *   inserted into the target node's children.
- * @fired update-fixed-angle - When a node with a fixed angle is dragged around. The event
- *  data is the dragged node and the new angle.
+ * @fires drag-item - When a menu item is dragged over the preview. The event data is the
+ *   dragged item, the original index of the dragged item (if it was an internal
+ *   drag-and-drop operation), the target menu item (if there is a valid drop target
+ *   currently, else undefined) and the index where the item should be inserted into the
+ *   target's children.
+ * @fires drop-item - When a menu item is successfully dropped onto a drop target. The
+ *   event data is the dragged item, the original index of the dragged item (if it was an
+ *   internal drag-and-drop operation), the target item and the index where the item
+ *   should be inserted into the target's children.
+ * @fires update-fixed-angle - When a menu item with a fixed angle is dragged around. The
+ *   event data is the dragged item and the new angle.
  */
 export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
   /**
@@ -43,10 +43,10 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
    */
   private container: HTMLElement = null;
 
-  /** This is the current center node of the preview. */
+  /** This is the current center item of the preview. */
   private centerItem: IEditorMenuItem = null;
 
-  /** This is the parent node of the center node. */
+  /** This is the parent item of the center item. */
   private parentItem: IEditorMenuItem = null;
 
   /**
@@ -84,11 +84,11 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
       this.previewCenter = utils.computeCenter(this.container);
     });
 
-    this.on('mouse-down', (node, itemDiv) => {
+    this.on('mouse-down', (item, itemDiv) => {
       itemDiv.classList.add('clicking');
     });
 
-    this.on('mouse-up', (node, itemDiv) => {
+    this.on('mouse-up', (item, itemDiv) => {
       itemDiv.classList.remove('clicking');
     });
 
@@ -99,9 +99,9 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
   /**
    * This is called by the `Preview` class whenever a new menu is displayed.
    *
-   * @param centerItem The menu node which is currently shown in preview.
+   * @param centerItem The menu item which is currently shown in preview.
    * @param parentItem The parent menu of the centerNode. Will be `undefined` for the root
-   *   node.
+   *   item.
    */
   public setCenterItem(centerItem: IEditorMenuItem, parentItem: IEditorMenuItem) {
     this.centerItem = centerItem;
@@ -120,7 +120,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
   /** This methods sets up the logic required for reordering menu nodes in the preview. */
   private initInternalDragging() {
     // We keep track whether something is currently dragged over the preview area. This
-    // way we can reset the drop target if the dragged node leaves the preview area.
+    // way we can reset the drop target if the dragged item leaves the preview area.
     let dragOverPreview = false;
 
     const dragEnter = () => {
@@ -135,10 +135,10 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
     // angles can be dragged freely around and will be detached from the parent menu
     // during the drag. Items with fixed angles cannot be dragged freely but will only
     // rotate around the parent menu item.
-    this.on('drag-start', (node, itemDiv) => {
-      // If the node has a fixed angle, we do nothing. In this case, the item will be
+    this.on('drag-start', (item, itemDiv) => {
+      // If the item has a fixed angle, we do nothing. In this case, the item will be
       // rotated during the drag-move listener further down.
-      if (node.angle !== undefined) {
+      if (item.angle !== undefined) {
         return;
       }
 
@@ -150,7 +150,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
       // Store the index of the dragged child. We need to exclude it from all angle
       // computations during the drag operation as it will be visually detached from the
       // parent menu.
-      this.dragIndex = this.centerItem.children.indexOf(node);
+      this.dragIndex = this.centerItem.children.indexOf(item);
       this.dropIndex = null;
       this.dropTarget = null;
 
@@ -164,17 +164,17 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
     // This is called when a menu item is dragged around. Menu items without fixed angles
     // will be moved around freely. If the item has a fixed angle, it will be rotated
     // around the parent menu item.
-    this.on('drag-move', (node, itemDiv, relative, absolute) => {
+    this.on('drag-move', (item, itemDiv, relative, absolute) => {
       // Compute the angle towards the dragged item.
       const relativePosition = math.subtract(absolute, this.previewCenter);
       const dragAngle = math.getAngle(relativePosition);
 
-      // If the node has a fixed angle, we cannot move it around freely. Instead, we
+      // If the item has a fixed angle, we cannot move it around freely. Instead, we
       // update its fixed angle when it's dragged around. For now, we limit the movement
       // to 15 degree steps.
-      if (node.angle !== undefined) {
+      if (item.angle !== undefined) {
         const angle = Math.round(dragAngle / 15) * 15;
-        this.emit('update-fixed-angle', node, angle);
+        this.emit('update-fixed-angle', item, angle);
         return;
       }
 
@@ -201,12 +201,12 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
         newDropIndex = result.dropIndex;
       }
 
-      // If the drop target or index changed, we emit the `drag-node` event.
+      // If the drop target or index changed, we emit the `drag-item` event.
       if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
         this.dropIndex = newDropIndex;
         this.dropTarget = newDropTarget;
 
-        this.emit('drag-node', node, this.dragIndex, this.dropTarget, this.dropIndex);
+        this.emit('drag-item', item, this.dragIndex, this.dropTarget, this.dropIndex);
       }
     });
 
@@ -227,14 +227,14 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
     };
 
     // This is called when a menu item is dropped.
-    this.on('drag-end', (node, itemDiv) => {
-      // If the node has a fixed angle, we do nothing. In this case, the item was only
+    this.on('drag-end', (item, itemDiv) => {
+      // If the item has a fixed angle, we do nothing. In this case, the item was only
       // rotated during the drag operation but not removed from the parent menu.
-      if (node.angle !== undefined) {
+      if (item.angle !== undefined) {
         return;
       }
 
-      this.emit('drop-node', node, this.dragIndex, this.dropTarget, this.dropIndex);
+      this.emit('drop-item', item, this.dragIndex, this.dropTarget, this.dropIndex);
 
       // Reset the position of the dragged div and hide the drop indicator.
       onDragEnd(itemDiv);
@@ -242,10 +242,10 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
 
     // This is called when a drag operation is aborted. The dragged item is re-added to the
     // parent menu.
-    this.on('drag-cancel', (node, itemDiv) => {
-      // If the node has a fixed angle, we do nothing. In this case, the item was only
+    this.on('drag-cancel', (item, itemDiv) => {
+      // If the item has a fixed angle, we do nothing. In this case, the item was only
       // rotated during the drag operation but not removed from the parent menu.
-      if (node.angle !== undefined) {
+      if (item.angle !== undefined) {
         return;
       }
 
@@ -258,9 +258,9 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
    * This methods sets up the logic required for dragging nodes from the toolbar to the
    * preview. We basically detect if something is dragged over the preview area by looking
    * at the mouse pointer state and the CSS classes given to the #kando-editor element. We
-   * emit the `drag-node` event accordingly. We do not emit the `drop-node` signal.
-   * Instead, the editor will tell the preview when a node from the toolbar is dropped to
-   * the preview.
+   * emit the `drag-item` event accordingly. We do not emit the `drop-item` signal.
+   * Instead, the editor will tell the preview when a menu item from the toolbar is
+   * dropped to the preview.
    */
   private initExternalDragging() {
     let externalDragOngoing = false;
@@ -286,7 +286,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
         externalDragOngoing = false;
         this.dropTarget = null;
         this.dropIndex = null;
-        this.emit('drag-node', null, null, null, null);
+        this.emit('drag-item', null, null, null, null);
       }
     });
 
@@ -313,22 +313,22 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
         newDropIndex = result.dropIndex;
       }
 
-      // If the drop target or index changed, we emit the `drag-node` event.
+      // If the drop target or index changed, we emit the `drag-item` event.
       if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
         this.dropIndex = newDropIndex;
         this.dropTarget = newDropTarget;
 
-        this.emit('drag-node', null, null, this.dropTarget, this.dropIndex);
+        this.emit('drag-item', null, null, this.dropTarget, this.dropIndex);
       }
     });
 
     // When the pointer is released while something is dragged over the preview, we emit
-    // the `drag-node` event with null values to indicate that the drag operation is
+    // the `drag-item` event with null values to indicate that the drag operation is
     // finished.
     this.container.addEventListener('pointerup', () => {
       if (externalDragOngoing) {
         externalDragOngoing = false;
-        this.emit('drag-node', null, null, null, null);
+        this.emit('drag-item', null, null, null, null);
       }
     });
   }

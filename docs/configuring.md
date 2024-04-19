@@ -68,32 +68,32 @@ They are JSON objects with the following properties:
 Property | Default Value | Description
 -------- | ------------- | -----------
 `shortcut` | _mandatory_ | The shortcut which opens the menu. This is a string which can contain multiple keys separated by `+`. For example, `"Ctrl+Shift+K"` or `"Cmd+Shift+K"`.
-`nodes` | _mandatory_ | The root node of the menu given as a Node Description. See below for details.
+`nodes` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
 
-#### Node Descriptions
+#### Menu Item Descriptions
 
 The layout of the menu is described by a tree of nodes.
-Each node is a JSON object with the following properties:
+Each menu item is a JSON object with the following properties:
 
 Property | Default Value | Description
 -------- | ------------- | -----------
-`name` | `"undefined"` | The name of the node. This is shown in the center of the menu when the node is hovered. The name of the root node defines the name of the menu.
+`name` | `"undefined"` | The name of the menu item. This is shown in the center of the menu when the item is hovered. The name of the root item defines the name of the menu.
 `iconTheme` | `""` | For now, this can either be `"material-symbols-rounded"`, `"simple-icons"`, or `"emoji"`. With the first, you can use icons from [Google's Material Symbols](https://fonts.google.com/icons). With the second, you can use any icon from [Simple Icons](https://simpleicons.org/).
 `icon` | `""` | The name of the icon from the given icon theme or an emoji like `"🚀"`.
-`angle` | _auto_ | If given, this defines the angle of the node in degrees. If this is not given, the angle is calculated automatically. 0° means that the node is at the top of the menu, 90° means that the node is on the right side of the menu, and so on. All sibling nodes are evenly distributed around the nodes with given angles.
-`type` | `"submenu"` | The type of the node. There are several types available. See below for details.
-`data` | `{}` | Depending on the type of the node, this can contain additional data. See below for details.
-`children` | `[]` | If the node is a submenu, this contains a list of child nodes. See below for details.
+`angle` | _auto_ | If given, this defines the angle of the menu item in degrees. If this is not given, the angle is calculated automatically. 0° means that the item is at the top of the menu, 90° means that the item is on the right side of the menu, and so on. All sibling nodes are evenly distributed around the nodes with given angles.
+`type` | `"submenu"` | The type of the menu item. There are several types available. See below for details.
+`data` | `{}` | Depending on the type of the item, this can contain additional data. See below for details.
+`children` | `[]` | If the menu item is a submenu, this contains a list of child nodes. See below for details.
 
-#### Node Types
+#### Menu Item Types
 
-For now, the `type` property of a node can be one of the following values.
+For now, the `type` property of a menu item can be one of the following values.
 New types will be added in the future.
 
-**`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the node must contain a list of child nodes.
+**`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the menu item must contain a list of child nodes.
 
-**`"command"`:** This type is used to execute a shell command. The `data` property of the node must contain a `command` property which contains the shell command to execute. For instance, this node will open Inkscape on Linux:
+**`"command"`:** This type is used to execute a shell command. The `data` property of the menu item must contain a `command` property which contains the shell command to execute. For instance, this menu item will open Inkscape on Linux:
 ```json
 {
   "name": "Inkscape",
@@ -106,7 +106,7 @@ New types will be added in the future.
 }
 ```
 
-**`"uri"`:** This type is used to open any kind of URI. The `data` property of the node must contain a `uri` property which contains the URI to open. For instance, this node will open GitHub in the default browser:
+**`"uri"`:** This type is used to open any kind of URI. The `data` property of the menu item must contain a `uri` property which contains the URI to open. For instance, this menu item will open GitHub in the default browser:
 ```json
 {
   "name": "GitHub",
@@ -119,7 +119,7 @@ New types will be added in the future.
 }
 ```
 
-**`"hotkey"`:** This type is used to simulate a keyboard shortcut. The `data` property of the node must contain a `hotkey` property which contains the shortcut to simulate. The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed. This can be used if the hotkey should be captured by another window. For instance, this node will paste the clipboard content:
+**`"hotkey"`:** This type is used to simulate a keyboard shortcut. The `data` property of the menu item must contain a `hotkey` property which contains the shortcut to simulate. The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed. This can be used if the hotkey should be captured by another window. For instance, this menu item will paste the clipboard content:
 ```json
 {
   "name": "Paste",

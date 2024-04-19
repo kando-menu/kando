@@ -75,7 +75,7 @@ contextBridge.exposeInMainWorld('api', {
   /**
    * This will be called by the host process when a new menu should be shown.
    *
-   * @param callback This callback will be called with the root node of the menu and the
+   * @param callback This callback will be called with the root item of the menu and the
    *   position of the mouse cursor.
    */
   showMenu: function (callback: (root: IMenuItem, pos: IVec2) => void) {
