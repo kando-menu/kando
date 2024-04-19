@@ -43,6 +43,10 @@ export interface IAction {
   execute(item: DeepReadonly<INode>, backend: Backend): void;
 }
 
+/**
+ * This singleton class is a registry for all available actions. It is used to execute the
+ * action of a menu item.
+ */
 export class ActionRegistry {
   /** The singleton instance of this class. */
   private static instance: ActionRegistry = null;
