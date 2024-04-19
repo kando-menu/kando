@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode } from '../index';
+import { IMenuItem } from '../index';
 import { IMeta } from '../item-factory';
 
 /** For submenu items, no additional data is required. */
@@ -40,7 +40,7 @@ export class SubmenuMeta implements IMeta {
     return 'Contains other menu items.';
   }
 
-  getDescription(node: INode): string {
-    return `Contains ${node.children.length} menu items.`;
+  getDescription(item: IMenuItem): string {
+    return `Contains ${item.children.length} menu items.`;
   }
 }

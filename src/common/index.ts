@@ -35,17 +35,14 @@ export interface IKeyStroke {
  */
 export type IKeySequence = Array<IKeyStroke>;
 
-/**
- * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
- * represent submenus, leaf nodes represent actual menu items.
- */
-export interface INode {
+/** The menu consists of a tree of menu items. */
+export interface IMenuItem {
   /** The type of the menu item. See `ActionRegistry` and `ItemFactory`. */
   type: string;
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf
-   * nodes will have this field.
+   * menu items will have this field.
    */
   data?: unknown;
 
@@ -59,10 +56,10 @@ export interface INode {
   iconTheme: string;
 
   /**
-   * The child nodes of this menu item. If this property is set, the node represents a
+   * The children of this menu item. If this property is set, the menu item represents a
    * submenu.
    */
-  children?: Array<INode>;
+  children?: Array<IMenuItem>;
 
   /**
    * The direction of the menu item in degrees. If not set, it will be computed when the
@@ -73,15 +70,18 @@ export interface INode {
 }
 
 /**
- * This interface describes a menu. It contains the root node of the menu, the shortcut to
+ * This interface describes a menu. It contains the root item of the menu, the shortcut to
  * open the menu and a flag indicating whether the menu should be opened in the center of
  * the screen or at the mouse pointer.
  *
  * This interface is used to describe one of the configured menus in the settings file.
  */
 export interface IMenu {
-  /** The root node of the menu. */
-  nodes: INode;
+  /**
+   * The root item of the menu. This is called `nodes` for legacy reasons and should be
+   * renamed to `root` in the future.
+   */
+  nodes: IMenuItem;
 
   /** The shortcut to open the menu. */
   shortcut: string;
@@ -101,7 +101,7 @@ export interface IMenuSettings {
   menus: Array<IMenu>;
 
   /** The currently stashed menu items. */
-  stash: Array<INode>;
+  stash: Array<IMenuItem>;
 }
 
 /**

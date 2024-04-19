@@ -14,7 +14,7 @@ import { EventEmitter } from 'events';
 import * as math from '../../math';
 import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 import { PreviewItemDragger } from './preview-item-dragger';
 import { IVec2, IMenu } from '../../../common';
 
@@ -63,13 +63,13 @@ export class Preview extends EventEmitter {
    * currently shown in the center. The first element is the menu's root, the second
    * element is the selected child of the root (if any), and so on.
    */
-  private selectionChain: Array<IEditorNode> = [];
+  private selectionChain: Array<IEditorMenuItem> = [];
 
   /**
    * The menu item which has been selected last time. This node has a special style in the
    * preview and its properties are drawn in the property editor on the right.
    */
-  private activeNode?: IEditorNode = null;
+  private activeItem?: IEditorMenuItem = null;
 
   /** This is used to drag'n'drop menu items. */
   private dragger: PreviewItemDragger = null;
@@ -156,7 +156,7 @@ export class Preview extends EventEmitter {
    *
    * @param node The new node to be added.
    */
-  public insertNode(node: IEditorNode) {
+  public insertNode(node: IEditorMenuItem) {
     const { dropTarget, dropIndex } = this.dragger.getLastDropTarget();
 
     if (dropTarget !== null) {
@@ -194,7 +194,7 @@ export class Preview extends EventEmitter {
    *
    * @returns The menu node which is currently in the center of the preview.
    */
-  private getCenterItem(): IEditorNode {
+  private getCenterItem(): IEditorMenuItem {
     return this.selectionChain[this.selectionChain.length - 1];
   }
 
@@ -205,7 +205,7 @@ export class Preview extends EventEmitter {
    * @returns The parent of the currently selected item or null if the currently selected
    *   item is the root item.
    */
-  private getParentItem(): IEditorNode | null {
+  private getParentItem(): IEditorMenuItem | null {
     return this.selectionChain[this.selectionChain.length - 2] ?? null;
   }
 
@@ -424,7 +424,7 @@ export class Preview extends EventEmitter {
 
     // Add the children of the currently selected menu.
     centerItem.children?.forEach((child) => {
-      this.redrawNode(child as IEditorNode, container);
+      this.redrawNode(child as IEditorMenuItem, container);
     });
 
     // Let the dragger know that we have a new center item.
@@ -486,7 +486,7 @@ export class Preview extends EventEmitter {
    * @param node The node which should be added to the preview.
    * @param container The container to which the node should be added.
    */
-  private redrawNode(node: IEditorNode, container: HTMLElement) {
+  private redrawNode(node: IEditorMenuItem, container: HTMLElement) {
     // Create a div for the child.
     node.itemDiv = utils.createChildDiv(node);
     container.appendChild(node.itemDiv);
@@ -562,7 +562,7 @@ export class Preview extends EventEmitter {
    *
    * @param child The child node for which to update the position.
    */
-  private updateChildPosition(child: IEditorNode) {
+  private updateChildPosition(child: IEditorMenuItem) {
     // Set the CSS variables for the position and rotation of the child.
     const position = math.getDirection(child.computedAngle, 1.0);
     child.itemDiv.style.setProperty('--rotation', child.computedAngle + 'deg');
@@ -604,7 +604,7 @@ export class Preview extends EventEmitter {
       child.children.forEach((grandChild, i) => {
         (grandChildContainer.childNodes[i] as HTMLElement).style.setProperty(
           '--rotation',
-          (grandChild as IEditorNode).computedAngle + 'deg'
+          (grandChild as IEditorMenuItem).computedAngle + 'deg'
         );
       });
     }
@@ -617,7 +617,7 @@ export class Preview extends EventEmitter {
    *
    * @param node The node which has been selected.
    */
-  private selectNode(node: IEditorNode) {
+  private selectNode(node: IEditorMenuItem) {
     // Only submenus can be part of the selection chain.
     if (node.type === 'submenu') {
       // If the node is already the last one in the selection chain, we do nothing. If it
@@ -636,11 +636,11 @@ export class Preview extends EventEmitter {
       }
     }
 
-    if (this.activeNode) {
-      this.activeNode.itemDiv.classList.remove('active');
+    if (this.activeItem) {
+      this.activeItem.itemDiv.classList.remove('active');
     }
 
-    this.activeNode = node;
+    this.activeItem = node;
     node.itemDiv.classList.add('active');
 
     this.emit('select-item', node);
@@ -654,7 +654,7 @@ export class Preview extends EventEmitter {
    *
    * @param nodes The nodes for which to setup the angles recursively.
    */
-  private computeItemAnglesRecursively(nodes?: IEditorNode[], parentAngle?: number) {
+  private computeItemAnglesRecursively(nodes?: IEditorMenuItem[], parentAngle?: number) {
     // If the node has no children, we can stop here.
     if (!nodes || nodes.length === 0) {
       return;
@@ -667,7 +667,7 @@ export class Preview extends EventEmitter {
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < nodes.length; ++i) {
-      const child = nodes[i] as IEditorNode;
+      const child = nodes[i] as IEditorMenuItem;
       child.computedAngle = itemAngles[i];
 
       // Finally, we recursively setup the angles for the children of the child.
@@ -722,7 +722,7 @@ export class Preview extends EventEmitter {
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < nodes.length; ++i) {
-      const child = nodes[i] as IEditorNode;
+      const child = nodes[i] as IEditorMenuItem;
       child.computedAngle = itemAngles[i];
 
       // Finally, we recursively setup the angles for the children of the child.

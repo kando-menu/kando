@@ -15,7 +15,7 @@ import { AddNodesTab } from './add-nodes-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { StashTab } from './stash-tab';
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -109,11 +109,11 @@ export class Toolbar extends EventEmitter {
     this.menusTab.setMenus(menus, currentMenu);
   }
 
-  public setTrashedItems(items: Array<IMenu | IEditorNode>) {
+  public setTrashedItems(items: Array<IMenu | IEditorMenuItem>) {
     this.trashTab.setTrashedItems(items);
   }
 
-  public setStashedItems(items: Array<IEditorNode>) {
+  public setStashedItems(items: Array<IEditorMenuItem>) {
     this.stashTab.setStashedItems(items);
   }
 

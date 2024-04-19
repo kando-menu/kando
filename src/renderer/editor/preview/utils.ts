@@ -10,7 +10,7 @@
 
 import * as math from '../../math';
 import * as themedIcon from '../common/themed-icon';
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 
 /**
  * This function returns the direction towards the parent of the given node. If the node
@@ -19,7 +19,7 @@ import { IEditorNode } from '../common/editor-node';
  * @param node The node for which to compute the parent angle.
  * @returns The angle towards the parent of the given node.
  */
-export function getParentAngle(node: IEditorNode) {
+export function getParentAngle(node: IEditorMenuItem) {
   if (node.computedAngle === undefined) {
     return undefined;
   }
@@ -75,11 +75,11 @@ export function getParentWithClass(div: HTMLElement, className: string) {
  * @returns The node to drop the item into and the index where to drop it.
  */
 export function computeDropTarget(
-  centerItem: IEditorNode,
+  centerItem: IEditorMenuItem,
   dragAngle: number,
   dragIndex?: number
 ): {
-  dropTarget: IEditorNode;
+  dropTarget: IEditorMenuItem;
   dropIndex: number;
 } {
   // First, we iterate over all possible drop indices and compute the angle between the
@@ -113,7 +113,7 @@ export function computeDropTarget(
   // drop target.
   const itemAngles = math.computeItemAngles(candidates, parentAngle);
   for (let i = 0; i < candidates.length; i++) {
-    const child = candidates[i] as IEditorNode;
+    const child = candidates[i] as IEditorMenuItem;
     if (child.type === 'submenu') {
       const diff = math.getAngularDifference(dragAngle, itemAngles[i]);
       if (diff < bestDiff || diff < 5) {
@@ -169,7 +169,7 @@ export function computeItemAnglesWithDropIndex(
  *
  * @param node The node for which to create the center div.
  */
-export function createCenterDiv(node: IEditorNode) {
+export function createCenterDiv(node: IEditorMenuItem) {
   const div = document.createElement('div');
   div.classList.add('kando-menu-preview-center');
   div.appendChild(themedIcon.createDiv(node.icon, node.iconTheme));
@@ -182,7 +182,7 @@ export function createCenterDiv(node: IEditorNode) {
  *
  * @param node The node for which to create the child div.
  */
-export function createChildDiv(node: IEditorNode) {
+export function createChildDiv(node: IEditorMenuItem) {
   const div = document.createElement('div');
   div.classList.add('kando-menu-preview-child');
 

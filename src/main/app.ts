@@ -15,7 +15,7 @@ import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { INode, IMenu, IMenuSettings, IAppSettings } from '../common';
+import { IMenuItem, IMenu, IMenuSettings, IAppSettings } from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ActionRegistry } from '../common/action-registry';
 
@@ -326,12 +326,12 @@ export class KandoApp {
     ipcMain.on('select-item', (event, path) => {
       try {
         // Find the selected item.
-        const node = this.getNodeAtPath(this.lastMenu.nodes, path);
+        const item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
 
         // If the action is not delayed, we execute it immediately.
-        const executeDelayed = ActionRegistry.getInstance().delayedExecution(node);
+        const executeDelayed = ActionRegistry.getInstance().delayedExecution(item);
         if (!executeDelayed) {
-          ActionRegistry.getInstance().execute(node, this.backend);
+          ActionRegistry.getInstance().execute(item, this.backend);
         }
 
         // Also wait with the execution of the selected action until the fade-out
@@ -345,7 +345,7 @@ export class KandoApp {
 
           // If the action is delayed, we execute it after the window is hidden.
           if (executeDelayed) {
-            ActionRegistry.getInstance().execute(node, this.backend);
+            ActionRegistry.getInstance().execute(item, this.backend);
           }
         }, 400);
       } catch (err) {
@@ -450,32 +450,32 @@ export class KandoApp {
   }
 
   /**
-   * This returns the node at the given path from the given root node. The path is a
-   * string of numbers separated by slashes. Each number is the index of the child node to
-   * select. For example, the path "0/2/1" would select the second child of the third
-   * child of the first child of the root node.
+   * This returns the menu item at the given path from the given root menu. The path is a
+   * string of numbers separated by slashes. Each number is the index of the child menu
+   * item to select. For example, the path "0/2/1" would select the second child of the
+   * third child of the first child of the root menu item.
    *
-   * @param root The root node of the menu.
-   * @param path The path to the node to select.
-   * @returns The node at the given path.
+   * @param root The root item of the menu.
+   * @param path The path to the menu item to select.
+   * @returns The menu item at the given path.
    * @throws If the path is invalid.
    */
-  private getNodeAtPath(root: DeepReadonly<INode>, path: string) {
-    let node = root;
+  private getMenuItemAtPath(root: DeepReadonly<IMenuItem>, path: string) {
+    let item = root;
     const indices = path
       .substring(1)
       .split('/')
       .map((x: string) => parseInt(x));
 
     for (const index of indices) {
-      if (!node.children || index >= node.children.length) {
+      if (!item.children || index >= item.children.length) {
         throw new Error(`Invalid path "${path}".`);
       }
 
-      node = node.children[index];
+      item = item.children[index];
     }
 
-    return node;
+    return item;
   }
 
   /**
@@ -537,7 +537,7 @@ export class KandoApp {
 
   /** This creates an example menu which can be used for testing. */
   private createExampleMenu() {
-    const root: INode = {
+    const root: IMenuItem = {
       type: 'submenu',
       name: 'Prototype Menu',
       icon: 'open_with',
@@ -546,8 +546,8 @@ export class KandoApp {
     };
 
     // This is currently used to create the test menu. It defines the number of children
-    // per level. The first number is the number of children of the root node, the second
-    // number is the number of children of each child node and so on.
+    // per level. The first number is the number of children of the root item, the second
+    // number is the number of children of each child menu item and so on.
     const CHILDREN_PER_LEVEL = [8, 7, 7];
 
     const TEST_ICONS = [
@@ -561,23 +561,23 @@ export class KandoApp {
       'fullscreen',
     ];
 
-    const addChildren = (parent: INode, name: string, level: number) => {
+    const addChildren = (parent: IMenuItem, name: string, level: number) => {
       if (level < CHILDREN_PER_LEVEL.length) {
         parent.children = [];
         for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
-          const node: INode = {
+          const item: IMenuItem = {
             type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'empty',
             name: `${name} ${i}`,
             icon: TEST_ICONS[i % TEST_ICONS.length],
             iconTheme: 'material-symbols-rounded',
           };
-          parent.children.push(node);
-          addChildren(node, node.name, level + 1);
+          parent.children.push(item);
+          addChildren(item, item.name, level + 1);
         }
       }
     };
 
-    addChildren(root, 'Node', 0);
+    addChildren(root, 'Item', 0);
 
     return {
       nodes: root,

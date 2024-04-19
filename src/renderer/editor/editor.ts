@@ -17,7 +17,7 @@ import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import { IMenu, IMenuSettings } from '../../common';
-import { IEditorNode, toINode } from './common/editor-node';
+import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
 import { ItemFactory } from '../../common/item-factory';
 
 /**
@@ -80,7 +80,7 @@ export class Editor extends EventEmitter {
    * restored by dragging them back to the menus tab or the menu preview. They will not be
    * saved to disc.
    */
-  private trashedItems: Array<IMenu | IEditorNode> = [];
+  private trashedItems: Array<IMenu | IEditorMenuItem> = [];
 
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
@@ -182,7 +182,7 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('add-item', (typeName: string) => {
-      const node = ItemFactory.getInstance().createNode(typeName);
+      const node = ItemFactory.getInstance().createMenuItem(typeName);
       this.preview.insertNode(node);
     });
 
@@ -206,13 +206,15 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('restore-deleted-item', (index: number) => {
-      const node = this.trashedItems.splice(index, 1)[0] as IEditorNode;
+      const node = this.trashedItems.splice(index, 1)[0] as IEditorMenuItem;
       this.preview.insertNode(node);
       this.toolbar.setTrashedItems(this.trashedItems);
     });
 
     this.toolbar.on('stash-deleted-item', (index: number) => {
-      this.menuSettings.stash.push(this.trashedItems.splice(index, 1)[0] as IEditorNode);
+      this.menuSettings.stash.push(
+        this.trashedItems.splice(index, 1)[0] as IEditorMenuItem
+      );
       this.toolbar.setTrashedItems(this.trashedItems);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
@@ -300,16 +302,16 @@ export class Editor extends EventEmitter {
 
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure
-      // that the menu nodes are converted back to INode objects. This is because
-      // IEditorNode objects contain properties (such as DOM nodes) which neither need to
+      // that the menu nodes are converted back to IMenuItem objects. This is because
+      // IEditorMenuItem objects contain properties (such as DOM nodes) which neither need to
       // be saved to disc nor can they be cloned using the structured clone algorithm
       // which is used by Electron for IPC.
       this.menuSettings.menus.forEach((menu) => {
-        menu.nodes = toINode(menu.nodes);
+        menu.nodes = toIMenuItem(menu.nodes);
       });
 
-      // Also the stash needs to be converted back to INode objects.
-      this.menuSettings.stash = this.menuSettings.stash.map(toINode);
+      // Also the stash needs to be converted back to IMenuItem objects.
+      this.menuSettings.stash = this.menuSettings.stash.map(toIMenuItem);
 
       window.api.menuSettings.set(this.menuSettings);
       this.menuSettings = null;

@@ -8,15 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2, INode } from '../../common';
+import { IVec2, IMenuItem } from '../../common';
 
 /**
  * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
  * represent submenus, leaf nodes represent actual menu items. This interface extends the
- * INode interface with properties which are only used by the Menu class in the renderer
- * process.
+ * IMenuItem interface with properties which are only used by the Menu class in the
+ * renderer process.
  */
-export interface IMenuNode extends INode {
+export interface IMenuNode extends IMenuItem {
   /**
    * The chain of indices to get to this node. This will be computed and set once the menu
    * is opened. It is stored here to avoid recomputation during emission of events. It

@@ -13,7 +13,7 @@ import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemFactory } from '../../../common/item-factory';
 
 /**
@@ -105,7 +105,7 @@ export class TrashTab extends EventEmitter {
    *
    * @param items The items which are currently in the trash.
    */
-  public setTrashedItems(items: Array<IMenu | IEditorNode>) {
+  public setTrashedItems(items: Array<IMenu | IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(
@@ -128,7 +128,7 @@ export class TrashTab extends EventEmitter {
       }
 
       // If the item is a menu node, we need to extract the name and the icon.
-      const node = item as IEditorNode;
+      const node = item as IEditorMenuItem;
       const typeInfo = ItemFactory.getInstance().getTypeInfo(node.type);
       return {
         isMenu: false,

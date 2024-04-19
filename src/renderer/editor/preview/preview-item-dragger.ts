@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemDragger } from '../common/item-dragger';
 import * as utils from './utils';
 import * as math from '../../math';
@@ -36,7 +36,7 @@ import { IVec2 } from '../../../common';
  * @fired update-fixed-angle - When a node with a fixed angle is dragged around. The event
  *  data is the dragged node and the new angle.
  */
-export class PreviewItemDragger extends ItemDragger<IEditorNode> {
+export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
   /**
    * The container is the HTML element which contains the menu preview. It is passed to
    * the constructor.
@@ -44,16 +44,16 @@ export class PreviewItemDragger extends ItemDragger<IEditorNode> {
   private container: HTMLElement = null;
 
   /** This is the current center node of the preview. */
-  private centerItem: IEditorNode = null;
+  private centerItem: IEditorMenuItem = null;
 
   /** This is the parent node of the center node. */
-  private parentItem: IEditorNode = null;
+  private parentItem: IEditorMenuItem = null;
 
   /**
    * During drag'n'drop operations, this is the menu item where the dragged item would be
    * dropped.
    */
-  private dropTarget: IEditorNode | null = null;
+  private dropTarget: IEditorMenuItem | null = null;
 
   /**
    * During drag'n'drop operations, this is the index where the dragged item would be
@@ -103,7 +103,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorNode> {
    * @param parentItem The parent menu of the centerNode. Will be `undefined` for the root
    *   node.
    */
-  public setCenterItem(centerItem: IEditorNode, parentItem: IEditorNode) {
+  public setCenterItem(centerItem: IEditorMenuItem, parentItem: IEditorMenuItem) {
     this.centerItem = centerItem;
     this.parentItem = parentItem;
 
