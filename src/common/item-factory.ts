@@ -10,16 +10,16 @@
 
 import { INode } from './index';
 
-import { CommandNodeType } from './node-types/command-node-type';
-import { HotkeyNodeType } from './node-types/hotkey-node-type';
-import { SubmenuNodeType } from './node-types/submenu-node-type';
-import { URINodeType } from './node-types/uri-node-type';
+import { CommandMeta } from './item-types/command-meta';
+import { HotkeyMeta } from './item-types/hotkey-meta';
+import { SubmenuMeta } from './item-types/submenu-meta';
+import { URIMeta } from './item-types/uri-meta';
 
 /**
  * This interface describes a type of a menu node. It is used to specify the action of a
  * menu item.
  */
-export interface INodeType {
+export interface IMeta {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -42,26 +42,26 @@ export interface INodeType {
   getDescription(node: INode): string;
 }
 
-export class NodeTypeRegistry {
-  private static instance: NodeTypeRegistry = null;
+export class ItemFactory {
+  private static instance: ItemFactory = null;
 
-  private types: Map<string, INodeType> = new Map();
+  private types: Map<string, IMeta> = new Map();
 
   private constructor() {
-    this.registerType('command', new CommandNodeType());
-    this.registerType('hotkey', new HotkeyNodeType());
-    this.registerType('submenu', new SubmenuNodeType());
-    this.registerType('uri', new URINodeType());
+    this.registerType('command', new CommandMeta());
+    this.registerType('hotkey', new HotkeyMeta());
+    this.registerType('submenu', new SubmenuMeta());
+    this.registerType('uri', new URIMeta());
   }
 
-  public static getInstance(): NodeTypeRegistry {
-    if (NodeTypeRegistry.instance === null) {
-      NodeTypeRegistry.instance = new NodeTypeRegistry();
+  public static getInstance(): ItemFactory {
+    if (ItemFactory.instance === null) {
+      ItemFactory.instance = new ItemFactory();
     }
-    return NodeTypeRegistry.instance;
+    return ItemFactory.instance;
   }
 
-  public getType(id: string): INodeType {
+  public getType(id: string): IMeta {
     return this.types.get(id);
   }
 
@@ -86,7 +86,7 @@ export class NodeTypeRegistry {
     return this.types;
   }
 
-  private registerType(name: string, type: INodeType): void {
+  private registerType(name: string, type: IMeta): void {
     this.types.set(name, type);
   }
 }

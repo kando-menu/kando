@@ -9,27 +9,40 @@
 // SPDX-License-Identifier: MIT
 
 import { INode } from '../index';
-import { INodeAction } from '../node-action-registry';
-import { DeepReadonly } from '../../main/settings';
-
-import { exec } from 'child_process';
+import { IMeta } from '../item-factory';
 
 interface INodeData {
-  command: string;
+  uri: string;
 }
 
-export class CommandNodeAction implements INodeAction {
-  delayedExecution() {
+export class URIMeta implements IMeta {
+  get hasChildren(): boolean {
     return false;
   }
 
-  execute(node: DeepReadonly<INode>): void {
-    const command = (node.data as INodeData).command;
+  get defaultName(): string {
+    return 'Open URL';
+  }
 
-    exec(command, (error) => {
-      if (error) {
-        throw `Failed to start command "${command}": ${error.message}`;
-      }
-    });
+  get defaultIcon(): string {
+    return 'public';
+  }
+
+  get defaultIconTheme(): string {
+    return 'material-symbols-rounded';
+  }
+
+  get defaultData(): INodeData {
+    return {
+      uri: '',
+    };
+  }
+
+  get genericDescription(): string {
+    return 'Opens files or websites.';
+  }
+
+  getDescription(node: INode): string {
+    return (node.data as INodeData).uri || 'Not configured.';
   }
 }

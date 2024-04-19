@@ -11,35 +11,37 @@
 import { INode } from './index';
 import { Backend } from '../main/backends/backend';
 
-import { CommandNodeAction } from './node-types/command-node-action';
-import { HotkeyNodeAction } from './node-types/hotkey-node-action';
-import { URINodeAction } from './node-types/uri-node-action';
+import { CommandAction } from './item-types/command-action';
+import { HotkeyAction } from './item-types/hotkey-action';
+import { URIAction } from './item-types/uri-action';
 import { DeepReadonly } from '../main/settings';
 
+/** In Kando, actions are used to define what happens when a menu item is clicked. */
+
 /** This interface describes the action of a menu item. */
-export interface INodeAction {
+export interface IAction {
   delayedExecution(node: DeepReadonly<INode>): boolean;
 
   /** This will be called when the menu item is executed. */
   execute(node: DeepReadonly<INode>, backend: Backend): void;
 }
 
-export class NodeActionRegistry {
-  private static instance: NodeActionRegistry = null;
+export class ActionRegistry {
+  private static instance: ActionRegistry = null;
 
-  private types: Map<string, INodeAction> = new Map();
+  private types: Map<string, IAction> = new Map();
 
   private constructor() {
-    this.registerType('command', new CommandNodeAction());
-    this.registerType('hotkey', new HotkeyNodeAction());
-    this.registerType('uri', new URINodeAction());
+    this.registerType('command', new CommandAction());
+    this.registerType('hotkey', new HotkeyAction());
+    this.registerType('uri', new URIAction());
   }
 
-  public static getInstance(): NodeActionRegistry {
-    if (NodeActionRegistry.instance === null) {
-      NodeActionRegistry.instance = new NodeActionRegistry();
+  public static getInstance(): ActionRegistry {
+    if (ActionRegistry.instance === null) {
+      ActionRegistry.instance = new ActionRegistry();
     }
-    return NodeActionRegistry.instance;
+    return ActionRegistry.instance;
   }
 
   public delayedExecution(node: DeepReadonly<INode>): boolean {
@@ -51,7 +53,7 @@ export class NodeActionRegistry {
     type.execute(node, backend);
   }
 
-  private registerType(name: string, type: INodeAction): void {
+  private registerType(name: string, type: IAction): void {
     this.types.set(name, type);
   }
 }

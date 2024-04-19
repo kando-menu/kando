@@ -9,21 +9,23 @@
 // SPDX-License-Identifier: MIT
 
 import { INode } from '../index';
-import { INodeType } from '../node-type-registry';
+import { IMeta } from '../item-factory';
 
-interface INodeData {}
+interface INodeData {
+  command: string;
+}
 
-export class SubmenuNodeType implements INodeType {
+export class CommandMeta implements IMeta {
   get hasChildren(): boolean {
-    return true;
+    return false;
   }
 
   get defaultName(): string {
-    return 'Submenu';
+    return 'Launch Application';
   }
 
   get defaultIcon(): string {
-    return 'apps';
+    return 'terminal';
   }
 
   get defaultIconTheme(): string {
@@ -31,14 +33,16 @@ export class SubmenuNodeType implements INodeType {
   }
 
   get defaultData(): INodeData {
-    return {};
+    return {
+      command: '',
+    };
   }
 
   get genericDescription(): string {
-    return 'Contains other menu items.';
+    return 'Runs any command.';
   }
 
   getDescription(node: INode): string {
-    return `Contains ${node.children.length} menu items.`;
+    return (node.data as INodeData).command || 'Not configured.';
   }
 }

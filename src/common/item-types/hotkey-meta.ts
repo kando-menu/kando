@@ -9,14 +9,14 @@
 // SPDX-License-Identifier: MIT
 
 import { INode } from '../index';
-import { INodeType } from '../node-type-registry';
+import { IMeta } from '../item-factory';
 
 interface INodeData {
   hotkey: string;
   delayed: boolean;
 }
 
-export class HotkeyNodeType implements INodeType {
+export class HotkeyMeta implements IMeta {
   get hasChildren(): boolean {
     return false;
   }

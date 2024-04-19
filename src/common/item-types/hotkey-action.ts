@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { INode, IKeySequence } from '../index';
-import { INodeAction } from '../node-action-registry';
+import { IAction } from '../action-registry';
 import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/settings';
 
@@ -18,7 +18,7 @@ interface INodeData {
   delayed: boolean;
 }
 
-export class HotkeyNodeAction implements INodeAction {
+export class HotkeyAction implements IAction {
   delayedExecution(node: DeepReadonly<INode>) {
     return (node.data as INodeData).delayed;
   }

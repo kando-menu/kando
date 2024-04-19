@@ -40,7 +40,7 @@ export type IKeySequence = Array<IKeyStroke>;
  * represent submenus, leaf nodes represent actual menu items.
  */
 export interface INode {
-  /** The type of the menu item. See INodeType. */
+  /** The type of the menu item. See `ActionRegistry` and `ItemFactory`. */
   type: string;
 
   /**

@@ -14,7 +14,7 @@ import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
 import { IEditorNode } from '../common/editor-node';
-import { NodeTypeRegistry } from '../../../common/node-type-registry';
+import { ItemFactory } from '../../../common/item-factory';
 
 /**
  * This class represents the trash tab in the toolbar. Users can drop menus and menu items
@@ -129,7 +129,7 @@ export class TrashTab extends EventEmitter {
 
       // If the item is a menu node, we need to extract the name and the icon.
       const node = item as IEditorNode;
-      const type = NodeTypeRegistry.getInstance().getType(node.type);
+      const type = ItemFactory.getInstance().getType(node.type);
       return {
         isMenu: false,
         name: node.name,

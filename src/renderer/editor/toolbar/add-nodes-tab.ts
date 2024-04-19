@@ -10,7 +10,7 @@
 
 import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
-import { NodeTypeRegistry } from '../../../common/node-type-registry';
+import { ItemFactory } from '../../../common/item-factory';
 import { EventEmitter } from 'events';
 import * as themedIcon from '../common/themed-icon';
 
@@ -73,7 +73,7 @@ export class AddNodesTab extends EventEmitter {
 
     const template = Handlebars.compile(require('./templates/add-nodes-tab.hbs').default);
 
-    const registry = NodeTypeRegistry.getInstance();
+    const registry = ItemFactory.getInstance();
 
     // Compile the data for the Handlebars template.
     const data: Array<{

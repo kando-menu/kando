@@ -15,9 +15,9 @@ import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { INode, IMenu, IMenuSettings, IAppSettings, IKeySequence } from '../common';
+import { INode, IMenu, IMenuSettings, IAppSettings } from '../common';
 import { Settings, DeepReadonly } from './settings';
-import { NodeActionRegistry } from '../common/node-action-registry';
+import { ActionRegistry } from '../common/action-registry';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -329,9 +329,9 @@ export class KandoApp {
         const node = this.getNodeAtPath(this.lastMenu.nodes, path);
 
         // If the action is not delayed, we execute it immediately.
-        const executeDelayed = NodeActionRegistry.getInstance().delayedExecution(node);
+        const executeDelayed = ActionRegistry.getInstance().delayedExecution(node);
         if (!executeDelayed) {
-          NodeActionRegistry.getInstance().execute(node, this.backend);
+          ActionRegistry.getInstance().execute(node, this.backend);
         }
 
         // Also wait with the execution of the selected action until the fade-out
@@ -345,7 +345,7 @@ export class KandoApp {
 
           // If the action is delayed, we execute it after the window is hidden.
           if (executeDelayed) {
-            NodeActionRegistry.getInstance().execute(node, this.backend);
+            ActionRegistry.getInstance().execute(node, this.backend);
           }
         }, 400);
       } catch (err) {

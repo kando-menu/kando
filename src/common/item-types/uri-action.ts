@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { INode } from '../index';
-import { INodeAction } from '../node-action-registry';
+import { IAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
 
 import { shell } from 'electron';
@@ -18,7 +18,7 @@ interface INodeData {
   uri: string;
 }
 
-export class URINodeAction implements INodeAction {
+export class URIAction implements IAction {
   delayedExecution() {
     return false;
   }
