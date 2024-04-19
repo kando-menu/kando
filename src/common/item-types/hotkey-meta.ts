@@ -11,11 +11,17 @@
 import { INode } from '../index';
 import { IMeta } from '../item-factory';
 
-interface INodeData {
+/**
+ * For this type of menu items, the user can configure a hotkey that will be simulated
+ * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
+ * after the Kando window has been closed.
+ */
+export interface IActionData {
   hotkey: string;
   delayed: boolean;
 }
 
+/** This class provides meta information for menu items that simulate a hotkey. */
 export class HotkeyMeta implements IMeta {
   get hasChildren(): boolean {
     return false;
@@ -33,7 +39,7 @@ export class HotkeyMeta implements IMeta {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): INodeData {
+  get defaultData(): IActionData {
     return {
       hotkey: '',
       delayed: false,
@@ -45,6 +51,6 @@ export class HotkeyMeta implements IMeta {
   }
 
   getDescription(node: INode): string {
-    return (node.data as INodeData).hotkey || 'Not configured.';
+    return (node.data as IActionData).hotkey || 'Not configured.';
   }
 }

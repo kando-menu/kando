@@ -11,8 +11,10 @@
 import { INode } from '../index';
 import { IMeta } from '../item-factory';
 
-interface INodeData {}
+/** For submenu items, no additional data is required. */
+export interface IActionData {}
 
+/** This class provides meta information for submenu items. */
 export class SubmenuMeta implements IMeta {
   get hasChildren(): boolean {
     return true;
@@ -30,7 +32,7 @@ export class SubmenuMeta implements IMeta {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): INodeData {
+  get defaultData(): IActionData {
     return {};
   }
 

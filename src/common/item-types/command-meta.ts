@@ -11,10 +11,15 @@
 import { INode } from '../index';
 import { IMeta } from '../item-factory';
 
-interface INodeData {
+/**
+ * For this type of menu items, the user can configure a command that will be executed
+ * when the item is clicked.
+ */
+export interface IActionData {
   command: string;
 }
 
+/** This class provides meta information for menu items that execute a command. */
 export class CommandMeta implements IMeta {
   get hasChildren(): boolean {
     return false;
@@ -32,7 +37,7 @@ export class CommandMeta implements IMeta {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): INodeData {
+  get defaultData(): IActionData {
     return {
       command: '',
     };
@@ -43,6 +48,6 @@ export class CommandMeta implements IMeta {
   }
 
   getDescription(node: INode): string {
-    return (node.data as INodeData).command || 'Not configured.';
+    return (node.data as IActionData).command || 'Not configured.';
   }
 }

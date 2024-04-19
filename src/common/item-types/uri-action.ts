@@ -11,19 +11,30 @@
 import { INode } from '../index';
 import { IAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
+import { IActionData } from './uri-meta';
 
 import { shell } from 'electron';
 
-interface INodeData {
-  uri: string;
-}
-
+/**
+ * This action opens URIs with the default application. This can be used to open for
+ * example websites or files.
+ */
 export class URIAction implements IAction {
+  /**
+   * URIs are opened immediately.
+   *
+   * @returns False
+   */
   delayedExecution() {
     return false;
   }
 
-  execute(node: DeepReadonly<INode>): void {
-    shell.openExternal((node.data as INodeData).uri);
+  /**
+   * Opens the URI with the default application.
+   *
+   * @param item The item for which the action should be executed.
+   */
+  execute(item: DeepReadonly<INode>): void {
+    shell.openExternal((item.data as IActionData).uri);
   }
 }

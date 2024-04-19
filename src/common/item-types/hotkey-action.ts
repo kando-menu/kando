@@ -12,20 +12,33 @@ import { INode, IKeySequence } from '../index';
 import { IAction } from '../action-registry';
 import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/settings';
+import { IActionData } from './hotkey-meta';
 
-interface INodeData {
-  hotkey: string;
-  delayed: boolean;
-}
-
+/** This action simulates key presses. It can be used to simulate hotkeys. */
 export class HotkeyAction implements IAction {
-  delayedExecution(node: DeepReadonly<INode>) {
-    return (node.data as INodeData).delayed;
+  /**
+   * For hotkeys, we can choose to execute them immediately or with a delay.
+   *
+   * @param item The item for which we want to know if the action should be executed
+   *   immediately or with a delay.
+   * @returns True if the action should be executed with a delay.
+   */
+  delayedExecution(item: DeepReadonly<INode>) {
+    return (item.data as IActionData).delayed;
   }
 
-  execute(node: DeepReadonly<INode>, backend: Backend): void {
+  /**
+   * This method simulates key presses. It first presses all keys and then releases them
+   * again. We add a small delay between the key presses to make sure that the keys are
+   * pressed in the correct order.
+   *
+   * @param item The item for which the action should be executed.
+   * @param backend The backend which is currently used. This is used to simulate the key
+   *   presses.
+   */
+  execute(item: DeepReadonly<INode>, backend: Backend): void {
     // We convert some common key names to the corresponding left key names.
-    const keyNames = (node.data as INodeData).hotkey.split('+').map((name) => {
+    const keyNames = (item.data as IActionData).hotkey.split('+').map((name) => {
       // There are many different names for the Control key. We convert them all
       // to "ControlLeft".
       if (

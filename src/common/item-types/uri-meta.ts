@@ -11,10 +11,15 @@
 import { INode } from '../index';
 import { IMeta } from '../item-factory';
 
-interface INodeData {
+/**
+ * For this type of menu items, the user can configure a URL that will be opened when the
+ * item is clicked.
+ */
+export interface IActionData {
   uri: string;
 }
 
+/** This class provides meta information for menu items that open a URL. */
 export class URIMeta implements IMeta {
   get hasChildren(): boolean {
     return false;
@@ -32,7 +37,7 @@ export class URIMeta implements IMeta {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): INodeData {
+  get defaultData(): IActionData {
     return {
       uri: '',
     };
@@ -43,6 +48,6 @@ export class URIMeta implements IMeta {
   }
 
   getDescription(node: INode): string {
-    return (node.data as INodeData).uri || 'Not configured.';
+    return (node.data as IActionData).uri || 'Not configured.';
   }
 }
