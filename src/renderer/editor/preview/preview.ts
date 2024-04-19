@@ -414,11 +414,11 @@ export class Preview extends EventEmitter {
 
     // Make the center item selectable.
     centerItem.div.addEventListener('click', () => this.selectItem(centerItem));
-    centerItem.div.addEventListener('mousedown', () => {
+    centerItem.div.addEventListener('pointerdown', () => {
       centerItem.div.classList.add('clicking');
     });
 
-    centerItem.div.addEventListener('mouseup', () => {
+    centerItem.div.addEventListener('pointerup', () => {
       centerItem.div.classList.remove('clicking');
     });
 
