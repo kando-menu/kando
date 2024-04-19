@@ -113,9 +113,9 @@ export class InputTracker extends EventEmitter {
    * the pointer-motion event.
    *
    * @param event The mouse or touch event.
-   * @param activeNodePosition The position of the currently selected menu item.
+   * @param activeItemPosition The position of the currently selected menu item.
    */
-  public onMotionEvent(event: MouseEvent | TouchEvent, activeNodePosition: IVec2) {
+  public onMotionEvent(event: MouseEvent | TouchEvent, activeItemPosition: IVec2) {
     // Ignore mouse motion events if requested.
     if (this.ignoreMotionEvents > 0) {
       this.ignoreMotionEvents--;
@@ -124,14 +124,14 @@ export class InputTracker extends EventEmitter {
 
     // Update the internal state of the InputTracker.
     if (event instanceof MouseEvent) {
-      this.update({ x: event.clientX, y: event.clientY }, activeNodePosition);
+      this.update({ x: event.clientX, y: event.clientY }, activeItemPosition);
     } else {
       this.update(
         {
           x: event.touches[0].clientX,
           y: event.touches[0].clientY,
         },
-        activeNodePosition
+        activeItemPosition
       );
     }
 
@@ -171,9 +171,9 @@ export class InputTracker extends EventEmitter {
    * the pointer-motion event.
    *
    * @param event The mouse or touch event.
-   * @param activeNodePosition The position of the currently selected menu item.
+   * @param activeItemPosition The position of the currently selected menu item.
    */
-  public onPointerDownEvent(event: MouseEvent | TouchEvent, activeNodePosition: IVec2) {
+  public onPointerDownEvent(event: MouseEvent | TouchEvent, activeItemPosition: IVec2) {
     if (event instanceof MouseEvent) {
       this.clickPosition = { x: event.clientX, y: event.clientY };
     } else {
@@ -185,7 +185,7 @@ export class InputTracker extends EventEmitter {
 
     this._state = InputState.CLICKED;
 
-    this.onMotionEvent(event, activeNodePosition);
+    this.onMotionEvent(event, activeItemPosition);
   }
 
   /**
@@ -201,14 +201,14 @@ export class InputTracker extends EventEmitter {
    * relative to the currently selected item.
    *
    * @param position The absolute mouse position.
-   * @param activeNodePosition The position of the currently selected menu item. If this
+   * @param activeItemPosition The position of the currently selected menu item. If this
    *   is not given, the menu item is assumed to be at the same position as the mouse.
    */
-  public update(position: IVec2, activeNodePosition?: IVec2) {
-    activeNodePosition = activeNodePosition || position;
+  public update(position: IVec2, activeItemPosition?: IVec2) {
+    activeItemPosition = activeItemPosition || position;
 
     this._absolutePosition = position;
-    this._relativePosition = math.subtract(position, activeNodePosition);
+    this._relativePosition = math.subtract(position, activeItemPosition);
     this._distance = math.getLength(this._relativePosition);
     this._angle = math.getAngle(this._relativePosition);
   }

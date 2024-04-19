@@ -302,7 +302,7 @@ export class Editor extends EventEmitter {
 
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure
-      // that the menu nodes are converted back to IMenuItem objects. This is because
+      // that the menu items are converted back to IMenuItem objects. This is because
       // IEditorMenuItem objects contain properties (such as DOM nodes) which neither need to
       // be saved to disc nor can they be cloned using the structured clone algorithm
       // which is used by Electron for IPC.

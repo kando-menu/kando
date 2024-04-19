@@ -212,8 +212,8 @@ export class Preview extends EventEmitter {
   /**
    * This method initializes the drag'n'drop functionality of the menu preview. This is
    * used to move menu items around in the preview. Normal items can be reordered, dropped
-   * into submenus, or dropped onto the parent menu item. Nodes with fixed angles can only
-   * be rotated around the parent item.
+   * into submenus, or dropped onto the parent menu item. Menu items with fixed angles can
+   * only be rotated around the parent item.
    */
   private initDragAndDrop() {
     this.dragger = new PreviewItemDragger(this.container);

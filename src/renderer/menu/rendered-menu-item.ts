@@ -43,8 +43,10 @@ export interface IRenderedMenuItem extends IMenuItem {
   position?: IVec2;
 
   /**
-   * The visual representation of this menu item. This is a div element which is created
-   * when the menu is opened.
+   * The tree of menu items consists of these `nodeDiv`s. The child items of a menu item
+   * are directly appended to this div. There is another div appended to this `nodeDiv`
+   * with the class `.menu-item` which contains the visual representation of this menu
+   * item.
    */
   nodeDiv?: HTMLElement;
 

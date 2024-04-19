@@ -100,7 +100,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
    * This is called by the `Preview` class whenever a new menu is displayed.
    *
    * @param centerItem The menu item which is currently shown in preview.
-   * @param parentItem The parent menu of the centerNode. Will be `undefined` for the root
+   * @param parentItem The parent menu of the centerItem. Will be `undefined` for the root
    *   item.
    */
   public setCenterItem(centerItem: IEditorMenuItem, parentItem: IEditorMenuItem) {
