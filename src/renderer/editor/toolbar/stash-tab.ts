@@ -101,11 +101,11 @@ export class StashTab extends EventEmitter {
 
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
-      const type = ItemFactory.getInstance().getType(item.type);
+      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
       return {
         isMenu: false,
         name: item.name,
-        description: type.getDescription(item),
+        description: typeInfo.getDescription(item),
         icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
         index,
       };

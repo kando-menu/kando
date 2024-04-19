@@ -16,27 +16,55 @@ import { HotkeyAction } from './item-types/hotkey-action';
 import { URIAction } from './item-types/uri-action';
 import { DeepReadonly } from '../main/settings';
 
-/** In Kando, actions are used to define what happens when a menu item is clicked. */
-
-/** This interface describes the action of a menu item. */
+/**
+ * This interface describes the action of a menu item. The action is what happens when the
+ * menu item is executed. Every item type which can be executed should implement this
+ * interface. You can find the implementations in the `item-types` directory.
+ */
 export interface IAction {
-  delayedExecution(node: DeepReadonly<INode>): boolean;
+  /**
+   * This will be called when the action is about to be executed. If this method returns
+   * `false`, the action will be executed right away. If it returns `true`, the action
+   * will be executed after Kando's window has been closed. This is useful for actions
+   * which act on another application which has to regain input focus before the action
+   * can be executed.
+   *
+   * @param item The menu item for which an action is about to be executed.
+   */
+  delayedExecution(item: DeepReadonly<INode>): boolean;
 
-  /** This will be called when the menu item is executed. */
-  execute(node: DeepReadonly<INode>, backend: Backend): void;
+  /**
+   * This will be called when the menu item is executed.
+   *
+   * @param item The menu item which is executed.
+   * @param backend The backend which is currently used. Use this to call system-dependent
+   *   functions.
+   */
+  execute(item: DeepReadonly<INode>, backend: Backend): void;
 }
 
 export class ActionRegistry {
+  /** The singleton instance of this class. */
   private static instance: ActionRegistry = null;
 
-  private types: Map<string, IAction> = new Map();
+  /** This map contains all available actions. The keys are the type names. */
+  private actions: Map<string, IAction> = new Map();
 
+  /**
+   * This is a singleton class. The constructor is private. Use `getInstance` to get the
+   * instance of this class.
+   */
   private constructor() {
-    this.registerType('command', new CommandAction());
-    this.registerType('hotkey', new HotkeyAction());
-    this.registerType('uri', new URIAction());
+    this.actions.set('command', new CommandAction());
+    this.actions.set('hotkey', new HotkeyAction());
+    this.actions.set('uri', new URIAction());
   }
 
+  /**
+   * Use this method to get the singleton instance of this class.
+   *
+   * @returns The singleton instance of this class.
+   */
   public static getInstance(): ActionRegistry {
     if (ActionRegistry.instance === null) {
       ActionRegistry.instance = new ActionRegistry();
@@ -44,16 +72,26 @@ export class ActionRegistry {
     return ActionRegistry.instance;
   }
 
-  public delayedExecution(node: DeepReadonly<INode>): boolean {
-    return this.types.get(node.type).delayedExecution(node);
+  /**
+   * This method returns `true` if the action of the given node should be executed after
+   * Kando's window has been closed.
+   *
+   * @param item The menu item for which an action is about to be executed.
+   * @returns `true` if the action should be executed after Kando's window has been
+   *   closed.
+   */
+  public delayedExecution(item: DeepReadonly<INode>): boolean {
+    return this.actions.get(item.type).delayedExecution(item);
   }
 
-  public execute(node: DeepReadonly<INode>, backend: Backend) {
-    const type = this.types.get(node.type);
-    type.execute(node, backend);
-  }
-
-  private registerType(name: string, type: IAction): void {
-    this.types.set(name, type);
+  /**
+   * This method executes the action of the given node.
+   *
+   * @param item The menu item which is executed.
+   * @param backend The backend which is currently used.
+   */
+  public execute(item: DeepReadonly<INode>, backend: Backend) {
+    const action = this.actions.get(item.type);
+    action.execute(item, backend);
   }
 }

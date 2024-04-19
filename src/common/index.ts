@@ -11,7 +11,7 @@
 /**
  * A simple 2D vector.
  *
- * Maybe we should turn this into a class and add some operations.
+ * You can find some vector math in the `src/renderer/math` directory.
  */
 export interface IVec2 {
   x: number;

@@ -129,11 +129,11 @@ export class TrashTab extends EventEmitter {
 
       // If the item is a menu node, we need to extract the name and the icon.
       const node = item as IEditorNode;
-      const type = ItemFactory.getInstance().getType(node.type);
+      const typeInfo = ItemFactory.getInstance().getTypeInfo(node.type);
       return {
         isMenu: false,
         name: node.name,
-        description: type.getDescription(node),
+        description: typeInfo.getDescription(node),
         icon: themedIcon.createDiv(node.icon, node.iconTheme).outerHTML,
         index,
       };

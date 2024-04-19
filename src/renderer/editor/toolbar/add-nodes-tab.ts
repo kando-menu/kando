@@ -83,11 +83,11 @@ export class AddNodesTab extends EventEmitter {
       typeName: string;
     }> = [];
 
-    registry.getTypes().forEach((type, typeName) => {
+    registry.getAllTypes().forEach((meta, typeName) => {
       data.push({
-        name: type.defaultName,
-        description: type.genericDescription,
-        icon: themedIcon.createDiv(type.defaultIcon, type.defaultIconTheme).outerHTML,
+        name: meta.defaultName,
+        description: meta.genericDescription,
+        icon: themedIcon.createDiv(meta.defaultIcon, meta.defaultIconTheme).outerHTML,
         typeName,
       });
     });
