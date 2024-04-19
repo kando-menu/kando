@@ -84,24 +84,24 @@ export class InputTracker extends EventEmitter {
 
   /**
    * The relative mouse position is the position of the mouse relative to the currently
-   * selected node. It is always updated when the mouse moves.
+   * selected menu item. It is always updated when the mouse moves.
    */
   public get relativePosition() {
     return this._relativePosition;
   }
 
   /**
-   * The mouse angle is the angle of the mouse relative to the currently selected node. 0°
-   * is up, 90° is right, 180° is down and 270° is left. It is always updated when the
-   * mouse moves.
+   * The mouse angle is the angle of the mouse relative to the currently selected menu
+   * item. 0° is up, 90° is right, 180° is down and 270° is left. It is always updated
+   * when the mouse moves.
    */
   public get angle() {
     return this._angle;
   }
 
   /**
-   * This is the distance of the mouse to the center of the currently selected node. It is
-   * always updated when the mouse moves.
+   * This is the distance of the mouse to the center of the currently selected menu item.
+   * It is always updated when the mouse moves.
    */
   public get distance() {
     return this._distance;
@@ -113,7 +113,7 @@ export class InputTracker extends EventEmitter {
    * the pointer-motion event.
    *
    * @param event The mouse or touch event.
-   * @param activeNodePosition The position of the currently selected node.
+   * @param activeNodePosition The position of the currently selected menu item.
    */
   public onMotionEvent(event: MouseEvent | TouchEvent, activeNodePosition: IVec2) {
     // Ignore mouse motion events if requested.
@@ -146,7 +146,7 @@ export class InputTracker extends EventEmitter {
     }
 
     // If a modifier key is pressed, this is handled basically as if the left mouse
-    // button is pressed. This allows for node selections without having to press a
+    // button is pressed. This allows for menu item selections without having to press a
     // mouse button if the menu was opened with a keyboard shortcut.
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
       this._state = InputState.DRAGGING;
@@ -171,7 +171,7 @@ export class InputTracker extends EventEmitter {
    * the pointer-motion event.
    *
    * @param event The mouse or touch event.
-   * @param activeNodePosition The position of the currently selected node.
+   * @param activeNodePosition The position of the currently selected menu item.
    */
   public onPointerDownEvent(event: MouseEvent | TouchEvent, activeNodePosition: IVec2) {
     if (event instanceof MouseEvent) {
@@ -201,8 +201,8 @@ export class InputTracker extends EventEmitter {
    * relative to the currently selected item.
    *
    * @param position The absolute mouse position.
-   * @param activeNodePosition The position of the currently selected node. If this is not
-   *   given, the node is assumed to be at the same position as the mouse.
+   * @param activeNodePosition The position of the currently selected menu item. If this
+   *   is not given, the menu item is assumed to be at the same position as the mouse.
    */
   public update(position: IVec2, activeNodePosition?: IVec2) {
     activeNodePosition = activeNodePosition || position;

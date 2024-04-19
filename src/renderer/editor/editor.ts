@@ -183,7 +183,7 @@ export class Editor extends EventEmitter {
 
     this.toolbar.on('add-item', (typeName: string) => {
       const item = ItemFactory.getInstance().createMenuItem(typeName);
-      this.preview.insertNode(item);
+      this.preview.insertItem(item);
     });
 
     this.toolbar.on('select-menu', (index: number) => {
@@ -207,7 +207,7 @@ export class Editor extends EventEmitter {
 
     this.toolbar.on('restore-deleted-item', (index: number) => {
       const item = this.trashedThings.splice(index, 1)[0] as IEditorMenuItem;
-      this.preview.insertNode(item);
+      this.preview.insertItem(item);
       this.toolbar.setTrashedThings(this.trashedThings);
     });
 
@@ -221,7 +221,7 @@ export class Editor extends EventEmitter {
 
     this.toolbar.on('restore-stashed-item', (index: number) => {
       const item = this.menuSettings.stash.splice(index, 1)[0];
-      this.preview.insertNode(item);
+      this.preview.insertItem(item);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 

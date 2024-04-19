@@ -66,7 +66,7 @@ export class Preview extends EventEmitter {
   private selectionChain: Array<IEditorMenuItem> = [];
 
   /**
-   * The menu item which has been selected last time. This node has a special style in the
+   * The menu item which has been selected last time. This item has a special style in the
    * preview and its properties are drawn in the property editor on the right.
    */
   private activeItem?: IEditorMenuItem = null;
@@ -144,27 +144,27 @@ export class Preview extends EventEmitter {
 
     if (menu) {
       this.computeItemAnglesRecursively(menu.nodes.children);
-      this.selectNode(menu.nodes);
+      this.selectItem(menu.nodes);
     } else {
       this.hideOldMenuItems();
     }
   }
 
   /**
-   * This method adds a new node to the currently displayed menu. This is used by the
+   * This method adds a new menu item to the currently displayed menu. This is used by the
    * `Editor` to add new items from the toolbar to the currently edited menu.
    *
-   * @param node The new node to be added.
+   * @param item The new item to be added.
    */
-  public insertNode(node: IEditorMenuItem) {
+  public insertItem(item: IEditorMenuItem) {
     const { dropTarget, dropIndex } = this.dragger.getLastDropTarget();
 
     if (dropTarget !== null) {
-      // Add the new node to the last valid drop location.
+      // Add the new item to the last valid drop location.
       if (dropIndex !== null) {
-        dropTarget.children.splice(dropIndex, 0, node);
+        dropTarget.children.splice(dropIndex, 0, item);
       } else {
-        dropTarget.children.push(node);
+        dropTarget.children.push(item);
       }
 
       // If this was the currently displayed menu (it could also have been a submenu or
@@ -174,7 +174,7 @@ export class Preview extends EventEmitter {
         const container = this.canvas.querySelector(
           '.kando-menu-preview-container.visible'
         ) as HTMLElement;
-        this.redrawNode(node, container);
+        this.redrawItem(item, container);
       }
 
       // In any case, update the angles of drop target.
@@ -185,14 +185,14 @@ export class Preview extends EventEmitter {
 
       this.updateAllPositions();
     } else {
-      window.api.log('Trying to add a node to an invalid position!');
+      window.api.log('Trying to add an item to an invalid position!');
     }
   }
 
   /**
    * This returns the menu item which is currently shown in the center of the preview.
    *
-   * @returns The menu node which is currently in the center of the preview.
+   * @returns The menu item which is currently in the center of the preview.
    */
   private getCenterItem(): IEditorMenuItem {
     return this.selectionChain[this.selectionChain.length - 1];
@@ -212,28 +212,28 @@ export class Preview extends EventEmitter {
   /**
    * This method initializes the drag'n'drop functionality of the menu preview. This is
    * used to move menu nodes around in the preview. Normal nodes can be reordered, dropped
-   * into submenus, or dropped onto the parent node. Nodes with fixed angles can only be
-   * rotated around the parent node.
+   * into submenus, or dropped onto the parent menu item. Nodes with fixed angles can only
+   * be rotated around the parent item.
    */
   private initDragAndDrop() {
     this.dragger = new PreviewItemDragger(this.container);
 
-    // Select a node when it is clicked.
-    this.dragger.on('click', (node) => {
-      this.selectNode(node);
+    // Select an item when it is clicked.
+    this.dragger.on('click', (item) => {
+      this.selectItem(item);
     });
 
     // Move the drop indicator either to the submenu, to the back-navigation link, or to
-    // the drop index position when a node is dragged around. This will also be called
+    // the drop index position when an item is dragged around. This will also be called
     // during drag-and-drop operations for new, deleted, and stashed nodes from the
-    // toolbar. In this case, `node` and `dragIndex` will be null.
-    this.dragger.on('drag-item', (node, dragIndex, dropTarget, dropIndex) => {
+    // toolbar. In this case, `item` and `dragIndex` will be null.
+    this.dragger.on('drag-item', (item, dragIndex, dropTarget, dropIndex) => {
       const parentItem = this.getParentItem();
       const centerItem = this.getCenterItem();
       let indicatorAngle = null;
 
       if (dropTarget === centerItem) {
-        // If the node is to be dropped somewhere in the currently displayed menu we have
+        // If the item is to be dropped somewhere in the currently displayed menu we have
         // to incorporate the dropIndex to leave an angular gap for the to-be-dropped
         // item.
         indicatorAngle = this.recomputeItemAngles(dragIndex, dropIndex);
@@ -241,7 +241,7 @@ export class Preview extends EventEmitter {
         // Else there is no need to leave a gap for the item.
         this.recomputeItemAngles(dragIndex);
 
-        // If the drop target is not the center node, it is either the parent node (via
+        // If the drop target is not the center item, it is either the parent item (via
         // the back-navigation link) or a submenu.
         if (dropTarget !== null) {
           indicatorAngle =
@@ -264,36 +264,36 @@ export class Preview extends EventEmitter {
       this.updateAllPositions();
     });
 
-    // This is called whenever a node with a fixed angle is dragged around.
-    this.dragger.on('update-fixed-angle', (node, angle) => {
-      node.angle = angle;
+    // This is called whenever a item with a fixed angle is dragged around.
+    this.dragger.on('update-fixed-angle', (item, angle) => {
+      item.angle = angle;
 
       // Within the list of children, the fixed angles must by monotonically increasing.
-      // That means that we may have to reorder the children if the node is dragged
+      // That means that we may have to reorder the children if the item is dragged
       // beyond the next or previous child with a fixed angle.
       const centerItem = this.getCenterItem();
-      let index = centerItem.children.indexOf(node);
+      let index = centerItem.children.indexOf(item);
 
       // First, we search for the child with the largest fixed angle which is smaller
-      // than the angle of the dragged node. For this, we iterate the children list from
-      // the back. If we find any, we have to move the dragged node to the next position.
+      // than the angle of the dragged item. For this, we iterate the children list from
+      // the back. If we find any, we have to move the dragged item to the next position.
       for (let i = centerItem.children.length - 1; i > index; --i) {
         const child = centerItem.children[i];
-        if (child.angle !== undefined && child.angle < node.angle) {
+        if (child.angle !== undefined && child.angle < item.angle) {
           centerItem.children.splice(index, 1);
-          centerItem.children.splice(i, 0, node);
+          centerItem.children.splice(i, 0, item);
           index = i;
           break;
         }
       }
 
       // Second, we search for the child with the smallest fixed angle which is larger
-      // than the angle of the dragged node.
+      // than the angle of the dragged item.
       for (let i = 0; i < index; ++i) {
         const child = centerItem.children[i];
-        if (child.angle !== undefined && child.angle > node.angle) {
+        if (child.angle !== undefined && child.angle > item.angle) {
           centerItem.children.splice(index, 1);
-          centerItem.children.splice(i, 0, node);
+          centerItem.children.splice(i, 0, item);
           break;
         }
       }
@@ -302,10 +302,10 @@ export class Preview extends EventEmitter {
       this.updateAllPositions();
     });
 
-    // This is called when a node is successfully dropped somewhere. This is not called
-    // for drag-and-drop operations from the toolbar. In this case, the `insertNode()`
+    // This is called when a menu item is successfully dropped somewhere. This is not called
+    // for drag-and-drop operations from the toolbar. In this case, the `insertItem()`
     // method will be called by the `Editor`.
-    this.dragger.on('drop-item', (node, dragIndex, dropTarget, dropIndex) => {
+    this.dragger.on('drop-item', (item, dragIndex, dropTarget, dropIndex) => {
       // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
 
@@ -316,16 +316,16 @@ export class Preview extends EventEmitter {
         centerItem.children.splice(dragIndex, 1);
       }
 
-      // We then check whether the node has been dropped into a submenu, or into the
-      // parent node. In both cases, the node's div is removed from the DOM and the menu
+      // We then check whether the menu item has been dropped into a submenu, or into the
+      // parent item. In both cases, the item's div is removed from the DOM and the menu
       // item is added to the children of the drop target.
       if (dropTarget && dropTarget !== centerItem) {
         // Remove the dragged item from the DOM.
-        node.itemDiv.remove();
+        item.div.remove();
 
-        dropTarget.children.push(node);
+        dropTarget.children.push(item);
 
-        // Recompute all node angles of the drop target after adding the new node.
+        // Recompute all item angles of the drop target after adding the new item.
         this.computeItemAnglesRecursively(
           dropTarget.children,
           utils.getParentAngle(dropTarget)
@@ -336,7 +336,7 @@ export class Preview extends EventEmitter {
         return;
       }
 
-      // If the node has been dropped on the stash or trash tab, we emit the respective
+      // If the item has been dropped on the stash or trash tab, we emit the respective
       // events.
       const eventTargets = [
         [".nav-link[data-bs-target='#kando-trash-tab']", 'delete-item'],
@@ -348,19 +348,19 @@ export class Preview extends EventEmitter {
       for (const [selector, event] of eventTargets) {
         const target = document.querySelector(selector);
         if (target && target.matches(':hover')) {
-          node.itemDiv.remove();
+          item.div.remove();
           this.recomputeItemAngles();
           this.updateAllPositions();
-          this.emit(event, node);
+          this.emit(event, item);
           return;
         }
       }
 
-      // If the node has been dropped into the currently shown menu, we add it to the
-      // children of the center node at the correct position. If there is currently no
+      // If the item has been dropped into the currently shown menu, we add it to the
+      // children of the center item at the correct position. If there is currently no
       // drop index, we drop the item where it was before.
       if (dropIndex !== null || dragIndex !== null) {
-        centerItem.children.splice(dropIndex ?? dragIndex, 0, node);
+        centerItem.children.splice(dropIndex ?? dragIndex, 0, item);
       }
 
       // In any case, we redraw the menu.
@@ -369,7 +369,7 @@ export class Preview extends EventEmitter {
     });
 
     // If the drag-and-drop operation is aborted, we hide the drop indicator and recompute
-    // the node positions.
+    // the item positions.
     this.dragger.on('drag-cancel', () => {
       this.dropIndicator.classList.remove('visible');
       this.recomputeItemAngles();
@@ -393,7 +393,7 @@ export class Preview extends EventEmitter {
     }
 
     // Clear all previous draggables. We will register all new nodes further below via the
-    // `redrawNode()` method.
+    // `redrawItem()` method.
     this.dragger.removeAllDraggables();
 
     // First, fade out all currently displayed menu items.
@@ -409,22 +409,22 @@ export class Preview extends EventEmitter {
 
     // The big center div shows the icon of the currently selected menu.
     const centerItem = this.getCenterItem();
-    centerItem.itemDiv = utils.createCenterDiv(centerItem);
-    container.appendChild(centerItem.itemDiv);
+    centerItem.div = utils.createCenterDiv(centerItem);
+    container.appendChild(centerItem.div);
 
     // Make the center item selectable.
-    centerItem.itemDiv.addEventListener('click', () => this.selectNode(centerItem));
-    centerItem.itemDiv.addEventListener('mousedown', () => {
-      centerItem.itemDiv.classList.add('clicking');
+    centerItem.div.addEventListener('click', () => this.selectItem(centerItem));
+    centerItem.div.addEventListener('mousedown', () => {
+      centerItem.div.classList.add('clicking');
     });
 
-    centerItem.itemDiv.addEventListener('mouseup', () => {
-      centerItem.itemDiv.classList.remove('clicking');
+    centerItem.div.addEventListener('mouseup', () => {
+      centerItem.div.classList.remove('clicking');
     });
 
     // Add the children of the currently selected menu.
     centerItem.children?.forEach((child) => {
-      this.redrawNode(child as IEditorMenuItem, container);
+      this.redrawItem(child as IEditorMenuItem, container);
     });
 
     // Let the dragger know that we have a new center item.
@@ -442,7 +442,7 @@ export class Preview extends EventEmitter {
       container.appendChild(this.backlink);
 
       // Make the back link selectable.
-      this.backlink.addEventListener('click', () => this.selectNode(parent));
+      this.backlink.addEventListener('click', () => this.selectItem(parent));
     } else {
       this.backlink = null;
     }
@@ -468,43 +468,43 @@ export class Preview extends EventEmitter {
     this.breadcrumbs.innerHTML = '';
 
     // Then we add the breadcrumbs for the current selection chain.
-    this.selectionChain.forEach((node) => {
+    this.selectionChain.forEach((item) => {
       const breadcrumb = document.createElement('div');
       breadcrumb.classList.add('kando-menu-preview-breadcrumb');
-      breadcrumb.textContent = node.name;
+      breadcrumb.textContent = item.name;
       this.breadcrumbs.appendChild(breadcrumb);
 
-      breadcrumb.addEventListener('click', () => this.selectNode(node));
+      breadcrumb.addEventListener('click', () => this.selectItem(item));
     });
   }
 
   /**
-   * This method is called whenever a new node should be added to the preview. It creates
-   * a new div for the node and adds it to the given container. The node is also made
-   * draggable and selectable.
+   * This method is called whenever a new menu item should be added to the preview. It
+   * creates a new div for the item and adds it to the given container. The item is also
+   * made draggable and selectable.
    *
-   * @param node The node which should be added to the preview.
-   * @param container The container to which the node should be added.
+   * @param item The menu item which should be added to the preview.
+   * @param container The container to which the item should be added.
    */
-  private redrawNode(node: IEditorMenuItem, container: HTMLElement) {
+  private redrawItem(items: IEditorMenuItem, container: HTMLElement) {
     // Create a div for the child.
-    node.itemDiv = utils.createChildDiv(node);
-    container.appendChild(node.itemDiv);
+    items.div = utils.createChildDiv(items);
+    container.appendChild(items.div);
 
     // Create the fixed-angle lock.
-    const lock = utils.createLockDiv(node.angle !== undefined, (locked) => {
+    const lock = utils.createLockDiv(items.angle !== undefined, (locked) => {
       if (locked) {
-        node.angle = node.computedAngle;
+        items.angle = items.computedAngle;
       } else {
-        node.angle = undefined;
+        items.angle = undefined;
         this.recomputeItemAngles();
         this.updateAllPositions();
       }
     });
-    node.itemDiv.appendChild(lock);
+    items.div.appendChild(lock);
 
     // Make the child div selectable and draggable.
-    this.dragger.addDraggable(node.itemDiv, node);
+    this.dragger.addDraggable(items.div, items);
   }
 
   /**
@@ -560,17 +560,17 @@ export class Preview extends EventEmitter {
    * child based on its `computedAngle` property. It also updates the CSS variables for
    * the position and rotation of the label, and the position of the grandchildren.
    *
-   * @param child The child node for which to update the position.
+   * @param child The child item for which to update the position.
    */
   private updateChildPosition(child: IEditorMenuItem) {
     // Set the CSS variables for the position and rotation of the child.
     const position = math.getDirection(child.computedAngle, 1.0);
-    child.itemDiv.style.setProperty('--rotation', child.computedAngle + 'deg');
-    child.itemDiv.style.setProperty('--dir-x', position.x + '');
-    child.itemDiv.style.setProperty('--dir-y', position.y + '');
+    child.div.style.setProperty('--rotation', child.computedAngle + 'deg');
+    child.div.style.setProperty('--dir-x', position.x + '');
+    child.div.style.setProperty('--dir-y', position.y + '');
 
     // Set the CSS variables for the position and rotation of the label.
-    const labelDivContainer = child.itemDiv.querySelector(
+    const labelDivContainer = child.div.querySelector(
       '.kando-menu-preview-label-container'
     ) as HTMLElement;
     labelDivContainer.style.setProperty('--rotation', child.computedAngle + 'deg');
@@ -587,7 +587,7 @@ export class Preview extends EventEmitter {
 
     // If the child has grandchildren, also position them in a circle around the child.
     if (child.type === 'submenu') {
-      const grandChildContainer = child.itemDiv.querySelector(
+      const grandChildContainer = child.div.querySelector(
         '.kando-menu-preview-grandchild-container'
       ) as HTMLElement;
 
@@ -611,63 +611,62 @@ export class Preview extends EventEmitter {
   }
 
   /**
-   * This method is called when a menu item is selected. If the menu item has children,
-   * the node is pushed to the selection chain and the preview is redrawn. In any case,
-   * the 'select' event is emitted.
+   * This method is called when a menu item is selected. If the menu item has children, it
+   * is pushed to the selection chain and the preview is redrawn. In any case, the
+   * 'select' event is emitted.
    *
-   * @param node The node which has been selected.
+   * @param item The menu item which has been selected.
    */
-  private selectNode(node: IEditorMenuItem) {
+  private selectItem(item: IEditorMenuItem) {
     // Only submenus can be part of the selection chain.
-    if (node.type === 'submenu') {
-      // If the node is already the last one in the selection chain, we do nothing. If it
+    if (item.type === 'submenu') {
+      // If the item is already the last one in the selection chain, we do nothing. If it
       // is not the last one but somewhere else in the selection chain, we remove all
       // nodes after it. If it is not in the selection chain at all, we add it to the end.
-      const index = this.selectionChain.indexOf(node);
+      const index = this.selectionChain.indexOf(item);
       if (index >= 0 && index < this.selectionChain.length - 1) {
         const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
         this.redrawMenu(lastSelected.computedAngle);
         this.redrawBreadcrumbs();
       } else if (index === -1) {
-        this.selectionChain.push(node);
-        this.redrawMenu(node.computedAngle + 180);
+        this.selectionChain.push(item);
+        this.redrawMenu(item.computedAngle + 180);
         this.redrawBreadcrumbs();
       }
     }
 
     if (this.activeItem) {
-      this.activeItem.itemDiv.classList.remove('active');
+      this.activeItem.div.classList.remove('active');
     }
 
-    this.activeItem = node;
-    node.itemDiv.classList.add('active');
+    this.activeItem = item;
+    item.div.classList.add('active');
 
-    this.emit('select-item', node);
+    this.emit('select-item', item);
   }
 
   /**
-   * This method computes the `computedAngle` properties for the given set of nodes. The
-   * `computedAngle` property is the angle of the child relative to its parent. It is
+   * This method computes the `computedAngle` properties for the given set of menu items.
+   * The `computedAngle` property is the angle of the child relative to its parent. It is
    * computed from the `computedAngle` property of the parent and the optional "fixed"
    * `angle` properties of itself and its siblings.
    *
-   * @param nodes The nodes for which to setup the angles recursively.
+   * @param items The items for which to setup the angles recursively.
    */
-  private computeItemAnglesRecursively(nodes?: IEditorMenuItem[], parentAngle?: number) {
-    // If the node has no children, we can stop here.
-    if (!nodes || nodes.length === 0) {
+  private computeItemAnglesRecursively(items?: IEditorMenuItem[], parentAngle?: number) {
+    if (!items || items.length === 0) {
       return;
     }
 
     // For all other cases, we have to compute the angles of the children. First, we
-    // compute the angle towards the parent node. This will be undefined for the root
-    // node.
-    const itemAngles = math.computeItemAngles(nodes, parentAngle);
+    // compute the angle towards the parent item. This will be undefined for the root
+    // item.
+    const itemAngles = math.computeItemAngles(items, parentAngle);
 
     // Now we assign the corresponding angles to the children.
-    for (let i = 0; i < nodes.length; ++i) {
-      const child = nodes[i] as IEditorMenuItem;
+    for (let i = 0; i < items.length; ++i) {
+      const child = items[i] as IEditorMenuItem;
       child.computedAngle = itemAngles[i];
 
       // Finally, we recursively setup the angles for the children of the child.
@@ -677,7 +676,7 @@ export class Preview extends EventEmitter {
 
   /**
    * This method is similar to the computeItemAnglesRecursively method. However, it always
-   * acts on the children of the currently selected node. In addition, it allows to pass
+   * acts on the children of the currently selected item. In addition, it allows to pass
    * an additional drag and / or drop index. If given, the computed item angles will leave
    * a gap for the to-be-dropped item and ignore the dragged item during the angle
    * computation. If a drop index is given, the method also returns the angle of the
@@ -692,7 +691,7 @@ export class Preview extends EventEmitter {
   private recomputeItemAngles(dragIndex?: number, dropIndex?: number) {
     const centerItem = this.getCenterItem();
 
-    // If the node has no children, we can stop here.
+    // If the item has no children, we can stop here.
     if (!centerItem.children || centerItem.children.length === 0) {
       return centerItem.computedAngle ?? 0;
     }
@@ -712,8 +711,8 @@ export class Preview extends EventEmitter {
     }
 
     // For all other cases, we have to compute the angles of the children. First, we
-    // compute the angle towards the parent node. This will be undefined for the root
-    // node.
+    // compute the angle towards the parent item. This will be undefined for the root
+    // item.
     const { itemAngles, dropAngle } = utils.computeItemAnglesWithDropIndex(
       nodes,
       dropIndex,

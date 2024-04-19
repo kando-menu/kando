@@ -19,7 +19,7 @@ export interface IEditorMenuItem extends IMenuItem {
    * The visual representation of this menu item. This is a div element which is created
    * when the editor is opened.
    */
-  itemDiv?: HTMLElement;
+  div?: HTMLElement;
 
   /**
    * This specifies the angle at which this menu item is displayed in the editor. This is

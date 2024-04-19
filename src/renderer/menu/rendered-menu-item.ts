@@ -11,17 +11,16 @@
 import { IVec2, IMenuItem } from '../../common';
 
 /**
- * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
- * represent submenus, leaf nodes represent actual menu items. This interface extends the
- * IMenuItem interface with properties which are only used by the Menu class in the
- * renderer process.
+ * The menu consists of a tree of menu items. This interface extends the IMenuItem
+ * interface with properties which are only used by the Menu class in the renderer
+ * process.
  */
-export interface IMenuNode extends IMenuItem {
+export interface IRenderedMenuItem extends IMenuItem {
   /**
-   * The chain of indices to get to this node. This will be computed and set once the menu
-   * is opened. It is stored here to avoid recomputation during emission of events. It
-   * will be '/' for the root node and something like '/0/1/2' for a node which is the
-   * third child of the second child of the first child of the root node.
+   * The chain of indices to get to this menu item. This will be computed and set once the
+   * menu is opened. It is stored here to avoid recomputation during emission of events.
+   * It will be '/' for the root item and something like '/0/1/2' for a menu item which is
+   * the third child of the second child of the first child of the root menu item.
    */
   path?: string;
 
