@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode } from '../index';
+import { IMenuItem } from '../index';
 import { IAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IActionData } from './uri-meta';
@@ -34,7 +34,7 @@ export class URIAction implements IAction {
    *
    * @param item The item for which the action should be executed.
    */
-  execute(item: DeepReadonly<INode>): void {
+  execute(item: DeepReadonly<IMenuItem>): void {
     shell.openExternal((item.data as IActionData).uri);
   }
 }

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode, IKeySequence } from '../index';
+import { IMenuItem, IKeySequence } from '../index';
 import { IAction } from '../action-registry';
 import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/settings';
@@ -23,7 +23,7 @@ export class HotkeyAction implements IAction {
    *   immediately or with a delay.
    * @returns True if the action should be executed with a delay.
    */
-  delayedExecution(item: DeepReadonly<INode>) {
+  delayedExecution(item: DeepReadonly<IMenuItem>) {
     return (item.data as IActionData).delayed;
   }
 
@@ -36,7 +36,7 @@ export class HotkeyAction implements IAction {
    * @param backend The backend which is currently used. This is used to simulate the key
    *   presses.
    */
-  execute(item: DeepReadonly<INode>, backend: Backend): void {
+  execute(item: DeepReadonly<IMenuItem>, backend: Backend): void {
     // We convert some common key names to the corresponding left key names.
     const keyNames = (item.data as IActionData).hotkey.split('+').map((name) => {
       // There are many different names for the Control key. We convert them all

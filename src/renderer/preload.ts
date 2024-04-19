@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2, INode, IAppSettings, IMenuSettings } from '../common';
+import { IKeySequence, IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -75,10 +75,10 @@ contextBridge.exposeInMainWorld('api', {
   /**
    * This will be called by the host process when a new menu should be shown.
    *
-   * @param callback This callback will be called with the root node of the menu and the
+   * @param callback This callback will be called with the root item of the menu and the
    *   position of the mouse cursor.
    */
-  showMenu: function (callback: (root: INode, pos: IVec2) => void) {
+  showMenu: function (callback: (root: IMenuItem, pos: IVec2) => void) {
     ipcRenderer.on('show-menu', (event, root, pos) => callback(root, pos));
   },
 

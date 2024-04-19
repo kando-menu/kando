@@ -8,20 +8,19 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2, INode } from '../../common';
+import { IVec2, IMenuItem } from '../../common';
 
 /**
- * The menu consists of a tree of nodes. Each node represents a menu item. Inner nodes
- * represent submenus, leaf nodes represent actual menu items. This interface extends the
- * INode interface with properties which are only used by the Menu class in the renderer
+ * The menu consists of a tree of menu items. This interface extends the IMenuItem
+ * interface with properties which are only used by the Menu class in the renderer
  * process.
  */
-export interface IMenuNode extends INode {
+export interface IRenderedMenuItem extends IMenuItem {
   /**
-   * The chain of indices to get to this node. This will be computed and set once the menu
-   * is opened. It is stored here to avoid recomputation during emission of events. It
-   * will be '/' for the root node and something like '/0/1/2' for a node which is the
-   * third child of the second child of the first child of the root node.
+   * The chain of indices to get to this menu item. This will be computed and set once the
+   * menu is opened. It is stored here to avoid recomputation during emission of events.
+   * It will be '/' for the root item and something like '/0/1/2' for a menu item which is
+   * the third child of the second child of the first child of the root menu item.
    */
   path?: string;
 
@@ -44,8 +43,10 @@ export interface IMenuNode extends INode {
   position?: IVec2;
 
   /**
-   * The visual representation of this menu item. This is a div element which is created
-   * when the menu is opened.
+   * The tree of menu items consists of these `nodeDiv`s. The child items of a menu item
+   * are directly appended to this div. There is another div appended to this `nodeDiv`
+   * with the class `.menu-item` which contains the visual representation of this menu
+   * item.
    */
   nodeDiv?: HTMLElement;
 

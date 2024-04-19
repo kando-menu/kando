@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode } from '../index';
+import { IMenuItem } from '../index';
 import { IMeta } from '../item-factory';
 
 /**
@@ -50,7 +50,7 @@ export class HotkeyMeta implements IMeta {
     return 'Simulates key presses.';
   }
 
-  getDescription(node: INode): string {
-    return (node.data as IActionData).hotkey || 'Not configured.';
+  getDescription(item: IMenuItem): string {
+    return (item.data as IActionData).hotkey || 'Not configured.';
   }
 }

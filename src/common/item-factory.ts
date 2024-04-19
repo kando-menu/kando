@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode } from './index';
+import { IMenuItem } from './index';
 
 import { CommandMeta } from './item-types/command-meta';
 import { HotkeyMeta } from './item-types/hotkey-meta';
@@ -46,7 +46,7 @@ export interface IMeta {
    * This should return a human-readable description of a specific menu item of this kind.
    * It will be shown in the trash and stash tab of the toolbar below the item name.
    */
-  getDescription(node: INode): string;
+  getDescription(item: IMenuItem): string;
 }
 
 /**
@@ -111,9 +111,9 @@ export class ItemFactory {
    * @param typeName The type of the menu item you want to create.
    * @returns The newly created menu item.
    */
-  public createNode(typeName: string): INode {
+  public createMenuItem(typeName: string): IMenuItem {
     const type = this.types.get(typeName);
-    const node: INode = {
+    const item: IMenuItem = {
       type: typeName,
       data: type.defaultData,
       name: type.defaultName,
@@ -122,9 +122,9 @@ export class ItemFactory {
     };
 
     if (type.hasChildren) {
-      node.children = [];
+      item.children = [];
     }
 
-    return node;
+    return item;
   }
 }

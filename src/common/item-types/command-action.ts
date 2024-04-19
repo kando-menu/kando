@@ -10,7 +10,7 @@
 
 import { exec } from 'child_process';
 
-import { INode } from '../index';
+import { IMenuItem } from '../index';
 import { IAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IActionData } from './command-meta';
@@ -32,7 +32,7 @@ export class CommandAction implements IAction {
    * @param item The item for which the action should be executed.
    * @throws If the command could not be started.
    */
-  execute(item: DeepReadonly<INode>): void {
+  execute(item: DeepReadonly<IMenuItem>): void {
     const command = (item.data as IActionData).command;
 
     exec(command, (error) => {

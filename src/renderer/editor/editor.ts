@@ -17,7 +17,7 @@ import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import { IMenu, IMenuSettings } from '../../common';
-import { IEditorNode, toINode } from './common/editor-node';
+import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
 import { ItemFactory } from '../../common/item-factory';
 
 /**
@@ -76,11 +76,11 @@ export class Editor extends EventEmitter {
   private currentMenu: number = 0;
 
   /**
-   * This array is used to store items which have been deleted by the user. They can be
-   * restored by dragging them back to the menus tab or the menu preview. They will not be
-   * saved to disc.
+   * This array is used to store menus and menu items which have been deleted by the user.
+   * They can be restored by dragging them back to the stash, to the menus tab, or the
+   * menu preview. They will not be saved to disc.
    */
-  private trashedItems: Array<IMenu | IEditorNode> = [];
+  private trashedThings: Array<IMenu | IEditorMenuItem> = [];
 
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
@@ -99,8 +99,8 @@ export class Editor extends EventEmitter {
     this.preview = new Preview();
 
     this.preview.on('delete-item', (item) => {
-      this.trashedItems.push(item);
-      this.toolbar.setTrashedItems(this.trashedItems);
+      this.trashedThings.push(item);
+      this.toolbar.setTrashedThings(this.trashedThings);
     });
 
     this.preview.on('stash-item', (item) => {
@@ -182,8 +182,8 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('add-item', (typeName: string) => {
-      const node = ItemFactory.getInstance().createNode(typeName);
-      this.preview.insertNode(node);
+      const item = ItemFactory.getInstance().createMenuItem(typeName);
+      this.preview.insertItem(item);
     });
 
     this.toolbar.on('select-menu', (index: number) => {
@@ -192,40 +192,42 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('delete-menu', (index: number) => {
-      this.trashedItems.push(this.menuSettings.menus.splice(index, 1)[0]);
+      this.trashedThings.push(this.menuSettings.menus.splice(index, 1)[0]);
       this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
       this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
       this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
-      this.toolbar.setTrashedItems(this.trashedItems);
+      this.toolbar.setTrashedThings(this.trashedThings);
     });
 
     this.toolbar.on('restore-deleted-menu', (index: number) => {
-      this.menuSettings.menus.push(this.trashedItems.splice(index, 1)[0] as IMenu);
+      this.menuSettings.menus.push(this.trashedThings.splice(index, 1)[0] as IMenu);
       this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.toolbar.setTrashedItems(this.trashedItems);
+      this.toolbar.setTrashedThings(this.trashedThings);
     });
 
     this.toolbar.on('restore-deleted-item', (index: number) => {
-      const node = this.trashedItems.splice(index, 1)[0] as IEditorNode;
-      this.preview.insertNode(node);
-      this.toolbar.setTrashedItems(this.trashedItems);
+      const item = this.trashedThings.splice(index, 1)[0] as IEditorMenuItem;
+      this.preview.insertItem(item);
+      this.toolbar.setTrashedThings(this.trashedThings);
     });
 
     this.toolbar.on('stash-deleted-item', (index: number) => {
-      this.menuSettings.stash.push(this.trashedItems.splice(index, 1)[0] as IEditorNode);
-      this.toolbar.setTrashedItems(this.trashedItems);
+      this.menuSettings.stash.push(
+        this.trashedThings.splice(index, 1)[0] as IEditorMenuItem
+      );
+      this.toolbar.setTrashedThings(this.trashedThings);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
     this.toolbar.on('restore-stashed-item', (index: number) => {
-      const node = this.menuSettings.stash.splice(index, 1)[0];
-      this.preview.insertNode(node);
+      const item = this.menuSettings.stash.splice(index, 1)[0];
+      this.preview.insertItem(item);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
     this.toolbar.on('delete-stashed-item', (index: number) => {
-      this.trashedItems.push(this.menuSettings.stash.splice(index, 1)[0]);
-      this.toolbar.setTrashedItems(this.trashedItems);
+      this.trashedThings.push(this.menuSettings.stash.splice(index, 1)[0]);
+      this.toolbar.setTrashedThings(this.trashedThings);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
@@ -300,16 +302,16 @@ export class Editor extends EventEmitter {
 
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure
-      // that the menu nodes are converted back to INode objects. This is because
-      // IEditorNode objects contain properties (such as DOM nodes) which neither need to
+      // that the menu items are converted back to IMenuItem objects. This is because
+      // IEditorMenuItem objects contain properties (such as DOM nodes) which neither need to
       // be saved to disc nor can they be cloned using the structured clone algorithm
       // which is used by Electron for IPC.
       this.menuSettings.menus.forEach((menu) => {
-        menu.nodes = toINode(menu.nodes);
+        menu.nodes = toIMenuItem(menu.nodes);
       });
 
-      // Also the stash needs to be converted back to INode objects.
-      this.menuSettings.stash = this.menuSettings.stash.map(toINode);
+      // Also the stash needs to be converted back to IMenuItem objects.
+      this.menuSettings.stash = this.menuSettings.stash.map(toIMenuItem);
 
       window.api.menuSettings.set(this.menuSettings);
       this.menuSettings = null;

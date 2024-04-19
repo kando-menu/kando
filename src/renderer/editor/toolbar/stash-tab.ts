@@ -12,7 +12,7 @@ import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import * as themedIcon from '../common/themed-icon';
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemFactory } from '../../../common/item-factory';
 
 /**
@@ -92,7 +92,7 @@ export class StashTab extends EventEmitter {
    *
    * @param items The items which are currently in the trash.
    */
-  public setStashedItems(items: Array<IEditorNode>) {
+  public setStashedItems(items: Array<IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(

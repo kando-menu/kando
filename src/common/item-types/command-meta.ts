@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { INode } from '../index';
+import { IMenuItem } from '../index';
 import { IMeta } from '../item-factory';
 
 /**
@@ -47,7 +47,7 @@ export class CommandMeta implements IMeta {
     return 'Runs any command.';
   }
 
-  getDescription(node: INode): string {
-    return (node.data as IActionData).command || 'Not configured.';
+  getDescription(item: IMenuItem): string {
+    return (item.data as IActionData).command || 'Not configured.';
   }
 }

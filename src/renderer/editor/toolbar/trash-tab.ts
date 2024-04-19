@@ -13,7 +13,7 @@ import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
-import { IEditorNode } from '../common/editor-node';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemFactory } from '../../../common/item-factory';
 
 /**
@@ -96,16 +96,16 @@ export class TrashTab extends EventEmitter {
     this.tab = this.container.querySelector('#kando-trash-tab');
 
     // Initialize the trash tab with an empty list of trashed items.
-    this.setTrashedItems([]);
+    this.setTrashedThings([]);
   }
 
   /**
    * This method is called when the user drops a menu or a menu item on the trash tab. It
    * completely updates the trash tab's content.
    *
-   * @param items The items which are currently in the trash.
+   * @param things The menus or menu items which are currently in the trash.
    */
-  public setTrashedItems(items: Array<IMenu | IEditorNode>) {
+  public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(
@@ -113,8 +113,8 @@ export class TrashTab extends EventEmitter {
     );
 
     // Compile the data for the Handlebars template.
-    const data = items.map((item, index) => {
-      const menu = item as IMenu;
+    const data = things.map((thing, index) => {
+      const menu = thing as IMenu;
 
       // If the item is a menu, we need to extract the name, the shortcut and the icon.
       if (menu.nodes) {
@@ -127,14 +127,14 @@ export class TrashTab extends EventEmitter {
         };
       }
 
-      // If the item is a menu node, we need to extract the name and the icon.
-      const node = item as IEditorNode;
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(node.type);
+      // If the item is a menu item, we need to extract the name and the icon.
+      const item = thing as IEditorMenuItem;
+      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
       return {
         isMenu: false,
-        name: node.name,
-        description: typeInfo.getDescription(node),
-        icon: themedIcon.createDiv(node.icon, node.iconTheme).outerHTML,
+        name: item.name,
+        description: typeInfo.getDescription(item),
+        icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
         index,
       };
     });
@@ -165,6 +165,6 @@ export class TrashTab extends EventEmitter {
 
     // Set the counter value.
     const counter = this.container.querySelector('#kando-trash-tab-counter');
-    counter.textContent = items.length.toString();
+    counter.textContent = things.length.toString();
   }
 }
