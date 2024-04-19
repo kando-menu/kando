@@ -17,7 +17,7 @@
   &.hidden {
     opacity: 0;
 
-    // Subtly scale in / out all nodes when the menu is shown and hidden.
+    // Subtly scale in / out all items when the menu is shown and hidden.
     .menu-icon {
       transform: scale(0.8) !important;
     }
@@ -37,7 +37,7 @@
     }
   }
 
-  // The menu consists of a tree of nodes. Their relative positions are computed in
+  // The menu consists of a tree of items. Their relative positions are computed in
   // JavaScript and then applied as inline styles. Each node has an additional div as
   // child with the class menu-icon. This div is used to display the node's content.
   .menu-node {

@@ -211,7 +211,7 @@ export class Preview extends EventEmitter {
 
   /**
    * This method initializes the drag'n'drop functionality of the menu preview. This is
-   * used to move menu nodes around in the preview. Normal nodes can be reordered, dropped
+   * used to move menu items around in the preview. Normal items can be reordered, dropped
    * into submenus, or dropped onto the parent menu item. Nodes with fixed angles can only
    * be rotated around the parent item.
    */
@@ -225,7 +225,7 @@ export class Preview extends EventEmitter {
 
     // Move the drop indicator either to the submenu, to the back-navigation link, or to
     // the drop index position when an item is dragged around. This will also be called
-    // during drag-and-drop operations for new, deleted, and stashed nodes from the
+    // during drag-and-drop operations for new, deleted, and stashed items from the
     // toolbar. In this case, `item` and `dragIndex` will be null.
     this.dragger.on('drag-item', (item, dragIndex, dropTarget, dropIndex) => {
       const parentItem = this.getParentItem();
@@ -392,7 +392,7 @@ export class Preview extends EventEmitter {
       return;
     }
 
-    // Clear all previous draggables. We will register all new nodes further below via the
+    // Clear all previous draggables. We will register all new items further below via the
     // `redrawItem()` method.
     this.dragger.removeAllDraggables();
 
@@ -622,7 +622,7 @@ export class Preview extends EventEmitter {
     if (item.type === 'submenu') {
       // If the item is already the last one in the selection chain, we do nothing. If it
       // is not the last one but somewhere else in the selection chain, we remove all
-      // nodes after it. If it is not in the selection chain at all, we add it to the end.
+      // items after it. If it is not in the selection chain at all, we add it to the end.
       const index = this.selectionChain.indexOf(item);
       if (index >= 0 && index < this.selectionChain.length - 1) {
         const lastSelected = this.selectionChain[index + 1];
@@ -702,11 +702,11 @@ export class Preview extends EventEmitter {
     }
 
     // We do not need to recompute the angle of the dragged item.
-    const nodes = centerItem.children.filter((_, i) => i !== dragIndex);
+    const items = centerItem.children.filter((_, i) => i !== dragIndex);
 
     // If no drop index is given, we simply compute the angles as usual.
     if (dropIndex === undefined) {
-      this.computeItemAnglesRecursively(nodes, utils.getParentAngle(centerItem));
+      this.computeItemAnglesRecursively(items, utils.getParentAngle(centerItem));
       return;
     }
 
@@ -714,14 +714,14 @@ export class Preview extends EventEmitter {
     // compute the angle towards the parent item. This will be undefined for the root
     // item.
     const { itemAngles, dropAngle } = utils.computeItemAnglesWithDropIndex(
-      nodes,
+      items,
       dropIndex,
       utils.getParentAngle(centerItem)
     );
 
     // Now we assign the corresponding angles to the children.
-    for (let i = 0; i < nodes.length; ++i) {
-      const child = nodes[i] as IEditorMenuItem;
+    for (let i = 0; i < items.length; ++i) {
+      const child = items[i] as IEditorMenuItem;
       child.computedAngle = itemAngles[i];
 
       // Finally, we recursively setup the angles for the children of the child.

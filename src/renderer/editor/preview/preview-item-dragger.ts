@@ -117,7 +117,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
     return { dropTarget: this.dropTarget, dropIndex: this.dropIndex };
   }
 
-  /** This methods sets up the logic required for reordering menu nodes in the preview. */
+  /** This methods sets up the logic required for reordering menu items in the preview. */
   private initInternalDragging() {
     // We keep track whether something is currently dragged over the preview area. This
     // way we can reset the drop target if the dragged item leaves the preview area.
@@ -255,12 +255,12 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
   }
 
   /**
-   * This methods sets up the logic required for dragging nodes from the toolbar to the
-   * preview. We basically detect if something is dragged over the preview area by looking
-   * at the mouse pointer state and the CSS classes given to the #kando-editor element. We
-   * emit the `drag-item` event accordingly. We do not emit the `drop-item` signal.
-   * Instead, the editor will tell the preview when a menu item from the toolbar is
-   * dropped to the preview.
+   * This methods sets up the logic required for dragging menu items from the toolbar to
+   * the preview. We basically detect if something is dragged over the preview area by
+   * looking at the mouse pointer state and the CSS classes given to the #kando-editor
+   * element. We emit the `drag-item` event accordingly. We do not emit the `drop-item`
+   * signal. Instead, the editor will tell the preview when a menu item from the toolbar
+   * is dropped to the preview.
    */
   private initExternalDragging() {
     let externalDragOngoing = false;

@@ -11,8 +11,8 @@
 import { IMenuItem } from '../../../common';
 
 /**
- * The menu consists of a tree of nodes. This interface extends the IMenuItem interface
- * with properties which are only used in the menu editor.
+ * The menu consists of a tree of menu items. This interface extends the IMenuItem
+ * interface with properties which are only used in the menu editor.
  */
 export interface IEditorMenuItem extends IMenuItem {
   /**

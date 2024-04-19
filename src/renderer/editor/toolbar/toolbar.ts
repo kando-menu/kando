@@ -11,7 +11,7 @@
 import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
-import { AddNodesTab } from './add-nodes-tab';
+import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { StashTab } from './stash-tab';
@@ -53,7 +53,7 @@ export class Toolbar extends EventEmitter {
   private menusTab: MenusTab = null;
 
   /** This manages the second tab of the toolbar. */
-  private addNodesTab: AddNodesTab = null;
+  private addItemsTab: AddItemsTab = null;
 
   /** This manages the trash tab of the toolbar. */
   private trashTab: TrashTab = null;
@@ -78,9 +78,9 @@ export class Toolbar extends EventEmitter {
     this.menusTab.on('select-menu', (index) => this.emit('select-menu', index));
     this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
 
-    // Initialize the add-nodes tab and forward its events.
-    this.addNodesTab = new AddNodesTab(this.container);
-    this.addNodesTab.on('add-item', (typeName) => this.emit('add-item', typeName));
+    // Initialize the add-items tab and forward its events.
+    this.addItemsTab = new AddItemsTab(this.container);
+    this.addItemsTab.on('add-item', (typeName) => this.emit('add-item', typeName));
 
     // Initialize the trash tab and forward its events.
     this.trashTab = new TrashTab(this.container);
@@ -134,7 +134,7 @@ export class Toolbar extends EventEmitter {
           content: '',
         },
         {
-          id: 'kando-add-nodes-tab',
+          id: 'kando-add-items-tab',
           icon: 'add',
           title: 'Menu Items',
           content: '',
@@ -199,7 +199,7 @@ export class Toolbar extends EventEmitter {
   private initTabs() {
     const tabs = [
       { id: 'kando-menus-tab', large: false },
-      { id: 'kando-add-nodes-tab', large: false },
+      { id: 'kando-add-items-tab', large: false },
       { id: 'kando-stash-tab', large: false },
       { id: 'kando-trash-tab', large: false },
       { id: 'kando-editor-themes-tab', large: true },

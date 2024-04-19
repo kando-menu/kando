@@ -23,7 +23,7 @@ import * as themedIcon from '../common/themed-icon';
  *   the menu preview. The index of the newly added item type is passed as the first
  *   argument.
  */
-export class AddNodesTab extends EventEmitter {
+export class AddItemsTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
@@ -61,7 +61,7 @@ export class AddNodesTab extends EventEmitter {
     });
 
     // The tab has been created in the toolbar's constructor.
-    this.tab = this.container.querySelector('#kando-add-nodes-tab');
+    this.tab = this.container.querySelector('#kando-add-items-tab');
 
     // Initialize the stash tab with an empty list of items.
     this.loadTypes();
@@ -71,7 +71,7 @@ export class AddNodesTab extends EventEmitter {
   public loadTypes() {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(require('./templates/add-nodes-tab.hbs').default);
+    const template = Handlebars.compile(require('./templates/add-items-tab.hbs').default);
 
     const registry = ItemFactory.getInstance();
 
