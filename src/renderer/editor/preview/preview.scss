@@ -89,6 +89,7 @@
     background-color: rgba(255, 255, 255, 0.1);
     border: 2px solid rgb(255, 255, 255);
     transition: all 150ms ease;
+    touch-action: none;
 
     display: flex;
     align-items: center;

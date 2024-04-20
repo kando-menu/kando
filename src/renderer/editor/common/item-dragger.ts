@@ -63,98 +63,101 @@ export class ItemDragger<T> extends EventEmitter {
    *   to the resulting drag events.
    */
   public addDraggable(div: HTMLElement, data: T) {
-    const abortController = new AbortController();
+    const onPointerDown = (e: PointerEvent | TouchEvent) => {
+      const dragStart = this.getCoords(e);
+      const rect = div.getBoundingClientRect();
+      const parentRect = div.parentElement.getBoundingClientRect();
 
-    div.addEventListener(
-      'mousedown',
-      (e) => {
-        const dragStart = { x: e.clientX, y: e.clientY };
-        const rect = div.getBoundingClientRect();
-        const parentRect = div.parentElement.getBoundingClientRect();
+      const startPos = {
+        x: rect.left - parentRect.left,
+        y: rect.top - parentRect.top,
+      };
 
-        const startPos = {
-          x: rect.left - parentRect.left,
-          y: rect.top - parentRect.top,
-        };
+      const grabOffset = {
+        x: dragStart.x - rect.left,
+        y: dragStart.y - rect.top,
+      };
 
-        const grapOffset = {
-          x: dragStart.x - rect.left,
-          y: dragStart.y - rect.top,
-        };
+      this.emit('mouse-down', data, div);
 
-        this.emit('mouse-down', data, div);
+      let clearListeners = () => {};
 
-        let clearListeners = () => {};
+      const onMotionEvent = (e2: MouseEvent | TouchEvent) => {
+        const dragCurrent = this.getCoords(e2);
+        const offset = math.subtract(dragCurrent, dragStart);
 
-        const onMouseMove = (e2: MouseEvent) => {
-          const dragCurrent = { x: e2.clientX, y: e2.clientY };
-          const offset = math.subtract(dragCurrent, dragStart);
-
-          if (math.getLength(offset) > this.DRAG_THRESHOLD) {
-            e2.preventDefault();
-            e2.stopPropagation();
-
-            if (this.currentlyDragged === null) {
-              this.currentlyDragged = { div, data };
-              document.body.style.cursor = 'grabbing';
-              this.emit('drag-start', data, div);
-            }
-
-            this.emit(
-              'drag-move',
-              data,
-              div,
-              { x: startPos.x + offset.x, y: startPos.y + offset.y },
-              { x: e2.x, y: e2.y },
-              offset,
-              grapOffset
-            );
+        if (math.getLength(offset) > this.DRAG_THRESHOLD) {
+          if (this.currentlyDragged === null) {
+            this.currentlyDragged = { div, data };
+            document.body.style.cursor = 'grabbing';
+            this.emit('drag-start', data, div);
           }
-        };
 
-        const onMouseUp = () => {
-          this.emit('mouse-up', data, div);
+          this.emit(
+            'drag-move',
+            data,
+            div,
+            { x: startPos.x + offset.x, y: startPos.y + offset.y },
+            dragCurrent,
+            offset,
+            grabOffset
+          );
+        }
+      };
 
+      const onMouseUp = () => {
+        console.log('pointerup');
+        this.emit('mouse-up', data, div);
+
+        if (this.currentlyDragged) {
+          document.body.style.cursor = '';
+          this.emit('drag-end', this.currentlyDragged.data, this.currentlyDragged.div);
+          this.currentlyDragged = null;
+        } else {
+          this.emit('click', data, div);
+        }
+
+        clearListeners();
+      };
+
+      const onEsc = (e2: KeyboardEvent) => {
+        if (e2.key === 'Escape') {
           if (this.currentlyDragged) {
             document.body.style.cursor = '';
-            this.emit('drag-end', this.currentlyDragged.data, this.currentlyDragged.div);
+            this.emit(
+              'drag-cancel',
+              this.currentlyDragged.data,
+              this.currentlyDragged.div
+            );
             this.currentlyDragged = null;
-          } else {
-            this.emit('click', data, div);
           }
 
           clearListeners();
-        };
+          e2.stopPropagation();
+        }
+      };
 
-        const onEsc = (e2: KeyboardEvent) => {
-          if (e2.key === 'Escape') {
-            if (this.currentlyDragged) {
-              document.body.style.cursor = '';
-              this.emit(
-                'drag-cancel',
-                this.currentlyDragged.data,
-                this.currentlyDragged.div
-              );
-              this.currentlyDragged = null;
-            }
+      clearListeners = () => {
+        window.removeEventListener('mousemove', onMotionEvent);
+        window.removeEventListener('touchmove', onMotionEvent);
+        window.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener('touchend', onMouseUp);
+        window.removeEventListener('touchcancel', onMouseUp);
+        window.removeEventListener('keyup', onEsc, true);
+      };
 
-            clearListeners();
-            e2.stopPropagation();
-          }
-        };
+      window.addEventListener('mousemove', onMotionEvent);
+      window.addEventListener('touchmove', onMotionEvent);
+      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener('touchend', onMouseUp);
+      window.addEventListener('touchcancel', onMouseUp);
+      window.addEventListener('keyup', onEsc, true);
+    };
 
-        clearListeners = () => {
-          window.removeEventListener('mousemove', onMouseMove);
-          window.removeEventListener('mouseup', onMouseUp);
-          window.removeEventListener('keyup', onEsc, true);
-        };
+    const abortController = new AbortController();
 
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('keyup', onEsc, true);
-      },
-      { signal: abortController.signal }
-    );
+    div.addEventListener('mousedown', onPointerDown, { signal: abortController.signal });
+    div.addEventListener('touchstart', onPointerDown, { signal: abortController.signal });
 
     this.draggables.set(div, { data, abortController });
   }
@@ -187,6 +190,23 @@ export class ItemDragger<T> extends EventEmitter {
   public removeAllDraggables() {
     for (const [div] of this.draggables) {
       this.removeDraggable(div);
+    }
+  }
+
+  /**
+   * This method is used to get the current coordinates of a mouse or touch event.
+   *
+   * @param event The event to get the coordinates from.
+   * @returns The coordinates of the event.
+   */
+  private getCoords(event: MouseEvent | TouchEvent) {
+    if (event instanceof MouseEvent) {
+      return { x: event.clientX, y: event.clientY };
+    } else {
+      return {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
     }
   }
 }
