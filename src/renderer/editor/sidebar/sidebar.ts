@@ -501,5 +501,9 @@ export class Sidebar {
         'https://github.com/kando-menu/kando/blob/main/docs/configuring.md'
       );
     });
+
+    this.container.querySelector('#sponsors-button').addEventListener('click', () => {
+      window.api.openURI('https://schneegans.github.io/sponsors/');
+    });
   }
 }
