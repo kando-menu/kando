@@ -116,7 +116,7 @@ export class StashTab extends EventEmitter {
       type: 'stash',
       placeholderHeading: 'You can temporarily store menu items here!',
       placeholderSubheading:
-        'This is especially useful if you want to reorganize your menus.',
+        'This is useful if you want to reorganize your menus. They will be saved.',
       items: data,
     });
 

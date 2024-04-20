@@ -143,7 +143,7 @@ export class TrashTab extends EventEmitter {
     this.tab.innerHTML = template({
       type: 'trash',
       placeholderHeading: 'You can delete menus and menu items by dropping them here!',
-      placeholderSubheading: 'When you start Kando the next time, they will be gone.',
+      placeholderSubheading: 'When you restart Kando, they will be gone.',
       items: data,
     });
 
