@@ -19,7 +19,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [unreleased]
 
-**Release Date:** TBD
+**Release Date:** 2024-04-21
 
 #### Added
 
