@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [Kando 0.7.1](https://github.com/kando-menu/kando/releases/tag/v0.7.1)
+
+**Release Date:** 2024-04-22
+
+#### Fixed
+
+- Fixed an issue which caused a JavaScript exception error to pop up when executing a command action for which the command returned a non-zero exit code.
+
 ## [Kando 0.7.0](https://github.com/kando-menu/kando/releases/tag/v0.7.0)
 
 <a href="https://www.youtube.com/watch?v=Tv9kRgxygA4">
