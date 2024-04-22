@@ -33,8 +33,9 @@ export class URIAction implements IAction {
    * Opens the URI with the default application.
    *
    * @param item The item for which the action should be executed.
+   * @returns A promise which resolves when the URI has been successfully opened.
    */
-  execute(item: DeepReadonly<IMenuItem>): void {
-    shell.openExternal((item.data as IActionData).uri);
+  async execute(item: DeepReadonly<IMenuItem>) {
+    return shell.openExternal((item.data as IActionData).uri);
   }
 }

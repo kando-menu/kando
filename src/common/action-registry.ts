@@ -31,7 +31,7 @@ export interface IAction {
    *
    * @param item The menu item for which an action is about to be executed.
    */
-  delayedExecution(item: DeepReadonly<IMenuItem>): boolean;
+  delayedExecution: (item: DeepReadonly<IMenuItem>) => boolean;
 
   /**
    * This will be called when the menu item is executed.
@@ -39,8 +39,9 @@ export interface IAction {
    * @param item The menu item which is executed.
    * @param backend The backend which is currently used. Use this to call system-dependent
    *   functions.
+   * @returns A promise which resolves when the action has been successfully executed.
    */
-  execute(item: DeepReadonly<IMenuItem>, backend: Backend): void;
+  execute: (item: DeepReadonly<IMenuItem>, backend: Backend) => Promise<void>;
 }
 
 /**
@@ -83,9 +84,10 @@ export class ActionRegistry {
    * @param item The menu item for which an action is about to be executed.
    * @returns `true` if the action should be executed after Kando's window has been
    *   closed.
+   * @throws An error if the type of the menu item is unknown.
    */
   public delayedExecution(item: DeepReadonly<IMenuItem>): boolean {
-    return this.actions.get(item.type).delayedExecution(item);
+    return this.getAction(item.type).delayedExecution(item);
   }
 
   /**
@@ -93,9 +95,26 @@ export class ActionRegistry {
    *
    * @param item The menu item which is executed.
    * @param backend The backend which is currently used.
+   * @returns A promise which resolves when the action has been successfully executed.
    */
-  public execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
-    const action = this.actions.get(item.type);
-    action.execute(item, backend);
+  async execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
+    return this.getAction(item.type).execute(item, backend);
+  }
+
+  /**
+   * This method returns the action of the given type.
+   *
+   * @param type The type of the action.
+   * @returns The action of the given type.
+   * @throws An error if the type is unknown.
+   */
+  private getAction(type: string): IAction {
+    const action = this.actions.get(type);
+
+    if (action === undefined) {
+      throw new Error(`Unknown action type: ${type}`);
+    }
+
+    return action;
   }
 }

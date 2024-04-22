@@ -30,15 +30,19 @@ export class CommandAction implements IAction {
    * Runs the command.
    *
    * @param item The item for which the action should be executed.
-   * @throws If the command could not be started.
+   * @returns A promise which resolves when the command has been successfully executed.
    */
-  execute(item: DeepReadonly<IMenuItem>): void {
-    const command = (item.data as IActionData).command;
+  async execute(item: DeepReadonly<IMenuItem>) {
+    return new Promise<void>((resolve, reject) => {
+      const command = (item.data as IActionData).command;
 
-    exec(command, (error) => {
-      if (error) {
-        throw `Failed to start command "${command}": ${error.message}`;
-      }
+      exec(command, (error) => {
+        if (error) {
+          reject(error.message);
+        } else {
+          resolve();
+        }
+      });
     });
   }
 }

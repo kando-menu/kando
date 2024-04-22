@@ -324,33 +324,44 @@ export class KandoApp {
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
     ipcMain.on('select-item', (event, path) => {
+      const execute = (item: DeepReadonly<IMenuItem>) => {
+        ActionRegistry.getInstance()
+          .execute(item, this.backend)
+          .catch((error) => {
+            this.showError('Failed to execute action', error);
+          });
+      };
+
+      let item: DeepReadonly<IMenuItem>;
+      let executeDelayed = false;
+
       try {
         // Find the selected item.
-        const item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
+        item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
 
         // If the action is not delayed, we execute it immediately.
-        const executeDelayed = ActionRegistry.getInstance().delayedExecution(item);
+        executeDelayed = ActionRegistry.getInstance().delayedExecution(item);
         if (!executeDelayed) {
-          ActionRegistry.getInstance().execute(item, this.backend);
+          execute(item);
         }
-
-        // Also wait with the execution of the selected action until the fade-out
-        // animation is finished to make sure that any resulting events (such as virtual
-        // key presses) are not captured by the window.
-        this.hideTimeout = setTimeout(() => {
-          console.log('Select item: ' + path);
-
-          this.hideWindow();
-          this.hideTimeout = null;
-
-          // If the action is delayed, we execute it after the window is hidden.
-          if (executeDelayed) {
-            ActionRegistry.getInstance().execute(item, this.backend);
-          }
-        }, 400);
-      } catch (err) {
-        console.error('Failed to select item: ' + err);
+      } catch (error) {
+        this.showError('Failed to select item', error.message);
       }
+
+      // Also wait with the execution of the selected action until the fade-out
+      // animation is finished to make sure that any resulting events (such as virtual
+      // key presses) are not captured by the window.
+      this.hideTimeout = setTimeout(() => {
+        console.log('Select item: ' + path);
+
+        this.hideWindow();
+        this.hideTimeout = null;
+
+        // If the action is delayed, we execute it after the window is hidden.
+        if (executeDelayed) {
+          execute(item);
+        }
+      }, 400);
     });
 
     // We do not hide the window immediately when the user aborts a selection. Instead, we
