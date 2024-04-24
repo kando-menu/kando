@@ -22,6 +22,10 @@ interface CLIOptions {
   // This optional parameter is specified using the --menu option. It is used to show a
   // menu when the app or a second instance of the app is started.
   menu?: string;
+
+  // This optional parameter is specified using the --settings option. It is used to show
+  // the menu editor when the app or a second instance of the app is started.
+  settings?: boolean;
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -35,7 +39,8 @@ program
   .name('kando')
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
-  .option('-m, --menu <menu>', 'show the menu with the given name');
+  .option('-m, --menu <menu>', 'show the menu with the given name')
+  .option('-s, --settings', 'show the menu editor');
 
 program.parse();
 const options = program.opts() as CLIOptions;
@@ -44,8 +49,10 @@ const options = program.opts() as CLIOptions;
 // we just quit this one and let the other instance handle the command line arguments.
 const gotTheLock = app.requestSingleInstanceLock(options);
 if (!gotTheLock) {
+  // Print a short message and exit. The running instance will get notified and will also
+  // show a corresponding desktop notification.
   console.log(
-    'Kando is already running. You can use the -m option to make the other instance show a menu.'
+    'Kando is already running. Use --help for a list of commands to communicate with the running instance!'
   );
   app.quit();
   process.exit(0);
@@ -54,7 +61,6 @@ if (!gotTheLock) {
 // Start the app. We import the KandoApp class here to make the code above as fast as
 // possible.
 import { KandoApp } from './main/app';
-import { Notification } from 'electron';
 import path from 'path';
 
 // It is not very nice that electron stores all its cache data in the user's config
@@ -66,6 +72,22 @@ app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
 // Create the app and initialize it as soon as electron is ready.
 const kando = new KandoApp();
+
+// This function is called when the app or a second instance is started with command line
+// arguments. It returns true a option was passed that was handled by the app.
+const handleCommandLine = (options: CLIOptions) => {
+  if (options.menu) {
+    kando.showMenu(options.menu);
+    return true;
+  }
+
+  if (options.settings) {
+    kando.showEditor();
+    return true;
+  }
+
+  return false;
+};
 
 app
   .whenReady()
@@ -79,35 +101,23 @@ app
 
     // Show the menu passed via --menu when a second instance is started.
     app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
-      if (options.menu) {
-        kando.showMenu(options.menu);
+      // If no option was passed, we show a notification to the user.
+      if (!handleCommandLine(options)) {
+        KandoApp.showError(
+          'Kando is already running',
+          'Check the system tray icon for some options!'
+        );
       }
     });
 
-    // Finally, show a message that the app is ready.
+    // Show a message that the app is ready.
     console.log(`Kando ${app.getVersion()} is ready.`);
-    console.log('Press <Ctrl>+<Space> to open the prototype menu!');
 
-    // Show the menu passed via --menu.
-    if (options.menu) {
-      kando.showMenu(options.menu);
-    }
+    // Finally, handle the command line arguments (if any).
+    handleCommandLine(options);
   })
-  .catch((err) => {
-    // Show a notification when the app fails to start.
-    if (Notification.isSupported()) {
-      const notification = new Notification({
-        title: 'Kando failed to start.',
-        body: 'Please check the console for more information.',
-        icon: path.join(__dirname, require('../assets/icons/icon.png')),
-      });
-
-      notification.show();
-    }
-
-    console.error('Failed to initialize Kando: ' + err);
+  .catch((error) => {
+    KandoApp.showError('Kando failed to start', error.message);
     app.quit();
-
-    // Make sure the app quits with a non-zero exit code.
     process.exitCode = 1;
   });
