@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Added
+
+- A new item to the tray menu which allows to open the menu editor.
+
 ## [Kando 0.7.1](https://github.com/kando-menu/kando/releases/tag/v0.7.1)
 
 **Release Date:** 2024-04-22
