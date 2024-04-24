@@ -203,7 +203,7 @@ export class KandoApp {
    * This is called when the user wants to open the menu editor. This can be either
    * triggered by the tray icon or runned a second instance of the app.
    */
-  private showEditor() {
+  public showEditor() {
     this.window.webContents.send('show-editor');
     this.showWindow();
   }
