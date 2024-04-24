@@ -29,6 +29,12 @@ window.api.showMenu((root, pos) => {
   editor.show();
 });
 
+// Show the editor when the main process requests it.
+window.api.showEditor(() => {
+  editor.show();
+  editor.enterEditMode();
+});
+
 // Sometimes, the user may select an item too close to the edge of the screen. In this
 // case, we can not open the menu directly under the pointer. To make sure that the
 // menu is still exactly under the pointer, we move the pointer a little bit.

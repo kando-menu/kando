@@ -36,6 +36,7 @@ declare global {
       runCommand: (command: string) => void;
       log: (message: string) => void;
       showMenu: (func: (root: IMenuItem, pos: IVec2) => void) => void;
+      showEditor: (func: () => void) => void;
       hoverItem: (path: string) => void;
       unhoverItem: (path: string) => void;
       selectItem: (path: string) => void;

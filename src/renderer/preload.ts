@@ -83,6 +83,15 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   /**
+   * This will be called by the host process when the user should be shown the editor.
+   *
+   * @param callback This callback will be called when the editor should be shown.
+   */
+  showEditor: function (callback: () => void) {
+    ipcRenderer.on('show-editor', () => callback());
+  },
+
+  /**
    * This will be called by the render process when the user hovers a menu item.
    *
    * @param path The path of the hovered menu item.
