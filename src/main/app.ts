@@ -192,24 +192,20 @@ export class KandoApp {
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
 
-        // On Windows, we have to remove the ignore-mouse-events property when
-        // un-minimizing the window. See the hideWindow() method for more information on
-        // this workaround
-        if (process.platform === 'win32') {
-          this.window.setIgnoreMouseEvents(false);
-        }
-
-        this.window.show();
-
-        // There seems to be an issue with GNOME Shell 44.1 where the window does not
-        // get focus when it is shown. This is a workaround for that issue.
-        setTimeout(() => {
-          this.window.focus();
-        }, 100);
+        this.showWindow();
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
       });
+  }
+
+  /**
+   * This is called when the user wants to open the menu editor. This can be either
+   * triggered by the tray icon or runned a second instance of the app.
+   */
+  private showEditor() {
+    this.window.webContents.send('show-editor');
+    this.showWindow();
   }
 
   /**
@@ -293,9 +289,14 @@ export class KandoApp {
     // return the index of a menu with the same name as the last menu. If the user uses
     // the same name for multiple menus, this will not work as expected.
     ipcMain.handle('menu-settings-get-current-menu', () => {
+      if (!this.lastMenu) {
+        return 0;
+      }
+
       const index = this.menuSettings
         .get('menus')
         .findIndex((m) => m.nodes.name === this.lastMenu.nodes.name);
+
       return Math.max(index, 0);
     });
 
@@ -450,6 +451,14 @@ export class KandoApp {
 
     template.push({ type: 'separator' });
 
+    // Add an entry to show the editor.
+    template.push({
+      label: 'Show Settings',
+      click: () => this.showEditor(),
+    });
+
+    template.push({ type: 'separator' });
+
     // Add an entry to quit the application.
     template.push({
       label: 'Quit',
@@ -520,6 +529,24 @@ export class KandoApp {
 
       notification.show();
     }
+  }
+
+  /** This shows the window. */
+  private showWindow() {
+    // On Windows, we have to remove the ignore-mouse-events property when
+    // un-minimizing the window. See the hideWindow() method for more information on
+    // this workaround
+    if (process.platform === 'win32') {
+      this.window.setIgnoreMouseEvents(false);
+    }
+
+    this.window.show();
+
+    // There seems to be an issue with GNOME Shell 44.1 where the window does not
+    // get focus when it is shown. This is a workaround for that issue.
+    setTimeout(() => {
+      this.window.focus();
+    }, 100);
   }
 
   /**
