@@ -329,7 +329,7 @@ export class KandoApp {
         ActionRegistry.getInstance()
           .execute(item, this.backend)
           .catch((error) => {
-            this.showError('Failed to execute action', error);
+            KandoApp.showError('Failed to execute action', error);
           });
       };
 
@@ -346,7 +346,7 @@ export class KandoApp {
           execute(item);
         }
       } catch (error) {
-        this.showError('Failed to select item', error.message);
+        KandoApp.showError('Failed to select item', error.message);
       }
 
       // Also wait with the execution of the selected action until the fade-out
@@ -394,7 +394,7 @@ export class KandoApp {
     ipcMain.on('simulate-keys', (event, keys) => {
       this.hideWindow();
       this.backend.simulateKeys(keys).catch((err) => {
-        this.showError('Failed to simulate keys', err.message);
+        KandoApp.showError('Failed to simulate keys', err.message);
       });
     });
   }
@@ -506,29 +506,9 @@ export class KandoApp {
     exec(command, (error) => {
       // Print an error if the command fails to start.
       if (error) {
-        this.showError('Failed to execute command', error.message);
+        KandoApp.showError('Failed to execute command', error.message);
       }
     });
-  }
-
-  /**
-   * This prints an error message to the console and shows a notification if possible.
-   *
-   * @param message The message to show.
-   * @param error The error to show.
-   */
-  private showError(message: string, error: string) {
-    console.error(message + ': ' + error);
-
-    if (Notification.isSupported()) {
-      const notification = new Notification({
-        title: message + '.',
-        body: error,
-        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-      });
-
-      notification.show();
-    }
   }
 
   /** This shows the window. */
@@ -622,5 +602,25 @@ export class KandoApp {
       shortcut: 'Control+Space',
       centered: false,
     };
+  }
+
+  /**
+   * This prints an error message to the console and shows a notification if possible.
+   *
+   * @param message The message to show.
+   * @param error The error to show.
+   */
+  public static showError(message: string, error: string) {
+    console.error(message + ': ' + error);
+
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: message + '.',
+        body: error,
+        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+      });
+
+      notification.show();
+    }
   }
 }
