@@ -108,6 +108,10 @@ export class Editor extends EventEmitter {
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
+    this.preview.on('select-item', (item) => {
+      this.properties.setItem(item);
+    });
+
     this.container.appendChild(this.preview.getContainer());
 
     // Initialize the properties view.

@@ -9,12 +9,17 @@
 // SPDX-License-Identifier: MIT
 
 import Handlebars from 'handlebars';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 
 export class Properties {
   // The container is the HTML element which contains the currently edited menu's
   // properties. It is created in the constructor and returned by the getContainer()
   // method.
   private container: HTMLElement = null;
+
+  private nameInput: HTMLInputElement = null;
+
+  private activeItem: IEditorMenuItem = null;
 
   /**
    * This constructor creates the HTML elements for the menu properties view and wires up
@@ -26,6 +31,13 @@ export class Properties {
     const div = document.createElement('div');
     div.innerHTML = template({
       areaId: 'kando-menu-properties-area',
+    });
+
+    this.nameInput = div.querySelector('#kando-menu-properties-name') as HTMLInputElement;
+    this.nameInput.addEventListener('input', () => {
+      if (this.activeItem) {
+        this.activeItem.name = this.nameInput.value;
+      }
     });
 
     this.container = div.firstElementChild as HTMLElement;
@@ -42,5 +54,11 @@ export class Properties {
 
   public hide() {
     this.container.classList.remove('visible');
+  }
+
+  public setItem(item: IEditorMenuItem) {
+    this.activeItem = item;
+
+    this.nameInput.value = item.name;
   }
 }
