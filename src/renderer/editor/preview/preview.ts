@@ -174,7 +174,7 @@ export class Preview extends EventEmitter {
         const container = this.canvas.querySelector(
           '.kando-menu-preview-container.visible'
         ) as HTMLElement;
-        this.redrawItem(item, container);
+        this.drawItem(item, container);
       }
 
       // In any case, update the angles of drop target.
@@ -386,14 +386,14 @@ export class Preview extends EventEmitter {
    *   direction of this angle. The new menu items are faded in and moved in the from the
    *   opposite direction.
    */
-  private redrawMenu(transitionAngle: number) {
+  private drawMenu(transitionAngle: number) {
     // Sanity check: If the selection chain is empty, we do nothing.
     if (this.selectionChain.length === 0) {
       return;
     }
 
     // Clear all previous draggables. We will register all new items further below via the
-    // `redrawItem()` method.
+    // `drawItem()` method.
     this.dragger.removeAllDraggables();
 
     // First, fade out all currently displayed menu items.
@@ -424,7 +424,7 @@ export class Preview extends EventEmitter {
 
     // Add the children of the currently selected menu.
     centerItem.children?.forEach((child) => {
-      this.redrawItem(child as IEditorMenuItem, container);
+      this.drawItem(child as IEditorMenuItem, container);
     });
 
     // Let the dragger know that we have a new center item.
@@ -464,7 +464,7 @@ export class Preview extends EventEmitter {
    * This method is called whenever the selection chain changes. It redraws the
    * breadcrumbs to display the current selection chain.
    */
-  private redrawBreadcrumbs() {
+  private drawBreadcrumbs() {
     this.breadcrumbs.innerHTML = '';
 
     // Then we add the breadcrumbs for the current selection chain.
@@ -486,7 +486,7 @@ export class Preview extends EventEmitter {
    * @param item The menu item which should be added to the preview.
    * @param container The container to which the item should be added.
    */
-  private redrawItem(items: IEditorMenuItem, container: HTMLElement) {
+  private drawItem(items: IEditorMenuItem, container: HTMLElement) {
     // Create a div for the child.
     items.div = utils.createChildDiv(items);
     container.appendChild(items.div);
@@ -627,12 +627,12 @@ export class Preview extends EventEmitter {
       if (index >= 0 && index < this.selectionChain.length - 1) {
         const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
-        this.redrawMenu(lastSelected.computedAngle);
-        this.redrawBreadcrumbs();
+        this.drawMenu(lastSelected.computedAngle);
+        this.drawBreadcrumbs();
       } else if (index === -1) {
         this.selectionChain.push(item);
-        this.redrawMenu(item.computedAngle + 180);
-        this.redrawBreadcrumbs();
+        this.drawMenu(item.computedAngle + 180);
+        this.drawBreadcrumbs();
       }
     }
 
