@@ -76,6 +76,12 @@ export class Editor extends EventEmitter {
   private currentMenu: number = 0;
 
   /**
+   * This will be set to true when the user currently edits a menu. I.e. when the root
+   * item is selected in the preview.
+   */
+  private editingMenu: boolean = true;
+
+  /**
    * This array is used to store menus and menu items which have been deleted by the user.
    * They can be restored by dragging them back to the stash, to the menus tab, or the
    * menu preview. They will not be saved to disc.
@@ -97,6 +103,7 @@ export class Editor extends EventEmitter {
 
     // Initialize the preview.
     this.preview = new Preview();
+    this.container.appendChild(this.preview.getContainer());
 
     this.preview.on('delete-item', (item) => {
       this.trashedThings.push(item);
@@ -108,11 +115,15 @@ export class Editor extends EventEmitter {
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
-    this.preview.on('select-item', (item) => {
-      this.properties.setItem(item);
+    this.preview.on('select-root', () => {
+      this.editingMenu = true;
+      this.properties.setMenu(this.menuSettings.menus[this.currentMenu]);
     });
 
-    this.container.appendChild(this.preview.getContainer());
+    this.preview.on('select-item', (item) => {
+      this.editingMenu = false;
+      this.properties.setItem(item);
+    });
 
     // Initialize the properties view.
     this.properties = new Properties();
@@ -125,6 +136,7 @@ export class Editor extends EventEmitter {
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
     // leaving edit mode. We wire up the corresponding events here.
     this.toolbar = new Toolbar();
+    this.container.appendChild(this.toolbar.getContainer());
 
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
@@ -234,8 +246,6 @@ export class Editor extends EventEmitter {
       this.toolbar.setTrashedThings(this.trashedThings);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
-
-    this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {

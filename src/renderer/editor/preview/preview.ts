@@ -25,6 +25,8 @@ import { IVec2, IMenu } from '../../../common';
  *
  * It will emit the following events:
  *
+ * - @fires select-root - This is emitted when the root menu item is selected. No event data
+ *   is emitted and also no select-item event is emitted.
  * - @fires select-item - This is emitted when a menu item is selected. The event data is
  *   the selected menu item.
  * - @fires delete-item - This is emitted when a menu item is dragged to the trash tab. The
@@ -613,7 +615,7 @@ export class Preview extends EventEmitter {
   /**
    * This method is called when a menu item is selected. If the menu item has children, it
    * is pushed to the selection chain and the preview is redrawn. In any case, the
-   * 'select' event is emitted.
+   * 'select-root' or 'select-item' event is emitted.
    *
    * @param item The menu item which has been selected.
    */
@@ -643,7 +645,11 @@ export class Preview extends EventEmitter {
     this.activeItem = item;
     item.div.classList.add('active');
 
-    this.emit('select-item', item);
+    if (item === this.selectionChain[0]) {
+      this.emit('select-root');
+    } else {
+      this.emit('select-item', item);
+    }
   }
 
   /**
