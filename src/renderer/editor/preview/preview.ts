@@ -192,6 +192,27 @@ export class Preview extends EventEmitter {
   }
 
   /**
+   * This method redraws the name and icon of the currently selected menu item. This is
+   * called when the user changes the name or icon in the properties editor.
+   */
+  public updateActiveItem() {
+    if (!this.activeItem) {
+      return;
+    }
+
+    // Update the label if it is a child item.
+    const label = this.activeItem.div.querySelector('.kando-menu-preview-label');
+    if (label) {
+      label.textContent = this.activeItem.name;
+    }
+
+    // Update the breadcrumbs if it is the center item.
+    if (this.activeItem === this.getCenterItem()) {
+      this.drawBreadcrumbs();
+    }
+  }
+
+  /**
    * This returns the menu item which is currently shown in the center of the preview.
    *
    * @returns The menu item which is currently in the center of the preview.

@@ -127,6 +127,15 @@ export class Toolbar extends EventEmitter {
     this.stashTab.setStashedItems(items);
   }
 
+  /**
+   * This method updates the button which represents the menu at the given index in the
+   * given menu list. It is called by the editor whenever the user changed a property of
+   * the currently edited menu in the properties view.
+   */
+  public updateMenu(menus: Array<IMenu>, index: number) {
+    this.menusTab.updateMenu(menus, index);
+  }
+
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
     const emptyTab = Handlebars.compile(require('./templates/empty-tab.hbs').default);

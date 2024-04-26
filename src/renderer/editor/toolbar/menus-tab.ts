@@ -115,4 +115,17 @@ export class MenusTab extends EventEmitter {
       });
     }
   }
+
+  /**
+   * TThis method updates the button which represents the menu at the given index in the
+   * given menu list. It is called by the toolbar whenever the user changed a property of
+   * the currently edited menu in the properties view.
+   */
+  public updateMenu(menus: Array<IMenu>, index: number) {
+    // Update the name.
+    const name = this.container.querySelector(`#menu-button-${index} .name`);
+    if (name) {
+      name.textContent = menus[index].nodes.name;
+    }
+  }
 }
