@@ -11,12 +11,44 @@
 
 <div id="{{areaId}}" class="visible">
   <div class="container-fluid">
+    
     <div class='row'>
-      <div class='col-12'>
-        <div class="form-group">
-          <label for="property-name">Name</label>
-          <input type="text" class="form-control" id="kando-menu-properties-name">
+      <div class='col-auto'>
+        <button class="btn btn-primary" id="kando-menu-properties-icon-button"></button>
+      </div>
+      <div class='col'>
+        <input type="text" class="kando-font form-control" id="kando-menu-properties-name" />
+      </div>
+    </div>
+
+    <div>
+      <div class='row'>
+        <div class='col'>
+          <input type="text" class="fs-4 kando-font form-control" placeholder="Search Icons..." id="kando-properties-icon-filter" />
         </div>
+        <div class='col-auto'>
+          <select class="form-select fs-4 kando-font">
+            <option selected value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='flex-grow-1 scrollbox mx-2'>
+          <div class="scrollbox-content d-grid">
+            Icons
+          </div>
+        </div>
+      </div>
+      <div class='row justify-content-end'>
+        <div class='col-auto'>
+          <button class="btn btn-secondary fs-4 kando-font px-4">Cancel</button>
+        </div>
+        <div class='col-auto'>
+          <button class="btn btn-secondary fs-4 kando-font px-4">Done</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
