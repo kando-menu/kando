@@ -109,10 +109,20 @@ export class Toolbar extends EventEmitter {
     this.menusTab.setMenus(menus, currentMenu);
   }
 
+  /**
+   * Whenever the content of the trash changes, the trash tab needs to be updated.
+   *
+   * @param items A list of all trashed menus and menu items.
+   */
   public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
     this.trashTab.setTrashedThings(items);
   }
 
+  /**
+   * Whenever the content of the stash changes, the stash tab needs to be updated.
+   *
+   * @param items A list of all stashed menu items.
+   */
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.stashTab.setStashedItems(items);
   }
