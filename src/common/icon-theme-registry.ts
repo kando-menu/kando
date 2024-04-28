@@ -82,7 +82,7 @@ export class IconThemeRegistry {
    * @returns A map containing all available icon themes. The keys are the unique names
    *   used in the menu settings.
    */
-  public getIconThemes(): Map<string, IIconTheme> {
+  public getThemes(): Map<string, IIconTheme> {
     return this.iconThemes;
   }
 
@@ -92,7 +92,7 @@ export class IconThemeRegistry {
    * @param key The unique key of the icon theme.
    * @returns The icon theme with the given key.
    */
-  public getIconTheme(key: string): IIconTheme {
+  public getTheme(key: string): IIconTheme {
     return this.iconThemes.get(key);
   }
 }

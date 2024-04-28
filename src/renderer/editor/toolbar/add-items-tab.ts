@@ -12,7 +12,7 @@ import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { ItemFactory } from '../../../common/item-factory';
 import { EventEmitter } from 'events';
-import * as themedIcon from '../common/themed-icon';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class represents the add-new-item tab in the toolbar. Users can drag new things
@@ -87,7 +87,9 @@ export class AddItemsTab extends EventEmitter {
       data.push({
         name: meta.defaultName,
         description: meta.genericDescription,
-        icon: themedIcon.createDiv(meta.defaultIcon, meta.defaultIconTheme).outerHTML,
+        icon: IconThemeRegistry.getInstance()
+          .getTheme(meta.defaultIconTheme)
+          .createDiv(meta.defaultIcon).outerHTML,
         typeName,
       });
     });

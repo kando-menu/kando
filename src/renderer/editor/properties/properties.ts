@@ -13,8 +13,8 @@ import Handlebars from 'handlebars';
 
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu } from '../../../common';
-import * as themedIcon from '../common/themed-icon';
 import { IconPicker } from './icon-picker';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -106,7 +106,9 @@ export class Properties extends EventEmitter {
   public setItem(item: IEditorMenuItem) {
     this.activeItem = item;
     this.nameInput.value = item.name;
-    this.iconButton.innerHTML = themedIcon.createDiv(item.icon, item.iconTheme).outerHTML;
+    this.iconButton.innerHTML = IconThemeRegistry.getInstance()
+      .getTheme(item.iconTheme)
+      .createDiv(item.icon).outerHTML;
 
     this.iconPicker.selectIcon(item.icon, item.iconTheme);
   }

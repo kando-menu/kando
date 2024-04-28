@@ -12,11 +12,11 @@ import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import * as math from '../../math';
-import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { PreviewItemDragger } from './preview-item-dragger';
 import { IVec2, IMenu } from '../../../common';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class is responsible for displaying the menu preview of the editor. It supports
@@ -460,7 +460,9 @@ export class Preview extends EventEmitter {
       this.backlink = document.createElement('div');
       this.backlink.classList.add('kando-menu-preview-backlink');
       this.backlink.appendChild(
-        themedIcon.createDiv('arrow_back', 'material-symbols-rounded')
+        IconThemeRegistry.getInstance()
+          .getTheme('material-symbols-rounded')
+          .createDiv('arrow_back')
       );
       container.appendChild(this.backlink);
 

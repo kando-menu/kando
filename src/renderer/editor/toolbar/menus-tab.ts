@@ -12,7 +12,7 @@ import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
-import * as themedIcon from '../common/themed-icon';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class is responsible for the menus tab in the toolbar. It is an event emitter
@@ -97,7 +97,9 @@ export class MenusTab extends EventEmitter {
       name: menu.nodes.name,
       active: index === currentMenu,
       description: menu.shortcut || 'Not bound.',
-      icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
+      icon: IconThemeRegistry.getInstance()
+        .getTheme(menu.nodes.iconTheme)
+        .createDiv(menu.nodes.icon).outerHTML,
       index,
     }));
 
