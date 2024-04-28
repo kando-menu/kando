@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { SimpleIconsTheme } from './icon-themes/simple-icons-theme';
+import { SimpleIconsColoredTheme } from './icon-themes/simple-icons-colored-theme';
 import { MaterialSymbolsTheme } from './icon-themes/material-symbols-theme';
 import { EmojiTheme } from './icon-themes/emoji-theme';
 
@@ -55,6 +56,7 @@ export class IconThemeRegistry {
    */
   private constructor() {
     this.iconThemes.set('simple-icons', new SimpleIconsTheme());
+    this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
     this.iconThemes.set('emoji', new EmojiTheme());
   }
