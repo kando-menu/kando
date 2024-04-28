@@ -9,18 +9,26 @@
 // SPDX-License-Identifier: MIT
 }}
 
-<div id="{{areaId}}" class="visible">
-  <div class="container-fluid">
+<div id="kando-menu-properties-area" class="visible">
     
-    <div class='row'>
-      <div class='col-auto'>
-        <button class="btn btn-primary form-control" id="kando-menu-properties-icon-button"></button>
-      </div>
-      <div class='col'>
-        <input type="text" class="kando-font form-control" id="kando-menu-properties-name" />
-      </div>
+  <div id="kando-menu-properties-base-settings" class='d-flex flex-column visible'>
+    <div class='d-flex flex-shrink-1'>
+      <button class="btn btn-primary form-control p-0 me-3" id="kando-menu-properties-icon-button"></button>
+      <input type="text" class="kando-font fs-1 form-control" id="kando-menu-properties-name" />
     </div>
-
-    <div id="kando-menu-properties-icon-picker"></div>
+    <div class='flex-grow-1 d-flex flex-column justify-content-center wip my-3'>
+      <div class='text-center kando-font fs-2'>
+        Here will be more settings.
+      </div>
+      <div class='text-center kando-font fs-5'>
+        Stay tuned for future updates!
+      </div>
+        <div class='text-center mb-4'>
+         <span class='swirl'></span>
+       </div>
+    </div>
   </div>
+
+  <div id="kando-menu-properties-icon-picker" class="d-flex flex-column"></div>
+
 </div>

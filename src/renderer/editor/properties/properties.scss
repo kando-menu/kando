@@ -42,20 +42,50 @@
   transition: opacity 150ms ease;
   opacity: 0;
 
-  #kando-menu-properties-icon-button {
-    @include rfs($properties-name-height, width);
-    @include rfs($properties-name-height, height);
-    padding: 0;
+  .wip {
+    border-radius: 10px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
   }
 
-  #kando-menu-properties-name {
-    @include rfs($properties-name-height, height);
-    @include rfs(calc($properties-name-height * 0.666), font-size);
+  #kando-menu-properties-icon-picker,
+  #kando-menu-properties-base-settings {
+    position: absolute;
+    top: 0;
+    left: 1vw;
+    right: 0;
+    bottom: 1vw;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+
+    transition:
+      opacity 150ms ease,
+      transform 150ms ease;
+
+    &.visible {
+      pointer-events: all;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  #kando-menu-properties-base-settings {
+    transform: scale(1.1);
+  }
+
+  #kando-menu-properties-icon-button {
+    flex-basis: content;
+
+    .icon-container {
+      @include rfs(5rem, width);
+      @include rfs(5rem, height);
+    }
   }
 
   #kando-properties-icon-picker-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(calc(32px + 2vw), 1fr));
 
     .icon-container {
       border-radius: 5px;

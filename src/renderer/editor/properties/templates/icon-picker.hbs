@@ -9,30 +9,22 @@
 // SPDX-License-Identifier: MIT
 }}
 
-<div class='row'>
-  <div class='col'>
-    <input type="text" class="fs-4 kando-font form-control" placeholder="Search Icons..." id="kando-properties-icon-filter" />
-  </div>
-  <div class='col-auto'>
-    <select class="form-select fs-4 kando-font form-control" id="kando-properties-icon-theme-select">
-      {{#each themes}}
-        <option value="{{key}}">{{name}}</option>
-      {{/each}}
-    </select>
+<div class='d-flex'>
+  <input type="text" class="fs-3 kando-font form-control flex-grow-1 me-3" placeholder="Search Icons..." id="kando-properties-icon-filter" />
+  <select class="form-select fs-3 kando-font form-control" id="kando-properties-icon-theme-select">
+    {{#each themes}}
+      <option value="{{key}}">{{name}}</option>
+    {{/each}}
+  </select>
+</div>
+
+<div class='scrollbox mx-2 flex-grow-1'>
+  <div class="scrollbox-content">
+    <div id="kando-properties-icon-picker-grid"></div>
   </div>
 </div>
-<div class='row'>
-  <div class='scrollbox mx-2' style="height: 600px;">
-    <div class="scrollbox-content">
-      <div id="kando-properties-icon-picker-grid"></div>
-    </div>
-  </div>
-</div>
-<div class='row justify-content-end'>
-  <div class='col-auto'>
-    <button class="btn btn-secondary fs-4 kando-font px-4" id="kando-properties-icon-picker-cancel">Cancel</button>
-  </div>
-  <div class='col-auto'>
-    <button class="btn btn-secondary fs-4 kando-font px-4" id="kando-properties-icon-picker-ok">Done</button>
-  </div>
+
+<div class='d-flex justify-content-end'>
+  <button class="btn btn-secondary fs-3 kando-font me-3 my-3 px-5 ms-auto" id="kando-properties-icon-picker-cancel">Cancel</button>
+  <button class="btn btn-secondary fs-3 kando-font my-3 px-5" id="kando-properties-icon-picker-ok">Done</button>
 </div>

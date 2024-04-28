@@ -25,6 +25,9 @@ import { IconThemeRegistry } from '../../../common/icon-theme-registry';
  *   theme of the selected icon as arguments.
  */
 export class IconPicker extends EventEmitter {
+  /** The container to which the icon picker is appended. */
+  private container: HTMLElement = null;
+
   /** The input field for filtering icons. */
   private filterInput: HTMLInputElement = null;
 
@@ -52,6 +55,8 @@ export class IconPicker extends EventEmitter {
    */
   constructor(container: HTMLElement) {
     super();
+
+    this.container = container;
 
     // The contents of the icon-theme select field are generated using the Handlebars
     // template below. The data object contains an array of objects with the keys `name`
@@ -82,14 +87,14 @@ export class IconPicker extends EventEmitter {
 
     // Close the icon picker when the user clicks the close button.
     const okButton = container.querySelector('#kando-properties-icon-picker-ok');
-    okButton.addEventListener('click', () => this.emit('close'));
+    okButton.addEventListener('click', () => this.close());
 
     // Also close the icon picker when the user clicks the cancel button. But before
     // closing the icon picker, emit a select event with the original icon and theme.
     const cancelButton = container.querySelector('#kando-properties-icon-picker-cancel');
     cancelButton.addEventListener('click', () => {
       this.emit('select', this.initialIcon, this.initialTheme);
-      this.emit('close');
+      this.close();
     });
   }
 
@@ -101,6 +106,7 @@ export class IconPicker extends EventEmitter {
    * @param theme - The theme that should be selected.
    */
   public show(icon: string, theme: string) {
+    this.container.classList.add('visible');
     this.initialIcon = icon;
     this.selectedIcon = icon;
     this.initialTheme = theme;
@@ -108,6 +114,22 @@ export class IconPicker extends EventEmitter {
     this.themeSelect.value = theme;
 
     this.updateIconGrid();
+  }
+
+  /** Hides the icon picker. */
+  public hide() {
+    if (this.loadAbortController) {
+      this.loadAbortController.abort();
+      this.loadAbortController = null;
+    }
+
+    this.container.classList.remove('visible');
+  }
+
+  /** Hides the icon picker and emits the close event. */
+  private close() {
+    this.hide();
+    this.emit('close');
   }
 
   /**
@@ -151,7 +173,7 @@ export class IconPicker extends EventEmitter {
     // icons have been loaded or the operation has been aborted.
     return new Promise<boolean>((resolve) => {
       // We add the icons in batches to avoid blocking the UI thread for too long.
-      const batchSize = 100;
+      const batchSize = 250;
       let startIndex = 0;
 
       const addBatch = () => {
@@ -182,7 +204,7 @@ export class IconPicker extends EventEmitter {
 
           // When the user double-clicks an icon, emit the close event.
           iconDiv.addEventListener('dblclick', () => {
-            this.emit('close');
+            this.close();
           });
         }
 

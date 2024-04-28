@@ -35,6 +35,7 @@ export class Properties extends EventEmitter {
 
   private iconPicker: IconPicker = null;
 
+  private baseSettings: HTMLElement = null;
   private nameInput: HTMLInputElement = null;
   private iconButton: HTMLButtonElement = null;
 
@@ -50,9 +51,7 @@ export class Properties extends EventEmitter {
     const template = Handlebars.compile(require('./templates/properties.hbs').default);
 
     const div = document.createElement('div');
-    div.innerHTML = template({
-      areaId: 'kando-menu-properties-area',
-    });
+    div.innerHTML = template({});
 
     this.nameInput = div.querySelector('#kando-menu-properties-name') as HTMLInputElement;
     this.nameInput.addEventListener('input', () => {
@@ -65,8 +64,14 @@ export class Properties extends EventEmitter {
     this.iconButton = div.querySelector(
       '#kando-menu-properties-icon-button'
     ) as HTMLButtonElement;
+    this.iconButton.addEventListener('click', () => {
+      this.iconPicker.show(this.activeItem.icon, this.activeItem.iconTheme);
+      this.baseSettings.classList.remove('visible');
+    });
 
     this.container = div.firstElementChild as HTMLElement;
+
+    this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
 
     this.iconPicker = new IconPicker(
       div.querySelector('#kando-menu-properties-icon-picker')
@@ -82,6 +87,9 @@ export class Properties extends EventEmitter {
 
         this.emit('changed-icon');
       }
+    });
+    this.iconPicker.on('close', () => {
+      this.baseSettings.classList.add('visible');
     });
   }
 
@@ -103,12 +111,15 @@ export class Properties extends EventEmitter {
   }
 
   public setItem(item: IEditorMenuItem) {
-    this.activeItem = item;
-    this.nameInput.value = item.name;
-    this.iconButton.innerHTML = IconThemeRegistry.getInstance()
-      .getTheme(item.iconTheme)
-      .createDiv(item.icon).outerHTML;
+    if (this.activeItem !== item) {
+      this.activeItem = item;
+      this.nameInput.value = item.name;
+      this.iconButton.innerHTML = IconThemeRegistry.getInstance()
+        .getTheme(item.iconTheme)
+        .createDiv(item.icon).outerHTML;
 
-    this.iconPicker.show(item.icon, item.iconTheme);
+      this.baseSettings.classList.add('visible');
+      this.iconPicker.hide();
+    }
   }
 }
