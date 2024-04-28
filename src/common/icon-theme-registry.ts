@@ -1,0 +1,93 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+import { SimpleIconsTheme } from './icon-themes/simple-icons-theme';
+import { MaterialSymbolsTheme } from './icon-themes/material-symbols-theme';
+import { EmojiTheme } from './icon-themes/emoji-theme';
+
+/**
+ * This interface describes an icon theme. An icon theme is a collection of icons that can
+ * be used in the application. The icon theme provides a method to list all icons that
+ * match a given search term.
+ */
+export interface IIconTheme {
+  /** A human-readable name of the icon theme. */
+  name: string;
+
+  /**
+   * Returns a list icons from this theme that match the given search term.
+   *
+   * @param searchTerm The search term to filter the icons.
+   * @returns An array of icon names that match the search term.
+   */
+  listIcons(searchTerm: string): Array<string>;
+
+  /**
+   * Creates a div element that contains the icon with the given name.
+   *
+   * @param icon One of the icons returned by `listIcons`.
+   * @returns A div element that contains the icon.
+   */
+  createDiv(icon: string): HTMLElement;
+}
+
+/**
+ * This class is a registry that contains all available icon themes. It is a singleton
+ * class. Use `getInstance` to get the instance of this class.
+ */
+export class IconThemeRegistry {
+  /** The singleton instance of this class. */
+  private static instance: IconThemeRegistry = null;
+
+  /** This map contains all available icon themes. The keys are the type names. */
+  private iconThemes: Map<string, IIconTheme> = new Map();
+
+  /**
+   * This is a singleton class. The constructor is private. Use `getInstance` to get the
+   * instance of this class.
+   */
+  private constructor() {
+    this.iconThemes.set('simple-icons', new SimpleIconsTheme());
+    this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
+    this.iconThemes.set('emoji', new EmojiTheme());
+  }
+
+  /**
+   * Use this method to get the singleton instance of this class.
+   *
+   * @returns The singleton instance of this class.
+   */
+  public static getInstance(): IconThemeRegistry {
+    if (IconThemeRegistry.instance === null) {
+      IconThemeRegistry.instance = new IconThemeRegistry();
+    }
+    return IconThemeRegistry.instance;
+  }
+
+  /**
+   * Use this method to get all available icon themes.
+   *
+   * @returns A map containing all available icon themes. The keys are the unique names
+   *   used in the menu settings.
+   */
+  public getIconThemes(): Map<string, IIconTheme> {
+    return this.iconThemes;
+  }
+
+  /**
+   * Use this method to get a specific icon theme.
+   *
+   * @param key The unique key of the icon theme.
+   * @returns The icon theme with the given key.
+   */
+  public getIconTheme(key: string): IIconTheme {
+    return this.iconThemes.get(key);
+  }
+}
