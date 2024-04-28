@@ -58,6 +58,10 @@ export class HotkeyAction implements IAction {
         if (name === 'Meta' || name === 'Super') return 'MetaLeft';
         if (name === 'Alt') return 'AltLeft';
 
+        // If the key name is an integer, we assume that it is a number key. In this
+        // case, we prefix it with "Digit".
+        if (!isNaN(parseInt(name))) return 'Digit' + name;
+
         // If the key name is only one character long, we assume that it is a
         // single character which should be pressed. In this case, we prefix it
         // with "Key".

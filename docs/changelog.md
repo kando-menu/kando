@@ -27,6 +27,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A command line option to open the menu editor: `kando --settings`. If Kando is already running, the menu editor will be opened in the running instance.
 - A desktop notification which is shown when you attempt to run a second instance of Kando.
 
+#### Fixed
+
+- Simulating hotkeys involving digit keys such as <kbd>Ctrl</kbd>+<kbd>1</kbd>.
+- The desktop notification which is shown when a menu-item action fails. It now shows the correct error message.
+
 ## [Kando 0.7.1](https://github.com/kando-menu/kando/releases/tag/v0.7.1)
 
 **Release Date:** 2024-04-22
