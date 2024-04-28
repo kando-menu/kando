@@ -56,6 +56,25 @@
   #kando-properties-icon-picker-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+
+    .icon-container {
+      border-radius: 5px;
+      clip-path: none;
+      border: 2px dashed transparent;
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      &.selected {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 2px dashed white;
+      }
+    }
   }
 }
 

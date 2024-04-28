@@ -129,5 +129,15 @@ export class MenusTab extends EventEmitter {
     if (name) {
       name.textContent = menus[index].nodes.name;
     }
+
+    // Update the icon.
+    const icon = this.container.querySelector(`#menu-button-${index} .icon-container`);
+    const parent = icon.parentElement;
+    icon.remove();
+    parent.append(
+      IconThemeRegistry.getInstance()
+        .getTheme(menus[index].nodes.iconTheme)
+        .createDiv(menus[index].nodes.icon)
+    );
   }
 }

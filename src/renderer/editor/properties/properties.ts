@@ -26,7 +26,6 @@ import { IconThemeRegistry } from '../../../common/icon-theme-registry';
  *
  * @fires changed-name - When the user changed the name of the current menu item.
  * @fires changed-icon - When the user changed the icon of the current menu item.
- * @fires changed-icon-theme - When the user changed the theme of the current menu item.
  */
 export class Properties extends EventEmitter {
   // The container is the HTML element which contains the currently edited menu's
@@ -72,16 +71,16 @@ export class Properties extends EventEmitter {
     this.iconPicker = new IconPicker(
       div.querySelector('#kando-menu-properties-icon-picker')
     );
-    this.iconPicker.on('changed-icon', (icon) => {
+    this.iconPicker.on('select', (icon, theme) => {
       if (this.activeItem) {
         this.activeItem.icon = icon;
+        this.activeItem.iconTheme = theme;
+
+        this.iconButton.innerHTML = IconThemeRegistry.getInstance()
+          .getTheme(theme)
+          .createDiv(icon).outerHTML;
+
         this.emit('changed-icon');
-      }
-    });
-    this.iconPicker.on('changed-icon-theme', (iconTheme) => {
-      if (this.activeItem) {
-        this.activeItem.iconTheme = iconTheme;
-        this.emit('changed-icon-theme');
       }
     });
   }
@@ -110,6 +109,6 @@ export class Properties extends EventEmitter {
       .getTheme(item.iconTheme)
       .createDiv(item.icon).outerHTML;
 
-    this.iconPicker.selectIcon(item.icon, item.iconTheme);
+    this.iconPicker.show(item.icon, item.iconTheme);
   }
 }

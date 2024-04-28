@@ -210,6 +210,15 @@ export class Preview extends EventEmitter {
     if (this.activeItem === this.getCenterItem()) {
       this.drawBreadcrumbs();
     }
+
+    // Update the icon.
+    const icon = this.activeItem.div.querySelector('.icon-container');
+    icon.remove();
+    this.activeItem.div.prepend(
+      IconThemeRegistry.getInstance()
+        .getTheme(this.activeItem.iconTheme)
+        .createDiv(this.activeItem.icon)
+    );
   }
 
   /**

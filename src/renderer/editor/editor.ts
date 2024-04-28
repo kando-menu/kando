@@ -129,13 +129,16 @@ export class Editor extends EventEmitter {
     this.properties = new Properties();
     this.container.appendChild(this.properties.getContainer());
 
-    this.properties.on('changed-name', () => {
+    const handleItemChange = () => {
       this.preview.updateActiveItem();
 
       if (this.editingMenu) {
         this.toolbar.updateMenu(this.menuSettings.menus, this.currentMenu);
       }
-    });
+    };
+
+    this.properties.on('changed-name', handleItemChange);
+    this.properties.on('changed-icon', handleItemChange);
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();

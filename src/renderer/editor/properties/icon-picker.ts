@@ -34,6 +34,10 @@ export class IconPicker extends EventEmitter {
   /** The div containing the grid of icons. */
   private iconGrid: HTMLElement = null;
 
+  /** The icon that is currently selected. */
+  private selectedIcon: string = null;
+  private selectedIconDiv: HTMLElement = null;
+
   /** When a new loadIcons operation is started, the previous one is aborted. */
   private loadAbortController: AbortController = null;
 
@@ -54,7 +58,7 @@ export class IconPicker extends EventEmitter {
     // and `key`. The `name` is the display name of the theme and the `key` is the key
     // that is used to identify the theme in the IconThemeRegistry.
     const data: { themes: { name: string; key: string }[] } = { themes: [] };
-    const themes = IconThemeRegistry.getInstance().getIconThemes();
+    const themes = IconThemeRegistry.getInstance().getThemes();
     themes.forEach((theme, key) => {
       data.themes.push({ name: theme.name, key });
     });
@@ -73,8 +77,8 @@ export class IconPicker extends EventEmitter {
       '#kando-properties-icon-theme-select'
     ) as HTMLSelectElement;
 
-    this.filterInput.addEventListener('input', () => this.loadIcons());
-    this.themeSelect.addEventListener('change', () => this.loadIcons());
+    this.filterInput.addEventListener('input', () => this.updateIconGrid());
+    this.themeSelect.addEventListener('change', () => this.updateIconGrid());
 
     // Close the icon picker when the user clicks the close button.
     const okButton = container.querySelector('#kando-properties-icon-picker-ok');
@@ -87,29 +91,44 @@ export class IconPicker extends EventEmitter {
       this.emit('select', this.initialIcon, this.initialTheme);
       this.emit('close');
     });
-
-    this.loadIcons();
   }
 
   /**
-   * Selects the given icon and theme in the icon picker. The icon picker will open with
-   * the given icon and theme selected.
+   * Shows the icon picker. The icon picker will open with the given icon and theme
+   * selected.
    *
    * @param icon - The icon that should be selected.
    * @param theme - The theme that should be selected.
    */
-  public selectIcon(icon: string, theme: string) {
+  public show(icon: string, theme: string) {
     this.initialIcon = icon;
+    this.selectedIcon = icon;
     this.initialTheme = theme;
 
     this.themeSelect.value = theme;
+
+    this.updateIconGrid();
+  }
+
+  /**
+   * Reloads the icons of the currently selected theme and updates the icon grid. The grid
+   * will scroll to the selected icon.
+   */
+  private updateIconGrid() {
+    this.loadIcons().then((fullyLoaded) => {
+      if (fullyLoaded && this.selectedIconDiv) {
+        const scrollbox = this.iconGrid.parentElement.parentElement;
+        scrollbox.scrollTop = this.selectedIconDiv.offsetTop - scrollbox.clientHeight / 2;
+      }
+    });
   }
 
   /**
    * Loads the icons of the currently selected theme and updates the icon grid.
    *
    * @returns A promise that resolves when all icons have been loaded or the operation has
-   *   been aborted.
+   *   been aborted. The promise resolves to `true` if all icons have been loaded and to
+   *   `false` if the operation has been aborted.
    */
   private async loadIcons() {
     // Check if there is a previous loadIcons operation in progress. If so, abort it.
@@ -125,12 +144,12 @@ export class IconPicker extends EventEmitter {
     // Clear existing icons.
     this.iconGrid.innerHTML = '';
 
-    const theme = IconThemeRegistry.getInstance().getIconTheme(this.themeSelect.value);
+    const theme = IconThemeRegistry.getInstance().getTheme(this.themeSelect.value);
     const icons = await theme.listIcons(this.filterInput.value);
 
     // Create a new Promise for the current operation. This promise will resolve when all
     // icons have been loaded or the operation has been aborted.
-    return new Promise<void>((resolve) => {
+    return new Promise<boolean>((resolve) => {
       // We add the icons in batches to avoid blocking the UI thread for too long.
       const batchSize = 100;
       let startIndex = 0;
@@ -139,12 +158,37 @@ export class IconPicker extends EventEmitter {
         const endIndex = Math.min(startIndex + batchSize, icons.length);
         const fragment = document.createDocumentFragment();
         for (let i = startIndex; i < endIndex; i++) {
-          fragment.appendChild(theme.createDiv(icons[i]));
+          const iconName = icons[i];
+          const iconDiv = theme.createDiv(iconName);
+          if (iconName === this.selectedIcon) {
+            iconDiv.classList.add('selected');
+            this.selectedIconDiv = iconDiv;
+          }
+          fragment.appendChild(iconDiv);
+
+          // When the user clicks an icon, emit the select-icon event and add the
+          // selected class to the icon.
+          iconDiv.addEventListener('click', () => {
+            if (this.selectedIconDiv) {
+              this.selectedIconDiv.classList.remove('selected');
+            }
+            iconDiv.classList.add('selected');
+
+            this.selectedIcon = iconName;
+            this.selectedIconDiv = iconDiv;
+
+            this.emit('select', iconName, this.themeSelect.value);
+          });
+
+          // When the user double-clicks an icon, emit the close event.
+          iconDiv.addEventListener('dblclick', () => {
+            this.emit('close');
+          });
         }
 
         // Before modifying the DOM, check if the operation has been aborted.
         if (abortController.signal.aborted) {
-          resolve();
+          resolve(false);
           return;
         }
 
@@ -158,7 +202,7 @@ export class IconPicker extends EventEmitter {
           requestAnimationFrame(addBatch);
         } else {
           this.loadAbortController = null;
-          resolve();
+          resolve(true);
         }
       };
 
