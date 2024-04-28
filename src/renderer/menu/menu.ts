@@ -285,6 +285,10 @@ export class Menu extends EventEmitter {
     } else if (item.iconTheme === 'simple-icons') {
       icon.classList.add('si');
       icon.classList.add('si-' + item.icon);
+    } else if (item.iconTheme === 'simple-icons-colored') {
+      icon.classList.add('si');
+      icon.classList.add('si--color');
+      icon.classList.add('si-' + item.icon);
     }
 
     container.appendChild(item.nodeDiv);

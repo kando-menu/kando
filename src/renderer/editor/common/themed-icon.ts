@@ -32,6 +32,10 @@ export function createDiv(icon: string, theme: string) {
   } else if (theme === 'simple-icons') {
     iconDiv.classList.add('si');
     iconDiv.classList.add('si-' + icon);
+  } else if (theme === 'simple-icons-colored') {
+    iconDiv.classList.add('si');
+    iconDiv.classList.add('si--color');
+    iconDiv.classList.add('si-' + icon);
   }
 
   return containerDiv;
