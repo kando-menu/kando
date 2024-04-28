@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
+- A new icon theme: `"simple-icons-colored"`. This is a colored version of the [Simple Icons](https://simpleicons.org/) theme.
 - A new item to the tray menu which allows to open the menu editor.
 - A command line option to open the menu editor: `kando --settings`. If Kando is already running, the menu editor will be opened in the running instance.
 - A desktop notification which is shown when you attempt to run a second instance of Kando.
