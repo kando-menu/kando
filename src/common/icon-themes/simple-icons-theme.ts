@@ -41,7 +41,7 @@ export class SimpleIconsTheme implements IIconTheme {
    * @param searchTerm The search term to filter the icons.
    * @returns An array of icon names that match the search term.
    */
-  public listIcons(searchTerm: string): Array<string> {
+  public async listIcons(searchTerm: string) {
     return matchSorter(this.iconNames, searchTerm);
   }
 

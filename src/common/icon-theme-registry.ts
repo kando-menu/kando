@@ -23,12 +23,15 @@ export interface IIconTheme {
   name: string;
 
   /**
-   * Returns a list icons from this theme that match the given search term.
+   * Returns a list icons from this theme that match the given search term. This can be
+   * implemented asynchronously if retrieving the list of icons is an expensive
+   * operation.
    *
    * @param searchTerm The search term to filter the icons.
-   * @returns An array of icon names that match the search term.
+   * @returns A promise that resolves to an array of icon names that match the search
+   *   term.
    */
-  listIcons(searchTerm: string): Array<string>;
+  listIcons(searchTerm: string): Promise<Array<string>>;
 
   /**
    * Creates a div element that contains the icon with the given name.
