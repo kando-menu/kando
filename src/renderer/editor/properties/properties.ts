@@ -14,7 +14,7 @@ import Handlebars from 'handlebars';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu } from '../../../common';
 import * as themedIcon from '../common/themed-icon';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconPicker } from './icon-picker';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -33,6 +33,8 @@ export class Properties extends EventEmitter {
   // properties. It is created in the constructor and returned by the getContainer()
   // method.
   private container: HTMLElement = null;
+
+  private iconPicker: IconPicker = null;
 
   private nameInput: HTMLInputElement = null;
   private iconButton: HTMLButtonElement = null;
@@ -67,9 +69,20 @@ export class Properties extends EventEmitter {
 
     this.container = div.firstElementChild as HTMLElement;
 
-    const themes = IconThemeRegistry.getInstance().getIconThemes();
-    themes.forEach((theme) => {
-      console.log(theme.name);
+    this.iconPicker = new IconPicker(
+      div.querySelector('#kando-menu-properties-icon-picker')
+    );
+    this.iconPicker.on('changed-icon', (icon) => {
+      if (this.activeItem) {
+        this.activeItem.icon = icon;
+        this.emit('changed-icon');
+      }
+    });
+    this.iconPicker.on('changed-icon-theme', (iconTheme) => {
+      if (this.activeItem) {
+        this.activeItem.iconTheme = iconTheme;
+        this.emit('changed-icon-theme');
+      }
     });
   }
 
@@ -94,5 +107,7 @@ export class Properties extends EventEmitter {
     this.activeItem = item;
     this.nameInput.value = item.name;
     this.iconButton.innerHTML = themedIcon.createDiv(item.icon, item.iconTheme).outerHTML;
+
+    this.iconPicker.selectIcon(item.icon, item.iconTheme);
   }
 }

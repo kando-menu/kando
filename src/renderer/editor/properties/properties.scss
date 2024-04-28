@@ -52,6 +52,11 @@
     @include rfs($properties-name-height, height);
     @include rfs(calc($properties-name-height * 0.666), font-size);
   }
+
+  #kando-properties-icon-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  }
 }
 
 #kando-editor.edit-mode #kando-menu-properties-area.visible {

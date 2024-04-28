@@ -102,11 +102,11 @@
   .form-control {
     --bs-body-bg: rgba(255, 255, 255, 0.1);
     border: 2px dashed transparent;
+  }
 
-    &:focus {
-      border: 2px dashed white;
-      box-shadow: none;
-    }
+  input.form-control:focus {
+    border: 2px dashed white;
+    box-shadow: none;
   }
 
   // We make the tooltip background a bit darker.
