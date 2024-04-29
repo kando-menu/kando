@@ -38,9 +38,8 @@ jobs:
         with:
           node-version: 20
       - name: Install Dependencies
-        # A simple npm install should be sufficient, but for some reason cmake.js
-        # sometimes skips the build step in CI on Windows in this case. So we install
-        # and execute cmake.js manually.
+        # For some reason cmake.js sometimes skips the build step in CI on Windows in this
+        # case. So we install and execute cmake.js manually.
         run: |
           npm install cmake-js -g
           npx cmake-js install
@@ -56,7 +55,9 @@ jobs:
       contents: write
     steps:
       # https://github.com/electron/forge/issues/2807
-      - run: python3 -m pip install setuptools --break-system-packages
+      - run: |
+          python3 -m pip install setuptools --break-system-packages
+          npm install -g appdmg
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
