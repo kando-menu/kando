@@ -65,7 +65,7 @@
     align-items: flex-end;
 
     .nav-link {
-      @include rfs(0.5rem, padding-top);
+      @include rfs(0.3rem, padding-top);
       @include rfs(1rem, padding-left);
       @include rfs(1rem, padding-right);
       padding-bottom: 0;
@@ -73,11 +73,6 @@
       transition:
         padding-bottom 150ms ease,
         margin-top 150ms ease;
-
-      i {
-        position: relative;
-        top: -3px;
-      }
 
       &.active {
         background-color: rgba(0, 0, 0, 0.8);
@@ -93,9 +88,11 @@
     // the trash or stash.
     .counter {
       @include rfs(1.1rem, font-size);
-      vertical-align: text-bottom;
+      position: relative;
+      top: -3px;
+      vertical-align: middle;
       border-radius: 30%;
-      padding: 0.2em 0.2em 0 0.2em;
+      padding: 0 0.3em;
       margin: 0 0.2em;
       background-color: rgba(80, 80, 80, 0.8);
     }
