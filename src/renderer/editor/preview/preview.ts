@@ -390,6 +390,11 @@ export class Preview extends EventEmitter {
           this.recomputeItemAngles();
           this.updateAllPositions();
           this.emit(event, item);
+
+          // If the item has been dropped into the trash or stash tab, we select the
+          // center item.
+          this.selectItem(centerItem);
+
           return;
         }
       }
