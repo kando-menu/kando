@@ -31,8 +31,8 @@
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
-    "@typescript-eslint/eslint-plugin": "^7.6.0",
-    "@typescript-eslint/parser": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "chai": "^4.3.10",
     "cmake-js": "^7.3.0",
@@ -66,7 +66,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "handlebars": "^4.7.8",
     "lodash.isequal": "^4.5.0",
-    "material-symbols": "^0.17.2",
+    "material-symbols": "^0.17.3",
     "node-addon-api": "^8.0.0",
     "simple-icons-font": "^11.12.0"
   }
