@@ -165,6 +165,7 @@ export class IconPicker extends EventEmitter {
 
     // Clear existing icons.
     this.iconGrid.innerHTML = '';
+    this.iconGrid.classList.add('loading');
 
     const theme = IconThemeRegistry.getInstance().getTheme(this.themeSelect.value);
     const icons = await theme.listIcons(this.filterInput.value);
@@ -224,6 +225,7 @@ export class IconPicker extends EventEmitter {
           requestAnimationFrame(addBatch);
         } else {
           this.loadAbortController = null;
+          this.iconGrid.classList.remove('loading');
           resolve(true);
         }
       };

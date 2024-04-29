@@ -105,6 +105,12 @@
         border: 2px dashed white;
       }
     }
+
+    &.loading .icon-container {
+      content-visibility: auto;
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 }
 
