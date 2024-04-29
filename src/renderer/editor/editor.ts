@@ -204,8 +204,10 @@ export class Editor extends EventEmitter {
       };
 
       this.menuSettings.menus.push(newMenu);
-      this.toolbar.setMenus(this.menuSettings.menus, this.menuSettings.menus.length - 1);
+      this.currentMenu = this.menuSettings.menus.length - 1;
+      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
       this.preview.setMenu(newMenu);
+      this.properties.setMenu(newMenu);
     });
 
     this.toolbar.on('add-item', (typeName: string) => {
