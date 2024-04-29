@@ -36,6 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Simulating hotkeys involving digit keys such as <kbd>Ctrl</kbd>+<kbd>1</kbd>.
 - The desktop notification which is shown when a menu-item action fails. It now shows the correct error message.
+- A crash when deleting or stashing one of the empty prototype menu items.
 
 ## [Kando 0.7.1](https://github.com/kando-menu/kando/releases/tag/v0.7.1)
 

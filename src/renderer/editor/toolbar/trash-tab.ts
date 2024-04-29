@@ -135,7 +135,7 @@ export class TrashTab extends EventEmitter {
       return {
         isMenu: false,
         name: item.name,
-        description: typeInfo.getDescription(item),
+        description: typeInfo?.getDescription(item),
         icon: IconThemeRegistry.getInstance()
           .getTheme(item.iconTheme)
           .createDiv(item.icon).outerHTML,
