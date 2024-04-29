@@ -70,7 +70,7 @@ jobs:
     name: Deploy for macOS
     strategy:
       matrix:
-        os: [macos-14, macos-14-xlarge]
+        os: [macos-12, macos-13, macos-14]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
