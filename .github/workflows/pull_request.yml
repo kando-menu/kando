@@ -55,17 +55,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        # below fixes https://github.com/electron/forge/issues/2807
-        # and https://github.com/LinusU/node-appdmg/issues/234
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
       - name: Setup appdmg
         run: |
           python3 -m pip install setuptools
-          npm install -g appdmg
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 20
