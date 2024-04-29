@@ -1,0 +1,30 @@
+{{! //////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+}}
+
+<div class='d-flex'>
+  <input type="text" class="fs-3 kando-font form-control flex-grow-1 me-3" placeholder="Search Icons..." id="kando-properties-icon-filter" />
+  <select class="form-select fs-3 kando-font form-control" id="kando-properties-icon-theme-select">
+    {{#each themes}}
+      <option value="{{key}}">{{name}}</option>
+    {{/each}}
+  </select>
+</div>
+
+<div class='scrollbox mx-2' style="height: 35vh;">
+  <div class="scrollbox-content">
+    <div id="kando-properties-icon-picker-grid" class="justify-content-start"></div>
+  </div>
+</div>
+
+<div class='d-flex justify-content-end'>
+  <button class="btn btn-secondary fs-3 kando-font me-3 my-3 px-5 ms-auto" id="kando-properties-icon-picker-cancel">Cancel</button>
+  <button class="btn btn-secondary fs-3 kando-font my-3 px-5" id="kando-properties-icon-picker-ok">Done</button>
+</div>

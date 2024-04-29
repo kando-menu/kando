@@ -12,15 +12,16 @@
   font-family: 'Neucha';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
   src: url('../../assets/fonts/Neucha-Regular.ttf') format('truetype');
+
+  // This fixes some vertical alignment issues with the font.
+  ascent-override: 100%;
 }
 
 @font-face {
   font-family: 'Cantarell';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
   src: url('../../assets/fonts/Cantarell-Regular.ttf') format('truetype');
 }
 

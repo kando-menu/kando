@@ -12,7 +12,7 @@ import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
-import * as themedIcon from '../common/themed-icon';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class is responsible for the menus tab in the toolbar. It is an event emitter
@@ -97,7 +97,9 @@ export class MenusTab extends EventEmitter {
       name: menu.nodes.name,
       active: index === currentMenu,
       description: menu.shortcut || 'Not bound.',
-      icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
+      icon: IconThemeRegistry.getInstance()
+        .getTheme(menu.nodes.iconTheme)
+        .createDiv(menu.nodes.icon).outerHTML,
       index,
     }));
 
@@ -114,5 +116,28 @@ export class MenusTab extends EventEmitter {
         dropTargets: [this.trashTab],
       });
     }
+  }
+
+  /**
+   * TThis method updates the button which represents the menu at the given index in the
+   * given menu list. It is called by the toolbar whenever the user changed a property of
+   * the currently edited menu in the properties view.
+   */
+  public updateMenu(menus: Array<IMenu>, index: number) {
+    // Update the name.
+    const name = this.container.querySelector(`#menu-button-${index} .name`);
+    if (name) {
+      name.textContent = menus[index].nodes.name;
+    }
+
+    // Update the icon.
+    const icon = this.container.querySelector(`#menu-button-${index} .icon-container`);
+    const parent = icon.parentElement;
+    icon.remove();
+    parent.append(
+      IconThemeRegistry.getInstance()
+        .getTheme(menus[index].nodes.iconTheme)
+        .createDiv(menus[index].nodes.icon)
+    );
   }
 }

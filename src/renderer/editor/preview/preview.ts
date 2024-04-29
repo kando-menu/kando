@@ -12,11 +12,11 @@ import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import * as math from '../../math';
-import * as themedIcon from '../common/themed-icon';
 import * as utils from './utils';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { PreviewItemDragger } from './preview-item-dragger';
 import { IVec2, IMenu } from '../../../common';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class is responsible for displaying the menu preview of the editor. It supports
@@ -25,6 +25,8 @@ import { IVec2, IMenu } from '../../../common';
  *
  * It will emit the following events:
  *
+ * - @fires select-root - This is emitted when the root menu item is selected. No event data
+ *   is emitted and also no select-item event is emitted.
  * - @fires select-item - This is emitted when a menu item is selected. The event data is
  *   the selected menu item.
  * - @fires delete-item - This is emitted when a menu item is dragged to the trash tab. The
@@ -174,7 +176,13 @@ export class Preview extends EventEmitter {
         const container = this.canvas.querySelector(
           '.kando-menu-preview-container.visible'
         ) as HTMLElement;
-        this.redrawItem(item, container);
+        this.drawItem(item, container);
+
+        // If it's not a submenu, we select the new item. For submenus this would be a
+        // bit confusing.
+        if (item.type !== 'submenu') {
+          this.selectItem(item);
+        }
       }
 
       // In any case, update the angles of drop target.
@@ -187,6 +195,36 @@ export class Preview extends EventEmitter {
     } else {
       window.api.log('Trying to add an item to an invalid position!');
     }
+  }
+
+  /**
+   * This method redraws the name and icon of the currently selected menu item. This is
+   * called when the user changes the name or icon in the properties editor.
+   */
+  public updateActiveItem() {
+    if (!this.activeItem) {
+      return;
+    }
+
+    // Update the label if it is a child item.
+    const label = this.activeItem.div.querySelector('.kando-menu-preview-label');
+    if (label) {
+      label.textContent = this.activeItem.name;
+    }
+
+    // Update the breadcrumbs if it is the center item.
+    if (this.activeItem === this.getCenterItem()) {
+      this.drawBreadcrumbs();
+    }
+
+    // Update the icon.
+    const icon = this.activeItem.div.querySelector('.icon-container');
+    icon.remove();
+    this.activeItem.div.prepend(
+      IconThemeRegistry.getInstance()
+        .getTheme(this.activeItem.iconTheme)
+        .createDiv(this.activeItem.icon)
+    );
   }
 
   /**
@@ -352,6 +390,11 @@ export class Preview extends EventEmitter {
           this.recomputeItemAngles();
           this.updateAllPositions();
           this.emit(event, item);
+
+          // If the item has been dropped into the trash or stash tab, we select the
+          // center item.
+          this.selectItem(centerItem);
+
           return;
         }
       }
@@ -386,14 +429,14 @@ export class Preview extends EventEmitter {
    *   direction of this angle. The new menu items are faded in and moved in the from the
    *   opposite direction.
    */
-  private redrawMenu(transitionAngle: number) {
+  private drawMenu(transitionAngle: number) {
     // Sanity check: If the selection chain is empty, we do nothing.
     if (this.selectionChain.length === 0) {
       return;
     }
 
     // Clear all previous draggables. We will register all new items further below via the
-    // `redrawItem()` method.
+    // `drawItem()` method.
     this.dragger.removeAllDraggables();
 
     // First, fade out all currently displayed menu items.
@@ -424,7 +467,7 @@ export class Preview extends EventEmitter {
 
     // Add the children of the currently selected menu.
     centerItem.children?.forEach((child) => {
-      this.redrawItem(child as IEditorMenuItem, container);
+      this.drawItem(child as IEditorMenuItem, container);
     });
 
     // Let the dragger know that we have a new center item.
@@ -437,7 +480,9 @@ export class Preview extends EventEmitter {
       this.backlink = document.createElement('div');
       this.backlink.classList.add('kando-menu-preview-backlink');
       this.backlink.appendChild(
-        themedIcon.createDiv('arrow_back', 'material-symbols-rounded')
+        IconThemeRegistry.getInstance()
+          .getTheme('material-symbols-rounded')
+          .createDiv('arrow_back')
       );
       container.appendChild(this.backlink);
 
@@ -464,7 +509,7 @@ export class Preview extends EventEmitter {
    * This method is called whenever the selection chain changes. It redraws the
    * breadcrumbs to display the current selection chain.
    */
-  private redrawBreadcrumbs() {
+  private drawBreadcrumbs() {
     this.breadcrumbs.innerHTML = '';
 
     // Then we add the breadcrumbs for the current selection chain.
@@ -486,7 +531,7 @@ export class Preview extends EventEmitter {
    * @param item The menu item which should be added to the preview.
    * @param container The container to which the item should be added.
    */
-  private redrawItem(items: IEditorMenuItem, container: HTMLElement) {
+  private drawItem(items: IEditorMenuItem, container: HTMLElement) {
     // Create a div for the child.
     items.div = utils.createChildDiv(items);
     container.appendChild(items.div);
@@ -613,7 +658,7 @@ export class Preview extends EventEmitter {
   /**
    * This method is called when a menu item is selected. If the menu item has children, it
    * is pushed to the selection chain and the preview is redrawn. In any case, the
-   * 'select' event is emitted.
+   * 'select-root' or 'select-item' event is emitted.
    *
    * @param item The menu item which has been selected.
    */
@@ -627,12 +672,12 @@ export class Preview extends EventEmitter {
       if (index >= 0 && index < this.selectionChain.length - 1) {
         const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
-        this.redrawMenu(lastSelected.computedAngle);
-        this.redrawBreadcrumbs();
+        this.drawMenu(lastSelected.computedAngle);
+        this.drawBreadcrumbs();
       } else if (index === -1) {
         this.selectionChain.push(item);
-        this.redrawMenu(item.computedAngle + 180);
-        this.redrawBreadcrumbs();
+        this.drawMenu(item.computedAngle + 180);
+        this.drawBreadcrumbs();
       }
     }
 
@@ -643,7 +688,11 @@ export class Preview extends EventEmitter {
     this.activeItem = item;
     item.div.classList.add('active');
 
-    this.emit('select-item', item);
+    if (item === this.selectionChain[0]) {
+      this.emit('select-root');
+    } else {
+      this.emit('select-item', item);
+    }
   }
 
   /**

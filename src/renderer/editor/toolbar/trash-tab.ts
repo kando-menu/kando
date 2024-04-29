@@ -12,9 +12,9 @@ import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
-import * as themedIcon from '../common/themed-icon';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemFactory } from '../../../common/item-factory';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class represents the trash tab in the toolbar. Users can drop menus and menu items
@@ -122,7 +122,9 @@ export class TrashTab extends EventEmitter {
           isMenu: true,
           name: menu.nodes.name,
           description: menu.shortcut || 'Not bound.',
-          icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
+          icon: IconThemeRegistry.getInstance()
+            .getTheme(menu.nodes.iconTheme)
+            .createDiv(menu.nodes.icon).outerHTML,
           index,
         };
       }
@@ -133,8 +135,10 @@ export class TrashTab extends EventEmitter {
       return {
         isMenu: false,
         name: item.name,
-        description: typeInfo.getDescription(item),
-        icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
+        description: typeInfo?.getDescription(item),
+        icon: IconThemeRegistry.getInstance()
+          .getTheme(item.iconTheme)
+          .createDiv(item.icon).outerHTML,
         index,
       };
     });

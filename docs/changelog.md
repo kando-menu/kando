@@ -23,14 +23,23 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
+- The possibility to change menu and menu item names! When a menu or menu item is selected, there is now a text field in the properties area on the right-hand side which allows to change the name.
+- The possibility to change the icon of a menu or menu item! Next to the name field, there is now a button which opens an icon picker. This allows to select the icon theme and the icon itself. There is also a search field which allows searching for icons.
+- A new icon theme: `"simple-icons-colored"`. This is a colored version of the [Simple Icons](https://simpleicons.org/) theme.
 - A new item to the tray menu which allows to open the menu editor.
 - A command line option to open the menu editor: `kando --settings`. If Kando is already running, the menu editor will be opened in the running instance.
 - A desktop notification which is shown when you attempt to run a second instance of Kando.
+
+#### Changed
+
+- When a menu item is added to the menu preview in the menu editor, it will now be automatically selected. The only exception are submenus which will not be opened automatically.
+- The binaries for the GitHub release are now build on newer versions of the CI runners. The Windows binaries are now build on Windows Server 2022, the macOS binaries on macOS 14.0, and the Linux binaries on Ubuntu 22.04.
 
 #### Fixed
 
 - Simulating hotkeys involving digit keys such as <kbd>Ctrl</kbd>+<kbd>1</kbd>.
 - The desktop notification which is shown when a menu-item action fails. It now shows the correct error message.
+- A crash when deleting or stashing one of the empty prototype menu items.
 
 ## [Kando 0.7.1](https://github.com/kando-menu/kando/releases/tag/v0.7.1)
 

@@ -109,12 +109,31 @@ export class Toolbar extends EventEmitter {
     this.menusTab.setMenus(menus, currentMenu);
   }
 
+  /**
+   * Whenever the content of the trash changes, the trash tab needs to be updated.
+   *
+   * @param items A list of all trashed menus and menu items.
+   */
   public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
     this.trashTab.setTrashedThings(items);
   }
 
+  /**
+   * Whenever the content of the stash changes, the stash tab needs to be updated.
+   *
+   * @param items A list of all stashed menu items.
+   */
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.stashTab.setStashedItems(items);
+  }
+
+  /**
+   * This method updates the button which represents the menu at the given index in the
+   * given menu list. It is called by the editor whenever the user changed a property of
+   * the currently edited menu in the properties view.
+   */
+  public updateMenu(menus: Array<IMenu>, index: number) {
+    this.menusTab.updateMenu(menus, index);
   }
 
   /** This method loads the HTML content of the toolbar. */

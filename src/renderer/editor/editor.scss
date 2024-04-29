@@ -53,13 +53,17 @@
 
   --bs-heading-color: #{$kando-text-color};
   --bs-code-color: #{$kando-highlight-color};
-  --bs-border-radius: 0.75rem;
+  --bs-border-radius: 0.6rem;
   --bs-border-width: 0;
   --bs-body-bg: rgba(0, 0, 0, 0.6);
   --bs-body-color: #{$kando-text-color};
-  --bs-secondary-color: rgb(100, 100, 100);
+  --bs-secondary-color: rgba(255, 255, 255, 0.3);
   --bs-emphasis-color: rgba(255, 255, 255);
   --bs-link-color: #{$kando-highlight-color};
+
+  .row {
+    --bs-gutter-x: 0.5rem;
+  }
 
   // Make buttons respond to clicks by moving down a bit.
   .btn {
@@ -80,13 +84,7 @@
     }
   }
 
-  .btn-dark {
-    --bs-btn-bg: rgba(0, 0, 0, 0.8);
-    --bs-btn-hover-bg: rgba(30, 30, 30, 0.8);
-  }
-
-  // The secondary button is used most of the time. We want it to be a bit darker than
-  // the default.
+  .btn-primary,
   .btn-secondary {
     --bs-btn-bg: rgba(255, 255, 255, 0.1);
     --bs-btn-hover-bg: rgba(255, 255, 255, 0.15);
@@ -94,6 +92,31 @@
     --bs-btn-border-color: transparent;
     --bs-btn-hover-border-color: transparent;
     --bs-btn-active-border-color: transparent;
+  }
+
+  .btn-dark {
+    --bs-btn-bg: rgba(0, 0, 0, 0.8);
+    --bs-btn-hover-bg: rgba(30, 30, 30, 0.8);
+  }
+
+  // Add a dashed border to text inputs.
+  .form-control {
+    --bs-body-bg: rgba(255, 255, 255, 0.1);
+    border: 2px dashed transparent;
+  }
+
+  input.form-control:focus {
+    border: 2px dashed white;
+    box-shadow: none;
+  }
+
+  // Give dropdowns a dark background.
+  option {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .form-select {
+    --bs-form-select-bg-img: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3e%3cpath fill=%27none%27 stroke=%27%23fffa40%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 d=%27m2 5 6 6 6-6%27/%3e%3c/svg%3e');
   }
 
   // We make the tooltip background a bit darker.

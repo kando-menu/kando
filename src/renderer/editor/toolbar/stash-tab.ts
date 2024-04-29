@@ -11,9 +11,9 @@
 import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
-import * as themedIcon from '../common/themed-icon';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemFactory } from '../../../common/item-factory';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class represents the stash tab in the toolbar. Users can drop menu items here to
@@ -105,8 +105,10 @@ export class StashTab extends EventEmitter {
       return {
         isMenu: false,
         name: item.name,
-        description: typeInfo.getDescription(item),
-        icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
+        description: typeInfo?.getDescription(item),
+        icon: IconThemeRegistry.getInstance()
+          .getTheme(item.iconTheme)
+          .createDiv(item.icon).outerHTML,
         index,
       };
     });

@@ -39,16 +39,78 @@
     padding-left: 0;
   }
 
-  // For now, we simply draw a dashed border around the empty properties view.
-  & > div {
-    width: 100%;
-    height: 100%;
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: var(--bs-border-radius);
-  }
-
   transition: opacity 150ms ease;
   opacity: 0;
+
+  .wip {
+    border-radius: 10px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+  }
+
+  #kando-menu-properties-icon-picker,
+  #kando-menu-properties-base-settings {
+    position: absolute;
+    top: 0;
+    left: 1vw;
+    right: 0;
+    bottom: 1vw;
+
+    opacity: 1;
+    transform: none;
+
+    transition:
+      opacity 150ms ease,
+      transform 150ms ease;
+
+    &.hidden {
+      transform: scale(0.9);
+      pointer-events: none;
+      opacity: 0;
+    }
+  }
+
+  #kando-menu-properties-base-settings.hidden {
+    transform: scale(1.1);
+  }
+
+  #kando-menu-properties-icon-button {
+    flex-basis: content;
+
+    .icon-container {
+      @include rfs(5rem, width);
+      @include rfs(5rem, height);
+    }
+  }
+
+  #kando-properties-icon-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(32px + 2vw), 1fr));
+
+    .icon-container {
+      border-radius: 5px;
+      clip-path: none;
+      border: 2px dashed transparent;
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      &.selected {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 2px dashed white;
+      }
+    }
+
+    &.loading .icon-container {
+      content-visibility: auto;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
 }
 
 #kando-editor.edit-mode #kando-menu-properties-area.visible {

@@ -11,14 +11,14 @@ on:
 jobs:
   linux:
     name: Test Deploy for Linux
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Install Dependencies
         run: |
           sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
@@ -29,18 +29,17 @@ jobs:
 
   windows:
     name: Test Deploy for Windows
-    runs-on: windows-2019
+    runs-on: windows-2022
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Install Dependencies
-        # A simple npm install should be sufficient, but for some reason cmake.js
-        # sometimes skips the build step in CI on Windows in this case. So we install
-        # and execute cmake.js manually.
+        # For some reason cmake.js sometimes skips the build step in CI on Windows in this
+        # case. So we install and execute cmake.js manually.
         run: |
           npm install cmake-js -g
           npx cmake-js install
@@ -51,22 +50,20 @@ jobs:
 
   macos:
     name: Test Deploy for macOS
-    runs-on: macos-11
+    runs-on: macos-14
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      # https://github.com/electron/forge/issues/2807
+      - run: python3 -m pip install setuptools --break-system-packages
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - # macOS: appears to fix https://github.com/electron/forge/issues/2807
-        name: Setup Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+          node-version: 20
       - name: Install Dependencies
         run: |
           npm install
+          npm install appdmg
       - name: Create Release
         run: |
           npm run make
