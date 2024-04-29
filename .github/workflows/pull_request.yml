@@ -60,10 +60,8 @@ jobs:
         with:
           node-version: 18
       - # macOS: appears to fix https://github.com/electron/forge/issues/2807
-        name: Setup Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+        name: Setup Python
+        run: python3 -m pip install setuptools
       - name: Install Dependencies
         run: |
           npm install
