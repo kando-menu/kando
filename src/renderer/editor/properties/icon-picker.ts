@@ -106,7 +106,7 @@ export class IconPicker extends EventEmitter {
    * @param theme - The theme that should be selected.
    */
   public show(icon: string, theme: string) {
-    this.container.classList.add('visible');
+    this.container.classList.remove('hidden');
     this.initialIcon = icon;
     this.selectedIcon = icon;
     this.initialTheme = theme;
@@ -123,7 +123,7 @@ export class IconPicker extends EventEmitter {
       this.loadAbortController = null;
     }
 
-    this.container.classList.remove('visible');
+    this.container.classList.add('hidden');
   }
 
   /** Hides the icon picker and emits the close event. */

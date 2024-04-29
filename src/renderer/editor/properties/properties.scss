@@ -55,18 +55,17 @@
     right: 0;
     bottom: 1vw;
 
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.9);
+    opacity: 1;
+    transform: none;
 
     transition:
       opacity 150ms ease,
       transform 150ms ease;
 
-    &.visible {
-      pointer-events: all;
-      opacity: 1;
-      transform: none;
+    &.hidden {
+      transform: scale(0.9);
+      pointer-events: none;
+      opacity: 0;
     }
   }
 

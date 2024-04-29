@@ -66,7 +66,7 @@ export class Properties extends EventEmitter {
     ) as HTMLButtonElement;
     this.iconButton.addEventListener('click', () => {
       this.iconPicker.show(this.activeItem.icon, this.activeItem.iconTheme);
-      this.baseSettings.classList.remove('visible');
+      this.baseSettings.classList.add('hidden');
     });
 
     this.container = div.firstElementChild as HTMLElement;
@@ -89,7 +89,7 @@ export class Properties extends EventEmitter {
       }
     });
     this.iconPicker.on('close', () => {
-      this.baseSettings.classList.add('visible');
+      this.baseSettings.classList.remove('hidden');
     });
   }
 
@@ -118,7 +118,7 @@ export class Properties extends EventEmitter {
         .getTheme(item.iconTheme)
         .createDiv(item.icon).outerHTML;
 
-      this.baseSettings.classList.add('visible');
+      this.baseSettings.classList.remove('hidden');
       this.iconPicker.hide();
     }
   }
