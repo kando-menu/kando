@@ -55,6 +55,8 @@ jobs:
     permissions:
       contents: write
     steps:
+      # https://github.com/electron/forge/issues/2807
+      - run: python3 -m pip install setuptools
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
