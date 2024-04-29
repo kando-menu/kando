@@ -177,6 +177,12 @@ export class Preview extends EventEmitter {
           '.kando-menu-preview-container.visible'
         ) as HTMLElement;
         this.drawItem(item, container);
+
+        // If it's not a submenu, we select the new item. For submenus this would be a
+        // bit confusing.
+        if (item.type !== 'submenu') {
+          this.selectItem(item);
+        }
       }
 
       // In any case, update the angles of drop target.

@@ -28,6 +28,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A command line option to open the menu editor: `kando --settings`. If Kando is already running, the menu editor will be opened in the running instance.
 - A desktop notification which is shown when you attempt to run a second instance of Kando.
 
+#### Changed
+
+- When a menu item is added to the menu preview in the menu editor, it will now be automatically selected. The only exception are submenus which will not be opened automatically.
+
 #### Fixed
 
 - Simulating hotkeys involving digit keys such as <kbd>Ctrl</kbd>+<kbd>1</kbd>.
