@@ -56,9 +56,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
       - name: Setup Python
         # below fixes https://github.com/electron/forge/issues/2807
         # and https://github.com/LinusU/node-appdmg/issues/234
@@ -69,6 +66,9 @@ jobs:
         run: |
           python3 -m pip install setuptools
           npm install -g appdmg
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
       - name: Install Dependencies
         run: |
           npm install
