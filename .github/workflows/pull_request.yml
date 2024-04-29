@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: Install Dependencies
         run: |
           sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: Install Dependencies
         # A simple npm install should be sufficient, but for some reason cmake.js
         # sometimes skips the build step in CI on Windows in this case. So we install
@@ -58,8 +58,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - # macOS: appears to fix https://github.com/electron/forge/issues/2807
+          node-version: 20
         name: Setup Python
         run: python3 -m pip install setuptools
       - name: Install Dependencies
