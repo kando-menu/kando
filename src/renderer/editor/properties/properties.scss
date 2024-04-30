@@ -82,9 +82,50 @@
     }
   }
 
+  #kando-menu-properties-icon-picker {
+    .spinner {
+      $size: 128px;
+
+      position: absolute;
+      top: calc(50% - $size / 2);
+      left: calc(50% - $size / 2);
+
+      pointer-events: none;
+      opacity: 0;
+
+      width: $size;
+      height: $size;
+      border-radius: 50%;
+      border-top: 3px solid #fff;
+      border-right: 3px solid transparent;
+      animation: spinnerRotation 1s linear infinite;
+
+      transition: opacity 500ms ease;
+    }
+
+    @keyframes spinnerRotation {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    &.loading .spinner {
+      opacity: 1;
+    }
+
+    &.loading #kando-properties-icon-picker-grid {
+      pointer-events: none;
+      visibility: hidden;
+    }
+  }
+
   #kando-properties-icon-picker-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(calc(32px + 2vw), 1fr));
+    transition: opacity 150ms ease;
 
     .icon-container {
       border-radius: 5px;
@@ -103,12 +144,6 @@
         background-color: rgba(255, 255, 255, 0.2);
         border: 2px dashed white;
       }
-    }
-
-    &.loading .icon-container {
-      content-visibility: auto;
-      pointer-events: none;
-      opacity: 0.5;
     }
   }
 }

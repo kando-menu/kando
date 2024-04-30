@@ -165,7 +165,7 @@ export class IconPicker extends EventEmitter {
 
     // Clear existing icons.
     this.iconGrid.innerHTML = '';
-    this.iconGrid.classList.add('loading');
+    this.container.classList.add('loading');
 
     const theme = IconThemeRegistry.getInstance().getTheme(this.themeSelect.value);
     const icons = await theme.listIcons(this.filterInput.value);
@@ -174,7 +174,7 @@ export class IconPicker extends EventEmitter {
     // icons have been loaded or the operation has been aborted.
     return new Promise<boolean>((resolve) => {
       // We add the icons in batches to avoid blocking the UI thread for too long.
-      const batchSize = 250;
+      const batchSize = 150;
       let startIndex = 0;
 
       const addBatch = () => {
@@ -225,7 +225,7 @@ export class IconPicker extends EventEmitter {
           requestAnimationFrame(addBatch);
         } else {
           this.loadAbortController = null;
-          this.iconGrid.classList.remove('loading');
+          this.container.classList.remove('loading');
           resolve(true);
         }
       };
