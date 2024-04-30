@@ -325,7 +325,14 @@ export class Editor extends EventEmitter {
       return;
     }
 
+    // We remove the edit-mode class from the container. This will trigger some fade-out
+    // animations. As most elements are set to 'display: none' when the edit-mode class is
+    // not present (for performance reasons), we temporarily add the 'leaving-edit-mode'
+    // class which elements can use to keep their visibility until the animations are
+    // done.
     this.container.classList.remove('edit-mode');
+    this.container.classList.add('leaving-edit-mode');
+    setTimeout(() => this.container.classList.remove('leaving-edit-mode'), 500);
 
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure

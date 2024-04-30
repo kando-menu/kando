@@ -43,6 +43,7 @@
   .menu-node {
     transition: $menu-transition;
     position: absolute;
+    pointer-events: none;
 
     .menu-item {
       position: absolute;

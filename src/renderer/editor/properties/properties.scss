@@ -39,6 +39,7 @@
     padding-left: 0;
   }
 
+  display: none;
   transition: opacity 150ms ease;
   opacity: 0;
 
@@ -146,6 +147,11 @@
       }
     }
   }
+}
+
+#kando-editor.edit-mode #kando-menu-properties-area,
+#kando-editor.leaving-edit-mode #kando-menu-properties-area {
+  display: block;
 }
 
 #kando-editor.edit-mode #kando-menu-properties-area.visible {

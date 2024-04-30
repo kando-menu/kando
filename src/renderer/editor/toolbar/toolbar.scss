@@ -47,8 +47,9 @@
   left: $editor-padding-left;
   right: $editor-padding-right;
   padding-top: 1vh;
-  opacity: 0;
 
+  opacity: 0;
+  display: none;
   transform: translateY(20px);
 
   transition:
@@ -166,6 +167,11 @@
     outline: 2px dashed rgba(255, 255, 255, 0.5);
     outline-offset: -5px;
   }
+}
+
+#kando-editor.edit-mode #kando-editor-toolbar,
+#kando-editor.leaving-edit-mode #kando-editor-toolbar {
+  display: block;
 }
 
 #kando-editor.visible.edit-mode #kando-editor-toolbar {
