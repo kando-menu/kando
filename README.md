@@ -4,7 +4,7 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=Tv9kRgxygA4"><img src="docs/img/video.jpg" /></a>
+  <a href="https://www.youtube.com/watch?v=5WXzIvPXLuE"><img src="docs/img/video.jpg" /></a>
 </p>
 
 

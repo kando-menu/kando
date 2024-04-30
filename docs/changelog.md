@@ -19,6 +19,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [Kando 0.8.0](https://github.com/kando-menu/kando/releases/tag/v0.8.0)
 
+<a href="https://www.youtube.com/watch?v=5WXzIvPXLuE">
+<img align="right" width="400px" src="img/player08.jpg"></img>
+</a>
+
 **Release Date:** 2024-04-30
 
 #### Added
