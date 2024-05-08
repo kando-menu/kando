@@ -35,12 +35,28 @@ export class Properties extends EventEmitter {
    */
   private container: HTMLElement = null;
 
+  /**
+   * The icon picker is a component that allows the user to select an icon from a
+   * filterable grid of icons.
+   */
   private iconPicker: IconPicker = null;
 
+  /** The base settings div contains the name input and the icon button. */
   private baseSettings: HTMLElement = null;
+
+  /**
+   * The name input is an input element that allows the user to change the name of the
+   * currently edited menu item.
+   */
   private nameInput: HTMLInputElement = null;
+
+  /** The icon button is a button that allows the user to open the icon picker. */
   private iconButton: HTMLButtonElement = null;
 
+  /**
+   * The currently edited menu item. This is the item whose properties are displayed in
+   * this view.
+   */
   private activeItem: IEditorMenuItem = null;
 
   /**
