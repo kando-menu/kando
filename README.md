@@ -95,7 +95,7 @@ You can read more about this in the [:memo: documentation](docs/configuring.md).
 
 That's great!
 If you like the idea of Kando, you can help in many ways:
-* **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions).
+* **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions) or by joining the [Discord server](https://discord.gg/hZwbVSDkhy).
 * **Spread the word!** Tell your friends about Kando and share the project on social media.
 * **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement. Please read the [contributing guidelines](docs/contributing.md) for more information!
 
