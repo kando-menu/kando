@@ -28,9 +28,11 @@ import { IconThemeRegistry } from '../../../common/icon-theme-registry';
  * @fires changed-icon - When the user changed the icon of the current menu item.
  */
 export class Properties extends EventEmitter {
-  // The container is the HTML element which contains the currently edited menu's
-  // properties. It is created in the constructor and returned by the getContainer()
-  // method.
+  /**
+   * The container is the HTML element which contains the currently edited menu's
+   * properties. It is created in the constructor and returned by the getContainer()
+   * method.
+   */
   private container: HTMLElement = null;
 
   private iconPicker: IconPicker = null;
@@ -53,6 +55,14 @@ export class Properties extends EventEmitter {
     const div = document.createElement('div');
     div.innerHTML = template({});
 
+    // The first child of the div is the container.
+    this.container = div.firstElementChild as HTMLElement;
+
+    // Store a reference to the base settings div. This contains the name input and the
+    // icon button.
+    this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
+
+    // Emit the 'changed-name' event when the name input changes.
     this.nameInput = div.querySelector('#kando-menu-properties-name') as HTMLInputElement;
     this.nameInput.addEventListener('input', () => {
       if (this.activeItem) {
@@ -61,6 +71,7 @@ export class Properties extends EventEmitter {
       }
     });
 
+    // Show the icon picker when the icon button is clicked.
     this.iconButton = div.querySelector(
       '#kando-menu-properties-icon-button'
     ) as HTMLButtonElement;
@@ -69,10 +80,7 @@ export class Properties extends EventEmitter {
       this.baseSettings.classList.add('hidden');
     });
 
-    this.container = div.firstElementChild as HTMLElement;
-
-    this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
-
+    // Create the icon picker and wire up its events.
     this.iconPicker = new IconPicker(
       div.querySelector('#kando-menu-properties-icon-picker')
     );
@@ -98,18 +106,33 @@ export class Properties extends EventEmitter {
     return this.container;
   }
 
+  /** This method shows the properties view. It adds the 'visible' class to the container. */
   public show() {
     this.container.classList.add('visible');
   }
 
+  /**
+   * This method hides the properties view. It removes the 'visible' class from the
+   * container.
+   */
   public hide() {
     this.container.classList.remove('visible');
   }
 
+  /**
+   * Make this Properties view display the properties of the given menu.
+   *
+   * @param menu The menu whose properties should be displayed.
+   */
   public setMenu(menu: IMenu) {
     this.setItem(menu.nodes);
   }
 
+  /**
+   * Make this Properties view display the properties of the given menu item.
+   *
+   * @param item The menu item whose properties should be displayed.
+   */
   public setItem(item: IEditorMenuItem) {
     if (this.activeItem !== item) {
       this.activeItem = item;

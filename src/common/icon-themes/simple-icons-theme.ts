@@ -12,7 +12,9 @@ import { matchSorter } from 'match-sorter';
 
 import { IIconTheme } from '../icon-theme-registry';
 
+/** This class implements an icon theme that uses the Simple Icons font as icons. */
 export class SimpleIconsTheme implements IIconTheme {
+  /** This array contains all available icon names. It is initialized in the constructor. */
   private iconNames: Array<string> = [];
 
   constructor() {
@@ -20,9 +22,9 @@ export class SimpleIconsTheme implements IIconTheme {
     const string =
       require('!!raw-loader!simple-icons-font/font/simple-icons.css').default;
 
-    // Use regex to extract all icon names. All the names start with a '.si-' and end
-    // before the next '::before'. We also ensure not to match the variants with the
-    // '--color' suffix.
+    // Use regex to extract all icon names. In the file above, all the names start with a
+    // '.si-' and end before the next '::before'. We also ensure not to match the variants
+    // with the '--color' suffix.
     const regex = /\.si-([a-z0-9-]+(?<!-color))(?=::before)/g;
     let match;
 
@@ -31,6 +33,7 @@ export class SimpleIconsTheme implements IIconTheme {
     }
   }
 
+  /** Returns a human-readable name of the icon theme. */
   get name() {
     return 'Simple Icons';
   }

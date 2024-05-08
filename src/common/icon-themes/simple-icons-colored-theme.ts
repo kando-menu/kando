@@ -10,7 +10,12 @@
 
 import { SimpleIconsTheme } from './simple-icons-theme';
 
+/**
+ * This class implements an icon theme that uses the Simple Icons font as icons. It colors
+ * the icons using the `si--color` class.
+ */
 export class SimpleIconsColoredTheme extends SimpleIconsTheme {
+  /** Returns a human-readable name of the icon theme. */
   get name() {
     return 'Simple Icons (Colored)';
   }
