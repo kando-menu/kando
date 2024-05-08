@@ -505,5 +505,9 @@ export class Sidebar {
     this.container.querySelector('#sponsors-button').addEventListener('click', () => {
       window.api.openURI('https://schneegans.github.io/sponsors/');
     });
+
+    this.container.querySelector('#discord-button').addEventListener('click', () => {
+      window.api.openURI('https://discord.gg/hZwbVSDkhy');
+    });
   }
 }
