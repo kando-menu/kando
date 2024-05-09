@@ -71,6 +71,9 @@ export class Properties extends EventEmitter {
    */
   private activeItem: IEditorMenuItem = null;
 
+  /** If the root item of a menu is edited, this is the menu that is edited. */
+  private activeMenu: IMenu = null;
+
   /**
    * This constructor creates the HTML elements for the menu properties view and wires up
    * all the functionality.
@@ -131,6 +134,16 @@ export class Properties extends EventEmitter {
     this.iconPicker.on('close', () => {
       this.baseSettings.classList.remove('hidden');
     });
+
+    // Emit the 'changed-centered' event when the open at pointer checkbox changes.
+    this.openAtPointerCheckbox = div.querySelector(
+      '#kando-menu-properties-open-at-pointer'
+    ) as HTMLInputElement;
+    this.openAtPointerCheckbox.addEventListener('change', () => {
+      if (this.activeItem) {
+        this.activeMenu.centered = !this.openAtPointerCheckbox.checked;
+      }
+    });
   }
 
   /** This method returns the container of the menu preview. */
@@ -160,6 +173,9 @@ export class Properties extends EventEmitter {
     // This will update the name input and the icon button.
     this.setItem(menu.nodes);
 
+    this.activeMenu = menu;
+    this.openAtPointerCheckbox.checked = !menu.centered;
+
     // Show the menu settings.
     this.menuSettings.classList.remove('hidden');
   }
@@ -171,6 +187,7 @@ export class Properties extends EventEmitter {
    */
   public setItem(item: IEditorMenuItem) {
     if (this.activeItem !== item) {
+      this.activeMenu = null;
       this.activeItem = item;
       this.nameInput.value = item.name;
       this.iconButton.innerHTML = IconThemeRegistry.getInstance()

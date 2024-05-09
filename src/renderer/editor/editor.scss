@@ -99,6 +99,15 @@
     --bs-btn-hover-bg: rgba(30, 30, 30, 0.8);
   }
 
+  // Labels are usually clickable.
+  label {
+    cursor: pointer;
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
   // Add a dashed border to text inputs.
   .form-control {
     --bs-body-bg: rgba(255, 255, 255, 0.1);
@@ -114,6 +123,7 @@
   .form-check-input {
     background-color: rgba(255, 255, 255, 0.1);
     box-shadow: none !important;
+    cursor: pointer;
     @include rfs(3.5rem, font-size);
 
     &:hover {
