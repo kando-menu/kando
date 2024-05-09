@@ -110,6 +110,29 @@
     box-shadow: none;
   }
 
+  // Make checkboxes round and transparent,
+  .form-check-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none !important;
+    @include rfs(3.5rem, font-size);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &:checked {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &[type='checkbox'] {
+      border-radius: 50%;
+    }
+  }
+
   // Give dropdowns a dark background.
   option {
     background-color: rgba(0, 0, 0, 0.8);

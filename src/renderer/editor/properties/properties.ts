@@ -54,6 +54,18 @@ export class Properties extends EventEmitter {
   private iconButton: HTMLButtonElement = null;
 
   /**
+   * The menu settings div contains the elements shown when the user is editing the root
+   * item of a menu.
+   */
+  private menuSettings: HTMLElement = null;
+
+  /**
+   * The open at pointer checkbox is a checkbox that allows the user to toggle whether the
+   * menu should open at the pointer position.
+   */
+  private openAtPointerCheckbox: HTMLInputElement = null;
+
+  /**
    * The currently edited menu item. This is the item whose properties are displayed in
    * this view.
    */
@@ -77,6 +89,10 @@ export class Properties extends EventEmitter {
     // Store a reference to the base settings div. This contains the name input and the
     // icon button.
     this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
+
+    // Store a reference to the menu settings div. This contains elements that are only
+    // shown when the user is editing the root item of a menu.
+    this.menuSettings = div.querySelector('#kando-menu-properties-menu-settings');
 
     // Emit the 'changed-name' event when the name input changes.
     this.nameInput = div.querySelector('#kando-menu-properties-name') as HTMLInputElement;
@@ -141,7 +157,11 @@ export class Properties extends EventEmitter {
    * @param menu The menu whose properties should be displayed.
    */
   public setMenu(menu: IMenu) {
+    // This will update the name input and the icon button.
     this.setItem(menu.nodes);
+
+    // Show the menu settings.
+    this.menuSettings.classList.remove('hidden');
   }
 
   /**
@@ -159,6 +179,7 @@ export class Properties extends EventEmitter {
 
       this.baseSettings.classList.remove('hidden');
       this.iconPicker.hide();
+      this.menuSettings.classList.add('hidden');
     }
   }
 }
