@@ -45,6 +45,11 @@
   transition: opacity 150ms ease;
   opacity: 0;
 
+  .wip {
+    border-radius: 10px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+  }
+
   #kando-menu-properties-icon-picker,
   #kando-menu-properties-base-settings {
     position: absolute;
