@@ -26,6 +26,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The possibility to change the open-menu-at-screen-center property via the menu editor.
 - A link to the new [Kando Discord server](https://discord.gg/hZwbVSDkhy) to the README and to the sidebar in the menu editor.
 
+#### Fixed
+
+- An issue which prevented Kando from starting on Hyprland 0.40.0.
+
 ## [Kando 0.8.0](https://github.com/kando-menu/kando/releases/tag/v0.8.0)
 
 <a href="https://www.youtube.com/watch?v=5WXzIvPXLuE">

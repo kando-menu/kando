@@ -71,8 +71,11 @@ class Native : public Napi::Addon<Native> {
 
     wl_registry_listener mRegistryListener{};
 
-    zwlr_virtual_pointer_v1* mPointer  = nullptr;
-    zwp_virtual_keyboard_v1* mKeyboard = nullptr;
+    zwlr_virtual_pointer_manager_v1* mPointerManager = nullptr;
+    zwlr_virtual_pointer_v1*         mPointer        = nullptr;
+
+    zwp_virtual_keyboard_manager_v1* mKeyboardManager = nullptr;
+    zwp_virtual_keyboard_v1*         mKeyboard        = nullptr;
 
     xkb_context* mXkbContext = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
     xkb_keymap*  mXkbKeymap  = nullptr;
