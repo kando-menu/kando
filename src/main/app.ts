@@ -413,14 +413,18 @@ export class KandoApp {
         continue;
       }
 
-      await this.backend.bindShortcut({
-        id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
-        description: `Kando - ${menu.nodes.name}`,
-        accelerator: menu.shortcut,
-        action: () => {
-          this.showMenu(menu);
-        },
-      });
+      try {
+        await this.backend.bindShortcut({
+          id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
+          description: `Kando - ${menu.nodes.name}`,
+          accelerator: menu.shortcut,
+          action: () => {
+            this.showMenu(menu);
+          },
+        });
+      } catch (error) {
+        KandoApp.showError('Failed to bind shortcut ' + menu.shortcut, error.message);
+      }
     }
   }
 

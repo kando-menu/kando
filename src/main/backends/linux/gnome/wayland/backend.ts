@@ -137,7 +137,7 @@ export class GnomeBackend implements Backend {
     const success = await this.interface.BindShortcut(accelerator);
 
     if (!success) {
-      throw new Error('Shortcut is already in use.');
+      throw new Error('Invalid shortcut or it is already in use.');
     }
 
     this.callbacks[accelerator] = shortcut.action;
