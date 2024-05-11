@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+** Release Date:** TBD
+
+#### Changed
+
+- If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
+
 ## [Kando 0.8.1](https://github.com/kando-menu/kando/releases/tag/v0.8.1)
 
 **Release Date:** 2024-05-10
