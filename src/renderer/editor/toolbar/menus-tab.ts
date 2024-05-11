@@ -139,5 +139,13 @@ export class MenusTab extends EventEmitter {
         .getTheme(menus[index].nodes.iconTheme)
         .createDiv(menus[index].nodes.icon)
     );
+
+    // Update the shortcut.
+    const description = this.container.querySelector(
+      `#menu-button-${index} .description`
+    );
+    if (description) {
+      description.textContent = menus[index].shortcut || 'Not bound.';
+    }
   }
 }

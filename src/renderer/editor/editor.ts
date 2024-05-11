@@ -139,6 +139,7 @@ export class Editor extends EventEmitter {
 
     this.properties.on('changed-name', handleItemChange);
     this.properties.on('changed-icon', handleItemChange);
+    this.properties.on('changed-shortcut', handleItemChange);
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
