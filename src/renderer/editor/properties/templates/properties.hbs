@@ -13,13 +13,13 @@
     
   <div id="kando-menu-properties-base-settings" class='d-flex flex-column justify-content-center'>
     <div class='d-flex'>
-      <button class="btn btn-primary form-control p-0 me-3" id="kando-menu-properties-icon-button"></button>
+      <button class="btn btn-primary p-0 me-3" id="kando-menu-properties-icon-button"></button>
       <input type="text" class="kando-font fs-1 form-control" id="kando-menu-properties-name" />
     </div>
 
     <div id="kando-menu-properties-menu-settings" class='d-flex flex-column'>
       
-      <label class='d-flex my-3'>
+      <label class='d-flex mt-3'>
         <div class="flex-grow-1">
           <div class='kando-font fs-2'>
             Open at Pointer
@@ -31,9 +31,24 @@
         <input type="checkbox" class="form-check-input" id="kando-menu-properties-open-at-pointer" />
       </label>
 
+      <div class='d-flex mt-3'>
+        <div class="flex-grow-1">
+          <div class='kando-font fs-2'>
+            Shortcut
+          </div>
+          <div class='kando-font fs-5'>
+            This will open the menu.
+          </div>
+        </div>
+        <div class="input-group kando-font flex-grow-1">
+          <input type="text" class="form-control fs-3" placeholder="Not Bound" size="10">
+          <button class="btn btn-primary fs-3" id="button-addon2"><i class='material-symbols-rounded inline-icon'>keyboard</i></button>
+        </div>
+      </div>
+
     </div>
 
-    <div class='d-flex flex-column justify-content-center wip my-3' style="height: 25vh;">
+    <div class='d-flex flex-column justify-content-center wip my-3' style="height: 20vh;">
       <div class='text-center kando-font fs-2'>
         Here will be more settings.
       </div>
