@@ -27,9 +27,9 @@ export interface WMInfo {
 
 /**
  * This interface is used to describe a keyboard shortcut. It contains a unique id, a
- * description and the actual shortcut.
- *
- * @todo: Add information about the string format of the shortcut.
+ * description and the actual shortcut. The shortcut is a string in the format used by
+ * Electron's globalShortcut module. More information on the format can be found here:
+ * https://www.electronjs.org/docs/latest/api/accelerator
  */
 export interface Shortcut {
   id: string;
