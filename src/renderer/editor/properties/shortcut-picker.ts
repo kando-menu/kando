@@ -265,7 +265,7 @@ export class ShortcutPicker extends EventEmitter {
     const parts = [];
 
     if (event.ctrlKey) {
-      parts.push('Ctrl');
+      parts.push('Control');
     }
 
     if (event.shiftKey) {
