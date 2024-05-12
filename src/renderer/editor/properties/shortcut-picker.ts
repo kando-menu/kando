@@ -236,6 +236,15 @@ export class ShortcutPicker extends EventEmitter {
 
     parts = parts.map((part) => multipleCapitals.get(part) || part);
 
+    // There are also some shorthands we want to resolve.
+    const shorthands = new Map([
+      ['Ctrl', 'Control'],
+      ['Cmd', 'Command'],
+      ['Esc', 'Escape'],
+    ]);
+
+    parts = parts.map((part) => shorthands.get(part) || part);
+
     return parts.join('+');
   }
 
