@@ -105,7 +105,7 @@ export class MacosBackend implements Backend {
    */
   public async bindShortcut(shortcut: Shortcut) {
     if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
-      throw new Error('Shortcut is already in use.');
+      throw new Error('Invalid shortcut or it is already in use.');
     }
   }
 

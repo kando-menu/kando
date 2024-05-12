@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 @import './icon-picker.scss';
+@import './shortcut-picker.scss';
 
 #kando-menu-properties-area {
   position: absolute;
@@ -86,7 +87,7 @@
   }
 
   #kando-menu-properties-menu-settings {
-    max-height: 100px;
+    max-height: 220px;
     transition: max-height 150ms ease-in-out;
     overflow: hidden;
 

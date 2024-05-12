@@ -68,6 +68,7 @@
   // Make buttons respond to clicks by moving down a bit.
   .btn {
     white-space: nowrap;
+    box-shadow: none;
 
     &.disabled {
       background: repeating-linear-gradient(
@@ -108,15 +109,24 @@
     }
   }
 
-  // Add a dashed border to text inputs.
+  // Make form controls transparent.
   .form-control {
     --bs-body-bg: rgba(255, 255, 255, 0.1);
-    border: 2px dashed transparent;
+  }
+
+  input.form-control {
+    transition: outline 150ms ease;
+    outline: 2px dashed transparent;
   }
 
   input.form-control:focus {
-    border: 2px dashed white;
-    box-shadow: none;
+    outline: 2px dashed white;
+  }
+
+  // Make input groups not 100% wide and tall.
+  .input-group {
+    width: auto;
+    align-content: center;
   }
 
   // Make checkboxes round and transparent,

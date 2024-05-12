@@ -15,6 +15,7 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { ShortcutPicker } from './shortcut-picker';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -26,6 +27,7 @@ import { IconThemeRegistry } from '../../../common/icon-theme-registry';
  *
  * @fires changed-name - When the user changed the name of the current menu item.
  * @fires changed-icon - When the user changed the icon of the current menu item.
+ * @fires changed-shortcut - When the user changed the shortcut of the current menu.
  */
 export class Properties extends EventEmitter {
   /**
@@ -64,6 +66,12 @@ export class Properties extends EventEmitter {
    * menu should open at the pointer position.
    */
   private openAtPointerCheckbox: HTMLInputElement = null;
+
+  /**
+   * The shortcut picker is a component that allows the user to select a shortcut for the
+   * currently edited menu item.
+   */
+  private menuShortcutPicker: ShortcutPicker = null;
 
   /**
    * The currently edited menu item. This is the item whose properties are displayed in
@@ -135,13 +143,24 @@ export class Properties extends EventEmitter {
       this.baseSettings.classList.remove('hidden');
     });
 
-    // Emit the 'changed-centered' event when the open at pointer checkbox changes.
+    // Update the 'centered' property of the menu when the checkbox changes.
     this.openAtPointerCheckbox = div.querySelector(
       '#kando-menu-properties-open-at-pointer'
     ) as HTMLInputElement;
     this.openAtPointerCheckbox.addEventListener('change', () => {
       if (this.activeItem) {
         this.activeMenu.centered = !this.openAtPointerCheckbox.checked;
+      }
+    });
+
+    // Create the shortcut picker and wire up its events.
+    this.menuShortcutPicker = new ShortcutPicker(
+      div.querySelector('#kando-menu-properties-shortcut-picker')
+    );
+    this.menuShortcutPicker.on('changed', (shortcut) => {
+      if (this.activeMenu) {
+        this.activeMenu.shortcut = shortcut;
+        this.emit('changed-shortcut');
       }
     });
   }
@@ -175,6 +194,7 @@ export class Properties extends EventEmitter {
 
     this.activeMenu = menu;
     this.openAtPointerCheckbox.checked = !menu.centered;
+    this.menuShortcutPicker.setShortcut(menu.shortcut);
 
     // Show the menu settings.
     this.menuSettings.classList.remove('hidden');

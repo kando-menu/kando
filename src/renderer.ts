@@ -72,7 +72,7 @@ editor.on('leave-edit-mode', () => {
 });
 
 // Hide the menu or the editor when the user presses escape.
-document.addEventListener('keyup', (ev) => {
+document.body.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape') {
     menu.hide();
     editor.hide();

@@ -69,6 +69,7 @@ export class IconPicker extends EventEmitter {
     });
 
     const template = Handlebars.compile(require('./templates/icon-picker.hbs').default);
+    container.classList.value = 'd-flex flex-column justify-content-center hidden';
     container.innerHTML = template(data);
 
     // Store a reference to the icon grid, the filter input and the theme select field.

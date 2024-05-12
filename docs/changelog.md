@@ -17,6 +17,19 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+** Release Date:** TBD
+
+#### Added
+
+- The possibility to change the shortcut of a menu in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard.
+
+#### Changed
+
+- If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
+- It is now allowed to have multiple menus with the same shortcut. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
+
 ## [Kando 0.8.1](https://github.com/kando-menu/kando/releases/tag/v0.8.1)
 
 **Release Date:** 2024-05-10

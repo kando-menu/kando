@@ -300,6 +300,11 @@ export class KandoApp {
       return Math.max(index, 0);
     });
 
+    // Unbind all shortcuts. This is used when the menu editor is shown.
+    ipcMain.on('unbind-shortcuts', async () => {
+      await this.backend.unbindAllShortcuts();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -407,20 +412,33 @@ export class KandoApp {
     // First, we unbind all shortcuts.
     await this.backend.unbindAllShortcuts();
 
-    // Then, we bind the shortcuts for all menus.
+    // Then, we collect all unique shortcuts and the corresponding menus.
+    const shortcuts = new Map<string, DeepReadonly<IMenu>[]>();
     for (const menu of this.menuSettings.get('menus')) {
-      if (!menu.shortcut) {
-        continue;
+      if (menu.shortcut) {
+        if (!shortcuts.has(menu.shortcut)) {
+          shortcuts.set(menu.shortcut, []);
+        }
+        shortcuts.get(menu.shortcut).push(menu);
       }
+    }
 
-      await this.backend.bindShortcut({
-        id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
-        description: `Kando - ${menu.nodes.name}`,
-        accelerator: menu.shortcut,
-        action: () => {
-          this.showMenu(menu);
-        },
-      });
+    // Finally, we bind the shortcuts. If there are multiple menus with the same
+    // shortcut, the shortcut will open the first menu for now.
+    for (const [shortcut, menus] of shortcuts) {
+      try {
+        const menu = menus[0];
+        await this.backend.bindShortcut({
+          id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
+          description: `Kando - ${menu.nodes.name}`,
+          accelerator: shortcut,
+          action: () => {
+            this.showMenu(menu);
+          },
+        });
+      } catch (error) {
+        KandoApp.showError('Failed to bind shortcut ' + shortcut, error.message);
+      }
     }
   }
 

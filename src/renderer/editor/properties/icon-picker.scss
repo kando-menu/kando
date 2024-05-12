@@ -54,9 +54,8 @@
   transition: opacity 150ms ease;
 
   .icon-container {
-    border-radius: 5px;
+    border-radius: var(--bs-border-radius);
     clip-path: none;
-    border: 2px dashed transparent;
 
     &:active {
       transform: translateY(1px);
@@ -68,7 +67,8 @@
 
     &.selected {
       background-color: rgba(255, 255, 255, 0.2);
-      border: 2px dashed white;
+      outline: 2px dashed white;
+      outline-offset: -2px;
     }
   }
 }

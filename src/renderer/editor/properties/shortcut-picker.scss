@@ -1,0 +1,39 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+#kando-menu-properties-area {
+  .shortcut-picker {
+    input {
+      transition: box-shadow 150ms ease;
+    }
+
+    .invalid {
+      box-shadow: 0 0 15px rgba(255, 64, 64, 1) inset;
+    }
+
+    // This class is used to add a pulsing glow to the shortcut input when waiting for user
+    // input.
+    .glowing {
+      animation: glowing 1s infinite;
+    }
+
+    @keyframes glowing {
+      0% {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+      50% {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      100% {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+  }
+}
