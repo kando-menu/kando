@@ -146,12 +146,12 @@ export class ItemDragger<T> extends EventEmitter {
         clearListeners = () => {
           window.removeEventListener('mousemove', onMouseMove);
           window.removeEventListener('mouseup', onMouseUp);
-          window.removeEventListener('keyup', onEsc, true);
+          window.removeEventListener('keydown', onEsc, true);
         };
 
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('keyup', onEsc, true);
+        window.addEventListener('keydown', onEsc, true);
       },
       { signal: abortController.signal }
     );

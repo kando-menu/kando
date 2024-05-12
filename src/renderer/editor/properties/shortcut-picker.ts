@@ -87,18 +87,18 @@ export class ShortcutPicker extends EventEmitter {
       this.shortcutInput.classList.add('glowing');
 
       // eslint-disable-next-line prefer-const
-      let clickHandler: (this: Window, ev: MouseEvent) => void;
+      let clickHandler: (ev: MouseEvent) => void;
 
       // eslint-disable-next-line prefer-const
-      let keyHandler: (this: Window, ev: KeyboardEvent) => void;
+      let keyHandler: (ev: KeyboardEvent) => void;
 
       // Reverts the input field to its original state.
       const reset = () => {
         this.shortcutInput.placeholder = 'Not Bound';
         this.shortcutInput.classList.remove('glowing');
-        document.removeEventListener('click', clickHandler);
-        document.removeEventListener('keydown', keyHandler);
-        document.removeEventListener('keyup', keyHandler);
+        window.removeEventListener('click', clickHandler);
+        window.removeEventListener('keydown', keyHandler, true);
+        window.removeEventListener('keyup', keyHandler, true);
       };
 
       // Reset the input field to the original state when the user clicks anywhere on
@@ -133,9 +133,9 @@ export class ShortcutPicker extends EventEmitter {
         }
       };
 
-      document.addEventListener('click', clickHandler);
-      document.addEventListener('keydown', keyHandler);
-      document.addEventListener('keyup', keyHandler);
+      window.addEventListener('click', clickHandler);
+      window.addEventListener('keydown', keyHandler, true);
+      window.addEventListener('keyup', keyHandler, true);
     });
   }
 
