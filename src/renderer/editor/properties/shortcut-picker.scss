@@ -15,7 +15,7 @@
     }
 
     .invalid {
-      box-shadow: 0 0 15px 0 rgba(255, 64, 64, 1) inset;
+      box-shadow: 0 0 15px rgba(255, 64, 64, 1) inset;
     }
 
     // This class is used to add a pulsing glow to the shortcut input when waiting for user
@@ -26,19 +26,13 @@
 
     @keyframes glowing {
       0% {
-        box-shadow:
-          0 0 5px 0 rgba(255, 255, 255, 0.1) inset,
-          0 0 15px 0 rgba(255, 255, 255, 0);
+        background-color: rgba(255, 255, 255, 0.05);
       }
       50% {
-        box-shadow:
-          0 0 10px 0 rgba(255, 255, 255, 0.8) inset,
-          0 0 15px 0 rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 255, 255, 0.2);
       }
       100% {
-        box-shadow:
-          0 0 5px 0 rgba(255, 255, 255, 0.1) inset,
-          0 0 15px 0 rgba(255, 255, 255, 0);
+        background-color: rgba(255, 255, 255, 0.05);
       }
     }
   }
