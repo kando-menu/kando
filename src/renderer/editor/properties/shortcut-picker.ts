@@ -207,10 +207,14 @@ export class ShortcutPicker extends EventEmitter {
     shortcut = shortcut.replace(/\s/g, '').toLowerCase();
 
     // We then selectively capitalize the parts of the shortcut. The first character of
-    // each part is capitalized.
+    // each part is capitalized, except for the num* keys.
     let parts = shortcut.split('+');
     parts.forEach((part, index) => {
-      parts[index] = part.charAt(0).toUpperCase() + part.slice(1);
+      if (part.startsWith('num')) {
+        parts[index] = part;
+      } else {
+        parts[index] = part.charAt(0).toUpperCase() + part.slice(1);
+      }
     });
 
     // Then there are a few names which contain multiple capital letters.
