@@ -58,6 +58,14 @@ contextBridge.exposeInMainWorld('api', {
     },
   },
 
+  /**
+   * This will unbind all menu shortcuts. This is used when the menu editor is shown.
+   * Otherwise, the shortcuts would interfere with the editor.
+   */
+  unbindShortcuts: function () {
+    ipcRenderer.send('unbind-shortcuts');
+  },
+
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');

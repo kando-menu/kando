@@ -300,6 +300,11 @@ export class Editor extends EventEmitter {
     this.container.classList.add('edit-mode');
     this.sidebar.setVisibility(false);
 
+    // Unbind all shortcuts. This is necessary because the shortcuts would interfere with
+    // the editor. When the user leaves edit mode, the shortcuts will be bound again
+    // automatically as they potentially have changed.
+    window.api.unbindShortcuts();
+
     // Get the current settings from the main process and pass them to the respective
     // components.
     Promise.all([

@@ -29,6 +29,7 @@ declare global {
         set: (data: IMenuSettings) => void;
         getCurrentMenu: () => Promise<number>;
       };
+      unbindShortcuts: () => void;
       showDevTools: () => void;
       simulateKeys: (keys: IKeySequence) => void;
       movePointer: (dist: IVec2) => void;

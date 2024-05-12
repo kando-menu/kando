@@ -300,6 +300,11 @@ export class KandoApp {
       return Math.max(index, 0);
     });
 
+    // Unbind all shortcuts. This is used when the menu editor is shown.
+    ipcMain.on('unbind-shortcuts', async () => {
+      await this.backend.unbindAllShortcuts();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
