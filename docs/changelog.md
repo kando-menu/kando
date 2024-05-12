@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ** Release Date:** TBD
 
+#### Added
+
+- The possibility to change the shortcut of a menu in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard.
+
 #### Changed
 
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
