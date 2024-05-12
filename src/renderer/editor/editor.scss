@@ -68,6 +68,7 @@
   // Make buttons respond to clicks by moving down a bit.
   .btn {
     white-space: nowrap;
+    box-shadow: none;
 
     &.disabled {
       background: repeating-linear-gradient(
