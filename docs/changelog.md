@@ -19,7 +19,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [unreleased]
 
-** Release Date:** TBD
+**Release Date:** TBD
 
 #### Added
 
@@ -29,6 +29,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
 - It is now allowed to have multiple menus with the same shortcut. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
+
+#### Fixed
+
+- The [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now ensures that shortcuts are rebound when the extension is reloaded. This fixes an issue where shortcuts would not work after logging out and back in.
 
 ## [Kando 0.8.1](https://github.com/kando-menu/kando/releases/tag/v0.8.1)
 
