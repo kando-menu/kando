@@ -231,7 +231,7 @@ export class KandoApp {
       y: display.workArea.y,
       width: display.workArea.width + 1,
       height: display.workArea.height + 1,
-      type: this.backend.getWindowType(),
+      type: this.backend.getBackendInfo().windowType,
       show: false,
     });
 

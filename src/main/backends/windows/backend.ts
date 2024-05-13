@@ -22,11 +22,13 @@ export class WindowsBackend implements Backend {
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
-   *
-   * @returns 'toolbar'
    */
-  public getWindowType() {
-    return 'toolbar';
+  public getBackendInfo() {
+    return {
+      windowType: 'toolbar',
+      supportsCustomShortcuts: true,
+      editorHint: '',
+    };
   }
 
   /**

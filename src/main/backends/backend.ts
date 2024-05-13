@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IKeySequence } from '../../common';
+import { IBackendInfo, IKeySequence } from '../../common';
 
 /**
  * This interface is used to transfer information required from the window manager when
@@ -55,16 +55,12 @@ export interface Backend {
   init: () => Promise<void>;
 
   /**
-   * Each backend should return a suitable window type here. The window type determines
-   * how the window is drawn. The most suitable type is dependent on the operating system
-   * and the window manager. For example, on GNOME, the window type "dock" seems to work
-   * best, on KDE "toolbar" provides a better experience. On Windows, "toolbar" is the
-   * only type that works.
-   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
+   * Each backend must provide some basic information about the backend. See IBackendInfo
+   * for more information.
    *
-   * @returns The window type to use for the pie menu window.
+   * @returns Some information about the backend.
    */
-  getWindowType: () => string;
+  getBackendInfo: () => IBackendInfo;
 
   /**
    * Each backend must provide a way to get the name and app of the currently focused

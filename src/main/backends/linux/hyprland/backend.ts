@@ -37,11 +37,13 @@ for more information.
   /**
    * 'splash' seems to be a good choice for Hyprland. See:
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   *
-   * @returns 'splash'
    */
-  public getWindowType() {
-    return 'splash';
+  public getBackendInfo() {
+    return {
+      windowType: 'splash',
+      supportsCustomShortcuts: true,
+      editorHint: '',
+    };
   }
 
   /**

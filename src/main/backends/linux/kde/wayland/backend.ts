@@ -81,11 +81,13 @@ export class KDEWaylandBackend implements Backend {
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
    * not receive any keyboard events.
-   *
-   * @returns 'toolbar'
    */
-  public getWindowType() {
-    return 'toolbar';
+  public getBackendInfo() {
+    return {
+      windowType: 'toolbar',
+      supportsCustomShortcuts: true,
+      editorHint: '',
+    };
   }
 
   /**

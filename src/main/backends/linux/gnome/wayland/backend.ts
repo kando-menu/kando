@@ -30,11 +30,13 @@ export class GnomeBackend implements Backend {
    * Dock On GNOME Shell, we use a dock window. This creates a floating window which is
    * always on top of all other windows. It even stays visible during workspace
    * switching.
-   *
-   * @returns 'dock'
    */
-  public getWindowType() {
-    return 'dock';
+  public getBackendInfo() {
+    return {
+      windowType: 'dock',
+      supportsCustomShortcuts: true,
+      editorHint: '',
+    };
   }
 
   /**

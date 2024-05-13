@@ -10,7 +10,7 @@
 
 import { native } from './native';
 import { Backend, Shortcut, WMInfo } from '../../backend';
-import { IKeySequence } from '../../../../common';
+import { IBackendInfo, IKeySequence } from '../../../../common';
 import { LinuxKeyCodes } from '../keys';
 
 /**
@@ -73,7 +73,7 @@ export abstract class WLRBackend implements Backend {
   // These methods are abstract and need to be implemented by subclasses. See the docs
   // of the methods in the Backend interface for more information.
   abstract init(): Promise<void>;
-  abstract getWindowType(): string;
+  abstract getBackendInfo(): IBackendInfo;
   abstract getWMInfo(): Promise<WMInfo>;
   abstract bindShortcut(shortcut: Shortcut): Promise<void>;
   abstract unbindShortcut(shortcut: Shortcut): Promise<void>;

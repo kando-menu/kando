@@ -8,6 +8,36 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+/** This interface describes some information about the currently used backend. */
+export interface IBackendInfo {
+  /**
+   * Each backend should return a suitable window type here. The window type determines
+   * how Kando's window is drawn. The most suitable type is dependent on the operating
+   * system and the window manager. For example, on GNOME, the window type "dock" seems to
+   * work best, on KDE "toolbar" provides a better experience. On Windows, "toolbar" is
+   * the only type that works.
+   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
+   *
+   * @returns The window type to use for the pie menu window.
+   */
+  windowType: string;
+
+  /**
+   * There are some backends which do not support custom shortcuts. In this case, the user
+   * will not be able to change the shortcuts in the settings. Usually, the hint returned
+   * by getEditorHint() which is shown in the settings dialog will explain how to change
+   * the shortcuts in the operating system.
+   */
+  supportsCustomShortcuts: boolean;
+
+  /**
+   * This hint is shown in the editor when editing a menu. Use this to explain some quirks
+   * of the backend, such as how to change the shortcuts in the operating system if the
+   * backend does not support custom shortcuts.
+   */
+  editorHint: string;
+}
+
 /**
  * A simple 2D vector.
  *

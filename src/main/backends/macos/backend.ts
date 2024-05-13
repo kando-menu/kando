@@ -18,11 +18,13 @@ export class MacosBackend implements Backend {
   /**
    * On macOS, the window type is set to 'panel'. This makes sure that the window is
    * always on top of other windows and that it is shown on all workspaces.
-   *
-   * @returns 'panel'
    */
-  public getWindowType() {
-    return 'panel';
+  public getBackendInfo() {
+    return {
+      windowType: 'panel',
+      supportsCustomShortcuts: true,
+      editorHint: '',
+    };
   }
 
   /** On macOS, we use this to hide the dock icon. */

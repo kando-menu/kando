@@ -26,11 +26,13 @@ export class X11Backend implements Backend {
   /**
    * Override this if another type is more suitable for your desktop environment.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   *
-   * @returns 'dock'
    */
-  public getWindowType() {
-    return 'dock';
+  public getBackendInfo() {
+    return {
+      windowType: 'dock',
+      supportsCustomShortcuts: true,
+      editorHint: '',
+    };
   }
 
   /** This is called when the backend is created. Currently, this this does nothing on X11. */
