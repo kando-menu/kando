@@ -58,6 +58,11 @@ contextBridge.exposeInMainWorld('api', {
     },
   },
 
+  /** This will return some information about the currently used backend. */
+  getBackendInfo: function () {
+    return ipcRenderer.invoke('get-backend-info');
+  },
+
   /**
    * This will unbind all menu shortcuts. This is used when the menu editor is shown.
    * Otherwise, the shortcuts would interfere with the editor.

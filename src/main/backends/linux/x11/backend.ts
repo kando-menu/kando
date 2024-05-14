@@ -30,7 +30,7 @@ export class X11Backend implements Backend {
   public getBackendInfo() {
     return {
       windowType: 'dock',
-      supportsCustomShortcuts: true,
+      supportsShortcuts: true,
       editorHint: '',
     };
   }

@@ -86,8 +86,10 @@ export class MenusTab extends EventEmitter {
    *
    * @param menus A list of menus.
    * @param currentMenu The index of the currently selected menu.
+   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
+   *   show the shortcut names.
    */
-  public setMenus(menus: Array<IMenu>, currentMenu: number) {
+  public setMenus(menus: Array<IMenu>, currentMenu: number, showShortcuts: boolean) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
@@ -96,7 +98,7 @@ export class MenusTab extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      description: menu.shortcut || 'Not bound.',
+      description: (showShortcuts ? menu.shortcut : menu.shortcutName) || 'Not bound.',
       icon: IconThemeRegistry.getInstance()
         .getTheme(menu.nodes.iconTheme)
         .createDiv(menu.nodes.icon).outerHTML,

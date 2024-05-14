@@ -96,7 +96,7 @@ export class TrashTab extends EventEmitter {
     this.tab = this.container.querySelector('#kando-trash-tab');
 
     // Initialize the trash tab with an empty list of trashed items.
-    this.setTrashedThings([]);
+    this.setTrashedThings([], false);
   }
 
   /**
@@ -104,8 +104,13 @@ export class TrashTab extends EventEmitter {
    * completely updates the trash tab's content.
    *
    * @param things The menus or menu items which are currently in the trash.
+   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
+   *   show the shortcut names.
    */
-  public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
+  public setTrashedThings(
+    things: Array<IMenu | IEditorMenuItem>,
+    showShortcuts: boolean
+  ) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(
@@ -121,7 +126,8 @@ export class TrashTab extends EventEmitter {
         return {
           isMenu: true,
           name: menu.nodes.name,
-          description: menu.shortcut || 'Not bound.',
+          description:
+            (showShortcuts ? menu.shortcut : menu.shortcutName) || 'Not bound.',
           icon: IconThemeRegistry.getInstance()
             .getTheme(menu.nodes.iconTheme)
             .createDiv(menu.nodes.icon).outerHTML,

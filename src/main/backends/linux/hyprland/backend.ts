@@ -41,7 +41,7 @@ for more information.
   public getBackendInfo() {
     return {
       windowType: 'splash',
-      supportsCustomShortcuts: true,
+      supportsShortcuts: true,
       editorHint: '',
     };
   }

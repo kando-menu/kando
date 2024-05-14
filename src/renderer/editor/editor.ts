@@ -16,7 +16,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenu, IMenuSettings } from '../../common';
+import { IMenu, IBackendInfo, IMenuSettings } from '../../common';
 import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
 import { ItemFactory } from '../../common/item-factory';
 
@@ -31,6 +31,9 @@ import { ItemFactory } from '../../common/item-factory';
 export class Editor extends EventEmitter {
   /** The container is the HTML element which contains the menu editor. */
   private container: HTMLElement = null;
+
+  /** This is the backend info which is retrieved from the main process. */
+  private backend: IBackendInfo = null;
 
   /**
    * The background is an opaque div which is shown when the editor is open. It
@@ -107,7 +110,7 @@ export class Editor extends EventEmitter {
 
     this.preview.on('delete-item', (item) => {
       this.trashedThings.push(item);
-      this.toolbar.setTrashedThings(this.trashedThings);
+      this.toolbar.setTrashedThings(this.trashedThings, this.backend.supportsShortcuts);
     });
 
     this.preview.on('stash-item', (item) => {
@@ -117,7 +120,10 @@ export class Editor extends EventEmitter {
 
     this.preview.on('select-root', () => {
       this.editingMenu = true;
-      this.properties.setMenu(this.menuSettings.menus[this.currentMenu]);
+      this.properties.setMenu(
+        this.menuSettings.menus[this.currentMenu],
+        this.backend.supportsShortcuts
+      );
     });
 
     this.preview.on('select-item', (item) => {
@@ -201,14 +207,19 @@ export class Editor extends EventEmitter {
           children: [],
         },
         shortcut: '',
+        shortcutName: '',
         centered: false,
       };
 
       this.menuSettings.menus.push(newMenu);
       this.currentMenu = this.menuSettings.menus.length - 1;
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
+      this.toolbar.setMenus(
+        this.menuSettings.menus,
+        this.currentMenu,
+        this.backend.supportsShortcuts
+      );
       this.preview.setMenu(newMenu);
-      this.properties.setMenu(newMenu);
+      this.properties.setMenu(newMenu, this.backend.supportsShortcuts);
     });
 
     this.toolbar.on('add-item', (typeName: string) => {
@@ -224,28 +235,36 @@ export class Editor extends EventEmitter {
     this.toolbar.on('delete-menu', (index: number) => {
       this.trashedThings.push(this.menuSettings.menus.splice(index, 1)[0]);
       this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
+      this.toolbar.setMenus(
+        this.menuSettings.menus,
+        this.currentMenu,
+        this.backend.supportsShortcuts
+      );
       this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
-      this.toolbar.setTrashedThings(this.trashedThings);
+      this.toolbar.setTrashedThings(this.trashedThings, this.backend.supportsShortcuts);
     });
 
     this.toolbar.on('restore-deleted-menu', (index: number) => {
       this.menuSettings.menus.push(this.trashedThings.splice(index, 1)[0] as IMenu);
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.toolbar.setTrashedThings(this.trashedThings);
+      this.toolbar.setMenus(
+        this.menuSettings.menus,
+        this.currentMenu,
+        this.backend.supportsShortcuts
+      );
+      this.toolbar.setTrashedThings(this.trashedThings, this.backend.supportsShortcuts);
     });
 
     this.toolbar.on('restore-deleted-item', (index: number) => {
       const item = this.trashedThings.splice(index, 1)[0] as IEditorMenuItem;
       this.preview.insertItem(item);
-      this.toolbar.setTrashedThings(this.trashedThings);
+      this.toolbar.setTrashedThings(this.trashedThings, this.backend.supportsShortcuts);
     });
 
     this.toolbar.on('stash-deleted-item', (index: number) => {
       this.menuSettings.stash.push(
         this.trashedThings.splice(index, 1)[0] as IEditorMenuItem
       );
-      this.toolbar.setTrashedThings(this.trashedThings);
+      this.toolbar.setTrashedThings(this.trashedThings, this.backend.supportsShortcuts);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
@@ -257,7 +276,7 @@ export class Editor extends EventEmitter {
 
     this.toolbar.on('delete-stashed-item', (index: number) => {
       this.trashedThings.push(this.menuSettings.stash.splice(index, 1)[0]);
-      this.toolbar.setTrashedThings(this.trashedThings);
+      this.toolbar.setTrashedThings(this.trashedThings, this.backend.supportsShortcuts);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
@@ -310,11 +329,13 @@ export class Editor extends EventEmitter {
     Promise.all([
       window.api.menuSettings.get(),
       window.api.menuSettings.getCurrentMenu(),
-    ]).then(([settings, currentMenu]) => {
+      window.api.getBackendInfo(),
+    ]).then(([settings, currentMenu, backendInfo]) => {
       this.menuSettings = settings;
       this.currentMenu = currentMenu;
+      this.backend = backendInfo;
       this.preview.setMenu(settings.menus[currentMenu]);
-      this.toolbar.setMenus(settings.menus, currentMenu);
+      this.toolbar.setMenus(settings.menus, currentMenu, backendInfo.supportsShortcuts);
       this.toolbar.setStashedItems(settings.stash);
     });
 

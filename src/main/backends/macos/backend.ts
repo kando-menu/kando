@@ -22,7 +22,7 @@ export class MacosBackend implements Backend {
   public getBackendInfo() {
     return {
       windowType: 'panel',
-      supportsCustomShortcuts: true,
+      supportsShortcuts: true,
       editorHint: '',
     };
   }

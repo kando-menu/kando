@@ -300,6 +300,11 @@ export class KandoApp {
       return Math.max(index, 0);
     });
 
+    // Allow the renderer to retrieve information about the backend.
+    ipcMain.handle('get-backend-info', () => {
+      return this.backend.getBackendInfo();
+    });
+
     // Unbind all shortcuts. This is used when the menu editor is shown.
     ipcMain.on('unbind-shortcuts', async () => {
       await this.backend.unbindAllShortcuts();
@@ -618,6 +623,7 @@ export class KandoApp {
     return {
       nodes: root,
       shortcut: 'Control+Space',
+      shortcutName: 'prototype_menu',
       centered: false,
     };
   }

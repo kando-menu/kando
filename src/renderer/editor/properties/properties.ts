@@ -187,8 +187,11 @@ export class Properties extends EventEmitter {
    * Make this Properties view display the properties of the given menu.
    *
    * @param menu The menu whose properties should be displayed.
+   * @param supportsShortcuts If true, the user can directly change the shortcut of the
+   *   menu. Else the user can change the name of the shortcut but not the shortcut
+   *   itself.
    */
-  public setMenu(menu: IMenu) {
+  public setMenu(menu: IMenu, supportsShortcuts: boolean) {
     // This will update the name input and the icon button.
     this.setItem(menu.nodes);
 

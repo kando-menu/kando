@@ -34,7 +34,7 @@ export class GnomeBackend implements Backend {
   public getBackendInfo() {
     return {
       windowType: 'dock',
-      supportsCustomShortcuts: true,
+      supportsShortcuts: true,
       editorHint: '',
     };
   }

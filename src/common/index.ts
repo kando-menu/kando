@@ -28,7 +28,7 @@ export interface IBackendInfo {
    * by getEditorHint() which is shown in the settings dialog will explain how to change
    * the shortcuts in the operating system.
    */
-  supportsCustomShortcuts: boolean;
+  supportsShortcuts: boolean;
 
   /**
    * This hint is shown in the editor when editing a menu. Use this to explain some quirks
@@ -113,8 +113,19 @@ export interface IMenu {
    */
   nodes: IMenuItem;
 
-  /** The shortcut to open the menu. */
+  /**
+   * The shortcut to open the menu. Something like 'Control+Space'.
+   *
+   * @todo: Add description of the format of the shortcut string.
+   */
   shortcut: string;
+
+  /**
+   * Some backends do not support direct binding of shortcuts. In this case, the user will
+   * not be able to change the shortcut in the settings. Instead, the user provides the
+   * name of the shortcut and can then assign a shortcut in the operating system.
+   */
+  shortcutName: string;
 
   /**
    * If true, the menu will open in the screen's center. Else it will open at the mouse

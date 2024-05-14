@@ -104,18 +104,22 @@ export class Toolbar extends EventEmitter {
    *
    * @param menus A list of all menus.
    * @param currentMenu The index of the currently selected menu.
+   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
+   *   show the shortcut names.
    */
-  public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    this.menusTab.setMenus(menus, currentMenu);
+  public setMenus(menus: Array<IMenu>, currentMenu: number, showShortcuts: boolean) {
+    this.menusTab.setMenus(menus, currentMenu, showShortcuts);
   }
 
   /**
    * Whenever the content of the trash changes, the trash tab needs to be updated.
    *
    * @param items A list of all trashed menus and menu items.
+   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
+   *   show the shortcut names.
    */
-  public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
-    this.trashTab.setTrashedThings(items);
+  public setTrashedThings(items: Array<IMenu | IEditorMenuItem>, showShortcuts: boolean) {
+    this.trashTab.setTrashedThings(items, showShortcuts);
   }
 
   /**
