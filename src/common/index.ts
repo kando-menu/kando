@@ -31,11 +31,11 @@ export interface IBackendInfo {
   supportsShortcuts: boolean;
 
   /**
-   * This hint is shown in the editor when editing a menu. Use this to explain some quirks
-   * of the backend, such as how to change the shortcuts in the operating system if the
-   * backend does not support custom shortcuts.
+   * This hint is shown in the editor next to the shortcut-name input field if
+   * supportsShortcuts is false. It should briefly explain how to change the shortcuts in
+   * the operating system.
    */
-  editorHint: string;
+  shortcutHint: string;
 }
 
 /**

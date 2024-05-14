@@ -166,4 +166,18 @@
   .tooltip {
     --bs-tooltip-bg: rgba(220, 220, 220, 0.99);
   }
+
+  // These are shown in various places in the editor.
+  .swirl {
+    display: inline-block;
+    background-image: url(../../assets/images/swirl.svg);
+    width: 160px;
+    height: 14px;
+
+    &.vertical {
+      width: 14px;
+      height: 160px;
+      background-image: url(../../assets/images/swirl-vertical.svg);
+    }
+  }
 }

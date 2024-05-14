@@ -86,7 +86,7 @@ export class KDEWaylandBackend implements Backend {
     return {
       windowType: 'toolbar',
       supportsShortcuts: true,
-      editorHint: '',
+      shortcutHint: '',
     };
   }
 

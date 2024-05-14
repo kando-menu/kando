@@ -42,7 +42,7 @@ for more information.
     return {
       windowType: 'splash',
       supportsShortcuts: true,
-      editorHint: '',
+      shortcutHint: '',
     };
   }
 

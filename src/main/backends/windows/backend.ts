@@ -27,7 +27,7 @@ export class WindowsBackend implements Backend {
     return {
       windowType: 'toolbar',
       supportsShortcuts: true,
-      editorHint: '',
+      shortcutHint: '',
     };
   }
 

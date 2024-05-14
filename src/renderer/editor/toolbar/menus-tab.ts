@@ -27,6 +27,12 @@ export class MenusTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
+  /**
+   * If true, menu buttons will show the shortcuts, else they will show the shortcut
+   * names.
+   */
+  private showShortcuts: boolean = false;
+
   /** This is the HTML element which contains the menus tab's content. */
   private tab: HTMLElement = null;
 
@@ -44,13 +50,18 @@ export class MenusTab extends EventEmitter {
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
+   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
+   *   show the shortcut names.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, showShortcuts: boolean) {
     super();
 
     // Store a reference to the container. We will attach menu buttons divs to it during
     // drag'n'drop operations.
     this.container = container;
+
+    // Store the showShortcuts argument.
+    this.showShortcuts = showShortcuts;
 
     // Store a reference to the trash tab. This is the only drop target for dragged menus.
     this.trashTab = this.container.querySelector(
@@ -86,10 +97,8 @@ export class MenusTab extends EventEmitter {
    *
    * @param menus A list of menus.
    * @param currentMenu The index of the currently selected menu.
-   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
-   *   show the shortcut names.
    */
-  public setMenus(menus: Array<IMenu>, currentMenu: number, showShortcuts: boolean) {
+  public setMenus(menus: Array<IMenu>, currentMenu: number) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
@@ -98,7 +107,8 @@ export class MenusTab extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      description: (showShortcuts ? menu.shortcut : menu.shortcutName) || 'Not bound.',
+      description:
+        (this.showShortcuts ? menu.shortcut : menu.shortcutName) || 'Not bound.',
       icon: IconThemeRegistry.getInstance()
         .getTheme(menu.nodes.iconTheme)
         .createDiv(menu.nodes.icon).outerHTML,

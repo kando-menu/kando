@@ -35,6 +35,12 @@ export class TrashTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
+  /**
+   * If true, menu buttons will show the shortcuts, else they will show the shortcut
+   * names.
+   */
+  private showShortcuts: boolean = false;
+
   /** This is the HTML element which contains the trash tab's content. */
   private tab: HTMLElement = null;
 
@@ -57,13 +63,18 @@ export class TrashTab extends EventEmitter {
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
+   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
+   *   show the shortcut names.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, showShortcuts: boolean) {
     super();
 
     // Store a reference to the container. We will attach menu buttons divs to it during
     // drag'n'drop operations.
     this.container = container;
+
+    // Store the showShortcuts argument.
+    this.showShortcuts = showShortcuts;
 
     // Store a reference to the potential drop targets.
     this.stashTab = this.container.querySelector(
@@ -96,7 +107,7 @@ export class TrashTab extends EventEmitter {
     this.tab = this.container.querySelector('#kando-trash-tab');
 
     // Initialize the trash tab with an empty list of trashed items.
-    this.setTrashedThings([], false);
+    this.setTrashedThings([]);
   }
 
   /**
@@ -104,13 +115,8 @@ export class TrashTab extends EventEmitter {
    * completely updates the trash tab's content.
    *
    * @param things The menus or menu items which are currently in the trash.
-   * @param showShortcuts If true, menu buttons will show the shortcuts, else they will
-   *   show the shortcut names.
    */
-  public setTrashedThings(
-    things: Array<IMenu | IEditorMenuItem>,
-    showShortcuts: boolean
-  ) {
+  public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
     const template = Handlebars.compile(
@@ -127,7 +133,7 @@ export class TrashTab extends EventEmitter {
           isMenu: true,
           name: menu.nodes.name,
           description:
-            (showShortcuts ? menu.shortcut : menu.shortcutName) || 'Not bound.',
+            (this.showShortcuts ? menu.shortcut : menu.shortcutName) || 'Not bound.',
           icon: IconThemeRegistry.getInstance()
             .getTheme(menu.nodes.iconTheme)
             .createDiv(menu.nodes.icon).outerHTML,

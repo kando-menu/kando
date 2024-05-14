@@ -12,7 +12,7 @@ import { EventEmitter } from 'events';
 import Handlebars from 'handlebars';
 
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { IMenu } from '../../../common';
+import { IMenu, IBackendInfo } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { ShortcutPicker } from './shortcut-picker';
@@ -85,14 +85,22 @@ export class Properties extends EventEmitter {
   /**
    * This constructor creates the HTML elements for the menu properties view and wires up
    * all the functionality.
+   *
+   * @param backend The backend info is used to determine whether the menu properties view
+   *   should show a 'Shortcut' label or a 'Shortcut Name' label.
    */
-  constructor() {
+  constructor(backend: IBackendInfo) {
     super();
 
     const template = Handlebars.compile(require('./templates/properties.hbs').default);
 
     const div = document.createElement('div');
-    div.innerHTML = template({});
+    div.innerHTML = template({
+      shortcutLabel: backend.supportsShortcuts ? 'Shortcut' : 'Shortcut Name',
+      shortcutHint: backend.supportsShortcuts
+        ? 'This will open the menu.'
+        : backend.shortcutHint,
+    });
 
     // The first child of the div is the container.
     this.container = div.firstElementChild as HTMLElement;
@@ -187,11 +195,8 @@ export class Properties extends EventEmitter {
    * Make this Properties view display the properties of the given menu.
    *
    * @param menu The menu whose properties should be displayed.
-   * @param supportsShortcuts If true, the user can directly change the shortcut of the
-   *   menu. Else the user can change the name of the shortcut but not the shortcut
-   *   itself.
    */
-  public setMenu(menu: IMenu, supportsShortcuts: boolean) {
+  public setMenu(menu: IMenu) {
     // This will update the name input and the icon button.
     this.setItem(menu.nodes);
 

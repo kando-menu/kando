@@ -31,7 +31,7 @@ export class X11Backend implements Backend {
     return {
       windowType: 'dock',
       supportsShortcuts: true,
-      editorHint: '',
+      shortcutHint: '',
     };
   }
 
