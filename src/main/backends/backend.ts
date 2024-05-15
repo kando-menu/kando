@@ -26,15 +26,13 @@ export interface WMInfo {
 }
 
 /**
- * This interface is used to describe a keyboard shortcut. It contains a unique id, a
- * description and the actual shortcut. The shortcut is a string in the format used by
- * Electron's globalShortcut module. More information on the format can be found here:
- * https://www.electronjs.org/docs/latest/api/accelerator
+ * This interface is used to pass information about a keyboard shortcut to the backend. If
+ * the backend supports custom shortcuts, the trigger property contains the key sequence
+ * given by the user. Else, it will be the unique ID given by the user. The backend should
+ * use this ID to generate a global shortcut in the operating system.
  */
 export interface Shortcut {
-  id: string;
-  description: string;
-  accelerator: string;
+  trigger: string;
   action: () => void;
 }
 

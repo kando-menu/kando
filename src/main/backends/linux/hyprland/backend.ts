@@ -41,8 +41,8 @@ for more information.
   public getBackendInfo() {
     return {
       windowType: 'splash',
-      supportsShortcuts: true,
-      shortcutHint: '',
+      supportsShortcuts: false,
+      shortcutHint: 'Use your hypr.conf to bind this.',
     };
   }
 
@@ -73,7 +73,7 @@ for more information.
    * This binds a shortcut. The action callback of the shortcut is called when the
    * shortcut is pressed.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    */
   public async bindShortcut(shortcut: Shortcut) {
     native.bindShortcut(shortcut);

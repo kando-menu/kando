@@ -85,8 +85,8 @@ export class KDEWaylandBackend implements Backend {
   public getBackendInfo() {
     return {
       windowType: 'toolbar',
-      supportsShortcuts: true,
-      shortcutHint: '',
+      supportsShortcuts: false,
+      shortcutHint: "Use KDE's system settings to bind this.",
     };
   }
 
@@ -130,8 +130,8 @@ export class KDEWaylandBackend implements Backend {
     });
 
     // Execute the trigger action whenever the KWin script sends a signal.
-    this.kandoInterface.triggerCallback = (shortcutID: string) => {
-      const shortcut = this.shortcuts.find((s) => s.id === shortcutID);
+    this.kandoInterface.triggerCallback = (trigger: string) => {
+      const shortcut = this.shortcuts.find((s) => s.trigger === trigger);
       if (shortcut) {
         shortcut.action();
       }
@@ -237,7 +237,7 @@ export class KDEWaylandBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    this.shortcuts = this.shortcuts.filter((s) => s.id !== shortcut.id);
+    this.shortcuts = this.shortcuts.filter((s) => s.trigger !== shortcut.trigger);
     await this.updateShortcuts();
   }
 
@@ -269,14 +269,11 @@ export class KDEWaylandBackend implements Backend {
     // Then create a new script which registers all shortcuts.
     const script = this.shortcuts
       .map((shortcut) => {
-        const accelerator = this.toKWinAccelerator(shortcut.accelerator);
-
         // Escape any ' or \ in the ID or description.
-        const id = this.escapeString(shortcut.id);
-        const description = this.escapeString(shortcut.description);
+        const id = this.escapeString(shortcut.trigger);
 
         return `
-          if(registerShortcut('${id}', '${description}', '${accelerator}',
+          if(registerShortcut('${id}', 'Kando', '',
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
@@ -284,9 +281,9 @@ export class KDEWaylandBackend implements Backend {
                        () => console.log('Kando: Triggered.'));
             }
           )) {
-            console.log('Kando: Registered shortcut ${accelerator}');
+            console.log('Kando: Registered shortcut ${id}');
           } else {
-            console.log('Kando: Failed to registered shortcut ${accelerator}');
+            console.log('Kando: Failed to registered shortcut ${id}');
           }
         `;
       })

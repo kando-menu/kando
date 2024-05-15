@@ -76,7 +76,7 @@ export class Toolbar extends EventEmitter {
     this.initTabs();
 
     // Initialize the menus tab and forward its events.
-    this.menusTab = new MenusTab(this.container, backend.supportsShortcuts);
+    this.menusTab = new MenusTab(this.container, !backend.supportsShortcuts);
     this.menusTab.on('add-menu', () => this.emit('add-menu'));
     this.menusTab.on('select-menu', (index) => this.emit('select-menu', index));
     this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
@@ -86,7 +86,7 @@ export class Toolbar extends EventEmitter {
     this.addItemsTab.on('add-item', (typeName) => this.emit('add-item', typeName));
 
     // Initialize the trash tab and forward its events.
-    this.trashTab = new TrashTab(this.container, backend.supportsShortcuts);
+    this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts);
     this.trashTab.on('restore-menu', (index) => this.emit('restore-deleted-menu', index));
     this.trashTab.on('restore-item', (index) => this.emit('restore-deleted-item', index));
     this.trashTab.on('stash-item', (index) => this.emit('stash-deleted-item', index));

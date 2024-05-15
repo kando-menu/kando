@@ -10,6 +10,8 @@
 }}
 
 <div class="shortcut-picker input-group">
-  <input type="text" class="form-control fs-3 kando-font" placeholder="{{placeholder}}" size="10">
-  <button class="btn btn-primary fs-3"><i class='material-symbols-rounded inline-icon'>keyboard</i></button>
+  <input type="text" class="form-control fs-3 kando-font" placeholder="{{placeholder}}" size="1">
+  {{#if withButton}}
+    <button class="btn btn-primary fs-3"><i class='material-symbols-rounded inline-icon'>keyboard</i></button>
+  {{/if}}
 </div>

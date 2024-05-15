@@ -67,7 +67,7 @@ They are JSON objects with the following properties:
 
 Property | Default Value | Description
 -------- | ------------- | -----------
-`shortcut` | _mandatory_ | The shortcut which opens the menu. This is a string which can contain multiple keys separated by `+`. For example, `"Ctrl+Shift+K"` or `"Cmd+Shift+K"`.
+`shortcutID` | `""` | On some platforms, Kando can not bind shortcuts directly. In this case, you can use this property to assign an ID which can be used in the global shortcut configuration of your desktop environment. This should be lowercase and contain only ASCII characters and dashes. For example, `"main-trigger"`.
 `nodes` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
 

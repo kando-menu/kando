@@ -16,6 +16,7 @@ import { IMenu, IBackendInfo } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { ShortcutPicker } from './shortcut-picker';
+import { ShortcutIDPicker } from './shortcut-id-picker';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -36,6 +37,12 @@ export class Properties extends EventEmitter {
    * method.
    */
   private container: HTMLElement = null;
+
+  /**
+   * The backend info is used to determine whether the menu properties view should show a
+   * 'Shortcut' label or a 'Shortcut Name' label.
+   */
+  private backend: IBackendInfo = null;
 
   /**
    * The icon picker is a component that allows the user to select an icon from a
@@ -71,7 +78,7 @@ export class Properties extends EventEmitter {
    * The shortcut picker is a component that allows the user to select a shortcut for the
    * currently edited menu item.
    */
-  private menuShortcutPicker: ShortcutPicker = null;
+  private shortcutPicker: ShortcutPicker | ShortcutIDPicker = null;
 
   /**
    * The currently edited menu item. This is the item whose properties are displayed in
@@ -92,14 +99,16 @@ export class Properties extends EventEmitter {
   constructor(backend: IBackendInfo) {
     super();
 
+    this.backend = backend;
+
     const template = Handlebars.compile(require('./templates/properties.hbs').default);
 
     const div = document.createElement('div');
     div.innerHTML = template({
-      shortcutLabel: backend.supportsShortcuts ? 'Shortcut' : 'Shortcut Name',
-      shortcutHint: backend.supportsShortcuts
+      shortcutLabel: this.backend.supportsShortcuts ? 'Shortcut' : 'Global Shortcut ID',
+      shortcutHint: this.backend.supportsShortcuts
         ? 'This will open the menu.'
-        : backend.shortcutHint,
+        : this.backend.shortcutHint,
     });
 
     // The first child of the div is the container.
@@ -161,16 +170,28 @@ export class Properties extends EventEmitter {
       }
     });
 
-    // Create the shortcut picker and wire up its events.
-    this.menuShortcutPicker = new ShortcutPicker(
-      div.querySelector('#kando-menu-properties-shortcut-picker')
-    );
-    this.menuShortcutPicker.on('changed', (shortcut) => {
-      if (this.activeMenu) {
-        this.activeMenu.shortcut = shortcut;
-        this.emit('changed-shortcut');
-      }
-    });
+    // Create the shortcut picker or the shorcut ID picker and wire up its events.
+    const shortcutContainer = div.querySelector(
+      '#kando-menu-properties-shortcut-picker'
+    ) as HTMLElement;
+
+    if (this.backend.supportsShortcuts) {
+      this.shortcutPicker = new ShortcutPicker(shortcutContainer);
+      this.shortcutPicker.on('changed', (shortcut) => {
+        if (this.activeMenu) {
+          this.activeMenu.shortcut = shortcut;
+          this.emit('changed-shortcut');
+        }
+      });
+    } else {
+      this.shortcutPicker = new ShortcutIDPicker(shortcutContainer);
+      this.shortcutPicker.on('changed', (id) => {
+        if (this.activeMenu) {
+          this.activeMenu.shortcutID = id;
+          this.emit('changed-shortcut');
+        }
+      });
+    }
   }
 
   /** This method returns the container of the menu preview. */
@@ -202,7 +223,9 @@ export class Properties extends EventEmitter {
 
     this.activeMenu = menu;
     this.openAtPointerCheckbox.checked = !menu.centered;
-    this.menuShortcutPicker.setShortcut(menu.shortcut);
+    this.shortcutPicker.setValue(
+      (this.backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || ''
+    );
 
     // Show the menu settings.
     this.menuSettings.classList.remove('hidden');

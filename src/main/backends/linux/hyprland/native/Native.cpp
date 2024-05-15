@@ -134,14 +134,17 @@ void Native::bindShortcut(const Napi::CallbackInfo& info) {
 
   // Get the shortcut data from the JavaScript object. We store the action function in a
   // Napi::Persistent object to make sure that it is not garbage collected.
-  std::string id          = info[0].As<Napi::Object>().Get("id").ToString();
-  std::string description = info[0].As<Napi::Object>().Get("description").ToString();
+  std::string id = info[0].As<Napi::Object>().Get("trigger").ToString();
   mShortcuts[id].mAction =
       Napi::Persistent(info[0].As<Napi::Object>().Get("action").As<Napi::Function>());
 
+  // Transform id to lowercase and replace all whitespace with '-'.
+  std::transform(id.begin(), id.end(), id.begin(), ::tolower);
+  std::replace(id.begin(), id.end(), ' ', '-');
+
   // Register the shortcut with the Wayland display.
   auto shortcut = hyprland_global_shortcuts_manager_v1_register_shortcut(
-      mData.mManager, id.c_str(), "kando", description.c_str(), "");
+      mData.mManager, id.c_str(), "kando", "Kando", "");
 
   // Add the callback functions to the shortcut.
   hyprland_global_shortcut_v1_add_listener(shortcut, &mData.mShortcutListener, nullptr);

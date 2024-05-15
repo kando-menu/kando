@@ -35,7 +35,6 @@ export class GnomeBackend implements Backend {
     return {
       windowType: 'dock',
       supportsShortcuts: true,
-      shortcutHint: '',
     };
   }
 
@@ -130,11 +129,11 @@ export class GnomeBackend implements Backend {
    * shortcut is pressed. On GNOME Wayland, this uses the DBus interface of the Kando
    * GNOME Shell integration.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
+    const accelerator = this.toGdkAccelerator(shortcut.trigger);
 
     const success = await this.interface.BindShortcut(accelerator);
 
@@ -151,7 +150,7 @@ export class GnomeBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
+    const accelerator = this.toGdkAccelerator(shortcut.trigger);
 
     const success = await this.interface.UnbindShortcut(accelerator);
 

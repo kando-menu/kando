@@ -88,11 +88,14 @@
 
   #kando-menu-properties-menu-settings {
     max-height: 220px;
-    transition: max-height 150ms ease-in-out;
-    overflow: hidden;
+    transition:
+      max-height 150ms ease-in-out,
+      opacity 150ms ease;
+    overflow: visible clip;
 
     &.hidden {
       max-height: 0;
+      opacity: 0;
     }
   }
 }

@@ -145,7 +145,7 @@ export class ShortcutPicker extends EventEmitter {
    *
    * @param shortcut The shortcut to set.
    */
-  public setShortcut(shortcut: string) {
+  public setValue(shortcut: string) {
     shortcut = this.normalizeShortcut(shortcut);
     this.shortcutInput.value = shortcut;
     if (this.isValidShortcut(shortcut)) {

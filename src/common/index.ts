@@ -24,18 +24,18 @@ export interface IBackendInfo {
 
   /**
    * There are some backends which do not support custom shortcuts. In this case, the user
-   * will not be able to change the shortcuts in the settings. Usually, the hint returned
-   * by getEditorHint() which is shown in the settings dialog will explain how to change
-   * the shortcuts in the operating system.
+   * will not be able to change the shortcuts in the settings. Instead, the user will set
+   * a shortcut ID and then assign a shortcut in the operating system.
    */
   supportsShortcuts: boolean;
 
   /**
-   * This hint is shown in the editor next to the shortcut-name input field if
-   * supportsShortcuts is false. It should briefly explain how to change the shortcuts in
-   * the operating system.
+   * This hint is shown in the editor next to the shortcut-id input field if
+   * supportsShortcuts is false. It should very briefly explain how to change the
+   * shortcuts in the operating system. If supportsShortcuts is true, this is not
+   * required.
    */
-  shortcutHint: string;
+  shortcutHint?: string;
 }
 
 /**
@@ -122,10 +122,10 @@ export interface IMenu {
 
   /**
    * Some backends do not support direct binding of shortcuts. In this case, the user will
-   * not be able to change the shortcut in the settings. Instead, the user provides the
-   * name of the shortcut and can then assign a shortcut in the operating system.
+   * not be able to change the shortcut in the settings. Instead, the user provides an ID
+   * for the shortcut and can then assign a key binding in the operating system.
    */
-  shortcutName: string;
+  shortcutID: string;
 
   /**
    * If true, the menu will open in the screen's center. Else it will open at the mouse

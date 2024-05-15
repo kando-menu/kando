@@ -411,38 +411,40 @@ export class KandoApp {
 
   /**
    * This binds the shortcuts for all menus. It will unbind all shortcuts first. This
-   * method is called when the menu settings change.
+   * method is called once initially and then whenever the menu settings change.
    */
   private async bindShortcuts() {
     // First, we unbind all shortcuts.
     await this.backend.unbindAllShortcuts();
 
     // Then, we collect all unique shortcuts and the corresponding menus.
-    const shortcuts = new Map<string, DeepReadonly<IMenu>[]>();
+    const triggers = new Map<string, DeepReadonly<IMenu>[]>();
     for (const menu of this.menuSettings.get('menus')) {
-      if (menu.shortcut) {
-        if (!shortcuts.has(menu.shortcut)) {
-          shortcuts.set(menu.shortcut, []);
+      const trigger = this.backend.getBackendInfo().supportsShortcuts
+        ? menu.shortcut
+        : menu.shortcutID;
+
+      if (trigger) {
+        if (!triggers.has(trigger)) {
+          triggers.set(trigger, []);
         }
-        shortcuts.get(menu.shortcut).push(menu);
+        triggers.get(trigger).push(menu);
       }
     }
 
     // Finally, we bind the shortcuts. If there are multiple menus with the same
     // shortcut, the shortcut will open the first menu for now.
-    for (const [shortcut, menus] of shortcuts) {
+    for (const [trigger, menus] of triggers) {
       try {
         const menu = menus[0];
         await this.backend.bindShortcut({
-          id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
-          description: `Kando - ${menu.nodes.name}`,
-          accelerator: shortcut,
+          trigger,
           action: () => {
             this.showMenu(menu);
           },
         });
       } catch (error) {
-        KandoApp.showError('Failed to bind shortcut ' + shortcut, error.message);
+        KandoApp.showError('Failed to bind shortcut ' + trigger, error.message);
       }
     }
   }
@@ -623,7 +625,7 @@ export class KandoApp {
     return {
       nodes: root,
       shortcut: 'Control+Space',
-      shortcutName: 'prototype_menu',
+      shortcutID: 'prototype-menu',
       centered: false,
     };
   }

@@ -31,7 +31,6 @@ export class X11Backend implements Backend {
     return {
       windowType: 'dock',
       supportsShortcuts: true,
-      shortcutHint: '',
     };
   }
 
@@ -107,11 +106,11 @@ export class X11Backend implements Backend {
    * This binds a shortcut. The action callback of the shortcut is called when the
    * shortcut is pressed. On X11, this uses Electron's globalShortcut module.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
+    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
       throw new Error('Invalid shortcut or it is already in use.');
     }
   }
@@ -122,7 +121,7 @@ export class X11Backend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    globalShortcut.unregister(shortcut.accelerator);
+    globalShortcut.unregister(shortcut.trigger);
   }
 
   /** This unbinds all previously bound shortcuts. */

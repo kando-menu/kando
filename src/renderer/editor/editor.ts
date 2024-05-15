@@ -205,7 +205,7 @@ export class Editor extends EventEmitter {
           children: [],
         },
         shortcut: '',
-        shortcutName: '',
+        shortcutID: '',
         centered: false,
       };
 
