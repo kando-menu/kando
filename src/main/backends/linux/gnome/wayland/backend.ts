@@ -197,7 +197,7 @@ export class GnomeBackend implements Backend {
       ['Ctrl', '<Ctrl>'],
       ['Alt', '<Alt>'],
       ['Shift', '<Shift>'],
-      ['Meta', '<Meta>'],
+      ['Meta', '<Super>'],
       ['Super', '<Super>'],
       [')', 'parenright'],
       ['!', 'exclam'],
