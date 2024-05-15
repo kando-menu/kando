@@ -273,7 +273,7 @@ export class KDEWaylandBackend implements Backend {
         const id = this.escapeString(shortcut.trigger);
 
         return `
-          if(registerShortcut('${id}', 'Kando', '',
+          if(registerShortcut('${id}', 'Kando - ${id}', '',
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
