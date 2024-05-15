@@ -138,10 +138,6 @@ void Native::bindShortcut(const Napi::CallbackInfo& info) {
   mShortcuts[id].mAction =
       Napi::Persistent(info[0].As<Napi::Object>().Get("action").As<Napi::Function>());
 
-  // Transform id to lowercase and replace all whitespace with '-'.
-  std::transform(id.begin(), id.end(), id.begin(), ::tolower);
-  std::replace(id.begin(), id.end(), ' ', '-');
-
   // Register the shortcut with the Wayland display.
   auto shortcut = hyprland_global_shortcuts_manager_v1_register_shortcut(
       mData.mManager, id.c_str(), "kando", "Kando", "");
@@ -209,13 +205,11 @@ void Native::unbindAllShortcuts(const Napi::CallbackInfo& info) {
 
 bool Native::isShortcutObject(Napi::Object const& obj) const {
 
-  if (!obj.Has("id") || !obj.Has("description") || !obj.Has("accelerator") ||
-      !obj.Has("action")) {
+  if (!obj.Has("trigger") || !obj.Has("action")) {
     return false;
   }
 
-  if (!obj.Get("id").IsString() || !obj.Get("description").IsString() ||
-      !obj.Get("accelerator").IsString() || !obj.Get("action").IsFunction()) {
+  if (!obj.Get("trigger").IsString() || !obj.Get("action").IsFunction()) {
     return false;
   }
 
