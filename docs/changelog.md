@@ -30,6 +30,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
 - It is now allowed to have multiple menus with the same shortcut. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
+- The `"shortcut"` property in the menu configuration is now optional. If no shortcut is given, the menu will not be accessible via a global shortcut. This is useful if you want to have a menu which is only accessible via the tray icon.
 
 #### Fixed
 
