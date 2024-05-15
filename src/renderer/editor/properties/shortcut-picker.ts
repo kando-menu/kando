@@ -57,6 +57,7 @@ export class ShortcutPicker extends EventEmitter {
     );
     container.innerHTML = template({
       placeholder: 'Not Bound',
+      withButton: true,
     });
 
     // Validate the input field when the user types something. If the input is valid, we
