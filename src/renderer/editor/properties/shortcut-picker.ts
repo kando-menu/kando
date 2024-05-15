@@ -57,6 +57,7 @@ export class ShortcutPicker extends EventEmitter {
     );
     container.innerHTML = template({
       placeholder: 'Not Bound',
+      withButton: true,
     });
 
     // Validate the input field when the user types something. If the input is valid, we
@@ -145,7 +146,7 @@ export class ShortcutPicker extends EventEmitter {
    *
    * @param shortcut The shortcut to set.
    */
-  public setShortcut(shortcut: string) {
+  public setValue(shortcut: string) {
     shortcut = this.normalizeShortcut(shortcut);
     this.shortcutInput.value = shortcut;
     if (this.isValidShortcut(shortcut)) {

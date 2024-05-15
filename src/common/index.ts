@@ -8,6 +8,36 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+/** This interface describes some information about the currently used backend. */
+export interface IBackendInfo {
+  /**
+   * Each backend should return a suitable window type here. The window type determines
+   * how Kando's window is drawn. The most suitable type is dependent on the operating
+   * system and the window manager. For example, on GNOME, the window type "dock" seems to
+   * work best, on KDE "toolbar" provides a better experience. On Windows, "toolbar" is
+   * the only type that works.
+   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
+   *
+   * @returns The window type to use for the pie menu window.
+   */
+  windowType: string;
+
+  /**
+   * There are some backends which do not support custom shortcuts. In this case, the user
+   * will not be able to change the shortcuts in the settings. Instead, the user will set
+   * a shortcut ID and then assign a shortcut in the operating system.
+   */
+  supportsShortcuts: boolean;
+
+  /**
+   * This hint is shown in the editor next to the shortcut-id input field if
+   * supportsShortcuts is false. It should very briefly explain how to change the
+   * shortcuts in the operating system. If supportsShortcuts is true, this is not
+   * required.
+   */
+  shortcutHint?: string;
+}
+
 /**
  * A simple 2D vector.
  *
@@ -83,8 +113,19 @@ export interface IMenu {
    */
   nodes: IMenuItem;
 
-  /** The shortcut to open the menu. */
+  /**
+   * The shortcut to open the menu. Something like 'Control+Space'.
+   *
+   * @todo: Add description of the format of the shortcut string.
+   */
   shortcut: string;
+
+  /**
+   * Some backends do not support direct binding of shortcuts. In this case, the user will
+   * not be able to change the shortcut in the settings. Instead, the user provides an ID
+   * for the shortcut and can then assign a key binding in the operating system.
+   */
+  shortcutID: string;
 
   /**
    * If true, the menu will open in the screen's center. Else it will open at the mouse

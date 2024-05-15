@@ -30,11 +30,12 @@ export class GnomeBackend implements Backend {
    * Dock On GNOME Shell, we use a dock window. This creates a floating window which is
    * always on top of all other windows. It even stays visible during workspace
    * switching.
-   *
-   * @returns 'dock'
    */
-  public getWindowType() {
-    return 'dock';
+  public getBackendInfo() {
+    return {
+      windowType: 'dock',
+      supportsShortcuts: true,
+    };
   }
 
   /**
@@ -128,11 +129,11 @@ export class GnomeBackend implements Backend {
    * shortcut is pressed. On GNOME Wayland, this uses the DBus interface of the Kando
    * GNOME Shell integration.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
+    const accelerator = this.toGdkAccelerator(shortcut.trigger);
 
     const success = await this.interface.BindShortcut(accelerator);
 
@@ -149,7 +150,7 @@ export class GnomeBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
+    const accelerator = this.toGdkAccelerator(shortcut.trigger);
 
     const success = await this.interface.UnbindShortcut(accelerator);
 
@@ -166,7 +167,10 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Translates a shortcut from the Electron format to the GDK format.
+   * Translates a shortcut from the Electron format to the GDK format. The Electron format
+   * is described here: https://www.electronjs.org/docs/latest/api/accelerator Gdk uses
+   * the key names from this file (simply without the GDK_KEY_ prefix):
+   * https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h
    *
    * @param shortcut The shortcut to translate.
    * @returns The translated shortcut.
@@ -181,17 +185,83 @@ export class GnomeBackend implements Backend {
       throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
     }
 
-    shortcut = shortcut.replace('CommandOrControl+', '<Ctrl>');
-    shortcut = shortcut.replace('CmdOrCtrl+', '<Ctrl>');
-    shortcut = shortcut.replace('Command+', '<Ctrl>');
-    shortcut = shortcut.replace('Control+', '<Ctrl>');
-    shortcut = shortcut.replace('Cmd+', '<Ctrl>');
-    shortcut = shortcut.replace('Ctrl+', '<Ctrl>');
-    shortcut = shortcut.replace('Alt+', '<Alt>');
-    shortcut = shortcut.replace('Shift+', '<Shift>');
-    shortcut = shortcut.replace('Meta+', '<Meta>');
-    shortcut = shortcut.replace('Super+', '<Super>');
+    // Split the shortcut into its parts.
+    const parts = shortcut.split('+');
 
-    return shortcut;
+    const replacements = new Map([
+      ['CommandOrControl', '<Ctrl>'],
+      ['CmdOrCtrl', '<Ctrl>'],
+      ['Command', '<Ctrl>'],
+      ['Control', '<Ctrl>'],
+      ['Cmd', '<Ctrl>'],
+      ['Ctrl', '<Ctrl>'],
+      ['Alt', '<Alt>'],
+      ['Shift', '<Shift>'],
+      ['Meta', '<Super>'],
+      ['Super', '<Super>'],
+      [')', 'parenright'],
+      ['!', 'exclam'],
+      ['@', 'at'],
+      ['#', 'numbersign'],
+      ['$', 'dollar'],
+      ['%', 'percent'],
+      ['^', 'asciicircum'],
+      ['&', 'ampersand'],
+      ['*', 'asterisk'],
+      ['(', 'parenleft'],
+      [':', 'colon'],
+      [';', 'semicolon'],
+      ["'", 'apostrophe'],
+      ['=', 'equal'],
+      ['<', 'less'],
+      [',', 'comma'],
+      ['_', 'underscore'],
+      ['-', 'minus'],
+      ['>', 'greater'],
+      ['.', 'period'],
+      ['?', 'question'],
+      ['/', 'slash'],
+      ['~', 'asciitilde'],
+      ['`', 'grave'],
+      ['{', 'braceleft'],
+      [']', 'bracketright'],
+      ['[', 'bracketleft'],
+      ['|', 'bar'],
+      ['\\', 'backslash'],
+      ['}', 'braceright'],
+      ['"', 'quotedbl'],
+      ['Capslock', 'Caps_lock'],
+      ['Numlock', 'Num_lock'],
+      ['Scrolllock', 'Scroll_lock'],
+      ['Enter', 'Return'],
+      ['PageUp', 'Page_Up'],
+      ['PageDown', 'PageDo_wn'],
+      ['Esc', 'Escape'],
+      ['VolumeUp', 'AudioRaiseVolume'],
+      ['VolumeDown', 'AudioLowerVolume'],
+      ['VolumeMute', 'AudioMute'],
+      ['MediaNextTrack', 'AudioNext'],
+      ['MediaPreviousTrack', 'AudioPrev'],
+      ['MediaStop', 'AudioStop'],
+      ['MediaPlayPause', 'AudioPause'],
+      ['PrintScreen', 'Print'],
+      ['num0', 'KP_0'],
+      ['num1', 'KP_1'],
+      ['num2', 'KP_2'],
+      ['num3', 'KP_3'],
+      ['num4', 'KP_4'],
+      ['num5', 'KP_5'],
+      ['num6', 'KP_6'],
+      ['num7', 'KP_7'],
+      ['num8', 'KP_8'],
+      ['num9', 'KP_9'],
+      ['numdec', 'KP_Decimal'],
+      ['numadd', 'KP_Add'],
+      ['numsub', 'KP_Subtract'],
+      ['nummult', 'KP_Multiply'],
+      ['numdiv', 'KP_Divide'],
+    ]);
+
+    return parts.map((part) => replacements.get(part) || part).join('');
   }
 }

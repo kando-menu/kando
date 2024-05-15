@@ -18,11 +18,12 @@ export class MacosBackend implements Backend {
   /**
    * On macOS, the window type is set to 'panel'. This makes sure that the window is
    * always on top of other windows and that it is shown on all workspaces.
-   *
-   * @returns 'panel'
    */
-  public getWindowType() {
-    return 'panel';
+  public getBackendInfo() {
+    return {
+      windowType: 'panel',
+      supportsShortcuts: true,
+    };
   }
 
   /** On macOS, we use this to hide the dock icon. */
@@ -104,7 +105,7 @@ export class MacosBackend implements Backend {
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
+    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
       throw new Error('Invalid shortcut or it is already in use.');
     }
   }
@@ -115,7 +116,7 @@ export class MacosBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    globalShortcut.unregister(shortcut.accelerator);
+    globalShortcut.unregister(shortcut.trigger);
   }
 
   /** This unbinds all previously bound shortcuts. */

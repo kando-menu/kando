@@ -37,11 +37,13 @@ for more information.
   /**
    * 'splash' seems to be a good choice for Hyprland. See:
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   *
-   * @returns 'splash'
    */
-  public getWindowType() {
-    return 'splash';
+  public getBackendInfo() {
+    return {
+      windowType: 'splash',
+      supportsShortcuts: false,
+      shortcutHint: 'Use your hyprland.conf to bind this.',
+    };
   }
 
   /**
@@ -71,7 +73,7 @@ for more information.
    * This binds a shortcut. The action callback of the shortcut is called when the
    * shortcut is pressed.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    */
   public async bindShortcut(shortcut: Shortcut) {
     native.bindShortcut(shortcut);

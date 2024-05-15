@@ -20,66 +20,68 @@ import { Editor } from './renderer/editor/editor';
 
 // Wire up the menu and the editor -------------------------------------------------------
 
-const menu = new Menu(document.getElementById('kando-menu'));
-const editor = new Editor(document.getElementById('kando-editor'));
+window.api.getBackendInfo().then((info) => {
+  const menu = new Menu(document.getElementById('kando-menu'));
+  const editor = new Editor(document.getElementById('kando-editor'), info);
 
-// Show the menu when the main process requests it.
-window.api.showMenu((root, pos) => {
-  menu.show(root, pos);
-  editor.show();
-});
+  // Show the menu when the main process requests it.
+  window.api.showMenu((root, pos) => {
+    menu.show(root, pos);
+    editor.show();
+  });
 
-// Show the editor when the main process requests it.
-window.api.showEditor(() => {
-  editor.show();
-  editor.enterEditMode();
-});
+  // Show the editor when the main process requests it.
+  window.api.showEditor(() => {
+    editor.show();
+    editor.enterEditMode();
+  });
 
-// Sometimes, the user may select an item too close to the edge of the screen. In this
-// case, we can not open the menu directly under the pointer. To make sure that the
-// menu is still exactly under the pointer, we move the pointer a little bit.
-menu.on('move-pointer', (dist) => {
-  window.api.movePointer(dist);
-});
+  // Sometimes, the user may select an item too close to the edge of the screen. In this
+  // case, we can not open the menu directly under the pointer. To make sure that the
+  // menu is still exactly under the pointer, we move the pointer a little bit.
+  menu.on('move-pointer', (dist) => {
+    window.api.movePointer(dist);
+  });
 
-// Hide Kando's window when the user aborts a selection.
-menu.on('cancel', () => {
-  menu.hide();
-  editor.hide();
-  window.api.cancelSelection();
-});
-
-// Hide Kando's window when the user selects an item and notify the main process.
-menu.on('select', (path) => {
-  menu.hide();
-  editor.hide();
-  window.api.selectItem(path);
-});
-
-// Report hover and unhover events to the main process.
-menu.on('hover', (path) => window.api.hoverItem(path));
-menu.on('unhover', (path) => window.api.unhoverItem(path));
-
-// Hide the menu when the user enters edit mode.
-editor.on('enter-edit-mode', () => {
-  menu.hide();
-});
-
-// Hide Kando's window when the user leaves edit mode.
-editor.on('leave-edit-mode', () => {
-  editor.hide();
-  window.api.cancelSelection();
-});
-
-// Hide the menu or the editor when the user presses escape.
-document.body.addEventListener('keydown', (ev) => {
-  if (ev.key === 'Escape') {
+  // Hide Kando's window when the user aborts a selection.
+  menu.on('cancel', () => {
     menu.hide();
     editor.hide();
     window.api.cancelSelection();
-  }
-});
+  });
 
-// This is helpful during development as it shows us when the renderer process has
-// finished reloading.
-window.api.log("Successfully loaded Kando's renderer process.");
+  // Hide Kando's window when the user selects an item and notify the main process.
+  menu.on('select', (path) => {
+    menu.hide();
+    editor.hide();
+    window.api.selectItem(path);
+  });
+
+  // Report hover and unhover events to the main process.
+  menu.on('hover', (path) => window.api.hoverItem(path));
+  menu.on('unhover', (path) => window.api.unhoverItem(path));
+
+  // Hide the menu when the user enters edit mode.
+  editor.on('enter-edit-mode', () => {
+    menu.hide();
+  });
+
+  // Hide Kando's window when the user leaves edit mode.
+  editor.on('leave-edit-mode', () => {
+    editor.hide();
+    window.api.cancelSelection();
+  });
+
+  // Hide the menu or the editor when the user presses escape.
+  document.body.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') {
+      menu.hide();
+      editor.hide();
+      window.api.cancelSelection();
+    }
+  });
+
+  // This is helpful during development as it shows us when the renderer process has
+  // finished reloading.
+  window.api.log("Successfully loaded Kando's renderer process.");
+});

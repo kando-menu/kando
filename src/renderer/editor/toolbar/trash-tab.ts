@@ -35,6 +35,9 @@ export class TrashTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
+  /** If true, menu buttons will show the shortcut IDs, instead of the shortcuts. */
+  private showShortcutIDs: boolean = false;
+
   /** This is the HTML element which contains the trash tab's content. */
   private tab: HTMLElement = null;
 
@@ -57,13 +60,18 @@ export class TrashTab extends EventEmitter {
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
+   * @param showShortcutIDs If true, menu buttons will show the shortcut IDs, instead of
+   *   the shortcuts.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, showShortcutIDs: boolean) {
     super();
 
     // Store a reference to the container. We will attach menu buttons divs to it during
     // drag'n'drop operations.
     this.container = container;
+
+    // Store the showShortcutIDs flag.
+    this.showShortcutIDs = showShortcutIDs;
 
     // Store a reference to the potential drop targets.
     this.stashTab = this.container.querySelector(
@@ -121,7 +129,8 @@ export class TrashTab extends EventEmitter {
         return {
           isMenu: true,
           name: menu.nodes.name,
-          description: menu.shortcut || 'Not bound.',
+          description:
+            (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
           icon: IconThemeRegistry.getInstance()
             .getTheme(menu.nodes.iconTheme)
             .createDiv(menu.nodes.icon).outerHTML,

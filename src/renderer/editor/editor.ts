@@ -16,7 +16,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenu, IMenuSettings } from '../../common';
+import { IMenu, IBackendInfo, IMenuSettings } from '../../common';
 import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
 import { ItemFactory } from '../../common/item-factory';
 
@@ -31,6 +31,9 @@ import { ItemFactory } from '../../common/item-factory';
 export class Editor extends EventEmitter {
   /** The container is the HTML element which contains the menu editor. */
   private container: HTMLElement = null;
+
+  /** This is the backend info which is retrieved from the main process. */
+  private backend: IBackendInfo = null;
 
   /**
    * The background is an opaque div which is shown when the editor is open. It
@@ -92,10 +95,11 @@ export class Editor extends EventEmitter {
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, backend: IBackendInfo) {
     super();
 
     this.container = container;
+    this.backend = backend;
 
     // Initialize the background.
     this.background = new Background();
@@ -126,7 +130,7 @@ export class Editor extends EventEmitter {
     });
 
     // Initialize the properties view.
-    this.properties = new Properties();
+    this.properties = new Properties(this.backend);
     this.container.appendChild(this.properties.getContainer());
 
     const handleItemChange = () => {
@@ -147,7 +151,7 @@ export class Editor extends EventEmitter {
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
     // leaving edit mode. We wire up the corresponding events here.
-    this.toolbar = new Toolbar();
+    this.toolbar = new Toolbar(backend);
     this.container.appendChild(this.toolbar.getContainer());
 
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
@@ -201,6 +205,7 @@ export class Editor extends EventEmitter {
           children: [],
         },
         shortcut: '',
+        shortcutID: '',
         centered: false,
       };
 

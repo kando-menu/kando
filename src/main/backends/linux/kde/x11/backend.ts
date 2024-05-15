@@ -15,10 +15,10 @@ export class KDEX11Backend extends X11Backend {
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
    * not receive any keyboard events.
-   *
-   * @returns 'toolbar'
    */
-  public override getWindowType() {
-    return 'toolbar';
+  public getBackendInfo() {
+    const info = super.getBackendInfo();
+    info.windowType = 'toolbar';
+    return info;
   }
 }

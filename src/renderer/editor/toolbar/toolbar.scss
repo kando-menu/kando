@@ -125,19 +125,6 @@
     }
   }
 
-  .swirl {
-    display: inline-block;
-    background-image: url(../../assets/images/swirl.svg);
-    width: 160px;
-    height: 14px;
-
-    &.vertical {
-      width: 14px;
-      height: 160px;
-      background-image: url(../../assets/images/swirl-vertical.svg);
-    }
-  }
-
   .toolbar-button-grid {
     display: grid;
     gap: 10px;

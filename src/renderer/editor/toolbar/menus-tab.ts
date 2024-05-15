@@ -27,6 +27,9 @@ export class MenusTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
 
+  /** If true, menu buttons will show the shortcut IDs, instead of the shortcuts. */
+  private showShortcutIDs: boolean = false;
+
   /** This is the HTML element which contains the menus tab's content. */
   private tab: HTMLElement = null;
 
@@ -44,13 +47,18 @@ export class MenusTab extends EventEmitter {
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
+   * @param showShortcutIDs If true, menu buttons will show the shortcut IDs, instead of
+   *   the shortcuts.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, showShortcutIDs: boolean) {
     super();
 
     // Store a reference to the container. We will attach menu buttons divs to it during
     // drag'n'drop operations.
     this.container = container;
+
+    // Store the showShortcutIDs flag.
+    this.showShortcutIDs = showShortcutIDs;
 
     // Store a reference to the trash tab. This is the only drop target for dragged menus.
     this.trashTab = this.container.querySelector(
@@ -96,7 +104,8 @@ export class MenusTab extends EventEmitter {
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
       active: index === currentMenu,
-      description: menu.shortcut || 'Not bound.',
+      description:
+        (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
       icon: IconThemeRegistry.getInstance()
         .getTheme(menu.nodes.iconTheme)
         .createDiv(menu.nodes.icon).outerHTML,
@@ -145,7 +154,9 @@ export class MenusTab extends EventEmitter {
       `#menu-button-${index} .description`
     );
     if (description) {
-      description.textContent = menus[index].shortcut || 'Not bound.';
+      description.textContent =
+        (this.showShortcutIDs ? menus[index].shortcutID : menus[index].shortcut) ||
+        'Not bound.';
     }
   }
 }
