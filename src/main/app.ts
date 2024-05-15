@@ -305,9 +305,15 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
-    // Unbind all shortcuts. This is used when the menu editor is shown.
-    ipcMain.on('unbind-shortcuts', async () => {
+    // Unbind all shortcuts. This is used when selecting shortcuts in the editor.
+    ipcMain.on('inhibit-shortcuts', async () => {
       await this.backend.unbindAllShortcuts();
+    });
+
+    // Rebind all shortcuts. This is used when the user is done selecting shortcuts in
+    // the editor.
+    ipcMain.on('uninhibit-shortcuts', async () => {
+      await this.bindShortcuts();
     });
 
     // Show the web developer tools if requested.

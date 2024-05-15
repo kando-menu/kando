@@ -82,6 +82,10 @@ export class ShortcutPicker extends EventEmitter {
     shortcutButton.addEventListener('click', (event) => {
       event.stopPropagation();
 
+      // Unbind all shortcuts. This is necessary because else the user could not enter
+      // shortcuts which are already bound.
+      window.api.inhibitShortcuts();
+
       const originalShortcut = this.shortcutInput.value;
       this.shortcutInput.placeholder = 'Press a shortcut...';
       this.shortcutInput.value = '';
@@ -100,6 +104,9 @@ export class ShortcutPicker extends EventEmitter {
         window.removeEventListener('click', clickHandler);
         window.removeEventListener('keydown', keyHandler, true);
         window.removeEventListener('keyup', keyHandler, true);
+
+        // Rebind all shortcuts.
+        window.api.uninhibitShortcuts();
       };
 
       // Reset the input field to the original state when the user clicks anywhere on

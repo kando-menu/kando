@@ -37,7 +37,8 @@ declare global {
         getCurrentMenu: () => Promise<number>;
       };
       getBackendInfo: () => Promise<IBackendInfo>;
-      unbindShortcuts: () => void;
+      inhibitShortcuts: () => void;
+      uninhibitShortcuts: () => void;
       showDevTools: () => void;
       simulateKeys: (keys: IKeySequence) => void;
       movePointer: (dist: IVec2) => void;

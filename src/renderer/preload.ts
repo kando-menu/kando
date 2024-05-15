@@ -63,12 +63,14 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-backend-info');
   },
 
-  /**
-   * This will unbind all menu shortcuts. This is used when the menu editor is shown.
-   * Otherwise, the shortcuts would interfere with the editor.
-   */
-  unbindShortcuts: function () {
-    ipcRenderer.send('unbind-shortcuts');
+  /** This will temporarily unbind all menu shortcuts. */
+  inhibitShortcuts: function () {
+    ipcRenderer.send('inhibit-shortcuts');
+  },
+
+  /** This will rebind all menu shortcuts. */
+  uninhibitShortcuts: function () {
+    ipcRenderer.send('uninhibit-shortcuts');
   },
 
   /** This will show the web developer tools. */
