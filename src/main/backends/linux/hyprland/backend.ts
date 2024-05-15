@@ -42,7 +42,7 @@ for more information.
     return {
       windowType: 'splash',
       supportsShortcuts: false,
-      shortcutHint: 'Use your hypr.conf to bind this.',
+      shortcutHint: 'Use your hyprland.conf to bind this.',
     };
   }
 
