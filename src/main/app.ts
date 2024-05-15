@@ -468,8 +468,12 @@ export class KandoApp {
 
     // Add an entry for each menu.
     for (const menu of this.menuSettings.get('menus')) {
+      const trigger =
+        (this.backend.getBackendInfo().supportsShortcuts
+          ? menu.shortcut
+          : menu.shortcutID) || 'Not Bound';
       template.push({
-        label: `${menu.nodes.name} (${menu.shortcut})`,
+        label: `${menu.nodes.name} (${trigger})`,
         click: () => this.showMenu(menu),
       });
     }
