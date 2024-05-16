@@ -34,6 +34,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (about 5x faster).
 - Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (about 2x faster).
 
+#### Removed
+
+- The Example Actions tab from the sidebar. As we are getting closer to a fully functional menu editor, this tab is no longer needed.
+
 #### Fixed
 
 - The [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now ensures that shortcuts are rebound when the extension is reloaded. This fixes an issue where shortcuts would not work after logging out and back in.
