@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IEditorMenuItem } from '../common/editor-menu-item';
@@ -95,10 +94,7 @@ export class StashTab extends EventEmitter {
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(
-      require('./templates/stash-trash-tab.hbs').default
-    );
-
+    const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
       const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);

@@ -9,7 +9,6 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import Handlebars from 'handlebars';
 
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu, IBackendInfo } from '../../../common';
@@ -101,7 +100,7 @@ export class Properties extends EventEmitter {
 
     this.backend = backend;
 
-    const template = Handlebars.compile(require('./templates/properties.hbs').default);
+    const template = require('./templates/properties.hbs');
 
     const div = document.createElement('div');
     div.innerHTML = template({

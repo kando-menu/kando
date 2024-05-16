@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import * as math from '../../math';
@@ -89,7 +88,7 @@ export class Preview extends EventEmitter {
   constructor() {
     super();
 
-    const template = Handlebars.compile(require('./templates/preview.hbs').default);
+    const template = require('./templates/preview.hbs');
 
     const div = document.createElement('div');
     div.innerHTML = template({

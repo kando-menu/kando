@@ -41,6 +41,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "handlebars-loader": "^1.7.3",
     "mocha": "^10.3.0",
     "node-loader": "^2.0.0",
     "prettier": "^3.2.5",

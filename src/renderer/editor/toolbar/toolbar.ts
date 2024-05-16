@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 import { IMenu, IBackendInfo } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
@@ -141,8 +140,8 @@ export class Toolbar extends EventEmitter {
 
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
-    const emptyTab = Handlebars.compile(require('./templates/empty-tab.hbs').default);
-    const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
+    const emptyTab = require('./templates/empty-tab.hbs');
+    const toolbar = require('./templates/toolbar.hbs');
 
     this.container = document.createElement('div');
     this.container.id = 'kando-editor-toolbar-area';

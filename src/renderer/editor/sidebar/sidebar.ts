@@ -8,8 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
-
 /**
  * This class is responsible for the sidebar on the left screen edge. It contains some
  * information about Kando in general.
@@ -85,9 +83,9 @@ export class Sidebar {
 
   /** This method loads the HTML content of the sidebar. */
   private loadContent() {
-    const tutorial = Handlebars.compile(require('./templates/tutorial-tab.hbs').default);
-    const buttonTab = Handlebars.compile(require('./templates/button-tab.hbs').default);
-    const sidebar = Handlebars.compile(require('./templates/sidebar.hbs').default);
+    const tutorial = require('./templates/tutorial-tab.hbs');
+    const buttonTab = require('./templates/button-tab.hbs');
+    const sidebar = require('./templates/sidebar.hbs');
 
     // Initialize the sidebar content.
     this.container = document.createElement('div');

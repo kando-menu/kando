@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
@@ -68,7 +67,7 @@ export class IconPicker extends EventEmitter {
       data.themes.push({ name: theme.name, key });
     });
 
-    const template = Handlebars.compile(require('./templates/icon-picker.hbs').default);
+    const template = require('./templates/icon-picker.hbs');
     container.classList.value = 'd-flex flex-column justify-content-center hidden';
     container.innerHTML = template(data);
 

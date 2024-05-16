@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
@@ -98,7 +97,7 @@ export class MenusTab extends EventEmitter {
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(require('./templates/menus-tab.hbs').default);
+    const template = require('./templates/menus-tab.hbs');
 
     // Compile the data for the Handlebars template.
     const data = menus.map((menu, index) => ({

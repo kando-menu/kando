@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
 
 /**
@@ -33,9 +32,7 @@ export class ShortcutIDPicker extends EventEmitter {
     super();
 
     // Render the template.
-    const template = Handlebars.compile(
-      require('./templates/shortcut-picker.hbs').default
-    );
+    const template = require('./templates/shortcut-picker.hbs');
     container.innerHTML = template({
       placeholder: 'Not Bound',
       withButton: false,

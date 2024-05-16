@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { ItemFactory } from '../../../common/item-factory';
 import { EventEmitter } from 'events';
@@ -71,7 +70,7 @@ export class AddItemsTab extends EventEmitter {
   public loadTypes() {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(require('./templates/add-items-tab.hbs').default);
+    const template = require('./templates/add-items-tab.hbs');
 
     const registry = ItemFactory.getInstance();
 
