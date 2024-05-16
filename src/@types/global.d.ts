@@ -8,14 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import {
-  IKeySequence,
-  IBackendInfo,
-  IVec2,
-  IMenuItem,
-  IAppSettings,
-  IMenuSettings,
-} from '../common';
+import { IBackendInfo, IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
 
 // Declare the API to the host process. See preload.ts for more information on the exposed
 // functions. The API has to be declared here again, because the TypeScript compiler
@@ -40,10 +33,8 @@ declare global {
       inhibitShortcuts: () => void;
       uninhibitShortcuts: () => void;
       showDevTools: () => void;
-      simulateKeys: (keys: IKeySequence) => void;
       movePointer: (dist: IVec2) => void;
       openURI: (uri: string) => void;
-      runCommand: (command: string) => void;
       log: (message: string) => void;
       showMenu: (func: (root: IMenuItem, pos: IVec2) => void) => void;
       showEditor: (func: () => void) => void;

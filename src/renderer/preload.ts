@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
+import { IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -157,23 +157,5 @@ contextBridge.exposeInMainWorld('api', {
    */
   openURI: function (uri: string) {
     ipcRenderer.send('open-uri', uri);
-  },
-
-  /**
-   * This can be used to simulate a key press.
-   *
-   * @param keys The keys to press.
-   */
-  simulateKeys: function (keys: IKeySequence) {
-    ipcRenderer.send('simulate-keys', keys);
-  },
-
-  /**
-   * This can be used to run a shell command.
-   *
-   * @param command The command to run.
-   */
-  runCommand: function (command: string) {
-    ipcRenderer.send('run-command', command);
   },
 });

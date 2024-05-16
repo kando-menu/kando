@@ -391,27 +391,10 @@ export class KandoApp {
       }, 300);
     });
 
-    // The callbacks below are only used for the example actions. They will be removed
-    // in the future.
-
     // Open an URI with the default application.
     ipcMain.on('open-uri', (event, uri) => {
       this.hideWindow();
       shell.openExternal(uri);
-    });
-
-    // Run a shell command.
-    ipcMain.on('run-command', (event, command) => {
-      this.hideWindow();
-      this.exec(command);
-    });
-
-    // Simulate a key press.
-    ipcMain.on('simulate-keys', (event, keys) => {
-      this.hideWindow();
-      this.backend.simulateKeys(keys).catch((err) => {
-        KandoApp.showError('Failed to simulate keys', err.message);
-      });
     });
   }
 
