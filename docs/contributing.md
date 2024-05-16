@@ -28,7 +28,8 @@ Commits should be small and focused on a single task.
 Therefore, only one emoji should be used per commit.
 * :tada: `:tada:` when adding a cool new feature.
 * :bug: `:bug:` when fixing a bug.
-* :wrench: `:wrench:` when adding or improving a small piece of code.
+* :wrench: `:wrench:` when adding small piece of code.
+* :rocket: `:rocket:` when improving performance.
 * :recycle: `:recycle:` when refactoring the code.
 * :fire: `:fire:` when removing files or code.
 * :truck: `:truck:` when moving / renaming files or classes.
