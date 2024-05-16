@@ -46,11 +46,11 @@ export interface IItemAction {
 
 /**
  * This singleton class is a registry for all available actions. It is used to execute the
- * action of a menu item.
+ * action of a menu item. This class can be used only in the backend process.
  */
-export class ActionRegistry {
+export class ItemActionRegistry {
   /** The singleton instance of this class. */
-  private static instance: ActionRegistry = null;
+  private static instance: ItemActionRegistry = null;
 
   /** This map contains all available actions. The keys are the type names. */
   private actions: Map<string, IItemAction> = new Map();
@@ -70,11 +70,11 @@ export class ActionRegistry {
    *
    * @returns The singleton instance of this class.
    */
-  public static getInstance(): ActionRegistry {
-    if (ActionRegistry.instance === null) {
-      ActionRegistry.instance = new ActionRegistry();
+  public static getInstance(): ItemActionRegistry {
+    if (ItemActionRegistry.instance === null) {
+      ItemActionRegistry.instance = new ItemActionRegistry();
     }
-    return ActionRegistry.instance;
+    return ItemActionRegistry.instance;
   }
 
   /**

@@ -67,7 +67,7 @@ export type IKeySequence = Array<IKeyStroke>;
 
 /** The menu consists of a tree of menu items. */
 export interface IMenuItem {
-  /** The type of the menu item. See `ActionRegistry` and `ItemFactory`. */
+  /** The type of the menu item. See `ItemActionRegistry` and `ItemTypeRegistry`. */
   type: string;
 
   /**

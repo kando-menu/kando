@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemAction } from '../action-registry';
+import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './uri-item-type';
 

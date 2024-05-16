@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemType } from '../item-factory';
+import { IItemType } from '../item-type-registry';
 
 /** For submenu items, no additional data is required. */
 export interface IItemData {}

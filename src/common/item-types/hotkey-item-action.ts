@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem, IKeySequence } from '../index';
-import { IItemAction } from '../action-registry';
+import { IItemAction } from '../item-action-registry';
 import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './hotkey-item-type';

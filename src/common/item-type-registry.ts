@@ -50,12 +50,13 @@ export interface IItemType {
 }
 
 /**
- * This singleton class is a factory used by the `Editor` to create new menu items. It is
- * also used to get information about menu item types.
+ * This singleton class is a registry for all available menu item types. It is used to
+ * acquire information about a specific type. It can be used both in the frontend and the
+ * backend process.
  */
-export class ItemFactory {
+export class ItemTypeRegistry {
   /** The singleton instance of this class. */
-  private static instance: ItemFactory = null;
+  private static instance: ItemTypeRegistry = null;
 
   /**
    * This map contains all available menu item types. The keys are the type names and the
@@ -79,11 +80,11 @@ export class ItemFactory {
    *
    * @returns The singleton instance of this class.
    */
-  public static getInstance(): ItemFactory {
-    if (ItemFactory.instance === null) {
-      ItemFactory.instance = new ItemFactory();
+  public static getInstance(): ItemTypeRegistry {
+    if (ItemTypeRegistry.instance === null) {
+      ItemTypeRegistry.instance = new ItemTypeRegistry();
     }
-    return ItemFactory.instance;
+    return ItemTypeRegistry.instance;
   }
 
   /**
@@ -92,7 +93,7 @@ export class ItemFactory {
    * @param typeName The name of the type you want to get information about.
    * @returns The information about the requested type.
    */
-  public getItemType(typeName: string): IItemType {
+  public getType(typeName: string): IItemType {
     return this.types.get(typeName);
   }
 
@@ -103,28 +104,5 @@ export class ItemFactory {
    */
   public getAllTypes() {
     return this.types;
-  }
-
-  /**
-   * Use this method to create a new menu item of a specific type.
-   *
-   * @param typeName The type of the menu item you want to create.
-   * @returns The newly created menu item.
-   */
-  public createMenuItem(typeName: string): IMenuItem {
-    const type = this.types.get(typeName);
-    const item: IMenuItem = {
-      type: typeName,
-      data: type.defaultData,
-      name: type.defaultName,
-      icon: type.defaultIcon,
-      iconTheme: type.defaultIconTheme,
-    };
-
-    if (type.hasChildren) {
-      item.children = [];
-    }
-
-    return item;
   }
 }

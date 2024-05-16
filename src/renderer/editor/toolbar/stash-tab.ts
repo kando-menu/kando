@@ -11,7 +11,7 @@
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
@@ -97,7 +97,7 @@ export class StashTab extends EventEmitter {
     const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
-      const typeInfo = ItemFactory.getInstance().getItemType(item.type);
+      const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
         name: item.name,

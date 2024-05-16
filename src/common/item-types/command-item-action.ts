@@ -11,7 +11,7 @@
 import { exec } from 'child_process';
 
 import { IMenuItem } from '../index';
-import { IItemAction } from '../action-registry';
+import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './command-item-type';
 

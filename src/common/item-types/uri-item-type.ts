@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemType } from '../item-factory';
+import { IItemType } from '../item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a URL that will be opened when the

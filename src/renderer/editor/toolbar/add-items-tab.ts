@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ToolbarItemDragger } from './toolbar-item-dragger';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { EventEmitter } from 'events';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
@@ -72,7 +72,7 @@ export class AddItemsTab extends EventEmitter {
 
     const template = require('./templates/add-items-tab.hbs');
 
-    const registry = ItemFactory.getInstance();
+    const registry = ItemTypeRegistry.getInstance();
 
     // Compile the data for the Handlebars template.
     const data: Array<{
