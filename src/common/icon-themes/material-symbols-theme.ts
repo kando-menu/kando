@@ -58,7 +58,7 @@ export class MaterialSymbolsTheme implements IIconTheme {
     containerDiv.appendChild(iconDiv);
 
     iconDiv.classList.add('material-symbols-rounded');
-    iconDiv.innerHTML = icon;
+    iconDiv.innerText = icon;
 
     return containerDiv;
   }

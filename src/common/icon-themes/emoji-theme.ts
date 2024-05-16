@@ -64,7 +64,7 @@ export class EmojiTheme implements IIconTheme {
     containerDiv.appendChild(iconDiv);
 
     iconDiv.classList.add('emoji-icon');
-    iconDiv.innerHTML = icon;
+    iconDiv.innerText = icon;
 
     return containerDiv;
   }

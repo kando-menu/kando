@@ -249,7 +249,7 @@ export function createLockDiv(
   div.addEventListener('mouseup', () => {
     const i = icon.querySelector('i');
     const wasLocked = i.textContent === 'lock';
-    i.innerHTML = wasLocked ? 'lock_open' : 'lock';
+    i.innerText = wasLocked ? 'lock_open' : 'lock';
 
     if (wasLocked) {
       div.classList.remove('locked');
