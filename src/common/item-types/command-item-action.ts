@@ -8,20 +8,17 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { exec } from 'child_process';
+
 import { IMenuItem } from '../index';
-import { IAction } from '../action-registry';
+import { IItemAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
-import { IActionData } from './uri-meta';
+import { IItemData } from './command-item-meta';
 
-import { shell } from 'electron';
-
-/**
- * This action opens URIs with the default application. This can be used to open for
- * example websites or files.
- */
-export class URIAction implements IAction {
+/** This action runs commands. This can be used to start applications or run scripts. */
+export class CommandItemAction implements IItemAction {
   /**
-   * URIs are opened immediately.
+   * Commands are executed immediately.
    *
    * @returns False
    */
@@ -30,12 +27,22 @@ export class URIAction implements IAction {
   }
 
   /**
-   * Opens the URI with the default application.
+   * Runs the command.
    *
    * @param item The item for which the action should be executed.
-   * @returns A promise which resolves when the URI has been successfully opened.
+   * @returns A promise which resolves when the command has been successfully executed.
    */
   async execute(item: DeepReadonly<IMenuItem>) {
-    return shell.openExternal((item.data as IActionData).uri);
+    return new Promise<void>((resolve, reject) => {
+      const command = (item.data as IItemData).command;
+
+      exec(command, (error) => {
+        if (error) {
+          reject(error.message);
+        } else {
+          resolve();
+        }
+      });
+    });
   }
 }

@@ -9,45 +9,48 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IMeta } from '../item-factory';
+import { IItemMeta } from '../item-factory';
 
 /**
- * For this type of menu items, the user can configure a URL that will be opened when the
- * item is clicked.
+ * For this type of menu items, the user can configure a hotkey that will be simulated
+ * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
+ * after the Kando window has been closed.
  */
-export interface IActionData {
-  uri: string;
+export interface IItemData {
+  hotkey: string;
+  delayed: boolean;
 }
 
-/** This class provides meta information for menu items that open a URL. */
-export class URIMeta implements IMeta {
+/** This class provides meta information for menu items that simulate a hotkey. */
+export class HotkeyItemMeta implements IItemMeta {
   get hasChildren(): boolean {
     return false;
   }
 
   get defaultName(): string {
-    return 'Open URL';
+    return 'Simulate Hotkey';
   }
 
   get defaultIcon(): string {
-    return 'public';
+    return 'keyboard';
   }
 
   get defaultIconTheme(): string {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): IActionData {
+  get defaultData(): IItemData {
     return {
-      uri: '',
+      hotkey: '',
+      delayed: false,
     };
   }
 
   get genericDescription(): string {
-    return 'Opens files or websites.';
+    return 'Simulates key presses.';
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IActionData).uri || 'Not configured.';
+    return (item.data as IItemData).hotkey || 'Not configured.';
   }
 }

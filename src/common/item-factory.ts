@@ -10,17 +10,17 @@
 
 import { IMenuItem } from './index';
 
-import { CommandMeta } from './item-types/command-meta';
-import { HotkeyMeta } from './item-types/hotkey-meta';
-import { SubmenuMeta } from './item-types/submenu-meta';
-import { URIMeta } from './item-types/uri-meta';
+import { CommandItemMeta } from './item-types/command-item-meta';
+import { HotkeyItemMeta } from './item-types/hotkey-item-meta';
+import { SubmenuItemMeta } from './item-types/submenu-item-meta';
+import { URIItemMeta } from './item-types/uri-item-meta';
 
 /**
  * This interface describes meta information about a menu-item type. Every available type
  * should implement this interface. You can find the implementations in the `item-types`
  * directory.
  */
-export interface IMeta {
+export interface IItemMeta {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -61,17 +61,17 @@ export class ItemFactory {
    * This map contains all available menu item types. The keys are the type names and the
    * values are the corresponding meta objects.
    */
-  private types: Map<string, IMeta> = new Map();
+  private types: Map<string, IItemMeta> = new Map();
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
    */
   private constructor() {
-    this.types.set('command', new CommandMeta());
-    this.types.set('hotkey', new HotkeyMeta());
-    this.types.set('submenu', new SubmenuMeta());
-    this.types.set('uri', new URIMeta());
+    this.types.set('command', new CommandItemMeta());
+    this.types.set('hotkey', new HotkeyItemMeta());
+    this.types.set('submenu', new SubmenuItemMeta());
+    this.types.set('uri', new URIItemMeta());
   }
 
   /**
@@ -92,7 +92,7 @@ export class ItemFactory {
    * @param typeName The name of the type you want to get meta information about.
    * @returns The meta information about the requested type.
    */
-  public getTypeInfo(typeName: string): IMeta {
+  public getTypeInfo(typeName: string): IItemMeta {
     return this.types.get(typeName);
   }
 

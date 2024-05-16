@@ -9,13 +9,13 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem, IKeySequence } from '../index';
-import { IAction } from '../action-registry';
+import { IItemAction } from '../action-registry';
 import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/settings';
-import { IActionData } from './hotkey-meta';
+import { IItemData } from './hotkey-item-meta';
 
 /** This action simulates key presses. It can be used to simulate hotkeys. */
-export class HotkeyAction implements IAction {
+export class HotkeyItemAction implements IItemAction {
   /**
    * For hotkeys, we can choose to execute them immediately or with a delay.
    *
@@ -24,7 +24,7 @@ export class HotkeyAction implements IAction {
    * @returns True if the action should be executed with a delay.
    */
   delayedExecution(item: DeepReadonly<IMenuItem>) {
-    return (item.data as IActionData).delayed;
+    return (item.data as IItemData).delayed;
   }
 
   /**
@@ -40,7 +40,7 @@ export class HotkeyAction implements IAction {
   async execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
     return new Promise<void>((resolve, reject) => {
       // We convert some common key names to the corresponding left key names.
-      const keyNames = (item.data as IActionData).hotkey.split('+').map((name) => {
+      const keyNames = (item.data as IItemData).hotkey.split('+').map((name) => {
         // There are many different names for the Control key. We convert them all
         // to "ControlLeft".
         if (
