@@ -291,11 +291,11 @@ export class Menu extends EventEmitter {
       switch (item.iconTheme) {
         case 'material-symbols-rounded':
           icon.classList.add('material-symbols-rounded');
-          icon.textContent = item.icon;
+          icon.innerText = item.icon;
           break;
         case 'emoji':
           icon.classList.add('emoji-icon');
-          icon.textContent = item.icon;
+          icon.innerText = item.icon;
           break;
         case 'simple-icons':
           icon.classList.add('si');
