@@ -9,23 +9,30 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemMeta } from '../item-factory';
+import { IItemType } from '../item-factory';
 
-/** For submenu items, no additional data is required. */
-export interface IItemData {}
+/**
+ * For this type of menu items, the user can configure a hotkey that will be simulated
+ * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
+ * after the Kando window has been closed.
+ */
+export interface IItemData {
+  hotkey: string;
+  delayed: boolean;
+}
 
-/** This class provides meta information for submenu items. */
-export class SubmenuItemMeta implements IItemMeta {
+/** This class provides meta information for menu items that simulate a hotkey. */
+export class HotkeyItemType implements IItemType {
   get hasChildren(): boolean {
-    return true;
+    return false;
   }
 
   get defaultName(): string {
-    return 'Submenu';
+    return 'Simulate Hotkey';
   }
 
   get defaultIcon(): string {
-    return 'apps';
+    return 'keyboard';
   }
 
   get defaultIconTheme(): string {
@@ -33,14 +40,17 @@ export class SubmenuItemMeta implements IItemMeta {
   }
 
   get defaultData(): IItemData {
-    return {};
+    return {
+      hotkey: '',
+      delayed: false,
+    };
   }
 
   get genericDescription(): string {
-    return 'Contains other menu items.';
+    return 'Simulates key presses.';
   }
 
   getDescription(item: IMenuItem): string {
-    return `Contains ${item.children.length} menu items.`;
+    return (item.data as IItemData).hotkey || 'Not configured.';
   }
 }

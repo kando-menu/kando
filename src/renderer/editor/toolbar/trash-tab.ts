@@ -136,7 +136,7 @@ export class TrashTab extends EventEmitter {
 
       // If the item is a menu item, we need to extract the name and the icon.
       const item = thing as IEditorMenuItem;
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
+      const typeInfo = ItemFactory.getInstance().getItemType(item.type);
       return {
         isMenu: false,
         name: item.name,

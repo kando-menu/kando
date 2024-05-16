@@ -9,28 +9,23 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemMeta } from '../item-factory';
+import { IItemType } from '../item-factory';
 
-/**
- * For this type of menu items, the user can configure a command that will be executed
- * when the item is clicked.
- */
-export interface IItemData {
-  command: string;
-}
+/** For submenu items, no additional data is required. */
+export interface IItemData {}
 
-/** This class provides meta information for menu items that execute a command. */
-export class CommandItemMeta implements IItemMeta {
+/** This class provides meta information for submenu items. */
+export class SubmenuItemType implements IItemType {
   get hasChildren(): boolean {
-    return false;
+    return true;
   }
 
   get defaultName(): string {
-    return 'Launch Application';
+    return 'Submenu';
   }
 
   get defaultIcon(): string {
-    return 'terminal';
+    return 'apps';
   }
 
   get defaultIconTheme(): string {
@@ -38,16 +33,14 @@ export class CommandItemMeta implements IItemMeta {
   }
 
   get defaultData(): IItemData {
-    return {
-      command: '',
-    };
+    return {};
   }
 
   get genericDescription(): string {
-    return 'Runs any command.';
+    return 'Contains other menu items.';
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).command || 'Not configured.';
+    return `Contains ${item.children.length} menu items.`;
   }
 }

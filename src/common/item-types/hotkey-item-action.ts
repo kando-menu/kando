@@ -12,7 +12,7 @@ import { IMenuItem, IKeySequence } from '../index';
 import { IItemAction } from '../action-registry';
 import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/settings';
-import { IItemData } from './hotkey-item-meta';
+import { IItemData } from './hotkey-item-type';
 
 /** This action simulates key presses. It can be used to simulate hotkeys. */
 export class HotkeyItemAction implements IItemAction {

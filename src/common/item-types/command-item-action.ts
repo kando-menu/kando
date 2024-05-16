@@ -13,7 +13,7 @@ import { exec } from 'child_process';
 import { IMenuItem } from '../index';
 import { IItemAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
-import { IItemData } from './command-item-meta';
+import { IItemData } from './command-item-type';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
 export class CommandItemAction implements IItemAction {

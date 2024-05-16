@@ -97,7 +97,7 @@ export class StashTab extends EventEmitter {
     const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
+      const typeInfo = ItemFactory.getInstance().getItemType(item.type);
       return {
         isMenu: false,
         name: item.name,

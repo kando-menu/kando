@@ -10,17 +10,17 @@
 
 import { IMenuItem } from './index';
 
-import { CommandItemMeta } from './item-types/command-item-meta';
-import { HotkeyItemMeta } from './item-types/hotkey-item-meta';
-import { SubmenuItemMeta } from './item-types/submenu-item-meta';
-import { URIItemMeta } from './item-types/uri-item-meta';
+import { CommandItemType } from './item-types/command-item-type';
+import { HotkeyItemType } from './item-types/hotkey-item-type';
+import { SubmenuItemType } from './item-types/submenu-item-type';
+import { URIItemType } from './item-types/uri-item-type';
 
 /**
  * This interface describes meta information about a menu-item type. Every available type
  * should implement this interface. You can find the implementations in the `item-types`
  * directory.
  */
-export interface IItemMeta {
+export interface IItemType {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -51,7 +51,7 @@ export interface IItemMeta {
 
 /**
  * This singleton class is a factory used by the `Editor` to create new menu items. It is
- * also used to get meta information about menu item types.
+ * also used to get information about menu item types.
  */
 export class ItemFactory {
   /** The singleton instance of this class. */
@@ -59,19 +59,19 @@ export class ItemFactory {
 
   /**
    * This map contains all available menu item types. The keys are the type names and the
-   * values are the corresponding meta objects.
+   * values are the corresponding type objects.
    */
-  private types: Map<string, IItemMeta> = new Map();
+  private types: Map<string, IItemType> = new Map();
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
    */
   private constructor() {
-    this.types.set('command', new CommandItemMeta());
-    this.types.set('hotkey', new HotkeyItemMeta());
-    this.types.set('submenu', new SubmenuItemMeta());
-    this.types.set('uri', new URIItemMeta());
+    this.types.set('command', new CommandItemType());
+    this.types.set('hotkey', new HotkeyItemType());
+    this.types.set('submenu', new SubmenuItemType());
+    this.types.set('uri', new URIItemType());
   }
 
   /**
@@ -87,12 +87,12 @@ export class ItemFactory {
   }
 
   /**
-   * Use this method to get meta information about a specific menu item type.
+   * Use this method to get information about a specific menu item type.
    *
-   * @param typeName The name of the type you want to get meta information about.
-   * @returns The meta information about the requested type.
+   * @param typeName The name of the type you want to get information about.
+   * @returns The information about the requested type.
    */
-  public getTypeInfo(typeName: string): IItemMeta {
+  public getItemType(typeName: string): IItemType {
     return this.types.get(typeName);
   }
 

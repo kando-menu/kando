@@ -11,7 +11,7 @@
 import { IMenuItem } from '../index';
 import { IItemAction } from '../action-registry';
 import { DeepReadonly } from '../../main/settings';
-import { IItemData } from './uri-item-meta';
+import { IItemData } from './uri-item-type';
 
 import { shell } from 'electron';
 

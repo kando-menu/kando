@@ -9,30 +9,28 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemMeta } from '../item-factory';
+import { IItemType } from '../item-factory';
 
 /**
- * For this type of menu items, the user can configure a hotkey that will be simulated
- * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
- * after the Kando window has been closed.
+ * For this type of menu items, the user can configure a command that will be executed
+ * when the item is clicked.
  */
 export interface IItemData {
-  hotkey: string;
-  delayed: boolean;
+  command: string;
 }
 
-/** This class provides meta information for menu items that simulate a hotkey. */
-export class HotkeyItemMeta implements IItemMeta {
+/** This class provides meta information for menu items that execute a command. */
+export class CommandItemType implements IItemType {
   get hasChildren(): boolean {
     return false;
   }
 
   get defaultName(): string {
-    return 'Simulate Hotkey';
+    return 'Launch Application';
   }
 
   get defaultIcon(): string {
-    return 'keyboard';
+    return 'terminal';
   }
 
   get defaultIconTheme(): string {
@@ -41,16 +39,15 @@ export class HotkeyItemMeta implements IItemMeta {
 
   get defaultData(): IItemData {
     return {
-      hotkey: '',
-      delayed: false,
+      command: '',
     };
   }
 
   get genericDescription(): string {
-    return 'Simulates key presses.';
+    return 'Runs any command.';
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).hotkey || 'Not configured.';
+    return (item.data as IItemData).command || 'Not configured.';
   }
 }

@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IItemMeta } from '../item-factory';
+import { IItemType } from '../item-factory';
 
 /**
  * For this type of menu items, the user can configure a URL that will be opened when the
@@ -20,7 +20,7 @@ export interface IItemData {
 }
 
 /** This class provides meta information for menu items that open a URL. */
-export class URIItemMeta implements IItemMeta {
+export class URIItemType implements IItemType {
   get hasChildren(): boolean {
     return false;
   }
