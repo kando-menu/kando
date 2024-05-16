@@ -266,49 +266,63 @@ export class Menu extends EventEmitter {
    * @param item The menu item to create the DOM tree for.
    * @param container The container to append the DOM tree to.
    */
-  private createNodeTree(item: IRenderedMenuItem, container: HTMLElement) {
-    item.nodeDiv = document.createElement('div');
-    item.nodeDiv.classList.add('menu-node');
+  private createNodeTree(rootItem: IRenderedMenuItem, rootContainer: HTMLElement) {
+    const queue: { item: IRenderedMenuItem; container: HTMLElement }[] = [];
 
-    const menuItem = document.createElement('div');
-    menuItem.classList.add('menu-item');
+    queue.push({ item: rootItem, container: rootContainer });
 
-    const icon = document.createElement('i');
-    icon.classList.add('menu-icon');
+    while (queue.length > 0) {
+      const { item, container } = queue.shift()!;
 
-    if (item.iconTheme === 'material-symbols-rounded') {
-      icon.classList.add('material-symbols-rounded');
-      icon.innerHTML = item.icon;
-    } else if (item.iconTheme === 'emoji') {
-      icon.classList.add('emoji-icon');
-      icon.innerHTML = item.icon;
-    } else if (item.iconTheme === 'simple-icons') {
-      icon.classList.add('si');
-      icon.classList.add('si-' + item.icon);
-    } else if (item.iconTheme === 'simple-icons-colored') {
-      icon.classList.add('si');
-      icon.classList.add('si--color');
-      icon.classList.add('si-' + item.icon);
-    }
+      const nodeDiv = document.createElement('div');
+      const menuItem = document.createElement('div');
+      const icon = document.createElement('i');
 
-    container.appendChild(item.nodeDiv);
-    item.nodeDiv.appendChild(menuItem);
-    menuItem.appendChild(icon);
+      nodeDiv.classList.add('menu-node');
+      menuItem.classList.add('menu-item');
+      icon.classList.add('menu-icon');
 
-    if (item.children) {
-      item.connectorDiv = document.createElement('div');
-      item.connectorDiv.classList.add('connector');
-      item.nodeDiv.appendChild(item.connectorDiv);
+      container.appendChild(nodeDiv);
+      nodeDiv.appendChild(menuItem);
+      menuItem.appendChild(icon);
 
-      for (const child of item.children) {
-        this.createNodeTree(child, item.nodeDiv);
+      item.nodeDiv = nodeDiv;
+
+      switch (item.iconTheme) {
+        case 'material-symbols-rounded':
+          icon.classList.add('material-symbols-rounded');
+          icon.textContent = item.icon;
+          break;
+        case 'emoji':
+          icon.classList.add('emoji-icon');
+          icon.textContent = item.icon;
+          break;
+        case 'simple-icons':
+          icon.classList.add('si');
+          icon.classList.add('si-' + item.icon);
+          break;
+        case 'simple-icons-colored':
+          icon.classList.add('si');
+          icon.classList.add('si--color');
+          icon.classList.add('si-' + item.icon);
+          break;
       }
-    }
 
-    if (item === this.root) {
-      const maxCenterTextSize = this.CENTER_RADIUS * 2.0;
-      const padding = this.CENTER_RADIUS * 0.1;
-      this.centerText = new CenterText(item.nodeDiv, maxCenterTextSize - padding);
+      if (item.children) {
+        item.connectorDiv = document.createElement('div');
+        item.connectorDiv.classList.add('connector');
+        nodeDiv.appendChild(item.connectorDiv);
+
+        for (const child of item.children) {
+          queue.push({ item: child, container: nodeDiv });
+        }
+      }
+
+      if (item === this.root) {
+        const maxCenterTextSize = this.CENTER_RADIUS * 2.0;
+        const padding = this.CENTER_RADIUS * 0.1;
+        this.centerText = new CenterText(nodeDiv, maxCenterTextSize - padding);
+      }
     }
   }
 
