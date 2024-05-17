@@ -168,16 +168,27 @@
   }
 
   // These are shown in various places in the editor.
-  .swirl {
+  .swirl1,
+  .swirl2 {
     display: inline-block;
-    background-image: url(../../assets/images/swirl.svg);
-    width: 160px;
-    height: 14px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    aspect-ratio: 200/16;
 
     &.vertical {
-      width: 14px;
-      height: 160px;
-      background-image: url(../../assets/images/swirl-vertical.svg);
+      aspect-ratio: 16/200;
     }
+  }
+
+  .swirl1 {
+    background-image: url(../../assets/images/swirl1.svg);
+
+    &.vertical {
+      background-image: url(../../assets/images/swirl1-vertical.svg);
+    }
+  }
+
+  .swirl2 {
+    background-image: url(../../assets/images/swirl2.svg);
   }
 }
