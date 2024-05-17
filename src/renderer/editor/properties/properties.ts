@@ -69,6 +69,12 @@ export class Properties extends EventEmitter {
   private menuSettings: HTMLElement = null;
 
   /**
+   * The item settings div contains the item-type specific settings for the currently
+   * edited menu item. It is cleared and filled every time the active item changes.
+   */
+  private itemSettings: HTMLElement = null;
+
+  /**
    * The open at pointer checkbox is a checkbox that allows the user to toggle whether the
    * menu should open at the pointer position.
    */
@@ -123,6 +129,7 @@ export class Properties extends EventEmitter {
     // Store references to various elements.
     this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
     this.menuSettings = div.querySelector('#kando-menu-properties-menu-settings');
+    this.itemSettings = div.querySelector('#kando-menu-properties-item-settings');
     this.hintElement = div.querySelector('#kando-menu-properties-hint');
 
     // Emit the 'changed-name' event when the name input changes.
@@ -244,9 +251,19 @@ export class Properties extends EventEmitter {
       this.activeMenu = null;
       this.activeItem = item;
       this.nameInput.value = item.name;
+
       this.iconButton.innerHTML = IconThemeRegistry.getInstance()
         .getTheme(item.iconTheme)
         .createDiv(item.icon).outerHTML;
+
+      const settings = ItemConfigRegistry.getInstance().getConfigWidget(item);
+
+      this.itemSettings.innerHTML = '';
+
+      if (settings) {
+        this.itemSettings.appendChild(settings);
+      }
+
       this.hintElement.innerText = ItemConfigRegistry.getInstance().getTipOfTheDay(
         item.type
       );

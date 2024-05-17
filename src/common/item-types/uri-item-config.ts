@@ -8,22 +8,44 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
+import { IItemData } from './uri-item-type';
 
 /** This class provides the configuration widgets for URI items. */
 export class URIItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'You can use the URI item type to open a link to a website.',
+      'You can use the URI item type to open a website using the http:// protocol.',
       'You can use the URI item type to open a file or folder using the file:// protocol.',
-      'You can use the URI item type to open a mailto:// link.',
+      'You can use the URI item type to open a mailto: link.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
   }
 
-  public getConfigWidget(): HTMLElement | null {
-    return null;
+  /** @inheritdoc */
+  public getConfigWidget(item: IMenuItem): HTMLElement | null {
+    const div = document.createElement('div');
+
+    // Render the template.
+    const template = require('./templates/text-entry.hbs');
+    div.innerHTML = template({
+      placeholder: 'Not Defined',
+      label: 'URI',
+      hint: 'This will be opened with the default application.',
+    });
+
+    // Get the input element and set the current value.
+    const input = div.querySelector('input');
+    input.value = (item.data as IItemData).uri || '';
+
+    // Listen for changes and update the item.
+    input.addEventListener('input', () => {
+      (item.data as IItemData).uri = input.value;
+    });
+
+    return div;
   }
 }

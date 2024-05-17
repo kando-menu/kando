@@ -32,10 +32,10 @@ export interface IItemConfig {
   /**
    * This method returns an HTMLElement that will be shown in the menu editor for editing
    * the given item. Whenever the user changes the settings of the item, the item is
-   * updated accordingly and the given callback is called. If an item type does not need
-   * any special settings, this method can return null.
+   * updated accordingly. If an item type does not need any special settings, this method
+   * can return null.
    */
-  getConfigWidget(item: IMenuItem, onChange: () => void): HTMLElement | null;
+  getConfigWidget(item: IMenuItem): HTMLElement | null;
 }
 
 /**
@@ -87,12 +87,11 @@ export class ItemConfigRegistry {
    * Use this method to get a configuration widget for a specific item type.
    *
    * @param item The item you want to configure.
-   * @param onChange This method will be called whenever the item's data is updated.
    * @returns A configuration widget for the requested type.
    * @throws If the item's type is not available.
    */
-  public getConfigWidget(item: IMenuItem, onChange: () => void) {
-    return this.getItemConfig(item.type).getConfigWidget(item, onChange);
+  public getConfigWidget(item: IMenuItem) {
+    return this.getItemConfig(item.type).getConfigWidget(item);
   }
 
   /**
