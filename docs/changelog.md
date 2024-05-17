@@ -25,6 +25,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - The possibility to change the shortcut of a menu in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard. This works on all platforms, except for KDE/Wayland and Hyprland, where direct binding of global shortcuts is not directly supported.
 - **[BREAKING]** The possibility to change the global shortcut ID on platforms which do not support direct binding of global shortcuts. For instance, on KDE/Wayland or on Hyprland, Kando can not directly bind global shortcuts. On those platforms, the menu editor shows a text field instead of the shortcut picker. Here you can enter a unique ID for the shortcut and then use the global shortcut settings of the desktop environment to bind the shortcut ID to a key combination. On these platforms, **your existing global shortcuts will not work anymore**. You will have to rebind them using the new method!
+- The possibility to configure the command action in the menu editor. There is now a text field in the properties area which allows to enter the command directly.
+- The possibility to configure the URI action in the menu editor. There is now a text field in the properties area which allows to enter the URI directly.
 
 #### Changed
 
