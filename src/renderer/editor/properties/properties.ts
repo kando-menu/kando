@@ -16,6 +16,7 @@ import { IconPicker } from './icon-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
+import { ItemConfigRegistry } from '../../../common/item-config-registry';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -80,6 +81,12 @@ export class Properties extends EventEmitter {
   private shortcutPicker: ShortcutPicker | ShortcutIDPicker = null;
 
   /**
+   * This shows a tip-of-the-day below the properties view. It is used to give the user
+   * some hints on how to configure the item.
+   */
+  private hintElement: HTMLElement = null;
+
+  /**
    * The currently edited menu item. This is the item whose properties are displayed in
    * this view.
    */
@@ -113,13 +120,10 @@ export class Properties extends EventEmitter {
     // The first child of the div is the container.
     this.container = div.firstElementChild as HTMLElement;
 
-    // Store a reference to the base settings div. This contains the name input and the
-    // icon button.
+    // Store references to various elements.
     this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
-
-    // Store a reference to the menu settings div. This contains elements that are only
-    // shown when the user is editing the root item of a menu.
     this.menuSettings = div.querySelector('#kando-menu-properties-menu-settings');
+    this.hintElement = div.querySelector('#kando-menu-properties-hint');
 
     // Emit the 'changed-name' event when the name input changes.
     this.nameInput = div.querySelector('#kando-menu-properties-name') as HTMLInputElement;
@@ -243,6 +247,9 @@ export class Properties extends EventEmitter {
       this.iconButton.innerHTML = IconThemeRegistry.getInstance()
         .getTheme(item.iconTheme)
         .createDiv(item.icon).outerHTML;
+      this.hintElement.innerText = ItemConfigRegistry.getInstance().getTipOfTheDay(
+        item.type
+      );
 
       this.baseSettings.classList.remove('hidden');
       this.iconPicker.hide();
