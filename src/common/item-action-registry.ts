@@ -111,8 +111,8 @@ export class ItemActionRegistry {
   private getAction(type: string): IItemAction {
     const action = this.actions.get(type);
 
-    if (action === undefined) {
-      throw new Error(`Unknown action type: ${type}`);
+    if (!action) {
+      throw new Error(`Unknown item type: ${type}`);
     }
 
     return action;
