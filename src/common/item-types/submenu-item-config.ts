@@ -19,6 +19,9 @@ export class SubmenuItemConfig implements IItemConfig {
       'You can also nest submenus inside of submenus.',
       'Submenus can be used to create complex menu structures.',
       'You should avoid adding more than twelve items to a submenu. Eight is a good number.',
+      "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
+      'You can reorder items by dragging them in the preview.',
+      'You can remove items by dragging them to the trash tab in the toolbar.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
