@@ -54,7 +54,7 @@ export class ShortcutPicker extends EventEmitter {
     const template = require('./templates/shortcut-picker.hbs');
     container.innerHTML = template({
       placeholder: 'Not Bound',
-      withButton: true,
+      recordButton: true,
     });
 
     // Validate the input field when the user types something. If the input is valid, we
@@ -71,12 +71,14 @@ export class ShortcutPicker extends EventEmitter {
       }
     });
 
+    const inputGroup = container.querySelector('.input-group');
+
     // When the user clicks the button, we enter a mode where the next key presses are
     // interpreted as the key combination. The mode is aborted when...
     // ... the user clicks anywhere on the screen
     // ... the user entered a valid key combination
-    const shortcutButton = container.querySelector('button');
-    shortcutButton.addEventListener('click', (event) => {
+    const recordButton = container.querySelector('button');
+    recordButton.addEventListener('click', (event) => {
       event.stopPropagation();
 
       // Unbind all shortcuts. This is necessary because else the user could not enter
@@ -86,7 +88,7 @@ export class ShortcutPicker extends EventEmitter {
       const originalShortcut = this.shortcutInput.value;
       this.shortcutInput.placeholder = 'Press a shortcut...';
       this.shortcutInput.value = '';
-      this.shortcutInput.classList.add('glowing');
+      inputGroup.classList.add('recording');
 
       // eslint-disable-next-line prefer-const
       let clickHandler: (ev: MouseEvent) => void;
@@ -97,7 +99,7 @@ export class ShortcutPicker extends EventEmitter {
       // Reverts the input field to its original state.
       const reset = () => {
         this.shortcutInput.placeholder = 'Not Bound';
-        this.shortcutInput.classList.remove('glowing');
+        inputGroup.classList.remove('recording');
         window.removeEventListener('click', clickHandler);
         window.removeEventListener('keydown', keyHandler, true);
         window.removeEventListener('keyup', keyHandler, true);

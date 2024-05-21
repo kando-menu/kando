@@ -35,7 +35,7 @@ export class ShortcutIDPicker extends EventEmitter {
     const template = require('./templates/shortcut-picker.hbs');
     container.innerHTML = template({
       placeholder: 'Not Bound',
-      withButton: false,
+      recordButton: false,
     });
 
     // Validate the input field when the user types something. If the input is valid, we

@@ -20,8 +20,14 @@
 
     // This class is used to add a pulsing glow to the shortcut input when waiting for user
     // input.
-    .glowing {
-      animation: glowing 1s infinite;
+    &.recording {
+      input {
+        animation: glowing 1s infinite;
+      }
+
+      button {
+        color: rgb(255, 64, 64);
+      }
     }
 
     @keyframes glowing {
