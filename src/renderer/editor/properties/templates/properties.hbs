@@ -19,17 +19,11 @@
 
     <div id="kando-menu-properties-menu-settings" class='d-flex flex-column'>
       
-      <label class='d-flex mt-3'>
-        <div class="flex-grow-1">
-          <div class='kando-font fs-2'>
-            Open at Pointer
-          </div>
-          <div class='kando-font fs-5'>
-            Else the menu will open in the screen's center.
-          </div>
-        </div>
-        <input type="checkbox" class="form-check-input" id="kando-menu-properties-open-at-pointer" />
-      </label>
+      {{> checkbox-option 
+          label="Open at Pointer"
+          hint="Else the menu will open in the screen's center."
+          id="kando-menu-properties-open-at-pointer"
+      }}
 
       <div id="kando-menu-properties-shortcut-picker"></div>
 
@@ -40,7 +34,6 @@
     <div class="swirl2 align-self-center mt-4 mb-5 w-100" style="opacity: 0.7;"></div>
 
     <div id="kando-menu-properties-hint" class="align-self-center text-center kando-font fs-4" style="opacity: 0.7; width: 75%; font-style:italic"></div>
-
 
   </div>
 

@@ -44,7 +44,7 @@ export abstract class TextPicker extends EventEmitter {
     super();
 
     // Render the template.
-    const template = require('./templates/text-picker.hbs');
+    const template = require('./templates/text-picker-option.hbs');
     container.innerHTML = template({
       label: options.label,
       hint: options.hint,

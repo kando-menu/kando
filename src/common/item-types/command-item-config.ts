@@ -24,7 +24,7 @@ export class CommandItemConfig implements IItemConfig {
     const div = document.createElement('div');
 
     // Render the template.
-    const template = require('./templates/text-entry.hbs');
+    const template = require('../../renderer/editor/properties/templates/text-option.hbs');
     div.innerHTML = template({
       placeholder: 'Not Defined',
       label: 'Command',
