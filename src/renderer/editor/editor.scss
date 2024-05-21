@@ -18,19 +18,21 @@
 //   or the menu configuration widgets in the screen's center. They are visible when
 //   the editor is in 'edit-mode'.
 
-@import './common/variables.scss';
-
 // The menu editor of Kando uses Bootstrap 5.
+// We use Bootstrap RFS to scale various things based on the window size. We set the base
+// value to a small number to make sure that RFS is also applied to small things like
+// padding and margin.
+$rfs-base-value: 0.1rem;
+$rfs-breakpoint: 1400px;
+
 @import '../../../node_modules/bootstrap/scss/bootstrap';
 
-@import './common/fonts.scss';
-@import './common/scrollbox.scss';
-@import './common/icon-container.scss';
-@import './background/background.scss';
-@import './sidebar/sidebar.scss';
-@import './toolbar/toolbar.scss';
-@import './preview/preview.scss';
-@import './properties/properties.scss';
+@import './common/style';
+@import './background/style';
+@import './sidebar/style';
+@import './toolbar/style';
+@import './preview/style';
+@import './properties/style';
 
 // Handle pointer events -----------------------------------------------------------------
 
