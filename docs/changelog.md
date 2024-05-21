@@ -33,6 +33,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
 - It is now allowed to have multiple menus with the same shortcut. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
 - The `"shortcut"` property in the menu configuration is now optional. If no shortcut is given, the menu will not be accessible via a global shortcut. This is useful if you want to have a menu which is only accessible via the tray icon.
+- **[BREAKING]** The Simulate-Hotkey action now strictly uses DOM key codes. Before, it was possible to use key names like `"Control"`, `"Shift"`, or `"Alt"`. Now, you have to use the key codes like `"ControlLeft"`, `"ShiftLeft"`, or `"AltLeft"`. You can find a list of all valid codes [here](https://github.com/kando-menu/kando/tree/main/src/common/key-codes.ts). 
 - Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (about 5x faster).
 - Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (about 2x faster).
 - Rename the "Open URL" action to "Open URI" in the menu editor.
