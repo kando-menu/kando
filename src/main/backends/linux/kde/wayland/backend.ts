@@ -343,25 +343,6 @@ export class KDEWaylandBackend implements Backend {
   }
 
   /**
-   * Translates a shortcut from the Electron format to something which can be used by
-   * KWIn.
-   *
-   * @param shortcut The shortcut to translate.
-   * @returns The translated shortcut.
-   * @todo: This is only a very basic implementation. It does not support all possible
-   *       shortcuts.
-   */
-  private toKWinAccelerator(shortcut: string) {
-    shortcut = shortcut.replace('CommandOrControl+', 'Ctrl+');
-    shortcut = shortcut.replace('CmdOrCtrl+', 'Ctrl+');
-    shortcut = shortcut.replace('Command+', 'Ctrl+');
-    shortcut = shortcut.replace('Control+', 'Ctrl+');
-    shortcut = shortcut.replace('Cmd+', 'Ctrl+');
-
-    return shortcut;
-  }
-
-  /**
    * Escapes a string so that it can be used in a JavaScript string.
    *
    * @param str The string to escape.
