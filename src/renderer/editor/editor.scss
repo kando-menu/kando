@@ -49,6 +49,9 @@ $rfs-breakpoint: 1400px;
 }
 
 // Basic UI styling ----------------------------------------------------------------------
+body {
+  --bs-body-line-height: 1.3;
+}
 
 #kando-editor {
   color: #{$kando-text-color};
