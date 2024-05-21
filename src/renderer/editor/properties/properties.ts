@@ -177,12 +177,8 @@ export class Properties extends EventEmitter {
     });
 
     // Create the shortcut picker or the shorcut ID picker and wire up its events.
-    const shortcutContainer = div.querySelector(
-      '#kando-menu-properties-shortcut-picker'
-    ) as HTMLElement;
-
     if (this.backend.supportsShortcuts) {
-      this.shortcutPicker = new ShortcutPicker(shortcutContainer);
+      this.shortcutPicker = new ShortcutPicker();
       this.shortcutPicker.on('changed', (shortcut) => {
         if (this.activeMenu) {
           this.activeMenu.shortcut = shortcut;
@@ -190,10 +186,7 @@ export class Properties extends EventEmitter {
         }
       });
     } else {
-      this.shortcutPicker = new ShortcutIDPicker(
-        shortcutContainer,
-        this.backend.shortcutHint
-      );
+      this.shortcutPicker = new ShortcutIDPicker(this.backend.shortcutHint);
       this.shortcutPicker.on('changed', (id) => {
         if (this.activeMenu) {
           this.activeMenu.shortcutID = id;
@@ -201,6 +194,11 @@ export class Properties extends EventEmitter {
         }
       });
     }
+
+    const shortcutContainer = div.querySelector(
+      '#kando-menu-properties-shortcut-picker'
+    ) as HTMLElement;
+    shortcutContainer.appendChild(this.shortcutPicker.getContainer());
   }
 
   /** This method returns the container of the menu preview. */

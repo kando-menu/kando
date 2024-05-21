@@ -22,30 +22,33 @@ import { EventEmitter } from 'events';
  *   and validated input text.
  */
 export abstract class TextPicker extends EventEmitter {
+  /** The div which contains the input field. */
+  private container: HTMLElement = null;
+
   /** The input field for directly editing the shortcut. */
   protected input: HTMLInputElement = null;
 
   /**
-   * Creates a new TextPicker and appends it to the given container.
+   * Creates a new TextPicker. You must call getContainer() to get the container which
+   * contains the picker.
    *
-   * @param container - The container to which the icon picker will be appended.
    * @param options - The options for the text picker.
    */
-  constructor(
-    container: HTMLElement,
-    options: {
-      label: string;
-      hint: string;
-      placeholder: string;
-      recordingPlaceholder: string;
-      enableRecording: boolean;
-    }
-  ) {
+  constructor(options: {
+    label: string;
+    hint: string;
+    placeholder: string;
+    recordingPlaceholder: string;
+    enableRecording: boolean;
+  }) {
     super();
+
+    // Create the container.
+    this.container = document.createElement('div');
 
     // Render the template.
     const template = require('./templates/text-picker-option.hbs');
-    container.innerHTML = template({
+    this.container.innerHTML = template({
       label: options.label,
       hint: options.hint,
       placeholder: options.placeholder,
@@ -54,7 +57,7 @@ export abstract class TextPicker extends EventEmitter {
 
     // Validate the input field when the user types something. If the input is valid, we
     // emit a 'changed' event.
-    this.input = container.querySelector('input');
+    this.input = this.container.querySelector('input');
     this.input.addEventListener('input', () => {
       const value = this.normalizeInput(this.input.value);
       if (this.isValid(value)) {
@@ -80,7 +83,7 @@ export abstract class TextPicker extends EventEmitter {
       // The recording mode is aborted when...
       // ... the user clicks anywhere on the screen
       // ... the user entered a valid key combination
-      const recordButton = container.querySelector('button');
+      const recordButton = this.container.querySelector('button');
       recordButton.addEventListener('click', (event) => {
         event.stopPropagation();
 
@@ -93,7 +96,7 @@ export abstract class TextPicker extends EventEmitter {
         this.input.placeholder = options.recordingPlaceholder;
         this.input.value = '';
 
-        const inputGroup = container.querySelector('.input-group');
+        const inputGroup = this.container.querySelector('.input-group');
         inputGroup.classList.add('recording');
 
         // eslint-disable-next-line prefer-const
@@ -130,9 +133,9 @@ export abstract class TextPicker extends EventEmitter {
           event.stopPropagation();
           event.preventDefault();
 
-          // recordInput returns false if we should stop recording. If so, we reset the
+          // recordInput returns true if we should stop recording. If so, we reset the
           // input field to its original state and emit a 'changed' event.
-          if (!this.recordInput(event)) {
+          if (this.recordInput(event)) {
             reset();
             this.input.classList.remove('invalid');
             this.emit('changed', this.input.value);
@@ -144,6 +147,10 @@ export abstract class TextPicker extends EventEmitter {
         window.addEventListener('keyup', keyHandler, true);
       });
     }
+  }
+
+  public getContainer(): HTMLElement {
+    return this.container;
   }
 
   /**
@@ -186,10 +193,10 @@ export abstract class TextPicker extends EventEmitter {
    * even if the input is not yet complete or valid. The input field will be reset to its
    * original state when the recording is aborted.
    *
-   * The method should return false if the recording should be stopped after the event.
+   * The method should return true if the recording should be stopped after the event.
    *
    * @param event The KeyboardEvent to get the shortcut for.
-   * @returns True if the recording should be continued, false otherwise.
+   * @returns False if the recording should be continued, true otherwise.
    */
   protected abstract recordInput(event: KeyboardEvent): boolean;
 }

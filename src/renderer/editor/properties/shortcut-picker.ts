@@ -16,8 +16,12 @@ import { TextPicker } from './text-picker';
  * shortcut directly into the input field or press the button to enter a mode where the
  * next key presses are interpreted as the keyboard shortcut.
  *
- * The key combinations is validated against the globalShortcut module of Electron. See
- * https://www.electronjs.org/docs/latest/api/accelerator for more information.
+ * There is also the HotkeyPicker which is similar to this class. See its documentation
+ * for more information.
+ *
+ * The shortcut selected by this class is validated against the globalShortcut module of
+ * Electron. See https://www.electronjs.org/docs/latest/api/accelerator for more
+ * information.
  *
  * @fires changed - When the user selects a valid keyboard shortcut. The event contains
  *   the new shortcut as an argument.
@@ -34,12 +38,11 @@ export class ShortcutPicker extends TextPicker {
   private keymap = new Map<string, string>();
 
   /**
-   * Creates a new ShortcutPicker and appends it to the given container.
-   *
-   * @param container - The container to which the icon picker will be appended.
+   * Creates a new ShortcutPicker. You must call getContainer() of the parent class to get
+   * the container which contains the picker.
    */
-  constructor(container: HTMLElement) {
-    super(container, {
+  constructor() {
+    super({
       label: 'Shortcut',
       hint: 'This will open the menu.',
       placeholder: 'Not Bound',
@@ -113,7 +116,7 @@ export class ShortcutPicker extends TextPicker {
    * the rules outlined in https://www.electronjs.org/docs/latest/api/accelerator. An
    * empty shortcut is also considered valid.
    *
-   * @param shortcut The normalized shortcut to validate
+   * @param shortcut The normalized shortcut to validate.
    * @returns True if the shortcut is valid, false otherwise.
    */
   protected override isValid(shortcut: string): boolean {
@@ -148,17 +151,15 @@ export class ShortcutPicker extends TextPicker {
   }
 
   /**
-   * This method returns the shortcut for the given KeyboardEvent. The shortcut is
-   * returned as a string and a boolean. The boolean is true if the shortcut is complete
-   * and false otherwise. A shortcut is complete if it contains exactly one key and any
-   * number of modifiers.
+   * This method sets the input field according to the given KeyboardEvent. The method
+   * returns true if the shortcut is complete.
    *
    * The key is determined by the KeyboardEvent.code property and the modifier state. The
    * shortcut is formatted according to the rules outlined in
    * https://www.electronjs.org/docs/latest/api/accelerator.
    *
    * @param event The KeyboardEvent to get the shortcut for.
-   * @returns The shortcut and a boolean indicating if the shortcut is complete.
+   * @returns False
    */
   protected override recordInput(event: KeyboardEvent): boolean {
     const parts = [];
@@ -229,7 +230,7 @@ export class ShortcutPicker extends TextPicker {
 
     this.input.value = parts.join('+');
 
-    return !isComplete;
+    return isComplete;
   }
 
   /**

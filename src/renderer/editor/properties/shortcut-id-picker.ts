@@ -21,12 +21,11 @@ import { TextPicker } from './text-picker';
  */
 export class ShortcutIDPicker extends TextPicker {
   /**
-   * Creates a new ShortcutIDPicker and appends it to the given container.
-   *
-   * @param container - The container to which the icon picker will be appended.
+   * Creates a new ShortcutIDPicker and appends it to the given container. You must call
+   * getContainer() of the parent class to get the container which contains the picker.
    */
-  constructor(container: HTMLElement, hint: string) {
-    super(container, {
+  constructor(hint: string) {
+    super({
       label: 'Global Shortcut ID',
       hint,
       placeholder: 'Not Bound',
