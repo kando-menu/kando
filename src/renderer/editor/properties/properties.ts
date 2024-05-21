@@ -116,12 +116,7 @@ export class Properties extends EventEmitter {
     const template = require('./templates/properties.hbs');
 
     const div = document.createElement('div');
-    div.innerHTML = template({
-      shortcutLabel: this.backend.supportsShortcuts ? 'Shortcut' : 'Global Shortcut ID',
-      shortcutHint: this.backend.supportsShortcuts
-        ? 'This will open the menu.'
-        : this.backend.shortcutHint,
-    });
+    div.innerHTML = template();
 
     // The first child of the div is the container.
     this.container = div.firstElementChild as HTMLElement;
@@ -194,7 +189,10 @@ export class Properties extends EventEmitter {
         }
       });
     } else {
-      this.shortcutPicker = new ShortcutIDPicker(shortcutContainer);
+      this.shortcutPicker = new ShortcutIDPicker(
+        shortcutContainer,
+        this.backend.shortcutHint
+      );
       this.shortcutPicker.on('changed', (id) => {
         if (this.activeMenu) {
           this.activeMenu.shortcutID = id;

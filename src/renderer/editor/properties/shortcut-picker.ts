@@ -27,7 +27,7 @@ import { EventEmitter } from 'events';
  */
 export class ShortcutPicker extends EventEmitter {
   /** The input field for directly editing the shortcut. */
-  private shortcutInput: HTMLInputElement = null;
+  private input: HTMLInputElement = null;
 
   /**
    * This maps from key codes to key names. Key codes represent physical keys on the
@@ -53,21 +53,23 @@ export class ShortcutPicker extends EventEmitter {
     // Render the template.
     const template = require('./templates/shortcut-picker.hbs');
     container.innerHTML = template({
+      label: 'Shortcut',
+      hint: 'This will open the menu.',
       placeholder: 'Not Bound',
       recordButton: true,
     });
 
     // Validate the input field when the user types something. If the input is valid, we
     // emit a 'changed' event.
-    this.shortcutInput = container.querySelector('input');
-    this.shortcutInput.addEventListener('input', () => {
-      const shortcut = this.normalizeShortcut(this.shortcutInput.value);
-      if (this.isValidShortcut(shortcut)) {
-        this.shortcutInput.classList.remove('invalid');
-        this.shortcutInput.value = shortcut;
-        this.emit('changed', this.shortcutInput.value);
+    this.input = container.querySelector('input');
+    this.input.addEventListener('input', () => {
+      const value = this.normalizeInput(this.input.value);
+      if (this.isValid(value)) {
+        this.input.classList.remove('invalid');
+        this.input.value = value;
+        this.emit('changed', this.input.value);
       } else {
-        this.shortcutInput.classList.add('invalid');
+        this.input.classList.add('invalid');
       }
     });
 
@@ -85,9 +87,9 @@ export class ShortcutPicker extends EventEmitter {
       // shortcuts which are already bound.
       window.api.inhibitShortcuts();
 
-      const originalShortcut = this.shortcutInput.value;
-      this.shortcutInput.placeholder = 'Press a shortcut...';
-      this.shortcutInput.value = '';
+      const originalValue = this.input.value;
+      this.input.placeholder = 'Press a shortcut...';
+      this.input.value = '';
       inputGroup.classList.add('recording');
 
       // eslint-disable-next-line prefer-const
@@ -98,7 +100,7 @@ export class ShortcutPicker extends EventEmitter {
 
       // Reverts the input field to its original state.
       const reset = () => {
-        this.shortcutInput.placeholder = 'Not Bound';
+        this.input.placeholder = 'Not Bound';
         inputGroup.classList.remove('recording');
         window.removeEventListener('click', clickHandler);
         window.removeEventListener('keydown', keyHandler, true);
@@ -112,7 +114,7 @@ export class ShortcutPicker extends EventEmitter {
       // the screen.
       clickHandler = (event: MouseEvent) => {
         event.stopPropagation();
-        this.shortcutInput.value = originalShortcut;
+        this.input.value = originalValue;
         reset();
       };
 
@@ -128,15 +130,15 @@ export class ShortcutPicker extends EventEmitter {
 
         // Update the input field with the current shortcut, even if it is not yet complete.
         if (shortcut != undefined) {
-          this.shortcutInput.value = shortcut;
+          this.input.value = shortcut;
         }
 
         // If the shortcut is complete, we reset the input field to its original state
         // and emit a 'changed' event.
         if (isComplete) {
           reset();
-          this.shortcutInput.classList.remove('invalid');
-          this.emit('changed', this.shortcutInput.value);
+          this.input.classList.remove('invalid');
+          this.emit('changed', this.input.value);
         }
       };
 
@@ -153,12 +155,12 @@ export class ShortcutPicker extends EventEmitter {
    * @param shortcut The shortcut to set.
    */
   public setValue(shortcut: string) {
-    shortcut = this.normalizeShortcut(shortcut);
-    this.shortcutInput.value = shortcut;
-    if (this.isValidShortcut(shortcut)) {
-      this.shortcutInput.classList.remove('invalid');
+    shortcut = this.normalizeInput(shortcut);
+    this.input.value = shortcut;
+    if (this.isValid(shortcut)) {
+      this.input.classList.remove('invalid');
     } else {
-      this.shortcutInput.classList.add('invalid');
+      this.input.classList.add('invalid');
     }
   }
 
@@ -170,7 +172,7 @@ export class ShortcutPicker extends EventEmitter {
    * @param shortcut The normalized shortcut to validate
    * @returns True if the shortcut is valid, false otherwise.
    */
-  private isValidShortcut(shortcut: string): boolean {
+  private isValid(shortcut: string): boolean {
     // If the shortcut is empty, it is valid.
     if (shortcut === '') {
       return true;
@@ -209,7 +211,7 @@ export class ShortcutPicker extends EventEmitter {
    * @param shortcut The shortcut to normalize.
    * @returns The normalized shortcut.
    */
-  private normalizeShortcut(shortcut: string): string {
+  private normalizeInput(shortcut: string): string {
     // We first remove any whitespace and transform the shortcut to lowercase.
     shortcut = shortcut.replace(/\s/g, '').toLowerCase();
 
@@ -303,7 +305,7 @@ export class ShortcutPicker extends EventEmitter {
     key = nameMap.get(key) || key;
 
     // Fix the case of the key.
-    key = this.normalizeShortcut(key);
+    key = this.normalizeInput(key);
 
     // We can explicitly bind to numpad keys. We check location property to determine
     // if the key is on the numpad.

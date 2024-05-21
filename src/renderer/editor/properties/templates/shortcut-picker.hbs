@@ -9,9 +9,19 @@
 // SPDX-License-Identifier: MIT
 }}
 
-<div class="shortcut-picker input-group">
-  <input type="text" class="form-control fs-3 kando-font" placeholder="{{placeholder}}" size="1">
-  {{#if recordButton}}
-    <button class="btn btn-primary fs-3"><i class='material-symbols-rounded inline-icon'>screen_record</i></button>
-  {{/if}}
+<div class='d-flex mt-3'>
+  <div class="flex-grow-1">
+    <div class='kando-font fs-2'>
+      {{label}}
+    </div>
+    <div class='kando-font fs-5'>
+      {{hint}}
+    </div>
+  </div>
+  <div class="shortcut-picker input-group align-self-center" style="flex-grow: 2;">
+    <input type="text" class="form-control fs-3 kando-font" placeholder="{{placeholder}}" size="1">
+    {{#if recordButton}}
+      <button class="btn btn-primary fs-3"><i class='material-symbols-rounded inline-icon'>screen_record</i></button>
+    {{/if}}
+  </div>
 </div>

@@ -28,12 +28,14 @@ export class ShortcutIDPicker extends EventEmitter {
    *
    * @param container - The container to which the icon picker will be appended.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, hint: string) {
     super();
 
     // Render the template.
     const template = require('./templates/shortcut-picker.hbs');
     container.innerHTML = template({
+      label: 'Global Shortcut ID',
+      hint,
       placeholder: 'Not Bound',
       recordButton: false,
     });
@@ -45,7 +47,7 @@ export class ShortcutIDPicker extends EventEmitter {
       const start = this.input.selectionStart;
       const end = this.input.selectionEnd;
 
-      const shortcut = this.normalizeShortcut(this.input.value);
+      const shortcut = this.normalizeInput(this.input.value);
       this.input.value = shortcut;
       this.emit('changed', this.input.value);
 
@@ -60,7 +62,7 @@ export class ShortcutIDPicker extends EventEmitter {
    * @param id The id to set.
    */
   public setValue(id: string) {
-    id = this.normalizeShortcut(id);
+    id = this.normalizeInput(id);
     this.input.value = id;
   }
 
@@ -71,7 +73,7 @@ export class ShortcutIDPicker extends EventEmitter {
    * @param id The shortcut ID to normalize.
    * @returns The normalized shortcut ID.
    */
-  private normalizeShortcut(id: string) {
+  private normalizeInput(id: string) {
     // We first remove any whitespace and transform the shortcut to lowercase.
     id = id.replace(/\s/g, '-').toLowerCase();
 
