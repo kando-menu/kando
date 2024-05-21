@@ -14,6 +14,7 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu, IBackendInfo } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
 import { ItemConfigRegistry } from '../../../common/item-config-registry';
@@ -84,7 +85,7 @@ export class Properties extends EventEmitter {
    * The shortcut picker is a component that allows the user to select a shortcut for the
    * currently edited menu item.
    */
-  private shortcutPicker: ShortcutPicker | ShortcutIDPicker = null;
+  private shortcutPicker: TextPicker = null;
 
   /**
    * This shows a tip-of-the-day below the properties view. It is used to give the user
