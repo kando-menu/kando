@@ -35,6 +35,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The `"shortcut"` property in the menu configuration is now optional. If no shortcut is given, the menu will not be accessible via a global shortcut. This is useful if you want to have a menu which is only accessible via the tray icon.
 - Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (about 5x faster).
 - Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (about 2x faster).
+- Rename the "Open URL" action to "Open URI" in the menu editor.
 
 #### Removed
 

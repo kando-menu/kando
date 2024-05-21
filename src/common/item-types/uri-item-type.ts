@@ -26,7 +26,7 @@ export class URIItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return 'Open URL';
+    return 'Open URI';
   }
 
   get defaultIcon(): string {
