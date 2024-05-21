@@ -12,7 +12,7 @@ import { native } from './native';
 import { screen, globalShortcut, app } from 'electron';
 import { Backend, Shortcut } from '../backend';
 import { IKeySequence } from '../../../common';
-import { MacosKeyNames } from './keys';
+import { mapKeys } from '../key-codes';
 
 export class MacosBackend implements Backend {
   /**
@@ -72,17 +72,9 @@ export class MacosBackend implements Backend {
    * @param shortcut The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence) {
-    // We first need to convert the given DOM key names to Apple key codes. If a key code
-    // is not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = MacosKeyNames.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // We first need to convert the given DOM key names to Apple key codes.  If a key code is
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'macos');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.

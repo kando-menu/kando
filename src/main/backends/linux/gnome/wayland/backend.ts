@@ -11,7 +11,7 @@
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../../common';
-import { LinuxKeyCodes } from '../../keys';
+import { mapKeys } from '../../../key-codes';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -103,16 +103,8 @@ export class GnomeBackend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now we create a list of tuples, each containing the information required for one
     // key event.

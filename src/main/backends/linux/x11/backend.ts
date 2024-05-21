@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../../common';
-import { LinuxKeyCodes } from '../keys';
+import { mapKeys } from '../../key-codes';
 
 /**
  * This backend uses the XTest extension via native C++ code to simulate key presses and
@@ -78,16 +78,8 @@ export class X11Backend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.

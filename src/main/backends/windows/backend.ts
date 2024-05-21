@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../backend';
 import { IKeySequence } from '../../../common';
-import { WindowsKeyCodes } from './keys';
+import { mapKeys } from '../key-codes';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -75,17 +75,9 @@ export class WindowsBackend implements Backend {
    * @param keys The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence) {
-    // We first need to convert the given DOM key names to Win32 key codes. If a key code
-    // is not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = WindowsKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // We first need to convert the given DOM key names to Win32 key codes. If a key code is
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'windows');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.
