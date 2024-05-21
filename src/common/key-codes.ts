@@ -5,7 +5,7 @@
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-import { IKeySequence } from '../../common';
+import { IKeySequence } from '.';
 
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
@@ -1331,7 +1331,7 @@ const KeyCodes: Map<string, IKeyMapping> = new Map([
  */
 export function mapKeys(keys: IKeySequence, os: 'windows' | 'macos' | 'linux'): number[] {
   return keys.map((key) => {
-    const code = KeyCodes.get(key.name)?.[os];
+    const code = KeyCodes.get(key.name.toLowerCase())?.[os];
 
     if (!code) {
       throw new Error(`Unknown key: ${key.name}`);

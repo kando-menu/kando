@@ -11,7 +11,7 @@
 import { native } from './native';
 import { Backend, Shortcut, WMInfo } from '../../backend';
 import { IBackendInfo, IKeySequence } from '../../../../common';
-import { mapKeys } from '../../key-codes';
+import { mapKeys } from '../../../../common/key-codes';
 
 /**
  * This is a partial implementation of the Backend interface for wlroots-based Wayland

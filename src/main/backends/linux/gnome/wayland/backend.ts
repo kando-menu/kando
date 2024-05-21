@@ -11,7 +11,7 @@
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../../common';
-import { mapKeys } from '../../../key-codes';
+import { mapKeys } from '../../../../../common/key-codes';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to

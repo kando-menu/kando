@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../backend';
 import { IKeySequence } from '../../../common';
-import { mapKeys } from '../key-codes';
+import { mapKeys } from '../../../common/key-codes';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses

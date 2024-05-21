@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../../common';
-import { mapKeys } from '../../key-codes';
+import { mapKeys } from '../../../../common/key-codes';
 
 /**
  * This backend uses the XTest extension via native C++ code to simulate key presses and

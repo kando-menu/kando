@@ -16,7 +16,7 @@ import { exec } from 'child_process';
 import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { IKeySequence } from '../../../../../common';
-import { mapKeys } from '../../../key-codes';
+import { mapKeys } from '../../../../../common/key-codes';
 
 /**
  * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind

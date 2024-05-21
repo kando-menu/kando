@@ -12,7 +12,7 @@ import { native } from './native';
 import { screen, globalShortcut, app } from 'electron';
 import { Backend, Shortcut } from '../backend';
 import { IKeySequence } from '../../../common';
-import { mapKeys } from '../key-codes';
+import { mapKeys } from '../../../common/key-codes';
 
 export class MacosBackend implements Backend {
   /**
