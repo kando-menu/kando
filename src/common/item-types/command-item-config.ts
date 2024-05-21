@@ -28,7 +28,7 @@ export class CommandItemConfig implements IItemConfig {
     div.innerHTML = template({
       placeholder: 'Not Defined',
       label: 'Command',
-      hint: 'A shell command or a path to an executable.',
+      hint: 'This will be executed.',
     });
 
     // Get the input element and set the current value.

@@ -34,7 +34,7 @@ export class URIItemConfig implements IItemConfig {
     div.innerHTML = template({
       placeholder: 'Not Defined',
       label: 'URI',
-      hint: 'This will be opened with the default application.',
+      hint: 'This will be opened.',
     });
 
     // Get the input element and set the current value.
