@@ -22,13 +22,14 @@ export class SubmenuItemConfig implements IItemConfig {
       "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
       'You can reorder items by dragging them in the preview.',
       'You can remove items by dragging them to the trash tab in the toolbar.',
+      'When recording a shortcut, you do not have to press all keys at once. You can press them one after another.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
   }
 
   /** Submenus do not have any special settings. Therefore, this method returns `null`. */
-  public getConfigWidget(): HTMLElement | null {
+  public getConfigWidget(): DocumentFragment | null {
     return null;
   }
 }

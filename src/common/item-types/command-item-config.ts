@@ -20,8 +20,11 @@ export class CommandItemConfig implements IItemConfig {
   }
 
   /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): HTMLElement | null {
+  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
+    const fragment = document.createDocumentFragment();
+
     const div = document.createElement('div');
+    fragment.appendChild(div);
 
     // Render the template.
     const template = require('../../renderer/editor/properties/templates/text-option.hbs');
@@ -40,6 +43,6 @@ export class CommandItemConfig implements IItemConfig {
       (item.data as IItemData).command = input.value;
     });
 
-    return div;
+    return fragment;
   }
 }

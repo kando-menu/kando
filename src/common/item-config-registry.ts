@@ -30,12 +30,12 @@ export interface IItemConfig {
   getTipOfTheDay(): string;
 
   /**
-   * This method returns an HTMLElement that will be shown in the menu editor for editing
-   * the given item. Whenever the user changes the settings of the item, the item is
-   * updated accordingly. If an item type does not need any special settings, this method
-   * can return null.
+   * This method returns an DocumentFragment that will be shown in the menu editor for
+   * editing the given item. Whenever the user changes the settings of the item, the item
+   * is updated accordingly. If an item type does not need any special settings, this
+   * method can return null.
    */
-  getConfigWidget(item: IMenuItem): HTMLElement | null;
+  getConfigWidget(item: IMenuItem): DocumentFragment | null;
 }
 
 /**

@@ -26,8 +26,11 @@ export class URIItemConfig implements IItemConfig {
   }
 
   /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): HTMLElement | null {
+  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
+    const fragment = document.createDocumentFragment();
+
     const div = document.createElement('div');
+    fragment.appendChild(div);
 
     // Render the template.
     const template = require('../../renderer/editor/properties/templates/text-option.hbs');
@@ -46,6 +49,6 @@ export class URIItemConfig implements IItemConfig {
       (item.data as IItemData).uri = input.value;
     });
 
-    return div;
+    return fragment;
   }
 }
