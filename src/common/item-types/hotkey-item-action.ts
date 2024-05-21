@@ -39,36 +39,7 @@ export class HotkeyItemAction implements IItemAction {
    */
   async execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
     return new Promise<void>((resolve, reject) => {
-      // We convert some common key names to the corresponding left key names.
-      const keyNames = (item.data as IItemData).hotkey.split('+').map((name) => {
-        // There are many different names for the Control key. We convert them all
-        // to "ControlLeft".
-        if (
-          name === 'CommandOrControl' ||
-          name === 'CmdOrCtrl' ||
-          name === 'Command' ||
-          name === 'Control' ||
-          name === 'Cmd' ||
-          name === 'Ctrl'
-        ) {
-          return 'ControlLeft';
-        }
-
-        if (name === 'Shift') return 'ShiftLeft';
-        if (name === 'Meta' || name === 'Super') return 'MetaLeft';
-        if (name === 'Alt') return 'AltLeft';
-
-        // If the key name is an integer, we assume that it is a number key. In this
-        // case, we prefix it with "Digit".
-        if (!isNaN(parseInt(name))) return 'Digit' + name;
-
-        // If the key name is only one character long, we assume that it is a
-        // single character which should be pressed. In this case, we prefix it
-        // with "Key".
-        if (name.length === 1) return 'Key' + name.toUpperCase();
-
-        return name;
-      });
+      const keyNames = (item.data as IItemData).hotkey.split('+');
 
       // We simulate the key press by first pressing all keys and then releasing
       // them again. We add a small delay between the key presses to make sure
