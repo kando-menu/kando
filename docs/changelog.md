@@ -44,6 +44,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Removed
 
 - The Example Actions tab from the sidebar. As we are getting closer to a fully functional menu editor, this tab is no longer needed.
+- The non-functional get-menus-online buttons from the menus tab. They will return in a later version when we have a way to actually get menus online.
 
 #### Fixed
 
