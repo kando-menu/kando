@@ -148,8 +148,8 @@ export class ShortcutPicker extends TextPicker {
   }
 
   /**
-   * This method sets the input field according to the given KeyboardEvent. The method
-   * returns true if the shortcut is complete.
+   * This method appends a key according to the given KeyboardEvent to the input field.
+   * The method returns true if the shortcut is complete.
    *
    * The key is determined by the KeyboardEvent.code property and the modifier state. The
    * shortcut is formatted according to the rules outlined in
@@ -159,22 +159,33 @@ export class ShortcutPicker extends TextPicker {
    * @returns False
    */
   protected override recordInput(event: KeyboardEvent): boolean {
-    const parts = [];
+    // Ignore key up events.
+    if (event.type === 'keyup') {
+      return false;
+    }
+
+    const parts = this.input.value.split('+').filter((part) => part !== '');
+
+    const push = (part: string) => {
+      if (!parts.includes(part)) {
+        parts.push(part);
+      }
+    };
 
     if (event.ctrlKey) {
-      parts.push('Control');
+      push('Control');
     }
 
     if (event.shiftKey) {
-      parts.push('Shift');
+      push('Shift');
     }
 
     if (event.altKey) {
-      parts.push('Alt');
+      push('Alt');
     }
 
     if (event.metaKey) {
-      parts.push('Meta');
+      push('Meta');
     }
 
     let key = this.keymap.get(event.code) || event.key;
