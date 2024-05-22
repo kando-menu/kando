@@ -8,195 +8,50 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { EventEmitter } from 'events';
+import { TextPicker } from './text-picker';
 
 /**
  * This class displays a text input field with a button next to it which allows the user
- * to select a key combination. The user can either type the key combination directly into
- * the input field or press the button to enter a mode where the next key presses are
- * interpreted as the key combination. If the key combination is entered manually, the
- * input is validated and the user is informed by a red border around the input field if
- * the key combination is invalid.
+ * to select a keyboard shortcut for opening a menu. The user can either type the keyboard
+ * shortcut directly into the input field or press the button to enter a mode where the
+ * next key presses are interpreted as the keyboard shortcut.
  *
- * For now, the key combinations is validated against the globalShortcut module of
+ * There is also the HotkeyPicker which is similar to this class. See its documentation
+ * for more information.
+ *
+ * The shortcut selected by this class is validated against the globalShortcut module of
  * Electron. See https://www.electronjs.org/docs/latest/api/accelerator for more
  * information.
- *
- * @fires changed - When the user selects a valid key combination. The event contains the
- *   new key combination as an argument.
  */
-export class ShortcutPicker extends EventEmitter {
-  /** The input field for directly editing the shortcut. */
-  private shortcutInput: HTMLInputElement = null;
-
+export class ShortcutPicker extends TextPicker {
   /**
    * This maps from key codes to key names. Key codes represent physical keys on the
    * keyboard, key names represent the characters which are generated when the specific
    * key is pressed. The latter depends on the current keyboard layout.
+   *
+   * This is used to get the names of of shifted keys. For instance, if the user presses
+   * Shift+1, we usually get '!'. We want to display 'Shift+1' instead.
    */
   private keymap = new Map<string, string>();
 
   /**
-   * Creates a new ShortcutPicker and appends it to the given container.
-   *
-   * @param container - The container to which the icon picker will be appended.
+   * Creates a new ShortcutPicker. You must call getContainer() of the parent class to get
+   * the container which contains the picker.
    */
-  constructor(container: HTMLElement) {
-    super();
+  constructor() {
+    super({
+      label: 'Shortcut',
+      hint: 'This will open the menu.',
+      placeholder: 'Not Bound',
+      recordingPlaceholder: 'Press a shortcut...',
+      enableRecording: true,
+    });
 
     // Retrieve the keymap from the system.
     // @ts-expect-error The navigator is indeed available in Electron
     window.navigator.keyboard.getLayoutMap().then((keymap) => {
       this.keymap = keymap;
     });
-
-    // Render the template.
-    const template = require('./templates/shortcut-picker.hbs');
-    container.innerHTML = template({
-      placeholder: 'Not Bound',
-      withButton: true,
-    });
-
-    // Validate the input field when the user types something. If the input is valid, we
-    // emit a 'changed' event.
-    this.shortcutInput = container.querySelector('input');
-    this.shortcutInput.addEventListener('input', () => {
-      const shortcut = this.normalizeShortcut(this.shortcutInput.value);
-      if (this.isValidShortcut(shortcut)) {
-        this.shortcutInput.classList.remove('invalid');
-        this.shortcutInput.value = shortcut;
-        this.emit('changed', this.shortcutInput.value);
-      } else {
-        this.shortcutInput.classList.add('invalid');
-      }
-    });
-
-    // When the user clicks the button, we enter a mode where the next key presses are
-    // interpreted as the key combination. The mode is aborted when...
-    // ... the user clicks anywhere on the screen
-    // ... the user entered a valid key combination
-    const shortcutButton = container.querySelector('button');
-    shortcutButton.addEventListener('click', (event) => {
-      event.stopPropagation();
-
-      // Unbind all shortcuts. This is necessary because else the user could not enter
-      // shortcuts which are already bound.
-      window.api.inhibitShortcuts();
-
-      const originalShortcut = this.shortcutInput.value;
-      this.shortcutInput.placeholder = 'Press a shortcut...';
-      this.shortcutInput.value = '';
-      this.shortcutInput.classList.add('glowing');
-
-      // eslint-disable-next-line prefer-const
-      let clickHandler: (ev: MouseEvent) => void;
-
-      // eslint-disable-next-line prefer-const
-      let keyHandler: (ev: KeyboardEvent) => void;
-
-      // Reverts the input field to its original state.
-      const reset = () => {
-        this.shortcutInput.placeholder = 'Not Bound';
-        this.shortcutInput.classList.remove('glowing');
-        window.removeEventListener('click', clickHandler);
-        window.removeEventListener('keydown', keyHandler, true);
-        window.removeEventListener('keyup', keyHandler, true);
-
-        // Rebind all shortcuts.
-        window.api.uninhibitShortcuts();
-      };
-
-      // Reset the input field to the original state when the user clicks anywhere on
-      // the screen.
-      clickHandler = (event: MouseEvent) => {
-        event.stopPropagation();
-        this.shortcutInput.value = originalShortcut;
-        reset();
-      };
-
-      // Update the input field when the user presses a key. If the key is a valid part
-      // of a shortcut, we update the input field accordingly. If the shortcut is
-      // complete, we reset the input field to its original state and emit a 'changed'
-      // event.
-      keyHandler = (event: KeyboardEvent) => {
-        event.stopPropagation();
-        event.preventDefault();
-
-        const [shortcut, isComplete] = this.getShortcut(event);
-
-        // Update the input field with the current shortcut, even if it is not yet complete.
-        if (shortcut != undefined) {
-          this.shortcutInput.value = shortcut;
-        }
-
-        // If the shortcut is complete, we reset the input field to its original state
-        // and emit a 'changed' event.
-        if (isComplete) {
-          reset();
-          this.shortcutInput.classList.remove('invalid');
-          this.emit('changed', this.shortcutInput.value);
-        }
-      };
-
-      window.addEventListener('click', clickHandler);
-      window.addEventListener('keydown', keyHandler, true);
-      window.addEventListener('keyup', keyHandler, true);
-    });
-  }
-
-  /**
-   * This method sets the shortcut of the picker. The shortcut is normalized and validated
-   * before it is set. If the shortcut is invalid, the input field is marked as invalid.
-   *
-   * @param shortcut The shortcut to set.
-   */
-  public setValue(shortcut: string) {
-    shortcut = this.normalizeShortcut(shortcut);
-    this.shortcutInput.value = shortcut;
-    if (this.isValidShortcut(shortcut)) {
-      this.shortcutInput.classList.remove('invalid');
-    } else {
-      this.shortcutInput.classList.add('invalid');
-    }
-  }
-
-  /**
-   * This method checks if the given shortcut is valid. A shortcut is valid if it follows
-   * the rules outlined in https://www.electronjs.org/docs/latest/api/accelerator. An
-   * empty shortcut is also considered valid.
-   *
-   * @param shortcut The normalized shortcut to validate
-   * @returns True if the shortcut is valid, false otherwise.
-   */
-  private isValidShortcut(shortcut: string): boolean {
-    // If the shortcut is empty, it is valid.
-    if (shortcut === '') {
-      return true;
-    }
-
-    // Make sure the shortcut does not start or end with a '+'.
-    if (shortcut.startsWith('+') || shortcut.endsWith('+')) {
-      return false;
-    }
-
-    // Split the shortcut into its parts.
-    const parts = shortcut.split('+');
-
-    // A valid shortcut must contain exactly one key and can contain any number of
-    // modifiers.
-    let hasKey = false;
-    for (const part of parts) {
-      if (this.isValidKey(part)) {
-        if (hasKey) {
-          return false;
-        }
-        hasKey = true;
-      } else if (!this.isValidModifier(part)) {
-        return false;
-      }
-    }
-
-    return hasKey;
   }
 
   /**
@@ -207,7 +62,7 @@ export class ShortcutPicker extends EventEmitter {
    * @param shortcut The shortcut to normalize.
    * @returns The normalized shortcut.
    */
-  private normalizeShortcut(shortcut: string): string {
+  protected override normalizeInput(shortcut: string): string {
     // We first remove any whitespace and transform the shortcut to lowercase.
     shortcut = shortcut.replace(/\s/g, '').toLowerCase();
 
@@ -254,35 +109,83 @@ export class ShortcutPicker extends EventEmitter {
   }
 
   /**
-   * This method returns the shortcut for the given KeyboardEvent. The shortcut is
-   * returned as a string and a boolean. The boolean is true if the shortcut is complete
-   * and false otherwise. A shortcut is complete if it contains exactly one key and any
-   * number of modifiers.
+   * This method checks if the given shortcut is valid. A shortcut is valid if it follows
+   * the rules outlined in https://www.electronjs.org/docs/latest/api/accelerator. An
+   * empty shortcut is also considered valid.
+   *
+   * @param shortcut The normalized shortcut to validate.
+   * @returns True if the shortcut is valid, false otherwise.
+   */
+  protected override isValid(shortcut: string): boolean {
+    // If the shortcut is empty, it is valid.
+    if (shortcut === '') {
+      return true;
+    }
+
+    // Make sure the shortcut does not start or end with a '+'.
+    if (shortcut.startsWith('+') || shortcut.endsWith('+')) {
+      return false;
+    }
+
+    // Split the shortcut into its parts.
+    const parts = shortcut.split('+');
+
+    // A valid shortcut must contain exactly one key and can contain any number of
+    // modifiers.
+    let hasKey = false;
+    for (const part of parts) {
+      if (this.isValidKey(part)) {
+        if (hasKey) {
+          return false;
+        }
+        hasKey = true;
+      } else if (!this.isValidModifier(part)) {
+        return false;
+      }
+    }
+
+    return hasKey;
+  }
+
+  /**
+   * This method appends a key according to the given KeyboardEvent to the input field.
+   * The method returns true if the shortcut is complete.
    *
    * The key is determined by the KeyboardEvent.code property and the modifier state. The
    * shortcut is formatted according to the rules outlined in
    * https://www.electronjs.org/docs/latest/api/accelerator.
    *
    * @param event The KeyboardEvent to get the shortcut for.
-   * @returns The shortcut and a boolean indicating if the shortcut is complete.
+   * @returns False
    */
-  private getShortcut(event: KeyboardEvent): [string, boolean] {
-    const parts = [];
+  protected override recordInput(event: KeyboardEvent): boolean {
+    // Ignore key up events.
+    if (event.type === 'keyup') {
+      return false;
+    }
+
+    const parts = this.input.value.split('+').filter((part) => part !== '');
+
+    const push = (part: string) => {
+      if (!parts.includes(part)) {
+        parts.push(part);
+      }
+    };
 
     if (event.ctrlKey) {
-      parts.push('Control');
+      push('Control');
     }
 
     if (event.shiftKey) {
-      parts.push('Shift');
+      push('Shift');
     }
 
     if (event.altKey) {
-      parts.push('Alt');
+      push('Alt');
     }
 
     if (event.metaKey) {
-      parts.push('Meta');
+      push('Meta');
     }
 
     let key = this.keymap.get(event.code) || event.key;
@@ -301,7 +204,7 @@ export class ShortcutPicker extends EventEmitter {
     key = nameMap.get(key) || key;
 
     // Fix the case of the key.
-    key = this.normalizeShortcut(key);
+    key = this.normalizeInput(key);
 
     // We can explicitly bind to numpad keys. We check location property to determine
     // if the key is on the numpad.
@@ -333,7 +236,9 @@ export class ShortcutPicker extends EventEmitter {
       parts.push(key);
     }
 
-    return [parts.join('+'), isComplete];
+    this.input.value = parts.join('+');
+
+    return isComplete;
   }
 
   /**

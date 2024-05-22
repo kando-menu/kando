@@ -16,9 +16,9 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenu, IBackendInfo, IMenuSettings } from '../../common';
+import { IMenu, IBackendInfo, IMenuSettings, IMenuItem } from '../../common';
 import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
-import { ItemFactory } from '../../common/item-factory';
+import { ItemTypeRegistry } from '../../common/item-type-registry';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the
@@ -217,7 +217,19 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('add-item', (typeName: string) => {
-      const item = ItemFactory.getInstance().createMenuItem(typeName);
+      const type = ItemTypeRegistry.getInstance().getType(typeName);
+      const item: IMenuItem = {
+        type: typeName,
+        data: type.defaultData,
+        name: type.defaultName,
+        icon: type.defaultIcon,
+        iconTheme: type.defaultIconTheme,
+      };
+
+      if (type.hasChildren) {
+        item.children = [];
+      }
+
       this.preview.insertItem(item);
     });
 

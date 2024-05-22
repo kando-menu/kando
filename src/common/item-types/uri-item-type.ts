@@ -9,45 +9,45 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IMeta } from '../item-factory';
+import { IItemType } from '../item-type-registry';
 
 /**
- * For this type of menu items, the user can configure a command that will be executed
- * when the item is clicked.
+ * For this type of menu items, the user can configure a URL that will be opened when the
+ * item is clicked.
  */
-export interface IActionData {
-  command: string;
+export interface IItemData {
+  uri: string;
 }
 
-/** This class provides meta information for menu items that execute a command. */
-export class CommandMeta implements IMeta {
+/** This class provides meta information for menu items that open a URL. */
+export class URIItemType implements IItemType {
   get hasChildren(): boolean {
     return false;
   }
 
   get defaultName(): string {
-    return 'Launch Application';
+    return 'Open URI';
   }
 
   get defaultIcon(): string {
-    return 'terminal';
+    return 'public';
   }
 
   get defaultIconTheme(): string {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): IActionData {
+  get defaultData(): IItemData {
     return {
-      command: '',
+      uri: '',
     };
   }
 
   get genericDescription(): string {
-    return 'Runs any command.';
+    return 'Opens files or websites.';
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IActionData).command || 'Not configured.';
+    return (item.data as IItemData).uri || 'Not configured.';
   }
 }

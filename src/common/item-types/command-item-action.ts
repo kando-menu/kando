@@ -11,12 +11,12 @@
 import { exec } from 'child_process';
 
 import { IMenuItem } from '../index';
-import { IAction } from '../action-registry';
+import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
-import { IActionData } from './command-meta';
+import { IItemData } from './command-item-type';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
-export class CommandAction implements IAction {
+export class CommandItemAction implements IItemAction {
   /**
    * Commands are executed immediately.
    *
@@ -34,7 +34,7 @@ export class CommandAction implements IAction {
    */
   async execute(item: DeepReadonly<IMenuItem>) {
     return new Promise<void>((resolve, reject) => {
-      const command = (item.data as IActionData).command;
+      const command = (item.data as IItemData).command;
 
       exec(command, (error) => {
         if (error) {

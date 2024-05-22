@@ -18,19 +18,21 @@
 //   or the menu configuration widgets in the screen's center. They are visible when
 //   the editor is in 'edit-mode'.
 
-@import './common/variables.scss';
-
 // The menu editor of Kando uses Bootstrap 5.
+// We use Bootstrap RFS to scale various things based on the window size. We set the base
+// value to a small number to make sure that RFS is also applied to small things like
+// padding and margin.
+$rfs-base-value: 0.1rem;
+$rfs-breakpoint: 1400px;
+
 @import '../../../node_modules/bootstrap/scss/bootstrap';
 
-@import './common/fonts.scss';
-@import './common/scrollbox.scss';
-@import './common/icon-container.scss';
-@import './background/background.scss';
-@import './sidebar/sidebar.scss';
-@import './toolbar/toolbar.scss';
-@import './preview/preview.scss';
-@import './properties/properties.scss';
+@import './common/style';
+@import './background/style';
+@import './sidebar/style';
+@import './toolbar/style';
+@import './preview/style';
+@import './properties/style';
 
 // Handle pointer events -----------------------------------------------------------------
 
@@ -47,6 +49,9 @@
 }
 
 // Basic UI styling ----------------------------------------------------------------------
+body {
+  --bs-body-line-height: 1.3;
+}
 
 #kando-editor {
   color: #{$kando-text-color};
@@ -168,16 +173,27 @@
   }
 
   // These are shown in various places in the editor.
-  .swirl {
+  .swirl1,
+  .swirl2 {
     display: inline-block;
-    background-image: url(../../assets/images/swirl.svg);
-    width: 160px;
-    height: 14px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    aspect-ratio: 200/16;
 
     &.vertical {
-      width: 14px;
-      height: 160px;
-      background-image: url(../../assets/images/swirl-vertical.svg);
+      aspect-ratio: 16/200;
     }
+  }
+
+  .swirl1 {
+    background-image: url(../../assets/images/swirl1.svg);
+
+    &.vertical {
+      background-image: url(../../assets/images/swirl1-vertical.svg);
+    }
+  }
+
+  .swirl2 {
+    background-image: url(../../assets/images/swirl2.svg);
   }
 }

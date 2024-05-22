@@ -14,8 +14,10 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu, IBackendInfo } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
+import { ItemConfigRegistry } from '../../../common/item-config-registry';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -49,8 +51,17 @@ export class Properties extends EventEmitter {
    */
   private iconPicker: IconPicker = null;
 
-  /** The base settings div contains the name input and the icon button. */
+  /**
+   * The base settings div contains the name input, the icon button, and the
+   * type-dependent settings as well as a hint element.
+   */
   private baseSettings: HTMLElement = null;
+
+  /**
+   * The settings wrapper contains the item-type specific settings. It is required for
+   * smooth animations when the item settings change.
+   */
+  private settingsWrapper: HTMLElement = null;
 
   /**
    * The name input is an input element that allows the user to change the name of the
@@ -68,6 +79,12 @@ export class Properties extends EventEmitter {
   private menuSettings: HTMLElement = null;
 
   /**
+   * The item settings div contains the item-type specific settings for the currently
+   * edited menu item. It is cleared and filled every time the active item changes.
+   */
+  private itemSettings: HTMLElement = null;
+
+  /**
    * The open at pointer checkbox is a checkbox that allows the user to toggle whether the
    * menu should open at the pointer position.
    */
@@ -77,7 +94,13 @@ export class Properties extends EventEmitter {
    * The shortcut picker is a component that allows the user to select a shortcut for the
    * currently edited menu item.
    */
-  private shortcutPicker: ShortcutPicker | ShortcutIDPicker = null;
+  private shortcutPicker: TextPicker = null;
+
+  /**
+   * This shows a tip-of-the-day below the properties view. It is used to give the user
+   * some hints on how to configure the item.
+   */
+  private hintElement: HTMLElement = null;
 
   /**
    * The currently edited menu item. This is the item whose properties are displayed in
@@ -103,23 +126,17 @@ export class Properties extends EventEmitter {
     const template = require('./templates/properties.hbs');
 
     const div = document.createElement('div');
-    div.innerHTML = template({
-      shortcutLabel: this.backend.supportsShortcuts ? 'Shortcut' : 'Global Shortcut ID',
-      shortcutHint: this.backend.supportsShortcuts
-        ? 'This will open the menu.'
-        : this.backend.shortcutHint,
-    });
+    div.innerHTML = template();
 
     // The first child of the div is the container.
     this.container = div.firstElementChild as HTMLElement;
 
-    // Store a reference to the base settings div. This contains the name input and the
-    // icon button.
+    // Store references to various elements.
+    this.settingsWrapper = div.querySelector('#kando-menu-properties-settings-wrapper');
     this.baseSettings = div.querySelector('#kando-menu-properties-base-settings');
-
-    // Store a reference to the menu settings div. This contains elements that are only
-    // shown when the user is editing the root item of a menu.
     this.menuSettings = div.querySelector('#kando-menu-properties-menu-settings');
+    this.itemSettings = div.querySelector('#kando-menu-properties-item-settings');
+    this.hintElement = div.querySelector('#kando-menu-properties-hint');
 
     // Emit the 'changed-name' event when the name input changes.
     this.nameInput = div.querySelector('#kando-menu-properties-name') as HTMLInputElement;
@@ -164,33 +181,34 @@ export class Properties extends EventEmitter {
       '#kando-menu-properties-open-at-pointer'
     ) as HTMLInputElement;
     this.openAtPointerCheckbox.addEventListener('change', () => {
-      if (this.activeItem) {
+      if (this.activeMenu) {
         this.activeMenu.centered = !this.openAtPointerCheckbox.checked;
       }
     });
 
     // Create the shortcut picker or the shorcut ID picker and wire up its events.
-    const shortcutContainer = div.querySelector(
-      '#kando-menu-properties-shortcut-picker'
-    ) as HTMLElement;
-
     if (this.backend.supportsShortcuts) {
-      this.shortcutPicker = new ShortcutPicker(shortcutContainer);
-      this.shortcutPicker.on('changed', (shortcut) => {
+      this.shortcutPicker = new ShortcutPicker();
+      this.shortcutPicker.on('change', (shortcut) => {
         if (this.activeMenu) {
           this.activeMenu.shortcut = shortcut;
           this.emit('changed-shortcut');
         }
       });
     } else {
-      this.shortcutPicker = new ShortcutIDPicker(shortcutContainer);
-      this.shortcutPicker.on('changed', (id) => {
+      this.shortcutPicker = new ShortcutIDPicker(this.backend.shortcutHint);
+      this.shortcutPicker.on('change', (id) => {
         if (this.activeMenu) {
           this.activeMenu.shortcutID = id;
           this.emit('changed-shortcut');
         }
       });
     }
+
+    const shortcutContainer = div.querySelector(
+      '#kando-menu-properties-shortcut-picker'
+    ) as HTMLElement;
+    shortcutContainer.appendChild(this.shortcutPicker.getContainer());
   }
 
   /** This method returns the container of the menu preview. */
@@ -216,18 +234,29 @@ export class Properties extends EventEmitter {
    *
    * @param menu The menu whose properties should be displayed.
    */
-  public setMenu(menu: IMenu) {
-    // This will update the name input and the icon button.
-    this.setItem(menu.nodes);
+  public async setMenu(menu: IMenu) {
+    this.iconPicker.hide();
 
-    this.activeMenu = menu;
-    this.openAtPointerCheckbox.checked = !menu.centered;
-    this.shortcutPicker.setValue(
-      (this.backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || ''
-    );
+    // If a menu is already active, we don't need a transition. We can just update the
+    // settings.
+    if (this.activeMenu) {
+      this.updateMenuSettingsWidgets(menu);
+      this.updateItemSettingsWidgets(menu.nodes);
+      this.menuSettings.classList.remove('hidden');
+      return;
+    }
 
-    // Show the menu settings.
+    // If the menu was not active, we need to animate the settings wrapper. First we hide
+    // the settings wrapper, then we update the settings, and finally we show the settings
+    // wrapper again.
+    await this.hideSettingsWrapper();
+
+    this.updateMenuSettingsWidgets(menu);
+    this.updateItemSettingsWidgets(menu.nodes);
     this.menuSettings.classList.remove('hidden');
+
+    await this.updateSettingsWrapperSize();
+    await this.showSettingsWrapper();
   }
 
   /**
@@ -235,18 +264,100 @@ export class Properties extends EventEmitter {
    *
    * @param item The menu item whose properties should be displayed.
    */
-  public setItem(item: IEditorMenuItem) {
-    if (this.activeItem !== item) {
-      this.activeMenu = null;
-      this.activeItem = item;
-      this.nameInput.value = item.name;
-      this.iconButton.innerHTML = IconThemeRegistry.getInstance()
-        .getTheme(item.iconTheme)
-        .createDiv(item.icon).outerHTML;
+  public async setItem(item: IEditorMenuItem) {
+    this.iconPicker.hide();
 
-      this.baseSettings.classList.remove('hidden');
-      this.iconPicker.hide();
+    // If an item of the same type is already active, we can just update the settings. No
+    // need for animations.
+    if (!this.activeMenu && this.activeItem && this.activeItem.type === item.type) {
+      this.updateItemSettingsWidgets(item);
       this.menuSettings.classList.add('hidden');
+      this.activeMenu = null;
+      return;
     }
+
+    // If the item type changed, we need to animate the settings wrapper. First we hide
+    // the settings wrapper, then we update the settings, and finally we show the settings
+    // wrapper again.
+    await this.hideSettingsWrapper();
+
+    this.updateItemSettingsWidgets(item);
+    this.menuSettings.classList.add('hidden');
+    this.activeMenu = null;
+
+    await this.updateSettingsWrapperSize();
+    await this.showSettingsWrapper();
+  }
+
+  /**
+   * This method updates the settings widgets to display the properties of the given menu
+   * item.
+   *
+   * @param item The menu item whose properties should be displayed.
+   */
+  private updateItemSettingsWidgets(item: IEditorMenuItem) {
+    this.activeItem = item;
+    this.nameInput.value = item.name;
+
+    this.iconButton.innerHTML = IconThemeRegistry.getInstance()
+      .getTheme(item.iconTheme)
+      .createDiv(item.icon).outerHTML;
+
+    const settings = ItemConfigRegistry.getInstance().getConfigWidget(item);
+
+    this.itemSettings.innerHTML = '';
+
+    if (settings) {
+      this.itemSettings.appendChild(settings);
+    }
+
+    this.hintElement.innerText = ItemConfigRegistry.getInstance().getTipOfTheDay(
+      item.type
+    );
+  }
+
+  /**
+   * This method updates the settings widgets to display the properties of the given menu.
+   *
+   * @param menu The menu whose properties should be displayed.
+   */
+  private updateMenuSettingsWidgets(menu: IMenu) {
+    this.activeMenu = menu;
+    this.openAtPointerCheckbox.checked = !menu.centered;
+    this.shortcutPicker.setValue(
+      (this.backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || ''
+    );
+  }
+
+  /**
+   * This method hides the menu and menu item settings.
+   *
+   * @returns A promise that resolves when the settings wrapper is hidden.
+   */
+  private async hideSettingsWrapper() {
+    this.settingsWrapper.classList.add('hidden');
+    await new Promise((resolve) => setTimeout(resolve, 75));
+  }
+
+  /**
+   * This method shows the menu and menu item settings.
+   *
+   * @returns A promise that resolves when the settings wrapper is shown.
+   */
+  private async showSettingsWrapper() {
+    this.settingsWrapper.classList.remove('hidden');
+    await new Promise((resolve) => setTimeout(resolve, 75));
+  }
+
+  /**
+   * This method updates the size of the settings wrapper to match the size of the
+   * contained menu and menu item settings. This is required for smooth animations.
+   *
+   * @returns A promise that resolves when the settings wrapper has been resized.
+   */
+  public async updateSettingsWrapperSize() {
+    this.settingsWrapper.style.height =
+      this.itemSettings.clientHeight + this.menuSettings.clientHeight + 'px';
+    await new Promise((resolve) => setTimeout(resolve, 150));
   }
 }

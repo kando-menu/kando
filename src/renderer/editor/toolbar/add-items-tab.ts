@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ToolbarItemDragger } from './toolbar-item-dragger';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { EventEmitter } from 'events';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
@@ -70,10 +70,6 @@ export class AddItemsTab extends EventEmitter {
   public loadTypes() {
     this.dragger.removeAllDraggables();
 
-    const template = require('./templates/add-items-tab.hbs');
-
-    const registry = ItemFactory.getInstance();
-
     // Compile the data for the Handlebars template.
     const data: Array<{
       name: string;
@@ -82,6 +78,7 @@ export class AddItemsTab extends EventEmitter {
       typeName: string;
     }> = [];
 
+    const registry = ItemTypeRegistry.getInstance();
     registry.getAllTypes().forEach((meta, typeName) => {
       data.push({
         name: meta.defaultName,
@@ -94,6 +91,7 @@ export class AddItemsTab extends EventEmitter {
     });
 
     // Update the tab's content.
+    const template = require('./templates/add-items-tab.hbs');
     this.tab.innerHTML = template({
       items: data,
     });

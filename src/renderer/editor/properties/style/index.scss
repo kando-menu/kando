@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 @import './icon-picker.scss';
-@import './shortcut-picker.scss';
+@import './text-picker.scss';
 
 #kando-menu-properties-area {
   position: absolute;
@@ -86,17 +86,26 @@
     }
   }
 
-  #kando-menu-properties-menu-settings {
-    max-height: 220px;
+  #kando-menu-properties-settings-wrapper {
     transition:
-      max-height 150ms ease-in-out,
-      opacity 150ms ease;
+      height 150ms ease-in-out,
+      opacity 75ms ease;
     overflow: visible clip;
-
     &.hidden {
-      max-height: 0;
       opacity: 0;
     }
+  }
+
+  #kando-menu-properties-menu-settings.hidden {
+    display: none !important;
+  }
+
+  #kando-menu-properties-hint {
+    @include rfs(4.5rem, height);
+
+    opacity: 0.7;
+    width: 75%;
+    font-style: italic;
   }
 }
 

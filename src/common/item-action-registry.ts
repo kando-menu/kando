@@ -11,9 +11,9 @@
 import { IMenuItem } from './index';
 import { Backend } from '../main/backends/backend';
 
-import { CommandAction } from './item-types/command-action';
-import { HotkeyAction } from './item-types/hotkey-action';
-import { URIAction } from './item-types/uri-action';
+import { CommandItemAction } from './item-types/command-item-action';
+import { HotkeyItemAction } from './item-types/hotkey-item-action';
+import { URIItemAction } from './item-types/uri-item-action';
 import { DeepReadonly } from '../main/settings';
 
 /**
@@ -21,7 +21,7 @@ import { DeepReadonly } from '../main/settings';
  * menu item is executed. Every item type which can be executed should implement this
  * interface. You can find the implementations in the `item-types` directory.
  */
-export interface IAction {
+export interface IItemAction {
   /**
    * This will be called when the action is about to be executed. If this method returns
    * `false`, the action will be executed right away. If it returns `true`, the action
@@ -46,23 +46,23 @@ export interface IAction {
 
 /**
  * This singleton class is a registry for all available actions. It is used to execute the
- * action of a menu item.
+ * action of a menu item. This class can be used only in the backend process.
  */
-export class ActionRegistry {
+export class ItemActionRegistry {
   /** The singleton instance of this class. */
-  private static instance: ActionRegistry = null;
+  private static instance: ItemActionRegistry = null;
 
   /** This map contains all available actions. The keys are the type names. */
-  private actions: Map<string, IAction> = new Map();
+  private actions: Map<string, IItemAction> = new Map();
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
    */
   private constructor() {
-    this.actions.set('command', new CommandAction());
-    this.actions.set('hotkey', new HotkeyAction());
-    this.actions.set('uri', new URIAction());
+    this.actions.set('command', new CommandItemAction());
+    this.actions.set('hotkey', new HotkeyItemAction());
+    this.actions.set('uri', new URIItemAction());
   }
 
   /**
@@ -70,11 +70,11 @@ export class ActionRegistry {
    *
    * @returns The singleton instance of this class.
    */
-  public static getInstance(): ActionRegistry {
-    if (ActionRegistry.instance === null) {
-      ActionRegistry.instance = new ActionRegistry();
+  public static getInstance(): ItemActionRegistry {
+    if (ItemActionRegistry.instance === null) {
+      ItemActionRegistry.instance = new ItemActionRegistry();
     }
-    return ActionRegistry.instance;
+    return ItemActionRegistry.instance;
   }
 
   /**
@@ -108,11 +108,11 @@ export class ActionRegistry {
    * @returns The action of the given type.
    * @throws An error if the type is unknown.
    */
-  private getAction(type: string): IAction {
+  private getAction(type: string): IItemAction {
     const action = this.actions.get(type);
 
-    if (action === undefined) {
-      throw new Error(`Unknown action type: ${type}`);
+    if (!action) {
+      throw new Error(`Unknown item type: ${type}`);
     }
 
     return action;

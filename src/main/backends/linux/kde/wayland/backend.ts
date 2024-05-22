@@ -16,7 +16,7 @@ import { exec } from 'child_process';
 import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { IKeySequence } from '../../../../../common';
-import { LinuxKeyCodes } from '../../keys';
+import { mapKeys } from '../../../../../common/key-codes';
 
 /**
  * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind
@@ -193,16 +193,8 @@ export class KDEWaylandBackend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence): Promise<void> {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.
@@ -348,25 +340,6 @@ export class KDEWaylandBackend implements Backend {
         member: 'stop',
       })
     );
-  }
-
-  /**
-   * Translates a shortcut from the Electron format to something which can be used by
-   * KWIn.
-   *
-   * @param shortcut The shortcut to translate.
-   * @returns The translated shortcut.
-   * @todo: This is only a very basic implementation. It does not support all possible
-   *       shortcuts.
-   */
-  private toKWinAccelerator(shortcut: string) {
-    shortcut = shortcut.replace('CommandOrControl+', 'Ctrl+');
-    shortcut = shortcut.replace('CmdOrCtrl+', 'Ctrl+');
-    shortcut = shortcut.replace('Command+', 'Ctrl+');
-    shortcut = shortcut.replace('Control+', 'Ctrl+');
-    shortcut = shortcut.replace('Cmd+', 'Ctrl+');
-
-    return shortcut;
   }
 
   /**

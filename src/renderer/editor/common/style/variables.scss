@@ -8,12 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// We use Bootstrap RFS to scale various things based on the window size. We set the base
-// value to a small number to make sure that RFS is also applied to small things like
-// padding and margin.
-$rfs-base-value: 0.1rem;
-$rfs-breakpoint: 1400px;
-
 // In the future, we will extract some more styling variables.
 $kando-text-color: #e4e4e4;
 $kando-highlight-color: #ffc8c8;

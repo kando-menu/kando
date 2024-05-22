@@ -10,39 +10,32 @@
 }}
 
 <div id="kando-menu-properties-area" class="visible">
-    
+
   <div id="kando-menu-properties-base-settings" class='d-flex flex-column justify-content-center'>
     <div class='d-flex'>
       <button class="btn btn-primary p-0 me-3" id="kando-menu-properties-icon-button"></button>
       <input type="text" class="kando-font fs-1 form-control" id="kando-menu-properties-name" />
     </div>
 
-    <div id="kando-menu-properties-menu-settings" class='d-flex flex-column'>
-      
-      <label class='d-flex mt-3'>
-        <div class="flex-grow-1">
-          <div class='kando-font fs-2'>
-            Open at Pointer
-          </div>
-          <div class='kando-font fs-5'>
-            Else the menu will open in the screen's center.
-          </div>
-        </div>
-        <input type="checkbox" class="form-check-input" id="kando-menu-properties-open-at-pointer" />
-      </label>
+    <div id="kando-menu-properties-settings-wrapper">
+      <div id="kando-menu-properties-menu-settings" class='d-flex flex-column'>
+        
+        {{> checkbox-option 
+            label="Open at Pointer"
+            hint="Else the menu will open in the screen's center."
+            id="kando-menu-properties-open-at-pointer"
+        }}
 
-      <div class='d-flex mt-3'>
-        <div class="flex-grow-1">
-          <div class='kando-font fs-2'>
-            {{shortcutLabel}}
-          </div>
-          <div class='kando-font fs-5'>
-            {{shortcutHint}}
-          </div>
-        </div>
-        <div id="kando-menu-properties-shortcut-picker" class="align-self-center" style="flex-grow: 2;"></div>
+        <div id="kando-menu-properties-shortcut-picker"></div>
+
       </div>
+
+      <div id="kando-menu-properties-item-settings" class='d-flex flex-column'></div>
     </div>
+
+    <div class="swirl2 align-self-center my-4 w-100" style="opacity: 0.7;"></div>
+
+    <div id="kando-menu-properties-hint" class="align-self-center text-center kando-font fs-4"></div>
 
   </div>
 

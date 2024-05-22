@@ -97,8 +97,6 @@ export class MenusTab extends EventEmitter {
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
     this.dragger.removeAllDraggables();
 
-    const template = require('./templates/menus-tab.hbs');
-
     // Compile the data for the Handlebars template.
     const data = menus.map((menu, index) => ({
       name: menu.nodes.name,
@@ -111,6 +109,7 @@ export class MenusTab extends EventEmitter {
       index,
     }));
 
+    const template = require('./templates/menus-tab.hbs');
     this.tab.innerHTML = template({ menus: data });
 
     // Add drag'n'drop logic to the menu buttons. The menus can only be dragged to the

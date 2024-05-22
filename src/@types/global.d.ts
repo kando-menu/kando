@@ -34,7 +34,6 @@ declare global {
       uninhibitShortcuts: () => void;
       showDevTools: () => void;
       movePointer: (dist: IVec2) => void;
-      openURI: (uri: string) => void;
       log: (message: string) => void;
       showMenu: (func: (root: IMenuItem, pos: IVec2) => void) => void;
       showEditor: (func: () => void) => void;

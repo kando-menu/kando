@@ -9,9 +9,9 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from '../index';
-import { IAction } from '../action-registry';
+import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
-import { IActionData } from './uri-meta';
+import { IItemData } from './uri-item-type';
 
 import { shell } from 'electron';
 
@@ -19,7 +19,7 @@ import { shell } from 'electron';
  * This action opens URIs with the default application. This can be used to open for
  * example websites or files.
  */
-export class URIAction implements IAction {
+export class URIItemAction implements IItemAction {
   /**
    * URIs are opened immediately.
    *
@@ -36,6 +36,6 @@ export class URIAction implements IAction {
    * @returns A promise which resolves when the URI has been successfully opened.
    */
   async execute(item: DeepReadonly<IMenuItem>) {
-    return shell.openExternal((item.data as IActionData).uri);
+    return shell.openExternal((item.data as IItemData).uri);
   }
 }

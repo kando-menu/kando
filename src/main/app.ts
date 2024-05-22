@@ -17,7 +17,7 @@ import { Notification } from 'electron';
 import { Backend, getBackend } from './backends';
 import { IMenuItem, IMenu, IMenuSettings, IAppSettings } from '../common';
 import { Settings, DeepReadonly } from './settings';
-import { ActionRegistry } from '../common/action-registry';
+import { ItemActionRegistry } from '../common/item-action-registry';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -239,6 +239,14 @@ export class KandoApp {
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
 
+    // If the user clicks on a link, we close Kando's window and open the link in the
+    // default browser.
+    this.window.webContents.setWindowOpenHandler(({ url }) => {
+      this.hideWindow();
+      shell.openExternal(url);
+      return { action: 'deny' };
+    });
+
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
 
@@ -342,7 +350,7 @@ export class KandoApp {
     // execute the action.
     ipcMain.on('select-item', (event, path) => {
       const execute = (item: DeepReadonly<IMenuItem>) => {
-        ActionRegistry.getInstance()
+        ItemActionRegistry.getInstance()
           .execute(item, this.backend)
           .catch((error) => {
             KandoApp.showError('Failed to execute action', error.message);
@@ -357,7 +365,7 @@ export class KandoApp {
         item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
 
         // If the action is not delayed, we execute it immediately.
-        executeDelayed = ActionRegistry.getInstance().delayedExecution(item);
+        executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
         if (!executeDelayed) {
           execute(item);
         }
@@ -389,12 +397,6 @@ export class KandoApp {
         this.hideWindow();
         this.hideTimeout = null;
       }, 300);
-    });
-
-    // Open an URI with the default application.
-    ipcMain.on('open-uri', (event, uri) => {
-      this.hideWindow();
-      shell.openExternal(uri);
     });
   }
 

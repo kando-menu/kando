@@ -11,7 +11,7 @@
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
@@ -94,10 +94,9 @@ export class StashTab extends EventEmitter {
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
+      const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
         name: item.name,
@@ -110,6 +109,7 @@ export class StashTab extends EventEmitter {
     });
 
     // Update the tab's content.
+    const template = require('./templates/stash-trash-tab.hbs');
     this.tab.innerHTML = template({
       type: 'stash',
       placeholderHeading: 'You can temporarily store menu items here!',

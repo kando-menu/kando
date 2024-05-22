@@ -11,7 +11,7 @@
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../../common';
-import { LinuxKeyCodes } from '../../keys';
+import { mapKeys } from '../../../../../common/key-codes';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -20,7 +20,7 @@ import { LinuxKeyCodes } from '../../keys';
  * preferred on X11 as it does not require any extensions.
  */
 export class GnomeBackend implements Backend {
-  /** This maps GDK accelerator strings to the registered shortcuts. */
+  /** This maps GDK shortcut strings to the registered shortcuts. */
   private callbacks: { [shortcut: string]: () => void } = {};
 
   /** This is the DBus interface of the Kando GNOME Shell integration extension. */
@@ -57,8 +57,8 @@ export class GnomeBackend implements Backend {
 
       this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
 
-      this.interface.on('ShortcutPressed', (accelerator: string) => {
-        this.callbacks[accelerator]();
+      this.interface.on('ShortcutPressed', (shortcut: string) => {
+        this.callbacks[shortcut]();
       });
     } catch (e) {
       throw new Error(
@@ -103,16 +103,8 @@ export class GnomeBackend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now we create a list of tuples, each containing the information required for one
     // key event.
@@ -133,15 +125,15 @@ export class GnomeBackend implements Backend {
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.trigger);
+    const gdkShortcut = this.toGdkShortcut(shortcut.trigger);
 
-    const success = await this.interface.BindShortcut(accelerator);
+    const success = await this.interface.BindShortcut(gdkShortcut);
 
     if (!success) {
       throw new Error('Invalid shortcut or it is already in use.');
     }
 
-    this.callbacks[accelerator] = shortcut.action;
+    this.callbacks[gdkShortcut] = shortcut.action;
   }
 
   /**
@@ -150,11 +142,11 @@ export class GnomeBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.trigger);
+    const gdkShortcut = this.toGdkShortcut(shortcut.trigger);
 
-    const success = await this.interface.UnbindShortcut(accelerator);
+    const success = await this.interface.UnbindShortcut(gdkShortcut);
 
-    delete this.callbacks[accelerator];
+    delete this.callbacks[gdkShortcut];
 
     if (!success) {
       throw new Error('Shortcut was not bound.');
@@ -168,15 +160,15 @@ export class GnomeBackend implements Backend {
 
   /**
    * Translates a shortcut from the Electron format to the GDK format. The Electron format
-   * is described here: https://www.electronjs.org/docs/latest/api/accelerator Gdk uses
-   * the key names from this file (simply without the GDK_KEY_ prefix):
+   * is described here: https://www.electronjs.org/docs/latest/api/shortcut Gdk uses the
+   * key names from this file (simply without the GDK_KEY_ prefix):
    * https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h
    *
    * @param shortcut The shortcut to translate.
    * @returns The translated shortcut.
    * @todo: Add information about the string format of the shortcut.
    */
-  private toGdkAccelerator(shortcut: string) {
+  private toGdkShortcut(shortcut: string) {
     if (shortcut.includes('Option')) {
       throw new Error('Shortcuts including Option are not yet supported on GNOME.');
     }

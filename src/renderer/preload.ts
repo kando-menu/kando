@@ -149,13 +149,4 @@ contextBridge.exposeInMainWorld('api', {
   movePointer: function (dist: IVec2) {
     ipcRenderer.send('move-pointer', dist);
   },
-
-  /**
-   * This can be used to open an URI with the default application.
-   *
-   * @param uri The URI to open. For instance, this can be a file path or a web address.
-   */
-  openURI: function (uri: string) {
-    ipcRenderer.send('open-uri', uri);
-  },
 });

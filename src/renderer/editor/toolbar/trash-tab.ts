@@ -12,7 +12,7 @@ import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
@@ -115,7 +115,6 @@ export class TrashTab extends EventEmitter {
   public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = things.map((thing, index) => {
       const menu = thing as IMenu;
@@ -136,7 +135,7 @@ export class TrashTab extends EventEmitter {
 
       // If the item is a menu item, we need to extract the name and the icon.
       const item = thing as IEditorMenuItem;
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
+      const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
         name: item.name,
@@ -149,6 +148,7 @@ export class TrashTab extends EventEmitter {
     });
 
     // Update the tab's content.
+    const template = require('./templates/stash-trash-tab.hbs');
     this.tab.innerHTML = template({
       type: 'trash',
       placeholderHeading: 'You can delete menus and menu items by dropping them here!',

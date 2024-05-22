@@ -9,17 +9,14 @@
 // SPDX-License-Identifier: MIT
 }}
 
-<!--
-  This is used for editor toolbar tabs which are still work in progress.
--->
-<div class='d-flex flex-column justify-content-center h-100'>
-  <div class='text-center kando-font fs-2'>
-    {{heading}}
+<label class='d-flex mt-3'>
+  <div class="flex-grow-1">
+    <div class='kando-font fs-2'>
+      {{label}}
+    </div>
+    <div class='kando-font fs-5'>
+      {{hint}}
+    </div>
   </div>
-  <div class='text-center kando-font fs-5'>
-    {{subheading}}
-  </div>
-  <div class='text-center mb-4 mt-2'>
-    <span class='swirl1' style="width: 10vw;"></span>
-  </div>
-</div>
+  <input type="checkbox" class="form-check-input" id="{{id}}" />
+</label>

@@ -10,17 +10,17 @@
 
 import { IMenuItem } from './index';
 
-import { CommandMeta } from './item-types/command-meta';
-import { HotkeyMeta } from './item-types/hotkey-meta';
-import { SubmenuMeta } from './item-types/submenu-meta';
-import { URIMeta } from './item-types/uri-meta';
+import { CommandItemType } from './item-types/command-item-type';
+import { HotkeyItemType } from './item-types/hotkey-item-type';
+import { SubmenuItemType } from './item-types/submenu-item-type';
+import { URIItemType } from './item-types/uri-item-type';
 
 /**
  * This interface describes meta information about a menu-item type. Every available type
  * should implement this interface. You can find the implementations in the `item-types`
  * directory.
  */
-export interface IMeta {
+export interface IItemType {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -50,28 +50,29 @@ export interface IMeta {
 }
 
 /**
- * This singleton class is a factory used by the `Editor` to create new menu items. It is
- * also used to get meta information about menu item types.
+ * This singleton class is a registry for all available menu item types. It is used to
+ * acquire information about a specific type. It can be used both in the frontend and the
+ * backend process.
  */
-export class ItemFactory {
+export class ItemTypeRegistry {
   /** The singleton instance of this class. */
-  private static instance: ItemFactory = null;
+  private static instance: ItemTypeRegistry = null;
 
   /**
    * This map contains all available menu item types. The keys are the type names and the
-   * values are the corresponding meta objects.
+   * values are the corresponding type objects.
    */
-  private types: Map<string, IMeta> = new Map();
+  private types: Map<string, IItemType> = new Map();
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
    */
   private constructor() {
-    this.types.set('command', new CommandMeta());
-    this.types.set('hotkey', new HotkeyMeta());
-    this.types.set('submenu', new SubmenuMeta());
-    this.types.set('uri', new URIMeta());
+    this.types.set('command', new CommandItemType());
+    this.types.set('hotkey', new HotkeyItemType());
+    this.types.set('submenu', new SubmenuItemType());
+    this.types.set('uri', new URIItemType());
   }
 
   /**
@@ -79,20 +80,20 @@ export class ItemFactory {
    *
    * @returns The singleton instance of this class.
    */
-  public static getInstance(): ItemFactory {
-    if (ItemFactory.instance === null) {
-      ItemFactory.instance = new ItemFactory();
+  public static getInstance(): ItemTypeRegistry {
+    if (ItemTypeRegistry.instance === null) {
+      ItemTypeRegistry.instance = new ItemTypeRegistry();
     }
-    return ItemFactory.instance;
+    return ItemTypeRegistry.instance;
   }
 
   /**
-   * Use this method to get meta information about a specific menu item type.
+   * Use this method to get information about a specific menu item type.
    *
-   * @param typeName The name of the type you want to get meta information about.
-   * @returns The meta information about the requested type.
+   * @param typeName The name of the type you want to get information about.
+   * @returns The information about the requested type.
    */
-  public getTypeInfo(typeName: string): IMeta {
+  public getType(typeName: string): IItemType {
     return this.types.get(typeName);
   }
 
@@ -103,28 +104,5 @@ export class ItemFactory {
    */
   public getAllTypes() {
     return this.types;
-  }
-
-  /**
-   * Use this method to create a new menu item of a specific type.
-   *
-   * @param typeName The type of the menu item you want to create.
-   * @returns The newly created menu item.
-   */
-  public createMenuItem(typeName: string): IMenuItem {
-    const type = this.types.get(typeName);
-    const item: IMenuItem = {
-      type: typeName,
-      data: type.defaultData,
-      name: type.defaultName,
-      icon: type.defaultIcon,
-      iconTheme: type.defaultIconTheme,
-    };
-
-    if (type.hasChildren) {
-      item.children = [];
-    }
-
-    return item;
   }
 }
