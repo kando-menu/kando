@@ -12,6 +12,7 @@ import { IMenuItem } from '..';
 import { HotkeyPicker } from '../../renderer/editor/properties/hotkey-picker';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './hotkey-item-type';
+import * as utils from './utils';
 
 /** This class provides the configuration widgets for hotkey items. */
 export class HotkeyItemConfig implements IItemConfig {
@@ -25,13 +26,13 @@ export class HotkeyItemConfig implements IItemConfig {
     const fragment = document.createDocumentFragment();
 
     // Add the checkbox for the delayed execution mode.
-    const template = require('../../renderer/editor/properties/templates/checkbox-option.hbs');
     fragment.append(
-      document.createRange().createContextualFragment(
-        template({
+      utils.renderTemplate(
+        require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
+        {
           label: 'Execute Delayed',
           hint: 'Ensures that Kando does not block the key events.',
-        })
+        }
       )
     );
 

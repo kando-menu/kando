@@ -11,6 +11,7 @@
 import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './command-item-type';
+import * as utils from './utils';
 
 /** This class provides the configuration widgets for command items. */
 export class CommandItemConfig implements IItemConfig {
@@ -21,21 +22,17 @@ export class CommandItemConfig implements IItemConfig {
 
   /** @inheritdoc */
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    const fragment = document.createDocumentFragment();
-
-    const div = document.createElement('div');
-    fragment.appendChild(div);
-
-    // Render the template.
-    const template = require('../../renderer/editor/properties/templates/text-option.hbs');
-    div.innerHTML = template({
-      placeholder: 'Not Defined',
-      label: 'Command',
-      hint: 'This will be executed.',
-    });
+    const fragment = utils.renderTemplate(
+      require('../../renderer/editor/properties/templates/text-option.hbs'),
+      {
+        placeholder: 'Not Defined',
+        label: 'Command',
+        hint: 'This will be executed.',
+      }
+    );
 
     // Get the input element and set the current value.
-    const input = div.querySelector('input');
+    const input = fragment.querySelector('input');
     input.value = (item.data as IItemData).command || '';
 
     // Listen for changes and update the item.
