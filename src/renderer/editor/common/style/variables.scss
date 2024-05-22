@@ -11,6 +11,9 @@
 // In the future, we will extract some more styling variables.
 $kando-text-color: #e4e4e4;
 $kando-highlight-color: #ffc8c8;
+$kando-highlight-color-red: red($kando-highlight-color);
+$kando-highlight-color-green: green($kando-highlight-color);
+$kando-highlight-color-blue: blue($kando-highlight-color);
 
 // Below this aspect ratio, the editor will be displayed in a vertical layout.
 $editor-aspect-breakpoint: 0.9;
