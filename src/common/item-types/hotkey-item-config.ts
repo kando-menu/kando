@@ -18,7 +18,12 @@ import * as utils from './utils';
 export class HotkeyItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
-    return 'When recording a hotkey, you do not have to press all keys at once. You can press them one after another.';
+    const tips = [
+      'When recording a hotkey, you do not have to press all keys at once. You can press them one after another.',
+      'If you cannot record a key because it is used by the system, try typing its name directly. All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/src/common/key-codes.ts#L70" target="_blank">here</a>.',
+    ];
+
+    return tips[Math.floor(Math.random() * tips.length)];
   }
 
   /** @inheritdoc */

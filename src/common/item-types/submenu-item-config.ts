@@ -21,6 +21,7 @@ export class SubmenuItemConfig implements IItemConfig {
       'You should avoid adding more than twelve items to a submenu. Eight is a good number.',
       "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
       'You can reorder items by dragging them in the preview.',
+      'You can delete a menu by dragging it from the menus tab to the trash tab in the toolbar.',
       'You can remove items by dragging them to the trash tab in the toolbar.',
       'When recording a shortcut, you do not have to press all keys at once. You can press them one after another.',
     ];
