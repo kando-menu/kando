@@ -94,7 +94,6 @@ export class StashTab extends EventEmitter {
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
       const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
@@ -110,6 +109,7 @@ export class StashTab extends EventEmitter {
     });
 
     // Update the tab's content.
+    const template = require('./templates/stash-trash-tab.hbs');
     this.tab.innerHTML = template({
       type: 'stash',
       placeholderHeading: 'You can temporarily store menu items here!',

@@ -115,7 +115,6 @@ export class TrashTab extends EventEmitter {
   public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = require('./templates/stash-trash-tab.hbs');
     // Compile the data for the Handlebars template.
     const data = things.map((thing, index) => {
       const menu = thing as IMenu;
@@ -149,6 +148,7 @@ export class TrashTab extends EventEmitter {
     });
 
     // Update the tab's content.
+    const template = require('./templates/stash-trash-tab.hbs');
     this.tab.innerHTML = template({
       type: 'trash',
       placeholderHeading: 'You can delete menus and menu items by dropping them here!',
