@@ -239,6 +239,14 @@ export class KandoApp {
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
 
+    // If the user clicks on a link, we close Kando's window and open the link in the
+    // default browser.
+    this.window.webContents.setWindowOpenHandler(({ url }) => {
+      this.hideWindow();
+      shell.openExternal(url);
+      return { action: 'deny' };
+    });
+
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
 
@@ -389,12 +397,6 @@ export class KandoApp {
         this.hideWindow();
         this.hideTimeout = null;
       }, 300);
-    });
-
-    // Open an URI with the default application.
-    ipcMain.on('open-uri', (event, uri) => {
-      this.hideWindow();
-      shell.openExternal(uri);
     });
   }
 
