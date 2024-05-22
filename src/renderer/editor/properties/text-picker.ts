@@ -18,8 +18,8 @@ import { EventEmitter } from 'events';
  * The class is abstract and must be extended to implement the actual validation and
  * normalization of the input.
  *
- * @fires changed - When the user selects a valid new input. The event contains the new
- *   and validated input text.
+ * @fires change - When the user selects a valid new input. The event contains the new and
+ *   validated input text.
  */
 export abstract class TextPicker extends EventEmitter {
   /** The div which contains the input field. */
@@ -56,7 +56,7 @@ export abstract class TextPicker extends EventEmitter {
     });
 
     // Validate the input field when the user types something. If the input is valid, we
-    // emit a 'changed' event.
+    // emit a 'change' event.
     this.input = this.container.querySelector('input');
     this.input.addEventListener('input', () => {
       const value = this.normalizeInput(this.input.value);
@@ -67,7 +67,7 @@ export abstract class TextPicker extends EventEmitter {
         const end = this.input.selectionEnd;
 
         this.input.value = value;
-        this.emit('changed', this.input.value);
+        this.emit('change', this.input.value);
 
         // We restore the cursor position.
         this.input.setSelectionRange(start, end);
@@ -127,18 +127,18 @@ export abstract class TextPicker extends EventEmitter {
 
         // Update the input field when the user presses a key. If the key is a valid part
         // of a shortcut, we update the input field accordingly. If the shortcut is
-        // complete, we reset the input field to its original state and emit a 'changed'
+        // complete, we reset the input field to its original state and emit a 'change'
         // event.
         keyHandler = (event: KeyboardEvent) => {
           event.stopPropagation();
           event.preventDefault();
 
           // recordInput returns true if we should stop recording. If so, we reset the
-          // input field to its original state and emit a 'changed' event.
+          // input field to its original state and emit a 'change' event.
           if (this.recordInput(event)) {
             reset();
             this.input.classList.remove('invalid');
-            this.emit('changed', this.input.value);
+            this.emit('change', this.input.value);
           }
         };
 

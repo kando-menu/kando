@@ -179,7 +179,7 @@ export class Properties extends EventEmitter {
     // Create the shortcut picker or the shorcut ID picker and wire up its events.
     if (this.backend.supportsShortcuts) {
       this.shortcutPicker = new ShortcutPicker();
-      this.shortcutPicker.on('changed', (shortcut) => {
+      this.shortcutPicker.on('change', (shortcut) => {
         if (this.activeMenu) {
           this.activeMenu.shortcut = shortcut;
           this.emit('changed-shortcut');
@@ -187,7 +187,7 @@ export class Properties extends EventEmitter {
       });
     } else {
       this.shortcutPicker = new ShortcutIDPicker(this.backend.shortcutHint);
-      this.shortcutPicker.on('changed', (id) => {
+      this.shortcutPicker.on('change', (id) => {
         if (this.activeMenu) {
           this.activeMenu.shortcutID = id;
           this.emit('changed-shortcut');

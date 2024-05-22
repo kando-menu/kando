@@ -22,9 +22,6 @@ import { TextPicker } from './text-picker';
  * The shortcut selected by this class is validated against the globalShortcut module of
  * Electron. See https://www.electronjs.org/docs/latest/api/accelerator for more
  * information.
- *
- * @fires changed - When the user selects a valid keyboard shortcut. The event contains
- *   the new shortcut as an argument.
  */
 export class ShortcutPicker extends TextPicker {
   /**

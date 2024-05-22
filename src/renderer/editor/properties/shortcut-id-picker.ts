@@ -15,9 +15,6 @@ import { TextPicker } from './text-picker';
  * global bindings which need to be set in the operation system settings.
  *
  * The picker only accepts lowercase ascii characters and no whitespace.
- *
- * @fires changed - When the user selects a new valid shortcut ID. The event contains the
- *   new ID as an argument.
  */
 export class ShortcutIDPicker extends TextPicker {
   /**
