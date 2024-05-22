@@ -66,10 +66,10 @@
     align-items: flex-end;
 
     .nav-link {
-      @include rfs(0.3rem, padding-top);
+      @include rfs(0.5rem, padding-top);
+      @include rfs(0.3rem, padding-bottom);
       @include rfs(1rem, padding-left);
       @include rfs(1rem, padding-right);
-      padding-bottom: 0;
       background-color: rgba(0, 0, 0, 0.3);
       transition:
         padding-bottom 150ms ease,
