@@ -311,7 +311,7 @@ export class Properties extends EventEmitter {
       this.itemSettings.appendChild(settings);
     }
 
-    this.hintElement.innerText = ItemConfigRegistry.getInstance().getTipOfTheDay(
+    this.hintElement.innerHTML = ItemConfigRegistry.getInstance().getTipOfTheDay(
       item.type
     );
   }
