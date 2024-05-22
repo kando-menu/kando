@@ -17,7 +17,12 @@ import * as utils from './utils';
 export class CommandItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
-    return 'You can use the Command item type to launch applications or scripts.';
+    const tips = [
+      'You can use the Command item type to launch applications or scripts.',
+      'If the path to an executable contains spaces, you should "wrap it in quotes".',
+    ];
+
+    return tips[Math.floor(Math.random() * tips.length)];
   }
 
   /** @inheritdoc */
