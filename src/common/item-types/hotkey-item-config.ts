@@ -24,11 +24,30 @@ export class HotkeyItemConfig implements IItemConfig {
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
     const fragment = document.createDocumentFragment();
 
+    // Add the checkbox for the delayed execution mode.
+    const template = require('../../renderer/editor/properties/templates/checkbox-option.hbs');
+    fragment.append(
+      document.createRange().createContextualFragment(
+        template({
+          label: 'Execute Delayed',
+          hint: 'Ensures that Kando does not block the key events.',
+        })
+      )
+    );
+
+    const input = fragment.querySelector('.form-check-input') as HTMLInputElement;
+    input.checked = (item.data as IItemData).delayed || false;
+
+    input.addEventListener('change', () => {
+      (item.data as IItemData).delayed = input.checked;
+    });
+
+    // Add the hotkey picker.
     const picker = new HotkeyPicker();
     picker.setValue((item.data as IItemData).hotkey || '');
-    fragment.appendChild(picker.getContainer());
+    fragment.append(picker.getContainer());
 
-    picker.on('changed', (value: string) => {
+    picker.on('change', (value: string) => {
       (item.data as IItemData).hotkey = value;
     });
 
