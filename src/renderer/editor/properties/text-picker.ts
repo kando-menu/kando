@@ -100,7 +100,7 @@ export abstract class TextPicker extends EventEmitter {
         inputGroup.classList.add('recording');
 
         // eslint-disable-next-line prefer-const
-        let clickHandler: (ev: MouseEvent) => void;
+        let abortHandler: (ev: MouseEvent) => void;
 
         // eslint-disable-next-line prefer-const
         let keyHandler: (ev: KeyboardEvent) => void;
@@ -109,7 +109,8 @@ export abstract class TextPicker extends EventEmitter {
         const reset = () => {
           this.input.placeholder = options.placeholder;
           inputGroup.classList.remove('recording');
-          window.removeEventListener('click', clickHandler);
+          window.removeEventListener('click', abortHandler);
+          window.removeEventListener('blur', abortHandler);
           window.removeEventListener('keydown', keyHandler, true);
           window.removeEventListener('keyup', keyHandler, true);
 
@@ -119,7 +120,7 @@ export abstract class TextPicker extends EventEmitter {
 
         // Reset the input field to the original state when the user clicks anywhere on
         // the screen.
-        clickHandler = (event: MouseEvent) => {
+        abortHandler = (event: MouseEvent) => {
           event.stopPropagation();
           this.input.value = originalValue;
           reset();
@@ -142,7 +143,8 @@ export abstract class TextPicker extends EventEmitter {
           }
         };
 
-        window.addEventListener('click', clickHandler);
+        window.addEventListener('click', abortHandler);
+        window.addEventListener('blur', abortHandler);
         window.addEventListener('keydown', keyHandler, true);
         window.addEventListener('keyup', keyHandler, true);
       });
