@@ -237,8 +237,12 @@ export class Properties extends EventEmitter {
   public async setMenu(menu: IMenu) {
     this.iconPicker.hide();
 
-    // If the menu is already active, we don't need to change the settings.
-    if (this.activeMenu === menu) {
+    // If a menu is already active, we don't need a transition. We can just update the
+    // settings.
+    if (this.activeMenu) {
+      this.updateMenuSettingsWidgets(menu);
+      this.updateItemSettingsWidgets(menu.nodes);
+      this.menuSettings.classList.remove('hidden');
       return;
     }
 
