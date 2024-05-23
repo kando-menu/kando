@@ -530,25 +530,25 @@ export class Preview extends EventEmitter {
    * @param item The menu item which should be added to the preview.
    * @param container The container to which the item should be added.
    */
-  private drawItem(items: IEditorMenuItem, container: HTMLElement) {
+  private drawItem(item: IEditorMenuItem, container: HTMLElement) {
     // Create a div for the child.
-    items.div = utils.createChildDiv(items);
-    container.appendChild(items.div);
+    item.div = utils.createChildDiv(item);
+    container.appendChild(item.div);
 
     // Create the fixed-angle lock.
-    const lock = utils.createLockDiv(items.angle !== undefined, (locked) => {
+    const lock = utils.createLockDiv(item.angle !== undefined, (locked) => {
       if (locked) {
-        items.angle = items.computedAngle;
+        item.angle = item.computedAngle;
       } else {
-        items.angle = undefined;
+        item.angle = undefined;
         this.recomputeItemAngles();
         this.updateAllPositions();
       }
     });
-    items.div.appendChild(lock);
+    item.div.appendChild(lock);
 
     // Make the child div selectable and draggable.
-    this.dragger.addDraggable(items.div, items);
+    this.dragger.addDraggable(item.div, item);
   }
 
   /**
@@ -558,20 +558,17 @@ export class Preview extends EventEmitter {
    *
    * @param transitionDirection The direction in which the old menu items should be moved.
    */
-  private hideOldMenuItems(transitionDirection?: IVec2) {
+  private hideOldMenuItems(transitionDirection: IVec2) {
     this.canvas.childNodes.forEach((c) => {
-      const child = c as HTMLElement;
+      const container = c as HTMLElement;
       if (
         c instanceof HTMLElement &&
-        child.classList.contains('visible') &&
-        child.classList.contains('kando-menu-preview-container')
+        container.classList.contains('visible') &&
+        container.classList.contains('kando-menu-preview-container')
       ) {
-        child.classList.remove('visible');
-
-        if (transitionDirection) {
-          child.style.setProperty('--dir-x', transitionDirection.x + '');
-          child.style.setProperty('--dir-y', transitionDirection.y + '');
-        }
+        container.classList.remove('visible');
+        container.style.setProperty('--dir-x', transitionDirection.x + '');
+        container.style.setProperty('--dir-y', transitionDirection.y + '');
 
         // After the animation is finished, we remove the menu item from the DOM.
         setTimeout(() => c.remove(), 500);
