@@ -343,6 +343,10 @@ export class Editor extends EventEmitter {
       return;
     }
 
+    // We remove the menu from the preview. Else it will be visible for a split second
+    // when the editor is opened the next time.
+    this.preview.setMenu(null);
+
     // We remove the edit-mode class from the container. This will trigger some fade-out
     // animations. As most elements are set to 'display: none' when the edit-mode class is
     // not present (for performance reasons), we temporarily add the 'leaving-edit-mode'
@@ -352,6 +356,7 @@ export class Editor extends EventEmitter {
     this.container.classList.add('leaving-edit-mode');
     setTimeout(() => this.container.classList.remove('leaving-edit-mode'), 500);
 
+    // Send the menu settings to the main process.
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure
       // that the menu items are converted back to IMenuItem objects. This is because
