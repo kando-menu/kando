@@ -147,7 +147,7 @@ export class Preview extends EventEmitter {
       this.computeItemAnglesRecursively(menu.nodes.children);
       this.selectItem(menu.nodes);
     } else {
-      this.hideOldMenuItems();
+      this.hideOldMenuItems({ x: 0, y: 0 });
     }
   }
 
@@ -428,7 +428,7 @@ export class Preview extends EventEmitter {
    *   direction of this angle. The new menu items are faded in and moved in the from the
    *   opposite direction.
    */
-  private drawMenu(transitionAngle: number) {
+  private drawMenu(transitionAngle?: number) {
     // Sanity check: If the selection chain is empty, we do nothing.
     if (this.selectionChain.length === 0) {
       return;
@@ -439,7 +439,10 @@ export class Preview extends EventEmitter {
     this.dragger.removeAllDraggables();
 
     // First, fade out all currently displayed menu items.
-    const transitionDirection = math.getDirection(transitionAngle, 1.0);
+    let transitionDirection = { x: 0, y: 0 };
+    if (transitionAngle != null) {
+      transitionDirection = math.getDirection(transitionAngle, 1.0);
+    }
     this.hideOldMenuItems(transitionDirection);
 
     // Now we create a new container for the new menu items.
@@ -672,7 +675,8 @@ export class Preview extends EventEmitter {
         this.drawBreadcrumbs();
       } else if (index === -1) {
         this.selectionChain.push(item);
-        this.drawMenu(item.computedAngle + 180);
+
+        this.drawMenu(item.computedAngle == null ? null : item.computedAngle + 180);
         this.drawBreadcrumbs();
       }
     }
