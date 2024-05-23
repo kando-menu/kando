@@ -172,7 +172,7 @@ export class Properties extends EventEmitter {
         this.emit('changed-icon');
       }
     });
-    this.iconPicker.on('close', () => {
+    this.iconPicker.on('hide', () => {
       this.baseSettings.classList.remove('hidden');
     });
 

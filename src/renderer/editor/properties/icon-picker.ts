@@ -19,7 +19,7 @@ import { IconThemeRegistry } from '../../../common/icon-theme-registry';
  * picker. The cancel button will also emit the close event, but right before the 'close'
  * event a 'select' event is emitted with the original icon and theme.
  *
- * @fires close - When the user closes the icon picker via one of the two buttons.
+ * @fires hide - When the user closes the icon picker via one of the two buttons.
  * @fires select - When the user selected an icon. The event contains the icon and the
  *   theme of the selected icon as arguments.
  */
@@ -87,14 +87,14 @@ export class IconPicker extends EventEmitter {
 
     // Close the icon picker when the user clicks the close button.
     const okButton = container.querySelector('#kando-properties-icon-picker-ok');
-    okButton.addEventListener('click', () => this.close());
+    okButton.addEventListener('click', () => this.hide());
 
     // Also close the icon picker when the user clicks the cancel button. But before
     // closing the icon picker, emit a select event with the original icon and theme.
     const cancelButton = container.querySelector('#kando-properties-icon-picker-cancel');
     cancelButton.addEventListener('click', () => {
       this.emit('select', this.initialIcon, this.initialTheme);
-      this.close();
+      this.hide();
     });
   }
 
@@ -124,12 +124,8 @@ export class IconPicker extends EventEmitter {
     }
 
     this.container.classList.add('hidden');
-  }
 
-  /** Hides the icon picker and emits the close event. */
-  private close() {
-    this.hide();
-    this.emit('close');
+    this.emit('hide');
   }
 
   /**
