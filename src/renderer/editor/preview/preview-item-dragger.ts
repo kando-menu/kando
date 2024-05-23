@@ -78,12 +78,6 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
 
     this.container = container;
 
-    // When the window is resized, we have to recompute the preview center. It is used
-    // to compute the angles of the menu items during drag'n'drop.
-    window.addEventListener('resize', () => {
-      this.previewCenter = utils.computeCenter(this.container);
-    });
-
     this.on('mouse-down', (item, itemDiv) => {
       itemDiv.classList.add('clicking');
     });
@@ -106,11 +100,6 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
   public setCenterItem(centerItem: IEditorMenuItem, parentItem: IEditorMenuItem) {
     this.centerItem = centerItem;
     this.parentItem = parentItem;
-
-    // This actually has to be done only once after the menu preview has been added to
-    // the DOM and during window resize events. However, we do not have a good place for
-    // this, so we do it here.
-    this.previewCenter = utils.computeCenter(this.container);
   }
 
   public getLastDropTarget() {
@@ -166,7 +155,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
     // around the parent menu item.
     this.on('drag-move', (item, itemDiv, relative, absolute) => {
       // Compute the angle towards the dragged item.
-      const relativePosition = math.subtract(absolute, this.previewCenter);
+      const relativePosition = math.subtract(absolute, this.getPreviewCenter());
       const dragAngle = math.getAngle(relativePosition);
 
       // If the item has a fixed angle, we cannot move it around freely. Instead, we
@@ -301,7 +290,7 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
         // Compute the angle towards the dragged item.
         const relativePosition = math.subtract(
           { x: event.clientX, y: event.clientY },
-          this.previewCenter
+          this.getPreviewCenter()
         );
 
         const dragAngle = math.getAngle(relativePosition);
@@ -331,5 +320,25 @@ export class PreviewItemDragger extends ItemDragger<IEditorMenuItem> {
         this.emit('drag-item', null, null, null, null);
       }
     });
+  }
+
+  /**
+   * Getting the center coordinates of the preview is only possible after the preview has
+   * been added to the DOM and is a bit costly. Therefore, we get it lazily and cache the
+   * result.
+   *
+   * @returns The center coordinates of the preview.
+   */
+  private getPreviewCenter() {
+    if (!this.previewCenter) {
+      this.previewCenter = utils.computeCenter(this.container);
+
+      // When the window is resized, we have to recompute the preview center.
+      window.addEventListener('resize', () => {
+        this.previewCenter = utils.computeCenter(this.container);
+      });
+    }
+
+    return this.previewCenter;
   }
 }
