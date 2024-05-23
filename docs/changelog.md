@@ -48,6 +48,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Fixed
 
+- A bug which occurred when opening a completely empty menu.
 - The [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now ensures that shortcuts are rebound when the extension is reloaded. This fixes an issue where shortcuts would not work after logging out and back in.
 
 ## [Kando 0.8.1](https://github.com/kando-menu/kando/releases/tag/v0.8.1)
