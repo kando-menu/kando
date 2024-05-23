@@ -23,23 +23,23 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
-- The possibility to change the shortcut of a menu in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard. This works on all platforms, except for KDE/Wayland and Hyprland, where direct binding of global shortcuts is not directly supported.
-- **[BREAKING]** The possibility to change the global shortcut ID on platforms which do not support direct binding of global shortcuts. For instance, on KDE/Wayland or on Hyprland, Kando can not directly bind global shortcuts. On those platforms, the menu editor shows a text field instead of the shortcut picker. Here you can enter a unique ID for the shortcut and then use the global shortcut settings of the desktop environment to bind the shortcut ID to a key combination. On these platforms, **your existing global shortcuts will not work anymore**. You will have to rebind them using the new method!
-- The possibility to configure menu items in the menu editor:
+- The possibility to **change the shortcut of a menu** in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard. This works on all platforms, except for KDE/Wayland and Hyprland, where direct binding of global shortcuts is not directly supported.
+- **[BREAKING]** The possibility to change the global shortcut ID on platforms which do not support direct binding of global shortcuts. For instance, on KDE/Wayland or on Hyprland, Kando can not directly bind global shortcuts. On those platforms, the menu editor shows a text field instead of the shortcut picker. Here you can enter a unique ID for the shortcut and then use the global shortcut settings of the desktop environment to bind the shortcut ID to a key combination. **On these platforms, your existing global shortcuts will not work anymore**. You will have to rebind them using the new method!
+- The possibility to **configure menu items** in the menu editor:
   - For the hotkey action, there is a hotkey-picker which allows recording a key combination.
   - For the command action, there is now a text field which allows to enter the command directly.
   - For the URI action, there is also a text field which allows to enter the URI directly.
-- Tips for the menu editor. When you select a menu item, a more or less related tip will be shown in the properties area on the right-hand side. 
+- Tips for the menu editor. When you select a menu item, a more or less related **tip will be shown** in the properties area on the right-hand side. 
 
 #### Changed
 
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
-- It is now allowed to have multiple menus with the same shortcut. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
+- It is now allowed to have **multiple menus with the same shortcut**. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
 - The `"shortcut"` property in the menu configuration is now optional. If no shortcut is given, the menu will not be accessible via a global shortcut. This is useful if you want to have a menu which is only accessible via the tray icon or via the command line.
 - **[BREAKING]** The Simulate-Hotkey action now strictly uses DOM key codes. Before, it was possible to use key names like `"Control"`, `"Shift"`, or `"Alt"`. Now, you have to use the key codes like `"ControlLeft"`, `"ShiftLeft"`, or `"AltLeft"`. You can find a list of all valid codes [here](https://github.com/kando-menu/kando/blob/main/src/common/key-codes.ts#L70). 
-- Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (🚀 about 5x faster).
-- Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (🚀 about 2x faster).
-- Refactored some more editor-opening code to remove a forced reflow. This makes the editor open even faster (🚀 another 1.5x).
+- Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (🚀 **about 5x faster**).
+- Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (🚀 **about 2x faster**).
+- Refactored some more editor-opening code to remove a forced reflow. This makes the editor open even faster (🚀 **another 1.5x**).
 - Rename the "Open URL" action to "Open URI" in the menu editor.
 
 #### Removed
