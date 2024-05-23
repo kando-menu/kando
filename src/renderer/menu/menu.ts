@@ -424,7 +424,7 @@ export class Menu extends EventEmitter {
     this.updateConnectors();
     this.redraw();
 
-    if (!item.children || item.children.length === 0) {
+    if (item.type !== 'submenu') {
       this.container.classList.add('selected');
       this.emit('select', item.path);
     }
@@ -488,9 +488,15 @@ export class Menu extends EventEmitter {
     if (newHoveredItem !== this.hoveredItem) {
       this.hoverItem(newHoveredItem);
 
-      // If the mouse is over the center of a menu or over the parent of the current menu,
-      // hide the center text.
-      if (this.isParentOfCenterItem(newHoveredItem) || newHoveredItem === this.root) {
+      // If no item is hovered, if the mouse is over the center of the menu, or if the
+      // mouse is over the parent of the current menu, hide the center text. Else, we
+      // display the name of the hovered item and make sure it is positioned at the
+      // center of the menu.
+      if (
+        !newHoveredItem ||
+        this.isParentOfCenterItem(newHoveredItem) ||
+        newHoveredItem === this.root
+      ) {
         this.centerText.hide();
       } else {
         this.centerText.setText(newHoveredItem.name);
