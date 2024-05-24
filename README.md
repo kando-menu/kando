@@ -4,12 +4,8 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=5WXzIvPXLuE"><img src="docs/img/video.jpg" /></a>
+  <a href="https://www.youtube.com/watch?v=_3KkDnfu_CE"><img src="docs/img/video.jpg" /></a>
 </p>
-
-
-> [!WARNING]
-> This project is currently in a very early stage of development. Especially, Kando does not have a fully functional menu editor yet. If you want to use Kando already today, you will have to [edit your menus in JSON files](docs/configuring.md). You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
 
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
 [![codeql](https://github.com/kando-menu/kando/workflows/CodeQL/badge.svg)](https://github.com/kando-menu/kando/actions)
@@ -25,6 +21,9 @@ For instance, you can use it to control your music player, to open your favorite
 It will be available for Windows, Linux and macOS.
 
 # The Vision
+
+> [!WARNING]
+> This project is in an early stage of development.  You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
 
 I am the developer of [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), which is a similar project but limited to the GNOME desktop.
 I have been working on Fly-Pie for more than 3 years now and I am very happy with the result.
