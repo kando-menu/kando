@@ -201,7 +201,7 @@ export class IconPicker extends EventEmitter {
 
           // When the user double-clicks an icon, emit the close event.
           iconDiv.addEventListener('dblclick', () => {
-            this.close();
+            this.hide();
           });
         }
 
