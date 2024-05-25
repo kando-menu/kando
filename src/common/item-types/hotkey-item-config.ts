@@ -20,7 +20,7 @@ export class HotkeyItemConfig implements IItemConfig {
   public getTipOfTheDay(): string {
     const tips = [
       'When recording a hotkey, you do not have to press all keys at once. You can press them one after another.',
-      'If you cannot record a key because it is used by the system, try typing its name directly. All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/src/common/key-codes.ts#L70" target="_blank">here</a>.',
+      'If you cannot record a key because it is used by the system, try typing its name directly. All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#menu-shortcuts-vs-simulated-hotkeys" target="_blank">here</a>.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
