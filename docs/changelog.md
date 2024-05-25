@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Added
+
+- Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#menu-shortcuts-vs-simulated-hotkeys).
+
 ## [Kando 0.9.0](https://github.com/kando-menu/kando/releases/tag/v0.9.0)
 
 <a href="https://www.youtube.com/watch?v=_3KkDnfu_CE">

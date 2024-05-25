@@ -15,31 +15,26 @@ SPDX-License-Identifier: CC-BY-4.0
 [![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
 [![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
 
-**Kando** will be a pie menu for the desktop.
-It will be highly customizable and will allow you to create your own menus and actions.
-For instance, you can use it to control your music player, to open your favorite websites or to simulate shortcuts.
-It will be available for Windows, Linux and macOS.
+**Kando** is a highly customizable pie menu for the desktop which allows you to create your own menus and actions.
+For instance, you can use it to control your music player, to open your favorite websites, or to simulate shortcuts.
+It is available for Windows, Linux and macOS.
 
 # The Vision
-
-> [!WARNING]
-> This project is in an early stage of development.  You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
 
 I am the developer of [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), which is a similar project but limited to the GNOME desktop.
 I have been working on Fly-Pie for more than 3 years now and I am very happy with the result.
 However, I have always wanted to create a similar application for the desktop in general.
 This is why I started this project.
 
-**Kando is very similar to Fly-Pie in terms of interaction and appearance.
-At the same time, there will be some major differences.
-You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!**
-
 <p align="center">
   <img src="docs/img/kando.gif"/>
 </p>
 
+**Kando** is very similar to Fly-Pie in terms of interaction and appearance.
+At the same time, there are some major differences.
+You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!
 
-The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
+
 
 # Platform Support
 
