@@ -97,7 +97,7 @@ export class CenterText {
    * @param text The text to display.
    */
   public setText(text: string) {
-    this.div.innerHTML = text;
+    this.div.textContent = text;
 
     // We query the line height only once.
     if (this.lineHeight === 0) {

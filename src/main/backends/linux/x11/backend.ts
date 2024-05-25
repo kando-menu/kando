@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../../common';
-import { LinuxKeyCodes } from '../keys';
+import { mapKeys } from '../../../../common/key-codes';
 
 /**
  * This backend uses the XTest extension via native C++ code to simulate key presses and
@@ -26,11 +26,12 @@ export class X11Backend implements Backend {
   /**
    * Override this if another type is more suitable for your desktop environment.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   *
-   * @returns 'dock'
    */
-  public getWindowType() {
-    return 'dock';
+  public getBackendInfo() {
+    return {
+      windowType: 'dock',
+      supportsShortcuts: true,
+    };
   }
 
   /** This is called when the backend is created. Currently, this this does nothing on X11. */
@@ -77,16 +78,8 @@ export class X11Backend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.
@@ -105,12 +98,12 @@ export class X11Backend implements Backend {
    * This binds a shortcut. The action callback of the shortcut is called when the
    * shortcut is pressed. On X11, this uses Electron's globalShortcut module.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
-      throw new Error('Shortcut is already in use.');
+    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
+      throw new Error('Invalid shortcut or it is already in use.');
     }
   }
 
@@ -120,7 +113,7 @@ export class X11Backend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    globalShortcut.unregister(shortcut.accelerator);
+    globalShortcut.unregister(shortcut.trigger);
   }
 
   /** This unbinds all previously bound shortcuts. */

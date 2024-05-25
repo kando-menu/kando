@@ -8,8 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
-
 /**
  * This class is responsible for the sidebar on the left screen edge. It contains some
  * information about Kando in general.
@@ -48,7 +46,7 @@ export class Sidebar {
     this.loadContent();
     this.initVisibility();
     this.initTutorialVideos();
-    this.initExampleActions();
+    this.initButtons();
   }
 
   /**
@@ -85,9 +83,9 @@ export class Sidebar {
 
   /** This method loads the HTML content of the sidebar. */
   private loadContent() {
-    const tutorial = Handlebars.compile(require('./templates/tutorial-tab.hbs').default);
-    const buttonTab = Handlebars.compile(require('./templates/button-tab.hbs').default);
-    const sidebar = Handlebars.compile(require('./templates/sidebar.hbs').default);
+    const tutorial = require('./templates/tutorial-tab.hbs');
+    const buttonTab = require('./templates/button-tab.hbs');
+    const sidebar = require('./templates/sidebar.hbs');
 
     // Initialize the sidebar content.
     this.container = document.createElement('div');
@@ -124,72 +122,6 @@ export class Sidebar {
                 heading: 'No accidental selections:',
                 subheading:
                   'Final items are only selected as soon as you release your mouse button in "Marking Mode" or Ctrl in "Turbo Mode". Use this to explore the menu!',
-              },
-            ],
-          }),
-        },
-        {
-          id: 'sidebar-tab-example-actions',
-          icon: 'bug_report',
-          title: 'Example Actions',
-          content: buttonTab({
-            intro:
-              "Here are some action buttons which show what the menu could do in the future. Check out the button's tooltips for more information!",
-            buttons: [
-              {
-                id: 'shortcut-button-1',
-                class: 'col-6',
-                icon: 'keyboard',
-                title: cIsMac ? 'Command+Z' : 'Ctrl+Z',
-                tooltip: 'This usually undoes your latest action.',
-              },
-              {
-                id: 'shortcut-button-2',
-                class: 'col-6',
-                icon: 'keyboard',
-                title: cIsMac ? 'Command+Tab' : 'Alt+Tab',
-                tooltip:
-                  'This will change the active window. This action uses delays between the individual key press events.',
-              },
-              {
-                id: 'shortcut-button-3',
-                class: 'col-6',
-                icon: 'keyboard',
-                title: 'Ctrl+C Ctrl+V',
-                tooltip:
-                  'This will duplicate any selected text. For this, it copies the currently selected text, moves the cursor to the right and finally pastes the text.',
-              },
-              {
-                id: 'shortcut-button-4',
-                class: 'col-6',
-                icon: 'keyboard',
-                title: cIsMac ? 'Command+Space' : 'Meta',
-                tooltip: cIsMac
-                  ? 'This will open the Spotlight Search.'
-                  : 'This will open a main menu on many desktop environments.',
-              },
-              {
-                id: 'url-button',
-                class: 'col-6',
-                icon: 'public',
-                title: 'Open URL',
-                tooltip: 'This opens the homepage of Kando.',
-              },
-              {
-                id: 'uri-button',
-                class: 'col-6',
-                icon: 'folder_open',
-                title: 'Open Folder',
-                tooltip: 'This opens a file explorer.',
-              },
-            ],
-            entries: [
-              {
-                id: 'command-action',
-                class: 'col-12',
-                icon: 'send',
-                placeholder: 'Run Command',
-                tooltip: 'This runs the given shell command.',
               },
             ],
           }),
@@ -288,218 +220,11 @@ export class Sidebar {
       });
   }
 
-  /**
-   * This method initializes the example actions. These are buttons which show what the
-   * menu could do in the future.
-   */
-  private initExampleActions() {
-    // Initialize the undo button.
-    this.container.querySelector('#shortcut-button-1').addEventListener('click', () => {
-      const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
-      window.api.simulateKeys([
-        {
-          name: modifier,
-          down: true,
-          delay: 100,
-        },
-        {
-          name: 'KeyZ',
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'KeyZ',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: modifier,
-          down: false,
-          delay: 0,
-        },
-      ]);
-    });
-
-    // Initialize the alt-tab button.
-    this.container.querySelector('#shortcut-button-2').addEventListener('click', () => {
-      const modifier = cIsMac ? 'MetaLeft' : 'AltLeft';
-      window.api.simulateKeys([
-        {
-          name: modifier,
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'Tab',
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'Tab',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: 'Tab',
-          down: true,
-          delay: 1000,
-        },
-        {
-          name: 'Tab',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: modifier,
-          down: false,
-          delay: 1000,
-        },
-      ]);
-    });
-
-    // Initialize the ctrl-c ctrl-v button.
-    this.container.querySelector('#shortcut-button-3').addEventListener('click', () => {
-      const modifier = cIsMac ? 'MetaLeft' : 'ControlLeft';
-      window.api.simulateKeys([
-        {
-          name: modifier,
-          down: true,
-          delay: 100,
-        },
-        {
-          name: 'KeyC',
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'KeyC',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: modifier,
-          down: false,
-          delay: 0,
-        },
-        {
-          name: 'ArrowRight',
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'ArrowRight',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: modifier,
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'KeyV',
-          down: true,
-          delay: 0,
-        },
-        {
-          name: 'KeyV',
-          down: false,
-          delay: 0,
-        },
-        {
-          name: modifier,
-          down: false,
-          delay: 0,
-        },
-      ]);
-    });
-
-    // Initialize the meta button.
-    this.container.querySelector('#shortcut-button-4').addEventListener('click', () => {
-      if (cIsMac) {
-        window.api.simulateKeys([
-          {
-            name: 'MetaLeft',
-            down: true,
-            delay: 0,
-          },
-          {
-            name: 'Space',
-            down: true,
-            delay: 0,
-          },
-          {
-            name: 'Space',
-            down: false,
-            delay: 0,
-          },
-          {
-            name: 'MetaLeft',
-            down: false,
-            delay: 0,
-          },
-        ]);
-      } else {
-        window.api.simulateKeys([
-          {
-            name: 'MetaLeft',
-            down: true,
-            delay: 0,
-          },
-          {
-            name: 'MetaLeft',
-            down: false,
-            delay: 0,
-          },
-        ]);
-      }
-    });
-
-    this.container.querySelector('#url-button').addEventListener('click', () => {
-      window.api.openURI('https://github.com/kando-menu/kando');
-    });
-
-    this.container.querySelector('#uri-button').addEventListener('click', () => {
-      window.api.openURI('file:///');
-    });
-
-    // Initialize the command action button + entry.
-    const runCommand = () => {
-      const input = this.container.querySelector(
-        '#command-action-entry'
-      ) as HTMLInputElement;
-      window.api.runCommand(input.value);
-      input.value = '';
-    };
-
-    // Run command on button click.
-    this.container
-      .querySelector('#command-action-button')
-      .addEventListener('click', runCommand);
-
-    // Run command on enter.
-    this.container
-      .querySelector('#command-action-entry')
-      .addEventListener('keydown', (e) => {
-        if ((e as KeyboardEvent).key === 'Enter') {
-          runCommand();
-        }
-      });
-
+  /** This method initializes the buttons in the sidebar. */
+  private initButtons() {
     // Show the dev tools if the button is clicked.
     this.container.querySelector('#dev-tools-button').addEventListener('click', () => {
       window.api.showDevTools();
-    });
-
-    // Currently, there are two buttons which lead to further information on the web. These will be removed in the future.
-    this.container.querySelector('#kofi-button').addEventListener('click', () => {
-      window.api.openURI('https://ko-fi.com/schneegans');
-    });
-
-    this.container.querySelector('#config-button').addEventListener('click', () => {
-      window.api.openURI(
-        'https://github.com/kando-menu/kando/blob/main/docs/configuring.md'
-      );
     });
   }
 }

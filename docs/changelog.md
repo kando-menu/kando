@@ -23,6 +23,106 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
+- Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#menu-shortcuts-vs-simulated-hotkeys).
+
+## [Kando 0.9.0](https://github.com/kando-menu/kando/releases/tag/v0.9.0)
+
+<a href="https://www.youtube.com/watch?v=_3KkDnfu_CE">
+<img align="right" width="400px" src="img/player09.jpg"></img>
+</a>
+
+**Release Date:** 2024-05-24
+
+#### Added
+
+- The possibility to **change the shortcut of a menu** in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard. This works on all platforms, except for KDE/Wayland and Hyprland, where direct binding of global shortcuts is not directly supported.
+- **[BREAKING]** The possibility to change the global shortcut ID on platforms which do not support direct binding of global shortcuts. For instance, on KDE/Wayland or on Hyprland, Kando can not directly bind global shortcuts. On those platforms, the menu editor shows a text field instead of the shortcut picker. Here you can enter a unique ID for the shortcut and then use the global shortcut settings of the desktop environment to bind the shortcut ID to a key combination. **On these platforms, your existing global shortcuts will not work anymore**. You will have to rebind them using the new method!
+- The possibility to **configure menu items** in the menu editor:
+  - For the hotkey action, there is a hotkey-picker which allows recording a key combination.
+  - For the command action, there is now a text field which allows to enter the command directly.
+  - For the URI action, there is also a text field which allows to enter the URI directly.
+- Tips for the menu editor. When you select a menu item, a more or less related **tip will be shown** in the properties area on the right-hand side. 
+
+#### Changed
+
+- If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
+- It is now allowed to have **multiple menus with the same shortcut**. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
+- The `"shortcut"` property in the menu configuration is now optional. If no shortcut is given, the menu will not be accessible via a global shortcut. This is useful if you want to have a menu which is only accessible via the tray icon or via the command line.
+- **[BREAKING]** The Simulate-Hotkey action now strictly uses DOM key codes. Before, it was possible to use key names like `"Control"`, `"Shift"`, or `"Alt"`. Now, you have to use the key codes like `"ControlLeft"`, `"ShiftLeft"`, or `"AltLeft"`. You can find a list of all valid codes [here](https://github.com/kando-menu/kando/blob/main/src/common/key-codes.ts#L70). 
+- Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (🚀 **about 5x faster**).
+- Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (🚀 **about 2x faster**).
+- Refactored some more editor-opening code to remove a forced reflow. This makes the editor open even faster (🚀 **another 1.5x**).
+- Rename the "Open URL" action to "Open URI" in the menu editor.
+
+#### Removed
+
+- The Example Actions tab from the sidebar. As we are getting closer to a fully functional menu editor, this tab is no longer needed.
+- The non-functional get-menus-online buttons from the menus tab. They will return in a later version when we have a way to actually get menus online.
+
+#### Fixed
+
+- A bug which occurred when opening a completely empty menu.
+- The [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now ensures that shortcuts are rebound when the extension is reloaded. This fixes an issue where shortcuts would not work after logging out and back in.
+
+## [Kando 0.8.1](https://github.com/kando-menu/kando/releases/tag/v0.8.1)
+
+**Release Date:** 2024-05-10
+
+#### Added
+
+- The possibility to change the open-menu-at-screen-center property via the menu editor.
+- A link to the new [Kando Discord server](https://discord.gg/hZwbVSDkhy) to the README and to the sidebar in the menu editor.
+
+#### Fixed
+
+- An issue which prevented Kando from starting on Hyprland 0.40.0.
+
+## [Kando 0.8.0](https://github.com/kando-menu/kando/releases/tag/v0.8.0)
+
+<a href="https://www.youtube.com/watch?v=5WXzIvPXLuE">
+<img align="right" width="400px" src="img/player08.jpg"></img>
+</a>
+
+**Release Date:** 2024-04-30
+
+#### Added
+
+- The possibility to change menu and menu item names! When a menu or menu item is selected, there is now a text field in the properties area on the right-hand side which allows to change the name.
+- The possibility to change the icon of a menu or menu item! Next to the name field, there is now a button which opens an icon picker. This allows to select the icon theme and the icon itself. There is also a search field which allows searching for icons.
+- A new icon theme: `"simple-icons-colored"`. This is a colored version of the [Simple Icons](https://simpleicons.org/) theme.
+- A new item to the tray menu which allows to open the menu editor.
+- A command line option to open the menu editor: `kando --settings`. If Kando is already running, the menu editor will be opened in the running instance.
+- A desktop notification which is shown when you attempt to run a second instance of Kando.
+
+#### Changed
+
+- When a menu item is added to the menu preview in the menu editor, it will now be automatically selected. The only exception are submenus which will not be opened automatically.
+- The binaries for the GitHub release are now built on newer versions of the CI runners. The Windows binaries are now built on Windows Server 2022, the macOS binaries on macOS 12 & 14, and the Linux binaries on Ubuntu 22.04.
+
+#### Fixed
+
+- Simulating hotkeys involving digit keys such as <kbd>Ctrl</kbd>+<kbd>1</kbd>.
+- The desktop notification which is shown when a menu-item action fails. It now shows the correct error message.
+- A crash when deleting or stashing one of the empty prototype menu items.
+
+## [Kando 0.7.1](https://github.com/kando-menu/kando/releases/tag/v0.7.1)
+
+**Release Date:** 2024-04-22
+
+#### Fixed
+
+- Fixed an issue which caused a JavaScript exception error to pop up when executing a command action for which the command returned a non-zero exit code.
+
+## [Kando 0.7.0](https://github.com/kando-menu/kando/releases/tag/v0.7.0)
+
+<a href="https://www.youtube.com/watch?v=Tv9kRgxygA4">
+<img align="right" width="400px" src="img/player07.jpg"></img>
+</a>
+
+**Release Date:** 2024-04-21
+
+#### Added
+
 - The Add-New-Item tab! You can now add new items to the menu by dragging them from the toolbar to the menu preview. It's not yet possible to edit the items, but this is the next major step towards a fully functional menu editor.
 - The Stash! You can now temporarily store menu items in the stash and later move them back to the menu. This is useful if you want to reorganize your menus or move things from one menu to another.
 - The possibility to move menu items to the trash. They can be restored from the trash by dragging them back to the menu.

@@ -16,7 +16,7 @@ import { exec } from 'child_process';
 import { Backend, WMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { IKeySequence } from '../../../../../common';
-import { LinuxKeyCodes } from '../../keys';
+import { mapKeys } from '../../../../../common/key-codes';
 
 /**
  * This backend is used on KDE with Wayland. It uses the KWin scripting interface to bind
@@ -81,11 +81,13 @@ export class KDEWaylandBackend implements Backend {
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
    * not receive any keyboard events.
-   *
-   * @returns 'toolbar'
    */
-  public getWindowType() {
-    return 'toolbar';
+  public getBackendInfo() {
+    return {
+      windowType: 'toolbar',
+      supportsShortcuts: false,
+      shortcutHint: "Use KDE's system settings to bind this.",
+    };
   }
 
   /**
@@ -128,8 +130,8 @@ export class KDEWaylandBackend implements Backend {
     });
 
     // Execute the trigger action whenever the KWin script sends a signal.
-    this.kandoInterface.triggerCallback = (shortcutID: string) => {
-      const shortcut = this.shortcuts.find((s) => s.id === shortcutID);
+    this.kandoInterface.triggerCallback = (trigger: string) => {
+      const shortcut = this.shortcuts.find((s) => s.trigger === trigger);
       if (shortcut) {
         shortcut.action();
       }
@@ -191,16 +193,8 @@ export class KDEWaylandBackend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence): Promise<void> {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.
@@ -235,7 +229,7 @@ export class KDEWaylandBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    this.shortcuts = this.shortcuts.filter((s) => s.id !== shortcut.id);
+    this.shortcuts = this.shortcuts.filter((s) => s.trigger !== shortcut.trigger);
     await this.updateShortcuts();
   }
 
@@ -267,14 +261,11 @@ export class KDEWaylandBackend implements Backend {
     // Then create a new script which registers all shortcuts.
     const script = this.shortcuts
       .map((shortcut) => {
-        const accelerator = this.toKWinAccelerator(shortcut.accelerator);
-
         // Escape any ' or \ in the ID or description.
-        const id = this.escapeString(shortcut.id);
-        const description = this.escapeString(shortcut.description);
+        const id = this.escapeString(shortcut.trigger);
 
         return `
-          if(registerShortcut('${id}', '${description}', '${accelerator}',
+          if(registerShortcut('${id}', 'Kando - ${id}', '',
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
@@ -282,9 +273,9 @@ export class KDEWaylandBackend implements Backend {
                        () => console.log('Kando: Triggered.'));
             }
           )) {
-            console.log('Kando: Registered shortcut ${accelerator}');
+            console.log('Kando: Registered shortcut ${id}');
           } else {
-            console.log('Kando: Failed to registered shortcut ${accelerator}');
+            console.log('Kando: Failed to registered shortcut ${id}');
           }
         `;
       })
@@ -349,25 +340,6 @@ export class KDEWaylandBackend implements Backend {
         member: 'stop',
       })
     );
-  }
-
-  /**
-   * Translates a shortcut from the Electron format to something which can be used by
-   * KWIn.
-   *
-   * @param shortcut The shortcut to translate.
-   * @returns The translated shortcut.
-   * @todo: This is only a very basic implementation. It does not support all possible
-   *       shortcuts.
-   */
-  private toKWinAccelerator(shortcut: string) {
-    shortcut = shortcut.replace('CommandOrControl+', 'Ctrl+');
-    shortcut = shortcut.replace('CmdOrCtrl+', 'Ctrl+');
-    shortcut = shortcut.replace('Command+', 'Ctrl+');
-    shortcut = shortcut.replace('Control+', 'Ctrl+');
-    shortcut = shortcut.replace('Cmd+', 'Ctrl+');
-
-    return shortcut;
   }
 
   /**

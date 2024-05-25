@@ -8,13 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
-import * as themedIcon from '../common/themed-icon';
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class represents the trash tab in the toolbar. Users can drop menus and menu items
@@ -34,6 +33,9 @@ import { ItemFactory } from '../../../common/item-factory';
 export class TrashTab extends EventEmitter {
   /** The container is the HTML element which contains the entire toolbar. */
   private container: HTMLElement = null;
+
+  /** If true, menu buttons will show the shortcut IDs, instead of the shortcuts. */
+  private showShortcutIDs: boolean = false;
 
   /** This is the HTML element which contains the trash tab's content. */
   private tab: HTMLElement = null;
@@ -57,13 +59,18 @@ export class TrashTab extends EventEmitter {
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
+   * @param showShortcutIDs If true, menu buttons will show the shortcut IDs, instead of
+   *   the shortcuts.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, showShortcutIDs: boolean) {
     super();
 
     // Store a reference to the container. We will attach menu buttons divs to it during
     // drag'n'drop operations.
     this.container = container;
+
+    // Store the showShortcutIDs flag.
+    this.showShortcutIDs = showShortcutIDs;
 
     // Store a reference to the potential drop targets.
     this.stashTab = this.container.querySelector(
@@ -108,10 +115,6 @@ export class TrashTab extends EventEmitter {
   public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(
-      require('./templates/stash-trash-tab.hbs').default
-    );
-
     // Compile the data for the Handlebars template.
     const data = things.map((thing, index) => {
       const menu = thing as IMenu;
@@ -121,29 +124,35 @@ export class TrashTab extends EventEmitter {
         return {
           isMenu: true,
           name: menu.nodes.name,
-          description: menu.shortcut || 'Not bound.',
-          icon: themedIcon.createDiv(menu.nodes.icon, menu.nodes.iconTheme).outerHTML,
+          description:
+            (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
+          icon: IconThemeRegistry.getInstance()
+            .getTheme(menu.nodes.iconTheme)
+            .createDiv(menu.nodes.icon).outerHTML,
           index,
         };
       }
 
       // If the item is a menu item, we need to extract the name and the icon.
       const item = thing as IEditorMenuItem;
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
+      const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
         name: item.name,
-        description: typeInfo.getDescription(item),
-        icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
+        description: typeInfo?.getDescription(item),
+        icon: IconThemeRegistry.getInstance()
+          .getTheme(item.iconTheme)
+          .createDiv(item.icon).outerHTML,
         index,
       };
     });
 
     // Update the tab's content.
+    const template = require('./templates/stash-trash-tab.hbs');
     this.tab.innerHTML = template({
       type: 'trash',
       placeholderHeading: 'You can delete menus and menu items by dropping them here!',
-      placeholderSubheading: 'When you start Kando the next time, they will be gone.',
+      placeholderSubheading: 'When you restart Kando, they will be gone.',
       items: data,
     });
 

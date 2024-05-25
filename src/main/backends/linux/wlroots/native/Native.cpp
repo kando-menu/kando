@@ -85,20 +85,32 @@ void Native::init(Napi::Env const& env) {
           registry, name, &wl_seat_interface, version <= 7 ? version : 7));
     }
 
-    // If the virtual pointer manager is available, create a virtual pointer device.
+    // Store a reference to the virtual pointer manager.
     if (!std::strcmp(interface, zwlr_virtual_pointer_manager_v1_interface.name)) {
-      auto manager = static_cast<zwlr_virtual_pointer_manager_v1*>(wl_registry_bind(
-          registry, name, &zwlr_virtual_pointer_manager_v1_interface, 1));
-      data->mPointer =
-          zwlr_virtual_pointer_manager_v1_create_virtual_pointer(manager, data->mSeat);
+      data->mPointerManager =
+          static_cast<zwlr_virtual_pointer_manager_v1*>(wl_registry_bind(
+              registry, name, &zwlr_virtual_pointer_manager_v1_interface, 1));
     }
 
-    // If the virtual keyboard manager is available, create a virtual keyboard device.
+    // If the virtual pointer manager and the seat are available, create a virtual pointer
+    // device.
+    if (!data->mPointer && data->mPointerManager && data->mSeat) {
+      data->mPointer = zwlr_virtual_pointer_manager_v1_create_virtual_pointer(
+          data->mPointerManager, data->mSeat);
+    }
+
+    // Store a reference to the virtual keyboard manager.
     if (!std::strcmp(interface, zwp_virtual_keyboard_manager_v1_interface.name)) {
-      auto manager = static_cast<zwp_virtual_keyboard_manager_v1*>(wl_registry_bind(
-          registry, name, &zwp_virtual_keyboard_manager_v1_interface, 1));
-      data->mKeyboard =
-          zwp_virtual_keyboard_manager_v1_create_virtual_keyboard(manager, data->mSeat);
+      data->mKeyboardManager =
+          static_cast<zwp_virtual_keyboard_manager_v1*>(wl_registry_bind(
+              registry, name, &zwp_virtual_keyboard_manager_v1_interface, 1));
+    }
+
+    // If the virtual keyboard manager and the seat are available, create a virtual
+    // keyboard device.
+    if (!data->mKeyboard && data->mKeyboardManager && data->mSeat) {
+      data->mKeyboard = zwp_virtual_keyboard_manager_v1_create_virtual_keyboard(
+          data->mKeyboardManager, data->mSeat);
 
       // AFICS, we have to keep track of the current pressed modifier keys ourselves. We
       // can do this using the xkbcommon library. For this, we need to get the keymap from

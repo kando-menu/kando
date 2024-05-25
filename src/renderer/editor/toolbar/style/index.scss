@@ -1,0 +1,312 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// Show- and hide-toolbar buttons --------------------------------------------------------
+
+#enter-edit-mode-button,
+#leave-edit-mode-button {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(20px);
+
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease;
+}
+
+#kando-editor.visible:not(.edit-mode) #enter-edit-mode-button,
+#kando-editor.visible.edit-mode #leave-edit-mode-button {
+  pointer-events: all;
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+#enter-edit-mode-button {
+  border-top-left-radius: 50%;
+  right: 10px;
+  bottom: 10px;
+}
+
+#leave-edit-mode-button {
+  right: -55px;
+  top: 1vh;
+}
+
+// The toolbar itself --------------------------------------------------------------------
+
+#kando-editor-toolbar {
+  position: absolute;
+  bottom: $editor-padding-bottom-small;
+  left: $editor-padding-left;
+  right: $editor-padding-right;
+  padding-top: 1vh;
+
+  opacity: 0;
+  display: none;
+  transform: translateY(20px);
+
+  transition:
+    bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
+    transform 150ms ease,
+    opacity 150ms ease;
+
+  .nav-tabs {
+    --bs-nav-tabs-link-active-color: white;
+    --bs-nav-link-color: #{$kando-text-color};
+    --bs-link-hover-color: white;
+
+    @include rfs(0.5rem, gap);
+    align-items: flex-end;
+
+    .nav-link {
+      @include rfs(0.5rem, padding-top);
+      @include rfs(0.3rem, padding-bottom);
+      @include rfs(1rem, padding-left);
+      @include rfs(1rem, padding-right);
+      background-color: rgba(0, 0, 0, 0.3);
+      transition:
+        padding-bottom 150ms ease,
+        margin-top 150ms ease;
+
+      &.active {
+        background-color: rgba(0, 0, 0, 0.8);
+        cursor: default;
+      }
+
+      &:not(.active):active {
+        transform: translateY(1px);
+      }
+    }
+
+    // Some tabs have a tiny counter which for instance displays the number of items in
+    // the trash or stash.
+    .counter {
+      @include rfs(1.1rem, font-size);
+      position: relative;
+      top: -3px;
+      vertical-align: middle;
+      border-radius: 30%;
+      padding: 0 0.3em;
+      margin: 0 0.2em;
+      background-color: rgba(80, 80, 80, 0.8);
+    }
+  }
+
+  .tab-pane {
+    border-radius: var(--bs-border-radius);
+  }
+
+  .tab-content {
+    height: calc($toolbar-height - $toolbar-tab-height);
+    border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    transition: height 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+  }
+
+  // Some tabs enlarge the toolbar. This is the case for instance for the themes tabs.
+  &.large {
+    bottom: $editor-padding-bottom-large;
+
+    // Draw above the menu preview.
+    z-index: 2;
+
+    .tab-content {
+      height: calc(
+        100vh - $editor-padding-top - $editor-padding-bottom-large - $toolbar-tab-height
+      );
+    }
+  }
+
+  .toolbar-button-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(calc(150px + 5vw), 1fr));
+  }
+}
+
+// When dragging items, we highlight the potential drop targets.
+#kando-editor {
+  &.dragging-menu-from-trash-tab .nav-link[data-bs-target='#kando-menus-tab'],
+  &.dragging-menu-from-menus-tab .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-item-from-stash-tab .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-item-from-trash-tab .nav-link[data-bs-target='#kando-stash-tab'],
+  &.dragging-item-from-preview .nav-link[data-bs-target='#kando-trash-tab'],
+  &.dragging-item-from-preview .nav-link[data-bs-target='#kando-stash-tab'] {
+    margin-top: -10px;
+    padding-bottom: 10px;
+
+    &:hover:not(.active) {
+      outline: 2px dashed rgba(255, 255, 255, 0.5);
+      outline-offset: -5px;
+    }
+  }
+
+  &.dragging-item-from-preview #kando-stash-tab:hover,
+  &.dragging-item-from-preview #kando-trash-tab:hover {
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
+    outline-offset: -5px;
+  }
+}
+
+#kando-editor.edit-mode #kando-editor-toolbar,
+#kando-editor.leaving-edit-mode #kando-editor-toolbar {
+  display: block;
+}
+
+#kando-editor.visible.edit-mode #kando-editor-toolbar {
+  transform: none;
+  opacity: 1;
+}
+
+// The menu tab buttons are attached to the #kando-editor container during drag-and-drop
+// operations. Therefore, we have to style them with this selector.
+#kando-editor .add-menu-button,
+#kando-editor .toolbar-item-button,
+#kando-editor .toolbar-menu-button {
+  // The buttons are actually radio buttons. We hide the input element and style the label
+  // instead. This way we get nice toggling behavior for free.
+  input {
+    display: none;
+  }
+
+  border: 2px dashed rgba(255, 255, 255, 0);
+  overflow: hidden;
+  transition: transform 150ms linear;
+
+  // If checked, we show a border and slightly different background color.
+  &:has(input:checked) {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--bs-btn-active-bg);
+  }
+
+  &.dragging {
+    backdrop-filter: blur(5px);
+    background-color: var(--bs-btn-active-bg);
+    transition: none;
+    pointer-events: none;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  // The icons in the buttons are scaled based on the window size.
+  div:has(.icon-container) {
+    pointer-events: none;
+    @include rfs($toolbar-menu-button-icon-size, width);
+    @include rfs($toolbar-menu-button-icon-size, height);
+    @include rfs($toolbar-menu-button-icon-size, min-width);
+    @include rfs($toolbar-menu-button-icon-size, min-height);
+    background-color: white;
+    border-radius: 50%;
+    transition: background-color 150ms linear;
+
+    i {
+      transition: color 150ms linear;
+      color: black;
+
+      // For some reason, the emoji icons are not properly aligned. This fixes it.
+      &.emoji-icon {
+        margin-top: 12cqi;
+      }
+    }
+  }
+
+  .description,
+  .name {
+    @include rfs(1rem, padding-left);
+    box-sizing: border-box;
+    pointer-events: none;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+// The buttons in the add-new-item, trash, and stash tabs are a bit special in that they
+// can only be dragged. We indicate this by changing the cursor and not changing the
+// background color on click.
+#kando-trash-tab .toolbar-menu-button,
+#kando-trash-tab .toolbar-item-button,
+#kando-stash-tab .toolbar-item-button,
+#kando-add-items-tab .toolbar-item-button {
+  cursor: grab;
+
+  &:active {
+    background-color: var(--bs-btn-hover-bg);
+  }
+}
+
+// Menu item buttons are styled differently. They look like the items in the preview.
+#kando-editor .toolbar-item-button {
+  background: transparent !important;
+
+  .name {
+    border-bottom: 2px dashed white;
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+
+  // Invert the icon color.
+  div:has(.icon-container) {
+    background-color: transparent;
+    border: 2px solid white;
+    i {
+      color: white;
+    }
+  }
+
+  &.dragging {
+    backdrop-filter: none;
+  }
+
+  // Highlight the icon on hover.
+  &.dragging,
+  &:hover {
+    div:has(.icon-container) {
+      background-color: var(--bs-btn-active-bg);
+      backdrop-filter: blur(5px);
+    }
+  }
+}
+
+// The add-new-menu button is a special case. It features a nice transition when hovered.
+#kando-editor .add-menu-button {
+  transition: width 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+
+  // The collapsed state shows just the icon. We compute the width based on the icon size
+  // plus the default horizontal button padding by bootstrap.
+  @include rfs(calc($toolbar-menu-button-icon-size + 1.5rem), width);
+
+  .name {
+    transition: opacity 150ms linear;
+    opacity: 0;
+  }
+
+  &:not(:hover) {
+    div:has(.icon-container) {
+      background-color: transparent;
+
+      i {
+        color: white;
+      }
+    }
+  }
+
+  &:hover {
+    width: 100%;
+
+    .name {
+      opacity: 1;
+    }
+  }
+}

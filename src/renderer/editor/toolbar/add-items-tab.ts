@@ -8,11 +8,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { EventEmitter } from 'events';
-import * as themedIcon from '../common/themed-icon';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class represents the add-new-item tab in the toolbar. Users can drag new things
@@ -71,10 +70,6 @@ export class AddItemsTab extends EventEmitter {
   public loadTypes() {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(require('./templates/add-items-tab.hbs').default);
-
-    const registry = ItemFactory.getInstance();
-
     // Compile the data for the Handlebars template.
     const data: Array<{
       name: string;
@@ -83,16 +78,20 @@ export class AddItemsTab extends EventEmitter {
       typeName: string;
     }> = [];
 
+    const registry = ItemTypeRegistry.getInstance();
     registry.getAllTypes().forEach((meta, typeName) => {
       data.push({
         name: meta.defaultName,
         description: meta.genericDescription,
-        icon: themedIcon.createDiv(meta.defaultIcon, meta.defaultIconTheme).outerHTML,
+        icon: IconThemeRegistry.getInstance()
+          .getTheme(meta.defaultIconTheme)
+          .createDiv(meta.defaultIcon).outerHTML,
         typeName,
       });
     });
 
     // Update the tab's content.
+    const template = require('./templates/add-items-tab.hbs');
     this.tab.innerHTML = template({
       items: data,
     });

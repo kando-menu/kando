@@ -8,9 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { EventEmitter } from 'events';
-import { IMenu } from '../../../common';
+import { IMenu, IBackendInfo } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
@@ -64,8 +63,11 @@ export class Toolbar extends EventEmitter {
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
    * functionality.
+   *
+   * @param backend The backend info is used to determine if the backend supports
+   *   shortcuts.
    */
-  constructor() {
+  constructor(backend: IBackendInfo) {
     super();
 
     this.loadContent();
@@ -73,7 +75,7 @@ export class Toolbar extends EventEmitter {
     this.initTabs();
 
     // Initialize the menus tab and forward its events.
-    this.menusTab = new MenusTab(this.container);
+    this.menusTab = new MenusTab(this.container, !backend.supportsShortcuts);
     this.menusTab.on('add-menu', () => this.emit('add-menu'));
     this.menusTab.on('select-menu', (index) => this.emit('select-menu', index));
     this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
@@ -83,7 +85,7 @@ export class Toolbar extends EventEmitter {
     this.addItemsTab.on('add-item', (typeName) => this.emit('add-item', typeName));
 
     // Initialize the trash tab and forward its events.
-    this.trashTab = new TrashTab(this.container);
+    this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts);
     this.trashTab.on('restore-menu', (index) => this.emit('restore-deleted-menu', index));
     this.trashTab.on('restore-item', (index) => this.emit('restore-deleted-item', index));
     this.trashTab.on('stash-item', (index) => this.emit('stash-deleted-item', index));
@@ -109,18 +111,37 @@ export class Toolbar extends EventEmitter {
     this.menusTab.setMenus(menus, currentMenu);
   }
 
+  /**
+   * Whenever the content of the trash changes, the trash tab needs to be updated.
+   *
+   * @param items A list of all trashed menus and menu items.
+   */
   public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
     this.trashTab.setTrashedThings(items);
   }
 
+  /**
+   * Whenever the content of the stash changes, the stash tab needs to be updated.
+   *
+   * @param items A list of all stashed menu items.
+   */
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.stashTab.setStashedItems(items);
   }
 
+  /**
+   * This method updates the button which represents the menu at the given index in the
+   * given menu list. It is called by the editor whenever the user changed a property of
+   * the currently edited menu in the properties view.
+   */
+  public updateMenu(menus: Array<IMenu>, index: number) {
+    this.menusTab.updateMenu(menus, index);
+  }
+
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
-    const emptyTab = Handlebars.compile(require('./templates/empty-tab.hbs').default);
-    const toolbar = Handlebars.compile(require('./templates/toolbar.hbs').default);
+    const emptyTab = require('./templates/empty-tab.hbs');
+    const toolbar = require('./templates/toolbar.hbs');
 
     this.container = document.createElement('div');
     this.container.id = 'kando-editor-toolbar-area';

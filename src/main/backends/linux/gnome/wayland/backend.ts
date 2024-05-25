@@ -11,7 +11,7 @@
 import DBus from 'dbus-final';
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../../common';
-import { LinuxKeyCodes } from '../../keys';
+import { mapKeys } from '../../../../../common/key-codes';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -20,7 +20,7 @@ import { LinuxKeyCodes } from '../../keys';
  * preferred on X11 as it does not require any extensions.
  */
 export class GnomeBackend implements Backend {
-  /** This maps GDK accelerator strings to the registered shortcuts. */
+  /** This maps GDK shortcut strings to the registered shortcuts. */
   private callbacks: { [shortcut: string]: () => void } = {};
 
   /** This is the DBus interface of the Kando GNOME Shell integration extension. */
@@ -30,11 +30,12 @@ export class GnomeBackend implements Backend {
    * Dock On GNOME Shell, we use a dock window. This creates a floating window which is
    * always on top of all other windows. It even stays visible during workspace
    * switching.
-   *
-   * @returns 'dock'
    */
-  public getWindowType() {
-    return 'dock';
+  public getBackendInfo() {
+    return {
+      windowType: 'dock',
+      supportsShortcuts: true,
+    };
   }
 
   /**
@@ -56,8 +57,8 @@ export class GnomeBackend implements Backend {
 
       this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
 
-      this.interface.on('ShortcutPressed', (accelerator: string) => {
-        this.callbacks[accelerator]();
+      this.interface.on('ShortcutPressed', (shortcut: string) => {
+        this.callbacks[shortcut]();
       });
     } catch (e) {
       throw new Error(
@@ -102,16 +103,8 @@ export class GnomeBackend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now we create a list of tuples, each containing the information required for one
     // key event.
@@ -128,19 +121,19 @@ export class GnomeBackend implements Backend {
    * shortcut is pressed. On GNOME Wayland, this uses the DBus interface of the Kando
    * GNOME Shell integration.
    *
-   * @param shortcut The shortcut to simulate.
+   * @param shortcut The shortcut to bind.
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
+    const gdkShortcut = this.toGdkShortcut(shortcut.trigger);
 
-    const success = await this.interface.BindShortcut(accelerator);
+    const success = await this.interface.BindShortcut(gdkShortcut);
 
     if (!success) {
-      throw new Error('Shortcut is already in use.');
+      throw new Error('Invalid shortcut or it is already in use.');
     }
 
-    this.callbacks[accelerator] = shortcut.action;
+    this.callbacks[gdkShortcut] = shortcut.action;
   }
 
   /**
@@ -149,11 +142,11 @@ export class GnomeBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    const accelerator = this.toGdkAccelerator(shortcut.accelerator);
+    const gdkShortcut = this.toGdkShortcut(shortcut.trigger);
 
-    const success = await this.interface.UnbindShortcut(accelerator);
+    const success = await this.interface.UnbindShortcut(gdkShortcut);
 
-    delete this.callbacks[accelerator];
+    delete this.callbacks[gdkShortcut];
 
     if (!success) {
       throw new Error('Shortcut was not bound.');
@@ -166,13 +159,16 @@ export class GnomeBackend implements Backend {
   }
 
   /**
-   * Translates a shortcut from the Electron format to the GDK format.
+   * Translates a shortcut from the Electron format to the GDK format. The Electron format
+   * is described here: https://www.electronjs.org/docs/latest/api/shortcut Gdk uses the
+   * key names from this file (simply without the GDK_KEY_ prefix):
+   * https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h
    *
    * @param shortcut The shortcut to translate.
    * @returns The translated shortcut.
    * @todo: Add information about the string format of the shortcut.
    */
-  private toGdkAccelerator(shortcut: string) {
+  private toGdkShortcut(shortcut: string) {
     if (shortcut.includes('Option')) {
       throw new Error('Shortcuts including Option are not yet supported on GNOME.');
     }
@@ -181,17 +177,83 @@ export class GnomeBackend implements Backend {
       throw new Error('Shortcuts including AltGr are not yet supported on GNOME.');
     }
 
-    shortcut = shortcut.replace('CommandOrControl+', '<Ctrl>');
-    shortcut = shortcut.replace('CmdOrCtrl+', '<Ctrl>');
-    shortcut = shortcut.replace('Command+', '<Ctrl>');
-    shortcut = shortcut.replace('Control+', '<Ctrl>');
-    shortcut = shortcut.replace('Cmd+', '<Ctrl>');
-    shortcut = shortcut.replace('Ctrl+', '<Ctrl>');
-    shortcut = shortcut.replace('Alt+', '<Alt>');
-    shortcut = shortcut.replace('Shift+', '<Shift>');
-    shortcut = shortcut.replace('Meta+', '<Meta>');
-    shortcut = shortcut.replace('Super+', '<Super>');
+    // Split the shortcut into its parts.
+    const parts = shortcut.split('+');
 
-    return shortcut;
+    const replacements = new Map([
+      ['CommandOrControl', '<Ctrl>'],
+      ['CmdOrCtrl', '<Ctrl>'],
+      ['Command', '<Ctrl>'],
+      ['Control', '<Ctrl>'],
+      ['Cmd', '<Ctrl>'],
+      ['Ctrl', '<Ctrl>'],
+      ['Alt', '<Alt>'],
+      ['Shift', '<Shift>'],
+      ['Meta', '<Super>'],
+      ['Super', '<Super>'],
+      [')', 'parenright'],
+      ['!', 'exclam'],
+      ['@', 'at'],
+      ['#', 'numbersign'],
+      ['$', 'dollar'],
+      ['%', 'percent'],
+      ['^', 'asciicircum'],
+      ['&', 'ampersand'],
+      ['*', 'asterisk'],
+      ['(', 'parenleft'],
+      [':', 'colon'],
+      [';', 'semicolon'],
+      ["'", 'apostrophe'],
+      ['=', 'equal'],
+      ['<', 'less'],
+      [',', 'comma'],
+      ['_', 'underscore'],
+      ['-', 'minus'],
+      ['>', 'greater'],
+      ['.', 'period'],
+      ['?', 'question'],
+      ['/', 'slash'],
+      ['~', 'asciitilde'],
+      ['`', 'grave'],
+      ['{', 'braceleft'],
+      [']', 'bracketright'],
+      ['[', 'bracketleft'],
+      ['|', 'bar'],
+      ['\\', 'backslash'],
+      ['}', 'braceright'],
+      ['"', 'quotedbl'],
+      ['Capslock', 'Caps_lock'],
+      ['Numlock', 'Num_lock'],
+      ['Scrolllock', 'Scroll_lock'],
+      ['Enter', 'Return'],
+      ['PageUp', 'Page_Up'],
+      ['PageDown', 'PageDo_wn'],
+      ['Esc', 'Escape'],
+      ['VolumeUp', 'AudioRaiseVolume'],
+      ['VolumeDown', 'AudioLowerVolume'],
+      ['VolumeMute', 'AudioMute'],
+      ['MediaNextTrack', 'AudioNext'],
+      ['MediaPreviousTrack', 'AudioPrev'],
+      ['MediaStop', 'AudioStop'],
+      ['MediaPlayPause', 'AudioPause'],
+      ['PrintScreen', 'Print'],
+      ['num0', 'KP_0'],
+      ['num1', 'KP_1'],
+      ['num2', 'KP_2'],
+      ['num3', 'KP_3'],
+      ['num4', 'KP_4'],
+      ['num5', 'KP_5'],
+      ['num6', 'KP_6'],
+      ['num7', 'KP_7'],
+      ['num8', 'KP_8'],
+      ['num9', 'KP_9'],
+      ['numdec', 'KP_Decimal'],
+      ['numadd', 'KP_Add'],
+      ['numsub', 'KP_Subtract'],
+      ['nummult', 'KP_Multiply'],
+      ['numdiv', 'KP_Divide'],
+    ]);
+
+    return parts.map((part) => replacements.get(part) || part).join('');
   }
 }

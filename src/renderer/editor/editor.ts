@@ -16,9 +16,9 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenu, IMenuSettings } from '../../common';
+import { IMenu, IBackendInfo, IMenuSettings, IMenuItem } from '../../common';
 import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
-import { ItemFactory } from '../../common/item-factory';
+import { ItemTypeRegistry } from '../../common/item-type-registry';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the
@@ -31,6 +31,9 @@ import { ItemFactory } from '../../common/item-factory';
 export class Editor extends EventEmitter {
   /** The container is the HTML element which contains the menu editor. */
   private container: HTMLElement = null;
+
+  /** This is the backend info which is retrieved from the main process. */
+  private backend: IBackendInfo = null;
 
   /**
    * The background is an opaque div which is shown when the editor is open. It
@@ -76,6 +79,12 @@ export class Editor extends EventEmitter {
   private currentMenu: number = 0;
 
   /**
+   * This will be set to true when the user currently edits a menu. I.e. when the root
+   * item is selected in the preview.
+   */
+  private editingMenu: boolean = true;
+
+  /**
    * This array is used to store menus and menu items which have been deleted by the user.
    * They can be restored by dragging them back to the stash, to the menus tab, or the
    * menu preview. They will not be saved to disc.
@@ -86,10 +95,11 @@ export class Editor extends EventEmitter {
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, backend: IBackendInfo) {
     super();
 
     this.container = container;
+    this.backend = backend;
 
     // Initialize the background.
     this.background = new Background();
@@ -97,6 +107,7 @@ export class Editor extends EventEmitter {
 
     // Initialize the preview.
     this.preview = new Preview();
+    this.container.appendChild(this.preview.getContainer());
 
     this.preview.on('delete-item', (item) => {
       this.trashedThings.push(item);
@@ -108,11 +119,31 @@ export class Editor extends EventEmitter {
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
-    this.container.appendChild(this.preview.getContainer());
+    this.preview.on('select-root', () => {
+      this.editingMenu = true;
+      this.properties.setMenu(this.menuSettings.menus[this.currentMenu]);
+    });
+
+    this.preview.on('select-item', (item) => {
+      this.editingMenu = false;
+      this.properties.setItem(item);
+    });
 
     // Initialize the properties view.
-    this.properties = new Properties();
+    this.properties = new Properties(this.backend);
     this.container.appendChild(this.properties.getContainer());
+
+    const handleItemChange = () => {
+      this.preview.updateActiveItem();
+
+      if (this.editingMenu) {
+        this.toolbar.updateMenu(this.menuSettings.menus, this.currentMenu);
+      }
+    };
+
+    this.properties.on('changed-name', handleItemChange);
+    this.properties.on('changed-icon', handleItemChange);
+    this.properties.on('changed-shortcut', handleItemChange);
 
     // Initialize the sidebar.
     this.sidebar = new Sidebar();
@@ -120,7 +151,8 @@ export class Editor extends EventEmitter {
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
     // leaving edit mode. We wire up the corresponding events here.
-    this.toolbar = new Toolbar();
+    this.toolbar = new Toolbar(backend);
+    this.container.appendChild(this.toolbar.getContainer());
 
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
     this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
@@ -173,16 +205,31 @@ export class Editor extends EventEmitter {
           children: [],
         },
         shortcut: '',
+        shortcutID: '',
         centered: false,
       };
 
       this.menuSettings.menus.push(newMenu);
-      this.toolbar.setMenus(this.menuSettings.menus, this.menuSettings.menus.length - 1);
+      this.currentMenu = this.menuSettings.menus.length - 1;
+      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
       this.preview.setMenu(newMenu);
+      this.properties.setMenu(newMenu);
     });
 
     this.toolbar.on('add-item', (typeName: string) => {
-      const item = ItemFactory.getInstance().createMenuItem(typeName);
+      const type = ItemTypeRegistry.getInstance().getType(typeName);
+      const item: IMenuItem = {
+        type: typeName,
+        data: type.defaultData,
+        name: type.defaultName,
+        icon: type.defaultIcon,
+        iconTheme: type.defaultIconTheme,
+      };
+
+      if (type.hasChildren) {
+        item.children = [];
+      }
+
       this.preview.insertItem(item);
     });
 
@@ -230,8 +277,6 @@ export class Editor extends EventEmitter {
       this.toolbar.setTrashedThings(this.trashedThings);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
-
-    this.container.appendChild(this.toolbar.getContainer());
 
     // Initialize all tooltips.
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
@@ -298,8 +343,20 @@ export class Editor extends EventEmitter {
       return;
     }
 
-    this.container.classList.remove('edit-mode');
+    // We remove the menu from the preview. Else it will be visible for a split second
+    // when the editor is opened the next time.
+    this.preview.setMenu(null);
 
+    // We remove the edit-mode class from the container. This will trigger some fade-out
+    // animations. As most elements are set to 'display: none' when the edit-mode class is
+    // not present (for performance reasons), we temporarily add the 'leaving-edit-mode'
+    // class which elements can use to keep their visibility until the animations are
+    // done.
+    this.container.classList.remove('edit-mode');
+    this.container.classList.add('leaving-edit-mode');
+    setTimeout(() => this.container.classList.remove('leaving-edit-mode'), 500);
+
+    // Send the menu settings to the main process.
     if (this.menuSettings) {
       // Before sending the menu settings back to the main process, we have to make sure
       // that the menu items are converted back to IMenuItem objects. This is because

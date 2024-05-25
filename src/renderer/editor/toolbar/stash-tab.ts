@@ -8,12 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import Handlebars from 'handlebars';
 import { ToolbarItemDragger } from './toolbar-item-dragger';
 import { EventEmitter } from 'events';
-import * as themedIcon from '../common/themed-icon';
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { ItemFactory } from '../../../common/item-factory';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
+import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
 /**
  * This class represents the stash tab in the toolbar. Users can drop menu items here to
@@ -95,28 +94,27 @@ export class StashTab extends EventEmitter {
   public setStashedItems(items: Array<IEditorMenuItem>) {
     this.dragger.removeAllDraggables();
 
-    const template = Handlebars.compile(
-      require('./templates/stash-trash-tab.hbs').default
-    );
-
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
-      const typeInfo = ItemFactory.getInstance().getTypeInfo(item.type);
+      const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
         name: item.name,
-        description: typeInfo.getDescription(item),
-        icon: themedIcon.createDiv(item.icon, item.iconTheme).outerHTML,
+        description: typeInfo?.getDescription(item),
+        icon: IconThemeRegistry.getInstance()
+          .getTheme(item.iconTheme)
+          .createDiv(item.icon).outerHTML,
         index,
       };
     });
 
     // Update the tab's content.
+    const template = require('./templates/stash-trash-tab.hbs');
     this.tab.innerHTML = template({
       type: 'stash',
       placeholderHeading: 'You can temporarily store menu items here!',
       placeholderSubheading:
-        'This is especially useful if you want to reorganize your menus.',
+        'This is useful if you want to reorganize your menus. They will be saved.',
       items: data,
     });
 

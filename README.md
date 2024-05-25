@@ -4,24 +4,20 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=8O5N6uS3cLo"><img src="docs/img/video.jpg" /></a>
+  <a href="https://www.youtube.com/watch?v=_3KkDnfu_CE"><img src="docs/img/video.jpg" /></a>
 </p>
-
-
-> [!WARNING]
-> This project is currently in a very early stage of development. Especially, Kando does not have a fully functional menu editor yet. If you want to use Kando already today, you will have to [edit your menus in JSON files](docs/configuring.md). You can read regular updates on the project on [my Ko-fi page](https://ko-fi.com/schneegans).
 
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
 [![codeql](https://github.com/kando-menu/kando/workflows/CodeQL/badge.svg)](https://github.com/kando-menu/kando/actions)
+[![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
 [![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
+[![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
 [![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
-[![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
 
-**Kando** will be a pie menu for the desktop.
-It will be highly customizable and will allow you to create your own menus and actions.
-For instance, you can use it to control your music player, to open your favorite websites or to simulate shortcuts.
-It will be available for Windows, Linux and macOS.
+**Kando** is a highly customizable pie menu for the desktop which allows you to create your own menus and actions.
+For instance, you can use it to control your music player, to open your favorite websites, or to simulate shortcuts.
+It is available for Windows, Linux and macOS.
 
 # The Vision
 
@@ -30,16 +26,15 @@ I have been working on Fly-Pie for more than 3 years now and I am very happy wit
 However, I have always wanted to create a similar application for the desktop in general.
 This is why I started this project.
 
-**Kando is very similar to Fly-Pie in terms of interaction and appearance.
-At the same time, there will be some major differences.
-You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!**
-
 <p align="center">
   <img src="docs/img/kando.gif"/>
 </p>
 
+**Kando** is very similar to Fly-Pie in terms of interaction and appearance.
+At the same time, there are some major differences.
+You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!
 
-The prototype already features the same interaction methods as Fly-Pie (point-and-click, marking mode, and turbo mode).
+
 
 # Platform Support
 
@@ -94,7 +89,7 @@ You can read more about this in the [:memo: documentation](docs/configuring.md).
 
 That's great!
 If you like the idea of Kando, you can help in many ways:
-* **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions).
+* **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions) or by joining the [Discord server](https://discord.gg/hZwbVSDkhy).
 * **Spread the word!** Tell your friends about Kando and share the project on social media.
 * **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement. Please read the [contributing guidelines](docs/contributing.md) for more information!
 

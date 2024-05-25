@@ -17,7 +17,7 @@ import { Notification } from 'electron';
 import { Backend, getBackend } from './backends';
 import { IMenuItem, IMenu, IMenuSettings, IAppSettings } from '../common';
 import { Settings, DeepReadonly } from './settings';
-import { ActionRegistry } from '../common/action-registry';
+import { ItemActionRegistry } from '../common/item-action-registry';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -192,24 +192,20 @@ export class KandoApp {
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
 
-        // On Windows, we have to remove the ignore-mouse-events property when
-        // un-minimizing the window. See the hideWindow() method for more information on
-        // this workaround
-        if (process.platform === 'win32') {
-          this.window.setIgnoreMouseEvents(false);
-        }
-
-        this.window.show();
-
-        // There seems to be an issue with GNOME Shell 44.1 where the window does not
-        // get focus when it is shown. This is a workaround for that issue.
-        setTimeout(() => {
-          this.window.focus();
-        }, 100);
+        this.showWindow();
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
       });
+  }
+
+  /**
+   * This is called when the user wants to open the menu editor. This can be either
+   * triggered by the tray icon or runned a second instance of the app.
+   */
+  public showEditor() {
+    this.window.webContents.send('show-editor');
+    this.showWindow();
   }
 
   /**
@@ -235,13 +231,21 @@ export class KandoApp {
       y: display.workArea.y,
       width: display.workArea.width + 1,
       height: display.workArea.height + 1,
-      type: this.backend.getWindowType(),
+      type: this.backend.getBackendInfo().windowType,
       show: false,
     });
 
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
+
+    // If the user clicks on a link, we close Kando's window and open the link in the
+    // default browser.
+    this.window.webContents.setWindowOpenHandler(({ url }) => {
+      this.hideWindow();
+      shell.openExternal(url);
+      return { action: 'deny' };
+    });
 
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   }
@@ -293,10 +297,31 @@ export class KandoApp {
     // return the index of a menu with the same name as the last menu. If the user uses
     // the same name for multiple menus, this will not work as expected.
     ipcMain.handle('menu-settings-get-current-menu', () => {
+      if (!this.lastMenu) {
+        return 0;
+      }
+
       const index = this.menuSettings
         .get('menus')
         .findIndex((m) => m.nodes.name === this.lastMenu.nodes.name);
+
       return Math.max(index, 0);
+    });
+
+    // Allow the renderer to retrieve information about the backend.
+    ipcMain.handle('get-backend-info', () => {
+      return this.backend.getBackendInfo();
+    });
+
+    // Unbind all shortcuts. This is used when selecting shortcuts in the editor.
+    ipcMain.on('inhibit-shortcuts', async () => {
+      await this.backend.unbindAllShortcuts();
+    });
+
+    // Rebind all shortcuts. This is used when the user is done selecting shortcuts in
+    // the editor.
+    ipcMain.on('uninhibit-shortcuts', async () => {
+      await this.bindShortcuts();
     });
 
     // Show the web developer tools if requested.
@@ -324,33 +349,44 @@ export class KandoApp {
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
     ipcMain.on('select-item', (event, path) => {
+      const execute = (item: DeepReadonly<IMenuItem>) => {
+        ItemActionRegistry.getInstance()
+          .execute(item, this.backend)
+          .catch((error) => {
+            KandoApp.showError('Failed to execute action', error.message);
+          });
+      };
+
+      let item: DeepReadonly<IMenuItem>;
+      let executeDelayed = false;
+
       try {
         // Find the selected item.
-        const item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
+        item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
 
         // If the action is not delayed, we execute it immediately.
-        const executeDelayed = ActionRegistry.getInstance().delayedExecution(item);
+        executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
         if (!executeDelayed) {
-          ActionRegistry.getInstance().execute(item, this.backend);
+          execute(item);
         }
-
-        // Also wait with the execution of the selected action until the fade-out
-        // animation is finished to make sure that any resulting events (such as virtual
-        // key presses) are not captured by the window.
-        this.hideTimeout = setTimeout(() => {
-          console.log('Select item: ' + path);
-
-          this.hideWindow();
-          this.hideTimeout = null;
-
-          // If the action is delayed, we execute it after the window is hidden.
-          if (executeDelayed) {
-            ActionRegistry.getInstance().execute(item, this.backend);
-          }
-        }, 400);
-      } catch (err) {
-        console.error('Failed to select item: ' + err);
+      } catch (error) {
+        KandoApp.showError('Failed to select item', error.message);
       }
+
+      // Also wait with the execution of the selected action until the fade-out
+      // animation is finished to make sure that any resulting events (such as virtual
+      // key presses) are not captured by the window.
+      this.hideTimeout = setTimeout(() => {
+        console.log('Select item: ' + path);
+
+        this.hideWindow();
+        this.hideTimeout = null;
+
+        // If the action is delayed, we execute it after the window is hidden.
+        if (executeDelayed) {
+          execute(item);
+        }
+      }, 400);
     });
 
     // We do not hide the window immediately when the user aborts a selection. Instead, we
@@ -362,53 +398,45 @@ export class KandoApp {
         this.hideTimeout = null;
       }, 300);
     });
-
-    // The callbacks below are only used for the example actions. They will be removed
-    // in the future.
-
-    // Open an URI with the default application.
-    ipcMain.on('open-uri', (event, uri) => {
-      this.hideWindow();
-      shell.openExternal(uri);
-    });
-
-    // Run a shell command.
-    ipcMain.on('run-command', (event, command) => {
-      this.hideWindow();
-      this.exec(command);
-    });
-
-    // Simulate a key press.
-    ipcMain.on('simulate-keys', (event, keys) => {
-      this.hideWindow();
-      this.backend.simulateKeys(keys).catch((err) => {
-        this.showError('Failed to simulate keys', err.message);
-      });
-    });
   }
 
   /**
    * This binds the shortcuts for all menus. It will unbind all shortcuts first. This
-   * method is called when the menu settings change.
+   * method is called once initially and then whenever the menu settings change.
    */
   private async bindShortcuts() {
     // First, we unbind all shortcuts.
     await this.backend.unbindAllShortcuts();
 
-    // Then, we bind the shortcuts for all menus.
+    // Then, we collect all unique shortcuts and the corresponding menus.
+    const triggers = new Map<string, DeepReadonly<IMenu>[]>();
     for (const menu of this.menuSettings.get('menus')) {
-      if (!menu.shortcut) {
-        continue;
-      }
+      const trigger = this.backend.getBackendInfo().supportsShortcuts
+        ? menu.shortcut
+        : menu.shortcutID;
 
-      await this.backend.bindShortcut({
-        id: menu.nodes.name.replace(/\s/g, '_').toLowerCase(),
-        description: `Kando - ${menu.nodes.name}`,
-        accelerator: menu.shortcut,
-        action: () => {
-          this.showMenu(menu);
-        },
-      });
+      if (trigger) {
+        if (!triggers.has(trigger)) {
+          triggers.set(trigger, []);
+        }
+        triggers.get(trigger).push(menu);
+      }
+    }
+
+    // Finally, we bind the shortcuts. If there are multiple menus with the same
+    // shortcut, the shortcut will open the first menu for now.
+    for (const [trigger, menus] of triggers) {
+      try {
+        const menu = menus[0];
+        await this.backend.bindShortcut({
+          trigger,
+          action: () => {
+            this.showMenu(menu);
+          },
+        });
+      } catch (error) {
+        KandoApp.showError('Failed to bind shortcut ' + trigger, error.message);
+      }
     }
   }
 
@@ -431,11 +459,23 @@ export class KandoApp {
 
     // Add an entry for each menu.
     for (const menu of this.menuSettings.get('menus')) {
+      const trigger =
+        (this.backend.getBackendInfo().supportsShortcuts
+          ? menu.shortcut
+          : menu.shortcutID) || 'Not Bound';
       template.push({
-        label: `${menu.nodes.name} (${menu.shortcut})`,
+        label: `${menu.nodes.name} (${trigger})`,
         click: () => this.showMenu(menu),
       });
     }
+
+    template.push({ type: 'separator' });
+
+    // Add an entry to show the editor.
+    template.push({
+      label: 'Show Settings',
+      click: () => this.showEditor(),
+    });
 
     template.push({ type: 'separator' });
 
@@ -486,29 +526,27 @@ export class KandoApp {
     exec(command, (error) => {
       // Print an error if the command fails to start.
       if (error) {
-        this.showError('Failed to execute command', error.message);
+        KandoApp.showError('Failed to execute command', error.message);
       }
     });
   }
 
-  /**
-   * This prints an error message to the console and shows a notification if possible.
-   *
-   * @param message The message to show.
-   * @param error The error to show.
-   */
-  private showError(message: string, error: string) {
-    console.error(message + ': ' + error);
-
-    if (Notification.isSupported()) {
-      const notification = new Notification({
-        title: message + '.',
-        body: error,
-        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-      });
-
-      notification.show();
+  /** This shows the window. */
+  private showWindow() {
+    // On Windows, we have to remove the ignore-mouse-events property when
+    // un-minimizing the window. See the hideWindow() method for more information on
+    // this workaround
+    if (process.platform === 'win32') {
+      this.window.setIgnoreMouseEvents(false);
     }
+
+    this.window.show();
+
+    // There seems to be an issue with GNOME Shell 44.1 where the window does not
+    // get focus when it is shown. This is a workaround for that issue.
+    setTimeout(() => {
+      this.window.focus();
+    }, 100);
   }
 
   /**
@@ -582,7 +620,28 @@ export class KandoApp {
     return {
       nodes: root,
       shortcut: 'Control+Space',
+      shortcutID: 'prototype-menu',
       centered: false,
     };
+  }
+
+  /**
+   * This prints an error message to the console and shows a notification if possible.
+   *
+   * @param message The message to show.
+   * @param error The error to show.
+   */
+  public static showError(message: string, error: string) {
+    console.error(message + ': ' + error);
+
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: message + '.',
+        body: error,
+        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+      });
+
+      notification.show();
+    }
   }
 }

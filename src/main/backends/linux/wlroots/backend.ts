@@ -10,8 +10,8 @@
 
 import { native } from './native';
 import { Backend, Shortcut, WMInfo } from '../../backend';
-import { IKeySequence } from '../../../../common';
-import { LinuxKeyCodes } from '../keys';
+import { IBackendInfo, IKeySequence } from '../../../../common';
+import { mapKeys } from '../../../../common/key-codes';
 
 /**
  * This is a partial implementation of the Backend interface for wlroots-based Wayland
@@ -46,16 +46,8 @@ export abstract class WLRBackend implements Backend {
    */
   public async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
-    // not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = LinuxKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'linux');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.
@@ -73,7 +65,7 @@ export abstract class WLRBackend implements Backend {
   // These methods are abstract and need to be implemented by subclasses. See the docs
   // of the methods in the Backend interface for more information.
   abstract init(): Promise<void>;
-  abstract getWindowType(): string;
+  abstract getBackendInfo(): IBackendInfo;
   abstract getWMInfo(): Promise<WMInfo>;
   abstract bindShortcut(shortcut: Shortcut): Promise<void>;
   abstract unbindShortcut(shortcut: Shortcut): Promise<void>;

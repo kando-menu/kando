@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IKeySequence, IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
+import { IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -58,6 +58,21 @@ contextBridge.exposeInMainWorld('api', {
     },
   },
 
+  /** This will return some information about the currently used backend. */
+  getBackendInfo: function () {
+    return ipcRenderer.invoke('get-backend-info');
+  },
+
+  /** This will temporarily unbind all menu shortcuts. */
+  inhibitShortcuts: function () {
+    ipcRenderer.send('inhibit-shortcuts');
+  },
+
+  /** This will rebind all menu shortcuts. */
+  uninhibitShortcuts: function () {
+    ipcRenderer.send('uninhibit-shortcuts');
+  },
+
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');
@@ -80,6 +95,15 @@ contextBridge.exposeInMainWorld('api', {
    */
   showMenu: function (callback: (root: IMenuItem, pos: IVec2) => void) {
     ipcRenderer.on('show-menu', (event, root, pos) => callback(root, pos));
+  },
+
+  /**
+   * This will be called by the host process when the user should be shown the editor.
+   *
+   * @param callback This callback will be called when the editor should be shown.
+   */
+  showEditor: function (callback: () => void) {
+    ipcRenderer.on('show-editor', () => callback());
   },
 
   /**
@@ -124,32 +148,5 @@ contextBridge.exposeInMainWorld('api', {
    */
   movePointer: function (dist: IVec2) {
     ipcRenderer.send('move-pointer', dist);
-  },
-
-  /**
-   * This can be used to open an URI with the default application.
-   *
-   * @param uri The URI to open. For instance, this can be a file path or a web address.
-   */
-  openURI: function (uri: string) {
-    ipcRenderer.send('open-uri', uri);
-  },
-
-  /**
-   * This can be used to simulate a key press.
-   *
-   * @param keys The keys to press.
-   */
-  simulateKeys: function (keys: IKeySequence) {
-    ipcRenderer.send('simulate-keys', keys);
-  },
-
-  /**
-   * This can be used to run a shell command.
-   *
-   * @param command The command to run.
-   */
-  runCommand: function (command: string) {
-    ipcRenderer.send('run-command', command);
   },
 });

@@ -12,7 +12,7 @@ import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../backend';
 import { IKeySequence } from '../../../common';
-import { WindowsKeyCodes } from './keys';
+import { mapKeys } from '../../../common/key-codes';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -22,11 +22,12 @@ export class WindowsBackend implements Backend {
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
-   *
-   * @returns 'toolbar'
    */
-  public getWindowType() {
-    return 'toolbar';
+  public getBackendInfo() {
+    return {
+      windowType: 'toolbar',
+      supportsShortcuts: true,
+    };
   }
 
   /**
@@ -74,17 +75,9 @@ export class WindowsBackend implements Backend {
    * @param keys The keys to simulate.
    */
   public async simulateKeys(keys: IKeySequence) {
-    // We first need to convert the given DOM key names to Win32 key codes. If a key code
-    // is not found, we throw an error.
-    const keyCodes = keys.map((key) => {
-      const code = WindowsKeyCodes.get(key.name);
-
-      if (code === undefined) {
-        throw new Error(`Unknown key: ${key.name}`);
-      }
-
-      return code;
-    });
+    // We first need to convert the given DOM key names to Win32 key codes. If a key code is
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'windows');
 
     // Now simulate the key presses. We wait a couple of milliseconds if the key has a
     // delay specified.
@@ -107,8 +100,8 @@ export class WindowsBackend implements Backend {
    * @returns A promise which resolves when the shortcut has been bound.
    */
   public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.accelerator, shortcut.action)) {
-      throw new Error('Shortcut is already in use.');
+    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
+      throw new Error('Invalid shortcut or it is already in use.');
     }
   }
 
@@ -118,7 +111,7 @@ export class WindowsBackend implements Backend {
    * @param shortcut The shortcut to unbind.
    */
   public async unbindShortcut(shortcut: Shortcut) {
-    globalShortcut.unregister(shortcut.accelerator);
+    globalShortcut.unregister(shortcut.trigger);
   }
 
   /** This unbinds all previously bound shortcuts. */
