@@ -47,7 +47,7 @@ Property | Default Value | Description
 ### The Menu Configuration: `menus.json`
 
 This file contains the configuration of the individual menus.
-The top-level JSON object is called `menus` and contains a list of menu descriptions:
+There are two top-level JSON objects: `menus` contains a list of _Menu Descriptions_ and `stash` contains a list of currently stashed menu items as _Menu Item Descriptions_.
 
 ```js
 {
@@ -61,6 +61,9 @@ The top-level JSON object is called `menus` and contains a list of menu descript
       // ...
     },
     // ...
+  ],
+  "stash": [
+    // Currently stashed Menu Items.
   ]
 }
 ```
