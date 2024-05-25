@@ -9,7 +9,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 Kando is a cross-platform pie menu which is still under heavy development.
 This documentation is also work-in-progress, but it will already give you an overview of the project and help you to get started.
-If you have any questions, please feel free to [open a discussion](https://github.com/orgs/kando-menu/discussions).
+If you have any questions, please feel free to [join the Discord server](https://discord.gg/hZwbVSDkhy) or [open a discussion on GitHub](https://github.com/orgs/kando-menu/discussions).
 If you want to improve this documentation, please [open a pull request](https://github.com/kando-menu/kando/pulls)!
 
 ## General Information
