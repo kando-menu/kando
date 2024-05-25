@@ -12,7 +12,7 @@ All configuration is stored JSON files which you can also edit manually.
 
 ## The Menu Editor
 
-<img src="img/settings-button.jpg" align="right"></img>
+<img src="img/settings-button.jpg" align="right" width="150px"></img>
 
 There are three ways to open the menu editor:
 1. **When a menu is shown:** Click the gear icon in the bottom right corner of the screen.
