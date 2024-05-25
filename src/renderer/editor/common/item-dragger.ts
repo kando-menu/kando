@@ -80,8 +80,6 @@ export class ItemDragger<T> extends EventEmitter {
 
       this.emit('mouse-down', data, div);
 
-      let clearListeners = () => {};
-
       const onMotionEvent = (e2: MouseEvent | TouchEvent) => {
         const dragCurrent = this.getCoords(e2);
         const offset = math.subtract(dragCurrent, dragStart);
@@ -137,13 +135,13 @@ export class ItemDragger<T> extends EventEmitter {
         }
       };
 
-      clearListeners = () => {
+      const clearListeners = () => {
         window.removeEventListener('mousemove', onMotionEvent);
         window.removeEventListener('touchmove', onMotionEvent);
         window.removeEventListener('mouseup', onMouseUp);
         window.removeEventListener('touchend', onMouseUp);
         window.removeEventListener('touchcancel', onMouseUp);
-        window.removeEventListener('keyup', onEsc, true);
+        window.removeEventListener('keydown', onEsc, true);
       };
 
       window.addEventListener('mousemove', onMotionEvent);
@@ -151,7 +149,7 @@ export class ItemDragger<T> extends EventEmitter {
       window.addEventListener('mouseup', onMouseUp);
       window.addEventListener('touchend', onMouseUp);
       window.addEventListener('touchcancel', onMouseUp);
-      window.addEventListener('keyup', onEsc, true);
+      window.addEventListener('keydown', onEsc, true);
     };
 
     const abortController = new AbortController();
