@@ -18,8 +18,11 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IDropTarget } from '../common/drop-target';
 
 /**
- * This class is used to make the child items in the menu preview draggable. It emits the
- * following events:
+ * This class is used to make the child items in the menu preview draggable.
+ *
+ * While it has access to the menu item, it will not modify it. Instead, it will emit
+ * events which can be used to modify the item from the outside. It emits the following
+ * events:
  *
  * @fires select - When the item is clicked.
  * @fires drag-start - When the item is started to be dragged. This is only emitted for

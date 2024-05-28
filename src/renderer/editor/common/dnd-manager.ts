@@ -58,6 +58,10 @@ export class DnDManager {
    * @param draggable The draggable to register.
    */
   public registerDraggable(draggable: IDraggable) {
+    // This is called both for mouse and touch events. After the pointer is down, we need
+    // to listen to move events to detect a drag operation. If the pointer is moved more
+    // than a few pixels, we start a drag operation. If the pointer is released before
+    // that, we call the `onClick` method of the draggable.
     const onPointerDown = (e: PointerEvent | TouchEvent) => {
       const dragStart = this.getCoords(e);
       const div = draggable.getDiv();
@@ -76,21 +80,28 @@ export class DnDManager {
 
       draggable.onMouseDown();
 
+      // Start listening to move events. If the pointer is moved more than a few pixels,
+      // we start a drag operation.
       const onMotionEvent = (e2: MouseEvent | TouchEvent) => {
         const viewportCoords = this.getCoords(e2);
         const offset = math.subtract(viewportCoords, dragStart);
 
         if (math.getLength(offset) > this.DRAG_THRESHOLD) {
+          // If we are not already dragging something, we start a new drag operation.
           if (this.currentlyDragged === null) {
             this.currentlyDragged = draggable;
             document.body.style.cursor = 'grabbing';
             draggable.onDragStart();
           }
 
+          // Notify the draggable about the current position.
           draggable.onDragMove(viewportCoords, math.add(startPos, offset));
 
+          // Check if the draggable is currently over a drop target.
           for (const target of this.dropTargets) {
             if (target.accepts(draggable, viewportCoords)) {
+              // If the draggable is over a new drop target, we notify the old one that
+              // the draggable left and the new one that the draggable entered.
               if (this.currentDropTarget !== target) {
                 if (this.currentDropTarget) {
                   this.currentDropTarget.onDropLeave();
@@ -100,8 +111,12 @@ export class DnDManager {
                 this.currentDropTarget = target;
               }
 
+              // Notify the drop target about the current position.
               target.onDropMove(viewportCoords);
-            } else if (this.currentDropTarget === target) {
+            }
+            // If the previous drop target does not accept the draggable anymore, we
+            // notify it that the draggable left.
+            else if (this.currentDropTarget === target) {
               target.onDropLeave();
               this.currentDropTarget = null;
             }
@@ -109,9 +124,12 @@ export class DnDManager {
         }
       };
 
+      // This method is called when the pointer is released or the touch is canceled.
       const onMouseUp = () => {
         draggable.onMouseUp();
 
+        // If we are currently dragging something over a drop target, we notify both the
+        // draggable and the drop target about the drop operation.
         if (this.currentlyDragged) {
           if (this.currentDropTarget) {
             draggable.onDrop(this.currentDropTarget);
@@ -130,6 +148,8 @@ export class DnDManager {
         clearListeners();
       };
 
+      // This method is called when the escape key is pressed. It cancels the drag
+      // operation.
       const onEsc = (e2: KeyboardEvent) => {
         if (e2.key === 'Escape') {
           if (this.currentlyDragged) {
@@ -166,6 +186,8 @@ export class DnDManager {
       window.addEventListener('keydown', onEsc, true);
     };
 
+    // We need to store the abort controller to be able to remove the event listeners
+    // when the draggable is unregistered.
     const abortController = new AbortController();
     const div = draggable.getDiv();
     div.addEventListener('mousedown', onPointerDown, { signal: abortController.signal });
