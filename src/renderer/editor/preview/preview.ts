@@ -13,9 +13,11 @@ import { EventEmitter } from 'events';
 import * as math from '../../math';
 import * as utils from './utils';
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { PreviewItemDragger } from './preview-item-dragger';
+import { PreviewDraggable } from './preview-draggable';
+import { PreviewDropTarget } from './preview-drop-target';
 import { IVec2, IMenu } from '../../../common';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { DnDManager } from '../common/dnd-manager';
 
 /**
  * This class is responsible for displaying the menu preview of the editor. It supports
@@ -73,7 +75,9 @@ export class Preview extends EventEmitter {
   private activeItem?: IEditorMenuItem = null;
 
   /** This is used to drag'n'drop menu items. */
-  private dragger: PreviewItemDragger = null;
+  private dndManager: DnDManager = null;
+  private dropTarget: PreviewDropTarget = null;
+  private draggables: Array<PreviewDraggable> = [];
 
   /**
    * This is a little div which becomes visible when something is dragged over the
@@ -85,7 +89,7 @@ export class Preview extends EventEmitter {
    * This constructor creates the HTML elements for the menu preview and wires up all the
    * functionality.
    */
-  constructor() {
+  constructor(dndManager: DnDManager) {
     super();
 
     const template = require('./templates/preview.hbs');
@@ -98,6 +102,10 @@ export class Preview extends EventEmitter {
     });
 
     this.container = div.firstElementChild as HTMLElement;
+
+    this.dndManager = dndManager;
+    this.dropTarget = new PreviewDropTarget(this.container);
+    this.dndManager.registerDropTarget(this.dropTarget);
 
     // Keep a reference to the 'canvas' element. It is not the HTML5 canvas element, but
     // the element into which the menu items are rendered using HTML and CSS.
@@ -148,51 +156,6 @@ export class Preview extends EventEmitter {
       this.selectItem(menu.nodes);
     } else {
       this.hideOldMenuItems({ x: 0, y: 0 });
-    }
-  }
-
-  /**
-   * This method adds a new menu item to the currently displayed menu. This is used by the
-   * `Editor` to add new items from the toolbar to the currently edited menu.
-   *
-   * @param item The new item to be added.
-   */
-  public insertItem(item: IEditorMenuItem) {
-    const { dropTarget, dropIndex } = this.dragger.getLastDropTarget();
-
-    if (dropTarget !== null) {
-      // Add the new item to the last valid drop location.
-      if (dropIndex !== null) {
-        dropTarget.children.splice(dropIndex, 0, item);
-      } else {
-        dropTarget.children.push(item);
-      }
-
-      // If this was the currently displayed menu (it could also have been a submenu or
-      // the parent menu via the back-navigation link), we need to add the DOM
-      // representation to our canvas.
-      if (dropTarget === this.getCenterItem()) {
-        const container = this.canvas.querySelector(
-          '.kando-menu-preview-container.visible'
-        ) as HTMLElement;
-        this.drawItem(item, container);
-
-        // If it's not a submenu, we select the new item. For submenus this would be a
-        // bit confusing.
-        if (item.type !== 'submenu') {
-          this.selectItem(item);
-        }
-      }
-
-      // In any case, update the angles of drop target.
-      this.computeItemAnglesRecursively(
-        dropTarget.children,
-        utils.getParentAngle(dropTarget)
-      );
-
-      this.updateAllPositions();
-    } else {
-      window.api.log('Trying to add an item to an invalid position!');
     }
   }
 
@@ -253,23 +216,17 @@ export class Preview extends EventEmitter {
    * only be rotated around the parent item.
    */
   private initDragAndDrop() {
-    this.dragger = new PreviewItemDragger(this.container);
-
-    // Select an item when it is clicked.
-    this.dragger.on('click', (item) => {
-      this.selectItem(item);
-    });
-
     // Move the drop indicator either to the submenu, to the back-navigation link, or to
     // the drop index position when an item is dragged around. This will also be called
     // during drag-and-drop operations for new, deleted, and stashed items from the
-    // toolbar. In this case, `item` and `dragIndex` will be null.
-    this.dragger.on('drag-item', (item, dragIndex, dropTarget, dropIndex) => {
+    // toolbar. In this case, and `dragIndex` will be null.
+    this.dropTarget.on('drag-over', (dragIndex, dropTarget, dropIndex) => {
+      console.log('drop target - drag over');
       const parentItem = this.getParentItem();
       const centerItem = this.getCenterItem();
       let indicatorAngle = null;
 
-      if (dropTarget === centerItem) {
+      if (dropTarget === centerItem && dropIndex !== null) {
         // If the item is to be dropped somewhere in the currently displayed menu we have
         // to incorporate the dropIndex to leave an angular gap for the to-be-dropped
         // item.
@@ -301,66 +258,20 @@ export class Preview extends EventEmitter {
       this.updateAllPositions();
     });
 
-    // This is called whenever a item with a fixed angle is dragged around.
-    this.dragger.on('update-fixed-angle', (item, angle) => {
-      item.angle = angle;
-
-      // Within the list of children, the fixed angles must by monotonically increasing.
-      // That means that we may have to reorder the children if the item is dragged
-      // beyond the next or previous child with a fixed angle.
-      const centerItem = this.getCenterItem();
-      let index = centerItem.children.indexOf(item);
-
-      // First, we search for the child with the largest fixed angle which is smaller
-      // than the angle of the dragged item. For this, we iterate the children list from
-      // the back. If we find any, we have to move the dragged item to the next position.
-      for (let i = centerItem.children.length - 1; i > index; --i) {
-        const child = centerItem.children[i];
-        if (child.angle !== undefined && child.angle < item.angle) {
-          centerItem.children.splice(index, 1);
-          centerItem.children.splice(i, 0, item);
-          index = i;
-          break;
-        }
-      }
-
-      // Second, we search for the child with the smallest fixed angle which is larger
-      // than the angle of the dragged item.
-      for (let i = 0; i < index; ++i) {
-        const child = centerItem.children[i];
-        if (child.angle !== undefined && child.angle > item.angle) {
-          centerItem.children.splice(index, 1);
-          centerItem.children.splice(i, 0, item);
-          break;
-        }
-      }
-
-      this.recomputeItemAngles();
-      this.updateAllPositions();
-    });
-
-    // This is called when a menu item is successfully dropped somewhere. This is not called
-    // for drag-and-drop operations from the toolbar. In this case, the `insertItem()`
-    // method will be called by the `Editor`.
-    this.dragger.on('drop-item', (item, dragIndex, dropTarget, dropIndex) => {
+    // This is called when a menu item is successfully dropped somewhere.
+    this.dropTarget.on('drop-item', (item, dragIndex, dropTarget, dropIndex) => {
+      console.log('drop target - drop item');
       // Hide the drop indicator.
       this.dropIndicator.classList.remove('visible');
 
-      // If a drag index is given, we first remove the dragged item from the children
-      // list.
       const centerItem = this.getCenterItem();
-      if (dragIndex !== null) {
-        centerItem.children.splice(dragIndex, 1);
-      }
 
       // We then check whether the menu item has been dropped into a submenu, or into the
       // parent item. In both cases, the item's div is removed from the DOM and the menu
       // item is added to the children of the drop target.
       if (dropTarget && dropTarget !== centerItem) {
-        // Remove the dragged item from the DOM.
-        item.div.remove();
-
         dropTarget.children.push(item);
+        this.removeItem(item);
 
         // Recompute all item angles of the drop target after adding the new item.
         this.computeItemAnglesRecursively(
@@ -373,29 +284,10 @@ export class Preview extends EventEmitter {
         return;
       }
 
-      // If the item has been dropped on the stash or trash tab, we emit the respective
-      // events.
-      const eventTargets = [
-        [".nav-link[data-bs-target='#kando-trash-tab']", 'delete-item'],
-        [".nav-link[data-bs-target='#kando-stash-tab']", 'stash-item'],
-        ['#kando-trash-tab', 'delete-item'],
-        ['#kando-stash-tab', 'stash-item'],
-      ];
-
-      for (const [selector, event] of eventTargets) {
-        const target = document.querySelector(selector);
-        if (target && target.matches(':hover')) {
-          item.div.remove();
-          this.recomputeItemAngles();
-          this.updateAllPositions();
-          this.emit(event, item);
-
-          // If the item has been dropped into the trash or stash tab, we select the
-          // center item.
-          this.selectItem(centerItem);
-
-          return;
-        }
+      // If a drag index is given, it was an internal drag operation. In this case, we do
+      // not re-add a new child item.
+      if (dragIndex !== null) {
+        centerItem.children.splice(dragIndex, 1);
       }
 
       // If the item has been dropped into the currently shown menu, we add it to the
@@ -403,17 +295,19 @@ export class Preview extends EventEmitter {
       // drop index, we drop the item where it was before.
       if (dropIndex !== null || dragIndex !== null) {
         centerItem.children.splice(dropIndex ?? dragIndex, 0, item);
+
+        // If it was a drag operation from outside the preview, we have to add a new
+        // div for the item.
+        if (dragIndex === null) {
+          const container = this.canvas.querySelector(
+            '.kando-menu-preview-container.visible'
+          ) as HTMLElement;
+          this.drawItem(item, container);
+          this.makeDraggable(item);
+        }
       }
 
       // In any case, we redraw the menu.
-      this.recomputeItemAngles();
-      this.updateAllPositions();
-    });
-
-    // If the drag-and-drop operation is aborted, we hide the drop indicator and recompute
-    // the item positions.
-    this.dragger.on('drag-cancel', () => {
-      this.dropIndicator.classList.remove('visible');
       this.recomputeItemAngles();
       this.updateAllPositions();
     });
@@ -436,7 +330,10 @@ export class Preview extends EventEmitter {
 
     // Clear all previous draggables. We will register all new items further below via the
     // `drawItem()` method.
-    this.dragger.removeAllDraggables();
+    this.draggables.forEach((draggable) =>
+      this.dndManager.unregisterDraggable(draggable)
+    );
+    this.draggables = [];
 
     // First, fade out all currently displayed menu items.
     let transitionDirection = { x: 0, y: 0 };
@@ -470,10 +367,11 @@ export class Preview extends EventEmitter {
     // Add the children of the currently selected menu.
     centerItem.children?.forEach((child) => {
       this.drawItem(child as IEditorMenuItem, container);
+      this.makeDraggable(child as IEditorMenuItem);
     });
 
-    // Let the dragger know that we have a new center item.
-    this.dragger.setCenterItem(centerItem, this.getParentItem());
+    // Let the dragDrop know that we have a new center item.
+    this.dropTarget.setCenterItem(centerItem, this.getParentItem());
 
     // If we are currently showing a submenu, we add the back navigation link towards
     // the direction of the parent menu.
@@ -549,9 +447,83 @@ export class Preview extends EventEmitter {
       }
     });
     item.div.appendChild(lock);
+  }
+
+  /**
+   * This method creates a new PreviewDraggable for the given menu item. The draggable can
+   * be used to move the item around in the preview.
+   */
+  private makeDraggable(item: IEditorMenuItem) {
+    const draggable = new PreviewDraggable(this.container, item);
 
     // Make the child div selectable and draggable.
-    this.dragger.addDraggable(item.div, item);
+    // Select an item when it is clicked.
+    draggable.on('select', () => {
+      console.log('draggable - select');
+      this.selectItem(item);
+    });
+
+    draggable.on('drag-start', () => {
+      console.log('draggable - drag start');
+      this.dropTarget.setDraggedItem(item);
+    });
+
+    // If the item is dropped somewhere outside the preview, we have to remove it from the
+    // children list of the current center item.
+    draggable.on('drop', (target) => {
+      console.log('draggable - drop');
+      if (target !== this.dropTarget) {
+        this.removeItem(item);
+      }
+    });
+
+    draggable.on('drag-cancel', () => {
+      console.log('draggable - drag cancel');
+      this.recomputeItemAngles();
+      this.updateAllPositions();
+    });
+
+    // This is called whenever a item with a fixed angle is dragged around.
+    draggable.on('update-fixed-angle', (angle) => {
+      console.log('draggable - update fixed angle');
+      item.angle = angle;
+
+      // Within the list of children, the fixed angles must by monotonically increasing.
+      // That means that we may have to reorder the children if the item is dragged
+      // beyond the next or previous child with a fixed angle.
+      const centerItem = this.getCenterItem();
+      let index = centerItem.children.indexOf(item);
+
+      // First, we search for the child with the largest fixed angle which is smaller
+      // than the angle of the dragged item. For this, we iterate the children list from
+      // the back. If we find any, we have to move the dragged item to the next position.
+      for (let i = centerItem.children.length - 1; i > index; --i) {
+        const child = centerItem.children[i];
+        if (child.angle !== undefined && child.angle < item.angle) {
+          centerItem.children.splice(index, 1);
+          centerItem.children.splice(i, 0, item);
+          index = i;
+          break;
+        }
+      }
+
+      // Second, we search for the child with the smallest fixed angle which is larger
+      // than the angle of the dragged item.
+      for (let i = 0; i < index; ++i) {
+        const child = centerItem.children[i];
+        if (child.angle !== undefined && child.angle > item.angle) {
+          centerItem.children.splice(index, 1);
+          centerItem.children.splice(i, 0, item);
+          break;
+        }
+      }
+
+      this.recomputeItemAngles();
+      this.updateAllPositions();
+    });
+
+    this.draggables.push(draggable);
+    this.dndManager.registerDraggable(draggable);
   }
 
   /**
@@ -693,6 +665,21 @@ export class Preview extends EventEmitter {
     } else {
       this.emit('select-item', item);
     }
+  }
+
+  private removeItem(item: IEditorMenuItem) {
+    // Remove the child.
+    const centerItem = this.getCenterItem();
+    const index = centerItem.children.indexOf(item);
+    centerItem.children.splice(index, 1);
+
+    // Remove the corresponding draggable.
+    const draggable = this.draggables.find((d) => d.getData() === item);
+    this.draggables = this.draggables.filter((d) => d.getData() !== item);
+    this.dndManager.unregisterDraggable(draggable);
+
+    // Remove the div from the DOM.
+    item.div.remove();
   }
 
   /**

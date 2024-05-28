@@ -19,6 +19,7 @@ import { Properties } from './properties/properties';
 import { IMenu, IBackendInfo, IMenuSettings, IMenuItem } from '../../common';
 import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
 import { ItemTypeRegistry } from '../../common/item-type-registry';
+import { DnDManager } from './common/dnd-manager';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the
@@ -65,6 +66,8 @@ export class Editor extends EventEmitter {
    */
   private toolbar: Toolbar = null;
 
+  private dndManager: DnDManager = new DnDManager();
+
   /**
    * These are the current menu settings. They are retrieved from the main process when
    * the user enters edit mode. It will modified by the user and then sent back to the
@@ -106,7 +109,7 @@ export class Editor extends EventEmitter {
     this.container.appendChild(this.background.getContainer());
 
     // Initialize the preview.
-    this.preview = new Preview();
+    this.preview = new Preview(this.dndManager);
     this.container.appendChild(this.preview.getContainer());
 
     this.preview.on('delete-item', (item) => {
@@ -230,7 +233,7 @@ export class Editor extends EventEmitter {
         item.children = [];
       }
 
-      this.preview.insertItem(item);
+      // this.preview.insertItem(item);
     });
 
     this.toolbar.on('select-menu', (index: number) => {
@@ -254,7 +257,7 @@ export class Editor extends EventEmitter {
 
     this.toolbar.on('restore-deleted-item', (index: number) => {
       const item = this.trashedThings.splice(index, 1)[0] as IEditorMenuItem;
-      this.preview.insertItem(item);
+      // this.preview.insertItem(item);
       this.toolbar.setTrashedThings(this.trashedThings);
     });
 
@@ -268,7 +271,7 @@ export class Editor extends EventEmitter {
 
     this.toolbar.on('restore-stashed-item', (index: number) => {
       const item = this.menuSettings.stash.splice(index, 1)[0];
-      this.preview.insertItem(item);
+      // this.preview.insertItem(item);
       this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 

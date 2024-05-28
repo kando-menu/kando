@@ -104,7 +104,6 @@ export class ItemDragger<T> extends EventEmitter {
       };
 
       const onMouseUp = () => {
-        console.log('pointerup');
         this.emit('mouse-up', data, div);
 
         if (this.currentlyDragged) {
