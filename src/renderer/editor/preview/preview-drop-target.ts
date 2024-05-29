@@ -98,12 +98,14 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     this.parentItem = parentItem;
   }
 
+  /**
+   * This is called by the `Preview` class whenever a menu item is dragged around. It
+   * stores the index of the dragged item.
+   *
+   * @param item The item which is currently dragged.
+   */
   public setDraggedItem(item: IEditorMenuItem) {
     this.dragIndex = this.centerItem.children.indexOf(item);
-  }
-
-  public getLast() {
-    return { dropTarget: this.dropTarget, dropIndex: this.dropIndex };
   }
 
   // IDropTarget implementation ----------------------------------------------------------
@@ -138,10 +140,18 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     return item.angle === undefined;
   }
 
+  /**
+   * Remember that something is dragged over the preview area. There will be a call to
+   * `onDropMove` right after this, so we do not have to emit the `drag-over` event here.
+   */
   public onDropEnter() {
     this.dragOverPreview = true;
   }
 
+  /**
+   * If something leaves the preview area, we emit the `drag-over` event with the drop
+   * target and index set to `null`.
+   */
   public onDropLeave() {
     this.emit('drag-over', this.dragIndex, null, null);
     this.dragOverPreview = false;
@@ -149,6 +159,12 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     this.dropTarget = null;
   }
 
+  /**
+   * If the drop target or drop index changes during the drag operation, we emit the
+   * `drag-over` event.
+   *
+   * @param coords The current coordinates of the pointer in viewport space.
+   */
   public onDropMove(coords: IVec2) {
     // Compute the angle towards the dragged item.
     const relativePosition = math.subtract(coords, this.getPreviewCenter());
@@ -178,20 +194,33 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     }
   }
 
+  /**
+   * If a menu item is dropped onto the preview, we emit the `drop-item` event.
+   *
+   * @param source The draggable which is dropped.
+   */
   public onDrop(source: IDraggable) {
     const item = source.getData() as IEditorMenuItem;
 
-    // Items with fixed angles are not really dragged around.
+    // Items with fixed angles are not really dragged around. Only items without fixed
+    // angles can be dropped.
     if (item.angle === undefined) {
       this.emit('drop-item', item, this.dragIndex, this.dropTarget, this.dropIndex);
     }
+
+    this.onDropCancel();
   }
 
+  /**
+   * If the drag operation is canceled, we emit the `drag-over` event with the drop index
+   * set to `null`.
+   */
   public onDropCancel() {
     this.emit('drag-over', null, this.dropTarget, null);
     this.dragOverPreview = false;
     this.dropIndex = null;
     this.dropTarget = null;
+    this.dragIndex = null;
   }
 
   // Private methods ---------------------------------------------------------------------
