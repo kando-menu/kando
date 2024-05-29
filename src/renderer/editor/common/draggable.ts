@@ -86,6 +86,8 @@ export interface IDraggable {
    * @param viewportCoords The current coordinates of the pointer in viewport space.
    * @param parentCoords The current coordinates of the pointer in the space of the
    *   draggable element's parent.
+   * @param grabOffset The offset between the pointer and the draggable element's top-left
+   *   corner when the drag operation started.
    */
-  onDragMove(viewportCoords: IVec2, parentCoords: IVec2): void;
+  onDragMove(viewportCoords: IVec2, parentCoords: IVec2, grabOffset: IVec2): void;
 }

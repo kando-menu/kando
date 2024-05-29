@@ -73,10 +73,10 @@ export class DnDManager {
         y: rect.top - parentRect.top,
       };
 
-      // const grabOffset = {
-      //   x: dragStart.x - rect.left,
-      //   y: dragStart.y - rect.top,
-      // };
+      const grabOffset = {
+        x: dragStart.x - rect.left,
+        y: dragStart.y - rect.top,
+      };
 
       draggable.onMouseDown();
 
@@ -95,7 +95,7 @@ export class DnDManager {
           }
 
           // Notify the draggable about the current position.
-          draggable.onDragMove(viewportCoords, math.add(startPos, offset));
+          draggable.onDragMove(viewportCoords, math.add(startPos, offset), grabOffset);
 
           // Check if the draggable is currently over a drop target.
           for (const target of this.dropTargets) {
