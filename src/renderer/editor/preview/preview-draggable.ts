@@ -104,7 +104,9 @@ export class PreviewDraggable extends EventEmitter implements IDraggable {
   public onDrop(target: IDropTarget) {
     if (this.item.angle === undefined) {
       // Reset the position of the dragged div.
-      this.onDragCancel();
+      this.item.div.style.left = '';
+      this.item.div.style.top = '';
+      this.item.div.classList.remove('dragging');
       this.emit('drop', target);
     }
   }
@@ -136,7 +138,9 @@ export class PreviewDraggable extends EventEmitter implements IDraggable {
       const relativePosition = math.subtract(viewportCoords, this.getPreviewCenter());
       const dragAngle = math.getAngle(relativePosition);
       const angle = Math.round(dragAngle / 15) * 15;
-      this.emit('update-fixed-angle', angle);
+      if (angle !== this.item.angle) {
+        this.emit('update-fixed-angle', angle);
+      }
     } else {
       // Update the position of the dragged div.
       this.item.div.style.left = `${parentCoords.x}px`;

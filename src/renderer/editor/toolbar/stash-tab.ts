@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ToolbarItemDragger } from './toolbar-item-dragger';
+import { ToolbarItemDragger } from './toolbar-draggable';
 import { EventEmitter } from 'events';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
@@ -32,13 +32,6 @@ export class StashTab extends EventEmitter {
 
   /** This is the HTML element which contains the stash tab's content. */
   private tab: HTMLElement = null;
-
-  /**
-   * This is used to drag'n'drop menus from the stash to the trash tab or the menus
-   * preview. The template argument is a number since the index of the dragged item is
-   * stored of in the data field.
-   */
-  private dragger: ToolbarItemDragger<number> = null;
 
   /**
    * These are all potential drop targets for dragged menu items. Menu items can be
@@ -69,14 +62,14 @@ export class StashTab extends EventEmitter {
     // Initialize the dragger. This will be used to make the item buttons draggable. When
     // a menu item is dropped to the trash tab, we emit the 'delete-item' event. If a menu
     // item is dropped to the preview area, we emit the 'restore-item' event.
-    this.dragger = new ToolbarItemDragger();
-    this.dragger.on('drop', (index, dropTarget) => {
-      if (dropTarget === this.preview) {
-        this.emit('restore-item', index);
-      } else {
-        this.emit('delete-item', index);
-      }
-    });
+    // this.dragger = new ToolbarItemDragger();
+    // this.dragger.on('drop', (index, dropTarget) => {
+    //   if (dropTarget === this.preview) {
+    //     this.emit('restore-item', index);
+    //   } else {
+    //     this.emit('delete-item', index);
+    //   }
+    // });
 
     // The tab has been created in the toolbar's constructor.
     this.tab = this.container.querySelector('#kando-stash-tab');
@@ -92,7 +85,7 @@ export class StashTab extends EventEmitter {
    * @param items The items which are currently in the trash.
    */
   public setStashedItems(items: Array<IEditorMenuItem>) {
-    this.dragger.removeAllDraggables();
+    // this.dragger.removeAllDraggables();
 
     // Compile the data for the Handlebars template.
     const data = items.map((item, index) => {
@@ -122,12 +115,12 @@ export class StashTab extends EventEmitter {
     // trash tab or to the menu preview.
     for (const item of data) {
       const div = document.getElementById(`stash-item-${item.index}`);
-      this.dragger.addDraggable(div, {
-        data: item.index,
-        ghostMode: false,
-        dragClass: 'dragging-item-from-stash-tab',
-        dropTargets: [this.trashTab, this.preview],
-      });
+      // this.dragger.addDraggable(div, {
+      //   data: item.index,
+      //   ghostMode: false,
+      //   dragClass: 'dragging-item-from-stash-tab',
+      //   dropTargets: [this.trashTab, this.preview],
+      // });
     }
 
     // Set the counter value.

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ToolbarItemDragger } from './toolbar-item-dragger';
+import { ToolbarItemDragger } from './toolbar-draggable';
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
@@ -31,13 +31,6 @@ export class MenusTab extends EventEmitter {
 
   /** This is the HTML element which contains the menus tab's content. */
   private tab: HTMLElement = null;
-
-  /**
-   * This is used to drag'n'drop menus from the toolbar to the trash. The template
-   * argument is a number since the index of the dragged item is stored of in the data
-   * field.
-   */
-  private dragger: ToolbarItemDragger<number> = null;
 
   /** This is the only drop target for dragged menus. */
   private trashTab: HTMLElement = null;
@@ -66,8 +59,8 @@ export class MenusTab extends EventEmitter {
 
     // Initialize the dragger. This will be used to make the menu buttons draggable. When
     // a menu button is dropped to the trash tab, we emit the 'delete-menu' event.
-    this.dragger = new ToolbarItemDragger();
-    this.dragger.on('drop', (index) => this.emit('delete-menu', index));
+    // this.dragger = new ToolbarItemDragger();
+    // this.dragger.on('drop', (index) => this.emit('delete-menu', index));
 
     // The tab has been created in the toolbar's constructor.
     this.tab = this.container.querySelector('#kando-menus-tab');
@@ -95,7 +88,7 @@ export class MenusTab extends EventEmitter {
    * @param currentMenu The index of the currently selected menu.
    */
   public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    this.dragger.removeAllDraggables();
+    // this.dragger.removeAllDraggables();
 
     // Compile the data for the Handlebars template.
     const data = menus.map((menu, index) => ({
@@ -116,12 +109,12 @@ export class MenusTab extends EventEmitter {
     // trash tab.
     for (const menu of data) {
       const div = document.getElementById(`menu-button-${menu.index}`);
-      this.dragger.addDraggable(div, {
-        data: menu.index,
-        ghostMode: false,
-        dragClass: 'dragging-menu-from-menus-tab',
-        dropTargets: [this.trashTab],
-      });
+      // this.dragger.addDraggable(div, {
+      //   data: menu.index,
+      //   ghostMode: false,
+      //   dragClass: 'dragging-menu-from-menus-tab',
+      //   dropTargets: [this.trashTab],
+      // });
     }
   }
 

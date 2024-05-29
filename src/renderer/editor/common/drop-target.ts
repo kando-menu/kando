@@ -26,30 +26,42 @@ export interface IDropTarget {
    */
   accepts(draggable: IDraggable, coords: IVec2): boolean;
 
-  /** This method is called when a draggable enters the drop target. */
-  onDropEnter(): void;
-
-  /** This method is called when a draggable leaves the drop target. */
-  onDropLeave(): void;
+  /**
+   * This method is called when an accepted draggable enters the drop target.
+   *
+   * @param draggable The draggable which is entered.
+   */
+  onDragEnter(draggable: IDraggable): void;
 
   /**
-   * This method is called when a draggable is moved over the drop target.
+   * This method is called when a previously entered draggable leaves the drop target.
    *
-   * @param coords The viewport coordinates of the draggable.
+   * @param draggable The draggable which left.
    */
-  onDropMove(coords: IVec2): void;
+  onDragLeave(draggable: IDraggable): void;
+
+  /**
+   * This method is called when an accepted draggable is moved over the drop target.
+   *
+   * @param draggable The draggable which is moved.
+   * @param coords The current coordinates of the pointer in viewport space.
+   */
+  onDropMove(draggable: IDraggable, coords: IVec2): void;
+
+  /**
+   * This method is called when the drag operation is canceled while the draggable is over
+   * the drop target. This will not be called if the drag operation is canceled while the
+   * draggable is not over the drop target.
+   *
+   * @param draggable The draggable which was canceled.
+   */
+  onDropCancel(draggable: IDraggable): void;
 
   /**
    * This method is called when a draggable is dropped onto the drop target. The
    * corresponding `onDrop` method of the draggable is called before this method.
    *
-   * @param source The draggable which was dropped onto the target.
+   * @param draggable The draggable which was dropped onto the target.
    */
-  onDrop(source: IDraggable): void;
-
-  /**
-   * This method is called when the drag operation is canceled while the draggable is over
-   * the drop target. In this case, the `onDropLeave` method is not called.
-   */
-  onDropCancel(): void;
+  onDrop(draggable: IDraggable): void;
 }

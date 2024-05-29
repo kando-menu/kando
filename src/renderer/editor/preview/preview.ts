@@ -30,10 +30,6 @@ import { DnDManager } from '../common/dnd-manager';
  *   is emitted and also no select-item event is emitted.
  * - @fires select-item - This is emitted when a menu item is selected. The event data is
  *   the selected menu item.
- * - @fires delete-item - This is emitted when a menu item is dragged to the trash tab. The
- *   event data is the deleted menu item.
- * - @fires stash-item - This is emitted when a menu item is dragged to the stash tab. The
- *   event data is the stashed menu item.
  */
 export class Preview extends EventEmitter {
   /**
@@ -103,6 +99,7 @@ export class Preview extends EventEmitter {
 
     this.container = div.firstElementChild as HTMLElement;
 
+    // Register the menu preview as potential drop target.
     this.dndManager = dndManager;
     this.dropTarget = new PreviewDropTarget(this.container);
     this.dndManager.registerDropTarget(this.dropTarget);
@@ -216,67 +213,93 @@ export class Preview extends EventEmitter {
    * only be rotated around the parent item.
    */
   private initDragAndDrop() {
+    // This is a small helper function which returns the index of the given item in the
+    // children list of the center item. If the item is not a child of the center item,
+    // this function returns null.
+    const getDragIndex = (item: IEditorMenuItem) => {
+      const centerItem = this.getCenterItem();
+      const index = centerItem.children.indexOf(item);
+      return index >= 0 ? index : null;
+    };
+
+    // This is called when a menu item enters the preview area.
+    this.dropTarget.on('drag-enter', () => {
+      this.dropIndicator.classList.add('visible');
+    });
+
+    // This is called when the dragged item leaves the preview area.
+    this.dropTarget.on('drag-leave', (item) => {
+      this.dropIndicator.classList.remove('visible');
+      this.recomputeItemAngles(getDragIndex(item));
+      this.updateAllPositions();
+    });
+
+    // This is called when the operation is canceled while the dragged item is over the
+    // preview area.
+    this.dropTarget.on('drag-cancel', () => {
+      this.dropIndicator.classList.remove('visible');
+      this.recomputeItemAngles();
+      this.updateAllPositions();
+    });
+
     // Move the drop indicator either to the submenu, to the back-navigation link, or to
-    // the drop index position when an item is dragged around. This will also be called
-    // during drag-and-drop operations for new, deleted, and stashed items from the
-    // toolbar. In this case, and `dragIndex` will be null.
-    this.dropTarget.on('drag-over', (dragIndex, dropTarget, dropIndex) => {
-      console.log('drop target - drag over');
+    // the drop index position when an item is dragged around.
+    this.dropTarget.on('drag-move', (item, dropTarget, dropIndex) => {
       const parentItem = this.getParentItem();
       const centerItem = this.getCenterItem();
+      const dragIndex = getDragIndex(item);
       let indicatorAngle = null;
 
-      if (dropTarget === centerItem && dropIndex !== null) {
-        // If the item is to be dropped somewhere in the currently displayed menu we have
-        // to incorporate the dropIndex to leave an angular gap for the to-be-dropped
-        // item.
+      // If the item is to be dropped somewhere in the currently displayed menu, we have
+      // to incorporate the dropIndex to leave an angular gap for the to-be-dropped item.
+      if (dropTarget === centerItem) {
         indicatorAngle = this.recomputeItemAngles(dragIndex, dropIndex);
-      } else {
-        // Else there is no need to leave a gap for the item.
+      }
+      // If the drop target is not the center item, it is either the parent item (via
+      // the back-navigation link) or a submenu. In this case, there is no need to leave a
+      // gap for the item.
+      else {
         this.recomputeItemAngles(dragIndex);
-
-        // If the drop target is not the center item, it is either the parent item (via
-        // the back-navigation link) or a submenu.
-        if (dropTarget !== null) {
-          indicatorAngle =
-            dropTarget === parentItem
-              ? utils.getParentAngle(centerItem)
-              : dropTarget.computedAngle;
-        }
+        indicatorAngle =
+          dropTarget === parentItem
+            ? utils.getParentAngle(centerItem)
+            : dropTarget.computedAngle;
       }
 
       // Update the drop indicator position.
-      if (indicatorAngle !== null) {
-        const position = math.getDirection(indicatorAngle, 1.0);
-        this.dropIndicator.style.setProperty('--dir-x', position.x + '');
-        this.dropIndicator.style.setProperty('--dir-y', position.y + '');
-        this.dropIndicator.classList.add('visible');
-      } else {
-        this.dropIndicator.classList.remove('visible');
-      }
+      const position = math.getDirection(indicatorAngle, 1.0);
+      this.dropIndicator.style.setProperty('--dir-x', position.x + '');
+      this.dropIndicator.style.setProperty('--dir-y', position.y + '');
 
+      // Update the positions of all items.
       this.updateAllPositions();
     });
 
     // This is called when a menu item is successfully dropped somewhere.
-    this.dropTarget.on('drop-item', (item, dragIndex, dropTarget, dropIndex) => {
-      console.log('drop target - drop item');
-      // Hide the drop indicator.
+    this.dropTarget.on('drop', (item, dropInto, dropIndex) => {
       this.dropIndicator.classList.remove('visible');
 
-      const centerItem = this.getCenterItem();
+      // If it was a preview-internal drag operation, this will be the original index of
+      // the item in the children list of the center item. Else it will be null.
+      const dragIndex = getDragIndex(item);
 
       // We then check whether the menu item has been dropped into a submenu, or into the
       // parent item. In both cases, the item's div is removed from the DOM and the menu
       // item is added to the children of the drop target.
-      if (dropTarget && dropTarget !== centerItem) {
-        dropTarget.children.push(item);
-        this.removeItem(item);
+      const centerItem = this.getCenterItem();
+      if (dropInto !== centerItem) {
+        // If a drag index is given, it was an internal drag operation. In this case, we
+        // have to remove the item from the children of the center item.
+        if (dragIndex != null) {
+          this.removeItem(item);
+        }
+
+        dropInto.children.push(item);
 
         // Recompute all item angles of the drop target after adding the new item.
         this.computeItemAnglesRecursively(
-          dropTarget.children,
-          utils.getParentAngle(dropTarget)
+          dropInto.children,
+          utils.getParentAngle(dropInto)
         );
 
         this.updateAllPositions();
@@ -284,27 +307,23 @@ export class Preview extends EventEmitter {
         return;
       }
 
-      // If a drag index is given, it was an internal drag operation. In this case, we do
-      // not re-add a new child item.
-      if (dragIndex !== null) {
+      // If the drag index is given, it was an internal drag operation. In this case, we
+      // have to remove the item from the children of the center item first.
+      if (dragIndex != null) {
         centerItem.children.splice(dragIndex, 1);
       }
 
-      // If the item has been dropped into the currently shown menu, we add it to the
-      // children of the center item at the correct position. If there is currently no
-      // drop index, we drop the item where it was before.
-      if (dropIndex !== null || dragIndex !== null) {
-        centerItem.children.splice(dropIndex ?? dragIndex, 0, item);
+      // Add the item to the children of the center item at the given drop index.
+      centerItem.children.splice(dropIndex, 0, item);
 
-        // If it was a drag operation from outside the preview, we have to add a new
-        // div for the item.
-        if (dragIndex === null) {
-          const container = this.canvas.querySelector(
-            '.kando-menu-preview-container.visible'
-          ) as HTMLElement;
-          this.drawItem(item, container);
-          this.makeDraggable(item);
-        }
+      // If it was a drag operation from outside the preview, we have to add a new
+      // div for the item and make it draggable.
+      if (dragIndex === null) {
+        const container = this.canvas.querySelector(
+          '.kando-menu-preview-container.visible'
+        ) as HTMLElement;
+        this.drawItem(item, container);
+        this.makeDraggable(item);
       }
 
       // In any case, we redraw the menu.
@@ -459,33 +478,26 @@ export class Preview extends EventEmitter {
     // Make the child div selectable and draggable.
     // Select an item when it is clicked.
     draggable.on('select', () => {
-      console.log('draggable - select');
       this.selectItem(item);
-    });
-
-    draggable.on('drag-start', () => {
-      console.log('draggable - drag start');
-      this.dropTarget.setDraggedItem(item);
     });
 
     // If the item is dropped somewhere outside the preview, we have to remove it from the
     // children list of the current center item.
     draggable.on('drop', (target) => {
-      console.log('draggable - drop');
       if (target !== this.dropTarget) {
         this.removeItem(item);
       }
     });
 
+    // If the drag operation is canceled, we have to recompute the item angles and update
+    // all positions.
     draggable.on('drag-cancel', () => {
-      console.log('draggable - drag cancel');
       this.recomputeItemAngles();
       this.updateAllPositions();
     });
 
     // This is called whenever a item with a fixed angle is dragged around.
     draggable.on('update-fixed-angle', (angle) => {
-      console.log('draggable - update fixed angle');
       item.angle = angle;
 
       // Within the list of children, the fixed angles must by monotonically increasing.
@@ -667,6 +679,13 @@ export class Preview extends EventEmitter {
     }
   }
 
+  /**
+   * This method removes the given item from the preview. It removes the div from the DOM,
+   * removes the draggable, and removes the item from the children list of the center
+   * item.
+   *
+   * @param item The item which should be removed.
+   */
   private removeItem(item: IEditorMenuItem) {
     // Remove the child.
     const centerItem = this.getCenterItem();

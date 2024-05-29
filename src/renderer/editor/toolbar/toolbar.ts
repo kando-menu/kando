@@ -15,6 +15,7 @@ import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { StashTab } from './stash-tab';
 import { IEditorMenuItem } from '../common/editor-menu-item';
+import { DnDManager } from '../common/dnd-manager';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -30,12 +31,6 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
  * @fires delete-menu - This event is emitted when the user drags a menu to the trash tab.
- * @fires restore-deleted-menu - This event is emitted when the user drags a menu from the
- *   trash tab to the menus tab.
- * @fires restore-deleted-item - This event is emitted when the user drags a menu item
- *   from the trash tab to the preview area.
- * @fires stash-deleted-item - This event is emitted when the user drags a menu item from
- *   the trash tab to the stash tab.
  * @fires restore-stashed-item - This event is emitted when the user drags a menu item
  *   from the stash tab to the preview area.
  * @fires delete-stashed-item - This event is emitted when the user drags a menu item from
@@ -66,8 +61,9 @@ export class Toolbar extends EventEmitter {
    *
    * @param backend The backend info is used to determine if the backend supports
    *   shortcuts.
+   * @param dndManager The DnDManager is used to handle drag and drop operations.
    */
-  constructor(backend: IBackendInfo) {
+  constructor(backend: IBackendInfo, dndManager: DnDManager) {
     super();
 
     this.loadContent();
@@ -81,14 +77,10 @@ export class Toolbar extends EventEmitter {
     this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
 
     // Initialize the add-items tab and forward its events.
-    this.addItemsTab = new AddItemsTab(this.container);
-    this.addItemsTab.on('add-item', (typeName) => this.emit('add-item', typeName));
+    this.addItemsTab = new AddItemsTab(this.container, dndManager);
 
     // Initialize the trash tab and forward its events.
-    this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts);
-    this.trashTab.on('restore-menu', (index) => this.emit('restore-deleted-menu', index));
-    this.trashTab.on('restore-item', (index) => this.emit('restore-deleted-item', index));
-    this.trashTab.on('stash-item', (index) => this.emit('stash-deleted-item', index));
+    this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts, dndManager);
 
     // Initialize the stash tab and forward its events.
     this.stashTab = new StashTab(this.container);

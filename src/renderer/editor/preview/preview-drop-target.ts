@@ -27,15 +27,18 @@ import { IDraggable } from '../common/draggable';
  * Instead, it will emit events which can be used to modify the menu structure from the
  * outside. It emits the following events:
  *
- * @fires drag-over - When a menu item is dragged over the preview. The event data is the
- *   the original index of the dragged item (if it was an internal drag-and-drop
- *   operation, null otherwise), the target menu item (if there is a valid drop target
- *   currently, else null) and the index where the item should be inserted into the
+ * @fires drag-enter - When a dragged menu item enters the preview area. The event data is
+ *   the dragged item.
+ * @fires drag-leave - When a dragged menu item leaves the preview area. The event data is
+ *   the dragged item.
+ * @fires drag-cancel - When a drag operation is canceled while the dragged item is over
+ *   the preview area. The event data is the dragged item.
+ * @fires drag-move - When a menu item is dragged over the preview. The event data is the
+ *   the dragged item, the current drop-target menu, and the index where the item should
+ *   be inserted into the target's children.
+ * @fires drop - When a menu item is successfully dropped. The event data is the dropped
+ *   menu item, the target item and the index where the item should be inserted into the
  *   target's children.
- * @fires drop-item - When a menu item is successfully dropped. The event data is the
- *   dropped menu item, the original index of the dragged item (if it was an internal
- *   drag-and-drop operation, else null), the target item and the index where the item
- *   should be inserted into the target's children.
  */
 export class PreviewDropTarget extends EventEmitter implements IDropTarget {
   /**
@@ -57,16 +60,10 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
   private previewCenter?: IVec2 = null;
 
   /**
-   * We keep track whether something is currently dragged over the preview area. This way
-   * we can reset the drop target if the dragged item leaves the preview area.
-   */
-  private dragOverPreview = false;
-
-  /**
    * During drag'n'drop operations, this is the menu item where the dragged item would be
    * dropped.
    */
-  private dropTarget: IEditorMenuItem | null = null;
+  private dropInto: IEditorMenuItem | null = null;
 
   /**
    * During drag'n'drop operations, this is the index where the dragged item would be
@@ -75,11 +72,10 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
   private dropIndex: number | null = null;
 
   /**
-   * This is the index of the dragged child. It is used to re-add the child to the correct
-   * position when the drag operation is aborted.
+   * This constructor creates a new `PreviewDropTarget` instance.
+   *
+   * @param container The container is the HTML element which contains the menu preview.
    */
-  private dragIndex: number | null = null;
-
   constructor(container: HTMLElement) {
     super();
 
@@ -96,16 +92,6 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
   public setCenterItem(centerItem: IEditorMenuItem, parentItem: IEditorMenuItem) {
     this.centerItem = centerItem;
     this.parentItem = parentItem;
-  }
-
-  /**
-   * This is called by the `Preview` class whenever a menu item is dragged around. It
-   * stores the index of the dragged item.
-   *
-   * @param item The item which is currently dragged.
-   */
-  public setDraggedItem(item: IEditorMenuItem) {
-    this.dragIndex = this.centerItem.children.indexOf(item);
   }
 
   // IDropTarget implementation ----------------------------------------------------------
@@ -140,32 +126,26 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     return item.angle === undefined;
   }
 
-  /**
-   * Remember that something is dragged over the preview area. There will be a call to
-   * `onDropMove` right after this, so we do not have to emit the `drag-over` event here.
-   */
-  public onDropEnter() {
-    this.dragOverPreview = true;
+  /** @inheritdoc */
+  public onDragEnter(draggable: IDraggable) {
+    this.emit('drag-enter', draggable.getData() as IEditorMenuItem);
   }
 
-  /**
-   * If something leaves the preview area, we emit the `drag-over` event with the drop
-   * target and index set to `null`.
-   */
-  public onDropLeave() {
-    this.emit('drag-over', this.dragIndex, null, null);
-    this.dragOverPreview = false;
+  /** @inheritdoc */
+  public onDragLeave(draggable: IDraggable) {
     this.dropIndex = null;
-    this.dropTarget = null;
+    this.dropInto = null;
+    this.emit('drag-leave', draggable.getData() as IEditorMenuItem);
   }
 
   /**
    * If the drop target or drop index changes during the drag operation, we emit the
-   * `drag-over` event.
+   * `drag-move` event.
    *
+   * @param draggable The draggable which is moved.
    * @param coords The current coordinates of the pointer in viewport space.
    */
-  public onDropMove(coords: IVec2) {
+  public onDropMove(draggable: IDraggable, coords: IVec2) {
     // Compute the angle towards the dragged item.
     const relativePosition = math.subtract(coords, this.getPreviewCenter());
     const dragAngle = math.getAngle(relativePosition);
@@ -173,54 +153,46 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     // If something is dragged over the preview, we compute the index where the item
     // would be dropped. The child items will be re-arranged to leave a gap for the
     // to-be-dropped item.
-    let newDropTarget = null;
-    let newDropIndex = null;
+    const item = draggable.getData() as IEditorMenuItem;
+    const dragIndex = this.centerItem.children.indexOf(item);
+    const result = utils.computeDropTarget(
+      this.centerItem,
+      dragAngle,
+      dragIndex >= 0 ? dragIndex : null
+    );
 
-    if (this.dragOverPreview) {
-      const result = utils.computeDropTarget(this.centerItem, dragAngle, this.dragIndex);
-
-      // If the returned drop target is null, it is supposed to be dropped on the
-      // parent item.
-      newDropTarget = result.dropTarget ?? this.parentItem;
-      newDropIndex = result.dropIndex;
-    }
+    // If the returned drop target is null, it is supposed to be dropped on the
+    // parent item.
+    const newDropInto = result.dropTarget ?? this.parentItem;
+    const newDropIndex = result.dropIndex;
 
     // If the drop target or index changed, we emit the `drag-item` event.
-    if (newDropTarget !== this.dropTarget || newDropIndex !== this.dropIndex) {
+    if (newDropInto !== this.dropInto || newDropIndex !== this.dropIndex) {
       this.dropIndex = newDropIndex;
-      this.dropTarget = newDropTarget;
+      this.dropInto = newDropInto;
 
-      this.emit('drag-over', this.dragIndex, this.dropTarget, this.dropIndex);
+      this.emit('drag-move', item, this.dropInto, this.dropIndex);
     }
   }
 
-  /**
-   * If a menu item is dropped onto the preview, we emit the `drop-item` event.
-   *
-   * @param source The draggable which is dropped.
-   */
-  public onDrop(source: IDraggable) {
-    const item = source.getData() as IEditorMenuItem;
+  /** @inheritdoc */
+  public onDropCancel(draggable: IDraggable) {
+    this.dropIndex = null;
+    this.dropInto = null;
 
+    const item = draggable.getData() as IEditorMenuItem;
+    this.emit('drag-cancel', item);
+  }
+
+  /** @inheritdoc */
+  public onDrop(draggable: IDraggable) {
     // Items with fixed angles are not really dragged around. Only items without fixed
     // angles can be dropped.
-    if (item.angle === undefined) {
-      this.emit('drop-item', item, this.dragIndex, this.dropTarget, this.dropIndex);
-    }
+    const item = draggable.getData() as IEditorMenuItem;
+    this.emit('drop', item, this.dropInto, this.dropIndex);
 
-    this.onDropCancel();
-  }
-
-  /**
-   * If the drag operation is canceled, we emit the `drag-over` event with the drop index
-   * set to `null`.
-   */
-  public onDropCancel() {
-    this.emit('drag-over', null, this.dropTarget, null);
-    this.dragOverPreview = false;
     this.dropIndex = null;
-    this.dropTarget = null;
-    this.dragIndex = null;
+    this.dropInto = null;
   }
 
   // Private methods ---------------------------------------------------------------------

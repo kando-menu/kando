@@ -70,6 +70,8 @@ export interface IDraggable {
    * This method is called when the drag operation is successfully finished. You can use
    * it to remove the draggable element from the DOM. It will be called before the
    * corresponding `onDrop` method of the drop target.
+   *
+   * @param target The drop target on which the draggable element was dropped.
    */
   onDrop(target: IDropTarget): void;
 

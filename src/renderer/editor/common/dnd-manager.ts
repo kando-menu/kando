@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { EventEmitter } from 'events';
+
 import * as math from '../../math';
 import { IDraggable } from './draggable';
 import { IDropTarget } from './drop-target';
@@ -17,8 +19,15 @@ import { IDropTarget } from './drop-target';
  * only one instance of this class which is created in the `Editor` class. It is used to
  * register drop targets and draggables. It will listen to pointer and touch events and
  * call the appropriate methods on the registered draggables and drop targets.
+ *
+ * The DnDManager is also an `EventEmitter` and emits the following events:
+ *
+ * @fires drag-start - When any drag operation starts. This can be used to highlight
+ *   potential drop targets.
+ * @fires drag-end - When any drag operation ends. This can be used to remove highlights
+ *   from drop targets.
  */
-export class DnDManager {
+export class DnDManager extends EventEmitter {
   /**
    * This is the threshold in pixels which is used to differentiate between a click and a
    * drag.
@@ -92,6 +101,7 @@ export class DnDManager {
             this.currentlyDragged = draggable;
             document.body.style.cursor = 'grabbing';
             draggable.onDragStart();
+            this.emit('drag-start', draggable);
           }
 
           // Notify the draggable about the current position.
@@ -104,20 +114,20 @@ export class DnDManager {
               // the draggable left and the new one that the draggable entered.
               if (this.currentDropTarget !== target) {
                 if (this.currentDropTarget) {
-                  this.currentDropTarget.onDropLeave();
+                  this.currentDropTarget.onDragLeave(draggable);
                 }
 
-                target.onDropEnter();
+                target.onDragEnter(draggable);
                 this.currentDropTarget = target;
               }
 
               // Notify the drop target about the current position.
-              target.onDropMove(viewportCoords);
+              target.onDropMove(draggable, viewportCoords);
             }
             // If the previous drop target does not accept the draggable anymore, we
             // notify it that the draggable left.
             else if (this.currentDropTarget === target) {
-              target.onDropLeave();
+              target.onDragLeave(draggable);
               this.currentDropTarget = null;
             }
           }
@@ -141,6 +151,7 @@ export class DnDManager {
           document.body.style.cursor = '';
           this.currentlyDragged = null;
           this.currentDropTarget = null;
+          this.emit('drag-end', draggable);
         } else {
           draggable.onClick();
         }
@@ -155,9 +166,10 @@ export class DnDManager {
           if (this.currentlyDragged) {
             document.body.style.cursor = '';
             draggable.onDragCancel();
+            this.emit('drag-end', draggable);
 
             if (this.currentDropTarget) {
-              this.currentDropTarget.onDropCancel();
+              this.currentDropTarget.onDropCancel(this.currentlyDragged);
             }
 
             this.currentlyDragged = null;
