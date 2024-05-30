@@ -25,6 +25,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#menu-shortcuts-vs-simulated-hotkeys).
 
+#### Fixed
+
+- Touch input in the menu editor. It is now possible to edit menus on touch devices. This involved a complete rewrite of the drag-and-drop code - please let me know if you encounter any issues!
+
 ## [Kando 0.9.0](https://github.com/kando-menu/kando/releases/tag/v0.9.0)
 
 <a href="https://www.youtube.com/watch?v=_3KkDnfu_CE">
