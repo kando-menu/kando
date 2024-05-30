@@ -103,6 +103,22 @@
     border-radius: var(--bs-border-radius);
   }
 
+  .nav-link.drop-target,
+  .tab-pane.drop-target {
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
+    outline-offset: -5px;
+  }
+
+  .nav-link.highlight-drop-target {
+    margin-top: -10px;
+    padding-bottom: 10px;
+  }
+
+  .nav-link.drop-target {
+    margin-top: -20px;
+    padding-bottom: 20px;
+  }
+
   .tab-content {
     height: calc($toolbar-height - $toolbar-tab-height);
     border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
@@ -132,30 +148,6 @@
   }
 }
 
-// When dragging items, we highlight the potential drop targets.
-#kando-editor {
-  &.dragging-menu-from-trash-tab .nav-link[data-bs-target='#kando-menus-tab'],
-  &.dragging-menu-from-menus-tab .nav-link[data-bs-target='#kando-trash-tab'],
-  &.dragging-item-from-stash-tab .nav-link[data-bs-target='#kando-trash-tab'],
-  &.dragging-item-from-trash-tab .nav-link[data-bs-target='#kando-stash-tab'],
-  &.dragging-item-from-preview .nav-link[data-bs-target='#kando-trash-tab'],
-  &.dragging-item-from-preview .nav-link[data-bs-target='#kando-stash-tab'] {
-    margin-top: -10px;
-    padding-bottom: 10px;
-
-    &:hover:not(.active) {
-      outline: 2px dashed rgba(255, 255, 255, 0.5);
-      outline-offset: -5px;
-    }
-  }
-
-  &.dragging-item-from-preview #kando-stash-tab:hover,
-  &.dragging-item-from-preview #kando-trash-tab:hover {
-    outline: 2px dashed rgba(255, 255, 255, 0.5);
-    outline-offset: -5px;
-  }
-}
-
 #kando-editor.edit-mode #kando-editor-toolbar,
 #kando-editor.leaving-edit-mode #kando-editor-toolbar {
   display: block;
@@ -182,7 +174,7 @@
   transition: transform 150ms linear;
 
   // If checked, we show a border and slightly different background color.
-  &:has(input:checked) {
+  &.checked {
     border-color: rgba(255, 255, 255, 0.5);
     background: var(--bs-btn-active-bg);
   }

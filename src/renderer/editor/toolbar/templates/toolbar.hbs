@@ -35,9 +35,9 @@
   -->
   <ul class='nav nav-tabs kando-font'>
     {{#each tabs}}
-      <li class='nav-item' {{#if gapBefore}} style="margin-left: auto" {{/if}}>
-        <button class='nav-link fs-4 {{#if active}} active {{/if}}' data-bs-toggle='tab'
-                data-bs-target='#{{id}}'>
+      <li  class='nav-item' {{#if gapBefore}} style="margin-left: auto" {{/if}}>
+        <button id='{{id}}-header' class='nav-link fs-4 {{#if active}} active {{/if}}'
+                data-bs-toggle='tab' data-bs-target='#{{id}}'>
           <i class='material-symbols-rounded inline-icon d-none d-lg-inline-block'>{{icon}}</i>
           {{title}}
           {{#if hasCounter}}

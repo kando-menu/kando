@@ -242,11 +242,12 @@ export function createLockDiv(
     .createDiv(initiallyLocked ? 'lock' : 'lock_open');
   div.appendChild(icon);
 
-  div.addEventListener('mousedown', (e) => {
+  div.addEventListener('pointerdown', (e) => {
     e.stopPropagation();
+    e.preventDefault();
   });
 
-  div.addEventListener('mouseup', () => {
+  div.addEventListener('pointerup', () => {
     const i = icon.querySelector('i');
     const wasLocked = i.textContent === 'lock';
     i.innerText = wasLocked ? 'lock_open' : 'lock';

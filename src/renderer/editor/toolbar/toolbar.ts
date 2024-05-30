@@ -9,12 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IMenu, IBackendInfo } from '../../../common';
+import { IBackendInfo, IMenuSettings } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { StashTab } from './stash-tab';
-import { IEditorMenuItem } from '../common/editor-menu-item';
+import { DnDManager } from '../common/dnd-manager';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -26,20 +26,8 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
  *   entire editor.
  * @fires collapse - This event is emitted when a tab is selected which should not cover
  *   the entire editor.
- * @fires add-menu - This event is emitted when the user clicks the "Add Menu" button.
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
- * @fires delete-menu - This event is emitted when the user drags a menu to the trash tab.
- * @fires restore-deleted-menu - This event is emitted when the user drags a menu from the
- *   trash tab to the menus tab.
- * @fires restore-deleted-item - This event is emitted when the user drags a menu item
- *   from the trash tab to the preview area.
- * @fires stash-deleted-item - This event is emitted when the user drags a menu item from
- *   the trash tab to the stash tab.
- * @fires restore-stashed-item - This event is emitted when the user drags a menu item
- *   from the stash tab to the preview area.
- * @fires delete-stashed-item - This event is emitted when the user drags a menu item from
- *   the stash tab to the trash tab.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -66,8 +54,9 @@ export class Toolbar extends EventEmitter {
    *
    * @param backend The backend info is used to determine if the backend supports
    *   shortcuts.
+   * @param dndManager The DnDManager is used to handle drag and drop operations.
    */
-  constructor(backend: IBackendInfo) {
+  constructor(backend: IBackendInfo, dndManager: DnDManager) {
     super();
 
     this.loadContent();
@@ -75,25 +64,17 @@ export class Toolbar extends EventEmitter {
     this.initTabs();
 
     // Initialize the menus tab and forward its events.
-    this.menusTab = new MenusTab(this.container, !backend.supportsShortcuts);
-    this.menusTab.on('add-menu', () => this.emit('add-menu'));
+    this.menusTab = new MenusTab(this.container, !backend.supportsShortcuts, dndManager);
     this.menusTab.on('select-menu', (index) => this.emit('select-menu', index));
-    this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
 
     // Initialize the add-items tab and forward its events.
-    this.addItemsTab = new AddItemsTab(this.container);
-    this.addItemsTab.on('add-item', (typeName) => this.emit('add-item', typeName));
+    this.addItemsTab = new AddItemsTab(this.container, dndManager);
 
     // Initialize the trash tab and forward its events.
-    this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts);
-    this.trashTab.on('restore-menu', (index) => this.emit('restore-deleted-menu', index));
-    this.trashTab.on('restore-item', (index) => this.emit('restore-deleted-item', index));
-    this.trashTab.on('stash-item', (index) => this.emit('stash-deleted-item', index));
+    this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts, dndManager);
 
     // Initialize the stash tab and forward its events.
-    this.stashTab = new StashTab(this.container);
-    this.stashTab.on('restore-item', (index) => this.emit('restore-stashed-item', index));
-    this.stashTab.on('delete-item', (index) => this.emit('delete-stashed-item', index));
+    this.stashTab = new StashTab(this.container, dndManager);
   }
 
   /** This method returns the container of the editor toolbar. */
@@ -102,40 +83,24 @@ export class Toolbar extends EventEmitter {
   }
 
   /**
-   * Whenever a menu is added or removed, the menus tab needs to be updated.
+   * This method is called initially when the editor is opened. It is used to set the
+   * menus and the stash content.
    *
-   * @param menus A list of all menus.
+   * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
    */
-  public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    this.menusTab.setMenus(menus, currentMenu);
+  public init(menuSettings: IMenuSettings, currentMenu: number) {
+    this.menusTab.init(menuSettings, currentMenu);
+    this.stashTab.init(menuSettings);
   }
 
   /**
-   * Whenever the content of the trash changes, the trash tab needs to be updated.
-   *
-   * @param items A list of all trashed menus and menu items.
+   * This method updates the button which represents the currently edited menu. It is
+   * called by the editor whenever the user changed a property of the currently edited
+   * menu in the properties view.
    */
-  public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
-    this.trashTab.setTrashedThings(items);
-  }
-
-  /**
-   * Whenever the content of the stash changes, the stash tab needs to be updated.
-   *
-   * @param items A list of all stashed menu items.
-   */
-  public setStashedItems(items: Array<IEditorMenuItem>) {
-    this.stashTab.setStashedItems(items);
-  }
-
-  /**
-   * This method updates the button which represents the menu at the given index in the
-   * given menu list. It is called by the editor whenever the user changed a property of
-   * the currently edited menu in the properties view.
-   */
-  public updateMenu(menus: Array<IMenu>, index: number) {
-    this.menusTab.updateMenu(menus, index);
+  public updateMenu() {
+    this.menusTab.updateMenu();
   }
 
   /** This method loads the HTML content of the toolbar. */

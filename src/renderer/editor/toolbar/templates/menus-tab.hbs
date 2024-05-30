@@ -33,11 +33,7 @@
     <div class="scrollbox-content toolbar-button-grid">
       {{#each menus}}
         <div>
-          <label id="menu-button-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-menu-button">
-            <input type="radio"
-                  name="menu-selection-button"
-                  data-index="{{index}}"
-                  {{#if active}} checked {{/if}}/>
+          <div id="menu-button-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-menu-button {{#if checked}} checked {{/if}}">
             <div>
               {{{icon}}}
             </div>
@@ -45,7 +41,7 @@
               <div class="name fs-4">{{name}}</div>
               <div class="description fs-6">{{description}}</div>
             </div>
-          </label>
+          </div>
         </div>
       {{/each}}
       <div>

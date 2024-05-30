@@ -16,9 +16,9 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenu, IBackendInfo, IMenuSettings, IMenuItem } from '../../common';
-import { IEditorMenuItem, toIMenuItem } from './common/editor-menu-item';
-import { ItemTypeRegistry } from '../../common/item-type-registry';
+import { IBackendInfo, IMenuSettings } from '../../common';
+import { toIMenuItem } from './common/editor-menu-item';
+import { DnDManager } from './common/dnd-manager';
 
 /**
  * This class is responsible for the entire editor. It contains the preview, the
@@ -65,6 +65,9 @@ export class Editor extends EventEmitter {
    */
   private toolbar: Toolbar = null;
 
+  /** This is used to manage drag'n'drop operations. */
+  private dndManager: DnDManager = new DnDManager();
+
   /**
    * These are the current menu settings. They are retrieved from the main process when
    * the user enters edit mode. It will modified by the user and then sent back to the
@@ -85,13 +88,6 @@ export class Editor extends EventEmitter {
   private editingMenu: boolean = true;
 
   /**
-   * This array is used to store menus and menu items which have been deleted by the user.
-   * They can be restored by dragging them back to the stash, to the menus tab, or the
-   * menu preview. They will not be saved to disc.
-   */
-  private trashedThings: Array<IMenu | IEditorMenuItem> = [];
-
-  /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
    */
@@ -106,18 +102,8 @@ export class Editor extends EventEmitter {
     this.container.appendChild(this.background.getContainer());
 
     // Initialize the preview.
-    this.preview = new Preview();
+    this.preview = new Preview(this.dndManager);
     this.container.appendChild(this.preview.getContainer());
-
-    this.preview.on('delete-item', (item) => {
-      this.trashedThings.push(item);
-      this.toolbar.setTrashedThings(this.trashedThings);
-    });
-
-    this.preview.on('stash-item', (item) => {
-      this.menuSettings.stash.push(item);
-      this.toolbar.setStashedItems(this.menuSettings.stash);
-    });
 
     this.preview.on('select-root', () => {
       this.editingMenu = true;
@@ -137,7 +123,7 @@ export class Editor extends EventEmitter {
       this.preview.updateActiveItem();
 
       if (this.editingMenu) {
-        this.toolbar.updateMenu(this.menuSettings.menus, this.currentMenu);
+        this.toolbar.updateMenu();
       }
     };
 
@@ -151,7 +137,7 @@ export class Editor extends EventEmitter {
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
     // leaving edit mode. We wire up the corresponding events here.
-    this.toolbar = new Toolbar(backend);
+    this.toolbar = new Toolbar(backend, this.dndManager);
     this.container.appendChild(this.toolbar.getContainer());
 
     this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
@@ -167,115 +153,10 @@ export class Editor extends EventEmitter {
       this.properties.show();
     });
 
-    this.toolbar.on('add-menu', () => {
-      // Choose a random icon for the new menu.
-      const icons = [
-        'favorite',
-        'star',
-        'kid_star',
-        'home',
-        'cycle',
-        'public',
-        'rocket_launch',
-        'mood',
-        'sunny',
-        'target',
-      ];
-
-      const icon = icons[Math.floor(Math.random() * icons.length)];
-
-      // Choose a new name for the menu. We will start with "New Menu" and append a
-      // number if this name is already taken.
-      let name = 'New Menu';
-      let i = 1;
-
-      if (this.menuSettings.menus.find((menu) => menu.nodes.name === name)) {
-        do {
-          name = `New Menu ${i}`;
-          i++;
-        } while (this.menuSettings.menus.find((menu) => menu.nodes.name === name));
-      }
-
-      const newMenu: IMenu = {
-        nodes: {
-          type: 'submenu',
-          name,
-          icon,
-          iconTheme: 'material-symbols-rounded',
-          children: [],
-        },
-        shortcut: '',
-        shortcutID: '',
-        centered: false,
-      };
-
-      this.menuSettings.menus.push(newMenu);
-      this.currentMenu = this.menuSettings.menus.length - 1;
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.preview.setMenu(newMenu);
-      this.properties.setMenu(newMenu);
-    });
-
-    this.toolbar.on('add-item', (typeName: string) => {
-      const type = ItemTypeRegistry.getInstance().getType(typeName);
-      const item: IMenuItem = {
-        type: typeName,
-        data: type.defaultData,
-        name: type.defaultName,
-        icon: type.defaultIcon,
-        iconTheme: type.defaultIconTheme,
-      };
-
-      if (type.hasChildren) {
-        item.children = [];
-      }
-
-      this.preview.insertItem(item);
-    });
-
     this.toolbar.on('select-menu', (index: number) => {
       this.currentMenu = index;
+      this.properties.setMenu(this.menuSettings.menus[index]);
       this.preview.setMenu(this.menuSettings.menus[index]);
-    });
-
-    this.toolbar.on('delete-menu', (index: number) => {
-      this.trashedThings.push(this.menuSettings.menus.splice(index, 1)[0]);
-      this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.preview.setMenu(this.menuSettings.menus[this.currentMenu]);
-      this.toolbar.setTrashedThings(this.trashedThings);
-    });
-
-    this.toolbar.on('restore-deleted-menu', (index: number) => {
-      this.menuSettings.menus.push(this.trashedThings.splice(index, 1)[0] as IMenu);
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.toolbar.setTrashedThings(this.trashedThings);
-    });
-
-    this.toolbar.on('restore-deleted-item', (index: number) => {
-      const item = this.trashedThings.splice(index, 1)[0] as IEditorMenuItem;
-      this.preview.insertItem(item);
-      this.toolbar.setTrashedThings(this.trashedThings);
-    });
-
-    this.toolbar.on('stash-deleted-item', (index: number) => {
-      this.menuSettings.stash.push(
-        this.trashedThings.splice(index, 1)[0] as IEditorMenuItem
-      );
-      this.toolbar.setTrashedThings(this.trashedThings);
-      this.toolbar.setStashedItems(this.menuSettings.stash);
-    });
-
-    this.toolbar.on('restore-stashed-item', (index: number) => {
-      const item = this.menuSettings.stash.splice(index, 1)[0];
-      this.preview.insertItem(item);
-      this.toolbar.setStashedItems(this.menuSettings.stash);
-    });
-
-    this.toolbar.on('delete-stashed-item', (index: number) => {
-      this.trashedThings.push(this.menuSettings.stash.splice(index, 1)[0]);
-      this.toolbar.setTrashedThings(this.trashedThings);
-      this.toolbar.setStashedItems(this.menuSettings.stash);
     });
 
     // Initialize all tooltips.
@@ -326,8 +207,7 @@ export class Editor extends EventEmitter {
       this.menuSettings = settings;
       this.currentMenu = currentMenu;
       this.preview.setMenu(settings.menus[currentMenu]);
-      this.toolbar.setMenus(settings.menus, currentMenu);
-      this.toolbar.setStashedItems(settings.stash);
+      this.toolbar.init(settings, currentMenu);
     });
 
     this.emit('enter-edit-mode');
