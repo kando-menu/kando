@@ -115,9 +115,10 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
       return false;
     }
 
-    // We only accept menu items.
+    // We accept menu items from everywhere.
     if (
       draggable.getDataType() !== 'trashed-menu-item' &&
+      draggable.getDataType() !== 'stashed-menu-item' &&
       draggable.getDataType() !== 'menu-item'
     ) {
       return false;

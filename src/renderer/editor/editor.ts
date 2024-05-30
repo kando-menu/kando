@@ -207,8 +207,7 @@ export class Editor extends EventEmitter {
       this.menuSettings = settings;
       this.currentMenu = currentMenu;
       this.preview.setMenu(settings.menus[currentMenu]);
-      this.toolbar.setMenus(settings, currentMenu);
-      this.toolbar.setStashedItems(settings.stash);
+      this.toolbar.init(settings, currentMenu);
     });
 
     this.emit('enter-edit-mode');

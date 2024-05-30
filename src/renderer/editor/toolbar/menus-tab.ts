@@ -77,10 +77,10 @@ export class MenusTab extends DropTargetTab {
    * @param menuSettings The menu settings contain all menus and their properties.
    * @param currentMenu This is the index of the currently selected menu.
    */
-  public setMenus(menuSettings: IMenuSettings, currentMenu: number) {
+  public init(menuSettings: IMenuSettings, currentMenu: number) {
     this.menuSettings = menuSettings;
     this.currentMenu = currentMenu;
-    this.updateAllMenus();
+    this.redraw();
   }
 
   /**
@@ -125,7 +125,7 @@ export class MenusTab extends DropTargetTab {
     // Add the dropped menu to the list menus.
     this.menuSettings.menus.push(draggable.getData() as IMenu);
     this.currentMenu = this.menuSettings.menus.length - 1;
-    this.updateAllMenus();
+    this.redraw();
     this.emit('select-menu', this.currentMenu);
   }
 
@@ -135,7 +135,7 @@ export class MenusTab extends DropTargetTab {
    * This method is called whenever a menu is added or removed. It updates the entire
    * menus tab.
    */
-  private updateAllMenus() {
+  private redraw() {
     // First, we remove all draggables.
     this.draggables.forEach((draggable) =>
       this.dndManager.unregisterDraggable(draggable)
@@ -170,7 +170,7 @@ export class MenusTab extends DropTargetTab {
         this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
 
         // Redraw the menus tab.
-        this.updateAllMenus();
+        this.redraw();
         this.emit('select-menu', this.currentMenu);
       });
 
@@ -227,7 +227,7 @@ export class MenusTab extends DropTargetTab {
     this.menuSettings.menus.push(newMenu);
 
     this.currentMenu = this.menuSettings.menus.length - 1;
-    this.updateAllMenus();
+    this.redraw();
     this.emit('select-menu', this.currentMenu);
   }
 }

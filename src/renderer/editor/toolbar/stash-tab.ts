@@ -8,87 +8,82 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ToolbarItemDragger } from './toolbar-draggable';
-import { EventEmitter } from 'events';
-import { IEditorMenuItem } from '../common/editor-menu-item';
+import { DropTargetTab } from './drop-target-tab';
+import { IMenuItem, IMenuSettings } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IDraggable } from '../common/draggable';
+import { DnDManager } from '../common/dnd-manager';
+import { ToolbarDraggable } from './toolbar-draggable';
 
 /**
  * This class represents the stash tab in the toolbar. Users can drop menu items here to
- * stash them for later use. The class is an event emitter which emits the following
- * events:
- *
- * @fires restore-item - This event is emitted when the user drags a menu item from the
- *   stash tab to the preview area. The index of the restored item is passed as the first
- *   argument.
- * @fires delete-item - This event is emitted when the user drags a menu item from the
- *   stash tab to the trash tab. The index of the deleted item is passed as the first
- *   argument.
+ * stash them for later use.
  */
-export class StashTab extends EventEmitter {
-  /** The container is the HTML element which contains the entire toolbar. */
-  private container: HTMLElement = null;
-
-  /** This is the HTML element which contains the stash tab's content. */
-  private tab: HTMLElement = null;
-
+export class StashTab extends DropTargetTab {
   /**
-   * These are all potential drop targets for dragged menu items. Menu items can be
-   * dropped to the trash tab or to the menu preview.
+   * This is used to access the stash. When the editor is closed, the settings are saved
+   * to disc.
    */
-  private trashTab: HTMLElement = null;
-  private preview: HTMLElement = null;
+  private menuSettings: IMenuSettings = null;
+
+  /** This list contains a draggable for each stashed item. */
+  private draggables: IDraggable[] = [];
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
+   * @param dndManager This is used to manage the drag'n'drop operations.
    */
-  constructor(container: HTMLElement) {
-    super();
-
-    // Store a reference to the container. We will attach menu buttons divs to it during
-    // drag'n'drop operations.
-    this.container = container;
-
-    // Store a reference to the potential drop targets.
-    this.trashTab = this.container.querySelector(
-      ".nav-link[data-bs-target='#kando-trash-tab']"
-    ) as HTMLElement;
-
-    this.preview = document.querySelector('#kando-menu-preview-area') as HTMLElement;
-
-    // Initialize the dragger. This will be used to make the item buttons draggable. When
-    // a menu item is dropped to the trash tab, we emit the 'delete-item' event. If a menu
-    // item is dropped to the preview area, we emit the 'restore-item' event.
-    // this.dragger = new ToolbarItemDragger();
-    // this.dragger.on('drop', (index, dropTarget) => {
-    //   if (dropTarget === this.preview) {
-    //     this.emit('restore-item', index);
-    //   } else {
-    //     this.emit('delete-item', index);
-    //   }
-    // });
-
-    // The tab has been created in the toolbar's constructor.
-    this.tab = this.container.querySelector('#kando-stash-tab');
-
-    // Initialize the stash tab with an empty list of items.
-    this.setStashedItems([]);
+  constructor(
+    private container: HTMLElement,
+    private dndManager: DnDManager
+  ) {
+    super(
+      dndManager,
+      ['menu-item', 'trashed-menu-item'],
+      container.querySelector('#kando-stash-tab-header'),
+      container.querySelector('#kando-stash-tab')
+    );
   }
 
   /**
-   * This method is called when the user drops a menu or a menu item on the trash tab. It
-   * completely updates the trash tab's content.
+   * This method is called initially to set the stash. It is called by the toolbar
+   * whenever the editor is opened.
    *
-   * @param items The items which are currently in the trash.
+   * @param menuSettings The menu settings contains the stash.
    */
-  public setStashedItems(items: Array<IEditorMenuItem>) {
-    // this.dragger.removeAllDraggables();
+  public init(menuSettings: IMenuSettings) {
+    this.menuSettings = menuSettings;
+    this.redraw();
+  }
+
+  /** @inheritdoc */
+  override onDrop(draggable: IDraggable) {
+    super.onDrop(draggable);
+
+    // Add the dropped thing to the trash.
+    this.menuSettings.stash.push(draggable.getData() as IMenuItem);
+    this.redraw();
+  }
+
+  // Private Methods ---------------------------------------------------------------------
+
+  /**
+   * This method is called whenever a stash item is added or removed. It updates the
+   * entire stash tab.
+   */
+  private redraw() {
+    // First remove all existing stash items.
+    this.draggables.forEach((draggable) => {
+      this.dndManager.unregisterDraggable(draggable);
+    });
+
+    this.draggables = [];
 
     // Compile the data for the Handlebars template.
-    const data = items.map((item, index) => {
+    const data = this.menuSettings.stash.map((item, index) => {
       const typeInfo = ItemTypeRegistry.getInstance().getType(item.type);
       return {
         isMenu: false,
@@ -103,7 +98,7 @@ export class StashTab extends EventEmitter {
 
     // Update the tab's content.
     const template = require('./templates/stash-trash-tab.hbs');
-    this.tab.innerHTML = template({
+    this.tabContent.innerHTML = template({
       type: 'stash',
       placeholderHeading: 'You can temporarily store menu items here!',
       placeholderSubheading:
@@ -111,20 +106,24 @@ export class StashTab extends EventEmitter {
       items: data,
     });
 
-    // Add drag'n'drop logic to the menu buttons. The menu items can be dragged to the
-    // trash tab or to the menu preview.
-    for (const item of data) {
-      const div = document.getElementById(`stash-item-${item.index}`);
-      // this.dragger.addDraggable(div, {
-      //   data: item.index,
-      //   ghostMode: false,
-      //   dragClass: 'dragging-item-from-stash-tab',
-      //   dropTargets: [this.trashTab, this.preview],
-      // });
-    }
+    // Add drag'n'drop logic to the items in the stash.
+    this.menuSettings.stash.forEach((item, index) => {
+      const div = this.tabContent.querySelector(`#stash-item-${index}`) as HTMLElement;
+
+      const draggable = new ToolbarDraggable(div, 'stashed-menu-item', false, () => item);
+      this.dndManager.registerDraggable(draggable);
+
+      // Remove the dropped item from the stash.
+      draggable.on('drop', () => {
+        this.menuSettings.stash = this.menuSettings.stash.filter((i) => i !== item);
+        this.redraw();
+      });
+
+      this.draggables.push(draggable);
+    });
 
     // Set the counter value.
     const counter = this.container.querySelector('#kando-stash-tab-counter');
-    counter.textContent = items.length.toString();
+    counter.textContent = this.menuSettings.stash.length.toString();
   }
 }

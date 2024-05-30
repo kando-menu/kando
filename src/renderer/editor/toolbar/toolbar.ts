@@ -9,12 +9,11 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IMenu, IBackendInfo, IMenuSettings } from '../../../common';
+import { IBackendInfo, IMenuSettings } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { StashTab } from './stash-tab';
-import { IEditorMenuItem } from '../common/editor-menu-item';
 import { DnDManager } from '../common/dnd-manager';
 
 /**
@@ -29,10 +28,6 @@ import { DnDManager } from '../common/dnd-manager';
  *   the entire editor.
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
- * @fires restore-stashed-item - This event is emitted when the user drags a menu item
- *   from the stash tab to the preview area.
- * @fires delete-stashed-item - This event is emitted when the user drags a menu item from
- *   the stash tab to the trash tab.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -79,9 +74,7 @@ export class Toolbar extends EventEmitter {
     this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts, dndManager);
 
     // Initialize the stash tab and forward its events.
-    this.stashTab = new StashTab(this.container);
-    this.stashTab.on('restore-item', (index) => this.emit('restore-stashed-item', index));
-    this.stashTab.on('delete-item', (index) => this.emit('delete-stashed-item', index));
+    this.stashTab = new StashTab(this.container, dndManager);
   }
 
   /** This method returns the container of the editor toolbar. */
@@ -90,31 +83,15 @@ export class Toolbar extends EventEmitter {
   }
 
   /**
-   * Whenever a menu is added or removed, the menus tab needs to be updated.
+   * This method is called initially when the editor is opened. It is used to set the
+   * menus and the stash content.
    *
    * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
    */
-  public setMenus(menus: IMenuSettings, currentMenu: number) {
-    this.menusTab.setMenus(menus, currentMenu);
-  }
-
-  /**
-   * Whenever the content of the trash changes, the trash tab needs to be updated.
-   *
-   * @param items A list of all trashed menus and menu items.
-   */
-  public setTrashedThings(items: Array<IMenu | IEditorMenuItem>) {
-    this.trashTab.setTrashedThings(items);
-  }
-
-  /**
-   * Whenever the content of the stash changes, the stash tab needs to be updated.
-   *
-   * @param items A list of all stashed menu items.
-   */
-  public setStashedItems(items: Array<IEditorMenuItem>) {
-    this.stashTab.setStashedItems(items);
+  public init(menuSettings: IMenuSettings, currentMenu: number) {
+    this.menusTab.init(menuSettings, currentMenu);
+    this.stashTab.init(menuSettings);
   }
 
   /**

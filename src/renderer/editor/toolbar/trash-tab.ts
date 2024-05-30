@@ -28,10 +28,10 @@ export class TrashTab extends DropTargetTab {
    * They can be restored by dragging them back to the stash, to the menus tab, or the
    * menu preview. They will not be saved to disc.
    */
-  private trashedThings: Array<{
-    thing: IMenu | IEditorMenuItem;
-    draggable: IDraggable;
-  }> = [];
+  private trash: Array<IMenu | IEditorMenuItem> = [];
+
+  /** This list contains a draggable for each trashed item. */
+  private draggables: IDraggable[] = [];
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -48,31 +48,38 @@ export class TrashTab extends DropTargetTab {
   ) {
     super(
       dndManager,
-      ['menu', 'menu-item'],
+      ['menu', 'menu-item', 'stashed-menu-item'],
       container.querySelector('#kando-trash-tab-header'),
       container.querySelector('#kando-trash-tab')
     );
 
-    // Initialize the trash tab with an empty list of trashed items.
-    this.setTrashedThings([]);
+    this.redraw();
+  }
+
+  /** @inheritdoc */
+  override onDrop(draggable: IDraggable) {
+    super.onDrop(draggable);
+
+    // Add the dropped thing to the trash.
+    this.trash.push(draggable.getData() as IMenu | IEditorMenuItem);
+    this.redraw();
   }
 
   /**
-   * This method is called when the user drops a menu or a menu item on the trash tab. It
-   * completely updates the trash tab's content.
-   *
-   * @param things The menus or menu items which are currently in the trash.
+   * This method is called when the user drops a menu or a menu item on the trash tab or
+   * when an item is removed from the trash. It completely updates the trash tab's
+   * content.
    */
-  public setTrashedThings(things: Array<IMenu | IEditorMenuItem>) {
+  private redraw() {
     // First remove all existing trash items.
-    this.trashedThings.forEach((thing) => {
-      this.dndManager.unregisterDraggable(thing.draggable);
+    this.draggables.forEach((draggable) => {
+      this.dndManager.unregisterDraggable(draggable);
     });
 
-    this.trashedThings = [];
+    this.draggables = [];
 
     // Compile the data for the Handlebars template.
-    const data = things.map((thing, index) => {
+    const data = this.trash.map((thing, index) => {
       const menu = thing as IMenu;
 
       // If the item is a menu, we need to extract the name, the shortcut and the icon.
@@ -113,37 +120,24 @@ export class TrashTab extends DropTargetTab {
     });
 
     // Add drag'n'drop logic to the things in the trash.
-    things.forEach((thing, index) => {
+    this.trash.forEach((thing, index) => {
       const div = this.tabContent.querySelector(`#trash-item-${index}`) as HTMLElement;
       const dataType = data[index].isMenu ? 'trashed-menu' : 'trashed-menu-item';
 
       const draggable = new ToolbarDraggable(div, dataType, false, () => thing);
       this.dndManager.registerDraggable(draggable);
 
+      // Remove the dropped item from the trash.
       draggable.on('drop', () => {
-        // Remove the dropped item from the trash.
-        this.trashedThings = this.trashedThings.filter((t) => t.thing !== thing);
-
-        // Redraw the trash tab.
-        this.setTrashedThings(this.trashedThings.map((t) => t.thing));
+        this.trash = this.trash.filter((t) => t !== thing);
+        this.redraw();
       });
 
-      this.trashedThings.push({ thing, draggable });
+      this.draggables.push(draggable);
     });
 
     // Set the counter value.
     const counter = this.container.querySelector('#kando-trash-tab-counter');
-    counter.textContent = things.length.toString();
-  }
-
-  /** @inheritdoc */
-  override onDrop(draggable: IDraggable) {
-    super.onDrop(draggable);
-
-    // Add the dropped thing to the trash.
-    this.setTrashedThings([
-      ...this.trashedThings.map((thing) => thing.thing),
-      draggable.getData() as IMenu | IEditorMenuItem,
-    ]);
+    counter.textContent = this.trash.length.toString();
   }
 }
