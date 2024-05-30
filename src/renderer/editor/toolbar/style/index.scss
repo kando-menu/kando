@@ -174,7 +174,7 @@
   transition: transform 150ms linear;
 
   // If checked, we show a border and slightly different background color.
-  &:has(input:checked) {
+  &.checked {
     border-color: rgba(255, 255, 255, 0.5);
     background: var(--bs-btn-active-bg);
   }

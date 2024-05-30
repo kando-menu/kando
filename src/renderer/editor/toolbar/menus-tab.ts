@@ -57,12 +57,6 @@ export class MenusTab extends DropTargetTab {
 
     // If the "Add Menu" button is clicked, we emit the 'add-menu' event.
     this.tabContent.addEventListener('click', (event) => {
-      const input = event.target as HTMLInputElement;
-      if (input && input.name === 'menu-selection-button') {
-        this.currentMenu = parseInt(input.dataset.index);
-        this.emit('select-menu', this.currentMenu);
-      }
-
       const button = event.target as HTMLButtonElement;
       if (button && button.classList.contains('add-menu-button')) {
         this.addMenu();
@@ -145,7 +139,7 @@ export class MenusTab extends DropTargetTab {
     // Compile the data for the Handlebars template.
     const data = this.menuSettings.menus.map((menu, index) => ({
       name: menu.nodes.name,
-      active: index === this.currentMenu,
+      checked: index === this.currentMenu,
       description:
         (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
       icon: IconThemeRegistry.getInstance()
@@ -171,6 +165,19 @@ export class MenusTab extends DropTargetTab {
 
         // Redraw the menus tab.
         this.redraw();
+        this.emit('select-menu', this.currentMenu);
+      });
+
+      draggable.on('select', () => {
+        // Remove the "checked" class from all buttons.
+        this.tabContent.querySelectorAll('.toolbar-menu-button').forEach((button) => {
+          button.classList.remove('checked');
+        });
+
+        // Add the "checked" class to the clicked button.
+        div.classList.add('checked');
+
+        this.currentMenu = index;
         this.emit('select-menu', this.currentMenu);
       });
 

@@ -248,9 +248,6 @@ export class KandoApp {
     });
 
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-    // Show the dev tools if requested.
-    this.window.webContents.openDevTools();
   }
 
   /**
