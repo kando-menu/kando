@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IMenu, IBackendInfo } from '../../../common';
+import { IMenu, IBackendInfo, IMenuSettings } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
@@ -27,10 +27,8 @@ import { DnDManager } from '../common/dnd-manager';
  *   entire editor.
  * @fires collapse - This event is emitted when a tab is selected which should not cover
  *   the entire editor.
- * @fires add-menu - This event is emitted when the user clicks the "Add Menu" button.
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
- * @fires delete-menu - This event is emitted when the user drags a menu to the trash tab.
  * @fires restore-stashed-item - This event is emitted when the user drags a menu item
  *   from the stash tab to the preview area.
  * @fires delete-stashed-item - This event is emitted when the user drags a menu item from
@@ -71,10 +69,8 @@ export class Toolbar extends EventEmitter {
     this.initTabs();
 
     // Initialize the menus tab and forward its events.
-    this.menusTab = new MenusTab(this.container, !backend.supportsShortcuts);
-    this.menusTab.on('add-menu', () => this.emit('add-menu'));
+    this.menusTab = new MenusTab(this.container, !backend.supportsShortcuts, dndManager);
     this.menusTab.on('select-menu', (index) => this.emit('select-menu', index));
-    this.menusTab.on('delete-menu', (index) => this.emit('delete-menu', index));
 
     // Initialize the add-items tab and forward its events.
     this.addItemsTab = new AddItemsTab(this.container, dndManager);
@@ -96,10 +92,10 @@ export class Toolbar extends EventEmitter {
   /**
    * Whenever a menu is added or removed, the menus tab needs to be updated.
    *
-   * @param menus A list of all menus.
+   * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
    */
-  public setMenus(menus: Array<IMenu>, currentMenu: number) {
+  public setMenus(menus: IMenuSettings, currentMenu: number) {
     this.menusTab.setMenus(menus, currentMenu);
   }
 
@@ -122,12 +118,12 @@ export class Toolbar extends EventEmitter {
   }
 
   /**
-   * This method updates the button which represents the menu at the given index in the
-   * given menu list. It is called by the editor whenever the user changed a property of
-   * the currently edited menu in the properties view.
+   * This method updates the button which represents the currently edited menu. It is
+   * called by the editor whenever the user changed a property of the currently edited
+   * menu in the properties view.
    */
-  public updateMenu(menus: Array<IMenu>, index: number) {
-    this.menusTab.updateMenu(menus, index);
+  public updateMenu() {
+    this.menusTab.updateMenu();
   }
 
   /** This method loads the HTML content of the toolbar. */

@@ -8,32 +8,33 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ToolbarItemDragger } from './toolbar-draggable';
-import { EventEmitter } from 'events';
-import { IMenu } from '../../../common';
+import { ToolbarDraggable } from './toolbar-draggable';
+
+import { DropTargetTab } from './drop-target-tab';
+import { IMenu, IMenuSettings } from '../../../common';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IDraggable } from '../common/draggable';
+import { DnDManager } from '../common/dnd-manager';
 
 /**
  * This class is responsible for the menus tab in the toolbar. It is an event emitter
  * which emits the following events:
  *
- * @fires add-menu - This event is emitted when the user clicks the "Add Menu" button.
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
- * @fires delete-menu - This event is emitted when the user drags a menu to the trash tab.
  */
-export class MenusTab extends EventEmitter {
-  /** The container is the HTML element which contains the entire toolbar. */
-  private container: HTMLElement = null;
+export class MenusTab extends DropTargetTab {
+  /**
+   * This contains all configured menus. When a menu is added or removed, we directly
+   * update the settings. When the editor is closed, the settings are saved to disc.
+   */
+  private menuSettings: IMenuSettings = null;
 
-  /** If true, menu buttons will show the shortcut IDs, instead of the shortcuts. */
-  private showShortcutIDs: boolean = false;
+  /** This is the index of the currently selected menu. */
+  private currentMenu: number = 0;
 
-  /** This is the HTML element which contains the menus tab's content. */
-  private tab: HTMLElement = null;
-
-  /** This is the only drop target for dragged menus. */
-  private trashTab: HTMLElement = null;
+  /** This list contains a draggable for each menu button. */
+  private draggables: IDraggable[] = [];
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -42,58 +43,109 @@ export class MenusTab extends EventEmitter {
    * @param showShortcutIDs If true, menu buttons will show the shortcut IDs, instead of
    *   the shortcuts.
    */
-  constructor(container: HTMLElement, showShortcutIDs: boolean) {
-    super();
+  constructor(
+    private container: HTMLElement,
+    private showShortcutIDs: boolean,
+    private dndManager: DnDManager
+  ) {
+    super(
+      dndManager,
+      ['trashed-menu'],
+      container.querySelector('#kando-menus-tab-header'),
+      container.querySelector('#kando-menus-tab')
+    );
 
-    // Store a reference to the container. We will attach menu buttons divs to it during
-    // drag'n'drop operations.
-    this.container = container;
-
-    // Store the showShortcutIDs flag.
-    this.showShortcutIDs = showShortcutIDs;
-
-    // Store a reference to the trash tab. This is the only drop target for dragged menus.
-    this.trashTab = this.container.querySelector(
-      ".nav-link[data-bs-target='#kando-trash-tab']"
-    ) as HTMLElement;
-
-    // Initialize the dragger. This will be used to make the menu buttons draggable. When
-    // a menu button is dropped to the trash tab, we emit the 'delete-menu' event.
-    // this.dragger = new ToolbarItemDragger();
-    // this.dragger.on('drop', (index) => this.emit('delete-menu', index));
-
-    // The tab has been created in the toolbar's constructor.
-    this.tab = this.container.querySelector('#kando-menus-tab');
-
-    // If a menu button is clicked, we emit the 'select-menu' event. If the "Add Menu"
-    // button is clicked, we emit the 'add-menu' event.
-    this.tab.addEventListener('click', (event) => {
+    // If the "Add Menu" button is clicked, we emit the 'add-menu' event.
+    this.tabContent.addEventListener('click', (event) => {
       const input = event.target as HTMLInputElement;
       if (input && input.name === 'menu-selection-button') {
-        this.emit('select-menu', input.dataset.index);
+        this.currentMenu = parseInt(input.dataset.index);
+        this.emit('select-menu', this.currentMenu);
       }
 
       const button = event.target as HTMLButtonElement;
       if (button && button.classList.contains('add-menu-button')) {
-        this.emit('add-menu');
+        this.addMenu();
       }
     });
   }
 
   /**
-   * This method is called by the toolbar whenever the list of menus changes. It
-   * completely rebuilds the menus tab.
+   * This method is called initially to set the menus. It is called by the toolbar
+   * whenever the editor is opened.
    *
-   * @param menus A list of menus.
-   * @param currentMenu The index of the currently selected menu.
+   * @param menuSettings The menu settings contain all menus and their properties.
+   * @param currentMenu This is the index of the currently selected menu.
    */
-  public setMenus(menus: Array<IMenu>, currentMenu: number) {
-    // this.dragger.removeAllDraggables();
+  public setMenus(menuSettings: IMenuSettings, currentMenu: number) {
+    this.menuSettings = menuSettings;
+    this.currentMenu = currentMenu;
+    this.updateAllMenus();
+  }
+
+  /**
+   * This method updates the currently selected button. It is called by the toolbar
+   * whenever the user changed a property of the currently edited menu in the properties
+   * view.
+   */
+  public updateMenu() {
+    const menu = this.menuSettings.menus[this.currentMenu];
+    const id = `#menu-button-${this.currentMenu}`;
+
+    // Update the name.
+    const name = this.container.querySelector(`${id} .name`);
+    if (name) {
+      name.textContent = menu.nodes.name;
+    }
+
+    // Update the icon.
+    const icon = this.container.querySelector(`${id} .icon-container`);
+    const parent = icon.parentElement;
+    icon.remove();
+    parent.append(
+      IconThemeRegistry.getInstance()
+        .getTheme(menu.nodes.iconTheme)
+        .createDiv(menu.nodes.icon)
+    );
+
+    // Update the shortcut.
+    const description = this.container.querySelector(`${id} .description`);
+    if (description) {
+      description.textContent =
+        (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.';
+    }
+  }
+
+  // IDropTarget implementation ----------------------------------------------------------
+
+  /** @inheritdoc */
+  override onDrop(draggable: IDraggable) {
+    super.onDrop(draggable);
+
+    // Add the dropped menu to the list menus.
+    this.menuSettings.menus.push(draggable.getData() as IMenu);
+    this.currentMenu = this.menuSettings.menus.length - 1;
+    this.updateAllMenus();
+    this.emit('select-menu', this.currentMenu);
+  }
+
+  // Private Methods ---------------------------------------------------------------------
+
+  /**
+   * This method is called whenever a menu is added or removed. It updates the entire
+   * menus tab.
+   */
+  private updateAllMenus() {
+    // First, we remove all draggables.
+    this.draggables.forEach((draggable) =>
+      this.dndManager.unregisterDraggable(draggable)
+    );
+    this.draggables = [];
 
     // Compile the data for the Handlebars template.
-    const data = menus.map((menu, index) => ({
+    const data = this.menuSettings.menus.map((menu, index) => ({
       name: menu.nodes.name,
-      active: index === currentMenu,
+      active: index === this.currentMenu,
       description:
         (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
       icon: IconThemeRegistry.getInstance()
@@ -103,51 +155,79 @@ export class MenusTab extends EventEmitter {
     }));
 
     const template = require('./templates/menus-tab.hbs');
-    this.tab.innerHTML = template({ menus: data });
+    this.tabContent.innerHTML = template({ menus: data });
 
-    // Add drag'n'drop logic to the menu buttons. The menus can only be dragged to the
-    // trash tab.
-    for (const menu of data) {
-      const div = document.getElementById(`menu-button-${menu.index}`);
-      // this.dragger.addDraggable(div, {
-      //   data: menu.index,
-      //   ghostMode: false,
-      //   dragClass: 'dragging-menu-from-menus-tab',
-      //   dropTargets: [this.trashTab],
-      // });
-    }
+    // Add drag'n'drop logic to the menu buttons.
+    this.menuSettings.menus.forEach((menu, index) => {
+      const div = this.tabContent.querySelector(`#menu-button-${index}`) as HTMLElement;
+
+      const draggable = new ToolbarDraggable(div, 'menu', false, () => menu);
+      this.dndManager.registerDraggable(draggable);
+
+      draggable.on('drop', () => {
+        // Remove the dropped menu from the menus.
+        this.menuSettings.menus = this.menuSettings.menus.filter((m) => m !== menu);
+        this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
+
+        // Redraw the menus tab.
+        this.updateAllMenus();
+        this.emit('select-menu', this.currentMenu);
+      });
+
+      this.draggables.push(draggable);
+    });
   }
 
   /**
-   * TThis method updates the button which represents the menu at the given index in the
-   * given menu list. It is called by the toolbar whenever the user changed a property of
-   * the currently edited menu in the properties view.
+   * This method is called when the user clicks the "Add Menu" button. It adds a new
+   * random menu to the menu list.
    */
-  public updateMenu(menus: Array<IMenu>, index: number) {
-    // Update the name.
-    const name = this.container.querySelector(`#menu-button-${index} .name`);
-    if (name) {
-      name.textContent = menus[index].nodes.name;
+  private addMenu() {
+    // Choose a random icon for the new menu.
+    const icons = [
+      'favorite',
+      'star',
+      'kid_star',
+      'home',
+      'cycle',
+      'public',
+      'rocket_launch',
+      'mood',
+      'sunny',
+      'target',
+    ];
+
+    const icon = icons[Math.floor(Math.random() * icons.length)];
+
+    // Choose a new name for the menu. We will start with "New Menu" and append a
+    // number if this name is already taken.
+    let name = 'New Menu';
+    let i = 1;
+
+    if (this.menuSettings.menus.find((menu) => menu.nodes.name === name)) {
+      do {
+        name = `New Menu ${i}`;
+        i++;
+      } while (this.menuSettings.menus.find((menu) => menu.nodes.name === name));
     }
 
-    // Update the icon.
-    const icon = this.container.querySelector(`#menu-button-${index} .icon-container`);
-    const parent = icon.parentElement;
-    icon.remove();
-    parent.append(
-      IconThemeRegistry.getInstance()
-        .getTheme(menus[index].nodes.iconTheme)
-        .createDiv(menus[index].nodes.icon)
-    );
+    const newMenu: IMenu = {
+      nodes: {
+        type: 'submenu',
+        name,
+        icon,
+        iconTheme: 'material-symbols-rounded',
+        children: [],
+      },
+      shortcut: '',
+      shortcutID: '',
+      centered: false,
+    };
 
-    // Update the shortcut.
-    const description = this.container.querySelector(
-      `#menu-button-${index} .description`
-    );
-    if (description) {
-      description.textContent =
-        (this.showShortcutIDs ? menus[index].shortcutID : menus[index].shortcut) ||
-        'Not bound.';
-    }
+    this.menuSettings.menus.push(newMenu);
+
+    this.currentMenu = this.menuSettings.menus.length - 1;
+    this.updateAllMenus();
+    this.emit('select-menu', this.currentMenu);
   }
 }

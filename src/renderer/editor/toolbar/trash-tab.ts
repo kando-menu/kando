@@ -8,12 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { DropTargetTab } from './drop-target-tab';
 import { ToolbarDraggable } from './toolbar-draggable';
-import { IMenu, IVec2 } from '../../../common';
+import { IMenu } from '../../../common';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
-import { IDropTarget } from '../common/drop-target';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
 
@@ -22,22 +22,7 @@ import { DnDManager } from '../common/dnd-manager';
  * here to delete them. Dropped items are stored in the trash until the user restarts the
  * application.
  */
-export class TrashTab implements IDropTarget {
-  /** The container is the HTML element which contains the entire toolbar. */
-  private container: HTMLElement = null;
-
-  /** This is used to manage drag'n'drop operations. */
-  private dndManager: DnDManager = null;
-
-  /** If true, menu buttons will show the shortcut IDs, instead of the shortcuts. */
-  private showShortcutIDs: boolean = false;
-
-  /** This is the trash tab's HTML element. */
-  private tabHeader: HTMLElement = null;
-
-  /** This is the HTML element which contains the trash tab's content. */
-  private tabContent: HTMLElement = null;
-
+export class TrashTab extends DropTargetTab {
   /**
    * This array is used to store menus and menu items which have been deleted by the user.
    * They can be restored by dragging them back to the stash, to the menus tab, or the
@@ -54,29 +39,19 @@ export class TrashTab implements IDropTarget {
    * @param container The container is the HTML element which contains the entire toolbar.
    * @param showShortcutIDs If true, menu buttons will show the shortcut IDs, instead of
    *   the shortcuts.
+   * @param dndManager This is used to manage the drag'n'drop operations.
    */
-  constructor(container: HTMLElement, showShortcutIDs: boolean, dndManager: DnDManager) {
-    this.container = container;
-    this.showShortcutIDs = showShortcutIDs;
-    this.dndManager = dndManager;
-
-    this.dndManager.registerDropTarget(this);
-
-    // If a menu or menu item is started to be dragged, we highlight the trash tab.
-    this.dndManager.on('drag-start', (draggable) => {
-      if (draggable.getDataType() === 'menu' || draggable.getDataType() === 'menu-item') {
-        this.tabHeader.classList.add('highlight-drop-target');
-      }
-    });
-
-    // And remove the highlight when the drag operation ends.
-    this.dndManager.on('drag-end', () => {
-      this.tabHeader.classList.remove('highlight-drop-target');
-    });
-
-    // The tab has been created in the toolbar's constructor.
-    this.tabHeader = this.container.querySelector('#kando-trash-tab-header');
-    this.tabContent = this.container.querySelector('#kando-trash-tab');
+  constructor(
+    private container: HTMLElement,
+    private showShortcutIDs: boolean,
+    private dndManager: DnDManager
+  ) {
+    super(
+      dndManager,
+      ['menu', 'menu-item'],
+      container.querySelector('#kando-trash-tab-header'),
+      container.querySelector('#kando-trash-tab')
+    );
 
     // Initialize the trash tab with an empty list of trashed items.
     this.setTrashedThings([]);
@@ -140,19 +115,17 @@ export class TrashTab implements IDropTarget {
     // Add drag'n'drop logic to the things in the trash.
     things.forEach((thing, index) => {
       const div = this.tabContent.querySelector(`#trash-item-${index}`) as HTMLElement;
-      const dataType = data[index].isMenu ? 'menu' : 'menu-item';
+      const dataType = data[index].isMenu ? 'trashed-menu' : 'trashed-menu-item';
 
       const draggable = new ToolbarDraggable(div, dataType, false, () => thing);
       this.dndManager.registerDraggable(draggable);
 
-      draggable.on('drop', (target) => {
+      draggable.on('drop', () => {
+        // Remove the dropped item from the trash.
         this.trashedThings = this.trashedThings.filter((t) => t.thing !== thing);
 
-        // If the target is the trash tab itself, we redraw the trash tab. Else this is
-        // not necessary as this will happen in the `onDrop` method further down.
-        if (target !== this) {
-          this.setTrashedThings(this.trashedThings.map((t) => t.thing));
-        }
+        // Redraw the trash tab.
+        this.setTrashedThings(this.trashedThings.map((t) => t.thing));
       });
 
       this.trashedThings.push({ thing, draggable });
@@ -163,71 +136,9 @@ export class TrashTab implements IDropTarget {
     counter.textContent = things.length.toString();
   }
 
-  // IDropTarget implementation ----------------------------------------------------------
-
   /** @inheritdoc */
-  accepts(draggable: IDraggable, coords: IVec2) {
-    // We only accept menus and menu items.
-    if (draggable.getDataType() !== 'menu' && draggable.getDataType() !== 'menu-item') {
-      return false;
-    }
-
-    // If the coords are inside the trash tab content, we accept the draggable.
-    const rect = this.tabContent.getBoundingClientRect();
-    if (
-      coords.x >= rect.left &&
-      coords.x <= rect.right &&
-      coords.y >= rect.top &&
-      coords.y <= rect.bottom
-    ) {
-      return true;
-    }
-
-    // Also accept the draggable if the coords are inside the trash tab header.
-    const headerRect = this.tabHeader.getBoundingClientRect();
-    if (
-      coords.x >= headerRect.left &&
-      coords.x <= headerRect.right &&
-      coords.y >= headerRect.top &&
-      coords.y <= headerRect.bottom
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /** @inheritdoc */
-  onDragEnter() {
-    // If the trash tab is currently shown, we highlight it.
-    if (this.tabContent.classList.contains('active')) {
-      this.tabContent.classList.add('drop-target');
-      return;
-    }
-
-    // Else we highlight the trash tab header.
-    this.tabHeader.classList.add('drop-target');
-  }
-
-  /** @inheritdoc */
-  onDragLeave() {
-    this.tabContent.classList.remove('drop-target');
-    this.tabHeader.classList.remove('drop-target');
-  }
-
-  /** @inheritdoc */
-  onDropMove() {}
-
-  /** @inheritdoc */
-  onDropCancel() {
-    this.tabContent.classList.remove('drop-target');
-    this.tabHeader.classList.remove('drop-target');
-  }
-
-  /** @inheritdoc */
-  onDrop(draggable: IDraggable) {
-    this.tabContent.classList.remove('drop-target');
-    this.tabHeader.classList.remove('drop-target');
+  override onDrop(draggable: IDraggable) {
+    super.onDrop(draggable);
 
     // Add the dropped thing to the trash.
     this.setTrashedThings([

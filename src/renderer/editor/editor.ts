@@ -16,7 +16,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IMenu, IBackendInfo, IMenuSettings } from '../../common';
+import { IBackendInfo, IMenuSettings } from '../../common';
 import { toIMenuItem } from './common/editor-menu-item';
 import { DnDManager } from './common/dnd-manager';
 
@@ -65,6 +65,7 @@ export class Editor extends EventEmitter {
    */
   private toolbar: Toolbar = null;
 
+  /** This is used to manage drag'n'drop operations. */
   private dndManager: DnDManager = new DnDManager();
 
   /**
@@ -122,7 +123,7 @@ export class Editor extends EventEmitter {
       this.preview.updateActiveItem();
 
       if (this.editingMenu) {
-        this.toolbar.updateMenu(this.menuSettings.menus, this.currentMenu);
+        this.toolbar.updateMenu();
       }
     };
 
@@ -152,57 +153,9 @@ export class Editor extends EventEmitter {
       this.properties.show();
     });
 
-    this.toolbar.on('add-menu', () => {
-      // Choose a random icon for the new menu.
-      const icons = [
-        'favorite',
-        'star',
-        'kid_star',
-        'home',
-        'cycle',
-        'public',
-        'rocket_launch',
-        'mood',
-        'sunny',
-        'target',
-      ];
-
-      const icon = icons[Math.floor(Math.random() * icons.length)];
-
-      // Choose a new name for the menu. We will start with "New Menu" and append a
-      // number if this name is already taken.
-      let name = 'New Menu';
-      let i = 1;
-
-      if (this.menuSettings.menus.find((menu) => menu.nodes.name === name)) {
-        do {
-          name = `New Menu ${i}`;
-          i++;
-        } while (this.menuSettings.menus.find((menu) => menu.nodes.name === name));
-      }
-
-      const newMenu: IMenu = {
-        nodes: {
-          type: 'submenu',
-          name,
-          icon,
-          iconTheme: 'material-symbols-rounded',
-          children: [],
-        },
-        shortcut: '',
-        shortcutID: '',
-        centered: false,
-      };
-
-      this.menuSettings.menus.push(newMenu);
-      this.currentMenu = this.menuSettings.menus.length - 1;
-      this.toolbar.setMenus(this.menuSettings.menus, this.currentMenu);
-      this.preview.setMenu(newMenu);
-      this.properties.setMenu(newMenu);
-    });
-
     this.toolbar.on('select-menu', (index: number) => {
       this.currentMenu = index;
+      this.properties.setMenu(this.menuSettings.menus[index]);
       this.preview.setMenu(this.menuSettings.menus[index]);
     });
 
@@ -254,7 +207,7 @@ export class Editor extends EventEmitter {
       this.menuSettings = settings;
       this.currentMenu = currentMenu;
       this.preview.setMenu(settings.menus[currentMenu]);
-      this.toolbar.setMenus(settings.menus, currentMenu);
+      this.toolbar.setMenus(settings, currentMenu);
       this.toolbar.setStashedItems(settings.stash);
     });
 
