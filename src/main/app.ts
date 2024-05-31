@@ -148,19 +148,6 @@ export class KandoApp {
           clearTimeout(this.hideTimeout);
         }
 
-        // Move the window to the monitor which contains the pointer.
-        const workarea = screen.getDisplayNearestPoint({
-          x: info.pointerX,
-          y: info.pointerY,
-        }).workArea;
-
-        this.window.setBounds({
-          x: workarea.x,
-          y: workarea.y,
-          width: workarea.width + 1,
-          height: workarea.height + 1,
-        });
-
         // Later, we will support application-specific menus. For now, we just print
         // the currently focused window.
         if (info.appName) {
@@ -182,6 +169,21 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
+        this.showWindow();
+
+        // Move the window to the monitor which contains the pointer.
+        const workarea = screen.getDisplayNearestPoint({
+          x: info.pointerX,
+          y: info.pointerY,
+        }).workArea;
+
+        this.window.setBounds({
+          x: workarea.x,
+          y: workarea.y,
+          width: workarea.width + 1,
+          height: workarea.height + 1,
+        });
+
         // Usually, the menu is shown at the pointer position. However, if the menu is
         // centered, we show it in the center of the screen.
         const pos = {
@@ -191,8 +193,6 @@ export class KandoApp {
 
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
-
-        this.showWindow();
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
