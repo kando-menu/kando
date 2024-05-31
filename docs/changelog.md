@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Added
 
+- Support for HiDPI screens. Kando will now properly warp the mouse pointer to the center of a menu item even if display scaling is enabled.
 - Better example menus. When you launch Kando for the first time (or delete your `menus.json` file), you will now see a more useful example menu. This menu depends on the platform you are using. There are some hard-coded applications and keyboard shortcuts, but you can easily change them in the menu editor.
 - Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#menu-shortcuts-vs-simulated-hotkeys).
 
@@ -30,8 +31,13 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - The sidebar tab "Tutorial" has been renamed to "Introduction". There will be real tutorials in the future.
 
+#### Removed
+
+- The console message which reported hover and selection events. This was only useful for debugging and is no longer needed.
+
 #### Fixed
 
+- A regression on Windows where the menu would not open on the correct monitor.
 - Touch input in the menu editor. It is now possible to edit menus on touch devices. This involved a complete rewrite of the drag-and-drop code - please let me know if you encounter any issues!
 
 ## [Kando 0.9.0](https://github.com/kando-menu/kando/releases/tag/v0.9.0)

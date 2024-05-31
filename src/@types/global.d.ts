@@ -35,7 +35,9 @@ declare global {
       showDevTools: () => void;
       movePointer: (dist: IVec2) => void;
       log: (message: string) => void;
-      showMenu: (func: (root: IMenuItem, pos: IVec2) => void) => void;
+      showMenu: (
+        func: (root: IMenuItem, menuPosition: IVec2, windowSize: IVec2) => void
+      ) => void;
       showEditor: (func: () => void) => void;
       hoverItem: (path: string) => void;
       unhoverItem: (path: string) => void;

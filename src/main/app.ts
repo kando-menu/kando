@@ -148,27 +148,6 @@ export class KandoApp {
           clearTimeout(this.hideTimeout);
         }
 
-        // Move the window to the monitor which contains the pointer.
-        const workarea = screen.getDisplayNearestPoint({
-          x: info.pointerX,
-          y: info.pointerY,
-        }).workArea;
-
-        this.window.setBounds({
-          x: workarea.x,
-          y: workarea.y,
-          width: workarea.width + 1,
-          height: workarea.height + 1,
-        });
-
-        // Later, we will support application-specific menus. For now, we just print
-        // the currently focused window.
-        if (info.appName) {
-          console.log(`Currently focused: ${info.appName} (${info.windowName})`);
-        } else {
-          console.log('Currently no window is focused.');
-        }
-
         // If the menu is a string, we need to find the corresponding menu in the
         // settings.
         if (typeof menu === 'string') {
@@ -182,17 +161,53 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
+        // Move the window to the monitor which contains the pointer.
+        const workarea = screen.getDisplayNearestPoint({
+          x: info.pointerX,
+          y: info.pointerY,
+        }).workArea;
+
+        // On Windows, we have to show the window before we can move it. Otherwise, the
+        // window will not be moved to the correct monitor.
+        if (process.platform === 'win32') {
+          this.showWindow();
+        }
+
+        // Some platforms require the window to be one pixel larger than the work area.
+        // Else there will be a small gap between the window and the screen edge.
+        this.window.setBounds({
+          x: workarea.x,
+          y: workarea.y,
+          width: workarea.width + 1,
+          height: workarea.height + 1,
+        });
+
+        // On all platforms except Windows, we show the window after we moved it.
+        if (process.platform !== 'win32') {
+          this.showWindow();
+        }
+
         // Usually, the menu is shown at the pointer position. However, if the menu is
         // centered, we show it in the center of the screen.
-        const pos = {
+        const menuPosition = {
           x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
           y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
         };
 
-        // Send the menu to the renderer process.
-        this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
+        // We have to pass the size of the window to the renderer because window.innerWidth
+        // and window.innerHeight are not reliable when the window has just been resized.
+        const windowSize = {
+          x: workarea.width,
+          y: workarea.height,
+        };
 
-        this.showWindow();
+        // Send the menu to the renderer process.
+        this.window.webContents.send(
+          'show-menu',
+          this.lastMenu.nodes,
+          menuPosition,
+          windowSize
+        );
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
@@ -337,12 +352,10 @@ export class KandoApp {
     // Move the mouse pointer. This is used to move the pointer to the center of the
     // menu when the menu is opened too close to the screen edge.
     ipcMain.on('move-pointer', (event, dist) => {
-      this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
-    });
-
-    // Print some messages when the user hovers or selects an item.
-    ipcMain.on('hover-item', (event, path) => {
-      console.log('Hover item: ' + path);
+      const bounds = this.window.getBounds();
+      const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
+      const scale = display.scaleFactor;
+      this.backend.movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
     // When the user selects an item, we execute the corresponding action. Depending on
@@ -377,8 +390,6 @@ export class KandoApp {
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
       this.hideTimeout = setTimeout(() => {
-        console.log('Select item: ' + path);
-
         this.hideWindow();
         this.hideTimeout = null;
 
@@ -393,7 +404,6 @@ export class KandoApp {
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
       this.hideTimeout = setTimeout(() => {
-        console.log('Cancel selection.');
         this.hideWindow();
         this.hideTimeout = null;
       }, 300);
