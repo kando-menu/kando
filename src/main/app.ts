@@ -575,28 +575,21 @@ export class KandoApp {
 
   /**
    * Depending on the operating system, we create a different example menu. The structure
-   * of the menu is the same on all platforms, but the shortcuts and commands are
+   * of the menu is similar on all platforms, but the shortcuts and commands are
    * different.
    *
    * All menu configurations are stored in the `example-menus` directory.
    */
-  private createExampleMenu() {
-    let root: IMenuItem;
-
+  private createExampleMenu(): IMenu {
     if (process.platform === 'win32') {
-      root = require('./example-menus/linux.json');
-    } else if (process.platform === 'darwin') {
-      root = require('./example-menus/linux.json');
-    } else {
-      root = require('./example-menus/linux.json');
+      return require('./example-menus/windows.json');
     }
 
-    return {
-      nodes: root,
-      shortcut: 'Control+Space',
-      shortcutID: 'example-menu',
-      centered: false,
-    };
+    if (process.platform === 'darwin') {
+      return require('./example-menus/linux.json');
+    }
+
+    return require('./example-menus/linux.json');
   }
 
   /**
