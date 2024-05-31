@@ -148,14 +148,6 @@ export class KandoApp {
           clearTimeout(this.hideTimeout);
         }
 
-        // Later, we will support application-specific menus. For now, we just print
-        // the currently focused window.
-        if (info.appName) {
-          console.log(`Currently focused: ${info.appName} (${info.windowName})`);
-        } else {
-          console.log('Currently no window is focused.');
-        }
-
         // If the menu is a string, we need to find the corresponding menu in the
         // settings.
         if (typeof menu === 'string') {
@@ -386,8 +378,6 @@ export class KandoApp {
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
       this.hideTimeout = setTimeout(() => {
-        console.log('Select item: ' + path);
-
         this.hideWindow();
         this.hideTimeout = null;
 
@@ -402,7 +392,6 @@ export class KandoApp {
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
       this.hideTimeout = setTimeout(() => {
-        console.log('Cancel selection.');
         this.hideWindow();
         this.hideTimeout = null;
       }, 300);
