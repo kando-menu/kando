@@ -26,7 +26,7 @@ Depending on your platform, the configuration files are located in different dir
 
 * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/Kando/`
-* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/Kando/`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/`
 
 **📝 JSON Format**: Both configuration files are JSON files. You can edit them with any text editor.
 

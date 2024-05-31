@@ -23,14 +23,21 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
-    new MakerZIP({}),
+    new MakerSquirrel({
+      // https://js.electronforge.io/interfaces/_electron_forge_maker_squirrel.InternalOptions.SquirrelWindowsOptions.html
+      name: 'Kando',
+    }),
+    new MakerZIP({
+      // https://js.electronforge.io/interfaces/_electron_forge_maker_zip.MakerZIPConfig.html
+    }),
     new MakerDMG({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_dmg.MakerDMGConfig.html
+      name: 'Kando',
     }),
     new MakerRpm({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
       options: {
+        productName: 'Kando',
         genericName: 'Pie Menu',
         icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
@@ -41,6 +48,7 @@ const config: ForgeConfig = {
     new MakerDeb({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html
       options: {
+        productName: 'Kando',
         genericName: 'Pie Menu',
         icon: 'assets/icons/icon.svg',
         homepage: 'https://github.com/kando-menu/kando',
