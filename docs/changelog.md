@@ -26,6 +26,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Better example menus. When you launch Kando for the first time (or delete your `menus.json` file), you will now see a more useful example menu. This menu depends on the platform you are using. There are some hard-coded applications and keyboard shortcuts, but you can easily change them in the menu editor.
 - Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#menu-shortcuts-vs-simulated-hotkeys).
 
+#### Changed
+
+- The sidebar tab "Tutorial" has been renamed to "Introduction". There will be real tutorials in the future.
+
 #### Fixed
 
 - Touch input in the menu editor. It is now possible to edit menus on touch devices. This involved a complete rewrite of the drag-and-drop code - please let me know if you encounter any issues!
