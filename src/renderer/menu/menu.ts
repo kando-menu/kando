@@ -60,6 +60,14 @@ export class Menu extends EventEmitter {
   private root: IRenderedMenuItem = null;
 
   /**
+   * The window size is the size of the window. Usually, this is the same as
+   * window.innerWidth and window.innerHeight. However, when the window was just resized
+   * before the menu was shown, this can be different. Therefore, we need to pass it from
+   * the main process.
+   */
+  private windowSize: IVec2 = null;
+
+  /**
    * The hovered item is the menu item which is currently hovered by the mouse. It is used
    * to highlight the item under the mouse cursor. This will only be null if the mouse is
    * over the center of the root item. If the menu center is hovered, the hovered item
@@ -216,9 +224,15 @@ export class Menu extends EventEmitter {
    * This method is called when the menu is shown. Currently, it just creates a test menu.
    *
    * @param position The position of the mouse cursor when the menu was opened.
+   * @param windowSize The size of the window. Usually, this is the same as
+   *   window.innerWidth and window.innerHeight. However, when the window was just
+   *   resized, this can be different. Therefore, we need to pass it from the main
+   *   process.
    */
-  public show(root: IRenderedMenuItem, position: IVec2) {
+  public show(root: IRenderedMenuItem, position: IVec2, windowSize: IVec2) {
     this.clear();
+
+    this.windowSize = windowSize;
 
     this.input.update(position);
     this.input.ignoreNextMotionEvents();
@@ -402,7 +416,7 @@ export class Menu extends EventEmitter {
       // magic number 1.4 accounts for the hover effect (which should be made
       // configurable). The 10 is some additional margin.
       const maxRadius = (this.CHILD_DISTANCE + this.GRANDCHILD_DISTANCE) * 1.4 + 10;
-      const clampedPosition = math.clampToMonitor(position, maxRadius);
+      const clampedPosition = math.clampToMonitor(position, maxRadius, this.windowSize);
 
       const offset = {
         x: Math.trunc(clampedPosition.x - position.x),

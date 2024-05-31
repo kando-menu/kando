@@ -37,6 +37,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Fixed
 
+- A regression on Windows where the menu would not open on the correct monitor.
 - Touch input in the menu editor. It is now possible to edit menus on touch devices. This involved a complete rewrite of the drag-and-drop code - please let me know if you encounter any issues!
 
 ## [Kando 0.9.0](https://github.com/kando-menu/kando/releases/tag/v0.9.0)

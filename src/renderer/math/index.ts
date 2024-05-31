@@ -387,11 +387,16 @@ function scaleWedge(start: number, center: number, end: number, scale: number) {
  *
  * @param position The center position of the menu.
  * @param radius The maximum radius of the menu.
+ * @param monitorSize The size of the monitor.
  * @returns The clamped position.
  */
-export function clampToMonitor(position: IVec2, radius: number): IVec2 {
-  const maxX = window.innerWidth - radius;
-  const maxY = window.innerHeight - radius;
+export function clampToMonitor(
+  position: IVec2,
+  radius: number,
+  monitorSize: IVec2
+): IVec2 {
+  const maxX = monitorSize.x - radius;
+  const maxY = monitorSize.y - radius;
 
   const posX = clamp(position.x, radius, maxX);
   const posY = clamp(position.y, radius, maxY);

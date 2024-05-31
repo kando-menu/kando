@@ -161,18 +161,20 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
-        // On Windows, we have to show the window before we can move it. Otherwise, the
-        // window will not be moved to the correct monitor.
-        if (process.platform === 'win32') {
-          this.showWindow();
-        }
-
         // Move the window to the monitor which contains the pointer.
         const workarea = screen.getDisplayNearestPoint({
           x: info.pointerX,
           y: info.pointerY,
         }).workArea;
 
+        // On Windows, we have to show the window before we can move it. Otherwise, the
+        // window will not be moved to the correct monitor.
+        if (process.platform === 'win32') {
+          this.showWindow();
+        }
+
+        // Some platforms require the window to be one pixel larger than the work area.
+        // Else there will be a small gap between the window and the screen edge.
         this.window.setBounds({
           x: workarea.x,
           y: workarea.y,
@@ -180,20 +182,32 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
-        // Usually, the menu is shown at the pointer position. However, if the menu is
-        // centered, we show it in the center of the screen.
-        const pos = {
-          x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
-          y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
-        };
-
-        // Send the menu to the renderer process.
-        this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
-
         // On all platforms except Windows, we show the window after we moved it.
         if (process.platform !== 'win32') {
           this.showWindow();
         }
+
+        // Usually, the menu is shown at the pointer position. However, if the menu is
+        // centered, we show it in the center of the screen.
+        const menuPosition = {
+          x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
+          y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
+        };
+
+        // We have to pass the size of the window to the renderer because window.innerWidth
+        // and window.innerHeight are not reliable when the window has just been resized.
+        const windowSize = {
+          x: workarea.width,
+          y: workarea.height,
+        };
+
+        // Send the menu to the renderer process.
+        this.window.webContents.send(
+          'show-menu',
+          this.lastMenu.nodes,
+          menuPosition,
+          windowSize
+        );
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
