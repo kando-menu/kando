@@ -169,7 +169,11 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
-        this.showWindow();
+        // On Windows, we have to show the window before we can move it. Otherwise, the
+        // window will not be moved to the correct monitor.
+        if (process.platform === 'win32') {
+          this.showWindow();
+        }
 
         // Move the window to the monitor which contains the pointer.
         const workarea = screen.getDisplayNearestPoint({
@@ -193,6 +197,11 @@ export class KandoApp {
 
         // Send the menu to the renderer process.
         this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
+
+        // On all platforms except Windows, we show the window after we moved it.
+        if (process.platform !== 'win32') {
+          this.showWindow();
+        }
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
