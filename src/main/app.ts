@@ -239,6 +239,9 @@ export class KandoApp {
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
 
+    // We show Kando on all workspaces.
+    this.window.setVisibleOnAllWorkspaces(true);
+
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.
     this.window.webContents.setWindowOpenHandler(({ url }) => {
