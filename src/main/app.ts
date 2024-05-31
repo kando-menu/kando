@@ -338,12 +338,10 @@ export class KandoApp {
     // Move the mouse pointer. This is used to move the pointer to the center of the
     // menu when the menu is opened too close to the screen edge.
     ipcMain.on('move-pointer', (event, dist) => {
-      this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
-    });
-
-    // Print some messages when the user hovers or selects an item.
-    ipcMain.on('hover-item', (event, path) => {
-      console.log('Hover item: ' + path);
+      const bounds = this.window.getBounds();
+      const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
+      const scale = display.scaleFactor;
+      this.backend.movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
     // When the user selects an item, we execute the corresponding action. Depending on
