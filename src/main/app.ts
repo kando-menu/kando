@@ -586,7 +586,7 @@ export class KandoApp {
     }
 
     if (process.platform === 'darwin') {
-      return require('./example-menus/linux.json');
+      return require('./example-menus/macos.json');
     }
 
     return require('./example-menus/linux.json');
