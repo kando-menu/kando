@@ -2,7 +2,7 @@
   "shortcut": "Control+Space",
   "shortcutID": "example-menu",
   "centered": false,
-  "nodes": {
+  "root": {
     "type": "submenu",
     "name": "Example Menu",
     "icon": "award_star",

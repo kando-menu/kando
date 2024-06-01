@@ -89,7 +89,7 @@ export class MenusTab extends DropTargetTab {
     // Update the name.
     const name = this.container.querySelector(`${id} .name`);
     if (name) {
-      name.textContent = menu.nodes.name;
+      name.textContent = menu.root.name;
     }
 
     // Update the icon.
@@ -98,8 +98,8 @@ export class MenusTab extends DropTargetTab {
     icon.remove();
     parent.append(
       IconThemeRegistry.getInstance()
-        .getTheme(menu.nodes.iconTheme)
-        .createDiv(menu.nodes.icon)
+        .getTheme(menu.root.iconTheme)
+        .createDiv(menu.root.icon)
     );
 
     // Update the shortcut.
@@ -138,13 +138,13 @@ export class MenusTab extends DropTargetTab {
 
     // Compile the data for the Handlebars template.
     const data = this.menuSettings.menus.map((menu, index) => ({
-      name: menu.nodes.name,
+      name: menu.root.name,
       checked: index === this.currentMenu,
       description:
         (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
       icon: IconThemeRegistry.getInstance()
-        .getTheme(menu.nodes.iconTheme)
-        .createDiv(menu.nodes.icon).outerHTML,
+        .getTheme(menu.root.iconTheme)
+        .createDiv(menu.root.icon).outerHTML,
       index,
     }));
 
@@ -211,15 +211,15 @@ export class MenusTab extends DropTargetTab {
     let name = 'New Menu';
     let i = 1;
 
-    if (this.menuSettings.menus.find((menu) => menu.nodes.name === name)) {
+    if (this.menuSettings.menus.find((menu) => menu.root.name === name)) {
       do {
         name = `New Menu ${i}`;
         i++;
-      } while (this.menuSettings.menus.find((menu) => menu.nodes.name === name));
+      } while (this.menuSettings.menus.find((menu) => menu.root.name === name));
     }
 
     const newMenu: IMenu = {
-      nodes: {
+      root: {
         type: 'submenu',
         name,
         icon,

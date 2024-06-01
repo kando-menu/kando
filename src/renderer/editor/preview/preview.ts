@@ -149,8 +149,8 @@ export class Preview extends EventEmitter {
     this.selectionChain = [];
 
     if (menu) {
-      this.computeItemAnglesRecursively(menu.nodes.children);
-      this.selectItem(menu.nodes);
+      this.computeItemAnglesRecursively(menu.root.children);
+      this.selectItem(menu.root);
     } else {
       this.hideOldMenuItems({ x: 0, y: 0 });
     }
