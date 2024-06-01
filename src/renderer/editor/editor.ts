@@ -244,7 +244,7 @@ export class Editor extends EventEmitter {
       // be saved to disc nor can they be cloned using the structured clone algorithm
       // which is used by Electron for IPC.
       this.menuSettings.menus.forEach((menu) => {
-        menu.nodes = toIMenuItem(menu.nodes);
+        menu.root = toIMenuItem(menu.root);
       });
 
       // Also the stash needs to be converted back to IMenuItem objects.

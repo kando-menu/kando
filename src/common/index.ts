@@ -107,11 +107,8 @@ export interface IMenuItem {
  * This interface is used to describe one of the configured menus in the settings file.
  */
 export interface IMenu {
-  /**
-   * The root item of the menu. This is called `nodes` for legacy reasons and should be
-   * renamed to `root` in the future.
-   */
-  nodes: IMenuItem;
+  /** The root item of the menu. */
+  root: IMenuItem;
 
   /**
    * The shortcut to open the menu. Something like 'Control+Space'.

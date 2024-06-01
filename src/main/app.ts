@@ -93,6 +93,9 @@ export class KandoApp {
 
     await this.backend.init();
 
+    // Try migrating settings from an old version of Kando.
+    this.migrateSettings();
+
     // We ensure that there is always a menu avaliable. If the user deletes all menus,
     // we create a new example menu when Kando is started the next time.
     if (this.menuSettings.get('menus').length === 0) {
@@ -153,7 +156,7 @@ export class KandoApp {
         if (typeof menu === 'string') {
           this.lastMenu = this.menuSettings
             .get('menus')
-            .find((m) => m.nodes.name === menu);
+            .find((m) => m.root.name === menu);
           if (!this.lastMenu) {
             throw new Error(`Menu "${menu}" not found.`);
           }
@@ -204,7 +207,7 @@ export class KandoApp {
         // Send the menu to the renderer process.
         this.window.webContents.send(
           'show-menu',
-          this.lastMenu.nodes,
+          this.lastMenu.root,
           menuPosition,
           windowSize
         );
@@ -318,7 +321,7 @@ export class KandoApp {
 
       const index = this.menuSettings
         .get('menus')
-        .findIndex((m) => m.nodes.name === this.lastMenu.nodes.name);
+        .findIndex((m) => m.root.name === this.lastMenu.root.name);
 
       return Math.max(index, 0);
     });
@@ -375,7 +378,7 @@ export class KandoApp {
 
       try {
         // Find the selected item.
-        item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
+        item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
         // If the action is not delayed, we execute it immediately.
         executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
@@ -474,7 +477,7 @@ export class KandoApp {
           ? menu.shortcut
           : menu.shortcutID) || 'Not Bound';
       template.push({
-        label: `${menu.nodes.name} (${trigger})`,
+        label: `${menu.root.name} (${trigger})`,
         click: () => this.showMenu(menu),
       });
     }
@@ -619,6 +622,23 @@ export class KandoApp {
       });
 
       notification.show();
+    }
+  }
+
+  /**
+   * This migrates settings from an old version of Kando to the current version. This
+   * method is called when the app is started.
+   */
+  private migrateSettings() {
+    // Up to Kando 0.9.0, the `root` property of the menu was called `nodes`.
+    const menus = this.menuSettings.getMutable('menus');
+    for (const menu of menus) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const oldMenu = menu as any;
+      if (oldMenu.nodes) {
+        menu.root = oldMenu.nodes as IMenuItem;
+        delete oldMenu.nodes;
+      }
     }
   }
 }

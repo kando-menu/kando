@@ -241,7 +241,7 @@ export class Properties extends EventEmitter {
     // settings.
     if (this.activeMenu) {
       this.updateMenuSettingsWidgets(menu);
-      this.updateItemSettingsWidgets(menu.nodes);
+      this.updateItemSettingsWidgets(menu.root);
       this.menuSettings.classList.remove('hidden');
       return;
     }
@@ -252,7 +252,7 @@ export class Properties extends EventEmitter {
     await this.hideSettingsWrapper();
 
     this.updateMenuSettingsWidgets(menu);
-    this.updateItemSettingsWidgets(menu.nodes);
+    this.updateItemSettingsWidgets(menu.root);
     this.menuSettings.classList.remove('hidden');
 
     await this.updateSettingsWrapperSize();

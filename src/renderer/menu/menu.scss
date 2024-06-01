@@ -161,8 +161,8 @@
 
   // Connectors --------------------------------------------------------------------------
 
-  // The connectors between the nodes are drawn as divs with a fixed height. Their width
-  // and rotation is computed in JavaScript and then applied as inline styles.
+  // The connectors between the menu items are drawn as divs with a fixed height. Their
+  // width and rotation is computed in JavaScript and then applied as inline styles.
   .connector {
     transition: $menu-transition;
     position: absolute;
