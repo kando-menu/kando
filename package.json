@@ -8,6 +8,7 @@
   "scripts": {
     "preinstall": "run-script-os",
     "preinstall:linux": "npm pkg delete productName",
+    "preinstall:default": "",
     "install": "cmake-js compile",
     "start": "electron-forge start",
     "package": "electron-forge package",
