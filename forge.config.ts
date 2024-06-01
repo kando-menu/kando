@@ -31,7 +31,6 @@ const config: ForgeConfig = {
     }),
     new MakerDMG({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_dmg.MakerDMGConfig.html
-      name: 'Kando',
     }),
     new MakerRpm({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
