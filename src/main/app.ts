@@ -355,9 +355,16 @@ export class KandoApp {
     // Move the mouse pointer. This is used to move the pointer to the center of the
     // menu when the menu is opened too close to the screen edge.
     ipcMain.on('move-pointer', (event, dist) => {
-      const bounds = this.window.getBounds();
-      const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
-      const scale = display.scaleFactor;
+      let scale = 1;
+
+      // On macOS, the pointer movement seems to be scaled automatically. We have to
+      // scale the movement manually on other platforms.
+      if (os.platform() !== 'darwin') {
+        const bounds = this.window.getBounds();
+        const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
+        scale = display.scaleFactor;
+      }
+
       this.backend.movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
