@@ -132,6 +132,17 @@ This will create several packages in the `out/` directory.
 * On Linux, it will create Debian, an RPM and a portable zip archive.
 * On macOS, it will create a DMG file and a portable zip archive. If the environment variables `KANDO_OSX_SIGN` and `KANDO_OSX_NOTARIZE` are set to `true`, the build process will try to sign and notarize the application.
 
+### Platform Specific Notes
+
+#### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
+
+* A [pre-install script hook](https://github.com/kando-menu/kando/blob/main/package.json#L9) is used to remove the `productName` from the `package.json` file. This is the [only reliable way I have found](https://github.com/kando-menu/kando/issues/411) to make Electron use a lower-case config directory on Linux (`~/.config/kando`) and an upper-case application name ("Kando") on Windows and macOS. As a consequence, the `package.json` file will always contain changes after the build process. This is not a problem, but it may be confusing.
+* On some distributions, you may encounter the error `The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now` during build, you can fix it by running these commands:
+  ```bash
+  sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
+  sudo chown root node_modules/electron/dist/chrome-sandbox
+  ```
+
 <p align="center"><img src ="img/hr.svg" /></p>
 
 <p align="center">
