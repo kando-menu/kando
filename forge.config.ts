@@ -25,7 +25,6 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_squirrel.InternalOptions.SquirrelWindowsOptions.html
-      name: 'Kando',
     }),
     new MakerZIP({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_zip.MakerZIPConfig.html
