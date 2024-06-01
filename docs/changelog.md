@@ -29,6 +29,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Changed
 
+- **[BREAKING]** On Linux, all configuration files are now stored in `~/.config/kando/`. The directory now starts with **lowercase letter**! To migrate your configuration, simply move the `menus.json` file from the old location to the new one.
 - The sidebar tab "Tutorial" has been renamed to "Introduction". There will be real tutorials in the future.
 
 #### Removed
