@@ -69,7 +69,7 @@ There are two top-level JSON objects: `menus` contains a list of _Menu Descripti
 ```
 
 > [!TIP]
-> You can have a look at a complete example configuration [here](https://gist.github.com/Schneegans/ebd385030bb7e15aa24d73f23abb4b53)!
+> You can have a look at a the example menu configurations [here](https://github.com/kando-menu/kando/tree/main/src/main/example-menus)!
 
 
 #### Menu Descriptions
