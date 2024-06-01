@@ -134,8 +134,9 @@ This will create several packages in the `out/` directory.
 
 ### Platform Specific Notes
 
-<img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> **Linux**:
-* On Linux, a [pre-install script hook](https://github.com/kando-menu/kando/blob/main/package.json#L9) is used to remove the `productName` from the `package.json` file. This is the [only reliable way I have found](https://github.com/kando-menu/kando/issues/411) to make Electron use a lower-case config directory on Linux (`~/.config/kando`) and an upper-case application name ("Kando") on Windows and macOS. As a consequence, the `package.json` file will always contain changes after the build process. This is not a problem, but it may be confusing.
+#### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
+
+* A [pre-install script hook](https://github.com/kando-menu/kando/blob/main/package.json#L9) is used to remove the `productName` from the `package.json` file. This is the [only reliable way I have found](https://github.com/kando-menu/kando/issues/411) to make Electron use a lower-case config directory on Linux (`~/.config/kando`) and an upper-case application name ("Kando") on Windows and macOS. As a consequence, the `package.json` file will always contain changes after the build process. This is not a problem, but it may be confusing.
 * On some distributions, you may encounter the error `The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now` during build, you can fix it by running these commands:
   ```bash
   sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
