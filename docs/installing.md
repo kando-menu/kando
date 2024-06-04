@@ -19,6 +19,9 @@ You can either download a portable zip archive or an installer.
 If you choose the portable version, you can just extract the archive and run the `kando` executable.
 If you choose the installer, you will find Kando in your start menu after the installation.
 
+> [!TIP]
+> After downloading, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
+
 ### Running Kando from the Command Line
 
 If you installed Kando with an installer, you can just run it from the start menu.
@@ -91,12 +94,14 @@ On **RPM-based** distributions you can install them with:
 sudo dnf install nodejs cmake libX11-devel libXtst-devel wayland-devel libxkbcommon-devel
 ```
 
-On GNOME under Wayland you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
 </details>
 
 ---
 
 ### :rocket: Running the Prototype
+
+> [!TIP]
+> Make sure to also read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
 
 Once these dependencies are installed, navigate into the Kando directory, then only these two commands are required:
 
@@ -132,11 +137,27 @@ This will create several packages in the `out/` directory.
 * On Linux, it will create Debian, an RPM and a portable zip archive.
 * On macOS, it will create a DMG file and a portable zip archive. If the environment variables `KANDO_OSX_SIGN` and `KANDO_OSX_NOTARIZE` are set to `true`, the build process will try to sign and notarize the application.
 
-### Platform Specific Notes
+## Platform-Specific Notes
 
-#### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
+### <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS
 
-* A [pre-install script hook](https://github.com/kando-menu/kando/blob/main/package.json#L9) is used to remove the `productName` from the `package.json` file. This is the [only reliable way I have found](https://github.com/kando-menu/kando/issues/411) to make Electron use a lower-case config directory on Linux (`~/.config/kando`) and an upper-case application name ("Kando") on Windows and macOS. As a consequence, the `package.json` file will always contain changes after the build process. This is not a problem, but it may be confusing.
+* On macOS, you will have to grant Kando Accessibility and Screen Recording permissions in the system settings. Accessibility permissions are required to simulate key presses and move the mouse cursor. Screen Recording permissions are required to get the name of the currently focused window.
+
+### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
+
+* On **GNOME / Wayland** you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
+* On **KDE / Wayland** and **Hyprland** you cannot directly bind global shortcuts. Instead, you specify a shortcut ID in the editor and bind a key combination in the desktop environment settings. On KDE you find your given shortcut ID under the KWin section in the global shortcuts settings. On Hyprland you can bind the shortcut using `bind = CTRL, Space, global, kando:<trigger-id>` for instance.
+* Per default, Kando runs under **XWayland** on Wayland compositors. If you want to run it natively, you can set the environment variable `ELECTRON_OZONE_PLATFORM_HINT=wayland` before starting Kando. This is not yet fully tested but should work on most distributions.
+* On **Hyprland**, you will need some window rules for Kando:
+  ```
+  windowrule = noblur, kando 
+  windowrule = size 100% 100%, kando
+  windowrule = noborder, kando
+  windowrule = noanim, kando
+  windowrule = float, kando
+  windowrule = pin, kando
+  ```
+* During compilation, a [pre-install script hook](https://github.com/kando-menu/kando/blob/main/package.json#L9) is used to remove the `productName` from the `package.json` file. This is the [only reliable way I have found](https://github.com/kando-menu/kando/issues/411) to make Electron use a lower-case config directory on Linux (`~/.config/kando`) and an upper-case application name ("Kando") on Windows and macOS. As a consequence, the `package.json` file will always contain changes after the build process. This is not a problem, but it may be confusing.
 * On some distributions, you may encounter the error `The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now` during build, you can fix it by running these commands:
   ```bash
   sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
