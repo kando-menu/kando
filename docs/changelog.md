@@ -30,6 +30,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Changed
 
 - **[BREAKING]** On Linux, all configuration files are now stored in `~/.config/kando/`. The directory now starts with **lowercase letter**! To migrate your configuration, simply move the `menus.json` file from the old location to the new one.
+- Kando is now shown on all workspaces.
 - The sidebar tab "Tutorial" has been renamed to "Introduction". There will be real tutorials in the future.
 - The top-level menu item in the configuration file is now called `"root"` instead of `"nodes"`. This is more consistent with the source code. Your settings file will be automatically migrated when you start Kando.
 
