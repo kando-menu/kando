@@ -93,8 +93,12 @@ contextBridge.exposeInMainWorld('api', {
    * @param callback This callback will be called with the root item of the menu and the
    *   position of the mouse cursor.
    */
-  showMenu: function (callback: (root: IMenuItem, pos: IVec2) => void) {
-    ipcRenderer.on('show-menu', (event, root, pos) => callback(root, pos));
+  showMenu: function (
+    callback: (root: IMenuItem, menuPosition: IVec2, windowSize: IVec2) => void
+  ) {
+    ipcRenderer.on('show-menu', (event, root, menuPosition, windowSize) =>
+      callback(root, menuPosition, windowSize)
+    );
   },
 
   /**

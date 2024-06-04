@@ -83,15 +83,15 @@ export class TrashTab extends DropTargetTab {
       const menu = thing as IMenu;
 
       // If the item is a menu, we need to extract the name, the shortcut and the icon.
-      if (menu.nodes) {
+      if (menu.root) {
         return {
           isMenu: true,
-          name: menu.nodes.name,
+          name: menu.root.name,
           description:
             (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
           icon: IconThemeRegistry.getInstance()
-            .getTheme(menu.nodes.iconTheme)
-            .createDiv(menu.nodes.icon).outerHTML,
+            .getTheme(menu.root.iconTheme)
+            .createDiv(menu.root.icon).outerHTML,
           index,
         };
       }

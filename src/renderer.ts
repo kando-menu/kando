@@ -25,8 +25,8 @@ window.api.getBackendInfo().then((info) => {
   const editor = new Editor(document.getElementById('kando-editor'), info);
 
   // Show the menu when the main process requests it.
-  window.api.showMenu((root, pos) => {
-    menu.show(root, pos);
+  window.api.showMenu((root, menuPosition, windowSize) => {
+    menu.show(root, menuPosition, windowSize);
     editor.show();
   });
 

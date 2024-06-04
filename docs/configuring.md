@@ -26,7 +26,7 @@ Depending on your platform, the configuration files are located in different dir
 
 * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/Kando/`
-* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/Kando/`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/`
 
 **📝 JSON Format**: Both configuration files are JSON files. You can edit them with any text editor.
 
@@ -69,7 +69,7 @@ There are two top-level JSON objects: `menus` contains a list of _Menu Descripti
 ```
 
 > [!TIP]
-> You can have a look at a complete example configuration [here](https://gist.github.com/Schneegans/ebd385030bb7e15aa24d73f23abb4b53)!
+> You can have a look at a the example menu configurations [here](https://github.com/kando-menu/kando/tree/main/src/main/example-menus)!
 
 
 #### Menu Descriptions
@@ -81,12 +81,12 @@ Property | Default Value | Description
 -------- | ------------- | -----------
 `shortcut` | `""` | The shortcut which opens the menu. This is a string which can contain multiple keys separated by `+`. For example, `"Ctrl+Shift+K"` or `"Cmd+Shift+K"`. If empty, the menu will not have a shortcut. See [Menu Shortcuts vs. Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details.
 `shortcutID` | `""` | On some platforms, Kando can not bind shortcuts directly. In this case, you can use this property to assign an ID which can be used in the global shortcut configuration of your desktop environment. This should be lowercase and contain only ASCII characters and dashes. For example, `"main-trigger"`.
-`nodes` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
+`root` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
 
 #### Menu Item Descriptions
 
-The layout of the menu is described by a tree of nodes.
+The layout of the menu is described by a tree of menu items.
 Each menu item is a JSON object with the following properties:
 
 Property | Default Value | Description
@@ -94,17 +94,17 @@ Property | Default Value | Description
 `name` | `"undefined"` | The name of the menu item. This is shown in the center of the menu when the item is hovered. The name of the root item defines the name of the menu.
 `iconTheme` | `""` | For now, this can either be `"material-symbols-rounded"`, `"simple-icons"`, `"simple-icons-colored"`, or `"emoji"`. With the first, you can use icons from [Google's Material Symbols](https://fonts.google.com/icons). With the second or third, you can use any icon from [Simple Icons](https://simpleicons.org/).
 `icon` | `""` | The name of the icon from the given icon theme or an emoji like `"🚀"`.
-`angle` | _auto_ | If given, this defines the angle of the menu item in degrees. If this is not given, the angle is calculated automatically. 0° means that the item is at the top of the menu, 90° means that the item is on the right side of the menu, and so on. All sibling nodes are evenly distributed around the nodes with given angles.
+`angle` | _auto_ | If given, this defines the angle of the menu item in degrees. If this is not given, the angle is calculated automatically. 0° means that the item is at the top of the menu, 90° means that the item is on the right side of the menu, and so on. All sibling items are evenly distributed around the items with given angles.
 `type` | `"submenu"` | The type of the menu item. There are several types available. See below for details.
 `data` | `{}` | Depending on the type of the item, this can contain additional data. See below for details.
-`children` | `[]` | If the menu item is a submenu, this contains a list of child nodes. See below for details.
+`children` | `[]` | If the menu item is a submenu, this contains a list of child items. See below for details.
 
 #### Menu Item Types
 
 For now, the `type` property of a menu item can be one of the following values.
 New types will be added in the future.
 
-**`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the menu item must contain a list of child nodes.
+**`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the menu item must contain a list of child items.
 
 **`"command"`:** This type is used to execute a shell command. The `data` property of the menu item must contain a `command` property which contains the shell command to execute. For instance, this menu item will open Inkscape on Linux:
 ```json

@@ -27,8 +27,8 @@ export class Sidebar {
   private visible = true;
 
   /**
-   * The videos are the tutorial videos which are shown in the tutorial tab. We store them
-   * here so that we can pause and play them when the tab is shown and hidden.
+   * The videos are the introduction videos which are shown in the introduction tab. We
+   * store them here so that we can pause and play them when the tab is shown and hidden.
    */
   private videos: HTMLVideoElement[] = [];
 
@@ -45,7 +45,7 @@ export class Sidebar {
   constructor() {
     this.loadContent();
     this.initVisibility();
-    this.initTutorialVideos();
+    this.initIntroductionVideos();
     this.initButtons();
   }
 
@@ -83,7 +83,7 @@ export class Sidebar {
 
   /** This method loads the HTML content of the sidebar. */
   private loadContent() {
-    const tutorial = require('./templates/tutorial-tab.hbs');
+    const introduction = require('./templates/introduction-tab.hbs');
     const buttonTab = require('./templates/button-tab.hbs');
     const sidebar = require('./templates/sidebar.hbs');
 
@@ -93,11 +93,11 @@ export class Sidebar {
       areaId: 'kando-editor-sidebar-area',
       tabs: [
         {
-          id: 'sidebar-tab-tutorial',
+          id: 'sidebar-tab-introduction',
           icon: 'school',
-          title: 'Tutorial',
-          content: tutorial({
-            id: 'tutorial-slides',
+          title: 'Introduction',
+          content: introduction({
+            id: 'introduction-slides',
             slides: [
               {
                 heading: 'Click Anywhere:',
@@ -172,45 +172,47 @@ export class Sidebar {
   }
 
   /**
-   * This method initializes the tutorial videos. The videos are loaded from the assets
-   * folder and played when the tutorial tab is shown. When the tab is hidden, the last
-   * visible video is paused. Also, only the video of the currently visible slide is
-   * played.
+   * This method initializes the introduction videos. The videos are loaded from the
+   * assets folder and played when the introduction tab is shown. When the tab is hidden,
+   * the last visible video is paused. Also, only the video of the currently visible slide
+   * is played.
    */
-  private initTutorialVideos() {
-    // Add the tutorial videos. We do this here because else webpack will not pick them up.
-    this.container.querySelector('#sidebar-tab-tutorial').addEventListener(
+  private initIntroductionVideos() {
+    // Add the introduction videos. We do this here because else webpack will not pick them up.
+    this.container.querySelector('#sidebar-tab-introduction').addEventListener(
       'show.bs.collapse',
       () => {
         for (let i = 0; i < 5; ++i) {
           this.videos[i] = this.container.querySelector(
-            `#tutorial-slides-video-${i}`
+            `#introduction-slides-video-${i}`
           ) as HTMLVideoElement;
-          this.videos[i].src = require(`../../../../assets/videos/tutorial-${i + 1}.mp4`);
+          this.videos[i].src = require(
+            `../../../../assets/videos/introduction-${i + 1}.mp4`
+          );
           this.videos[i].loop = true;
         }
       },
       { once: true }
     );
 
-    // Start playing a video when the tutorial tab is shown.
+    // Start playing a video when the introduction tab is shown.
     this.container
-      .querySelector('#sidebar-tab-tutorial')
+      .querySelector('#sidebar-tab-introduction')
       .addEventListener('shown.bs.collapse', () => {
         this.videos[this.lastVisibleVideo].currentTime = 0;
         this.videos[this.lastVisibleVideo].play();
       });
 
-    // Pause the last visible video when the tutorial tab is hidden.
+    // Pause the last visible video when the introduction tab is hidden.
     this.container
-      .querySelector('#sidebar-tab-tutorial')
+      .querySelector('#sidebar-tab-introduction')
       .addEventListener('hidden.bs.collapse', () => {
         this.videos[this.lastVisibleVideo].pause();
       });
 
     // Start playing a video when its slide is shown and pause the last visible video.
     this.container
-      .querySelector('#sidebar-tab-tutorial-content')
+      .querySelector('#sidebar-tab-introduction-content')
       .addEventListener('slide.bs.carousel', (e) => {
         this.videos[this.lastVisibleVideo].pause();
         this.videos[e.to].currentTime = 0;

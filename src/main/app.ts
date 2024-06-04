@@ -93,6 +93,9 @@ export class KandoApp {
 
     await this.backend.init();
 
+    // Try migrating settings from an old version of Kando.
+    this.migrateSettings();
+
     // We ensure that there is always a menu avaliable. If the user deletes all menus,
     // we create a new example menu when Kando is started the next time.
     if (this.menuSettings.get('menus').length === 0) {
@@ -148,33 +151,12 @@ export class KandoApp {
           clearTimeout(this.hideTimeout);
         }
 
-        // Move the window to the monitor which contains the pointer.
-        const workarea = screen.getDisplayNearestPoint({
-          x: info.pointerX,
-          y: info.pointerY,
-        }).workArea;
-
-        this.window.setBounds({
-          x: workarea.x,
-          y: workarea.y,
-          width: workarea.width + 1,
-          height: workarea.height + 1,
-        });
-
-        // Later, we will support application-specific menus. For now, we just print
-        // the currently focused window.
-        if (info.appName) {
-          console.log(`Currently focused: ${info.appName} (${info.windowName})`);
-        } else {
-          console.log('Currently no window is focused.');
-        }
-
         // If the menu is a string, we need to find the corresponding menu in the
         // settings.
         if (typeof menu === 'string') {
           this.lastMenu = this.menuSettings
             .get('menus')
-            .find((m) => m.nodes.name === menu);
+            .find((m) => m.root.name === menu);
           if (!this.lastMenu) {
             throw new Error(`Menu "${menu}" not found.`);
           }
@@ -182,17 +164,53 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
+        // Move the window to the monitor which contains the pointer.
+        const workarea = screen.getDisplayNearestPoint({
+          x: info.pointerX,
+          y: info.pointerY,
+        }).workArea;
+
+        // On Windows, we have to show the window before we can move it. Otherwise, the
+        // window will not be moved to the correct monitor.
+        if (process.platform === 'win32') {
+          this.showWindow();
+        }
+
+        // Some platforms require the window to be one pixel larger than the work area.
+        // Else there will be a small gap between the window and the screen edge.
+        this.window.setBounds({
+          x: workarea.x,
+          y: workarea.y,
+          width: workarea.width + 1,
+          height: workarea.height + 1,
+        });
+
+        // On all platforms except Windows, we show the window after we moved it.
+        if (process.platform !== 'win32') {
+          this.showWindow();
+        }
+
         // Usually, the menu is shown at the pointer position. However, if the menu is
         // centered, we show it in the center of the screen.
-        const pos = {
+        const menuPosition = {
           x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
           y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
         };
 
-        // Send the menu to the renderer process.
-        this.window.webContents.send('show-menu', this.lastMenu.nodes, pos);
+        // We have to pass the size of the window to the renderer because window.innerWidth
+        // and window.innerHeight are not reliable when the window has just been resized.
+        const windowSize = {
+          x: workarea.width,
+          y: workarea.height,
+        };
 
-        this.showWindow();
+        // Send the menu to the renderer process.
+        this.window.webContents.send(
+          'show-menu',
+          this.lastMenu.root,
+          menuPosition,
+          windowSize
+        );
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
@@ -306,7 +324,7 @@ export class KandoApp {
 
       const index = this.menuSettings
         .get('menus')
-        .findIndex((m) => m.nodes.name === this.lastMenu.nodes.name);
+        .findIndex((m) => m.root.name === this.lastMenu.root.name);
 
       return Math.max(index, 0);
     });
@@ -340,12 +358,17 @@ export class KandoApp {
     // Move the mouse pointer. This is used to move the pointer to the center of the
     // menu when the menu is opened too close to the screen edge.
     ipcMain.on('move-pointer', (event, dist) => {
-      this.backend.movePointer(Math.floor(dist.x), Math.floor(dist.y));
-    });
+      let scale = 1;
 
-    // Print some messages when the user hovers or selects an item.
-    ipcMain.on('hover-item', (event, path) => {
-      console.log('Hover item: ' + path);
+      // On macOS, the pointer movement seems to be scaled automatically. We have to
+      // scale the movement manually on other platforms.
+      if (os.platform() !== 'darwin') {
+        const bounds = this.window.getBounds();
+        const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
+        scale = display.scaleFactor;
+      }
+
+      this.backend.movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
     // When the user selects an item, we execute the corresponding action. Depending on
@@ -365,7 +388,7 @@ export class KandoApp {
 
       try {
         // Find the selected item.
-        item = this.getMenuItemAtPath(this.lastMenu.nodes, path);
+        item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
         // If the action is not delayed, we execute it immediately.
         executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
@@ -380,8 +403,6 @@ export class KandoApp {
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
       this.hideTimeout = setTimeout(() => {
-        console.log('Select item: ' + path);
-
         this.hideWindow();
         this.hideTimeout = null;
 
@@ -396,7 +417,6 @@ export class KandoApp {
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
       this.hideTimeout = setTimeout(() => {
-        console.log('Cancel selection.');
         this.hideWindow();
         this.hideTimeout = null;
       }, 300);
@@ -467,7 +487,7 @@ export class KandoApp {
           ? menu.shortcut
           : menu.shortcutID) || 'Not Bound';
       template.push({
-        label: `${menu.nodes.name} (${trigger})`,
+        label: `${menu.root.name} (${trigger})`,
         click: () => this.showMenu(menu),
       });
     }
@@ -576,56 +596,23 @@ export class KandoApp {
     }
   }
 
-  /** This creates an example menu which can be used for testing. */
-  private createExampleMenu() {
-    const root: IMenuItem = {
-      type: 'submenu',
-      name: 'Prototype Menu',
-      icon: 'open_with',
-      iconTheme: 'material-symbols-rounded',
-      children: [],
-    };
+  /**
+   * Depending on the operating system, we create a different example menu. The structure
+   * of the menu is similar on all platforms, but the shortcuts and commands are
+   * different.
+   *
+   * All menu configurations are stored in the `example-menus` directory.
+   */
+  private createExampleMenu(): IMenu {
+    if (process.platform === 'win32') {
+      return require('./example-menus/windows.json');
+    }
 
-    // This is currently used to create the test menu. It defines the number of children
-    // per level. The first number is the number of children of the root item, the second
-    // number is the number of children of each child menu item and so on.
-    const CHILDREN_PER_LEVEL = [8, 7, 7];
+    if (process.platform === 'darwin') {
+      return require('./example-menus/macos.json');
+    }
 
-    const TEST_ICONS = [
-      'play_circle',
-      'public',
-      'arrow_circle_right',
-      'terminal',
-      'settings',
-      'apps',
-      'arrow_circle_left',
-      'fullscreen',
-    ];
-
-    const addChildren = (parent: IMenuItem, name: string, level: number) => {
-      if (level < CHILDREN_PER_LEVEL.length) {
-        parent.children = [];
-        for (let i = 0; i < CHILDREN_PER_LEVEL[level]; ++i) {
-          const item: IMenuItem = {
-            type: level < CHILDREN_PER_LEVEL.length - 1 ? 'submenu' : 'empty',
-            name: `${name} ${i}`,
-            icon: TEST_ICONS[i % TEST_ICONS.length],
-            iconTheme: 'material-symbols-rounded',
-          };
-          parent.children.push(item);
-          addChildren(item, item.name, level + 1);
-        }
-      }
-    };
-
-    addChildren(root, 'Item', 0);
-
-    return {
-      nodes: root,
-      shortcut: 'Control+Space',
-      shortcutID: 'prototype-menu',
-      centered: false,
-    };
+    return require('./example-menus/linux.json');
   }
 
   /**
@@ -645,6 +632,23 @@ export class KandoApp {
       });
 
       notification.show();
+    }
+  }
+
+  /**
+   * This migrates settings from an old version of Kando to the current version. This
+   * method is called when the app is started.
+   */
+  private migrateSettings() {
+    // Up to Kando 0.9.0, the `root` property of the menu was called `nodes`.
+    const menus = this.menuSettings.getMutable('menus');
+    for (const menu of menus) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const oldMenu = menu as any;
+      if (oldMenu.nodes) {
+        menu.root = oldMenu.nodes as IMenuItem;
+        delete oldMenu.nodes;
+      }
     }
   }
 }
