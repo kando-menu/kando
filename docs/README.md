@@ -14,6 +14,7 @@ If you want to improve this documentation, please [open a pull request](https://
 
 ## General Information
 
+* [Code of Conduct](code-of-conduct.md)
 * [Changelog](changelog.md)
 * [Contribution Guidelines](contributing.md)
 
