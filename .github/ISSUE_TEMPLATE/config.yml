@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+contact_links:
+  - name: Kando's Discord Server
+    url: https://discord.gg/hZwbVSDkhy
+    about: Join our Discord Server to ask any Kando-related question!
+  - name: Kando's GitHub Discussions
+    url: https://github.com/orgs/kando-menu/discussions
+    about: You can also get help here.
