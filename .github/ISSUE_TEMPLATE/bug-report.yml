@@ -1,0 +1,88 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+name: Bug Report
+description: File a bug report.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to help improving Kando!
+  - type: textarea
+    id: summary
+    attributes:
+      label: Short Summary
+      description: In one sentence, what is this issue about?
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Steps to Reproduce the Issue
+      description: Step by step, how can the problem be reproduced?
+      value: |
+        1. Open the editor by using the tray icon
+        2. Click on ...
+        3. ...
+        ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Kando Version
+      description: What version of Kando are you running?
+      placeholder: e.g. "v1.0.0" or "latest from main branch"
+    validations:
+      required: true
+  - type: dropdown
+    id: installation-mthod
+    attributes:
+      label: Installation Method
+      description: How did you install Kando?
+      multiple: true
+      options:
+        - Via an installer downloaded from a release on GitHub
+        - Via a portable zip archive downloaded from a release on GitHub
+        - Via a package manger
+        - Directly from the main branch
+        - Another method (specify in the comments below)
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Desktop Environment
+      description: On which desktop environment have you observed the issue?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - GNOME on Wayland
+        - GNOME on X11
+        - KDE on Wayland
+        - KDE on X11
+        - Hyprland
+        - Any other X11-based environment
+        - Any other Wayland-based environment
+        - Other (specify below)
+    validations:
+      required: true
+  - type: input
+    id: platform-version
+    attributes:
+      label: Environment Version
+      description: Which version of the OS / Desktop Environment / Linux Distribution are you running?
+      placeholder: e.g. "Windows 11" or "KDE Plasma 6.0 on Ubuntu 24.04"
+    validations:
+      required: true
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional Information
+      description: Use this to add any additional comments or logs which you think may be related.
+  - type: markdown
+    attributes:
+      value: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/kando-menu/kando/blob/main/docs/code-of-conduct.md).
