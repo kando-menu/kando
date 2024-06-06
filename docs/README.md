@@ -21,6 +21,7 @@ If you want to improve this documentation, please [open a pull request](https://
 ## Getting Started
 
 * [Installation](installing.md)
+* [Usage](usage.md)
 * [Configuration](configuring.md)
 
 <p align="center"><img src ="img/hr.svg" /></p>

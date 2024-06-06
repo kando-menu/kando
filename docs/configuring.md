@@ -372,7 +372,7 @@ Note that not all key codes are available on all platforms.
 
 <p align="center">
   <img src="img/nav-space.svg"/>
-  <a href="installing.md"><img src ="img/left-arrow.png"/> Building Kando</a>
+  <a href="usage.md"><img src ="img/left-arrow.png"/> Using Kando</a>
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
