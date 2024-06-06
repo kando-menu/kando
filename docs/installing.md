@@ -172,5 +172,6 @@ This will create several packages in the `out/` directory.
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
-  <a href="configuring.md">Configuring Kando <img src ="img/right-arrow.png"/></a>
+  <a href="usage.md">Using Kando <img src ="img/right-arrow.png"/></a>
+  <img src="img/nav-space.svg"/>
 </p>

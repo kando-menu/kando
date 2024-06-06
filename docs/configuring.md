@@ -7,6 +7,14 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Configuring Kando
 
+Kando comes with an example menu which you can use to get started.
+However, you should soon adapt the menu to your needs and create your own menus.
+
+When designing your own menus, keep the following tips in mind:
+* **Avoid too many items in a single menu.** Instead, create submenus. Eight items per menu is a good rule of thumb, and you should never have more than twelve items in a single menu.
+* **Deeply nested menus are not a problem.** Kando is designed to handle deeply nested menus. You can use the marking mode to quickly select items which are in subsubsubmenus.
+* **Use the fixed-angle locks to create a clean layout.** Even if you have an odd number of items, you can use fixed angles to lock items to the top, bottom, left, or right side of the menu.
+
 Kando comes with a graphical menu editor which allows you to create and edit your own menus.
 All configuration is stored JSON files which you can also edit manually.
 
@@ -18,6 +26,9 @@ There are three ways to open the menu editor:
 1. **When a menu is shown:** Click the gear icon in the bottom right corner of the screen.
 2. **From the system tray:** Right-click the Kando icon and select "Show Settings".
 3. **From the command line:** Run `kando --settings`.
+
+In the editor, you can create new menus, and edit existing menus.
+Drag new items from the toolbar to the menu preview, reorder them, and change their properties on the right side of the screen.
 
 ## The Configuration Files
 
@@ -361,7 +372,7 @@ Note that not all key codes are available on all platforms.
 
 <p align="center">
   <img src="img/nav-space.svg"/>
-  <a href="installing.md"><img src ="img/left-arrow.png"/> Building Kando</a>
+  <a href="usage.md"><img src ="img/left-arrow.png"/> Using Kando</a>
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
