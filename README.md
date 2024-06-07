@@ -4,7 +4,7 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=_3KkDnfu_CE"><img src="docs/img/video.jpg" /></a>
+  <a href="https://www.youtube.com/watch?v=vOE7EAlPUwE"><img src="docs/img/video.jpg" /></a>
 </p>
 
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
