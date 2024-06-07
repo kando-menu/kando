@@ -23,6 +23,11 @@ jobs:
         run: |
           sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
           npm install
+      - name: Fix Permissions
+        # Workaround for https://github.com/electron/electron/issues/17972
+        run: |
+          sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
+          sudo chown root node_modules/electron/dist/chrome-sandbox
       - name: Create Release
         run: |
           npm run make
