@@ -15,28 +15,20 @@ SPDX-License-Identifier: CC-BY-4.0
 [![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
 [![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
 
-**Kando** is a highly customizable pie menu for the desktop which allows you to create your own menus and actions.
-For instance, you can use it to control your music player, to open your favorite websites, or to simulate shortcuts.
-It is available for Windows, Linux and macOS.
+# What is Kando?
 
-# The Vision
+**Kando is a cross-platform pie menu for your desktop.** It offers an unconventional, fast, highly efficient, and fun way of interacting with your computer! You can use Kando to launch applications, simulate keyboard shortcuts, open files, and much more. 
 
-I am the developer of [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), which is a similar project but limited to the GNOME desktop.
-I have been working on Fly-Pie for more than 3 years now and I am very happy with the result.
-However, I have always wanted to create a similar application for the desktop in general.
-This is why I started this project.
+Kando is designed to be used with 🖱️ mouse, 🖊️ stylus, or 👆 touch input. If you have both hands at your keyboard most of the time, Kando is maybe not the right tool for you.
+
+You are welcome to join the 💬 [Discord server](https://discord.gg/hZwbVSDkhy) to discuss the project, ask questions, or just to hang out with other Kando enthusiasts!
 
 <p align="center">
   <img src="docs/img/kando.gif"/>
 </p>
 
-**Kando** is very similar to Fly-Pie in terms of interaction and appearance.
-At the same time, there are some major differences.
-You can read more in this [blog post](https://ko-fi.com/post/Introducing-Ken-Do-L3L7L0FQ2)!
 
-
-
-# Platform Support
+## Platform Support
 
 Implementing a menu like Kando in a cross-platform manner is not exactly easy.
 Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window has to be implemented differently on each platform.
@@ -74,24 +66,22 @@ Manual compilation is only required if you want to test the latest development v
 
 # :rocket: Getting Started
 
-For now, the prototype only comes with an example menu which does not do anything useful.
-However, if you want to get your hands dirty, you can already **create custom menus and actions by editing the config files**!
-This way, the prototype can do something useful already.
-You can read more about this in the [:memo: documentation](docs/configuring.md).
+Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
+This is great to get a first impression!
+To learn some basics about the interaction with Kando, you can have a look at the [:memo: documentation](docs/usage.md).
 
+Once you are familiar with the basics, you can start creating your own menus.
+There is some basic documentation on how to create your own menus in the [:memo: documentation](docs/configuring.md) as well!
 
 # :revolving_hearts: I want to contribute!
+
+**I am creating Kando out of sheer passion.** It is completely free, and I am not planning to monetize it in any way.
+But I would be very happy if you could support the project with creative ideas, code contributions, or by sharing it with your friends and followers! 💖
 
 [![kofi](https://img.shields.io/badge/Donate-on_Ko--fi-ff5e5b?logo=ko-fi)](https://ko-fi.com/schneegans)
 [![github](https://img.shields.io/badge/Donate-on_GitHub-purple?logo=github)](https://github.com/sponsors/Schneegans)
 [![paypal](https://img.shields.io/badge/Donate-on_PayPal-009cde?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=3F7UFL8KLVPXE)
 [![crypto](https://img.shields.io/badge/Donate-some_Crypto-f7931a?logo=bitcoin)](https://schneegans.cb.id)
-
-That's great!
-If you like the idea of Kando, you can help in many ways:
-* **Discuss the idea!** Tell me what you think about Kando and what features you would like to see. You can do this by [opening a discussion](https://github.com/kando-menu/kando/discussions) or by joining the [Discord server](https://discord.gg/hZwbVSDkhy).
-* **Spread the word!** Tell your friends about Kando and share the project on social media.
-* **Contribute code!** If you are a developer, you can help me with the implementation. I have never worked with Electron before, so I'm sure there is a lot of room for improvement. Please read the [contributing guidelines](docs/contributing.md) for more information!
 
 While direct contributions are the most awesome way to support the development, donations will encourage me to invest my spare time for developing free and open-source software.
 

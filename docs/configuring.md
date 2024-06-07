@@ -15,13 +15,12 @@ When designing your own menus, keep the following tips in mind:
 * **Deeply nested menus are not a problem.** Kando is designed to handle deeply nested menus. You can use the marking mode to quickly select items which are in subsubsubmenus.
 * **Use the fixed-angle locks to create a clean layout.** Even if you have an odd number of items, you can use fixed angles to lock items to the top, bottom, left, or right side of the menu.
 
-Kando comes with a graphical menu editor which allows you to create and edit your own menus.
-All configuration is stored JSON files which you can also edit manually.
 
 ## The Menu Editor
 
 <img src="img/settings-button.jpg" align="right" width="150px"></img>
 
+Kando comes with a graphical menu editor which allows you to create and edit your own menus.
 There are three ways to open the menu editor:
 1. **When a menu is shown:** Click the gear icon in the bottom right corner of the screen.
 2. **From the system tray:** Right-click the Kando icon and select "Show Settings".
@@ -32,7 +31,8 @@ Drag new items from the toolbar to the menu preview, reorder them, and change th
 
 ## The Configuration Files
 
-For now, Kando uses **two configuration files**. `config.json` stores the general configuration of the application and `menus.json` stores the configuration of the individual menus.
+All configuration is stored in **two configuration files** JSON files which you can also edit manually.
+`config.json` stores the general configuration of the application and `menus.json` stores the configuration of the individual menus.
 Depending on your platform, the configuration files are located in different directories:
 
 * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
