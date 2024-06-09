@@ -49,6 +49,15 @@ export interface IVec2 {
 }
 
 /**
+ * This interface holds the request made to Kando App either from external source or from
+ * a shortcut trigger.
+ */
+export interface IKandoRequest {
+  trigger: string;
+  name: string;
+}
+
+/**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
  * delay in milliseconds.
@@ -129,6 +138,21 @@ export interface IMenu {
    * pointer.
    */
   centered: boolean;
+
+  /**
+   * Conditions matched before showing off menu, one that has more conditions and met them
+   * all is selected.
+   */
+  conditions?: {
+    /** Regex to match for a window name */
+    windowName?: RegExp | string;
+
+    /** Regex to match for an application name. */
+    appName?: RegExp | string;
+
+    /** Cursor position to match ranging from 0.0 to 1.0 at the end of the screen */
+    cursorPosition?: { xMin: number; xMax: number; yMin: number; yMax: number };
+  };
 }
 
 /**
