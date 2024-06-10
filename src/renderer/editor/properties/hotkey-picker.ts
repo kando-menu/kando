@@ -25,8 +25,8 @@ import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
  * pressing the physical key "Z" which may be labeled differently on different keyboards
  * for example "Y" on a German keyboard.
  *
- * @fires changed - When the user selects a valid hotkey. The event contains the new
- *   hotkey as an argument.
+ * @fires change - When the user selects a valid hotkey. The event contains the new hotkey
+ *   as an argument.
  */
 export class HotkeyPicker extends TextPicker {
   /**
@@ -40,6 +40,7 @@ export class HotkeyPicker extends TextPicker {
       placeholder: 'Not Bound',
       recordingPlaceholder: 'Press a hotkey...',
       enableRecording: true,
+      resetOnBlur: false,
     });
   }
 

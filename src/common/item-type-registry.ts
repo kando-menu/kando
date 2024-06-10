@@ -12,6 +12,7 @@ import { IMenuItem } from './index';
 
 import { CommandItemType } from './item-types/command-item-type';
 import { HotkeyItemType } from './item-types/hotkey-item-type';
+import { MacroItemType } from './item-types/macro-item-type';
 import { SubmenuItemType } from './item-types/submenu-item-type';
 import { URIItemType } from './item-types/uri-item-type';
 
@@ -71,6 +72,7 @@ export class ItemTypeRegistry {
   private constructor() {
     this.types.set('command', new CommandItemType());
     this.types.set('hotkey', new HotkeyItemType());
+    this.types.set('macro', new MacroItemType());
     this.types.set('submenu', new SubmenuItemType());
     this.types.set('uri', new URIItemType());
   }

@@ -28,6 +28,7 @@ export class ShortcutIDPicker extends TextPicker {
       placeholder: 'Not Bound',
       recordingPlaceholder: '',
       enableRecording: false,
+      resetOnBlur: false,
     });
   }
 

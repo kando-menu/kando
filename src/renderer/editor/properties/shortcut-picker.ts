@@ -45,6 +45,7 @@ export class ShortcutPicker extends TextPicker {
       placeholder: 'Not Bound',
       recordingPlaceholder: 'Press a shortcut...',
       enableRecording: true,
+      resetOnBlur: true,
     });
 
     // Retrieve the keymap from the system.

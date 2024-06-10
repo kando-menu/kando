@@ -12,27 +12,27 @@ import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 /**
- * For this type of menu items, the user can configure a hotkey that will be simulated
- * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
- * after the Kando window has been closed.
+ * For this type of menu items, the user can configure a macro that will be typed when the
+ * item is clicked. If the `delayed` flag is set, the macro will be typed after the Kando
+ * window has been closed.
  */
 export interface IItemData {
-  hotkey: string;
+  macro: string;
   delayed: boolean;
 }
 
-/** This class provides meta information for menu items that simulate a hotkey. */
-export class HotkeyItemType implements IItemType {
+/** This class provides meta information for menu items that simulate a macro. */
+export class MacroItemType implements IItemType {
   get hasChildren(): boolean {
     return false;
   }
 
   get defaultName(): string {
-    return 'Simulate Hotkey';
+    return 'Simulate Macro';
   }
 
   get defaultIcon(): string {
-    return 'keyboard_external_input';
+    return 'keyboard_keys';
   }
 
   get defaultIconTheme(): string {
@@ -41,24 +41,24 @@ export class HotkeyItemType implements IItemType {
 
   get defaultData(): IItemData {
     return {
-      hotkey: '',
+      macro: '',
       delayed: false,
     };
   }
 
   get genericDescription(): string {
-    return 'Presses a hotkey.';
+    return 'Types a keyboard macro.';
   }
 
   getDescription(item: IMenuItem): string {
     const data = item.data as IItemData;
-    if (!data.hotkey) {
+    if (!data.macro) {
       return 'Not configured.';
     }
 
     // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and
-    // "Meta" to make the hotkey more readable.
-    return data.hotkey
+    // "Meta" to make the macro more readable. We also shorten the up and down events.
+    return data.macro
       .replace('ControlLeft', 'Ctrl')
       .replace('ControlRight', 'Ctrl')
       .replace('ShiftLeft', 'Shift')
@@ -67,6 +67,8 @@ export class HotkeyItemType implements IItemType {
       .replace('AltRight', 'Alt')
       .replace('MetaLeft', 'Meta')
       .replace('MetaRight', 'Meta')
+      .replace(':up', '↑')
+      .replace(':down', '↓')
       .replace(/\+/g, ' + ');
   }
 }
