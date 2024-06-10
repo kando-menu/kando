@@ -32,7 +32,7 @@ export class HotkeyItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'keyboard';
+    return 'keyboard_external_input';
   }
 
   get defaultIconTheme(): string {
@@ -47,7 +47,7 @@ export class HotkeyItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return 'Simulates key presses.';
+    return 'Presses a hotkey.';
   }
 
   getDescription(item: IMenuItem): string {
