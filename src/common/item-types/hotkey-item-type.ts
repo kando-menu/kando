@@ -51,6 +51,24 @@ export class HotkeyItemType implements IItemType {
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).hotkey || 'Not configured.';
+    const data = item.data as IItemData;
+    if (!data.hotkey) {
+      return 'Not configured.';
+    }
+
+    // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and
+    // "Meta". There is also an "ArrowLeft" and "ArrowRight" key, but we do not want to
+    // remove the "Left" and "Right" suffixes from them. So this is a bit longer than
+    // expected.
+    return data.hotkey
+      .replace('ControlLeft', 'Ctrl')
+      .replace('ControlRight', 'Ctrl')
+      .replace('ShiftLeft', 'Shift')
+      .replace('ShiftRight', 'Shift')
+      .replace('AltLeft', 'Alt')
+      .replace('AltRight', 'Alt')
+      .replace('MetaLeft', 'Meta')
+      .replace('MetaRight', 'Meta')
+      .replace(/\+/g, ' + ');
   }
 }

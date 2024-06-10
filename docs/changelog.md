@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Changed
+
+- The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
+
 ## [Kando 1.0.0](https://github.com/kando-menu/kando/releases/tag/v1.0.0)
 
 <a href="https://www.youtube.com/watch?v=vOE7EAlPUwE">
