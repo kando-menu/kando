@@ -26,7 +26,7 @@ export abstract class TextPicker extends EventEmitter {
   private container: HTMLElement = null;
 
   /** The input field for directly editing the shortcut. */
-  protected input: HTMLInputElement = null;
+  protected input: HTMLTextAreaElement = null;
 
   /**
    * Creates a new TextPicker. You must call getContainer() to get the container which
@@ -37,6 +37,7 @@ export abstract class TextPicker extends EventEmitter {
   constructor(options: {
     label: string;
     hint: string;
+    lines: number;
     placeholder: string;
     recordingPlaceholder: string;
     enableRecording: boolean;
@@ -54,11 +55,12 @@ export abstract class TextPicker extends EventEmitter {
       hint: options.hint,
       placeholder: options.placeholder,
       recordButton: options.enableRecording,
+      lines: options.lines,
     });
 
     // Validate the input field when the user types something. If the input is valid, we
     // emit a 'change' event.
-    this.input = this.container.querySelector('input');
+    this.input = this.container.querySelector('textarea');
     this.input.addEventListener('input', () => {
       const value = this.normalizeInput(this.input.value);
       if (this.isValid(value)) {

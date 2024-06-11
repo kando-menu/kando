@@ -29,6 +29,7 @@ export class MacroPicker extends TextPicker {
     super({
       label: 'Macro',
       hint: 'This will be simulated.',
+      lines: 5,
       placeholder: 'Not Bound',
       recordingPlaceholder: 'Press the keys...',
       enableRecording: true,

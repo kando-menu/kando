@@ -37,6 +37,7 @@ export class HotkeyPicker extends TextPicker {
     super({
       label: 'Hotkey',
       hint: 'This will be simulated.',
+      lines: 1,
       placeholder: 'Not Bound',
       recordingPlaceholder: 'Press a hotkey...',
       enableRecording: true,

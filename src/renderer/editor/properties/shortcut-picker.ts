@@ -42,6 +42,7 @@ export class ShortcutPicker extends TextPicker {
     super({
       label: 'Shortcut',
       hint: 'This will open the menu.',
+      lines: 1,
       placeholder: 'Not Bound',
       recordingPlaceholder: 'Press a shortcut...',
       enableRecording: true,

@@ -37,28 +37,33 @@
   overflow-y: auto;
   overflow-x: hidden;
 
-  &::-webkit-scrollbar {
-    width: 10px;
-    cursor: pointer;
+  .scrollbox-content {
+    margin: 1rem 0;
+    padding-right: 1rem;
   }
 
   &::-webkit-scrollbar-track {
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
     margin: 1rem 0;
   }
+}
 
-  &::-webkit-scrollbar-thumb {
+#kando-editor {
+  *::-webkit-scrollbar {
+    width: 10px;
+    cursor: pointer;
+  }
+
+  *::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  *::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
   }
 
-  &::-webkit-scrollbar-thumb:hover {
+  *::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.9);
-  }
-
-  .scrollbox-content {
-    margin: 1rem 0;
-    padding-right: 1rem;
   }
 }
