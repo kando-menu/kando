@@ -123,6 +123,7 @@ export abstract class TextPicker extends EventEmitter {
         const complete = this.recordInput(event);
 
         if (this.isValid(this.input.value)) {
+          this.input.classList.remove('invalid');
           this.emit('change', this.input.value);
         }
 

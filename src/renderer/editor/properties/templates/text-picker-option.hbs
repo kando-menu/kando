@@ -10,16 +10,18 @@
 }}
 
 <div class='d-flex mt-3'>
-  <div class="flex-grow-1">
-    <div class='kando-font fs-2'>
-      {{label}}
+  {{#if label}}
+    <div class="flex-grow-1">
+      <div class='kando-font fs-2'>
+        {{label}}
+      </div>
+      <div class='kando-font fs-5'>
+        {{hint}}
+      </div>
     </div>
-    <div class='kando-font fs-5'>
-      {{hint}}
-    </div>
-  </div>
+  {{/if}}
   <div class="text-picker input-group align-self-center" style="flex-grow: 2;">
-    <textarea rows="{{lines}}" class="form-control fs-3 kando-font" placeholder="{{placeholder}}">
+    <textarea rows="{{lines}}" class="form-control fs-3 kando-font" placeholder="{{placeholder}}" spellcheck="false">
     </textarea>
     {{#if recordButton}}
       <button class="btn btn-primary fs-3"><i class='material-symbols-rounded inline-icon'>screen_record</i></button>

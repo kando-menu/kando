@@ -8,8 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import JSON5 from 'json5';
+
 import { TextPicker } from './text-picker';
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import { IMacroEvent } from '../../../common/item-types/macro-item-type';
 
 /**
  * This class displays a text input field with a button next to it which allows the user
@@ -27,10 +30,10 @@ export class MacroPicker extends TextPicker {
    */
   constructor() {
     super({
-      label: 'Macro',
-      hint: 'This will be simulated.',
+      label: '',
+      hint: '',
       lines: 5,
-      placeholder: 'Not Bound',
+      placeholder: 'Hit the record button to start recording!',
       recordingPlaceholder: 'Press the keys...',
       enableRecording: true,
       resetOnBlur: false,
@@ -38,82 +41,132 @@ export class MacroPicker extends TextPicker {
   }
 
   /**
-   * This method normalizes the given macro. It removes all whitespace and transforms the
-   * macro to proper CamelCase. All components of the macro are matched against the
-   * available key codes in common/key-codes.ts. Each
+   * This method normalizes the given macro. It properly formats the JSON input and turns
+   * the key codes to proper CamelCase. All key codes are matched against the available
+   * key codes in common/key-codes.ts.
    *
-   * @param macro The macro to normalize.
+   * @param input The input to normalize.
    * @returns The normalized macro.
    */
-  protected override normalizeInput(macro: string): string {
-    // We first remove any whitespace and transform the macro to lowercase.
-    macro = macro.replace(/\s/g, '').toLowerCase();
+  protected override normalizeInput(input: string): string {
+    let macro;
 
-    // We then split the macro into its parts and normalize each part. The key part is
-    // transformed to proper CamelCase, while the event part is transformed to lowercase.
-    let parts = macro.split('+');
-    parts = parts.map((part) => {
-      const [key, event] = part.split(':');
-      if (event) {
-        return `${fixKeyCodeCase(key)}:${event.toLowerCase()}`;
+    // Try to parse the input as JSON. If this fails, return the input as is.
+    try {
+      macro = JSON5.parse('[' + input + ']');
+    } catch (error) {
+      return input;
+    }
+
+    // Each element must be an object with a type and a key.
+    macro.forEach((event: IMacroEvent) => {
+      if (event.key) {
+        event.key = fixKeyCodeCase(event.key);
       }
 
-      return fixKeyCodeCase(key);
+      // If a delay is given, it must be a number.
+      if (event.delay && typeof event.delay === 'string') {
+        event.delay = parseInt(event.delay);
+      }
+
+      // The type must be spelled either 'keyDown' or 'keyUp'. We fix the case here.
+      if (event.type && typeof event.type === 'string') {
+        if (event.type.toLowerCase() === 'keydown') {
+          event.type = 'keyDown';
+        } else if (event.type.toLowerCase() === 'keyup') {
+          event.type = 'keyUp';
+        }
+      }
     });
 
-    return parts.join('+');
+    return this.beautyPrint(JSON5.stringify(macro, null, 1));
   }
 
   /**
-   * This method checks if the given macro is valid. A macro is valid if it contains only
-   * valid key codes, each suffixed with eith :up or :down.
+   * This method checks if the given macro is valid. A macro is valid if it is an array of
+   * IMacroEvent objects. Each IMacroEvent object must have a type and a key. The key must
+   * be a valid key code. There can be an optional delay, and there must be no other
+   * properties.
    *
-   * @param macro The normalized macro to validate.
+   * @param input The normalized input to validate.
    * @returns True if the macro is valid, false otherwise.
    */
-  protected override isValid(macro: string): boolean {
-    // If the macro is empty, it is valid.
-    if (macro === '') {
-      return true;
-    }
+  protected override isValid(input: string): boolean {
+    let macro;
 
-    // Make sure the macro does not start or end with a '+'.
-    if (macro.startsWith('+') || macro.endsWith('+')) {
+    // Try to parse the input as JSON. If this fails, return false.
+    try {
+      macro = JSON5.parse('[' + input + ']');
+    } catch (error) {
       return false;
     }
 
-    // Split the macro into its parts.
-    const parts = macro.split('+');
-
-    // Check if each part is composed of a valid key code and a valid event.
-    return parts.every((part) => {
-      const [key, event] = part.split(':');
-      if (!event) {
+    // Each element must be an object with a type and a key.
+    return macro.every((event: IMacroEvent) => {
+      // There must be a key property.
+      if (
+        event.key === undefined ||
+        typeof event.key !== 'string' ||
+        !isKnownKeyCode(event.key)
+      ) {
         return false;
       }
-      return isKnownKeyCode(key) && (event === 'up' || event === 'down');
+
+      // There must be a type property.
+      if (
+        event.type === undefined ||
+        typeof event.type !== 'string' ||
+        (event.type !== 'keyDown' && event.type !== 'keyUp')
+      ) {
+        return false;
+      }
+
+      // If a delay is given, it must be a number.
+      if (event.delay !== undefined && typeof event.delay !== 'number') {
+        return false;
+      }
+
+      // There must be no other properties.
+      for (const key of Object.keys(event)) {
+        if (key !== 'type' && key !== 'key' && key !== 'delay') {
+          return false;
+        }
+      }
+
+      return true;
     });
   }
 
   /**
    * This method appends the key code of the given KeyboardEvent to the input field. Macro
-   * recording continues until the input field losses focus, so the method never returns
-   * true.
+   * recording continues until the input field looses focus or the record button is
+   * pressed again, so the method never returns true.
    *
    * @param event The KeyboardEvent to get the macro for.
    * @returns False
    */
   protected override recordInput(event: KeyboardEvent): boolean {
-    if (this.input.value !== '') {
-      this.input.value += '+';
-    }
+    const macro = JSON5.parse('[' + this.input.value + ']' || '[]');
 
-    if (event.type === 'keyup') {
-      this.input.value += event.code + ':up';
-    } else if (event.type === 'keydown') {
-      this.input.value += event.code + ':down';
-    }
+    macro.push({
+      type: event.type === 'keydown' ? 'keyDown' : 'keyUp',
+      key: event.code,
+      delay: 10,
+    });
+
+    this.input.value = this.beautyPrint(JSON5.stringify(macro, null, 1));
 
     return false;
+  }
+
+  private beautyPrint(json: string): string {
+    return json
+      .replace(/\n/g, '')
+      .replace(/ /g, '')
+      .replace(/\[/g, '')
+      .replace(/\]/g, '')
+      .replace(/\},/g, '},\n')
+      .replace(/:/g, ': ')
+      .replace(/,/g, ', ');
   }
 }

@@ -13,7 +13,8 @@ import { IItemType } from '../item-type-registry';
 
 export interface IMacroEvent {
   type: 'keyDown' | 'keyUp';
-  key: string;
+  delay?: number;
+  key?: string;
 }
 
 /**
@@ -62,7 +63,8 @@ export class MacroItemType implements IItemType {
     }
 
     // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and
-    // "Meta" to make the macro more readable. We also shorten the up and down events.
+    // "Meta" to make the macro more readable. We prepend "↓" or "↑" to indicate key
+    // presses and releases.
     return data.macro
       .map((event) => {
         const key = event.key

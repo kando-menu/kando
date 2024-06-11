@@ -45,11 +45,10 @@ export class MacroItemAction implements IItemAction {
       const keys: IKeySequence = [];
 
       data.macro.forEach((event) => {
-        if (event.type === 'keyUp') {
-          keys.push({ name: event.key, down: false, delay: 10 });
-        } else if (event.type === 'keyDown') {
-          keys.push({ name: event.key, down: true, delay: 10 });
-        }
+        const delay = event.delay || 10;
+        const name = event.key;
+        const down = event.type === 'keyDown';
+        keys.push({ name, down, delay });
       });
 
       // Finally, we simulate the key presses using the backend.

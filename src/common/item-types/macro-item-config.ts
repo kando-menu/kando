@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import JSON5 from 'json5';
+
 import { IMenuItem } from '..';
 import { MacroPicker } from '../../renderer/editor/properties/macro-picker';
 import { IItemConfig } from '../item-config-registry';
@@ -19,7 +21,8 @@ export class MacroItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#menu-shortcuts-vs-simulated-macros" target="_blank">here</a>. Just append "Up" or "Down" to the key name to simulate a key press or release.',
+      'All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#valid-simulated-hotkeys-using-key-codes" target="_blank">here</a>.',
+      'Per default, Kando adds a 10ms delay before each key event. You can change this with the "delay" property.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
@@ -50,23 +53,14 @@ export class MacroItemConfig implements IItemConfig {
     // Add the macro picker.
     const picker = new MacroPicker();
     picker.setValue(
-      (item.data as IItemData).macro
-        .map((event) => {
-          const type = event.type.replace('keyDown', 'down').replace('keyUp', 'up');
-          return `${event.key}:${type}`;
-        })
-        .join(' + ')
+      JSON5.stringify((item.data as IItemData).macro)
+        .replace(/\[/g, '')
+        .replace(/\]/g, '')
     );
     fragment.append(picker.getContainer());
 
     picker.on('change', (value: string) => {
-      (item.data as IItemData).macro = value.split('+').map((part) => {
-        const [key, event] = part.split(':');
-        return {
-          key,
-          type: event === 'down' ? 'keyDown' : 'keyUp',
-        };
-      });
+      (item.data as IItemData).macro = JSON5.parse('[' + value + ']');
     });
 
     return fragment;
