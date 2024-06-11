@@ -174,6 +174,20 @@ export class KandoApp {
         // window will not be moved to the correct monitor.
         if (process.platform === 'win32') {
           this.showWindow();
+
+          // Also, there is this long-standing issue with Windows where the window is not
+          // scaled correctly when it is moved to another monitor with a different DPI
+          // scale: https://github.com/electron/electron/issues/10862
+          // To work around this, we first move the window to the top-left corner of the
+          // screen and make sure that it is only on this monitor by reducing its size to
+          // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
+          // scale the window to the correct size.
+          this.window.setBounds({
+            x: workarea.x,
+            y: workarea.y,
+            width: 1,
+            height: 1,
+          });
         }
 
         // Some platforms require the window to be one pixel larger than the work area.
