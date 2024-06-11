@@ -14,7 +14,9 @@ import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
   packagerConfig: {
+    // https://electron.github.io/packager/main/interfaces/Options.html
     icon: 'assets/icons/icon',
+    name: 'Kando',
 
     // This makes sure that the app is not shown in the dock on macOS.
     extendInfo: {
