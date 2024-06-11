@@ -159,8 +159,8 @@ New types will be added in the future.
 
 ## Menu Shortcuts vs. Simulated Hotkeys
 
-With Kando, you can bind a menu to a keyboard shortcut and use menu items to simulate keyboard hotkeys.
-This is a bit confusing as both are configured similarly, but use different formats.
+With Kando, you can bind a menu to a keyboard shortcut and use menu items to simulate keyboard hotkeys or macros.
+This is a bit confusing as all are configured similarly, but use different formats.
 
 Below is the configuration of a menu bound to <kbd>Ctrl</kbd>+<kbd>V</kbd> and a menu item simulating <kbd>Ctrl</kbd>+<kbd>V</kbd>.
 As you can see, the format for the key combination is different.
@@ -171,7 +171,7 @@ Menu-Shortcut Configuration | Hotkey-Item Configuration
 
 The reason for this is complex: Depending on the platform, Kando uses different mechanisms to bind menus to shortcuts.
 All of these require _key names_ for the shortcuts.
-The hotkey items on the other hand simulate _key codes_.
+The hotkey and macro items on the other hand simulate _key codes_.
 Each key on your keyboard has a unique _key code_.
 The keyboard layout you have set in your OS assigns a _key name_ to each _key code_.
 For instance, the key with the _code_ `KeyZ` gets the _name_ `Y` with a German keyboard layout.
@@ -268,6 +268,9 @@ All names are case-insensitive and must be separated by `+`.
 <kbd>numdiv</kbd>
 
 ### Valid Simulated Hotkeys (using _key codes_)
+
+Macro items simulate keyboard hotkeys by sending key codes.
+Below is a list of all available key codes.
 
 The configuration of the hotkey items should also contain any number of modifier key codes followed by a single non-modifier key code, all separated by `+`.
 Note that not all key codes are available on all platforms.
