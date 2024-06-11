@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### Changed
 
+- On macOS, the application settings are now stored in `~/Library/Application Support/kando/` (with a lowercase `kando`). This is more consistent with the other platforms and macOS seems to handle this in a case-insensitive way, so the settings should be preserved when upgrading from an older version.
 - The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
 
 ## [Kando 1.0.0](https://github.com/kando-menu/kando/releases/tag/v1.0.0)

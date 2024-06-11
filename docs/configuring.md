@@ -36,7 +36,7 @@ All configuration is stored in **two configuration files** JSON files which you 
 Depending on your platform, the configuration files are located in different directories:
 
 * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
-* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/Kando/`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/kando/`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/`
 
 **📝 JSON Format**: Both configuration files are JSON files. You can edit them with any text editor.
