@@ -30,6 +30,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - On macOS, the application settings are now stored in `~/Library/Application Support/kando/` (with a lowercase `kando`). This is more consistent with the other platforms and macOS seems to handle this in a case-insensitive way, so the settings should be preserved when upgrading from an older version.
 - The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
 
+#### Fixed
+
+- A bug where the menu would not open on the correct monitor on Windows if there was a monitor with a higher DPI scale to the right of a monitor with a lower DPI scale.
+
 ## [Kando 1.0.0](https://github.com/kando-menu/kando/releases/tag/v1.0.0)
 
 <a href="https://www.youtube.com/watch?v=vOE7EAlPUwE">
