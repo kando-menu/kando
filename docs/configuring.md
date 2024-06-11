@@ -115,9 +115,15 @@ Property | Default Value | Description
 For now, the `type` property of a menu item can be one of the following values.
 New types will be added in the future.
 
-**`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the menu item must contain a list of child items.
+##### `"submenu"`
+This is the default type.
+It is used to create a submenu.
+The `children` property of the menu item must contain a list of child items.
 
-**`"command"`:** This type is used to execute a shell command. The `data` property of the menu item must contain a `command` property which contains the shell command to execute. For instance, this menu item will open Inkscape on Linux:
+##### `"command"`
+This type is used to execute a shell command.
+The `data` property of the menu item must contain a `command` property which contains the shell command to execute.
+For instance, this menu item will open Inkscape on Linux:
 ```json
 {
   "name": "Inkscape",
@@ -130,7 +136,10 @@ New types will be added in the future.
 }
 ```
 
-**`"uri"`:** This type is used to open any kind of URI. The `data` property of the menu item must contain a `uri` property which contains the URI to open. For instance, this menu item will open GitHub in the default browser:
+##### `"uri"`
+This type is used to open any kind of URI.
+The `data` property of the menu item must contain a `uri` property which contains the URI to open.
+For instance, this menu item will open GitHub in the default browser:
 ```json
 {
   "name": "GitHub",
@@ -143,7 +152,14 @@ New types will be added in the future.
 }
 ```
 
-**`"hotkey"`:** This type is used to simulate keyboard events. The `data` property of the menu item must contain a `hotkey` property which contains the hotkey to simulate. See [Menu Shortcuts vs. Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details on the format of the `hotkey` property. The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed. This can be used if the hotkey should be captured by another window. For instance, this menu item will paste the clipboard content:
+##### `"hotkey"`
+This type is used to simulate simple keyboard events.
+The `data` property of the menu item must contain a `hotkey` property which contains the hotkey to simulate.
+See [Menu Shortcuts vs.
+Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details on the format of the `hotkey` property.
+The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed.
+This can be used if the hotkey should be captured by another window.
+For instance, this menu item will paste the clipboard content:
 ```json
 {
   "name": "Paste",
@@ -154,6 +170,57 @@ New types will be added in the future.
     "hotkey": "ControlLeft+KeyV",
     "delayed": true
   }
+}
+```
+
+##### `"macro"`
+This type is used to simulate a more comples sequence of keyboard events.
+The `data` property of the menu item must contain a `macro` property which contains the sequence of key codes to simulate.
+See [Menu Shortcuts vs. Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details on key code format.
+The optional `delayed` property will ensure that the macro is simulated _after_ the Kando window is closed.
+This can be used if the macro should be captured by another window.
+For instance, this menu item will type "Hi" on most keyboard layouts:
+```json
+{
+  "type": "macro",
+  "data": {
+    "macro": [
+      {
+        "type": "keyDown",
+        "key": "ShiftLeft",
+        "delay": 10
+      },
+      {
+        "type": "keyDown",
+        "key": "KeyH",
+        "delay": 10
+      },
+      {
+        "type": "keyUp",
+        "key": "KeyH",
+        "delay": 10
+      },
+      {
+        "type": "keyUp",
+        "key": "ShiftLeft",
+        "delay": 10
+      },
+      {
+        "type": "keyDown",
+        "key": "KeyI",
+        "delay": 10
+      },
+      {
+        "type": "keyUp",
+        "key": "KeyI",
+        "delay": 10
+      }
+    ],
+    "delayed": true
+  },
+  "name": "Hello World",
+  "icon": "keyboard_keys",
+  "iconTheme": "material-symbols-rounded"
 }
 ```
 
