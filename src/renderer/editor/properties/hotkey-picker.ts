@@ -17,16 +17,16 @@ import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
  * hotkey directly into the input field or press the button to enter a mode where the next
  * key presses are interpreted as hotkey.
  *
- * The hotkey selected with this picker may seem similar to the hotkeys selected by the
- * hotkeyPicker. However, there is a key difference: hotkeys use _key names_ which are
+ * The hotkey selected with this picker may seem similar to the shortcuts selected by the
+ * ShortcutPicker. However, there is a key difference: shortcuts use _key names_ which are
  * affected by the keyboard layout. Hotkeys use _key codes_ which are independent of the
- * keyboard layout. Pressing a hotkey like "Control+Z" may require different keys
+ * keyboard layout. Pressing a shortcut like "Control+Z" may require different keys
  * depending on the keyboard layout. The hotkey "Control+Z" on the other hand will invoke
  * pressing the physical key "Z" which may be labeled differently on different keyboards
  * for example "Y" on a German keyboard.
  *
- * @fires changed - When the user selects a valid hotkey. The event contains the new
- *   hotkey as an argument.
+ * @fires change - When the user selects a valid hotkey. The event contains the new hotkey
+ *   as an argument.
  */
 export class HotkeyPicker extends TextPicker {
   /**
@@ -37,9 +37,11 @@ export class HotkeyPicker extends TextPicker {
     super({
       label: 'Hotkey',
       hint: 'This will be simulated.',
+      lines: 1,
       placeholder: 'Not Bound',
       recordingPlaceholder: 'Press a hotkey...',
       enableRecording: true,
+      resetOnBlur: false,
     });
   }
 

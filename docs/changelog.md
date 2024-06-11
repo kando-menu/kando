@@ -17,6 +17,18 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Added
+
+- New menu item type: Keyboard Macros! You can now record and playback keyboard macros in Kando. This is very useful if you want to automate repetitive tasks! The new item type is much more flexible than the simple hotkey-simulation action. It allows for an arbitrary number of key presses and releases and also supports delays between the key events.
+
+#### Changed
+
+- The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
+
 ## [Kando 1.0.0](https://github.com/kando-menu/kando/releases/tag/v1.0.0)
 
 <a href="https://www.youtube.com/watch?v=vOE7EAlPUwE">

@@ -26,7 +26,7 @@ export abstract class TextPicker extends EventEmitter {
   private container: HTMLElement = null;
 
   /** The input field for directly editing the shortcut. */
-  protected input: HTMLInputElement = null;
+  protected input: HTMLTextAreaElement = null;
 
   /**
    * Creates a new TextPicker. You must call getContainer() to get the container which
@@ -37,9 +37,11 @@ export abstract class TextPicker extends EventEmitter {
   constructor(options: {
     label: string;
     hint: string;
+    lines: number;
     placeholder: string;
     recordingPlaceholder: string;
     enableRecording: boolean;
+    resetOnBlur: boolean;
   }) {
     super();
 
@@ -53,11 +55,12 @@ export abstract class TextPicker extends EventEmitter {
       hint: options.hint,
       placeholder: options.placeholder,
       recordButton: options.enableRecording,
+      lines: options.lines,
     });
 
     // Validate the input field when the user types something. If the input is valid, we
     // emit a 'change' event.
-    this.input = this.container.querySelector('input');
+    this.input = this.container.querySelector('textarea');
     this.input.addEventListener('input', () => {
       const value = this.normalizeInput(this.input.value);
       if (this.isValid(value)) {
@@ -80,6 +83,56 @@ export abstract class TextPicker extends EventEmitter {
     // where the next key presses are recorded and transformed into a value for the input
     // field.
     if (options.enableRecording) {
+      let originalValue = '';
+      let recording = false;
+
+      // Reverts the input field to its original state.
+      const reset = () => {
+        recording = false;
+        this.input.placeholder = options.placeholder;
+        this.container.querySelector('.input-group').classList.remove('recording');
+        window.removeEventListener('click', abortHandler);
+        window.removeEventListener('blur', abortHandler);
+        window.removeEventListener('keydown', keyHandler, true);
+        window.removeEventListener('keyup', keyHandler, true);
+
+        // Rebind all shortcuts.
+        window.api.uninhibitShortcuts();
+      };
+
+      // Reset the input field to the original state when the user clicks anywhere on
+      // the screen.
+      const abortHandler = (event: MouseEvent) => {
+        event.stopPropagation();
+        if (options.resetOnBlur) {
+          this.input.value = originalValue;
+        }
+        reset();
+      };
+
+      // Update the input field when the user presses a key. If the key is a valid part
+      // of a shortcut, we update the input field accordingly. If the shortcut is
+      // complete, we reset the input field to its original state and emit a 'change'
+      // event.
+      const keyHandler = (event: KeyboardEvent) => {
+        event.stopPropagation();
+        event.preventDefault();
+
+        // recordInput returns true if we should stop recording. If so, we reset the
+        // input field to its original state and emit a 'change' event.
+        const complete = this.recordInput(event);
+
+        if (this.isValid(this.input.value)) {
+          this.input.classList.remove('invalid');
+          this.emit('change', this.input.value);
+        }
+
+        if (complete) {
+          reset();
+          this.input.classList.remove('invalid');
+        }
+      };
+
       // The recording mode is aborted when...
       // ... the user clicks anywhere on the screen
       // ... the user entered a valid key combination
@@ -87,61 +140,22 @@ export abstract class TextPicker extends EventEmitter {
       recordButton.addEventListener('click', (event) => {
         event.stopPropagation();
 
+        if (recording) {
+          abortHandler(event);
+          return;
+        }
+
         // We unbind all shortcuts when entering record-mode. This is necessary because
         // else the user could not enter shortcuts which are bound to actions in the
         // application.
         window.api.inhibitShortcuts();
 
-        const originalValue = this.input.value;
+        recording = true;
+        originalValue = this.input.value;
         this.input.placeholder = options.recordingPlaceholder;
         this.input.value = '';
 
-        const inputGroup = this.container.querySelector('.input-group');
-        inputGroup.classList.add('recording');
-
-        // eslint-disable-next-line prefer-const
-        let abortHandler: (ev: MouseEvent) => void;
-
-        // eslint-disable-next-line prefer-const
-        let keyHandler: (ev: KeyboardEvent) => void;
-
-        // Reverts the input field to its original state.
-        const reset = () => {
-          this.input.placeholder = options.placeholder;
-          inputGroup.classList.remove('recording');
-          window.removeEventListener('click', abortHandler);
-          window.removeEventListener('blur', abortHandler);
-          window.removeEventListener('keydown', keyHandler, true);
-          window.removeEventListener('keyup', keyHandler, true);
-
-          // Rebind all shortcuts.
-          window.api.uninhibitShortcuts();
-        };
-
-        // Reset the input field to the original state when the user clicks anywhere on
-        // the screen.
-        abortHandler = (event: MouseEvent) => {
-          event.stopPropagation();
-          this.input.value = originalValue;
-          reset();
-        };
-
-        // Update the input field when the user presses a key. If the key is a valid part
-        // of a shortcut, we update the input field accordingly. If the shortcut is
-        // complete, we reset the input field to its original state and emit a 'change'
-        // event.
-        keyHandler = (event: KeyboardEvent) => {
-          event.stopPropagation();
-          event.preventDefault();
-
-          // recordInput returns true if we should stop recording. If so, we reset the
-          // input field to its original state and emit a 'change' event.
-          if (this.recordInput(event)) {
-            reset();
-            this.input.classList.remove('invalid');
-            this.emit('change', this.input.value);
-          }
-        };
+        this.container.querySelector('.input-group').classList.add('recording');
 
         window.addEventListener('click', abortHandler);
         window.addEventListener('blur', abortHandler);

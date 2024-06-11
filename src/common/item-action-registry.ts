@@ -13,6 +13,7 @@ import { Backend } from '../main/backends/backend';
 
 import { CommandItemAction } from './item-types/command-item-action';
 import { HotkeyItemAction } from './item-types/hotkey-item-action';
+import { MacroItemAction } from './item-types/macro-item-action';
 import { URIItemAction } from './item-types/uri-item-action';
 import { DeepReadonly } from '../main/settings';
 
@@ -62,6 +63,7 @@ export class ItemActionRegistry {
   private constructor() {
     this.actions.set('command', new CommandItemAction());
     this.actions.set('hotkey', new HotkeyItemAction());
+    this.actions.set('macro', new MacroItemAction());
     this.actions.set('uri', new URIItemAction());
   }
 
