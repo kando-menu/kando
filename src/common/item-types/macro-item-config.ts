@@ -49,12 +49,24 @@ export class MacroItemConfig implements IItemConfig {
 
     // Add the macro picker.
     const picker = new MacroPicker();
-    picker.setValue((item.data as IItemData).macro);
+    picker.setValue(
+      (item.data as IItemData).macro
+        .map((event) => {
+          const type = event.type.replace('keyDown', 'down').replace('keyUp', 'up');
+          return `${event.key}:${type}`;
+        })
+        .join(' + ')
+    );
     fragment.append(picker.getContainer());
 
     picker.on('change', (value: string) => {
-      console.log('Macro changed:', value);
-      (item.data as IItemData).macro = value;
+      (item.data as IItemData).macro = value.split('+').map((part) => {
+        const [key, event] = part.split(':');
+        return {
+          key,
+          type: event === 'down' ? 'keyDown' : 'keyUp',
+        };
+      });
     });
 
     return fragment;

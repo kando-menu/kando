@@ -11,13 +11,18 @@
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
+export interface IMacroEvent {
+  type: 'keyDown' | 'keyUp';
+  key: string;
+}
+
 /**
  * For this type of menu items, the user can configure a macro that will be typed when the
  * item is clicked. If the `delayed` flag is set, the macro will be typed after the Kando
  * window has been closed.
  */
 export interface IItemData {
-  macro: string;
+  macro: IMacroEvent[];
   delayed: boolean;
 }
 
@@ -41,7 +46,7 @@ export class MacroItemType implements IItemType {
 
   get defaultData(): IItemData {
     return {
-      macro: '',
+      macro: [],
       delayed: false,
     };
   }
@@ -59,16 +64,18 @@ export class MacroItemType implements IItemType {
     // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and
     // "Meta" to make the macro more readable. We also shorten the up and down events.
     return data.macro
-      .replace('ControlLeft', 'Ctrl')
-      .replace('ControlRight', 'Ctrl')
-      .replace('ShiftLeft', 'Shift')
-      .replace('ShiftRight', 'Shift')
-      .replace('AltLeft', 'Alt')
-      .replace('AltRight', 'Alt')
-      .replace('MetaLeft', 'Meta')
-      .replace('MetaRight', 'Meta')
-      .replace(':up', '↑')
-      .replace(':down', '↓')
-      .replace(/\+/g, ' + ');
+      .map((event) => {
+        const key = event.key
+          .replace('ControlLeft', 'Ctrl')
+          .replace('ControlRight', 'Ctrl')
+          .replace('ShiftLeft', 'Shift')
+          .replace('ShiftRight', 'Shift')
+          .replace('AltLeft', 'Alt')
+          .replace('AltRight', 'Alt')
+          .replace('MetaLeft', 'Meta')
+          .replace('MetaRight', 'Meta');
+        return `${event.type === 'keyDown' ? '↓' : '↑'}${key}`;
+      })
+      .join(' + ');
   }
 }

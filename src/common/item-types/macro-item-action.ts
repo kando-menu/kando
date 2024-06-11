@@ -44,15 +44,11 @@ export class MacroItemAction implements IItemAction {
 
       const keys: IKeySequence = [];
 
-      // We remove all whitespace and split the macro into its parts.
-      const parts = data.macro.replace(/\s/g, '').split('+');
-
-      parts.forEach((part) => {
-        const [key, event] = part.split(':');
-        if (event === 'up') {
-          keys.push({ name: key, down: false, delay: 10 });
-        } else if (event === 'down') {
-          keys.push({ name: key, down: true, delay: 10 });
+      data.macro.forEach((event) => {
+        if (event.type === 'keyUp') {
+          keys.push({ name: event.key, down: false, delay: 10 });
+        } else if (event.type === 'keyDown') {
+          keys.push({ name: event.key, down: true, delay: 10 });
         }
       });
 
