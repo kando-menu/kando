@@ -35,6 +35,13 @@ export enum InputState {
  * This class is used to track the state of the input device. It stores the current state
  * (see InputState), the absolute mouse position, as well as the mouse position, distance,
  * and angle relative to the currently selected item.
+ *
+ * This class is an EventEmitter. It emits the following events:
+ *
+ * @fires pointer-motion - This event is emitted whenever the mouse moves. This first
+ *   argument is the absolute mouse position. The second argument is a boolean which is
+ *   true if the mouse is currently dragging an item. This is also true in turbo mode,
+ *   when the mouse is moved while a modifier key is pressed.
  */
 export class InputTracker extends EventEmitter {
   /** See the documentation of the corresponding getters for more information. */
