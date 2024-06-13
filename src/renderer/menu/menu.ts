@@ -171,20 +171,24 @@ export class Menu extends EventEmitter {
     this.container.addEventListener('touchmove', onMotionEvent);
     this.container.addEventListener('touchend', onPointerUpEvent);
 
+    // In order to keep track of any pressed key for the turbo mode, we listen to keydown
+    // and keyup events.
+    document.addEventListener('keydown', (event) => {
+      this.input.onKeyDownEvent(event);
+    });
+
     // If the last modifier is released while a menu item is dragged around, we select it.
-    // This enables selections in "Turbo-Mode", where items are selected with modifier
-    // buttons pressed instead of the left mouse button.
+    // This enables selections in "Turbo-Mode", where items can be selected with mouse
+    // movements without pressing the left mouse button but by holding a keyboard key
+    // instead.
     document.addEventListener('keyup', (event) => {
+      this.input.onKeyUpEvent(event);
+
       if (this.input.state === InputState.DRAGGING) {
-        const modifierReleased =
-          event.key === 'Control' ||
-          event.key === 'Shift' ||
-          event.key === 'Alt' ||
-          event.key === 'Meta';
         const stillAnyModifierPressed =
           event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
-        if (modifierReleased && !stillAnyModifierPressed) {
+        if (!stillAnyModifierPressed) {
           this.input.onPointerUpEvent();
           this.gestures.reset();
           if (this.draggedItem) {
