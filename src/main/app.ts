@@ -11,7 +11,6 @@
 import os from 'node:os';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
-import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
