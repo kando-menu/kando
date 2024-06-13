@@ -63,16 +63,6 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-backend-info');
   },
 
-  /** This will temporarily unbind all menu shortcuts. */
-  inhibitShortcuts: function () {
-    ipcRenderer.send('inhibit-shortcuts');
-  },
-
-  /** This will rebind all menu shortcuts. */
-  uninhibitShortcuts: function () {
-    ipcRenderer.send('uninhibit-shortcuts');
-  },
-
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');

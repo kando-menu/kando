@@ -95,9 +95,6 @@ export abstract class TextPicker extends EventEmitter {
         window.removeEventListener('blur', abortHandler);
         window.removeEventListener('keydown', keyHandler, true);
         window.removeEventListener('keyup', keyHandler, true);
-
-        // Rebind all shortcuts.
-        window.api.uninhibitShortcuts();
       };
 
       // Reset the input field to the original state when the user clicks anywhere on
@@ -144,11 +141,6 @@ export abstract class TextPicker extends EventEmitter {
           abortHandler(event);
           return;
         }
-
-        // We unbind all shortcuts when entering record-mode. This is necessary because
-        // else the user could not enter shortcuts which are bound to actions in the
-        // application.
-        window.api.inhibitShortcuts();
 
         recording = true;
         originalValue = this.input.value;
