@@ -116,12 +116,12 @@ export class Sidebar {
               {
                 heading: 'Turbo Mode:',
                 subheading:
-                  'If you keep Ctrl pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!',
+                  'If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!',
               },
               {
                 heading: 'No accidental selections:',
                 subheading:
-                  'Final items are only selected as soon as you release your mouse button in "Marking Mode" or Ctrl in "Turbo Mode". Use this to explore the menu!',
+                  'Final items are only selected as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!',
               },
             ],
           }),

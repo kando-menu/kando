@@ -35,6 +35,13 @@ export enum InputState {
  * This class is used to track the state of the input device. It stores the current state
  * (see InputState), the absolute mouse position, as well as the mouse position, distance,
  * and angle relative to the currently selected item.
+ *
+ * This class is an EventEmitter. It emits the following events:
+ *
+ * @fires pointer-motion - This event is emitted whenever the mouse moves. This first
+ *   argument is the absolute mouse position. The second argument is a boolean which is
+ *   true if the mouse is currently dragging an item. This is also true in turbo mode,
+ *   when the mouse is moved while a keyboard key is pressed.
  */
 export class InputTracker extends EventEmitter {
   /** See the documentation of the corresponding getters for more information. */
@@ -57,6 +64,12 @@ export class InputTracker extends EventEmitter {
    * reset() method for more information.
    */
   private ignoreMotionEvents = 0;
+
+  /**
+   * This is set to true if any key is pressed. This is used to enable the turbo mode with
+   * non-modifier keys as well.
+   */
+  private anyNonModifierKeyPressed = false;
 
   /**
    * This is the threshold in pixels which is used to differentiate between a click and a
@@ -145,10 +158,16 @@ export class InputTracker extends EventEmitter {
       this._state = InputState.DRAGGING;
     }
 
-    // If a modifier key is pressed, this is handled basically as if the left mouse
+    // If any key is pressed, this is handled basically as if the left mouse
     // button is pressed. This allows for menu item selections without having to press a
     // mouse button if the menu was opened with a keyboard shortcut.
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+    if (
+      this.anyNonModifierKeyPressed ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
       this._state = InputState.DRAGGING;
     } else if (
       event instanceof MouseEvent &&
@@ -194,6 +213,30 @@ export class InputTracker extends EventEmitter {
    */
   public onPointerUpEvent() {
     this._state = InputState.RELEASED;
+  }
+
+  /**
+   * For mouse movement events, we know whether a modifier key is pressed. However, we
+   * want to enable the turbo mode if _any_ key is pressed. Therefore, we need to listen
+   * to keydown and keyup events as well. We set this flag to true whenever a non-modifier
+   * key is pressed and to false whenever a non-modifier key is released.
+   *
+   * @param event The keydown event.
+   */
+  public onKeyDownEvent(event: KeyboardEvent) {
+    if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+      this.anyNonModifierKeyPressed = true;
+    }
+  }
+
+  /**
+   * @param event The keyup event.
+   * @see onKeyDownEvent.
+   */
+  public onKeyUpEvent(event: KeyboardEvent) {
+    if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+      this.anyNonModifierKeyPressed = false;
+    }
   }
 
   /**

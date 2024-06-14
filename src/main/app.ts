@@ -11,7 +11,6 @@
 import os from 'node:os';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
-import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
@@ -105,9 +104,13 @@ export class KandoApp {
     }
 
     // When the menu settings change, we need to rebind the shortcuts and update the
-    // tray menu.
+    // tray menu. Rebinding the shortcuts is only necessary when the window is currently
+    // not shown. If the window is shown, the shortcuts are already unbound and will be
+    // rebound when the window is hidden.
     this.menuSettings.onChange('menus', async () => {
-      await this.bindShortcuts();
+      if (!this.window.isVisible()) {
+        await this.bindShortcuts();
+      }
       this.updateTrayMenu();
     });
 
@@ -345,17 +348,6 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
-    // Unbind all shortcuts. This is used when selecting shortcuts in the editor.
-    ipcMain.on('inhibit-shortcuts', async () => {
-      await this.backend.unbindAllShortcuts();
-    });
-
-    // Rebind all shortcuts. This is used when the user is done selecting shortcuts in
-    // the editor.
-    ipcMain.on('uninhibit-shortcuts', async () => {
-      await this.bindShortcuts();
-    });
-
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -413,24 +405,18 @@ export class KandoApp {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hideTimeout = setTimeout(() => {
-        this.hideWindow();
-        this.hideTimeout = null;
-
+      this.hideWindow(400).then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
         }
-      }, 400);
+      });
     });
 
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
-      this.hideTimeout = setTimeout(() => {
-        this.hideWindow();
-        this.hideTimeout = null;
-      }, 300);
+      this.hideWindow(300);
     });
   }
 
@@ -552,19 +538,6 @@ export class KandoApp {
     return item;
   }
 
-  /**
-   * A small helper function to execute a shell command. It will show a notification if
-   * the command fails to start.
-   */
-  private exec(command: string) {
-    exec(command, (error) => {
-      // Print an error if the command fails to start.
-      if (error) {
-        KandoApp.showError('Failed to execute command', error.message);
-      }
-    });
-  }
-
   /** This shows the window. */
   private showWindow() {
     // On Windows, we have to remove the ignore-mouse-events property when
@@ -573,6 +546,10 @@ export class KandoApp {
     if (process.platform === 'win32') {
       this.window.setIgnoreMouseEvents(false);
     }
+
+    // Once Kando's window is shown, we unbind all shortcuts to make sure that the
+    // user can select the bound shortcuts in the menu editor.
+    this.backend.unbindAllShortcuts();
 
     this.window.show();
 
@@ -584,9 +561,14 @@ export class KandoApp {
   }
 
   /**
-   * This hides the window. When Electron windows are hidden, input focus is not
-   * necessarily returned to the topmost window below the hidden window. This is a problem
-   * if we want to simulate key presses.
+   * This hides the window. As shortcuts are unbound when the window is shown, we have to
+   * rebind them when the window is hidden. This method also accepts a delay parameter
+   * which can be used to delay the hiding of the window. This is useful when we want to
+   * show a fade-out animation.
+   *
+   * When Electron windows are hidden, input focus is not necessarily returned to the
+   * topmost window below the hidden window. This is a problem if we want to simulate key
+   * presses.
    *
    * - On Windows, we have to minimize the window instead. This leads to another issue:
    *   https://github.com/kando-menu/kando/issues/375. To make this weird little window
@@ -596,15 +578,29 @@ export class KandoApp {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  private hideWindow() {
-    if (process.platform === 'win32') {
-      this.window.setIgnoreMouseEvents(true);
-      this.window.minimize();
-    } else if (process.platform === 'darwin') {
-      app.hide();
-    } else {
-      this.window.hide();
+  private async hideWindow(delay = 0) {
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
     }
+
+    return new Promise<void>((resolve) => {
+      this.bindShortcuts();
+
+      this.hideTimeout = setTimeout(() => {
+        if (process.platform === 'win32') {
+          this.window.setIgnoreMouseEvents(true);
+          this.window.minimize();
+        } else if (process.platform === 'darwin') {
+          app.hide();
+        } else {
+          this.window.hide();
+        }
+
+        this.hideTimeout = null;
+
+        resolve();
+      }, delay);
+    });
   }
 
   /**
