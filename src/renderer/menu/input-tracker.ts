@@ -127,7 +127,6 @@ export class InputTracker extends EventEmitter {
    * is already pressed.
    */
   public set deferredTurboMode(val: boolean) {
-    window.api.log('set deferred turbo mode');
     this._deferredTurboMode = val;
     this.turboMode = false;
   }
