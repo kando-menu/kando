@@ -221,13 +221,15 @@ export class KandoApp {
           y: workarea.height,
         };
 
-        // Send the menu to the renderer process.
-        this.window.webContents.send(
-          'show-menu',
-          this.lastMenu.root,
+        // Send the menu to the renderer process. If the menu is centered, we delay the
+        // turbo mode. This way, a key has to be pressed first before the turbo mode is
+        // activated. Else, the turbo mode would be activated immediately when the menu is
+        // opened which is not nice if it is not opened at the pointer position.
+        this.window.webContents.send('show-menu', this.lastMenu.root, {
           menuPosition,
-          windowSize
-        );
+          windowSize,
+          deferredTurboMode: this.lastMenu.centered,
+        });
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);

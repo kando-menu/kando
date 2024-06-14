@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../math';
-import { IVec2 } from '../../common';
+import { IShowMenuOptions, IVec2 } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
@@ -173,8 +173,8 @@ export class Menu extends EventEmitter {
 
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
     // and keyup events.
-    document.addEventListener('keydown', (event) => {
-      this.input.onKeyDownEvent(event);
+    document.addEventListener('keydown', () => {
+      this.input.onKeyDownEvent();
     });
 
     // If the last modifier is released while a menu item is dragged around, we select it.
@@ -225,20 +225,19 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * This method is called when the menu is shown. Currently, it just creates a test menu.
+   * This method is called when the menu is shown. It will create the DOM tree for the
+   * given root item and all its children. It will also set up the angles and positions of
+   * all items and show the menu.
    *
-   * @param position The position of the mouse cursor when the menu was opened.
-   * @param windowSize The size of the window. Usually, this is the same as
-   *   window.innerWidth and window.innerHeight. However, when the window was just
-   *   resized, this can be different. Therefore, we need to pass it from the main
-   *   process.
+   * @param options Some additional information on how to show the menu.
    */
-  public show(root: IRenderedMenuItem, position: IVec2, windowSize: IVec2) {
+  public show(root: IRenderedMenuItem, options: IShowMenuOptions) {
     this.clear();
 
-    this.windowSize = windowSize;
+    this.windowSize = options.windowSize;
 
-    this.input.update(position);
+    this.input.deferredTurboMode = options.deferredTurboMode;
+    this.input.update(options.menuPosition);
     this.input.ignoreNextMotionEvents();
 
     this.root = root;

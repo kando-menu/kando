@@ -29,6 +29,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Changed
 
 - On macOS, the application settings are now stored in `~/Library/Application Support/kando/` (with a lowercase `kando`). This is more consistent with the other platforms and macOS seems to handle this in a case-insensitive way, so the settings should be preserved when upgrading from an older version.
+- When a menu is opened in screen-center mode, turbo-mode is now disabled initially. This is to prevent accidental navigation when the menu is opened and a key is still pressed. Once all keyboard keys are released, turbo-mode can be activated by pressing and holding any key.
 - The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
 
 #### Fixed
