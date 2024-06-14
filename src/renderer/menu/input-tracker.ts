@@ -50,6 +50,7 @@ export class InputTracker extends EventEmitter {
   private _relativePosition = { x: 0, y: 0 };
   private _angle = 0;
   private _distance = 0;
+  private _deferredTurboMode = false;
 
   /**
    * The position where the mouse was when the user pressed the left mouse button the last
@@ -66,10 +67,10 @@ export class InputTracker extends EventEmitter {
   private ignoreMotionEvents = 0;
 
   /**
-   * This is set to true if any key is pressed. This is used to enable the turbo mode with
-   * non-modifier keys as well.
+   * This is set to true if any key is pressed. If true, the menu will behave as if the
+   * left mouse button is pressed.
    */
-  private anyNonModifierKeyPressed = false;
+  private turboMode = false;
 
   /**
    * This is the threshold in pixels which is used to differentiate between a click and a
@@ -121,6 +122,17 @@ export class InputTracker extends EventEmitter {
   }
 
   /**
+   * If this is set to true, the turbo mode will be activated only after a key is pressed.
+   * Else, the turbo mode will be activated immediately when the menu is opened and a key
+   * is already pressed.
+   */
+  public set deferredTurboMode(val: boolean) {
+    window.api.log('set deferred turbo mode');
+    this._deferredTurboMode = val;
+    this.turboMode = false;
+  }
+
+  /**
    * This method is called by the Menu class whenever the mouse pointer is moved or a
    * touch event is received. It updates the internal state of the InputTracker and emits
    * the pointer-motion event.
@@ -135,7 +147,6 @@ export class InputTracker extends EventEmitter {
       return;
     }
 
-    // Update the internal state of the InputTracker.
     if (event instanceof MouseEvent) {
       this.update({ x: event.clientX, y: event.clientY }, activeItemPosition);
     } else {
@@ -161,13 +172,16 @@ export class InputTracker extends EventEmitter {
     // If any key is pressed, this is handled basically as if the left mouse
     // button is pressed. This allows for menu item selections without having to press a
     // mouse button if the menu was opened with a keyboard shortcut.
-    if (
-      this.anyNonModifierKeyPressed ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
+    if (!this._deferredTurboMode) {
+      this.turboMode =
+        this.turboMode ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey;
+    }
+
+    if (this.turboMode) {
       this._state = InputState.DRAGGING;
     } else if (
       event instanceof MouseEvent &&
@@ -216,26 +230,30 @@ export class InputTracker extends EventEmitter {
   }
 
   /**
-   * For mouse movement events, we know whether a modifier key is pressed. However, we
-   * want to enable the turbo mode if _any_ key is pressed. Therefore, we need to listen
-   * to keydown and keyup events as well. We set this flag to true whenever a non-modifier
-   * key is pressed and to false whenever a non-modifier key is released.
+   * If any key is pressed, the turbo mode will be activated as long as turbo mode is not
+   * deferred. In this case, a key has to be released first before the turbo mode will be
+   * activated.
    *
    * @param event The keydown event.
    */
-  public onKeyDownEvent(event: KeyboardEvent) {
-    if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
-      this.anyNonModifierKeyPressed = true;
+  public onKeyDownEvent() {
+    if (!this._deferredTurboMode) {
+      this.turboMode = true;
     }
   }
 
   /**
+   * If the last key is released, the turbo mode will be deactivated.
+   *
    * @param event The keyup event.
-   * @see onKeyDownEvent.
    */
   public onKeyUpEvent(event: KeyboardEvent) {
-    if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
-      this.anyNonModifierKeyPressed = false;
+    const stillAnyModifierPressed =
+      event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+
+    if (!stillAnyModifierPressed) {
+      this._deferredTurboMode = false;
+      this.turboMode = false;
     }
   }
 
