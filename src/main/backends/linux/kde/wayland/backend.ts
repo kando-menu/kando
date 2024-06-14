@@ -108,7 +108,7 @@ export class KDEWaylandBackend implements Backend {
     this.wmInfoScriptPath = this.storeScript(
       'get-info.js',
       `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
-               'org.kandomenu.kando', 'SendWMInfo',
+               'org.kandomenu.kando', 'sendWMInfo',
                workspace.${property} ? workspace.${property}.caption : "",
                workspace.${property} ? workspace.${property}.resourceClass : "",
                workspace.cursorPos.x, workspace.cursorPos.y,
@@ -124,8 +124,8 @@ export class KDEWaylandBackend implements Backend {
     this.kandoInterface = new CustomInterface('org.kandomenu.kando');
     CustomInterface.configureMembers({
       methods: {
-        SendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
-        Trigger: { inSignature: 's', outSignature: '', noReply: false },
+        sendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
+        trigger: { inSignature: 's', outSignature: '', noReply: false },
       },
     });
 
@@ -269,7 +269,7 @@ export class KDEWaylandBackend implements Backend {
             () => {
               console.log('Kando: Triggered.');
               callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
-                       'org.kandomenu.kando', 'Trigger', '${id}',
+                       'org.kandomenu.kando', 'trigger', '${id}',
                        () => console.log('Kando: Triggered.'));
             }
           )) {
@@ -382,7 +382,7 @@ class CustomInterface extends DBus.interface.Interface {
   public triggerCallback: (shortcutID: string) => void;
 
   // This is called by the get-info KWin script.
-  public SendWMInfo(
+  public sendWMInfo(
     windowName: string,
     appName: string,
     pointerX: number,
@@ -394,7 +394,7 @@ class CustomInterface extends DBus.interface.Interface {
   }
 
   // This is called by the global-shortcut KWin script whenever the trigger shortcut is pressed.
-  public Trigger(shortcutID: string) {
+  public trigger(shortcutID: string) {
     if (this.triggerCallback) {
       this.triggerCallback(shortcutID);
     }

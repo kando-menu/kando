@@ -35,26 +35,31 @@ export function getBackend(): Backend | null {
     console.log(`Running on Linux (${desktop} on ${session}).`);
 
     if ((desktop === 'GNOME' || desktop === 'Unity') && session === 'wayland') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { GnomeBackend } = require('./linux/gnome/wayland/backend');
       return new GnomeBackend();
     }
 
     if (desktop === 'KDE' && session === 'x11') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { KDEX11Backend } = require('./linux/kde/x11/backend');
       return new KDEX11Backend();
     }
 
     if (desktop === 'KDE' && session === 'wayland') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { KDEWaylandBackend } = require('./linux/kde/wayland/backend');
       return new KDEWaylandBackend();
     }
 
     if (desktop === 'Hyprland') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { HyprBackend } = require('./linux/hyprland/backend');
       return new HyprBackend();
     }
 
     if (session === 'x11') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { X11Backend } = require('./linux/x11/backend');
       return new X11Backend();
     }
@@ -65,12 +70,14 @@ export function getBackend(): Backend | null {
 
   if (os.platform() === 'win32') {
     console.log(`Running on Windows ${os.release()}.`);
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { WindowsBackend } = require('./windows/backend');
     return new WindowsBackend();
   }
 
   if (os.platform() === 'darwin') {
     console.log(`Running on MacOS ${os.release()}.`);
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { MacosBackend } = require('./macos/backend');
     return new MacosBackend();
   }

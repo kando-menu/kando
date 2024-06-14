@@ -106,7 +106,9 @@ export class RemoteDesktop extends DesktopPortal {
   private async createSession() {
     return this.makeRequest((request) => {
       this.interface.CreateSession({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         handle_token: new DBus.Variant('s', request.token),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         session_handle_token: new DBus.Variant('s', this.session.token),
       });
     });
@@ -121,6 +123,7 @@ export class RemoteDesktop extends DesktopPortal {
   private async requestDevices() {
     return this.makeRequest((request) => {
       this.interface.SelectDevices(this.session.path, {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         handle_token: new DBus.Variant('s', request.token),
         types: new DBus.Variant('u', 1 | 2),
       });
@@ -136,6 +139,7 @@ export class RemoteDesktop extends DesktopPortal {
   private async start() {
     return this.makeRequest((request) => {
       this.interface.Start(this.session.path, '', {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         handle_token: new DBus.Variant('s', request.token),
       });
     });
