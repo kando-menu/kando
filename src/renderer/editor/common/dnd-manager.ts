@@ -15,6 +15,12 @@ import { IDraggable } from './draggable';
 import { IDropTarget } from './drop-target';
 
 /**
+ * This is the threshold in pixels which is used to differentiate between a click and a
+ * drag.
+ */
+const DRAG_THRESHOLD = 5;
+
+/**
  * This class is used to manage drag and drop operations in the editor. In Kando, there is
  * only one instance of this class which is created in the `Editor` class. It is used to
  * register drop targets and draggables. It will listen to pointer and touch events and
@@ -28,12 +34,6 @@ import { IDropTarget } from './drop-target';
  *   from drop targets.
  */
 export class DnDManager extends EventEmitter {
-  /**
-   * This is the threshold in pixels which is used to differentiate between a click and a
-   * drag.
-   */
-  private readonly DRAG_THRESHOLD = 5;
-
   /** This set contains all registered drop targets. */
   private dropTargets: Set<IDropTarget> = new Set();
 
@@ -95,7 +95,7 @@ export class DnDManager extends EventEmitter {
         const viewportCoords = this.getCoords(e2);
         const offset = math.subtract(viewportCoords, dragStart);
 
-        if (math.getLength(offset) > this.DRAG_THRESHOLD) {
+        if (math.getLength(offset) > DRAG_THRESHOLD) {
           // If we are not already dragging something, we start a new drag operation.
           if (this.currentlyDragged === null) {
             this.currentlyDragged = draggable;

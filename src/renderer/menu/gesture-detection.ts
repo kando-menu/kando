@@ -13,6 +13,21 @@ import { EventEmitter } from 'events';
 import * as math from '../math';
 import { IVec2 } from '../../common';
 
+/** Shorter gestures will not lead to selections. */
+const MIN_STROKE_LENGTH = 150;
+
+/** Smaller turns will not lead to selections. */
+const MIN_STROKE_ANGLE = 20;
+
+/** Smaller movements will not be considered. */
+const JITTER_THRESHOLD = 10;
+
+/**
+ * If the pointer is stationary for this many milliseconds, the current item will be
+ * selected.
+ */
+const PAUSE_TIMEOUT = 100;
+
 /**
  * This class detects gestures. It is used to detect marking mode selections in the menu.
  * It is fed with motion events and emits a selection event if either the mouse pointer
@@ -34,21 +49,6 @@ export class GestureDetection extends EventEmitter {
    * time. These events also lead to selections.
    */
   private pauseTimeout: NodeJS.Timeout = null;
-
-  /** Shorter gestures will not lead to selections. */
-  private readonly MIN_STROKE_LENGTH = 150;
-
-  /** Smaller turns will not lead to selections. */
-  private readonly MIN_STROKE_ANGLE = 20;
-
-  /** Smaller movements will not be considered. */
-  private readonly JITTER_THRESHOLD = 10;
-
-  /**
-   * If the pointer is stationary for this many milliseconds, the current item will be
-   * selected.
-   */
-  private readonly PAUSE_TIMEOUT = 100;
 
   /**
    * This method detects the gestures. It should be called if the mouse pointer was moved
@@ -83,13 +83,13 @@ export class GestureDetection extends EventEmitter {
 
       const strokeLength = math.getLength(strokeDir);
 
-      if (strokeLength > this.MIN_STROKE_LENGTH) {
+      if (strokeLength > MIN_STROKE_LENGTH) {
         // Calculate the vector E->M in the diagram above.
         const tipDir = { x: coords.x - this.strokeEnd.x, y: coords.y - this.strokeEnd.y };
 
         const tipLength = math.getLength(tipDir);
 
-        if (tipLength > this.JITTER_THRESHOLD) {
+        if (tipLength > JITTER_THRESHOLD) {
           // If the tip vector is long enough, the pointer was not stationary. Remove
           // the timer again.
           if (this.pauseTimeout !== null) {
@@ -105,7 +105,7 @@ export class GestureDetection extends EventEmitter {
 
           //  Emit the selection events if it exceeds the configured threshold. We pass
           //  the coordinates of E for the selection event.
-          if ((angle * 180) / Math.PI > this.MIN_STROKE_ANGLE) {
+          if ((angle * 180) / Math.PI > MIN_STROKE_ANGLE) {
             const coords = this.strokeEnd;
             this.reset();
             this.emit('selection', coords);
@@ -124,7 +124,7 @@ export class GestureDetection extends EventEmitter {
           this.pauseTimeout = setTimeout(() => {
             this.reset();
             this.emit('selection', coords);
-          }, this.PAUSE_TIMEOUT);
+          }, PAUSE_TIMEOUT);
         }
       } else {
         // The vector S->E is not long enough to be a gesture, so we only update the end

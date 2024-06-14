@@ -20,7 +20,7 @@ import { IKeySequence } from '.';
  */
 export function mapKeys(keys: IKeySequence, os: 'windows' | 'macos' | 'linux'): number[] {
   return keys.map((key) => {
-    const code = KeyCodes.get(key.name.toLowerCase())?.[os];
+    const code = KEY_CODES.get(key.name.toLowerCase())?.[os];
 
     if (!code) {
       throw new Error(`Unknown key: ${key.name}`);
@@ -38,7 +38,7 @@ export function mapKeys(keys: IKeySequence, os: 'windows' | 'macos' | 'linux'): 
  * @returns The fixed key code.
  */
 export function fixKeyCodeCase(code: string): string {
-  return ProperKeyCase.get(code.toLowerCase()) ?? code;
+  return PROPER_KEY_CASE.get(code.toLowerCase()) ?? code;
 }
 
 /**
@@ -48,7 +48,7 @@ export function fixKeyCodeCase(code: string): string {
  * @returns True if the key code is known.
  */
 export function isKnownKeyCode(code: string) {
-  return ProperKeyCase.has(code.toLowerCase());
+  return PROPER_KEY_CASE.has(code.toLowerCase());
 }
 
 /**
@@ -67,7 +67,7 @@ interface IKeyMapping {
  * insensitive. However, we usually want to display the key names in a user-friendly way.
  * This map is used to convert the key names to proper case.
  */
-const ProperKeyCase: Map<string, string> = new Map([
+const PROPER_KEY_CASE: Map<string, string> = new Map([
   ['again', 'Again'],
   ['altleft', 'AltLeft'],
   ['altright', 'AltRight'],
@@ -234,7 +234,7 @@ const ProperKeyCase: Map<string, string> = new Map([
 
 // The values in this map are derived from the tables on this page:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-const KeyCodes: Map<string, IKeyMapping> = new Map([
+const KEY_CODES: Map<string, IKeyMapping> = new Map([
   [
     'again',
     {

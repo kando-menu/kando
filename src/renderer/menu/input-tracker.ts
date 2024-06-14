@@ -14,21 +14,28 @@ import * as math from '../math';
 import { IVec2 } from '../../common';
 
 /**
+ * This is the threshold in pixels which is used to differentiate between a click and a
+ * drag. If the mouse is moved more than this threshold before the mouse button is
+ * released, the current mouse state is set to DRAGGING.
+ */
+const DRAG_THRESHOLD = 5;
+
+/**
  * This enum is used to store the logical state of the input device. This will be set to
- * CLICKED once the left mouse button is pressed. If the mouse is moved more than a couple
- * of pixels before the mouse button is released, it is set to DRAGGING. When the mouse
- * button is released, it is set to RELEASED.
+ * eClicked once the left mouse button is pressed. If the mouse is moved more than a
+ * couple of pixels before the mouse button is released, it is set to eDragging. When the
+ * mouse button is released, it is set to eReleased.
  *
  * At a higher level, Kando does not differentiate between mouse, touch and pen input.
  * This enum is used for all input devices. There is even the possibility of the "Turbo
  * Mode" which allows the user to select items by moving the mouse while a modifier key is
- * pressed. In this case, the mouse state will also be set to DRAGGING, even though the
+ * pressed. In this case, the mouse state will also be set to eDragging, even though the
  * mouse button is not pressed.
  */
 export enum InputState {
-  RELEASED,
-  CLICKED,
-  DRAGGING,
+  eReleased,
+  eClicked,
+  eDragging,
 }
 
 /**
@@ -45,7 +52,7 @@ export enum InputState {
  */
 export class InputTracker extends EventEmitter {
   /** See the documentation of the corresponding getters for more information. */
-  private _state = InputState.RELEASED;
+  private _state = InputState.eReleased;
   private _absolutePosition = { x: 0, y: 0 };
   private _relativePosition = { x: 0, y: 0 };
   private _angle = 0;
@@ -71,13 +78,6 @@ export class InputTracker extends EventEmitter {
    * left mouse button is pressed.
    */
   private turboMode = false;
-
-  /**
-   * This is the threshold in pixels which is used to differentiate between a click and a
-   * drag. If the mouse is moved more than this threshold before the mouse button is
-   * released, the current mouse state is set to DRAGGING.
-   */
-  private readonly DRAG_THRESHOLD = 5;
 
   /**
    * This will be set to CLICKED once the left mouse button is pressed. If the mouse is
@@ -160,12 +160,12 @@ export class InputTracker extends EventEmitter {
 
     // If the mouse moved too much, the current mousedown - mouseup event is not
     // considered to be a click anymore. Set the current mouse state to
-    // InputState.DRAGGING.
+    // InputState.eDragging.
     if (
-      this._state === InputState.CLICKED &&
-      math.getDistance(this._absolutePosition, this.clickPosition) > this.DRAG_THRESHOLD
+      this._state === InputState.eClicked &&
+      math.getDistance(this._absolutePosition, this.clickPosition) > DRAG_THRESHOLD
     ) {
-      this._state = InputState.DRAGGING;
+      this._state = InputState.eDragging;
     }
 
     // If any key is pressed, this is handled basically as if the left mouse
@@ -181,19 +181,19 @@ export class InputTracker extends EventEmitter {
     }
 
     if (this.turboMode) {
-      this._state = InputState.DRAGGING;
+      this._state = InputState.eDragging;
     } else if (
       event instanceof MouseEvent &&
-      this._state === InputState.DRAGGING &&
+      this._state === InputState.eDragging &&
       event.buttons === 0
     ) {
-      this._state = InputState.RELEASED;
+      this._state = InputState.eReleased;
     }
 
     this.emit(
       'pointer-motion',
       this._absolutePosition,
-      this._state === InputState.DRAGGING
+      this._state === InputState.eDragging
     );
   }
 
@@ -215,7 +215,7 @@ export class InputTracker extends EventEmitter {
       };
     }
 
-    this._state = InputState.CLICKED;
+    this._state = InputState.eClicked;
 
     this.onMotionEvent(event, activeItemPosition);
   }
@@ -225,7 +225,7 @@ export class InputTracker extends EventEmitter {
    * touch release event is received. It updates the internal state of the InputTracker.
    */
   public onPointerUpEvent() {
-    this._state = InputState.RELEASED;
+    this._state = InputState.eReleased;
   }
 
   /**
