@@ -36,6 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Fixed
 
 - A bug where the menu would not open on the correct monitor on Windows if there was a monitor with a higher DPI scale to the right of a monitor with a lower DPI scale.
+- Low-resolutions tray icons on macOS.
 - A regression which caused a dock-icon on macOS to be shown for Kando.
 - A bug which caused the icons of the "Simple Icons (Colored)" theme to be shown in the center menu item even if a child item was hovered. This made the item names unreadable.
 

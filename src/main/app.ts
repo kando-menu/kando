@@ -167,7 +167,8 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
-        // Move the window to the monitor which contains the pointer.
+        // Get the work area of the screen where the pointer is located. We will move the
+        // window to this screen and show the menu at the pointer position.
         const workarea = screen.getDisplayNearestPoint({
           x: info.pointerX,
           y: info.pointerY,
@@ -466,9 +467,11 @@ export class KandoApp {
   private updateTrayMenu() {
     if (!this.tray) {
       if (os.platform() === 'darwin') {
-        this.tray = new Tray(
-          path.join(__dirname, require('../../assets/icons/trayTemplate.png'))
-        );
+        // On macOS, the tray icons are not bundled via webpack, as the different
+        // resolutions for HiDPI displays are loaded at runtime. Instead, the tray icons
+        // are copied to the assets directory during the build process.
+        // See webpack.plugins.ts for more information.
+        this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
         this.tray = new Tray(
           path.join(__dirname, require('../../assets/icons/icon.png'))
