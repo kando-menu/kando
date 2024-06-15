@@ -470,7 +470,7 @@ export class KandoApp {
         // resolutions for HiDPI displays are loaded at runtime. Instead, the tray icons
         // are copied to the assets directory during the build process.
         // See webpack.plugins.ts for more information.
-        this.tray = new Tray(path.join(__dirname, '../../../assets/trayTemplate.png'));
+        this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
         this.tray = new Tray(
           path.join(__dirname, require('../../assets/icons/icon.png'))
