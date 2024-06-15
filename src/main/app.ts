@@ -167,7 +167,8 @@ export class KandoApp {
           this.lastMenu = menu;
         }
 
-        // Move the window to the monitor which contains the pointer.
+        // Get the work area of the screen where the pointer is located. We will move the
+        // window to this screen and show the menu at the pointer position.
         const workarea = screen.getDisplayNearestPoint({
           x: info.pointerX,
           y: info.pointerY,
