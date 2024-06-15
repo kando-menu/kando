@@ -1,13 +1,16 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: CC0-1.0
 
+import os from 'os';
 import type IForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack';
+import CopyPlugin from 'copy-webpack-plugin';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-export const plugins = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const plugins: any[] = [
   new ForkTsCheckerWebpackPlugin({
     logger: 'webpack-infrastructure',
   }),
@@ -27,3 +30,13 @@ export const plugins = [
     cIsLinux: process.platform === 'linux',
   }),
 ];
+
+// On macOS, we have to copy the tray icons as the HiDPI icons are loaded at runtime.
+// Therefore, we cannot bundle them with webpack.
+if (os.platform() === 'darwin') {
+  plugins.push(
+    new CopyPlugin({
+      patterns: [{ from: 'trayTemplate*.png', to: 'assets/', context: 'assets/icons/' }],
+    })
+  );
+}
