@@ -160,6 +160,13 @@ body {
     }
   }
 
+  // Hide arrows in number inputs.
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   // Give dropdowns a dark background.
   option {
     background-color: rgba(0, 0, 0, 0.8);
