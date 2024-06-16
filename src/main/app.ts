@@ -44,6 +44,9 @@ export class KandoApp {
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
 
+  /** This flag is used to determine if the bindShortcuts() method is currently running. */
+  private bindingShortcuts = false;
+
   /**
    * This is the tray icon which is displayed in the system tray. In the future it will be
    * possible to disable this icon.
@@ -428,6 +431,13 @@ export class KandoApp {
    * method is called once initially and then whenever the menu settings change.
    */
   private async bindShortcuts() {
+    // This async function should not be run twice at the same time.
+    if (this.bindingShortcuts) {
+      return;
+    }
+
+    this.bindingShortcuts = true;
+
     // First, we unbind all shortcuts.
     await this.backend.unbindAllShortcuts();
 
@@ -461,6 +471,8 @@ export class KandoApp {
         KandoApp.showError('Failed to bind shortcut ' + trigger, error.message);
       }
     }
+
+    this.bindingShortcuts = false;
   }
 
   /** This updates the menu of the tray icon. It is called when the menu settings change. */
