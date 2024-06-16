@@ -9,48 +9,47 @@
 // SPDX-License-Identifier: MIT
 }}
 
-<div class='kando-font fs-1'>
-  Menu Conditions
+{{> checkbox-option 
+    label="Limit to Specific Apps"
+    hint="Show the menu only if a specific application is focused."
+    checkedHint="This supports regular expressions like /Firefox|Chrome/."
+    id="kando-properties-condition-app-name-checkbox"
+}}
+
+<div class="collapse">
+  <input id="kando-properties-condition-app-name" type="text" 
+        class="form-control my-2 fs-3 kando-font" placeholder="App Name">
 </div>
 
-<div class='kando-font fs-5'>
-  You can bind multiple menus to the same shortcut. Use conditions to show the right menu at the right time!
-  Kando will choose the menu with the most specific conditions.
+{{> checkbox-option 
+    label="Limit to Specific Window Titles"
+    hint="Show the menu only if the focused window's title contains a given text."
+    checkedHint="This supports regular expressions like /Firefox|Chrome/."
+    id="kando-properties-condition-window-title-checkbox"
+}}
+
+<div class="collapse">
+  <input id="kando-properties-condition-window-title" type="text" 
+         class="form-control my-2 fs-3 kando-font" placeholder="Window Ttile">
 </div>
 
-<div class='mt-3'>
-  <div class="mb-2">
-    <div class='kando-font fs-2'>
-      Application Name or Window Title
-    </div>
-    <div class='kando-font fs-5'>
-      This supports regular expressions like /Firefox|Chrome/.
-    </div>
-  </div>
-  <div class="align-self-center d-flex gap-2">
-    <input id="kando-properties-condition-app-name" type="text" class="form-control fs-3 kando-font" placeholder="App Name">
-    <input id="kando-properties-condition-window-title" type="text" class="form-control fs-3 kando-font" placeholder="Window Title">
-  </div>
-</div>
+{{> checkbox-option 
+    label="Limit to Specific Pointer Positions"
+    hint="Show the menu only if the pointer is in a given area on the screen."
+    checkedHint="In pixels, relative to the top left corner of your main display."
+    id="kando-properties-condition-pointer-position-checkbox"
+}}
 
-<div class='mt-3'>
-  <div class="mb-2">
-    <div class='kando-font fs-2'>
-      Pointer Position
-    </div>
-    <div class='kando-font fs-5'>
-      In pixels, relative to the top left corner of your main display.
-    </div>
-  </div>
-  <div class="align-self-center input-group">
-    <input id="kando-properties-condition-pointer-minx" type="number" class="form-control fs-3 kando-font" placeholder="Left">
-    <input id="kando-properties-condition-pointer-maxx" type="number" class="form-control fs-3 kando-font" placeholder="Right">
-    <input id="kando-properties-condition-pointer-miny" type="number" class="form-control fs-3 kando-font" placeholder="Top">
-    <input id="kando-properties-condition-pointer-maxy" type="number" class="form-control fs-3 kando-font" placeholder="Bottom">
+<div class="collapse">
+  <div id="kando-properties-condition-pointer-position" class="input-group my-2">
+    <input id="kando-properties-condition-pointer-minx" type="number" class="form-control fs-3 kando-font" placeholder="Left of">
+    <input id="kando-properties-condition-pointer-maxx" type="number" class="form-control fs-3 kando-font" placeholder="Right of">
+    <input id="kando-properties-condition-pointer-miny" type="number" class="form-control fs-3 kando-font" placeholder="Below">
+    <input id="kando-properties-condition-pointer-maxy" type="number" class="form-control fs-3 kando-font" placeholder="Above">
   </div>
 </div>
 
-<div class='d-flex justify-content-end'>
+<div class='d-flex justify-content-end mt-3'>
   <button class="btn btn-secondary fs-3 kando-font me-3 my-3 px-5 ms-auto" id="kando-properties-condition-picker-cancel">Cancel</button>
   <button class="btn btn-secondary fs-3 kando-font my-3 px-5" id="kando-properties-condition-picker-ok">Done</button>
 </div>

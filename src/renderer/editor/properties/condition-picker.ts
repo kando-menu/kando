@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { Collapse } from 'bootstrap';
 import { EventEmitter } from 'events';
 
 /**
@@ -24,12 +25,6 @@ export class ConditionPicker extends EventEmitter {
   /** The container to which the condition picker is appended. */
   private container: HTMLElement = null;
 
-  /** The input field for filtering by app name. */
-  private appName: HTMLInputElement = null;
-
-  /** The input field for filtering by window title. */
-  private windowTitle: HTMLInputElement = null;
-
   /**
    * Creates a new ConditionPicker and appends it to the given container.
    *
@@ -44,21 +39,38 @@ export class ConditionPicker extends EventEmitter {
     container.classList.value = 'd-flex flex-column justify-content-center hidden';
     container.innerHTML = template({});
 
-    this.appName = container.querySelector(
-      '#kando-properties-condition-app-name'
-    ) as HTMLInputElement;
+    const conditions = [
+      'kando-properties-condition-app-name',
+      'kando-properties-condition-window-title',
+      'kando-properties-condition-pointer-position',
+    ];
 
-    this.windowTitle = container.querySelector(
-      '#kando-properties-condition-window-title'
-    ) as HTMLInputElement;
+    // Show and collapse the input fields if the corresponding checkboxes are checked.
+    conditions.forEach((condition) => {
+      const checkbox = container.querySelector(
+        `#${condition}-checkbox`
+      ) as HTMLInputElement;
+      const input = container.querySelector(`#${condition}`).parentElement;
+
+      console.log(condition, checkbox, input);
+
+      const collapse = new Collapse(input, { toggle: false });
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          collapse.show();
+        } else {
+          collapse.hide();
+        }
+      });
+    });
 
     // Close the condition picker when the user clicks the OK button. Before, we emit the
     // select event with the selected conditions.
     const okButton = container.querySelector('#kando-properties-condition-picker-ok');
     okButton.addEventListener('click', () => {
-      const appName = this.appName.value;
-      const windowTitle = this.windowTitle.value;
-      this.emit('select', appName, windowTitle);
+      // const appName = this.appName.value;
+      // const windowTitle = this.windowTitle.value;
+      // this.emit('select', appName, windowTitle);
       this.hide();
     });
 
@@ -80,8 +92,8 @@ export class ConditionPicker extends EventEmitter {
    */
   public show(appName: string, windowTitle: string) {
     this.container.classList.remove('hidden');
-    this.appName.value = appName;
-    this.windowTitle.value = windowTitle;
+    // this.appName.value = appName;
+    // this.windowTitle.value = windowTitle;
   }
 
   /** Hides the condition picker. */
