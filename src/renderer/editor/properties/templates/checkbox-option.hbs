@@ -14,7 +14,14 @@
     <div class='kando-font fs-2'>
       {{label}}
     </div>
-    <div class='kando-font fs-5'>
+    <div class='kando-font fs-5 only-if-checked'>
+      {{#if checkedHint}}
+        {{checkedHint}}
+      {{else}}
+        {{hint}}
+      {{/if}}
+    </div>
+    <div class='kando-font fs-5 if-not-checked'>
       {{hint}}
     </div>
   </div>

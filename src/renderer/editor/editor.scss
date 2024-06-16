@@ -160,6 +160,16 @@ body {
     }
   }
 
+  // We add the possibility to change the label of checkboxes based on their state.
+  div:has(+ .form-check-input:checked) .if-not-checked,
+  div:has(+ .form-check-input) .only-if-checked {
+    display: none;
+  }
+
+  div:has(+ .form-check-input:checked) .only-if-checked {
+    display: block;
+  }
+
   // Hide arrows in number inputs.
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
