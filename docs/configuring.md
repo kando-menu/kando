@@ -36,7 +36,7 @@ All configuration is stored in **two configuration files** JSON files which you 
 Depending on your platform, the configuration files are located in different directories:
 
 * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
-* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/Kando/`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/kando/`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/`
 
 **📝 JSON Format**: Both configuration files are JSON files. You can edit them with any text editor.
@@ -115,9 +115,15 @@ Property | Default Value | Description
 For now, the `type` property of a menu item can be one of the following values.
 New types will be added in the future.
 
-**`"submenu"`:** This is the default type. It is used to create a submenu. The `children` property of the menu item must contain a list of child items.
+##### `"submenu"`
+This is the default type.
+It is used to create a submenu.
+The `children` property of the menu item must contain a list of child items.
 
-**`"command"`:** This type is used to execute a shell command. The `data` property of the menu item must contain a `command` property which contains the shell command to execute. For instance, this menu item will open Inkscape on Linux:
+##### `"command"`
+This type is used to execute a shell command.
+The `data` property of the menu item must contain a `command` property which contains the shell command to execute.
+For instance, this menu item will open Inkscape on Linux:
 ```json
 {
   "name": "Inkscape",
@@ -130,7 +136,10 @@ New types will be added in the future.
 }
 ```
 
-**`"uri"`:** This type is used to open any kind of URI. The `data` property of the menu item must contain a `uri` property which contains the URI to open. For instance, this menu item will open GitHub in the default browser:
+##### `"uri"`
+This type is used to open any kind of URI.
+The `data` property of the menu item must contain a `uri` property which contains the URI to open.
+For instance, this menu item will open GitHub in the default browser:
 ```json
 {
   "name": "GitHub",
@@ -143,7 +152,14 @@ New types will be added in the future.
 }
 ```
 
-**`"hotkey"`:** This type is used to simulate keyboard events. The `data` property of the menu item must contain a `hotkey` property which contains the hotkey to simulate. See [Menu Shortcuts vs. Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details on the format of the `hotkey` property. The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed. This can be used if the hotkey should be captured by another window. For instance, this menu item will paste the clipboard content:
+##### `"hotkey"`
+This type is used to simulate simple keyboard events.
+The `data` property of the menu item must contain a `hotkey` property which contains the hotkey to simulate.
+See [Menu Shortcuts vs.
+Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details on the format of the `hotkey` property.
+The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed.
+This can be used if the hotkey should be captured by another window.
+For instance, this menu item will paste the clipboard content:
 ```json
 {
   "name": "Paste",
@@ -157,10 +173,61 @@ New types will be added in the future.
 }
 ```
 
+##### `"macro"`
+This type is used to simulate a more comples sequence of keyboard events.
+The `data` property of the menu item must contain a `macro` property which contains the sequence of key codes to simulate.
+See [Menu Shortcuts vs. Simulated Hotkeys](#menu-shortcuts-vs-simulated-hotkeys) for details on key code format.
+The optional `delayed` property will ensure that the macro is simulated _after_ the Kando window is closed.
+This can be used if the macro should be captured by another window.
+For instance, this menu item will type "Hi" on most keyboard layouts:
+```json
+{
+  "type": "macro",
+  "data": {
+    "macro": [
+      {
+        "type": "keyDown",
+        "key": "ShiftLeft",
+        "delay": 10
+      },
+      {
+        "type": "keyDown",
+        "key": "KeyH",
+        "delay": 10
+      },
+      {
+        "type": "keyUp",
+        "key": "KeyH",
+        "delay": 10
+      },
+      {
+        "type": "keyUp",
+        "key": "ShiftLeft",
+        "delay": 10
+      },
+      {
+        "type": "keyDown",
+        "key": "KeyI",
+        "delay": 10
+      },
+      {
+        "type": "keyUp",
+        "key": "KeyI",
+        "delay": 10
+      }
+    ],
+    "delayed": true
+  },
+  "name": "Hello World",
+  "icon": "keyboard_keys",
+  "iconTheme": "material-symbols-rounded"
+}
+```
+
 ## Menu Shortcuts vs. Simulated Hotkeys
 
-With Kando, you can bind a menu to a keyboard shortcut and use menu items to simulate keyboard hotkeys.
-This is a bit confusing as both are configured similarly, but use different formats.
+With Kando, you can bind a menu to a keyboard shortcut and use menu items to simulate keyboard hotkeys or macros.
+This is a bit confusing as all are configured similarly, but use different formats.
 
 Below is the configuration of a menu bound to <kbd>Ctrl</kbd>+<kbd>V</kbd> and a menu item simulating <kbd>Ctrl</kbd>+<kbd>V</kbd>.
 As you can see, the format for the key combination is different.
@@ -171,7 +238,7 @@ Menu-Shortcut Configuration | Hotkey-Item Configuration
 
 The reason for this is complex: Depending on the platform, Kando uses different mechanisms to bind menus to shortcuts.
 All of these require _key names_ for the shortcuts.
-The hotkey items on the other hand simulate _key codes_.
+The hotkey and macro items on the other hand simulate _key codes_.
 Each key on your keyboard has a unique _key code_.
 The keyboard layout you have set in your OS assigns a _key name_ to each _key code_.
 For instance, the key with the _code_ `KeyZ` gets the _name_ `Y` with a German keyboard layout.
@@ -268,6 +335,9 @@ All names are case-insensitive and must be separated by `+`.
 <kbd>numdiv</kbd>
 
 ### Valid Simulated Hotkeys (using _key codes_)
+
+Macro items simulate keyboard hotkeys by sending key codes.
+Below is a list of all available key codes.
 
 The configuration of the hotkey items should also contain any number of modifier key codes followed by a single non-modifier key code, all separated by `+`.
 Note that not all key codes are available on all platforms.

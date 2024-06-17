@@ -10,17 +10,18 @@
 
 #kando-menu-properties-area {
   .text-picker {
-    input {
+    textarea {
       transition: box-shadow 150ms ease;
+      resize: none;
     }
 
     .invalid {
       box-shadow: 0 0 15px rgba(255, 64, 64, 1) inset;
     }
 
-    // This class is used to add a pulsing glow to the input when recording user input.
+    // This class is used to add a pulsing glow to the textarea when recording user input.
     &.recording {
-      input {
+      textarea {
         animation: glowing 1s infinite;
       }
 

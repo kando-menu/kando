@@ -17,6 +17,30 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### Added
+
+- New menu item type: **Keyboard Macros**! You can now record and playback keyboard macros in Kando. This is very useful if you want to automate repetitive tasks! The new item type is much more flexible than the simple hotkey-simulation action. It allows for an arbitrary number of key presses and releases and also supports delays between the key events.
+- **Single-Key Turbo Mode**: Now _any_ key is a Turbo-Mode modifier. Before only if <kbd>Alt</kbd>, <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, and <kbd>Meta</kbd> were held down, you could browse through the menu in "Turbo-Mode". Now this is possible with any key. This makes it possible to easily use Turbo-Mode even if a menu is bound to a single key without a modifier.
+
+#### Changed
+
+- On macOS, the application settings are now stored in `~/Library/Application Support/kando/` (with a lowercase `kando`). This is more consistent with the other platforms and macOS seems to handle this in a case-insensitive way, so the settings should be preserved when upgrading from an older version.
+- When a menu is opened in screen-center mode, turbo-mode is now disabled initially. This is to prevent accidental navigation when the menu is opened and a key is still pressed. Once all keyboard keys are released, turbo-mode can be activated by pressing and holding any key.
+- The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
+- An [ESLint rule](https://typescript-eslint.io/rules/naming-convention/) which enforces naming conventions is used now. This should make the code more consistent, easier to read, and easier to contribute to.
+- Another [ESLint rule](https://eslint.org/docs/latest/rules/curly) which enforces the use of curly braces for all control statements is used now. This should make the code more consistent and less error-prone.
+
+#### Fixed
+
+- A bug where the menu would not open on the correct monitor on Windows if there was a monitor with a higher DPI scale to the right of a monitor with a lower DPI scale.
+- Low-resolutions tray icons on macOS.
+- A regression which caused a dock-icon on macOS to be shown for Kando.
+- A bug which caused the icons of the "Simple Icons (Colored)" theme to be shown in the center menu item even if a child item was hovered. This made the item names unreadable.
+
 ## [Kando 1.0.0](https://github.com/kando-menu/kando/releases/tag/v1.0.0)
 
 <a href="https://www.youtube.com/watch?v=vOE7EAlPUwE">

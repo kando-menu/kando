@@ -156,6 +156,30 @@ export interface IMenu {
 }
 
 /**
+ * This interface is used to describe the additional information that is passed to the
+ * `showMenu` function when the main process requests the menu to be shown.
+ */
+export interface IShowMenuOptions {
+  /** The position of the mouse cursor when the menu was opened. */
+  menuPosition: IVec2;
+
+  /**
+   * The size of the window. Usually, this is the same as window.innerWidth and
+   * window.innerHeight. However, when the window was just resized, this can be different.
+   * Therefore, we need to pass it from the main process.
+   */
+  windowSize: IVec2;
+
+  /**
+   * If this is set, a key has to be pressed first before the turbo mode will be
+   * activated. Else, the turbo mode will be activated immediately when the menu is opened
+   * and a key is already pressed. This is useful for menus that are not opened at the
+   * mouse pointer.
+   */
+  deferredTurboMode: boolean;
+}
+
+/**
  * This interface describes the content of the menu settings file. It contains the
  * configured menus as well as the currently stashed menus.
  */

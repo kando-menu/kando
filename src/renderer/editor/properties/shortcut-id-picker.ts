@@ -25,9 +25,11 @@ export class ShortcutIDPicker extends TextPicker {
     super({
       label: 'Global Shortcut ID',
       hint,
+      lines: 1,
       placeholder: 'Not Bound',
       recordingPlaceholder: '',
       enableRecording: false,
+      resetOnBlur: false,
     });
   }
 

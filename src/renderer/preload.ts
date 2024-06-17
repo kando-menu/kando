@@ -9,7 +9,13 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
-import { IVec2, IMenuItem, IAppSettings, IMenuSettings } from '../common';
+import {
+  IVec2,
+  IMenuItem,
+  IAppSettings,
+  IMenuSettings,
+  IShowMenuOptions,
+} from '../common';
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -63,16 +69,6 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-backend-info');
   },
 
-  /** This will temporarily unbind all menu shortcuts. */
-  inhibitShortcuts: function () {
-    ipcRenderer.send('inhibit-shortcuts');
-  },
-
-  /** This will rebind all menu shortcuts. */
-  uninhibitShortcuts: function () {
-    ipcRenderer.send('uninhibit-shortcuts');
-  },
-
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');
@@ -93,12 +89,8 @@ contextBridge.exposeInMainWorld('api', {
    * @param callback This callback will be called with the root item of the menu and the
    *   position of the mouse cursor.
    */
-  showMenu: function (
-    callback: (root: IMenuItem, menuPosition: IVec2, windowSize: IVec2) => void
-  ) {
-    ipcRenderer.on('show-menu', (event, root, menuPosition, windowSize) =>
-      callback(root, menuPosition, windowSize)
-    );
+  showMenu: function (callback: (root: IMenuItem, options: IShowMenuOptions) => void) {
+    ipcRenderer.on('show-menu', (event, root, options) => callback(root, options));
   },
 
   /**

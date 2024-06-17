@@ -11,7 +11,6 @@
 import os from 'node:os';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import path from 'path';
-import { exec } from 'child_process';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
@@ -45,6 +44,9 @@ export class KandoApp {
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
+
+  /** This flag is used to determine if the bindShortcuts() method is currently running. */
+  private bindingShortcuts = false;
 
   /**
    * This is the tray icon which is displayed in the system tray. In the future it will be
@@ -106,9 +108,13 @@ export class KandoApp {
     }
 
     // When the menu settings change, we need to rebind the shortcuts and update the
-    // tray menu.
+    // tray menu. Rebinding the shortcuts is only necessary when the window is currently
+    // not shown. If the window is shown, the shortcuts are already unbound and will be
+    // rebound when the window is hidden.
     this.menuSettings.onChange('menus', async () => {
-      await this.bindShortcuts();
+      if (!this.window.isVisible()) {
+        await this.bindShortcuts();
+      }
       this.updateTrayMenu();
     });
 
@@ -244,7 +250,8 @@ export class KandoApp {
           clearTimeout(this.hideTimeout);
         }
 
-        // Move the window to the monitor which contains the pointer.
+        // Get the work area of the screen where the pointer is located. We will move the
+        // window to this screen and show the menu at the pointer position.
         const workarea = screen.getDisplayNearestPoint({
           x: info.pointerX,
           y: info.pointerY,
@@ -254,6 +261,20 @@ export class KandoApp {
         // window will not be moved to the correct monitor.
         if (process.platform === 'win32') {
           this.showWindow();
+
+          // Also, there is this long-standing issue with Windows where the window is not
+          // scaled correctly when it is moved to another monitor with a different DPI
+          // scale: https://github.com/electron/electron/issues/10862
+          // To work around this, we first move the window to the top-left corner of the
+          // screen and make sure that it is only on this monitor by reducing its size to
+          // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
+          // scale the window to the correct size.
+          this.window.setBounds({
+            x: workarea.x,
+            y: workarea.y,
+            width: 1,
+            height: 1,
+          });
         }
 
         // Some platforms require the window to be one pixel larger than the work area.
@@ -284,13 +305,15 @@ export class KandoApp {
           y: workarea.height,
         };
 
-        // Send the menu to the renderer process.
-        this.window.webContents.send(
-          'show-menu',
-          this.lastMenu.root,
+        // Send the menu to the renderer process. If the menu is centered, we delay the
+        // turbo mode. This way, a key has to be pressed first before the turbo mode is
+        // activated. Else, the turbo mode would be activated immediately when the menu is
+        // opened which is not nice if it is not opened at the pointer position.
+        this.window.webContents.send('show-menu', this.lastMenu.root, {
           menuPosition,
-          windowSize
-        );
+          windowSize,
+          deferredTurboMode: this.lastMenu.centered,
+        });
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
@@ -336,9 +359,6 @@ export class KandoApp {
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
-
-    // We show Kando on all workspaces.
-    this.window.setVisibleOnAllWorkspaces(true);
 
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.
@@ -414,17 +434,6 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
-    // Unbind all shortcuts. This is used when selecting shortcuts in the editor.
-    ipcMain.on('inhibit-shortcuts', async () => {
-      await this.backend.unbindAllShortcuts();
-    });
-
-    // Rebind all shortcuts. This is used when the user is done selecting shortcuts in
-    // the editor.
-    ipcMain.on('uninhibit-shortcuts', async () => {
-      await this.bindShortcuts();
-    });
-
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -482,24 +491,18 @@ export class KandoApp {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hideTimeout = setTimeout(() => {
-        this.hideWindow();
-        this.hideTimeout = null;
-
+      this.hideWindow(400).then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
         }
-      }, 400);
+      });
     });
 
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
-      this.hideTimeout = setTimeout(() => {
-        this.hideWindow();
-        this.hideTimeout = null;
-      }, 300);
+      this.hideWindow(300);
     });
   }
 
@@ -508,6 +511,13 @@ export class KandoApp {
    * method is called once initially and then whenever the menu settings change.
    */
   private async bindShortcuts() {
+    // This async function should not be run twice at the same time.
+    if (this.bindingShortcuts) {
+      return;
+    }
+
+    this.bindingShortcuts = true;
+
     // First, we unbind all shortcuts.
     await this.backend.unbindAllShortcuts();
 
@@ -543,15 +553,19 @@ export class KandoApp {
         KandoApp.showError('Failed to bind shortcut ' + trigger, error.message);
       }
     }
+
+    this.bindingShortcuts = false;
   }
 
   /** This updates the menu of the tray icon. It is called when the menu settings change. */
   private updateTrayMenu() {
     if (!this.tray) {
       if (os.platform() === 'darwin') {
-        this.tray = new Tray(
-          path.join(__dirname, require('../../assets/icons/trayTemplate.png'))
-        );
+        // On macOS, the tray icons are not bundled via webpack, as the different
+        // resolutions for HiDPI displays are loaded at runtime. Instead, the tray icons
+        // are copied to the assets directory during the build process.
+        // See webpack.plugins.ts for more information.
+        this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
         this.tray = new Tray(
           path.join(__dirname, require('../../assets/icons/icon.png'))
@@ -628,19 +642,6 @@ export class KandoApp {
     return item;
   }
 
-  /**
-   * A small helper function to execute a shell command. It will show a notification if
-   * the command fails to start.
-   */
-  private exec(command: string) {
-    exec(command, (error) => {
-      // Print an error if the command fails to start.
-      if (error) {
-        KandoApp.showError('Failed to execute command', error.message);
-      }
-    });
-  }
-
   /** This shows the window. */
   private showWindow() {
     // On Windows, we have to remove the ignore-mouse-events property when
@@ -649,6 +650,10 @@ export class KandoApp {
     if (process.platform === 'win32') {
       this.window.setIgnoreMouseEvents(false);
     }
+
+    // Once Kando's window is shown, we unbind all shortcuts to make sure that the
+    // user can select the bound shortcuts in the menu editor.
+    this.backend.unbindAllShortcuts();
 
     this.window.show();
 
@@ -660,9 +665,14 @@ export class KandoApp {
   }
 
   /**
-   * This hides the window. When Electron windows are hidden, input focus is not
-   * necessarily returned to the topmost window below the hidden window. This is a problem
-   * if we want to simulate key presses.
+   * This hides the window. As shortcuts are unbound when the window is shown, we have to
+   * rebind them when the window is hidden. This method also accepts a delay parameter
+   * which can be used to delay the hiding of the window. This is useful when we want to
+   * show a fade-out animation.
+   *
+   * When Electron windows are hidden, input focus is not necessarily returned to the
+   * topmost window below the hidden window. This is a problem if we want to simulate key
+   * presses.
    *
    * - On Windows, we have to minimize the window instead. This leads to another issue:
    *   https://github.com/kando-menu/kando/issues/375. To make this weird little window
@@ -672,15 +682,29 @@ export class KandoApp {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  private hideWindow() {
-    if (process.platform === 'win32') {
-      this.window.setIgnoreMouseEvents(true);
-      this.window.minimize();
-    } else if (process.platform === 'darwin') {
-      app.hide();
-    } else {
-      this.window.hide();
+  private async hideWindow(delay = 0) {
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
     }
+
+    return new Promise<void>((resolve) => {
+      this.bindShortcuts();
+
+      this.hideTimeout = setTimeout(() => {
+        if (process.platform === 'win32') {
+          this.window.setIgnoreMouseEvents(true);
+          this.window.minimize();
+        } else if (process.platform === 'darwin') {
+          app.hide();
+        } else {
+          this.window.hide();
+        }
+
+        this.hideTimeout = null;
+
+        resolve();
+      }, delay);
+    });
   }
 
   /**
