@@ -187,11 +187,13 @@ export class Properties extends EventEmitter {
     this.conditionPicker = new ConditionPicker(
       div.querySelector('#kando-menu-properties-condition-picker')
     );
-    // TODO: Remove this eslint-disable line.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.conditionPicker.on('select', (appName, windowTitle) => {
-      if (this.activeItem) {
-        // this.activeItem.condition = { appName, windowTitle };
+    this.conditionPicker.on('select', (conditions) => {
+      if (this.activeMenu) {
+        if (conditions) {
+          this.activeMenu.conditions = conditions;
+        } else {
+          delete this.activeMenu.conditions;
+        }
       }
     });
     this.conditionPicker.on('hide', () => {
@@ -203,7 +205,7 @@ export class Properties extends EventEmitter {
       '#kando-menu-properties-condition-button'
     ) as HTMLButtonElement;
     conditionButton.addEventListener('click', () => {
-      this.conditionPicker.show('', '');
+      this.conditionPicker.show(this.activeMenu.conditions);
       this.baseSettings.classList.add('hidden');
     });
 

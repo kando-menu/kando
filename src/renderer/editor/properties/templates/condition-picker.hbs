@@ -13,11 +13,11 @@
     label="Limit to Specific Apps"
     hint="Show the menu only if a specific application is focused."
     checkedHint="This supports regular expressions like /Firefox|Chrome/."
-    id="kando-properties-condition-app-name-checkbox"
+    id="kando-properties-condition-app-checkbox"
 }}
 
-<div class="collapse">
-  <input id="kando-properties-condition-app-name" type="text" 
+<div id="kando-properties-condition-app-collapse" class="collapse">
+  <input id="kando-properties-condition-app" type="text" 
         class="form-control my-2 fs-3 kando-font" placeholder="App Name">
 </div>
 
@@ -25,27 +25,27 @@
     label="Limit to Specific Window Titles"
     hint="Show the menu only if the focused window's title contains a given text."
     checkedHint="This supports regular expressions like /Firefox|Chrome/."
-    id="kando-properties-condition-window-title-checkbox"
+    id="kando-properties-condition-window-checkbox"
 }}
 
-<div class="collapse">
-  <input id="kando-properties-condition-window-title" type="text" 
-         class="form-control my-2 fs-3 kando-font" placeholder="Window Ttile">
+<div id="kando-properties-condition-window-collapse" class="collapse">
+  <input id="kando-properties-condition-window" type="text" 
+         class="form-control my-2 fs-3 kando-font" placeholder="Window Title">
 </div>
 
 {{> checkbox-option 
     label="Limit to Specific Pointer Positions"
     hint="Show the menu only if the pointer is in a given area on the screen."
     checkedHint="In pixels, relative to the top left corner of your main display."
-    id="kando-properties-condition-pointer-position-checkbox"
+    id="kando-properties-condition-pointer-checkbox"
 }}
 
-<div class="collapse">
-  <div id="kando-properties-condition-pointer-position" class="input-group my-2">
-    <input id="kando-properties-condition-pointer-minx" type="number" class="form-control fs-3 kando-font" placeholder="Left of">
-    <input id="kando-properties-condition-pointer-maxx" type="number" class="form-control fs-3 kando-font" placeholder="Right of">
-    <input id="kando-properties-condition-pointer-miny" type="number" class="form-control fs-3 kando-font" placeholder="Below">
-    <input id="kando-properties-condition-pointer-maxy" type="number" class="form-control fs-3 kando-font" placeholder="Above">
+<div id="kando-properties-condition-pointer-collapse" class="collapse">
+  <div class="input-group my-2">
+    <input id="kando-properties-condition-pointer-min-x" type="number" class="form-control fs-3 kando-font" placeholder="Left of">
+    <input id="kando-properties-condition-pointer-max-x" type="number" class="form-control fs-3 kando-font" placeholder="Right of">
+    <input id="kando-properties-condition-pointer-min-y" type="number" class="form-control fs-3 kando-font" placeholder="Below">
+    <input id="kando-properties-condition-pointer-max-y" type="number" class="form-control fs-3 kando-font" placeholder="Above">
   </div>
 </div>
 
