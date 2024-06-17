@@ -608,10 +608,15 @@ export class Preview extends EventEmitter {
     labelDivContainer.classList.remove('top');
     labelDivContainer.classList.remove('bottom');
 
-    if (position.x < -0.001) labelDivContainer.classList.add('left');
-    else if (position.x > 0.001) labelDivContainer.classList.add('right');
-    else if (position.y < 0) labelDivContainer.classList.add('top');
-    else labelDivContainer.classList.add('bottom');
+    if (position.x < -0.001) {
+      labelDivContainer.classList.add('left');
+    } else if (position.x > 0.001) {
+      labelDivContainer.classList.add('right');
+    } else if (position.y < 0) {
+      labelDivContainer.classList.add('top');
+    } else {
+      labelDivContainer.classList.add('bottom');
+    }
 
     // If the child has grandchildren, also position them in a circle around the child.
     if (child.type === 'submenu') {
