@@ -32,6 +32,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - When a menu is opened in screen-center mode, turbo-mode is now disabled initially. This is to prevent accidental navigation when the menu is opened and a key is still pressed. Once all keyboard keys are released, turbo-mode can be activated by pressing and holding any key.
 - The description line of hotkey items in the stash or in the trash now shows the hotkey in a shorter format. For instance, "ControlLeft+AltLeft+ArrowRight" is now shown as "Ctrl + Alt + ArrowRight".
 - An [ESLint rule](https://typescript-eslint.io/rules/naming-convention/) which enforces naming conventions is used now. This should make the code more consistent, easier to read, and easier to contribute to.
+- Another [ESLint rule](https://eslint.org/docs/latest/rules/curly) which enforces the use of curly braces for all control statements is used now. This should make the code more consistent and less error-prone.
 
 #### Fixed
 
