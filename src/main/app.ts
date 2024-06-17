@@ -171,8 +171,8 @@ export class KandoApp {
 
       // If current menu does not have any conditions we check if we have already have
       // any menu selected, if not then we select it as conditionless match.
-      if (menu.conditions == null) {
-        if (selectedMenu == null) {
+      if (!menu.conditions) {
+        if (!selectedMenu) {
           selectedMenu = menu;
         }
 
@@ -182,7 +182,7 @@ export class KandoApp {
 
       // And we start with appName condition check (we know conditions is not null)
       // if appName condition does not exists we skip it.
-      if (menu.conditions.appName != null) {
+      if (menu.conditions.appName) {
         // We check if appName condition is RegExp or string, if string we create RegExp from it.
         const regex =
           typeof menu.conditions.appName === 'string'
@@ -198,7 +198,7 @@ export class KandoApp {
       }
 
       // We do the same for windowName condition
-      if (menu.conditions.windowName != null) {
+      if (menu.conditions.windowName) {
         const regex =
           typeof menu.conditions.windowName === 'string'
             ? new RegExp(menu.conditions.windowName)
@@ -538,7 +538,7 @@ export class KandoApp {
 
     // Finally, we bind the shortcuts. If there are multiple menus with the same
     // shortcut, the shortcut will open the first menu for now.
-    for (const [trigger, menus] of triggers) {
+    for (const [trigger] of triggers) {
       try {
         await this.backend.bindShortcut({
           trigger,
