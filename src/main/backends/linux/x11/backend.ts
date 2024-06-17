@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { screen, globalShortcut } from 'electron';
+import { globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../../common';
