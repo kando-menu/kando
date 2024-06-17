@@ -74,6 +74,25 @@ export interface IKeyStroke {
  */
 export type IKeySequence = Array<IKeyStroke>;
 
+/**
+ * This interface is used to describe the conditions under which a menu should be shown.
+ * When a menu shall be shown, the conditions of all menus are checked. The menu with the
+ * most conditions that are met is selected.
+ */
+export interface IMenuConditions {
+  /** Regex to match for a window name */
+  windowName?: RegExp | string;
+
+  /** Regex to match for an application name. */
+  appName?: RegExp | string;
+
+  /**
+   * Cursor position to match. In pixels relative to the top-left corner of the primary
+   * display.
+   */
+  cursorPosition?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number };
+}
+
 /** The menu consists of a tree of menu items. */
 export interface IMenuItem {
   /** The type of the menu item. See `ItemActionRegistry` and `ItemTypeRegistry`. */
@@ -140,19 +159,10 @@ export interface IMenu {
   centered: boolean;
 
   /**
-   * Conditions matched before showing off menu, one that has more conditions and met them
-   * all is selected.
+   * Conditions are matched before showing a menu. The one that has more conditions and
+   * met them all is selected.
    */
-  conditions?: {
-    /** Regex to match for a window name */
-    windowName?: RegExp | string;
-
-    /** Regex to match for an application name. */
-    appName?: RegExp | string;
-
-    /** Cursor position to match ranging from 0.0 to 1.0 at the end of the screen */
-    cursorPosition?: { xMin: number; xMax: number; yMin: number; yMax: number };
-  };
+  conditions?: IMenuConditions;
 }
 
 /**
