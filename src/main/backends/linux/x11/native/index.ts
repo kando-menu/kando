@@ -11,9 +11,9 @@
 export interface Native {
   /**
    * This uses XLib calls to get the name and the class of the currently focused
-   * application window.
+   * application window, as well as the current pointer position.
    */
-  getActiveWindow(): { app: string; name: string };
+  getWMInfo(): { app: string; window: string; pointerX: number; pointerY: number };
 
   /**
    * This simulates a mouse movement.

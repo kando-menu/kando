@@ -11,9 +11,11 @@
 #include "Native.hpp"
 
 #include <X11/Xlib.h>
+#include <X11/Xresource.h>
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
+#include <cmath>
 #include <iostream>
 #include <string>
 
@@ -23,7 +25,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
   DefineAddon(exports, {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
-                           InstanceMethod("getActiveWindow", &Native::getActiveWindow),
+                           InstanceMethod("getWMInfo", &Native::getWMInfo),
                        });
 }
 
@@ -104,40 +106,58 @@ unsigned long getLongProperty(Display* display, Window window, std::string const
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
+Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
   Napi::Object obj = Napi::Object::New(env);
 
   Display* display = XOpenDisplay(nullptr);
   int      screen  = XDefaultScreen(display);
-  Window   window  = RootWindow(display, screen);
+  Window   root    = RootWindow(display, screen);
 
-  if (!window) {
-    return env.Null();
+  if (root) {
+    Window window = getLongProperty(display, root, "_NET_ACTIVE_WINDOW");
+
+    if (window) {
+      char* wm_class =
+          reinterpret_cast<char*>(getStringProperty(display, window, "WM_CLASS"));
+
+      unsigned char* net_wm_name = getStringProperty(display, window, "_NET_WM_NAME");
+      const char*    wm_name     = "";
+
+      if (net_wm_name != nullptr) {
+        wm_name = reinterpret_cast<const char*>(
+            getStringProperty(display, window, "_NET_WM_NAME"));
+      }
+
+      obj.Set("app", wm_class);
+      obj.Set("window", wm_name);
+    }
   }
 
-  window = getLongProperty(display, window, "_NET_ACTIVE_WINDOW");
+  // Get pointer location.
+  int          root_x, root_y, win_x, win_y;
+  unsigned int mask;
+  Window       child;
+  XQueryPointer(display, root, &child, &child, &root_x, &root_y, &win_x, &win_y, &mask);
 
-  if (!window) {
-    return env.Null();
+  // Get the DPI scaling factor
+  char*       resource_string = XResourceManagerString(display);
+  XrmDatabase db              = XrmGetStringDatabase(resource_string);
+
+  char*    type;
+  XrmValue value;
+  double   scaling_factor = 1.0;
+
+  if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value)) {
+    double dpi     = atof(value.addr);
+    scaling_factor = dpi / 96.0; // Assuming 96 DPI as the baseline for 1.0 scaling
   }
 
-  char* wm_class =
-      reinterpret_cast<char*>(getStringProperty(display, window, "WM_CLASS"));
+  XrmDestroyDatabase(db);
 
-  // Workaround for null values
-  unsigned char* net_wm_name = getStringProperty(display, window, "_NET_WM_NAME");
-
-  const char* wm_name = "";
-
-  if (net_wm_name != NULL) {
-    wm_name =
-        reinterpret_cast<const char*>(getStringProperty(display, window, "_NET_WM_NAME"));
-  }
-
-  obj.Set("app", wm_class);
-  obj.Set("name", wm_name);
+  obj.Set("pointerX", 1.0 * root_x / scaling_factor);
+  obj.Set("pointerY", 1.0 * root_y / scaling_factor);
 
   XCloseDisplay(display);
 
