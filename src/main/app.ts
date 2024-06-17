@@ -14,9 +14,10 @@ import path from 'path';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { IMenuItem, IMenu, IMenuSettings, IAppSettings } from '../common';
+import { IMenuItem, IMenu, IMenuSettings, IAppSettings, IKandoRequest } from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
+import { WMInfo } from './backends/backend';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -142,32 +143,111 @@ export class KandoApp {
   }
 
   /**
+   * This chooses the correct menu depending on environment.
+   *
+   * @param request Required information to select correct menu.
+   * @param info Informations about current desktop environment.
+   */
+  public chooseMenu(request: IKandoRequest, info: WMInfo) {
+    // Score of currently selected menu
+    let currentScore = 0;
+    // Temporary selected menu
+    let selectedMenu: DeepReadonly<IMenu>;
+    // Get list of current menus.
+    const menus = this.menuSettings.get('menus');
+
+    for (const menu of menus) {
+      let menuScore = 0;
+      // We check if request has menu name, and if it matches checked menu.
+      // If that's the case we return it as chosen menu, there's no need to check rest.
+      if (request.name != '' && request.name == menu.root.name) {
+        return menu;
+      }
+
+      // Then we check if menu trigger matches our request, if not we skip this menu.
+      if (request.trigger != menu.shortcut && request.trigger != menu.shortcutID) {
+        continue;
+      }
+
+      // If current menu does not have any conditions we check if we have already have
+      // any menu selected, if not then we select it as conditionless match.
+      if (menu.conditions == null) {
+        if (selectedMenu == null) {
+          selectedMenu = menu;
+        }
+
+        // As we dont have any conditions to check we continue with next menu.
+        continue;
+      }
+
+      // And we start with appName condition check (we know conditions is not null)
+      // if appName condition does not exists we skip it.
+      if (menu.conditions.appName != null) {
+        // We check if appName condition is RegExp or string, if string we create RegExp from it.
+        const regex =
+          typeof menu.conditions.appName === 'string'
+            ? new RegExp(menu.conditions.appName)
+            : menu.conditions.appName;
+
+        // If condition matches we add score, if not we skip this menu.
+        if (regex.test(info.appName)) {
+          menuScore += 1;
+        } else {
+          continue;
+        }
+      }
+
+      // We do the same for windowName condition
+      if (menu.conditions.windowName != null) {
+        const regex =
+          typeof menu.conditions.windowName === 'string'
+            ? new RegExp(menu.conditions.windowName)
+            : menu.conditions.windowName;
+
+        if (regex.test(info.windowName)) {
+          menuScore += 1;
+        } else {
+          continue;
+        }
+      }
+
+      // Because we havent yet figured out how to set pointer coordinates condition
+      // this condition is TODO.
+
+      // If our menuScore is higher than currentScore we need to select this menu
+      // As it matches more conditions than previous selection
+      if (menuScore > currentScore) {
+        selectedMenu = menu;
+        currentScore = menuScore;
+      }
+    }
+
+    // If after searching we do not have any menu, then there is nothing to display.
+    if (selectedMenu == null) {
+      throw new Error(`Menu for request ${request} was not found.`);
+    }
+
+    // We finally return our last selected menu as choosen.
+    return selectedMenu;
+  }
+
+  /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
    *
-   * @param menu The menu to show or the name of the menu to show.
+   * @param request Required information to select correct menu.
    */
-  public showMenu(menu: DeepReadonly<IMenu> | string) {
+  public showMenu(request: IKandoRequest) {
     this.backend
       .getWMInfo()
       .then((info) => {
+        // Select correct menu before showing it to user.
+        this.lastMenu = this.chooseMenu(request, info);
+
         // Abort any ongoing hide animation.
         if (this.hideTimeout) {
           clearTimeout(this.hideTimeout);
-        }
-
-        // If the menu is a string, we need to find the corresponding menu in the
-        // settings.
-        if (typeof menu === 'string') {
-          this.lastMenu = this.menuSettings
-            .get('menus')
-            .find((m) => m.root.name === menu);
-          if (!this.lastMenu) {
-            throw new Error(`Menu "${menu}" not found.`);
-          }
-        } else {
-          this.lastMenu = menu;
         }
 
         // Get the work area of the screen where the pointer is located. We will move the
@@ -460,11 +540,13 @@ export class KandoApp {
     // shortcut, the shortcut will open the first menu for now.
     for (const [trigger, menus] of triggers) {
       try {
-        const menu = menus[0];
         await this.backend.bindShortcut({
           trigger,
           action: () => {
-            this.showMenu(menu);
+            this.showMenu({
+              trigger: trigger,
+              name: '',
+            });
           },
         });
       } catch (error) {
@@ -502,7 +584,12 @@ export class KandoApp {
           : menu.shortcutID) || 'Not Bound';
       template.push({
         label: `${menu.root.name} (${trigger})`,
-        click: () => this.showMenu(menu),
+        click: () => {
+          this.showMenu({
+            trigger: '',
+            name: menu.root.name,
+          });
+        },
       });
     }
 
