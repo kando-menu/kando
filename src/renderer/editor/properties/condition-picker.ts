@@ -90,10 +90,10 @@ export class ConditionPicker extends EventEmitter {
    * @param appName - The initial app name filter.
    * @param windowTitle - The initial window title filter.
    */
+  // TODO: Remove this eslint-disable line.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public show(appName: string, windowTitle: string) {
     this.container.classList.remove('hidden');
-    // this.appName.value = appName;
-    // this.windowTitle.value = windowTitle;
   }
 
   /** Hides the condition picker. */

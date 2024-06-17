@@ -187,6 +187,8 @@ export class Properties extends EventEmitter {
     this.conditionPicker = new ConditionPicker(
       div.querySelector('#kando-menu-properties-condition-picker')
     );
+    // TODO: Remove this eslint-disable line.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.conditionPicker.on('select', (appName, windowTitle) => {
       if (this.activeItem) {
         // this.activeItem.condition = { appName, windowTitle };
