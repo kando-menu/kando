@@ -39,23 +39,27 @@ export class X11Backend implements Backend {
 
   /**
    * This uses the X11 library to get the name and app of the currently focused window. In
-   * addition, it uses Electron's screen module to get the current pointer position.
+   * addition, it returns the current pointer position.
    *
    * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
-    const window = native.getActiveWindow();
-    const pointer = screen.getCursorScreenPoint();
+    // Starting with Electron 29, the cursorScreenPoint() method is unreliable on X11. It
+    // returns the a position where the pointer has been a couple of milliseconds ago.
+    // Therefore, we use the native module to get the pointer position.
+    // const pointer = screen.getCursorScreenPoint();
+
+    const info = native.getWMInfo();
 
     // For some reason, this makes the method much faster. For now, I have no idea why.
     process.nextTick(() => {});
 
     return {
-      windowName: window ? window.name : '',
-      appName: window ? window.app : '',
-      pointerX: pointer.x,
-      pointerY: pointer.y,
+      windowName: info.window || '',
+      appName: info.app || '',
+      pointerX: info.pointerX || 0,
+      pointerY: info.pointerY || 0,
     };
   }
 
