@@ -92,7 +92,7 @@ export interface IMenuConditions {
    * Cursor position to match. In pixels relative to the top-left corner of the primary
    * display.
    */
-  cursorPosition?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number };
+  screenArea?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number };
 }
 
 /** The menu consists of a tree of menu items. */

@@ -216,14 +216,17 @@ export class KandoApp {
         }
       }
 
-      // And for cursorPosition condition.
+      // And for screenArea condition.
       if (
-        menu.conditions.cursorPosition?.xMin != null ||
-        menu.conditions.cursorPosition?.xMax != null ||
-        menu.conditions.cursorPosition?.yMin != null ||
-        menu.conditions.cursorPosition?.yMax != null
+        menu.conditions.screenArea?.xMin != null ||
+        menu.conditions.screenArea?.xMax != null ||
+        menu.conditions.screenArea?.yMin != null ||
+        menu.conditions.screenArea?.yMax != null
       ) {
-        const condition = menu.conditions.cursorPosition;
+        const condition = menu.conditions.screenArea;
+
+        console.log(condition);
+        console.log(info.pointerX, info.pointerY);
 
         // We check if cursor is in the specified range.
         if (

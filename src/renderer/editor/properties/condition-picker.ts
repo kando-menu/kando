@@ -41,7 +41,7 @@ export class ConditionPicker extends EventEmitter {
   private conditions: {
     app: IConditionPickerInputs;
     window: IConditionPickerInputs;
-    pointer: IConditionPickerInputs;
+    screen: IConditionPickerInputs;
   };
 
   /**
@@ -72,14 +72,14 @@ export class ConditionPicker extends EventEmitter {
         collapse: container.querySelector(idPrefix + 'window-collapse'),
         inputs: [container.querySelector(idPrefix + 'window')],
       },
-      pointer: {
-        checkbox: container.querySelector(idPrefix + 'pointer-checkbox'),
-        collapse: container.querySelector(idPrefix + 'pointer-collapse'),
+      screen: {
+        checkbox: container.querySelector(idPrefix + 'screen-checkbox'),
+        collapse: container.querySelector(idPrefix + 'screen-collapse'),
         inputs: [
-          container.querySelector(idPrefix + 'pointer-x-min'),
-          container.querySelector(idPrefix + 'pointer-x-max'),
-          container.querySelector(idPrefix + 'pointer-y-min'),
-          container.querySelector(idPrefix + 'pointer-y-max'),
+          container.querySelector(idPrefix + 'screen-x-min'),
+          container.querySelector(idPrefix + 'screen-x-max'),
+          container.querySelector(idPrefix + 'screen-y-min'),
+          container.querySelector(idPrefix + 'screen-y-max'),
         ],
       },
     };
@@ -110,17 +110,24 @@ export class ConditionPicker extends EventEmitter {
         conditions.windowName = this.conditions.window.inputs[0].value;
       }
 
-      if (this.conditions.pointer.checkbox.checked) {
-        conditions.cursorPosition = {
-          xMin: parseInt(this.conditions.pointer.inputs[0].value),
-          xMax: parseInt(this.conditions.pointer.inputs[1].value),
-          yMin: parseInt(this.conditions.pointer.inputs[2].value),
-          yMax: parseInt(this.conditions.pointer.inputs[3].value),
-        };
+      if (this.conditions.screen.checkbox.checked) {
+        conditions.screenArea = {};
+        if (this.conditions.screen.inputs[0].value !== '') {
+          conditions.screenArea.xMin = parseInt(this.conditions.screen.inputs[0].value);
+        }
+        if (this.conditions.screen.inputs[1].value !== '') {
+          conditions.screenArea.xMax = parseInt(this.conditions.screen.inputs[1].value);
+        }
+        if (this.conditions.screen.inputs[2].value !== '') {
+          conditions.screenArea.yMin = parseInt(this.conditions.screen.inputs[2].value);
+        }
+        if (this.conditions.screen.inputs[3].value !== '') {
+          conditions.screenArea.yMax = parseInt(this.conditions.screen.inputs[3].value);
+        }
       }
 
       const anyConditionSelected =
-        conditions.appName || conditions.windowName || conditions.cursorPosition;
+        conditions.appName || conditions.windowName || conditions.screenArea;
 
       this.emit('select', anyConditionSelected ? conditions : null);
       this.hide();
@@ -163,17 +170,17 @@ export class ConditionPicker extends EventEmitter {
         this.conditions.window.inputs[0].value = conditions.windowName.toString();
       }
 
-      if (conditions.cursorPosition) {
-        this.conditions.pointer.collapse.classList.add('show');
-        this.conditions.pointer.checkbox.checked = true;
-        this.conditions.pointer.inputs[0].value =
-          conditions.cursorPosition.xMin?.toString() || '';
-        this.conditions.pointer.inputs[1].value =
-          conditions.cursorPosition.xMax?.toString() || '';
-        this.conditions.pointer.inputs[2].value =
-          conditions.cursorPosition.yMin?.toString() || '';
-        this.conditions.pointer.inputs[3].value =
-          conditions.cursorPosition.yMax?.toString() || '';
+      if (conditions.screenArea) {
+        this.conditions.screen.collapse.classList.add('show');
+        this.conditions.screen.checkbox.checked = true;
+        this.conditions.screen.inputs[0].value =
+          conditions.screenArea.xMin?.toString() || '';
+        this.conditions.screen.inputs[1].value =
+          conditions.screenArea.xMax?.toString() || '';
+        this.conditions.screen.inputs[2].value =
+          conditions.screenArea.yMin?.toString() || '';
+        this.conditions.screen.inputs[3].value =
+          conditions.screenArea.yMax?.toString() || '';
       }
     }
   }
