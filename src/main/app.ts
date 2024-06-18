@@ -166,7 +166,7 @@ export class KandoApp {
       let menuScore = 0;
       // We check if request has menu name, and if it matches checked menu.
       // If that's the case we return it as chosen menu, there's no need to check rest.
-      if (request.name != '' && request.name == menu.root.name) {
+      if (request.name && request.name == menu.root.name) {
         return menu;
       }
 
@@ -175,19 +175,18 @@ export class KandoApp {
         continue;
       }
 
-      // If current menu does not have any conditions we check if we have already have
-      // any menu selected, if not then we select it as conditionless match.
+      // If no other menu matches, we will choose the first one with no conditions set.
       if (!menu.conditions) {
         if (!selectedMenu) {
           selectedMenu = menu;
         }
 
-        // As we dont have any conditions to check we continue with next menu.
+        // As we don't have any conditions to check we continue with next menu.
         continue;
       }
 
-      // And we start with appName condition check (we know conditions is not null)
-      // if appName condition does not exists we skip it.
+      // And we start with appName condition check (we know conditions is not null).
+      // If appName condition does not exists we skip it.
       if (menu.conditions.appName) {
         // We check if appName condition is RegExp or string, if string we create RegExp from it.
         const regex =
@@ -203,7 +202,7 @@ export class KandoApp {
         }
       }
 
-      // We do the same for windowName condition
+      // We do the same for windowName condition.
       if (menu.conditions.windowName) {
         const regex =
           typeof menu.conditions.windowName === 'string'
@@ -217,8 +216,27 @@ export class KandoApp {
         }
       }
 
-      // Because we havent yet figured out how to set pointer coordinates condition
-      // this condition is TODO.
+      // And for cursorPosition condition.
+      if (
+        menu.conditions.cursorPosition?.xMin != null ||
+        menu.conditions.cursorPosition?.xMax != null ||
+        menu.conditions.cursorPosition?.yMin != null ||
+        menu.conditions.cursorPosition?.yMax != null
+      ) {
+        const condition = menu.conditions.cursorPosition;
+
+        // We check if cursor is in the specified range.
+        if (
+          (condition.xMin == null || info.pointerX >= condition.xMin) &&
+          (condition.xMax == null || info.pointerX <= condition.xMax) &&
+          (condition.yMin == null || info.pointerY >= condition.yMin) &&
+          (condition.yMax == null || info.pointerY <= condition.yMax)
+        ) {
+          menuScore += 1;
+        } else {
+          continue;
+        }
+      }
 
       // If our menuScore is higher than currentScore we need to select this menu
       // As it matches more conditions than previous selection

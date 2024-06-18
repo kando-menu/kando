@@ -13,7 +13,7 @@ import { EventEmitter } from 'events';
 import { IMenuConditions } from '../../../common';
 
 /**
- * Each condition picker input consists of a collapse element, a checkbox for enabling the
+ * Each condition-picker input consists of a collapse element, a checkbox for enabling the
  * condition and a set of input fields for the actual condition.
  */
 interface IConditionPickerInputs {
@@ -76,10 +76,10 @@ export class ConditionPicker extends EventEmitter {
         checkbox: container.querySelector(idPrefix + 'pointer-checkbox'),
         collapse: container.querySelector(idPrefix + 'pointer-collapse'),
         inputs: [
-          container.querySelector(idPrefix + 'pointer-min-x'),
-          container.querySelector(idPrefix + 'pointer-max-x'),
-          container.querySelector(idPrefix + 'pointer-min-y'),
-          container.querySelector(idPrefix + 'pointer-max-y'),
+          container.querySelector(idPrefix + 'pointer-x-min'),
+          container.querySelector(idPrefix + 'pointer-x-max'),
+          container.querySelector(idPrefix + 'pointer-y-min'),
+          container.querySelector(idPrefix + 'pointer-y-max'),
         ],
       },
     };
