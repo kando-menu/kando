@@ -19,6 +19,7 @@ import { IMenuConditions } from '../../../common';
 interface IConditionPickerInputs {
   collapse: HTMLElement;
   checkbox: HTMLInputElement;
+  defaultValue?: string;
   inputs: HTMLInputElement[];
 }
 
@@ -138,6 +139,11 @@ export class ConditionPicker extends EventEmitter {
     cancelButton.addEventListener('click', () => {
       this.hide();
     });
+
+    // Log pointer position.
+    document.addEventListener('mousemove', (ev) => {
+      console.log('x:', ev.clientX, 'y:', ev.clientY);
+    });
   }
 
   /**
@@ -149,11 +155,13 @@ export class ConditionPicker extends EventEmitter {
   public show(conditions?: IMenuConditions) {
     this.container.classList.remove('hidden');
 
-    for (const { checkbox, inputs, collapse } of Object.values(this.conditions)) {
+    for (const { checkbox, inputs, defaultValue, collapse } of Object.values(
+      this.conditions
+    )) {
       checkbox.checked = false;
       collapse.classList.remove('show');
       for (const input of inputs) {
-        input.value = '';
+        input.value = defaultValue || '';
       }
     }
 
@@ -189,5 +197,17 @@ export class ConditionPicker extends EventEmitter {
   public hide() {
     this.container.classList.add('hidden');
     this.emit('hide');
+  }
+
+  /**
+   * This is called whenever the menu editor shown. It is used to set hints for the
+   * condition picker.
+   *
+   * @param appName The name of the app which was in focus when Kando was opened.
+   * @param windowName The name of the window which was in focus when Kando was opened.
+   */
+  public setConditionHints(appName: string, windowName: string) {
+    this.conditions.app.defaultValue = appName;
+    this.conditions.window.defaultValue = windowName;
   }
 }

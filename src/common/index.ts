@@ -169,7 +169,7 @@ export interface IMenu {
 
 /**
  * This interface is used to describe the additional information that is passed to the
- * `showMenu` function when the main process requests the menu to be shown.
+ * Menu's `show()` method from the main to the renderer process.
  */
 export interface IShowMenuOptions {
   /** The position of the mouse cursor when the menu was opened. */
@@ -189,6 +189,24 @@ export interface IShowMenuOptions {
    * mouse pointer.
    */
   deferredTurboMode: boolean;
+}
+
+/**
+ * This interface is used to describe the additional information that is passed to the
+ * Editor's `show()` method from the main to the renderer process.
+ */
+export interface IShowEditorOptions {
+  /**
+   * The name of the application that is currently focused. This will be used as a
+   * condition example in the condition picker of the menu editor.
+   */
+  appName: string;
+
+  /**
+   * The name of the window that is currently focused. This will also be used as a
+   * condition example in the condition picker of the menu editor.
+   */
+  windowName: string;
 }
 
 /**

@@ -333,11 +333,21 @@ export class KandoApp {
         // turbo mode. This way, a key has to be pressed first before the turbo mode is
         // activated. Else, the turbo mode would be activated immediately when the menu is
         // opened which is not nice if it is not opened at the pointer position.
-        this.window.webContents.send('show-menu', this.lastMenu.root, {
-          menuPosition,
-          windowSize,
-          deferredTurboMode: this.lastMenu.centered,
-        });
+        // We also send the name of the current application and window to the renderer.
+        // It will be used as an example in the condition picker of the menu editor.
+        this.window.webContents.send(
+          'show-menu',
+          this.lastMenu.root,
+          {
+            menuPosition,
+            windowSize,
+            deferredTurboMode: this.lastMenu.centered,
+          },
+          {
+            appName: info.appName,
+            windowName: info.windowName,
+          }
+        );
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
@@ -346,11 +356,23 @@ export class KandoApp {
 
   /**
    * This is called when the user wants to open the menu editor. This can be either
-   * triggered by the tray icon or runned a second instance of the app.
+   * triggered by the tray icon or by running a second instance of the app. We send the
+   * name of the current application and window to the renderer. It will be used as an
+   * example in the condition picker of the menu editor.
    */
   public showEditor() {
-    this.window.webContents.send('show-editor');
-    this.showWindow();
+    this.backend
+      .getWMInfo()
+      .then((info) => {
+        this.window.webContents.send('show-editor', {
+          appName: info.appName,
+          windowName: info.windowName,
+        });
+        this.showWindow();
+      })
+      .catch((err) => {
+        console.error('Failed to settings: ' + err);
+      });
   }
 
   /**

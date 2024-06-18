@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { IMenu, IBackendInfo } from '../../../common';
+import { IMenu, IBackendInfo, IShowEditorOptions } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { ConditionPicker } from './condition-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
@@ -322,6 +322,10 @@ export class Properties extends EventEmitter {
 
     await this.updateSettingsWrapperSize();
     await this.showSettingsWrapper();
+  }
+
+  public setOptions(options: IShowEditorOptions) {
+    this.conditionPicker.setConditionHints(options.appName, options.windowName);
   }
 
   /**

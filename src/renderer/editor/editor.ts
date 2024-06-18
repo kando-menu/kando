@@ -16,7 +16,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IBackendInfo, IMenuSettings } from '../../common';
+import { IBackendInfo, IMenuSettings, IShowEditorOptions } from '../../common';
 import { toIMenuItem } from './common/editor-menu-item';
 import { DnDManager } from './common/dnd-manager';
 
@@ -172,7 +172,8 @@ export class Editor extends EventEmitter {
    * the other components are hidden by default and will only be shown when
    * enterEditMode() is called.
    */
-  public show() {
+  public show(options: IShowEditorOptions) {
+    this.properties.setOptions(options);
     this.container.classList.add('visible');
   }
 
