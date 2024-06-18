@@ -69,7 +69,7 @@ export type IKeySequence = Array<IKeyStroke>;
  * This interface holds the request made to Kando App either from external source or from
  * a shortcut trigger.
  */
-export interface IKandoRequest {
+export interface IShowMenuRequest {
   trigger: string;
   name: string;
 }

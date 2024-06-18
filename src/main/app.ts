@@ -14,7 +14,13 @@ import path from 'path';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { IMenuItem, IMenu, IMenuSettings, IAppSettings, IKandoRequest } from '../common';
+import {
+  IMenuItem,
+  IMenu,
+  IMenuSettings,
+  IAppSettings,
+  IShowMenuRequest,
+} from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
 import { WMInfo } from './backends/backend';
@@ -148,7 +154,7 @@ export class KandoApp {
    * @param request Required information to select correct menu.
    * @param info Informations about current desktop environment.
    */
-  public chooseMenu(request: IKandoRequest, info: WMInfo) {
+  public chooseMenu(request: IShowMenuRequest, info: WMInfo) {
     // Score of currently selected menu
     let currentScore = 0;
     // Temporary selected menu
@@ -238,7 +244,7 @@ export class KandoApp {
    *
    * @param request Required information to select correct menu.
    */
-  public showMenu(request: IKandoRequest) {
+  public showMenu(request: IShowMenuRequest) {
     this.backend
       .getWMInfo()
       .then((info) => {
