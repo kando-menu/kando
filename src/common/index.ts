@@ -66,8 +66,10 @@ export interface IKeyStroke {
 export type IKeySequence = Array<IKeyStroke>;
 
 /**
- * This interface holds the request made to Kando App either from external source or from
- * a shortcut trigger.
+ * There are different reasons why a menu should be shown. This interface is used to
+ * describe the request to show a menu. A menu can be shown because a shortcut was pressed
+ * (in this case `trigger` will be the shortcut or the shortcut ID) or because a menu was
+ * requested by name.
  */
 export interface IShowMenuRequest {
   trigger: string;
