@@ -207,6 +207,12 @@ export interface IShowEditorOptions {
    * condition example in the condition picker of the menu editor.
    */
   windowName: string;
+
+  /**
+   * To compute the current mouse position in the condition picker, we need to know the
+   * position of the window.
+   */
+  windowPosition: IVec2;
 }
 
 /**

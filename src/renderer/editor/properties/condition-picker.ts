@@ -10,7 +10,7 @@
 
 import { Collapse } from 'bootstrap';
 import { EventEmitter } from 'events';
-import { IMenuConditions } from '../../../common';
+import { IMenuConditions, IVec2 } from '../../../common';
 
 /**
  * Each condition-picker input consists of a collapse element, a checkbox for enabling the
@@ -46,6 +46,18 @@ export class ConditionPicker extends EventEmitter {
   };
 
   /**
+   * The position of Kando's window when it was opened. This is used to compute the mouse
+   * position hint.
+   */
+  private windowPosition: IVec2;
+
+  /** The element that shows the mouse position hint. */
+  private screenAreaHint: HTMLElement;
+
+  /** The event handler for mouse move events. */
+  private mouseMoveHandler: (event: MouseEvent) => void;
+
+  /**
    * Creates a new ConditionPicker and appends it to the given container.
    *
    * @param container - The container to which the condition picker will be appended.
@@ -60,6 +72,9 @@ export class ConditionPicker extends EventEmitter {
     container.innerHTML = template({});
 
     const idPrefix = '#kando-properties-condition-';
+
+    // Get the screen area hint element.
+    this.screenAreaHint = container.querySelector(idPrefix + 'screen-hint');
 
     // Get all the input fields and checkboxes.
     this.conditions = {
@@ -140,10 +155,13 @@ export class ConditionPicker extends EventEmitter {
       this.hide();
     });
 
-    // Log pointer position.
-    document.addEventListener('mousemove', (ev) => {
-      console.log('x:', ev.clientX, 'y:', ev.clientY);
-    });
+    // Update the mouse position hint. This will be called on every mouse move event
+    // while the condition picker is open.
+    this.mouseMoveHandler = (event: MouseEvent) => {
+      this.screenAreaHint.innerText = `Your mouse is currently at ${
+        event.clientX + this.windowPosition.x
+      } x ${event.clientY + this.windowPosition.y}`;
+    };
   }
 
   /**
@@ -191,11 +209,15 @@ export class ConditionPicker extends EventEmitter {
           conditions.screenArea.yMax?.toString() || '';
       }
     }
+
+    // Update the mouse position hint.
+    document.addEventListener('mousemove', this.mouseMoveHandler);
   }
 
   /** Hides the condition picker. */
   public hide() {
     this.container.classList.add('hidden');
+    document.removeEventListener('mousemove', this.mouseMoveHandler);
     this.emit('hide');
   }
 
@@ -205,9 +227,11 @@ export class ConditionPicker extends EventEmitter {
    *
    * @param appName The name of the app which was in focus when Kando was opened.
    * @param windowName The name of the window which was in focus when Kando was opened.
+   * @param windowPosition The position of Kando's window when it was opened.
    */
-  public setConditionHints(appName: string, windowName: string) {
+  public setConditionHints(appName: string, windowName: string, windowPosition: IVec2) {
     this.conditions.app.defaultValue = appName;
     this.conditions.window.defaultValue = windowName;
+    this.windowPosition = windowPosition;
   }
 }

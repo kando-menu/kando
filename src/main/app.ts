@@ -346,6 +346,10 @@ export class KandoApp {
           {
             appName: info.appName,
             windowName: info.windowName,
+            windowPosition: {
+              x: workarea.x,
+              y: workarea.y,
+            },
           }
         );
       })
@@ -367,6 +371,10 @@ export class KandoApp {
         this.window.webContents.send('show-editor', {
           appName: info.appName,
           windowName: info.windowName,
+          windowPosition: {
+            x: this.window.getPosition()[0],
+            y: this.window.getPosition()[1],
+          },
         });
         this.showWindow();
       })

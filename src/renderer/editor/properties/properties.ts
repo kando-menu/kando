@@ -325,7 +325,11 @@ export class Properties extends EventEmitter {
   }
 
   public setOptions(options: IShowEditorOptions) {
-    this.conditionPicker.setConditionHints(options.appName, options.windowName);
+    this.conditionPicker.setConditionHints(
+      options.appName,
+      options.windowName,
+      options.windowPosition
+    );
   }
 
   /**
