@@ -8,6 +8,16 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+/**
+ * A simple 2D vector.
+ *
+ * You can find some vector math in the `src/renderer/math` directory.
+ */
+export interface IVec2 {
+  x: number;
+  y: number;
+}
+
 /** This interface describes some information about the currently used backend. */
 export interface IBackendInfo {
   /**
@@ -39,25 +49,6 @@ export interface IBackendInfo {
 }
 
 /**
- * A simple 2D vector.
- *
- * You can find some vector math in the `src/renderer/math` directory.
- */
-export interface IVec2 {
-  x: number;
-  y: number;
-}
-
-/**
- * This interface holds the request made to Kando App either from external source or from
- * a shortcut trigger.
- */
-export interface IKandoRequest {
-  trigger: string;
-  name: string;
-}
-
-/**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
  * delay in milliseconds.
@@ -73,6 +64,15 @@ export interface IKeyStroke {
  * keyboard shortcuts.
  */
 export type IKeySequence = Array<IKeyStroke>;
+
+/**
+ * This interface holds the request made to Kando App either from external source or from
+ * a shortcut trigger.
+ */
+export interface IKandoRequest {
+  trigger: string;
+  name: string;
+}
 
 /**
  * This interface is used to describe the conditions under which a menu should be shown.
