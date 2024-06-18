@@ -225,9 +225,6 @@ export class KandoApp {
       ) {
         const condition = menu.conditions.screenArea;
 
-        console.log(condition);
-        console.log(info.pointerX, info.pointerY);
-
         // We check if cursor is in the specified range.
         if (
           (condition.xMin == null || info.pointerX >= condition.xMin) &&
