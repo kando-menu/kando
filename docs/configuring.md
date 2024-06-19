@@ -103,7 +103,7 @@ Only if all conditions are met, the menu will be shown.
 
 Property | Default Value | Description
 -------- | ------------- | -----------
-`appName` | `""` | The name of the application which must be focused for the menu to be shown. If it is a simple string, the condition is met if the name of the focused application contains the given string (case-insensitive). If the string starts and ends with a `/`, it is interpreted as a regular expression.
+`appName` | `""` | The name of the application which must be focused for the menu to be shown. If it is a simple string, the condition is met if the name of the focused application contains the given string (case-insensitive). If the string starts with a `/`, it is interpreted as a regular expression.
 `windowName` | `""` | The name of the window which must be focused for the menu to be shown. It is interpreted in the same way as `appName`.
 `screenArea` | `{}` | A dictionary with the optional properties `xMin`, `xMax`, `yMin`, and `yMax`. The menu will only be shown if the mouse cursor is within the given screen area. The values are given in pixels and are relative to the top-left corner of the screen. If a value is not given, the area is unbounded in this direction.
 
