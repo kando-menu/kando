@@ -94,6 +94,18 @@ Property | Default Value | Description
 `shortcutID` | `""` | On some platforms, Kando can not bind shortcuts directly. In this case, you can use this property to assign an ID which can be used in the global shortcut configuration of your desktop environment. This should be lowercase and contain only ASCII characters and dashes. For example, `"main-trigger"`.
 `root` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
+`conditions` | `{}` | A dictionary of conditions which must be met for the menu to be shown. See below for details.
+
+#### Menu Conditions
+
+The `conditions` property of a menu description can contain a dictionary of conditions.
+Only if all conditions are met, the menu will be shown.
+
+Property | Default Value | Description
+-------- | ------------- | -----------
+`appName` | `""` | The name of the application which must be focused for the menu to be shown. If it is a simple string, the condition is met if the name of the focused application contains the given string (case-insensitive). If the string starts and ends with a `/`, it is interpreted as a regular expression.
+`windowName` | `""` | The name of the window which must be focused for the menu to be shown. It is interpreted in the same way as `appName`.
+`screenArea` | `{}` | A dictionary with the optional properties `xMin`, `xMax`, `yMin`, and `yMax`. The menu will only be shown if the mouse cursor is within the given screen area. The values are given in pixels and are relative to the top-left corner of the screen. If a value is not given, the area is unbounded in this direction.
 
 #### Menu Item Descriptions
 
