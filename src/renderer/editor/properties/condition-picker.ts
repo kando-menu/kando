@@ -19,7 +19,7 @@ import { IMenuConditions, IVec2 } from '../../../common';
 interface IConditionPickerInputs {
   collapse: HTMLElement;
   checkbox: HTMLInputElement;
-  defaultValue?: string;
+  suggestedValue?: string;
   inputs: HTMLInputElement[];
 }
 
@@ -112,6 +112,17 @@ export class ConditionPicker extends EventEmitter {
       });
     }
 
+    // The app and window name conditions have a "suggested value". This value is set
+    // when the condition picker is opened and contains the name of the app and window
+    // that were in focus when Kando was opened. There are buttons that allow the user
+    // to use this suggested value.
+    for (const condition of Object.values(this.conditions)) {
+      const useSuggestedButton = condition.collapse.querySelector('button');
+      useSuggestedButton?.addEventListener('click', () => {
+        condition.inputs[0].value = condition.suggestedValue;
+      });
+    }
+
     // Close the condition picker when the user clicks the OK button. Before, we emit the
     // select event with the selected conditions.
     const okButton = container.querySelector(idPrefix + 'picker-ok');
@@ -173,13 +184,11 @@ export class ConditionPicker extends EventEmitter {
   public show(conditions?: IMenuConditions) {
     this.container.classList.remove('hidden');
 
-    for (const { checkbox, inputs, defaultValue, collapse } of Object.values(
-      this.conditions
-    )) {
+    for (const { checkbox, inputs, collapse } of Object.values(this.conditions)) {
       checkbox.checked = false;
       collapse.classList.remove('show');
       for (const input of inputs) {
-        input.value = defaultValue || '';
+        input.value = '';
       }
     }
 
@@ -230,8 +239,8 @@ export class ConditionPicker extends EventEmitter {
    * @param windowPosition The position of Kando's window when it was opened.
    */
   public setConditionHints(appName: string, windowName: string, windowPosition: IVec2) {
-    this.conditions.app.defaultValue = appName;
-    this.conditions.window.defaultValue = windowName;
+    this.conditions.app.suggestedValue = appName;
+    this.conditions.window.suggestedValue = windowName;
     this.windowPosition = windowPosition;
   }
 }

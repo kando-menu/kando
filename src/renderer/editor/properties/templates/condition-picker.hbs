@@ -17,8 +17,14 @@
 }}
 
 <div id="kando-properties-condition-app-collapse" class="collapse">
-  <input id="kando-properties-condition-app" type="text" 
-        class="form-control my-2 fs-3 kando-font" placeholder="App Name">
+  <div class="input-group my-2">
+    <input id="kando-properties-condition-app" type="text" 
+          class="form-control my-2 fs-3 kando-font" placeholder="App Name">
+    <button class="btn btn-primary align-self-center fs-3"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Use the app which was focused when the Kando was opened.">
+      <i class='material-symbols-rounded inline-icon'>highlight_mouse_cursor</i>
+    </button>
+  </div>
 </div>
 
 {{> checkbox-option 
@@ -29,8 +35,14 @@
 }}
 
 <div id="kando-properties-condition-window-collapse" class="collapse">
-  <input id="kando-properties-condition-window" type="text" 
-         class="form-control my-2 fs-3 kando-font" placeholder="Window Title">
+  <div class="input-group my-2">
+    <input id="kando-properties-condition-window" type="text" 
+          class="form-control my-2 fs-3 kando-font" placeholder="Window Title">
+    <button class="btn btn-primary align-self-center fs-3"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Use the window which was focused when the Kando was opened.">
+      <i class='material-symbols-rounded inline-icon'>highlight_mouse_cursor</i>
+    </button>
+  </div>
 </div>
 
 {{> checkbox-option 
