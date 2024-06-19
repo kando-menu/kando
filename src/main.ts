@@ -77,7 +77,10 @@ const kando = new KandoApp();
 // arguments. It returns true a option was passed that was handled by the app.
 const handleCommandLine = (options: CLIOptions) => {
   if (options.menu) {
-    kando.showMenu(options.menu);
+    kando.showMenu({
+      trigger: '',
+      name: options.menu,
+    });
     return true;
   }
 

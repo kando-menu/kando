@@ -11,8 +11,9 @@
 import { EventEmitter } from 'events';
 
 import { IEditorMenuItem } from '../common/editor-menu-item';
-import { IMenu, IBackendInfo } from '../../../common';
+import { IMenu, IBackendInfo, IShowEditorOptions } from '../../../common';
 import { IconPicker } from './icon-picker';
+import { ConditionPicker } from './condition-picker';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
@@ -50,6 +51,12 @@ export class Properties extends EventEmitter {
    * filterable grid of icons.
    */
   private iconPicker: IconPicker = null;
+
+  /**
+   * The condition picker is a component that allows the user to select conditions under
+   * which the current menu should be shown.
+   */
+  private conditionPicker: ConditionPicker = null;
 
   /**
    * The base settings div contains the name input, the icon button, and the
@@ -176,6 +183,32 @@ export class Properties extends EventEmitter {
       this.baseSettings.classList.remove('hidden');
     });
 
+    // Create the condition picker and wire up its events.
+    this.conditionPicker = new ConditionPicker(
+      div.querySelector('#kando-menu-properties-condition-picker')
+    );
+    this.conditionPicker.on('select', (conditions) => {
+      if (this.activeMenu) {
+        if (conditions) {
+          this.activeMenu.conditions = conditions;
+        } else {
+          delete this.activeMenu.conditions;
+        }
+      }
+    });
+    this.conditionPicker.on('hide', () => {
+      this.baseSettings.classList.remove('hidden');
+    });
+
+    // Show the condition picker when the condition button is clicked.
+    const conditionButton = div.querySelector(
+      '#kando-menu-properties-condition-button'
+    ) as HTMLButtonElement;
+    conditionButton.addEventListener('click', () => {
+      this.conditionPicker.show(this.activeMenu.conditions);
+      this.baseSettings.classList.add('hidden');
+    });
+
     // Update the 'centered' property of the menu when the checkbox changes.
     this.openAtPointerCheckbox = div.querySelector(
       '#kando-menu-properties-open-at-pointer'
@@ -236,6 +269,7 @@ export class Properties extends EventEmitter {
    */
   public async setMenu(menu: IMenu) {
     this.iconPicker.hide();
+    this.conditionPicker.hide();
 
     // If a menu is already active, we don't need a transition. We can just update the
     // settings.
@@ -266,6 +300,7 @@ export class Properties extends EventEmitter {
    */
   public async setItem(item: IEditorMenuItem) {
     this.iconPicker.hide();
+    this.conditionPicker.hide();
 
     // If an item of the same type is already active, we can just update the settings. No
     // need for animations.
@@ -287,6 +322,14 @@ export class Properties extends EventEmitter {
 
     await this.updateSettingsWrapperSize();
     await this.showSettingsWrapper();
+  }
+
+  public setOptions(options: IShowEditorOptions) {
+    this.conditionPicker.setConditionHints(
+      options.appName,
+      options.windowName,
+      options.windowPosition
+    );
   }
 
   /**

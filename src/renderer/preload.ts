@@ -15,6 +15,7 @@ import {
   IAppSettings,
   IMenuSettings,
   IShowMenuOptions,
+  IShowEditorOptions,
 } from '../common';
 
 /**
@@ -86,11 +87,18 @@ contextBridge.exposeInMainWorld('api', {
   /**
    * This will be called by the host process when a new menu should be shown.
    *
-   * @param callback This callback will be called with the root item of the menu and the
-   *   position of the mouse cursor.
+   * @param callback This callback will be called when a new menu should be shown.
    */
-  showMenu: function (callback: (root: IMenuItem, options: IShowMenuOptions) => void) {
-    ipcRenderer.on('show-menu', (event, root, options) => callback(root, options));
+  showMenu: function (
+    callback: (
+      root: IMenuItem,
+      menuOptions: IShowMenuOptions,
+      editorOptions: IShowEditorOptions
+    ) => void
+  ) {
+    ipcRenderer.on('show-menu', (event, root, menuOptions, editorOptions) =>
+      callback(root, menuOptions, editorOptions)
+    );
   },
 
   /**
@@ -98,8 +106,8 @@ contextBridge.exposeInMainWorld('api', {
    *
    * @param callback This callback will be called when the editor should be shown.
    */
-  showEditor: function (callback: () => void) {
-    ipcRenderer.on('show-editor', () => callback());
+  showEditor: function (callback: (editorOptions: IShowEditorOptions) => void) {
+    ipcRenderer.on('show-editor', (event, editorOptions) => callback(editorOptions));
   },
 
   /**

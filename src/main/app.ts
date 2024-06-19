@@ -14,9 +14,16 @@ import path from 'path';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
-import { IMenuItem, IMenu, IMenuSettings, IAppSettings } from '../common';
+import {
+  IMenuItem,
+  IMenu,
+  IMenuSettings,
+  IAppSettings,
+  IShowMenuRequest,
+} from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
+import { WMInfo } from './backends/backend';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -142,32 +149,136 @@ export class KandoApp {
   }
 
   /**
+   * This chooses the correct menu depending on environment.
+   *
+   * @param request Required information to select correct menu.
+   * @param info Informations about current desktop environment.
+   * @returns The selected menu or null if no menu was found.
+   */
+  public chooseMenu(request: IShowMenuRequest, info: WMInfo) {
+    // Score of currently selected menu
+    let currentScore = 0;
+    // Temporary selected menu
+    let selectedMenu: DeepReadonly<IMenu>;
+    // Get list of current menus.
+    const menus = this.menuSettings.get('menus');
+
+    for (const menu of menus) {
+      let menuScore = 0;
+      // We check if request has menu name, and if it matches checked menu.
+      // If that's the case we return it as chosen menu, there's no need to check rest.
+      if (request.name && request.name == menu.root.name) {
+        return menu;
+      }
+
+      // Then we check if menu trigger matches our request, if not we skip this menu.
+      if (request.trigger != menu.shortcut && request.trigger != menu.shortcutID) {
+        continue;
+      }
+
+      // If no other menu matches, we will choose the first one with no conditions set.
+      if (!menu.conditions) {
+        if (!selectedMenu) {
+          selectedMenu = menu;
+        }
+
+        // As we don't have any conditions to check we continue with next menu.
+        continue;
+      }
+
+      // If the conditions starts with / we treat it as regex, otherwise we treat it as
+      // string. We also ignore case for string conditions.
+      const testStringCondition = (condition: string, value: string) => {
+        // If condition starts with / we treat it as regex. For this we need to extract
+        // the flags from the end of the string and the pattern from the middle.
+        if (condition.startsWith('/')) {
+          const flags = condition.replace(/.*\/([gimy]*)$/, '$1');
+          const pattern = condition.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+          return new RegExp(pattern, flags).test(value);
+        }
+
+        return value.toLowerCase().includes(condition.toLowerCase());
+      };
+
+      // And we start with appName condition check (we know conditions is not null).
+      // If appName condition does not exists we skip it.
+      if (menu.conditions.appName) {
+        if (testStringCondition(menu.conditions.appName, info.appName)) {
+          menuScore += 1;
+        } else {
+          continue;
+        }
+      }
+
+      // We do the same for windowName condition.
+      if (menu.conditions.windowName) {
+        if (testStringCondition(menu.conditions.windowName, info.windowName)) {
+          menuScore += 1;
+        } else {
+          continue;
+        }
+      }
+
+      // And for screenArea condition.
+      if (
+        menu.conditions.screenArea?.xMin != null ||
+        menu.conditions.screenArea?.xMax != null ||
+        menu.conditions.screenArea?.yMin != null ||
+        menu.conditions.screenArea?.yMax != null
+      ) {
+        const condition = menu.conditions.screenArea;
+
+        // We check if cursor is in the specified range.
+        if (
+          (condition.xMin == null || info.pointerX >= condition.xMin) &&
+          (condition.xMax == null || info.pointerX <= condition.xMax) &&
+          (condition.yMin == null || info.pointerY >= condition.yMin) &&
+          (condition.yMax == null || info.pointerY <= condition.yMax)
+        ) {
+          menuScore += 1;
+        } else {
+          continue;
+        }
+      }
+
+      // If our menuScore is higher than currentScore we need to select this menu
+      // As it matches more conditions than previous selection
+      if (menuScore > currentScore) {
+        selectedMenu = menu;
+        currentScore = menuScore;
+      }
+    }
+
+    // We finally return our last selected menu as choosen.
+    return selectedMenu;
+  }
+
+  /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
    *
-   * @param menu The menu to show or the name of the menu to show.
+   * @param request Required information to select correct menu.
    */
-  public showMenu(menu: DeepReadonly<IMenu> | string) {
+  public showMenu(request: IShowMenuRequest) {
     this.backend
       .getWMInfo()
       .then((info) => {
+        // Select correct menu before showing it to user.
+        const menu = this.chooseMenu(request, info);
+
+        // If no menu was found, we can stop here.
+        if (!menu) {
+          console.log('No menu was found for the current conditions: ', info);
+          return;
+        }
+
+        // Store the last menu to be able to execute the selected action later.
+        this.lastMenu = menu;
+
         // Abort any ongoing hide animation.
         if (this.hideTimeout) {
           clearTimeout(this.hideTimeout);
-        }
-
-        // If the menu is a string, we need to find the corresponding menu in the
-        // settings.
-        if (typeof menu === 'string') {
-          this.lastMenu = this.menuSettings
-            .get('menus')
-            .find((m) => m.root.name === menu);
-          if (!this.lastMenu) {
-            throw new Error(`Menu "${menu}" not found.`);
-          }
-        } else {
-          this.lastMenu = menu;
         }
 
         // Get the work area of the screen where the pointer is located. We will move the
@@ -229,11 +340,25 @@ export class KandoApp {
         // turbo mode. This way, a key has to be pressed first before the turbo mode is
         // activated. Else, the turbo mode would be activated immediately when the menu is
         // opened which is not nice if it is not opened at the pointer position.
-        this.window.webContents.send('show-menu', this.lastMenu.root, {
-          menuPosition,
-          windowSize,
-          deferredTurboMode: this.lastMenu.centered,
-        });
+        // We also send the name of the current application and window to the renderer.
+        // It will be used as an example in the condition picker of the menu editor.
+        this.window.webContents.send(
+          'show-menu',
+          this.lastMenu.root,
+          {
+            menuPosition,
+            windowSize,
+            deferredTurboMode: this.lastMenu.centered,
+          },
+          {
+            appName: info.appName,
+            windowName: info.windowName,
+            windowPosition: {
+              x: workarea.x,
+              y: workarea.y,
+            },
+          }
+        );
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
@@ -242,11 +367,27 @@ export class KandoApp {
 
   /**
    * This is called when the user wants to open the menu editor. This can be either
-   * triggered by the tray icon or runned a second instance of the app.
+   * triggered by the tray icon or by running a second instance of the app. We send the
+   * name of the current application and window to the renderer. It will be used as an
+   * example in the condition picker of the menu editor.
    */
   public showEditor() {
-    this.window.webContents.send('show-editor');
-    this.showWindow();
+    this.backend
+      .getWMInfo()
+      .then((info) => {
+        this.window.webContents.send('show-editor', {
+          appName: info.appName,
+          windowName: info.windowName,
+          windowPosition: {
+            x: this.window.getPosition()[0],
+            y: this.window.getPosition()[1],
+          },
+        });
+        this.showWindow();
+      })
+      .catch((err) => {
+        console.error('Failed to settings: ' + err);
+      });
   }
 
   /**
@@ -458,13 +599,15 @@ export class KandoApp {
 
     // Finally, we bind the shortcuts. If there are multiple menus with the same
     // shortcut, the shortcut will open the first menu for now.
-    for (const [trigger, menus] of triggers) {
+    for (const [trigger] of triggers) {
       try {
-        const menu = menus[0];
         await this.backend.bindShortcut({
           trigger,
           action: () => {
-            this.showMenu(menu);
+            this.showMenu({
+              trigger: trigger,
+              name: '',
+            });
           },
         });
       } catch (error) {
@@ -502,7 +645,12 @@ export class KandoApp {
           : menu.shortcutID) || 'Not Bound';
       template.push({
         label: `${menu.root.name} (${trigger})`,
-        click: () => this.showMenu(menu),
+        click: () => {
+          this.showMenu({
+            trigger: '',
+            name: menu.root.name,
+          });
+        },
       });
     }
 
