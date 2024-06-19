@@ -153,6 +153,7 @@ export class KandoApp {
    *
    * @param request Required information to select correct menu.
    * @param info Informations about current desktop environment.
+   * @returns The selected menu or null if no menu was found.
    */
   public chooseMenu(request: IShowMenuRequest, info: WMInfo) {
     // Score of currently selected menu
@@ -246,11 +247,6 @@ export class KandoApp {
       }
     }
 
-    // If after searching we do not have any menu, then there is nothing to display.
-    if (selectedMenu == null) {
-      throw new Error(`Menu for request ${request} was not found.`);
-    }
-
     // We finally return our last selected menu as choosen.
     return selectedMenu;
   }
@@ -267,7 +263,16 @@ export class KandoApp {
       .getWMInfo()
       .then((info) => {
         // Select correct menu before showing it to user.
-        this.lastMenu = this.chooseMenu(request, info);
+        const menu = this.chooseMenu(request, info);
+
+        // If no menu was found, we can stop here.
+        if (!menu) {
+          console.log('No menu was found for the current conditions: ', info);
+          return;
+        }
+
+        // Store the last menu to be able to execute the selected action later.
+        this.lastMenu = menu;
 
         // Abort any ongoing hide animation.
         if (this.hideTimeout) {
