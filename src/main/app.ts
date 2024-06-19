@@ -186,17 +186,24 @@ export class KandoApp {
         continue;
       }
 
+      // If the conditions starts with / we treat it as regex, otherwise we treat it as
+      // string. We also ignore case for string conditions.
+      const testStringCondition = (condition: string, value: string) => {
+        // If condition starts with / we treat it as regex. For this we need to extract
+        // the flags from the end of the string and the pattern from the middle.
+        if (condition.startsWith('/')) {
+          const flags = condition.replace(/.*\/([gimy]*)$/, '$1');
+          const pattern = condition.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+          return new RegExp(pattern, flags).test(value);
+        }
+
+        return value.toLowerCase().includes(condition.toLowerCase());
+      };
+
       // And we start with appName condition check (we know conditions is not null).
       // If appName condition does not exists we skip it.
       if (menu.conditions.appName) {
-        // We check if appName condition is RegExp or string, if string we create RegExp from it.
-        const regex =
-          typeof menu.conditions.appName === 'string'
-            ? new RegExp(menu.conditions.appName)
-            : menu.conditions.appName;
-
-        // If condition matches we add score, if not we skip this menu.
-        if (regex.test(info.appName)) {
+        if (testStringCondition(menu.conditions.appName, info.appName)) {
           menuScore += 1;
         } else {
           continue;
@@ -205,12 +212,7 @@ export class KandoApp {
 
       // We do the same for windowName condition.
       if (menu.conditions.windowName) {
-        const regex =
-          typeof menu.conditions.windowName === 'string'
-            ? new RegExp(menu.conditions.windowName)
-            : menu.conditions.windowName;
-
-        if (regex.test(info.windowName)) {
+        if (testStringCondition(menu.conditions.windowName, info.windowName)) {
           menuScore += 1;
         } else {
           continue;

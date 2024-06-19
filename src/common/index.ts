@@ -83,10 +83,10 @@ export interface IShowMenuRequest {
  */
 export interface IMenuConditions {
   /** Regex to match for a window name */
-  windowName?: RegExp | string;
+  windowName?: string;
 
   /** Regex to match for an application name. */
-  appName?: RegExp | string;
+  appName?: string;
 
   /**
    * Cursor position to match. In pixels relative to the top-left corner of the primary
