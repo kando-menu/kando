@@ -103,7 +103,15 @@ sudo dnf install nodejs cmake libX11-devel libXtst-devel wayland-devel libxkbcom
 > [!TIP]
 > Make sure to also read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
 
-Once these dependencies are installed, navigate into the Kando directory, then only these two commands are required:
+Once these dependencies are installed, navigate to a directory where you want the sources of Kando and clone the repository:
+
+```
+cd "path/to/your/directory"
+git clone https://github.com/kando-menu/kando.git
+cd kando
+```
+
+Then, install all node dependencies and start the application:
 
 ```
 npm install
@@ -111,6 +119,10 @@ npm start
 ```
 
 Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to open the test window.
+
+If started this way, Kando will run in development mode.
+This means that any changes to the source code (at least to the renderer process) will be applied immediately. So you usually don't have to restart the application after changing the code.
+`npm install` is only required when the dependencies change.
 
 ### :package: Creating a Release Executable
 
