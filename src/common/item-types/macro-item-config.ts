@@ -37,7 +37,7 @@ export class MacroItemConfig implements IItemConfig {
       utils.renderTemplate(
         require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
         {
-          label: 'Execute Delayed',
+          label: 'Execute After Closing the Menu',
           hint: 'Ensures that Kando does not block the key events.',
         }
       )
