@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Changed
 
 - The "Execute Delayed" property of hotkey and macro items is now called "Execute After Closing the Menu". This should make it clearer what this property does.
+- The "Execute After Closing the Menu" property is now enabled by default for hotkey and macro items. This should make it easier to use these items in a way that is expected by most users.
 
 ## [Kando 1.1.0](https://github.com/kando-menu/kando/releases/tag/v1.1.0)
 

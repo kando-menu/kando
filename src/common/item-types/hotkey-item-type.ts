@@ -42,7 +42,7 @@ export class HotkeyItemType implements IItemType {
   get defaultData(): IItemData {
     return {
       hotkey: '',
-      delayed: false,
+      delayed: true,
     };
   }
 

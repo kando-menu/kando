@@ -48,7 +48,7 @@ export class MacroItemType implements IItemType {
   get defaultData(): IItemData {
     return {
       macro: [],
-      delayed: false,
+      delayed: true,
     };
   }
 
