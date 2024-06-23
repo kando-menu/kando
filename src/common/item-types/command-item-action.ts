@@ -18,12 +18,14 @@ import { IItemData } from './command-item-type';
 /** This action runs commands. This can be used to start applications or run scripts. */
 export class CommandItemAction implements IItemAction {
   /**
-   * Commands are executed immediately.
+   * Commands can be executed immediately or with a delay.
    *
-   * @returns False
+   * @param item The item for which we want to know if the action should be executed
+   *   immediately or with a delay.
+   * @returns True if the action should be executed with a delay.
    */
-  delayedExecution() {
-    return false;
+  delayedExecution(item: DeepReadonly<IMenuItem>) {
+    return (item.data as IItemData).delayed;
   }
 
   /**

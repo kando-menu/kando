@@ -27,22 +27,42 @@ export class CommandItemConfig implements IItemConfig {
 
   /** @inheritdoc */
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
+    // Add the checkbox for the delayed execution mode.
     const fragment = utils.renderTemplate(
-      require('../../renderer/editor/properties/templates/text-option.hbs'),
+      require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
       {
-        placeholder: 'Not Defined',
-        label: 'Command',
-        hint: 'This will be executed.',
+        label: 'Execute After Closing the Menu',
+        hint: 'Useful if the command targets a window that needs to be focused.',
       }
     );
 
+    const delayedInput = fragment.querySelector(
+      'input[type="checkbox"]'
+    ) as HTMLInputElement;
+    delayedInput.checked = (item.data as IItemData).delayed || false;
+
+    delayedInput.addEventListener('change', () => {
+      (item.data as IItemData).delayed = delayedInput.checked;
+    });
+
+    fragment.append(
+      utils.renderTemplate(
+        require('../../renderer/editor/properties/templates/text-option.hbs'),
+        {
+          placeholder: 'Not Defined',
+          label: 'Command',
+          hint: 'This will be executed.',
+        }
+      )
+    );
+
     // Get the input element and set the current value.
-    const input = fragment.querySelector('input');
-    input.value = (item.data as IItemData).command || '';
+    const commandInput = fragment.querySelector('input[type="text"]') as HTMLInputElement;
+    commandInput.value = (item.data as IItemData).command || '';
 
     // Listen for changes and update the item.
-    input.addEventListener('input', () => {
-      (item.data as IItemData).command = input.value;
+    commandInput.addEventListener('input', () => {
+      (item.data as IItemData).command = commandInput.value;
     });
 
     return fragment;
