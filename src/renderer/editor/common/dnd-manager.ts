@@ -183,7 +183,7 @@ export class DnDManager extends EventEmitter {
 
           clearListeners();
           e2.stopPropagation();
-        } else if (e2.key === 'Control') {
+        } else if (e2.key === 'Control' || e2.key === 'Meta') {
           document.body.style.cursor = 'copy';
         }
       };
@@ -191,7 +191,7 @@ export class DnDManager extends EventEmitter {
       // This method is called when a key is released. It changes the cursor back to the
       // move cursor.
       const onKeyUp = (e2: KeyboardEvent) => {
-        if (e2.key === 'Control') {
+        if (e2.key === 'Control' || e2.key === 'Meta') {
           document.body.style.cursor = 'grabbing';
         }
       };
