@@ -90,6 +90,7 @@
     border: 2px solid rgb(255, 255, 255);
     transition: all 150ms ease;
     touch-action: none;
+    cursor: pointer;
 
     display: flex;
     align-items: center;
@@ -107,6 +108,7 @@
       transition: none;
       z-index: 99;
       backdrop-filter: blur(5px);
+      cursor: inherit;
 
       .kando-menu-preview-label-container {
         opacity: 0;
