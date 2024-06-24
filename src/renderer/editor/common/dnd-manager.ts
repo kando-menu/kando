@@ -106,7 +106,7 @@ export class DnDManager extends EventEmitter {
           // Update the pointer graphic. If the Ctrl key is pressed, we show a copy
           // cursor, otherwise we show a move cursor.
           if (this.currentlyDragged) {
-            document.body.style.cursor = e2.ctrlKey ? 'copy' : 'grabbing';
+            document.body.style.cursor = e2.ctrlKey || e2.metaKey ? 'copy' : 'grabbing';
           }
 
           // Notify the draggable about the current position.
@@ -147,8 +147,8 @@ export class DnDManager extends EventEmitter {
         // draggable and the drop target about the drop operation.
         if (this.currentlyDragged) {
           if (this.currentDropTarget) {
-            draggable.onDrop(this.currentDropTarget, e2.ctrlKey);
-            this.currentDropTarget.onDrop(draggable, e2.ctrlKey);
+            draggable.onDrop(this.currentDropTarget, e2.ctrlKey || e2.metaKey);
+            this.currentDropTarget.onDrop(draggable, e2.ctrlKey || e2.metaKey);
           } else {
             draggable.onDragCancel();
           }
