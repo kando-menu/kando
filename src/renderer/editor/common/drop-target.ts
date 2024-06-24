@@ -62,6 +62,7 @@ export interface IDropTarget {
    * corresponding `onDrop` method of the draggable is called before this method.
    *
    * @param draggable The draggable which was dropped onto the target.
+   * @param shouldCopy If `true`, the draggable should be copied instead of moved.
    */
-  onDrop(draggable: IDraggable): void;
+  onDrop(draggable: IDraggable, shouldCopy: boolean): void;
 }

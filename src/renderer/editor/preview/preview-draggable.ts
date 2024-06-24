@@ -100,14 +100,15 @@ export class PreviewDraggable extends EventEmitter implements IDraggable {
     }
   }
 
-  /** This is called when a drag operation is done. We emit the 'drop' event. */
-  public onDrop(target: IDropTarget) {
+  /** This is called when a drag operation is done. */
+  public onDrop(target: IDropTarget, shouldCopy: boolean) {
     if (this.item.angle === undefined) {
       // Reset the position of the dragged div.
       this.item.div.style.left = '';
       this.item.div.style.top = '';
       this.item.div.classList.remove('dragging');
-      this.emit('drop', target);
+
+      this.emit('drop', target, shouldCopy);
     }
   }
 

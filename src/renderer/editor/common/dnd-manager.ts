@@ -140,15 +140,15 @@ export class DnDManager extends EventEmitter {
       };
 
       // This method is called when the pointer is released or the touch is canceled.
-      const onMouseUp = () => {
+      const onMouseUp = (e2: MouseEvent | TouchEvent) => {
         draggable.onMouseUp();
 
         // If we are currently dragging something over a drop target, we notify both the
         // draggable and the drop target about the drop operation.
         if (this.currentlyDragged) {
           if (this.currentDropTarget) {
-            draggable.onDrop(this.currentDropTarget);
-            this.currentDropTarget.onDrop(draggable);
+            draggable.onDrop(this.currentDropTarget, e2.ctrlKey);
+            this.currentDropTarget.onDrop(draggable, e2.ctrlKey);
           } else {
             draggable.onDragCancel();
           }

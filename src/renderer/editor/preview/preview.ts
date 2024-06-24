@@ -481,11 +481,16 @@ export class Preview extends EventEmitter {
       this.selectItem(item);
     });
 
-    // If the item is dropped somewhere outside the preview, we have to remove it from the
+    // If the item is moved to somewhere outside the preview, we have to remove it from the
     // children list of the current center item.
-    draggable.on('drop', (target) => {
+    draggable.on('drop', (target, shouldCopy) => {
       if (target !== this.dropTarget) {
-        this.removeItem(item);
+        if (shouldCopy) {
+          this.recomputeItemAngles();
+          this.updateAllPositions();
+        } else {
+          this.removeItem(item);
+        }
       }
     });
 
@@ -568,6 +573,7 @@ export class Preview extends EventEmitter {
    * visible menu items, including the back link div.
    */
   private updateAllPositions() {
+    window.api.log('updateAllPositions');
     const centerItem = this.getCenterItem();
     if (centerItem.children?.length > 0) {
       centerItem.children.forEach((child) => {

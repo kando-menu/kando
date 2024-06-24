@@ -72,8 +72,10 @@ export interface IDraggable {
    * corresponding `onDrop` method of the drop target.
    *
    * @param target The drop target on which the draggable element was dropped.
+   * @param shouldCopy If `true`, the draggable element is usppoed to be copied. If
+   *   `false`, it is supposed to be moved.
    */
-  onDrop(target: IDropTarget): void;
+  onDrop(target: IDropTarget, shouldCopy: boolean): void;
 
   /**
    * This method is called when the drag operation is canceled. You can use it to update

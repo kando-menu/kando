@@ -14,7 +14,7 @@ import * as utils from './utils';
 import * as math from '../../math';
 import { IDropTarget } from '../common/drop-target';
 import { IVec2 } from '../../../common';
-import { IEditorMenuItem } from '../common/editor-menu-item';
+import { IEditorMenuItem, toIMenuItem } from '../common/editor-menu-item';
 import { IDraggable } from '../common/draggable';
 
 /**
@@ -189,11 +189,15 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
   }
 
   /** @inheritdoc */
-  public onDrop(draggable: IDraggable) {
-    // Items with fixed angles are not really dragged around. Only items without fixed
-    // angles can be dropped.
+  public onDrop(draggable: IDraggable, shouldCopy: boolean) {
+    // If the item is to be copied, we create a new item with the same data.
     const item = draggable.getData() as IEditorMenuItem;
-    this.emit('drop', item, this.dropInto, this.dropIndex);
+
+    if (shouldCopy) {
+      this.emit('drop', toIMenuItem(item), this.dropInto, this.dropIndex);
+    } else {
+      this.emit('drop', item, this.dropInto, this.dropIndex);
+    }
 
     this.dropIndex = null;
     this.dropInto = null;
