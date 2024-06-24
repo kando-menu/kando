@@ -29,22 +29,3 @@ export interface IEditorMenuItem extends IMenuItem {
    */
   computedAngle?: number;
 }
-
-/**
- * This function can be used to strip all properties from an IEditorMenuItem which are not
- * present in an IMenuItem. This is used before saving the menu settings.
- *
- * @param item The menu item to convert.
- * @returns The converted menu item.
- */
-export function toIMenuItem(item: IEditorMenuItem): IMenuItem {
-  return {
-    type: item.type,
-    data: item.data,
-    name: item.name,
-    icon: item.icon,
-    iconTheme: item.iconTheme,
-    children: item.children?.map(toIMenuItem),
-    angle: item.angle,
-  };
-}

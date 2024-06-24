@@ -10,7 +10,7 @@
 
 import { DropTargetTab } from './drop-target-tab';
 import { ToolbarDraggable } from './toolbar-draggable';
-import { IMenu } from '../../../common';
+import { IMenu, deepCopyMenu, deepCopyMenuItem } from '../../../common';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
@@ -60,8 +60,14 @@ export class TrashTab extends DropTargetTab {
   override onDrop(draggable: IDraggable) {
     super.onDrop(draggable);
 
-    // Add the dropped thing to the trash.
-    this.trash.push(draggable.getData() as IMenu | IEditorMenuItem);
+    // Add the dropped thing to the trash. We need to deep copy it to avoid side effects.
+    const menu = draggable.getData() as IMenu;
+    if (menu.root) {
+      this.trash.push(deepCopyMenu(menu));
+    } else {
+      this.trash.push(deepCopyMenuItem(draggable.getData() as IEditorMenuItem));
+    }
+
     this.redraw();
   }
 
@@ -128,9 +134,11 @@ export class TrashTab extends DropTargetTab {
       this.dndManager.registerDraggable(draggable);
 
       // Remove the dropped item from the trash.
-      draggable.on('drop', () => {
-        this.trash = this.trash.filter((t) => t !== thing);
-        this.redraw();
+      draggable.on('drop', (target, shouldCopy) => {
+        if (!shouldCopy) {
+          this.trash = this.trash.filter((t) => t !== thing);
+          this.redraw();
+        }
       });
 
       this.draggables.push(draggable);

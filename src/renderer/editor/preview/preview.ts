@@ -573,7 +573,6 @@ export class Preview extends EventEmitter {
    * visible menu items, including the back link div.
    */
   private updateAllPositions() {
-    window.api.log('updateAllPositions');
     const centerItem = this.getCenterItem();
     if (centerItem.children?.length > 0) {
       centerItem.children.forEach((child) => {

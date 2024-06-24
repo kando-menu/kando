@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { DropTargetTab } from './drop-target-tab';
-import { IMenuItem, IMenuSettings } from '../../../common';
+import { IMenuItem, IMenuSettings, deepCopyMenuItem } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
@@ -63,8 +63,8 @@ export class StashTab extends DropTargetTab {
   override onDrop(draggable: IDraggable) {
     super.onDrop(draggable);
 
-    // Add the dropped thing to the trash.
-    this.menuSettings.stash.push(draggable.getData() as IMenuItem);
+    // Add the dropped thing to the trash. We drop a copy of the item to the stash.
+    this.menuSettings.stash.push(deepCopyMenuItem(draggable.getData() as IMenuItem));
     this.redraw();
   }
 
@@ -114,9 +114,11 @@ export class StashTab extends DropTargetTab {
       this.dndManager.registerDraggable(draggable);
 
       // Remove the dropped item from the stash.
-      draggable.on('drop', () => {
-        this.menuSettings.stash = this.menuSettings.stash.filter((i) => i !== item);
-        this.redraw();
+      draggable.on('drop', (target, shouldCopy) => {
+        if (!shouldCopy) {
+          this.menuSettings.stash = this.menuSettings.stash.filter((i) => i !== item);
+          this.redraw();
+        }
       });
 
       this.draggables.push(draggable);

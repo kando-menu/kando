@@ -13,8 +13,8 @@ import { EventEmitter } from 'events';
 import * as utils from './utils';
 import * as math from '../../math';
 import { IDropTarget } from '../common/drop-target';
-import { IVec2 } from '../../../common';
-import { IEditorMenuItem, toIMenuItem } from '../common/editor-menu-item';
+import { IVec2, deepCopyMenuItem } from '../../../common';
+import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IDraggable } from '../common/draggable';
 
 /**
@@ -194,7 +194,7 @@ export class PreviewDropTarget extends EventEmitter implements IDropTarget {
     const item = draggable.getData() as IEditorMenuItem;
 
     if (shouldCopy) {
-      this.emit('drop', toIMenuItem(item), this.dropInto, this.dropIndex);
+      this.emit('drop', deepCopyMenuItem(item), this.dropInto, this.dropIndex);
     } else {
       this.emit('drop', item, this.dropInto, this.dropIndex);
     }

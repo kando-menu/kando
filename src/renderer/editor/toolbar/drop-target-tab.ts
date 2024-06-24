@@ -61,7 +61,6 @@ export class DropTargetTab extends EventEmitter implements IDropTarget {
 
   /** @inheritdoc */
   accepts(draggable: IDraggable, coords: IVec2) {
-    // We only accept only menus.
     if (!this.acceptedTypes.includes(draggable.getDataType())) {
       return false;
     }

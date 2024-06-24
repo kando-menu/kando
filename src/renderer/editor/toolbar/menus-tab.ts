@@ -11,7 +11,7 @@
 import { ToolbarDraggable } from './toolbar-draggable';
 
 import { DropTargetTab } from './drop-target-tab';
-import { IMenu, IMenuSettings } from '../../../common';
+import { IMenu, IMenuSettings, deepCopyMenu } from '../../../common';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
@@ -116,8 +116,8 @@ export class MenusTab extends DropTargetTab {
   override onDrop(draggable: IDraggable) {
     super.onDrop(draggable);
 
-    // Add the dropped menu to the list menus.
-    this.menuSettings.menus.push(draggable.getData() as IMenu);
+    // Add the dropped menu to the list menus. We drop a copy of the item to the menus.
+    this.menuSettings.menus.push(deepCopyMenu(draggable.getData() as IMenu));
     this.currentMenu = this.menuSettings.menus.length - 1;
     this.redraw();
     this.emit('select-menu', this.currentMenu);
@@ -158,14 +158,19 @@ export class MenusTab extends DropTargetTab {
       const draggable = new ToolbarDraggable(div, 'menu', false, () => menu);
       this.dndManager.registerDraggable(draggable);
 
-      draggable.on('drop', () => {
-        // Remove the dropped menu from the menus.
-        this.menuSettings.menus = this.menuSettings.menus.filter((m) => m !== menu);
-        this.currentMenu = Math.min(this.currentMenu, this.menuSettings.menus.length - 1);
+      draggable.on('drop', (target, shouldCopy) => {
+        if (!shouldCopy) {
+          // Remove the dropped menu from the menus.
+          this.menuSettings.menus = this.menuSettings.menus.filter((m) => m !== menu);
+          this.currentMenu = Math.min(
+            this.currentMenu,
+            this.menuSettings.menus.length - 1
+          );
 
-        // Redraw the menus tab.
-        this.redraw();
-        this.emit('select-menu', this.currentMenu);
+          // Redraw the menus tab.
+          this.redraw();
+          this.emit('select-menu', this.currentMenu);
+        }
       });
 
       draggable.on('select', () => {
