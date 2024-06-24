@@ -180,6 +180,7 @@
   }
 
   &.dragging {
+    cursor: inherit;
     backdrop-filter: blur(5px);
     background-color: var(--bs-btn-active-bg);
     transition: none;
