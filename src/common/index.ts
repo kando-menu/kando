@@ -130,6 +130,26 @@ export interface IMenuItem {
 }
 
 /**
+ * This function creates a deep copy of an IMenuItem. It can also be used to strip all
+ * properties from an menu item object which are not present in an IMenuItem. This is for
+ * instance used before saving the menu settings.
+ *
+ * @param item The menu item to copy.
+ * @returns The copied menu item.
+ */
+export function deepCopyMenuItem(item: IMenuItem): IMenuItem {
+  return {
+    type: item.type,
+    data: item.data,
+    name: item.name,
+    icon: item.icon,
+    iconTheme: item.iconTheme,
+    children: item.children?.map(deepCopyMenuItem),
+    angle: item.angle,
+  };
+}
+
+/**
  * This interface describes a menu. It contains the root item of the menu, the shortcut to
  * open the menu and a flag indicating whether the menu should be opened in the center of
  * the screen or at the mouse pointer.
@@ -165,6 +185,22 @@ export interface IMenu {
    * met them all is selected.
    */
   conditions?: IMenuConditions;
+}
+
+/**
+ * This function creates a deep copy of an IMenu.
+ *
+ * @param menu The menu to copy.
+ * @returns The copied menu.
+ */
+export function deepCopyMenu(menu: IMenu): IMenu {
+  return {
+    root: deepCopyMenuItem(menu.root),
+    shortcut: menu.shortcut,
+    shortcutID: menu.shortcutID,
+    centered: menu.centered,
+    conditions: structuredClone(menu.conditions),
+  };
 }
 
 /**

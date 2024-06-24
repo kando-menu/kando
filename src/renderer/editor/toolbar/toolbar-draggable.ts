@@ -122,9 +122,9 @@ export class ToolbarDraggable<T> extends EventEmitter implements IDraggable {
   }
 
   /** @inheritdoc */
-  public onDrop(target: IDropTarget) {
+  public onDrop(target: IDropTarget, shouldCopy: boolean) {
     this.dragEnd(false);
-    this.emit('drop', target);
+    this.emit('drop', target, shouldCopy);
   }
 
   /** @inheritdoc */

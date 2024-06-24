@@ -16,8 +16,12 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IBackendInfo, IMenuSettings, IShowEditorOptions } from '../../common';
-import { toIMenuItem } from './common/editor-menu-item';
+import {
+  IBackendInfo,
+  IMenuSettings,
+  IShowEditorOptions,
+  deepCopyMenuItem,
+} from '../../common';
 import { DnDManager } from './common/dnd-manager';
 
 /**
@@ -245,11 +249,11 @@ export class Editor extends EventEmitter {
       // be saved to disc nor can they be cloned using the structured clone algorithm
       // which is used by Electron for IPC.
       this.menuSettings.menus.forEach((menu) => {
-        menu.root = toIMenuItem(menu.root);
+        menu.root = deepCopyMenuItem(menu.root);
       });
 
       // Also the stash needs to be converted back to IMenuItem objects.
-      this.menuSettings.stash = this.menuSettings.stash.map(toIMenuItem);
+      this.menuSettings.stash = this.menuSettings.stash.map(deepCopyMenuItem);
 
       window.api.menuSettings.set(this.menuSettings);
       this.menuSettings = null;

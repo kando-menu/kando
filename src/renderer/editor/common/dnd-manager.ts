@@ -99,9 +99,14 @@ export class DnDManager extends EventEmitter {
           // If we are not already dragging something, we start a new drag operation.
           if (this.currentlyDragged === null) {
             this.currentlyDragged = draggable;
-            document.body.style.cursor = 'grabbing';
             draggable.onDragStart();
             this.emit('drag-start', draggable);
+          }
+
+          // Update the pointer graphic. If the Ctrl key is pressed, we show a copy
+          // cursor, otherwise we show a move cursor.
+          if (this.currentlyDragged) {
+            document.body.style.cursor = e2.ctrlKey || e2.metaKey ? 'copy' : 'grabbing';
           }
 
           // Notify the draggable about the current position.
@@ -135,15 +140,15 @@ export class DnDManager extends EventEmitter {
       };
 
       // This method is called when the pointer is released or the touch is canceled.
-      const onMouseUp = () => {
+      const onMouseUp = (e2: MouseEvent | TouchEvent) => {
         draggable.onMouseUp();
 
         // If we are currently dragging something over a drop target, we notify both the
         // draggable and the drop target about the drop operation.
         if (this.currentlyDragged) {
           if (this.currentDropTarget) {
-            draggable.onDrop(this.currentDropTarget);
-            this.currentDropTarget.onDrop(draggable);
+            draggable.onDrop(this.currentDropTarget, e2.ctrlKey || e2.metaKey);
+            this.currentDropTarget.onDrop(draggable, e2.ctrlKey || e2.metaKey);
           } else {
             draggable.onDragCancel();
           }
@@ -159,9 +164,9 @@ export class DnDManager extends EventEmitter {
         clearListeners();
       };
 
-      // This method is called when the escape key is pressed. It cancels the drag
-      // operation.
-      const onEsc = (e2: KeyboardEvent) => {
+      // This method is called when a key is pressed. It cancels the drag
+      // operation on Escape and changes the cursor to the copy-cursor on Ctrl.
+      const onKeyDown = (e2: KeyboardEvent) => {
         if (e2.key === 'Escape') {
           if (this.currentlyDragged) {
             document.body.style.cursor = '';
@@ -178,6 +183,16 @@ export class DnDManager extends EventEmitter {
 
           clearListeners();
           e2.stopPropagation();
+        } else if (e2.key === 'Control' || e2.key === 'Meta') {
+          document.body.style.cursor = 'copy';
+        }
+      };
+
+      // This method is called when a key is released. It changes the cursor back to the
+      // move cursor.
+      const onKeyUp = (e2: KeyboardEvent) => {
+        if (e2.key === 'Control' || e2.key === 'Meta') {
+          document.body.style.cursor = 'grabbing';
         }
       };
 
@@ -187,7 +202,8 @@ export class DnDManager extends EventEmitter {
         window.removeEventListener('mouseup', onMouseUp);
         window.removeEventListener('touchend', onMouseUp);
         window.removeEventListener('touchcancel', onMouseUp);
-        window.removeEventListener('keydown', onEsc, true);
+        window.removeEventListener('keydown', onKeyDown, true);
+        window.removeEventListener('keyup', onKeyUp, true);
       };
 
       window.addEventListener('mousemove', onMotionEvent);
@@ -195,7 +211,8 @@ export class DnDManager extends EventEmitter {
       window.addEventListener('mouseup', onMouseUp);
       window.addEventListener('touchend', onMouseUp);
       window.addEventListener('touchcancel', onMouseUp);
-      window.addEventListener('keydown', onEsc, true);
+      window.addEventListener('keydown', onKeyDown, true);
+      window.addEventListener('keyup', onKeyUp, true);
     };
 
     // We need to store the abort controller to be able to remove the event listeners
