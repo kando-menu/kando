@@ -29,7 +29,7 @@
     "@electron-forge/maker-zip": "^7.4.0",
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@types/chai": "^4.3.11",
-    "@types/mocha": "^10.0.6",
+    "@types/mocha": "^10.0.7",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
@@ -54,7 +54,7 @@
     "ts-loader": "^9.5.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -72,6 +72,6 @@
     "match-sorter": "^6.3.4",
     "material-symbols": "^0.20.0",
     "node-addon-api": "^8.0.0",
-    "simple-icons-font": "^12.3.0"
+    "simple-icons-font": "^12.4.0"
   }
 }
