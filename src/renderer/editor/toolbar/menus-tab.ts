@@ -50,7 +50,7 @@ export class MenusTab extends DropTargetTab {
   ) {
     super(
       dndManager,
-      ['trashed-menu'],
+      ['trashed-menu', 'template-menu'],
       container.querySelector('#kando-menus-tab-header'),
       container.querySelector('#kando-menus-tab')
     );

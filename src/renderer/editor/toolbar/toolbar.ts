@@ -13,7 +13,7 @@ import { IBackendInfo, IMenuSettings } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
-import { StashTab } from './stash-tab';
+import { TemplatesTab } from './templates-tab';
 import { DnDManager } from '../common/dnd-manager';
 
 /**
@@ -45,8 +45,8 @@ export class Toolbar extends EventEmitter {
   /** This manages the trash tab of the toolbar. */
   private trashTab: TrashTab = null;
 
-  /** This manages the stash tab of the toolbar. */
-  private stashTab: StashTab = null;
+  /** This manages the templates tab of the toolbar. */
+  private templatesTab: TemplatesTab = null;
 
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
@@ -73,8 +73,12 @@ export class Toolbar extends EventEmitter {
     // Initialize the trash tab and forward its events.
     this.trashTab = new TrashTab(this.container, !backend.supportsShortcuts, dndManager);
 
-    // Initialize the stash tab and forward its events.
-    this.stashTab = new StashTab(this.container, dndManager);
+    // Initialize the templates tab and forward its events.
+    this.templatesTab = new TemplatesTab(
+      this.container,
+      !backend.supportsShortcuts,
+      dndManager
+    );
   }
 
   /** This method returns the container of the editor toolbar. */
@@ -84,14 +88,14 @@ export class Toolbar extends EventEmitter {
 
   /**
    * This method is called initially when the editor is opened. It is used to set the
-   * menus and the stash content.
+   * menus and the templates content.
    *
    * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
    */
   public init(menuSettings: IMenuSettings, currentMenu: number) {
     this.menusTab.init(menuSettings, currentMenu);
-    this.stashTab.init(menuSettings);
+    this.templatesTab.init(menuSettings);
   }
 
   /**
@@ -121,14 +125,14 @@ export class Toolbar extends EventEmitter {
         },
         {
           id: 'kando-add-items-tab',
-          icon: 'add',
+          icon: 'control_point_duplicate',
           title: 'Menu Items',
           content: '',
         },
         {
-          id: 'kando-stash-tab',
-          icon: 'content_paste',
-          title: 'Stash',
+          id: 'kando-templates-tab',
+          icon: 'content_copy',
+          title: 'Templates',
           hasCounter: true,
           content: '',
         },
@@ -186,7 +190,7 @@ export class Toolbar extends EventEmitter {
     const tabs = [
       { id: 'kando-menus-tab', large: false },
       { id: 'kando-add-items-tab', large: false },
-      { id: 'kando-stash-tab', large: false },
+      { id: 'kando-templates-tab', large: false },
       { id: 'kando-trash-tab', large: false },
       { id: 'kando-editor-themes-tab', large: true },
       { id: 'kando-menu-themes-tab', large: true },
