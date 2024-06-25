@@ -77,6 +77,7 @@ export class KandoApp {
       menuTheme: 'none',
       editorTheme: 'none',
       sidebarVisible: true,
+      zoomFactor: 1,
     },
   });
 
@@ -124,6 +125,11 @@ export class KandoApp {
       this.updateTrayMenu();
     });
 
+    // When the app settings change, we need to apply the zoom factor to the window.
+    this.appSettings.onChange('zoomFactor', (newValue) => {
+      this.window.webContents.setZoomFactor(newValue);
+    });
+
     // Initialize the IPC communication to the renderer process.
     this.initRendererIPC();
 
@@ -136,6 +142,22 @@ export class KandoApp {
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
     this.updateTrayMenu();
+  }
+
+  /**
+   * This is called when the app is about to close. It will save some settings before
+   * quitting.
+   */
+  public saveSettings() {
+    // Save the current zoom factor to the settings.
+    if (this.window) {
+      this.appSettings.set(
+        {
+          zoomFactor: this.window.webContents.getZoomFactor(),
+        },
+        false
+      );
+    }
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */
@@ -434,6 +456,9 @@ export class KandoApp {
     });
 
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+    // Apply the stored zoom factor to the window.
+    this.window.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));
   }
 
   /**

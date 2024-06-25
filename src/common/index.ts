@@ -275,4 +275,7 @@ export interface IAppSettings {
 
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
+
+  /** A scale factor for the menu. */
+  zoomFactor: number;
 }
