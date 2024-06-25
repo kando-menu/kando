@@ -326,7 +326,13 @@ export class Preview extends EventEmitter {
         this.makeDraggable(item);
       }
 
-      // In any case, we redraw the menu.
+      // As long as the item is not a submenu, we select it immediately. Selecting a
+      // submenu would be weird because the preview would transition to the submenu and.
+      if (item.type !== 'submenu') {
+        this.selectItem(item);
+      }
+
+      // In any case, we select the item and redraw the menu.
       this.recomputeItemAngles();
       this.updateAllPositions();
     });
