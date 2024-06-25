@@ -135,6 +135,8 @@ The `children` property of the menu item must contain a list of child items.
 ##### `"command"`
 This type is used to execute a shell command.
 The `data` property of the menu item must contain a `command` property which contains the shell command to execute.
+The optional `delayed` property will ensure that the command is executed _after_ the Kando window is closed.
+This can be useful if the command targets another window.
 For instance, this menu item will open Inkscape on Linux:
 ```json
 {
@@ -143,7 +145,8 @@ For instance, this menu item will open Inkscape on Linux:
   "iconTheme": "simple-icons",
   "type": "command",
   "data": {
-    "command": "/usr/bin/inkscape"
+    "command": "/usr/bin/inkscape",
+    "delayed": false
   }
 }
 ```
