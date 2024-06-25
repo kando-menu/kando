@@ -90,7 +90,7 @@ export class KandoApp {
     directory: app.getPath('userData'),
     defaults: {
       menus: [this.createExampleMenu()],
-      stash: [],
+      templates: [],
     },
   });
 
@@ -850,6 +850,15 @@ export class KandoApp {
         menu.root = oldMenu.nodes as IMenuItem;
         delete oldMenu.nodes;
       }
+    }
+
+    // Up to Kando 1.1.0, there was a `stash` property in the menu settings. This was
+    // changed to `templates` in Kando 1.2.0.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const settings = this.menuSettings.getMutable() as any;
+    if (settings.stash) {
+      settings.templates = settings.stash;
+      delete settings.stash;
     }
   }
 }

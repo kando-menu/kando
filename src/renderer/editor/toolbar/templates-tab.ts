@@ -9,28 +9,34 @@
 // SPDX-License-Identifier: MIT
 
 import { DropTargetTab } from './drop-target-tab';
-import { ToolbarDraggable } from './toolbar-draggable';
-import { IMenu, IMenuItem, deepCopyMenu, deepCopyMenuItem } from '../../../common';
-import { IEditorMenuItem } from '../common/editor-menu-item';
+import {
+  IMenu,
+  IMenuItem,
+  IMenuSettings,
+  deepCopyMenu,
+  deepCopyMenuItem,
+} from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
+import { ToolbarDraggable } from './toolbar-draggable';
+import { TrashTab } from './trash-tab';
 
 /**
- * This class represents the trash tab in the toolbar. Users can drop menus and menu items
- * here to delete them. Dropped items are stored in the trash until the user restarts the
- * application.
+ * This class represents the templates tab in the toolbar. Users can drop menus and menu
+ * items here to store them as templates. Templates can be used to quickly create new
+ * menus or menu items. They are stored in the settings and will be available after
+ * restarting the application.
  */
-export class TrashTab extends DropTargetTab {
+export class TemplatesTab extends DropTargetTab {
   /**
-   * This array is used to store menus and menu items which have been deleted by the user.
-   * They can be restored by dragging them back to the templates, to the menus tab, or the
-   * menu preview. They will not be saved to disc.
+   * This is used to access the templates. When the editor is closed, the settings are
+   * saved to disc.
    */
-  private trash: Array<IMenu | IEditorMenuItem> = [];
+  private menuSettings: IMenuSettings = null;
 
-  /** This list contains a draggable for each trashed item. */
+  /** This list contains a draggable for each template. */
   private draggables: IDraggable[] = [];
 
   /**
@@ -48,11 +54,20 @@ export class TrashTab extends DropTargetTab {
   ) {
     super(
       dndManager,
-      ['menu', 'menu-item', 'template-menu', 'template-menu-item'],
-      container.querySelector('#kando-trash-tab-header'),
-      container.querySelector('#kando-trash-tab')
+      ['menu', 'menu-item', 'trashed-menu-item'],
+      container.querySelector('#kando-templates-tab-header'),
+      container.querySelector('#kando-templates-tab')
     );
+  }
 
+  /**
+   * This method is called initially to set the templates. It is called by the toolbar
+   * whenever the editor is opened.
+   *
+   * @param menuSettings The menu settings contain the templates.
+   */
+  public init(menuSettings: IMenuSettings) {
+    this.menuSettings = menuSettings;
     this.redraw();
   }
 
@@ -60,24 +75,27 @@ export class TrashTab extends DropTargetTab {
   override onDrop(draggable: IDraggable) {
     super.onDrop(draggable);
 
-    // Add the dropped thing to the trash. We need to deep copy it to avoid side effects.
+    // Add the dropped thing to the templates. We need to deep copy it to avoid side effects.
     const menu = draggable.getData() as IMenu;
     if (menu.root) {
-      this.trash.push(deepCopyMenu(menu));
+      this.menuSettings.templates.push(deepCopyMenu(menu));
     } else {
-      this.trash.push(deepCopyMenuItem(draggable.getData() as IMenuItem));
+      this.menuSettings.templates.push(
+        deepCopyMenuItem(draggable.getData() as IMenuItem)
+      );
     }
 
     this.redraw();
   }
 
+  // Private Methods ---------------------------------------------------------------------
+
   /**
-   * This method is called when the user drops a menu or a menu item on the trash tab or
-   * when an item is removed from the trash. It completely updates the trash tab's
-   * content.
+   * This method is called whenever a template item is added or removed. It updates the
+   * entire template tab.
    */
   private redraw() {
-    // First remove all existing trash items.
+    // First remove all existing template items.
     this.draggables.forEach((draggable) => {
       this.dndManager.unregisterDraggable(draggable);
     });
@@ -85,7 +103,7 @@ export class TrashTab extends DropTargetTab {
     this.draggables = [];
 
     // Compile the data for the Handlebars template.
-    const data = this.trash.map((thing, index) => {
+    const data = this.menuSettings.templates.map((thing, index) => {
       const menu = thing as IMenu;
 
       // If the item is a menu, we need to extract the name, the shortcut and the icon.
@@ -119,24 +137,34 @@ export class TrashTab extends DropTargetTab {
     // Update the tab's content.
     const template = require('./templates/templates-trash-tab.hbs');
     this.tabContent.innerHTML = template({
-      type: 'trash',
-      placeholderHeading: 'You can delete menus and menu items by dropping them here!',
-      placeholderSubheading: 'When you restart Kando, they will be gone.',
+      type: 'template',
+      placeholderHeading: 'Drop menus and menu items here and use them as templates!',
+      placeholderSubheading:
+        'Create copies of the stored items by moving them to the menus tab or to the preview above.',
       items: data,
     });
 
-    // Add drag'n'drop logic to the things in the trash.
-    this.trash.forEach((thing, index) => {
-      const div = this.tabContent.querySelector(`#trash-item-${index}`) as HTMLElement;
-      const dataType = data[index].isMenu ? 'trashed-menu' : 'trashed-menu-item';
+    // Add drag'n'drop logic to the template items.
+    this.menuSettings.templates.forEach((thing, index) => {
+      const div = this.tabContent.querySelector(`#template-item-${index}`) as HTMLElement;
+      const dataType = data[index].isMenu ? 'template-menu' : 'template-menu-item';
 
-      const draggable = new ToolbarDraggable(div, dataType, false, () => thing);
+      const draggable = new ToolbarDraggable(div, dataType, true, () => {
+        if (data[index].isMenu) {
+          return deepCopyMenu(thing as IMenu);
+        } else {
+          return deepCopyMenuItem(thing as IMenuItem);
+        }
+      });
       this.dndManager.registerDraggable(draggable);
 
-      // Remove the dropped item from the trash.
+      // Remove the dropped item from the templates tab when it is dropped on the trash
+      // tab.
       draggable.on('drop', (target, shouldCopy) => {
-        if (!shouldCopy) {
-          this.trash = this.trash.filter((t) => t !== thing);
+        if (!shouldCopy && target instanceof TrashTab) {
+          this.menuSettings.templates = this.menuSettings.templates.filter(
+            (i) => i !== thing
+          );
           this.redraw();
         }
       });
@@ -145,7 +173,7 @@ export class TrashTab extends DropTargetTab {
     });
 
     // Set the counter value.
-    const counter = this.container.querySelector('#kando-trash-tab-counter');
-    counter.textContent = this.trash.length.toString();
+    const counter = this.container.querySelector('#kando-templates-tab-counter');
+    counter.textContent = this.menuSettings.templates.length.toString();
   }
 }
