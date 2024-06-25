@@ -96,6 +96,11 @@ app
   .whenReady()
   .then(() => kando.init())
   .then(() => {
+    // Save some settings when the app is closed.
+    app.on('before-quit', () => {
+      kando.saveSettings();
+    });
+
     // Show a nifty message when the app is about to quit.
     app.on('will-quit', async () => {
       await kando.quit();

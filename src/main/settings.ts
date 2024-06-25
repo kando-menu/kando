@@ -205,13 +205,17 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * once, you should avoid calling this method multiple times.
    *
    * @param newSettings The new settings object.
+   * @param emitEvents Whether events should be emitted for the changed properties.
    */
-  public set(newSettings: Partial<T>) {
+  public set(newSettings: Partial<T>, emitEvents = true) {
     if (this.watcher) {
       const oldSettings = { ...this.settings };
       this.settings = { ...this.settings, ...newSettings };
       this.saveSettings(this.settings);
-      this.emitEvents(this.settings, oldSettings);
+
+      if (emitEvents) {
+        this.emitEvents(this.settings, oldSettings);
+      }
     }
   }
 
