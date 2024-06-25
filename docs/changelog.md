@@ -25,12 +25,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - **Copy Items:** If <kbd>Ctrl</kbd> or <kbd>Command</kbd> is pressed while dragging a menu or menu item in the editor, the item will be duplicated instead of moved. Due to an [issue in electron](https://github.com/electron/electron/issues/8730), the cursor graphic does not change when dragging or copying items on macOS. The operation is still performed correctly, though.
 - **Menu Scaling:** The menu now behaves properly when scaled via <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>-</kbd>, and <kbd>Ctrl</kbd>+<kbd>0</kbd>. The scale factor is saved to and loaded from `config.json`. It's still a somewhat hidden feature, but once we have a general settings UI, this can be exposed via slider in the UI.
+- **Anchored Mode:** In addition to the existing "Centered Mode", there is now an "Anchored Mode". In this mode, submenus are opened at the position of the parent item. With this, the menu will always stay at the same position on the screen. With this mode, gesture selections are not possible, but it seems that some users prefer this behavior.
 
 #### Changed
 
 - The "Execute Delayed" property of hotkey and macro items is now called "Execute After Closing the Menu". This should make it clearer what this property does.
 - The "Execute After Closing the Menu" property is now enabled by default for hotkey and macro items. This should make it easier to use these items in a way that is expected by most users.
 - Command items now have an "Execute After Closing the Menu" property as well. This allows to execute a command after closing the menu. This is useful if the command should be executed in the context of the currently focused window.
+- "Open at Pointer" has been renamed to "Centered Mode" (and the condition has been inverted).
 - The menu items in the editor's preview use now a pointer cursor when hovered. This should make it clearer that the items are interactive.
 - Newly added items in the editor's preview are now selected by default.
 - The minimum distance your pointer has to travel to trigger a selection in mark mode has been reduced from 200 to 150 pixels. This makes it possible to draw gestures at a smaller scale.
