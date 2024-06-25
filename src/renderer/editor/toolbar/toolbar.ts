@@ -121,7 +121,7 @@ export class Toolbar extends EventEmitter {
         },
         {
           id: 'kando-add-items-tab',
-          icon: 'add',
+          icon: 'control_point_duplicate',
           title: 'Menu Items',
           content: '',
         },
