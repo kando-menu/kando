@@ -49,11 +49,12 @@ Depending on your platform, the configuration files are located in different dir
 ### The General Configuration: `config.json`
 
 This file contains the general configuration of Kando.
-For now, only a single option is available:
+For now, only contains a few options.
 
 Property | Default Value | Description
 -------- | ------------- | -----------
 `sidebarVisible` | `true` | Whether the left sidebar is currently visible.
+`zoomFactor` | `1.0` | The zoom factor of the menu. This can be used to scale the menu on high-resolution screens.
 
 ### The Menu Configuration: `menus.json`
 
