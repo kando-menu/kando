@@ -45,7 +45,7 @@ export interface IItemType {
 
   /**
    * This should return a human-readable description of a specific menu item of this kind.
-   * It will be shown in the trash and stash tab of the toolbar below the item name.
+   * It will be shown in the trash and templates tab of the toolbar below the item name.
    */
   getDescription(item: IMenuItem): string;
 }

@@ -86,7 +86,7 @@
     }
 
     // Some tabs have a tiny counter which for instance displays the number of items in
-    // the trash or stash.
+    // them.
     .counter {
       @include rfs(1.1rem, font-size);
       position: relative;
@@ -224,12 +224,12 @@
   }
 }
 
-// The buttons in the add-new-item, trash, and stash tabs are a bit special in that they
+// The buttons in the add-new-item, trash, and template tabs are a bit special in that they
 // can only be dragged. We indicate this by changing the cursor and not changing the
 // background color on click.
 #kando-trash-tab .toolbar-menu-button,
 #kando-trash-tab .toolbar-item-button,
-#kando-stash-tab .toolbar-item-button,
+#kando-templates-tab .toolbar-item-button,
 #kando-add-items-tab .toolbar-item-button {
   cursor: grab;
 

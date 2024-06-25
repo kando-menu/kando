@@ -253,13 +253,13 @@ export interface IShowEditorOptions {
 
 /**
  * This interface describes the content of the menu settings file. It contains the
- * configured menus as well as the currently stashed menus.
+ * configured menus as well as the templates.
  */
 export interface IMenuSettings {
   menus: Array<IMenu>;
 
-  /** The currently stashed menu items. */
-  stash: Array<IMenuItem>;
+  /** The template menus and menu items. */
+  templates: Array<IMenu | IMenuItem>;
 }
 
 /**

@@ -18,8 +18,11 @@ import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import {
   IBackendInfo,
+  IMenu,
+  IMenuItem,
   IMenuSettings,
   IShowEditorOptions,
+  deepCopyMenu,
   deepCopyMenuItem,
 } from '../../common';
 import { DnDManager } from './common/dnd-manager';
@@ -252,8 +255,14 @@ export class Editor extends EventEmitter {
         menu.root = deepCopyMenuItem(menu.root);
       });
 
-      // Also the stash needs to be converted back to IMenuItem objects.
-      this.menuSettings.stash = this.menuSettings.stash.map(deepCopyMenuItem);
+      // Also the templates needs to be converted back to IMenu and IMenuItem objects.
+      this.menuSettings.templates = this.menuSettings.templates.map((thing) => {
+        if ((thing as IMenu).root) {
+          return deepCopyMenu(thing as IMenu);
+        } else {
+          return deepCopyMenuItem(thing as IMenuItem);
+        }
+      });
 
       window.api.menuSettings.set(this.menuSettings);
       this.menuSettings = null;
