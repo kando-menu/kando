@@ -31,8 +31,10 @@ const PAUSE_TIMEOUT = 100;
 /**
  * This class detects gestures. It is used to detect marking mode selections in the menu.
  * It is fed with motion events and emits a selection event if either the mouse pointer
- * was stationary for some time or if the mouse pointer made a sharp turn. The selection
- * event contains the coordinates of the location where the selection event occurred.
+ * was stationary for some time or if the mouse pointer made a sharp turn.
+ *
+ * @fires selection - This event is emitted when a selection is detected. The event data
+ *   contains the coordinates of the location where the selection event occurred.
  */
 export class GestureDetection extends EventEmitter {
   /**

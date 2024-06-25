@@ -95,7 +95,13 @@ export class Properties extends EventEmitter {
    * The open at pointer checkbox is a checkbox that allows the user to toggle whether the
    * menu should open at the pointer position.
    */
-  private openAtPointerCheckbox: HTMLInputElement = null;
+  private centeredModeCheckbox: HTMLInputElement = null;
+
+  /**
+   * The anchored mode checkbox is a checkbox that allows the user to toggle whether
+   * submenus should open at the same position as the parent menu.
+   */
+  private anchoredModeCheckbox: HTMLInputElement = null;
 
   /**
    * The shortcut picker is a component that allows the user to select a shortcut for the
@@ -210,12 +216,22 @@ export class Properties extends EventEmitter {
     });
 
     // Update the 'centered' property of the menu when the checkbox changes.
-    this.openAtPointerCheckbox = div.querySelector(
-      '#kando-menu-properties-open-at-pointer'
+    this.centeredModeCheckbox = div.querySelector(
+      '#kando-menu-properties-centered-mode'
     ) as HTMLInputElement;
-    this.openAtPointerCheckbox.addEventListener('change', () => {
+    this.centeredModeCheckbox.addEventListener('change', () => {
       if (this.activeMenu) {
-        this.activeMenu.centered = !this.openAtPointerCheckbox.checked;
+        this.activeMenu.centered = this.centeredModeCheckbox.checked;
+      }
+    });
+
+    // Update the 'anchored' property of the menu when the checkbox changes.
+    this.anchoredModeCheckbox = div.querySelector(
+      '#kando-menu-properties-anchored-mode'
+    ) as HTMLInputElement;
+    this.anchoredModeCheckbox.addEventListener('change', () => {
+      if (this.activeMenu) {
+        this.activeMenu.anchored = this.anchoredModeCheckbox.checked;
       }
     });
 
@@ -366,7 +382,8 @@ export class Properties extends EventEmitter {
    */
   private updateMenuSettingsWidgets(menu: IMenu) {
     this.activeMenu = menu;
-    this.openAtPointerCheckbox.checked = !menu.centered;
+    this.centeredModeCheckbox.checked = menu.centered;
+    this.anchoredModeCheckbox.checked = menu.anchored;
     this.shortcutPicker.setValue(
       (this.backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || ''
     );

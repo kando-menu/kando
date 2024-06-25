@@ -23,7 +23,7 @@ import { InputState, InputTracker } from './input-tracker';
  */
 const CENTER_RADIUS = 50;
 const CHILD_DISTANCE = 100;
-const PARENT_DISTANCE = 200;
+const PARENT_DISTANCE = 150;
 const GRANDCHILD_DISTANCE = 25;
 
 /**
@@ -69,12 +69,10 @@ export class Menu extends EventEmitter {
   private root: IRenderedMenuItem = null;
 
   /**
-   * The window size is the size of the window. Usually, this is the same as
-   * window.innerWidth and window.innerHeight. However, when the window was just resized
-   * before the menu was shown, this can be different. Therefore, we need to pass it from
-   * the main process.
+   * This holds some information which is passed to the menu when it is shown from the
+   * main process. For instance, it holds the window size and the initial mouse position.
    */
-  private windowSize: IVec2 = null;
+  private options: IShowMenuOptions;
 
   /**
    * The hovered item is the menu item which is currently hovered by the mouse. It is used
@@ -216,7 +214,11 @@ export class Menu extends EventEmitter {
       // If there is an item currently dragged, select it. We only select items which have
       // children in marking mode in order to prevent unwanted actions. This way the user
       // can always check if the correct action was selected before executing it.
-      if (this.draggedItem && this.draggedItem.children?.length > 0) {
+      if (
+        !this.options.anchoredMode &&
+        this.draggedItem &&
+        this.draggedItem.children?.length > 0
+      ) {
         // The selection event reports where the selection most likely occurred (e.g. the
         // position where the mouse pointer actually made a turn). We pretend that the
         // mouse pointer is currently at that position, so that the newly selected item
@@ -237,10 +239,10 @@ export class Menu extends EventEmitter {
   public show(root: IRenderedMenuItem, options: IShowMenuOptions) {
     this.clear();
 
-    this.windowSize = options.windowSize;
+    this.options = options;
 
-    this.input.deferredTurboMode = options.deferredTurboMode;
-    this.input.update(options.menuPosition);
+    this.input.deferredTurboMode = options.centeredMode;
+    this.input.update(this.getInitialMenuPosition());
     this.input.ignoreNextMotionEvents();
 
     this.root = root;
@@ -386,22 +388,34 @@ export class Menu extends EventEmitter {
     // center. There is the special case where we select the root item. In this case, we
     // simply position the root element at the mouse position.
     if (item === this.root) {
-      this.root.position = this.input.absolutePosition;
+      this.root.position = this.options.anchoredMode
+        ? this.getInitialMenuPosition()
+        : this.input.absolutePosition;
     } else if (selectedParent) {
       const center = this.selectionChain[this.selectionChain.length - 1];
-      const offset = math.add(this.input.relativePosition, center.position);
-      this.root.position = math.add(this.root.position, offset);
+
+      if (this.options.anchoredMode) {
+        this.root.position = math.add(this.root.position, center.position);
+      } else {
+        const offset = math.add(this.input.relativePosition, center.position);
+        this.root.position = math.add(this.root.position, offset);
+      }
     } else {
       // Compute the ideal position of the new item. The distance to the parent item is
       // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
-      // to the parent item.
-      item.position = math.getDirection(
-        item.angle,
-        Math.max(PARENT_DISTANCE, this.input.distance)
-      );
+      // to the parent item. In anchored mode, the distance is set to PARENT_DISTANCE.
+      const distance = this.options.anchoredMode
+        ? PARENT_DISTANCE
+        : Math.max(PARENT_DISTANCE, this.input.distance);
 
-      const offset = math.subtract(this.input.relativePosition, item.position);
-      this.root.position = math.add(this.root.position, offset);
+      item.position = math.getDirection(item.angle, distance);
+
+      if (this.options.anchoredMode) {
+        this.root.position = math.subtract(this.root.position, item.position);
+      } else {
+        const offset = math.subtract(this.input.relativePosition, item.position);
+        this.root.position = math.add(this.root.position, offset);
+      }
     }
 
     // If the menu item is the parent of the currently selected item, we have to pop the
@@ -422,7 +436,11 @@ export class Menu extends EventEmitter {
       // magic number 1.4 accounts for the hover effect (which should be made
       // configurable). The 10 is some additional margin.
       const maxRadius = (CHILD_DISTANCE + GRANDCHILD_DISTANCE) * 1.4 + 10;
-      const clampedPosition = math.clampToMonitor(position, maxRadius, this.windowSize);
+      const clampedPosition = math.clampToMonitor(
+        position,
+        maxRadius,
+        this.options.windowSize
+      );
 
       const offset = {
         x: Math.trunc(clampedPosition.x - position.x),
@@ -849,5 +867,23 @@ export class Menu extends EventEmitter {
     }
 
     return position;
+  }
+
+  /**
+   * This method computes the initial position of the root item. If the menu is in
+   * centered mode, the root item will be positioned at the center of the window.
+   * Otherwise, it will be positioned at the mouse position.
+   *
+   * @returns The initial position of the root item.
+   */
+  private getInitialMenuPosition() {
+    return {
+      x: this.options.centeredMode
+        ? (this.options.windowSize.x / this.options.zoomFactor) * 0.5
+        : this.options.mousePosition.x,
+      y: this.options.centeredMode
+        ? (this.options.windowSize.y / this.options.zoomFactor) * 0.5
+        : this.options.mousePosition.y,
+    };
   }
 }
