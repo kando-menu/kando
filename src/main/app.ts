@@ -329,6 +329,10 @@ export class KandoApp {
           y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
         };
 
+        // Account for the window's zoom factor.
+        menuPosition.x /= this.window.webContents.getZoomFactor();
+        menuPosition.y /= this.window.webContents.getZoomFactor();
+
         // We have to pass the size of the window to the renderer because window.innerWidth
         // and window.innerHeight are not reliable when the window has just been resized.
         const windowSize = {
