@@ -23,7 +23,7 @@ import { InputState, InputTracker } from './input-tracker';
  */
 const CENTER_RADIUS = 50;
 const CHILD_DISTANCE = 100;
-const PARENT_DISTANCE = 200;
+const PARENT_DISTANCE = 150;
 const GRANDCHILD_DISTANCE = 25;
 
 /**
