@@ -181,6 +181,12 @@ export interface IMenu {
   centered: boolean;
 
   /**
+   * If true, the menu will be "anchored". This means that any submenus will be opened at
+   * the same position as the parent menu.
+   */
+  anchored: boolean;
+
+  /**
    * Conditions are matched before showing a menu. The one that has more conditions and
    * met them all is selected.
    */
@@ -199,6 +205,7 @@ export function deepCopyMenu(menu: IMenu): IMenu {
     shortcut: menu.shortcut,
     shortcutID: menu.shortcutID,
     centered: menu.centered,
+    anchored: menu.anchored,
     conditions: structuredClone(menu.conditions),
   };
 }
@@ -208,8 +215,11 @@ export function deepCopyMenu(menu: IMenu): IMenu {
  * Menu's `show()` method from the main to the renderer process.
  */
 export interface IShowMenuOptions {
-  /** The position of the mouse cursor when the menu was opened. */
-  menuPosition: IVec2;
+  /**
+   * The position of the mouse cursor when the menu was opened. Relative to the top left
+   * corner of the window.
+   */
+  mousePosition: IVec2;
 
   /**
    * The size of the window. Usually, this is the same as window.innerWidth and
@@ -219,12 +229,22 @@ export interface IShowMenuOptions {
   windowSize: IVec2;
 
   /**
-   * If this is set, a key has to be pressed first before the turbo mode will be
-   * activated. Else, the turbo mode will be activated immediately when the menu is opened
-   * and a key is already pressed. This is useful for menus that are not opened at the
-   * mouse pointer.
+   * The scale factor of the menu. This is required to compute the correct position of the
+   * menu.
    */
-  deferredTurboMode: boolean;
+  zoomFactor: number;
+
+  /**
+   * If this is set, the menu will be opened in the screen's center. Else it will be
+   * opened at the mouse pointer.
+   */
+  centeredMode: boolean;
+
+  /**
+   * If this is set, the menu will be "anchored". This means that any submenus will be
+   * opened at the same position as the parent menu.
+   */
+  anchoredMode: boolean;
 }
 
 /**

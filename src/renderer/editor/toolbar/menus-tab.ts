@@ -234,6 +234,7 @@ export class MenusTab extends DropTargetTab {
       shortcut: '',
       shortcutID: '',
       centered: false,
+      anchored: false,
     };
 
     this.menuSettings.menus.push(newMenu);

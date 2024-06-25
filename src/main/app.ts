@@ -346,14 +346,10 @@ export class KandoApp {
 
         // Usually, the menu is shown at the pointer position. However, if the menu is
         // centered, we show it in the center of the screen.
-        const menuPosition = {
-          x: this.lastMenu.centered ? workarea.width / 2 : info.pointerX - workarea.x,
-          y: this.lastMenu.centered ? workarea.height / 2 : info.pointerY - workarea.y,
+        const mousePosition = {
+          x: (info.pointerX - workarea.x) / this.window.webContents.getZoomFactor(),
+          y: (info.pointerY - workarea.y) / this.window.webContents.getZoomFactor(),
         };
-
-        // Account for the window's zoom factor.
-        menuPosition.x /= this.window.webContents.getZoomFactor();
-        menuPosition.y /= this.window.webContents.getZoomFactor();
 
         // We have to pass the size of the window to the renderer because window.innerWidth
         // and window.innerHeight are not reliable when the window has just been resized.
@@ -372,9 +368,11 @@ export class KandoApp {
           'show-menu',
           this.lastMenu.root,
           {
-            menuPosition,
+            mousePosition,
             windowSize,
-            deferredTurboMode: this.lastMenu.centered,
+            zoomFactor: this.window.webContents.getZoomFactor(),
+            centeredMode: this.lastMenu.centered,
+            anchoredMode: this.lastMenu.anchored,
           },
           {
             appName: info.appName,
