@@ -33,6 +33,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The menu items in the editor's preview use now a pointer cursor when hovered. This should make it clearer that the items are interactive.
 - Newly added items in the editor's preview are now selected by default.
 
+#### Fixed
+
+- A bug where the properties of a menu item were still shown in the editor after the item was deleted.
+
 ## [Kando 1.1.0](https://github.com/kando-menu/kando/releases/tag/v1.1.0)
 
 

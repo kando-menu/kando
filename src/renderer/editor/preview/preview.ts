@@ -715,6 +715,11 @@ export class Preview extends EventEmitter {
 
     // Remove the div from the DOM.
     item.div.remove();
+
+    // If it was selected, we select the center item instead.
+    if (this.activeItem === item) {
+      this.selectItem(centerItem);
+    }
   }
 
   /**
