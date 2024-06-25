@@ -33,6 +33,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Command items now have an "Execute After Closing the Menu" property as well. This allows to execute a command after closing the menu. This is useful if the command should be executed in the context of the currently focused window.
 - The menu items in the editor's preview use now a pointer cursor when hovered. This should make it clearer that the items are interactive.
 - Newly added items in the editor's preview are now selected by default.
+- The minimum distance your pointer has to travel to trigger a selection in mark mode has been reduced from 200 to 150 pixels. This makes it possible to draw gestures at a smaller scale.
 
 #### Fixed
 
