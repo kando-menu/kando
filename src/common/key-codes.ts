@@ -1511,7 +1511,7 @@ const KEY_CODES: Map<string, IKeyMapping> = new Map([
     'tab',
     {
       windows: 0x000f,
-      macos: null,
+      macos: 0x30,
       linux: 0x0017,
     },
   ],
