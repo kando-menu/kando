@@ -19,6 +19,8 @@ import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
 import { ItemConfigRegistry } from '../../../common/item-config-registry';
+import { Tooltip } from 'bootstrap';
+
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -158,6 +160,17 @@ export class Properties extends EventEmitter {
         this.activeItem.name = this.nameInput.value;
         this.emit('changed-name');
       }
+    });
+
+    //adding tooltip to icon.
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const iconButtons = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      iconButtons.forEach((button) => {
+          new Tooltip(button, {
+              delay: { show: 500, hide: 0 }, // Adjust delay as needed
+          });
+      });
     });
 
     // Show the icon picker when the icon button is clicked.

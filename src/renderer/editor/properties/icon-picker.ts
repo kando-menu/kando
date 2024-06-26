@@ -181,6 +181,8 @@ export class IconPicker extends EventEmitter {
           const iconDiv = theme.createDiv(iconName);
           if (iconName === this.selectedIcon) {
             iconDiv.classList.add('selected');
+            iconDiv.setAttribute('data-bs-toggle', 'tooltip');
+            iconDiv.setAttribute('title', iconName);
             this.selectedIconDiv = iconDiv;
           }
           fragment.appendChild(iconDiv);
