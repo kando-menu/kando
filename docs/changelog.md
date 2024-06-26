@@ -41,6 +41,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Fixed
 
 - A bug where the properties of a menu item were still shown in the editor after the item was deleted.
+- Simulating the <kbd>Tab</kbd> key on macOS. Thanks to [@NeighNeighNeigh](https://github.com/NeighNeighNeigh) for the fix!
 
 ## [Kando 1.1.0](https://github.com/kando-menu/kando/releases/tag/v1.1.0)
 
