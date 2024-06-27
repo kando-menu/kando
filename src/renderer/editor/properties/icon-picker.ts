@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
+import { Tooltip } from 'bootstrap';
 
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
@@ -179,11 +180,19 @@ export class IconPicker extends EventEmitter {
         for (let i = startIndex; i < endIndex; i++) {
           const iconName = icons[i];
           const iconDiv = theme.createDiv(iconName);
+          iconDiv.setAttribute('data-bs-toggle', 'tooltip');
+          iconDiv.setAttribute('title', iconName);
           if (iconName === this.selectedIcon) {
             iconDiv.classList.add('selected');
+
             this.selectedIconDiv = iconDiv;
           }
           fragment.appendChild(iconDiv);
+
+          // Initialize the tooltip for the newly created icon
+          new Tooltip(iconDiv, {
+            delay: { show: 500, hide: 0 }, // Adjust delay as needed
+          });
 
           // When the user clicks an icon, emit the select-icon event and add the
           // selected class to the icon.
