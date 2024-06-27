@@ -20,6 +20,7 @@ import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
 import { ItemConfigRegistry } from '../../../common/item-config-registry';
 
+
 /**
  * This class is responsible for displaying the properties of the currently edited menu
  * item. It emits events when the user changes one of the properties of the currently
