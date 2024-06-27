@@ -19,7 +19,6 @@ import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
 import { ItemConfigRegistry } from '../../../common/item-config-registry';
-import { Tooltip } from 'bootstrap';
 
 
 /**
