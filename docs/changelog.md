@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Menu Scaling:** The menu now behaves properly when scaled via <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>-</kbd>, and <kbd>Ctrl</kbd>+<kbd>0</kbd>. The scale factor is saved to and loaded from `config.json`. It's still a somewhat hidden feature, but once we have a general settings UI, this can be exposed via slider in the UI.
 - **Anchored Mode:** In addition to the existing "Centered Mode", there is now an "Anchored Mode". In this mode, submenus are opened at the position of the parent item. With this, the menu will always stay at the same position on the screen. With this mode, gesture selections are not possible, but it seems that some users prefer this behavior.
 - **Menu Templates:** The stash tab is now called "Templates". In addition to menu items, you can now also store entire menus in there. Move them back to the menus tab or the preview to create unlimited copies of the same menu, submenu, or menu item!
+- **New-Version Notification:** When a new version of Kando is available, a notification will be shown. It works the following way: When you open a menu, Kando will check GitHub for a new release. If a new version is found, a notification will be shown and no further tests are made for this session. If no new version is found or the connection failed, Kando will try again when a menu is opened next time, but not earlier than an hour later. 
 
 #### Changed
 
