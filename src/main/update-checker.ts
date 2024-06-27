@@ -32,6 +32,9 @@ export class UpdateChecker extends EventEmitter {
   /** The time we last checked for updates. */
   private lastCheck = 0;
 
+  /** This flag can be used to disable update checks. */
+  public enabled = true;
+
   /**
    * This method checks for updates. If a new version is available, an 'update-available'
    * event is emitted. This method will not check for updates if another check was made
@@ -39,7 +42,7 @@ export class UpdateChecker extends EventEmitter {
    * available.
    */
   public async checkForUpdates() {
-    if (this.updateAvailable) {
+    if (!this.enabled || this.updateAvailable) {
       return;
     }
 

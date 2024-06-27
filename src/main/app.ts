@@ -81,6 +81,7 @@ export class KandoApp {
       menuTheme: 'none',
       editorTheme: 'none',
       sidebarVisible: true,
+      enableVersionCheck: true,
       zoomFactor: 1,
     },
   });
@@ -148,6 +149,12 @@ export class KandoApp {
     this.updateTrayMenu();
 
     // Show a notification if a new version of Kando is available.
+    this.updateChecker.enabled = this.appSettings.get('enableVersionCheck');
+
+    this.appSettings.onChange('enableVersionCheck', (newValue) => {
+      this.updateChecker.enabled = newValue;
+    });
+
     this.updateChecker.on('update-available', () => {
       console.log(
         'A new version of Kando is available! Get it from https://github.com/kando-menu/kando/releases.'
