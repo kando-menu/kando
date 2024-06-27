@@ -156,6 +156,9 @@ export class KandoApp {
       // Show the update-available button in the sidebar.
       this.window.webContents.send('show-update-available-button');
 
+      // Show the sidebar if it is hidden.
+      this.appSettings.set({ sidebarVisible: true });
+
       // Show a notification if possible.
       if (Notification.isSupported()) {
         const notification = new Notification({
