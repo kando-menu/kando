@@ -12,6 +12,8 @@ import { EventEmitter } from 'events';
 
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
+import { Tooltip } from 'bootstrap';
+
 /**
  * This class is responsible for displaying the icon picker of the menu editor. It emits
  * events when the user chooses a new icon. In fact, whenever an icon is clicked at, the
@@ -179,13 +181,19 @@ export class IconPicker extends EventEmitter {
         for (let i = startIndex; i < endIndex; i++) {
           const iconName = icons[i];
           const iconDiv = theme.createDiv(iconName);
+          iconDiv.setAttribute('data-bs-toggle', 'tooltip');
+          iconDiv.setAttribute('title', iconName);
           if (iconName === this.selectedIcon) {
             iconDiv.classList.add('selected');
-            iconDiv.setAttribute('data-bs-toggle', 'tooltip');
-            iconDiv.setAttribute('title', iconName);
+
             this.selectedIconDiv = iconDiv;
           }
           fragment.appendChild(iconDiv);
+
+          // Initialize the tooltip for the newly created icon
+          new Tooltip(iconDiv, {
+            delay: { show: 500, hide: 0 } // Adjust delay as needed
+          });
 
           // When the user clicks an icon, emit the select-icon event and add the
           // selected class to the icon.

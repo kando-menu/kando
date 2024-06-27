@@ -162,17 +162,6 @@ export class Properties extends EventEmitter {
       }
     });
 
-    //adding tooltip to icon.
-    
-    document.addEventListener('DOMContentLoaded', () => {
-      const iconButtons = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-      iconButtons.forEach((button) => {
-          new Tooltip(button, {
-              delay: { show: 500, hide: 0 }, // Adjust delay as needed
-          });
-      });
-    });
-
     // Show the icon picker when the icon button is clicked.
     this.iconButton = div.querySelector(
       '#kando-menu-properties-icon-button'
