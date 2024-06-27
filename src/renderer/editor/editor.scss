@@ -93,7 +93,8 @@ body {
   }
 
   .btn-primary,
-  .btn-secondary {
+  .btn-secondary,
+  .btn-shine {
     --bs-btn-bg: rgba(255, 255, 255, 0.1);
     --bs-btn-hover-bg: rgba(255, 255, 255, 0.15);
     --bs-btn-active-bg: rgba(255, 255, 255, 0.2);
@@ -105,6 +106,43 @@ body {
   .btn-dark {
     --bs-btn-bg: rgba(0, 0, 0, 0.8);
     --bs-btn-hover-bg: rgba(30, 30, 30, 0.8);
+  }
+
+  .btn-shine {
+    transition: background-color 0.15s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+
+      animation: btn-shine 1s ease-in-out infinite;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  @keyframes btn-shine {
+    0% {
+      left: -100%;
+      transition-property: left;
+    }
+    100% {
+      left: 100%;
+      transition-property: left;
+    }
   }
 
   // Labels are usually clickable.
