@@ -9,10 +9,9 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
+import { Tooltip } from 'bootstrap';
 
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
-
-import { Tooltip } from 'bootstrap';
 
 /**
  * This class is responsible for displaying the icon picker of the menu editor. It emits
@@ -192,7 +191,7 @@ export class IconPicker extends EventEmitter {
 
           // Initialize the tooltip for the newly created icon
           new Tooltip(iconDiv, {
-            delay: { show: 500, hide: 0 } // Adjust delay as needed
+            delay: { show: 500, hide: 0 }, // Adjust delay as needed
           });
 
           // When the user clicks an icon, emit the select-icon event and add the
