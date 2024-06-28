@@ -293,6 +293,9 @@ export interface IAppSettings {
   /** The name of the theme to use for the editor. */
   editorTheme: string;
 
+  /** Set this to false to disable the check for new versions. */
+  enableVersionCheck: boolean;
+
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
 

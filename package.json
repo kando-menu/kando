@@ -72,6 +72,7 @@
     "match-sorter": "^6.3.4",
     "material-symbols": "^0.20.0",
     "node-addon-api": "^8.0.0",
+    "octokit": "^4.0.2",
     "simple-icons-font": "^12.4.0"
   }
 }

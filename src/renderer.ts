@@ -36,6 +36,11 @@ window.api.getBackendInfo().then((info) => {
     editor.enterEditMode();
   });
 
+  // Show the update available button when the main process requests it.
+  window.api.showUpdateAvailableButton(() => {
+    document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
+  });
+
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the
   // menu is still exactly under the pointer, we move the pointer a little bit.

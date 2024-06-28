@@ -49,6 +49,7 @@ declare global {
         ) => void
       ) => void;
       showEditor: (func: (editorOptions: IShowEditorOptions) => void) => void;
+      showUpdateAvailableButton: (func: () => void) => void;
       hoverItem: (path: string) => void;
       unhoverItem: (path: string) => void;
       selectItem: (path: string) => void;

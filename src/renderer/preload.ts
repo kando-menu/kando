@@ -111,6 +111,16 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   /**
+   * This will be called by the host process when the user should be shown a button to
+   * update the app.
+   *
+   * @param callback This callback will be called when the button should be shown.
+   */
+  showUpdateAvailableButton: function (callback: () => void) {
+    ipcRenderer.on('show-update-available-button', callback);
+  },
+
+  /**
    * This will be called by the render process when the user hovers a menu item.
    *
    * @param path The path of the hovered menu item.

@@ -24,6 +24,7 @@ import {
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
 import { WMInfo } from './backends/backend';
+import { UpdateChecker } from './update-checker';
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -40,6 +41,9 @@ export class KandoApp {
    * differently for each platform.
    */
   private backend: Backend = getBackend();
+
+  /** This is used to check for updates. */
+  private updateChecker = new UpdateChecker();
 
   /**
    * The window is the main window of the application. It is a transparent window which
@@ -77,6 +81,7 @@ export class KandoApp {
       menuTheme: 'none',
       editorTheme: 'none',
       sidebarVisible: true,
+      enableVersionCheck: true,
       zoomFactor: 1,
     },
   });
@@ -142,6 +147,40 @@ export class KandoApp {
     // Add a tray icon to the system tray. This icon can be used to open the pie menu
     // and to quit the application.
     this.updateTrayMenu();
+
+    // Show a notification if a new version of Kando is available.
+    this.updateChecker.enabled = this.appSettings.get('enableVersionCheck');
+
+    this.appSettings.onChange('enableVersionCheck', (newValue) => {
+      this.updateChecker.enabled = newValue;
+    });
+
+    this.updateChecker.on('update-available', () => {
+      console.log(
+        'A new version of Kando is available! Get it from https://github.com/kando-menu/kando/releases.'
+      );
+
+      // Show the update-available button in the sidebar.
+      this.window.webContents.send('show-update-available-button');
+
+      // Show the sidebar if it is hidden.
+      this.appSettings.set({ sidebarVisible: true });
+
+      // Show a notification if possible.
+      if (Notification.isSupported()) {
+        const notification = new Notification({
+          title: 'A new version of Kando is available!',
+          body: 'Get it from https://github.com/kando-menu/kando/releases.',
+          icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+        });
+
+        notification.on('click', () => {
+          shell.openExternal('https://github.com/kando-menu/kando/releases');
+        });
+
+        notification.show();
+      }
+    });
   }
 
   /**
@@ -383,6 +422,10 @@ export class KandoApp {
             },
           }
         );
+
+        // We use the opportunity to check for updates. If an update is available, we show
+        // a notification to the user. This notification is only shown once per app start.
+        this.updateChecker.checkForUpdates();
       })
       .catch((err) => {
         console.error('Failed to show menu: ' + err);
