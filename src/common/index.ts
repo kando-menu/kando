@@ -140,7 +140,7 @@ export interface IMenuItem {
 export function deepCopyMenuItem(item: IMenuItem): IMenuItem {
   return {
     type: item.type,
-    data: item.data,
+    data: structuredClone(item.data),
     name: item.name,
     icon: item.icon,
     iconTheme: item.iconTheme,
