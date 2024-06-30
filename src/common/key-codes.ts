@@ -22,7 +22,7 @@ export function mapKeys(keys: IKeySequence, os: 'windows' | 'macos' | 'linux'): 
   return keys.map((key) => {
     const code = KEY_CODES.get(key.name.toLowerCase())?.[os];
 
-    if (!code) {
+    if (code === undefined || code === null) {
       throw new Error(`Unknown key: ${key.name}`);
     }
 
