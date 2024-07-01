@@ -18,19 +18,19 @@ import { IVec2 } from '../../common';
  * drag. If the mouse is moved more than this threshold before the mouse button is
  * released, the current mouse state is set to DRAGGING.
  */
-const DRAG_THRESHOLD = 5;
+const DRAG_THRESHOLD = 15;
 
 /**
  * This enum is used to store the logical state of the input device. This will be set to
- * eClicked once the left mouse button is pressed. If the mouse is moved more than a
- * couple of pixels before the mouse button is released, it is set to eDragging. When the
- * mouse button is released, it is set to eReleased.
+ * eClicked once a mouse button is pressed. If the mouse is moved more than a couple of
+ * pixels before the mouse button is released, it is set to eDragging. When the mouse
+ * button is released, it is set to eReleased.
  *
  * At a higher level, Kando does not differentiate between mouse, touch and pen input.
  * This enum is used for all input devices. There is even the possibility of the "Turbo
- * Mode" which allows the user to select items by moving the mouse while a modifier key is
- * pressed. In this case, the mouse state will also be set to eDragging, even though the
- * mouse button is not pressed.
+ * Mode" which allows the user to select items by moving the mouse while a key is pressed.
+ * In this case, the pointer state will also be set to eDragging, even though the mouse
+ * button is not pressed.
  */
 export enum InputState {
   eReleased,
@@ -58,12 +58,19 @@ export class InputTracker extends EventEmitter {
   private _angle = 0;
   private _distance = 0;
   private _deferredTurboMode = false;
+  private _turboMode = false;
+
+  /** The position where the mouse was when the user pressed a mouse button the last time. */
+  private clickPosition = { x: 0, y: 0 };
+
+  /** The position where the mouse was when the user pressed a keyboard key the last time. */
+  private keydownPosition = { x: 0, y: 0 };
 
   /**
-   * The position where the mouse was when the user pressed the left mouse button the last
-   * time.
+   * This is set to true once a key is pressed. If the pointer is moved at least
+   * DRAG_THRESHOLD before the key is released, the turbo mode will be activated.
    */
-  private clickPosition = { x: 0, y: 0 };
+  private anyKeyPressed = false;
 
   /**
    * If set to a value greater than 0, this will be decremented by 1 every time the the
@@ -74,15 +81,18 @@ export class InputTracker extends EventEmitter {
   private ignoreMotionEvents = 0;
 
   /**
-   * This is set to true if any key is pressed. If true, the menu will behave as if the
-   * left mouse button is pressed.
+   * This returns true if the input state is set to eDragging even if no mouse button is
+   * pressed.
    */
-  private turboMode = false;
+  public get turboMode() {
+    return this._turboMode;
+  }
 
   /**
-   * This will be set to CLICKED once the left mouse button is pressed. If the mouse is
-   * moved more than DRAG_THRESHOLD pixels before the mouse button is released, this is
-   * set to DRAGGING. When the mouse button is released, this is set to RELEASED.
+   * This will be set to eClicked once a mouse button is pressed. If the mouse is moved
+   * more than DRAG_THRESHOLD pixels before the mouse button is released, this is set to
+   * eDragging. When the mouse button is released, this is set to eReleased. It can also
+   * be set to eDragging if the mouse is moved while a key is pressed.
    */
   public get state() {
     return this._state;
@@ -128,7 +138,7 @@ export class InputTracker extends EventEmitter {
    */
   public set deferredTurboMode(val: boolean) {
     this._deferredTurboMode = val;
-    this.turboMode = false;
+    this._turboMode = false;
   }
 
   /**
@@ -168,16 +178,19 @@ export class InputTracker extends EventEmitter {
       this._state = InputState.eDragging;
     }
 
-    // If any key is pressed, this is handled basically as if the left mouse
-    // button is pressed. This allows for menu item selections without having to press a
-    // mouse button if the menu was opened with a keyboard shortcut.
-    if (!this._deferredTurboMode) {
-      this.turboMode =
-        this.turboMode ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.shiftKey ||
-        event.altKey;
+    // We check if the turbo mode should be activated. This is the case if any key is
+    // pressed and the mouse is moved more than DRAG_THRESHOLD since the last keydown
+    // event. Also, the turbo mode is activated if any modifier key is pressed.
+    if (!this._deferredTurboMode && !this._turboMode) {
+      if (this.anyKeyPressed) {
+        this._turboMode =
+          math.getDistance(this._absolutePosition, this.keydownPosition) > DRAG_THRESHOLD;
+      }
+
+      if (!this._turboMode) {
+        this._turboMode =
+          event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+      }
     }
 
     if (this.turboMode) {
@@ -237,7 +250,11 @@ export class InputTracker extends EventEmitter {
    */
   public onKeyDownEvent() {
     if (!this._deferredTurboMode) {
-      this.turboMode = true;
+      this.anyKeyPressed = true;
+      this.keydownPosition = {
+        x: this._absolutePosition.x,
+        y: this._absolutePosition.y,
+      };
     }
   }
 
@@ -251,8 +268,9 @@ export class InputTracker extends EventEmitter {
       event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
     if (!stillAnyModifierPressed) {
+      this.anyKeyPressed = false;
       this._deferredTurboMode = false;
-      this.turboMode = false;
+      this._turboMode = false;
     }
   }
 

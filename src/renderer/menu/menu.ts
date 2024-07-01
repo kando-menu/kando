@@ -183,14 +183,15 @@ export class Menu extends EventEmitter {
     // movements without pressing the left mouse button but by holding a keyboard key
     // instead.
     document.addEventListener('keyup', (event) => {
+      const wasTurboMode = this.input.turboMode;
+
       this.input.onKeyUpEvent(event);
 
-      if (this.input.state === InputState.eDragging) {
+      if (wasTurboMode) {
         const stillAnyModifierPressed =
           event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
         if (!stillAnyModifierPressed) {
-          this.input.onPointerUpEvent();
           this.gestures.reset();
           if (this.draggedItem) {
             this.selectItem(this.draggedItem);
