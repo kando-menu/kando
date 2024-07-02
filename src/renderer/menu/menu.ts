@@ -174,8 +174,10 @@ export class Menu extends EventEmitter {
 
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
     // and keyup events.
-    document.addEventListener('keydown', () => {
-      this.input.onKeyDownEvent();
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') {
+        this.input.onKeyDownEvent();
+      }
     });
 
     // If the last modifier is released while a menu item is dragged around, we select it.
@@ -183,6 +185,10 @@ export class Menu extends EventEmitter {
     // movements without pressing the left mouse button but by holding a keyboard key
     // instead.
     document.addEventListener('keyup', (event) => {
+      if (event.key === 'Escape') {
+        return;
+      }
+
       const wasTurboMode = this.input.turboMode;
 
       this.input.onKeyUpEvent(event);
