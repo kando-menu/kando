@@ -599,7 +599,7 @@ export class KandoApp {
         ItemActionRegistry.getInstance()
           .execute(item, this.backend)
           .catch((error) => {
-            KandoApp.showError('Failed to execute action', error.message);
+            KandoApp.showError('Failed to execute action', error.message || error);
           });
       };
 
