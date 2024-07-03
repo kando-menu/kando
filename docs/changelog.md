@@ -44,6 +44,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - A bug where the properties of a menu item were still shown in the editor after the item was deleted.
 - A bug where menu items would be selected when pressing <kbd>Esc</kbd> (or nay other key) while dragging an item.
+- A bug which caused empty error messages to be shown when executing an action failed.
 - Simulating the <kbd>Tab</kbd> key on macOS. Thanks to [@NeighNeighNeigh](https://github.com/NeighNeighNeigh) for the fix!
 - Simulating the <kbd>A</kbd> key on macOS.
 - Restoring input focus after closing the menu on macOS 11 by downgrading Electron to version 29. This is a temporary fix until the issue is resolved in a newer version of Electron.
