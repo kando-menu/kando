@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import fs from 'fs-extra';
+import path from 'path';
 import chokidar from 'chokidar';
 import isEqual from 'lodash.isequal';
 
@@ -154,7 +155,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   constructor(options: Options<T>) {
     super();
 
-    this.filePath = options.directory + '/' + options.file;
+    this.filePath = path.join(options.directory, options.file);
     this.defaults = options.defaults;
     this.settings = this.loadSettings(this.defaults);
 
