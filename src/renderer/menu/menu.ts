@@ -12,6 +12,7 @@ import { EventEmitter } from 'events';
 
 import * as math from '../math';
 import { IShowMenuOptions, IVec2 } from '../../common';
+import { IconThemeRegistry } from '../../common/icon-theme-registry';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
@@ -289,8 +290,8 @@ export class Menu extends EventEmitter {
    * each item, a div element with the class ".menu-node" is created and appended to the
    * given container. In addition to the child menu items, the div element contains a div
    * with the class ".menu-item" which contains the visual representation of the item. The
-   * item's icon is rendered as an <i> element with the class ".menu-icon" as a child of
-   * the ".menu-item" element.
+   * item's icon is rendered as an <i> element with the class ".icon-container" as a child
+   * of the ".menu-item" element.
    *
    * @param item The menu item to create the DOM tree for.
    * @param container The container to append the DOM tree to.
@@ -305,37 +306,18 @@ export class Menu extends EventEmitter {
 
       const nodeDiv = document.createElement('div');
       const menuItem = document.createElement('div');
-      const icon = document.createElement('i');
+      const icon = IconThemeRegistry.getInstance()
+        .getTheme(item.iconTheme)
+        .createDiv(item.icon);
 
       nodeDiv.classList.add('menu-node');
       menuItem.classList.add('menu-item');
-      icon.classList.add('menu-icon');
 
       container.appendChild(nodeDiv);
       nodeDiv.appendChild(menuItem);
       menuItem.appendChild(icon);
 
       item.nodeDiv = nodeDiv;
-
-      switch (item.iconTheme) {
-        case 'material-symbols-rounded':
-          icon.classList.add('material-symbols-rounded');
-          icon.innerText = item.icon;
-          break;
-        case 'emoji':
-          icon.classList.add('emoji-icon');
-          icon.innerText = item.icon;
-          break;
-        case 'simple-icons':
-          icon.classList.add('si');
-          icon.classList.add('si-' + item.icon);
-          break;
-        case 'simple-icons-colored':
-          icon.classList.add('si');
-          icon.classList.add('si--color');
-          icon.classList.add('si-' + item.icon);
-          break;
-      }
 
       if (item.children) {
         item.connectorDiv = document.createElement('div');
