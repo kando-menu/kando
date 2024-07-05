@@ -70,6 +70,23 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-backend-info');
   },
 
+  /**
+   * This will return all subdirectories of the icon-themes directory in the config
+   * directory.
+   */
+  getUserIconThemes: function () {
+    return ipcRenderer.invoke('get-user-icon-themes');
+  },
+
+  /**
+   * This will return all files in the given icon theme directory.
+   *
+   * @param iconTheme The icon theme to list.
+   */
+  listUserIcons: function (iconTheme: string) {
+    return ipcRenderer.invoke('list-user-icons', iconTheme);
+  },
+
   /** This will show the web developer tools. */
   showDevTools: function () {
     ipcRenderer.send('show-dev-tools');

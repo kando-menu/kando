@@ -38,6 +38,8 @@ declare global {
         getCurrentMenu: () => Promise<number>;
       };
       getBackendInfo: () => Promise<IBackendInfo>;
+      getUserIconThemes: () => Promise<Array<string>>;
+      listUserIcons: (string: iconTheme) => Promise<Array<string>>;
       showDevTools: () => void;
       movePointer: (dist: IVec2) => void;
       log: (message: string) => void;

@@ -9,8 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
-import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
+import fs from 'fs';
+import mime from 'mime-types';
 import path from 'path';
+import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
@@ -563,6 +565,50 @@ export class KandoApp {
     // Allow the renderer to retrieve information about the backend.
     ipcMain.handle('get-backend-info', () => {
       return this.backend.getBackendInfo();
+    });
+
+    // Allow the renderer to retrieve all subdirectories of the icon-themes directory.
+    ipcMain.handle('get-user-icon-themes', async () => {
+      return new Promise<string[]>((resolve, reject) => {
+        const iconThemesDir = path.join(app.getPath('userData'), 'icon-themes');
+        fs.readdir(iconThemesDir, { withFileTypes: true }, (err, dirents) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          const iconThemes = dirents
+            .filter((dirent) => dirent.isDirectory())
+            .map((dirent) => dirent.name);
+
+          resolve(iconThemes);
+        });
+      });
+    });
+
+    // Allow the renderer to retrieve all files in the given icon theme directory.
+    ipcMain.handle('list-user-icons', async (event, iconTheme: string) => {
+      return new Promise<string[]>((resolve, reject) => {
+        const iconDir = path.join(app.getPath('userData'), 'icon-themes', iconTheme);
+        fs.readdir(iconDir, { withFileTypes: true }, (err, files) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          // Filter by mimetype to only return image files.
+          files = files.filter((file) => {
+            if (!file.isFile()) {
+              return false;
+            }
+
+            const mimeType = mime.lookup(file.name);
+            return mimeType && mimeType.startsWith('image/');
+          });
+
+          resolve(files.map((file) => file.name));
+        });
+      });
     });
 
     // Show the web developer tools if requested.
