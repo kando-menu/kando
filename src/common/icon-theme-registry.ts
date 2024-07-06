@@ -12,6 +12,7 @@ import { SimpleIconsTheme } from './icon-themes/simple-icons-theme';
 import { SimpleIconsColoredTheme } from './icon-themes/simple-icons-colored-theme';
 import { MaterialSymbolsTheme } from './icon-themes/material-symbols-theme';
 import { EmojiTheme } from './icon-themes/emoji-theme';
+import { UserIconTheme } from './icon-themes/user-icon-theme';
 
 /**
  * This interface describes an icon theme. An icon theme is a collection of icons that can
@@ -48,7 +49,7 @@ export interface IIconTheme {
  */
 export class IconThemeRegistry {
   /** The singleton instance of this class. */
-  private static instance: IconThemeRegistry = null;
+  private static instance: IconThemeRegistry = new IconThemeRegistry();
 
   /** This map contains all available icon themes. The keys are the type names. */
   private iconThemes: Map<string, IIconTheme> = new Map();
@@ -62,6 +63,16 @@ export class IconThemeRegistry {
     this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
     this.iconThemes.set('emoji', new EmojiTheme());
+
+    // Add an icon theme for all icon themes in the user's icon theme directory.
+    Promise.all([
+      window.api.getUserIconThemeDirectory(),
+      window.api.getUserIconThemes(),
+    ]).then(([directory, themes]) => {
+      for (const theme of themes) {
+        this.iconThemes.set(theme, new UserIconTheme(directory, theme));
+      }
+    });
   }
 
   /**
@@ -70,9 +81,6 @@ export class IconThemeRegistry {
    * @returns The singleton instance of this class.
    */
   public static getInstance(): IconThemeRegistry {
-    if (IconThemeRegistry.instance === null) {
-      IconThemeRegistry.instance = new IconThemeRegistry();
-    }
     return IconThemeRegistry.instance;
   }
 

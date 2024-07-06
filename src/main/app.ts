@@ -571,6 +571,11 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
+    // Allow the renderer to retrieve the path to the user's icon theme directory.
+    ipcMain.handle('get-user-icon-theme-directory', () => {
+      return path.join(app.getPath('userData'), 'icon-themes');
+    });
+
     // Allow the renderer to retrieve all subdirectories of the icon-themes directory.
     ipcMain.handle('get-user-icon-themes', async () => {
       return new Promise<string[]>((resolve, reject) => {
