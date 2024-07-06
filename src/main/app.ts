@@ -471,6 +471,10 @@ export class KandoApp {
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
+        // Electron only allows loading local resources from apps loaded from the file
+        // system. In development mode, the app is loaded from the webpack dev server.
+        // Hence, we have to disable webSecurity in development mode.
+        webSecurity: process.env.NODE_ENV !== 'development',
         preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       transparent: true,
