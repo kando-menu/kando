@@ -66,9 +66,10 @@ export class UserIconTheme implements IIconTheme {
     containerDiv.classList.add('icon-container');
 
     const iconDiv = document.createElement('img');
-    containerDiv.appendChild(iconDiv);
-
     iconDiv.src = `file://${this.directory}/${this.subdirectory}/${icon}`;
+    iconDiv.draggable = false;
+
+    containerDiv.appendChild(iconDiv);
 
     return containerDiv;
   }
