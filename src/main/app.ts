@@ -495,9 +495,11 @@ export class KandoApp {
     this.window.setAlwaysOnTop(true, 'screen-saver');
 
     // We set the Activation Policy to Accessory so that Kando doesn't show in dock
-    // or the CMD Tab App Switcher
+    // or the CMD Tab App Switcher. This is only for MacOS.
+    if (process.platform === 'darwin') {
     app.setActivationPolicy('accessory')
-
+    }
+    
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.
     this.window.webContents.setWindowOpenHandler(({ url }) => {
