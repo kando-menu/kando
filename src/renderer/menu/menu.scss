@@ -54,7 +54,8 @@
       .icon-container {
         transition: $menu-transition;
 
-        color: transparent;
+        opacity: 0;
+        color: $text-color;
 
         container-type: size;
         width: 100%;
@@ -92,7 +93,7 @@
       transform: scale(0.9);
 
       & > .icon-container {
-        color: $text-color;
+        opacity: 1;
         font-size: calc($root-size * 0.75);
       }
     }
@@ -130,7 +131,7 @@
       transform: scale(1);
 
       & > .icon-container {
-        color: $text-color;
+        opacity: 1;
         font-size: calc($child-size * 0.75);
       }
     }
