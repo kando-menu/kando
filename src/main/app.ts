@@ -380,6 +380,12 @@ export class KandoApp {
 
         // On all platforms except Windows, we show the window after we moved it.
         if (process.platform !== 'win32') {
+          // Ensure the window is on the current worksspace before showing
+          this.window.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
+          setTimeout(() => {
+          this.window.setVisibleOnAllWorkspaces(false, { skipTransformProcessType: true });
+          }, 100);
+          // Now let's show the window
           this.showWindow();
         }
 
@@ -487,6 +493,10 @@ export class KandoApp {
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
+
+    // We set the Activation Policy to Accessory so that Kando doesn't show in dock
+    // or the CMD Tab App Switcher
+    app.setActivationPolicy('accessory')
 
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.
