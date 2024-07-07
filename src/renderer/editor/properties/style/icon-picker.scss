@@ -53,7 +53,8 @@
   grid-template-columns: repeat(auto-fill, minmax(calc(32px + 2vw), 1fr));
   transition: opacity 150ms ease;
 
-  .icon-container {
+  & > div {
+    aspect-ratio: 1 / 1;
     border-radius: var(--bs-border-radius);
     clip-path: none;
 
