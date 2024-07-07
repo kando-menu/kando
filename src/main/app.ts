@@ -599,7 +599,7 @@ export class KandoApp {
     ipcMain.handle('list-user-icons', async (event, iconTheme: string) => {
       return new Promise<string[]>((resolve, reject) => {
         const iconDir = path.join(app.getPath('userData'), 'icon-themes', iconTheme);
-        fs.readdir(iconDir, { withFileTypes: true }, (err, files) => {
+        fs.readdir(iconDir, { withFileTypes: true, recursive: true }, (err, files) => {
           if (err) {
             reject(err);
             return;
@@ -615,7 +615,10 @@ export class KandoApp {
             return mimeType && mimeType.startsWith('image/');
           });
 
-          resolve(files.map((file) => file.name));
+          // We return the relative path of the files to the icon theme directory.
+          resolve(
+            files.map((file) => path.relative(iconDir, path.join(file.path, file.name)))
+          );
         });
       });
     });
