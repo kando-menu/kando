@@ -56,6 +56,12 @@ export class IconPicker extends EventEmitter {
   /** The observer that is used to detect when icons are scrolled into view. */
   private observer: IntersectionObserver = null;
 
+  /**
+   * The tooltips of the icons in the grid. We need to keep track of them to remove them
+   * when the icon grid is reloaded.
+   */
+  private tooltips: Tooltip[] = [];
+
   /** The icon and theme that were selected when the icon picker was opened. */
   private initialTheme: string = null;
   private initialIcon: string = null;
@@ -165,6 +171,10 @@ export class IconPicker extends EventEmitter {
       this.observer.disconnect();
     }
 
+    // Clear the tooltips.
+    this.tooltips.forEach((tooltip) => tooltip.dispose());
+    this.tooltips = [];
+
     const theme = IconThemeRegistry.getInstance().getTheme(this.themeSelect.value);
     const icons = await theme.listIcons(this.filterInput.value);
 
@@ -196,9 +206,10 @@ export class IconPicker extends EventEmitter {
         fragment.appendChild(iconButton);
 
         // Initialize the tooltip for the newly created icon.
-        new Tooltip(iconButton, {
+        const tooltip = new Tooltip(iconButton, {
           delay: { show: 500, hide: 0 },
         });
+        this.tooltips.push(tooltip);
 
         // When the user clicks an icon, emit the select-icon event and add the
         // selected class to the icon.
