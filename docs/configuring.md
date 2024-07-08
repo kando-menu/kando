@@ -21,19 +21,35 @@ There are three ways to open the menu editor:
 In the editor, you can create new menus, and edit existing menus.
 Drag new items from the toolbar to the menu preview, reorder them, and change their properties on the right side of the screen.
 
-## Tips for Creating Efficient Menu Layouts
+## Tips for Creating Efficient Menu Layouts :rocket:
 
 When designing your own menus, keep the following tips in mind:
 * **Avoid too many items in a single menu.** Instead, create submenus. Eight items per menu is a good rule of thumb, and you should never have more than twelve items in a single menu.
 * **Deeply nested menus are not a problem.** Kando is designed to handle deeply nested menus. You can use the marking mode to quickly select items which are in subsubsubmenus.
 * **Use the fixed-angle locks to create a clean layout.** Even if you have an odd number of items, you can use fixed angles to lock items to the top, bottom, left, or right side of the menu.
 
-## Adding Custom Icon Themes
+## Adding Custom Icon Themes :sparkles:
 
 To add your own icons to Kando, follow these steps:
-1. Create a new `icon-themes` directory in Kando's configuration directory if it does not yet exist.
+1. Create a new `icon-themes` directory in Kando's configuration directory if it does not yet exist. Depending on your OS, this will be the following locations:
+    * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\icon-themes`
+    * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/kando/icon-themes`
+    * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/icon-themes`
+2. Create a new directory for your icon theme in the `icon-themes` directory. You can give it any name you like.
+3. Add your icons to the new directory. The icons can be in various formats, but we recommend using SVG files.
+4. **Restart Kando.** Icon themes are only loaded when Kando starts.
+5. Select your icon theme in the icon-theme dropdown in the icon picker in Kando's menu editor.
 
-## Menu Shortcuts vs. Simulated Hotkeys
+### Some Tips for Creating Icon Themes
+
+* You can organize your icons in subdirectories. Kando will load them recursively. The directory will be part of the icon's name and therefore you can use the search bar to filter by directory.
+* There are many great icon sets available on the internet. Here are some which you could try:
+  * [Numix Circle](https://github.com/numixproject/numix-icon-theme-circle)
+  * [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
+  * [Tela](https://github.com/vinceliuice/Tela-icon-theme)
+
+
+## Menu Shortcuts vs. Simulated Hotkeys :keyboard:
 
 With Kando, you can bind a menu to a keyboard shortcut and use menu items to simulate keyboard hotkeys or macros.
 This is a bit confusing as all are configured similarly, but use different formats.
