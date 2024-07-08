@@ -380,6 +380,17 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
+        // On MacOS we need to ensure the window is on the current workspace before showing.
+        // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
+        if (process.platform === 'darwin') {
+          this.window.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
+          setTimeout(() => {
+            this.window.setVisibleOnAllWorkspaces(false, {
+              skipTransformProcessType: true,
+            });
+          }, 100);
+        }
+
         // On all platforms except Windows, we show the window after we moved it.
         if (process.platform !== 'win32') {
           this.showWindow();
@@ -493,6 +504,12 @@ export class KandoApp {
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.window.setAlwaysOnTop(true, 'screen-saver');
+
+    // We set the Activation Policy to Accessory so that Kando doesn't show in dock
+    // or the CMD Tab App Switcher. This is only for MacOS.
+    if (process.platform === 'darwin') {
+      app.setActivationPolicy('accessory');
+    }
 
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.

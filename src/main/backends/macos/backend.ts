@@ -21,7 +21,7 @@ export class MacosBackend implements Backend {
    */
   public getBackendInfo() {
     return {
-      windowType: 'panel',
+      windowType: 'normal',
       supportsShortcuts: true,
     };
   }
