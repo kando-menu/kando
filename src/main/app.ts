@@ -595,11 +595,17 @@ export class KandoApp {
 
     // Allow the renderer to retrieve all subdirectories of the icon-themes directory.
     ipcMain.handle('get-user-icon-themes', async () => {
-      return new Promise<string[]>((resolve, reject) => {
+      return new Promise<string[]>((resolve) => {
         const iconThemesDir = path.join(app.getPath('userData'), 'icon-themes');
         fs.readdir(iconThemesDir, { withFileTypes: true }, (err, dirents) => {
+          // We ignore ENOENT errors as they just mean that the directory does not exist.
+          // All other errors are printed to the console.
           if (err) {
-            reject(err);
+            if (err.code !== 'ENOENT') {
+              console.error(err);
+            }
+
+            resolve([]);
             return;
           }
 
@@ -614,11 +620,12 @@ export class KandoApp {
 
     // Allow the renderer to retrieve all files in the given icon theme directory.
     ipcMain.handle('list-user-icons', async (event, iconTheme: string) => {
-      return new Promise<string[]>((resolve, reject) => {
+      return new Promise<string[]>((resolve) => {
         const iconDir = path.join(app.getPath('userData'), 'icon-themes', iconTheme);
         fs.readdir(iconDir, { withFileTypes: true, recursive: true }, (err, files) => {
           if (err) {
-            reject(err);
+            console.error(err);
+            resolve([]);
             return;
           }
 
