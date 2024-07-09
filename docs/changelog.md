@@ -41,6 +41,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Newly added items in the editor's preview are now selected by default.
 - The minimum distance your pointer has to travel to trigger a selection in marking mode has been reduced from 200 to 150 pixels. This makes it possible to draw gestures at a smaller scale.
 - When the user clicks on an external link in the editor, Kando's window will now fade out properly and the settings will be saved before the external link is opened.
+- The menu-condition picker now has a header which shortly explains why you would want to use menu conditions.
 
 #### Fixed
 

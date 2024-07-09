@@ -69,7 +69,11 @@ export class ConditionPicker extends EventEmitter {
 
     const template = require('./templates/condition-picker.hbs');
     container.classList.value = 'd-flex flex-column justify-content-center hidden';
-    container.innerHTML = template({});
+    container.innerHTML = template({
+      heading: 'Select Menu Conditions',
+      subheading:
+        'You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.',
+    });
 
     const idPrefix = '#kando-properties-condition-';
 
