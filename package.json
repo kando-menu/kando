@@ -60,6 +60,7 @@
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.10",
     "@types/lodash.isequal": "^4.5.8",
+    "@types/mime-types": "^2.1.4",
     "bootstrap": "^5.3.1",
     "chokidar": "^3.6.0",
     "commander": "^12.0.0",
@@ -71,6 +72,7 @@
     "lodash.isequal": "^4.5.0",
     "match-sorter": "^6.3.4",
     "material-symbols": "^0.21.0",
+    "mime-types": "^2.1.35",
     "node-addon-api": "^8.0.0",
     "octokit": "^4.0.2",
     "simple-icons-font": "^13.1.0"

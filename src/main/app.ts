@@ -9,8 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
-import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
+import fs from 'fs';
+import mime from 'mime-types';
 import path from 'path';
+import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
@@ -480,6 +482,10 @@ export class KandoApp {
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
+        // Electron only allows loading local resources from apps loaded from the file
+        // system. In development mode, the app is loaded from the webpack dev server.
+        // Hence, we have to disable webSecurity in development mode.
+        webSecurity: process.env.NODE_ENV !== 'development',
         preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       transparent: true,
@@ -508,7 +514,7 @@ export class KandoApp {
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.
     this.window.webContents.setWindowOpenHandler(({ url }) => {
-      this.hideWindow();
+      this.window.webContents.send('hide-editor');
       shell.openExternal(url);
       return { action: 'deny' };
     });
@@ -580,6 +586,65 @@ export class KandoApp {
     // Allow the renderer to retrieve information about the backend.
     ipcMain.handle('get-backend-info', () => {
       return this.backend.getBackendInfo();
+    });
+
+    // Allow the renderer to retrieve the path to the user's icon theme directory.
+    ipcMain.handle('get-user-icon-theme-directory', () => {
+      return path.join(app.getPath('userData'), 'icon-themes');
+    });
+
+    // Allow the renderer to retrieve all subdirectories of the icon-themes directory.
+    ipcMain.handle('get-user-icon-themes', async () => {
+      return new Promise<string[]>((resolve) => {
+        const iconThemesDir = path.join(app.getPath('userData'), 'icon-themes');
+        fs.readdir(iconThemesDir, { withFileTypes: true }, (err, dirents) => {
+          // We ignore ENOENT errors as they just mean that the directory does not exist.
+          // All other errors are printed to the console.
+          if (err) {
+            if (err.code !== 'ENOENT') {
+              console.error(err);
+            }
+
+            resolve([]);
+            return;
+          }
+
+          const iconThemes = dirents
+            .filter((dirent) => dirent.isDirectory())
+            .map((dirent) => dirent.name);
+
+          resolve(iconThemes);
+        });
+      });
+    });
+
+    // Allow the renderer to retrieve all files in the given icon theme directory.
+    ipcMain.handle('list-user-icons', async (event, iconTheme: string) => {
+      return new Promise<string[]>((resolve) => {
+        const iconDir = path.join(app.getPath('userData'), 'icon-themes', iconTheme);
+        fs.readdir(iconDir, { withFileTypes: true, recursive: true }, (err, files) => {
+          if (err) {
+            console.error(err);
+            resolve([]);
+            return;
+          }
+
+          // Filter by mimetype to only return image files.
+          files = files.filter((file) => {
+            if (!file.isFile()) {
+              return false;
+            }
+
+            const mimeType = mime.lookup(file.name);
+            return mimeType && mimeType.startsWith('image/');
+          });
+
+          // We return the relative path of the files to the icon theme directory.
+          resolve(
+            files.map((file) => path.relative(iconDir, path.join(file.path, file.name)))
+          );
+        });
+      });
     });
 
     // Show the web developer tools if requested.

@@ -59,6 +59,13 @@ const config: ForgeConfig = {
   ],
   plugins: [
     new WebpackPlugin({
+      // We add 'img-src 'self' file: data:' to the default-src directive to allow loading
+      // images from the file system and data URLs. This is only necessary for the
+      // development build. In the production build, webpack will serve the app from a file
+      // instead of a server in which case electron will not enforce the Content Security
+      // Policy.
+      devContentSecurityPolicy:
+        "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; img-src 'self' file: data:",
       mainConfig,
       renderer: {
         config: rendererConfig,

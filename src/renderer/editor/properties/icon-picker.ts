@@ -13,6 +13,15 @@ import { Tooltip } from 'bootstrap';
 
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
 
+// Extend the IntersectionObserverInit interface to allow for a delay option. This delay
+// was introduced in IntersectionObserver v2 and is for some reason not yet part of the
+// TypeScript definitions.
+declare global {
+  interface IntersectionObserverInit {
+    delay?: number;
+  }
+}
+
 /**
  * This class is responsible for displaying the icon picker of the menu editor. It emits
  * events when the user chooses a new icon. In fact, whenever an icon is clicked at, the
@@ -44,6 +53,15 @@ export class IconPicker extends EventEmitter {
   /** When a new loadIcons operation is started, the previous one is aborted. */
   private loadAbortController: AbortController = null;
 
+  /** The observer that is used to detect when icons are scrolled into view. */
+  private observer: IntersectionObserver = null;
+
+  /**
+   * The tooltips of the icons in the grid. We need to keep track of them to remove them
+   * when the icon grid is reloaded.
+   */
+  private tooltips: Tooltip[] = [];
+
   /** The icon and theme that were selected when the icon picker was opened. */
   private initialTheme: string = null;
   private initialIcon: string = null;
@@ -62,7 +80,18 @@ export class IconPicker extends EventEmitter {
     // template below. The data object contains an array of objects with the keys `name`
     // and `key`. The `name` is the display name of the theme and the `key` is the key
     // that is used to identify the theme in the IconThemeRegistry.
-    const data: { themes: { name: string; key: string }[] } = { themes: [] };
+    const data = {
+      heading: 'Select an Icon',
+      subheading:
+        'You can add your own icon collections by putting a folder with icons into %1. Learn more <a %2>here</a>.'
+          .replace('%1', IconThemeRegistry.getInstance().userIconThemeDirectory)
+          .replace(
+            '%2',
+            'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md" target="_blank"'
+          ),
+
+      themes: new Array<{ name: string; key: string }>(),
+    };
     const themes = IconThemeRegistry.getInstance().getThemes();
     themes.forEach((theme, key) => {
       data.themes.push({ name: theme.name, key });
@@ -83,8 +112,8 @@ export class IconPicker extends EventEmitter {
       '#kando-properties-icon-theme-select'
     ) as HTMLSelectElement;
 
-    this.filterInput.addEventListener('input', () => this.updateIconGrid());
-    this.themeSelect.addEventListener('change', () => this.updateIconGrid());
+    this.filterInput.addEventListener('input', () => this.loadIcons());
+    this.themeSelect.addEventListener('change', () => this.loadIcons());
 
     // Close the icon picker when the user clicks the close button.
     const okButton = container.querySelector('#kando-properties-icon-picker-ok');
@@ -114,7 +143,7 @@ export class IconPicker extends EventEmitter {
 
     this.themeSelect.value = theme;
 
-    this.updateIconGrid();
+    this.loadIcons();
   }
 
   /** Hides the icon picker. */
@@ -131,29 +160,14 @@ export class IconPicker extends EventEmitter {
 
   /**
    * Reloads the icons of the currently selected theme and updates the icon grid. The grid
-   * will scroll to the selected icon.
-   */
-  private updateIconGrid() {
-    this.loadIcons().then((fullyLoaded) => {
-      if (fullyLoaded && this.selectedIconDiv) {
-        const scrollbox = this.iconGrid.parentElement.parentElement;
-        scrollbox.scrollTop = this.selectedIconDiv.offsetTop - scrollbox.clientHeight / 2;
-      }
-    });
-  }
-
-  /**
-   * Loads the icons of the currently selected theme and updates the icon grid.
-   *
-   * @returns A promise that resolves when all icons have been loaded or the operation has
-   *   been aborted. The promise resolves to `true` if all icons have been loaded and to
-   *   `false` if the operation has been aborted.
+   * will scroll to the selected icon. The loading happens in batches to avoid blocking
+   * the UI thread for too long. When a previous loadIcons operation is still in progress,
+   * it is aborted.
    */
   private async loadIcons() {
     // Check if there is a previous loadIcons operation in progress. If so, abort it.
     if (this.loadAbortController) {
       this.loadAbortController.abort();
-      this.loadAbortController = null;
     }
 
     // Create a new AbortController for the current operation.
@@ -164,79 +178,121 @@ export class IconPicker extends EventEmitter {
     this.iconGrid.innerHTML = '';
     this.container.classList.add('loading');
 
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    // Clear the tooltips.
+    this.tooltips.forEach((tooltip) => tooltip.dispose());
+    this.tooltips = [];
+
     const theme = IconThemeRegistry.getInstance().getTheme(this.themeSelect.value);
     const icons = await theme.listIcons(this.filterInput.value);
 
-    // Create a new Promise for the current operation. This promise will resolve when all
-    // icons have been loaded or the operation has been aborted.
-    return new Promise<boolean>((resolve) => {
-      // We add the icons in batches to avoid blocking the UI thread for too long.
-      const batchSize = 150;
-      let startIndex = 0;
+    // We add the icons in batches to avoid blocking the UI thread for too long.
+    const batchSize = 150;
+    let startIndex = 0;
 
-      const addBatch = () => {
-        const endIndex = Math.min(startIndex + batchSize, icons.length);
-        const fragment = document.createDocumentFragment();
-        for (let i = startIndex; i < endIndex; i++) {
-          const iconName = icons[i];
-          const iconDiv = theme.createDiv(iconName);
-          iconDiv.setAttribute('data-bs-toggle', 'tooltip');
-          iconDiv.setAttribute('title', iconName);
-          if (iconName === this.selectedIcon) {
-            iconDiv.classList.add('selected');
+    const addBatch = () => {
+      const endIndex = Math.min(startIndex + batchSize, icons.length);
+      const fragment = document.createDocumentFragment();
+      for (let i = startIndex; i < endIndex; i++) {
+        const iconName = icons[i];
 
-            this.selectedIconDiv = iconDiv;
+        const iconButton = document.createElement('div');
+
+        // Add the attributes required for the tooltip.
+        iconButton.setAttribute('data-bs-toggle', 'tooltip');
+        iconButton.setAttribute('title', iconName);
+
+        // The icon-name attribute is used when loading the icon when the button becomes
+        // visible.
+        iconButton.setAttribute('icon-name', iconName);
+
+        if (iconName === this.selectedIcon) {
+          iconButton.classList.add('selected');
+          this.selectedIconDiv = iconButton;
+        }
+
+        fragment.appendChild(iconButton);
+
+        // Initialize the tooltip for the newly created icon.
+        const tooltip = new Tooltip(iconButton, {
+          delay: { show: 500, hide: 0 },
+        });
+        this.tooltips.push(tooltip);
+
+        // When the user clicks an icon, emit the select-icon event and add the
+        // selected class to the icon.
+        iconButton.addEventListener('click', () => {
+          if (this.selectedIconDiv) {
+            this.selectedIconDiv.classList.remove('selected');
           }
-          fragment.appendChild(iconDiv);
+          iconButton.classList.add('selected');
 
-          // Initialize the tooltip for the newly created icon
-          new Tooltip(iconDiv, {
-            delay: { show: 500, hide: 0 }, // Adjust delay as needed
-          });
+          this.selectedIcon = iconName;
+          this.selectedIconDiv = iconButton;
 
-          // When the user clicks an icon, emit the select-icon event and add the
-          // selected class to the icon.
-          iconDiv.addEventListener('click', () => {
-            if (this.selectedIconDiv) {
-              this.selectedIconDiv.classList.remove('selected');
-            }
-            iconDiv.classList.add('selected');
+          this.emit('select', iconName, this.themeSelect.value);
+        });
 
-            this.selectedIcon = iconName;
-            this.selectedIconDiv = iconDiv;
+        // When the user double-clicks an icon, emit the close event.
+        iconButton.addEventListener('dblclick', () => {
+          this.hide();
+        });
+      }
 
-            this.emit('select', iconName, this.themeSelect.value);
-          });
+      // Before actually modifying the DOM, check if the operation has been aborted.
+      if (abortController.signal.aborted) {
+        return;
+      }
 
-          // When the user double-clicks an icon, emit the close event.
-          iconDiv.addEventListener('dblclick', () => {
-            this.hide();
-          });
+      this.iconGrid.appendChild(fragment);
+
+      startIndex = endIndex;
+
+      // If there are still icons pending, yield to let the UI thread continue a bit and
+      // then add the next batch of icons.
+      if (startIndex < icons.length) {
+        requestAnimationFrame(addBatch);
+      } else {
+        // The loading operation is finished. Clean up and scroll to the selected icon.
+        this.loadAbortController = null;
+        this.container.classList.remove('loading');
+
+        const scrollbox = this.iconGrid.parentElement.parentElement;
+        if (this.selectedIconDiv) {
+          scrollbox.scrollTop =
+            this.selectedIconDiv.offsetTop - scrollbox.clientHeight / 2 - 150;
         }
 
-        // Before modifying the DOM, check if the operation has been aborted.
-        if (abortController.signal.aborted) {
-          resolve(false);
-          return;
-        }
+        // Create the observer that is used to detect when icons are scrolled into view.
+        // Once an icon is visible, the icon is loaded into the button. This is done to
+        // avoid loading all icons at once.
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const iconButton = entry.target;
+              const iconName = iconButton.attributes.getNamedItem('icon-name').value;
 
-        this.iconGrid.appendChild(fragment);
+              if (entry.isIntersecting) {
+                iconButton.appendChild(theme.createDiv(iconName));
+              } else {
+                iconButton.innerHTML = '';
+              }
+            });
+          },
+          { root: scrollbox, delay: 250, rootMargin: '250px' }
+        );
 
-        startIndex = endIndex;
+        // Observe all icons in the grid. We get the icons by querying the grid for all
+        // divs having the icon-name attribute.
+        const icons = this.iconGrid.querySelectorAll('div[icon-name]');
+        icons.forEach((icon) => this.observer.observe(icon));
+      }
+    };
 
-        // If there are still icons pending, yield to let the UI thread continue a bit and
-        // then add the next batch of icons. Else resolve the promise.
-        if (startIndex < icons.length) {
-          requestAnimationFrame(addBatch);
-        } else {
-          this.loadAbortController = null;
-          this.container.classList.remove('loading');
-          resolve(true);
-        }
-      };
-
-      // Start adding the first batch of icons.
-      addBatch();
-    });
+    // Start adding the first batch of icons.
+    addBatch();
   }
 }

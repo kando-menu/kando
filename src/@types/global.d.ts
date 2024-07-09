@@ -38,6 +38,9 @@ declare global {
         getCurrentMenu: () => Promise<number>;
       };
       getBackendInfo: () => Promise<IBackendInfo>;
+      getUserIconThemeDirectory: () => Promise<string>;
+      getUserIconThemes: () => Promise<Array<string>>;
+      listUserIcons: (string: iconTheme) => Promise<Array<string>>;
       showDevTools: () => void;
       movePointer: (dist: IVec2) => void;
       log: (message: string) => void;
@@ -49,6 +52,7 @@ declare global {
         ) => void
       ) => void;
       showEditor: (func: (editorOptions: IShowEditorOptions) => void) => void;
+      hideEditor: (func: () => void) => void;
       showUpdateAvailableButton: (func: () => void) => void;
       hoverItem: (path: string) => void;
       unhoverItem: (path: string) => void;

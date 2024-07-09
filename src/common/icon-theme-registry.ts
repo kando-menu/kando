@@ -12,6 +12,8 @@ import { SimpleIconsTheme } from './icon-themes/simple-icons-theme';
 import { SimpleIconsColoredTheme } from './icon-themes/simple-icons-colored-theme';
 import { MaterialSymbolsTheme } from './icon-themes/material-symbols-theme';
 import { EmojiTheme } from './icon-themes/emoji-theme';
+import { UserIconTheme } from './icon-themes/user-icon-theme';
+import { FallbackTheme } from './icon-themes/fallback-theme';
 
 /**
  * This interface describes an icon theme. An icon theme is a collection of icons that can
@@ -48,10 +50,16 @@ export interface IIconTheme {
  */
 export class IconThemeRegistry {
   /** The singleton instance of this class. */
-  private static instance: IconThemeRegistry = null;
+  private static instance: IconThemeRegistry = new IconThemeRegistry();
 
   /** This map contains all available icon themes. The keys are the type names. */
   private iconThemes: Map<string, IIconTheme> = new Map();
+
+  /** This is the fallback icon theme that is used if no valid icon theme is selected. */
+  private fallbackTheme: IIconTheme = new FallbackTheme();
+
+  /** The directory where the user's icon themes are stored. */
+  private _userIconThemeDirectory = '';
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
@@ -62,6 +70,17 @@ export class IconThemeRegistry {
     this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
     this.iconThemes.set('emoji', new EmojiTheme());
+
+    // Add an icon theme for all icon themes in the user's icon theme directory.
+    Promise.all([
+      window.api.getUserIconThemeDirectory(),
+      window.api.getUserIconThemes(),
+    ]).then(([directory, themes]) => {
+      this._userIconThemeDirectory = directory;
+      for (const theme of themes) {
+        this.iconThemes.set(theme, new UserIconTheme(directory, theme));
+      }
+    });
   }
 
   /**
@@ -70,10 +89,16 @@ export class IconThemeRegistry {
    * @returns The singleton instance of this class.
    */
   public static getInstance(): IconThemeRegistry {
-    if (IconThemeRegistry.instance === null) {
-      IconThemeRegistry.instance = new IconThemeRegistry();
-    }
     return IconThemeRegistry.instance;
+  }
+
+  /**
+   * Use this method to get the directory where the user's icon themes are stored.
+   *
+   * @returns The directory where the user's icon themes are stored.
+   */
+  get userIconThemeDirectory(): string {
+    return this._userIconThemeDirectory;
   }
 
   /**
@@ -90,9 +115,10 @@ export class IconThemeRegistry {
    * Use this method to get a specific icon theme.
    *
    * @param key The unique key of the icon theme.
-   * @returns The icon theme with the given key.
+   * @returns The icon theme with the given key. If no icon theme with the given key
+   *   exists, a fallback icon theme is returned.
    */
   public getTheme(key: string): IIconTheme {
-    return this.iconThemes.get(key);
+    return this.iconThemes.get(key) || this.fallbackTheme;
   }
 }

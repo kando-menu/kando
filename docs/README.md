@@ -24,4 +24,9 @@ If you want to improve this documentation, please [open a pull request](https://
 * [Usage](usage.md)
 * [Configuration](configuring.md)
 
+## Advanced Topics
+
+* [Config Files](config-files.md)
+
+
 <p align="center"><img src ="img/hr.svg" /></p>
