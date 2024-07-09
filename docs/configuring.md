@@ -271,6 +271,6 @@ Note that not all key codes are available on all platforms.
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
-  <a href="config-files.md">The Configuration Files <img src ="img/right-arrow.png"/></a>
+  <a href="config-files.md">Config Files <img src ="img/right-arrow.png"/></a>
   <img src="img/nav-space.svg"/>
 </p>

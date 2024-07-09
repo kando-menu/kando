@@ -23,7 +23,7 @@ If you want to improve this documentation, please [open a pull request](https://
 * [Installation](installing.md)
 * [Usage](usage.md)
 * [Configuration](configuring.md)
-* [The Configuration Files](config-files.md)
+* [Config Files](config-files.md)
 
 
 <p align="center"><img src ="img/hr.svg" /></p>

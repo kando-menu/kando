@@ -5,7 +5,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 <img src="img/banner08.jpg"></img>
 
-# The Configuration Files
+# The Config Files
 
 All settings are stored in **two configuration files** JSON files which you can also edit manually.
 `config.json` stores the general configuration of the application and `menus.json` stores the configuration of the individual menus.
