@@ -263,7 +263,7 @@ export class IconPicker extends EventEmitter {
         const scrollbox = this.iconGrid.parentElement.parentElement;
         if (this.selectedIconDiv) {
           scrollbox.scrollTop =
-            this.selectedIconDiv.offsetTop - scrollbox.clientHeight / 2;
+            this.selectedIconDiv.offsetTop - scrollbox.clientHeight / 2 - 150;
         }
 
         // Create the observer that is used to detect when icons are scrolled into view.
