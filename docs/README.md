@@ -23,6 +23,9 @@ If you want to improve this documentation, please [open a pull request](https://
 * [Installation](installing.md)
 * [Usage](usage.md)
 * [Configuration](configuring.md)
+
+## Advanced Topics
+
 * [Config Files](config-files.md)
 
 

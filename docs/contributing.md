@@ -68,5 +68,5 @@ When a new version is released, this section will be marked as released and a ta
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
-  <a href="installing.md">Building Kando <img src ="img/right-arrow.png"/></a>
+  <a href="installing.md">Installing Kando <img src ="img/right-arrow.png"/></a>
 </p>
