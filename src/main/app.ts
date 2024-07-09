@@ -514,7 +514,7 @@ export class KandoApp {
     // If the user clicks on a link, we close Kando's window and open the link in the
     // default browser.
     this.window.webContents.setWindowOpenHandler(({ url }) => {
-      this.hideWindow();
+      this.window.webContents.send('hide-editor');
       shell.openExternal(url);
       return { action: 'deny' };
     });

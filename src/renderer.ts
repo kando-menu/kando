@@ -36,6 +36,12 @@ window.api.getBackendInfo().then((info) => {
     editor.enterEditMode();
   });
 
+  // Hide the editor when the main process requests it.
+  window.api.hideEditor(() => {
+    editor.hide();
+    window.api.cancelSelection();
+  });
+
   // Show the update available button when the main process requests it.
   window.api.showUpdateAvailableButton(() => {
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');

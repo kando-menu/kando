@@ -133,6 +133,16 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   /**
+   * This will be called by the host process when the editor should be hidden. This
+   * happens for instance when the user clicks on an external link.
+   *
+   * @param callback This callback will be called when the editor should be hidden.
+   */
+  hideEditor: function (callback: () => void) {
+    ipcRenderer.on('hide-editor', callback);
+  },
+
+  /**
    * This will be called by the host process when the user should be shown a button to
    * update the app.
    *
