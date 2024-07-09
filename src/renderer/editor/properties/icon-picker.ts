@@ -80,7 +80,18 @@ export class IconPicker extends EventEmitter {
     // template below. The data object contains an array of objects with the keys `name`
     // and `key`. The `name` is the display name of the theme and the `key` is the key
     // that is used to identify the theme in the IconThemeRegistry.
-    const data: { themes: { name: string; key: string }[] } = { themes: [] };
+    const data = {
+      heading: 'Select an Icon',
+      subheading:
+        'You can add your own icon collections by putting a folder with icons into %1. Learn more <a %2>here</a>.'
+          .replace('%1', IconThemeRegistry.getInstance().userIconThemeDirectory)
+          .replace(
+            '%2',
+            'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md" target="_blank"'
+          ),
+
+      themes: new Array<{ name: string; key: string }>(),
+    };
     const themes = IconThemeRegistry.getInstance().getThemes();
     themes.forEach((theme, key) => {
       data.themes.push({ name: theme.name, key });
@@ -271,7 +282,7 @@ export class IconPicker extends EventEmitter {
               }
             });
           },
-          { root: scrollbox, delay: 100 }
+          { root: scrollbox, delay: 250, rootMargin: '250px' }
         );
 
         // Observe all icons in the grid. We get the icons by querying the grid for all

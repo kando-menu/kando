@@ -58,6 +58,9 @@ export class IconThemeRegistry {
   /** This is the fallback icon theme that is used if no valid icon theme is selected. */
   private fallbackTheme: IIconTheme = new FallbackTheme();
 
+  /** The directory where the user's icon themes are stored. */
+  private _userIconThemeDirectory = '';
+
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
@@ -73,6 +76,7 @@ export class IconThemeRegistry {
       window.api.getUserIconThemeDirectory(),
       window.api.getUserIconThemes(),
     ]).then(([directory, themes]) => {
+      this._userIconThemeDirectory = directory;
       for (const theme of themes) {
         this.iconThemes.set(theme, new UserIconTheme(directory, theme));
       }
@@ -86,6 +90,15 @@ export class IconThemeRegistry {
    */
   public static getInstance(): IconThemeRegistry {
     return IconThemeRegistry.instance;
+  }
+
+  /**
+   * Use this method to get the directory where the user's icon themes are stored.
+   *
+   * @returns The directory where the user's icon themes are stored.
+   */
+  get userIconThemeDirectory(): string {
+    return this._userIconThemeDirectory;
   }
 
   /**
