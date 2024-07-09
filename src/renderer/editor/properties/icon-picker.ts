@@ -83,7 +83,7 @@ export class IconPicker extends EventEmitter {
     const data = {
       heading: 'Select an Icon',
       subheading:
-        'You can add your own icon collections by putting a folder with icons into %1. Learn more <a %2>here</a>.'
+        'Add your own icon collections by putting a folder with images into %1. You will need to restart Kando. Learn more <a %2>here</a>.'
           .replace('%1', IconThemeRegistry.getInstance().userIconThemeDirectory)
           .replace(
             '%2',
