@@ -44,9 +44,9 @@ To add your own icons to Kando, follow these steps:
 
 * You can organize your icons in subdirectories. Kando will load them recursively. The directory will be part of the icon's name and therefore you can use the search bar to filter by directory.
 * There are many great icon sets available on the internet. Here are some which you could try:
-  * [Numix Circle](https://github.com/numixproject/numix-icon-theme-circle)
-  * [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
-  * [Tela](https://github.com/vinceliuice/Tela-icon-theme)
+  * [Numix Circle](https://github.com/numixproject/numix-icon-theme-circle): Just use the files from the `Numix-Circle/48/apps` directory.
+  * [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme): Here you could use the content from the `Papirus/64x64` directory.
+  * [Tela](https://github.com/vinceliuice/Tela-icon-theme): Here you find the icons in the `src/scalable` directory.
 
 
 ## Menu Shortcuts vs. Simulated Hotkeys :keyboard:
