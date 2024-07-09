@@ -87,7 +87,7 @@ export class IconPicker extends EventEmitter {
           .replace('%1', IconThemeRegistry.getInstance().userIconThemeDirectory)
           .replace(
             '%2',
-            'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md" target="_blank"'
+            'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#adding-custom-icon-themes-sparkles" target="_blank"'
           ),
 
       themes: new Array<{ name: string; key: string }>(),
