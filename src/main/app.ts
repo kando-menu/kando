@@ -636,7 +636,10 @@ export class KandoApp {
             }
 
             const mimeType = mime.lookup(file.name);
-            return mimeType && mimeType.startsWith('image/');
+            const isImage = mimeType && mimeType.startsWith('image/');
+            const isJson = mimeType && mimeType === 'application/json';
+
+            return isImage || isJson;
           });
 
           // We return the relative path of the files to the icon theme directory.

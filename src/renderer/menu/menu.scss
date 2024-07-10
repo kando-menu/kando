@@ -70,11 +70,13 @@
         justify-content: center;
 
         i {
+          width: auto;
+          height: auto;
           font-size: 75cqi;
           font-style: normal;
         }
 
-        img {
+        & > * {
           width: 100%;
           height: 100%;
           object-fit: contain;

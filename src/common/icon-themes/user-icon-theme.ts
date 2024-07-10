@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { matchSorter } from 'match-sorter';
+import lottie from 'lottie-web';
 
 import { IIconTheme } from '../icon-theme-registry';
 
@@ -65,11 +66,22 @@ export class UserIconTheme implements IIconTheme {
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('icon-container');
 
-    const iconDiv = document.createElement('img');
-    iconDiv.src = `file://${this.directory}/${this.subdirectory}/${icon}`;
-    iconDiv.draggable = false;
-
-    containerDiv.appendChild(iconDiv);
+    if (icon.endsWith('.lottie') || icon.endsWith('.json')) {
+      const element = document.createElement('div');
+      lottie.loadAnimation({
+        container: element, // the dom element that will contain the animation
+        renderer: 'canvas',
+        loop: true,
+        autoplay: true,
+        path: `file://${this.directory}/${this.subdirectory}/${icon}`,
+      });
+      containerDiv.appendChild(element);
+    } else {
+      const iconDiv = document.createElement('img');
+      iconDiv.src = `file://${this.directory}/${this.subdirectory}/${icon}`;
+      iconDiv.draggable = false;
+      containerDiv.appendChild(iconDiv);
+    }
 
     return containerDiv;
   }

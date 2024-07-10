@@ -70,6 +70,7 @@
     "handlebars": "^4.7.8",
     "json5": "^2.2.3",
     "lodash.isequal": "^4.5.0",
+    "lottie-web": "^5.12.2",
     "match-sorter": "^6.3.4",
     "material-symbols": "^0.21.0",
     "mime-types": "^2.1.35",
