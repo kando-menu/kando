@@ -25,6 +25,7 @@ export class SubmenuItemConfig implements IItemConfig {
       'You can remove items by dragging them to the trash tab in the toolbar.',
       'When recording a shortcut, you do not have to press all keys at once. You can press them one after another.',
       'You can copy menus and items by dragging them while holding the Ctrl key.',
+      'You can open menus from the command line via the --menu flag.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
