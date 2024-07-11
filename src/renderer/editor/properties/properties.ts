@@ -276,6 +276,7 @@ export class Properties extends EventEmitter {
   public async setMenu(menu: IMenu) {
     this.iconPicker.hide();
     this.conditionPicker.hide();
+    this.advancedOptionsPicker.hide();
 
     // If a menu is already active, we don't need a transition. We can just update the
     // settings.
@@ -307,6 +308,7 @@ export class Properties extends EventEmitter {
   public async setItem(item: IEditorMenuItem) {
     this.iconPicker.hide();
     this.conditionPicker.hide();
+    this.advancedOptionsPicker.hide();
 
     // If an item of the same type is already active, we can just update the settings. No
     // need for animations.
