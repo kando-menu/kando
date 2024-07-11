@@ -25,12 +25,9 @@ interface IConditionPickerInputs {
 
 /**
  * This class shows an inline dialog in the properties panel that allows the user to
- * choose conditions under which the current menu should be shown. The dialog contains two
- * buttons: "OK" and "Cancel". When the user clicks "OK", the first the 'select' event is
- * emitted. If either of the two buttons is clicked, the 'hide' event is emitted as well.
+ * choose conditions under which the current menu should be shown.
  *
- * @fires hide - When the user closes the condition picker via one of the two buttons.
- * @fires select - When the user selected new conditions. The selected IMenuConditions are
+ * @fires close - When the user selected new conditions. The selected IMenuConditions are
  *   passed as arguments to the event handler. If no conditions are selected, null is
  *   passed.
  */
@@ -127,45 +124,8 @@ export class ConditionPicker extends EventEmitter {
       });
     }
 
-    // Close the condition picker when the user clicks the OK button. Before, we emit the
-    // select event with the selected conditions.
-    const okButton = container.querySelector(idPrefix + 'picker-ok');
-    okButton.addEventListener('click', () => {
-      const conditions: IMenuConditions = {};
-
-      if (this.conditions.app.checkbox.checked) {
-        conditions.appName = this.conditions.app.inputs[0].value;
-      }
-
-      if (this.conditions.window.checkbox.checked) {
-        conditions.windowName = this.conditions.window.inputs[0].value;
-      }
-
-      if (this.conditions.screen.checkbox.checked) {
-        conditions.screenArea = {};
-        if (this.conditions.screen.inputs[0].value !== '') {
-          conditions.screenArea.xMin = parseInt(this.conditions.screen.inputs[0].value);
-        }
-        if (this.conditions.screen.inputs[1].value !== '') {
-          conditions.screenArea.xMax = parseInt(this.conditions.screen.inputs[1].value);
-        }
-        if (this.conditions.screen.inputs[2].value !== '') {
-          conditions.screenArea.yMin = parseInt(this.conditions.screen.inputs[2].value);
-        }
-        if (this.conditions.screen.inputs[3].value !== '') {
-          conditions.screenArea.yMax = parseInt(this.conditions.screen.inputs[3].value);
-        }
-      }
-
-      const anyConditionSelected =
-        conditions.appName || conditions.windowName || conditions.screenArea;
-
-      this.emit('select', anyConditionSelected ? conditions : null);
-      this.hide();
-    });
-
     // Close the condition picker when the user clicks the Cancel button.
-    const cancelButton = container.querySelector(idPrefix + 'picker-cancel');
+    const cancelButton = container.querySelector(idPrefix + 'picker-close');
     cancelButton.addEventListener('click', () => {
       this.hide();
     });
@@ -231,7 +191,37 @@ export class ConditionPicker extends EventEmitter {
   public hide() {
     this.container.classList.add('hidden');
     document.removeEventListener('mousemove', this.mouseMoveHandler);
-    this.emit('hide');
+
+    const conditions: IMenuConditions = {};
+
+    if (this.conditions.app.checkbox.checked) {
+      conditions.appName = this.conditions.app.inputs[0].value;
+    }
+
+    if (this.conditions.window.checkbox.checked) {
+      conditions.windowName = this.conditions.window.inputs[0].value;
+    }
+
+    if (this.conditions.screen.checkbox.checked) {
+      conditions.screenArea = {};
+      if (this.conditions.screen.inputs[0].value !== '') {
+        conditions.screenArea.xMin = parseInt(this.conditions.screen.inputs[0].value);
+      }
+      if (this.conditions.screen.inputs[1].value !== '') {
+        conditions.screenArea.xMax = parseInt(this.conditions.screen.inputs[1].value);
+      }
+      if (this.conditions.screen.inputs[2].value !== '') {
+        conditions.screenArea.yMin = parseInt(this.conditions.screen.inputs[2].value);
+      }
+      if (this.conditions.screen.inputs[3].value !== '') {
+        conditions.screenArea.yMax = parseInt(this.conditions.screen.inputs[3].value);
+      }
+    }
+
+    const anyConditionSelected =
+      conditions.appName || conditions.windowName || conditions.screenArea;
+
+    this.emit('close', anyConditionSelected ? conditions : null);
   }
 
   /**

@@ -1,0 +1,30 @@
+{{! //////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+}}
+
+<div class="fs-1 kando-font">{{heading}}</div>
+<div class="fs-5 kando-font mb-1">{{{subheading}}}</div>
+
+{{> checkbox-option 
+    label="Centered Mode"
+    hint="Open the menu in the screen's center instead of at the cursor."
+    id="kando-menu-properties-centered-mode"
+}}
+
+{{> checkbox-option 
+    label="Anchored Mode"
+    hint="Open submenus at the same position as the parent menu."
+    checkedHint="Checking this, will disable Marking Mode."
+    id="kando-menu-properties-anchored-mode"
+}}
+
+<div class='d-flex justify-content-end mt-3'>
+  <button class="btn btn-secondary fs-3 kando-font my-3 px-5 ms-auto" id="kando-properties-advanced-options-picker-close">Done</button>
+</div>

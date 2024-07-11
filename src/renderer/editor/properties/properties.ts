@@ -19,6 +19,7 @@ import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
 import { ItemConfigRegistry } from '../../../common/item-config-registry';
+import { AdvancedOptionsPicker } from './advanced-options-picker';
 
 /**
  * This class is responsible for displaying the properties of the currently edited menu
@@ -92,22 +93,16 @@ export class Properties extends EventEmitter {
   private itemSettings: HTMLElement = null;
 
   /**
-   * The open at pointer checkbox is a checkbox that allows the user to toggle whether the
-   * menu should open at the pointer position.
-   */
-  private centeredModeCheckbox: HTMLInputElement = null;
-
-  /**
-   * The anchored mode checkbox is a checkbox that allows the user to toggle whether
-   * submenus should open at the same position as the parent menu.
-   */
-  private anchoredModeCheckbox: HTMLInputElement = null;
-
-  /**
    * The shortcut picker is a component that allows the user to select a shortcut for the
    * currently edited menu item.
    */
   private shortcutPicker: TextPicker = null;
+
+  /**
+   * The advanced options picker is a component that allows the user to select advanced
+   * options for the currently edited menu.
+   */
+  private advancedOptionsPicker: AdvancedOptionsPicker = null;
 
   /**
    * This shows a tip-of-the-day below the properties view. It is used to give the user
@@ -193,7 +188,7 @@ export class Properties extends EventEmitter {
     this.conditionPicker = new ConditionPicker(
       div.querySelector('#kando-menu-properties-condition-picker')
     );
-    this.conditionPicker.on('select', (conditions) => {
+    this.conditionPicker.on('close', (conditions) => {
       if (this.activeMenu) {
         if (conditions) {
           this.activeMenu.conditions = conditions;
@@ -201,8 +196,6 @@ export class Properties extends EventEmitter {
           delete this.activeMenu.conditions;
         }
       }
-    });
-    this.conditionPicker.on('hide', () => {
       this.baseSettings.classList.remove('hidden');
     });
 
@@ -215,24 +208,21 @@ export class Properties extends EventEmitter {
       this.baseSettings.classList.add('hidden');
     });
 
-    // Update the 'centered' property of the menu when the checkbox changes.
-    this.centeredModeCheckbox = div.querySelector(
-      '#kando-menu-properties-centered-mode'
-    ) as HTMLInputElement;
-    this.centeredModeCheckbox.addEventListener('change', () => {
-      if (this.activeMenu) {
-        this.activeMenu.centered = this.centeredModeCheckbox.checked;
-      }
+    // Create the advanced options picker and wire up its events.
+    this.advancedOptionsPicker = new AdvancedOptionsPicker(
+      div.querySelector('#kando-menu-properties-advanced-options-picker')
+    );
+    this.advancedOptionsPicker.on('close', () => {
+      this.baseSettings.classList.remove('hidden');
     });
 
-    // Update the 'anchored' property of the menu when the checkbox changes.
-    this.anchoredModeCheckbox = div.querySelector(
-      '#kando-menu-properties-anchored-mode'
-    ) as HTMLInputElement;
-    this.anchoredModeCheckbox.addEventListener('change', () => {
-      if (this.activeMenu) {
-        this.activeMenu.anchored = this.anchoredModeCheckbox.checked;
-      }
+    // Show the options picker when the options button is clicked.
+    const advancedOptionsButton = div.querySelector(
+      '#kando-menu-properties-advanced-options-button'
+    ) as HTMLButtonElement;
+    advancedOptionsButton.addEventListener('click', () => {
+      this.advancedOptionsPicker.show();
+      this.baseSettings.classList.add('hidden');
     });
 
     // Create the shortcut picker or the shorcut ID picker and wire up its events.
@@ -382,8 +372,9 @@ export class Properties extends EventEmitter {
    */
   private updateMenuSettingsWidgets(menu: IMenu) {
     this.activeMenu = menu;
-    this.centeredModeCheckbox.checked = menu.centered;
-    this.anchoredModeCheckbox.checked = menu.anchored;
+
+    this.advancedOptionsPicker.setMenu(menu);
+
     this.shortcutPicker.setValue(
       (this.backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || ''
     );
