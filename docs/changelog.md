@@ -42,6 +42,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The minimum distance your pointer has to travel to trigger a selection in marking mode has been reduced from 200 to 150 pixels. This makes it possible to draw gestures at a smaller scale.
 - When the user clicks on an external link in the editor, Kando's window will now fade out properly and the settings will be saved before the external link is opened.
 - The menu-condition picker now has a header which shortly explains why you would want to use menu conditions.
+- On macOS, if the user tries to pick the focused window in the menu condition editor but Kando does not have the necessary permission, the window-title entry will show that the Screen Recording permission is required.
 
 #### Fixed
 

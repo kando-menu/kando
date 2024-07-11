@@ -146,6 +146,8 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
         if (name) {
           result.Set("name", Napi::String::New(env, name.UTF8String));
         } else {
+          result.Set(
+              "name", Napi::String::New(env, "Missing Screen Recording Permissions"));
           std::cout
               << "Failed to get window name for app " << appName
               << ". Maybe you need to enable screen recording permissions for Kando?"
