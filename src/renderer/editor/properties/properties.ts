@@ -330,6 +330,12 @@ export class Properties extends EventEmitter {
     await this.showSettingsWrapper();
   }
 
+  /**
+   * This method sets the default values for the condition picker. It is called when the
+   * editor is shown.
+   *
+   * @param options The options to set.
+   */
   public setOptions(options: IShowEditorOptions) {
     this.conditionPicker.setConditionHints(
       options.appName,
