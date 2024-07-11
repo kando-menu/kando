@@ -22,9 +22,21 @@ See the [platform-specific installation notes](installing.md#platform-specific-n
 It can also happen that the shortcut is already used by another application.
 In this case, you can use the tray icon to open the settings and change the shortcut of the example menu.
 
-## 🔄 Navigating in Menus
+## 💡 The Idea of Kando
 
-Kando features several navigation methods, and you can seemlessly switch between them.
+Kando uses [Fitts's Law](https://en.wikipedia.org/wiki/Fitts%27s_law) to make menu navigation as fast as possible.
+You do not have to aim at the items you want to select, but you can click anywhere in the wedge of an item.
+
+In additions, Kando is a _marking menu_ (which were [described first about 30 years ago by Gordon Kurtenbach](https://www.research.autodesk.com/app/uploads/2023/03/the-design-and-evaluation.pdf_recHpUp1v9dc1n2CJ.pdf)).
+As such it allows you to select items by drawing zig-zag lines. This is extremely powerful!
+**You can select things in subsubsubmenus in well below a second without looking at your screen!**
+
+However, people are different and so are their preferences.
+Therefore, Kando comes with options like the **"Centered Mode"** or the **"Anchored Mode"** which change this default behavior.
+Especially on smaller touch screens, these options may be beneficial, however, they will degrade your selection speed in most cases.
+
+**Therefore, we recommend to learn the default behavior first and only change it if you are really sure that it is not working for you. It may take some time to get used to it, but it is worth it!** You will be surprised how fast you _can do_ something after you mastered it! 🍰🚀
+
 At first, you will probably use the point-and-click method.
 Once you get more comfortable with Kando, you can try the marking mode, and even the turbo mode.
 
