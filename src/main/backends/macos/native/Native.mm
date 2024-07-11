@@ -129,8 +129,18 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
 
   if (app) {
 
-    // We use the bundle identifier as application name.
-    std::string appName(app.bundleIdentifier.UTF8String);
+    std::string appName;
+
+    // We prefer the bundle identifier, but if it is not available we use the
+    // localizedName. The former is more portable and more specific.
+    if (app.bundleIdentifier) {
+      appName = app.bundleIdentifier.UTF8String;
+    }
+
+    if (appName.empty() && app.localizedName) {
+      appName = app.localizedName.UTF8String;
+    }
+
     result.Set("app", Napi::String::New(env, appName));
 
     // Now we iterate over all windows and find the first one with the same PID.
