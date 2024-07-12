@@ -380,17 +380,6 @@ export class KandoApp {
           height: workarea.height + 1,
         });
 
-        // On MacOS we need to ensure the window is on the current workspace before showing.
-        // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
-        if (process.platform === 'darwin') {
-          this.window.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
-          setTimeout(() => {
-            this.window.setVisibleOnAllWorkspaces(false, {
-              skipTransformProcessType: true,
-            });
-          }, 100);
-        }
-
         // On all platforms except Windows, we show the window after we moved it.
         if (process.platform !== 'win32') {
           this.showWindow();
@@ -867,6 +856,17 @@ export class KandoApp {
     // Once Kando's window is shown, we unbind all shortcuts to make sure that the
     // user can select the bound shortcuts in the menu editor.
     this.backend.unbindAllShortcuts();
+
+    // On MacOS we need to ensure the window is on the current workspace before showing.
+    // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
+    if (process.platform === 'darwin') {
+      this.window.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
+      setTimeout(() => {
+        this.window.setVisibleOnAllWorkspaces(false, {
+          skipTransformProcessType: true,
+        });
+      }, 100);
+    }
 
     this.window.show();
 
