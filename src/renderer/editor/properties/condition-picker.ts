@@ -10,7 +10,7 @@
 
 import { Collapse } from 'bootstrap';
 import { EventEmitter } from 'events';
-import { IMenuConditions, IVec2 } from '../../../common';
+import { IMenu, IMenuConditions, IVec2 } from '../../../common';
 
 /**
  * Each condition-picker input consists of a collapse element, a checkbox for enabling the
@@ -24,23 +24,25 @@ interface IConditionPickerInputs {
 }
 
 /**
- * This class shows an inline dialog in the properties panel that allows the user to
- * choose conditions under which the current menu should be shown.
+ * This class shows an inline dialog in the properties panel that allows the user to edit
+ * the conditions under which the current menu should be shown. The properties of the
+ * given menu are directly edited.
  *
- * @fires close - When the user selected new conditions. The selected IMenuConditions are
- *   passed as arguments to the event handler. If no conditions are selected, null is
- *   passed.
+ * @fires close - When the user selected new conditions.
  */
 export class ConditionPicker extends EventEmitter {
   /** The container to which the condition picker is appended. */
   private container: HTMLElement = null;
 
   /** The input fields for the conditions. */
-  private conditions: {
+  private inputs: {
     app: IConditionPickerInputs;
     window: IConditionPickerInputs;
     screen: IConditionPickerInputs;
   };
+
+  /** The conditions that are currently being edited. */
+  private menu: IMenu;
 
   /**
    * The position of Kando's window when it was opened. This is used to compute the mouse
@@ -78,7 +80,7 @@ export class ConditionPicker extends EventEmitter {
     this.screenAreaHint = container.querySelector(idPrefix + 'screen-hint');
 
     // Get all the input fields and checkboxes.
-    this.conditions = {
+    this.inputs = {
       app: {
         checkbox: container.querySelector(idPrefix + 'app-checkbox'),
         collapse: container.querySelector(idPrefix + 'app-collapse'),
@@ -102,7 +104,7 @@ export class ConditionPicker extends EventEmitter {
     };
 
     // Show and collapse the input fields if the corresponding checkboxes are checked.
-    for (const { checkbox, collapse } of Object.values(this.conditions)) {
+    for (const { checkbox, collapse } of Object.values(this.inputs)) {
       const bsCollapse = new Collapse(collapse, { toggle: false });
       checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
@@ -117,16 +119,16 @@ export class ConditionPicker extends EventEmitter {
     // when the condition picker is opened and contains the name of the app and window
     // that were in focus when Kando was opened. There are buttons that allow the user
     // to use this suggested value.
-    for (const condition of Object.values(this.conditions)) {
+    for (const condition of Object.values(this.inputs)) {
       const useSuggestedButton = condition.collapse.querySelector('button');
       useSuggestedButton?.addEventListener('click', () => {
         condition.inputs[0].value = condition.suggestedValue;
       });
     }
 
-    // Close the condition picker when the user clicks the Cancel button.
-    const cancelButton = container.querySelector(idPrefix + 'picker-close');
-    cancelButton.addEventListener('click', () => {
+    // Close the condition picker when the user clicks the done button.
+    const doneButton = container.querySelector(idPrefix + 'picker-done');
+    doneButton.addEventListener('click', () => {
       this.hide();
     });
 
@@ -143,12 +145,14 @@ export class ConditionPicker extends EventEmitter {
    * Shows the condition picker. The condition picker will open with the given conditions
    * preselected.
    *
-   * @param conditions - The initial set of conditions.
+   * @param menu - The menu whose conditions should be edited.
    */
-  public show(conditions?: IMenuConditions) {
+  public show(menu: IMenu) {
     this.container.classList.remove('hidden');
+    this.menu = menu;
 
-    for (const { checkbox, inputs, collapse } of Object.values(this.conditions)) {
+    // Reset the input fields.
+    for (const { checkbox, inputs, collapse } of Object.values(this.inputs)) {
       checkbox.checked = false;
       collapse.classList.remove('show');
       for (const input of inputs) {
@@ -156,31 +160,29 @@ export class ConditionPicker extends EventEmitter {
       }
     }
 
-    if (conditions) {
-      if (conditions.appName) {
-        this.conditions.app.collapse.classList.add('show');
-        this.conditions.app.checkbox.checked = true;
-        this.conditions.app.inputs[0].value = conditions.appName.toString();
-      }
+    if (this.menu.conditions?.appName) {
+      this.inputs.app.collapse.classList.add('show');
+      this.inputs.app.checkbox.checked = true;
+      this.inputs.app.inputs[0].value = this.menu.conditions.appName.toString();
+    }
 
-      if (conditions.windowName) {
-        this.conditions.window.collapse.classList.add('show');
-        this.conditions.window.checkbox.checked = true;
-        this.conditions.window.inputs[0].value = conditions.windowName.toString();
-      }
+    if (this.menu.conditions?.windowName) {
+      this.inputs.window.collapse.classList.add('show');
+      this.inputs.window.checkbox.checked = true;
+      this.inputs.window.inputs[0].value = this.menu.conditions.windowName.toString();
+    }
 
-      if (conditions.screenArea) {
-        this.conditions.screen.collapse.classList.add('show');
-        this.conditions.screen.checkbox.checked = true;
-        this.conditions.screen.inputs[0].value =
-          conditions.screenArea.xMin?.toString() || '';
-        this.conditions.screen.inputs[1].value =
-          conditions.screenArea.xMax?.toString() || '';
-        this.conditions.screen.inputs[2].value =
-          conditions.screenArea.yMin?.toString() || '';
-        this.conditions.screen.inputs[3].value =
-          conditions.screenArea.yMax?.toString() || '';
-      }
+    if (this.menu.conditions?.screenArea) {
+      this.inputs.screen.collapse.classList.add('show');
+      this.inputs.screen.checkbox.checked = true;
+      this.inputs.screen.inputs[0].value =
+        this.menu.conditions.screenArea.xMin?.toString() || '';
+      this.inputs.screen.inputs[1].value =
+        this.menu.conditions.screenArea.xMax?.toString() || '';
+      this.inputs.screen.inputs[2].value =
+        this.menu.conditions.screenArea.yMin?.toString() || '';
+      this.inputs.screen.inputs[3].value =
+        this.menu.conditions.screenArea.yMax?.toString() || '';
     }
 
     // Update the mouse position hint.
@@ -192,36 +194,45 @@ export class ConditionPicker extends EventEmitter {
     this.container.classList.add('hidden');
     document.removeEventListener('mousemove', this.mouseMoveHandler);
 
-    const conditions: IMenuConditions = {};
+    // Update the conditions of the menu.
+    if (this.menu) {
+      const conditions: IMenuConditions = {};
 
-    if (this.conditions.app.checkbox.checked) {
-      conditions.appName = this.conditions.app.inputs[0].value;
+      if (this.inputs.app.checkbox.checked) {
+        conditions.appName = this.inputs.app.inputs[0].value;
+      }
+
+      if (this.inputs.window.checkbox.checked) {
+        conditions.windowName = this.inputs.window.inputs[0].value;
+      }
+
+      if (this.inputs.screen.checkbox.checked) {
+        conditions.screenArea = {};
+        if (this.inputs.screen.inputs[0].value !== '') {
+          conditions.screenArea.xMin = parseInt(this.inputs.screen.inputs[0].value);
+        }
+        if (this.inputs.screen.inputs[1].value !== '') {
+          conditions.screenArea.xMax = parseInt(this.inputs.screen.inputs[1].value);
+        }
+        if (this.inputs.screen.inputs[2].value !== '') {
+          conditions.screenArea.yMin = parseInt(this.inputs.screen.inputs[2].value);
+        }
+        if (this.inputs.screen.inputs[3].value !== '') {
+          conditions.screenArea.yMax = parseInt(this.inputs.screen.inputs[3].value);
+        }
+      }
+
+      const anyConditionSelected =
+        conditions.appName || conditions.windowName || conditions.screenArea;
+
+      if (anyConditionSelected) {
+        this.menu.conditions = conditions;
+      } else {
+        delete this.menu.conditions;
+      }
     }
 
-    if (this.conditions.window.checkbox.checked) {
-      conditions.windowName = this.conditions.window.inputs[0].value;
-    }
-
-    if (this.conditions.screen.checkbox.checked) {
-      conditions.screenArea = {};
-      if (this.conditions.screen.inputs[0].value !== '') {
-        conditions.screenArea.xMin = parseInt(this.conditions.screen.inputs[0].value);
-      }
-      if (this.conditions.screen.inputs[1].value !== '') {
-        conditions.screenArea.xMax = parseInt(this.conditions.screen.inputs[1].value);
-      }
-      if (this.conditions.screen.inputs[2].value !== '') {
-        conditions.screenArea.yMin = parseInt(this.conditions.screen.inputs[2].value);
-      }
-      if (this.conditions.screen.inputs[3].value !== '') {
-        conditions.screenArea.yMax = parseInt(this.conditions.screen.inputs[3].value);
-      }
-    }
-
-    const anyConditionSelected =
-      conditions.appName || conditions.windowName || conditions.screenArea;
-
-    this.emit('close', anyConditionSelected ? conditions : null);
+    this.emit('close');
   }
 
   /**
@@ -233,8 +244,8 @@ export class ConditionPicker extends EventEmitter {
    * @param windowPosition The position of Kando's window when it was opened.
    */
   public setConditionHints(appName: string, windowName: string, windowPosition: IVec2) {
-    this.conditions.app.suggestedValue = appName;
-    this.conditions.window.suggestedValue = windowName;
+    this.inputs.app.suggestedValue = appName;
+    this.inputs.window.suggestedValue = windowName;
     this.windowPosition = windowPosition;
   }
 }

@@ -188,14 +188,7 @@ export class Properties extends EventEmitter {
     this.conditionPicker = new ConditionPicker(
       div.querySelector('#kando-menu-properties-condition-picker')
     );
-    this.conditionPicker.on('close', (conditions) => {
-      if (this.activeMenu) {
-        if (conditions) {
-          this.activeMenu.conditions = conditions;
-        } else {
-          delete this.activeMenu.conditions;
-        }
-      }
+    this.conditionPicker.on('close', () => {
       this.baseSettings.classList.remove('hidden');
     });
 
@@ -204,7 +197,7 @@ export class Properties extends EventEmitter {
       '#kando-menu-properties-condition-button'
     ) as HTMLButtonElement;
     conditionButton.addEventListener('click', () => {
-      this.conditionPicker.show(this.activeMenu.conditions);
+      this.conditionPicker.show(this.activeMenu);
       this.baseSettings.classList.add('hidden');
     });
 
