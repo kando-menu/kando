@@ -32,7 +32,7 @@ When designing your own menus, keep the following tips in mind:
 
 To add your own icons to Kando, follow these steps:
 1. Create a new `icon-themes` directory in Kando's configuration directory if it does not yet exist. Depending on your OS, this will be the following locations:
-    * <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\icon-themes`
+    * <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%appdata%\kando\icon-themes`
     * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/kando/icon-themes`
     * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/icon-themes`
 2. Create a new directory for your icon theme in the `icon-themes` directory. You can give it any name you like.

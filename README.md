@@ -37,7 +37,7 @@ For now, I have tested Kando on the following platforms:
 
 Tested Environment | Status | Notes
 :-- | :---: | ---
-<img height="14" width="14" src="https://cdn.simpleicons.org/windows" /> Windows | :heavy_check_mark: | Tested on Windows 11.
+<img height="14" width="14" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows | :heavy_check_mark: | Tested on Windows 11.
 <img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> macOS | :heavy_check_mark: | Tested on macOS 11.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.

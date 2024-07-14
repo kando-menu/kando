@@ -37,7 +37,7 @@ If you installed Kando with an installer, you can just run it from the start men
 However, sometimes it is useful to run Kando from the command line in order to see the output of the application.
 Depending on your platform, the `kando` executable will be located in different directories:
 
-* <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%localappdata%\Kando\app-<version number>\Kando.exe`
+* <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%localappdata%\Kando\app-<version number>\Kando.exe`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `/Applications/Kando.app/Contents/MacOS/Kando`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando`
 
@@ -50,7 +50,7 @@ Additionally, you will need a C++ toolchain.
 ---
 
 <details>
-<summary><img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows Dependencies</summary>
+<summary><img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows Dependencies</summary>
 
 On Windows, you can install either Visual Studio or run this to get the build tools:
 

@@ -11,7 +11,7 @@ All settings are stored in **two configuration files** JSON files which you can 
 `config.json` stores the general configuration of the application and `menus.json` stores the configuration of the individual menus.
 Depending on your platform, the configuration files are located in different directories:
 
-* <img height="14" width="26" src="https://cdn.simpleicons.org/windows" /> Windows: `%appdata%\kando\`
+* <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%appdata%\kando\`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/kando/`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/`
 
