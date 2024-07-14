@@ -14,6 +14,7 @@ import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './command-item-type';
+import { Backend, WMInfo } from '../../main/backends/backend';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
 export class CommandItemAction implements IItemAction {
@@ -32,11 +33,19 @@ export class CommandItemAction implements IItemAction {
    * Runs the command.
    *
    * @param item The item for which the action should be executed.
+   * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns A promise which resolves when the command has been successfully executed.
    */
-  async execute(item: DeepReadonly<IMenuItem>) {
+  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo) {
     return new Promise<void>((resolve, reject) => {
-      const command = (item.data as IItemData).command;
+      let command = (item.data as IItemData).command;
+
+      // Replace placeholders in the command string.
+      command = command
+        .replace(/\{{app_name}}/g, wmInfo.appName)
+        .replace(/\{{window_name}}/g, wmInfo.windowName)
+        .replace(/\{{pointer_x}}/g, wmInfo.pointerX.toString())
+        .replace(/\{{pointer_y}}/g, wmInfo.pointerY.toString());
 
       exec(command, (error) => {
         if (error) {

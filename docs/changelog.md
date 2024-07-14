@@ -30,6 +30,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Menu Templates:** The stash tab is now called "Templates". In addition to menu items, you can now also store entire menus in there. Move them back to the menus tab or the preview to create unlimited copies of the same menu, submenu, or menu item!
 - **New-Version Notification:** When a new version of Kando is available, a notification will be shown. It works the following way: When you open a menu, Kando will check GitHub for a new release. If a new version is found, a notification will be shown and no further tests are made for this session. If no new version is found or the connection failed, Kando will try again when a menu is opened next time, but not earlier than an hour later. There is also a new `enableVersionCheck` in the application settings which can be used to disable this feature.
 - **Icon-Name Tooltips in the Icon Picker:** When hovering over an icon in the icon picker, the name of the icon is now shown as a tooltip. This should make it easier to find an icon again. Thanks to [@pushkardev123](https://github.com/pushkardev123) for this contribution!
+- **Info-Placeholders for the Command Menu Items:** You can now use `{{app_name}}`, `{{window_name}}`, `{{pointer_x}}`, and `{{pointer_y}}` in your commands. These placeholders will be replaced with the name of the focused application, focused window, and the pointer position when the menu was opened.
 
 #### Changed
 

@@ -20,6 +20,9 @@ export class CommandItemConfig implements IItemConfig {
     const tips = [
       'You can use the Command item type to launch applications or scripts.',
       'If the path to an executable contains spaces, you should "wrap it in quotes".',
+      'Use {{app_name}} to insert the name of the application which was focused when you opened the menu.',
+      'Use {{window_name}} to insert the name of the window which was focused when you opened the menu.',
+      'Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];

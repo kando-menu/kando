@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from './index';
-import { Backend } from '../main/backends/backend';
+import { Backend, WMInfo } from '../main/backends/backend';
 
 import { CommandItemAction } from './item-types/command-item-action';
 import { HotkeyItemAction } from './item-types/hotkey-item-action';
@@ -40,9 +40,14 @@ export interface IItemAction {
    * @param item The menu item which is executed.
    * @param backend The backend which is currently used. Use this to call system-dependent
    *   functions.
+   * @param wmInfo Information on the window-manager state when the menu was opened.
    * @returns A promise which resolves when the action has been successfully executed.
    */
-  execute: (item: DeepReadonly<IMenuItem>, backend: Backend) => Promise<void>;
+  execute: (
+    item: DeepReadonly<IMenuItem>,
+    backend: Backend,
+    wmInfo: WMInfo
+  ) => Promise<void>;
 }
 
 /**
@@ -97,10 +102,11 @@ export class ItemActionRegistry {
    *
    * @param item The menu item which is executed.
    * @param backend The backend which is currently used.
+   * @param wmInfo Information on the window-manager state when the menu was opened.
    * @returns A promise which resolves when the action has been successfully executed.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
-    return this.getAction(item.type).execute(item, backend);
+  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo) {
+    return this.getAction(item.type).execute(item, backend, wmInfo);
   }
 
   /**

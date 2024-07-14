@@ -72,6 +72,9 @@ export class KandoApp {
    */
   private lastMenu?: DeepReadonly<IMenu>;
 
+  /** This contains the last WMInfo which was received. */
+  private lastWMInfo?: WMInfo;
+
   /**
    * This is the settings object which is used to store the general application settings
    * in the user's home directory.
@@ -336,8 +339,10 @@ export class KandoApp {
           return;
         }
 
-        // Store the last menu to be able to execute the selected action later.
+        // Store the last menu to be able to execute the selected action later. The WMInfo
+        // will be passed to the action as well.
         this.lastMenu = menu;
+        this.lastWMInfo = info;
 
         // Abort any ongoing hide animation.
         if (this.hideTimeout) {
@@ -668,7 +673,7 @@ export class KandoApp {
     ipcMain.on('select-item', (event, path) => {
       const execute = (item: DeepReadonly<IMenuItem>) => {
         ItemActionRegistry.getInstance()
-          .execute(item, this.backend)
+          .execute(item, this.backend, this.lastWMInfo)
           .catch((error) => {
             KandoApp.showError('Failed to execute action', error.message || error);
           });
