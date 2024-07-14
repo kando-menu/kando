@@ -62,7 +62,7 @@ So you can either make the third-party tool open the menu by simulation the shor
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando --menu "Menu Name"`
 
 Below are some applications which can help you to open menus in various ways.
-If discovered a cool new way to open menus, please let us know! You can either open an issue on GitHub or join the [Discord server](https://discord.gg/hZwbVSDkhy) to discuss your idea with us!
+If you discovered a cool new way to open menus, please let us know! You can either open an issue, open a pull request, or join the [Discord server](https://discord.gg/hZwbVSDkhy) to discuss your idea!
 
 ### <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows
 
