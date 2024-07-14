@@ -48,6 +48,39 @@ Once you get more comfortable with Kando, you can try the marking mode, and even
 | **Turbo Mode:** If you opened the menu using a key combination, you can keep a key pressed. If you do so, the menu will behave as if the left mouse button is pressed, and you can easily browse through the menu without having to click anywhere. Once you release the key, the currently dragged item will be selected. **This allows you to make even faster selections!** <br><br> Turbo-Mode works best with <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd>, or <kbd>Meta</kbd>. For all other keys there will be a short delay until Turbo-Mode kicks in. If this delay is too long for your liking, you can hit the key quickly twice - this way Kando will get the key-down event faster and Turbo-Mode will work right out of the box! | <video src="https://github.com/kando-menu/kando/assets/829942/8f56791e-f9ae-4af1-85a4-cf33da15af65"> |
 | **Exploring Items:** Kando will never select a menu item as long as a mouse button (or a keyboard key in _Turbo Mode_) is pressed. This means, as long as you keep the button or the key pressed, you can explore the menu! | <video src="https://github.com/kando-menu/kando/assets/829942/798b6d27-dabf-412f-96aa-5def20854ecc"> |
 
+## 🖊️🖱️ Opening Menus without the Keyboard
+
+There are currently three ways for opening menus in Kando: by pressing a **key combination**, by using the **tray icon**, or by using the `--menu "menu name"` **command line** argument.
+
+While Kando does not have a cross-platform way to open menus with a mouse button, there are many platform-dependent third-party tools which can help you with this.
+With some creativity, you can open menus not only with mouse buttons but also with gestures, desktop widgets, or in many other ways.
+
+So you can either make the third-party tool open the menu by simulation the shortcut for the menu, or it can directly call the Kando executable with the `--menu "menu name"` argument.
+
+* <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%localappdata%\Kando\app-<version number>\Kando.exe --menu "Menu Name"`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `/Applications/Kando.app/Contents/MacOS/Kando --menu "Menu Name"`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando --menu "Menu Name"`
+
+Below are some applications which can help you to open menus in various ways.
+If discovered a cool new way to open menus, please let us know! You can either open an issue on GitHub or join the [Discord server](https://discord.gg/hZwbVSDkhy) to discuss your idea with us!
+
+### <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows
+
+* [AutoHotkey](https://www.autohotkey.com/) is a powerful scripting language for Windows. You can use it to run the kando command when you press a mouse button or to remap a mouse button to a keyboard shortcut which opens a Kando menu.
+
+### <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS
+
+* [Karabiner-Elements](https://karabiner-elements.pqrs.org/) can be used to remap mouse buttons to keyboard shortcuts.
+* [BetterTouchTool](https://folivora.ai/) allows opening a Kando menu via touchpad gestures.
+* [BetterMouse](https://better-mouse.com/) is a tool which allows you to remap mouse buttons to keyboard shortcuts.
+
+### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
+
+* [Input Remapper](https://github.com/sezanzeb/input-remapper) is a tool which allows you to remap mouse buttons to keyboard shortcuts. It works both on **X11 and Wayland**.
+* **KDE Plasma** comes with built-in support for remapping mouse buttons to keyboard shortcuts. You can find [this feature](https://www.phoronix.com/news/KDE-Rebind-Extra-Mouse-Buttons) in the system settings under "System Settings" / "Mouse & Touchpad" / "Add Binding".
+* There's a [Configurable Button](https://store.kde.org/p/1297839/) widget for **KDE Plasma** which allows running arbitrary when clicked.
+* On **GNOME Shell**, you can use the [CHC-E (Custom Hot Corners - Extended)](https://extensions.gnome.org/extension/4167/custom-hot-corners-extended/) extension to run arbitrary commands when you move your mouse to a corner of the screen.
+
 <p align="center"><img src ="img/hr.svg" /></p>
 
 <p align="center">
