@@ -7,22 +7,31 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Installing Kando
 
-You have two options to install Kando.
-You can either download a pre-built package from the releases page or compile Kando yourself.
+You can either download a pre-built package from the [:tada: Releases Page](#tada-Downloading-the-latest-Release) or [:gear: Compile Kando Yourself](#gear-Manual-Installation).
+With a pre-built package, you can just run the executable; no installation is required.
 
-## a) Downloading a Release
+Manual compilation is only required if you want to test the latest development version of the prototype or if you want to contribute to the project.
+
+## :tada: Downloading the latest Release
 
 This is the easiest way to get Kando.
-Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download the latest version for your platform.
-You can either download a portable zip archive or an installer.
+There are some YouTube videos to help you get started:
+* [▶️ How to install Kando on Windows](https://www.youtube.com/watch?v=T4iC99HM5bo)
+* [▶️ How to install Kando on macOS](https://www.youtube.com/watch?v=q1H64iPYnAE)
 
-If you choose the portable version, you can just extract the archive and run the `kando` executable.
+Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download the latest version for your platform.
+You can either download a standalone zip archive or an installer.
+
+If you choose the standalone version, you can just extract the archive and run the `kando` executable.
 If you choose the installer, you will find Kando in your start menu after the installation.
 
 > [!TIP]
-> After downloading, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
+> After downloading and installing, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
 
-### Running Kando from the Command Line
+Once done, you can open the example menu by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd>.
+Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
+
+### How to run Kando from the Command Line
 
 If you installed Kando with an installer, you can just run it from the start menu.
 However, sometimes it is useful to run Kando from the command line in order to see the output of the application.
@@ -32,7 +41,7 @@ Depending on your platform, the `kando` executable will be located in different 
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `/Applications/Kando.app/Contents/MacOS/Kando`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando`
 
-## b) Manual Installation
+## :gear: Manual Installation
 
 If you want to test the latest development version of the prototype, you will have to install `node` and `npm`.
 You will also need `cmake` for building the native backends.
@@ -157,7 +166,7 @@ This will create several packages in the `out/` directory.
 
 ### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
 
-* On **GNOME / Wayland** you will also need to install the [adapter extension](https://github.com/kando-menu/gnome-shell-integration).
+* On **GNOME / Wayland** you will also need to install the [:shell: Kando Integration Extension](https://github.com/kando-menu/gnome-shell-integration).
 * On **KDE / Wayland** and **Hyprland** you cannot directly bind global shortcuts. Instead, you specify a shortcut ID in the editor and bind a key combination in the desktop environment settings. On KDE you find your given shortcut ID under the KWin section in the global shortcuts settings. On Hyprland you can bind the shortcut using `bind = CTRL, Space, global, kando:<trigger-id>` for instance.
 * Per default, Kando runs under **XWayland** on Wayland compositors. If you want to run it natively, you can set the environment variable `ELECTRON_OZONE_PLATFORM_HINT=wayland` before starting Kando. This is not yet fully tested but should work on most distributions.
 * On **Hyprland**, you will need some window rules for Kando:

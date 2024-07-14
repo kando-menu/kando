@@ -56,22 +56,17 @@ Tested Environment | Status | Notes
 
 # :package: Installation
 
-You can either [:arrow_down: download a pre-built package](https://github.com/kando-menu/kando/releases) from the releases page or [:rocket: compile Kando yourself](docs/installing.md).
-With a pre-built package, you can just run the executable; no installation is required.
-
-> [!IMPORTANT]
-> If you are using GNOME under Wayland, you will also need to install the [:shell: adapter extension](https://github.com/kando-menu/gnome-shell-integration)!
-
-Manual compilation is only required if you want to test the latest development version of the prototype or if you want to contribute to the project.
+You can either download a prebuilt binary or compile Kando yourself.
+For both approaches there are instructions available in the [:memo: Installation Guide](docs/installing.md).
 
 # :rocket: Getting Started
 
 Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
 This is great to get a first impression!
-To learn some basics about the interaction with Kando, you can have a look at the [:memo: documentation](docs/usage.md).
+To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](docs/usage.md).
 
 Once you are familiar with the basics, you can start creating your own menus.
-There is some basic documentation on how to create your own menus in the [:memo: documentation](docs/configuring.md) as well!
+Learn how to create your own menus in the [:memo: Configuration Guide](docs/configuring.md)!
 
 # :revolving_hearts: I want to contribute!
 
