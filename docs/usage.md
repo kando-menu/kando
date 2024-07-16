@@ -24,12 +24,18 @@ In this case, you can use the tray icon to open the settings and change the shor
 
 ## 💡 The Idea of Kando
 
+<a href="https://www.youtube.com/watch?v=elHUCarOiXQ">
+<img align="right" width="500px" src="img/player12.jpg"></img>
+</a>
+
 Kando uses [Fitts's Law](https://en.wikipedia.org/wiki/Fitts%27s_law) to make menu navigation as fast as possible.
 You do not have to aim at the items you want to select, but you can click anywhere in the wedge of an item.
 
 In additions, Kando is a _marking menu_ (which were [described first about 30 years ago by Gordon Kurtenbach](https://www.research.autodesk.com/app/uploads/2023/03/the-design-and-evaluation.pdf_recHpUp1v9dc1n2CJ.pdf)).
 As such it allows you to select items by drawing zig-zag lines. This is extremely powerful!
 **You can select things in subsubsubmenus in well below a second without looking at your screen!**
+
+You can watch the video on the right to get an idea of how fast you can navigate through a menu with Kando.
 
 However, people are different and so are their preferences.
 Therefore, Kando comes with options like the **"Centered Mode"** or the **"Anchored Mode"** which change this default behavior.
