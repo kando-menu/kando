@@ -40,7 +40,8 @@ program
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
   .option('-m, --menu <menu>', 'show the menu with the given name')
-  .option('-s, --settings', 'show the menu editor');
+  .option('-s, --settings', 'show the menu editor')
+  .allowUnknownOption(true);
 
 program.parse();
 const options = program.opts() as CLIOptions;
