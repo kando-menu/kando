@@ -33,10 +33,11 @@ cp "$SCRIPT_DIR/kando.desktop" .
 cp resources/app/.webpack/main/assets/icon*png ./kando.png && ln -s ./kando.png ./.DirIcon
 
 # Create the AppRun file.
+# --no-sandbox is required as workaround for https://github.com/electron/electron/issues/17972
 cat >> ./AppRun << 'EOF'
 #!/bin/sh
 CURRENTDIR="$(readlink -f "$(dirname "$0")")"
-exec "$CURRENTDIR"/kando "$@"
+exec "$CURRENTDIR"/kando --no-sandbox "$@"
 EOF
 chmod a+x ./AppRun
 
