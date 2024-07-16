@@ -28,13 +28,16 @@ jobs:
         run: |
           sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
           sudo chown root node_modules/electron/dist/chrome-sandbox
-      - name: Create Release
+      - name: Create Packages
         run: |
           npm run make
+      - name: Create AppImage
+        run: |
+          tools/make-app-image.sh
       - name: Upload Packages
         uses: svenstaro/upload-release-action@v2
         with:
-          file: out/make/**/x64/*
+          file: out/make/**/*
           tag: ${{ github.ref }}
           file_glob: true
 
