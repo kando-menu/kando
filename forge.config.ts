@@ -80,6 +80,12 @@ const config: ForgeConfig = {
           },
         ],
       },
+      devServer: {
+        client: {
+          overlay: false,
+          logging: 'warn',
+        },
+      },
     }),
   ],
 };
