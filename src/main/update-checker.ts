@@ -85,15 +85,45 @@ export class UpdateChecker extends EventEmitter {
       },
     });
 
+    // This function converts a component of a version string into a number. 'rc', 'beta'
+    // and 'alpha' are converted to -1, -2 and -3 respectively. All other strings are
+    // converted to integers.
+    const toNumber = (str: string) => {
+      if (str === 'rc') {
+        return -1;
+      } else if (str === 'beta') {
+        return -2;
+      } else if (str === 'alpha') {
+        return -3;
+      }
+
+      return parseInt(str);
+    };
+
+    // This function splits a version string into its components and converts them into
+    // numbers. The version string is expected to be in the format 'v1.2.3' or
+    // 'v1.2.3-beta.1'. The function returns an array of numbers.
+    const parseVersionString = (str: string) => {
+      return str.split(/[.-]+/).map(toNumber);
+    };
+
     if (response?.data?.length > 0) {
       for (const release of response.data) {
         if (!release.prerelease) {
-          // Strip leading 'v' from version string and split into parts.
-          const latestVersion = release.tag_name.substring(1).split('.').map(Number);
-          const currentVersion = app.getVersion().split('.').map(Number);
+          const latestVersion = parseVersionString(release.tag_name.substring(1));
+          const currentVersion = parseVersionString(app.getVersion());
+
+          // Make sure both version strings have the same length. Pad the shorter one with
+          // zeros.
+          while (latestVersion.length < currentVersion.length) {
+            latestVersion.push(0);
+          }
+          while (currentVersion.length < latestVersion.length) {
+            currentVersion.push(0);
+          }
 
           // Compare version numbers.
-          for (let i = 0; i < 3; i++) {
+          for (let i = 0; i < currentVersion.length; i++) {
             if (latestVersion[i] > currentVersion[i]) {
               return true;
             } else if (latestVersion[i] < currentVersion[i]) {
