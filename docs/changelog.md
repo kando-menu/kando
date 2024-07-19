@@ -21,7 +21,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-07-19
 
-<a href="https://www.youtube.com/watch?v=1TCpDkwqwxc">
+<a href="https://www.youtube.com/watch?v=-CShPfR3JvE">
 <img align="right" width="400px" src="img/player13.jpg"></img>
 </a>
 
