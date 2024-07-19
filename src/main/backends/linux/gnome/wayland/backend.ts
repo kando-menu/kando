@@ -62,7 +62,7 @@ export class GnomeBackend implements Backend {
       });
     } catch (e) {
       throw new Error(
-        'Could not connect to Kando Integration GNOME Shell extension. Is it installed?'
+        'Could not connect to Kando Integration GNOME Shell extension. You can get it from here: https://extensions.gnome.org/extension/7068/kando-integration/'
       );
     }
   }
