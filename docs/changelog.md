@@ -19,7 +19,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [Kando 1.2.0](https://github.com/kando-menu/kando/releases/tag/v1.2.0)
 
-**Release Date:** TBD
+**Release Date:** 2024-07-19
 
 <a href="https://www.youtube.com/watch?v=1TCpDkwqwxc">
 <img align="right" width="400px" src="img/player13.jpg"></img>
