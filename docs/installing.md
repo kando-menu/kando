@@ -7,41 +7,63 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Installing Kando
 
-You can either download a pre-built package from the [:tada: Releases Page](#tada-Downloading-the-latest-Release) or [:gear: Compile Kando Yourself](#gear-Manual-Installation).
-With a pre-built package, you can just run the executable; no installation is required.
-
+You can either **download a pre-built package** or **compile Kando yourself**.
 Manual compilation is only required if you want to test the latest development version of the prototype or if you want to contribute to the project.
 
-## :tada: Downloading the latest Release
-
-This is the easiest way to get Kando.
-There are some YouTube videos to help you get started:
-* [▶️ How to install Kando on Windows](https://www.youtube.com/watch?v=T4iC99HM5bo)
-* [▶️ How to install Kando on macOS](https://www.youtube.com/watch?v=q1H64iPYnAE)
-
-Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download the latest version for your platform.
-You can either download a standalone zip archive or an installer.
-
-If you choose the standalone version, you can just extract the archive and run the `kando` executable.
-If you choose the installer, you will find Kando in your start menu after the installation.
+## <img height="20" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Downloading Kando for Windows
 
 > [!TIP]
-> After downloading and installing, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
+> There is a YouTube video to get you started: [▶️ How to install Kando on Windows](https://www.youtube.com/watch?v=T4iC99HM5bo).
 
-Once done, you can open the example menu by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd>.
+Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download either the installer (the `Kando-*.Setup.exe` file) or the standalone version (the `Kando-win32-x64-*.zip` file).
+
+If you chose the standalone version, you can just extract the archive and run the `kando` executable.
+If you chose the installer, you will find Kando in your start menu after the installation (the installation process is very minimal and does not require any user interaction).
+
+As the executables are not signed, Windows will show a warning when you try to run them.
+Just click on "More info" and then on "Run anyway".
+
 Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
 
-### How to run Kando from the Command Line
+## <img height="20" width="26" src="https://cdn.simpleicons.org/apple" /> Downloading Kando for macOS
 
-If you installed Kando with an installer, you can just run it from the start menu.
-However, sometimes it is useful to run Kando from the command line in order to see the output of the application.
-Depending on your platform, the `kando` executable will be located in different directories:
+> [!TIP]
+> There is a YouTube video to get you started: [▶️ How to install Kando on macOS](https://www.youtube.com/watch?v=q1H64iPYnAE).
 
-* <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%localappdata%\Kando\app-<version number>\Kando.exe`
-* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `/Applications/Kando.app/Contents/MacOS/Kando`
-* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando`
+Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download either the installer (`Kando-*-arm64.dmg` if you are on Apple Silicon, or `Kando-*-x64.dmg` if you are on Intel hardware) or the standalone version (`Kando-darwin-arm64-*.zip` on Apple Silicon, or `Kando-darwin-x64-*.zip` for Intel hardware).
 
-## :gear: Manual Installation
+If you chose the standalone version, you can just extract the archive and run the contained app.
+If you chose the installer, you will find Kando in your launchpad after the installation.
+
+> [!IMPORTANT]
+> After downloading and installing, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
+
+Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
+
+## <img height="20" width="26" src="https://cdn.simpleicons.org/linux/black" /> Downloading Kando for Linux
+
+There are many ways to install Kando on Linux.
+First you should check if there is an up-to-date package in your distribution's package manager.
+
+Kando is quite new and is not yet available in many package managers.
+Here are some packages that we are aware of:
+* [AM and AppMan](https://portable-linux-apps.github.io/apps)
+* [AUR](https://aur.archlinux.org/packages/kando-bin/)
+
+Alternatively, you can download a pre-built package from GitHub.
+Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download a standalone zip archive (`Kando-linux-x64-*.zip`), a Debian package (`Kando_*_amd64.deb`), an RPM package (`Kando-*.x86_64.rpm`), or a AppImage (`Kando-*-x86_64.AppImage`).
+
+The app image can be run directly.
+If you chose the standalone version, just extract the archive and run the `kando` executable.
+If you chose the Debian or RPM package, you can install it with `sudo dpkg -i Kando_*_amd64.deb` or `sudo rpm -i Kando-*.x86_64.rpm` (or `yum` or `dnf` depending on your distro).
+Thereafter, you can run Kando from your main menu.
+
+> [!IMPORTANT]
+> After downloading and installing, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
+
+Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
+
+## :gear: Building Kando Yourself
 
 If you want to test the latest development version of the prototype, you will have to install `node` and `npm`.
 You will also need `cmake` for building the native backends.
@@ -184,6 +206,16 @@ This will create several packages in the `out/` directory.
   sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
   sudo chown root node_modules/electron/dist/chrome-sandbox
   ```
+
+## How to run Kando from the Command Line
+
+If you installed Kando with an installer, you can just run it from the start menu.
+However, sometimes it is useful to run Kando from the command line in order to see the output of the application.
+Depending on your platform, the `kando` executable will be located in different directories:
+
+* <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%localappdata%\Kando\app-<version number>\Kando.exe`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `/Applications/Kando.app/Contents/MacOS/Kando`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando` or `/usr/local/bin/kando`
 
 <p align="center"><img src ="img/hr.svg" /></p>
 
