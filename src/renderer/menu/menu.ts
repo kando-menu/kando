@@ -12,20 +12,11 @@ import { EventEmitter } from 'events';
 
 import * as math from '../math';
 import { IShowMenuOptions, IVec2 } from '../../common';
-import { IconThemeRegistry } from '../../common/icon-theme-registry';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
-
-/**
- * The following constants define the layout of the menu. They are all in pixels and
- * should be configurable in the future.
- */
-const CENTER_RADIUS = 50;
-const CHILD_DISTANCE = 100;
-const PARENT_DISTANCE = 150;
-const GRANDCHILD_DISTANCE = 25;
+import { MenuTheme } from './menu-theme';
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -105,6 +96,8 @@ export class Menu extends EventEmitter {
    */
   private input: InputTracker = new InputTracker();
 
+  private theme: MenuTheme = new MenuTheme();
+
   constructor(container: HTMLElement) {
     super();
 
@@ -152,7 +145,7 @@ export class Menu extends EventEmitter {
       if (
         this.input.state === InputState.eClicked &&
         this.selectionChain.length === 1 &&
-        this.input.distance < CENTER_RADIUS
+        this.input.distance < this.theme.centerRadius
       ) {
         this.emit('cancel');
         return;
@@ -304,19 +297,8 @@ export class Menu extends EventEmitter {
     while (queue.length > 0) {
       const { item, container } = queue.shift()!;
 
-      const nodeDiv = document.createElement('div');
-      const menuItem = document.createElement('div');
-      const icon = IconThemeRegistry.getInstance()
-        .getTheme(item.iconTheme)
-        .createDiv(item.icon);
-
-      nodeDiv.classList.add('menu-node');
-      menuItem.classList.add('menu-item');
-
+      const nodeDiv = this.theme.createItem(item);
       container.appendChild(nodeDiv);
-      nodeDiv.appendChild(menuItem);
-      menuItem.appendChild(icon);
-
       item.nodeDiv = nodeDiv;
 
       if (item.children) {
@@ -330,8 +312,8 @@ export class Menu extends EventEmitter {
       }
 
       if (item === this.root) {
-        const maxCenterTextSize = CENTER_RADIUS * 2.0;
-        const padding = CENTER_RADIUS * 0.1;
+        const maxCenterTextSize = this.theme.centerRadius * 2.0;
+        const padding = this.theme.centerRadius * 0.1;
         this.centerText = new CenterText(nodeDiv, maxCenterTextSize - padding);
       }
     }
@@ -391,11 +373,12 @@ export class Menu extends EventEmitter {
       }
     } else {
       // Compute the ideal position of the new item. The distance to the parent item is
-      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is too close
-      // to the parent item. In anchored mode, the distance is set to PARENT_DISTANCE.
+      // set to be at least this.theme.parentDistance. This is to avoid that the menu is
+      // too close to the parent item. In anchored mode, the distance is set to
+      // this.theme.parentDistance.
       const distance = this.options.anchoredMode
-        ? PARENT_DISTANCE
-        : Math.max(PARENT_DISTANCE, this.input.distance);
+        ? this.theme.parentDistance
+        : Math.max(this.theme.parentDistance, this.input.distance);
 
       item.position = math.getDirection(item.angle, distance);
 
@@ -424,7 +407,8 @@ export class Menu extends EventEmitter {
       // Compute the maximum radius of the menu, including children and grandchildren. The
       // magic number 1.4 accounts for the hover effect (which should be made
       // configurable). The 10 is some additional margin.
-      const maxRadius = (CHILD_DISTANCE + GRANDCHILD_DISTANCE) * 1.4 + 10;
+      const maxRadius =
+        (this.theme.childDistance + this.theme.grandChildDistance) * 1.4 + 10;
       const clampedPosition = math.clampToMonitor(
         position,
         maxRadius,
@@ -548,7 +532,7 @@ export class Menu extends EventEmitter {
     if (
       this.input.state === InputState.eDragging &&
       !this.draggedItem &&
-      this.input.distance > CENTER_RADIUS &&
+      this.input.distance > this.theme.centerRadius &&
       this.hoveredItem
     ) {
       this.dragItem(this.hoveredItem);
@@ -559,7 +543,7 @@ export class Menu extends EventEmitter {
     if (
       this.input.state === InputState.eDragging &&
       this.draggedItem &&
-      this.input.distance < CENTER_RADIUS
+      this.input.distance < this.theme.centerRadius
     ) {
       this.dragItem(null);
       this.updateConnectors();
@@ -592,7 +576,7 @@ export class Menu extends EventEmitter {
   private computeHoveredItem(): IRenderedMenuItem {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected item.
-    if (this.input.distance < CENTER_RADIUS) {
+    if (this.input.distance < this.theme.centerRadius) {
       if (this.selectionChain.length > 1) {
         return this.selectionChain[this.selectionChain.length - 2];
       }
@@ -630,13 +614,13 @@ export class Menu extends EventEmitter {
    */
   private updateTransform(item: IRenderedMenuItem) {
     if (item.nodeDiv.classList.contains('grandchild')) {
-      item.position = math.getDirection(item.angle, GRANDCHILD_DISTANCE);
+      item.position = math.getDirection(item.angle, this.theme.grandChildDistance);
       item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
     } else if (item.nodeDiv.classList.contains('child')) {
       let transform = '';
 
       // If the item is hovered, increase the scale a bit.
-      if (this.input.distance > CENTER_RADIUS) {
+      if (this.input.distance > this.theme.centerRadius) {
         const angleDiff = Math.abs(item.angle - this.input.angle);
         let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
 
@@ -654,7 +638,7 @@ export class Menu extends EventEmitter {
         transform = `translate(${item.position.x}px, ${item.position.y}px)`;
       } else {
         // If the item is not dragged, move it to its position on the circle.
-        item.position = math.getDirection(item.angle, CHILD_DISTANCE);
+        item.position = math.getDirection(item.angle, this.theme.childDistance);
         transform += `translate(${item.position.x}px, ${item.position.y}px)`;
       }
 
