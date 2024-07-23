@@ -11,7 +11,49 @@
 import { IconThemeRegistry } from '../../common/icon-theme-registry';
 import { IRenderedMenuItem } from './rendered-menu-item';
 
+/**
+ * Menu themes in Kando are responsible for rendering the menu items. A theme consists of
+ * a JSON5 file, a CSS file, and potentially some assets like fonts or images.
+ *
+ * The JSON5 file defines some meta data and the different layers which are drawn on top
+ * of each other for each menu item. Each layer is a div element with a class defined in
+ * the theme file.
+ *
+ * The CSS file defines the appearance of the different layers. Kando assigns a class to
+ * menu item's container div based on the current state of the menu item (child, center,
+ * parent, hovered, etc).
+ *
+ * In the JSON5 file, each layer can get a `content` property which can be used to make
+ * the layer contain the item's icon or name.
+ */
+
+export enum LayerContentType {
+  eNone = 'none',
+  eIcon = 'icon',
+  eName = 'name',
+}
+
+interface IMenuThemeDescription {
+  name: string;
+  author: string;
+  themeVersion: string;
+  engineVersion: number;
+  license: string;
+  css: string;
+  drawChildrenBelow: boolean;
+  colors: {
+    name: string;
+    default: string;
+  }[];
+  layers: {
+    class: string;
+    content: LayerContentType;
+  }[];
+}
+
 export class MenuTheme {
+  constructor(private description: IMenuThemeDescription) {}
+
   public get centerRadius() {
     return 50;
   }
@@ -26,6 +68,10 @@ export class MenuTheme {
 
   public get grandChildDistance() {
     return 25;
+  }
+
+  public get drawChildrenBelow() {
+    return this.description.drawChildrenBelow;
   }
 
   public createItem(item: IRenderedMenuItem) {

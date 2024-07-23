@@ -16,7 +16,7 @@ import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
-import { MenuTheme } from './menu-theme';
+import { LayerContentType, MenuTheme } from './menu-theme';
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -96,7 +96,24 @@ export class Menu extends EventEmitter {
    */
   private input: InputTracker = new InputTracker();
 
-  private theme: MenuTheme = new MenuTheme();
+  private theme: MenuTheme = new MenuTheme({
+    name: 'default',
+    author: 'Simon Schneegans',
+    themeVersion: '1.0',
+    engineVersion: 1,
+    license: 'MIT',
+    css: 'default.css',
+    drawChildrenBelow: true,
+    colors: [
+      { name: 'background', default: '#000000' },
+      { name: 'foreground', default: '#ffffff' },
+    ],
+    layers: [
+      { class: 'background', content: LayerContentType.eNone },
+      { class: 'icon-container', content: LayerContentType.eIcon },
+      { class: 'name', content: LayerContentType.eName },
+    ],
+  });
 
   constructor(container: HTMLElement) {
     super();
@@ -298,7 +315,12 @@ export class Menu extends EventEmitter {
       const { item, container } = queue.shift()!;
 
       const nodeDiv = this.theme.createItem(item);
-      container.appendChild(nodeDiv);
+      if (this.theme.drawChildrenBelow) {
+        container.insertBefore(nodeDiv, container.firstChild);
+      } else {
+        container.appendChild(nodeDiv);
+      }
+
       item.nodeDiv = nodeDiv;
 
       if (item.children) {
