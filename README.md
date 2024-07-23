@@ -59,6 +59,11 @@ Tested Environment | Status | Notes
 You can either download a prebuilt binary or compile Kando yourself.
 For both approaches there are instructions available in the [:memo: Installation Guide](docs/installing.md).
 
+## Homebrew (macOS)
+If you are on macOS, you can install Kando as a Homebrew Cask by running:
+
+    brew install kando
+
 # :rocket: Getting Started
 
 Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
