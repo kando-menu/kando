@@ -336,7 +336,7 @@ export class Menu extends EventEmitter {
       if (item === this.root) {
         const maxCenterTextSize = this.theme.centerRadius * 2.0;
         const padding = this.theme.centerRadius * 0.1;
-        this.centerText = new CenterText(nodeDiv, maxCenterTextSize - padding);
+        this.centerText = new CenterText(rootContainer, maxCenterTextSize - padding);
       }
     }
   }
@@ -536,8 +536,6 @@ export class Menu extends EventEmitter {
         this.centerText.show();
 
         const position = this.getCenterItemPosition();
-        position.x -= this.root.position.x;
-        position.y -= this.root.position.y;
         this.centerText.setPosition(position);
       }
     }
