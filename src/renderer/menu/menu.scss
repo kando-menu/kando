@@ -73,8 +73,16 @@
     display: none;
   }
 
-  .menu-node.active:has(> .menu-node.dragged) > .connector {
-    transition: none;
+  .menu-node {
+    &.active:has(> .menu-node.dragged) > .connector {
+      transition: none;
+    }
+
+    &.parent > .connector,
+    &.active > .connector,
+    &.active:has(> .menu-node.dragged) > .connector {
+      display: block;
+    }
   }
 
   // Center Text -------------------------------------------------------------------------
@@ -145,6 +153,8 @@
       transition: var(--opacity-transition);
     }
 
+    &.parent > .menu-item > .icon-container,
+    &.child > .menu-item > .icon-container,
     &.active > .menu-item > .icon-container {
       opacity: 1;
     }
@@ -169,10 +179,6 @@
       background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
       transform: scale(1);
-      & > .icon-container {
-        opacity: 1;
-        font-size: calc(var(--child-size) * 0.75);
-      }
     }
 
     // Hovered child or parent items are highlighted.
@@ -209,12 +215,6 @@
       height: var(--connector-width);
       background-color: var(--connector-color);
       top: calc(-1 * var(--connector-width) / 2);
-    }
-
-    &.parent > .connector,
-    &.active > .connector,
-    &.active:has(> .menu-node.dragged) > .connector {
-      display: block;
     }
 
     &.hovered > .connector {
