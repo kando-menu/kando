@@ -80,6 +80,9 @@ interface IMenuThemeDescription {
   engineVersion: number;
   license: string;
   css: string;
+  childDistance: number;
+  parentDistance: number;
+  grandChildDistance: number;
   drawChildrenBelow: boolean;
   colors: {
     name: string;
@@ -94,20 +97,16 @@ interface IMenuThemeDescription {
 export class MenuTheme {
   constructor(private description: IMenuThemeDescription) {}
 
-  public get centerRadius() {
-    return 50;
-  }
-
   public get childDistance() {
-    return 100;
+    return this.description.childDistance;
   }
 
   public get parentDistance() {
-    return 150;
+    return this.description.parentDistance;
   }
 
   public get grandChildDistance() {
-    return 25;
+    return this.description.grandChildDistance;
   }
 
   public get drawChildrenBelow() {

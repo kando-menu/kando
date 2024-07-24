@@ -18,6 +18,8 @@ import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
 import { LayerContentType, MenuTheme } from './menu-theme';
 
+const CENTER_RADIUS = 50;
+
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
  * the menu. The menu is shown by calling the show() method and hidden by calling the
@@ -103,6 +105,9 @@ export class Menu extends EventEmitter {
     engineVersion: 1,
     license: 'MIT',
     css: 'default.css',
+    childDistance: 100,
+    parentDistance: 150,
+    grandChildDistance: 25,
     drawChildrenBelow: true,
     colors: [
       { name: 'background', default: '#000000' },
@@ -158,7 +163,7 @@ export class Menu extends EventEmitter {
       if (
         this.input.state === InputState.eClicked &&
         this.selectionChain.length === 1 &&
-        this.input.distance < this.theme.centerRadius
+        this.input.distance < CENTER_RADIUS
       ) {
         this.emit('cancel');
         return;
@@ -330,8 +335,8 @@ export class Menu extends EventEmitter {
       }
 
       if (item === this.root) {
-        const maxCenterTextSize = this.theme.centerRadius * 2.0;
-        const padding = this.theme.centerRadius * 0.1;
+        const maxCenterTextSize = CENTER_RADIUS * 2.0;
+        const padding = CENTER_RADIUS * 0.1;
         this.centerText = new CenterText(rootContainer, maxCenterTextSize - padding);
       }
     }
@@ -548,7 +553,7 @@ export class Menu extends EventEmitter {
     if (
       this.input.state === InputState.eDragging &&
       !this.draggedItem &&
-      this.input.distance > this.theme.centerRadius &&
+      this.input.distance > CENTER_RADIUS &&
       this.hoveredItem
     ) {
       this.dragItem(this.hoveredItem);
@@ -559,7 +564,7 @@ export class Menu extends EventEmitter {
     if (
       this.input.state === InputState.eDragging &&
       this.draggedItem &&
-      this.input.distance < this.theme.centerRadius
+      this.input.distance < CENTER_RADIUS
     ) {
       this.dragItem(null);
       this.updateConnectors();
@@ -592,7 +597,7 @@ export class Menu extends EventEmitter {
   private computeHoveredItem(): IRenderedMenuItem {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected item.
-    if (this.input.distance < this.theme.centerRadius) {
+    if (this.input.distance < CENTER_RADIUS) {
       if (this.selectionChain.length > 1) {
         return this.selectionChain[this.selectionChain.length - 2];
       }
@@ -636,7 +641,7 @@ export class Menu extends EventEmitter {
       let transform = '';
 
       // If the item is hovered, increase the scale a bit.
-      if (this.input.distance > this.theme.centerRadius) {
+      if (this.input.distance > CENTER_RADIUS) {
         const angleDiff = Math.abs(item.angle - this.input.angle);
         let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
 
