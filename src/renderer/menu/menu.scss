@@ -30,8 +30,6 @@
     pointer-events: none;
 
     .icon-container {
-      opacity: 0;
-
       container-type: size;
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -112,15 +110,12 @@
 
   .menu-node {
     transition: var(--menu-transition);
-    .icon-container {
-      transition: var(--opacity-transition);
-      color: var(--text-color);
-    }
+
     .menu-item {
       position: absolute;
       border-radius: 50%;
-      transition: var(--menu-transition);
       border: 1px solid var(--border-color);
+      transition: var(--menu-transition);
     }
 
     // The active menu node is currently displayed in the center of the menu.
@@ -132,10 +127,6 @@
       background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
       transform: scale(0.9);
-      & > .icon-container {
-        opacity: 1;
-        font-size: calc(var(--center-size) * 0.75);
-      }
     }
 
     // If the center node is hovered, we want to highlight it.
@@ -148,9 +139,20 @@
       transform: scale(0.8);
     }
 
+    .icon-container {
+      opacity: 0;
+      color: var(--text-color);
+      transition: var(--opacity-transition);
+    }
+
+    &.active > .menu-item > .icon-container {
+      opacity: 1;
+    }
+
     // If there is a hovered child node, we scale up the center a bit and hide its icon.
     &.active:has(> .menu-node.hovered) > .menu-item {
       transform: scale(1);
+
       & > .icon-container {
         opacity: 0;
       }
@@ -186,11 +188,6 @@
       transform: scale(1);
     }
 
-    // We disable any transition for dragged items.
-    &.dragged {
-      transition: none;
-    }
-
     // Grandchild items are very small and drawn below the child items.
     &.grandchild > .menu-item {
       top: calc(-1 * var(--grandchild-size) / 2);
@@ -199,24 +196,38 @@
       height: var(--grandchild-size);
       background-color: var(--border-color);
     }
+
+    // We disable any transition for dragged items.
+    &.dragged {
+      transition: none;
+    }
+
+    /* Connectors --------------------------------------------------------------------- */
+
     .connector {
       transition: var(--menu-transition);
       height: var(--connector-width);
       background-color: var(--connector-color);
       top: calc(-1 * var(--connector-width) / 2);
     }
+
     &.parent > .connector,
     &.active > .connector,
     &.active:has(> .menu-node.dragged) > .connector {
       display: block;
     }
+
     &.hovered > .connector {
       background-color: var(--connector-color-hover);
     }
+
     &.active > .connector {
       background-color: var(--connector-color-active);
     }
   }
+
+  /* Center Text ---------------------------------------------------------------------- */
+
   .center-text {
     color: var(--text-color);
     transition: var(--opacity-transition);
