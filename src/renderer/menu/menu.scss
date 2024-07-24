@@ -8,27 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@import './variables.scss';
-
 #kando-menu {
   transition: opacity 150ms ease;
 
   // When the menu is hidden or shown, we fade it to / from transparent.
   &.hidden {
     opacity: 0;
-
-    // Subtly scale in / out all items when the menu is shown and hidden.
-    .icon-container {
-      transform: scale(0.8) !important;
-    }
-
-    // Only the selected leaf node is scaled up to show that it has been selected. We also
-    // want to delay the transition of the selected leaf node to leave time for the
-    // position transition.
-    &.selected .menu-node.active:not(:has(.menu-node)) > .menu-item {
-      transform: scale(1) !important;
-      transition-delay: 100ms;
-    }
 
     // We also want to delay the fade-out animation if a node is selected. Else the
     // selected node would disappear before the position transition is finished.
@@ -41,66 +26,121 @@
   // JavaScript and then applied as inline styles. Each node has an additional div as
   // child with the class icon-container. This div is used to display the node's content.
   .menu-node {
-    transition: $menu-transition;
     position: absolute;
     pointer-events: none;
 
+    .icon-container {
+      opacity: 0;
+
+      container-type: size;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+
+      // Circle clipping.
+      clip-path: circle(45% at 50% 50%);
+      white-space: nowrap;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 75cqi;
+        font-style: normal;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    // Hide deeper levels than grandchildren.
+    &.grandchild > .menu-node {
+      display: none;
+    }
+  }
+
+  // Connectors --------------------------------------------------------------------------
+
+  // The connectors between the menu items are drawn as divs with a fixed height. Their
+  // width and rotation is computed in JavaScript and then applied as inline styles.
+  .connector {
+    position: absolute;
+    width: 0px;
+    left: 0;
+    transform-origin: 0% 50%;
+    z-index: -1;
+    display: none;
+  }
+
+  .menu-node.active:has(> .menu-node.dragged) > .connector {
+    transition: none;
+  }
+
+  // Center Text -------------------------------------------------------------------------
+
+  // The text in the center of the menu is wrapped in a square div with a 10% padding.
+  .center-text {
+    position: absolute;
+    text-align: center;
+
+    overflow: hidden;
+    word-break: break-word;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
+}
+
+#kando-menu {
+  --center-size: 100px;
+  --child-size: 50px;
+  --grandchild-size: 15px;
+  --connector-width: 10px;
+  --item-color: rgb(255, 255, 255);
+  --text-color: rgb(66, 66, 66);
+  --hovered-item-color: rgb(255, 200, 200);
+  --border-color: rgb(109, 109, 109);
+  --connector-color: rgb(109, 109, 109);
+  --connector-color-hover: rgb(172, 136, 136);
+  --connector-color-active: rgb(255, 200, 200);
+  --menu-transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+  --opacity-transition: opacity 250ms ease;
+
+  .menu-node {
+    transition: var(--menu-transition);
+    .icon-container {
+      transition: var(--opacity-transition);
+      color: var(--text-color);
+    }
     .menu-item {
       position: absolute;
       border-radius: 50%;
-      transition: $menu-transition;
-      border: 1px solid $border-color;
-
-      .icon-container {
-        transition: $menu-transition;
-
-        opacity: 0;
-        color: $text-color;
-
-        container-type: size;
-        width: 100%;
-        aspect-ratio: 1 / 1;
-
-        // Circle clipping.
-        clip-path: circle(45% at 50% 50%);
-        white-space: nowrap;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        i {
-          font-size: 75cqi;
-          font-style: normal;
-        }
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
+      transition: var(--menu-transition);
+      border: 1px solid var(--border-color);
     }
 
     // The active menu node is currently displayed in the center of the menu.
     &.active > .menu-item {
-      top: calc(-1 * $root-size / 2);
-      left: calc(-1 * $root-size / 2);
-      width: $root-size;
-      height: $root-size;
-      background-color: $item-color;
+      top: calc(-1 * var(--center-size) / 2);
+      left: calc(-1 * var(--center-size) / 2);
+      width: var(--center-size);
+      height: var(--center-size);
+      background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
       transform: scale(0.9);
-
       & > .icon-container {
         opacity: 1;
-        font-size: calc($root-size * 0.75);
+        font-size: calc(var(--center-size) * 0.75);
       }
     }
 
     // If the center node is hovered, we want to highlight it.
     &.active.hovered > .menu-item {
-      background-color: $hovered-item-color;
+      background-color: var(--hovered-item-color);
     }
 
     // If the center node is clicked, we scale it down a bit.
@@ -111,7 +151,6 @@
     // If there is a hovered child node, we scale up the center a bit and hide its icon.
     &.active:has(> .menu-node.hovered) > .menu-item {
       transform: scale(1);
-
       & > .icon-container {
         opacity: 0;
       }
@@ -121,17 +160,16 @@
     // node is displayed in a similar style.
     &.parent > .menu-item,
     &.child > .menu-item {
-      top: calc(-1 * $child-size / 2);
-      left: calc(-1 * $child-size / 2);
-      width: $child-size;
-      height: $child-size;
-      background-color: $item-color;
+      top: calc(-1 * var(--child-size) / 2);
+      left: calc(-1 * var(--child-size) / 2);
+      width: var(--child-size);
+      height: var(--child-size);
+      background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
       transform: scale(1);
-
       & > .icon-container {
         opacity: 1;
-        font-size: calc($child-size * 0.75);
+        font-size: calc(var(--child-size) * 0.75);
       }
     }
 
@@ -139,7 +177,7 @@
     &.parent.hovered > .menu-item,
     &.child.hovered > .menu-item {
       transform: scale(1.1);
-      background-color: $hovered-item-color;
+      background-color: var(--hovered-item-color);
     }
 
     // If dragged around, child or parent items are scaled back to normal again.
@@ -155,71 +193,34 @@
 
     // Grandchild items are very small and drawn below the child items.
     &.grandchild > .menu-item {
-      top: calc(-1 * $grandchild-size / 2);
-      left: calc(-1 * $grandchild-size / 2);
-      width: $grandchild-size;
-      height: $grandchild-size;
-      background-color: $border-color;
+      top: calc(-1 * var(--grandchild-size) / 2);
+      left: calc(-1 * var(--grandchild-size) / 2);
+      width: var(--grandchild-size);
+      height: var(--grandchild-size);
+      background-color: var(--border-color);
     }
-
-    // Hide deeper levels than grandchildren.
-    &.grandchild > .menu-node {
-      display: none;
+    .connector {
+      transition: var(--menu-transition);
+      height: var(--connector-width);
+      background-color: var(--connector-color);
+      top: calc(-1 * var(--connector-width) / 2);
+    }
+    &.parent > .connector,
+    &.active > .connector,
+    &.active:has(> .menu-node.dragged) > .connector {
+      display: block;
+    }
+    &.hovered > .connector {
+      background-color: var(--connector-color-hover);
+    }
+    &.active > .connector {
+      background-color: var(--connector-color-active);
     }
   }
-
-  // Connectors --------------------------------------------------------------------------
-
-  // The connectors between the menu items are drawn as divs with a fixed height. Their
-  // width and rotation is computed in JavaScript and then applied as inline styles.
-  .connector {
-    transition: $menu-transition;
-    position: absolute;
-    width: 0px;
-    height: $connector-size;
-    background-color: $connector-color;
-    left: 0;
-    top: calc(-1 * $connector-size / 2);
-    transform-origin: 0% 50%;
-    z-index: -1;
-    display: none;
-  }
-
-  .menu-node.parent > .connector,
-  .menu-node.active > .connector,
-  .menu-node.active:has(> .menu-node.dragged) > .connector {
-    display: block;
-  }
-
-  .menu-node.hovered > .connector {
-    background-color: $connector-color-hover;
-  }
-
-  .menu-node.active > .connector {
-    background-color: $connector-color-active;
-  }
-
-  .menu-node.active:has(> .menu-node.dragged) > .connector {
-    transition: none;
-  }
-
-  // Center Text -------------------------------------------------------------------------
-
-  // The text in the center of the menu is wrapped in a square div with a 10% padding.
   .center-text {
-    position: absolute;
-    color: $text-color;
-    transition: $text-opacity-transition;
-
-    text-align: center;
+    color: var(--text-color);
+    transition: var(--opacity-transition);
     font-size: 16px;
     line-height: 22px;
-
-    overflow: hidden;
-    word-break: break-word;
-
-    &.hidden {
-      opacity: 0;
-    }
   }
 }

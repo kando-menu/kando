@@ -108,11 +108,7 @@ export class Menu extends EventEmitter {
       { name: 'background', default: '#000000' },
       { name: 'foreground', default: '#ffffff' },
     ],
-    layers: [
-      { class: 'background', content: LayerContentType.eNone },
-      { class: 'icon-container', content: LayerContentType.eIcon },
-      { class: 'name', content: LayerContentType.eName },
-    ],
+    layers: [{ class: 'menu-item', content: LayerContentType.eIcon }],
   });
 
   constructor(container: HTMLElement) {
