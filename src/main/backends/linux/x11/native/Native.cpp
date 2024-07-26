@@ -142,19 +142,22 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
   XQueryPointer(display, root, &child, &child, &root_x, &root_y, &win_x, &win_y, &mask);
 
   // Get the DPI scaling factor
-  char*       resource_string = XResourceManagerString(display);
-  XrmDatabase db              = XrmGetStringDatabase(resource_string);
+  double scaling_factor  = 1.0;
+  char*  resource_string = XResourceManagerString(display);
 
-  char*    type;
-  XrmValue value;
-  double   scaling_factor = 1.0;
+  if (resource_string) {
+    XrmDatabase db = XrmGetStringDatabase(resource_string);
 
-  if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value)) {
-    double dpi     = atof(value.addr);
-    scaling_factor = dpi / 96.0; // Assuming 96 DPI as the baseline for 1.0 scaling
+    char*    type;
+    XrmValue value;
+
+    if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value)) {
+      double dpi     = atof(value.addr);
+      scaling_factor = dpi / 96.0; // Assuming 96 DPI as the baseline for 1.0 scaling
+    }
+
+    XrmDestroyDatabase(db);
   }
-
-  XrmDestroyDatabase(db);
 
   obj.Set("pointerX", 1.0 * root_x / scaling_factor);
   obj.Set("pointerY", 1.0 * root_y / scaling_factor);
