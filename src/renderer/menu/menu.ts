@@ -325,6 +325,12 @@ export class Menu extends EventEmitter {
 
       item.nodeDiv = nodeDiv;
 
+      // Set the direction of the item. This is used by the theme to position the item
+      // correctly.
+      const dir = math.getDirection(item.angle, 1.0);
+      item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
+      item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
+
       if (item.children) {
         item.connectorDiv = document.createElement('div');
         item.connectorDiv.classList.add('connector');
@@ -648,24 +654,17 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * This method updates the 2D position of the given menu item and all its children. The
-   * position is computed based on the given state.
+   * This method updates the 2D position of the given menu item and all its children. For
+   * child and grandchild items, the position is computed by the theme in CSS. For parent
+   * and active items, the position is based on where the menu was opened.
    *
    * @param item The position will be recomputed for this menu item and all its children.
-   * @param state The state of the given item. The transformation will be computed
-   *   differently depending on the state.
    */
   private updateTransform(item: IRenderedMenuItem) {
     if (item.nodeDiv.classList.contains('grandchild')) {
       item.nodeDiv.style.transform = '';
-      const dir = math.getDirection(item.angle, 1.0);
-      item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
-      item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
+      delete item.position;
     } else if (item.nodeDiv.classList.contains('child')) {
-      const dir = math.getDirection(item.angle, 1.0);
-      item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
-      item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
-
       // let transform = '';
 
       // // If the item is hovered, increase the scale a bit.
@@ -686,6 +685,7 @@ export class Menu extends EventEmitter {
         item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
       } else {
         item.nodeDiv.style.transform = '';
+        delete item.position;
       }
 
       // Finally, update the transformation of all its children.
@@ -713,44 +713,56 @@ export class Menu extends EventEmitter {
    */
   private updateConnectors() {
     for (let i = 0; i < this.selectionChain.length; i++) {
+      // The connector div is the div which connects the menu items. In this iteration
+      // we update the length and rotation of the connector div at "item" so that it
+      // points to "nextItem".
       const item = this.selectionChain[i];
       let nextItem = this.selectionChain[i + 1];
 
-      // For the last element in the selection chain (which is the currently active menu
-      // item displayed in the center), we only draw a connector if one of its children is
-      // currently dragged around. We have to ensure that the dragged menu item is not the
-      // parent of the active item.
-      if (
-        i === this.selectionChain.length - 1 &&
-        !this.isParentOfCenterItem(this.draggedItem)
-      ) {
-        nextItem = this.draggedItem || this.clickedItem;
+      // Sanity check: If the item has no connector div, we can skip it.
+      if (!item.connectorDiv) {
+        continue;
       }
 
-      if (item.connectorDiv) {
-        if (nextItem) {
-          const length =
-            nextItem == this.clickedItem ? 0 : math.getLength(nextItem.position);
-          let angle =
-            nextItem == this.clickedItem
-              ? nextItem.angle
-              : math.getAngle(nextItem.position);
-
-          if (
-            item.lastConnectorRotation &&
-            Math.abs(item.lastConnectorRotation - angle) > 180
-          ) {
-            const fullTurns = Math.round((item.lastConnectorRotation - angle) / 360);
-            angle += fullTurns * 360;
-          }
-
-          item.lastConnectorRotation = angle;
-
-          item.connectorDiv.style.width = `${length}px`;
-          item.connectorDiv.style.transform = `rotate(${angle - 90}deg)`;
-        } else {
-          item.connectorDiv.style.width = '0px';
+      // For the last element in the selection chain (which is the currently active menu
+      // item displayed in the center), we only draw a connector if one of its children is
+      // currently dragged around or clicked. When clicked, the connector will be drawn
+      // with length 0 - hence it's invisible but we use it to rotate the connector to the
+      // correct angle. Once the item is selected, the connector will be drawn with the
+      // correct length.
+      if (i === this.selectionChain.length - 1) {
+        if (this.isChildOfCenterItem(this.draggedItem)) {
+          nextItem = this.draggedItem;
         }
+
+        if (!nextItem && this.isChildOfCenterItem(this.clickedItem)) {
+          nextItem = this.clickedItem;
+        }
+      }
+
+      if (nextItem) {
+        let length = 0;
+        let angle = nextItem.angle;
+
+        if (nextItem.position) {
+          length = math.getLength(nextItem.position);
+          angle = math.getAngle(nextItem.position);
+        }
+
+        if (
+          item.lastConnectorRotation &&
+          Math.abs(item.lastConnectorRotation - angle) > 180
+        ) {
+          const fullTurns = Math.round((item.lastConnectorRotation - angle) / 360);
+          angle += fullTurns * 360;
+        }
+
+        item.lastConnectorRotation = angle;
+
+        item.connectorDiv.style.width = `${length}px`;
+        item.connectorDiv.style.transform = `rotate(${angle - 90}deg)`;
+      } else {
+        item.connectorDiv.style.width = '0px';
       }
     }
   }
@@ -860,6 +872,19 @@ export class Menu extends EventEmitter {
       this.selectionChain.length > 1 &&
       this.selectionChain[this.selectionChain.length - 2] === item
     );
+  }
+
+  /**
+   * This method returns true if the given menu item is a child of the currently selected
+   * item.
+   *
+   * @param item The potential child item.
+   * @returns True if the given item is a child of the currently selected item.
+   */
+
+  private isChildOfCenterItem(item: IRenderedMenuItem) {
+    const centerItem = this.selectionChain[this.selectionChain.length - 1];
+    return centerItem.children?.includes(item);
   }
 
   /**
