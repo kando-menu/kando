@@ -46,15 +46,10 @@
     }
 
     &.active:has(> .menu-node.hovered)>.child {
-      --wobble: calc(1.0 + 0.15 * pow(1 - var(--angle-diff) / 180, 4));
-
-      &.hovered {
-        --wobble: calc(1.05 + 0.15 * pow(1 - var(--angle-diff) / 180, 4));
-      }
-
-      transform: scale(var(--wobble)) translate(calc(var(--child-distance) * var(--dir-x)),
-        calc(var(--child-distance) * var(--dir-y)));
+      transform: scale(calc(1.2 - pow(var(--angle-diff) / 180, 0.2) * 0.2)) translate(calc(var(--child-distance) * var(--dir-x)),
+          calc(var(--child-distance) * var(--dir-y)));
     }
+
 
 
     /* Theme Layers ------------------------------------------------------------------- */

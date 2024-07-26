@@ -330,6 +330,7 @@ export class Menu extends EventEmitter {
       const dir = math.getDirection(item.angle, 1.0);
       item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
       item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
+      item.nodeDiv.style.setProperty('--angle', item.angle?.toString());
 
       if (item.children) {
         item.connectorDiv = document.createElement('div');
@@ -665,17 +666,17 @@ export class Menu extends EventEmitter {
       item.nodeDiv.style.transform = '';
       delete item.position;
     } else if (item.nodeDiv.classList.contains('child')) {
-      // To allow for cool animations, we pass the angular distance between the item and
-      // the pointer to the theme.
-      const angleDiff = Math.abs(item.angle - this.input.angle);
-      item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
-
       // If the item is dragged, move it to the mouse position. Else the item is positioned
       // by the theme.
       if (item === this.draggedItem && this.input.state === InputState.eDragging) {
         item.position = this.input.relativePosition;
         item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
       } else {
+        // To allow for cool animations, we pass the angular distance between the item and
+        // the pointer to the theme.
+        let angleDiff = Math.abs(item.angle - this.input.angle);
+        angleDiff = Math.min(angleDiff, 360 - angleDiff);
+        item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
         item.nodeDiv.style.transform = '';
         delete item.position;
       }

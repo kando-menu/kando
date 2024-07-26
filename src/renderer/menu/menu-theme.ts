@@ -107,6 +107,13 @@ export class MenuTheme {
     link.type = 'text/css';
     link.id = 'kando-menu-theme';
     head.appendChild(link);
+
+    CSS.registerProperty({
+      name: '--angle-diff',
+      syntax: '<number>',
+      inherits: false,
+      initialValue: '0',
+    });
   }
 
   public get maxMenuRadius() {
