@@ -79,9 +79,7 @@ interface IMenuThemeDescription {
   themeVersion: string;
   engineVersion: number;
   license: string;
-  childDistance: number;
-  parentDistance: number;
-  grandChildDistance: number;
+  maxMenuRadius: number;
   drawChildrenBelow: boolean;
   colors: {
     name: string;
@@ -105,22 +103,14 @@ export class MenuTheme {
     const head = document.head;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = `assets/menu-themes/default/theme.css`;
+    link.href = `../assets/menu-themes/default/theme.css`;
     link.type = 'text/css';
     link.id = 'kando-menu-theme';
     head.appendChild(link);
   }
 
-  public get childDistance() {
-    return this.description.childDistance;
-  }
-
-  public get parentDistance() {
-    return this.description.parentDistance;
-  }
-
-  public get grandChildDistance() {
-    return this.description.grandChildDistance;
+  public get maxMenuRadius() {
+    return this.description.maxMenuRadius;
   }
 
   public get drawChildrenBelow() {

@@ -9,6 +9,10 @@
 /* SPDX-License-Identifier: MIT */
 
 #kando-menu {
+  --child-distance: 100px;
+  --parent-distance: 150px;
+  --grandchild-distance: 25px;
+
   --center-size: 100px;
   --child-size: 50px;
   --grandchild-size: 15px;
@@ -26,7 +30,22 @@
   .menu-node {
     transition: var(--menu-transition);
 
-    /* Menu Items --------------------------------------------------------------------- */
+    &.grandchild {
+      transform: translate(calc(var(--grandchild-distance) * var(--dir-x)),
+          calc(var(--grandchild-distance) * var(--dir-y)));
+    }
+
+    &.child {
+      transform: translate(calc(var(--child-distance) * var(--dir-x)),
+          calc(var(--child-distance) * var(--dir-y)));
+    }
+
+    &.parent {
+      transform: translate(calc(var(--parent-distance) * var(--dir-x)),
+          calc(var(--parent-distance) * var(--dir-y)));
+    }
+
+    /* Theme Layers ------------------------------------------------------------------- */
 
     /* We hide all icons by default. They will be shown further down in this file for the
        center item and the child items. */
@@ -44,7 +63,7 @@
       transition: var(--menu-transition);
     }
 
-    /* The active menu item is the center of the menu. Usually it's scaled down a bit. */
+    /* The active menu item is the center of the menu. */
     &.active>.menu-item {
       top: calc(-1 * var(--center-size) / 2);
       left: calc(-1 * var(--center-size) / 2);
@@ -52,12 +71,11 @@
       height: var(--center-size);
       background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      transform: scale(0.9);
     }
 
     /* If the center item has a hovered child node, we scale it up and hide its icon. */
     &.active:has(> .menu-node.hovered)>.menu-item {
-      transform: scale(1);
+      transform: scale(1.1);
 
       &>.icon-container {
         opacity: 0;
@@ -69,9 +87,15 @@
       background-color: var(--hovered-item-color);
     }
 
+    /* If the parent or a child node is clicked, we scale it down to normal size. */
+    &.parent.hovered.clicked>.menu-item,
+    &.child.hovered.clicked>.menu-item {
+      transform: scale(1.0);
+    }
+
     /* If the center node is clicked, we scale it down a bit. */
-    &.active.dragged>.menu-item {
-      transform: scale(0.8);
+    &.active.hovered.dragged>.menu-item {
+      transform: scale(0.9);
     }
 
     /* Show the icons of the center, parent and child items. */
@@ -100,12 +124,6 @@
       background-color: var(--hovered-item-color);
     }
 
-    /* If dragged around, child or parent items are scaled back to normal again. */
-    &.parent.dragged>.menu-item,
-    &.child.dragged>.menu-item {
-      transform: scale(1);
-    }
-
     /* Grandchild items are very small and drawn below the child items. */
     &.grandchild>.menu-item {
       top: calc(-1 * var(--grandchild-size) / 2);
@@ -127,6 +145,11 @@
       height: var(--connector-width);
       background-color: var(--connector-color);
       top: calc(-1 * var(--connector-width) / 2);
+    }
+
+    &:has(.dragged)>.connector,
+    &:has(.clicked)>.connector {
+      transition: none;
     }
 
     &.hovered>.connector {

@@ -73,16 +73,11 @@
     display: none;
   }
 
-  .menu-node {
-    &.active:has(> .menu-node.dragged) > .connector {
-      transition: none;
-    }
-
-    &.parent > .connector,
-    &.active > .connector,
-    &.active:has(> .menu-node.dragged) > .connector {
-      display: block;
-    }
+  .menu-node.parent > .connector,
+  .menu-node.active > .connector,
+  .menu-node.active:has(> .menu-node.dragged) > .connector,
+  .menu-node.active:has(> .menu-node.clicked) > .connector {
+    display: block;
   }
 
   // Center Text -------------------------------------------------------------------------

@@ -19,6 +19,7 @@ import { InputState, InputTracker } from './input-tracker';
 import { LayerContentType, MenuTheme } from './menu-theme';
 
 const CENTER_RADIUS = 50;
+const PARENT_DISTANCE = 150;
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -76,6 +77,12 @@ export class Menu extends EventEmitter {
    */
   private hoveredItem: IRenderedMenuItem = null;
 
+  /**
+   * The clicked item is the item which is under the mouse cursor when the left mouse
+   * button is pressed. Items with this state can be styled differently by the theme.
+   */
+  private clickedItem: IRenderedMenuItem = null;
+
   /** The dragged item is the item which is currently dragged by the mouse. */
   private draggedItem: IRenderedMenuItem = null;
 
@@ -104,10 +111,8 @@ export class Menu extends EventEmitter {
     themeVersion: '1.0',
     engineVersion: 1,
     license: 'MIT',
-    childDistance: 100,
-    parentDistance: 150,
-    grandChildDistance: 25,
     drawChildrenBelow: true,
+    maxMenuRadius: 160,
     colors: [
       { name: 'background', default: '#000000' },
       { name: 'foreground', default: '#ffffff' },
@@ -135,10 +140,7 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      // If there is a hovered item, it now becomes a dragged item.
-      if (this.hoveredItem) {
-        this.dragItem(this.hoveredItem);
-      }
+      this.redraw();
 
       this.input.onPointerDownEvent(event, this.getCenterItemPosition());
       this.gestures.reset();
@@ -171,8 +173,8 @@ export class Menu extends EventEmitter {
       this.input.onPointerUpEvent();
       this.gestures.reset();
 
-      if (this.draggedItem) {
-        this.selectItem(this.draggedItem);
+      if (this.draggedItem || this.clickedItem) {
+        this.selectItem(this.draggedItem || this.clickedItem);
       }
     };
 
@@ -354,15 +356,9 @@ export class Menu extends EventEmitter {
    * @param item The newly selected menu item.
    */
   private selectItem(item: IRenderedMenuItem) {
-    // Make sure to un-hover the item if it was hovered before.
-    if (item === this.hoveredItem) {
-      this.hoverItem(null);
-    }
-
-    // Make sure to un-drag the item if it was dragged before.
-    if (item === this.draggedItem) {
-      this.dragItem(null);
-    }
+    this.clickItem(null);
+    this.hoverItem(null);
+    this.dragItem(null);
 
     // If the item is already selected, do nothing.
     if (
@@ -395,12 +391,12 @@ export class Menu extends EventEmitter {
       }
     } else {
       // Compute the ideal position of the new item. The distance to the parent item is
-      // set to be at least this.theme.parentDistance. This is to avoid that the menu is
+      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is
       // too close to the parent item. In anchored mode, the distance is set to
-      // this.theme.parentDistance.
+      // PARENT_DISTANCE.
       const distance = this.options.anchoredMode
-        ? this.theme.parentDistance
-        : Math.max(this.theme.parentDistance, this.input.distance);
+        ? PARENT_DISTANCE
+        : Math.max(PARENT_DISTANCE, this.input.distance);
 
       item.position = math.getDirection(item.angle, distance);
 
@@ -426,14 +422,9 @@ export class Menu extends EventEmitter {
     if (item.children?.length > 0) {
       const position = this.getCenterItemPosition();
 
-      // Compute the maximum radius of the menu, including children and grandchildren. The
-      // magic number 1.4 accounts for the hover effect (which should be made
-      // configurable). The 10 is some additional margin.
-      const maxRadius =
-        (this.theme.childDistance + this.theme.grandChildDistance) * 1.4 + 10;
       const clampedPosition = math.clampToMonitor(
         position,
-        maxRadius,
+        this.theme.maxMenuRadius,
         this.options.windowSize
       );
 
@@ -464,29 +455,6 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * This will assign the CSS class 'dragged' to the given menu item's node div element.
-   * It will also remove the class from the previously dragged menu item.
-   *
-   * @param item The item to drag. If null, the previously dragged item will be
-   *   un-dragged.
-   */
-  private dragItem(item?: IRenderedMenuItem) {
-    if (this.draggedItem === item) {
-      return;
-    }
-
-    if (this.draggedItem) {
-      this.draggedItem.nodeDiv.classList.remove('dragged');
-      this.draggedItem = null;
-    }
-
-    if (item) {
-      this.draggedItem = item;
-      this.draggedItem.nodeDiv.classList.add('dragged');
-    }
-  }
-
-  /**
    * This will assign the CSS class 'hovered' to the given menu item's node div element.
    * It will also remove the class from the previously hovered menu item.
    *
@@ -507,6 +475,54 @@ export class Menu extends EventEmitter {
       this.hoveredItem = item;
       this.hoveredItem.nodeDiv.classList.add('hovered');
       this.emit('hover', this.hoveredItem.path);
+    }
+  }
+
+  /**
+   * This will assign the CSS class 'clicked' to the given menu item's node div element.
+   * It will also remove the class from the previously clicked menu item.
+   *
+   * @param item The item to click. If null, the previously clicked item will be
+   *   unclicked.
+   */
+  private clickItem(item?: IRenderedMenuItem) {
+    if (this.clickedItem === item) {
+      return;
+    }
+
+    if (this.clickedItem) {
+      this.clickedItem.nodeDiv.classList.remove('clicked');
+      this.clickedItem = null;
+    }
+
+    if (item) {
+      this.clickedItem = item;
+      this.clickedItem.nodeDiv.classList.add('clicked');
+    }
+  }
+
+  /**
+   * This will assign the CSS class 'dragged' to the given menu item's node div element.
+   * It will also remove the class from the previously dragged menu item.
+   *
+   * @param item The item to drag. If null, the previously dragged item will be
+   *   un-dragged.
+   */
+  private dragItem(item?: IRenderedMenuItem) {
+    this.clickItem(null);
+
+    if (this.draggedItem === item) {
+      return;
+    }
+
+    if (this.draggedItem) {
+      this.draggedItem.nodeDiv.classList.remove('dragged');
+      this.draggedItem = null;
+    }
+
+    if (item) {
+      this.draggedItem = item;
+      this.draggedItem.nodeDiv.classList.add('dragged');
     }
   }
 
@@ -542,10 +558,11 @@ export class Menu extends EventEmitter {
 
     if (this.draggedItem && this.draggedItem !== this.hoveredItem) {
       this.dragItem(this.hoveredItem);
+    }
 
-      if (!this.draggedItem) {
-        this.updateConnectors();
-      }
+    if (this.input.state === InputState.eClicked && !this.clickedItem) {
+      this.clickItem(this.hoveredItem);
+      this.updateConnectors();
     }
 
     // If the mouse is dragged over a menu item, make that item the dragged item.
@@ -572,6 +589,12 @@ export class Menu extends EventEmitter {
     // Abort item dragging if the mouse button was released.
     if (this.input.state === InputState.eReleased && this.draggedItem) {
       this.dragItem(null);
+      this.updateConnectors();
+    }
+
+    // Un-click an item if mouse button was released.
+    if (this.input.state === InputState.eReleased && this.clickedItem) {
+      this.clickItem(null);
       this.updateConnectors();
     }
 
@@ -634,38 +657,38 @@ export class Menu extends EventEmitter {
    */
   private updateTransform(item: IRenderedMenuItem) {
     if (item.nodeDiv.classList.contains('grandchild')) {
-      item.position = math.getDirection(item.angle, this.theme.grandChildDistance);
-      item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
+      item.nodeDiv.style.transform = '';
+      const dir = math.getDirection(item.angle, 1.0);
+      item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
+      item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
     } else if (item.nodeDiv.classList.contains('child')) {
-      let transform = '';
+      const dir = math.getDirection(item.angle, 1.0);
+      item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
+      item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
 
-      // If the item is hovered, increase the scale a bit.
-      if (this.input.distance > CENTER_RADIUS) {
-        const angleDiff = Math.abs(item.angle - this.input.angle);
-        let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
+      // let transform = '';
 
-        // If the item is hovered, increase the scale a bit more.
-        if (item === this.hoveredItem) {
-          scale += 0.05;
-        }
+      // // If the item is hovered, increase the scale a bit.
+      // if (this.input.distance > CENTER_RADIUS) {
+      //   const angleDiff = Math.abs(item.angle - this.input.angle);
+      //   let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
 
-        transform = `scale(${scale}) `;
-      }
+      //   // If the item is hovered, increase the scale a bit more.
+      //   if (item === this.hoveredItem) {
+      //     scale += 0.05;
+      //   }
+      // }
 
-      // If the item is dragged, move it to the mouse position.
+      // If the item is dragged, move it to the mouse position. Else the item is positioned
+      // by the theme.
       if (item === this.draggedItem && this.input.state === InputState.eDragging) {
         item.position = this.input.relativePosition;
-        transform = `translate(${item.position.x}px, ${item.position.y}px)`;
+        item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
       } else {
-        // If the item is not dragged, move it to its position on the circle.
-        item.position = math.getDirection(item.angle, this.theme.childDistance);
-        transform += `translate(${item.position.x}px, ${item.position.y}px)`;
+        item.nodeDiv.style.transform = '';
       }
 
-      // Finally, apply the transformation to the item and update the transformation of
-      // all its children.
-      item.nodeDiv.style.transform = transform;
-
+      // Finally, update the transformation of all its children.
       if (item.children) {
         for (const child of item.children) {
           this.updateTransform(child);
@@ -699,16 +722,19 @@ export class Menu extends EventEmitter {
       // parent of the active item.
       if (
         i === this.selectionChain.length - 1 &&
-        !this.isParentOfCenterItem(this.draggedItem) &&
-        this.draggedItem !== this.root
+        !this.isParentOfCenterItem(this.draggedItem)
       ) {
-        nextItem = this.draggedItem;
+        nextItem = this.draggedItem || this.clickedItem;
       }
 
       if (item.connectorDiv) {
         if (nextItem) {
-          const length = math.getLength(nextItem.position);
-          let angle = math.getAngle(nextItem.position);
+          const length =
+            nextItem == this.clickedItem ? 0 : math.getLength(nextItem.position);
+          let angle =
+            nextItem == this.clickedItem
+              ? nextItem.angle
+              : math.getAngle(nextItem.position);
 
           if (
             item.lastConnectorRotation &&
