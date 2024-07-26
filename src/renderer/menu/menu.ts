@@ -665,18 +665,10 @@ export class Menu extends EventEmitter {
       item.nodeDiv.style.transform = '';
       delete item.position;
     } else if (item.nodeDiv.classList.contains('child')) {
-      // let transform = '';
-
-      // // If the item is hovered, increase the scale a bit.
-      // if (this.input.distance > CENTER_RADIUS) {
-      //   const angleDiff = Math.abs(item.angle - this.input.angle);
-      //   let scale = 1.0 + 0.15 * Math.pow(1 - angleDiff / 180, 4.0);
-
-      //   // If the item is hovered, increase the scale a bit more.
-      //   if (item === this.hoveredItem) {
-      //     scale += 0.05;
-      //   }
-      // }
+      // To allow for cool animations, we pass the angular distance between the item and
+      // the pointer to the theme.
+      const angleDiff = Math.abs(item.angle - this.input.angle);
+      item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
 
       // If the item is dragged, move it to the mouse position. Else the item is positioned
       // by the theme.

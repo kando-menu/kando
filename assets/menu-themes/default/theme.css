@@ -45,6 +45,18 @@
           calc(var(--parent-distance) * var(--dir-y)));
     }
 
+    &.active:has(> .menu-node.hovered)>.child {
+      --wobble: calc(1.0 + 0.15 * pow(1 - var(--angle-diff) / 180, 4));
+
+      &.hovered {
+        --wobble: calc(1.05 + 0.15 * pow(1 - var(--angle-diff) / 180, 4));
+      }
+
+      transform: scale(var(--wobble)) translate(calc(var(--child-distance) * var(--dir-x)),
+        calc(var(--child-distance) * var(--dir-y)));
+    }
+
+
     /* Theme Layers ------------------------------------------------------------------- */
 
     /* We hide all icons by default. They will be shown further down in this file for the
@@ -120,7 +132,6 @@
     /* Hovered child or parent items are highlighted. */
     &.parent.hovered>.menu-item,
     &.child.hovered>.menu-item {
-      transform: scale(1.1);
       background-color: var(--hovered-item-color);
     }
 
