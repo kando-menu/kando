@@ -30,7 +30,11 @@ Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact wit
 > [!TIP]
 > There is a YouTube video to get you started: [▶️ How to install Kando on macOS](https://www.youtube.com/watch?v=q1H64iPYnAE).
 
-Just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download either the installer (`Kando-*-arm64.dmg` if you are on Apple Silicon, or `Kando-*-x64.dmg` if you are on Intel hardware) or the standalone version (`Kando-darwin-arm64-*.zip` on Apple Silicon, or `Kando-darwin-x64-*.zip` for Intel hardware).
+Kando is available as a Homebrew Cask. You can install it by running:
+
+    brew install kando
+
+Otherwise, just head over to the [releases page](https://github.com/kando-menu/kando/releases) and download either the installer (`Kando-*-arm64.dmg` if you are on Apple Silicon, or `Kando-*-x64.dmg` if you are on Intel hardware) or the standalone version (`Kando-darwin-arm64-*.zip` on Apple Silicon, or `Kando-darwin-x64-*.zip` for Intel hardware).
 
 If you chose the standalone version, you can just extract the archive and run the contained app.
 If you chose the installer, you will find Kando in your launchpad after the installation.
