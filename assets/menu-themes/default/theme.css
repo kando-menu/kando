@@ -26,6 +26,17 @@
   .menu-node {
     transition: var(--menu-transition);
 
+    /* Menu Items --------------------------------------------------------------------- */
+
+    /* We hide all icons by default. They will be shown further down in this file for the
+       center item and the child items. */
+    .icon-container {
+      opacity: 0;
+      color: var(--text-color);
+      transition: var(--opacity-transition);
+    }
+
+    /* All menu items have a border and are circles in this theme. */
     .menu-item {
       position: absolute;
       border-radius: 50%;
@@ -33,7 +44,7 @@
       transition: var(--menu-transition);
     }
 
-    /* The active menu node is currently displayed in the center of the menu. */
+    /* The active menu item is the center of the menu. Usually it's scaled down a bit. */
     &.active>.menu-item {
       top: calc(-1 * var(--center-size) / 2);
       left: calc(-1 * var(--center-size) / 2);
@@ -42,6 +53,15 @@
       background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
       transform: scale(0.9);
+    }
+
+    /* If the center item has a hovered child node, we scale it up and hide its icon. */
+    &.active:has(> .menu-node.hovered)>.menu-item {
+      transform: scale(1);
+
+      &>.icon-container {
+        opacity: 0;
+      }
     }
 
     /* If the center node is hovered, we want to highlight it. */
@@ -54,25 +74,11 @@
       transform: scale(0.8);
     }
 
-    .icon-container {
-      opacity: 0;
-      color: var(--text-color);
-      transition: var(--opacity-transition);
-    }
-
+    /* Show the icons of the center, parent and child items. */
     &.parent>.menu-item>.icon-container,
     &.child>.menu-item>.icon-container,
     &.active>.menu-item>.icon-container {
       opacity: 1;
-    }
-
-    /* If there is a hovered child node, we scale up the center a bit and hide its icon. */
-    &.active:has(> .menu-node.hovered)>.menu-item {
-      transform: scale(1);
-
-      &>.icon-container {
-        opacity: 0;
-      }
     }
 
     /* Child items are displayed around the active node. The parent node of the active
@@ -85,7 +91,6 @@
       height: var(--child-size);
       background-color: var(--item-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      transform: scale(1);
     }
 
     /* Hovered child or parent items are highlighted. */
