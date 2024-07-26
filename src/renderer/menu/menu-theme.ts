@@ -79,7 +79,6 @@ interface IMenuThemeDescription {
   themeVersion: string;
   engineVersion: number;
   license: string;
-  css: string;
   childDistance: number;
   parentDistance: number;
   grandChildDistance: number;
@@ -95,7 +94,22 @@ interface IMenuThemeDescription {
 }
 
 export class MenuTheme {
-  constructor(private description: IMenuThemeDescription) {}
+  constructor(private description: IMenuThemeDescription) {
+    // Remove any old theme first.
+    const oldTheme = document.getElementById('kando-menu-theme');
+    if (oldTheme) {
+      oldTheme.remove();
+    }
+
+    // Then add the new theme.
+    const head = document.head;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `assets/menu-themes/default/theme.css`;
+    link.type = 'text/css';
+    link.id = 'kando-menu-theme';
+    head.appendChild(link);
+  }
 
   public get childDistance() {
     return this.description.childDistance;

@@ -104,7 +104,6 @@ export class Menu extends EventEmitter {
     themeVersion: '1.0',
     engineVersion: 1,
     license: 'MIT',
-    css: 'default.css',
     childDistance: 100,
     parentDistance: 150,
     grandChildDistance: 25,
