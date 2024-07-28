@@ -97,12 +97,12 @@
     /* If the parent or a child node is clicked, we scale it down to normal size. */
     &.parent.hovered.clicked>.icon-layer,
     &.child.hovered.clicked>.icon-layer {
-      transform: scale(1.0);
+      transform: scale(0.95);
     }
 
     /* If the center node is clicked, we scale it down a bit. */
-    &.active.hovered.dragged>.icon-layer {
-      transform: scale(0.9);
+    &.active.hovered.clicked>.icon-layer {
+      transform: scale(0.95);
     }
 
     /* Show the icons of the center, parent and child items. */
