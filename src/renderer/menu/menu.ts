@@ -309,12 +309,12 @@ export class Menu extends EventEmitter {
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(rootItem: IRenderedMenuItem, rootContainer: HTMLElement) {
-    const queue: { item: IRenderedMenuItem; container: HTMLElement }[] = [];
+    const queue = [];
 
-    queue.push({ item: rootItem, container: rootContainer });
+    queue.push({ item: rootItem, container: rootContainer, level: 0 });
 
     while (queue.length > 0) {
-      const { item, container } = queue.shift()!;
+      const { item, container, level } = queue.shift();
 
       const nodeDiv = this.theme.createItem(item);
       if (this.theme.drawChildrenBelow) {
@@ -331,6 +331,8 @@ export class Menu extends EventEmitter {
       item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
       item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
       item.nodeDiv.style.setProperty('--angle', item.angle?.toString());
+      item.nodeDiv.classList.add(`level-${level}`);
+      item.nodeDiv.classList.add(`type-${item.type}`);
 
       if (item.children) {
         item.connectorDiv = document.createElement('div');
@@ -338,7 +340,11 @@ export class Menu extends EventEmitter {
         nodeDiv.appendChild(item.connectorDiv);
 
         for (const child of item.children) {
-          queue.push({ item: child, container: nodeDiv });
+          queue.push({
+            item: child as IRenderedMenuItem,
+            container: nodeDiv,
+            level: level + 1,
+          });
         }
       }
 
@@ -773,28 +779,36 @@ export class Menu extends EventEmitter {
    * class. As they are not visible anyway, this is not a problem.
    */
   private updateCSSClasses() {
+    const clearClasses = (item: IRenderedMenuItem) => {
+      item.nodeDiv.classList.remove('active', 'parent', 'child', 'grandchild');
+    };
+
     for (let i = 0; i < this.selectionChain.length; ++i) {
       const item = this.selectionChain[i];
+      clearClasses(item);
       if (i === this.selectionChain.length - 1) {
-        item.nodeDiv.className = 'menu-node active';
+        item.nodeDiv.classList.add('active');
 
         if (item.children) {
           for (const child of item.children as IRenderedMenuItem[]) {
-            child.nodeDiv.className = 'menu-node child';
+            clearClasses(child);
+            child.nodeDiv.classList.add('child');
 
             if (child.children) {
               for (const grandchild of child.children as IRenderedMenuItem[]) {
-                grandchild.nodeDiv.className = 'menu-node grandchild';
+                clearClasses(grandchild);
+                grandchild.nodeDiv.classList.add('grandchild');
               }
             }
           }
         }
       } else {
-        item.nodeDiv.className = 'menu-node parent';
+        item.nodeDiv.classList.add('parent');
 
         if (item.children) {
           for (const child of item.children as IRenderedMenuItem[]) {
-            child.nodeDiv.className = 'menu-node grandchild';
+            clearClasses(child);
+            child.nodeDiv.classList.add('grandchild');
           }
         }
       }

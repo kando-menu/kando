@@ -27,22 +27,22 @@ import { IRenderedMenuItem } from './rendered-menu-item';
  * this:
  *
  *     #kando-menu
- *     ├ .menu-node.level0.submenu.parent
- *     │  ├ .menu-node.level1.submenu.grandchild
- *     │  │  ├ .menu-node.level2.uri
- *     │  │  └ .menu-node.level2.command
- *     │  ├ .menu-node.level1.submenu.grandchild
- *     │  │  ├ .menu-node.level2.hotkey
- *     │  │  └ .menu-node.level2.macro
- *     │  └ .menu-node.level1.submenu.active
- *     │     ├ .menu-node.level2.child.uri
- *     │     ├ .menu-node.level2.submenu.child.hovered.dragged
- *     │     │  ├ .menu-node.level3.grandchild.command
- *     │     │  └ .menu-node.level3.grandchild.command
- *     │     ├ .menu-node.level2.submenu.child
- *     │     │  ├ .menu-node.level3.grandchild.command
- *     │     │  └ .menu-node.level3.grandchild.command
- *     │     └ .menu-node.level2.child.macro
+ *     ├ .menu-node.level-0.submenu.parent
+ *     │  ├ .menu-node.level-1.submenu.grandchild
+ *     │  │  ├ .menu-node.level-2.uri
+ *     │  │  └ .menu-node.level-2.command
+ *     │  ├ .menu-node.level-1.submenu.grandchild
+ *     │  │  ├ .menu-node.level-2.hotkey
+ *     │  │  └ .menu-node.level-2.macro
+ *     │  └ .menu-node.level-1.submenu.active
+ *     │     ├ .menu-node.level-2.child.uri
+ *     │     ├ .menu-node.level-2.submenu.child.hovered.dragged
+ *     │     │  ├ .menu-node.level-3.grandchild.command
+ *     │     │  └ .menu-node.level-3.grandchild.command
+ *     │     ├ .menu-node.level-2.submenu.child
+ *     │     │  ├ .menu-node.level-3.grandchild.command
+ *     │     │  └ .menu-node.level-3.grandchild.command
+ *     │     └ .menu-node.level-2.child.macro
  *     └ .center-text
  *
  * The menu container contains two elements: The center text and the root item of the
