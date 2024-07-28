@@ -67,32 +67,101 @@ import { IRenderedMenuItem } from './rendered-menu-item';
  * file.
  */
 
+/** The different types of content a layer can contain. */
 export enum LayerContentType {
   eNone = 'none',
   eIcon = 'icon',
   eName = 'name',
 }
 
+/**
+ * The description of a menu theme. These are the properties which can be defined in the
+ * JSON5 file.
+ */
 interface IMenuThemeDescription {
+  /** A human readable name of the theme. */
   name: string;
+
+  /** The author of the theme. */
   author: string;
+
+  /** The version of the theme. Should be a semantic version string like "1.0.0". */
   themeVersion: string;
+
+  /** The version of the Kando theme engine this theme is compatible with. */
   engineVersion: number;
+
+  /** The license of the theme. For instance "CC-BY-4.0". */
   license: string;
+
+  /**
+   * The maximum radius in pixels of a menu when using this theme. This is used to move
+   * the menu away from the screen edges when it's opened too close to them.
+   */
   maxMenuRadius: number;
+
+  /**
+   * If this is true, children of a menu item will be drawn below the parent. Otherwise
+   * they will be drawn above.
+   */
   drawChildrenBelow: boolean;
+
+  /**
+   * These colors will be available as var(--name) in the CSS file and can be adjusted by
+   * the user in the settings. The default value is the value given here.
+   */
   colors: {
     name: string;
     default: string;
   }[];
+
+  /**
+   * The layers which are drawn on top of each other for each menu item. Each layer will
+   * be a html div element with a class defined in the theme file. Also, each layer can
+   * have a `content` property which can be used to make the layer contain the item's icon
+   * or name.
+   */
   layers: {
     class: string;
     content: LayerContentType;
   }[];
 }
 
+/**
+ * This class is responsible for loading a menu theme and creating the html elements for
+ * the menu items.
+ */
 export class MenuTheme {
-  constructor(private description: IMenuThemeDescription) {
+  /**
+   * The current theme description. When the user changes the theme, this will be updated
+   * via the `loadDescription` method.
+   */
+  private description: IMenuThemeDescription;
+
+  /**
+   * Returns the maximum radius in pixels of a menu when using this theme. This is used to
+   * move the menu away from the screen edges when it's opened too close to them.
+   */
+  public get maxMenuRadius() {
+    return this.description.maxMenuRadius;
+  }
+
+  /**
+   * Returns true if children of a menu item should be drawn below the parent. Otherwise
+   * they will be drawn above.
+   */
+  public get drawChildrenBelow() {
+    return this.description.drawChildrenBelow;
+  }
+
+  /**
+   * Loads the given theme description and applies it to the document. This will remove
+   * any old theme first and then add the new theme to the document. It will also register
+   * the colors defined in the theme description as CSS properties.
+   */
+  public loadDescription(description: IMenuThemeDescription) {
+    this.description = description;
+
     // Remove any old theme first.
     const oldTheme = document.getElementById('kando-menu-theme');
     if (oldTheme) {
@@ -108,6 +177,8 @@ export class MenuTheme {
     link.id = 'kando-menu-theme';
     head.appendChild(link);
 
+    // Register the angular-difference CSS property. This is set each frame for each child
+    // menu item to allow for cool zooming effects.
     CSS.registerProperty({
       name: '--angle-diff',
       syntax: '<number>',
@@ -115,6 +186,7 @@ export class MenuTheme {
       initialValue: '0',
     });
 
+    // Register the colors as CSS properties.
     this.description.colors.forEach((color) => {
       CSS.registerProperty({
         name: `--${color.name}`,
@@ -125,14 +197,14 @@ export class MenuTheme {
     });
   }
 
-  public get maxMenuRadius() {
-    return this.description.maxMenuRadius;
-  }
-
-  public get drawChildrenBelow() {
-    return this.description.drawChildrenBelow;
-  }
-
+  /**
+   * Creates the html elements for the given menu item. This will create a div element
+   * with the class `menu-node` and append the layers defined in the theme description to
+   * it.
+   *
+   * @param item The menu item to create the html elements for.
+   * @returns The created html element.
+   */
   public createItem(item: IRenderedMenuItem) {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');

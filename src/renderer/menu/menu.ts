@@ -105,27 +105,29 @@ export class Menu extends EventEmitter {
    */
   private input: InputTracker = new InputTracker();
 
-  private theme: MenuTheme = new MenuTheme({
-    name: 'default',
-    author: 'Simon Schneegans',
-    themeVersion: '1.0',
-    engineVersion: 1,
-    license: 'MIT',
-    drawChildrenBelow: true,
-    maxMenuRadius: 160,
-    colors: [
-      { name: 'background-color', default: 'rgb(255, 255, 255)' },
-      { name: 'text-color', default: 'rgb(109, 109, 109)' },
-      { name: 'border-color', default: 'rgb(109, 109, 109)' },
-      { name: 'hover-color', default: 'rgb(255, 200, 200)' },
-    ],
-    layers: [{ class: 'icon-layer', content: LayerContentType.eIcon }],
-  });
+  private theme: MenuTheme = new MenuTheme();
 
   constructor(container: HTMLElement) {
     super();
 
     this.container = container;
+
+    this.theme.loadDescription({
+      name: 'default',
+      author: 'Simon Schneegans',
+      themeVersion: '1.0',
+      engineVersion: 1,
+      license: 'MIT',
+      drawChildrenBelow: true,
+      maxMenuRadius: 160,
+      colors: [
+        { name: 'background-color', default: 'rgb(255, 255, 255)' },
+        { name: 'text-color', default: 'rgb(109, 109, 109)' },
+        { name: 'border-color', default: 'rgb(109, 109, 109)' },
+        { name: 'hover-color', default: 'rgb(255, 200, 200)' },
+      ],
+      layers: [{ class: 'icon-layer', content: LayerContentType.eIcon }],
+    });
 
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.
