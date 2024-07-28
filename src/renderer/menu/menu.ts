@@ -114,10 +114,12 @@ export class Menu extends EventEmitter {
     drawChildrenBelow: true,
     maxMenuRadius: 160,
     colors: [
-      { name: 'background', default: '#000000' },
-      { name: 'foreground', default: '#ffffff' },
+      { name: 'background-color', default: 'rgb(255, 255, 255)' },
+      { name: 'text-color', default: 'rgb(109, 109, 109)' },
+      { name: 'border-color', default: 'rgb(109, 109, 109)' },
+      { name: 'hover-color', default: 'rgb(255, 200, 200)' },
     ],
-    layers: [{ class: 'menu-item', content: LayerContentType.eIcon }],
+    layers: [{ class: 'icon-layer', content: LayerContentType.eIcon }],
   });
 
   constructor(container: HTMLElement) {

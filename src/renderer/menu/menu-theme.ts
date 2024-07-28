@@ -114,6 +114,15 @@ export class MenuTheme {
       inherits: false,
       initialValue: '0',
     });
+
+    this.description.colors.forEach((color) => {
+      CSS.registerProperty({
+        name: `--${color.name}`,
+        syntax: '<color>',
+        inherits: false,
+        initialValue: color.default,
+      });
+    });
   }
 
   public get maxMenuRadius() {
