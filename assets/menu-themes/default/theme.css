@@ -40,11 +40,11 @@
     }
 
     &.active:has(> .menu-node.hovered)>.child {
-      transform: scale(calc(1.2 - pow(var(--angle-diff) / 180, 0.25) * 0.2)) translate(calc(var(--child-distance) * var(--dir-x)),
+      transform: scale(calc(1.15 - pow(var(--angle-diff) / 180, 0.25) * 0.15)) translate(calc(var(--child-distance) * var(--dir-x)),
           calc(var(--child-distance) * var(--dir-y)));
 
       &.hovered {
-        transform: scale(1.2) translate(calc(var(--child-distance) * var(--dir-x)),
+        transform: scale(1.15) translate(calc(var(--child-distance) * var(--dir-x)),
             calc(var(--child-distance) * var(--dir-y)));
       }
     }
