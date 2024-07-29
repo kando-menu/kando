@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### Changed
+
+- The text in the center item is now updated asynchronously. This may reduce occasional frame drops as the update causes a forced reflow of the menu layout.
+
 #### Fixed
 
 - A bug which caused Kando to crash when opening a menu on Linux/X11 where `XResourceManagerString` returns `NULL`.
