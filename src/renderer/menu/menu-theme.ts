@@ -8,14 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { IMenuThemeDescription } from '../../common';
 import { IconThemeRegistry } from '../../common/icon-theme-registry';
 import { IRenderedMenuItem } from './rendered-menu-item';
 
 /**
  * Menu themes in Kando are responsible for rendering the menu items. A theme consists of
- * a JSON5 file, a CSS file, and potentially some assets like fonts or images.
+ * a JSON file, a CSS file, and potentially some assets like fonts or images.
  *
- * The JSON5 file contains a IMenuThemeDescription which defines some meta data and the
+ * The JSON file contains a IMenuThemeDescription which defines some meta data and the
  * different layers which are drawn on top of each other for each menu item. Each layer
  * will be a html div element with a class defined in the theme file. Also, each layer can
  * have a `content` property which can be used to make the layer contain the item's icon
@@ -67,66 +68,6 @@ import { IRenderedMenuItem } from './rendered-menu-item';
  * file.
  */
 
-/** The different types of content a layer can contain. */
-export enum LayerContentType {
-  eNone = 'none',
-  eIcon = 'icon',
-  eName = 'name',
-}
-
-/**
- * The description of a menu theme. These are the properties which can be defined in the
- * JSON5 file.
- */
-interface IMenuThemeDescription {
-  /** A human readable name of the theme. */
-  name: string;
-
-  /** The author of the theme. */
-  author: string;
-
-  /** The version of the theme. Should be a semantic version string like "1.0.0". */
-  themeVersion: string;
-
-  /** The version of the Kando theme engine this theme is compatible with. */
-  engineVersion: number;
-
-  /** The license of the theme. For instance "CC-BY-4.0". */
-  license: string;
-
-  /**
-   * The maximum radius in pixels of a menu when using this theme. This is used to move
-   * the menu away from the screen edges when it's opened too close to them.
-   */
-  maxMenuRadius: number;
-
-  /**
-   * If this is true, children of a menu item will be drawn below the parent. Otherwise
-   * they will be drawn above.
-   */
-  drawChildrenBelow: boolean;
-
-  /**
-   * These colors will be available as var(--name) in the CSS file and can be adjusted by
-   * the user in the settings. The default value is the value given here.
-   */
-  colors: {
-    name: string;
-    default: string;
-  }[];
-
-  /**
-   * The layers which are drawn on top of each other for each menu item. Each layer will
-   * be a html div element with a class defined in the theme file. Also, each layer can
-   * have a `content` property which can be used to make the layer contain the item's icon
-   * or name.
-   */
-  layers: {
-    class: string;
-    content: LayerContentType;
-  }[];
-}
-
 /**
  * This class is responsible for loading a menu theme and creating the html elements for
  * the menu items.
@@ -172,7 +113,7 @@ export class MenuTheme {
     const head = document.head;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = `../assets/menu-themes/default/theme.css`;
+    link.href = 'file://' + description.cssFile;
     link.type = 'text/css';
     link.id = 'kando-menu-theme';
     head.appendChild(link);
@@ -213,9 +154,9 @@ export class MenuTheme {
       const layerDiv = document.createElement('div');
       layerDiv.classList.add(layer.class);
 
-      if (layer.content === LayerContentType.eName) {
+      if (layer.content === 'name') {
         layerDiv.innerText = item.name;
-      } else if (layer.content === LayerContentType.eIcon) {
+      } else if (layer.content === 'icon') {
         const icon = IconThemeRegistry.getInstance()
           .getTheme(item.iconTheme)
           .createDiv(item.icon);
@@ -226,5 +167,13 @@ export class MenuTheme {
     });
 
     return nodeDiv;
+  }
+
+  /** Sets the colors defined in the theme description as CSS properties. */
+  public setColors(colors: Array<{ name: string; color: string }>) {
+    colors.forEach((color) => {
+      window.api.log(`Setting color ${color.name} to ${color.color}`);
+      document.documentElement.style.setProperty(`--${color.name}`, color.color);
+    });
   }
 }

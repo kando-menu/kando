@@ -12,6 +12,7 @@ import './renderer/index.scss';
 
 import { Menu } from './renderer/menu/menu';
 import { Editor } from './renderer/editor/editor';
+import { MenuTheme } from './renderer/menu/menu-theme';
 
 /**
  * This file is the main entry point for Kando's renderer process. It is responsible for
@@ -20,8 +21,33 @@ import { Editor } from './renderer/editor/editor';
 
 // Wire up the menu and the editor -------------------------------------------------------
 
-window.api.getBackendInfo().then((info) => {
-  const menu = new Menu(document.getElementById('kando-menu'));
+// We need some information from the main process before we can start. This includes the
+// backend info, the menu theme, and the menu theme colors.
+Promise.all([
+  window.api.getBackendInfo(),
+  window.api.getMenuTheme(),
+  window.api.appSettings.get('menuThemeColors'),
+]).then(([info, themeDescription, colors]) => {
+  // First, we create a new menu theme and load the description we got from the main
+  // process.
+  const menuTheme = new MenuTheme();
+  menuTheme.loadDescription(themeDescription);
+  menuTheme.setColors(colors);
+
+  // We also listen for changes to the menu theme and the menu theme colors.
+  window.api.appSettings.onChange('menuThemeColors', (colors) => {
+    menuTheme.setColors(colors);
+  });
+
+  window.api.appSettings.onChange('menuTheme', () => {
+    window.api.getMenuTheme().then((themeDescription) => {
+      menuTheme.loadDescription(themeDescription);
+    });
+  });
+
+  // Now, we create a new menu and a new editor. The menu is responsible for rendering
+  // the menu items and the editor is responsible for rendering the editor UI.
+  const menu = new Menu(document.getElementById('kando-menu'), menuTheme);
   const editor = new Editor(document.getElementById('kando-editor'), info);
 
   // Show the menu when the main process requests it.

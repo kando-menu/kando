@@ -16,7 +16,7 @@ import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
-import { LayerContentType, MenuTheme } from './menu-theme';
+import { MenuTheme } from './menu-theme';
 
 const CENTER_RADIUS = 50;
 const PARENT_DISTANCE = 150;
@@ -51,12 +51,6 @@ const PARENT_DISTANCE = 150;
  */
 
 export class Menu extends EventEmitter {
-  /**
-   * The container is the HTML element which contains the menu. It is used to attach event
-   * listeners.
-   */
-  private container: HTMLElement = null;
-
   /**
    * The root item is the parent of all other menu items. It will be created when the menu
    * is shown and destroyed when the menu is hidden.
@@ -105,29 +99,20 @@ export class Menu extends EventEmitter {
    */
   private input: InputTracker = new InputTracker();
 
-  private theme: MenuTheme = new MenuTheme();
-
-  constructor(container: HTMLElement) {
+  /**
+   * The constructor will attach event listeners to the given container element. It will
+   * also initialize the input tracker and the gesture detection.
+   *
+   * @param container The HTML element which contains the menu.
+   * @param theme The theme to use for rendering the menu.
+   */
+  constructor(
+    private container: HTMLElement,
+    private theme: MenuTheme
+  ) {
     super();
 
     this.container = container;
-
-    this.theme.loadDescription({
-      name: 'default',
-      author: 'Simon Schneegans',
-      themeVersion: '1.0',
-      engineVersion: 1,
-      license: 'MIT',
-      drawChildrenBelow: true,
-      maxMenuRadius: 160,
-      colors: [
-        { name: 'background-color', default: 'rgb(255, 255, 255)' },
-        { name: 'text-color', default: 'rgb(109, 109, 109)' },
-        { name: 'border-color', default: 'rgb(109, 109, 109)' },
-        { name: 'hover-color', default: 'rgb(255, 200, 200)' },
-      ],
-      layers: [{ class: 'icon-layer', content: LayerContentType.eIcon }],
-    });
 
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.

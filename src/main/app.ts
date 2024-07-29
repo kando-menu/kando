@@ -84,6 +84,7 @@ export class KandoApp {
     directory: app.getPath('userData'),
     defaults: {
       menuTheme: 'none',
+      menuThemeColors: [],
       editorTheme: 'none',
       sidebarVisible: true,
       enableVersionCheck: true,
@@ -641,6 +642,16 @@ export class KandoApp {
       });
     });
 
+    // Allow the renderer to retrieve the description of the current menu theme. We also
+    // return the path to the CSS file of the theme, so that the renderer can load it.
+    ipcMain.handle('get-menu-theme', async () => {
+      const directory = await this.findMenuThemePath(this.appSettings.get('menuTheme'));
+      const content = await fs.promises.readFile(path.join(directory, 'theme.json'));
+      const description = JSON.parse(content.toString());
+      description.cssFile = path.join(directory, 'theme.css');
+      return description;
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -923,6 +934,38 @@ export class KandoApp {
         resolve();
       }, delay);
     });
+  }
+
+  /**
+   * This finds the path to the menu theme with the given name. If the theme is not found,
+   * the default theme is used instead. Kando will first look for the theme in the user's
+   * data directory. If it is not found there, it will look in the app's assets
+   * directory.
+   *
+   * @param theme The name of the menu theme's directory.
+   * @returns The absolute path to the menu theme's directory.
+   */
+  private async findMenuThemePath(theme: string) {
+    const testPaths = [
+      path.join(app.getPath('userData'), `menu-themes/${theme}`),
+      path.join(__dirname, `../renderer/assets/menu-themes/${theme}`),
+    ];
+
+    for (const testPath of testPaths) {
+      const metaPath = path.join(testPath, 'theme.json');
+      const exists = await fs.promises
+        .access(metaPath, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false);
+
+      if (exists) {
+        return testPath;
+      }
+    }
+
+    console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
+
+    return path.join(__dirname, `../renderer/assets/menu-themes/default`);
   }
 
   /**

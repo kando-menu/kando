@@ -49,6 +49,65 @@ export interface IBackendInfo {
 }
 
 /**
+ * The description of a menu theme. These are the properties which can be defined in the
+ * JSON file of a menu theme.
+ */
+export interface IMenuThemeDescription {
+  /**
+   * The absolute path to the CSS file of the theme. This is set by Kando when loading the
+   * theme.json file.
+   */
+  cssFile: string;
+
+  /** A human readable name of the theme. */
+  name: string;
+
+  /** The author of the theme. */
+  author: string;
+
+  /** The version of the theme. Should be a semantic version string like "1.0.0". */
+  themeVersion: string;
+
+  /** The version of the Kando theme engine this theme is compatible with. */
+  engineVersion: number;
+
+  /** The license of the theme. For instance "CC-BY-4.0". */
+  license: string;
+
+  /**
+   * The maximum radius in pixels of a menu when using this theme. This is used to move
+   * the menu away from the screen edges when it's opened too close to them.
+   */
+  maxMenuRadius: number;
+
+  /**
+   * If this is true, children of a menu item will be drawn below the parent. Otherwise
+   * they will be drawn above.
+   */
+  drawChildrenBelow: boolean;
+
+  /**
+   * These colors will be available as var(--name) in the CSS file and can be adjusted by
+   * the user in the settings. The default value is the value given here.
+   */
+  colors: {
+    name: string;
+    default: string;
+  }[];
+
+  /**
+   * The layers which are drawn on top of each other for each menu item. Each layer will
+   * be a html div element with a class defined in the theme file. Also, each layer can
+   * have a `content` property which can be used to make the layer contain the item's icon
+   * or name.
+   */
+  layers: {
+    class: string;
+    content: 'none' | 'name' | 'icon';
+  }[];
+}
+
+/**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
  * delay in milliseconds.
@@ -289,6 +348,9 @@ export interface IMenuSettings {
 export interface IAppSettings {
   /** The name of the theme to use for the menu. */
   menuTheme: string;
+
+  /** The accent colors to use for menu themes. */
+  menuThemeColors: Array<{ name: string; color: string }>;
 
   /** The name of the theme to use for the editor. */
   editorTheme: string;
