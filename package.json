@@ -30,10 +30,10 @@
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.7",
-    "@typescript-eslint/eslint-plugin": "^7.16.1",
-    "@typescript-eslint/parser": "^7.16.1",
+    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/parser": "^7.17.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
-    "chai": "^4.3.10",
+    "chai": "^4.5.0",
     "cmake-js": "^7.3.0",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.1",
@@ -54,7 +54,7 @@
     "ts-loader": "^9.5.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -75,6 +75,6 @@
     "mime-types": "^2.1.35",
     "node-addon-api": "^8.1.0",
     "octokit": "^4.0.2",
-    "simple-icons-font": "^13.2.0"
+    "simple-icons-font": "^13.3.0"
   }
 }
