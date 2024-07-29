@@ -132,7 +132,7 @@ export class MenuTheme {
       CSS.registerProperty({
         name: `--${color.name}`,
         syntax: '<color>',
-        inherits: false,
+        inherits: true,
         initialValue: color.default,
       });
     });
