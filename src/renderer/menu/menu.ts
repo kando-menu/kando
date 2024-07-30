@@ -17,6 +17,7 @@ import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
 import { MenuTheme } from './menu-theme';
+import { closestEquivalentAngle } from '../math';
 
 const CENTER_RADIUS = 50;
 const PARENT_DISTANCE = 150;
@@ -667,11 +668,9 @@ export class Menu extends EventEmitter {
         item.position = this.input.relativePosition;
         item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
       } else {
-        // To allow for cool animations, we pass the angular distance between the item and
-        // the pointer to the theme.
-        let angleDiff = Math.abs(item.angle - this.input.angle);
-        angleDiff = Math.min(angleDiff, 360 - angleDiff);
-        item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
+        // Set the custom CSS properties of the item, like the angular difference between
+        // the item and the mouse pointer direction.
+        this.theme.setChildProperties(item, this.input.angle);
         item.nodeDiv.style.transform = '';
         delete item.position;
       }
@@ -691,6 +690,15 @@ export class Menu extends EventEmitter {
         for (const child of item.children) {
           this.updateTransform(child);
         }
+      }
+
+      // If the item is the current center item, we also set some custom CSS properties.
+      if (item.nodeDiv.classList.contains('active')) {
+        let hoveredAngle = this.hoveredItem?.angle;
+        if (this.isParentOfCenterItem(this.hoveredItem)) {
+          hoveredAngle = (item.angle + 180) % 360;
+        }
+        this.theme.setCenterProperties(item, this.input.angle, hoveredAngle);
       }
     }
   }
@@ -737,15 +745,8 @@ export class Menu extends EventEmitter {
           angle = math.getAngle(nextItem.position);
         }
 
-        if (
-          item.lastConnectorRotation &&
-          Math.abs(item.lastConnectorRotation - angle) > 180
-        ) {
-          const fullTurns = Math.round((item.lastConnectorRotation - angle) / 360);
-          angle += fullTurns * 360;
-        }
-
-        item.lastConnectorRotation = angle;
+        angle = closestEquivalentAngle(item.lastConnectorAngle, angle);
+        item.lastConnectorAngle = angle;
 
         item.connectorDiv.style.width = `${length}px`;
         item.connectorDiv.style.transform = `rotate(${angle - 90}deg)`;

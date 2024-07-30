@@ -10,6 +10,7 @@
 
 import { IMenuThemeDescription } from '../../common';
 import { IconThemeRegistry } from '../../common/icon-theme-registry';
+import { closestEquivalentAngle } from '../math';
 import { IRenderedMenuItem } from './rendered-menu-item';
 
 /**
@@ -127,6 +128,24 @@ export class MenuTheme {
       initialValue: '0',
     });
 
+    // Register the pointer-angle and hover-angle CSS properties. These are set for each
+    // layer of the center item to allow for cool effects when the user moves the pointer
+    // around. The pointer-angle is the angle towards the mouse pointer, the hover-angle
+    // is the angle towards the currently hovered child.
+    CSS.registerProperty({
+      name: '--pointer-angle',
+      syntax: '<angle>',
+      inherits: false,
+      initialValue: '0deg',
+    });
+
+    CSS.registerProperty({
+      name: '--hover-angle',
+      syntax: '<angle>',
+      inherits: false,
+      initialValue: '0deg',
+    });
+
     // Register the colors as CSS properties.
     this.description.colors.forEach((color) => {
       CSS.registerProperty({
@@ -175,5 +194,56 @@ export class MenuTheme {
       window.api.log(`Setting color ${color.name} to ${color.color}`);
       document.documentElement.style.setProperty(`--${color.name}`, color.color);
     });
+  }
+
+  /**
+   * Sets the custom CSS properties for the given child menu item. Currently, this is only
+   * the `--angle-diff` property which is set to the angular difference between the child
+   * and the pointer.
+   *
+   * @param item The menu item to set the properties for.
+   * @param pointerAngle The angle towards the pointer.
+   */
+  public setChildProperties(item: IRenderedMenuItem, pointerAngle: number) {
+    let angleDiff = Math.abs(item.angle - pointerAngle);
+    angleDiff = Math.min(angleDiff, 360 - angleDiff);
+    item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
+  }
+
+  /**
+   * Sets the custom CSS properties for the given center menu item. Currently, this are
+   * the `--pointer-angle` and `--hover-angle` properties which are set to the angle
+   * towards the pointer and the angle towards the currently hovered child.
+   *
+   * @param item The menu item to set the properties for.
+   * @param pointerAngle The angle towards the pointer.
+   * @param hoverAngle The angle towards the currently hovered child.
+   */
+  public setCenterProperties(
+    item: IRenderedMenuItem,
+    pointerAngle: number,
+    hoverAngle: number
+  ) {
+    hoverAngle = closestEquivalentAngle(item.lastHoveredChildAngle, hoverAngle);
+    pointerAngle = closestEquivalentAngle(item.lastPointerAngle, pointerAngle);
+
+    this.description.layers.forEach((layer) => {
+      const div = item.nodeDiv.querySelector(`:scope > .${layer.class}`) as HTMLElement;
+      if (pointerAngle != null) {
+        div.style.setProperty('--pointer-angle', pointerAngle + 'deg');
+      }
+
+      if (hoverAngle != null) {
+        div.style.setProperty('--hover-angle', hoverAngle + 'deg');
+      }
+    });
+
+    if (pointerAngle != null) {
+      item.lastPointerAngle = pointerAngle;
+    }
+
+    if (hoverAngle != null) {
+      item.lastHoveredChildAngle = hoverAngle;
+    }
   }
 }

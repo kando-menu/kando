@@ -55,6 +55,19 @@ export function getAngularDifference(angle1: number, angle2: number): number {
 }
 
 /**
+ * This method returns the angle which equivalent to the given angle (modulo 360) and
+ * closest to the given before angle. The result can be negative.
+ */
+export function closestEquivalentAngle(before: number, angle: number): number {
+  if (before != null && Math.abs(before - angle) > 180) {
+    const fullTurns = Math.round((before - angle) / 360);
+    angle += fullTurns * 360;
+  }
+
+  return angle;
+}
+
+/**
  * This method returns the angle of the given vector in degrees. 0° is on the top, 90° is
  * on the right, 180° is on the bottom and 270° is on the right. The vector does not need
  * to be normalized.

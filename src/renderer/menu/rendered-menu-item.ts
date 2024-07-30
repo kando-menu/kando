@@ -60,5 +60,18 @@ export interface IRenderedMenuItem extends IMenuItem {
    * The rotation of the connectors is transitioned using CSS. In order to avoid 360°
    * flips, we store an accumulated rotation here.
    */
-  lastConnectorRotation?: number;
+  lastConnectorAngle?: number;
+
+  /**
+   * The themes get the current angle towards the pointer in degrees. To avoid 360° flips,
+   * we store the last angle here.
+   */
+  lastPointerAngle?: number;
+
+  /**
+   * The themes also get the current angle towards the currently hovered child item in
+   * degrees. This can also be the angle towards the parent item. To avoid 360° flips, we
+   * store the last angle here.
+   */
+  lastHoveredChildAngle?: number;
 }
