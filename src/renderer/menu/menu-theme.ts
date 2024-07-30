@@ -81,6 +81,39 @@ export class MenuTheme {
   private description: IMenuThemeDescription;
 
   /**
+   * Creates a new MenuTheme. This will register the custom CSS properties used by the
+   * theme.
+   */
+  constructor() {
+    // Register the angular-difference CSS property. This is set each frame for each child
+    // menu item to allow for cool zooming effects.
+    CSS.registerProperty({
+      name: '--angle-diff',
+      syntax: '<number>',
+      inherits: false,
+      initialValue: '0',
+    });
+
+    // Register the pointer-angle and hover-angle CSS properties. These are set for each
+    // layer of the center item to allow for cool effects when the user moves the pointer
+    // around. The pointer-angle is the angle towards the mouse pointer, the hover-angle
+    // is the angle towards the currently hovered child.
+    CSS.registerProperty({
+      name: '--pointer-angle',
+      syntax: '<angle>',
+      inherits: false,
+      initialValue: '0deg',
+    });
+
+    CSS.registerProperty({
+      name: '--hover-angle',
+      syntax: '<angle>',
+      inherits: false,
+      initialValue: '0deg',
+    });
+  }
+
+  /**
    * Returns the maximum radius in pixels of a menu when using this theme. This is used to
    * move the menu away from the screen edges when it's opened too close to them.
    */
@@ -119,41 +152,20 @@ export class MenuTheme {
     link.id = 'kando-menu-theme';
     head.appendChild(link);
 
-    // Register the angular-difference CSS property. This is set each frame for each child
-    // menu item to allow for cool zooming effects.
-    CSS.registerProperty({
-      name: '--angle-diff',
-      syntax: '<number>',
-      inherits: false,
-      initialValue: '0',
-    });
-
-    // Register the pointer-angle and hover-angle CSS properties. These are set for each
-    // layer of the center item to allow for cool effects when the user moves the pointer
-    // around. The pointer-angle is the angle towards the mouse pointer, the hover-angle
-    // is the angle towards the currently hovered child.
-    CSS.registerProperty({
-      name: '--pointer-angle',
-      syntax: '<angle>',
-      inherits: false,
-      initialValue: '0deg',
-    });
-
-    CSS.registerProperty({
-      name: '--hover-angle',
-      syntax: '<angle>',
-      inherits: false,
-      initialValue: '0deg',
-    });
-
     // Register the colors as CSS properties.
     this.description.colors.forEach((color) => {
-      CSS.registerProperty({
-        name: `--${color.name}`,
-        syntax: '<color>',
-        inherits: true,
-        initialValue: color.default,
-      });
+      // Try to register the property. If this fails, we had registered it before and
+      // can just set the value.
+      try {
+        CSS.registerProperty({
+          name: `--${color.name}`,
+          syntax: '<color>',
+          inherits: true,
+          initialValue: color.default,
+        });
+      } catch (e) {
+        document.documentElement.style.setProperty(`--${color.name}`, color.default);
+      }
     });
   }
 
@@ -191,7 +203,6 @@ export class MenuTheme {
   /** Sets the colors defined in the theme description as CSS properties. */
   public setColors(colors: Array<{ name: string; color: string }>) {
     colors.forEach((color) => {
-      window.api.log(`Setting color ${color.name} to ${color.color}`);
       document.documentElement.style.setProperty(`--${color.name}`, color.color);
     });
   }
@@ -229,6 +240,12 @@ export class MenuTheme {
 
     this.description.layers.forEach((layer) => {
       const div = item.nodeDiv.querySelector(`:scope > .${layer.class}`) as HTMLElement;
+
+      // Sanity check.
+      if (!div) {
+        return;
+      }
+
       if (pointerAngle != null) {
         div.style.setProperty('--pointer-angle', pointerAngle + 'deg');
       }

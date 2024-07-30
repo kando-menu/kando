@@ -76,7 +76,6 @@
       height: var(--center-size);
       background-color: var(--background-color);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-
     }
 
     /* If the center item has a hovered child node, we scale it up and hide its icon. */
@@ -128,7 +127,6 @@
     /* Hovered child or parent items are highlighted. */
     &.parent.hovered>.icon-layer,
     &.child.hovered>.icon-layer {
-
       background-color: var(--hover-color);
     }
 
