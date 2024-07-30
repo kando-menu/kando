@@ -1,0 +1,218 @@
+/*//////////////////////////////////////////////////////////////////////////////////////*/
+/*   _  _ ____ _  _ ___  ____                                                           */
+/*   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         */
+/*   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     */
+/*                                                                                      */
+/*//////////////////////////////////////////////////////////////////////////////////////*/
+
+/* SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> */
+/* SPDX-License-Identifier: MIT */
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#kando-menu {
+  --child-distance: 100px;
+  --parent-distance: 150px;
+
+  --center-size: 100px;
+  --child-size: 50px;
+  --connector-width: 5px;
+
+  --menu-transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
+  --opacity-transition: opacity 250ms ease;
+
+  .menu-node {
+    transition: var(--menu-transition);
+
+    &.child {
+      transform: translate(calc(var(--child-distance) * var(--dir-x)),
+          calc(var(--child-distance) * var(--dir-y)));
+    }
+
+    &.parent {
+      transform: translate(calc(var(--parent-distance) * var(--dir-x)),
+          calc(var(--parent-distance) * var(--dir-y)));
+    }
+
+    &.active:has(> .menu-node.hovered)>.child {
+      transform: scale(calc(1.5 - pow(var(--angle-diff) / 180, 0.25) * 0.5)) translate(calc(var(--child-distance) * var(--dir-x)),
+          calc(var(--child-distance) * var(--dir-y)));
+
+      &.hovered {
+        transform: scale(1.5) translate(calc(var(--child-distance) * var(--dir-x)),
+            calc(var(--child-distance) * var(--dir-y)));
+      }
+    }
+
+
+    /* Theme Layers ------------------------------------------------------------------- */
+
+    /* We hide all icons by default. They will be shown further down in this file for the
+       center item and the child items. */
+    .icon-container {
+      opacity: 0;
+      color: var(--text-color);
+      transition: var(--opacity-transition);
+      clip-path: none;
+    }
+
+    .arrow-layer,
+    .ring-slow-layer,
+    .ring-slow-layer::before,
+    .ring-fast-layer,
+    .ring-fast-layer::before,
+    .icon-glow-layer,
+    .icon-layer {
+      position: absolute;
+      transition: var(--menu-transition);
+    }
+
+    /* The active menu item is the center of the menu. */
+    &.active>.arrow-layer,
+    &.active>.ring-slow-layer::before,
+    &.active>.ring-fast-layer::before,
+    &.active>.icon-glow-layer,
+    &.active>.icon-layer {
+      top: calc(-1 * var(--center-size) / 2);
+      left: calc(-1 * var(--center-size) / 2);
+      width: var(--center-size);
+      height: var(--center-size);
+    }
+
+    .icon-glow-layer {
+      filter: blur(15px);
+    }
+
+    .arrow-layer {
+      background: url(assets/arrow.svg) no-repeat center;
+      transform: scale(1.6) rotate(var(--hover-angle));
+    }
+
+    &:has(.dragged)>.arrow-layer {
+      transform: scale(1.6) rotate(var(--pointer-angle));
+      transition: none;
+    }
+
+    .ring-slow-layer {
+      animation: rotate 10s linear infinite;
+      opacity: 0;
+
+      &::before {
+        content: '';
+        background: url(assets/ring-small.svg) no-repeat center;
+      }
+    }
+
+    .ring-fast-layer {
+      animation: rotate 2s linear infinite;
+      opacity: 0;
+
+      &::before {
+        content: '';
+        background: url(assets/ring-large.svg) no-repeat center;
+      }
+    }
+
+    /* If the center item has a hovered child node, we scale it up and hide its icon. */
+    &.active:has(>.hovered)>.ring-fast-layer {
+      opacity: 1;
+
+      &::before {
+        transform: scale(2.0);
+      }
+    }
+
+    &.parent>.active:not(:has(.hovered))>.ring-slow-layer,
+    &.active.hovered>.ring-slow-layer {
+      opacity: 1;
+
+      &::before {
+        transform: scale(1.0);
+      }
+    }
+
+    &.active.hovered>.arrow-layer {
+      opacity: 0;
+      transform: scale(1.0) rotate(var(--hover-angle));
+    }
+
+    /* If the parent or a child node is clicked, we scale it down to normal size. */
+    &.parent.hovered.clicked>.icon-layer,
+    &.child.hovered.clicked>.icon-layer {
+      transform: scale(0.8);
+    }
+
+    /* Show the icons of the center, parent and child items. */
+    &.parent>.icon-layer>.icon-container,
+    &.parent>.icon-glow-layer>.icon-container,
+    &.child>.icon-layer>.icon-container,
+    &.child>.icon-glow-layer>.icon-container {
+      opacity: 1;
+    }
+
+    /* Child items are displayed around the active node. The parent node of the active
+       node is displayed in a similar style. */
+    &.parent>.icon-layer,
+    &.parent>.icon-glow-layer,
+    &.child>.icon-layer,
+    &.child>.icon-glow-layer {
+      top: calc(-1 * var(--child-size) / 2);
+      left: calc(-1 * var(--child-size) / 2);
+      width: var(--child-size);
+      height: var(--child-size);
+    }
+
+    /* Grandchild items are very small and drawn below the child items. */
+    &.grandchild>.icon-layer {
+      top: calc(-1 * var(--grandchild-size) / 2);
+      left: calc(-1 * var(--grandchild-size) / 2);
+      width: var(--grandchild-size);
+      height: var(--grandchild-size);
+    }
+
+    /* We disable any transition for dragged items. */
+    &.dragged {
+      transition: none;
+    }
+
+    /* Connectors --------------------------------------------------------------------- */
+
+    .connector {
+      transition: var(--menu-transition);
+      height: var(--connector-width);
+      top: calc(-1 * var(--connector-width) / 2);
+    }
+
+    &:has(.dragged)>.connector,
+    &:has(.clicked)>.connector {
+      transition: none;
+    }
+
+    &.active>.connector {
+      background: linear-gradient(to right, transparent 80px, var(--flash-color) 50%, transparent calc(100% - 80px));
+    }
+
+    .connector {
+      background: linear-gradient(to right, transparent 80px, rgba(255, 255, 255, 0.3) 50%, transparent calc(100% - 80px));
+    }
+  }
+
+  /* Center Text ---------------------------------------------------------------------- */
+
+  .center-text {
+    color: var(--text-color);
+    transition: var(--opacity-transition);
+    text-shadow: 0 0 10px var(--text-color);
+    font-size: 16px;
+    line-height: 22px;
+    overflow: visible;
+  }
+}

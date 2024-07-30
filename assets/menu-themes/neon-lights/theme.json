@@ -1,0 +1,20 @@
+{
+  "name": "Neon Lights",
+  "author": "Simon Schneegans",
+  "themeVersion": "1.0",
+  "engineVersion": 1,
+  "license": "CC-BY-4.0",
+  "drawChildrenBelow": true,
+  "maxMenuRadius": 160,
+  "colors": [
+    { "name": "text-color", "default": "white" },
+    { "name": "flash-color", "default": "rgb(255, 200, 200)" }
+  ],
+  "layers": [
+    { "class": "ring-slow-layer", "content": "none" },
+    { "class": "ring-fast-layer", "content": "none" },
+    { "class": "arrow-layer", "content": "none" },
+    { "class": "icon-glow-layer", "content": "icon" },
+    { "class": "icon-layer", "content": "icon" }
+  ]
+}
