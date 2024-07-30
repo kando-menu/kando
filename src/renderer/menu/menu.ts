@@ -317,10 +317,13 @@ export class Menu extends EventEmitter {
 
       // Set the direction of the item. This is used by the theme to position the item
       // correctly.
-      const dir = math.getDirection(item.angle, 1.0);
-      item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
-      item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
-      item.nodeDiv.style.setProperty('--angle', item.angle?.toString());
+      if (level > 0) {
+        const dir = math.getDirection(item.angle, 1.0);
+        item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
+        item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
+        item.nodeDiv.style.setProperty('--angle', item.angle?.toString());
+      }
+
       item.nodeDiv.classList.add(`level-${level}`);
       item.nodeDiv.classList.add(`type-${item.type}`);
 
