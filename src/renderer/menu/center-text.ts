@@ -135,15 +135,18 @@ export class CenterText {
       targetLines++;
     }
 
-    // We remove the temporary div again.
-    this.container.removeChild(tmpDiv);
+    // We remove the temporary div again. There are cases where the container got cleared
+    // before the promise resolved, so we have to check if the div is still in the DOM.
+    if (tmpDiv.parentElement) {
+      this.container.removeChild(tmpDiv);
 
-    // We set the computed values to the actual text element.
-    this.div.textContent = text;
-    this.div.style.width = `${width}px`;
-    this.div.style.height = `${height}px`;
-    this.div.style.top = `${-height / 2}px`;
-    this.div.style.left = `${-width / 2}px`;
+      // We set the computed values to the actual text element.
+      this.div.textContent = text;
+      this.div.style.width = `${width}px`;
+      this.div.style.height = `${height}px`;
+      this.div.style.top = `${-height / 2}px`;
+      this.div.style.left = `${-width / 2}px`;
+    }
   }
 
   /**

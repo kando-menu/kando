@@ -70,6 +70,11 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-backend-info');
   },
 
+  /** This will return the descriptions of the currently used menu theme. */
+  getMenuTheme: function () {
+    return ipcRenderer.invoke('get-menu-theme');
+  },
+
   /** This will return the path to the user's icon theme directory in the config directory. */
   getUserIconThemeDirectory: function () {
     return ipcRenderer.invoke('get-user-icon-theme-directory');
