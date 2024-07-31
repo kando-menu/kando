@@ -328,7 +328,7 @@
           {
             "type": "command",
             "data": {
-              "command": "explorer %USERPROFILE%"
+              "command": "start %USERPROFILE%"
             },
             "name": "Home",
             "icon": "home",
