@@ -205,6 +205,14 @@ This will create several packages in the `out/` directory.
   windowrule = float, kando
   windowrule = pin, kando
   ```
+* On **Dusk**, you will need some window rules for Kando:
+  ```
+    static const Rule clientrules[] = {
+    { .class = "kando", .flags = FullScreen }, //kando should be on top of DOCK clientrule
+    { .wintype = WTYPE "DESKTOP", .flags = Unmanaged|Lower },
+    { .wintype = WTYPE "DOCK", .flags = Unmanaged|Raise },
+    };
+  ```
 * On some distributions, you may encounter the error `The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now`. This is related to [this issue](https://github.com/electron/electron/issues/17972) and can be fixed by running these commands:
   ```bash
   sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
