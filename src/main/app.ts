@@ -465,6 +465,15 @@ export class KandoApp {
       });
   }
 
+  /** This is called when the --reload-menu-theme command line option is passed. */
+  public reloadMenuTheme() {
+    this.window.webContents.send(
+      `app-settings-changed-menuTheme`,
+      this.appSettings.get('menuTheme'),
+      this.appSettings.get('menuTheme')
+    );
+  }
+
   /**
    * This creates the main window. It is a transparent window which covers the whole
    * screen. It is not shown in any task bar and has no frame. It is used to display the
@@ -659,11 +668,7 @@ export class KandoApp {
 
     // Reload the current menu theme if requested.
     ipcMain.on('reload-menu-theme', async () => {
-      this.window.webContents.send(
-        `app-settings-changed-menuTheme`,
-        this.appSettings.get('menuTheme'),
-        this.appSettings.get('menuTheme')
-      );
+      this.reloadMenuTheme();
     });
 
     // Print a message to the console of the host process.

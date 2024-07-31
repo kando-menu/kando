@@ -26,6 +26,10 @@ interface CLIOptions {
   // This optional parameter is specified using the --settings option. It is used to show
   // the menu editor when the app or a second instance of the app is started.
   settings?: boolean;
+
+  // This optional parameter is specified using the --reload-menu-theme option. It is used
+  // to reload the current menu theme from disk.
+  reloadMenuTheme?: boolean;
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -41,6 +45,7 @@ program
   .version(app.getVersion())
   .option('-m, --menu <menu>', 'show the menu with the given name')
   .option('-s, --settings', 'show the menu editor')
+  .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .allowUnknownOption(true);
 
 program.parse();
@@ -52,9 +57,11 @@ const gotTheLock = app.requestSingleInstanceLock(options);
 if (!gotTheLock) {
   // Print a short message and exit. The running instance will get notified and will also
   // show a corresponding desktop notification.
-  console.log(
-    'Kando is already running. Use --help for a list of commands to communicate with the running instance!'
-  );
+  if (!options.menu && !options.settings && !options.reloadMenuTheme) {
+    console.log(
+      'Kando is already running. Use --help for a list of commands to communicate with the running instance!'
+    );
+  }
   app.quit();
   process.exit(0);
 }
@@ -87,6 +94,11 @@ const handleCommandLine = (options: CLIOptions) => {
 
   if (options.settings) {
     kando.showEditor();
+    return true;
+  }
+
+  if (options.reloadMenuTheme) {
+    kando.reloadMenuTheme();
     return true;
   }
 
