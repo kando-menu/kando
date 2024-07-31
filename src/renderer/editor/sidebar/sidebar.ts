@@ -138,6 +138,13 @@ export class Sidebar {
                 title: 'Show Developer Tools',
                 tooltip: 'Open the web developer tools for inspecting the UI.',
               },
+              {
+                id: 'reload-menu-theme-button',
+                icon: 'palette',
+                title: 'Reload Current Menu Theme',
+                tooltip:
+                  'CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu.',
+              },
             ],
           }),
         },
@@ -228,5 +235,11 @@ export class Sidebar {
     this.container.querySelector('#dev-tools-button').addEventListener('click', () => {
       window.api.showDevTools();
     });
+
+    this.container
+      .querySelector('#reload-menu-theme-button')
+      .addEventListener('click', () => {
+        window.api.reloadMenuTheme();
+      });
   }
 }

@@ -657,6 +657,15 @@ export class KandoApp {
       this.window.webContents.openDevTools();
     });
 
+    // Reload the current menu theme if requested.
+    ipcMain.on('reload-menu-theme', async () => {
+      this.window.webContents.send(
+        `app-settings-changed-menuTheme`,
+        this.appSettings.get('menuTheme'),
+        this.appSettings.get('menuTheme')
+      );
+    });
+
     // Print a message to the console of the host process.
     ipcMain.on('log', (event, message) => {
       console.log(message);

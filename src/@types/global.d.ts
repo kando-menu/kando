@@ -43,6 +43,7 @@ declare global {
       getUserIconThemes: () => Promise<Array<string>>;
       listUserIcons: (string: iconTheme) => Promise<Array<string>>;
       showDevTools: () => void;
+      reloadMenuTheme: () => void;
       movePointer: (dist: IVec2) => void;
       log: (message: string) => void;
       showMenu: (

@@ -102,6 +102,11 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.send('show-dev-tools');
   },
 
+  /** This will reload the current menu theme. */
+  reloadMenuTheme: function () {
+    ipcRenderer.send('reload-menu-theme');
+  },
+
   /**
    * This will print the given message to the console of the host process.
    *
