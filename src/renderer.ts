@@ -40,8 +40,12 @@ Promise.all([
   });
 
   window.api.appSettings.onChange('menuTheme', () => {
-    window.api.getMenuTheme().then((themeDescription) => {
+    Promise.all([
+      window.api.getMenuTheme(),
+      window.api.appSettings.get('menuThemeColors'),
+    ]).then(([themeDescription, colors]) => {
       menuTheme.loadDescription(themeDescription);
+      menuTheme.setColors(colors);
     });
   });
 
