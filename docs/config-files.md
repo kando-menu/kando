@@ -29,7 +29,7 @@ This file contains the general configuration of Kando.
 Property | Default Value | Description
 -------- | ------------- | -----------
 `menuTheme` | `"default"` | The directory name of the menu theme to use. Kando will first look for a directory with this name in the `menu-themes` subdirectory of the config directory. If it does not find one, it will look for a directory with this name in `.webpack/renderer/assets/menu-themes` in Kando's installation directory.
-`menuThemeColors` | `[]` | A list of accent colors which may be used by some menu themes. Each entry is an object like `{ "name": "color-name", "value": "#RRGGBB" }`.
+`menuThemeColors` | `[]` | A list of accent colors which may be used by some menu themes. Each entry is an object like `{ "name": "color-name", "color": "#RRGGBB" }`.
 `sidebarVisible` | `true` | Whether the left sidebar is currently visible.
 `zoomFactor` | `1.0` | The zoom factor of the menu. This can be used to scale the menu on high-resolution screens.
 `enableVersionCheck` | `true` | If set to `true`, Kando will check for new version regularly, and show a notification if a new version is available.
