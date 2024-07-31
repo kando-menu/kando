@@ -83,9 +83,9 @@ export class KandoApp {
     file: 'config.json',
     directory: app.getPath('userData'),
     defaults: {
-      menuTheme: 'none',
+      menuTheme: 'default',
       menuThemeColors: [],
-      editorTheme: 'none',
+      editorTheme: 'default',
       sidebarVisible: true,
       enableVersionCheck: true,
       zoomFactor: 1,
