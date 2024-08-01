@@ -52,6 +52,7 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :heavy_check_mark: | Requires a compositor for the transparency to work.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :heavy_check_mark: | Requires a compositor for the transparency to work.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> i3 | :heavy_check_mark: | Requires a compositor for the transparency to work.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> dusk | :heavy_check_mark: | Requires a compositor for the transparency to work. See [platform-specific notes](docs/installing.md#platform-specific-notes) for some details.
 
 
 # :package: Installation
