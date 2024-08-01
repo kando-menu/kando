@@ -42,7 +42,7 @@
           calc(var(--parent-distance) * var(--dir-y)));
     }
 
-    &.active:has(> .menu-node.hovered)>.child {
+    &.active:has(> .hovered)>.child {
       transform: scale(calc(1.5 - pow(var(--angle-diff) / 180, 0.25) * 0.5)) translate(calc(var(--child-distance) * var(--dir-x)),
           calc(var(--child-distance) * var(--dir-y)));
 
@@ -61,7 +61,6 @@
       opacity: 0;
       color: var(--text-color);
       transition: var(--opacity-transition);
-      clip-path: none;
     }
 
     .arrow-layer,
