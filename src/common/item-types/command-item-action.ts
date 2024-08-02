@@ -47,7 +47,12 @@ export class CommandItemAction implements IItemAction {
         .replace(/\{{pointer_x}}/g, wmInfo.pointerX.toString())
         .replace(/\{{pointer_y}}/g, wmInfo.pointerY.toString());
 
-      exec(command, (error) => {
+      // Remove the CHROME_DESKTOP environment variable if it is set.
+      // See https://github.com/kando-menu/kando/issues/552
+      const env = { ...process.env };
+      delete env.CHROME_DESKTOP;
+
+      exec(command, { env }, (error) => {
         if (error) {
           reject(error.message);
         } else {
