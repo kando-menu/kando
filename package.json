@@ -68,6 +68,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "emojilib": "^3.0.12",
     "handlebars": "^4.7.8",
+    "json5": "^2.2.3",
     "lodash.isequal": "^4.5.0",
     "match-sorter": "^6.3.4",
     "material-symbols": "^0.21.2",

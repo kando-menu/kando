@@ -12,6 +12,7 @@ import os from 'node:os';
 import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
+import json5 from 'json5';
 import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
 import { Notification } from 'electron';
 
@@ -654,9 +655,10 @@ export class KandoApp {
     // Allow the renderer to retrieve the description of the current menu theme. We also
     // return the path to the CSS file of the theme, so that the renderer can load it.
     ipcMain.handle('get-menu-theme', async () => {
-      const directory = await this.findMenuThemePath(this.appSettings.get('menuTheme'));
-      const content = await fs.promises.readFile(path.join(directory, 'theme.json'));
-      const description = JSON.parse(content.toString());
+      const metaFile = await this.findMenuThemePath(this.appSettings.get('menuTheme'));
+      const content = await fs.promises.readFile(metaFile);
+      const description = json5.parse(content.toString());
+      const directory = path.dirname(metaFile);
       description.cssFile = path.join(directory, 'theme.css');
       return description;
     });
@@ -951,10 +953,10 @@ export class KandoApp {
   }
 
   /**
-   * This finds the path to the menu theme with the given name. If the theme is not found,
-   * the default theme is used instead. Kando will first look for the theme in the user's
-   * data directory. If it is not found there, it will look in the app's assets
-   * directory.
+   * This finds the path to the menu theme's JSON or JSON5 file with the given directory
+   * name. If the theme is not found, the default theme is used instead. Kando will first
+   * look for the theme in the user's data directory. If it is not found there, it will
+   * look in the app's assets directory.
    *
    * @param theme The name of the menu theme's directory.
    * @returns The absolute path to the menu theme's directory.
@@ -965,21 +967,25 @@ export class KandoApp {
       path.join(__dirname, `../renderer/assets/menu-themes/${theme}`),
     ];
 
-    for (const testPath of testPaths) {
-      const metaPath = path.join(testPath, 'theme.json');
-      const exists = await fs.promises
-        .access(metaPath, fs.constants.F_OK)
-        .then(() => true)
-        .catch(() => false);
+    const testFiles = ['theme.json', 'theme.json5'];
 
-      if (exists) {
-        return testPath;
+    for (const testPath of testPaths) {
+      for (const testFile of testFiles) {
+        const metaPath = path.join(testPath, testFile);
+        const exists = await fs.promises
+          .access(metaPath, fs.constants.F_OK)
+          .then(() => true)
+          .catch(() => false);
+
+        if (exists) {
+          return metaPath;
+        }
       }
     }
 
     console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
 
-    return path.join(__dirname, `../renderer/assets/menu-themes/default`);
+    return path.join(__dirname, `../renderer/assets/menu-themes/default/theme.json5`);
   }
 
   /**
