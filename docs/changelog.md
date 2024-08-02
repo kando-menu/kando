@@ -29,6 +29,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### Fixed
 
 - A bug which caused Kando to crash when opening a menu on Linux/X11 where `XResourceManagerString` returns `NULL`.
+- A bug which prevented some Electron-based applications to start properly when launched from Kando on Linux. See [#552](https://github.com/kando-menu/kando/issues/552) for details.
 
 ## [Kando 1.2.0](https://github.com/kando-menu/kando/releases/tag/v1.2.0)
 
