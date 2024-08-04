@@ -129,7 +129,7 @@ export class Sidebar {
         {
           id: 'sidebar-tab-debugging',
           icon: 'ads_click',
-          title: 'Debugging',
+          title: 'Development',
           content: buttonTab({
             buttons: [
               {

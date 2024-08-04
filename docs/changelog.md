@@ -25,6 +25,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - The text in the center item is now updated asynchronously. This may reduce occasional frame drops as the update causes a forced reflow of the menu layout.
 - The default Windows menu now uses `start %USERPROFILE%` instead of `explorer %USERPROFILE%` to avoid a notification due to wrong exit codes of `explorer`.
+- The "Debugging" tab in the sidebar is now called "Development".
 
 #### Fixed
 
