@@ -11,15 +11,28 @@
 {
   name: 'Neon Lights',
   author: 'Simon Schneegans',
-  themeVersion: '1.0',
-  engineVersion: 1,
   license: 'CC0-1.0',
-  drawChildrenBelow: true,
+  themeVersion: '1.0',
+
+  // This theme was created for Kando's theme engine version 1. Kando will use this to
+  // check if the theme is compatible with the current version of Kando.
+  engineVersion: 1,
+
+  // When a menu is opened too close to a screen's edge, it is moved away from the edge
+  // by this amount of pixels.
   maxMenuRadius: 160,
+
+  // This theme draws child items below their parent items.
+  drawChildrenBelow: true,
+
+  // These colors can be configured by the user and are vailable in the CSS file as CSS
+  // variables. The default values are used if the user does not provide any values.
   colors: [
     { name: 'text-color', default: 'white' },
     { name: 'flash-color', default: 'rgb(255, 200, 200)' },
   ],
+
+  // This is a very complex theme with multiple layers.
   layers: [
     { class: 'ring-slow-layer', content: 'none' },
     { class: 'ring-fast-layer', content: 'none' },
