@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-<img src="img/banner06.jpg"></img>
+<img src="img/banner02.png"></img>
 
 
 # Contributor Covenant Code of Conduct

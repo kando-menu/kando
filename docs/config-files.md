@@ -3,7 +3,7 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-<img src="img/banner08.jpg"></img>
+<img src="img/banner03.png"></img>
 
 # The Config Files
 

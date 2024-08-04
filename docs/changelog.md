@@ -10,7 +10,7 @@ Fixed      - for any bug fixes.
 Security   - in case of vulnerabilities.
 -->
 
-<img src="img/banner01.jpg"></img>
+<img src="img/banner01.png"></img>
 
 # Changelog of Kando
 
