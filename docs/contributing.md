@@ -13,6 +13,9 @@ report this as a [GitHub issue](https://github.com/kando-menu/kando/issues)!
 We are happy to receive contributions in the form of **pull requests** on GitHub.
 Feel free to fork the repository, implement your changes and create a merge request to the `main` branch!
 
+> [!TIP]
+> There are always some issues labeled as [good first issue](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Feel free to pick one of these and ask for some pointers for how to get started in the comments!
+
 ## Branching Guidelines
 
 Kando uses a simplified version of [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/):
@@ -44,7 +47,8 @@ Therefore, only one emoji should be used per commit.
 * :arrow_down_small: `:arrow_down_small:` when removing / downgrading dependencies.
 * :twisted_rightwards_arrows: `:twisted_rightwards_arrows:` when merging branches.
 
-Usage of these emojis is not mandatory; we will still accept your pull request if you don't use them.
+**Usage of these emojis is not mandatory.**
+We will still accept your pull request if you don't use them.
 However, we will be very happy if you do :smile:.
 
 ## Versioning
