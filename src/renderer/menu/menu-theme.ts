@@ -181,7 +181,9 @@ export class MenuTheme {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
-    this.description.layers.forEach((layer) => {
+    // Iterate over the layers back to front to get the right stacking order.
+    for (let i = this.description.layers.length - 1; i >= 0; i--) {
+      const layer = this.description.layers[i];
       const layerDiv = document.createElement('div');
       layerDiv.classList.add(layer.class);
 

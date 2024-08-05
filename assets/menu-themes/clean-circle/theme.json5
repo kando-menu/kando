@@ -36,7 +36,7 @@
   // This theme uses two layers, one for the icon and the background and one for the arrow
   // which points to the hovered item.
   layers: [
-    { class: 'icon-layer', content: 'icon' },
     { class: 'arrow-layer', content: 'none' },
+    { class: 'icon-layer', content: 'icon' },
   ],
 }
