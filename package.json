@@ -71,10 +71,10 @@
     "json5": "^2.2.3",
     "lodash.isequal": "^4.5.0",
     "match-sorter": "^6.3.4",
-    "material-symbols": "^0.21.2",
+    "material-symbols": "^0.21.3",
     "mime-types": "^2.1.35",
     "node-addon-api": "^8.1.0",
     "octokit": "^4.0.2",
-    "simple-icons-font": "^13.3.0"
+    "simple-icons-font": "^13.4.0"
   }
 }
