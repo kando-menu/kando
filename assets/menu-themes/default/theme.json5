@@ -29,7 +29,7 @@
   // variables. The default values are used if the user does not provide any values.
   colors: [
     { name: 'background-color', default: 'rgb(255, 255, 255)' },
-    { name: 'text-color', default: 'rgb(109, 109, 109)' },
+    { name: 'text-color', default: 'rgb(60, 60, 60)' },
     { name: 'border-color', default: 'rgb(109, 109, 109)' },
     { name: 'hover-color', default: 'rgb(255, 200, 200)' },
   ],
