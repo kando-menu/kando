@@ -27,28 +27,23 @@ const PARENT_DISTANCE = 150;
  * the menu. The menu is shown by calling the show() method and hidden by calling the
  * hide() method. The menu will be rendered into the given container element.
  *
- * When the user selects a menu item, the menu will emit a "select" event. If the user
- * cancels the selection, the menu will emit a "cancel" event. If items are hovered or
- * unhovered, the menu will emit "hover" and "unhover" events.
+ * Usually, child items are placed on a circle around the parent item. Grandchild items
+ * are placed on a circle around the child item. How this is done exactly, depends on the
+ * menu theme which is used to render the menu.
  *
- * Child items are always placed on a circle around the parent item. Grandchild items are
- * placed on a circle around the child item.
+ * The menu is a tree of menu items, one of which is the current center item, the
+ * so-called active item. Items which connect the active item to the root item are called
+ * parent items. Items which are connected to the active item are called child items.
+ * Items which are connected to child items are called grandchild items.
  *
- * Menu items can be in one of four states:
+ * The menu is an event emitter and will emit the following events:
  *
- * - PARENT: The item is the parent of the currently selected item. All items along the
- *   chain from the root to the selected item are in this state. Items of this type will
- *   have the .parent css class.
- * - ACTIVE: The item is the currently selected item. Items of this type will have the
- *   .active css class.
- * - CHILD: The item is a child of the currently selected item. Items of this type will have
- *   the .child css class.
- * - GRANDCHILD: The item is a grandchild of the currently selected item. This state is also
- *   used for all children of parent items which have not been selected. Items of this
- *   type will have the .grandchild css class.
- *
- * In addition, child items can be be either hovered or dragged. Hovered items will have
- * the .hovered css class. Dragged items will have the .dragged css class.
+ * @fires 'select' When a leaf item is selected.
+ * @fires 'hover' When an item is hovered.
+ * @fires 'unhover' When an item is unhovered.
+ * @fires 'cancel' When the menu is hidden.
+ * @fires 'move-pointer' When the mouse pointer should be warped due to menu clamping at
+ *   the screen edges.
  */
 
 export class Menu extends EventEmitter {
