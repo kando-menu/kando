@@ -605,7 +605,7 @@ export class Menu extends EventEmitter {
     }
 
     // Update all transformations.
-    this.updateTransform(this.root);
+    this.updateTransform();
 
     // If there is a item dragged around, we also have to redraw the connectors.
     if (this.draggedItem) {
@@ -657,51 +657,33 @@ export class Menu extends EventEmitter {
    * This method updates the 2D position of the given menu item and all its children. For
    * child and grandchild items, the position is computed by the theme in CSS. For parent
    * and active items, the position is based on where the menu was opened.
-   *
-   * @param item The position will be recomputed for this menu item and all its children.
    */
-  private updateTransform(item: IRenderedMenuItem) {
-    if (item.nodeDiv.classList.contains('grandchild')) {
-      item.nodeDiv.style.transform = '';
-      delete item.position;
-    } else if (item.nodeDiv.classList.contains('child')) {
-      // If the item is dragged, move it to the mouse position. Else the item is positioned
-      // by the theme.
-      if (item === this.draggedItem && this.input.state === InputState.eDragging) {
-        item.position = this.input.relativePosition;
-        item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
-      } else {
-        // Set the custom CSS properties of the item, like the angular difference between
-        // the item and the mouse pointer direction.
-        this.theme.setChildProperties(item, this.input.angle);
-        item.nodeDiv.style.transform = '';
-        delete item.position;
-      }
+  private updateTransform() {
+    for (let i = 0; i < this.selectionChain.length; i++) {
+      const item = this.selectionChain[i];
 
-      // Finally, update the transformation of all its children.
-      if (item.children) {
-        for (const child of item.children) {
-          this.updateTransform(child);
-        }
-      }
-    } else if (
-      item.nodeDiv.classList.contains('active') ||
-      item.nodeDiv.classList.contains('parent')
-    ) {
       item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
-      if (item.children) {
-        for (const child of item.children) {
-          this.updateTransform(child);
-        }
-      }
 
-      // If the item is the current center item, we also set some custom CSS properties.
-      if (item.nodeDiv.classList.contains('active')) {
+      if (i === this.selectionChain.length - 1) {
         let hoveredAngle = this.hoveredItem?.angle;
         if (this.isParentOfCenterItem(this.hoveredItem)) {
           hoveredAngle = (item.angle + 180) % 360;
         }
         this.theme.setCenterProperties(item, this.input.angle, hoveredAngle);
+
+        for (let j = 0; j < item.children?.length; ++j) {
+          const child = item.children[j] as IRenderedMenuItem;
+          if (child === this.draggedItem && this.input.state === InputState.eDragging) {
+            child.position = this.input.relativePosition;
+            child.nodeDiv.style.transform = `translate(${child.position.x}px, ${child.position.y}px)`;
+          } else {
+            // Set the custom CSS properties of the item, like the angular difference between
+            // the item and the mouse pointer direction.
+            this.theme.setChildProperties(child, this.input.angle);
+            child.nodeDiv.style.transform = '';
+            delete child.position;
+          }
+        }
       }
     }
   }
