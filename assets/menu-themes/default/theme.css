@@ -8,7 +8,7 @@
 /* SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> */
 /* SPDX-License-Identifier: CC0-1.0 */
 
-#kando-menu {
+.menu-node {
   --child-distance: 100px;
   --parent-distance: 150px;
   --grandchild-distance: 25px;
@@ -21,159 +21,156 @@
   --menu-transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
   --opacity-transition: opacity 250ms ease;
 
-  .menu-node {
-    transition: var(--menu-transition);
+  transition: var(--menu-transition);
 
-    &.grandchild {
-      transform: translate(calc(var(--grandchild-distance) * var(--dir-x)),
-          calc(var(--grandchild-distance) * var(--dir-y)));
-    }
+  &.grandchild {
+    transform: translate(calc(var(--grandchild-distance) * var(--dir-x)),
+        calc(var(--grandchild-distance) * var(--dir-y)));
+  }
 
-    &.child {
-      transform: translate(calc(var(--child-distance) * var(--dir-x)),
+  &.child {
+    transform: translate(calc(var(--child-distance) * var(--dir-x)),
+        calc(var(--child-distance) * var(--dir-y)));
+  }
+
+  &.parent {
+    transform: translate(calc(var(--parent-distance) * var(--dir-x)),
+        calc(var(--parent-distance) * var(--dir-y)));
+  }
+
+  &.active:has(.hovered)>.child {
+    transform: scale(calc(1.15 - pow(var(--angle-diff) / 180, 0.25) * 0.15)) translate(calc(var(--child-distance) * var(--dir-x)),
+        calc(var(--child-distance) * var(--dir-y)));
+
+    &.hovered {
+      transform: scale(1.15) translate(calc(var(--child-distance) * var(--dir-x)),
           calc(var(--child-distance) * var(--dir-y)));
-    }
-
-    &.parent {
-      transform: translate(calc(var(--parent-distance) * var(--dir-x)),
-          calc(var(--parent-distance) * var(--dir-y)));
-    }
-
-    &.active:has(> .hovered)>.child {
-      transform: scale(calc(1.15 - pow(var(--angle-diff) / 180, 0.25) * 0.15)) translate(calc(var(--child-distance) * var(--dir-x)),
-          calc(var(--child-distance) * var(--dir-y)));
-
-      &.hovered {
-        transform: scale(1.15) translate(calc(var(--child-distance) * var(--dir-x)),
-            calc(var(--child-distance) * var(--dir-y)));
-      }
-    }
-
-
-    /* Theme Layers ------------------------------------------------------------------- */
-
-    /* We hide all icons by default. They will be shown further down in this file for the
-       center item and the child items. */
-    .icon-container {
-      opacity: 0;
-      color: var(--text-color);
-      transition: var(--opacity-transition);
-      clip-path: circle(45% at 50% 50%);
-    }
-
-    /* All menu items have a border and are circles in this theme. */
-    .icon-layer {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid var(--border-color);
-      transition: var(--menu-transition);
-    }
-
-    /* The active menu item is the center of the menu. */
-    &.active>.icon-layer {
-      top: calc(-1 * var(--center-size) / 2);
-      left: calc(-1 * var(--center-size) / 2);
-      width: var(--center-size);
-      height: var(--center-size);
-      background-color: var(--background-color);
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    /* If the center item has a hovered child node, we scale it up and hide its icon. */
-    &.active:has(> .menu-node.hovered)>.icon-layer {
-      transform: scale(1.1);
-
-
-      &>.icon-container {
-        opacity: 0;
-      }
-    }
-
-    /* If the center node is hovered, we want to highlight it. */
-    &.active.hovered>.icon-layer {
-      background-color: var(--hover-color);
-    }
-
-    /* If the parent or a child node is clicked, we scale it down to normal size. */
-    &.parent.hovered.clicked>.icon-layer,
-    &.child.hovered.clicked>.icon-layer {
-      transform: scale(0.95);
-    }
-
-    /* If the center node is clicked, we scale it down a bit. */
-    &.active.hovered.clicked>.icon-layer {
-      transform: scale(0.95);
-    }
-
-    /* Show the icons of the center, parent and child items. */
-    &.parent>.icon-layer>.icon-container,
-    &.child>.icon-layer>.icon-container,
-    &.active>.icon-layer>.icon-container {
-      opacity: 1;
-    }
-
-    /* Child items are displayed around the active node. The parent node of the active
-       node is displayed in a similar style. */
-    &.parent>.icon-layer,
-    &.child>.icon-layer {
-      top: calc(-1 * var(--child-size) / 2);
-      left: calc(-1 * var(--child-size) / 2);
-      width: var(--child-size);
-      height: var(--child-size);
-      background-color: var(--background-color);
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-
-    }
-
-    /* Hovered child or parent items are highlighted. */
-    &.parent.hovered>.icon-layer,
-    &.child.hovered>.icon-layer {
-      background-color: var(--hover-color);
-    }
-
-    /* Grandchild items are very small and drawn below the child items. */
-    &.grandchild>.icon-layer {
-      top: calc(-1 * var(--grandchild-size) / 2);
-      left: calc(-1 * var(--grandchild-size) / 2);
-      width: var(--grandchild-size);
-      height: var(--grandchild-size);
-      background-color: var(--border-color);
-    }
-
-    /* We disable any transition for dragged items. */
-    &.dragged {
-      transition: none;
-    }
-
-    /* Connectors --------------------------------------------------------------------- */
-
-    .connector {
-      transition: var(--menu-transition);
-      height: var(--connector-width);
-      background-color: var(--border-color);
-      top: calc(-1 * var(--connector-width) / 2);
-    }
-
-    &:has(.dragged)>.connector,
-    &:has(.clicked)>.connector {
-      transition: none;
-    }
-
-    &.hovered>.connector {
-      background-color: color-mix(in srgb, var(--hover-color) 50%, var(--border-color));
-    }
-
-    &.active>.connector {
-      background-color: var(--hover-color);
     }
   }
 
-  /* Center Text ---------------------------------------------------------------------- */
 
-  .center-text {
+  /* Theme Layers ------------------------------------------------------------------- */
+
+  /* We hide all icons by default. They will be shown further down in this file for the
+       center item and the child items. */
+  .icon-container {
+    opacity: 0;
     color: var(--text-color);
     transition: var(--opacity-transition);
-    font-size: 16px;
-    line-height: 22px;
+    clip-path: circle(45% at 50% 50%);
   }
+
+  /* All menu items have a border and are circles in this theme. */
+  .icon-layer {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    transition: var(--menu-transition);
+  }
+
+  /* The active menu item is the center of the menu. */
+  &.active>.icon-layer {
+    top: calc(-1 * var(--center-size) / 2);
+    left: calc(-1 * var(--center-size) / 2);
+    width: var(--center-size);
+    height: var(--center-size);
+    background-color: var(--background-color);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* If the center item has a hovered child node, we scale it up and hide its icon. */
+  &.active:has(>.menu-node.hovered)>.icon-layer {
+    transform: scale(1.1);
+
+    &>.icon-container {
+      opacity: 0;
+    }
+  }
+
+  /* If the center node is hovered, we want to highlight it. */
+  &.active.hovered>.icon-layer {
+    background-color: var(--hover-color);
+  }
+
+  /* If the parent or a child node is clicked, we scale it down to normal size. */
+  &.parent.hovered.clicked>.icon-layer,
+  &.child.hovered.clicked>.icon-layer {
+    transform: scale(0.95);
+  }
+
+  /* If the center node is clicked, we scale it down a bit. */
+  &.active.hovered.clicked>.icon-layer {
+    transform: scale(0.95);
+  }
+
+  /* Show the icons of the center, parent and child items. */
+  &.parent>.icon-layer>.icon-container,
+  &.child>.icon-layer>.icon-container,
+  &.active>.icon-layer>.icon-container {
+    opacity: 1;
+  }
+
+  /* Child items are displayed around the active node. The parent node of the active
+       node is displayed in a similar style. */
+  &.parent>.icon-layer,
+  &.child>.icon-layer {
+    top: calc(-1 * var(--child-size) / 2);
+    left: calc(-1 * var(--child-size) / 2);
+    width: var(--child-size);
+    height: var(--child-size);
+    background-color: var(--background-color);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+
+  }
+
+  /* Hovered child or parent items are highlighted. */
+  &.parent.hovered>.icon-layer,
+  &.child.hovered>.icon-layer {
+    background-color: var(--hover-color);
+  }
+
+  /* Grandchild items are very small and drawn below the child items. */
+  &.grandchild>.icon-layer {
+    top: calc(-1 * var(--grandchild-size) / 2);
+    left: calc(-1 * var(--grandchild-size) / 2);
+    width: var(--grandchild-size);
+    height: var(--grandchild-size);
+    background-color: var(--border-color);
+  }
+
+  /* We disable any transition for dragged items. */
+  &.dragged {
+    transition: none;
+  }
+
+  /* Connectors --------------------------------------------------------------------- */
+
+  .connector {
+    transition: var(--menu-transition);
+    height: var(--connector-width);
+    background-color: var(--border-color);
+    top: calc(-1 * var(--connector-width) / 2);
+  }
+
+  &:has(.dragged)>.connector,
+  &:has(.clicked)>.connector {
+    transition: none;
+  }
+
+  &.hovered>.connector {
+    background-color: color-mix(in srgb, var(--hover-color) 50%, var(--border-color));
+  }
+
+  &.active>.connector {
+    background-color: var(--hover-color);
+  }
+}
+
+/* Center Text ---------------------------------------------------------------------- */
+
+.center-text {
+  color: var(--text-color);
+  transition: var(--opacity-transition);
+  font-size: 16px;
+  line-height: 22px;
 }
