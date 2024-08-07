@@ -25,48 +25,7 @@ import { IRenderedMenuItem } from './rendered-menu-item';
  *
  * The CSS file defines the appearance of the different layer divs. Kando assigns a class
  * to menu item's container div based on the current state of the menu item (child,
- * center, parent, hovered, etc). The overall tree structure of the menu may look like
- * this:
- *
- *     #kando-menu
- *     ├ .menu-node.level-0.type-submenu.parent
- *     │  ├ .menu-node.level-1.type-submenu.grandchild
- *     │  │  ├ .menu-node.level-2.type-uri
- *     │  │  └ .menu-node.level-2.type-command
- *     │  ├ .menu-node.level-1.type-submenu.grandchild
- *     │  │  ├ .menu-node.level-2.type-hotkey
- *     │  │  └ .menu-node.level-2.type-macro
- *     │  └ .menu-node.level-1.type-submenu.active
- *     │     ├ .menu-node.level-2.child.type-uri
- *     │     ├ .menu-node.level-2.type-submenu.child.hovered.dragged
- *     │     │  ├ .menu-node.level-3.grandchild.type-command
- *     │     │  └ .menu-node.level-3.grandchild.type-command
- *     │     ├ .menu-node.level-2.type-submenu.child
- *     │     │  ├ .menu-node.level-3.grandchild.type-command
- *     │     │  └ .menu-node.level-3.grandchild.type-command
- *     │     └ .menu-node.level-2.child.type-macro
- *     └ .center-text
- *
- * The menu container contains two elements: The center text and the root item of the
- * menu. The center text shows the name of the currently selected item. It is
- * automatically moved to the currently active menu item. In the above case, the root item
- * contains three submenus. The third child is a submenu which is currently open
- * (.active). Therefore the root item is a parent and the other two children are drawn as
- * grand children. The active child has four children itself, two of which have
- * grandchildren. The second child is currently dragged in marking mode and thus has the
- * classes .hovered and .dragged.
- *
- * In addition, each menu node has a class for the current level (level0, level1, level2,
- * etc). This can be used to style the menu items differently depending on their depth in
- * the menu tree. Only the root item has the class .level0.
- *
- * Furthermore, the menu node classes contain the type of the item (submenu, uri, command,
- * etc). This can be used to style different item types differently.
- *
- * Not depicted in the tree structure above are the connector lines between the menu items
- * and the layers added by the theme. The connector lines are long divs which are appended
- * to each submenu menu node. They have the class .connector and can be styled in the CSS
- * file.
+ * center, parent, hovered, etc).
  */
 
 /**
