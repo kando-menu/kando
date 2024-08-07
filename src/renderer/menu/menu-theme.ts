@@ -197,7 +197,7 @@ export class MenuTheme {
       }
 
       nodeDiv.appendChild(layerDiv);
-    });
+    }
 
     return nodeDiv;
   }
