@@ -286,9 +286,8 @@ export class Menu extends EventEmitter {
    * This method creates the DOM tree for the given menu item and all its children. For
    * each item, a div element with the class ".menu-node" is created and appended to the
    * given container. In addition to the child menu items, the div element contains a div
-   * with the class ".menu-item" which contains the visual representation of the item. The
-   * item's icon is rendered as an <i> element with the class ".icon-container" as a child
-   * of the ".menu-item" element.
+   * for each layer of the current menu theme, as well as the connector div which connects
+   * the item to its parent.
    *
    * @param item The menu item to create the DOM tree for.
    * @param container The container to append the DOM tree to.
