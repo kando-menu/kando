@@ -27,6 +27,7 @@ If you want to improve this documentation, please [open a pull request](https://
 ## Advanced Topics
 
 * [Config Files](config-files.md)
+* [Creating Menu Themes](menu-themes.md)
 
 
 <p align="center"><img src ="img/hr.svg" /></p>

@@ -227,6 +227,5 @@ For instance, this menu item will type "Hi" on most keyboard layouts:
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
-  <img src="img/nav-space.svg"/>
-  <img src="img/nav-space.svg"/>
+  <a href="menu-themes.md">Creating Menu Themes <img src ="img/right-arrow.png"/></a>
 </p>
