@@ -27,28 +27,23 @@ const PARENT_DISTANCE = 150;
  * the menu. The menu is shown by calling the show() method and hidden by calling the
  * hide() method. The menu will be rendered into the given container element.
  *
- * When the user selects a menu item, the menu will emit a "select" event. If the user
- * cancels the selection, the menu will emit a "cancel" event. If items are hovered or
- * unhovered, the menu will emit "hover" and "unhover" events.
+ * Usually, child items are placed on a circle around the parent item. Grandchild items
+ * are placed on a circle around the child item. How this is done exactly, depends on the
+ * menu theme which is used to render the menu.
  *
- * Child items are always placed on a circle around the parent item. Grandchild items are
- * placed on a circle around the child item.
+ * The menu is a tree of menu items, one of which is the current center item, the
+ * so-called active item. Items which connect the active item to the root item are called
+ * parent items. Items which are connected to the active item are called child items.
+ * Items which are connected to child items are called grandchild items.
  *
- * Menu items can be in one of four states:
+ * The menu is an event emitter and will emit the following events:
  *
- * - PARENT: The item is the parent of the currently selected item. All items along the
- *   chain from the root to the selected item are in this state. Items of this type will
- *   have the .parent css class.
- * - ACTIVE: The item is the currently selected item. Items of this type will have the
- *   .active css class.
- * - CHILD: The item is a child of the currently selected item. Items of this type will have
- *   the .child css class.
- * - GRANDCHILD: The item is a grandchild of the currently selected item. This state is also
- *   used for all children of parent items which have not been selected. Items of this
- *   type will have the .grandchild css class.
- *
- * In addition, child items can be be either hovered or dragged. Hovered items will have
- * the .hovered css class. Dragged items will have the .dragged css class.
+ * @fires 'select' When a leaf item is selected.
+ * @fires 'hover' When an item is hovered.
+ * @fires 'unhover' When an item is unhovered.
+ * @fires 'cancel' When the menu is hidden.
+ * @fires 'move-pointer' When the mouse pointer should be warped due to menu clamping at
+ *   the screen edges.
  */
 
 export class Menu extends EventEmitter {
@@ -291,9 +286,8 @@ export class Menu extends EventEmitter {
    * This method creates the DOM tree for the given menu item and all its children. For
    * each item, a div element with the class ".menu-node" is created and appended to the
    * given container. In addition to the child menu items, the div element contains a div
-   * with the class ".menu-item" which contains the visual representation of the item. The
-   * item's icon is rendered as an <i> element with the class ".icon-container" as a child
-   * of the ".menu-item" element.
+   * for each layer of the current menu theme, as well as the connector div which connects
+   * the item to its parent.
    *
    * @param item The menu item to create the DOM tree for.
    * @param container The container to append the DOM tree to.
@@ -605,7 +599,7 @@ export class Menu extends EventEmitter {
     }
 
     // Update all transformations.
-    this.updateTransform(this.root);
+    this.updateTransform();
 
     // If there is a item dragged around, we also have to redraw the connectors.
     if (this.draggedItem) {
@@ -657,51 +651,33 @@ export class Menu extends EventEmitter {
    * This method updates the 2D position of the given menu item and all its children. For
    * child and grandchild items, the position is computed by the theme in CSS. For parent
    * and active items, the position is based on where the menu was opened.
-   *
-   * @param item The position will be recomputed for this menu item and all its children.
    */
-  private updateTransform(item: IRenderedMenuItem) {
-    if (item.nodeDiv.classList.contains('grandchild')) {
-      item.nodeDiv.style.transform = '';
-      delete item.position;
-    } else if (item.nodeDiv.classList.contains('child')) {
-      // If the item is dragged, move it to the mouse position. Else the item is positioned
-      // by the theme.
-      if (item === this.draggedItem && this.input.state === InputState.eDragging) {
-        item.position = this.input.relativePosition;
-        item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
-      } else {
-        // Set the custom CSS properties of the item, like the angular difference between
-        // the item and the mouse pointer direction.
-        this.theme.setChildProperties(item, this.input.angle);
-        item.nodeDiv.style.transform = '';
-        delete item.position;
-      }
+  private updateTransform() {
+    for (let i = 0; i < this.selectionChain.length; i++) {
+      const item = this.selectionChain[i];
 
-      // Finally, update the transformation of all its children.
-      if (item.children) {
-        for (const child of item.children) {
-          this.updateTransform(child);
-        }
-      }
-    } else if (
-      item.nodeDiv.classList.contains('active') ||
-      item.nodeDiv.classList.contains('parent')
-    ) {
       item.nodeDiv.style.transform = `translate(${item.position.x}px, ${item.position.y}px)`;
-      if (item.children) {
-        for (const child of item.children) {
-          this.updateTransform(child);
-        }
-      }
 
-      // If the item is the current center item, we also set some custom CSS properties.
-      if (item.nodeDiv.classList.contains('active')) {
+      if (i === this.selectionChain.length - 1) {
         let hoveredAngle = this.hoveredItem?.angle;
         if (this.isParentOfCenterItem(this.hoveredItem)) {
           hoveredAngle = (item.angle + 180) % 360;
         }
         this.theme.setCenterProperties(item, this.input.angle, hoveredAngle);
+
+        for (let j = 0; j < item.children?.length; ++j) {
+          const child = item.children[j] as IRenderedMenuItem;
+          if (child === this.draggedItem && this.input.state === InputState.eDragging) {
+            child.position = this.input.relativePosition;
+            child.nodeDiv.style.transform = `translate(${child.position.x}px, ${child.position.y}px)`;
+          } else {
+            // Set the custom CSS properties of the item, like the angular difference between
+            // the item and the mouse pointer direction.
+            this.theme.setChildProperties(child, this.input.angle);
+            child.nodeDiv.style.transform = '';
+            delete child.position;
+          }
+        }
       }
     }
   }
