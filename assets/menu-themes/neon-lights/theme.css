@@ -20,7 +20,6 @@
 
 .menu-node {
   --child-distance: 100px;
-  --parent-distance: 150px;
 
   --center-size: 100px;
   --child-size: 50px;
@@ -31,16 +30,17 @@
 
   transition: var(--menu-transition);
 
+  /* Positioning ---------------------------------------------------------------------- */
+
+  /* This theme does not render grandchild items. Children are displayed around the
+     active node. */
   &.child {
     transform: translate(calc(var(--child-distance) * var(--dir-x)),
         calc(var(--child-distance) * var(--dir-y)));
   }
 
-  &.parent {
-    transform: translate(calc(var(--parent-distance) * var(--dir-x)),
-        calc(var(--parent-distance) * var(--dir-y)));
-  }
-
+  /* If there is a hovered child node, we scale all children up a bit to create a cool
+     zoom effect. The hovered child itself is scaled up even more. */
   &.active:has(>.hovered)>.child {
     transform: scale(calc(1.5 - pow(var(--angle-diff) / 180, 0.25) * 0.5)) translate(calc(var(--child-distance) * var(--dir-x)),
         calc(var(--child-distance) * var(--dir-y)));
@@ -52,7 +52,7 @@
   }
 
 
-  /* Theme Layers ------------------------------------------------------------------- */
+  /* Theme Layers --------------------------------------------------------------------- */
 
   /* We hide all icons by default. They will be shown further down in this file for the
        center item and the child items. */
@@ -181,7 +181,7 @@
     transition: none;
   }
 
-  /* Connectors --------------------------------------------------------------------- */
+  /* Connectors ----------------------------------------------------------------------- */
 
   .connector {
     transition: var(--menu-transition);
@@ -203,7 +203,7 @@
   }
 }
 
-/* Center Text ---------------------------------------------------------------------- */
+/* Center Text ------------------------------------------------------------------------ */
 
 .center-text {
   color: var(--text-color);
