@@ -108,9 +108,8 @@ export class GestureDetection extends EventEmitter {
           //  Emit the selection events if it exceeds the configured threshold. We pass
           //  the coordinates of E for the selection event.
           if ((angle * 180) / Math.PI > MIN_STROKE_ANGLE) {
-            const coords = this.strokeEnd;
-            this.reset();
-            this.emit('selection', coords);
+            this.reset(this.strokeEnd);
+            this.emit('selection', this.strokeEnd);
             return;
           }
 
@@ -124,7 +123,7 @@ export class GestureDetection extends EventEmitter {
         // also lead to selections.
         if (this.pauseTimeout === null) {
           this.pauseTimeout = setTimeout(() => {
-            this.reset();
+            this.reset(coords);
             this.emit('selection', coords);
           }, PAUSE_TIMEOUT);
         }
@@ -137,16 +136,19 @@ export class GestureDetection extends EventEmitter {
   }
 
   /**
-   * This method resets the gesture detection. It should be called if the left mouse
-   * button is released.
+   * This method resets the gesture detection. For instnce, it should be called if the
+   * left mouse button is released.
+   *
+   * @param lastCorner - If the gesture may continue, this parameter can be used to
+   *   provide the last corner of the gesture, e.g. the start of the next stroke.
    */
-  public reset() {
+  public reset(lastCorner: IVec2 = null): void {
     if (this.pauseTimeout !== null) {
       clearTimeout(this.pauseTimeout);
       this.pauseTimeout = null;
     }
 
-    this.strokeStart = null;
-    this.strokeEnd = null;
+    this.strokeStart = lastCorner;
+    this.strokeEnd = lastCorner;
   }
 }
