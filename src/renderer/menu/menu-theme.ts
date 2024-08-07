@@ -181,6 +181,10 @@ export class MenuTheme {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
+    // Add name property to the nodeDiv so that themes can style the items based on their
+    // name.
+    nodeDiv.dataset.name = item.name;
+
     // Iterate over the layers back to front to get the right stacking order.
     for (let i = this.description.layers.length - 1; i >= 0; i--) {
       const layer = this.description.layers[i];
