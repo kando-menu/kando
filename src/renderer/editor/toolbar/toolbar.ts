@@ -9,12 +9,13 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IBackendInfo, IMenuSettings } from '../../../common';
+import { IBackendInfo, IMenuSettings, IMenuThemeDescription } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { TemplatesTab } from './templates-tab';
 import { DnDManager } from '../common/dnd-manager';
+import { MenuThemesTab } from './menu-themes-tab';
 
 /**
  * This class is responsible for the toolbar on the bottom of the editor screen. It is an
@@ -28,6 +29,8 @@ import { DnDManager } from '../common/dnd-manager';
  *   the entire editor.
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
+ * @fires select-menu-theme - This event is emitted when the user selects a menu theme in
+ *   the toolbar. The folder name of the selected theme is passed as the first argument.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -47,6 +50,9 @@ export class Toolbar extends EventEmitter {
 
   /** This manages the templates tab of the toolbar. */
   private templatesTab: TemplatesTab = null;
+
+  /** This manages the menu themes tab of the toolbar. */
+  private menuThemesTab: MenuThemesTab = null;
 
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
@@ -79,6 +85,12 @@ export class Toolbar extends EventEmitter {
       !backend.supportsShortcuts,
       dndManager
     );
+
+    // Initialize the menu themes tab and forward its events.
+    this.menuThemesTab = new MenuThemesTab(this.container);
+    this.menuThemesTab.on('select-theme', (theme) =>
+      this.emit('select-menu-theme', theme)
+    );
   }
 
   /** This method returns the container of the editor toolbar. */
@@ -92,10 +104,18 @@ export class Toolbar extends EventEmitter {
    *
    * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
+   * @param allMenuThemes All available menu themes.
+   * @param currentMenuTheme The currently selected menu theme.
    */
-  public init(menuSettings: IMenuSettings, currentMenu: number) {
+  public init(
+    menuSettings: IMenuSettings,
+    currentMenu: number,
+    allMenuThemes: Array<IMenuThemeDescription>,
+    currentMenuTheme: IMenuThemeDescription
+  ) {
     this.menusTab.init(menuSettings, currentMenu);
     this.templatesTab.init(menuSettings);
+    this.menuThemesTab.init(allMenuThemes, currentMenuTheme);
   }
 
   /**

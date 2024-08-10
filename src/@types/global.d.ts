@@ -39,6 +39,7 @@ declare global {
       };
       getBackendInfo: () => Promise<IBackendInfo>;
       getMenuTheme: () => Promise<IMenuThemeDescription>;
+      getAllMenuThemes: () => Promise<Array<IMenuThemeDescription>>;
       getUserIconThemeDirectory: () => Promise<string>;
       getUserIconThemes: () => Promise<Array<string>>;
       listUserIcons: (string: iconTheme) => Promise<Array<string>>;

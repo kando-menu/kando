@@ -655,12 +655,15 @@ export class KandoApp {
     // Allow the renderer to retrieve the description of the current menu theme. We also
     // return the path to the CSS file of the theme, so that the renderer can load it.
     ipcMain.handle('get-menu-theme', async () => {
-      const metaFile = await this.findMenuThemePath(this.appSettings.get('menuTheme'));
-      const content = await fs.promises.readFile(metaFile);
-      const description = json5.parse(content.toString());
-      const directory = path.dirname(metaFile);
-      description.cssFile = path.join(directory, 'theme.css');
-      return description;
+      return this.loadMenuDescription(this.appSettings.get('menuTheme'));
+    });
+
+    // Allow the renderer to retrieve all available menu themes.
+    ipcMain.handle('get-all-menu-themes', async () => {
+      const themes = await this.listMenuThemes();
+
+      // Load all descriptions in parallel.
+      return Promise.all(themes.map((theme) => this.loadMenuDescription(theme)));
     });
 
     // Show the web developer tools if requested.
@@ -986,6 +989,56 @@ export class KandoApp {
     console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
 
     return path.join(__dirname, `../renderer/assets/menu-themes/default/theme.json5`);
+  }
+
+  /**
+   * This lists all available menu themes. It will first look in the user's data directory
+   * and then in the app's assets directory.
+   *
+   * @returns A list of all available menu-theme directory names.
+   */
+  private async listMenuThemes() {
+    const testPaths = [
+      path.join(app.getPath('userData'), `menu-themes`),
+      path.join(__dirname, `../renderer/assets/menu-themes`),
+    ];
+
+    const themes = new Set<string>();
+
+    for (const testPath of testPaths) {
+      const exists = await fs.promises
+        .access(testPath, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false);
+
+      if (exists) {
+        const files = await fs.promises.readdir(testPath, { withFileTypes: true });
+        for (const file of files) {
+          if (file.isDirectory()) {
+            themes.add(file.name);
+          }
+        }
+      }
+    }
+
+    return Array.from(themes);
+  }
+
+  /**
+   * This loads the description of the menu theme with the given name. The description
+   * includes the path to the CSS file of the theme. If the theme is not found, the
+   * default theme is used instead.
+   *
+   * @param theme The name of the menu theme.
+   * @returns The description of the menu theme.
+   */
+  private async loadMenuDescription(theme: string) {
+    const metaFile = await this.findMenuThemePath(theme);
+    const content = await fs.promises.readFile(metaFile);
+    const description = json5.parse(content.toString());
+    const directory = path.dirname(metaFile);
+    description.cssFile = path.join(directory, 'theme.css');
+    return description;
   }
 
   /**
