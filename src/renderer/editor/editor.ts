@@ -166,6 +166,10 @@ export class Editor extends EventEmitter {
       this.preview.setMenu(this.menuSettings.menus[index]);
     });
 
+    this.toolbar.on('select-mennu-theme', (theme: string) => {
+      window.api.appSettings.set('menuTheme', theme);
+    });
+
     // Initialize all tooltips.
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
       new Tooltip(elem, {
