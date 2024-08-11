@@ -1,0 +1,43 @@
+{{! //////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+}}
+
+<!--
+  This tab displays a grid of buttons which can be used to select the active menu.
+-->
+
+<div class='d-flex h-100 flex-column'>
+
+  <div class='d-flex flex-row mx-3 mt-3 justify-content-end gap-1'>
+    <button class='btn btn-secondary text-start fs-6'>
+      <i class='material-symbols-rounded inline-icon mx-1'>folder_managed</i>Open System Theme Directory
+    </button>
+    <button class='btn btn-secondary text-start fs-6'>
+      <i class='material-symbols-rounded inline-icon mx-1'>folder_supervised</i>Open User Theme Directory
+    </button>
+  </div> 
+
+  <div class='flex-grow-1 align-content-start scrollbox mx-2'>
+    <div class="scrollbox-content toolbar-button-grid">
+      {{#each themes}}
+        <div>
+          <div data-theme-id="{{id}}" class="kando-font btn btn-secondary toolbar-theme-button {{#if checked}} checked {{/if}}">
+            <img src="{{preview}}" />
+            <div class="align-self-center">
+              <div class="name fs-4">{{name}}</div>
+              <div class="description fs-6">{{author}}</div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+ 
+</div>

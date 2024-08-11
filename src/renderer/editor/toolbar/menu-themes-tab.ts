@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
+
 import { IMenuThemeDescription } from '../../../common';
 
 /**
@@ -19,13 +20,18 @@ import { IMenuThemeDescription } from '../../../common';
  *   folder name of the selected theme is passed as an argument.
  */
 export class MenuThemesTab extends EventEmitter {
+  /** This is the HTML element which contains the tab's content. */
+  private tabContent: HTMLElement;
+
   /**
    * This constructor is called after the general toolbar DOM has been created.
    *
    * @param container The container is the HTML element which contains the entire toolbar.
    */
-  constructor(private container: HTMLElement) {
+  constructor(container: HTMLElement) {
     super();
+
+    this.tabContent = container.querySelector('#kando-menu-themes-tab');
   }
 
   /**
@@ -40,17 +46,26 @@ export class MenuThemesTab extends EventEmitter {
     currentMenu: IMenuThemeDescription
   ) {
     // Compile the data for the Handlebars template.
-    // const data = this.menuThemes.map((menu, index) => ({
-    //   name: menu.root.name,
-    //   checked: index === this.currentMenu,
-    //   description:
-    //     (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
-    //   icon: IconThemeRegistry.getInstance()
-    //     .getTheme(menu.root.iconTheme)
-    //     .createDiv(menu.root.icon).outerHTML,
-    //   index,
-    // }));
-    // const template = require('./templates/menus-tab.hbs');
-    // this.tabContent.innerHTML = template({ menus: data });
+    const data = allMenuThemes.map((theme) => ({
+      id: theme.id,
+      name: theme.name,
+      author: theme.author,
+      checked: theme.id === currentMenu.id,
+      preview: 'file://' + theme.directory + '/' + theme.id + '/preview.jpg',
+    }));
+
+    const template = require('./templates/menu-themes-tab.hbs');
+    this.tabContent.innerHTML = template({ themes: data });
+
+    const allButtons = this.tabContent.querySelectorAll('.toolbar-theme-button');
+    allButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        allButtons.forEach((button) => {
+          button.classList.remove('checked');
+        });
+        button.classList.add('checked');
+        this.emit('select-theme', button.getAttribute('data-theme-id'));
+      });
+    });
   }
 }
