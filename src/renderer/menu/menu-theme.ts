@@ -106,7 +106,7 @@ export class MenuTheme {
     const head = document.head;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'file://' + description.cssFile;
+    link.href = 'file://' + description.directory + '/' + description.id + '/theme.css';
     link.type = 'text/css';
     link.id = 'kando-menu-theme';
     head.appendChild(link);
