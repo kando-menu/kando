@@ -201,6 +201,11 @@
     border-radius: 50%;
     transition: background-color 150ms linear;
 
+    // Circle clipping.
+    .icon-container {
+      clip-path: circle(45% at 50% 50%);
+    }
+
     i {
       transition: color 150ms linear;
       color: black;

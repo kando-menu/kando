@@ -119,6 +119,11 @@
     .icon-container .emoji-icon {
       margin-top: -6cqi;
     }
+
+    // Circle clipping.
+    .icon-container {
+      clip-path: circle(45% at 50% 50%);
+    }
   }
 
   // The ::before pseudo element is used to draw a dashed circle around the preview

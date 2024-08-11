@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Improved the gesture detection algorithm slightly. Mouse gestures should be recognized more reliably especially with very quick movements.
 - The default Windows menu now uses `start %USERPROFILE%` instead of `explorer %USERPROFILE%` to avoid a notification due to wrong exit codes of `explorer`.
 - The "Debugging" tab in the sidebar is now called "Development".
+- The icons in the icon picker are not cropped to a circle anymore. This is not useful anymore since the menu themes can decide not to use circular icons.
 
 #### Fixed
 
