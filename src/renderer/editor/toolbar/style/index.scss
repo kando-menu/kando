@@ -162,13 +162,8 @@
 // operations. Therefore, we have to style them with this selector.
 #kando-editor .add-menu-button,
 #kando-editor .toolbar-item-button,
-#kando-editor .toolbar-menu-button {
-  // The buttons are actually radio buttons. We hide the input element and style the label
-  // instead. This way we get nice toggling behavior for free.
-  input {
-    display: none;
-  }
-
+#kando-editor .toolbar-menu-button,
+#kando-editor .toolbar-theme-button {
   border: 2px dashed rgba(255, 255, 255, 0);
   overflow: hidden;
   transition: transform 150ms linear;
