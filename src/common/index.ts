@@ -54,10 +54,17 @@ export interface IBackendInfo {
  */
 export interface IMenuThemeDescription {
   /**
-   * The absolute path to the CSS file of the theme. This is set by Kando when loading the
-   * theme.json file.
+   * The ID of the theme. This is used to identify the theme in the settings file. It is
+   * also the directory name of the theme and is set by Kando when loading the theme.json
+   * file. So the path to the theme.json file is this.directory/this.id/theme.json.
    */
-  cssFile: string;
+  id: string;
+
+  /**
+   * The absolute path to the directory where the theme is stored. This is set by Kando
+   * when loading the theme.json file.
+   */
+  directory: string;
 
   /** A human readable name of the theme. */
   name: string;

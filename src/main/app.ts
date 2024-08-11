@@ -1037,7 +1037,8 @@ export class KandoApp {
     const content = await fs.promises.readFile(metaFile);
     const description = json5.parse(content.toString());
     const directory = path.dirname(metaFile);
-    description.cssFile = path.join(directory, 'theme.css');
+    description.id = path.basename(directory);
+    description.directory = path.dirname(directory);
     return description;
   }
 
