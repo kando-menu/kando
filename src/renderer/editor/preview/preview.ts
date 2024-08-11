@@ -52,12 +52,6 @@ export class Preview extends EventEmitter {
   private backlink: HTMLElement = null;
 
   /**
-   * The breadcrumbs are the HTML element which contains the breadcrumbs for the current
-   * selection chain. It is a sub-element of the container.
-   */
-  private breadcrumbs: HTMLElement = null;
-
-  /**
    * This array contains the chain of selected menu items up to the item which is
    * currently shown in the center. The first element is the menu's root, the second
    * element is the selected child of the root (if any), and so on.
@@ -94,7 +88,6 @@ export class Preview extends EventEmitter {
     div.innerHTML = template({
       areaId: 'kando-menu-preview-area',
       canvasId: 'kando-menu-preview-canvas',
-      breadcrumbsId: 'kando-menu-preview-breadcrumbs',
     });
 
     this.container = div.firstElementChild as HTMLElement;
@@ -108,12 +101,6 @@ export class Preview extends EventEmitter {
     // the element into which the menu items are rendered using HTML and CSS.
     this.canvas = this.container.querySelector(
       '#kando-menu-preview-canvas'
-    ) as HTMLElement;
-
-    // Keep a reference to the breadcrumbs element. It is used to display the current
-    // selection chain.
-    this.breadcrumbs = this.container.querySelector(
-      '#kando-menu-preview-breadcrumbs'
     ) as HTMLElement;
 
     this.initDragAndDrop();
@@ -169,11 +156,6 @@ export class Preview extends EventEmitter {
     const label = this.activeItem.div.querySelector('.kando-menu-preview-label');
     if (label) {
       label.textContent = this.activeItem.name;
-    }
-
-    // Update the breadcrumbs if it is the center item.
-    if (this.activeItem === this.getCenterItem()) {
-      this.drawBreadcrumbs();
     }
 
     // Update the icon.
@@ -431,24 +413,6 @@ export class Preview extends EventEmitter {
   }
 
   /**
-   * This method is called whenever the selection chain changes. It redraws the
-   * breadcrumbs to display the current selection chain.
-   */
-  private drawBreadcrumbs() {
-    this.breadcrumbs.innerHTML = '';
-
-    // Then we add the breadcrumbs for the current selection chain.
-    this.selectionChain.forEach((item) => {
-      const breadcrumb = document.createElement('div');
-      breadcrumb.classList.add('kando-menu-preview-breadcrumb');
-      breadcrumb.textContent = item.name;
-      this.breadcrumbs.appendChild(breadcrumb);
-
-      breadcrumb.addEventListener('click', () => this.selectItem(item));
-    });
-  }
-
-  /**
    * This method is called whenever a new menu item should be added to the preview. It
    * creates a new div for the item and adds it to the given container. The item is also
    * made draggable and selectable.
@@ -672,12 +636,10 @@ export class Preview extends EventEmitter {
         const lastSelected = this.selectionChain[index + 1];
         this.selectionChain.splice(index + 1);
         this.drawMenu(lastSelected.computedAngle);
-        this.drawBreadcrumbs();
       } else if (index === -1) {
         this.selectionChain.push(item);
 
         this.drawMenu(item.computedAngle == null ? null : item.computedAngle + 180);
-        this.drawBreadcrumbs();
       }
     }
 
