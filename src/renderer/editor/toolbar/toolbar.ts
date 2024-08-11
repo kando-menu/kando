@@ -168,11 +168,7 @@ export class Toolbar extends EventEmitter {
           icon: 'palette',
           title: 'Menu Themes',
           gapBefore: true,
-          content: emptyTab({
-            heading: 'Here will be a list of available menu themes!',
-            subheading:
-              'There will be preview images and the possibility to download new themes from the web.',
-          }),
+          content: '',
         },
         {
           id: 'kando-editor-themes-tab',
