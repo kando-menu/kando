@@ -663,7 +663,12 @@ export class KandoApp {
       const themes = await this.listMenuThemes();
 
       // Load all descriptions in parallel.
-      return Promise.all(themes.map((theme) => this.loadMenuDescription(theme)));
+      const descriptions = await Promise.all(
+        themes.map((theme) => this.loadMenuDescription(theme))
+      );
+
+      // Sort by the name property of the description.
+      return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
     // Show the web developer tools if requested.
