@@ -166,7 +166,7 @@ export class Editor extends EventEmitter {
       this.preview.setMenu(this.menuSettings.menus[index]);
     });
 
-    this.toolbar.on('select-mennu-theme', (theme: string) => {
+    this.toolbar.on('select-menu-theme', (theme: string) => {
       window.api.appSettings.set('menuTheme', theme);
     });
 
