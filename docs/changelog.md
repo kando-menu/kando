@@ -29,6 +29,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The "Debugging" tab in the sidebar is now called "Development".
 - The icons in the icon picker are not cropped to a circle anymore. This is not useful anymore since the menu themes can decide not to use circular icons.
 
+#### Removed
+
+- The breadcrumbs showing the path to the currently edited menu in the menu editor. This was not very useful and looked out of place.
+
 #### Fixed
 
 - A bug which caused Kando to crash when opening a menu on Linux/X11 where `XResourceManagerString` returns `NULL`.
