@@ -172,13 +172,12 @@
 #kando-editor .toolbar-item-button,
 #kando-editor .toolbar-menu-button,
 #kando-editor .toolbar-theme-button {
-  border: 2px dashed rgba(255, 255, 255, 0);
   overflow: hidden;
   transition: transform 150ms linear;
 
   // If checked, we show a border and slightly different background color.
   &.checked {
-    border-color: rgba(255, 255, 255, 0.5);
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
     background: var(--bs-btn-active-bg);
   }
 
@@ -313,9 +312,23 @@
 
 // The theme buttons are a bit larger and a different layout.
 #kando-editor .toolbar-theme-button {
+  padding: 0;
+
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .color-button {
+    @include rfs(30px, width);
+    @include rfs(30px, height);
+    border-radius: 50%;
+    margin: 0 2px;
+    padding: 0;
+
+    &:hover {
+      box-shadow: 0 0 5px white;
+    }
   }
 }

@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { Tooltip } from 'bootstrap';
 import { EventEmitter } from 'events';
 
 import { IMenuThemeDescription } from '../../../common';
@@ -52,10 +53,18 @@ export class MenuThemesTab extends EventEmitter {
       author: theme.author,
       checked: theme.id === currentMenu.id,
       preview: 'file://' + theme.directory + '/' + theme.id + '/preview.jpg',
+      colors: theme.colors,
     }));
 
     const template = require('./templates/menu-themes-tab.hbs');
     this.tabContent.innerHTML = template({ themes: data });
+
+    // Initialize all tooltips.
+    this.tabContent.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
+      new Tooltip(elem, {
+        delay: { show: 500, hide: 0 },
+      });
+    });
 
     const allButtons = this.tabContent.querySelectorAll('.toolbar-theme-button');
     allButtons.forEach((button) => {
