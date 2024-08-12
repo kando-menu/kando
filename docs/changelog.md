@@ -21,7 +21,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
-#### Changed
+#### :wrench: Changed
 
 - The text in the center item is now updated asynchronously. This may reduce occasional frame drops as the update causes a forced reflow of the menu layout.
 - Improved the gesture detection algorithm slightly. Mouse gestures should be recognized more reliably especially with very quick movements.
@@ -29,11 +29,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The "Debugging" tab in the sidebar is now called "Development".
 - The icons in the icon picker are not cropped to a circle anymore. This is not useful anymore since the menu themes can decide not to use circular icons.
 
-#### Removed
+#### :fire: Removed
 
 - The breadcrumbs showing the path to the currently edited menu in the menu editor. This was not very useful and looked out of place.
 
-#### Fixed
+#### :bug: Fixed
 
 - A bug which caused Kando to crash when opening a menu on Linux/X11 where `XResourceManagerString` returns `NULL`.
 - A bug which prevented some Electron-based applications to start properly when launched from Kando on Linux. See [#552](https://github.com/kando-menu/kando/issues/552) for details.
@@ -46,7 +46,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 <img align="right" width="400px" src="img/player13.jpg"></img>
 </a>
 
-#### Added
+#### :tada: Added
 
 - **Custom Icon Themes:** You can now use your own icons in Kando! Read the [corresponding documentation](configuring.md#adding-custom-icon-themes-sparkles) to learn how it is done.
 - **Icon-Name Tooltips in the Icon Picker:** When hovering over an icon in the icon picker, the name of the icon is now shown as a tooltip. This should make it easier to find an icon again. Thanks to [@pushkardev123](https://github.com/pushkardev123) for this contribution!
@@ -58,7 +58,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Info-Placeholders for the Command Menu Items:** You can now use `{{app_name}}`, `{{window_name}}`, `{{pointer_x}}`, and `{{pointer_y}}` in your commands. These placeholders will be replaced with the name of the focused application, focused window, and the pointer position when the menu was opened.
 - **AppImages for Linux:** Kando is now also available as an [AppImage](https://appimage.org/) from the [releases page](https://github.com/kando-menu/kando/releases). This should make it easier to use Kando on Linux distributions which do not have a package manager that supports Kando yet. Thanks to [@Samueru-sama](https://github.com/Samueru-sama) and [@ivan-hc](https://github.com/ivan-hc) for their contributions!
 
-#### Changed
+#### :wrench: Changed
 
 - The "Execute Delayed" property of hotkey and macro items is now called "Execute After Closing the Menu". This should make it clearer what this property does.
 - The "Execute After Closing the Menu" property is now enabled by default for hotkey and macro items. This should make it easier to use these items in a way that is expected by most users.
@@ -72,7 +72,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The menu-condition picker now has a header which shortly explains why you would want to use menu conditions.
 - On macOS, if the user tries to pick the focused window in the menu condition editor but Kando does not have the necessary permission, the window-title entry will show that the Screen Recording permission is required.
 
-#### Fixed
+#### :bug: Fixed
 
 - A bug where the properties of a menu item were still shown in the editor after the item was deleted.
 - A bug where menu items would be selected when pressing <kbd>Esc</kbd> (or nay other key) while dragging an item.
@@ -92,13 +92,13 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-06-20
 
-#### Added
+#### :tada: Added
 
 - **Menu Conditions!** It is now possible to show menus only under certain circumstances. For instance, you can show a menu only if a specific application is focused or if the mouse is in a specific region of the screen. Thanks a ton to [@ClearStaff](https://github.com/ClearStaff) for many contributions to this feature!
 - New menu item type: **Keyboard Macros**! You can now record and playback keyboard macros in Kando. This is very useful if you want to automate repetitive tasks! The new item type is much more flexible than the simple hotkey-simulation action. It allows for an arbitrary number of key presses and releases and also supports delays between the key events.
 - **Single-Key Turbo Mode**: Now _any_ key is a Turbo-Mode modifier. Before only if <kbd>Alt</kbd>, <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, and <kbd>Meta</kbd> were held down, you could browse through the menu in "Turbo-Mode". Now this is possible with any key. This makes it possible to easily use Turbo-Mode even if a menu is bound to a single key without a modifier.
 
-#### Changed
+#### :wrench: Changed
 
 - On macOS, the application settings are now stored in `~/Library/Application Support/kando/` (with a lowercase `kando`). This is more consistent with the other platforms and macOS seems to handle this in a case-insensitive way, so the settings should be preserved when upgrading from an older version.
 - When a menu is opened in screen-center mode, turbo-mode is now disabled initially. This is to prevent accidental navigation when the menu is opened and a key is still pressed. Once all keyboard keys are released, turbo-mode can be activated by pressing and holding any key.
@@ -107,7 +107,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - An [ESLint rule](https://typescript-eslint.io/rules/naming-convention/) which enforces naming conventions is used now. This should make the code more consistent, easier to read, and easier to contribute to.
 - Another [ESLint rule](https://eslint.org/docs/latest/rules/curly) which enforces the use of curly braces for all control statements is used now. This should make the code more consistent and less error-prone.
 
-#### Fixed
+#### :bug: Fixed
 
 - A bug where the menu would not open on the correct monitor on Windows if there was a monitor with a higher DPI scale to the right of a monitor with a lower DPI scale.
 - Low-resolutions tray icons on macOS.
@@ -122,7 +122,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-06-07
 
-#### Added
+#### :tada: Added
 
 - Support for HiDPI screens. Kando will now properly warp the mouse pointer to the center of a menu item even if display scaling is enabled.
 - Better example menus. When you launch Kando for the first time (or delete your `menus.json` file), you will now see a more useful example menu. This menu depends on the platform you are using. There are some hard-coded applications and keyboard shortcuts, but you can easily change them in the menu editor.
@@ -131,18 +131,18 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Issue templates. If you now [open a new issue](https://github.com/kando-menu/kando/issues/new/choose), you can choose from different templates.
 - A [Code of Conduct](code-of-conduct.md). This is a set of rules which defines the behavior of contributors and users in the Kando community. It is important to read and understand this document before contributing to Kando.
 
-#### Changed
+#### :wrench: Changed
 
 - **[BREAKING]** On Linux, all configuration files are now stored in `~/.config/kando/`. The directory now starts with **lowercase letter**! To migrate your configuration, simply move the `menus.json` file from the old location to the new one.
 - Kando is now shown on all workspaces.
 - The sidebar tab "Tutorial" has been renamed to "Introduction". There will be real tutorials in the future.
 - The top-level menu item in the configuration file is now called `"root"` instead of `"nodes"`. This is more consistent with the source code. Your settings file will be automatically migrated when you start Kando.
 
-#### Removed
+#### :fire: Removed
 
 - The console message which reported hover and selection events. This was only useful for debugging and is no longer needed.
 
-#### Fixed
+#### :bug: Fixed
 
 - A regression on Windows where the menu would not open on the correct monitor.
 - Touch input in the menu editor. It is now possible to edit menus on touch devices. This involved a complete rewrite of the drag-and-drop code - please let me know if you encounter any issues!
@@ -155,7 +155,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-05-24
 
-#### Added
+#### :tada: Added
 
 - The possibility to **change the shortcut of a menu** in the menu editor. There is now a text field in the properties area on the right-hand side which allows to either enter the shortcut directly or to press the key combination on the keyboard. This works on all platforms, except for KDE/Wayland and Hyprland, where direct binding of global shortcuts is not directly supported.
 - **[BREAKING]** The possibility to change the global shortcut ID on platforms which do not support direct binding of global shortcuts. For instance, on KDE/Wayland or on Hyprland, Kando can not directly bind global shortcuts. On those platforms, the menu editor shows a text field instead of the shortcut picker. Here you can enter a unique ID for the shortcut and then use the global shortcut settings of the desktop environment to bind the shortcut ID to a key combination. **On these platforms, your existing global shortcuts will not work anymore**. You will have to rebind them using the new method!
@@ -165,7 +165,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - For the URI action, there is also a text field which allows to enter the URI directly.
 - Tips for the menu editor. When you select a menu item, a more or less related **tip will be shown** in the properties area on the right-hand side. 
 
-#### Changed
+#### :wrench: Changed
 
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
 - It is now allowed to have **multiple menus with the same shortcut**. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
@@ -176,12 +176,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Refactored some more editor-opening code to remove a forced reflow. This makes the editor open even faster (🚀 **another 1.5x**).
 - Rename the "Open URL" action to "Open URI" in the menu editor.
 
-#### Removed
+#### :fire: Removed
 
 - The Example Actions tab from the sidebar. As we are getting closer to a fully functional menu editor, this tab is no longer needed.
 - The non-functional get-menus-online buttons from the menus tab. They will return in a later version when we have a way to actually get menus online.
 
-#### Fixed
+#### :bug: Fixed
 
 - A bug which occurred when opening a completely empty menu.
 - The [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now ensures that shortcuts are rebound when the extension is reloaded. This fixes an issue where shortcuts would not work after logging out and back in.
@@ -190,12 +190,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-05-10
 
-#### Added
+#### :tada: Added
 
 - The possibility to change the open-menu-at-screen-center property via the menu editor.
 - A link to the new [Kando Discord server](https://discord.gg/hZwbVSDkhy) to the README and to the sidebar in the menu editor.
 
-#### Fixed
+#### :bug: Fixed
 
 - An issue which prevented Kando from starting on Hyprland 0.40.0.
 
@@ -207,7 +207,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-04-30
 
-#### Added
+#### :tada: Added
 
 - The possibility to change menu and menu item names! When a menu or menu item is selected, there is now a text field in the properties area on the right-hand side which allows to change the name.
 - The possibility to change the icon of a menu or menu item! Next to the name field, there is now a button which opens an icon picker. This allows to select the icon theme and the icon itself. There is also a search field which allows searching for icons.
@@ -216,12 +216,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A command line option to open the menu editor: `kando --settings`. If Kando is already running, the menu editor will be opened in the running instance.
 - A desktop notification which is shown when you attempt to run a second instance of Kando.
 
-#### Changed
+#### :wrench: Changed
 
 - When a menu item is added to the menu preview in the menu editor, it will now be automatically selected. The only exception are submenus which will not be opened automatically.
 - The binaries for the GitHub release are now built on newer versions of the CI runners. The Windows binaries are now built on Windows Server 2022, the macOS binaries on macOS 12 & 14, and the Linux binaries on Ubuntu 22.04.
 
-#### Fixed
+#### :bug: Fixed
 
 - Simulating hotkeys involving digit keys such as <kbd>Ctrl</kbd>+<kbd>1</kbd>.
 - The desktop notification which is shown when a menu-item action fails. It now shows the correct error message.
@@ -231,7 +231,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-04-22
 
-#### Fixed
+#### :bug: Fixed
 
 - Fixed an issue which caused a JavaScript exception error to pop up when executing a command action for which the command returned a non-zero exit code.
 
@@ -243,20 +243,20 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-04-21
 
-#### Added
+#### :tada: Added
 
 - The Add-New-Item tab! You can now add new items to the menu by dragging them from the toolbar to the menu preview. It's not yet possible to edit the items, but this is the next major step towards a fully functional menu editor.
 - The Stash! You can now temporarily store menu items in the stash and later move them back to the menu. This is useful if you want to reorganize your menus or move things from one menu to another.
 - The possibility to move menu items to the trash. They can be restored from the trash by dragging them back to the menu.
 
-#### Changed
+#### :wrench: Changed
 
 - Menu buttons in the toolbar of the menu editor have now a maximum width. They will not span the whole width of the toolbar anymore.
 - Dragged menu items now have a subtle backdrop blur.
 - If a dragged item from the toolbar is not successfully dropped somewhere, there will now be an animation of the item moving back to its original position.
 - To support drag-and-drop operations from the toolbar to the menu preview, some code refactoring was necessary. Also, item types are now much less hard-coded and much more modular, which also involved much refactoring. Both changes should not be visible to the user, but if you experience any issues in the menu editor, please let me know!
 
-#### Fixed
+#### :bug: Fixed
 
 - Loosing menu items when pressing the <kbd>Escape</kbd> key in the menu editor during a drag operation. Now, the drag operation will be properly cancelled, and the menu editor will not be closed.
 - A weird issue on Windows where closing the menu left a small unclickable area in the bottom left of the screen. See [#375](https://github.com/kando-menu/kando/issues/375) for details. 
@@ -269,7 +269,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-03-29
 
-#### Added
+#### :tada: Added
 
 - The possibility to use emojis as menu item icons. Just use `"iconTheme": "emoji"` and for instance `"icon": "🚀"` in your `menus.json`.
 - The possibility to select the to-be-edited menu in the menu editor.
@@ -281,7 +281,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Support for Plasma 6.
 - Support for Wayland on GNOME 46 via an update to the [🐚 Kando GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration).
 
-#### Changed
+#### :wrench: Changed
 
 - Significantly improved the algorithm which calculates the drop location when dragging an item in the menu editor's preview. There are still some weird edge cases especially in the presence of fixed angles, but it should work much better now.
 - The sizing and layout of the editor components now depends on the window size. The menu editor will now look much better on small and large screens.
@@ -293,7 +293,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The SCSS source code of Kando has received a major cleanup. It is now much better documented and structured.
 - If no menus are configured, Kando will recreate the default prototype menu on startup. This is useful if you accidentally removed all menus from the configuration file.
 
-#### Fixed
+#### :bug: Fixed
 
 - An issue which prevented the app from starting if no shortcut was configured for a menu.
 
@@ -306,7 +306,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-01-29
 
-#### Added
+#### :tada: Added
 
 - The first component of the menu editor: **The menu preview!** This shows a preview of the menu which is currently being edited. For now, it can be used to...
   * Reorder menu items.
@@ -316,13 +316,13 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Some initial documentation. You can read it [here](https://github.com/kando-menu/kando/blob/main/docs/README.md).
 - A console message when a second instance of Kando is launched. Before, the second instance would just silently quit.
 
-#### Changed
+#### :wrench: Changed
 
 - The item positioning code has been slightly changed: If no fixed angle is given, the first child will now be positioned at the first valid position counting clockwise from the top. Before, it was positioned at the position closest to the top, which could have been slightly counter-clockwise as well.
 - The menu is now hidden when the user exits the menu editor.
 - Some parts of the rendering code have been refactored. This should not change anything for the user, but it makes the code more readable and maintainable.
 
-#### Fixed
+#### :bug: Fixed
 
 - Global shortcuts on KDE Wayland which were broken due to a regression.
 - Opening the menu on KDE Wayland when no window was focused.
@@ -331,7 +331,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-01-15
 
-#### Fixed
+#### :bug: Fixed
 
 - The macOS M1 binaries are now created on one of GitHub's [large macOS runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/about-larger-runners) which run on actual M1 hardware. This should fix the issue where the arm64 binaries did not work on M1 Macs.
 
@@ -344,7 +344,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-01-11
 
-#### Added
+#### :tada: Added
 
 - **A new backend for macOS!**
   - This new native backend uses Objective-C++ and supports all required features for Kando. It can be used to synthesize keyboard and mouse events and to get the name and application of the currently focused window.
@@ -352,7 +352,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - I am still very new to macOS development, so please let me know if you encounter any issues!
 - CodeQL analysis. This is a static analysis tool which is used to find bugs and security vulnerabilities in the code. It is now integrated into the CI pipeline and will run on every commit.
 
-#### Changed
+#### :wrench: Changed
 
 - When installed, the app is now called "Kando" instead of "kando".
 - The X11 backend has been refactored to use a more object-oriented approach. Now it is more inlined with the other native backends.
@@ -360,7 +360,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - On Windows, the menu window is now minimized instead of hidden when the menu is closed. This allows for a smoother transition when opening the menu again.
 - Replaced the switch-virtual-desktop example action with a <kbd>Ctrl</kbd>+<kbd>Z</kbd> example action.
 
-#### Fixed
+#### :bug: Fixed
 
 - Input focus after closing the menu on Windows. Now, the window which had focus before opening the menu will regain focus. Thanks to [@mmikeww](https://github.com/mmikeww) for this fix!
 - Synthesizing key events on Windows which have _extended scan codes_ like for instance the <kbd>Win</kbd> key.
@@ -373,7 +373,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2023-12-22
 
-#### Added
+#### :tada: Added
 
 - The possibility to **execute some specific actions when a menu item is selected**. This is the first step towards making Kando actually useful! To use this, you will have to edit your menu configuration file for now. This is located at `~/.config/kando/menus.json` (Linux) or `%appdata%\kando\menus.json` (Windows). Change the `type` of an item to one of the options below and add a `"data": { ... }` object with additional parameters. Kando will automatically reload the menu configuration file when you save it.
   - `"type": "command"`: This will execute a shell command. The command is specified in the `"data"` object. For instance, you can use `"data": { "command": "firefox" }` to open Firefox on Linux.
@@ -386,7 +386,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Restoring of the sidebar visibility**. This is now stored in the application settings. This means that the sidebar will remain hidden when you restart Kando.
 - A **new example action** in the sidebar which runs any given shell command. You can type a command into a text entry and Kando will execute it when you press enter. This will be one of the most basic actions in Kando.
 
-#### Fixed
+#### :bug: Fixed
 
 - Simulating the `MediaTrackPrevious`, `MediaTrackNext`, `MediaPlayPause`, and `MediaStop` keys on Linux.
 - Loading of invalid menu configuration files. This no longer crashes Kando, but shows an error message in the console instead. Kando will fall back to the default configuration in this case.
@@ -394,7 +394,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Overwriting invalid menu configuration files. Instead of overwriting with the default settings, Kando will not touch invalid configuration files anymore.
 - Alignment of the text on the center item. Before, it used to be left aligned if the text wrapped to multiple lines. Now, it is always centered.
 
-#### Removed
+#### :fire: Removed
 
 - Showing the prototype menu when launching a second instance of Kando. As we now support multiple menus, this is no longer useful. Instead, you can now use the `--menu <name>` command line argument to open a specific menu.
 
@@ -406,14 +406,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2023-11-24
 
-#### Added
+#### :tada: Added
 
 - A new backend for [Hyprland](https://hyprland.org/). This backend uses the [virtual-pointer](https://wayland.app/protocols/wlr-virtual-pointer-unstable-v1) and [virtual-keyboard](https://wayland.app/protocols/virtual-keyboard-unstable-v1) Wayland protocols to simulate mouse and keyboard input. In addition, it uses `hyprctl` to get the name of the currently focused window as well as the current pointer location. Global shortcuts are bound via the [hyprland-global-shortcuts](https://github.com/hyprwm/hyprland-protocols/blob/main/protocols/hyprland-global-shortcuts-v1.xml) protocol.
 - Callbacks which called whenever menu items are hovered, unhovered, or selected. There is a fourth callback which is executed when a selection is aborted. Later, we will use these events to actually make something happen when items are selected in the menu.
 - Initial support for persistent settings. Some settings (like the demo menu layout) are now saved and loaded to / from a file in the user's home directory (e.g. `~/.config/kando/` on Linux).
 - Some initial code for the menu editor. This is not yet functional, but you can already open it by clicking the small gear icon in the bottom right corner of the screen when the demo menu is shown. [You can read more about the future plans for the menu editor](https://ko-fi.com/post/Editor-Mockups-U6U1PD0K8)!
 
-#### Changed
+#### :wrench: Changed
 
 - Large parts of the code have been refactored. For instance, by using the template engine [Handlebars](https://handlebarsjs.com/), the code is now much more readable and maintainable. 
 
@@ -425,7 +425,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2023-08-21
 
-#### Added
+#### :tada: Added
 
 - All initial features of the Tech-Demo. It's not a functional menu yet, but it already demonstrates the basic concepts. The following features are implemented:
   - Backends for Windows and Linux. On Linux, many X11-based window managers and KDE and GNOME on Wayland are supported.
