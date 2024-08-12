@@ -356,11 +356,26 @@ export interface IAppSettings {
   /** The name of the theme to use for the menu. */
   menuTheme: string;
 
-  /** The accent colors to use for menu themes. */
-  menuThemeColors: Array<{ name: string; color: string }>;
+  /** The name of the theme which should be used for the dark mode. */
+  darkMenuTheme: string;
 
-  /** The name of the theme to use for the editor. */
-  editorTheme: string;
+  /** The accent color overrides to use for menu themes. */
+  menuThemeColors: Array<{
+    theme: string;
+    colors: Array<{ name: string; color: string }>;
+  }>;
+
+  /** The accent color overrides to use for the dark mode. */
+  darkMenuThemeColors: Array<{
+    theme: string;
+    colors: Array<{ name: string; color: string }>;
+  }>;
+
+  /**
+   * If enabled, the dark menu theme and dark color variants will be used if the system is
+   * in dark mode.
+   */
+  enableDarkModeForMenuThemes: boolean;
 
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: boolean;

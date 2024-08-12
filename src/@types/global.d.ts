@@ -25,8 +25,9 @@ declare global {
   interface Window {
     api: {
       appSettings: {
-        get: <K extends keyof IAppSettings>(key: K) => Promise<IAppSettings[K]>;
-        set: <K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) => void;
+        get: () => Promise<IAppSettings>;
+        getKey: <K extends keyof IAppSettings>(key: K) => Promise<IAppSettings[K]>;
+        setKey: <K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) => void;
         onChange: <K extends keyof IAppSettings>(
           key: K,
           callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
@@ -40,6 +41,8 @@ declare global {
       getBackendInfo: () => Promise<IBackendInfo>;
       getMenuTheme: () => Promise<IMenuThemeDescription>;
       getAllMenuThemes: () => Promise<Array<IMenuThemeDescription>>;
+      getCurrentMenuThemeColors: () => Promise<Array<{ name: string; color: string }>>;
+      darkModeChanged: (callback: () => void) => void;
       getUserIconThemeDirectory: () => Promise<string>;
       getUserIconThemes: () => Promise<Array<string>>;
       listUserIcons: (string: iconTheme) => Promise<Array<string>>;

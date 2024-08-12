@@ -30,10 +30,13 @@ contextBridge.exposeInMainWorld('api', {
    * notify the renderer process.
    */
   appSettings: {
-    get<K extends keyof IAppSettings>(key: K): Promise<IAppSettings[K]> {
+    get(): Promise<IAppSettings> {
+      return ipcRenderer.invoke('app-settings-get');
+    },
+    getKey<K extends keyof IAppSettings>(key: K): Promise<IAppSettings[K]> {
       return ipcRenderer.invoke(`app-settings-get-${key}`);
     },
-    set<K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) {
+    setKey<K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) {
       ipcRenderer.send(`app-settings-set-${key}`, value);
     },
     onChange<K extends keyof IAppSettings>(
@@ -78,6 +81,19 @@ contextBridge.exposeInMainWorld('api', {
   /** This will return all available menu themes. */
   getAllMenuThemes: function () {
     return ipcRenderer.invoke('get-all-menu-themes');
+  },
+
+  /**
+   * This will return the accent colors of the currently used menu theme. This may depend
+   * on the current system theme (light or dark).
+   */
+  getCurrentMenuThemeColors: function () {
+    return ipcRenderer.invoke('get-current-menu-theme-colors');
+  },
+
+  /** This will be called by the host process when the dark mode is toggled for the system. */
+  darkModeChanged(callback: () => void) {
+    ipcRenderer.on('dark-mode-changed', () => callback());
   },
 
   /** This will return the path to the user's icon theme directory in the config directory. */

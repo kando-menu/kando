@@ -72,7 +72,7 @@ export class Sidebar {
       }
 
       this.visible = visible;
-      window.api.appSettings.set('sidebarVisible', visible);
+      window.api.appSettings.setKey('sidebarVisible', visible);
     }
   }
 
@@ -173,7 +173,7 @@ export class Sidebar {
     });
 
     // Initialize the visibility from the app settings.
-    window.api.appSettings.get('sidebarVisible').then((visible) => {
+    window.api.appSettings.getKey('sidebarVisible').then((visible) => {
       this.setVisibility(visible);
     });
   }

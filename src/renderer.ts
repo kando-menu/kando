@@ -26,7 +26,7 @@ import { MenuTheme } from './renderer/menu/menu-theme';
 Promise.all([
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
-  window.api.appSettings.get('menuThemeColors'),
+  window.api.getCurrentMenuThemeColors(),
 ]).then(([info, themeDescription, colors]) => {
   // First, we create a new menu theme and load the description we got from the main
   // process.
@@ -34,20 +34,22 @@ Promise.all([
   menuTheme.loadDescription(themeDescription);
   menuTheme.setColors(colors);
 
-  // We also listen for changes to the menu theme and the menu theme colors.
-  window.api.appSettings.onChange('menuThemeColors', (colors) => {
-    menuTheme.setColors(colors);
-  });
+  const reloadMenuTheme = async () => {
+    Promise.all([window.api.getMenuTheme(), window.api.getCurrentMenuThemeColors()]).then(
+      ([themeDescription, colors]) => {
+        menuTheme.loadDescription(themeDescription);
+        menuTheme.setColors(colors);
+      }
+    );
+  };
 
-  window.api.appSettings.onChange('menuTheme', () => {
-    Promise.all([
-      window.api.getMenuTheme(),
-      window.api.appSettings.get('menuThemeColors'),
-    ]).then(([themeDescription, colors]) => {
-      menuTheme.loadDescription(themeDescription);
-      menuTheme.setColors(colors);
-    });
-  });
+  // We also listen for changes to the menu theme and the menu theme colors.
+  window.api.appSettings.onChange('menuThemeColors', () => reloadMenuTheme());
+  window.api.appSettings.onChange('darkMenuThemeColors', () => reloadMenuTheme());
+  window.api.appSettings.onChange('menuTheme', () => reloadMenuTheme());
+  window.api.appSettings.onChange('darkMenuTheme', () => reloadMenuTheme());
+  window.api.appSettings.onChange('enableDarkModeForMenuThemes', () => reloadMenuTheme());
+  window.api.darkModeChanged(() => reloadMenuTheme());
 
   // Now, we create a new menu and a new editor. The menu is responsible for rendering
   // the menu items and the editor is responsible for rendering the editor UI.

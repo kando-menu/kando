@@ -13,7 +13,16 @@ import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
+import {
+  screen,
+  BrowserWindow,
+  ipcMain,
+  shell,
+  Tray,
+  Menu,
+  app,
+  nativeTheme,
+} from 'electron';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
@@ -85,8 +94,10 @@ export class KandoApp {
     directory: app.getPath('userData'),
     defaults: {
       menuTheme: 'default',
+      darkMenuTheme: 'default',
       menuThemeColors: [],
-      editorTheme: 'default',
+      darkMenuThemeColors: [],
+      enableDarkModeForMenuThemes: false,
       sidebarVisible: true,
       enableVersionCheck: true,
       zoomFactor: 1,
@@ -563,10 +574,11 @@ export class KandoApp {
       );
     }
 
+    // We also allow getting the entire app settings object.
+    ipcMain.handle('app-settings-get', () => this.appSettings.get());
+
     // Allow the renderer to retrieve the menu settings.
-    ipcMain.handle('menu-settings-get', () => {
-      return this.menuSettings.get();
-    });
+    ipcMain.handle('menu-settings-get', () => this.menuSettings.get());
 
     // Allow the renderer to alter the menu settings.
     ipcMain.on('menu-settings-set', (event, settings) => {
@@ -655,7 +667,12 @@ export class KandoApp {
     // Allow the renderer to retrieve the description of the current menu theme. We also
     // return the path to the CSS file of the theme, so that the renderer can load it.
     ipcMain.handle('get-menu-theme', async () => {
-      return this.loadMenuDescription(this.appSettings.get('menuTheme'));
+      const useDarkVariant =
+        this.appSettings.get('enableDarkModeForMenuThemes') &&
+        nativeTheme.shouldUseDarkColors;
+      return this.loadMenuDescription(
+        this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
+      );
     });
 
     // Allow the renderer to retrieve all available menu themes.
@@ -669,6 +686,28 @@ export class KandoApp {
 
       // Sort by the name property of the description.
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    // Allow the renderer to retrieve the current menu theme override colors. We return
+    // the colors for the current theme and for the dark theme if the user enabled dark
+    // mode for menu themes and if the system is currently in dark mode.
+    ipcMain.handle('get-current-menu-theme-colors', async () => {
+      const useDarkVariant =
+        this.appSettings.get('enableDarkModeForMenuThemes') &&
+        nativeTheme.shouldUseDarkColors;
+
+      const theme = this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme');
+      const colors = this.appSettings.get(
+        useDarkVariant ? 'darkMenuThemeColors' : 'menuThemeColors'
+      );
+
+      const overrides = colors.find((c) => c.theme === theme);
+      return overrides ? overrides.colors : [];
+    });
+
+    // Allow the renderer to retrieve the current system theme.
+    nativeTheme.on('updated', () => {
+      this.window.webContents.send('dark-mode-changed');
     });
 
     // Show the web developer tools if requested.

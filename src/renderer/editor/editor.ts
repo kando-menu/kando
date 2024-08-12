@@ -167,7 +167,7 @@ export class Editor extends EventEmitter {
     });
 
     this.toolbar.on('select-menu-theme', (theme: string) => {
-      window.api.appSettings.set('menuTheme', theme);
+      window.api.appSettings.setKey('menuTheme', theme);
     });
 
     // Initialize all tooltips.
@@ -217,11 +217,11 @@ export class Editor extends EventEmitter {
       window.api.menuSettings.getCurrentMenu(),
       window.api.getAllMenuThemes(),
       window.api.getMenuTheme(),
-    ]).then(([settings, currentMenu, allMenuThemes, currentMenuTheme]) => {
-      this.menuSettings = settings;
+    ]).then(([menuSettings, currentMenu, allMenuThemes, currentMenuTheme]) => {
+      this.menuSettings = menuSettings;
       this.currentMenu = currentMenu;
-      this.preview.setMenu(settings.menus[currentMenu]);
-      this.toolbar.init(settings, currentMenu, allMenuThemes, currentMenuTheme);
+      this.preview.setMenu(menuSettings.menus[currentMenu]);
+      this.toolbar.init(menuSettings, currentMenu, allMenuThemes, currentMenuTheme);
     });
 
     this.emit('enter-edit-mode');
