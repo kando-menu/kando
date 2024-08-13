@@ -29,8 +29,6 @@ import { MenuThemesTab } from './menu-themes-tab';
  *   the entire editor.
  * @fires select-menu - This event is emitted when the user selects a menu in the toolbar.
  *   The index of the selected menu is passed as the first argument.
- * @fires select-menu-theme - This event is emitted when the user selects a menu theme in
- *   the toolbar. The folder name of the selected theme is passed as the first argument.
  */
 export class Toolbar extends EventEmitter {
   /**
@@ -88,9 +86,6 @@ export class Toolbar extends EventEmitter {
 
     // Initialize the menu themes tab and forward its events.
     this.menuThemesTab = new MenuThemesTab(this.container);
-    this.menuThemesTab.on('select-theme', (theme) =>
-      this.emit('select-menu-theme', theme)
-    );
   }
 
   /** This method returns the container of the editor toolbar. */

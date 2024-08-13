@@ -42,7 +42,8 @@ declare global {
       getMenuTheme: () => Promise<IMenuThemeDescription>;
       getAllMenuThemes: () => Promise<Array<IMenuThemeDescription>>;
       getCurrentMenuThemeColors: () => Promise<Array<{ name: string; color: string }>>;
-      darkModeChanged: (callback: () => void) => void;
+      getIsDarkMode: () => Promise<boolean>;
+      darkModeChanged: (callback: (darkMode: boolean) => void) => void;
       getUserIconThemeDirectory: () => Promise<string>;
       getUserIconThemes: () => Promise<Array<string>>;
       listUserIcons: (string: iconTheme) => Promise<Array<string>>;

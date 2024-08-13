@@ -9,23 +9,22 @@
 // SPDX-License-Identifier: MIT
 
 import { Tooltip } from 'bootstrap';
-import { EventEmitter } from 'events';
 
 import { IMenuThemeDescription } from '../../../common';
 
 /**
- * This class is responsible for the menu-theme selection tab in the toolbar. It is an
- * event emitter which emits the following events:
- *
- * @fires select-theme - This event is emitted when the user selects a menu theme. The
- *   folder name of the selected theme is passed as an argument.
+ * This class is responsible for the menu-theme selection tab in the toolbar. It directly
+ * interacts with the main process to set the menu theme.
  */
-export class MenuThemesTab extends EventEmitter {
+export class MenuThemesTab {
   /** This is the HTML element which contains the tab's content. */
   private tabContent: HTMLElement;
 
   /** This is an array of all available menu themes. */
   private allMenuThemes: Array<IMenuThemeDescription>;
+
+  /** This is a flag which is set to true if the dark mode is currently enabled. */
+  private darkMode: boolean;
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -33,11 +32,13 @@ export class MenuThemesTab extends EventEmitter {
    * @param container The container is the HTML element which contains the entire toolbar.
    */
   constructor(container: HTMLElement) {
-    super();
-
     this.tabContent = container.querySelector('#kando-menu-themes-tab');
 
-    window.api.darkModeChanged(() => this.redraw());
+    window.api.darkModeChanged((darkMode) => {
+      this.darkMode = darkMode;
+      this.redraw();
+    });
+
     window.api.appSettings.onChange('enableDarkModeForMenuThemes', () => this.redraw());
   }
 
@@ -49,11 +50,17 @@ export class MenuThemesTab extends EventEmitter {
    */
   public init(allMenuThemes: Array<IMenuThemeDescription>) {
     this.allMenuThemes = allMenuThemes;
-    this.redraw();
+    window.api.getIsDarkMode().then((darkMode) => {
+      this.darkMode = darkMode;
+      this.redraw();
+    });
   }
 
   private async redraw() {
     const currentTheme = await window.api.getMenuTheme();
+    const enableDarkMode = await window.api.appSettings.getKey(
+      'enableDarkModeForMenuThemes'
+    );
 
     // Compile the data for the Handlebars template.
     const data = this.allMenuThemes.map((theme) => ({
@@ -82,7 +89,13 @@ export class MenuThemesTab extends EventEmitter {
           button.classList.remove('checked');
         });
         button.classList.add('checked');
-        this.emit('select-theme', button.getAttribute('data-theme-id'));
+        const theme = button.getAttribute('data-theme-id');
+
+        if (this.darkMode && enableDarkMode) {
+          window.api.appSettings.setKey('darkMenuTheme', theme);
+        } else {
+          window.api.appSettings.setKey('menuTheme', theme);
+        }
       });
     });
 
@@ -92,8 +105,6 @@ export class MenuThemesTab extends EventEmitter {
     darkMode.addEventListener('change', () => {
       window.api.appSettings.setKey('enableDarkModeForMenuThemes', darkMode.checked);
     });
-    window.api.appSettings
-      .getKey('enableDarkModeForMenuThemes')
-      .then((value) => (darkMode.checked = value));
+    darkMode.checked = enableDarkMode;
   }
 }

@@ -91,9 +91,14 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-current-menu-theme-colors');
   },
 
+  /** This will return whether the dark mode is currently enabled for the system. */
+  getIsDarkMode: function () {
+    return ipcRenderer.invoke('get-is-dark-mode');
+  },
+
   /** This will be called by the host process when the dark mode is toggled for the system. */
-  darkModeChanged(callback: () => void) {
-    ipcRenderer.on('dark-mode-changed', () => callback());
+  darkModeChanged(callback: (darkMode: boolean) => void) {
+    ipcRenderer.on('dark-mode-changed', (e, darkMode) => callback(darkMode));
   },
 
   /** This will return the path to the user's icon theme directory in the config directory. */

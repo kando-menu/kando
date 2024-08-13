@@ -706,8 +706,13 @@ export class KandoApp {
     });
 
     // Allow the renderer to retrieve the current system theme.
+    ipcMain.handle('get-is-dark-mode', () => {
+      return nativeTheme.shouldUseDarkColors;
+    });
+
+    // Allow the renderer to be notified when the system theme changes.
     nativeTheme.on('updated', () => {
-      this.window.webContents.send('dark-mode-changed');
+      this.window.webContents.send('dark-mode-changed', nativeTheme.shouldUseDarkColors);
     });
 
     // Show the web developer tools if requested.
