@@ -28,6 +28,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The default Windows menu now uses `start %USERPROFILE%` instead of `explorer %USERPROFILE%` to avoid a notification due to wrong exit codes of `explorer`.
 - The "Debugging" tab in the sidebar is now called "Development".
 - The icons in the icon picker are not cropped to a circle anymore. This is not useful anymore since the menu themes can decide not to use circular icons.
+- The Cantarell font which was used in several places in the menu editor has been replaced with Noto Sans. Also, some places which used the Neucha font now use Noto Sans as well. This should make some labels easier to read.
 
 #### :fire: Removed
 
