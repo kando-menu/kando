@@ -11,7 +11,7 @@
 import { Tooltip } from 'bootstrap';
 import { EventEmitter } from 'events';
 
-import { IAppSettings, IMenuThemeDescription } from '../../../common';
+import { IMenuThemeDescription } from '../../../common';
 
 /**
  * This class is responsible for the menu-theme selection tab in the toolbar. It is an
@@ -24,6 +24,9 @@ export class MenuThemesTab extends EventEmitter {
   /** This is the HTML element which contains the tab's content. */
   private tabContent: HTMLElement;
 
+  /** This is an array of all available menu themes. */
+  private allMenuThemes: Array<IMenuThemeDescription>;
+
   /**
    * This constructor is called after the general toolbar DOM has been created.
    *
@@ -33,23 +36,27 @@ export class MenuThemesTab extends EventEmitter {
     super();
 
     this.tabContent = container.querySelector('#kando-menu-themes-tab');
+
+    window.api.darkModeChanged(() => this.redraw());
+    window.api.appSettings.onChange('enableDarkModeForMenuThemes', () => this.redraw());
   }
 
   /**
    * This method is called initially to set the menu themes. It is called by the toolbar
    * whenever the editor is opened.
    *
-   * @param appSettings The app settings object.
    * @param allMenuThemes An array of all available menu themes.
-   * @param currentTheme The currently selected menu theme.
    */
-  public init(
-    appSettings: IAppSettings,
-    allMenuThemes: Array<IMenuThemeDescription>,
-    currentTheme: IMenuThemeDescription
-  ) {
+  public init(allMenuThemes: Array<IMenuThemeDescription>) {
+    this.allMenuThemes = allMenuThemes;
+    this.redraw();
+  }
+
+  private async redraw() {
+    const currentTheme = await window.api.getMenuTheme();
+
     // Compile the data for the Handlebars template.
-    const data = allMenuThemes.map((theme) => ({
+    const data = this.allMenuThemes.map((theme) => ({
       id: theme.id,
       name: theme.name,
       author: theme.author,
@@ -85,6 +92,8 @@ export class MenuThemesTab extends EventEmitter {
     darkMode.addEventListener('change', () => {
       window.api.appSettings.setKey('enableDarkModeForMenuThemes', darkMode.checked);
     });
-    darkMode.checked = appSettings.enableDarkModeForMenuThemes;
+    window.api.appSettings
+      .getKey('enableDarkModeForMenuThemes')
+      .then((value) => (darkMode.checked = value));
   }
 }

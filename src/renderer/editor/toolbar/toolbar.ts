@@ -9,12 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import {
-  IAppSettings,
-  IBackendInfo,
-  IMenuSettings,
-  IMenuThemeDescription,
-} from '../../../common';
+import { IBackendInfo, IMenuSettings, IMenuThemeDescription } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
@@ -107,22 +102,18 @@ export class Toolbar extends EventEmitter {
    * This method is called initially when the editor is opened. It is used to set the
    * menus and the templates content.
    *
-   * @param appSettings The current app settings.
    * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
    * @param allMenuThemes All available menu themes.
-   * @param currentMenuTheme The currently selected menu theme.
    */
   public init(
-    appSettings: IAppSettings,
     menuSettings: IMenuSettings,
     currentMenu: number,
-    allMenuThemes: Array<IMenuThemeDescription>,
-    currentMenuTheme: IMenuThemeDescription
+    allMenuThemes: Array<IMenuThemeDescription>
   ) {
     this.menusTab.init(menuSettings, currentMenu);
     this.templatesTab.init(menuSettings);
-    this.menuThemesTab.init(appSettings, allMenuThemes, currentMenuTheme);
+    this.menuThemesTab.init(allMenuThemes);
   }
 
   /**
