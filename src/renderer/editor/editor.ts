@@ -213,16 +213,25 @@ export class Editor extends EventEmitter {
     // Get the current settings from the main process and pass them to the respective
     // components.
     Promise.all([
+      window.api.appSettings.get(),
       window.api.menuSettings.get(),
       window.api.menuSettings.getCurrentMenu(),
       window.api.getAllMenuThemes(),
       window.api.getMenuTheme(),
-    ]).then(([menuSettings, currentMenu, allMenuThemes, currentMenuTheme]) => {
-      this.menuSettings = menuSettings;
-      this.currentMenu = currentMenu;
-      this.preview.setMenu(menuSettings.menus[currentMenu]);
-      this.toolbar.init(menuSettings, currentMenu, allMenuThemes, currentMenuTheme);
-    });
+    ]).then(
+      ([appSettings, menuSettings, currentMenu, allMenuThemes, currentMenuTheme]) => {
+        this.menuSettings = menuSettings;
+        this.currentMenu = currentMenu;
+        this.preview.setMenu(menuSettings.menus[currentMenu]);
+        this.toolbar.init(
+          appSettings,
+          menuSettings,
+          currentMenu,
+          allMenuThemes,
+          currentMenuTheme
+        );
+      }
+    );
 
     this.emit('enter-edit-mode');
   }
