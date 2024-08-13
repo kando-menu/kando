@@ -19,17 +19,22 @@
 }
 
 @font-face {
-  font-family: 'Cantarell';
+  font-family: 'NotoSans';
   font-style: normal;
   font-weight: 400;
-  src: url('../../assets/fonts/Cantarell-Regular.ttf') format('truetype');
+  src: url('../../assets/fonts/NotoSans-VariableFont_wdth,wght.ttf') format('truetype');
 }
 
 // The base font for the editor is Cantarell. We use the more expressive Neucha for
 // special elements.
 
 #kando-editor {
-  font-family: 'Cantarell', sans-serif;
+  font-family: 'NotoSans', sans-serif;
+  font-stretch: condensed;
+
+  button {
+    font-stretch: condensed;
+  }
 }
 
 .kando-font {

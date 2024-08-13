@@ -19,11 +19,11 @@
     <div class="scrollbox-content toolbar-button-grid">
       {{#each themes}}
         <div>
-          <div data-theme-id="{{id}}" class="kando-font btn btn-secondary toolbar-theme-button {{#if checked}} checked {{/if}}">
+          <div data-theme-id="{{id}}" class="btn btn-secondary toolbar-theme-button {{#if checked}} checked {{/if}}">
             <img src="{{preview}}" />
             <div class="my-2 d-flex flex-row justify-content-between">
               <div>
-                <div class="name fs-4">{{name}}</div>
+                <div class="name kando-font fs-4">{{name}}</div>
                 <div class="description fs-6">by {{author}}</div>
               </div>
               <div class="align-self-center px-3">
@@ -45,7 +45,7 @@
         <div class='kando-font fs-3'>
           Use Separate Settings for Dark Mode
         </div>
-        <div class=''>
+        <div class="fs-6">
           If enabled, you can choose a different theme and colors if the system is in dark mode.
         </div>
       </div>

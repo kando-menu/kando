@@ -222,12 +222,7 @@
   .description,
   .name {
     @include rfs(1rem, padding-left);
-    box-sizing: border-box;
-    pointer-events: none;
     text-align: left;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
 }
 

@@ -19,22 +19,22 @@
       {{#each items}}
         <div>
           {{#if isMenu}}
-            <div id="{{../type}}-item-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-menu-button">
+            <div id="{{../type}}-item-{{index}}" class="d-flex btn btn-secondary toolbar-menu-button">
               <div>
                 {{{icon}}}
               </div>
               <div class="align-self-center">
-                <div class="name fs-4">{{name}}</div>
+                <div class="name kando-font fs-4">{{name}}</div>
                 <div class="description fs-6">{{description}}</div>
               </div>
             </div>
           {{else}}
-            <div id="{{../type}}-item-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-item-button">
+            <div id="{{../type}}-item-{{index}}" class="d-flex btn btn-secondary toolbar-item-button">
               <div>
                 {{{icon}}}
               </div>
               <div class="align-self-center">
-                <div class="name fs-4">{{name}}</div>
+                <div class="name kando-font fs-4">{{name}}</div>
                 <div class="description fs-6">{{description}}</div>
               </div>
             </div>
