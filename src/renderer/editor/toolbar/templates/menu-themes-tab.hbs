@@ -21,6 +21,7 @@
         <div>
           <div data-theme-id="{{id}}" class="btn btn-secondary toolbar-theme-button {{#if checked}} checked {{/if}}">
             <img src="{{preview}}" />
+            <div class="color-picker"></div>
             <div class="my-2 d-flex flex-row justify-content-between">
               <div>
                 <div class="name kando-font fs-4">{{name}}</div>
@@ -30,6 +31,9 @@
                 {{#each colors}}
                   <div class="btn color-button"  data-bs-toggle="tooltip" data-bs-title="{{name}}" style="background-color: {{value}}"></div>
                 {{/each}}
+                  <div class="btn color-button" data-bs-toggle="tooltip" data-bs-title="Reset to default">
+                    <i class="material-symbols-rounded">undo</i>
+                  </div>
               </div>
             </div>
           </div>

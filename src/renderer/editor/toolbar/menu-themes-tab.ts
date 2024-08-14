@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Tooltip } from 'bootstrap';
+import iro from '@jaames/iro';
 
 import { IMenuThemeDescription } from '../../../common';
 
@@ -116,12 +117,42 @@ export class MenuThemesTab {
       });
     });
 
-    const darkMode = this.tabContent.querySelector(
+    const darkModeCheckbox = this.tabContent.querySelector(
       '#kando-menu-theme-enable-dark-mode'
     ) as HTMLInputElement;
-    darkMode.addEventListener('change', () => {
-      window.api.appSettings.setKey('enableDarkModeForMenuThemes', darkMode.checked);
+    darkModeCheckbox.addEventListener('change', () => {
+      window.api.appSettings.setKey(
+        'enableDarkModeForMenuThemes',
+        darkModeCheckbox.checked
+      );
     });
-    darkMode.checked = enableDarkMode;
+    darkModeCheckbox.checked = enableDarkMode;
+
+    this.allMenuThemes.forEach((theme) => {
+      const container = this.tabContent.querySelector(
+        `div[data-theme-id="${theme.id}"] .color-picker`
+      ) as HTMLElement;
+      const colorPicker = iro.ColorPicker(container, {
+        layoutDirection: 'horizontal',
+        width: 200,
+        layout: [
+          {
+            component: iro.ui.Wheel,
+          },
+          {
+            component: iro.ui.Slider,
+            options: {
+              sliderType: 'value',
+            },
+          },
+          {
+            component: iro.ui.Slider,
+            options: {
+              sliderType: 'alpha',
+            },
+          },
+        ],
+      });
+    });
   }
 }

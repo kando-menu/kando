@@ -308,6 +308,7 @@
 // The theme buttons are a bit larger and a different layout.
 #kando-editor .toolbar-theme-button {
   padding: 0;
+  position: relative;
 
   img {
     width: 100%;
@@ -321,9 +322,16 @@
     border-radius: 50%;
     margin: 0 2px;
     padding: 0;
+    background-color: var(--bs-btn-active-bg);
 
     &:hover {
       box-shadow: 0 0 5px white;
     }
+  }
+
+  .color-picker {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
