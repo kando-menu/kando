@@ -711,8 +711,12 @@ export class KandoApp {
     });
 
     // Allow the renderer to be notified when the system theme changes.
+    let darkMode = nativeTheme.shouldUseDarkColors;
     nativeTheme.on('updated', () => {
-      this.window.webContents.send('dark-mode-changed', nativeTheme.shouldUseDarkColors);
+      if (darkMode !== nativeTheme.shouldUseDarkColors) {
+        darkMode = nativeTheme.shouldUseDarkColors;
+        this.window.webContents.send('dark-mode-changed', darkMode);
+      }
     });
 
     // Show the web developer tools if requested.
