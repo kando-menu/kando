@@ -57,20 +57,37 @@ export class MenuThemesTab {
   }
 
   private async redraw() {
-    const currentTheme = await window.api.getMenuTheme();
     const enableDarkMode = await window.api.appSettings.getKey(
       'enableDarkModeForMenuThemes'
     );
 
+    const [currentTheme, colorOverrides] = await Promise.all([
+      window.api.getMenuTheme(),
+      window.api.appSettings.getKey(
+        this.darkMode && enableDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors'
+      ),
+    ]);
+
     // Compile the data for the Handlebars template.
-    const data = this.allMenuThemes.map((theme) => ({
-      id: theme.id,
-      name: theme.name,
-      author: theme.author,
-      checked: theme.id === currentTheme.id,
-      preview: 'file://' + theme.directory + '/' + theme.id + '/preview.jpg',
-      colors: theme.colors,
-    }));
+    const data = this.allMenuThemes.map((theme) => {
+      const colors = theme.colors.map((color) => {
+        const themeOverride = colorOverrides.find((c) => c.theme === theme.id);
+        const colorOverride = themeOverride?.colors.find((c) => c.name === color.name);
+        return {
+          name: color.name,
+          value: colorOverride?.color || color.default,
+        };
+      });
+
+      return {
+        id: theme.id,
+        name: theme.name,
+        author: theme.author,
+        checked: theme.id === currentTheme.id,
+        preview: 'file://' + theme.directory + '/' + theme.id + '/preview.jpg',
+        colors,
+      };
+    });
 
     const template = require('./templates/menu-themes-tab.hbs');
     this.tabContent.innerHTML = template({ themes: data });
