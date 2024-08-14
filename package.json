@@ -57,6 +57,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@jaames/iro": "^5.5.2",
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.10",
     "@types/lodash.isequal": "^4.5.8",
