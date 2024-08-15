@@ -135,6 +135,7 @@ export class MenuThemesTab {
       const colorPicker = iro.ColorPicker(container, {
         layoutDirection: 'horizontal',
         width: 200,
+        padding: 5,
         layout: [
           {
             component: iro.ui.Wheel,

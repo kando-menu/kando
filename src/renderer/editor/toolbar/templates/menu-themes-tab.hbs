@@ -19,23 +19,34 @@
     <div class="scrollbox-content toolbar-button-grid">
       {{#each themes}}
         <div>
-          <div data-theme-id="{{id}}" class="btn btn-secondary toolbar-theme-button {{#if checked}} checked {{/if}}">
-            <img src="{{preview}}" />
-            <div class="color-picker"></div>
-            <div class="my-2 d-flex flex-row justify-content-between">
-              <div>
-                <div class="name kando-font fs-4">{{name}}</div>
-                <div class="description fs-6">by {{author}}</div>
+          <div data-theme-id="{{id}}" class="btn btn-secondary w-100 toolbar-theme-button {{#if checked}} checked {{/if}}">
+            
+            <div class="header w-100" style="background-image: url({{preview}})">
+              <div class="color-picker-container d-flex justify-content-center align-items-center">
+                <div>
+                  <div class="color-picker pb-2"></div>
+                  <div class="input-group">
+                    <input type="text" class="form-control fs-5 kando-font" spellcheck="false" size="10">
+                    </input>
+                    <button class="btn btn-primary fs-3" data-bs-toggle="tooltip" data-bs-title="Reset to default"><i class='material-symbols-rounded inline-icon'>undo</i></button>
+                    <button class="btn btn-primary fs-3" data-bs-toggle="tooltip" data-bs-title="Done"><i class='material-symbols-rounded inline-icon'>done</i></button>
+                  </div>
+                </div>
               </div>
-              <div class="align-self-center px-3">
+            </div>
+
+            <div class="d-flex flex-row mx-3 my-1 justify-content-between">
+              <div>
+                <div class="kando-font text-start fs-4">{{name}}</div>
+                <div class="text-start fs-6">by {{author}}</div>
+              </div>
+              <div class="align-self-center">
                 {{#each colors}}
                   <div class="btn color-button"  data-bs-toggle="tooltip" data-bs-title="{{name}}" style="background-color: {{value}}"></div>
                 {{/each}}
-                  <div class="btn color-button" data-bs-toggle="tooltip" data-bs-title="Reset to default">
-                    <i class="material-symbols-rounded">undo</i>
-                  </div>
               </div>
             </div>
+
           </div>
         </div>
       {{/each}}
