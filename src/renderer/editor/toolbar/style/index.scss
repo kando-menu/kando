@@ -322,6 +322,15 @@
       right: 0;
       bottom: 0;
       backdrop-filter: blur(15px) brightness(0.8);
+      transition:
+        transform 150ms ease,
+        opacity 150ms ease;
+
+      &.hidden {
+        pointer-events: none;
+        opacity: 0;
+        transform: scale(1.1);
+      }
     }
   }
 

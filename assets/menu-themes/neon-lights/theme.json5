@@ -28,7 +28,7 @@
   // These colors can be configured by the user and are vailable in the CSS file as CSS
   // variables. The default values are used if the user does not provide any values.
   colors: [
-    { name: 'text-color', default: 'white' },
+    { name: 'text-color', default: '#fff' },
     { name: 'flash-color', default: 'rgb(255, 200, 200)' },
   ],
 

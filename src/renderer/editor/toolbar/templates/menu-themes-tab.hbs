@@ -22,14 +22,14 @@
           <div data-theme-id="{{id}}" class="btn btn-secondary w-100 toolbar-theme-button {{#if checked}} checked {{/if}}">
             
             <div class="header w-100" style="background-image: url({{preview}})">
-              <div class="color-picker-container d-flex justify-content-center align-items-center">
+              <div class="color-picker-container d-flex justify-content-center align-items-center hidden">
                 <div>
                   <div class="color-picker pb-2"></div>
                   <div class="input-group">
-                    <input type="text" class="form-control fs-5 kando-font" spellcheck="false" size="10">
+                    <input type="text" class="form-control fs-6" spellcheck="false" size="10">
                     </input>
-                    <button class="btn btn-primary fs-3" data-bs-toggle="tooltip" data-bs-title="Reset to default"><i class='material-symbols-rounded inline-icon'>undo</i></button>
-                    <button class="btn btn-primary fs-3" data-bs-toggle="tooltip" data-bs-title="Done"><i class='material-symbols-rounded inline-icon'>done</i></button>
+                    <button class="btn btn-primary fs-4" data-bs-toggle="tooltip" data-bs-title="Reset to default"><i class='material-symbols-rounded inline-icon'>undo</i></button>
+                    <button class="btn btn-primary fs-4" data-bs-toggle="tooltip" data-bs-title="Done"><i class='material-symbols-rounded inline-icon'>done</i></button>
                   </div>
                 </div>
               </div>
@@ -42,7 +42,7 @@
               </div>
               <div class="align-self-center">
                 {{#each colors}}
-                  <div class="btn color-button"  data-bs-toggle="tooltip" data-bs-title="{{name}}" style="background-color: {{value}}"></div>
+                  <div class="btn color-button" data-theme-id="{{../id}}" data-color-name="{{name}}" data-bs-toggle="tooltip" data-bs-title="{{name}}" style="background-color: {{value}}"></div>
                 {{/each}}
               </div>
             </div>

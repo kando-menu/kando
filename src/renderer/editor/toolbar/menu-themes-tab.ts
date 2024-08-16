@@ -24,8 +24,37 @@ export class MenuThemesTab {
   /** This is an array of all available menu themes. */
   private allMenuThemes: Array<IMenuThemeDescription>;
 
-  /** This is a flag which is set to true if the dark mode is currently enabled. */
+  /** This is an array of all color overrides. */
+  private colorOverrides: Array<{
+    theme: string;
+    colors: Array<{
+      name: string;
+      color: string;
+    }>;
+  }>;
+
+  /** This is a flag which is set to true if the system is currently in dark mode. */
   private darkMode: boolean;
+
+  /**
+   * This is a flag which is set to true if a separate theme and colors are used in dark
+   * mode.
+   */
+  private enableDarkMode: boolean;
+
+  /** This is an array of all color pickers. There's one for each theme card. */
+  private colorPickers: Array<{
+    wrapper: HTMLElement;
+    picker: iro.ColorPicker;
+    themeID: string;
+    currentColor: string;
+    textEntry: HTMLInputElement;
+    resetButton: HTMLButtonElement;
+    doneButton: HTMLButtonElement;
+  }> = [];
+
+  /** This timeout is used to avoid submitting changes too often. */
+  private submitChangesTimeout: NodeJS.Timeout;
 
   /**
    * This constructor is called after the general toolbar DOM has been created.
@@ -58,16 +87,18 @@ export class MenuThemesTab {
   }
 
   private async redraw() {
-    const enableDarkMode = await window.api.appSettings.getKey(
+    this.enableDarkMode = await window.api.appSettings.getKey(
       'enableDarkModeForMenuThemes'
     );
 
     const [currentTheme, colorOverrides] = await Promise.all([
       window.api.getMenuTheme(),
       window.api.appSettings.getKey(
-        this.darkMode && enableDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors'
+        this.darkMode && this.enableDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors'
       ),
     ]);
+
+    this.colorOverrides = colorOverrides;
 
     // Compile the data for the Handlebars template.
     const data = this.allMenuThemes.map((theme) => {
@@ -100,6 +131,7 @@ export class MenuThemesTab {
       });
     });
 
+    // Select the theme if the entire card is clicked.
     const allThemeButtons = this.tabContent.querySelectorAll('.toolbar-theme-button');
     allThemeButtons.forEach((button) => {
       button.addEventListener('click', () => {
@@ -109,7 +141,7 @@ export class MenuThemesTab {
         button.classList.add('checked');
         const theme = button.getAttribute('data-theme-id');
 
-        if (this.darkMode && enableDarkMode) {
+        if (this.darkMode && this.enableDarkMode) {
           window.api.appSettings.setKey('darkMenuTheme', theme);
         } else {
           window.api.appSettings.setKey('menuTheme', theme);
@@ -117,6 +149,7 @@ export class MenuThemesTab {
       });
     });
 
+    // Toggle the separate theme-in-dark-mode setting.
     const darkModeCheckbox = this.tabContent.querySelector(
       '#kando-menu-theme-enable-dark-mode'
     ) as HTMLInputElement;
@@ -126,13 +159,21 @@ export class MenuThemesTab {
         darkModeCheckbox.checked
       );
     });
-    darkModeCheckbox.checked = enableDarkMode;
+    darkModeCheckbox.checked = this.enableDarkMode;
 
+    // Add all color pickers.
+    this.colorPickers = [];
     this.allMenuThemes.forEach((theme) => {
-      const container = this.tabContent.querySelector(
-        `div[data-theme-id="${theme.id}"] .color-picker`
+      const card = this.tabContent.querySelector(
+        `div[data-theme-id="${theme.id}"]`
       ) as HTMLElement;
-      const colorPicker = iro.ColorPicker(container, {
+
+      const pickerContainer = card.querySelector('.color-picker') as HTMLElement;
+      const wrapper = pickerContainer.parentElement.parentElement;
+      const textEntry = card.querySelector('input') as HTMLInputElement;
+      const [resetButton, doneButton] = card.querySelectorAll('button');
+
+      const picker = iro.ColorPicker(pickerContainer, {
         layoutDirection: 'horizontal',
         width: 200,
         padding: 5,
@@ -154,6 +195,89 @@ export class MenuThemesTab {
           },
         ],
       });
+
+      const colorPickerInfo = {
+        wrapper,
+        picker,
+        themeID: theme.id,
+        currentColor: '',
+        textEntry,
+        resetButton: resetButton as HTMLButtonElement,
+        doneButton: doneButton as HTMLButtonElement,
+      };
+
+      doneButton.addEventListener('click', () => {
+        wrapper.classList.add('hidden');
+      });
+
+      picker.on('color:change', (color: iro.Color) => {
+        textEntry.value = color.rgbaString;
+
+        const button = card.querySelector(
+          `.color-button[data-color-name="${colorPickerInfo.currentColor}"]`
+        ) as HTMLElement;
+
+        button.style.backgroundColor = color.rgbaString;
+
+        colorOverrides.forEach((themeOverride) => {
+          if (themeOverride.theme === theme.id) {
+            themeOverride.colors.forEach((colorOverride) => {
+              if (colorOverride.name === colorPickerInfo.currentColor) {
+                colorOverride.color = color.rgbaString;
+              }
+            });
+          }
+        });
+
+        this.submitChanges();
+      });
+
+      textEntry.addEventListener('input', () => {
+        picker.color.set(textEntry.value);
+      });
+
+      resetButton.addEventListener('click', () => {
+        const colors = this.allMenuThemes.find((t) => t.id === theme.id).colors;
+        const color = colors.find((c) => c.name === colorPickerInfo.currentColor);
+        picker.color.set(color.default);
+      });
+
+      this.colorPickers.push(colorPickerInfo);
     });
+
+    // Show the color picker when a color button is clicked.
+    this.tabContent.querySelectorAll('.color-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const themeID = button.getAttribute('data-theme-id');
+        const colorName = button.getAttribute('data-color-name');
+        const colorPicker = this.colorPickers.find(
+          (picker) => picker.themeID === themeID
+        );
+        colorPicker.currentColor = colorName;
+        colorPicker.wrapper.classList.remove('hidden');
+        colorPicker.picker.color.set((button as HTMLElement).style.backgroundColor);
+        colorPicker.textEntry.value = colorPicker.picker.color.rgbaString;
+      });
+    });
+  }
+
+  /**
+   * We submit changes to the main process not too often to avoid unnecessary IPC calls.
+   * After the user has stopped interacting with the color picker for 500ms, we submit the
+   * changes.
+   */
+  private submitChanges() {
+    if (this.submitChangesTimeout) {
+      clearTimeout(this.submitChangesTimeout);
+    }
+    this.submitChangesTimeout = setTimeout(() => {
+      this.submitChangesTimeout = null;
+
+      if (this.darkMode && this.enableDarkMode) {
+        window.api.appSettings.setKey('darkMenuThemeColors', this.colorOverrides);
+      } else {
+        window.api.appSettings.setKey('menuThemeColors', this.colorOverrides);
+      }
+    }, 500);
   }
 }
