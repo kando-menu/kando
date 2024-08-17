@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### :tada: Added
+
+- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There are currently three initial themes available, and for each theme you can specify some colors, like the background color or the text color. There is [a guide available](https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
+
 #### :wrench: Changed
 
 - The text in the center item is now updated asynchronously. This may reduce occasional frame drops as the update causes a forced reflow of the menu layout.
