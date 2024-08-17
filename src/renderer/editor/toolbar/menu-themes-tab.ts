@@ -103,7 +103,7 @@ export class MenuThemesTab {
     // Compile the data for the Handlebars template.
     const data = this.allMenuThemes.map((theme) => {
       const colors = theme.colors.map((color) => {
-        const themeOverride = colorOverrides.find((c) => c.theme === theme.id);
+        const themeOverride = this.colorOverrides.find((c) => c.theme === theme.id);
         const colorOverride = themeOverride?.colors.find((c) => c.name === color.name);
         return {
           name: color.name,
