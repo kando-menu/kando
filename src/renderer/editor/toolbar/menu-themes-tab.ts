@@ -75,15 +75,14 @@ export class MenuThemesTab {
   /**
    * This method is called initially to set the menu themes. It is called by the toolbar
    * whenever the editor is opened.
-   *
-   * @param allMenuThemes An array of all available menu themes.
    */
-  public init(allMenuThemes: Array<IMenuThemeDescription>) {
-    this.allMenuThemes = allMenuThemes;
-    window.api.getIsDarkMode().then((darkMode) => {
-      this.darkMode = darkMode;
-      this.redraw();
-    });
+  public async init() {
+    [this.allMenuThemes, this.darkMode] = await Promise.all([
+      window.api.getAllMenuThemes(),
+      window.api.getIsDarkMode(),
+    ]);
+
+    this.redraw();
   }
 
   private async redraw() {

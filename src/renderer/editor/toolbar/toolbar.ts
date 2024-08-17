@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IBackendInfo, IMenuSettings, IMenuThemeDescription } from '../../../common';
+import { IBackendInfo, IMenuSettings } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
 import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
@@ -99,16 +99,11 @@ export class Toolbar extends EventEmitter {
    *
    * @param menuSettings The current menu settings.
    * @param currentMenu The index of the currently selected menu.
-   * @param allMenuThemes All available menu themes.
    */
-  public init(
-    menuSettings: IMenuSettings,
-    currentMenu: number,
-    allMenuThemes: Array<IMenuThemeDescription>
-  ) {
+  public init(menuSettings: IMenuSettings, currentMenu: number) {
     this.menusTab.init(menuSettings, currentMenu);
     this.templatesTab.init(menuSettings);
-    this.menuThemesTab.init(allMenuThemes);
+    this.menuThemesTab.init();
   }
 
   /**
