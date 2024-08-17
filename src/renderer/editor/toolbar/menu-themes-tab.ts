@@ -219,7 +219,7 @@ export class MenuThemesTab {
 
         button.style.backgroundColor = color.rgbaString;
 
-        colorOverrides.forEach((themeOverride) => {
+        this.colorOverrides.forEach((themeOverride) => {
           if (themeOverride.theme === theme.id) {
             themeOverride.colors.forEach((colorOverride) => {
               if (colorOverride.name === colorPickerInfo.currentColor) {
