@@ -69,27 +69,26 @@ export class MenuThemesTab {
       this.redraw();
     });
 
-    window.api.appSettings.onChange('enableDarkModeForMenuThemes', () => this.redraw());
+    // We also have to redraw the tab whenever the user changes the separate-theme-and-
+    // colors-for-dark-mode setting.
+    window.api.appSettings.onChange('enableDarkModeForMenuThemes', (enableDarkMode) => {
+      this.enableDarkMode = enableDarkMode;
+      this.redraw();
+    });
   }
 
-  /**
-   * This method is called initially to set the menu themes. It is called by the toolbar
-   * whenever the editor is opened.
-   */
+  /** This method is called initially by the toolbar whenever the editor is opened. */
   public async init() {
-    [this.allMenuThemes, this.darkMode] = await Promise.all([
+    [this.allMenuThemes, this.darkMode, this.enableDarkMode] = await Promise.all([
       window.api.getAllMenuThemes(),
       window.api.getIsDarkMode(),
+      window.api.appSettings.getKey('enableDarkModeForMenuThemes'),
     ]);
 
     this.redraw();
   }
 
   private async redraw() {
-    this.enableDarkMode = await window.api.appSettings.getKey(
-      'enableDarkModeForMenuThemes'
-    );
-
     const [currentTheme, colorOverrides] = await Promise.all([
       window.api.getMenuTheme(),
       window.api.appSettings.getKey(
