@@ -211,11 +211,11 @@ export class Editor extends EventEmitter {
     Promise.all([
       window.api.menuSettings.get(),
       window.api.menuSettings.getCurrentMenu(),
-    ]).then(([settings, currentMenu]) => {
-      this.menuSettings = settings;
+    ]).then(([menuSettings, currentMenu]) => {
+      this.menuSettings = menuSettings;
       this.currentMenu = currentMenu;
-      this.preview.setMenu(settings.menus[currentMenu]);
-      this.toolbar.init(settings, currentMenu);
+      this.preview.setMenu(menuSettings.menus[currentMenu]);
+      this.toolbar.init(menuSettings, currentMenu);
     });
 
     this.emit('enter-edit-mode');

@@ -13,7 +13,16 @@ import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { screen, BrowserWindow, ipcMain, shell, Tray, Menu, app } from 'electron';
+import {
+  screen,
+  BrowserWindow,
+  ipcMain,
+  shell,
+  Tray,
+  Menu,
+  app,
+  nativeTheme,
+} from 'electron';
 import { Notification } from 'electron';
 
 import { Backend, getBackend } from './backends';
@@ -85,8 +94,10 @@ export class KandoApp {
     directory: app.getPath('userData'),
     defaults: {
       menuTheme: 'default',
-      menuThemeColors: [],
-      editorTheme: 'default',
+      darkMenuTheme: 'default',
+      menuThemeColors: {},
+      darkMenuThemeColors: {},
+      enableDarkModeForMenuThemes: false,
       sidebarVisible: true,
       enableVersionCheck: true,
       zoomFactor: 1,
@@ -563,10 +574,11 @@ export class KandoApp {
       );
     }
 
+    // We also allow getting the entire app settings object.
+    ipcMain.handle('app-settings-get', () => this.appSettings.get());
+
     // Allow the renderer to retrieve the menu settings.
-    ipcMain.handle('menu-settings-get', () => {
-      return this.menuSettings.get();
-    });
+    ipcMain.handle('menu-settings-get', () => this.menuSettings.get());
 
     // Allow the renderer to alter the menu settings.
     ipcMain.on('menu-settings-set', (event, settings) => {
@@ -655,12 +667,55 @@ export class KandoApp {
     // Allow the renderer to retrieve the description of the current menu theme. We also
     // return the path to the CSS file of the theme, so that the renderer can load it.
     ipcMain.handle('get-menu-theme', async () => {
-      const metaFile = await this.findMenuThemePath(this.appSettings.get('menuTheme'));
-      const content = await fs.promises.readFile(metaFile);
-      const description = json5.parse(content.toString());
-      const directory = path.dirname(metaFile);
-      description.cssFile = path.join(directory, 'theme.css');
-      return description;
+      const useDarkVariant =
+        this.appSettings.get('enableDarkModeForMenuThemes') &&
+        nativeTheme.shouldUseDarkColors;
+      return this.loadMenuDescription(
+        this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
+      );
+    });
+
+    // Allow the renderer to retrieve all available menu themes.
+    ipcMain.handle('get-all-menu-themes', async () => {
+      const themes = await this.listMenuThemes();
+
+      // Load all descriptions in parallel.
+      const descriptions = await Promise.all(
+        themes.map((theme) => this.loadMenuDescription(theme))
+      );
+
+      // Sort by the name property of the description.
+      return descriptions.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    // Allow the renderer to retrieve the current menu theme override colors. We return
+    // the colors for the current theme and for the dark theme if the user enabled dark
+    // mode for menu themes and if the system is currently in dark mode.
+    ipcMain.handle('get-current-menu-theme-colors', async () => {
+      const useDarkVariant =
+        this.appSettings.get('enableDarkModeForMenuThemes') &&
+        nativeTheme.shouldUseDarkColors;
+
+      const theme = this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme');
+      const colorOverrides = this.appSettings.get(
+        useDarkVariant ? 'darkMenuThemeColors' : 'menuThemeColors'
+      );
+
+      return colorOverrides[theme] || {};
+    });
+
+    // Allow the renderer to retrieve the current system theme.
+    ipcMain.handle('get-is-dark-mode', () => {
+      return nativeTheme.shouldUseDarkColors;
+    });
+
+    // Allow the renderer to be notified when the system theme changes.
+    let darkMode = nativeTheme.shouldUseDarkColors;
+    nativeTheme.on('updated', () => {
+      if (darkMode !== nativeTheme.shouldUseDarkColors) {
+        darkMode = nativeTheme.shouldUseDarkColors;
+        this.window.webContents.send('dark-mode-changed', darkMode);
+      }
     });
 
     // Show the web developer tools if requested.
@@ -986,6 +1041,57 @@ export class KandoApp {
     console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
 
     return path.join(__dirname, `../renderer/assets/menu-themes/default/theme.json5`);
+  }
+
+  /**
+   * This lists all available menu themes. It will first look in the user's data directory
+   * and then in the app's assets directory.
+   *
+   * @returns A list of all available menu-theme directory names.
+   */
+  private async listMenuThemes() {
+    const testPaths = [
+      path.join(app.getPath('userData'), `menu-themes`),
+      path.join(__dirname, `../renderer/assets/menu-themes`),
+    ];
+
+    const themes = new Set<string>();
+
+    for (const testPath of testPaths) {
+      const exists = await fs.promises
+        .access(testPath, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false);
+
+      if (exists) {
+        const files = await fs.promises.readdir(testPath, { withFileTypes: true });
+        for (const file of files) {
+          if (file.isDirectory()) {
+            themes.add(file.name);
+          }
+        }
+      }
+    }
+
+    return Array.from(themes);
+  }
+
+  /**
+   * This loads the description of the menu theme with the given name. The description
+   * includes the path to the CSS file of the theme. If the theme is not found, the
+   * default theme is used instead.
+   *
+   * @param theme The name of the menu theme.
+   * @returns The description of the menu theme.
+   */
+  private async loadMenuDescription(theme: string) {
+    const metaFile = await this.findMenuThemePath(theme);
+    const content = await fs.promises.readFile(metaFile);
+    const description = json5.parse(content.toString());
+    const directory = path.dirname(metaFile);
+    description.id = path.basename(directory);
+    description.directory = path.dirname(directory);
+    return description;
   }
 
   /**

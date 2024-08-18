@@ -45,14 +45,12 @@ We will have a look at the `colors` and `layers` keys in the following sections.
 
 https://github.com/kando-menu/kando/blob/03c3962e8ce29f84c9b3ae0a5d2ee606afa2fd27/assets/menu-themes/default/theme.json5#L1-L39
 
-### `colors: []`
+### `colors: {}`
 
-The `colors` key is an array of objects.
-Each object has a `name` and a `default` key.
-In your CSS file, you can use the colors with `var(--<name>)`.
-
-In the future, the user will be able to override these colors in the menu editor.
-It is already possible to override them today by adding a `"menuThemeColors": [],` key to the `config.json` file where each entry is an object with a `name` and a `color` key.
+The `colors` object lists colors which can be configured by the user.
+Each entry maps a CSS color to a given color name.
+In your CSS file, you can use the colors with `var(--<key>)`.
+In the menu editor, the user can change the value of these colors.
 
 ### `layers: []`
 

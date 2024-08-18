@@ -54,10 +54,17 @@ export interface IBackendInfo {
  */
 export interface IMenuThemeDescription {
   /**
-   * The absolute path to the CSS file of the theme. This is set by Kando when loading the
-   * theme.json file.
+   * The ID of the theme. This is used to identify the theme in the settings file. It is
+   * also the directory name of the theme and is set by Kando when loading the theme.json
+   * file. So the path to the theme.json file is this.directory/this.id/theme.json.
    */
-  cssFile: string;
+  id: string;
+
+  /**
+   * The absolute path to the directory where the theme is stored. This is set by Kando
+   * when loading the theme.json file.
+   */
+  directory: string;
 
   /** A human readable name of the theme. */
   name: string;
@@ -88,12 +95,9 @@ export interface IMenuThemeDescription {
 
   /**
    * These colors will be available as var(--name) in the CSS file and can be adjusted by
-   * the user in the settings. The default value is the value given here.
+   * the user in the settings. The map assigns a default CSS color to each name.
    */
-  colors: {
-    name: string;
-    default: string;
-  }[];
+  colors: Record<string, string>;
 
   /**
    * The layers which are drawn on top of each other for each menu item. Each layer will
@@ -349,11 +353,26 @@ export interface IAppSettings {
   /** The name of the theme to use for the menu. */
   menuTheme: string;
 
-  /** The accent colors to use for menu themes. */
-  menuThemeColors: Array<{ name: string; color: string }>;
+  /** The name of the theme which should be used for the dark mode. */
+  darkMenuTheme: string;
 
-  /** The name of the theme to use for the editor. */
-  editorTheme: string;
+  /**
+   * The accent color overrides to use for menu themes. The outer key is the theme's ID,
+   * the inner key is the color's name. The final value is the CSS color.
+   */
+  menuThemeColors: Record<string, Record<string, string>>;
+
+  /**
+   * The accent color overrides to use for the dark mode. The outer key is the theme's ID,
+   * the inner key is the color's name. The final value is the CSS color.
+   */
+  darkMenuThemeColors: Record<string, Record<string, string>>;
+
+  /**
+   * If enabled, the dark menu theme and dark color variants will be used if the system is
+   * in dark mode.
+   */
+  enableDarkModeForMenuThemes: boolean;
 
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: boolean;

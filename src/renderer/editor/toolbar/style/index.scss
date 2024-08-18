@@ -146,6 +146,14 @@
     gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(calc(150px + 5vw), 1fr));
   }
+
+  // The large toolbar has usually larger buttons. For now, these are used for the themes
+  // tab.
+  &.large {
+    .toolbar-button-grid {
+      grid-template-columns: repeat(auto-fill, minmax(calc(200px + 10vw), 1fr));
+    }
+  }
 }
 
 #kando-editor.edit-mode #kando-editor-toolbar,
@@ -162,21 +170,15 @@
 // operations. Therefore, we have to style them with this selector.
 #kando-editor .add-menu-button,
 #kando-editor .toolbar-item-button,
-#kando-editor .toolbar-menu-button {
-  // The buttons are actually radio buttons. We hide the input element and style the label
-  // instead. This way we get nice toggling behavior for free.
-  input {
-    display: none;
-  }
-
-  border: 2px dashed rgba(255, 255, 255, 0);
+#kando-editor .toolbar-menu-button,
+#kando-editor .toolbar-theme-button {
   overflow: hidden;
   transition: transform 150ms linear;
 
   // If checked, we show a border and slightly different background color.
   &.checked {
-    border-color: rgba(255, 255, 255, 0.5);
-    background: var(--bs-btn-active-bg);
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
+    background-color: var(--bs-btn-active-bg);
   }
 
   &.dragging {
@@ -201,6 +203,11 @@
     border-radius: 50%;
     transition: background-color 150ms linear;
 
+    // Circle clipping.
+    .icon-container {
+      clip-path: circle(45% at 50% 50%);
+    }
+
     i {
       transition: color 150ms linear;
       color: black;
@@ -215,12 +222,7 @@
   .description,
   .name {
     @include rfs(1rem, padding-left);
-    box-sizing: border-box;
-    pointer-events: none;
     text-align: left;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
 }
 
@@ -299,6 +301,78 @@
 
     .name {
       opacity: 1;
+    }
+  }
+}
+
+// The theme buttons are a bit larger and a different layout.
+#kando-editor .toolbar-theme-button {
+  position: relative;
+  padding: 0;
+  background-size: cover;
+  background-position: 50% 100%;
+
+  &.checked {
+    outline: 2px dashed rgba(255, 255, 255, 1);
+  }
+
+  &:active {
+    transform: none !important;
+  }
+
+  .color-picker-container {
+    backdrop-filter: blur(15px) brightness(0.75);
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
+
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  .theme-button-footer {
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  &.color-picker-visible {
+    .color-picker-container {
+      pointer-events: all;
+      opacity: 1;
+      transform: none;
+    }
+
+    .theme-button-footer {
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  .color-button {
+    transition: none;
+    display: block;
+    border-radius: 50%;
+    @include rfs(35px, width);
+    @include rfs(35px, height);
+    padding: 0;
+    background-color: var(--bs-btn-active-bg);
+
+    &:hover {
+      box-shadow: 0 0 5px white;
+      border: 1px solid black;
+    }
+
+    &.selected {
+      outline: 2px dashed rgba(255, 255, 255, 1);
     }
   }
 }

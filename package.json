@@ -57,6 +57,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@jaames/iro": "^5.5.2",
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.10",
     "@types/lodash.isequal": "^4.5.8",
@@ -69,6 +70,7 @@
     "emojilib": "^3.0.12",
     "handlebars": "^4.7.8",
     "json5": "^2.2.3",
+    "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",
     "match-sorter": "^6.3.4",
     "material-symbols": "^0.21.3",

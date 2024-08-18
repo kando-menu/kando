@@ -33,12 +33,12 @@
     <div class="scrollbox-content toolbar-button-grid">
       {{#each menus}}
         <div>
-          <div id="menu-button-{{index}}" class="d-flex kando-font btn btn-secondary toolbar-menu-button {{#if checked}} checked {{/if}}">
+          <div id="menu-button-{{index}}" class="d-flex btn btn-secondary toolbar-menu-button {{#if checked}} checked {{/if}}">
             <div>
               {{{icon}}}
             </div>
             <div class="align-self-center">
-              <div class="name fs-4">{{name}}</div>
+              <div class="name kando-font fs-4">{{name}}</div>
               <div class="description fs-6">{{description}}</div>
             </div>
           </div>
@@ -51,7 +51,7 @@
               <i class='material-symbols-rounded inline-icon mx-1'>add</i>
             </div>
           </div>
-          <div class="name fs-4 align-self-center">Create a menu!</div>
+          <div class="name kando-font fs-4 align-self-center">Create a menu!</div>
         </button>
       </div>
     </div>

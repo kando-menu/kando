@@ -119,6 +119,11 @@
     .icon-container .emoji-icon {
       margin-top: -6cqi;
     }
+
+    // Circle clipping.
+    .icon-container {
+      clip-path: circle(45% at 50% 50%);
+    }
   }
 
   // The ::before pseudo element is used to draw a dashed circle around the preview
@@ -444,44 +449,6 @@
         100% {
           transform: scale(1);
           box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-        }
-      }
-    }
-  }
-
-  // Breadcrumbs -------------------------------------------------------------------------
-
-  // At some point, the breadcrumbs will be shown in the item properties area. For now,
-  // they are simply drawn at the top of the preview area.
-  #kando-menu-preview-breadcrumbs {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    color: rgba(255, 255, 255, 0.5);
-
-    .kando-menu-preview-breadcrumb {
-      display: inline-block;
-      margin-right: 0.5em;
-
-      &:hover {
-        color: rgb(255, 255, 255);
-      }
-
-      &:last-child {
-        color: rgb(255, 255, 255);
-        border-bottom: 2px dashed rgb(255, 255, 255);
-        pointer-events: none;
-      }
-
-      &:not(:last-child) {
-        cursor: pointer;
-
-        &::after {
-          content: '»';
-          margin-left: 0.5em;
-          color: rgba(255, 255, 255, 0.5) !important;
         }
       }
     }
