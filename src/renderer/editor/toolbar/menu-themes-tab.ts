@@ -322,14 +322,23 @@ export class MenuThemesTab {
   }
 
   private editColor(themeID: string, colorName: string) {
-    const button = this.tabContent.querySelector(
-      `div[data-theme-id="${themeID}"].color-button[data-color-name="${colorName}"]`
+    const card = this.tabContent.querySelector(
+      `div[data-theme-id="${themeID}"]`
     ) as HTMLElement;
 
     const colorPicker = this.colorPickers.find((picker) => picker.themeID === themeID);
     colorPicker.currentColor = colorName;
-    colorPicker.picker.color.set(button.style.backgroundColor);
     colorPicker.textEntry.value = colorPicker.picker.color.rgbaString;
     colorPicker.colorName.innerText = colorName;
+
+    const buttons = card.querySelectorAll('.color-button') as NodeListOf<HTMLElement>;
+    buttons.forEach((button) => {
+      if (button.getAttribute('data-color-name') === colorName) {
+        button.classList.add('selected');
+        colorPicker.picker.color.set(button.style.backgroundColor);
+      } else {
+        button.classList.remove('selected');
+      }
+    });
   }
 }

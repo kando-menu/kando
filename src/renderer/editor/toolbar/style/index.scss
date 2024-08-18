@@ -366,5 +366,9 @@
       box-shadow: 0 0 5px white;
       border: 1px solid black;
     }
+
+    &.selected {
+      outline: 2px dashed rgba(255, 255, 255, 1);
+    }
   }
 }
