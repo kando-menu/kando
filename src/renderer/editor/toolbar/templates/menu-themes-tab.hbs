@@ -17,35 +17,54 @@
 
 <div class='d-flex h-100 flex-column'>
 
+
+  <label class="d-flex m-3 mb-1 gap-3 align-items-end">
+    <input id="kando-menu-theme-enable-dark-mode" type="checkbox" class="form-check-input" {{#if darkMode}} checked {{/if}} />
+    <div>
+      <div class='kando-font fs-2'>
+        Use Separate Themes and Colors for Light and Dark Mode
+      </div>
+      <div class="fs-5">
+        {{subheading}}
+      </div>
+    </div>
+  </label>
+
   <div class='flex-grow-1 align-content-start scrollbox mx-2'>
     <div class="scrollbox-content toolbar-button-grid">
       {{#each themes}}
-        <div data-theme-id="{{id}}" class="btn btn-secondary w-100 toolbar-theme-button {{#if checked}} checked {{/if}}">
+        <div data-theme-id="{{id}}" style="background-image: url({{preview}})" class="btn btn-secondary w-100 toolbar-theme-button {{#if checked}} checked {{/if}}">
           
-          <div class="header w-100" style="background-image: url({{preview}})">
-            <div class="color-picker-container d-flex justify-content-center align-items-center hidden">
+          <div class="color-picker-container">
+
+            <div class="d-flex justify-content-between p-3">
+              <div class="">
+                {{#each colors}}
+                  <div class="btn color-button p-2 mb-1" data-theme-id="{{../id}}" data-color-name="{{@key}}" style="background-color: {{this}}">{{@key}}</div>
+                {{/each}}
+              </div>
+
               <div>
                 <div class="color-picker pb-2"></div>
-                <div class="input-group">
-                  <input type="text" class="form-control fs-6" spellcheck="false" size="10">
-                  </input>
-                  <button class="btn btn-primary fs-4" data-bs-toggle="tooltip" data-bs-title="Reset to default"><i class='material-symbols-rounded inline-icon'>undo</i></button>
-                  <button class="btn btn-primary fs-4" data-bs-toggle="tooltip" data-bs-title="Done"><i class='material-symbols-rounded inline-icon'>done</i></button>
-                </div>
+                <input type="text" class="form-control fs-6" spellcheck="false" size="10"></input>
               </div>
             </div>
+
+            <div class="d-flex flex-row p-2 justify-content-between">
+              <button class="btn btn-secondary kando-font p-3 fs-5">Reset All</button>
+              <button class="btn btn-secondary kando-font p-3 fs-5">Done</button>
+            </div>
+
           </div>
 
-          <div class="d-flex flex-row mx-3 my-1 justify-content-between">
-            <div>
+          <div class="theme-button-footer d-flex flex-row p-2 justify-content-between">
+            <div class="ps-1">
               <div class="kando-font text-start fs-4">{{name}}</div>
               <div class="text-start fs-6">by {{author}}</div>
             </div>
-            <div class="align-self-center">
-              {{#each colors}}
-                <div class="btn color-button" data-theme-id="{{../id}}" data-color-name="{{name}}" data-bs-toggle="tooltip" data-bs-title="{{name}}" style="background-color: {{value}}"></div>
-              {{/each}}
-            </div>
+            <button class="edit-colors-button btn btn-secondary p-3 fs-5 kando-font">
+              Edit Colors
+            </button>
           </div>
 
         </div>
@@ -53,20 +72,6 @@
     </div>
   </div>
 
-  <div class='d-flex justify-content-between'>
-    <label class="d-flex m-3 gap-2 align-items-end">
-      <input id="kando-menu-theme-enable-dark-mode" type="checkbox" class="form-check-input" {{#if darkMode}} checked {{/if}} />
-      <div class="flex-grow-1">
-        <div class='kando-font fs-2'>
-          Use Separate Settings for Dark Mode
-        </div>
-        <div class="fs-5">
-          If enabled, you can choose a different theme and colors if the system is in dark mode.
-        </div>
-      </div>
-    </label>
-
-    <div class="m-3 align-self-end fs-5" style="width: 40%;">In the future, we will have an online repository for menu themes. For now, you can <a target="_blank" href="https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md">learn how to create your own themes</a> and share them in <a target="_blank" href="https://discord.gg/hZwbVSDkhy">Kando's Discord Server</a>!</div>
-  </div> 
+  <div class="m-3 fs-5" >In the future, we will have an online repository for menu themes. For now, you can <a target="_blank" href="https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md">learn how to create your own themes</a> and share them in <a target="_blank" href="https://discord.gg/hZwbVSDkhy">Kando's Discord Server</a>!</div>
  
 </div>

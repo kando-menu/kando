@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Tooltip } from 'bootstrap';
 import iro from '@jaames/iro';
+import lodash from 'lodash';
 
 import { IMenuThemeDescription } from '../../../common';
 
@@ -33,14 +33,7 @@ export class MenuThemesTab {
    * color. Also, when the system switches between dark and light mode, the colors are
    * reloaded from the main process.
    */
-  private colorOverrides: Array<{
-    /** This is the ID of the theme. */
-    theme: string;
-    colors: Array<{
-      name: string;
-      color: string;
-    }>;
-  }>;
+  private colorOverrides: Record<string, Record<string, string>>;
 
   /** `true` if the system is currently in dark mode. */
   private darkMode: boolean;
@@ -53,9 +46,6 @@ export class MenuThemesTab {
    * each theme card.
    */
   private colorPickers: Array<{
-    /** This is container which is shown when the color picker is opened. */
-    wrapper: HTMLElement;
-
     /** This is the actual color picker. */
     picker: iro.ColorPicker;
 
@@ -67,12 +57,6 @@ export class MenuThemesTab {
 
     /** This is the text entry field which shows the current color. */
     textEntry: HTMLInputElement;
-
-    /** This button resets the color to the default value. */
-    resetButton: HTMLButtonElement;
-
-    /** This button closes the color picker. */
-    doneButton: HTMLButtonElement;
   }> = [];
 
   /** This timeout is used to avoid submitting changes too often. */
@@ -131,36 +115,29 @@ export class MenuThemesTab {
     // theme information and the list of colors for each theme. We have to check for
     // each color if there is a color override.
     const themeData = this.allMenuThemes.map((theme) => {
-      const colors = theme.colors.map((color) => {
-        const themeOverride = this.colorOverrides.find((c) => c.theme === theme.id);
-        const colorOverride = themeOverride?.colors.find((c) => c.name === color.name);
-        return {
-          name: color.name,
-          value: colorOverride?.color || color.default,
-        };
-      });
-
       return {
         id: theme.id,
         name: theme.name,
         author: theme.author,
         checked: theme.id === currentTheme.id,
         preview: 'file://' + theme.directory + '/' + theme.id + '/preview.jpg',
-        colors,
+        colors: lodash.merge({}, theme.colors, colorOverrides[theme.id]),
       };
     });
+
+    let subheading =
+      'If enabled, you can choose a different theme and color set if your system is in light or dark color mode.';
+    if (this.enableDarkMode) {
+      subheading = this.darkMode
+        ? 'Your system is currently in dark mode. The settings below will be used only in dark mode.'
+        : 'Your system is currently in light mode. The settings below will be used only in light mode.';
+    }
 
     const template = require('./templates/menu-themes-tab.hbs');
     this.tabContent.innerHTML = template({
       themes: themeData,
       darkMode: this.enableDarkMode,
-    });
-
-    // Initialize all tooltips.
-    this.tabContent.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
-      new Tooltip(elem, {
-        delay: { show: 500, hide: 0 },
-      });
+      subheading,
     });
 
     // Select the theme if the entire card is clicked.
@@ -198,22 +175,18 @@ export class MenuThemesTab {
         `div[data-theme-id="${theme.id}"]`
       ) as HTMLElement;
 
-      // This is a bit hard-coded here. We could use individualclasses to retrieve the
+      // This is a bit hard-coded here. We could use individual classes to retrieve the
       // elements, but it also works this way. You can have a look at the Handlebars
       // template to see how the elements are structured.
       const pickerContainer = card.querySelector('.color-picker') as HTMLElement;
-      const wrapper = pickerContainer.parentElement.parentElement;
       const textEntry = card.querySelector('input') as HTMLInputElement;
       const [resetButton, doneButton] = card.querySelectorAll('button');
+      const editColorsButton = card.querySelector('.edit-colors-button') as HTMLElement;
 
       const picker = iro.ColorPicker(pickerContainer, {
-        layoutDirection: 'horizontal',
-        width: 200,
+        width: 150,
         padding: 5,
         layout: [
-          {
-            component: iro.ui.Wheel,
-          },
           {
             component: iro.ui.Slider,
             options: {
@@ -226,30 +199,54 @@ export class MenuThemesTab {
               sliderType: 'alpha',
             },
           },
+          {
+            component: iro.ui.Wheel,
+          },
         ],
       });
 
       // This will be stored in the colorPickers info object.
       const colorPickerInfo = {
-        wrapper,
         picker,
         themeID: theme.id,
         currentColor: '',
         textEntry,
-        resetButton: resetButton as HTMLButtonElement,
-        doneButton: doneButton as HTMLButtonElement,
       };
+
+      // Show the color picker when the edit colors button is clicked.
+      editColorsButton.addEventListener('click', () => {
+        card.classList.add('color-picker-visible');
+      });
 
       // Hide the color picker when the done button is clicked.
       doneButton.addEventListener('click', () => {
-        wrapper.classList.add('hidden');
+        card.classList.remove('color-picker-visible');
       });
 
-      // Reset the color to the default value when the reset button is clicked.
+      // Reset all colors to the default value when the reset button is clicked. For this,
+      // we have to manually reset the background color of all color buttons, updated the
+      // color picker's current color and remove the entire set of color overrides for the
+      // current theme.
       resetButton.addEventListener('click', () => {
-        const colors = this.allMenuThemes.find((t) => t.id === theme.id).colors;
-        const color = colors.find((c) => c.name === colorPickerInfo.currentColor);
-        picker.color.set(color.default);
+        const overrides = this.colorOverrides[theme.id];
+        if (overrides) {
+          Object.keys(overrides).forEach((colorName) => {
+            const defaultColor = theme.colors[colorName];
+
+            if (colorName === colorPickerInfo.currentColor) {
+              picker.color.set(defaultColor);
+            }
+
+            const button = card.querySelector(
+              `.color-button[data-color-name="${colorName}"]`
+            ) as HTMLElement;
+            button.style.backgroundColor = defaultColor;
+          });
+
+          delete this.colorOverrides[theme.id];
+
+          this.submitChanges();
+        }
       });
 
       // Set the color when the text entry field is changed.
@@ -268,15 +265,8 @@ export class MenuThemesTab {
         button.style.backgroundColor = color.rgbaString;
         textEntry.value = color.rgbaString;
 
-        this.colorOverrides.forEach((themeOverride) => {
-          if (themeOverride.theme === theme.id) {
-            themeOverride.colors.forEach((colorOverride) => {
-              if (colorOverride.name === colorPickerInfo.currentColor) {
-                colorOverride.color = color.rgbaString;
-              }
-            });
-          }
-        });
+        this.colorOverrides[theme.id] = this.colorOverrides[theme.id] || {};
+        this.colorOverrides[theme.id][colorPickerInfo.currentColor] = color.rgbaString;
 
         this.submitChanges();
       });
@@ -293,7 +283,6 @@ export class MenuThemesTab {
           (picker) => picker.themeID === themeID
         );
         colorPicker.currentColor = colorName;
-        colorPicker.wrapper.classList.remove('hidden');
         colorPicker.picker.color.set((button as HTMLElement).style.backgroundColor);
         colorPicker.textEntry.value = colorPicker.picker.color.rgbaString;
       });

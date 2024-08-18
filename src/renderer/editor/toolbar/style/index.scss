@@ -178,7 +178,7 @@
   // If checked, we show a border and slightly different background color.
   &.checked {
     outline: 2px dashed rgba(255, 255, 255, 0.5);
-    background: var(--bs-btn-active-bg);
+    background-color: var(--bs-btn-active-bg);
   }
 
   &.dragging {
@@ -307,37 +307,56 @@
 
 // The theme buttons are a bit larger and a different layout.
 #kando-editor .toolbar-theme-button {
+  position: relative;
   padding: 0;
+  background-size: cover;
+  background-position: 50% 30%;
 
-  .header {
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    aspect-ratio: 5/4;
+  &.checked {
+    outline: 2px dashed rgba(255, 255, 255, 1);
+  }
 
+  .color-picker-container {
+    backdrop-filter: blur(15px) brightness(0.8);
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
+
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  .theme-button-footer {
+    backdrop-filter: blur(15px) brightness(0.8);
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  &.color-picker-visible {
     .color-picker-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      backdrop-filter: blur(15px) brightness(0.8);
-      transition:
-        transform 150ms ease,
-        opacity 150ms ease;
+      pointer-events: all;
+      opacity: 1;
+      transform: none;
+    }
 
-      &.hidden {
-        pointer-events: none;
-        opacity: 0;
-        transform: scale(1.1);
-      }
+    .theme-button-footer {
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px);
     }
   }
 
   .color-button {
-    @include rfs(30px, width);
-    @include rfs(30px, height);
-    border-radius: 50%;
+    transition: none;
+    display: block;
+    border-radius: 100px;
     margin: 0 2px;
     padding: 0;
     background-color: var(--bs-btn-active-bg);
