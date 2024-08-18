@@ -335,6 +335,13 @@ export class MenuThemesTab {
     }, 500);
   }
 
+  /**
+   * This method is called when the user clicks on one of the color buttons. It updates
+   * the color picker and the text entry field to reflect the new color.
+   *
+   * @param themeID The ID of the theme the color belongs to.
+   * @param colorName The name of the color which was clicked.
+   */
   private editColor(themeID: string, colorName: string) {
     const card = this.tabContent.querySelector(
       `div[data-theme-id="${themeID}"]`
