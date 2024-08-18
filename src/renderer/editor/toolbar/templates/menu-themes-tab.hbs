@@ -33,16 +33,16 @@
             </div>
 
             <div class="d-flex flex-row p-2 justify-content-between align-items-center">
-              <button class="btn btn-secondary kando-font fs-3" data-bs-toggle="tooltip" data-bs-title="Reset all colors to their defaults">
-                <i class="material-symbols-rounded">reset_settings</i>
+              <button class="btn btn-secondary py-0 px-2 kando-font fs-1" data-bs-toggle="tooltip" data-bs-title="Reset all colors to their defaults">
+                <i class="material-symbols-rounded inline-icon">reset_settings</i>
               </button>
               <div class="d-flex gap-2">
                 {{#each colors}}
                   <div class="btn color-button p-2 mb-1"  data-bs-toggle="tooltip" data-bs-title="{{@key}}" data-theme-id="{{../id}}" data-color-name="{{@key}}" style="background-color: {{this}}"></div>
                 {{/each}}
               </div>
-              <button class="btn btn-secondary kando-font fs-3" data-bs-toggle="tooltip" data-bs-title="Close the color editor">
-                <i class="material-symbols-rounded">done</i>
+              <button class="btn btn-secondary py-0 px-2 kando-font fs-1" data-bs-toggle="tooltip" data-bs-title="Close the color editor">
+                <i class="material-symbols-rounded inline-icon">done</i>
               </button>
             </div>
 
@@ -53,8 +53,8 @@
               <div class="kando-font text-start fs-4">{{name}}</div>
               <div class="text-start fs-6">by {{author}}</div>
             </div>
-            <button class="edit-colors-button btn btn-secondary p-3 fs-5 kando-font">
-              Edit Colors
+            <button class="edit-colors-button btn btn-secondary align-self-end fs-5 kando-font">
+             <i class="material-symbols-rounded inline-icon">edit</i> Edit Colors
             </button>
           </div>
 

@@ -321,7 +321,7 @@
   }
 
   .color-picker-container {
-    backdrop-filter: blur(15px) brightness(0.8);
+    backdrop-filter: blur(15px) brightness(0.75);
     transition:
       transform 150ms ease,
       opacity 150ms ease;
@@ -332,7 +332,7 @@
   }
 
   .theme-button-footer {
-    backdrop-filter: blur(15px) brightness(0.8);
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
     transition:
       transform 150ms ease,
       opacity 150ms ease;
