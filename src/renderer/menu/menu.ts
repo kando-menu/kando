@@ -173,8 +173,9 @@ export class Menu extends EventEmitter {
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
     // and keyup events.
     document.addEventListener('keydown', (event) => {
+      const anyModifierPressed = event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
       const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
-      if (menuKeys.includes(event.key)) {
+      if (!anyModifierPressed && menuKeys.includes(event.key)) {
         const index = menuKeys.indexOf(event.key);
         if (index === 0) {
           if (this.selectionChain.length > 1) {
