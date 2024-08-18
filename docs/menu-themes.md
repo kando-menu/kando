@@ -43,7 +43,7 @@ The keys are explained with inline comments.
 Most of it will be clear, but some keys might need a bit more explanation.
 We will have a look at the `colors` and `layers` keys in the following sections.
 
-https://github.com/kando-menu/kando/blob/03c3962e8ce29f84c9b3ae0a5d2ee606afa2fd27/assets/menu-themes/default/theme.json5#L1-L39
+https://github.com/kando-menu/kando/blob/235e29c9d558d554b83b401fbb61fbf74a65f034/assets/menu-themes/default/theme.json5#L1-L39
 
 ### `colors: {}`
 
@@ -149,7 +149,7 @@ Usually, you will want to apply a transformation to the `.menu-node` elements to
 Appearance properties like `background-color`, `border`, `box-shadow`, or `filter` are usually applied to the layer elements.
 Here's how the theme.css file of the default theme looks like:
 
-https://github.com/kando-menu/kando/blob/03c3962e8ce29f84c9b3ae0a5d2ee606afa2fd27/assets/menu-themes/default/theme.css#L1-L177
+https://github.com/kando-menu/kando/blob/235e29c9d558d554b83b401fbb61fbf74a65f034/assets/menu-themes/default/theme.css#L1-L177
 
 You should have a look at this default theme to get an idea of how to style the menu.
 It is maybe a good idea to start with a copy of the default theme and modify it to your needs.
