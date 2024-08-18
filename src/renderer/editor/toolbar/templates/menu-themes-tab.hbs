@@ -26,7 +26,7 @@
           
           <div class="color-picker-container d-flex flex-column ">
 
-            <div class="align-self-center p-2">
+            <div class="align-self-center p-3">
               <div class="color-name kando-font fs-3 mb-2">foo</div>
               <div class="color-picker pb-2"></div>
               <input type="text" class="form-control fs-6" spellcheck="false" size="10"></input>
@@ -38,7 +38,7 @@
               </button>
               <div class="d-flex gap-2">
                 {{#each colors}}
-                  <div class="btn color-button p-2 mb-1" data-theme-id="{{../id}}" data-color-name="{{@key}}" style="background-color: {{this}}"></div>
+                  <div class="btn color-button p-2 mb-1"  data-bs-toggle="tooltip" data-bs-title="{{@key}}" data-theme-id="{{../id}}" data-color-name="{{@key}}" style="background-color: {{this}}"></div>
                 {{/each}}
               </div>
               <button class="btn btn-secondary kando-font fs-3" data-bs-toggle="tooltip" data-bs-title="Close the color editor">

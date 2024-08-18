@@ -219,6 +219,11 @@ export class MenuThemesTab {
         ],
       });
 
+      // Prevent clicks on the color picker from selecting the theme.
+      pickerContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
       // This will be stored in the colorPickers info object.
       const colorPickerInfo = {
         picker,
@@ -229,14 +234,15 @@ export class MenuThemesTab {
       };
 
       // Show the color picker when the edit colors button is clicked.
-      editColorsButton.addEventListener('click', () => {
+      editColorsButton.addEventListener('click', (e) => {
+        e.stopPropagation();
         card.classList.add('color-picker-visible');
-
         this.editColor(theme.id, Object.keys(theme.colors)[0]);
       });
 
       // Hide the color picker when the done button is clicked.
-      doneButton.addEventListener('click', () => {
+      doneButton.addEventListener('click', (e) => {
+        e.stopPropagation();
         card.classList.remove('color-picker-visible');
       });
 
@@ -244,7 +250,9 @@ export class MenuThemesTab {
       // we have to manually reset the background color of all color buttons, updated the
       // color picker's current color and remove the entire set of color overrides for the
       // current theme.
-      resetButton.addEventListener('click', () => {
+      resetButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+
         const overrides = this.colorOverrides[theme.id];
         if (overrides) {
           Object.keys(overrides).forEach((colorName) => {
@@ -271,6 +279,11 @@ export class MenuThemesTab {
         picker.color.set(textEntry.value);
       });
 
+      // Prevent clicks on the text entry field from selecting the theme.
+      textEntry.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
       // Submit changes when the color is changed. We update the color of the color
       // button, the text entry field and the value stored in our colorOverrides array.
       // Finally, the changes are submitted to the main process.
@@ -293,7 +306,8 @@ export class MenuThemesTab {
 
     // Show the color picker when a color button is clicked.
     this.tabContent.querySelectorAll('.color-button').forEach((button) => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
         const themeID = button.getAttribute('data-theme-id');
         const colorName = button.getAttribute('data-color-name');
         this.editColor(themeID, colorName);

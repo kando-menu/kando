@@ -316,6 +316,10 @@
     outline: 2px dashed rgba(255, 255, 255, 1);
   }
 
+  &:active {
+    transform: none !important;
+  }
+
   .color-picker-container {
     backdrop-filter: blur(15px) brightness(0.8);
     transition:
