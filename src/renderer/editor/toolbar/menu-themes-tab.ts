@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { Tooltip } from 'bootstrap';
 import iro from '@jaames/iro';
 import lodash from 'lodash';
 
@@ -57,6 +58,9 @@ export class MenuThemesTab {
 
     /** This is the text entry field which shows the current color. */
     textEntry: HTMLInputElement;
+
+    /** This is the div which shows the color's name. */
+    colorName: HTMLElement;
   }> = [];
 
   /** This timeout is used to avoid submitting changes too often. */
@@ -129,8 +133,8 @@ export class MenuThemesTab {
       'If enabled, you can choose a different theme and color set if your system is in light or dark color mode.';
     if (this.enableDarkMode) {
       subheading = this.darkMode
-        ? 'Your system is currently in dark mode. The settings below will be used only in dark mode.'
-        : 'Your system is currently in light mode. The settings below will be used only in light mode.';
+        ? 'Your system is currently in dark mode. The settings above will only be used in dark mode.'
+        : 'Your system is currently in light mode. The settings above will only be used in light mode.';
     }
 
     const template = require('./templates/menu-themes-tab.hbs');
@@ -138,6 +142,13 @@ export class MenuThemesTab {
       themes: themeData,
       darkMode: this.enableDarkMode,
       subheading,
+    });
+
+    // Initialize all tooltips.
+    this.tabContent.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
+      new Tooltip(elem, {
+        delay: { show: 500, hide: 0 },
+      });
     });
 
     // Select the theme if the entire card is clicked.
@@ -182,11 +193,17 @@ export class MenuThemesTab {
       const textEntry = card.querySelector('input') as HTMLInputElement;
       const [resetButton, doneButton] = card.querySelectorAll('button');
       const editColorsButton = card.querySelector('.edit-colors-button') as HTMLElement;
+      const colorName = card.querySelector('.color-name') as HTMLElement;
 
       const picker = iro.ColorPicker(pickerContainer, {
         width: 150,
         padding: 5,
+        handleRadius: 10,
+        layoutDirection: 'horizontal',
         layout: [
+          {
+            component: iro.ui.Wheel,
+          },
           {
             component: iro.ui.Slider,
             options: {
@@ -199,9 +216,6 @@ export class MenuThemesTab {
               sliderType: 'alpha',
             },
           },
-          {
-            component: iro.ui.Wheel,
-          },
         ],
       });
 
@@ -211,11 +225,14 @@ export class MenuThemesTab {
         themeID: theme.id,
         currentColor: '',
         textEntry,
+        colorName,
       };
 
       // Show the color picker when the edit colors button is clicked.
       editColorsButton.addEventListener('click', () => {
         card.classList.add('color-picker-visible');
+
+        this.editColor(theme.id, Object.keys(theme.colors)[0]);
       });
 
       // Hide the color picker when the done button is clicked.
@@ -279,12 +296,7 @@ export class MenuThemesTab {
       button.addEventListener('click', () => {
         const themeID = button.getAttribute('data-theme-id');
         const colorName = button.getAttribute('data-color-name');
-        const colorPicker = this.colorPickers.find(
-          (picker) => picker.themeID === themeID
-        );
-        colorPicker.currentColor = colorName;
-        colorPicker.picker.color.set((button as HTMLElement).style.backgroundColor);
-        colorPicker.textEntry.value = colorPicker.picker.color.rgbaString;
+        this.editColor(themeID, colorName);
       });
     });
   }
@@ -307,5 +319,17 @@ export class MenuThemesTab {
         window.api.appSettings.setKey('menuThemeColors', this.colorOverrides);
       }
     }, 500);
+  }
+
+  private editColor(themeID: string, colorName: string) {
+    const button = this.tabContent.querySelector(
+      `div[data-theme-id="${themeID}"].color-button[data-color-name="${colorName}"]`
+    ) as HTMLElement;
+
+    const colorPicker = this.colorPickers.find((picker) => picker.themeID === themeID);
+    colorPicker.currentColor = colorName;
+    colorPicker.picker.color.set(button.style.backgroundColor);
+    colorPicker.textEntry.value = colorPicker.picker.color.rgbaString;
+    colorPicker.colorName.innerText = colorName;
   }
 }

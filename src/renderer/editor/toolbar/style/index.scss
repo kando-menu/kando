@@ -310,7 +310,7 @@
   position: relative;
   padding: 0;
   background-size: cover;
-  background-position: 50% 30%;
+  background-position: 50% 100%;
 
   &.checked {
     outline: 2px dashed rgba(255, 255, 255, 1);
@@ -356,13 +356,15 @@
   .color-button {
     transition: none;
     display: block;
-    border-radius: 100px;
-    margin: 0 2px;
+    border-radius: 50%;
+    @include rfs(35px, width);
+    @include rfs(35px, height);
     padding: 0;
     background-color: var(--bs-btn-active-bg);
 
     &:hover {
       box-shadow: 0 0 5px white;
+      border: 1px solid black;
     }
   }
 }
