@@ -173,7 +173,25 @@ export class Menu extends EventEmitter {
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
     // and keyup events.
     document.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape') {
+      const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
+      if (menuKeys.includes(event.key)) {
+        const index = menuKeys.indexOf(event.key);
+        if (index === 0) {
+          if (this.selectionChain.length > 1) {
+            this.selectItem(this.selectionChain[this.selectionChain.length - 2]);
+          } else {
+            this.emit('cancel');
+          }
+        } else {
+          const currentItem = this.selectionChain[this.selectionChain.length - 1];
+          if (currentItem.children) {
+            const child = currentItem.children[index - 1];
+            if (child) {
+              this.selectItem(child);
+            }
+          }
+        }
+      } else if (event.key !== 'Escape') {
         this.input.onKeyDownEvent();
       }
     });
