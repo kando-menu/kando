@@ -95,8 +95,8 @@ export class KandoApp {
     defaults: {
       menuTheme: 'default',
       darkMenuTheme: 'default',
-      menuThemeColors: [],
-      darkMenuThemeColors: [],
+      menuThemeColors: {},
+      darkMenuThemeColors: {},
       enableDarkModeForMenuThemes: false,
       sidebarVisible: true,
       enableVersionCheck: true,
@@ -697,12 +697,11 @@ export class KandoApp {
         nativeTheme.shouldUseDarkColors;
 
       const theme = this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme');
-      const colors = this.appSettings.get(
+      const colorOverrides = this.appSettings.get(
         useDarkVariant ? 'darkMenuThemeColors' : 'menuThemeColors'
       );
 
-      const overrides = colors.find((c) => c.theme === theme);
-      return overrides ? overrides.colors : [];
+      return colorOverrides[theme] || {};
     });
 
     // Allow the renderer to retrieve the current system theme.

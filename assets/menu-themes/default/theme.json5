@@ -27,12 +27,12 @@
 
   // These colors can be configured by the user and are vailable in the CSS file as CSS
   // variables. The default values are used if the user does not provide any values.
-  colors: [
-    { name: 'background-color', default: 'rgb(255, 255, 255)' },
-    { name: 'text-color', default: 'rgb(60, 60, 60)' },
-    { name: 'border-color', default: 'rgb(109, 109, 109)' },
-    { name: 'hover-color', default: 'rgb(255, 200, 200)' },
-  ],
+  colors: {
+    'background-color': 'rgb(255, 255, 255)',
+    'text-color': 'rgb(60, 60, 60)',
+    'border-color': 'rgb(109, 109, 109)',
+    'hover-color': 'rgb(255, 200, 200)',
+  },
 
   // This theme is very simple and only uses one layer for the menu items.
   layers: [{ class: 'icon-layer', content: 'icon' }],

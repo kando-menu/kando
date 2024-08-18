@@ -112,18 +112,18 @@ export class MenuTheme {
     head.appendChild(link);
 
     // Register the colors as CSS properties.
-    this.description.colors.forEach((color) => {
+    Object.entries(this.description.colors).forEach(([name, color]) => {
       // Try to register the property. If this fails, we had registered it before and
       // can just set the value.
       try {
         CSS.registerProperty({
-          name: `--${color.name}`,
+          name: `--${name}`,
           syntax: '<color>',
           inherits: true,
-          initialValue: color.default,
+          initialValue: color,
         });
       } catch (e) {
-        document.documentElement.style.setProperty(`--${color.name}`, color.default);
+        document.documentElement.style.setProperty(`--${name}`, color);
       }
     });
   }
@@ -166,9 +166,9 @@ export class MenuTheme {
   }
 
   /** Sets the colors defined in the theme description as CSS properties. */
-  public setColors(colors: Array<{ name: string; color: string }>) {
-    colors.forEach((color) => {
-      document.documentElement.style.setProperty(`--${color.name}`, color.color);
+  public setColors(colors: Record<string, string>) {
+    Object.entries(colors).forEach(([name, color]) => {
+      document.documentElement.style.setProperty(`--${name}`, color);
     });
   }
 

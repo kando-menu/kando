@@ -95,12 +95,9 @@ export interface IMenuThemeDescription {
 
   /**
    * These colors will be available as var(--name) in the CSS file and can be adjusted by
-   * the user in the settings. The default value is the value given here.
+   * the user in the settings. The map assigns a default CSS color to each name.
    */
-  colors: {
-    name: string;
-    default: string;
-  }[];
+  colors: Record<string, string>;
 
   /**
    * The layers which are drawn on top of each other for each menu item. Each layer will
@@ -359,17 +356,17 @@ export interface IAppSettings {
   /** The name of the theme which should be used for the dark mode. */
   darkMenuTheme: string;
 
-  /** The accent color overrides to use for menu themes. */
-  menuThemeColors: Array<{
-    theme: string;
-    colors: Array<{ name: string; color: string }>;
-  }>;
+  /**
+   * The accent color overrides to use for menu themes. The outer key is the theme's ID,
+   * the inner key is the color's name. The final value is the CSS color.
+   */
+  menuThemeColors: Record<string, Record<string, string>>;
 
-  /** The accent color overrides to use for the dark mode. */
-  darkMenuThemeColors: Array<{
-    theme: string;
-    colors: Array<{ name: string; color: string }>;
-  }>;
+  /**
+   * The accent color overrides to use for the dark mode. The outer key is the theme's ID,
+   * the inner key is the color's name. The final value is the CSS color.
+   */
+  darkMenuThemeColors: Record<string, Record<string, string>>;
 
   /**
    * If enabled, the dark menu theme and dark color variants will be used if the system is
