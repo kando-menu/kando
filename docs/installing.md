@@ -8,7 +8,7 @@ SPDX-License-Identifier: CC-BY-4.0
 # Installing Kando
 
 You can either **download a pre-built package** or **compile Kando yourself**.
-Manual compilation is only required if you want to test the latest development version of the prototype or if you want to contribute to the project.
+Manual compilation is only required if you want to test the latest development version of Kando or if you want to contribute to the project.
 
 ## <img height="20" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Downloading Kando for Windows
 
@@ -69,8 +69,8 @@ Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact wit
 
 ## :gear: Building Kando Yourself
 
-If you want to test the latest development version of the prototype, you will have to install `node` and `npm`.
-You will also need `cmake` for building the native backends.
+If you want to test the latest development version of Kando, you will have to install `node` and `npm`.
+You will also need [CMake](https://cmake.org/) for building the native backends.
 Additionally, you will need a C++ toolchain.
 
 ---
@@ -78,13 +78,13 @@ Additionally, you will need a C++ toolchain.
 <details>
 <summary><img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows Dependencies</summary>
 
-On Windows, you can install either Visual Studio or run this to get the build tools:
+To get `node` and `npm` on Windows, you can follow the [official instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+To get the Microsoft MSVC toolchain, you can install either Visual Studio or run this:
 
 ```
 npm install -g windows-build-tools
 ```
 
-To get `node` and `npm`, you can follow the [official instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
 </details>
 
@@ -133,10 +133,7 @@ sudo dnf install nodejs cmake libX11-devel libXtst-devel wayland-devel libxkbcom
 
 ---
 
-### :rocket: Running the Prototype
-
-> [!TIP]
-> Make sure to also read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
+### :rocket: Running Kando from Source
 
 Once these dependencies are installed, navigate to a directory where you want the sources of Kando and clone the repository:
 
@@ -154,6 +151,9 @@ npm start
 ```
 
 Once this is running, you can press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to open the test window.
+
+> [!TIP]
+> Make sure to also read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
 
 If started this way, Kando will run in development mode.
 This means that any changes to the source code (at least to the renderer process) will be applied immediately. So you usually don't have to restart the application after changing the code.
