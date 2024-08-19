@@ -139,7 +139,8 @@ Property | Available on | Description
 `--angle` | All elements with the `.menu-node` class except for the root node. | The angle of the item in degrees, starting at the top with 0° and going clockwise.
 `--angle-diff` | All elements with the classes `.menu-node.child`. | The angular difference between the item and the direction towards the mouse pointer.
 `--pointer-angle` | All layer divs attached to the element with the `.menu-node.active` classes. | The angle towards the mouse pointer in degrees, starting at the top with 0° and going clockwise.
-`--hover-angle` | All layer divs attached to the element with the `.menu-node.active` classes. | The angle towards the currently hovered child item in degrees, starting at the top with 0° and going clockwise.
+`--hover-angle` | All layer divs attached to the element with the `.menu-node.active` classes. | The angle towards the currently hovered item in degrees, starting at the top with 0° and going clockwise. If the center is hovered, this will be the direction towards the parent item (if there is any).
+`--hovered-child-angle` | All layer divs attached to the element with the `.menu-node.active` classes. | The same as `--hover-angle`, but if the center is hovered, this will not be updated.
 
 
 ### Styling the Layers

@@ -663,7 +663,13 @@ export class Menu extends EventEmitter {
         if (this.isParentOfCenterItem(this.hoveredItem)) {
           hoveredAngle = (item.angle + 180) % 360;
         }
-        this.theme.setCenterProperties(item, this.input.angle, hoveredAngle);
+
+        this.theme.setCenterProperties(
+          item,
+          this.input.angle,
+          hoveredAngle,
+          this.isParentOfCenterItem(this.hoveredItem)
+        );
 
         for (let j = 0; j < item.children?.length; ++j) {
           const child = item.children[j] as IRenderedMenuItem;
