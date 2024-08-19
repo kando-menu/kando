@@ -16,11 +16,11 @@ Feel free to fork the repository, implement your changes and create a merge requ
 > [!TIP]
 > There are always some issues labeled as [good first issue](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Feel free to pick one of these and ask for some pointers for how to get started in the comments!
 
-## Branching Guidelines
+### Code Style
 
-Kando uses a simplified version of [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/):
-New features are usually implemented in `feature/*` branches and are merged to `main` once they are finished.
-Similarly, bugfixes are implemented in `fix/*` branches, where the `*` is usually the issue number (e.g. `fix/#123`).
+Kando uses [Prettier](https://prettier.io/) for code formatting.
+You can either configure your editor to format the code on save or run `npm run format` before committing your changes.
+Else the CI will fail and you will have to fix the formatting before your pull request can be merged.
 
 ### Git Commit Messages
 
@@ -51,11 +51,11 @@ Therefore, only one emoji should be used per commit.
 We will still accept your pull request if you don't use them.
 However, we will be very happy if you do :smile:.
 
-## Versioning
+## Branching Guidelines
 
-Kando uses [semantic versioning](https://semver.org) and the [changelog](changelog.md) follows the rules of [Keep a Changelog](http://keepachangelog.com/).
-Whenever you add a new feature or fix a bug, please add an entry to the top of the changelog in the `[unreleased]` section.
-When a new version is released, this section will be marked as released and a tag is created on the `main` branch.
+Kando uses a simplified version of [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/):
+New features are usually implemented in `feature/*` branches and are merged to `main` once they are finished.
+Similarly, bugfixes are implemented in `fix/*` branches, where the `*` is usually the issue number (e.g. `fix/#123`).
 
 ## Continuous Integration
 
@@ -63,6 +63,12 @@ When a new version is released, this section will be marked as released and a ta
 * For **each commit**, several checks are performed. These include code formatting, linting, [REUSE](https://reuse.software/) compliance and unit tests.
 * For **pull requests**, it is checked in addition that the application can be packaged for Linux and Windows.
 * When a **new tag** is created, the application is packaged for Linux, macOS, and Windows and uploaded to the [releases page](https://github.com/kando-menu/kando/releases).
+
+## Versioning
+
+Kando uses [semantic versioning](https://semver.org) and the [changelog](changelog.md) follows the rules of [Keep a Changelog](http://keepachangelog.com/).
+Whenever you add a new feature or fix a bug, please add an entry to the top of the changelog in the `[unreleased]` section.
+When a new version is released, this section will be marked as released and a tag is created on the `main` branch.
 
 <p align="center"><img src ="img/hr.svg" /></p>
 
