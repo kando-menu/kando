@@ -28,9 +28,10 @@
   // These colors can be configured by the user and are vailable in the CSS file as CSS
   // variables. The default values are used if the user does not provide any values.
   colors: {
-    'icon-color': '#fff',
-    'text-color': 'rgb(80, 80, 80)',
-    'background-color': 'rgb(255, 255, 255)',
+    'action-icon-color': 'rgba(255, 200, 225, 1)',
+    'submenu-icon-color': '#333',
+    'text-color': '#222',
+    'background-color': '#fff',
   },
 
   // This theme uses two layers, one for the icon and the background and one for the arrow
