@@ -188,6 +188,7 @@
     top: calc(-1 * var(--connector-width) / 2);
     background-color: var(--background-color);
     opacity: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
   &:has(>.dragged)>.connector,
