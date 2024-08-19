@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - There are currently three initial themes available: "Default", "Clean Circle", and "Neon Lights". The two latter themes are somewhat experimental and may change in the future. If you create a cool theme, we can consider adding it to the default themes!
   - For each theme you can specify some colors, like the background color or the text color.
   - Kando is aware of system color mode (light or dark) and you can select different colors and / or themes for each mode.
+- **Initial Keyboard Based Menu Navigation!** Thanks to [@Frenzie](https://github.com/Frenzie), it is now possible to select menu items using keyboard shortcuts. This a somewhat "hidden feature" as the individual shortcuts are not displayed anywhere. It works like this: The topmost item can be activated using <kbd>1</kbd>, the next clockwise item with <kbd>2</kbd>, and so on. With <kbd>0</kbd> you can go back to the parent menu or close the menu if you are in the root menu. In the future, the shortcuts may become configurable.
 
 #### :wrench: Changed
 
