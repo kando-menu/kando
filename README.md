@@ -33,12 +33,12 @@ You are welcome to join the 💬 [Discord server](https://discord.gg/hZwbVSDkhy)
 Implementing a menu like Kando in a cross-platform manner is not exactly easy.
 Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window has to be implemented differently on each platform.
 
-For now, I have tested Kando on the following platforms:
+For now, Kando has been tested on the following platforms:
 
 Tested Environment | Status | Notes
 :-- | :---: | ---
-<img height="14" width="14" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows | :heavy_check_mark: | Tested on Windows 11.
-<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> macOS | :heavy_check_mark: | Tested on macOS 11.
+<img height="14" width="14" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows | :heavy_check_mark: |
+<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> macOS | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
@@ -74,12 +74,16 @@ Learn how to create your own menus in the [:memo: Configuration Guide](docs/conf
 **I am creating Kando out of sheer passion.** It is completely free, and I am not planning to monetize it in any way.
 But I would be very happy if you could support the project with creative ideas, code contributions, or by sharing it with your friends and followers! 💖
 
+There are always some open issues labeled as [good first issue](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) which are a great starting point for new contributors.
+Just drop a comment if you want to work on one of these issues, and we can discuss the details!
+
+While direct contributions are the most awesome way to support the development, **donations will encourage me to invest my spare time for developing free and open-source software**.
+
 [![kofi](https://img.shields.io/badge/Donate-on_Ko--fi-ff5e5b?logo=ko-fi)](https://ko-fi.com/schneegans)
 [![github](https://img.shields.io/badge/Donate-on_GitHub-purple?logo=github)](https://github.com/sponsors/Schneegans)
 [![paypal](https://img.shields.io/badge/Donate-on_PayPal-009cde?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=3F7UFL8KLVPXE)
 [![crypto](https://img.shields.io/badge/Donate-some_Crypto-f7931a?logo=bitcoin)](https://schneegans.cb.id)
 
-While direct contributions are the most awesome way to support the development, donations will encourage me to invest my spare time for developing free and open-source software.
 
 **These awesome people have already donated to the development of my open-source projects:**
 
