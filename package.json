@@ -12,6 +12,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint src",
     "prettier": "prettier --check src",
+    "prettier-write": "prettier --write src",
     "test": "ts-mocha test/**/*.spec.ts"
   },
   "keywords": [],
