@@ -345,7 +345,7 @@
 
   &.color-picker-visible {
     .color-picker-container {
-      pointer-events: all;
+      pointer-events: inherit;
       opacity: 1;
       transform: none;
     }
