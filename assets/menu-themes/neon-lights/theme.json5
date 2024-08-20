@@ -28,8 +28,8 @@
   // These colors can be configured by the user and are vailable in the CSS file as CSS
   // variables. The default values are used if the user does not provide any values.
   colors: {
-    'text-color': 'rgb(255, 255, 255)',
-    'flash-color': 'rgb(255, 200, 200)',
+    'glow-color': 'rgb(255, 140, 210)',
+    'connector-color': 'rgba(255, 200, 255, 0.75)',
   },
 
   // This is a very complex theme with multiple layers.

@@ -58,8 +58,9 @@
        center item and the child items. */
   .icon-container {
     opacity: 0;
-    color: var(--text-color);
+    color: white;
     transition: var(--opacity-transition);
+    text-shadow: 0 0 10px var(--glow-color);
   }
 
   .arrow-layer,
@@ -75,8 +76,8 @@
 
   /* The active menu item is the center of the menu. */
   &.active>.arrow-layer,
-  &.active>.ring-slow-layer::before,
-  &.active>.ring-fast-layer::before,
+  &.active>.ring-slow-layer,
+  &.active>.ring-fast-layer,
   &.active>.icon-glow-layer,
   &.active>.icon-layer {
     top: calc(-1 * var(--center-size) / 2);
@@ -85,13 +86,36 @@
     height: var(--center-size);
   }
 
+  &.active>.ring-slow-layer::before,
+  &.active>.ring-fast-layer::before {
+    top: 0;
+    left: 0;
+    width: var(--center-size);
+    height: var(--center-size);
+  }
+
   .icon-glow-layer {
     filter: blur(15px);
+
+    &::before {
+      content: '';
+      background-image: radial-gradient(circle, black, transparent 60%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &.active>.icon-glow-layer {
+    opacity: 0;
   }
 
   .arrow-layer {
     background: url(assets/arrow.svg) no-repeat center;
-    transform: scale(1.6) rotate(var(--hover-angle));
+    transform: scale(1.0) rotate(var(--hovered-child-angle));
+    opacity: 0;
   }
 
   &:has(.dragged)>.arrow-layer {
@@ -105,17 +129,40 @@
 
     &::before {
       content: '';
-      background: url(assets/ring-small.svg) no-repeat center;
+      mask-image: url(assets/ring-mask.svg);
+      background-image: radial-gradient(circle,
+          transparent 20%,
+          rgba(120, 120, 120, 0.1) 27%,
+          rgba(120, 120, 120, 0.2) 30%,
+          rgba(120, 120, 120, 0.6) 33%,
+          rgb(120, 120, 120) 34%,
+          rgb(120, 120, 120) 36%,
+          rgba(120, 120, 120, 0.6) 37%,
+          rgba(120, 120, 120, 0.2) 40%,
+          rgba(120, 120, 120, 0.1) 47%,
+          transparent 60%)
     }
   }
 
   .ring-fast-layer {
     animation: rotate 2s linear infinite;
     opacity: 0;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.3) 60%, transparent 70%);
 
     &::before {
       content: '';
-      background: url(assets/ring-large.svg) no-repeat center;
+      mask-image: url(assets/ring-mask.svg);
+      background-image: radial-gradient(circle,
+          transparent 20%,
+          color-mix(in srgb, var(--glow-color) 10%, transparent) 27%,
+          color-mix(in srgb, var(--glow-color) 20%, transparent) 30%,
+          color-mix(in srgb, var(--glow-color) 60%, transparent) 33%,
+          white 34%,
+          white 36%,
+          color-mix(in srgb, var(--glow-color) 60%, transparent) 37%,
+          color-mix(in srgb, var(--glow-color) 20%, transparent) 40%,
+          color-mix(in srgb, var(--glow-color) 10%, transparent) 47%,
+          transparent 60%)
     }
   }
 
@@ -137,9 +184,13 @@
     }
   }
 
-  &.active.hovered>.arrow-layer {
-    opacity: 0;
-    transform: scale(1.0) rotate(var(--hover-angle));
+  &.active:has(.hovered)>.arrow-layer {
+    opacity: 1;
+    transform: scale(1.6) rotate(var(--hovered-child-angle));
+  }
+
+  &.active:has(.hovered.dragged)>.arrow-layer {
+    transform: scale(1.6) rotate(var(--pointer-angle));
   }
 
   /* If the parent or a child node is clicked, we scale it down to normal size. */
@@ -194,21 +245,17 @@
     transition: none;
   }
 
-  &.active>.connector {
-    background: linear-gradient(to right, transparent 80px, var(--flash-color) 50%, transparent calc(100% - 80px));
-  }
-
   .connector {
-    background: linear-gradient(to right, transparent 80px, rgba(255, 255, 255, 0.3) 50%, transparent calc(100% - 80px));
+    background: linear-gradient(to right, transparent 80px, var(--connector-color) 50%, transparent calc(100% - 80px));
   }
 }
 
 /* Center Text ------------------------------------------------------------------------ */
 
 .center-text {
-  color: var(--text-color);
+  color: white;
   transition: var(--opacity-transition);
-  text-shadow: 0 0 10px var(--text-color);
+  text-shadow: 0 0 10px var(--glow-color);
   font-size: 16px;
   line-height: 22px;
   overflow: visible;
