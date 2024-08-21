@@ -35,19 +35,19 @@
   /* This theme does not render grandchild items. Children are displayed around the
      active node. */
   &.child {
-    transform: translate(calc(var(--child-distance) * var(--dir-x)),
-        calc(var(--child-distance) * var(--dir-y)));
+    transform: translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+        calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
   }
 
   /* If there is a hovered child node, we scale all children up a bit to create a cool
      zoom effect. The hovered child itself is scaled up even more. */
   &.active:has(>.hovered)>.child {
-    transform: scale(calc(1.5 - pow(var(--angle-diff) / 180, 0.25) * 0.5)) translate(calc(var(--child-distance) * var(--dir-x)),
-        calc(var(--child-distance) * var(--dir-y)));
+    transform: scale(calc(1.5 - pow(var(--angle-diff) / 180, 0.25) * 0.5)) translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+        calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
 
     &.hovered {
-      transform: scale(1.5) translate(calc(var(--child-distance) * var(--dir-x)),
-          calc(var(--child-distance) * var(--dir-y)));
+      transform: scale(1.5) translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+          calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
     }
   }
 

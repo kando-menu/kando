@@ -26,17 +26,17 @@
 
   /* Child items are positioned around the active node. */
   &.child.type-submenu {
-    transform: translate(calc(var(--child-distance) * var(--dir-x)),
-        calc(var(--child-distance) * var(--dir-y)));
+    transform: translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+        calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
   }
 
   &.child:not(.type-submenu) {
-    transform: translate(calc(var(--child-distance) * var(--dir-x)),
-        calc(var(--child-distance) * var(--dir-y))) !important;
+    transform: translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+        calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y))) !important;
 
     &.hovered {
-      transform: scale(1.2) translate(calc(var(--child-distance) * var(--dir-x)),
-          calc(var(--child-distance) * var(--dir-y))) !important;
+      transform: scale(1.2) translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+          calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y))) !important;
     }
   }
 
@@ -50,12 +50,12 @@
   /* If there is a hovered child node, we scale all children up a bit to create a cool
      zoom effect. The hovered child itself is scaled up even more. */
   &.active:has(>.hovered)>.child {
-    transform: scale(calc(1.1 - pow(var(--angle-diff) / 180, 0.2) * 0.1)) translate(calc(var(--child-distance) * var(--dir-x)),
-        calc(var(--child-distance) * var(--dir-y)));
+    transform: scale(calc(1.1 - pow(var(--angle-diff) / 180, 0.2) * 0.1)) translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+        calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
 
     &.hovered {
-      transform: scale(1.2) translate(calc(var(--child-distance) * var(--dir-x)),
-          calc(var(--child-distance) * var(--dir-y)));
+      transform: scale(1.2) translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
+          calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
     }
   }
 
