@@ -20,11 +20,11 @@
 
 .menu-node {
   --child-distance: 100px;
-
+  --grandchild-distance: 16px;
+  --grandchild-size: 15px;
   --center-size: 100px;
   --child-size: 50px;
   --connector-width: 5px;
-
   --menu-transition: all 250ms cubic-bezier(0.775, 1.325, 0.535, 1);
   --opacity-transition: opacity 250ms ease;
 
@@ -48,6 +48,13 @@
     &.hovered {
       transform: scale(1.5) translate(calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-x)),
           calc(max(var(--child-distance), 10px * var(--sibling-count)) * var(--dir-y)));
+    }
+
+    /* Grandchild items are hidden with this theme, but we have to position them
+     nevertheless to allow for smooth transitions when showing or hiding them. */
+    &.grandchild {
+      transform: translate(calc(var(--grandchild-distance) * var(--dir-x)),
+          calc(var(--grandchild-distance) * var(--dir-y)));
     }
   }
 
@@ -219,12 +226,14 @@
     height: var(--child-size);
   }
 
-  /* Grandchild items are very small and drawn below the child items. */
+  /* Grandchild items are invisible. The sizing is required for transitions from and to
+     this state. */
   &.grandchild>.icon-layer {
     top: calc(-1 * var(--grandchild-size) / 2);
     left: calc(-1 * var(--grandchild-size) / 2);
     width: var(--grandchild-size);
     height: var(--grandchild-size);
+    opacity: 0;
   }
 
   /* We disable any transition for dragged items. */
