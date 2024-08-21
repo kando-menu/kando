@@ -40,7 +40,8 @@
     }
   }
 
-  /* Grandchild items are positioned around the child items. */
+  /* Grandchild items are hidden with this theme, but we have to position them
+     nevertheless to allow for smooth transitions when showing or hiding them. */
   &.grandchild {
     transform: translate(calc(var(--grandchild-distance) * var(--dir-x)),
         calc(var(--grandchild-distance) * var(--dir-y)));
@@ -62,7 +63,7 @@
   /* Theme Layers --------------------------------------------------------------------- */
 
   /* We hide all icons by default. They will be shown further down in this file for the
-       center item and the child items. */
+     center item and the child items. */
   .icon-container {
     position: relative;
     top: 0;
@@ -143,14 +144,14 @@
     transform: scale(0.8);
   }
 
-  /* Show the icons of the center, parent and child items. */
+  /* Show the icons of the parent and child items. */
   &.parent>.icon-layer>.icon-container,
   &.child>.icon-layer>.icon-container {
     opacity: 1;
   }
 
   /* Child items are displayed around the active node. The parent node of the active
-       node is displayed in a similar style. */
+     node is displayed in a similar style. */
   &.parent>.icon-layer,
   &.child.type-submenu>.icon-layer {
     top: calc(-1 * var(--submenu-size) / 2);
@@ -166,7 +167,8 @@
     height: var(--child-size);
   }
 
-  /* Grandchild items are very small and drawn below the child items. */
+  /* Grandchild items are invisible. The sizing is required for transitions from and to
+     this state. */
   &.grandchild>.icon-layer {
     top: calc(-1 * var(--grandchild-size) / 2);
     left: calc(-1 * var(--grandchild-size) / 2);
