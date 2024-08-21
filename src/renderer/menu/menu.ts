@@ -315,10 +315,10 @@ export class Menu extends EventEmitter {
   private createNodeTree(rootItem: IRenderedMenuItem, rootContainer: HTMLElement) {
     const queue = [];
 
-    queue.push({ item: rootItem, container: rootContainer, level: 0 });
+    queue.push({ item: rootItem, parent: null, container: rootContainer, level: 0 });
 
     while (queue.length > 0) {
-      const { item, container, level } = queue.shift();
+      const { item, parent, container, level } = queue.shift();
 
       const nodeDiv = this.theme.createItem(item);
       if (this.theme.drawChildrenBelow) {
@@ -335,7 +335,28 @@ export class Menu extends EventEmitter {
         const dir = math.getDirection(item.angle, 1.0);
         item.nodeDiv.style.setProperty('--dir-x', dir.x.toString());
         item.nodeDiv.style.setProperty('--dir-y', dir.y.toString());
-        item.nodeDiv.style.setProperty('--angle', item.angle?.toString());
+        item.nodeDiv.style.setProperty('--angle', item.angle.toString() + 'deg');
+        item.nodeDiv.style.setProperty(
+          '--sibling-count',
+          parent.children.length.toString()
+        );
+
+        if (level > 1) {
+          item.nodeDiv.style.setProperty(
+            '--parent-angle',
+            parent.angle.toString() + 'deg'
+          );
+        }
+
+        if (dir.x < -0.2) {
+          item.nodeDiv.classList.add('left');
+        } else if (dir.x > 0.2) {
+          item.nodeDiv.classList.add('right');
+        } else if (dir.y < 0) {
+          item.nodeDiv.classList.add('top');
+        } else {
+          item.nodeDiv.classList.add('bottom');
+        }
       }
 
       item.nodeDiv.classList.add(`level-${level}`);
@@ -349,6 +370,7 @@ export class Menu extends EventEmitter {
         for (const child of item.children) {
           queue.push({
             item: child as IRenderedMenuItem,
+            parent: item,
             container: nodeDiv,
             level: level + 1,
           });
