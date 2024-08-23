@@ -125,6 +125,12 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
+      // Hide the menu on right click events.
+      if ((event as MouseEvent)?.button === 2) {
+        this.emit('cancel');
+        return;
+      }
+
       this.redraw();
 
       this.input.onPointerDownEvent(event, this.getCenterItemPosition());
@@ -135,15 +141,6 @@ export class Menu extends EventEmitter {
     const onPointerUpEvent = (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
-
-      // Hide the menu on right click events.
-      if (
-        this.input.state === InputState.eClicked &&
-        (event as MouseEvent).button === 2
-      ) {
-        this.emit('cancel');
-        return;
-      }
 
       // Hide the menu if we clicked the center of the root menu.
       if (
@@ -158,10 +155,8 @@ export class Menu extends EventEmitter {
       this.input.onPointerUpEvent();
       this.gestures.reset();
 
-      if ((event as MouseEvent).button !== 2) {
-        if (this.draggedItem || this.clickedItem) {
-          this.selectItem(this.draggedItem || this.clickedItem);
-        }
+      if (this.draggedItem || this.clickedItem) {
+        this.selectItem(this.draggedItem || this.clickedItem);
       }
     };
 
