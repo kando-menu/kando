@@ -35,6 +35,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - The text in the center item is now updated asynchronously. This may reduce occasional frame drops as the update causes a forced reflow of the menu layout.
 - Improved the gesture detection algorithm slightly. Mouse gestures should be recognized more reliably especially with very quick movements.
+- The menu is now hidden when the right mouse button is pressed (instead of when it is released). This makes closing the menu more responsive.
 - The default Windows menu now uses `start %USERPROFILE%` instead of `explorer %USERPROFILE%` to avoid a notification due to wrong exit codes of `explorer`.
 - The "Debugging" tab in the sidebar is now called "Development".
 - The icons in the icon picker are not cropped to a circle anymore. This is not useful anymore since the menu themes can decide not to use circular icons.
@@ -48,6 +49,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - A bug which caused Kando to crash when opening a menu on Linux/X11 where `XResourceManagerString` returns `NULL`.
 - A bug which prevented some Electron-based applications to start properly when launched from Kando on Linux. See [#552](https://github.com/kando-menu/kando/issues/552) for details.
+- A bug which allowed selecting items with the right mouse button in marking or turbo mode.
 
 ## [Kando 1.2.0](https://github.com/kando-menu/kando/releases/tag/v1.2.0)
 

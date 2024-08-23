@@ -125,6 +125,12 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
+      // Hide the menu on right click events.
+      if ((event as MouseEvent).button === 2) {
+        this.emit('cancel');
+        return;
+      }
+
       this.redraw();
 
       this.input.onPointerDownEvent(event, this.getCenterItemPosition());
@@ -136,12 +142,8 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      // Hide the menu on right click events.
-      if (
-        this.input.state === InputState.eClicked &&
-        (event as MouseEvent).button === 2
-      ) {
-        this.emit('cancel');
+      // Ignore right mouse button events.
+      if ((event as MouseEvent).button === 2) {
         return;
       }
 
