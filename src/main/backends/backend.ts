@@ -98,10 +98,10 @@ export interface Backend {
   /**
    * Each backend must provide a way to unbind a previously bound keyboard shortcut.
    *
-   * @param shortcut The ID of the shortcut to unbind.
+   * @param trigger The trigger of a previously bound.
    * @returns A promise which resolves when the shortcut has been unbound.
    */
-  unbindShortcut: (shortcut: Shortcut) => Promise<void>;
+  unbindShortcut: (trigger: string) => Promise<void>;
 
   /**
    * Each backend must provide a way to unbind all previously bound keyboard shortcuts.

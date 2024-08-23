@@ -82,10 +82,10 @@ for more information.
   /**
    * This unbinds a previously bound shortcut.
    *
-   * @param shortcut The shortcut to unbind.
+   * @param trigger The trigger of a previously bound.
    */
-  public async unbindShortcut(shortcut: Shortcut) {
-    native.unbindShortcut(shortcut);
+  public async unbindShortcut(trigger: string) {
+    native.unbindShortcut(trigger);
   }
 
   /** This unbinds all previously bound shortcuts. */
