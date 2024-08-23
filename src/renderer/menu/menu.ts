@@ -142,6 +142,11 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
+      // Ignore right mouse button events.
+      if ((event as MouseEvent)?.button === 2) {
+        return;
+      }
+
       // Hide the menu if we clicked the center of the root menu.
       if (
         this.input.state === InputState.eClicked &&
