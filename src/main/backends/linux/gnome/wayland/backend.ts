@@ -139,10 +139,10 @@ export class GnomeBackend implements Backend {
   /**
    * This unbinds a previously bound shortcut.
    *
-   * @param shortcut The shortcut to unbind.
+   * @param trigger The trigger of a previously bound.
    */
-  public async unbindShortcut(shortcut: Shortcut) {
-    const gdkShortcut = this.toGdkShortcut(shortcut.trigger);
+  public async unbindShortcut(trigger: string) {
+    const gdkShortcut = this.toGdkShortcut(trigger);
 
     const success = await this.interface.UnbindShortcut(gdkShortcut);
 

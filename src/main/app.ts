@@ -352,15 +352,42 @@ export class KandoApp {
           return;
         }
 
+        // We unbind the shortcut of the menu (if any) so that key-repeat events can be
+        // received by the renderer. These are necessary for the turbo-mode to work for
+        // single-key shortcuts. The shortcuts are rebound when the window is hidden.
+        // It is possible to open a menu while another one is already shown. If this
+        // happens, we will replace it without closing and opening the window. As the
+        // shortcut for the previous menu had been unbound when showing it, we have to
+        // rebind it here (if it was a different one).
+        const useID = !this.backend.getBackendInfo().supportsShortcuts;
+        const newTrigger = useID ? menu.shortcut : menu.shortcutID;
+        const oldTrigger = useID ? this.lastMenu?.shortcut : this.lastMenu?.shortcutID;
+
+        if (this.window.isVisible() && oldTrigger != newTrigger) {
+          // Rebind the trigger for the previous menu. If the hideTimeout is set, the
+          // window is about to be hidden and the shortcuts have been rebound already.
+          if (oldTrigger && !this.hideTimeout) {
+            this.backend.bindShortcut({
+              trigger: oldTrigger,
+              action: () => {
+                this.showMenu({
+                  trigger: oldTrigger,
+                  name: '',
+                });
+              },
+            });
+          }
+
+          // Unbind the trigger for the new menu.
+          if (newTrigger) {
+            this.backend.unbindShortcut(newTrigger);
+          }
+        }
+
         // Store the last menu to be able to execute the selected action later. The WMInfo
         // will be passed to the action as well.
         this.lastMenu = menu;
         this.lastWMInfo = info;
-
-        // Abort any ongoing hide animation.
-        if (this.hideTimeout) {
-          clearTimeout(this.hideTimeout);
-        }
 
         // Get the work area of the screen where the pointer is located. We will move the
         // window to this screen and show the menu at the pointer position.
@@ -718,6 +745,12 @@ export class KandoApp {
       }
     });
 
+    // Once the editor is shown, we unbind all shortcuts to make sure that the
+    // user can select the bound shortcuts in the menu editor.
+    ipcMain.on('unbind-shortcuts', () => {
+      this.backend.unbindAllShortcuts();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
       this.window.webContents.openDevTools();
@@ -933,16 +966,17 @@ export class KandoApp {
 
   /** This shows the window. */
   private showWindow() {
+    // Cancel any ongoing window-hiding.
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout = null;
+    }
     // On Windows, we have to remove the ignore-mouse-events property when
     // un-minimizing the window. See the hideWindow() method for more information on
     // this workaround
     if (process.platform === 'win32') {
       this.window.setIgnoreMouseEvents(false);
     }
-
-    // Once Kando's window is shown, we unbind all shortcuts to make sure that the
-    // user can select the bound shortcuts in the menu editor.
-    this.backend.unbindAllShortcuts();
 
     // On MacOS we need to ensure the window is on the current workspace before showing.
     // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
@@ -983,11 +1017,11 @@ export class KandoApp {
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
   private async hideWindow(delay = 0) {
-    if (this.hideTimeout) {
-      clearTimeout(this.hideTimeout);
-    }
-
     return new Promise<void>((resolve) => {
+      if (this.hideTimeout) {
+        clearTimeout(this.hideTimeout);
+      }
+
       this.bindShortcuts();
 
       this.hideTimeout = setTimeout(() => {

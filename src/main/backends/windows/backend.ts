@@ -108,10 +108,10 @@ export class WindowsBackend implements Backend {
   /**
    * This unbinds a previously bound shortcut.
    *
-   * @param shortcut The shortcut to unbind.
+   * @param trigger The trigger of a previously bound.
    */
-  public async unbindShortcut(shortcut: Shortcut) {
-    globalShortcut.unregister(shortcut.trigger);
+  public async unbindShortcut(trigger: string) {
+    globalShortcut.unregister(trigger);
   }
 
   /** This unbinds all previously bound shortcuts. */

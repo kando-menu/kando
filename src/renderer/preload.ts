@@ -179,6 +179,14 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   /**
+   * This will be called when the user enters the edit mode. This ensures that a currently
+   * selected shortcut can be assigned to a new menu.
+   */
+  unbindShortcuts: function () {
+    ipcRenderer.send('unbind-shortcuts');
+  },
+
+  /**
    * This will be called by the host process when the user should be shown a button to
    * update the app.
    *

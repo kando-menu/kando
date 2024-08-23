@@ -23,9 +23,9 @@ export interface Native {
   /**
    * This unbinds a previously bound shortcut.
    *
-   * @param shortcut The shortcut to unbind.
+   * @param trigger The trigger of a previously bound.
    */
-  unbindShortcut(shortcut: Shortcut): void;
+  unbindShortcut(trigger: string): void;
 
   /** This unbinds all previously bound shortcuts. */
   unbindAllShortcuts(): void;
