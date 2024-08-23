@@ -126,7 +126,7 @@ export class Menu extends EventEmitter {
       event.stopPropagation();
 
       // Hide the menu on right click events.
-      if ((event as MouseEvent)?.button === 2) {
+      if ((event as MouseEvent).button === 2) {
         this.emit('cancel');
         return;
       }
@@ -143,7 +143,7 @@ export class Menu extends EventEmitter {
       event.stopPropagation();
 
       // Ignore right mouse button events.
-      if ((event as MouseEvent)?.button === 2) {
+      if ((event as MouseEvent).button === 2) {
         return;
       }
 
