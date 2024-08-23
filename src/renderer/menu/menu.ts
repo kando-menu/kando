@@ -158,8 +158,10 @@ export class Menu extends EventEmitter {
       this.input.onPointerUpEvent();
       this.gestures.reset();
 
-      if (this.draggedItem || this.clickedItem) {
-        this.selectItem(this.draggedItem || this.clickedItem);
+      if ((event as MouseEvent).button !== 2) {
+        if (this.draggedItem || this.clickedItem) {
+          this.selectItem(this.draggedItem || this.clickedItem);
+        }
       }
     };
 
