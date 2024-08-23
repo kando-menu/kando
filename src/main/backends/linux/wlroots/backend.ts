@@ -68,6 +68,6 @@ export abstract class WLRBackend implements Backend {
   abstract getBackendInfo(): IBackendInfo;
   abstract getWMInfo(): Promise<WMInfo>;
   abstract bindShortcut(shortcut: Shortcut): Promise<void>;
-  abstract unbindShortcut(shortcut: Shortcut): Promise<void>;
+  abstract unbindShortcut(trigger: string): Promise<void>;
   abstract unbindAllShortcuts(): Promise<void>;
 }

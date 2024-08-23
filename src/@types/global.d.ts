@@ -60,6 +60,7 @@ declare global {
       ) => void;
       showEditor: (func: (editorOptions: IShowEditorOptions) => void) => void;
       hideEditor: (func: () => void) => void;
+      unbindShortcuts: () => void;
       showUpdateAvailableButton: (func: () => void) => void;
       hoverItem: (path: string) => void;
       unhoverItem: (path: string) => void;

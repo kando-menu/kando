@@ -226,10 +226,10 @@ export class KDEWaylandBackend implements Backend {
    * which registered the shortcut. A new script is started which re-registers all
    * remaining shortcuts.
    *
-   * @param shortcut The shortcut to unbind.
+   * @param trigger The trigger of a previously bound.
    */
-  public async unbindShortcut(shortcut: Shortcut) {
-    this.shortcuts = this.shortcuts.filter((s) => s.trigger !== shortcut.trigger);
+  public async unbindShortcut(trigger: string) {
+    this.shortcuts = this.shortcuts.filter((s) => s.trigger !== trigger);
     await this.updateShortcuts();
   }
 

@@ -158,16 +158,15 @@ void Native::unbindShortcut(const Napi::CallbackInfo& info) {
 
   // We need to check the number of arguments and their types. If something is wrong, we
   // throw a JavaScript exception.
-  if (info.Length() != 1 || !info[0].IsObject() ||
-      !isShortcutObject(info[0].As<Napi::Object>())) {
-    Napi::Error::New(env, "Shortcut object expected!").ThrowAsJavaScriptException();
+  if (info.Length() != 1 || !info[0].IsString()) {
+    Napi::Error::New(env, "string expected!").ThrowAsJavaScriptException();
     return;
   }
 
   // Make sure that we are connected to the Wayland display.
   init(env);
 
-  std::string id = info[0].As<Napi::Object>().Get("id").ToString();
+  std::string id = info[0].As<Napi::String>();
 
   auto it = mShortcuts.find(id);
   if (it != mShortcuts.end()) {

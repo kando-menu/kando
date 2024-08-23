@@ -107,6 +107,7 @@ Promise.all([
   // Hide the menu when the user enters edit mode.
   editor.on('enter-edit-mode', () => {
     menu.hide();
+    window.api.unbindShortcuts();
   });
 
   // Hide Kando's window when the user leaves edit mode.
