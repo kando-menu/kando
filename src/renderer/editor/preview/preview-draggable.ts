@@ -66,7 +66,7 @@ export class PreviewDraggable extends EventEmitter implements IDraggable {
 
   /** @returns 'menu-item' */
   public getDataType() {
-    return 'menu-item';
+    return this.item.angle != null ? 'locked-menu-item' : 'menu-item';
   }
 
   /** @returns The menu item which is made draggable. */
