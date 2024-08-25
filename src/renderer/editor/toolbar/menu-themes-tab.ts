@@ -119,12 +119,19 @@ export class MenuThemesTab {
     // theme information and the list of colors for each theme. We have to check for
     // each color if there is a color override.
     const themeData = this.allMenuThemes.map((theme) => {
+      let previewPath = 'file://' + theme.directory + '/' + theme.id + '/preview.jpg';
+
+      // On Windows, we have to replace backslashes with slashes to make the path work.
+      if (cIsWindows) {
+        previewPath = previewPath.replace(/\\/g, '/');
+      }
+
       return {
         id: theme.id,
         name: theme.name,
         author: theme.author,
         checked: theme.id === currentTheme.id,
-        preview: 'file://' + theme.directory + '/' + theme.id + '/preview.jpg',
+        preview: encodeURI(previewPath),
         colors: lodash.merge({}, theme.colors, colorOverrides[theme.id]),
       };
     });
