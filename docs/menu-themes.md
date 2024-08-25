@@ -13,10 +13,11 @@ Depending on the menu item's state (e.g. active, child, parent, hovered, etc.), 
 
 ## 🧬 Anatomy of a Menu Theme
 
-A menu theme is a directory containing at least two files: `theme.json` and `theme.css`.
+A menu theme is a directory containing at least three files: `theme.json`, `theme.css`, and `preview.jpg`.
 * The JSON file contains metadata about the theme and a list of layers which will be created for each menu item.
 Each layer gets a specific _class name_ which can be used in the CSS file to style the layer.
 * The CSS file can contain any CSS code you like. With _CSS selectors_, you can choose which layers to style in which way.
+* The preview image is a square-shaped image which will be shown in the menu editor to preview the theme.
 
 The CSS file can reference assets like images or fonts. These can be placed in the same directory as the JSON and CSS files or in a subdirectory.
 
@@ -147,7 +148,6 @@ Property | Available on | Description
 `--sibling-count` | All elements with the `.menu-node` class except for the root node. | The number of child items the item's parent has. This can be used to increase the child item distance if there are many children.
 
 
-
 ### Styling the Layers
 
 You can now use [CSS selectors](https://www.w3schools.com/css/css_selectors.asp) to style each of these elements.
@@ -179,7 +179,13 @@ Here are some CSS selectors which you may find useful.
 .menu-node[data-name='Menu Item Name'] {}
 ```
 
-## 🛳️ Distributing your Theme
+## 🖼️ A Preview for your Theme: `preview.jpg`
+
+This should be a **square** screenshot of the menu with the theme applied.
+You can use a custom background to suit your theme.
+The menu should be shown in the center of the image, the default themes use a resolution of **700x700 pixels**, but Kando will scale the image to fit the preview area in the menu editor.
+
+# 🛳️ Distributing your Theme
 
 In the future, we plan to add a repository for sharing themes.
 For now, you are invited to share your themes in [Kando's Discord Server](https://discord.gg/hZwbVSDkhy).
