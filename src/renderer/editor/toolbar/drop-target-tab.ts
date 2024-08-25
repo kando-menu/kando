@@ -65,7 +65,7 @@ export class DropTargetTab extends EventEmitter implements IDropTarget {
       return false;
     }
 
-    // If the coords are inside the trash tab content, we accept the draggable.
+    // If the coords are inside the tab's content, we accept the draggable.
     const rect = this.tabContent.getBoundingClientRect();
     if (
       coords.x >= rect.left &&
@@ -76,7 +76,7 @@ export class DropTargetTab extends EventEmitter implements IDropTarget {
       return true;
     }
 
-    // Also accept the draggable if the coords are inside the trash tab header.
+    // Also accept the draggable if the coords are inside the tab's header.
     const headerRect = this.tabHeader.getBoundingClientRect();
     if (
       coords.x >= headerRect.left &&
@@ -92,13 +92,13 @@ export class DropTargetTab extends EventEmitter implements IDropTarget {
 
   /** @inheritdoc */
   onDragEnter() {
-    // If the trash tab is currently shown, we highlight it.
+    // If the tab is currently active, we highlight the entire content area.
     if (this.tabContent.classList.contains('active')) {
       this.tabContent.classList.add('drop-target');
       return;
     }
 
-    // Else we highlight the trash tab header.
+    // Else we highlight the tab's header.
     this.tabHeader.classList.add('drop-target');
   }
 
