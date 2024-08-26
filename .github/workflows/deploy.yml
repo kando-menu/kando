@@ -35,7 +35,7 @@ jobs:
         run: |
           tools/make-app-image.sh
       - name: Upload Packages
-        uses: svenstaro/upload-release-action@v2.9.0
+        uses: svenstaro/upload-release-action@2.9.0
         with:
           file: out/make/**/*
           tag: ${{ github.ref }}
@@ -63,14 +63,14 @@ jobs:
         run: |
           npm run make
       - name: Upload Zip
-        uses: svenstaro/upload-release-action@v2.9.0
+        uses: svenstaro/upload-release-action@2.9.0
         with:
           file: out/make/zip/win32/x64/*
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Squirrel Installer
-        uses: svenstaro/upload-release-action@v2.9.0
+        uses: svenstaro/upload-release-action@2.9.0
         with:
           file: out/make/squirrel.windows/x64/*.exe
           tag: ${{ github.ref }}
@@ -112,14 +112,14 @@ jobs:
         run: |
           npm run make
       - name: Upload DMG
-        uses: svenstaro/upload-release-action@v2.9.0
+        uses: svenstaro/upload-release-action@2.9.0
         with:
           file: out/make/*.dmg
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Zip
-        uses: svenstaro/upload-release-action@v2.9.0
+        uses: svenstaro/upload-release-action@2.9.0
         with:
           file: out/make/zip/darwin/**/*.zip
           tag: ${{ github.ref }}
