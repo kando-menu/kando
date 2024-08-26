@@ -17,9 +17,13 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [unreleased]
+## [Kando 1.3.0](https://github.com/kando-menu/kando/releases/tag/v1.3.0)
 
-**Release Date:** TBD
+**Release Date:** 2024-08-26
+
+<a href="https://www.youtube.com/watch?v=GVbnLsMnTYQ">
+<img align="right" width="400px" src="img/player14.jpg"></img>
+</a>
 
 #### :tada: Added
 
