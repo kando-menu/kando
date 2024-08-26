@@ -360,28 +360,32 @@ export class KandoApp {
         // shortcut for the previous menu had been unbound when showing it, we have to
         // rebind it here (if it was a different one).
         const useID = !this.backend.getBackendInfo().supportsShortcuts;
-        const newTrigger = useID ? menu.shortcut : menu.shortcutID;
-        const oldTrigger = useID ? this.lastMenu?.shortcut : this.lastMenu?.shortcutID;
+        const newTrigger = useID ? menu.shortcutID : menu.shortcut;
+        const oldTrigger = useID ? this.lastMenu?.shortcutID : this.lastMenu?.shortcut;
 
-        if (this.window.isVisible() && oldTrigger != newTrigger) {
-          // Rebind the trigger for the previous menu. If the hideTimeout is set, the
-          // window is about to be hidden and the shortcuts have been rebound already.
-          if (oldTrigger && !this.hideTimeout) {
-            this.backend.bindShortcut({
-              trigger: oldTrigger,
-              action: () => {
-                this.showMenu({
-                  trigger: oldTrigger,
-                  name: '',
-                });
-              },
-            });
-          }
+        // First, unbind the trigger for the new menu.
+        if (newTrigger) {
+          this.backend.unbindShortcut(newTrigger);
+        }
 
-          // Unbind the trigger for the new menu.
-          if (newTrigger) {
-            this.backend.unbindShortcut(newTrigger);
-          }
+        // If old and new trigger are the same, we don't need to rebind it. If the
+        // hideTimeout is set, the window is about to be hidden and the shortcuts have
+        // been rebound already.
+        if (
+          oldTrigger &&
+          oldTrigger != newTrigger &&
+          this.window.isVisible() &&
+          !this.hideTimeout
+        ) {
+          this.backend.bindShortcut({
+            trigger: oldTrigger,
+            action: () => {
+              this.showMenu({
+                trigger: oldTrigger,
+                name: '',
+              });
+            },
+          });
         }
 
         // Store the last menu to be able to execute the selected action later. The WMInfo
