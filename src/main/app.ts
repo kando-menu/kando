@@ -132,7 +132,8 @@ export class KandoApp {
 
     console.log(app.getLocale());
     console.log(i18next.t('Hello World!'));
-    console.log(i18next.t('How are you?'));
+    console.log(i18next.t('How are you???'));
+    console.log(i18next.t('I am fine.'));
 
     // Bail out if the backend is not available.
     if (this.backend === null) {

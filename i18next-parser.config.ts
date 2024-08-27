@@ -5,4 +5,5 @@
 export default {
   locales: ['en'],
   createOldCatalogs: false,
+  defaultValue: (locale: string, namespace: string, key: string) => key,
 };
