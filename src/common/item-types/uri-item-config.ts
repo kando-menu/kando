@@ -21,6 +21,9 @@ export class URIItemConfig implements IItemConfig {
       'You can use the URI item type to open a website using the http:// protocol.',
       'You can use the URI item type to open a file or folder using the file:// protocol.',
       'You can use the URI item type to open a mailto: link.',
+      'Use {{app_name}} to insert the name of the application which was focused when you opened the menu.',
+      'Use {{window_name}} to insert the name of the window which was focused when you opened the menu.',
+      'Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];

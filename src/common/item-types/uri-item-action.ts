@@ -12,7 +12,7 @@ import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './uri-item-type';
-import { WMInfo, Backend } from '../../main/backends/backend'
+import { WMInfo, Backend } from '../../main/backends/backend';
 import { shell } from 'electron';
 
 /**
@@ -30,19 +30,19 @@ export class URIItemAction implements IItemAction {
   }
 
   /**
- * Replaces placeholders in the URI string with actual values.
- *
- * @param uri The URI string.
- * @param wmInfo Information about the window manager state when the menu was opened.
- * @returns The URI string with placeholders replaced.
- */
-private replacePlaceholders(uri: string, wmInfo: WMInfo): string {
-  return uri
-    .replace(/\{{app_name}}/g, wmInfo.appName)
-    .replace(/\{{window_name}}/g, wmInfo.windowName)
-    .replace(/\{{pointer_x}}/g, wmInfo.pointerX.toString())
-    .replace(/\{{pointer_y}}/g, wmInfo.pointerY.toString());
-}
+   * Replaces placeholders in the URI string with actual values.
+   *
+   * @param uri The URI string.
+   * @param wmInfo Information about the window manager state when the menu was opened.
+   * @returns The URI string with placeholders replaced.
+   */
+  private replacePlaceholders(uri: string, wmInfo: WMInfo): string {
+    return uri
+      .replace(/\{{app_name}}/g, wmInfo.appName)
+      .replace(/\{{window_name}}/g, wmInfo.windowName)
+      .replace(/\{{pointer_x}}/g, wmInfo.pointerX.toString())
+      .replace(/\{{pointer_y}}/g, wmInfo.pointerY.toString());
+  }
 
   /**
    * Opens the URI with the default application.
@@ -51,9 +51,9 @@ private replacePlaceholders(uri: string, wmInfo: WMInfo): string {
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns A promise which resolves when the URI has been successfully opened.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend:Backend, wmInfo: WMInfo) {
-    let uri= (item.data as IItemData).uri
-    uri = this.replacePlaceholders(uri, wmInfo)
+  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo) {
+    let uri = (item.data as IItemData).uri;
+    uri = this.replacePlaceholders(uri, wmInfo);
     return shell.openExternal(uri);
   }
 }
