@@ -1,17 +1,5 @@
 {
-  "Kando is already running": {
-    "message": "Kando is already running",
-    "description": "huhu",
-    "paths": ["/home/simon/Linux-Projects/unsecured/kando-menu/kando/src/main.ts"]
-  },
-  "Check the system tray icon for some options!": {
-    "message": "Check the system tray icon for some options!",
-    "description": "",
-    "paths": ["/home/simon/Linux-Projects/unsecured/kando-menu/kando/src/main.ts"]
-  },
-  "Kando failed to start": {
-    "message": "Kando failed to start",
-    "description": "",
-    "paths": ["/home/simon/Linux-Projects/unsecured/kando-menu/kando/src/main.ts"]
-  }
+  "Kando is already running": "Kando is already running",
+  "Check the system tray icon for some options!": "Check the system tray icon for some options!",
+  "Kando failed to start": "Kando failed to start"
 }

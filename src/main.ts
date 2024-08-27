@@ -136,9 +136,7 @@ app
       // If no option was passed, we show a notification to the user.
       if (!handleCommandLine(options)) {
         KandoApp.showError(
-          i18next.t('Kando is already running', {
-            description: 'This will be shown in a desktop notification.',
-          }),
+          i18next.t('Kando is already running'),
           i18next.t('Check the system tray icon for some options!')
         );
       }
