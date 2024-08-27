@@ -10,6 +10,7 @@ SPDX-License-Identifier: CC-BY-4.0
 [![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
 [![codeql](https://github.com/kando-menu/kando/workflows/CodeQL/badge.svg)](https://github.com/kando-menu/kando/actions)
 [![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
+[![translate](https://hosted.weblate.org/widget/kando/svg-badge.svg)](https://hosted.weblate.org/engage/kando/)
 [![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
 [![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
