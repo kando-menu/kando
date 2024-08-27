@@ -9,4 +9,9 @@ export default {
   namespaceSeparator: false,
   keySeparator: false,
   defaultValue: (locale: string, namespace: string, key: string) => key,
+  customValueTemplate: {
+    message: '${defaultValue}',
+    description: '${description}',
+    paths: '${filePaths}',
+  },
 };

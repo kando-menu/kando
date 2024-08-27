@@ -10,6 +10,8 @@
 
 import { app } from 'electron';
 import { program } from 'commander';
+import i18next from 'i18next';
+import i18Backend from 'i18next-fs-backend';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -107,6 +109,15 @@ const handleCommandLine = (options: CLIOptions) => {
 
 app
   .whenReady()
+  .then(() => {
+    return i18next.use(i18Backend).init({
+      lng: app.getLocale(),
+      fallbackLng: 'en',
+      backend: {
+        loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
+      },
+    });
+  })
   .then(() => kando.init())
   .then(() => {
     // Save some settings when the app is closed.
@@ -125,8 +136,10 @@ app
       // If no option was passed, we show a notification to the user.
       if (!handleCommandLine(options)) {
         KandoApp.showError(
-          'Kando is already running',
-          'Check the system tray icon for some options!'
+          i18next.t('Kando is already running', {
+            description: 'This will be shown in a desktop notification.',
+          }),
+          i18next.t('Check the system tray icon for some options!')
         );
       }
     });
@@ -138,7 +151,7 @@ app
     handleCommandLine(options);
   })
   .catch((error) => {
-    KandoApp.showError('Kando failed to start', error.message);
+    KandoApp.showError(i18next.t('Kando failed to start'), error.message);
     app.quit();
     process.exitCode = 1;
   });

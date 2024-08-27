@@ -25,7 +25,6 @@ import {
 } from 'electron';
 import { Notification } from 'electron';
 import i18next from 'i18next';
-import i18Backend from 'i18next-fs-backend';
 
 import { Backend, getBackend } from './backends';
 import {
@@ -121,20 +120,6 @@ export class KandoApp {
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
-    // Initialize the i18next localization library.
-    await i18next.use(i18Backend).init({
-      lng: app.getLocale(),
-      fallbackLng: 'en',
-      backend: {
-        loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
-      },
-    });
-
-    console.log(app.getLocale());
-    console.log(i18next.t('Hello World!'));
-    console.log(i18next.t('How are you???'));
-    console.log(i18next.t('I am fine.'));
-
     // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
