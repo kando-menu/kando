@@ -13,7 +13,8 @@
     "lint": "eslint src",
     "prettier": "prettier --check src",
     "format": "prettier --write src",
-    "test": "ts-mocha test/**/*.spec.ts"
+    "test": "ts-mocha test/**/*.spec.ts",
+    "i18n": "i18next 'src/**/*.ts'"
   },
   "keywords": [],
   "author": {
@@ -43,6 +44,7 @@
     "eslint-plugin-import": "^2.29.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "handlebars-loader": "^1.7.3",
+    "i18next-parser": "^9.0.2",
     "mocha": "^10.7.3",
     "node-loader": "^2.0.0",
     "prettier": "^3.3.3",

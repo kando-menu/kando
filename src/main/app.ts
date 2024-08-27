@@ -126,12 +126,13 @@ export class KandoApp {
       lng: app.getLocale(),
       fallbackLng: 'en',
       backend: {
-        loadPath: path.join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
+        loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
       },
     });
 
     console.log(app.getLocale());
     console.log(i18next.t('Hello World!'));
+    console.log(i18next.t('How are you?'));
 
     // Bail out if the backend is not available.
     if (this.backend === null) {

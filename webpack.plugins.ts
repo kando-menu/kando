@@ -44,6 +44,9 @@ if (os.platform() === 'darwin') {
 // Some resources are not bundled with webpack. We copy them to the output directory.
 plugins.push(
   new CopyPlugin({
-    patterns: [{ from: 'menu-themes', to: 'assets/menu-themes', context: 'assets/' }],
+    patterns: [
+      { from: 'menu-themes', to: 'assets/menu-themes', context: 'assets/' },
+      { from: 'locales', to: '../main/locales' },
+    ],
   })
 );
