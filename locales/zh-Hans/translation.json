@@ -1,1 +1,5 @@
-{}
+{
+    "Kando failed to start": "Kando 启动失败",
+    "Check the system tray icon for some options!": "点击托盘图标以查看选项！",
+    "Kando is already running": "Kando 已经在运行了"
+}
