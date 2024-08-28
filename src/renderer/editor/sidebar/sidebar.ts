@@ -123,7 +123,7 @@ export class Sidebar {
               },
               {
                 caption: i18next.t(
-                  'No accidental selections: Final items are only selected as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!'
+                  'No accidental selections: Actions are only executed as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!'
                 ),
               },
             ],
