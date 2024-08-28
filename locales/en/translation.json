@@ -1,5 +1,16 @@
 {
   "Kando is already running": "Kando is already running",
   "Check the system tray icon for some options!": "Check the system tray icon for some options!",
-  "Kando failed to start": "Kando failed to start"
+  "Kando failed to start": "Kando failed to start",
+  "Introduction": "Introduction",
+  "Click Anywhere:": "Click Anywhere:",
+  "You do not have to exactly click on an item, you just have to click somewhere into its wedge!": "You do not have to exactly click on an item, you just have to click somewhere into its wedge!",
+  "Go Back:": "Go Back:",
+  "Quickly navigate one level up by clicking the center item.": "Quickly navigate one level up by clicking the center item.",
+  "Marking Mode:": "Marking Mode:",
+  "Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.": "Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.",
+  "Turbo Mode:": "Turbo Mode:",
+  "If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!": "If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!",
+  "No accidental selections:": "No accidental selections:",
+  "Final items are only selected as soon as you release your mouse button in \"Marking Mode\" or a keyboard key in \"Turbo Mode\". Use this to explore the menu!": "Final items are only selected as soon as you release your mouse button in \"Marking Mode\" or a keyboard key in \"Turbo Mode\". Use this to explore the menu!"
 }

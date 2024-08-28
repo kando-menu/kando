@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 /**
  * This class is responsible for the sidebar on the left screen edge. It contains some
  * information about Kando in general.
@@ -95,33 +97,39 @@ export class Sidebar {
         {
           id: 'sidebar-tab-introduction',
           icon: 'school',
-          title: 'Introduction',
+          title: i18next.t('Introduction'),
           content: introduction({
             id: 'introduction-slides',
             slides: [
               {
-                heading: 'Click Anywhere:',
-                subheading:
-                  'You do not have to exactly click on an item, you just have to click somewhere into its wedge!',
+                heading: i18next.t('Click Anywhere:'),
+                subheading: i18next.t(
+                  'You do not have to exactly click on an item, you just have to click somewhere into its wedge!'
+                ),
               },
               {
-                heading: 'Go Back:',
-                subheading: 'Quickly navigate one level up by clicking the center item.',
+                heading: i18next.t('Go Back:'),
+                subheading: i18next.t(
+                  'Quickly navigate one level up by clicking the center item.'
+                ),
               },
               {
-                heading: 'Marking Mode:',
-                subheading:
-                  'Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.',
+                heading: i18next.t('Marking Mode:'),
+                subheading: i18next.t(
+                  'Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.'
+                ),
               },
               {
-                heading: 'Turbo Mode:',
-                subheading:
-                  'If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!',
+                heading: i18next.t('Turbo Mode:'),
+                subheading: i18next.t(
+                  'If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!'
+                ),
               },
               {
-                heading: 'No accidental selections:',
-                subheading:
-                  'Final items are only selected as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!',
+                heading: i18next.t('No accidental selections:'),
+                subheading: i18next.t(
+                  'Final items are only selected as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!'
+                ),
               },
             ],
           }),
