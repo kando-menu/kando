@@ -102,33 +102,28 @@ export class Sidebar {
             id: 'introduction-slides',
             slides: [
               {
-                heading: i18next.t('Click Anywhere:'),
-                subheading: i18next.t(
-                  'You do not have to exactly click on an item, you just have to click somewhere into its wedge!'
+                caption: i18next.t(
+                  'Click Anywhere: You do not have to exactly click on an item, you just have to click somewhere into its wedge!'
                 ),
               },
               {
-                heading: i18next.t('Go Back:'),
-                subheading: i18next.t(
-                  'Quickly navigate one level up by clicking the center item.'
+                caption: i18next.t(
+                  'Go Back: Quickly navigate one level up by clicking the center item.'
                 ),
               },
               {
-                heading: i18next.t('Marking Mode:'),
-                subheading: i18next.t(
-                  'Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.'
+                caption: i18next.t(
+                  'Marking Mode: Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.'
                 ),
               },
               {
-                heading: i18next.t('Turbo Mode:'),
-                subheading: i18next.t(
-                  'If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!'
+                caption: i18next.t(
+                  'Turbo Mode: If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!'
                 ),
               },
               {
-                heading: i18next.t('No accidental selections:'),
-                subheading: i18next.t(
-                  'Final items are only selected as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!'
+                caption: i18next.t(
+                  'No accidental selections: Final items are only selected as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!'
                 ),
               },
             ],
