@@ -3,5 +3,12 @@
     "How are you???": "Wie geht's?",
     "I am fine": "Mir geht's gut.",
     "I am fine.": "Mir geht's gut.",
-    "Kando is already running": "Kando läuft bereits"
+    "Kando is already running": "Kando läuft bereits",
+    "Check the system tray icon for some options!": "Überprüfen Sie das Taskleistensymbol für einige Optionen!",
+    "Kando failed to start": "Kando konnte nicht gestartet werden",
+    "Introduction": "Einführung",
+    "Click Anywhere: You do not have to exactly click on an item, you just have to click somewhere into its wedge!": "Irgendwo Klicken: Sie müssen nicht genau auf ein Element klicken, Sie müssen nur irgendwo in dessen Bereich klicken!",
+    "Go Back: Quickly navigate one level up by clicking the center item.": "Zurück: Navigieren Sie schnell eine Ebene nach oben, indem Sie auf das mittlere Element klicken.",
+    "Marking Mode: Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.": "Markierungsmodus: Ziehen Sie über ein Element, um in den Markierungsmodus zu wechseln. Wenn Sie die Zeigerbewegung pausieren oder eine Kurve zeichnen, wird das aktuell gezogene Untermenü geöffnet.",
+    "Turbo Mode: If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!": "Turbo-Modus: Wenn Sie nach dem Öffnen des Menüs eine Taste gedrückt halten, können Sie durch einfaches Bewegen des Zeigers eine Auswahl treffen. Dies ist der schnellste Weg, Einträge auszuwählen!"
 }
