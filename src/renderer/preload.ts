@@ -25,6 +25,14 @@ import {
  */
 contextBridge.exposeInMainWorld('api', {
   /**
+   * This will return the localization strings for the current locale as well as the
+   * english fallback strings.
+   */
+  getLocales: function () {
+    return ipcRenderer.invoke('get-locales');
+  },
+
+  /**
    * The appSettings object can be used to read and write the app settings. The settings
    * are persisted in the host process. When a setting is changed, the host process will
    * notify the renderer process.

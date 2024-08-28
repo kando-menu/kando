@@ -578,6 +578,17 @@ export class KandoApp {
    * more information on the exposed functionality.
    */
   private initRendererIPC() {
+    // Allow the renderer to retrieve the i18next locales.
+    ipcMain.handle('get-locales', () => {
+      const fallback = i18next.getResourceBundle('en', '');
+      const current = i18next.getResourceBundle(app.getLocale(), '');
+
+      return {
+        en: fallback,
+        current,
+      };
+    });
+
     // Allow the renderer to access the app settings. We do this by exposing the
     // a setter, a getter, and an on-change event for each key in the settings object.
     for (const k of Object.keys(this.appSettings.defaults)) {
