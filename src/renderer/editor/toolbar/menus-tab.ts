@@ -8,8 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ToolbarDraggable } from './toolbar-draggable';
+import i18next from 'i18next';
 
+import { ToolbarDraggable } from './toolbar-draggable';
 import { DropTargetTab } from './drop-target-tab';
 import { IMenu, IMenuSettings, deepCopyMenu } from '../../../common';
 import { IconThemeRegistry } from '../../../common/icon-theme-registry';
@@ -149,7 +150,12 @@ export class MenusTab extends DropTargetTab {
     }));
 
     const template = require('./templates/menus-tab.hbs');
-    this.tabContent.innerHTML = template({ menus: data });
+    this.tabContent.innerHTML = template({
+      menus: data,
+      strings: {
+        createMenuButton: i18next.t('toolbar.create-menu-button'),
+      },
+    });
 
     // Add drag'n'drop logic to the menu buttons.
     this.menuSettings.menus.forEach((menu, index) => {

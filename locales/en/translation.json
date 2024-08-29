@@ -44,8 +44,7 @@
       "name": "Submenu",
       "description": "Contains other menu items.",
       "detailed-description_one": "Contains one menu item.",
-      "detailed-description_other": "Contains {{count}} menu items.",
-      "detailed-description_zero": "Contains no menu items."
+      "detailed-description_other": "Contains {{count}} menu items."
     },
     "uri": {
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
@@ -82,5 +81,20 @@
     "dev-tools-button-tooltip": "Open the web developer tools for inspecting the UI.",
     "reload-menu-theme-button": "Reload Current Menu Theme",
     "reload-menu-theme-button-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu."
+  },
+  "toolbar": {
+    "create-menu-button": "Create a menu!",
+    "templates-tab-placeholder-heading": "Drop menus and menu items here and use them as templates!",
+    "templates-tab-placeholder-subheading": "Create copies of the stored items by moving them to the menus tab or to the preview above.",
+    "menus-tab": "Menus",
+    "add-items-tab": "Menu Items",
+    "templates-tab": "Templates",
+    "trash-tab": "Trash",
+    "menu-themes-tab": "Menu Themes",
+    "editor-themes-tab": "Editor Themes",
+    "editor-themes-tab-heading": "Here will be a list of available editor themes!",
+    "editor-themes-tab-subheading": "In the future, it will be possible to theme the entire menu editor.",
+    "trash-tab-placeholder-heading": "You can delete menus and menu items by dropping them here!",
+    "trash-tab-placeholder-subheading": "When you restart Kando, they will be gone."
   }
 }

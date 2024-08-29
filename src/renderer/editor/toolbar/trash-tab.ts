@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { DropTargetTab } from './drop-target-tab';
 import { ToolbarDraggable } from './toolbar-draggable';
 import { IMenu, IMenuItem, deepCopyMenu, deepCopyMenuItem } from '../../../common';
@@ -120,8 +122,8 @@ export class TrashTab extends DropTargetTab {
     const template = require('./templates/templates-trash-tab.hbs');
     this.tabContent.innerHTML = template({
       type: 'trash',
-      placeholderHeading: 'You can delete menus and menu items by dropping them here!',
-      placeholderSubheading: 'When you restart Kando, they will be gone.',
+      placeholderHeading: i18next.t('toolbar.trash-tab-placeholder-heading'),
+      placeholderSubheading: i18next.t('toolbar.trash-tab-placeholder-subheading'),
       items: data,
     });
 
