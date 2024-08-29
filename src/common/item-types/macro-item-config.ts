@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import JSON5 from 'json5';
+import i18next from 'i18next';
 
 import { IMenuItem } from '..';
 import { MacroPicker } from '../../renderer/editor/properties/macro-picker';
@@ -21,8 +22,10 @@ export class MacroItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#valid-simulated-hotkeys-using-key-codes" target="_blank">here</a>.',
-      'Per default, Kando adds a 10ms delay before each key event. You can change this with the "delay" property.',
+      i18next.t('items.macro.tip-1'),
+      '<a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#menu-shortcuts-vs-simulated-hotkeys" target="_blank">' +
+        i18next.t('items.macro.tip-2') +
+        '</a>',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
@@ -37,8 +40,8 @@ export class MacroItemConfig implements IItemConfig {
       utils.renderTemplate(
         require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
         {
-          label: 'Execute After Closing the Menu',
-          hint: 'Ensures that Kando does not block the key events.',
+          label: i18next.t('items.common.delayed-option'),
+          hint: i18next.t('items.common.delayed-option-hint'),
         }
       )
     );

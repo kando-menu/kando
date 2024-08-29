@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
@@ -28,7 +30,7 @@ export class HotkeyItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return 'Simulate Hotkey';
+    return i18next.t('items.hotkey.name');
   }
 
   get defaultIcon(): string {
@@ -47,13 +49,13 @@ export class HotkeyItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return 'Presses a hotkey.';
+    return i18next.t('items.hotkey.description');
   }
 
   getDescription(item: IMenuItem): string {
     const data = item.data as IItemData;
     if (!data.hotkey) {
-      return 'Not configured.';
+      return i18next.t('items.common.not-configured');
     }
 
     // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and

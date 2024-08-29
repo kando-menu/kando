@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IItemConfig } from '../item-config-registry';
 
 /** This class provides the configuration widgets for submenu items. */
@@ -15,17 +17,17 @@ export class SubmenuItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'Submenus can be used to group items.',
-      'You can also nest submenus inside of submenus.',
-      'Submenus can be used to create complex menu structures.',
-      'You should avoid adding more than twelve items to a submenu. Eight is a good number.',
-      "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
-      'You can reorder items by dragging them in the preview.',
-      'You can delete a menu by dragging it from the menus tab to the trash tab in the toolbar.',
-      'You can remove items by dragging them to the trash tab in the toolbar.',
-      'When recording a shortcut, you do not have to press all keys at once. You can press them one after another.',
-      'You can copy menus and items by dragging them while holding the Ctrl key.',
-      'You can open menus from the command line via the --menu flag.',
+      i18next.t('items.submenu.tip-1'),
+      i18next.t('items.submenu.tip-2'),
+      i18next.t('items.submenu.tip-3'),
+      i18next.t('items.submenu.tip-4'),
+      i18next.t('items.submenu.tip-5'),
+      i18next.t('items.submenu.tip-6'),
+      i18next.t('items.submenu.tip-7'),
+      i18next.t('items.submenu.tip-8'),
+      i18next.t('items.submenu.tip-9'),
+      i18next.t('items.submenu.tip-10'),
+      i18next.t('items.submenu.tip-11'),
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];

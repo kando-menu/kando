@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './uri-item-type';
@@ -18,9 +20,9 @@ export class URIItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'You can use the URI item type to open a website using the http:// protocol.',
-      'You can use the URI item type to open a file or folder using the file:// protocol.',
-      'You can use the URI item type to open a mailto: link.',
+      i18next.t('items.uri.tip-1'),
+      i18next.t('items.uri.tip-2'),
+      i18next.t('items.uri.tip-3'),
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
@@ -31,9 +33,9 @@ export class URIItemConfig implements IItemConfig {
     const fragment = utils.renderTemplate(
       require('../../renderer/editor/properties/templates/text-option.hbs'),
       {
-        placeholder: 'Not Defined',
-        label: 'URI',
-        hint: 'This will be opened.',
+        placeholder: i18next.t('items.common.not-configured'),
+        label: i18next.t('items.uri.uri'),
+        hint: i18next.t('items.uri.uri-hint'),
       }
     );
 

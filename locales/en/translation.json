@@ -1,4 +1,62 @@
 {
+  "items": {
+    "command": {
+      "tip-1": "You can use the Command item type to launch applications or scripts.",
+      "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
+      "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
+      "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
+      "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
+      "command": "Command",
+      "command-hint": "This will be executed.",
+      "name": "Launch Application",
+      "description": "Runs any command."
+    },
+    "common": {
+      "delayed-option": "Execute After Closing the Menu",
+      "delayed-option-hint": "Useful if the action targets a window that needs to be focused.",
+      "not-configured": "Not configured."
+    },
+    "hotkey": {
+      "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
+      "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
+      "tip-3": "Click this link to see all valid key names.",
+      "name": "Simulate Hotkey",
+      "description": "Presses a hotkey."
+    },
+    "macro": {
+      "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
+      "tip-2": "Click this link to see all valid key names.",
+      "name": "Simulate Macro",
+      "description": "Types a keyboard macro."
+    },
+    "submenu": {
+      "tip-1": "Submenus can be used to group items.",
+      "tip-2": "You can also nest submenus inside of submenus.",
+      "tip-3": "Submenus can be used to create complex menu structures.",
+      "tip-4": "You should avoid adding more than twelve items to a submenu. Eight is a good number.",
+      "tip-5": "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
+      "tip-6": "You can reorder items by dragging them in the preview.",
+      "tip-7": "You can delete a menu by dragging it from the menus tab to the trash tab in the toolbar.",
+      "tip-8": "You can remove items by dragging them to the trash tab in the toolbar.",
+      "tip-9": "When recording a shortcut, you do not have to press all keys at once. You can press them one after another.",
+      "tip-10": "You can copy menus and items by dragging them while holding the Ctrl key.",
+      "tip-11": "You can open menus from the command line via the --menu flag.",
+      "name": "Submenu",
+      "description": "Contains other menu items.",
+      "detailed-description_one": "Contains one menu item.",
+      "detailed-description_other": "Contains {{count}} menu items.",
+      "detailed-description_zero": "Contains no menu items."
+    },
+    "uri": {
+      "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
+      "tip-2": "You can use the URI item type to open a file or folder using the file:// protocol.",
+      "tip-3": "You can use the URI item type to open a mailto: link.",
+      "uri": "URI",
+      "uri-hint": "This will be opened.",
+      "name": "Open URI",
+      "description": "Opens files or websites."
+    }
+  },
   "main": {
     "is-running-header": "Kando is already running",
     "is-running-message": "Check the system tray icon for some options!",
