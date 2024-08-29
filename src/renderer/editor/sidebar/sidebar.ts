@@ -97,34 +97,24 @@ export class Sidebar {
         {
           id: 'sidebar-tab-introduction',
           icon: 'school',
-          title: i18next.t('Introduction'),
+          title: i18next.t('sidebar.introduction-tab-header'),
           content: introduction({
             id: 'introduction-slides',
             slides: [
               {
-                caption: i18next.t(
-                  'Click Anywhere: You do not have to exactly click on an item, you just have to click somewhere into its wedge!'
-                ),
+                caption: i18next.t('sidebar.introduction-tab-slide-1-caption'),
               },
               {
-                caption: i18next.t(
-                  'Go Back: Quickly navigate one level up by clicking the center item.'
-                ),
+                caption: i18next.t('sidebar.introduction-tab-slide-2-caption'),
               },
               {
-                caption: i18next.t(
-                  'Marking Mode: Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.'
-                ),
+                caption: i18next.t('sidebar.introduction-tab-slide-3-caption'),
               },
               {
-                caption: i18next.t(
-                  'Turbo Mode: If you keep a key pressed after opening the menu, you can perform selections by just moving the pointer. This is the fastest way to select items!'
-                ),
+                caption: i18next.t('sidebar.introduction-tab-slide-4-caption'),
               },
               {
-                caption: i18next.t(
-                  'No accidental selections: Actions are only executed as soon as you release your mouse button in "Marking Mode" or a keyboard key in "Turbo Mode". Use this to explore the menu!'
-                ),
+                caption: i18next.t('sidebar.introduction-tab-slide-5-caption'),
               },
             ],
           }),
@@ -132,21 +122,20 @@ export class Sidebar {
         {
           id: 'sidebar-tab-debugging',
           icon: 'ads_click',
-          title: 'Development',
+          title: i18next.t('sidebar.development-tab-header'),
           content: buttonTab({
             buttons: [
               {
                 id: 'dev-tools-button',
                 icon: 'code',
-                title: 'Show Developer Tools',
-                tooltip: 'Open the web developer tools for inspecting the UI.',
+                title: i18next.t('sidebar.dev-tools-button'),
+                tooltip: i18next.t('sidebar.dev-tools-button-tooltip'),
               },
               {
                 id: 'reload-menu-theme-button',
                 icon: 'palette',
-                title: 'Reload Current Menu Theme',
-                tooltip:
-                  'CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu.',
+                title: i18next.t('sidebar.reload-menu-theme-button'),
+                tooltip: i18next.t('sidebar.reload-menu-theme-button-tooltip'),
               },
             ],
           }),

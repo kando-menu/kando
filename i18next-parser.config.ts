@@ -5,8 +5,4 @@
 export default {
   locales: ['en'],
   createOldCatalogs: false,
-  pluralSeparator: false,
-  namespaceSeparator: false,
-  keySeparator: false,
-  defaultValue: (locale: string, namespace: string, key: string) => key,
 };

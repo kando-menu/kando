@@ -136,8 +136,8 @@ app
       // If no option was passed, we show a notification to the user.
       if (!handleCommandLine(options)) {
         KandoApp.showError(
-          i18next.t('Kando is already running'),
-          i18next.t('Check the system tray icon for some options!')
+          i18next.t('main.is-running-header'),
+          i18next.t('main.is-running-message')
         );
       }
     });
@@ -149,7 +149,7 @@ app
     handleCommandLine(options);
   })
   .catch((error) => {
-    KandoApp.showError(i18next.t('Kando failed to start'), error.message);
+    KandoApp.showError(i18next.t('main.failed-to-start-header'), error.message);
     app.quit();
     process.exitCode = 1;
   });
