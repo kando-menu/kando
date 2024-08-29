@@ -93,6 +93,16 @@ export class Sidebar {
     this.container = document.createElement('div');
     this.container.innerHTML = sidebar({
       areaId: 'kando-editor-sidebar-area',
+      strings: {
+        welcome: i18next.t('sidebar.welcome'),
+        introText: i18next.t('sidebar.intro-text'),
+        watchIntro: i18next.t('sidebar.watch-intro-button'),
+        configGuide: i18next.t('sidebar.config-guide-button'),
+        discord: i18next.t('sidebar.discord-button'),
+        buyMeACoffee: i18next.t('sidebar.buy-me-a-coffee-button'),
+        sponsors: i18next.t('sidebar.sponsors-button'),
+        newVersion: i18next.t('sidebar.new-version-button'),
+      },
       tabs: [
         {
           id: 'sidebar-tab-introduction',
