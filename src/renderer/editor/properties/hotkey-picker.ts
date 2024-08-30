@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { TextPicker } from './text-picker';
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 
@@ -35,11 +37,11 @@ export class HotkeyPicker extends TextPicker {
    */
   constructor() {
     super({
-      label: 'Hotkey',
-      hint: 'This will be simulated.',
+      label: i18next.t('properties.hotkey-picker.label'),
+      hint: i18next.t('properties.hotkey-picker.hint'),
       lines: 1,
-      placeholder: 'Not Bound',
-      recordingPlaceholder: 'Press a hotkey...',
+      placeholder: i18next.t('properties.common.not-bound'),
+      recordingPlaceholder: i18next.t('properties.hotkey-picker.recording'),
       enableRecording: true,
       resetOnBlur: false,
     });

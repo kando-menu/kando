@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { EventEmitter } from 'events';
 import { IMenu } from '../../../common';
 
@@ -50,12 +52,20 @@ export class AdvancedOptionsPicker extends EventEmitter {
     const template = require('./templates/advanced-options-picker.hbs');
     container.classList.value = 'd-flex flex-column justify-content-center hidden';
     container.innerHTML = template({
-      heading: "Tweak the Menu's Behavior",
-      subheading:
-        "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a %s>here</a>.".replace(
-          '%s',
-          'target="_blank" href="https://github.com/kando-menu/kando/blob/main/docs/usage.md"'
+      strings: {
+        heading: i18next.t('properties.advanced-options.heading'),
+        subheading: i18next.t('properties.advanced-options.subheading', {
+          link: 'target="_blank" href="https://github.com/kando-menu/kando/blob/main/docs/usage.md"',
+        }),
+        centeredMode: i18next.t('properties.advanced-options.centered-mode'),
+        centeredModeHint: i18next.t('properties.advanced-options.centered-mode-hint'),
+        anchoredMode: i18next.t('properties.advanced-options.anchored-mode'),
+        anchoredModeHint: i18next.t('properties.advanced-options.anchored-mode-hint'),
+        anchoredModeCheckedHint: i18next.t(
+          'properties.advanced-options.anchored-mode-checked-hint'
         ),
+        done: i18next.t('properties.common.done'),
+      },
     });
 
     // Update the 'centered' property of the menu when the checkbox changes.

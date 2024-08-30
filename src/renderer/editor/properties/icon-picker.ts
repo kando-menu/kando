@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
 import { EventEmitter } from 'events';
 import { Tooltip } from 'bootstrap';
 
@@ -81,15 +82,15 @@ export class IconPicker extends EventEmitter {
     // and `key`. The `name` is the display name of the theme and the `key` is the key
     // that is used to identify the theme in the IconThemeRegistry.
     const data = {
-      heading: 'Select an Icon',
-      subheading:
-        'Add your own icon collections by putting a folder with images into %1. You will need to restart Kando. Learn more <a %2>here</a>.'
-          .replace('%1', IconThemeRegistry.getInstance().userIconThemeDirectory)
-          .replace(
-            '%2',
-            'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#adding-custom-icon-themes-sparkles" target="_blank"'
-          ),
-
+      strings: {
+        heading: i18next.t('properties.icon-picker.heading'),
+        subheading: i18next.t('properties.icon-picker.subheading', {
+          path: IconThemeRegistry.getInstance().userIconThemeDirectory,
+          link: 'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#adding-custom-icon-themes-sparkles" target="_blank"',
+        }),
+        close: i18next.t('properties.common.close'),
+        done: i18next.t('properties.common.done'),
+      },
       themes: new Array<{ name: string; key: string }>(),
     };
     const themes = IconThemeRegistry.getInstance().getThemes();

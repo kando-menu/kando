@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { Collapse } from 'bootstrap';
 import { EventEmitter } from 'events';
 import { IMenu, IMenuConditions, IVec2 } from '../../../common';
@@ -69,9 +71,28 @@ export class ConditionPicker extends EventEmitter {
     const template = require('./templates/condition-picker.hbs');
     container.classList.value = 'd-flex flex-column justify-content-center hidden';
     container.innerHTML = template({
-      heading: 'Select Menu Conditions',
-      subheading:
-        'You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.',
+      strings: {
+        heading: i18next.t('properties.condition-picker.heading'),
+        subheading: i18next.t('properties.condition-picker.subheading'),
+        done: i18next.t('properties.common.done'),
+        app: i18next.t('properties.condition-picker.app'),
+        appHint: i18next.t('properties.condition-picker.app-hint'),
+        appCheckedHint: i18next.t('properties.condition-picker.app-checked-hint'),
+        appPlaceholder: i18next.t('properties.condition-picker.app-placeholder'),
+        appTooltip: i18next.t('properties.condition-picker.app-tooltip'),
+        window: i18next.t('properties.condition-picker.window'),
+        windowHint: i18next.t('properties.condition-picker.window-hint'),
+        windowCheckedHint: i18next.t('properties.condition-picker.window-checked-hint'),
+        windowPlaceholder: i18next.t('properties.condition-picker.window-placeholder'),
+        windowTooltip: i18next.t('properties.condition-picker.window-tooltip'),
+        screen: i18next.t('properties.condition-picker.screen'),
+        screenHint: i18next.t('properties.condition-picker.screen-hint'),
+        screenCheckedHint: i18next.t('properties.condition-picker.screen-checked-hint'),
+        leftPlaceholder: i18next.t('properties.condition-picker.left-placeholder'),
+        rightPlaceholder: i18next.t('properties.condition-picker.right-placeholder'),
+        topPlaceholder: i18next.t('properties.condition-picker.top-placeholder'),
+        bottomPlaceholder: i18next.t('properties.condition-picker.bottom-placeholder'),
+      },
     });
 
     const idPrefix = '#kando-properties-condition-';
@@ -135,9 +156,13 @@ export class ConditionPicker extends EventEmitter {
     // Update the mouse position hint. This will be called on every mouse move event
     // while the condition picker is open.
     this.mouseMoveHandler = (event: MouseEvent) => {
-      this.screenAreaHint.innerText = `Your mouse is currently at ${
-        event.clientX + this.windowPosition.x
-      } x ${event.clientY + this.windowPosition.y}`;
+      this.screenAreaHint.innerText = i18next.t(
+        'properties.condition-picker.pointer-position-hint',
+        {
+          x: event.clientX + this.windowPosition.x,
+          y: event.clientY + this.windowPosition.y,
+        }
+      );
     };
   }
 

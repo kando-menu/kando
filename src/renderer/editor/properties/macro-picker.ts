@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
 import JSON5 from 'json5';
 
 import { TextPicker } from './text-picker';
@@ -33,8 +34,8 @@ export class MacroPicker extends TextPicker {
       label: '',
       hint: '',
       lines: 5,
-      placeholder: 'Hit the record button to start recording!',
-      recordingPlaceholder: 'Press the keys...',
+      placeholder: i18next.t('properties.macro-picker.placeholder'),
+      recordingPlaceholder: i18next.t('properties.macro-picker.recording'),
       enableRecording: true,
       resetOnBlur: false,
     });

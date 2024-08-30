@@ -61,6 +61,73 @@
     "is-running-message": "Check the system tray icon for some options!",
     "failed-to-start-header": "Kando failed to start"
   },
+  "properties": {
+    "common": {
+      "not-bound": "Not Bound",
+      "done": "Done",
+      "close": "Close"
+    },
+    "advanced-options": {
+      "heading": "Tweak the Menu's Behavior",
+      "subheading": "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a {{- link}}>here</a>.",
+      "centered-mode": "Centered Mode",
+      "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
+      "anchored-mode": "Anchored Mode",
+      "anchored-mode-hint": "Open submenus at the same position as the parent menu.",
+      "anchored-mode-checked-hint": "Checking this, will disable Marking Mode."
+    },
+    "condition-picker": {
+      "heading": "Select Menu Conditions",
+      "subheading": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
+      "app": "Limit to Specific Apps",
+      "app-hint": "Show the menu only if a specific application is focused.",
+      "app-checked-hint": "This supports regular expressions like /firefox|chrome/i.",
+      "app-placeholder": "App Name",
+      "app-tooltip": "Use the app which was focused when the Kando was opened.",
+      "window": "Limit to Specific Window Titles",
+      "window-hint": "Show the menu only if the focused window's title contains a given text.",
+      "window-checked-hint": "This supports regular expressions like /youtube|vimeo/i.",
+      "window-placeholder": "Window Title",
+      "window-tooltip": "Use the window which was focused when the Kando was opened.",
+      "screen": "Limit to Specific Screen Area",
+      "screen-hint": "Show the menu only if the pointer is in a given area on the screen.",
+      "screen-checked-hint": "In pixels, relative to the top left corner of your main display.",
+      "left-placeholder": "Left",
+      "right-placeholder": "Right",
+      "top-placeholder": "Top",
+      "bottom-placeholder": "Bottom",
+      "pointer-position-hint": "Your mouse is currently at {{x}} x {{y}}."
+    },
+    "hotkey-picker": {
+      "label": "Hotkey",
+      "hint": "This will be simulated.",
+      "recording": "Press a hotkey..."
+    },
+    "icon-picker": {
+      "heading": "Select an Icon",
+      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>."
+    },
+    "macro-picker": {
+      "placeholder": "Hit the record button to start recording!",
+      "recording": "Press the keys..."
+    },
+    "shortcut-id-picker": {
+      "label": "Global Shortcut ID"
+    },
+    "shortcut-picker": {
+      "label": "Shortcut",
+      "hint": "This will open the menu.",
+      "recording": "Press a shortcut..."
+    }
+  },
+  "backends": {
+    "hyprland": {
+      "shortcut-hint": "Use your hyprland.conf to bind this."
+    },
+    "kde-wayland": {
+      "shortcut-hint": "Use KDE's system settings to bind this."
+    }
+  },
   "sidebar": {
     "welcome": "Welcome to Kando!",
     "intro-text": "Kando comes with a basic example menu. You can play with it, but you should create your own menus soon! You can open the menu editor by clicking on the gear icon in the lower right corner of the screen.",
@@ -83,18 +150,30 @@
     "reload-menu-theme-button-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu."
   },
   "toolbar": {
-    "create-menu-button": "Create a menu!",
-    "templates-tab-placeholder-heading": "Drop menus and menu items here and use them as templates!",
-    "templates-tab-placeholder-subheading": "Create copies of the stored items by moving them to the menus tab or to the preview above.",
-    "menus-tab": "Menus",
-    "add-items-tab": "Menu Items",
-    "templates-tab": "Templates",
-    "trash-tab": "Trash",
-    "menu-themes-tab": "Menu Themes",
-    "editor-themes-tab": "Editor Themes",
-    "editor-themes-tab-heading": "Here will be a list of available editor themes!",
-    "editor-themes-tab-subheading": "In the future, it will be possible to theme the entire menu editor.",
-    "trash-tab-placeholder-heading": "You can delete menus and menu items by dropping them here!",
-    "trash-tab-placeholder-subheading": "When you restart Kando, they will be gone."
+    "menus-tab": {
+      "create-menu-button": "Create a menu!",
+      "label": "Menus"
+    },
+    "templates-tab": {
+      "heading": "Drop menus and menu items here and use them as templates!",
+      "subheading": "Create copies of the stored items by moving them to the menus tab or to the preview above.",
+      "label": "Templates"
+    },
+    "add-items-tab": {
+      "label": "Menu Items"
+    },
+    "trash-tab": {
+      "label": "Trash",
+      "heading": "You can delete menus and menu items by dropping them here!",
+      "subheading": "When you restart Kando, they will be gone."
+    },
+    "menu-themes-tab": {
+      "label": "Menu Themes"
+    },
+    "editor-themes-tab": {
+      "label": "Editor Themes",
+      "heading": "Here will be a list of available editor themes!",
+      "subheading": "In the future, it will be possible to theme the entire menu editor."
+    }
   }
 }

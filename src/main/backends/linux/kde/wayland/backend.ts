@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
 import os from 'os';
 import fs from 'fs';
 import DBus from 'dbus-final';
@@ -86,7 +87,7 @@ export class KDEWaylandBackend implements Backend {
     return {
       windowType: 'toolbar',
       supportsShortcuts: false,
-      shortcutHint: "Use KDE's system settings to bind this.",
+      shortcutHint: i18next.t('backends.kde-wayland.shortcut-hint'),
     };
   }
 

@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
 import { exec } from 'child_process';
 import { WLRBackend } from '../wlroots/backend';
 import { native } from './native';
@@ -42,7 +43,7 @@ for more information.
     return {
       windowType: 'splash',
       supportsShortcuts: false,
-      shortcutHint: 'Use your hyprland.conf to bind this.',
+      shortcutHint: i18next.t('backends.hyprland.shortcut-hint'),
     };
   }
 

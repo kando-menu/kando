@@ -122,8 +122,8 @@ export class TrashTab extends DropTargetTab {
     const template = require('./templates/templates-trash-tab.hbs');
     this.tabContent.innerHTML = template({
       type: 'trash',
-      placeholderHeading: i18next.t('toolbar.trash-tab-placeholder-heading'),
-      placeholderSubheading: i18next.t('toolbar.trash-tab-placeholder-subheading'),
+      placeholderHeading: i18next.t('toolbar.trash-tab.heading'),
+      placeholderSubheading: i18next.t('toolbar.trash-tab.subheading'),
       items: data,
     });
 

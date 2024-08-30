@@ -142,7 +142,8 @@ export class MenusTab extends DropTargetTab {
       name: menu.root.name,
       checked: index === this.currentMenu,
       description:
-        (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
+        (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) ||
+        i18next.t('properties.common.not-bound'),
       icon: IconThemeRegistry.getInstance()
         .getTheme(menu.root.iconTheme)
         .createDiv(menu.root.icon).outerHTML,
@@ -153,7 +154,7 @@ export class MenusTab extends DropTargetTab {
     this.tabContent.innerHTML = template({
       menus: data,
       strings: {
-        createMenuButton: i18next.t('toolbar.create-menu-button'),
+        createMenuButton: i18next.t('toolbar.menus-tab.create-menu-button'),
       },
     });
 

@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { TextPicker } from './text-picker';
 
 /**
@@ -23,10 +25,10 @@ export class ShortcutIDPicker extends TextPicker {
    */
   constructor(hint: string) {
     super({
-      label: 'Global Shortcut ID',
+      label: i18next.t('properties.shortcut-id-picker.label'),
       hint,
       lines: 1,
-      placeholder: 'Not Bound',
+      placeholder: i18next.t('properties.common.not-bound'),
       recordingPlaceholder: '',
       enableRecording: false,
       resetOnBlur: false,
