@@ -90,33 +90,13 @@ export class KandoApp {
    * This is the settings object which is used to store the general application settings
    * in the user's home directory.
    */
-  private appSettings = new Settings<IAppSettings>({
-    file: 'config.json',
-    directory: app.getPath('userData'),
-    defaults: {
-      menuTheme: 'default',
-      darkMenuTheme: 'default',
-      menuThemeColors: {},
-      darkMenuThemeColors: {},
-      enableDarkModeForMenuThemes: false,
-      sidebarVisible: true,
-      enableVersionCheck: true,
-      zoomFactor: 1,
-    },
-  });
+  private appSettings: Settings<IAppSettings>;
 
   /**
    * This is the settings object which is used to store the configured menus in the user's
    * home directory.
    */
-  private menuSettings = new Settings<IMenuSettings>({
-    file: 'menus.json',
-    directory: app.getPath('userData'),
-    defaults: {
-      menus: [this.createExampleMenu()],
-      templates: [],
-    },
-  });
+  private menuSettings: Settings<IMenuSettings>;
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -126,6 +106,34 @@ export class KandoApp {
     }
 
     await this.backend.init();
+
+    // We load the settings from the user's home directory. If the settings file does not
+    // exist, it will be created with the default values.
+    this.appSettings = new Settings<IAppSettings>({
+      file: 'config.json',
+      directory: app.getPath('userData'),
+      defaults: {
+        menuTheme: 'default',
+        darkMenuTheme: 'default',
+        menuThemeColors: {},
+        darkMenuThemeColors: {},
+        enableDarkModeForMenuThemes: false,
+        sidebarVisible: true,
+        enableVersionCheck: true,
+        zoomFactor: 1,
+      },
+    });
+
+    // We load the menu settings from the user's home directory. If the settings file does
+    // not exist, it will be created with the default values.
+    this.menuSettings = new Settings<IMenuSettings>({
+      file: 'menus.json',
+      directory: app.getPath('userData'),
+      defaults: {
+        menus: [this.createExampleMenu()],
+        templates: [],
+      },
+    });
 
     // Try migrating settings from an old version of Kando.
     this.migrateSettings();
