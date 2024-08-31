@@ -209,6 +209,18 @@
     "reload-menu-theme-button-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu."
   },
   "toolbar": {
+    "menu-themes-tab": {
+      "author": "by {{author}}",
+      "system-mode-subheading": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
+      "system-mode-subheading-dark": "Your system is currently in dark mode. The settings above will only be used in dark mode.",
+      "system-mode-subheading-light": "Your system is currently in light mode. The settings above will only be used in light mode.",
+      "caption": "In the future, we will have an online repository for menu themes. For now, you can <a {{tutorialLink}}>learn how to create your own themes</a> and share them in <a {{discordLink}}>Kando's Discord Server</a>!",
+      "edit-colors": "Edit Colors",
+      "dark-mode": "Use Separate Themes and Colors for Light and Dark Mode",
+      "close-color-picker": "Close the color editor",
+      "reset-color-picker": "Reset all colors to their defaults",
+      "label": "Menu Themes"
+    },
     "menus-tab": {
       "create-menu-button": "Create a menu!",
       "label": "Menus"
@@ -225,9 +237,6 @@
       "label": "Trash",
       "heading": "You can delete menus and menu items by dropping them here!",
       "subheading": "When you restart Kando, they will be gone."
-    },
-    "menu-themes-tab": {
-      "label": "Menu Themes"
     },
     "editor-themes-tab": {
       "label": "Editor Themes",
