@@ -8,8 +8,8 @@
       "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
       "command": "Command",
       "command-hint": "This will be executed.",
-      "name": "Launch Application",
-      "description": "Runs any command."
+      "name": "Run Command",
+      "description": "Runs any shell command."
     },
     "common": {
       "delayed-option": "Execute After Closing the Menu",
