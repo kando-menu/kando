@@ -72,5 +72,32 @@
         },
         "name": "Beispiel-Menü",
         "previous-workspace": "Vorherige Arbeitsfläche"
+    },
+    "items": {
+        "command": {
+            "tip-2": "Wenn der Pfad zu einer ausführbaren Datei Leerzeichen enthält, sollten Sie ihn „in Anführungszeichen setzen“.",
+            "tip-3": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
+            "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde.",
+            "command": "Befehl",
+            "command-hint": "Das wird ausgeführt.",
+            "name": "Befehl Ausführen",
+            "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
+            "description": "Führt einen beliebigen Shell-Befehl aus."
+        },
+        "common": {
+            "delayed-option": "Ausführen nach dem Schließen des Menüs",
+            "not-configured": "Nicht konfiguriert.",
+            "delayed-option-hint": "Nützlich, wenn die Aktion auf ein Fenster abzielt, das fokussiert werden muss."
+        },
+        "hotkey": {
+            "tip-1": "Beim Aufzeichnen eines Hotkeys müssen Sie nicht alle Tasten gleichzeitig drücken. Sie können sie auch nacheinander drücken.",
+            "tip-3": "Klicken Sie auf diesen Link, um alle gültigen Tastennamen zu sehen.",
+            "description": "Drückt einen Hotkey.",
+            "tip-2": "Wenn Sie eine Taste nicht aufnehmen können, weil sie vom System verwendet wird, versuchen Sie, ihren Namen direkt einzugeben.",
+            "name": "Hotkey Simulieren"
+        },
+        "macro": {
+            "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern."
+        }
     }
 }
