@@ -120,6 +120,62 @@
       "recording": "Press a shortcut..."
     }
   },
+  "example-menu": {
+    "name": "Example Menu",
+    "apps": {
+      "submenu": "Apps",
+      "safari": "Safari",
+      "web-browser": "Web Browser",
+      "email": "E-Mail",
+      "apple-music": "Music",
+      "gimp": "GIMP",
+      "paint": "Paint",
+      "finder": "Finder",
+      "file-browser": "File Browser",
+      "terminal": "Terminal"
+    },
+    "web-links": {
+      "submenu": "Web Links",
+      "google": "Google",
+      "kando-on-github": "Kando on GitHub",
+      "kando-on-kofi": "Kando on Ko-fi",
+      "kando-on-youtube": "Kando on YouTube",
+      "kando-on-discord": "Kando on Discord"
+    },
+    "next-workspace": "Next Workspace",
+    "clipboard": {
+      "submenu": "Clipboard",
+      "paste": "Paste",
+      "copy": "Copy",
+      "cut": "Cut"
+    },
+    "audio": {
+      "submenu": "Audio",
+      "next-track": "Next Track",
+      "play-pause": "Play / Pause",
+      "mute": "Mute",
+      "previous-track": "Previous Track"
+    },
+    "windows": {
+      "submenu": "Windows",
+      "mission-control": "Mission Control",
+      "toggle-maximize": "Toggle Maximize",
+      "tile-right": "Tile Right",
+      "close-window": "Close Window",
+      "tile-left": "Tile Left"
+    },
+    "previous-workspace": "Previous Workspace",
+    "bookmarks": {
+      "submenu": "Bookmarks",
+      "downloads": "Downloads",
+      "videos": "Videos",
+      "pictures": "Pictures",
+      "documents": "Documents",
+      "desktop": "Desktop",
+      "home": "Home",
+      "music": "Music"
+    }
+  },
   "backends": {
     "hyprland": {
       "shortcut-hint": "Use your hyprland.conf to bind this."

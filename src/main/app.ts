@@ -1152,15 +1152,77 @@ export class KandoApp {
    * All menu configurations are stored in the `example-menus` directory.
    */
   private createExampleMenu(): IMenu {
+    // To enable localization of the example menus, we need to lookup the strings with
+    // i18next after loading the menu structure from JSON. i18next-parser cannot extract
+    // the strings from JSON files, therefore we have to specify all strings from the
+    // example menus here in a comment. This way, the parser will find them.
+    /*
+    i18next.t('example-menu.name')
+    i18next.t('example-menu.apps.submenu')
+    i18next.t('example-menu.apps.safari')
+    i18next.t('example-menu.apps.web-browser')
+    i18next.t('example-menu.apps.email')
+    i18next.t('example-menu.apps.apple-music')
+    i18next.t('example-menu.apps.gimp')
+    i18next.t('example-menu.apps.paint')
+    i18next.t('example-menu.apps.finder')
+    i18next.t('example-menu.apps.file-browser')
+    i18next.t('example-menu.apps.terminal')
+    i18next.t('example-menu.web-links.submenu')
+    i18next.t('example-menu.web-links.google')
+    i18next.t('example-menu.web-links.kando-on-github')
+    i18next.t('example-menu.web-links.kando-on-kofi')
+    i18next.t('example-menu.web-links.kando-on-youtube')
+    i18next.t('example-menu.web-links.kando-on-discord')
+    i18next.t('example-menu.next-workspace')
+    i18next.t('example-menu.clipboard.submenu')
+    i18next.t('example-menu.clipboard.paste')
+    i18next.t('example-menu.clipboard.copy')
+    i18next.t('example-menu.clipboard.cut')
+    i18next.t('example-menu.audio.submenu')
+    i18next.t('example-menu.audio.next-track')
+    i18next.t('example-menu.audio.play-pause')
+    i18next.t('example-menu.audio.mute')
+    i18next.t('example-menu.audio.previous-track')
+    i18next.t('example-menu.windows.submenu')
+    i18next.t('example-menu.windows.mission-control')
+    i18next.t('example-menu.windows.toggle-maximize')
+    i18next.t('example-menu.windows.tile-right')
+    i18next.t('example-menu.windows.close-window')
+    i18next.t('example-menu.windows.tile-left')
+    i18next.t('example-menu.previous-workspace')
+    i18next.t('example-menu.bookmarks.submenu')
+    i18next.t('example-menu.bookmarks.downloads')
+    i18next.t('example-menu.bookmarks.videos')
+    i18next.t('example-menu.bookmarks.pictures')
+    i18next.t('example-menu.bookmarks.documents')
+    i18next.t('example-menu.bookmarks.desktop')
+    i18next.t('example-menu.bookmarks.home')
+    i18next.t('example-menu.bookmarks.music')
+    */
+
+    let menu: IMenu;
+
     if (process.platform === 'win32') {
-      return require('./example-menus/windows.json');
+      menu = require('./example-menus/windows.json');
+    } else if (process.platform === 'darwin') {
+      menu = require('./example-menus/macos.json');
+    } else {
+      menu = require('./example-menus/linux.json');
     }
 
-    if (process.platform === 'darwin') {
-      return require('./example-menus/macos.json');
-    }
+    const translate = (item: IMenuItem) => {
+      item.name = i18next.t(item.name);
+      if (item.children) {
+        for (const child of item.children) {
+          translate(child);
+        }
+      }
+    };
 
-    return require('./example-menus/linux.json');
+    translate(menu.root);
+
+    return menu;
   }
 
   /**
