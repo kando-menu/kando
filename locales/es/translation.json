@@ -1,1 +1,48 @@
-{}
+{
+    "items": {
+        "command": {
+            "tip-2": "Si la dirección al ejecutable contiene espacios, deberias de \"ponerlo en comillas\".",
+            "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrio el menu.",
+            "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrio el menu.",
+            "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
+            "command": "Comando",
+            "command-hint": "Esto se ejecutará.",
+            "name": "Ejecutar comando",
+            "description": "Ejecuta cualquier comando del shell."
+        },
+        "hotkey": {
+            "tip-2": "Si no puedes grabar una tecla porque la utiliza el sistema, prueba a escribir directamente su nombre.",
+            "name": "Simular Hotkey",
+            "description": "Presiona una hotkey.",
+            "tip-3": "Haga click en este link para ver todos los nombres de clave válidos.",
+            "tip-1": "Al grabar una Hotkey, no es necesario pulsar todas las teclas a la vez. Puedes pulsarlas una tras otra."
+        },
+        "macro": {
+            "tip-1": "Por defecto, Kando añade un retardo de 10ms antes de cada evento de tecla. Puede cambiar esto con la propiedad \"delay\".",
+            "tip-2": "Haga click en este enlace para ver todos los nombres de clave válidos.",
+            "name": "Simular Macro",
+            "description": "Escribe una macro del teclado."
+        },
+        "submenu": {
+            "tip-1": "Los submenús pueden utilizarse para agrupar items.",
+            "tip-3": "Los submenús permiten crear estructuras de menú complejas.",
+            "tip-4": "Evite añadir más de doce elementos a un submenú. Ocho es un buen número.",
+            "tip-6": "Puede reordenar los elementos arrastrándolos en la vista previa.",
+            "tip-7": "Puede eliminar un menú arrastrándolo desde la pestaña de menús a la papelera de la barra de herramientas.",
+            "tip-9": "Al grabar un shortcut, no es necesario pulsar todas las teclas a la vez. Puedes pulsarlas una tras otra.",
+            "tip-10": "Puedes copiar menús y elementos arrastrándolos mientras mantienes pulsada la tecla Ctrl.",
+            "name": "Submenú",
+            "description": "Contiene otras opciones de menú.",
+            "detailed-description_one": "Contiene un item del menú.",
+            "detailed-description_many": "Contiene {{count}} items del menú.",
+            "detailed-description_other": "",
+            "tip-11": "Puede abrir menús desde la línea de comandos mediante el indicador --menu.",
+            "tip-8": "Puedes eliminar elementos arrastrándolos a la papelera de la barra de herramientas."
+        },
+        "common": {
+            "delayed-option": "Ejecutar después de cerrar el menú",
+            "delayed-option-hint": "Útil si la acción se dirige a una ventana que necesita ser enfocada.",
+            "not-configured": "No configurado."
+        }
+    }
+}
