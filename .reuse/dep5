@@ -6,7 +6,7 @@ License: CC0-1.0
 
 Files: locales/*
 Copyright: Simon Schneegans <code@simonschneegans.de>
-License: CC0-1.0
+License: MIT
 
 Files: src/main/example-menus/*
 Copyright: Simon Schneegans <code@simonschneegans.de>
