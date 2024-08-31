@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### :tada: Added
+
+- It is now possible to use `{{app_name}}`, `{{window_name}}`, `{{pointer_x}}`, and `{{pointer_y}}` as part of the URI in the URI action. These placeholders will be replaced with the name of the focused application, focused window, and the pointer position when the menu was opened. Thanks to [@AliElamir](https://github.com/AliElamir) for the contribution!
+
 ## [Kando 1.3.0](https://github.com/kando-menu/kando/releases/tag/v1.3.0)
 
 **Release Date:** 2024-08-26

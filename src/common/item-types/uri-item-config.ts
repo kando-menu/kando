@@ -23,6 +23,9 @@ export class URIItemConfig implements IItemConfig {
       i18next.t('items.uri.tip-1'),
       i18next.t('items.uri.tip-2'),
       i18next.t('items.uri.tip-3'),
+      i18next.t('items.uri.tip-4'),
+      i18next.t('items.uri.tip-5'),
+      i18next.t('items.uri.tip-6'),
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
