@@ -7,7 +7,56 @@
             "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
             "command": "Comando",
             "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
-            "command-hint": "Isso será executado."
+            "command-hint": "Isso será executado.",
+            "name": "Executar Comando",
+            "description": "Executa qualquer comando do shell."
+        },
+        "common": {
+            "delayed-option-hint": "Útil se a ação é executada na janela que esteja com foco.",
+            "not-configured": "Não configurado.",
+            "delayed-option": "Executar Depois de Fechar o Menu"
+        },
+        "hotkey": {
+            "tip-2": "Se você não consegue gravar uma tecla porque ela é usada pelo sistema, tente digitar o nome da tecla diretamente.",
+            "tip-3": "Clique neste link para ver todos os nomes de teclas válidos.",
+            "name": "Simular atalho de teclado",
+            "description": "Pressione um atalho de teclado.",
+            "tip-1": "Ao gravar uma tecla de atalho, você não precisa pressionar todas as teclas ao mesmo tempo. Você pode pressionar uma após a outra."
+        },
+        "macro": {
+            "tip-1": "Por padrão, Kando adiciona 10ms de delay antes de cada evento de tecla. Você pode mudar isso com a propriedade \"delay\".",
+            "tip-2": "Clique neste link para ver todos os nomes de teclas válidos.",
+            "name": "Simular Macro",
+            "description": "Digita um macro de teclado."
+        },
+        "submenu": {
+            "tip-1": "Submenus podem ser usados para agrupar itens.",
+            "tip-2": "Você também pode aninhar submenus dentro de submenus.",
+            "tip-3": "Submenus podem ser usados para criar estruturas de menu complexas.",
+            "tip-4": "Você deve evitar usar mais que doze itens em um submenu. Oito é um bom número.",
+            "tip-5": "Você pode usar os pequenos ícones de cadeado na pré-visualização para fixar a posição de um item no menu.",
+            "tip-6": "Você pode reordenar os items arrastando-os na pré-visualização.",
+            "tip-7": "Você pode deletar um menu arrastando-o da guia de menus para a guia lixeira na barra de ferramentas.",
+            "tip-8": "Você pode remover itens arrastando-os para a guia lixo na barra de ferramentas.",
+            "tip-9": "Ao gravar um atalho de teclado, você não precisa pressionar todas as teclas ao mesmo tempo. Você pode pressionar uma após a outra.",
+            "tip-10": "Você pode copiar menus e itens arrastando-os enquanto segura a tecla Ctrl.",
+            "tip-11": "Você pode abrir menus pela linha de comando através do argumento --menu.",
+            "name": "Submenu",
+            "description": "Contém outros itens de menu.",
+            "detailed-description_one": "Contém um item de menu.",
+            "detailed-description_many": "Contém {{count}} itens de menu.",
+            "detailed-description_other": "Contém {{count}} itens de menu."
+        },
+        "uri": {
+            "tip-1": "Você pode usar o item URI para abrir um site usando o protocolo http://.",
+            "tip-3": "Você pode usar o item URI para abrir um link do tipo mailto: .",
+            "tip-5": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
+            "uri": "URI",
+            "uri-hint": "Isto será aberto.",
+            "name": "Abrir URI",
+            "tip-2": "Você pode usar o item URI para abrir um arquivo ou pasta usando o protocolo file://.",
+            "tip-4": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
+            "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto."
         }
     }
 }
