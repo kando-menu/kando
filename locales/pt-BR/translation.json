@@ -1,1 +1,13 @@
-{}
+{
+    "items": {
+        "command": {
+            "tip-1": "Você pode usar o item do tipo Comando para iniciar aplicativos ou scripts.",
+            "tip-2": "Se o caminho para um executável contem espaços, você deve \"colocar entre aspas\".",
+            "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
+            "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
+            "command": "Comando",
+            "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
+            "command-hint": "Isso será executado."
+        }
+    }
+}
