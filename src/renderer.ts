@@ -38,7 +38,10 @@ Promise.all([
   });
 
   i18next.addResourceBundle('en', 'translation', locales.en, true, true);
-  i18next.addResourceBundle('current', 'translation', locales.current, true, true);
+
+  if (locales.current) {
+    i18next.addResourceBundle('current', 'translation', locales.current, true, true);
+  }
 
   // First, we create a new menu theme and load the description we got from the main
   // process.
