@@ -132,6 +132,8 @@
         }
     },
     "sidebar": {
-        "welcome": "Добро пожаловать в Kando!"
+        "welcome": "Добро пожаловать в Kando!",
+        "watch-intro-button": "Узнайте как использовать Kando",
+        "config-guide-button": "Руководство конфига"
     }
 }
