@@ -62,10 +62,16 @@
         "audio": {
             "submenu": "Аудио",
             "next-track": "Следующий трек",
-            "play-pause": "Играть / Пауза"
+            "play-pause": "Играть / Пауза",
+            "mute": "Беззвучный",
+            "previous-track": "Предыдущий трек"
         },
         "web-links": {
             "kando-on-discord": "Kando в Discord"
+        },
+        "windows": {
+            "submenu": "Windows",
+            "mission-control": "Контроль окон"
         }
     }
 }
