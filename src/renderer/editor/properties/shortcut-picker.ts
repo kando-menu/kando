@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { TextPicker } from './text-picker';
 
 /**
@@ -40,11 +42,11 @@ export class ShortcutPicker extends TextPicker {
    */
   constructor() {
     super({
-      label: 'Shortcut',
-      hint: 'This will open the menu.',
+      label: i18next.t('properties.shortcut-picker.label'),
+      hint: i18next.t('properties.shortcut-picker.hint'),
       lines: 1,
-      placeholder: 'Not Bound',
-      recordingPlaceholder: 'Press a shortcut...',
+      placeholder: i18next.t('properties.common.not-bound'),
+      recordingPlaceholder: i18next.t('properties.shortcut-picker.recording'),
       enableRecording: true,
       resetOnBlur: true,
     });

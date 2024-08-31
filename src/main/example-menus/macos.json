@@ -4,13 +4,13 @@
   "centered": false,
   "root": {
     "type": "submenu",
-    "name": "Example Menu",
+    "name": "example-menu.name",
     "icon": "award_star",
     "iconTheme": "material-symbols-rounded",
     "children": [
       {
         "type": "submenu",
-        "name": "Apps",
+        "name": "example-menu.apps.submenu",
         "icon": "apps",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -19,7 +19,7 @@
             "data": {
               "command": "open -a Safari"
             },
-            "name": "Safari",
+            "name": "example-menu.apps.safari",
             "icon": "safari",
             "iconTheme": "simple-icons"
           },
@@ -28,7 +28,7 @@
             "data": {
               "command": "open -a Mail"
             },
-            "name": "E-Mail",
+            "name": "example-menu.apps.email",
             "icon": "mail",
             "iconTheme": "material-symbols-rounded"
           },
@@ -37,7 +37,7 @@
             "data": {
               "command": "open -a Music"
             },
-            "name": "Music",
+            "name": "example-menu.apps.apple-music",
             "icon": "itunes",
             "iconTheme": "simple-icons"
           },
@@ -46,7 +46,7 @@
             "data": {
               "command": "open -a Finder"
             },
-            "name": "Finder",
+            "name": "example-menu.apps.finder",
             "icon": "folder_shared",
             "iconTheme": "material-symbols-rounded"
           },
@@ -55,7 +55,7 @@
             "data": {
               "command": "open -a Terminal"
             },
-            "name": "Terminal",
+            "name": "example-menu.apps.terminal",
             "icon": "terminal",
             "iconTheme": "material-symbols-rounded"
           }
@@ -63,7 +63,7 @@
       },
       {
         "type": "submenu",
-        "name": "Web Links",
+        "name": "example-menu.web-links.submenu",
         "icon": "public",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -81,7 +81,7 @@
             "data": {
               "uri": "https://github.com/kando-menu/kando"
             },
-            "name": "Kando on GitHub",
+            "name": "example-menu.web-links.kando-on-github",
             "icon": "github",
             "iconTheme": "simple-icons"
           },
@@ -90,26 +90,26 @@
             "data": {
               "uri": "https://ko-fi.com/schneegans"
             },
-            "name": "Kando on Ko-fi",
+            "name": "example-menu.web-links.kando-on-kofi",
             "icon": "kofi",
             "iconTheme": "simple-icons"
           },
           {
             "type": "uri",
             "data": {
-              "uri": "https://www.youtube.com"
+              "uri": "https://www.youtube.com/@simonschneegans"
             },
-            "name": "YouTube",
+            "name": "example-menu.web-links.kando-on-youtube",
             "icon": "youtube",
             "iconTheme": "simple-icons"
           },
           {
             "type": "uri",
             "data": {
-              "uri": "https://chat.openai.com/chat"
+              "uri": "https://discord.gg/hZwbVSDkhy"
             },
-            "name": "ChatGPT",
-            "icon": "openai",
+            "name": "example-menu.web-links.kando-on-discord",
+            "icon": "discord",
             "iconTheme": "simple-icons"
           }
         ]
@@ -119,13 +119,13 @@
         "data": {
           "command": "osascript -e 'tell application \"System Events\" to key code 124 using control down'"
         },
-        "name": "Next Workspace",
+        "name": "example-menu.next-workspace",
         "icon": "arrow_forward",
         "iconTheme": "material-symbols-rounded"
       },
       {
         "type": "submenu",
-        "name": "Clipboard",
+        "name": "example-menu.clipboard.submenu",
         "icon": "assignment",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -135,7 +135,7 @@
               "hotkey": "MetaLeft+KeyV",
               "delayed": true
             },
-            "name": "Paste",
+            "name": "example-menu.clipboard.paste",
             "icon": "content_paste_go",
             "iconTheme": "material-symbols-rounded",
             "angle": 90
@@ -146,7 +146,7 @@
               "hotkey": "MetaLeft+KeyC",
               "delayed": true
             },
-            "name": "Copy",
+            "name": "example-menu.clipboard.copy",
             "icon": "content_copy",
             "iconTheme": "material-symbols-rounded"
           },
@@ -156,7 +156,7 @@
               "hotkey": "MetaLeft+KeyX",
               "delayed": true
             },
-            "name": "Cut",
+            "name": "example-menu.clipboard.cut",
             "icon": "cut",
             "iconTheme": "material-symbols-rounded"
           }
@@ -164,7 +164,7 @@
       },
       {
         "type": "submenu",
-        "name": "Audio",
+        "name": "example-menu.audio.submenu",
         "icon": "play_circle",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -173,7 +173,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Music\" to next track'"
             },
-            "name": "Next Track",
+            "name": "example-menu.audio.next-track",
             "icon": "skip_next",
             "iconTheme": "material-symbols-rounded"
           },
@@ -182,7 +182,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Music\" to playpause'"
             },
-            "name": "Play / Pause",
+            "name": "example-menu.audio.play-pause",
             "icon": "play_pause",
             "iconTheme": "material-symbols-rounded"
           },
@@ -191,7 +191,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Music\" to previous track'"
             },
-            "name": "Previous Track",
+            "name": "example-menu.audio.previous-track",
             "icon": "skip_previous",
             "iconTheme": "material-symbols-rounded"
           }
@@ -199,7 +199,7 @@
       },
       {
         "type": "submenu",
-        "name": "Windows",
+        "name": "example-menu.windows.submenu",
         "icon": "select_window",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -208,7 +208,7 @@
             "data": {
               "command": "osascript -e 'tell application \"System Events\" to key code 126 using control down'"
             },
-            "name": "Mission Control",
+            "name": "example-menu.windows.mission-control",
             "icon": "select_window",
             "iconTheme": "material-symbols-rounded",
             "angle": 0
@@ -219,7 +219,7 @@
               "hotkey": "ControlLeft+AltLeft+ArrowRight",
               "delayed": true
             },
-            "name": "Tile Right",
+            "name": "example-menu.windows.tile-right",
             "icon": "text_select_jump_to_end",
             "iconTheme": "material-symbols-rounded",
             "angle": 90
@@ -230,7 +230,7 @@
               "hotkey": "MetaLeft+KeyW",
               "delayed": true
             },
-            "name": "Close Window",
+            "name": "example-menu.windows.close-window",
             "icon": "cancel_presentation",
             "iconTheme": "material-symbols-rounded"
           },
@@ -240,7 +240,7 @@
               "hotkey": "ControlLeft+AltLeft+ArrowLeft",
               "delayed": true
             },
-            "name": "Tile Left",
+            "name": "example-menu.windows.tile-left",
             "icon": "text_select_jump_to_beginning",
             "iconTheme": "material-symbols-rounded",
             "angle": 270
@@ -252,13 +252,13 @@
         "data": {
           "command": "osascript -e 'tell application \"System Events\" to key code 123 using control down'"
         },
-        "name": "Previous Workspace",
+        "name": "example-menu.previous-workspace",
         "icon": "arrow_back",
         "iconTheme": "material-symbols-rounded"
       },
       {
         "type": "submenu",
-        "name": "Bookmarks",
+        "name": "example-menu.bookmarks.submenu",
         "icon": "folder_special",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -267,7 +267,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Finder\" to open (path to downloads folder as text)'"
             },
-            "name": "Downloads",
+            "name": "example-menu.bookmarks.downloads",
             "icon": "download",
             "iconTheme": "material-symbols-rounded"
           },
@@ -276,7 +276,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Finder\" to open (path to movies folder as text)'"
             },
-            "name": "Movies",
+            "name": "example-menu.bookmarks.videos",
             "icon": "video_camera_front",
             "iconTheme": "material-symbols-rounded"
           },
@@ -285,7 +285,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Finder\" to open (path to pictures folder as text)'"
             },
-            "name": "Pictures",
+            "name": "example-menu.bookmarks.pictures",
             "icon": "imagesmode",
             "iconTheme": "material-symbols-rounded"
           },
@@ -294,7 +294,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Finder\" to open (path to documents folder as text)'"
             },
-            "name": "Documents",
+            "name": "Docuexample-menu.bookmarks.documentsments",
             "icon": "text_ad",
             "iconTheme": "material-symbols-rounded"
           },
@@ -303,7 +303,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Finder\" to open (path to desktop folder as text)'"
             },
-            "name": "Desktop",
+            "name": "example-menu.bookmarks.desktop",
             "icon": "desktop_windows",
             "iconTheme": "material-symbols-rounded"
           },
@@ -312,7 +312,7 @@
             "data": {
               "command": "open $HOME"
             },
-            "name": "Home",
+            "name": "example-menu.bookmarks.home",
             "icon": "home",
             "iconTheme": "material-symbols-rounded"
           },
@@ -321,7 +321,7 @@
             "data": {
               "command": "osascript -e 'tell application \"Finder\" to open (path to music folder as text)'"
             },
-            "name": "Music",
+            "name": "example-menu.bookmarks.music",
             "icon": "music_note",
             "iconTheme": "material-symbols-rounded"
           }

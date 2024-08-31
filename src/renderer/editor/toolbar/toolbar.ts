@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { EventEmitter } from 'events';
 import { IBackendInfo, IMenuSettings } from '../../../common';
 import { AddItemsTab } from './add-items-tab';
@@ -127,45 +129,44 @@ export class Toolbar extends EventEmitter {
         {
           id: 'kando-menus-tab',
           icon: 'apps',
-          title: 'Menus',
+          title: i18next.t('toolbar.menus-tab.label'),
           active: true,
           content: '',
         },
         {
           id: 'kando-add-items-tab',
           icon: 'control_point_duplicate',
-          title: 'Menu Items',
+          title: i18next.t('toolbar.add-items-tab.label'),
           content: '',
         },
         {
           id: 'kando-templates-tab',
           icon: 'content_copy',
-          title: 'Templates',
+          title: i18next.t('toolbar.templates-tab.label'),
           hasCounter: true,
           content: '',
         },
         {
           id: 'kando-trash-tab',
           icon: 'delete',
-          title: 'Trash',
+          title: i18next.t('toolbar.trash-tab.label'),
           hasCounter: true,
           content: '',
         },
         {
           id: 'kando-menu-themes-tab',
           icon: 'palette',
-          title: 'Menu Themes',
+          title: i18next.t('toolbar.menu-themes-tab.label'),
           gapBefore: true,
           content: '',
         },
         {
           id: 'kando-editor-themes-tab',
           icon: 'palette',
-          title: 'Editor Themes',
+          title: i18next.t('toolbar.editor-themes-tab.label'),
           content: emptyTab({
-            heading: 'Here will be a list of available editor themes!',
-            subheading:
-              'In the future, it will be possible to theme the entire menu editor.',
+            heading: i18next.t('toolbar.editor-themes-tab.heading'),
+            subheading: i18next.t('toolbar.editor-themes-tab.subheading'),
           }),
         },
       ],

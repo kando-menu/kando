@@ -13,7 +13,8 @@
     "lint": "eslint src",
     "prettier": "prettier --check src",
     "format": "prettier --write src",
-    "test": "ts-mocha test/**/*.spec.ts"
+    "test": "ts-mocha test/**/*.spec.ts",
+    "i18n": "i18next 'src/**/*.ts'"
   },
   "keywords": [],
   "author": {
@@ -43,6 +44,7 @@
     "eslint-plugin-import": "^2.29.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "handlebars-loader": "^1.7.3",
+    "i18next-parser": "^9.0.2",
     "mocha": "^10.7.3",
     "node-loader": "^2.0.0",
     "prettier": "^3.3.3",
@@ -70,6 +72,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "emojilib": "^3.0.12",
     "handlebars": "^4.7.8",
+    "i18next": "^23.14.0",
+    "i18next-fs-backend": "^2.3.2",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",

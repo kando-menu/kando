@@ -24,6 +24,7 @@ import {
   nativeTheme,
 } from 'electron';
 import { Notification } from 'electron';
+import i18next from 'i18next';
 
 import { Backend, getBackend } from './backends';
 import {
@@ -89,33 +90,13 @@ export class KandoApp {
    * This is the settings object which is used to store the general application settings
    * in the user's home directory.
    */
-  private appSettings = new Settings<IAppSettings>({
-    file: 'config.json',
-    directory: app.getPath('userData'),
-    defaults: {
-      menuTheme: 'default',
-      darkMenuTheme: 'default',
-      menuThemeColors: {},
-      darkMenuThemeColors: {},
-      enableDarkModeForMenuThemes: false,
-      sidebarVisible: true,
-      enableVersionCheck: true,
-      zoomFactor: 1,
-    },
-  });
+  private appSettings: Settings<IAppSettings>;
 
   /**
    * This is the settings object which is used to store the configured menus in the user's
    * home directory.
    */
-  private menuSettings = new Settings<IMenuSettings>({
-    file: 'menus.json',
-    directory: app.getPath('userData'),
-    defaults: {
-      menus: [this.createExampleMenu()],
-      templates: [],
-    },
-  });
+  private menuSettings: Settings<IMenuSettings>;
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -125,6 +106,34 @@ export class KandoApp {
     }
 
     await this.backend.init();
+
+    // We load the settings from the user's home directory. If the settings file does not
+    // exist, it will be created with the default values.
+    this.appSettings = new Settings<IAppSettings>({
+      file: 'config.json',
+      directory: app.getPath('userData'),
+      defaults: {
+        menuTheme: 'default',
+        darkMenuTheme: 'default',
+        menuThemeColors: {},
+        darkMenuThemeColors: {},
+        enableDarkModeForMenuThemes: false,
+        sidebarVisible: true,
+        enableVersionCheck: true,
+        zoomFactor: 1,
+      },
+    });
+
+    // We load the menu settings from the user's home directory. If the settings file does
+    // not exist, it will be created with the default values.
+    this.menuSettings = new Settings<IMenuSettings>({
+      file: 'menus.json',
+      directory: app.getPath('userData'),
+      defaults: {
+        menus: [this.createExampleMenu()],
+        templates: [],
+      },
+    });
 
     // Try migrating settings from an old version of Kando.
     this.migrateSettings();
@@ -577,6 +586,17 @@ export class KandoApp {
    * more information on the exposed functionality.
    */
   private initRendererIPC() {
+    // Allow the renderer to retrieve the i18next locales.
+    ipcMain.handle('get-locales', () => {
+      const fallback = i18next.getResourceBundle('en', '');
+      const current = i18next.getResourceBundle(app.getLocale(), '');
+
+      return {
+        en: fallback,
+        current,
+      };
+    });
+
     // Allow the renderer to access the app settings. We do this by exposing the
     // a setter, a getter, and an on-change event for each key in the settings object.
     for (const k of Object.keys(this.appSettings.defaults)) {
@@ -907,7 +927,7 @@ export class KandoApp {
       const trigger =
         (this.backend.getBackendInfo().supportsShortcuts
           ? menu.shortcut
-          : menu.shortcutID) || 'Not Bound';
+          : menu.shortcutID) || i18next.t('properties.common.not-bound');
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {
@@ -1140,15 +1160,77 @@ export class KandoApp {
    * All menu configurations are stored in the `example-menus` directory.
    */
   private createExampleMenu(): IMenu {
+    // To enable localization of the example menus, we need to lookup the strings with
+    // i18next after loading the menu structure from JSON. i18next-parser cannot extract
+    // the strings from JSON files, therefore we have to specify all strings from the
+    // example menus here in a comment. This way, the parser will find them.
+    /*
+    i18next.t('example-menu.name')
+    i18next.t('example-menu.apps.submenu')
+    i18next.t('example-menu.apps.safari')
+    i18next.t('example-menu.apps.web-browser')
+    i18next.t('example-menu.apps.email')
+    i18next.t('example-menu.apps.apple-music')
+    i18next.t('example-menu.apps.gimp')
+    i18next.t('example-menu.apps.paint')
+    i18next.t('example-menu.apps.finder')
+    i18next.t('example-menu.apps.file-browser')
+    i18next.t('example-menu.apps.terminal')
+    i18next.t('example-menu.web-links.submenu')
+    i18next.t('example-menu.web-links.google')
+    i18next.t('example-menu.web-links.kando-on-github')
+    i18next.t('example-menu.web-links.kando-on-kofi')
+    i18next.t('example-menu.web-links.kando-on-youtube')
+    i18next.t('example-menu.web-links.kando-on-discord')
+    i18next.t('example-menu.next-workspace')
+    i18next.t('example-menu.clipboard.submenu')
+    i18next.t('example-menu.clipboard.paste')
+    i18next.t('example-menu.clipboard.copy')
+    i18next.t('example-menu.clipboard.cut')
+    i18next.t('example-menu.audio.submenu')
+    i18next.t('example-menu.audio.next-track')
+    i18next.t('example-menu.audio.play-pause')
+    i18next.t('example-menu.audio.mute')
+    i18next.t('example-menu.audio.previous-track')
+    i18next.t('example-menu.windows.submenu')
+    i18next.t('example-menu.windows.mission-control')
+    i18next.t('example-menu.windows.toggle-maximize')
+    i18next.t('example-menu.windows.tile-right')
+    i18next.t('example-menu.windows.close-window')
+    i18next.t('example-menu.windows.tile-left')
+    i18next.t('example-menu.previous-workspace')
+    i18next.t('example-menu.bookmarks.submenu')
+    i18next.t('example-menu.bookmarks.downloads')
+    i18next.t('example-menu.bookmarks.videos')
+    i18next.t('example-menu.bookmarks.pictures')
+    i18next.t('example-menu.bookmarks.documents')
+    i18next.t('example-menu.bookmarks.desktop')
+    i18next.t('example-menu.bookmarks.home')
+    i18next.t('example-menu.bookmarks.music')
+    */
+
+    let menu: IMenu;
+
     if (process.platform === 'win32') {
-      return require('./example-menus/windows.json');
+      menu = require('./example-menus/windows.json');
+    } else if (process.platform === 'darwin') {
+      menu = require('./example-menus/macos.json');
+    } else {
+      menu = require('./example-menus/linux.json');
     }
 
-    if (process.platform === 'darwin') {
-      return require('./example-menus/macos.json');
-    }
+    const translate = (item: IMenuItem) => {
+      item.name = i18next.t(item.name);
+      if (item.children) {
+        for (const child of item.children) {
+          translate(child);
+        }
+      }
+    };
 
-    return require('./example-menus/linux.json');
+    translate(menu.root);
+
+    return menu;
   }
 
   /**

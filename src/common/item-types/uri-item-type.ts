@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
@@ -26,7 +28,7 @@ export class URIItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return 'Open URI';
+    return i18next.t('items.uri.name');
   }
 
   get defaultIcon(): string {
@@ -44,10 +46,10 @@ export class URIItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return 'Opens files or websites.';
+    return i18next.t('items.uri.description');
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).uri || 'Not configured.';
+    return (item.data as IItemData).uri || i18next.t('items.common.not-configured');
   }
 }

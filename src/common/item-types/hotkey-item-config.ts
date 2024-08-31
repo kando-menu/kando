@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '..';
 import { HotkeyPicker } from '../../renderer/editor/properties/hotkey-picker';
 import { IItemConfig } from '../item-config-registry';
@@ -19,8 +21,11 @@ export class HotkeyItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'When recording a hotkey, you do not have to press all keys at once. You can press them one after another.',
-      'If you cannot record a key because it is used by the system, try typing its name directly. All valid key names are listed <a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#menu-shortcuts-vs-simulated-hotkeys" target="_blank">here</a>.',
+      i18next.t('items.hotkey.tip-1'),
+      i18next.t('items.hotkey.tip-2'),
+      '<a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#menu-shortcuts-vs-simulated-hotkeys" target="_blank">' +
+        i18next.t('items.hotkey.tip-3') +
+        '</a>',
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
@@ -35,8 +40,8 @@ export class HotkeyItemConfig implements IItemConfig {
       utils.renderTemplate(
         require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
         {
-          label: 'Execute After Closing the Menu',
-          hint: 'Ensures that Kando does not block the key events.',
+          label: i18next.t('items.common.delayed-option'),
+          hint: i18next.t('items.common.delayed-option-hint'),
         }
       )
     );

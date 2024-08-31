@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './command-item-type';
@@ -18,11 +20,11 @@ export class CommandItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
     const tips = [
-      'You can use the Command item type to launch applications or scripts.',
-      'If the path to an executable contains spaces, you should "wrap it in quotes".',
-      'Use {{app_name}} to insert the name of the application which was focused when you opened the menu.',
-      'Use {{window_name}} to insert the name of the window which was focused when you opened the menu.',
-      'Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.',
+      i18next.t('items.command.tip-1'),
+      i18next.t('items.command.tip-2'),
+      i18next.t('items.command.tip-3'),
+      i18next.t('items.command.tip-4'),
+      i18next.t('items.command.tip-5'),
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
@@ -34,8 +36,8 @@ export class CommandItemConfig implements IItemConfig {
     const fragment = utils.renderTemplate(
       require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
       {
-        label: 'Execute After Closing the Menu',
-        hint: 'Useful if the command targets a window that needs to be focused.',
+        label: i18next.t('items.common.delayed-option'),
+        hint: i18next.t('items.common.delayed-option-hint'),
       }
     );
 
@@ -52,9 +54,9 @@ export class CommandItemConfig implements IItemConfig {
       utils.renderTemplate(
         require('../../renderer/editor/properties/templates/text-option.hbs'),
         {
-          placeholder: 'Not Defined',
-          label: 'Command',
-          hint: 'This will be executed.',
+          placeholder: i18next.t('items.common.not-configured'),
+          label: i18next.t('items.command.command'),
+          hint: i18next.t('items.command.command-hint'),
         }
       )
     );

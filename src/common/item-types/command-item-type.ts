@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
@@ -28,7 +30,7 @@ export class CommandItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return 'Launch Application';
+    return i18next.t('items.command.name');
   }
 
   get defaultIcon(): string {
@@ -47,10 +49,10 @@ export class CommandItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return 'Runs any command.';
+    return i18next.t('items.command.description');
   }
 
   getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).command || 'Not configured.';
+    return (item.data as IItemData).command || i18next.t('items.common.not-configured');
   }
 }

@@ -4,13 +4,13 @@
   "centered": false,
   "root": {
     "type": "submenu",
-    "name": "Example Menu",
+    "name": "example-menu.name",
     "icon": "award_star",
     "iconTheme": "material-symbols-rounded",
     "children": [
       {
         "type": "submenu",
-        "name": "Apps",
+        "name": "example-menu.apps.submenu",
         "icon": "apps",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -19,7 +19,7 @@
             "data": {
               "command": "explorer \"https://www.google.com\""
             },
-            "name": "Web Browser",
+            "name": "example-menu.apps.web-browser",
             "icon": "globe",
             "iconTheme": "material-symbols-rounded"
           },
@@ -28,7 +28,7 @@
             "data": {
               "command": "start mailto:"
             },
-            "name": "E-Mail",
+            "name": "example-menu.apps.email",
             "icon": "mail",
             "iconTheme": "material-symbols-rounded"
           },
@@ -37,16 +37,16 @@
             "data": {
               "command": "mspaint"
             },
-            "name": "Paint",
-            "icon": "windows95",
-            "iconTheme": "simple-icons"
+            "name": "example-menu.apps.paint",
+            "icon": "brush",
+            "iconTheme": "material-symbols-rounded"
           },
           {
             "type": "command",
             "data": {
               "command": "explorer"
             },
-            "name": "File Browser",
+            "name": "example-menu.apps.file-browser",
             "icon": "folder_shared",
             "iconTheme": "material-symbols-rounded"
           },
@@ -55,7 +55,7 @@
             "data": {
               "command": "start powershell"
             },
-            "name": "Terminal",
+            "name": "example-menu.apps.terminal",
             "icon": "terminal",
             "iconTheme": "material-symbols-rounded"
           }
@@ -63,7 +63,7 @@
       },
       {
         "type": "submenu",
-        "name": "Web Links",
+        "name": "example-menu.web-links.submenu",
         "icon": "public",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -81,7 +81,7 @@
             "data": {
               "uri": "https://github.com/kando-menu/kando"
             },
-            "name": "Kando on GitHub",
+            "name": "example-menu.web-links.kando-on-github",
             "icon": "github",
             "iconTheme": "simple-icons"
           },
@@ -90,26 +90,26 @@
             "data": {
               "uri": "https://ko-fi.com/schneegans"
             },
-            "name": "Kando on Ko-fi",
+            "name": "example-menu.web-links.kando-on-kofi",
             "icon": "kofi",
             "iconTheme": "simple-icons"
           },
           {
             "type": "uri",
             "data": {
-              "uri": "https://www.youtube.com"
+              "uri": "https://www.youtube.com/@simonschneegans"
             },
-            "name": "YouTube",
+            "name": "example-menu.web-links.kando-on-youtube",
             "icon": "youtube",
             "iconTheme": "simple-icons"
           },
           {
             "type": "uri",
             "data": {
-              "uri": "https://chat.openai.com/chat"
+              "uri": "https://discord.gg/hZwbVSDkhy"
             },
-            "name": "ChatGPT",
-            "icon": "openai",
+            "name": "example-menu.web-links.kando-on-discord",
+            "icon": "discord",
             "iconTheme": "simple-icons"
           }
         ]
@@ -120,13 +120,13 @@
           "hotkey": "ControlLeft+MetaLeft+ArrowRight",
           "delayed": false
         },
-        "name": "Next Workspace",
+        "name": "example-menu.next-workspace",
         "icon": "arrow_forward",
         "iconTheme": "material-symbols-rounded"
       },
       {
         "type": "submenu",
-        "name": "Clipboard",
+        "name": "example-menu.clipboard.submenu",
         "icon": "assignment",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -136,7 +136,7 @@
               "hotkey": "ControlLeft+KeyV",
               "delayed": true
             },
-            "name": "Paste",
+            "name": "example-menu.clipboard.paste",
             "icon": "content_paste_go",
             "iconTheme": "material-symbols-rounded",
             "angle": 90
@@ -147,7 +147,7 @@
               "hotkey": "ControlLeft+KeyC",
               "delayed": true
             },
-            "name": "Copy",
+            "name": "example-menu.clipboard.copy",
             "icon": "content_copy",
             "iconTheme": "material-symbols-rounded"
           },
@@ -157,7 +157,7 @@
               "hotkey": "ControlLeft+KeyX",
               "delayed": true
             },
-            "name": "Cut",
+            "name": "example-menu.clipboard.cut",
             "icon": "cut",
             "iconTheme": "material-symbols-rounded"
           }
@@ -165,7 +165,7 @@
       },
       {
         "type": "submenu",
-        "name": "Audio",
+        "name": "example-menu.audio.submenu",
         "icon": "play_circle",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -175,7 +175,7 @@
               "hotkey": "MediaTrackNext",
               "delayed": false
             },
-            "name": "Next Title",
+            "name": "example-menu.audio.next-track",
             "icon": "skip_next",
             "iconTheme": "material-symbols-rounded",
             "angle": 90
@@ -186,7 +186,7 @@
               "hotkey": "MediaPlayPause",
               "delayed": false
             },
-            "name": "Play / Pause",
+            "name": "example-menu.audio.play-pause",
             "icon": "play_pause",
             "iconTheme": "material-symbols-rounded"
           },
@@ -196,7 +196,7 @@
               "hotkey": "AudioVolumeMute",
               "delayed": false
             },
-            "name": "Mute",
+            "name": "example-menu.audio.mute",
             "icon": "music_off",
             "iconTheme": "material-symbols-rounded"
           },
@@ -206,7 +206,7 @@
               "hotkey": "MediaTrackPrevious",
               "delayed": false
             },
-            "name": "Previous Title",
+            "name": "example-menu.audio.previous-track",
             "icon": "skip_previous",
             "iconTheme": "material-symbols-rounded",
             "angle": 270
@@ -215,7 +215,7 @@
       },
       {
         "type": "submenu",
-        "name": "Windows",
+        "name": "example-menu.windows.submenu",
         "icon": "select_window",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -225,7 +225,7 @@
               "hotkey": "MetaLeft+ArrowUp",
               "delayed": true
             },
-            "name": "Toggle Maximize",
+            "name": "example-menu.windows.toggle-maximize",
             "icon": "open_in_full",
             "iconTheme": "material-symbols-rounded",
             "angle": 0
@@ -236,7 +236,7 @@
               "hotkey": "MetaLeft+ArrowRight",
               "delayed": true
             },
-            "name": "Tile Right",
+            "name": "example-menu.windows.tile-right",
             "icon": "text_select_jump_to_end",
             "iconTheme": "material-symbols-rounded",
             "angle": 90
@@ -247,7 +247,7 @@
               "hotkey": "AltLeft+F4",
               "delayed": true
             },
-            "name": "Close Window",
+            "name": "example-menu.windows.close-window",
             "icon": "cancel_presentation",
             "iconTheme": "material-symbols-rounded"
           },
@@ -257,7 +257,7 @@
               "hotkey": "MetaLeft+ArrowLeft",
               "delayed": true
             },
-            "name": "Tile Left",
+            "name": "example-menu.windows.tile-left",
             "icon": "text_select_jump_to_beginning",
             "iconTheme": "material-symbols-rounded",
             "angle": 270
@@ -270,13 +270,13 @@
           "hotkey": "ControlLeft+MetaLeft+ArrowLeft",
           "delayed": false
         },
-        "name": "Previous Workspace",
+        "name": "example-menu.previous-workspace",
         "icon": "arrow_back",
         "iconTheme": "material-symbols-rounded"
       },
       {
         "type": "submenu",
-        "name": "Bookmarks",
+        "name": "example-menu.bookmarks.submenu",
         "icon": "folder_special",
         "iconTheme": "material-symbols-rounded",
         "children": [
@@ -285,7 +285,7 @@
             "data": {
               "command": "explorer %USERPROFILE%\\Downloads"
             },
-            "name": "Downloads",
+            "name": "example-menu.bookmarks.downloads",
             "icon": "download",
             "iconTheme": "material-symbols-rounded"
           },
@@ -294,7 +294,7 @@
             "data": {
               "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyVideos'))\""
             },
-            "name": "Videos",
+            "name": "example-menu.bookmarks.videos",
             "icon": "video_camera_front",
             "iconTheme": "material-symbols-rounded"
           },
@@ -303,7 +303,7 @@
             "data": {
               "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyPictures'))\""
             },
-            "name": "Pictures",
+            "name": "example-menu.bookmarks.pictures",
             "icon": "imagesmode",
             "iconTheme": "material-symbols-rounded"
           },
@@ -312,7 +312,7 @@
             "data": {
               "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyDocuments'))\""
             },
-            "name": "Documents",
+            "name": "example-menu.bookmarks.documents",
             "icon": "text_ad",
             "iconTheme": "material-symbols-rounded"
           },
@@ -321,7 +321,7 @@
             "data": {
               "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('Desktop'))\""
             },
-            "name": "Desktop",
+            "name": "example-menu.bookmarks.desktop",
             "icon": "desktop_windows",
             "iconTheme": "material-symbols-rounded"
           },
@@ -330,7 +330,7 @@
             "data": {
               "command": "start %USERPROFILE%"
             },
-            "name": "Home",
+            "name": "example-menu.bookmarks.home",
             "icon": "home",
             "iconTheme": "material-symbols-rounded"
           },
@@ -339,7 +339,7 @@
             "data": {
               "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyMusic'))\""
             },
-            "name": "Music",
+            "name": "example-menu.bookmarks.music",
             "icon": "music_note",
             "iconTheme": "material-symbols-rounded"
           }

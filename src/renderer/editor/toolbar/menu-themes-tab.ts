@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { Tooltip } from 'bootstrap';
 import iro from '@jaames/iro';
 import lodash from 'lodash';
@@ -129,26 +131,38 @@ export class MenuThemesTab {
       return {
         id: theme.id,
         name: theme.name,
-        author: theme.author,
+        author: i18next.t('toolbar.menu-themes-tab.author', {
+          author: theme.author,
+        }),
         checked: theme.id === currentTheme.id,
         preview: encodeURI(previewPath),
         colors: lodash.merge({}, theme.colors, colorOverrides[theme.id]),
       };
     });
 
-    let subheading =
-      'If enabled, you can choose a different theme and color set if your system is in light or dark color mode.';
+    let subheading = i18next.t('toolbar.menu-themes-tab.system-mode-subheading');
     if (this.enableDarkMode) {
       subheading = this.darkMode
-        ? 'Your system is currently in dark mode. The settings above will only be used in dark mode.'
-        : 'Your system is currently in light mode. The settings above will only be used in light mode.';
+        ? i18next.t('toolbar.menu-themes-tab.system-mode-subheading-dark')
+        : i18next.t('toolbar.menu-themes-tab.system-mode-subheading-light');
     }
 
     const template = require('./templates/menu-themes-tab.hbs');
     this.tabContent.innerHTML = template({
       themes: themeData,
       darkMode: this.enableDarkMode,
-      subheading,
+      strings: {
+        caption: i18next.t('toolbar.menu-themes-tab.caption', {
+          tutorialLink:
+            'target="_blank" href="https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md"',
+          discordLink: 'target="_blank" href="https://discord.gg/hZwbVSDkhy"',
+        }),
+        editColors: i18next.t('toolbar.menu-themes-tab.edit-colors'),
+        darkMode: i18next.t('toolbar.menu-themes-tab.dark-mode'),
+        darkModeHint: subheading,
+        closeColorPicker: i18next.t('toolbar.menu-themes-tab.close-color-picker'),
+        resetColorPicker: i18next.t('toolbar.menu-themes-tab.reset-color-picker'),
+      },
     });
 
     // Initialize all tooltips.

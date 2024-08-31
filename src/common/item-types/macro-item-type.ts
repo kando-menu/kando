@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
@@ -34,7 +36,7 @@ export class MacroItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return 'Simulate Macro';
+    return i18next.t('items.macro.name');
   }
 
   get defaultIcon(): string {
@@ -53,13 +55,13 @@ export class MacroItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return 'Types a keyboard macro.';
+    return i18next.t('items.macro.description');
   }
 
   getDescription(item: IMenuItem): string {
     const data = item.data as IItemData;
     if (!data.macro) {
-      return 'Not configured.';
+      return i18next.t('items.common.not-configured');
     }
 
     // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and

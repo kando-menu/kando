@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { DropTargetTab } from './drop-target-tab';
 import {
   IMenu,
@@ -138,9 +140,8 @@ export class TemplatesTab extends DropTargetTab {
     const template = require('./templates/templates-trash-tab.hbs');
     this.tabContent.innerHTML = template({
       type: 'template',
-      placeholderHeading: 'Drop menus and menu items here and use them as templates!',
-      placeholderSubheading:
-        'Create copies of the stored items by moving them to the menus tab or to the preview above.',
+      placeholderHeading: i18next.t('toolbar.templates-tab.heading'),
+      placeholderSubheading: i18next.t('toolbar.templates-tab.subheading'),
       items: data,
     });
 

@@ -1,0 +1,76 @@
+{
+    "main": {
+        "is-running-header": "Kando läuft bereits",
+        "is-running-message": "Überprüfen Sie das Taskleistensymbol für einige Optionen!",
+        "failed-to-start-header": "Kando konnte nicht gestartet werden"
+    },
+    "sidebar": {
+        "introduction-tab-header": "Einführung",
+        "introduction-tab-slide-1-caption": "Irgendwo Klicken: Sie müssen nicht genau auf ein Element klicken, Sie müssen nur irgendwo in dessen Bereich klicken!",
+        "introduction-tab-slide-2-caption": "Zurück: Navigieren Sie schnell eine Ebene nach oben, indem Sie auf das mittlere Element klicken.",
+        "introduction-tab-slide-4-caption": "Turbo-Modus: Wenn Sie nach dem Öffnen des Menüs eine Taste gedrückt halten, können Sie durch einfaches Bewegen des Zeigers eine Auswahl treffen. Dies ist der schnellste Weg, Einträge auszuwählen!",
+        "dev-tools-button-tooltip": "Öffnen Sie die Web-Entwickler-Tools zur Analyse des UI.",
+        "reload-menu-theme-button": "Aktuelles Menü-Theme Neuladen",
+        "reload-menu-theme-button-tooltip": "CSS-Änderungen werden sofort angewendet. Für Änderungen an der Datei theme.json müssen Sie das Menü erneut öffnen.",
+        "introduction-tab-slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
+        "introduction-tab-slide-3-caption": "Markierungsmodus: Ziehen Sie über ein Element, um in den Markierungsmodus zu wechseln. Wenn Sie die Zeigerbewegung pausieren oder eine Kurve zeichnen, wird das aktuell gezogene Untermenü geöffnet.",
+        "development-tab-header": "Entwicklung",
+        "dev-tools-button": "Entwicklerwerkzeuge Anzeigen"
+    },
+    "example-menu": {
+        "apps": {
+            "email": "E-Mail",
+            "apple-music": "Music",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "safari": "Safari",
+            "web-browser": "Web-Browser",
+            "finder": "Finder",
+            "file-browser": "Datei-Browser",
+            "terminal": "Konsole",
+            "submenu": "Programme"
+        },
+        "audio": {
+            "mute": "Stummschalten",
+            "submenu": "Audio",
+            "next-track": "Nächster Titel",
+            "play-pause": "Play / Pause",
+            "previous-track": "Vorheriger Titel"
+        },
+        "web-links": {
+            "submenu": "Internetverknüpfungen",
+            "google": "Google",
+            "kando-on-youtube": "Kando auf YouTube",
+            "kando-on-discord": "Kando auf Discord",
+            "kando-on-github": "Kando auf GitHub",
+            "kando-on-kofi": "Kando auf Ko-fi"
+        },
+        "next-workspace": "Nächste Arbeitsfläche",
+        "clipboard": {
+            "submenu": "Zwischenablage",
+            "copy": "Kopieren",
+            "cut": "Ausschneiden",
+            "paste": "Einfügen"
+        },
+        "windows": {
+            "submenu": "Fenster",
+            "mission-control": "Mission Control",
+            "toggle-maximize": "Maximieren",
+            "tile-right": "Rechts Andocken",
+            "close-window": "Fenster Schließen",
+            "tile-left": "Links Andocken"
+        },
+        "bookmarks": {
+            "downloads": "Downloads",
+            "videos": "Videos",
+            "pictures": "Bilder",
+            "documents": "Dokumente",
+            "desktop": "Desktop",
+            "home": "Persönlicher Ordner",
+            "music": "Musik",
+            "submenu": "Lesezeichen"
+        },
+        "name": "Beispiel-Menü",
+        "previous-workspace": "Vorherige Arbeitsfläche"
+    }
+}

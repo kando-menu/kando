@@ -10,6 +10,8 @@
 
 import './renderer/index.scss';
 
+import i18next from 'i18next';
+
 import { Menu } from './renderer/menu/menu';
 import { Editor } from './renderer/editor/editor';
 import { MenuTheme } from './renderer/menu/menu-theme';
@@ -24,10 +26,20 @@ import { MenuTheme } from './renderer/menu/menu-theme';
 // We need some information from the main process before we can start. This includes the
 // backend info, the menu theme, and the menu theme colors.
 Promise.all([
+  window.api.getLocales(),
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
-]).then(([info, themeDescription, colors]) => {
+]).then(async ([locales, info, themeDescription, colors]) => {
+  // Initialize i18next with the current locale and the english fallback locale.
+  await i18next.init({
+    lng: 'current',
+    fallbackLng: 'en',
+  });
+
+  i18next.addResourceBundle('en', 'translation', locales.en, true, true);
+  i18next.addResourceBundle('current', 'translation', locales.current, true, true);
+
   // First, we create a new menu theme and load the description we got from the main
   // process.
   const menuTheme = new MenuTheme();

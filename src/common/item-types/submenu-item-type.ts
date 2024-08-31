@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
@@ -21,7 +23,7 @@ export class SubmenuItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return 'Submenu';
+    return i18next.t('items.submenu.name');
   }
 
   get defaultIcon(): string {
@@ -37,10 +39,12 @@ export class SubmenuItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return 'Contains other menu items.';
+    return i18next.t('items.submenu.description');
   }
 
   getDescription(item: IMenuItem): string {
-    return `Contains ${item.children.length} menu items.`;
+    return i18next.t('items.submenu.detailed-description', {
+      count: item.children.length,
+    });
   }
 }
