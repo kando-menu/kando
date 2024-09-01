@@ -200,6 +200,7 @@
         "introduction-tab-slide-5-caption": "실수로 선택하는 경우 없음: 동작은 \"마킹 모드\"에서 마우스 버튼을 떼거나 \"터보 모드\"에서 키를 떼었을 때만 실행돼요. 이렇게 메뉴를 탐색해 보세요!",
         "intro-text": "Kando는 기본적인 예시 메뉴가 이미 있어요. 그대로 써도 되지만, 직접 메뉴를 만드는 게 더 좋을거에요! 화면 우측 하단의 톱니바퀴 아이콘을 클릭하여 메뉴 편집기를 열 수 있어요.",
         "introduction-tab-slide-1-caption": "아무데나 클릭하세요: 항목에 정확히 클릭하지 않아도 돼요!",
-        "introduction-tab-slide-2-caption": "뒤로가기: 중앙의 항목을 클릭하여 위로 한 단계 이동할 수 있어요."
+        "introduction-tab-slide-2-caption": "뒤로가기: 중앙의 항목을 클릭하여 위로 한 단계 이동할 수 있어요.",
+        "development-tab-header": "개발"
     }
 }
