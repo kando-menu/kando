@@ -24,14 +24,21 @@
         "introduction-tab-slide-1-caption": "随意点击：您不必精确地点击某个菜单项，只需在它对应的楔形区域内点击即可！",
         "discord-button": "在我们的Discord聊天",
         "buy-me-a-coffee-button": "Ko-fi上的Kando",
-        "sponsors-button": "赞助者名单"
+        "sponsors-button": "赞助者名单",
+        "introduction-tab-slide-4-caption": "极速模式：如果您在打开菜单后一直按下某个键，您就可以通过直接移动鼠标指针进行选择。这是选择菜单项目的最快方式！",
+        "introduction-tab-slide-5-caption": "防误触选择:只有当您在“标记模式”中释放鼠标按钮或在“极速模式”中释放键盘键时，操作才会执行。使用它来探索菜单!"
     },
     "items": {
         "command": {
             "command": "命令",
             "command-hint": "该命令将被执行。",
             "name": "运行命令",
-            "description": "运行任意Shell命令。"
+            "description": "运行任意Shell命令。",
+            "tip-1": "您可以使用“命令”项目类型来启动应用程序或脚本。",
+            "tip-2": "如果可执行文件的路径包含空格，您应该用引号包含它（\"example/path\"）。",
+            "tip-3": "使用 {{app_name}} 来插入打开菜单时正在专注的应用程序的名称。",
+            "tip-4": "使用 {{window_name}} 来插入打开菜单时正在专注的窗口的名称。",
+            "tip-5": "使用{{pointer_x}}和{{pointer_y}}来插入打开菜单时的指针位置。"
         },
         "common": {
             "delayed-option": "关闭菜单后运行",
@@ -41,12 +48,14 @@
         "hotkey": {
             "name": "模拟热键",
             "description": "发送模拟快捷键。",
-            "tip-3": "点击此链接以查看所有可用的键名格式。"
+            "tip-3": "点击此链接以查看所有可用的键名格式。",
+            "tip-1": "记录快捷键时，您不必一次性输入所有按键。您可以一个接一个地按。",
+            "tip-2": "如果由于某个按键被系统使用而无法记录，请尝试直接键入按键名称。"
         },
         "macro": {
             "tip-2": "点击此链接以查看所有可用的键名格式。",
             "name": "模拟宏",
-            "tip-1": "默认情况下，Kando在激活每个按键事件之前都会添加10ms的延迟。你可以通过“延迟”属性来改变这一点。",
+            "tip-1": "默认情况下，Kando在激活每个按键事件之前都会添加10ms的延迟。你可以通过“delay”属性来改变这一点。",
             "description": "输入键盘宏。"
         },
         "submenu": {
@@ -82,7 +91,11 @@
         "common": {
             "not-bound": "未绑定",
             "done": "完成",
-            "close": "关闭"
+            "close": "关闭",
+            "menu-conditions": "菜单条件",
+            "menu-behavior": "菜单行为",
+            "menu-behavior-hint": "调整菜单的高级选项。",
+            "menu-conditions-hint": "选择何时显示菜单。"
         },
         "advanced-options": {
             "heading": "调整菜单行为",
