@@ -68,7 +68,7 @@
     "common": {
       "not-bound": "Not Bound",
       "done": "Done",
-      "close": "Close",
+      "cancel": "Cancel",
       "menu-conditions": "Menu Conditions",
       "menu-conditions-hint": "Choose when the menu should be shown.",
       "menu-behavior": "Menu Behavior",
@@ -112,7 +112,8 @@
     },
     "icon-picker": {
       "heading": "Select an Icon",
-      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>."
+      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>.",
+      "placeholder": "Search Icons..."
     },
     "macro-picker": {
       "placeholder": "Hit the record button to start recording!",
