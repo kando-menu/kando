@@ -108,16 +108,16 @@
     "hotkey-picker": {
       "label": "Hotkey",
       "hint": "This will be simulated.",
-      "recording": "Press a hotkey..."
+      "recording": "Press a hotkey…"
     },
     "icon-picker": {
       "heading": "Select an Icon",
       "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>.",
-      "placeholder": "Search Icons..."
+      "placeholder": "Search Icons…"
     },
     "macro-picker": {
       "placeholder": "Hit the record button to start recording!",
-      "recording": "Press the keys..."
+      "recording": "Press the keys…"
     },
     "shortcut-id-picker": {
       "label": "Global Shortcut ID"
@@ -125,7 +125,7 @@
     "shortcut-picker": {
       "label": "Shortcut",
       "hint": "This will open the menu.",
-      "recording": "Press a shortcut..."
+      "recording": "Press a shortcut…"
     }
   },
   "example-menu": {
