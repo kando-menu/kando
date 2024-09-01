@@ -1,1 +1,42 @@
-{}
+{
+    "items": {
+        "command": {
+            "tip-3": "Usa {{app_name}} per inserire il nome dell'applicazione che aveva il focus quando hai aperto il menu.",
+            "tip-5": "Usa {{pointer_x}} e {{pointer_y}} per inserire la posizione del puntatore dove il menu è stato aperto.",
+            "command": "Comando",
+            "command-hint": "Questo comando verrà eseguito.",
+            "name": "Esegui Comando",
+            "description": "Esegue qualunque shell di comando",
+            "tip-2": "Se il percorso ad un eseguibile contiene spazi, è necessario \"scriverlo tra virgolette\".",
+            "tip-4": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu."
+        },
+        "common": {
+            "delayed-option": "Esegue dopo aver chiuso il Menu",
+            "not-configured": "Non configurato.",
+            "delayed-option-hint": "Utile se l'azione è rivolta ad una finestra che necessita di avere il focus."
+        },
+        "hotkey": {
+            "tip-1": "Quando si registra una scorciatoia da tastiera, non devi premere tutti i tasti contemporaneamente. Puoi premerli uno in seguito all'altro.",
+            "tip-3": "Clicca questo link per vedere tutti i tasti validi.",
+            "name": "Simula una scorciatoia da tastiera",
+            "description": "Premi una scorciatoia da tastiera.",
+            "tip-2": "Se non puoi registrare un tasto perchè è usato dal sistema, prova a scrivere il suo nome direttamente."
+        },
+        "macro": {
+            "tip-2": "Clicca questo link per vedere tutti i nomi dei tasti validi.",
+            "name": "Simula una Macro",
+            "tip-1": "Di base, Kando aggiunge un ritardo di 10ms prima di ciascun evento di digitazione. Puoi cambiarlo con la proprietà \"delay\" (\"ritardo\").",
+            "description": "Digita una macro."
+        },
+        "submenu": {
+            "tip-1": "I sottomenu possono essere usati per raggruppare gli elementi.",
+            "tip-2": "Puoi anche inserire sottomenu all'interno di altri sottomenu.",
+            "tip-3": "Sottomenu possono essere usati per creare strutture di menu complessi.",
+            "tip-4": "Dovresti evitare di aggiungere più di 12 oggetti ad un sottomenu. 8 è un buon compromesso.",
+            "tip-5": "Puoi usare le piccole icone a forma di lucchetto nell'anteprima per fissare la posizione di un elemento nel menu.",
+            "tip-6": "Puoi riordinare gli elementi trascinandoli nell'anteprima.",
+            "tip-8": "Puoi rimuovere gli elementi trascinandoli nella scheda del cestino nella barra degli strumenti.",
+            "tip-7": "Puoi eliminare un menu trascinandolo dalla scheda dei menu alla scheda del cestino nella barra degli strumenti."
+        }
+    }
+}
