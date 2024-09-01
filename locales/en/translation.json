@@ -68,7 +68,11 @@
     "common": {
       "not-bound": "Not Bound",
       "done": "Done",
-      "close": "Close"
+      "close": "Close",
+      "menu-conditions": "Menu Conditions",
+      "menu-conditions-hint": "Choose when the menu should be shown.",
+      "menu-behavior": "Menu Behavior",
+      "menu-behavior-hint": "Tweak advanced options for the menu."
     },
     "advanced-options": {
       "heading": "Tweak the Menu's Behavior",
