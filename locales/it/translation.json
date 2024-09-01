@@ -8,7 +8,8 @@
             "name": "Esegui Comando",
             "description": "Esegue qualunque shell di comando",
             "tip-2": "Se il percorso ad un eseguibile contiene spazi, è necessario \"scriverlo tra virgolette\".",
-            "tip-4": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu."
+            "tip-4": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu.",
+            "tip-1": "Puoi usare l'oggetto di tipo Comando per lanciare applicazioni oppure eseguire script."
         },
         "common": {
             "delayed-option": "Esegue dopo aver chiuso il Menu",
@@ -36,7 +37,20 @@
             "tip-5": "Puoi usare le piccole icone a forma di lucchetto nell'anteprima per fissare la posizione di un elemento nel menu.",
             "tip-6": "Puoi riordinare gli elementi trascinandoli nell'anteprima.",
             "tip-8": "Puoi rimuovere gli elementi trascinandoli nella scheda del cestino nella barra degli strumenti.",
-            "tip-7": "Puoi eliminare un menu trascinandolo dalla scheda dei menu alla scheda del cestino nella barra degli strumenti."
+            "tip-7": "Puoi eliminare un menu trascinandolo dalla scheda dei menu alla scheda del cestino nella barra degli strumenti.",
+            "detailed-description_one": "Contiene un oggetto del menu.",
+            "detailed-description_many": "Contiene {{count}} oggetti del menu.",
+            "detailed-description_other": "Contiene {{count}} oggetti del menu.",
+            "tip-9": "Quando registri una scorciatoia, non è necessario premere tutti i tasti contemporaneamente. Puoi premereli uno dopo l'altro.",
+            "tip-10": "Puoi copiare menu ed oggetti trascinandoli mentre tieni premuto il tasto Ctrl.",
+            "tip-11": "Puoi aprire i menu dalla linea di comando usando il parametro --menu.",
+            "name": "Sottomenu",
+            "description": "Contiene altri oggetti del menu."
+        },
+        "uri": {
+            "tip-2": "Puoi usare l'oggetto di tipo URI per aprire un file o una cartella usando il protocollo file://",
+            "tip-1": "Puoi usare l'oggetto di tipo URI per aprire un sito usando il protocollo http://",
+            "tip-3": "Puoi usare l'oggetto di tipo URI per aprire un link mailto:"
         }
     }
 }
