@@ -67,7 +67,12 @@
         "common": {
             "not-bound": "설정되지 않음",
             "done": "완료",
-            "close": "닫기"
+            "close": "닫기",
+            "menu-conditions": "메뉴 조건",
+            "menu-conditions-hint": "언제 메뉴가 보여질 지 선택해요.",
+            "menu-behavior": "메뉴 특성",
+            "menu-behavior-hint": "메뉴의 고급 설정을 변경해요.",
+            "cancel": "취소"
         },
         "advanced-options": {
             "centered-mode": "중앙 정렬 모드",
@@ -107,7 +112,8 @@
         },
         "icon-picker": {
             "heading": "아이콘 선택하기",
-            "subheading": "{{path}}에 이미지가 들어있는 폴더를 넣어 아이콘을 직접 추가할 수 있어요. Kando의 재시작이 필요해요. 추가적인 정보는 <a {{- link}}>여기서</a> 참조하세요."
+            "subheading": "{{path}}에 이미지가 들어있는 폴더를 넣어 아이콘을 직접 추가할 수 있어요. Kando의 재시작이 필요해요. 추가적인 정보는 <a {{- link}}>여기서</a> 참조하세요.",
+            "placeholder": "아이콘 검색..."
         },
         "macro-picker": {
             "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
