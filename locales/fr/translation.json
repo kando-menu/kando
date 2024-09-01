@@ -56,7 +56,8 @@
             "uri": "URI",
             "name": "Ouvrir un URI",
             "description": "Ouvre des fichiers ou des sites web.",
-            "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du pointeur à l'endroit où le menu a été ouvert."
+            "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du pointeur à l'endroit où le menu a été ouvert.",
+            "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien mailto:"
         }
     },
     "main": {
@@ -163,7 +164,8 @@
             "submenu": "Fenêtres",
             "close-window": "Fermer la Fenêtre",
             "tile-left": "Tuile à Gauche",
-            "tile-right": "Tuile à Droite"
+            "tile-right": "Tuile à Droite",
+            "mission-control": "Mission Control"
         },
         "previous-workspace": "Espace de Travail Précédent",
         "bookmarks": {
