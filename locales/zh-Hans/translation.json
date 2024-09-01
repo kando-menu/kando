@@ -34,7 +34,9 @@
             "description": "运行任意Shell命令。"
         },
         "common": {
-            "delayed-option": "关闭菜单后运行"
+            "delayed-option": "关闭菜单后运行",
+            "delayed-option-hint": "如果操作针对的是需要聚焦的窗口，则非常有用。",
+            "not-configured": "未配置。"
         },
         "hotkey": {
             "name": "模拟热键",
