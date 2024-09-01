@@ -1,5 +1,238 @@
 {
     "Kando failed to start": "Kando 启动失败",
     "Check the system tray icon for some options!": "点击托盘图标以查看选项！",
-    "Kando is already running": "Kando 已经在运行了"
+    "Kando is already running": "Kando 已经在运行了",
+    "main": {
+        "is-running-header": "Kando已在运行",
+        "is-running-message": "请检查系统托盘菜单图标以查看部分选项！",
+        "failed-to-start-header": "Kando启动失败"
+    },
+    "sidebar": {
+        "welcome": "欢迎使用Kando！",
+        "development-tab-header": "开发",
+        "introduction-tab-slide-2-caption": "返回：通过点击菜单中心的项目，即可快速返回上一级菜单。",
+        "introduction-tab-slide-3-caption": "标记模式：拖放菜单项目以进入标记模式。如果鼠标指针暂停移动或转向，则将展开当前正在拖动的子菜单。",
+        "dev-tools-button": "显示开发人员工具",
+        "reload-menu-theme-button": "重载当前菜单主题",
+        "reload-menu-theme-button-tooltip": "对CSS文件的更改将立即应用。而对于对 theme.json 文档的更改响应，则需要重新打开菜单以应用。",
+        "dev-tools-button-tooltip": "打开Web开发人员工具进行UI巡检。",
+        "watch-intro-button": "学习如何使用Kando",
+        "config-guide-button": "配置向导",
+        "intro-text": "Kando附带了一个基本的示例菜单。您可以使用它，但您应该在稍后创建自己的菜单！你可以通过点击屏幕右下角的齿轮图标来打开菜单编辑器。",
+        "new-version-button": "Kando的新版本现已可用！",
+        "introduction-tab-header": "介绍",
+        "introduction-tab-slide-1-caption": "随意点击：您不必精确地点击某个菜单项，只需在它对应的楔形区域内点击即可！",
+        "discord-button": "在我们的Discord聊天",
+        "buy-me-a-coffee-button": "Ko-fi上的Kando",
+        "sponsors-button": "赞助者名单"
+    },
+    "items": {
+        "command": {
+            "command": "命令",
+            "command-hint": "该命令将被执行。",
+            "name": "运行命令",
+            "description": "运行任意Shell命令。"
+        },
+        "common": {
+            "delayed-option": "关闭菜单后运行"
+        },
+        "hotkey": {
+            "name": "模拟热键",
+            "description": "发送模拟快捷键。",
+            "tip-3": "点击此链接以查看所有可用的键名格式。"
+        },
+        "macro": {
+            "tip-2": "点击此链接以查看所有可用的键名格式。",
+            "name": "模拟宏",
+            "tip-1": "默认情况下，Kando在激活每个按键事件之前都会添加10ms的延迟。你可以通过“延迟”属性来改变这一点。",
+            "description": "输入键盘宏。"
+        },
+        "submenu": {
+            "tip-1": "子菜单可用于将菜单项目编组。",
+            "tip-2": "您还可以在子菜单中嵌套子菜单。",
+            "tip-3": "子菜单可用于创建复杂的菜单结构。",
+            "tip-4": "您应当避免在单个子菜单中添加超过12个菜单项目，推荐数量为8个。",
+            "tip-6": "您可以通过在预览视图中拖动项目来重新排序它们。",
+            "tip-8": "您可以通过拖拽菜单项目到“回收站”标签页以移除它。",
+            "tip-9": "记录快捷键时，您不必一次性输入所有按键。您可以一个接一个地按。",
+            "tip-10": "您可以通过在按住Ctrl键的同时拖拽菜单/菜单项目以复制它们。",
+            "tip-11": "您可以通过 --menu 标志从命令行打开菜单。",
+            "description": "包含其它菜单项目。",
+            "detailed-description_other": "包含{{count}}个菜单项目。",
+            "tip-5": "您可以使用预览视图中的小锁定图标以固定菜单项目的位置。",
+            "tip-7": "您可以通过将一个菜单从“菜单”标签页拖拽到“回收站”标签页以删除它。",
+            "name": "子菜单"
+        },
+        "uri": {
+            "tip-1": "您可以使用URI项目类型以 http:// 协议打开网站。",
+            "description": "打开文件或网页。",
+            "tip-3": "您可以使用URI项目类型运行mailto: 链接。",
+            "uri": "URI",
+            "uri-hint": "该链接将被打开。",
+            "name": "打开URI",
+            "tip-4": "使用 {{app_name}} 来插入打开菜单时正在专注的应用程序的名称。",
+            "tip-5": "使用 {{window_name}} 来插入打开菜单时正在专注的窗口的名称。",
+            "tip-6": "使用{{pointer_x}}和{{pointer_y}}来插入打开菜单时的指针位置。",
+            "tip-2": "您可以使用URI项目类型以 file:// 协议打开文件或文件夹。"
+        }
+    },
+    "properties": {
+        "common": {
+            "not-bound": "未绑定",
+            "done": "完成",
+            "close": "关闭"
+        },
+        "advanced-options": {
+            "heading": "调整菜单行为",
+            "subheading": "在您开启这些选项之前，我们建议您了解Kando的默认行为。<a {{- link}}>在这里</a>了解为什么我们喜欢这些行为。",
+            "centered-mode": "居中模式",
+            "centered-mode-hint": "在屏幕正中央打开菜单，而不是在鼠标指针处。",
+            "anchored-mode": "锚定模式",
+            "anchored-mode-hint": "在与父菜单相同的位置打开子菜单。",
+            "anchored-mode-checked-hint": "若选择此项，将禁用标记模式。"
+        },
+        "icon-picker": {
+            "heading": "选择一个图标",
+            "subheading": "您可以在{{path}}置入存有图标的文件夹以创建您自己的图标集。重新启动Kando以载入。查看自定义图标的更多信息，<a {{- link}}>请看此处</a>."
+        },
+        "condition-picker": {
+            "top-placeholder": "顶侧",
+            "bottom-placeholder": "底侧",
+            "pointer-position-hint": "您的鼠标光标当前位于 {{x}} x {{y}}。",
+            "heading": "选择菜单激活条件",
+            "subheading": "您可以将多个菜单绑定到同一个快捷方式，然后分别选择每个菜单的激活条件。",
+            "app": "特定应用限制",
+            "app-hint": "仅在选择的特定应用聚焦时显示该菜单。",
+            "app-checked-hint": "支持正则表达式。如： /firefox|chrome/i。",
+            "app-placeholder": "应用名称",
+            "app-tooltip": "使用当Kando打开时正在聚焦的应用程序。",
+            "window": "特定窗口标题限制",
+            "window-hint": "仅当聚焦窗口的标题包含给定文本时显示该菜单。",
+            "window-checked-hint": "支持正则表达式。如： /youtube|vimeo/i。",
+            "window-placeholder": "窗口标题",
+            "window-tooltip": "使用当Kando打开时正在聚焦的窗口标题。",
+            "screen": "特定屏幕区域限制",
+            "screen-hint": "仅当鼠标指针位于屏幕上的给定区域时显示该菜单。",
+            "screen-checked-hint": "以像素为单位，相对于主显示器的左上角。",
+            "left-placeholder": "左侧",
+            "right-placeholder": "右侧"
+        },
+        "hotkey-picker": {
+            "label": "热键",
+            "hint": "该热键将被触发。",
+            "recording": "按下热键......"
+        },
+        "shortcut-picker": {
+            "label": "快捷方式",
+            "hint": "此快捷方式将打开该菜单。",
+            "recording": "键入快捷键......"
+        },
+        "macro-picker": {
+            "placeholder": "点击录制按钮以开始录制！",
+            "recording": "输入按键......"
+        },
+        "shortcut-id-picker": {
+            "label": "全局快捷方式ID"
+        }
+    },
+    "toolbar": {
+        "add-items-tab": {
+            "label": "菜单项"
+        },
+        "trash-tab": {
+            "heading": "你可以把菜单或菜单项拖拽到此处以删除！",
+            "subheading": "重新启动Kando时，它们将被清除。",
+            "label": "回收站"
+        },
+        "menus-tab": {
+            "create-menu-button": "创建新菜单！",
+            "label": "菜单"
+        },
+        "templates-tab": {
+            "heading": "把菜单和菜单项拖到这里以使用它们作为模板！",
+            "subheading": "将这里的存储项拖拽到“菜单”标签页或上方的预览区域，即可创建它们的副本。",
+            "label": "模板"
+        },
+        "editor-themes-tab": {
+            "subheading": "在未来，将有可能为整个菜单编辑器自定义主题。",
+            "label": "编辑菜单主题",
+            "heading": "这里将列出可用的编辑器主题！"
+        },
+        "menu-themes-tab": {
+            "label": "菜单主题",
+            "system-mode-subheading-dark": "您的系统当前处于深色模式，上述设置仅在深色模式下生效。",
+            "system-mode-subheading-light": "您的系统当前处于浅色模式，上述设置仅在浅色模式下生效。",
+            "author": "by {{author}}",
+            "dark-mode": "基于系统的深浅模式使用不同的主题和颜色集",
+            "system-mode-subheading": "如果启用该项，您就可以在系统处于浅色或深色模式时分别选择不同的主题和颜色集。",
+            "edit-colors": "编辑颜色",
+            "close-color-picker": "关闭颜色编辑器",
+            "reset-color-picker": "重设所有颜色至默认选项",
+            "caption": "在未来，我们将建设一个对于菜单主题的在线存储库。现在，您可以<a {{tutorialLink}}>学习如何创建自己的主题</a>，并在<a {{discordLink}}>Kando的Discord服务器</a>中分享它们！"
+        }
+    },
+    "example-menu": {
+        "web-links": {
+            "kando-on-kofi": "Ko-fi上的Kando",
+            "kando-on-youtube": "Youtube上的Kando",
+            "kando-on-github": "Github上的Kando",
+            "google": "Google",
+            "submenu": "网页链接",
+            "kando-on-discord": "Discord上的Kando"
+        },
+        "apps": {
+            "terminal": "终端",
+            "finder": "访达",
+            "file-browser": "文件资源管理器",
+            "submenu": "应用",
+            "safari": "Safari",
+            "web-browser": "网页浏览器",
+            "email": "邮件",
+            "apple-music": "音乐",
+            "gimp": "GIMP",
+            "paint": "画图"
+        },
+        "next-workspace": "后一个桌面",
+        "name": "示例菜单",
+        "bookmarks": {
+            "videos": "视频",
+            "pictures": "图片",
+            "documents": "文档",
+            "desktop": "桌面",
+            "home": "个人文件夹",
+            "music": "音乐",
+            "downloads": "下载",
+            "submenu": "收藏夹"
+        },
+        "audio": {
+            "next-track": "下一首",
+            "play-pause": "暂停 / 播放",
+            "mute": "静音",
+            "previous-track": "上一首",
+            "submenu": "媒体"
+        },
+        "windows": {
+            "submenu": "窗口管理",
+            "toggle-maximize": "最大化 / 还原",
+            "tile-right": "向右贴靠",
+            "close-window": "关闭窗口",
+            "tile-left": "向左贴靠",
+            "mission-control": "Mission Control"
+        },
+        "previous-workspace": "前一个桌面",
+        "clipboard": {
+            "submenu": "剪贴板",
+            "paste": "粘贴",
+            "copy": "拷贝",
+            "cut": "剪切"
+        }
+    },
+    "backends": {
+        "hyprland": {
+            "shortcut-hint": "使用你的 hyperland.conf 文件绑定此项。"
+        },
+        "kde-wayland": {
+            "shortcut-hint": "使用KDE的系统设置绑定此项。"
+        }
+    }
 }
