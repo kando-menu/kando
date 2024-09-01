@@ -42,13 +42,28 @@
         "common": {
             "delayed-option": "Ejecutar después de cerrar el menú",
             "delayed-option-hint": "Útil si la acción se dirige a una ventana que necesita ser enfocada.",
-            "not-configured": "No configurado."
+            "not-configured": "No configurado"
         }
     },
     "toolbar": {
         "editor-themes-tab": {
             "heading": "¡Aquí habrá una lista de temas de editor disponibles!",
             "subheading": "En el futuro, será posible tematizar todo el editor de menú."
+        }
+    },
+    "properties": {
+        "icon-picker": {
+            "placeholder": "Buscando iconos…"
+        },
+        "macro-picker": {
+            "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
+            "recording": "Presiona las teclas…"
+        },
+        "shortcut-id-picker": {
+            "label": "ID de acceso directo global"
+        },
+        "shortcut-picker": {
+            "label": "Tecla de acceso directo"
         }
     }
 }
