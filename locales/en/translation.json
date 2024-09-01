@@ -14,7 +14,7 @@
     "common": {
       "delayed-option": "Execute After Closing the Menu",
       "delayed-option-hint": "Useful if the action targets a window that needs to be focused.",
-      "not-configured": "Not configured."
+      "not-configured": "Not configured"
     },
     "hotkey": {
       "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
