@@ -1,1 +1,205 @@
-{}
+{
+    "items": {
+        "command": {
+            "tip-1": "앱이나 스크립트를 실행하기 위해 '명령어' 타입을 사용할 수 있어요.",
+            "tip-2": "실행파일의 경로에 공백문자가 포함된다면, 경로를 \"쌍따옴표 안에 넣어야 해요\".",
+            "command": "명령어",
+            "command-hint": "이 명령어가 실행될 거예요.",
+            "tip-5": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요.",
+            "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
+            "tip-3": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
+            "name": "명령어 실행",
+            "description": "쉘 명령어를 실행해요."
+        },
+        "common": {
+            "delayed-option": "메뉴가 완전히 닫혔을 때 실행",
+            "delayed-option-hint": "활성화되어야 하는 창을 띄울 때 유용해요.",
+            "not-configured": "설정되어 있지 않아요."
+        },
+        "hotkey": {
+            "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없어요. 하나씩 눌러도 돼요.",
+            "name": "단축키",
+            "description": "단축키를 누릅니다.",
+            "tip-2": "시스템이 사용하는 키가 녹화가 안된다면, 그 키의 이름을 적어보세요.",
+            "tip-3": "사용 가능한 키 이름들을 보려면 이 링크를 클릭하세요."
+        },
+        "macro": {
+            "tip-1": "기본적으로, Kando는 키 이벤트 사이에 10밀리초 딜레이을 추가해요. \"딜레이\" 설정으로 변경할 수 있어요.",
+            "tip-2": "사용 가능한 키 이름들을 보려면 이 링크를 클릭하세요.",
+            "name": "매크로",
+            "description": "키보드 매크로를 실행합니다."
+        },
+        "submenu": {
+            "tip-6": "미리보기에서 항목을 드래그하여 항목의 순서를 바꿀 수 있어요.",
+            "tip-7": "툴바의 메뉴 탭에서 메뉴를 휴지통 탭으로 드래그하여 삭제할 수 있어요.",
+            "tip-8": "항목을 툴바에 있는 휴지통 탭으로 드래그하여 삭제할 수 있어요.",
+            "tip-9": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없어요. 하나씩 눌러도 돼요.",
+            "tip-10": "Ctrl 키를 누른 상태에서 메뉴나 항목을 드래그하면 복사할 수 있어요.",
+            "tip-11": "명령줄에서 --menu 인수로 메뉴를 열 수 있어요.",
+            "name": "서브메뉴",
+            "description": "다른 메뉴 항목을 넣을 수 있어요.",
+            "detailed-description_other": "{{count}}개의 메뉴 항목이 들어있어요.",
+            "tip-3": "더 복잡한 메뉴 구조를 만들기 위해 서브메뉴를 사용할 수 있어요.",
+            "tip-4": "서브메뉴에 항목이 12개를 넘지 않게 하는 것이 좋아요. 서브메뉴당 8개를 추천해요.",
+            "tip-5": "미리보기에서 작은 자물쇠 아이콘으로 항목의 위치를 고정시킬 수 있어요.",
+            "tip-1": "서브메뉴로 여러 항목들을 모을 수 있어요.",
+            "tip-2": "서브메뉴 안에 서브메뉴도 넣을 수 있어요."
+        },
+        "uri": {
+            "tip-2": "URI 타입으로 file:// 프로토콜을 사용하여 파일이나 폴더를 열 수 있어요.",
+            "tip-1": "URI 타입으로 http:// 프로토콜을 사용하여 웹사이트를 열 수 있어요.",
+            "tip-3": "URI 타입으로 mailto: 링크를 열 수 있어요.",
+            "tip-5": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
+            "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
+            "tip-6": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요.",
+            "uri": "URI",
+            "uri-hint": "이 URI를 열어요.",
+            "name": "URI 열기",
+            "description": "파일이나 웹사이트를 열어요."
+        }
+    },
+    "main": {
+        "is-running-header": "Kando가 이미 실행 중이예요",
+        "is-running-message": "시스템 트레이 아이콘으로 설정을 확인해 보세요!",
+        "failed-to-start-header": "Kando를 실행하지 못했어요"
+    },
+    "properties": {
+        "common": {
+            "not-bound": "설정되지 않음",
+            "done": "완료",
+            "close": "닫기"
+        },
+        "advanced-options": {
+            "centered-mode": "중앙 정렬 모드",
+            "anchored-mode": "고정 모드",
+            "anchored-mode-hint": "서브메뉴를 상위 메뉴의 위치에서 엽니다.",
+            "anchored-mode-checked-hint": "이 옵션을 활성화하면 마킹 모드가 비활성화됩니다.",
+            "subheading": "이 설정을 변경하기 전에, Kando의 기본적인 특성을 배워보는 것을 추천해요. 왜 그런지는 <a {{- link}}>여기서</a> 확인해 보세요.",
+            "centered-mode-hint": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
+            "heading": "메뉴 설정하기"
+        },
+        "condition-picker": {
+            "heading": "메뉴 조건 선택하기",
+            "app": "특정 앱으로 제한",
+            "app-hint": "특정한 앱이 활성화되어 있을 때만 메뉴를 열어요.",
+            "app-checked-hint": "\"/firefox|chrome/i\" 와 같은 정규 표현식도 지원해요.",
+            "right-placeholder": "오른쪽",
+            "top-placeholder": "위",
+            "app-tooltip": "Kando가 열렸을 때 활성화되어 있던 앱을 사용해요.",
+            "window": "특정 창 이름으로 제한",
+            "window-placeholder": "창 이름",
+            "window-tooltip": "Kando가 열렸을 때 활성화되어 있던 창을 사용해요.",
+            "screen": "지정된 스크린 구역으로 제한",
+            "screen-hint": "커서가 지정된 스크린 구역에 있을 때만 메뉴를 열어요.",
+            "screen-checked-hint": "픽셀 단위로, 디스플레이 좌측 상단부터 시작해요.",
+            "left-placeholder": "왼쪽",
+            "bottom-placeholder": "아래",
+            "pointer-position-hint": "현재 커서의 위치는 {{x}} x {{y}}이예요.",
+            "subheading": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
+            "app-placeholder": "앱 이름",
+            "window-hint": "활성화된 창의 이름이 지정된 텍스트를 포함할 때만 메뉴를 열어요.",
+            "window-checked-hint": "\"/youtube|vimeo/i\"와 같은 정규 표현식도 지원해요."
+        },
+        "hotkey-picker": {
+            "label": "단축키",
+            "hint": "이 단축키가 눌릴 거에요.",
+            "recording": "단축키를 눌러주세요..."
+        },
+        "icon-picker": {
+            "heading": "아이콘 선택하기",
+            "subheading": "{{path}}에 이미지가 들어있는 폴더를 넣어 아이콘을 직접 추가할 수 있어요. Kando의 재시작이 필요해요. 추가적인 정보는 <a {{- link}}>여기서</a> 참조하세요."
+        },
+        "macro-picker": {
+            "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
+            "recording": "키를 눌러주세요..."
+        },
+        "shortcut-id-picker": {
+            "label": "전역 단축키 ID"
+        },
+        "shortcut-picker": {
+            "hint": "메뉴를 열 거에요.",
+            "recording": "단축키를 눌러주세요...",
+            "label": "단축키"
+        }
+    },
+    "example-menu": {
+        "apps": {
+            "submenu": "앱",
+            "safari": "사파리",
+            "web-browser": "웹 브라우저",
+            "email": "이메일",
+            "apple-music": "음악",
+            "paint": "그림판",
+            "finder": "Finder",
+            "file-browser": "파일 브라우저",
+            "terminal": "터미널",
+            "gimp": "GIMP"
+        },
+        "web-links": {
+            "submenu": "웹 링크",
+            "google": "구글",
+            "kando-on-github": "Kando의 GitHub 페이지",
+            "kando-on-youtube": "Kando의 유튜브",
+            "kando-on-discord": "Kando의 Discord",
+            "kando-on-kofi": "Kando의 Ko-fi"
+        },
+        "audio": {
+            "previous-track": "이전 트랙",
+            "mute": "음소거",
+            "submenu": "오디오",
+            "next-track": "다음 트랙",
+            "play-pause": "재생 / 일시정지"
+        },
+        "windows": {
+            "submenu": "윈도우",
+            "mission-control": "Mission Control",
+            "toggle-maximize": "최대화 토글",
+            "tile-right": "오른쪽 타일",
+            "close-window": "창 닫기",
+            "tile-left": "왼쪽 타일"
+        },
+        "previous-workspace": "이전 타일",
+        "bookmarks": {
+            "submenu": "즐겨찾기",
+            "downloads": "다운로드",
+            "videos": "영상",
+            "pictures": "사진",
+            "documents": "문서",
+            "desktop": "데스크탑",
+            "home": "홈",
+            "music": "음악"
+        },
+        "next-workspace": "다음 워크스페이스",
+        "clipboard": {
+            "paste": "붙여넣기",
+            "copy": "복사",
+            "cut": "자르기",
+            "submenu": "클립보드"
+        },
+        "name": "예시 메뉴"
+    },
+    "backends": {
+        "hyprland": {
+            "shortcut-hint": "hyprland.conf에서 바인딩하세요."
+        },
+        "kde-wayland": {
+            "shortcut-hint": "KDE의 시스템 설정에서 바인딩하세요."
+        }
+    },
+    "sidebar": {
+        "welcome": "Kando에 오신 것을 환영해요!",
+        "watch-intro-button": "Kando 사용법 알아보기",
+        "config-guide-button": "설정 가이드",
+        "discord-button": "Discord에서 채팅하기",
+        "buy-me-a-coffee-button": "Kando의 Ko-fi",
+        "sponsors-button": "후원자 목록",
+        "new-version-button": "Kando의 새 버전이 이용 가능해요!",
+        "introduction-tab-header": "소개",
+        "introduction-tab-slide-3-caption": "마킹 모드: 항목 위로 드래그하여 마킹 모드를 사용할 수 있어요. 마우스의 움직임을 멈추거나 방향을 바꾸면, 드래그하고 있는 서브메뉴가 열려요.",
+        "introduction-tab-slide-4-caption": "터보 모드: 메뉴를 열고 키를 누른 상태를 유지한다면, 마우스만 움직여 선택할 수 있어요. 제일 빠르게 항목을 선택하는 방법이에요!",
+        "introduction-tab-slide-5-caption": "실수로 선택하는 경우 없음: 동작은 \"마킹 모드\"에서 마우스 버튼을 떼거나 \"터보 모드\"에서 키를 떼었을 때만 실행돼요. 이렇게 메뉴를 탐색해 보세요!",
+        "intro-text": "Kando는 기본적인 예시 메뉴가 이미 있어요. 그대로 써도 되지만, 직접 메뉴를 만드는 게 더 좋을거에요! 화면 우측 하단의 톱니바퀴 아이콘을 클릭하여 메뉴 편집기를 열 수 있어요.",
+        "introduction-tab-slide-1-caption": "아무데나 클릭하세요: 항목에 정확히 클릭하지 않아도 돼요!",
+        "introduction-tab-slide-2-caption": "뒤로가기: 중앙의 항목을 클릭하여 위로 한 단계 이동할 수 있어요."
+    }
+}
