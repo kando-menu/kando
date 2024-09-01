@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
+import i18next from 'i18next';
 
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu, IBackendInfo, IShowEditorOptions } from '../../../common';
@@ -134,7 +135,14 @@ export class Properties extends EventEmitter {
     const template = require('./templates/properties.hbs');
 
     const div = document.createElement('div');
-    div.innerHTML = template();
+    div.innerHTML = template({
+      strings: {
+        menuConditions: i18next.t('properties.common.menu-conditions'),
+        menuConditionsHint: i18next.t('properties.common.menu-conditions-hint'),
+        menuBehavior: i18next.t('properties.common.menu-behavior'),
+        menuBehaviorHint: i18next.t('properties.common.menu-behavior-hint'),
+      },
+    });
 
     // The first child of the div is the container.
     this.container = div.firstElementChild as HTMLElement;
