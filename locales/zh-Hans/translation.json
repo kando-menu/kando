@@ -43,7 +43,7 @@
         "common": {
             "delayed-option": "关闭菜单后运行",
             "delayed-option-hint": "如果操作针对的是需要聚焦的窗口，则非常有用。",
-            "not-configured": "未配置。"
+            "not-configured": "未配置"
         },
         "hotkey": {
             "name": "模拟热键",
@@ -77,7 +77,7 @@
         "uri": {
             "tip-1": "您可以使用URI项目类型以 http:// 协议打开网站。",
             "description": "打开文件或网页。",
-            "tip-3": "您可以使用URI项目类型运行mailto: 链接。",
+            "tip-3": "您可以使用URI项目类型打开Mailto链接。",
             "uri": "URI",
             "uri-hint": "该链接将被打开。",
             "name": "打开URI",
@@ -95,7 +95,8 @@
             "menu-conditions": "菜单条件",
             "menu-behavior": "菜单行为",
             "menu-behavior-hint": "调整菜单的高级选项。",
-            "menu-conditions-hint": "选择何时显示菜单。"
+            "menu-conditions-hint": "选择何时显示菜单。",
+            "cancel": "取消"
         },
         "advanced-options": {
             "heading": "调整菜单行为",
@@ -108,7 +109,8 @@
         },
         "icon-picker": {
             "heading": "选择一个图标",
-            "subheading": "您可以在{{path}}置入存有图标的文件夹以创建您自己的图标集。重新启动Kando以载入。查看自定义图标的更多信息，<a {{- link}}>请看此处</a>."
+            "subheading": "您可以在{{path}}置入存有图标的文件夹以创建您自己的图标集。重新启动Kando以载入。查看自定义图标的更多信息，<a {{- link}}>请看此处</a>.",
+            "placeholder": "搜索图标…"
         },
         "condition-picker": {
             "top-placeholder": "顶侧",
@@ -135,16 +137,16 @@
         "hotkey-picker": {
             "label": "热键",
             "hint": "该热键将被触发。",
-            "recording": "按下热键......"
+            "recording": "按下热键…"
         },
         "shortcut-picker": {
             "label": "快捷方式",
             "hint": "此快捷方式将打开该菜单。",
-            "recording": "键入快捷键......"
+            "recording": "键入快捷键…"
         },
         "macro-picker": {
             "placeholder": "点击录制按钮以开始录制！",
-            "recording": "输入按键......"
+            "recording": "输入按键…"
         },
         "shortcut-id-picker": {
             "label": "全局快捷方式ID"
@@ -248,6 +250,9 @@
         },
         "kde-wayland": {
             "shortcut-hint": "使用 KDE 系统设置来绑定该快捷键。"
+        },
+        "gnome": {
+            "error": "无法连接到 Kando 集成 GNOME Shell Extensions。您可以从这里获取：{{- link}}"
         }
     }
 }
