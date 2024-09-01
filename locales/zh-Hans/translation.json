@@ -8,25 +8,25 @@
         "failed-to-start-header": "Kando启动失败"
     },
     "sidebar": {
-        "welcome": "欢迎使用Kando！",
+        "welcome": "欢迎使用 Kando！",
         "development-tab-header": "开发",
-        "introduction-tab-slide-2-caption": "返回：通过点击菜单中心的项目，即可快速返回上一级菜单。",
-        "introduction-tab-slide-3-caption": "标记模式：拖放菜单项目以进入标记模式。如果鼠标指针暂停移动或转向，则将展开当前正在拖动的子菜单。",
+        "introduction-tab-slide-2-caption": "返回：点击菜单中心返回上一级菜单。",
+        "introduction-tab-slide-3-caption": "画笔模式：按住并向外拖动菜单项进入画笔模式。如果停下不动或转向，就能打开当前选中的子菜单。",
         "dev-tools-button": "显示开发人员工具",
         "reload-menu-theme-button": "重载当前菜单主题",
-        "reload-menu-theme-button-tooltip": "对CSS文件的更改将立即应用。而对于对 theme.json 文档的更改响应，则需要重新打开菜单以应用。",
-        "dev-tools-button-tooltip": "打开Web开发人员工具进行UI巡检。",
-        "watch-intro-button": "学习如何使用Kando",
-        "config-guide-button": "配置向导",
-        "intro-text": "Kando附带了一个基本的示例菜单。您可以使用它，但您应该在稍后创建自己的菜单！你可以通过点击屏幕右下角的齿轮图标来打开菜单编辑器。",
-        "new-version-button": "Kando的新版本现已可用！",
+        "reload-menu-theme-button-tooltip": "对 CSS 的更改将会立即生效，对 theme.json 文件的更改则需要重新打开菜单。",
+        "dev-tools-button-tooltip": "打开 Web 开发人员工具来调试用户界面。",
+        "watch-intro-button": "学习如何使用 Kando",
+        "config-guide-button": "配置指南",
+        "intro-text": "Kando 自带一个基本的示例菜单，您可以试着玩玩。相信您很快就能拥有一个自己的菜单！点击屏幕右下角的齿轮图标来打开菜单编辑器。",
+        "new-version-button": "Kando 发布新版本啦！",
         "introduction-tab-header": "介绍",
-        "introduction-tab-slide-1-caption": "随意点击：您不必精确地点击某个菜单项，只需在它对应的楔形区域内点击即可！",
-        "discord-button": "在我们的Discord聊天",
-        "buy-me-a-coffee-button": "Ko-fi上的Kando",
+        "introduction-tab-slide-1-caption": "点击任何方向：不必精确地点击某个菜单项，只需要点击它所在方向的扇形区域就行！",
+        "discord-button": "Discord 聊天群",
+        "buy-me-a-coffee-button": "Ko-fi 上赞助 Kando",
         "sponsors-button": "赞助者名单",
-        "introduction-tab-slide-4-caption": "极速模式：如果您在打开菜单后一直按下某个键，您就可以通过直接移动鼠标指针进行选择。这是选择菜单项目的最快方式！",
-        "introduction-tab-slide-5-caption": "防误触选择:只有当您在“标记模式”中释放鼠标按钮或在“极速模式”中释放键盘键时，操作才会执行。使用它来探索菜单!"
+        "introduction-tab-slide-4-caption": "极速模式：如果您在打开菜单后按住一个键盘按键不放，就可以直接移动鼠标光标进行选择。这是最快的操作方法！",
+        "introduction-tab-slide-5-caption": "不会误触：最终操作只会在松开鼠标或键盘按键时触发。利用这个技巧探索一下菜单吧！"
     },
     "items": {
         "command": {
@@ -155,8 +155,8 @@
             "label": "菜单项"
         },
         "trash-tab": {
-            "heading": "你可以把菜单或菜单项拖拽到此处以删除！",
-            "subheading": "重新启动Kando时，它们将被清除。",
+            "heading": "把菜单或菜单项拖拽到这里即可删除！",
+            "subheading": "重新启动 Kando 后，这里将会清空。",
             "label": "回收站"
         },
         "menus-tab": {
@@ -164,26 +164,26 @@
             "label": "菜单"
         },
         "templates-tab": {
-            "heading": "把菜单和菜单项拖到这里以使用它们作为模板！",
-            "subheading": "将这里的存储项拖拽到“菜单”标签页或上方的预览区域，即可创建它们的副本。",
+            "heading": "把菜单和菜单项拖拽到这里即可储存为模板！",
+            "subheading": "将模板拖拽到菜单列表或上方的预览区中即可创建一个副本。",
             "label": "模板"
         },
         "editor-themes-tab": {
-            "subheading": "在未来，将有可能为整个菜单编辑器自定义主题。",
-            "label": "编辑菜单主题",
-            "heading": "这里将列出可用的编辑器主题！"
+            "subheading": "在未来，将可以自定义整个编辑器的样式。",
+            "label": "编辑器主题",
+            "heading": "以后这里会列出很多编辑器主题！"
         },
         "menu-themes-tab": {
             "label": "菜单主题",
             "system-mode-subheading-dark": "您的系统当前处于深色模式，上述设置仅在深色模式下生效。",
             "system-mode-subheading-light": "您的系统当前处于浅色模式，上述设置仅在浅色模式下生效。",
-            "author": "by {{author}}",
-            "dark-mode": "基于系统的深浅模式使用不同的主题和颜色集",
-            "system-mode-subheading": "如果启用该项，您就可以在系统处于浅色或深色模式时分别选择不同的主题和颜色集。",
+            "author": "作者 {{author}}",
+            "dark-mode": "在系统浅色和深色模式下使用不同的主题和颜色",
+            "system-mode-subheading": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
             "edit-colors": "编辑颜色",
             "close-color-picker": "关闭颜色编辑器",
-            "reset-color-picker": "重设所有颜色至默认选项",
-            "caption": "在未来，我们将建设一个对于菜单主题的在线存储库。现在，您可以<a {{tutorialLink}}>学习如何创建自己的主题</a>，并在<a {{discordLink}}>Kando的Discord服务器</a>中分享它们！"
+            "reset-color-picker": "重置所有颜色至默认值",
+            "caption": "在未来，我们会有一个在线的菜单主题仓库。现在，您可以 <a {{tutorialLink}}>了解如何创建主题</a>，并在 <a {{discordLink}}>Kando 的 Discord 群</a> 里和我们分享！"
         }
     },
     "example-menu": {
@@ -244,10 +244,10 @@
     },
     "backends": {
         "hyprland": {
-            "shortcut-hint": "使用你的 hyperland.conf 文件绑定此项。"
+            "shortcut-hint": "使用您的 hyperland.conf 文件来绑定该快捷键。"
         },
         "kde-wayland": {
-            "shortcut-hint": "使用KDE的系统设置绑定此项。"
+            "shortcut-hint": "使用 KDE 系统设置来绑定该快捷键。"
         }
     }
 }
