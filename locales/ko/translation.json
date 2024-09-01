@@ -201,6 +201,45 @@
         "intro-text": "Kando는 기본적인 예시 메뉴가 이미 있어요. 그대로 써도 되지만, 직접 메뉴를 만드는 게 더 좋을거에요! 화면 우측 하단의 톱니바퀴 아이콘을 클릭하여 메뉴 편집기를 열 수 있어요.",
         "introduction-tab-slide-1-caption": "아무데나 클릭하세요: 항목에 정확히 클릭하지 않아도 돼요!",
         "introduction-tab-slide-2-caption": "뒤로가기: 중앙의 항목을 클릭하여 위로 한 단계 이동할 수 있어요.",
-        "development-tab-header": "개발"
+        "development-tab-header": "개발",
+        "dev-tools-button-tooltip": "UI를 검사할 때 쓰는 웹 개발자 도구를 열어요.",
+        "reload-menu-theme-button": "현재 메뉴 테마 새로고침하기",
+        "reload-menu-theme-button-tooltip": "CSS 변경은 곧바로 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
+        "dev-tools-button": "개발자 도구 열기"
+    },
+    "toolbar": {
+        "menu-themes-tab": {
+            "author": "{{author}}이/가 제작함",
+            "system-mode-subheading": "활성화 시, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 다른 테마와 색상을 선택할 수 있어요.",
+            "system-mode-subheading-dark": "현재 시스템은 다크 모드로 설정되어 있어요. 위의 설정은 다크 모드에서만 사용돼요.",
+            "system-mode-subheading-light": "현재 시스템은 라이트 모드로 설정되어 있어요. 위의 설정은 라이트 모드에서만 사용돼요.",
+            "caption": "미래에는 메뉴 테마를 저장하는 온라인 저장소를 만들 예정이에요. 현재로서는 <a {{tutorialLink}}>직접 테마를 만드는 법을 배우고</a>, <a {{discordLink}}>Kando의 Discord 서버</a>에 공유할 수 있어요!",
+            "edit-colors": "색상 편집",
+            "dark-mode": "라이트와 다크 모드 각각 다른 테마와 색상 사용하기",
+            "close-color-picker": "색상 편집기 닫기",
+            "reset-color-picker": "색상 모두 기본값으로 초기화하기",
+            "label": "메뉴 테마"
+        },
+        "menus-tab": {
+            "create-menu-button": "메뉴 생성하기!",
+            "label": "메뉴"
+        },
+        "templates-tab": {
+            "heading": "여기에 메뉴와 메뉴 항목들을 끌어 템플릿으로 활용하세요!",
+            "subheading": "저장된 항목들을 메뉴 탭이나 위의 미리보기로 옮겨 복사본을 만드세요.",
+            "label": "템플릿"
+        },
+        "add-items-tab": {
+            "label": "메뉴 항목"
+        },
+        "trash-tab": {
+            "label": "휴지통",
+            "heading": "메뉴와 메뉴 항목을 여기에 끌어나 놓으면 삭제할 수 있어요!",
+            "subheading": "Kando를 재시작하면 사라져 있을 거예요."
+        },
+        "editor-themes-tab": {
+            "heading": "여기에 이용 가능한 편집기 테마를 나열해 놓을 예정이에요!",
+            "label": "편집기 테마"
+        }
     }
 }
