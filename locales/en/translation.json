@@ -185,6 +185,9 @@
     }
   },
   "backends": {
+    "gnome": {
+      "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: {{- link}}"
+    },
     "hyprland": {
       "shortcut-hint": "Use your hyprland.conf to bind this."
     },

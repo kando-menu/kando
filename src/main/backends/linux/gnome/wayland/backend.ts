@@ -8,7 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
 import DBus from 'dbus-final';
+
 import { Backend, Shortcut } from '../../../backend';
 import { IKeySequence } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
@@ -62,7 +64,9 @@ export class GnomeBackend implements Backend {
       });
     } catch (e) {
       throw new Error(
-        'Could not connect to Kando Integration GNOME Shell extension. You can get it from here: https://extensions.gnome.org/extension/7068/kando-integration/'
+        i18next.t('backends.gnome.error', {
+          link: 'https://extensions.gnome.org/extension/7068/kando-integration/',
+        })
       );
     }
   }
