@@ -13,7 +13,7 @@
         },
         "common": {
             "delayed-option-hint": "Útil se a ação é executada na janela que esteja com foco.",
-            "not-configured": "Não configurado.",
+            "not-configured": "Não configurado",
             "delayed-option": "Executar Depois de Fechar o Menu"
         },
         "hotkey": {
@@ -163,12 +163,94 @@
         "windows": {
             "mission-control": "Mission Control",
             "toggle-maximize": "Alternar Maximizado",
-            "submenu": "Janelas"
+            "submenu": "Janelas",
+            "tile-right": "Ajustar para Direita",
+            "close-window": "Fechar Janela",
+            "tile-left": "Ajustar para Esquerda"
+        },
+        "previous-workspace": "Espaço de Trabalho Anterior",
+        "bookmarks": {
+            "submenu": "Favoritos",
+            "downloads": "Downloads",
+            "videos": "Vídeos",
+            "pictures": "Imagens",
+            "documents": "Documentos",
+            "home": "Home",
+            "desktop": "Área de trabalho",
+            "music": "Música"
         }
     },
     "main": {
         "is-running-header": "Kando já está em execução",
         "is-running-message": "Verifique o ícone da bandeja do sistema para algumas opções!",
         "failed-to-start-header": "Kando não conseguiu iniciar"
+    },
+    "sidebar": {
+        "welcome": "Bem-vindo ao Kando!",
+        "introduction-tab-slide-2-caption": "Voltar: Navegue rapidamente um nível acima clicando no item central.",
+        "introduction-tab-slide-3-caption": "Modo de marcação: Arraste sobre um item para entrar no modo de marcação. Se você pausar o movimento do ponteiro ou fazer uma curva, o submenu arrastado no momento será aberto.",
+        "development-tab-header": "Desenvolvimento",
+        "discord-button": "Conversar no Discord",
+        "buy-me-a-coffee-button": "Kando no Ko-fi",
+        "sponsors-button": "Lista de Patrocinadores",
+        "new-version-button": "Uma nova versão do Kando está disponível!",
+        "introduction-tab-header": "Introdução",
+        "introduction-tab-slide-1-caption": "Clique em Qualquer lugar: Você não tem que clicar exatamente em um item, você só tem que clicar em algum lugar próximo a ele!",
+        "introduction-tab-slide-4-caption": "Modo Turbo: Se você manter uma tecla pressionada após abrir o menu, você pode executar seleções apenas movendo o ponteiro. Esta é a maneira mais rápida de selecionar itens!",
+        "introduction-tab-slide-5-caption": "Sem seleções acidentais: As ações só são executadas assim que você solta o botão do mouse em \"Modo de Marcação\" ou uma tecla de teclado no \"Modo Turbo\". Use isso para explorar o menu!",
+        "dev-tools-button": "Mostrar Ferramentas de Desenvolvedor",
+        "dev-tools-button-tooltip": "Abra as ferramentas de desenvolvedor da web para inspecionar a interface do usuário.",
+        "reload-menu-theme-button": "Recarregar Tema Atual do Menu",
+        "intro-text": "Kando vem com um menu de exemplo básico. Você pode experimentar com ele, mas você deve criar seus próprios menus! Você pode abrir o editor de menu clicando no ícone de engrenagem no canto inferior direito da tela.",
+        "watch-intro-button": "Aprenda a usar Kando",
+        "config-guide-button": "Guia de Configuração",
+        "reload-menu-theme-button-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu."
+    },
+    "toolbar": {
+        "menu-themes-tab": {
+            "close-color-picker": "Feche o editor de cores",
+            "system-mode-subheading": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
+            "author": "por {{author}}",
+            "system-mode-subheading-dark": "Seu sistema está atualmente em modo escuro. As configurações acima só serão usadas no modo escuro.",
+            "system-mode-subheading-light": "Seu sistema está atualmente em modo claro. As configurações acima só serão usadas no modo claro.",
+            "edit-colors": "Editar Cores",
+            "dark-mode": "Use Temas e Cores Separados para o Modo Claro e Escuro",
+            "reset-color-picker": "Resetar todas as cores aos seus padrões",
+            "caption": "No futuro, teremos um repositório online para temas de menu. Por agora, você pode <a {{tutorialLink}}>aprender como criar seus próprios temas</a> e compartilhá-los no <a {{discordLink}}> Servidor do Discord do Kando</a>!",
+            "label": "Temas de Menu"
+        },
+        "menus-tab": {
+            "create-menu-button": "Criar um menu!",
+            "label": "Menus"
+        },
+        "templates-tab": {
+            "heading": "Jogue menus e itens de menu aqui para usá-los como modelos!",
+            "subheading": "Crie cópias dos itens armazenados movendo-os para a guia menus ou para a visualização acima.",
+            "label": "Modelos"
+        },
+        "add-items-tab": {
+            "label": "Itens de Menu"
+        },
+        "trash-tab": {
+            "label": "Lixeira",
+            "heading": "Você pode excluir menus e itens de menu, soltando-os aqui!",
+            "subheading": "Quando reiniciar o Kando, eles desaparecerão."
+        },
+        "editor-themes-tab": {
+            "label": "Temas do Editor",
+            "subheading": "No futuro, será possível tematizar o editor de menu inteiro.",
+            "heading": "Aqui haverá uma lista de temas de editores disponíveis!"
+        }
+    },
+    "backends": {
+        "hyprland": {
+            "shortcut-hint": "Use o arquivo hyprland.conf para vincular isso."
+        },
+        "gnome": {
+            "error": "Não foi possível se conectar a extensão do GNOME Shell \"Kando Integration\". Você pode obtê-la a partir daqui: {{- link}}"
+        },
+        "kde-wayland": {
+            "shortcut-hint": "Use as configurações do sistema do KDE para ligar isso."
+        }
     }
 }
