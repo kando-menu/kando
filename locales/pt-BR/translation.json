@@ -56,7 +56,119 @@
             "name": "Abrir URI",
             "tip-2": "Você pode usar o item URI para abrir um arquivo ou pasta usando o protocolo file://.",
             "tip-4": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
-            "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto."
+            "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
+            "description": "Abre arquivos ou sites."
         }
+    },
+    "properties": {
+        "common": {
+            "menu-conditions": "Condições do menu",
+            "menu-conditions-hint": "Escolha quando o menu deve ser mostrado.",
+            "menu-behavior": "Comportamento de menu",
+            "menu-behavior-hint": "Ajuste opções avançadas para o menu.",
+            "cancel": "Cancelar",
+            "not-bound": "Não Atribuído",
+            "done": "Feito"
+        },
+        "advanced-options": {
+            "centered-mode-hint": "Abra o menu no centro da tela em vez de onde o cursor está.",
+            "anchored-mode": "Modo Ancorado",
+            "anchored-mode-hint": "Abra o submenus na mesma posição do menu pai.",
+            "anchored-mode-checked-hint": "Verificando isso, desativará o Modo de Marcação.",
+            "heading": "Ajuste o Comportamento do Menu",
+            "subheading": "Antes de ativar essas opções, recomendamos aprender o comportamento padrão de Kando. Leia sobre por que nós gostamos <a {{- link}}>aqui</a>.",
+            "centered-mode": "Modo Centralizado"
+        },
+        "condition-picker": {
+            "heading": "Selecione as Condições do Menu",
+            "subheading": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
+            "app": "Limite a Aplicativos Específicos",
+            "app-hint": "Mostrar o menu apenas se uma aplicação específica estiver focada.",
+            "app-checked-hint": "Isso suporta expressões regulares como /firefox|chrome/i.",
+            "app-placeholder": "Nome do Aplicativo",
+            "app-tooltip": "Use o aplicativo que estava focado quando o Kando foi aberto.",
+            "window": "Limite para Títulos de Janelas Especificas",
+            "window-hint": "Mostrar o menu apenas se o título da janela focada contém um determinado texto.",
+            "window-checked-hint": "Isso suporta expressões regulares como /youtube|vimeo/i.",
+            "window-placeholder": "Título da Janela",
+            "window-tooltip": "Use a janela que estava focada quando o Kando foi aberto.",
+            "screen": "Limite à Área Específica da Tela",
+            "screen-hint": "Mostrar o menu apenas se o ponteiro estiver em uma determinada área na tela.",
+            "left-placeholder": "Esquerda",
+            "bottom-placeholder": "Baixo",
+            "pointer-position-hint": "Seu mouse está atualmente em {{x}} x {{y}}.",
+            "screen-checked-hint": "Em pixels, em relação ao canto superior esquerdo da tela principal.",
+            "right-placeholder": "Direita",
+            "top-placeholder": "Topo"
+        },
+        "hotkey-picker": {
+            "label": "Tecla de Atalho",
+            "hint": "Isto será simulado.",
+            "recording": "Pressione uma tecla de atalho…"
+        },
+        "icon-picker": {
+            "heading": "Selecione um ícone",
+            "placeholder": "Pesquisa ícones…",
+            "subheading": "Adicione suas próprias coleções de ícones colocando uma pasta com imagens em {{path}}. Você vai precisar reiniciar Kando. Saiba mais <a {{- link}}>aqui</a>."
+        },
+        "macro-picker": {
+            "placeholder": "Aperte o botão de gravação para começar a gravar!",
+            "recording": "Pressione as teclas…"
+        },
+        "shortcut-id-picker": {
+            "label": "ID de Atalho de Teclado Global"
+        },
+        "shortcut-picker": {
+            "label": "Atalho de Teclado",
+            "hint": "Isso vai abrir o menu.",
+            "recording": "Pressione um atalho de teclado…"
+        }
+    },
+    "example-menu": {
+        "web-links": {
+            "submenu": "Links da Web",
+            "google": "Google",
+            "kando-on-github": "Kando em GitHub",
+            "kando-on-kofi": "Kando em Ko-fi",
+            "kando-on-youtube": "Kando no YouTube",
+            "kando-on-discord": "Kando em Discord"
+        },
+        "name": "Exemplo de Menu",
+        "apps": {
+            "submenu": "Aplicativos",
+            "safari": "Safari",
+            "web-browser": "Navegador de Web",
+            "email": "E-Mail",
+            "apple-music": "Música",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "finder": "Finder",
+            "file-browser": "Navegador de Arquivos",
+            "terminal": "Terminal"
+        },
+        "next-workspace": "Próximo Espaço de Trabalho",
+        "clipboard": {
+            "submenu": "Área de Transferência",
+            "paste": "Colar",
+            "copy": "Copiar",
+            "cut": "Recortar"
+        },
+        "audio": {
+            "submenu": "Áudio",
+            "next-track": "Próxima Faixa",
+            "play-pause": "Tocar / Pausar",
+            "mute": "Mutar",
+            "previous-track": "Trilha Anterior"
+        },
+        "windows": {
+            "mission-control": "Mission Control",
+            "toggle-maximize": "Alternar Maximizado",
+            "submenu": "Janelas"
+        }
+    },
+    "main": {
+        "is-running-header": "Kando já está em execução",
+        "is-running-message": "Verifique o ícone da bandeja do sistema para algumas opções!",
+        "failed-to-start-header": "Kando não conseguiu iniciar"
     }
 }
