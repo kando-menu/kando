@@ -50,7 +50,9 @@
         "uri": {
             "tip-2": "Puoi usare l'oggetto di tipo URI per aprire un file o una cartella usando il protocollo file://",
             "tip-1": "Puoi usare l'oggetto di tipo URI per aprire un sito usando il protocollo http://",
-            "tip-3": "Puoi usare l'oggetto di tipo URI per aprire un link mailto:"
+            "tip-3": "Puoi usare l'oggetto di tipo URI per aprire un link mailto:",
+            "tip-5": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu.",
+            "tip-4": "Usa {{app_name}} per inserire il nome dell'applicazione che aveva il focus quando hai aperto il menu."
         }
     }
 }
