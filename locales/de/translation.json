@@ -82,11 +82,12 @@
             "command-hint": "Das wird ausgeführt.",
             "name": "Befehl Ausführen",
             "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
-            "description": "Führt einen beliebigen Shell-Befehl aus."
+            "description": "Führt einen beliebigen Shell-Befehl aus.",
+            "tip-1": "Mit dem Elementtyp „Befehl Ausführen“ können Sie Anwendungen oder Skripte starten."
         },
         "common": {
             "delayed-option": "Ausführen nach dem Schließen des Menüs",
-            "not-configured": "Nicht konfiguriert.",
+            "not-configured": "Nicht konfiguriert",
             "delayed-option-hint": "Nützlich, wenn die Aktion auf ein Fenster abzielt, das fokussiert werden muss."
         },
         "hotkey": {
@@ -97,7 +98,37 @@
             "name": "Hotkey Simulieren"
         },
         "macro": {
-            "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern."
+            "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern.",
+            "description": "Gibt ein Tastaturmakro ein.",
+            "tip-2": "Klicken Sie auf diesen Link, um alle gültigen Tastennamen anzuzeigen.",
+            "name": "Makro Simulieren"
+        },
+        "submenu": {
+            "tip-3": "Durch Untermenüs lassen sich komplexe Menüstrukturen erstellen.",
+            "tip-1": "Untermenüs können zum Gruppieren von Elementen verwendet werden.",
+            "tip-2": "Sie können Untermenüs auch in Untermenüs verschachteln.",
+            "tip-4": "Sie sollten nicht mehr als zwölf Elemente zu einem Untermenü hinzufügen. Acht ist eine gute Zahl.",
+            "tip-5": "Mithilfe der kleinen Schlosssymbole in der Vorschau können Sie die Position eines Elements im Menü fixieren.",
+            "tip-6": "Sie können Elemente neu anordnen, indem Sie sie in der Vorschau verschieben.",
+            "tip-7": "Sie können ein Menü löschen, indem Sie es von der Registerkarte „Menüs“ auf die Registerkarte „Papierkorb“ ziehen.",
+            "tip-8": "Sie können Elemente entfernen, indem Sie sie auf die Registerkarte „Papierkorb“ ziehen.",
+            "tip-9": "Beim Aufzeichnen einer Tastenkombination müssen Sie nicht alle Tasten gleichzeitig drücken. Sie können sie auch nacheinander drücken.",
+            "tip-10": "Sie können Menüs und Elemente kopieren, indem Sie sie ziehen, während Sie die Strg-Taste gedrückt halten.",
+            "tip-11": "Sie können Menüs von der Befehlszeile aus über das Flag --menu öffnen.",
+            "name": "Untermenü",
+            "description": "Enthält andere Menüelemente.",
+            "detailed-description_one": "Enthält eine Element.",
+            "detailed-description_other": "Enthält {{count}} Elemente."
+        },
+        "uri": {
+            "uri-hint": "Dies wird geöffnet.",
+            "tip-1": "Sie können den URI-Elementtyp verwenden, um eine Website über das http:// Protokoll zu öffnen.",
+            "tip-2": "Sie können den URI-Elementtyp verwenden, um eine Datei oder einen Ordner mit dem Protokoll file:// zu öffnen.",
+            "tip-3": "Sie können den URI-Elementtyp verwenden, um einen mailto:-Link zu öffnen.",
+            "uri": "URI",
+            "tip-4": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
+            "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
+            "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde."
         }
     }
 }
