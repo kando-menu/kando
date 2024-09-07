@@ -30,6 +30,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Some of the default links in the example menus. It contains now some links to Kando on social media and to the Kando Discord server.
 
+#### :bug: Fixed
+
+- A bug which made it possible to select menu items using number keys while the menu editor was open.
+
 ## [Kando 1.3.0](https://github.com/kando-menu/kando/releases/tag/v1.3.0)
 
 **Release Date:** 2024-08-26
