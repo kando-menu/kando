@@ -10,12 +10,20 @@
         "introduction-tab-slide-2-caption": "Zurück: Navigieren Sie schnell eine Ebene nach oben, indem Sie auf das mittlere Element klicken.",
         "introduction-tab-slide-4-caption": "Turbo-Modus: Wenn Sie nach dem Öffnen des Menüs eine Taste gedrückt halten, können Sie durch einfaches Bewegen des Zeigers eine Auswahl treffen. Dies ist der schnellste Weg, Einträge auszuwählen!",
         "dev-tools-button-tooltip": "Öffnen Sie die Web-Entwickler-Tools zur Analyse des UI.",
-        "reload-menu-theme-button": "Aktuelles Menü-Theme Neuladen",
+        "reload-menu-theme-button": "Aktuelles Menü-Design Neuladen",
         "reload-menu-theme-button-tooltip": "CSS-Änderungen werden sofort angewendet. Für Änderungen an der Datei theme.json müssen Sie das Menü erneut öffnen.",
         "introduction-tab-slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
         "introduction-tab-slide-3-caption": "Markierungsmodus: Ziehen Sie über ein Element, um in den Markierungsmodus zu wechseln. Wenn Sie die Zeigerbewegung pausieren oder eine Kurve zeichnen, wird das aktuell gezogene Untermenü geöffnet.",
         "development-tab-header": "Entwicklung",
-        "dev-tools-button": "Entwicklerwerkzeuge Anzeigen"
+        "dev-tools-button": "Entwicklerwerkzeuge Anzeigen",
+        "intro-text": "Kando bringt ein einfaches Beispielmenü mit. Sie können damit experimentieren, aber Sie sollten bald Ihre eigenen Menüs erstellen! Sie können den Menüeditor öffnen, indem Sie auf das Zahnradsymbol in der unteren rechten Ecke des Bildschirms klicken.",
+        "welcome": "Willkommen bei Kando!",
+        "watch-intro-button": "Lernen Sie, wie man Kando verwendet",
+        "config-guide-button": "Konfigurationshandbuch",
+        "discord-button": "Discord-Chat",
+        "buy-me-a-coffee-button": "Kando auf Ko-fi",
+        "sponsors-button": "Sponsorenliste",
+        "new-version-button": "Eine neue Version von Kando ist verfügbar!"
     },
     "example-menu": {
         "apps": {
@@ -128,7 +136,120 @@
             "uri": "URI",
             "tip-4": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
             "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
-            "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde."
+            "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
+            "description": "Öffnet Dateien oder Webseiten.",
+            "name": "URI Öffnen"
+        }
+    },
+    "properties": {
+        "condition-picker": {
+            "subheading": "Sie können mehrere Menüs an denselben Hotkey binden und dann auswählen, unter welchen Bedingungen jedes Menü angezeigt werden soll.",
+            "app": "Auf bestimmte Apps beschränken",
+            "window-checked-hint": "Dies unterstützt reguläre Ausdrücke wie /youtube|vimeo/i.",
+            "heading": "Menübedingungen auswählen",
+            "app-hint": "Zeigen Sie das Menü nur an, wenn eine bestimmte Anwendung im Fokus ist.",
+            "app-tooltip": "Verwenden Sie die App, die beim Öffnen von Kando fokussiert war.",
+            "screen-checked-hint": "In Pixeln, relativ zur oberen linken Ecke Ihres Hauptdisplays.",
+            "left-placeholder": "Links",
+            "app-checked-hint": "Dies unterstützt reguläre Ausdrücke wie /firefox|chrome/i.",
+            "app-placeholder": "Anwendungsname",
+            "window": "Auf bestimmte Fenstertitel beschränken",
+            "window-hint": "Zeigen Sie das Menü nur an, wenn der Titel des fokussierten Fensters einen bestimmten Text enthält.",
+            "window-placeholder": "Fenstertitel",
+            "window-tooltip": "Verwenden Sie das Fenster, das beim Öffnen von Kando fokussiert war.",
+            "screen": "Auf bestimmten Bildschirmbereich beschränken",
+            "screen-hint": "Zeigen Sie das Menü nur an, wenn sich der Zeiger in einem bestimmten Bereich auf dem Bildschirm befindet.",
+            "right-placeholder": "Rechts",
+            "top-placeholder": "Oben",
+            "bottom-placeholder": "Unten",
+            "pointer-position-hint": "Ihre Maus befindet sich derzeit bei {{x}} x {{y}}."
+        },
+        "common": {
+            "not-bound": "Nicht Gebunden",
+            "done": "Fertig",
+            "menu-conditions": "Menübedingungen",
+            "menu-conditions-hint": "Wählen Sie, wann das Menü angezeigt werden soll.",
+            "menu-behavior": "Menüverhalten",
+            "menu-behavior-hint": "Optimieren Sie erweiterte Optionen für das Menü.",
+            "cancel": "Abbrechen"
+        },
+        "advanced-options": {
+            "heading": "Optimieren Sie das Verhalten des Menüs",
+            "subheading": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, sich mit dem Standardverhalten von Kando vertraut zu machen. Lesen Sie <a {{- link}}>hier</a>, warum es uns gefällt.",
+            "centered-mode": "Zentrierter Modus",
+            "anchored-mode": "Verankerter Modus",
+            "anchored-mode-hint": "Öffnen Sie Untermenüs an der gleichen Position wie das übergeordnete Menü.",
+            "anchored-mode-checked-hint": "Wenn Sie dies aktivieren, wird der Markierungsmodus deaktiviert.",
+            "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor."
+        },
+        "hotkey-picker": {
+            "label": "Hotkey",
+            "hint": "Dies wird simuliert.",
+            "recording": "Drücken Sie einen Hotkey…"
+        },
+        "icon-picker": {
+            "heading": "Wählen Sie ein Symbol",
+            "subheading": "Fügen Sie Ihre eigenen Symbolsammlungen hinzu, indem Sie einen Ordner mit Bildern in {{path}} ablegen. Sie müssen Kando danach neu starten. Weitere Informationen <a {{- link}}>hier</a>.",
+            "placeholder": "Symbole suchen…"
+        },
+        "macro-picker": {
+            "placeholder": "Drücken Sie die Aufnahmetaste, um die Aufnahme zu starten!",
+            "recording": "Drücken Sie die Tasten…"
+        },
+        "shortcut-id-picker": {
+            "label": "Globale Shortcut-ID"
+        },
+        "shortcut-picker": {
+            "label": "Tastenkombination",
+            "hint": "Dadurch wird das Menü geöffnet.",
+            "recording": "Drücken Sie eine Tastenkombination…"
+        }
+    },
+    "toolbar": {
+        "menu-themes-tab": {
+            "close-color-picker": "Schließen Sie den Farbeditor",
+            "caption": "In Zukunft werden wir ein Online-Repository für Menü-Designs haben. Im Moment können Sie <a {{tutorialLink}}>lernen, wie Sie Ihre eigenen Designs erstellen</a> und diese auf <a {{discordLink}}>Kandos Discord-Server</a> teilen!",
+            "edit-colors": "Farben ändern",
+            "dark-mode": "Verwenden Sie separate Designs und Farben für den hellen und dunklen Modus",
+            "label": "Menü-Designs",
+            "system-mode-subheading": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
+            "system-mode-subheading-dark": "Ihr System befindet sich derzeit im dunklen Modus. Die obigen Einstellungen werden nur im dunklen Modus verwendet.",
+            "system-mode-subheading-light": "Ihr System befindet sich derzeit im hellen Modus. Die obigen Einstellungen werden nur im hellen Modus verwendet.",
+            "author": "von {{author}}",
+            "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen"
+        },
+        "trash-tab": {
+            "label": "Papierkorb",
+            "heading": "Sie können Menüs und Menüpunkte löschen, indem Sie sie hier ablegen!",
+            "subheading": "Wenn Sie Kando neu starten, werden sie gelöscht worden sein."
+        },
+        "menus-tab": {
+            "create-menu-button": "Erstellen Sie ein Menü!",
+            "label": "Menüs"
+        },
+        "templates-tab": {
+            "heading": "Legen Sie Menüs und Menüelemente hier ab und verwenden Sie sie als Vorlagen!",
+            "label": "Vorlagen",
+            "subheading": "Erstellen Sie Kopien der gespeicherten Elemente, indem Sie sie auf die Registerkarte „Menüs“ oder in die Vorschau oben verschieben."
+        },
+        "editor-themes-tab": {
+            "label": "Editor-Designs",
+            "heading": "Hier finden Sie in Zukunft eine Liste der verfügbaren Editor-Designs!",
+            "subheading": "Zukünftig wird es möglich sein, den gesamten Menüeditor zu umzugestalten."
+        },
+        "add-items-tab": {
+            "label": "Menüelemente"
+        }
+    },
+    "backends": {
+        "gnome": {
+            "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: {{- link}}"
+        },
+        "hyprland": {
+            "shortcut-hint": "Verwenden Sie Ihre hyprland.conf, um dies zu binden."
+        },
+        "kde-wayland": {
+            "shortcut-hint": "Verwenden Sie zum Festlegen der Tastenkombination die Systemeinstellungen von KDE."
         }
     }
 }
