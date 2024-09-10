@@ -125,7 +125,7 @@
             "tip-11": "Sie können Menüs von der Befehlszeile aus über das Flag --menu öffnen.",
             "name": "Untermenü",
             "description": "Enthält andere Menüelemente.",
-            "detailed-description_one": "Enthält eine Element.",
+            "detailed-description_one": "Enthält ein Element.",
             "detailed-description_other": "Enthält {{count}} Elemente."
         },
         "uri": {
@@ -235,7 +235,7 @@
         "editor-themes-tab": {
             "label": "Editor-Designs",
             "heading": "Hier finden Sie in Zukunft eine Liste der verfügbaren Editor-Designs!",
-            "subheading": "Zukünftig wird es möglich sein, den gesamten Menüeditor zu umzugestalten."
+            "subheading": "Zukünftig wird es möglich sein, den gesamten Menüeditor umzugestalten."
         },
         "add-items-tab": {
             "label": "Menüelemente"
