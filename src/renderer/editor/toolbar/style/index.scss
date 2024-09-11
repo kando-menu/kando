@@ -144,7 +144,7 @@
   .toolbar-button-grid {
     display: grid;
     gap: 10px;
-    grid-template-columns: repeat(auto-fill, minmax(calc(150px + 5vw), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(calc(200px + 5vw), 1fr));
   }
 
   // The large toolbar has usually larger buttons. For now, these are used for the themes
