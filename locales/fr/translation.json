@@ -8,7 +8,7 @@
             "command": "Commande",
             "tip-2": "Si le chemin d'un exécutable contient des espaces, il faut le \"mettre entre guillemets\".",
             "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
-            "command-hint": "Cette commande sera exécuté.",
+            "command-hint": "Cette commande sera exécutée.",
             "name": "Exécuter une Commande"
         },
         "common": {
@@ -20,12 +20,12 @@
             "tip-3": "Cliquez ce lien pour voir tous les noms de touches valides.",
             "tip-1": "Pour enregistrer un touche de raccourci, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
             "name": "Simuler une touche de raccourci",
-            "tip-2": "Si une touche ne peut pas être enregistré car elle est utilisé par le système, essayez de taper son nom directement.",
+            "tip-2": "Si une touche ne peut pas être enregistrée car elle est utilisée par le système, essayez de taper son nom directement.",
             "description": "Appuie sur une touche de raccourci."
         },
         "macro": {
             "tip-2": "Cliquez ce lien pour voir tous les noms de touches valides.",
-            "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touches. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\".",
+            "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touche. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\".",
             "description": "Exécute une macro clavier.",
             "name": "Simuler une Macro"
         },
@@ -36,12 +36,12 @@
             "tip-5": "Il est possible d'utiliser le petit cadenas dans l'aperçu pour fixer la position d'un élément dans le menu.",
             "tip-6": "Il est possible de réorganiser les éléments en les déplaçant dans l'aperçu.",
             "tip-7": "Pour supprimer un menu, faites-le glisser de l'onglet menus à l'onglet corbeille dans la barre d'outils.",
-            "tip-8": "Il possible de supprimer des éléments en les faisant glisser dans l'onglet corbeille.",
-            "tip-10": "Il possible de copier des menus et des éléments en les faisant glisser avec la touche Ctrl enfoncée.",
+            "tip-8": "Il est possible de supprimer des éléments en les faisant glisser dans l'onglet corbeille.",
+            "tip-10": "Il est possible de copier des menus et des éléments en les faisant glisser avec la touche Ctrl enfoncée.",
             "name": "Sous-Menu",
             "tip-1": "Les sous-menus peuvent être utilisés pour regrouper des éléments.",
             "tip-9": "Pour enregistrer un raccourcis, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
-            "tip-11": "Il possible d'ouvrir un menus par ligne de commande avec l'argument --menu \"Nom du menu\".",
+            "tip-11": "Il est possible d'ouvrir un menus par ligne de commande avec l'argument --menu \"Nom du menu\".",
             "description": "Contient d'autres éléments.",
             "detailed-description_one": "Contient un élément.",
             "detailed-description_many": "Contient {{count}} éléments.",
@@ -63,7 +63,7 @@
     "main": {
         "is-running-header": "Kando est déjà en cours d'exécution",
         "is-running-message": "Utilisez l'icône de la barre des tâches pour plus d'options !",
-        "failed-to-start-header": "Le lancement de Kando à échoué"
+        "failed-to-start-header": "Le lancement de Kando a échoué"
     },
     "properties": {
         "common": {
@@ -126,7 +126,7 @@
         },
         "icon-picker": {
             "heading": "Sélectionner une Icône",
-            "subheading": "Ajoutez vos propres collections d'icônes en plaçant un dossier d'images dans {{path}}. Un redémarrage de Kando sera nécéssaire. Plus d'information <a {{- link}}>ici</a>.",
+            "subheading": "Ajoutez vos propres collections d'icônes en plaçant un dossier d'images dans {{path}}. Un redémarrage de Kando sera nécessaire. Plus d'information <a {{- link}}>ici</a>.",
             "placeholder": "Rechercher des Icônes…"
         }
     },
