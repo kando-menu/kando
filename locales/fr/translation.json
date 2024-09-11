@@ -1,18 +1,18 @@
 {
     "items": {
         "command": {
-            "description": "Exécute n'importe quelle commande shell.",
+            "description": "Exécuter n'importe quelle commande shell.",
             "tip-1": "Il est possible d'utiliser l'élément de type Commande pour lancer des applications ou des scripts.",
             "tip-3": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
             "tip-4": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
             "command": "Commande",
             "tip-2": "Si le chemin d'un exécutable contient des espaces, il faut le \"mettre entre guillemets\".",
-            "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du pointeur à l'endroit où le menu a été ouvert.",
+            "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
             "command-hint": "Cette commande sera exécuté.",
-            "name": "Exécuter la Commande"
+            "name": "Exécuter une Commande"
         },
         "common": {
-            "not-configured": "Non configuré.",
+            "not-configured": "Non configuré",
             "delayed-option-hint": "Utile si l'action cible une fenêtre qui doit être au premier plan.",
             "delayed-option": "Exécuter Après La Fermeture du Menu"
         },
@@ -20,7 +20,7 @@
             "tip-3": "Cliquez ce lien pour voir tous les noms de touches valides.",
             "tip-1": "Pour enregistrer un touche de raccourci, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
             "name": "Simuler une touche de raccourci",
-            "tip-2": "Si une touche ne peut pas être enregistrer car elle est utilisé par le système, essayez de taper son nom directement.",
+            "tip-2": "Si une touche ne peut pas être enregistré car elle est utilisé par le système, essayez de taper son nom directement.",
             "description": "Appuie sur une touche de raccourci."
         },
         "macro": {
@@ -56,7 +56,7 @@
             "uri": "URI",
             "name": "Ouvrir un URI",
             "description": "Ouvre des fichiers ou des sites web.",
-            "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du pointeur à l'endroit où le menu a été ouvert.",
+            "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
             "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien mailto:"
         }
     },
@@ -69,7 +69,12 @@
         "common": {
             "done": "Terminé",
             "close": "Fermer",
-            "not-bound": "Non-Attribué"
+            "not-bound": "Non-Attribué",
+            "menu-conditions": "Conditions du Menu",
+            "menu-conditions-hint": "Choisis quand le menu doit s'afficher.",
+            "menu-behavior": "Comportement du Menu",
+            "menu-behavior-hint": "Modifie les options avancées du menu.",
+            "cancel": "Annuler"
         },
         "advanced-options": {
             "heading": "Modifier le comportement du menu",
@@ -77,18 +82,18 @@
             "anchored-mode": "Mode Ancré",
             "anchored-mode-hint": "Ouvrir les sous-menus au même endroit que le menu parent.",
             "anchored-mode-checked-hint": "Cocher cette case désactivera le mode Marquage.",
-            "subheading": "Avant d'activer ces options, nous vous recommandons d'apprendre le comportement par défaut de Kando. Lisez pourquoi nous le préférons  <a {{- link}}>ici</a>.",
+            "subheading": "Avant d'activer ces options, nous vous recommandons d'apprendre le comportement par défaut de Kando. Lisez pourquoi nous le préférons <a {{- link}}>ici</a>.",
             "centered-mode-hint": "Ouvrir le menu au centre de l'écran au lieu du curseur."
         },
         "condition-picker": {
             "subheading": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
             "app": "Limiter à des Applications Spécifiques",
             "app-checked-hint": "Cette option prend en charge les expressions régulières telles que /firefox|chrome/i.",
-            "app-placeholder": "Nom d'Application",
+            "app-placeholder": "Nom de l'Application",
             "window-checked-hint": "Cette option prend en charge les expressions régulières telles que /youtube|vimeo/i.",
             "window-placeholder": "Titre de la Fenêtre",
             "screen": "Limiter à une Zone Spécifique de l'Écran",
-            "screen-hint": "Afficher le menu uniquement si le pointeur se trouve dans une zone donnée de l'écran.",
+            "screen-hint": "Afficher le menu uniquement si le curseur se trouve dans une zone donnée de l'écran.",
             "screen-checked-hint": "En pixels, relatif au coin supérieur gauche de votre écran principal.",
             "right-placeholder": "Droite",
             "top-placeholder": "Haut",
@@ -105,11 +110,11 @@
         "hotkey-picker": {
             "label": "Touche de Raccourci",
             "hint": "Ce sera simulé.",
-            "recording": "Appuyez sur une touche de raccourci..."
+            "recording": "Appuyez sur une touche de raccourci…"
         },
         "macro-picker": {
-            "placeholder": "Appuyez sur le bouton d'enregistrement pour commencer à enregistrer !",
-            "recording": "Appuyez sur les touches..."
+            "placeholder": "Cliquez sur le bouton pour commencer l'enregistrement !",
+            "recording": "Appuyez sur les touches…"
         },
         "shortcut-id-picker": {
             "label": "ID de raccourci global"
@@ -117,11 +122,12 @@
         "shortcut-picker": {
             "label": "Raccourci",
             "hint": "Ceci ouvrira les menu.",
-            "recording": "Appuyez sur un raccourci..."
+            "recording": "Appuyez sur un raccourci…"
         },
         "icon-picker": {
             "heading": "Sélectionner une Icône",
-            "subheading": "Ajoutez vos propres collections d'icônes en plaçant un dossier d'images dans {{path}}. Un redémarrage de Kando sera nécéssaire. Plus d'information <a {{- link}}>ici</a>."
+            "subheading": "Ajoutez vos propres collections d'icônes en plaçant un dossier d'images dans {{path}}. Un redémarrage de Kando sera nécéssaire. Plus d'information <a {{- link}}>ici</a>.",
+            "placeholder": "Rechercher des Icônes…"
         }
     },
     "example-menu": {
@@ -160,7 +166,7 @@
             "mute": "Sourdine"
         },
         "windows": {
-            "toggle-maximize": "Basculer à Maximiser",
+            "toggle-maximize": "Agrandir la fenêtre",
             "submenu": "Fenêtres",
             "close-window": "Fermer la Fenêtre",
             "tile-left": "Tuile à Gauche",
@@ -182,17 +188,20 @@
     },
     "backends": {
         "hyprland": {
-            "shortcut-hint": "Utilisez votre hyprland.conf pour relier ceci."
+            "shortcut-hint": "Utilisez votre hyprland.conf pour lier ceci."
         },
         "kde-wayland": {
             "shortcut-hint": "Utilisez les paramètres système de KDE pour lier ceci."
+        },
+        "gnome": {
+            "error": "Impossible de se connecter à l'extension Kando Integration GNOME Shell. Vous pouvez l'obtenir ici : {{- link}}"
         }
     },
     "sidebar": {
         "welcome": "Bienvenue sur Kando !",
         "intro-text": "Kando est fourni avec un exemple de menu basique. Vous pouvez jouer avec, mais vous devriez créer vos propres menus plus tard ! Vous pouvez ouvrir l'éditeur de menu en cliquant sur l'icône d'engrenage dans le coin inférieur droit de l'écran.",
-        "introduction-tab-slide-3-caption": "Mode Marquage : Faites glisser le curseur sur un élément pour passer en mode marquage. Si vous le mouvement du curseur est interrompu ou si vous le tournez, le sous-menu sur lequel vous avez glissé sera ouvert.",
-        "introduction-tab-slide-4-caption": "Mode Turbo : Si vous maintenez une touche enfoncée après avoir ouvert le menu, vous pouvez effectuer des sélections en déplaçant simplement le pointeur. C'est le moyen le plus rapide de sélectionner des éléments !",
+        "introduction-tab-slide-3-caption": "Mode Marquage : Faites glisser le curseur sur un élément pour passer en mode marquage. Si le mouvement du curseur est interrompu ou si vous faites un virage, le sous-menu sur lequel vous avez glissé sera ouvert.",
+        "introduction-tab-slide-4-caption": "Mode Turbo : Si vous maintenez une touche enfoncée après avoir ouvert le menu, vous pouvez effectuer des sélections en déplaçant simplement le curseur. C'est le moyen le plus rapide de sélectionner des éléments !",
         "introduction-tab-slide-5-caption": "Pas de sélections accidentelles : Les actions ne sont exécutées que lorsque vous relâchez le bouton de la souris en \"Mode Marquage\" ou une touche du clavier en \"Mode Turbo\". Profitez-en pour explorer le menu !",
         "development-tab-header": "Développement",
         "dev-tools-button": "Afficher les outils du développeur",
@@ -201,9 +210,9 @@
         "reload-menu-theme-button-tooltip": "Les changements CSS seront appliqués immédiatement, pour les changements effectués au fichier theme.json, vous devez rouvrir le menu.",
         "watch-intro-button": "Apprendre à utiliser Kando",
         "introduction-tab-slide-2-caption": "Retourner en Arrière : Remonter rapidement d'un niveau en cliquant sur l'élément central.",
-        "config-guide-button": "Guide de Configuration",
+        "config-guide-button": "Guide de Config",
         "discord-button": "Discuter sur Discord",
-        "introduction-tab-slide-1-caption": "Cliquez N'importe où : Il n'est pas nécessaire de cliquer exactement sur un élément, il suffit de cliquer quelque part dans son coin !",
+        "introduction-tab-slide-1-caption": "Cliquez N'importe où : Il n'est pas nécessaire de cliquer exactement sur un élément, il suffit de cliquer quelque part dans sa zone !",
         "buy-me-a-coffee-button": "Kando sur Ko-fi",
         "sponsors-button": "Liste des Sponsors",
         "new-version-button": "Une nouvelle version de Kando est disponible !",
@@ -215,7 +224,7 @@
             "system-mode-subheading": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
             "system-mode-subheading-dark": "Votre système est actuellement en mode sombre. Les paramètres ci-dessus ne seront utilisés qu'en mode sombre.",
             "system-mode-subheading-light": "Votre système est actuellement en mode clair. Les paramètres ci-dessus ne seront utilisés qu'en mode clair.",
-            "caption": "À l'avenir, nous disposerons d'un repository en ligne pour les thèmes de menu. Pour l'instant, vous pouvez <a {{tutorialLink}}>apprendre à créer vos propres thèmes</a> et les partager dans le <a {{discordLink}}>Serveur Discord de Kando</a>!",
+            "caption": "À l'avenir, nous disposerons d'un répertoire en ligne pour les thèmes de menu. Pour l'instant, vous pouvez <a {{tutorialLink}}>apprendre à créer vos propres thèmes</a> et les partager dans le <a {{discordLink}}>Serveur Discord de Kando</a>!",
             "edit-colors": "Modifier les couleurs",
             "dark-mode": "Utiliser des Thèmes et des Couleurs Différents pour le Mode Clair et le Mode Sombre",
             "close-color-picker": "Fermer l'éditeur de couleurs",
@@ -226,12 +235,12 @@
             "label": "Éléments de Menu"
         },
         "menus-tab": {
-            "create-menu-button": "Créez un menu !",
+            "create-menu-button": "Créer un menu !",
             "label": "Menus"
         },
         "templates-tab": {
             "heading": "Déposez ici des menus et des éléments de menu et utilisez-les comme modèles !",
-            "subheading": "Créez des copies des éléments stockés en les déplaçant vers l'onglet des menus ou vers l'aperçu ci-dessus.",
+            "subheading": "Créez des copies des éléments stockés en les déplaçant vers l'onglet des menus ou vers l'aperçu en haut.",
             "label": "Modèles"
         },
         "trash-tab": {
