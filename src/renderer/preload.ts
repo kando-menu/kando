@@ -25,8 +25,8 @@ import {
  */
 contextBridge.exposeInMainWorld('api', {
   /**
-   * This will return the localization strings for the current locale as well as the
-   * english fallback strings.
+   * This will return the current locale and all localization strings loaded by i18next
+   * for the current and all potential fallback locales.
    */
   getLocales: function () {
     return ipcRenderer.invoke('get-locales');

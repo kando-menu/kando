@@ -33,15 +33,19 @@ Promise.all([
 ]).then(async ([locales, info, themeDescription, colors]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
-    lng: 'current',
+    lng: locales.current,
     fallbackLng: 'en',
   });
 
-  i18next.addResourceBundle('en', 'translation', locales.en, true, true);
-
-  if (locales.current) {
-    i18next.addResourceBundle('current', 'translation', locales.current, true, true);
-  }
+  Object.keys(locales.data).forEach((key) => {
+    i18next.addResourceBundle(
+      key,
+      'translation',
+      locales.data[key].translation,
+      true,
+      true
+    );
+  });
 
   // First, we create a new menu theme and load the description we got from the main
   // process.

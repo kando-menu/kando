@@ -588,12 +588,9 @@ export class KandoApp {
   private initRendererIPC() {
     // Allow the renderer to retrieve the i18next locales.
     ipcMain.handle('get-locales', () => {
-      const fallback = i18next.getResourceBundle('en', '');
-      const current = i18next.getResourceBundle(app.getLocale(), '');
-
       return {
-        en: fallback,
-        current,
+        current: app.getLocale(),
+        data: i18next.store.data,
       };
     });
 

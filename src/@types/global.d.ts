@@ -25,7 +25,7 @@ declare global {
   interface Window {
     api: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      getLocales: () => Promise<{ en: any; current: any }>;
+      getLocales: () => Promise<{ current: string; data: any }>;
       appSettings: {
         get: () => Promise<IAppSettings>;
         getKey: <K extends keyof IAppSettings>(key: K) => Promise<IAppSettings[K]>;
