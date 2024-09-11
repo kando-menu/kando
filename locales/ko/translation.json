@@ -14,7 +14,7 @@
         "common": {
             "delayed-option": "메뉴가 완전히 닫혔을 때 실행",
             "delayed-option-hint": "활성화되어야 하는 창을 띄울 때 유용해요.",
-            "not-configured": "설정되어 있지 않아요."
+            "not-configured": "설정되어 있지 않아요"
         },
         "hotkey": {
             "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없어요. 하나씩 눌러도 돼요.",
@@ -108,23 +108,23 @@
         "hotkey-picker": {
             "label": "단축키",
             "hint": "이 단축키가 눌릴 거에요.",
-            "recording": "단축키를 눌러주세요..."
+            "recording": "단축키를 눌러주세요…"
         },
         "icon-picker": {
             "heading": "아이콘 선택하기",
             "subheading": "{{path}}에 이미지가 들어있는 폴더를 넣어 아이콘을 직접 추가할 수 있어요. Kando의 재시작이 필요해요. 추가적인 정보는 <a {{- link}}>여기서</a> 참조하세요.",
-            "placeholder": "아이콘 검색..."
+            "placeholder": "아이콘 검색…"
         },
         "macro-picker": {
             "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
-            "recording": "키를 눌러주세요..."
+            "recording": "키를 눌러주세요…"
         },
         "shortcut-id-picker": {
             "label": "전역 단축키 ID"
         },
         "shortcut-picker": {
             "hint": "메뉴를 열 거에요.",
-            "recording": "단축키를 눌러주세요...",
+            "recording": "단축키를 눌러주세요…",
             "label": "단축키"
         }
     },
@@ -190,6 +190,9 @@
         },
         "kde-wayland": {
             "shortcut-hint": "KDE의 시스템 설정에서 바인딩하세요."
+        },
+        "gnome": {
+            "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: {{- link}}"
         }
     },
     "sidebar": {
