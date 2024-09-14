@@ -112,7 +112,19 @@ app
   .then(() => {
     return i18next.use(i18Backend).init({
       lng: app.getLocale(),
-      fallbackLng: 'en',
+      fallbackLng: {
+        /* eslint-disable @typescript-eslint/naming-convention */
+        'en-US': ['en'],
+        'en-GB': ['en'],
+        'de-DE': ['de', 'en'],
+        'de-CH': ['de', 'en'],
+        'de-AT': ['de', 'en'],
+        'zh-CN': ['zh-Hans', 'en'],
+        zh: ['zh-Hans', 'en'],
+        pt: ['pt-BR', 'en'],
+        /* eslint-enable @typescript-eslint/naming-convention */
+        default: ['en'],
+      },
       backend: {
         loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
       },

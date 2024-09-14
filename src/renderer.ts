@@ -34,8 +34,11 @@ Promise.all([
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
-    fallbackLng: 'en',
+    fallbackLng: locales.fallbackLng,
   });
+
+  console.log('Current locale:');
+  console.log(locales.current);
 
   Object.keys(locales.data).forEach((key) => {
     i18next.addResourceBundle(

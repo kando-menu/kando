@@ -591,6 +591,7 @@ export class KandoApp {
       return {
         current: app.getLocale(),
         data: i18next.store.data,
+        fallbackLng: i18next.options.fallbackLng,
       };
     });
 
