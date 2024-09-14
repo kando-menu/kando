@@ -23,7 +23,16 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **Translations!** It is now possible to translate Kando into different languages. Translations are managed via [Weblate](https://hosted.weblate.org/engage/kando/). To get started, simply visist this webpage and translate the strings into your own language. The changes will be included automatically in the next release of Kando!
+- **Translations!** It is now possible to translate Kando into different languages. Translations are managed via [Weblate](https://hosted.weblate.org/engage/kando/). To get started, simply visit this webpage and translate the strings into your own language. The changes will be included automatically in the next release of Kando! This version already includes complete translations for
+  - German
+  - Chinese
+  - French
+  - Italian
+  - Korean
+  - Portuguese
+  - Ukrainian
+  
+  Some other languages are already in progress. Feel free to contribute!
 - It is now possible to use `{{app_name}}`, `{{window_name}}`, `{{pointer_x}}`, and `{{pointer_y}}` as part of the URI in the URI action. These placeholders will be replaced with the name of the focused application, focused window, and the pointer position when the menu was opened. Thanks to [@AliElamir](https://github.com/AliElamir) for the contribution!
 
 #### :wrench: Changed
