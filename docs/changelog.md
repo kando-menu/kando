@@ -17,13 +17,17 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [unreleased]
+## [Kando 1.4.0](https://github.com/kando-menu/kando/releases/tag/v1.4.0)
 
-**Release Date:** TBD
+**Release Date:** 2024-09-15
+
+<a href="https://www.youtube.com/watch?v=WgqLcIo91p0">
+<img align="right" width="400px" src="img/player15.jpg"></img>
+</a>
 
 #### :tada: Added
 
-- **Translations!** It is now possible to translate Kando into different languages. Translations are managed via [Weblate](https://hosted.weblate.org/engage/kando/). To get started, simply visit this webpage and translate the strings into your own language. The changes will be included automatically in the next release of Kando! This version already includes complete translations for
+- **Translations!** It is now possible to translate Kando into different languages. Translations are managed via [Weblate](https://hosted.weblate.org/engage/kando/). To get started, simply visit this webpage and translate the strings into your own language. The changes will be included automatically in the next release of Kando! This version already includes complete translations for seven languages:
   - German
   - Chinese
   - French
