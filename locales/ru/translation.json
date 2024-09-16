@@ -197,7 +197,13 @@
     "sidebar": {
         "welcome": "Добро пожаловать в Kando!",
         "watch-intro-button": "Узнайте как использовать Kando",
-        "config-guide-button": "Руководство конфига"
+        "config-guide-button": "Руководство конфига",
+        "intro-text": "В Kando есть простой пример меню. Вы можете поиграться с ним, но в ближайшее время вам следует создать свои собственные меню! Вы можете открыть редактор, нажав на значок шестеренки в правом нижнем углу экрана.",
+        "discord-button": "Чат в Discord",
+        "buy-me-a-coffee-button": "Kando на Ko-fi",
+        "sponsors-button": "Список спонсоров",
+        "new-version-button": "Доступна новая версия Kando!",
+        "introduction-tab-header": "Вступление"
     },
     "toolbar": {
         "menu-themes-tab": {
