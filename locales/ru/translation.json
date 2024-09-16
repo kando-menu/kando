@@ -80,7 +80,7 @@
             "google": "Google",
             "kando-on-github": "Kando в GitHub",
             "kando-on-kofi": "Кандо в Ko-fi",
-            "kando-on-youtube": "Kando на YouTube"
+            "kando-on-youtube": "Kando в YouTube"
         },
         "windows": {
             "submenu": "Windows",
@@ -165,7 +165,7 @@
         },
         "icon-picker": {
             "placeholder": "Искать иконки…",
-            "heading": "Выберите иконку",
+            "heading": "Выбрать иконку",
             "subheading": "Добавляйте свои собственные коллекции значков, поместив папку с изображениями в {{path}}. Вам нужно будет перезапустить Kando. Подробную информацию можно найти <a {{- link}}>здесь</a>."
         },
         "hotkey-picker": {
