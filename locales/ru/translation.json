@@ -78,8 +78,8 @@
             "kando-on-discord": "Kando в Discord",
             "submenu": "Веб-ссылки",
             "google": "Google",
-            "kando-on-github": "Kando на GitHub",
-            "kando-on-kofi": "Kando на Ko-fi",
+            "kando-on-github": "Kando в GitHub",
+            "kando-on-kofi": "Кандо в Ко-фи",
             "kando-on-youtube": "Kando на YouTube"
         },
         "windows": {
@@ -105,8 +105,8 @@
         "apps": {
             "submenu": "Приложения",
             "safari": "Safari",
-            "web-browser": "Браузер",
-            "email": "Электронная почта",
+            "web-browser": "Веб-браузер",
+            "email": "Почта",
             "apple-music": "Музыка",
             "gimp": "GIMP",
             "paint": "Paint",
