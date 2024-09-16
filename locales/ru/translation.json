@@ -203,7 +203,9 @@
         "buy-me-a-coffee-button": "Kando на Ko-fi",
         "sponsors-button": "Список спонсоров",
         "new-version-button": "Доступна новая версия Kando!",
-        "introduction-tab-header": "Вступление"
+        "introduction-tab-header": "Вступление",
+        "introduction-tab-slide-1-caption": "Нажмите в любом месте: вам не нужно точно нажимать на элемент, вам просто нужно кликнуть где-нибудь в его области!",
+        "introduction-tab-slide-2-caption": "Вернуться назад: быстро перейдите на один уровень вверх, щелкнув по центральному элементу."
     },
     "toolbar": {
         "menu-themes-tab": {
