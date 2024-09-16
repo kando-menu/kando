@@ -43,9 +43,9 @@
             "tip-11": "Вы можете открыть меню из командной строки через флаг --menu.",
             "name": "Подменю",
             "description": "Содержит другие меню элементов.",
-            "detailed-description_one": "один, двадцать один, тридцать один, сорок один, пятьдесят один, шестьдесят один, семьдесят один, восемьдесят один, девяносто один, сто один.",
-            "detailed-description_few": "двое, трое, четверо,",
-            "detailed-description_many": ""
+            "detailed-description_one": "Содержит {{count}} пункт меню.",
+            "detailed-description_few": "Содержит {{count}} пункта меню.",
+            "detailed-description_many": "Содержит {{count}} пунктов меню."
         },
         "uri": {
             "tip-3": "Вы можете использовать это элемент ввода URI, чтобы открыть ссылку mailto:.",
@@ -79,16 +79,16 @@
             "submenu": "Веб-ссылки",
             "google": "Google",
             "kando-on-github": "Kando в GitHub",
-            "kando-on-kofi": "Кандо в Ко-фи",
+            "kando-on-kofi": "Кандо в Ko-fi",
             "kando-on-youtube": "Kando на YouTube"
         },
         "windows": {
             "submenu": "Windows",
-            "mission-control": "Контроль окон",
+            "mission-control": "Mission Control",
             "toggle-maximize": "Развернуть",
-            "tile-right": "Вправо",
+            "tile-right": "Окно вправо",
             "close-window": "Закрыть окно",
-            "tile-left": "Влево"
+            "tile-left": "Окно влево"
         },
         "bookmarks": {
             "submenu": "Заметки",
@@ -124,7 +124,7 @@
     "properties": {
         "common": {
             "not-bound": "Не назначено",
-            "done": "Выполнено",
+            "done": "Готово",
             "close": "Закрыть",
             "menu-conditions": "Состояния меню",
             "menu-conditions-hint": "Выберите, когда меню должно быть показано.",
@@ -182,7 +182,7 @@
         },
         "shortcut-picker": {
             "label": "Ярлык",
-            "hint": "Открыть меню",
+            "hint": "Открыть меню.",
             "recording": "Нажмите сокращение…"
         }
     },
