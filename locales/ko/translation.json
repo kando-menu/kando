@@ -19,7 +19,7 @@
         "hotkey": {
             "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없어요. 하나씩 눌러도 돼요.",
             "name": "단축키",
-            "description": "단축키를 누릅니다.",
+            "description": "단축키를 눌러요.",
             "tip-2": "시스템이 사용하는 키가 녹화가 안된다면, 그 키의 이름을 적어보세요.",
             "tip-3": "사용 가능한 키 이름들을 보려면 이 링크를 클릭하세요."
         },
@@ -27,7 +27,7 @@
             "tip-1": "기본적으로, Kando는 키 이벤트 사이에 10밀리초 딜레이을 추가해요. \"딜레이\" 설정으로 변경할 수 있어요.",
             "tip-2": "사용 가능한 키 이름들을 보려면 이 링크를 클릭하세요.",
             "name": "매크로",
-            "description": "키보드 매크로를 실행합니다."
+            "description": "키보드 매크로를 실행해요."
         },
         "submenu": {
             "tip-6": "미리보기에서 항목을 드래그하여 항목의 순서를 바꿀 수 있어요.",
@@ -77,8 +77,8 @@
         "advanced-options": {
             "centered-mode": "중앙 정렬 모드",
             "anchored-mode": "고정 모드",
-            "anchored-mode-hint": "서브메뉴를 상위 메뉴의 위치에서 엽니다.",
-            "anchored-mode-checked-hint": "이 옵션을 활성화하면 마킹 모드가 비활성화됩니다.",
+            "anchored-mode-hint": "서브메뉴를 상위 메뉴의 위치에서 열어요.",
+            "anchored-mode-checked-hint": "이 옵션을 활성화하면 마킹 모드가 비활성화돼요.",
             "subheading": "이 설정을 변경하기 전에, Kando의 기본적인 특성을 배워보는 것을 추천해요. 왜 그런지는 <a {{- link}}>여기서</a> 확인해 보세요.",
             "centered-mode-hint": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
             "heading": "메뉴 설정하기"
@@ -205,22 +205,22 @@
         "new-version-button": "Kando의 새 버전이 이용 가능해요!",
         "introduction-tab-header": "소개",
         "introduction-tab-slide-3-caption": "마킹 모드: 항목 위로 드래그하여 마킹 모드를 사용할 수 있어요. 마우스의 움직임을 멈추거나 방향을 바꾸면, 드래그하고 있는 서브메뉴가 열려요.",
-        "introduction-tab-slide-4-caption": "터보 모드: 메뉴를 열고 키를 누른 상태를 유지한다면, 마우스만 움직여 선택할 수 있어요. 제일 빠르게 항목을 선택하는 방법이에요!",
+        "introduction-tab-slide-4-caption": "터보 모드: 메뉴가 열린 후 키를 누른 상태를 유지한다면, 마우스만 써서 선택이 가능해요. 제일 빠르게 항목을 선택하는 방법이에요!",
         "introduction-tab-slide-5-caption": "실수로 선택하는 경우 없음: 동작은 \"마킹 모드\"에서 마우스 버튼을 떼거나 \"터보 모드\"에서 키를 떼었을 때만 실행돼요. 이렇게 메뉴를 탐색해 보세요!",
-        "intro-text": "Kando는 기본적인 예시 메뉴가 이미 있어요. 그대로 써도 되지만, 직접 메뉴를 만드는 게 더 좋을거에요! 화면 우측 하단의 톱니바퀴 아이콘을 클릭하여 메뉴 편집기를 열 수 있어요.",
+        "intro-text": "Kando는 기본 메뉴가 이미 있어요. 그대로 써봐도 되지만, 곧 메뉴를 직접 만드는 게 좋을거에요! 화면 우측 하단의 톱니바퀴 아이콘을 클릭하여 메뉴 편집기를 열 수 있어요.",
         "introduction-tab-slide-1-caption": "아무데나 클릭하세요: 항목에 정확히 클릭하지 않아도 돼요!",
         "introduction-tab-slide-2-caption": "뒤로가기: 중앙의 항목을 클릭하여 위로 한 단계 이동할 수 있어요.",
         "development-tab-header": "개발",
         "dev-tools-button-tooltip": "UI를 검사할 때 쓰는 웹 개발자 도구를 열어요.",
         "reload-menu-theme-button": "현재 메뉴 테마 새로고침하기",
-        "reload-menu-theme-button-tooltip": "CSS 변경은 곧바로 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
+        "reload-menu-theme-button-tooltip": "CSS 변경은 즉시 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
         "dev-tools-button": "개발자 도구 열기"
     },
     "toolbar": {
         "menu-themes-tab": {
-            "author": "{{author}}이/가 제작함",
-            "system-mode-subheading": "활성화 시, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 다른 테마와 색상을 선택할 수 있어요.",
-            "system-mode-subheading-dark": "현재 시스템은 다크 모드로 설정되어 있어요. 위의 설정은 다크 모드에서만 사용돼요.",
+            "author": "{{author}} 제작",
+            "system-mode-subheading": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
+            "system-mode-subheading-dark": "현재 다크 모드로 설정되어 있어요. 위의 설정은 다크 모드에서만 사용돼요.",
             "system-mode-subheading-light": "현재 시스템은 라이트 모드로 설정되어 있어요. 위의 설정은 라이트 모드에서만 사용돼요.",
             "caption": "미래에는 메뉴 테마를 저장하는 온라인 저장소를 만들 예정이에요. 현재로서는 <a {{tutorialLink}}>직접 테마를 만드는 법을 배우고</a>, <a {{discordLink}}>Kando의 Discord 서버</a>에 공유할 수 있어요!",
             "edit-colors": "색상 편집",
