@@ -32,7 +32,7 @@ const config: ForgeConfig = {
       // https://js.electronforge.io/interfaces/_electron_forge_maker_zip.MakerZIPConfig.html
     }),
     new MakerDMG({
-      // https://js.electronforge.io/interfaces/_electron_forge_maker_dmg.MakerDMGConfig.html
+      appPath: '', // https://github.com/electron/forge/issues/3712
     }),
     new MakerRpm({
       // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
