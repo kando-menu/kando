@@ -12,7 +12,7 @@ import { SimpleIconsTheme } from './icon-themes/simple-icons-theme';
 import { SimpleIconsColoredTheme } from './icon-themes/simple-icons-colored-theme';
 import { MaterialSymbolsTheme } from './icon-themes/material-symbols-theme';
 import { EmojiTheme } from './icon-themes/emoji-theme';
-import { UserIconTheme } from './icon-themes/user-icon-theme';
+import { FileIconTheme } from './icon-themes/file-icon-theme';
 import { FallbackTheme } from './icon-themes/fallback-theme';
 
 /**
@@ -72,13 +72,10 @@ export class IconThemeRegistry {
     this.iconThemes.set('emoji', new EmojiTheme());
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
-    Promise.all([
-      window.api.getUserIconThemeDirectory(),
-      window.api.getUserIconThemes(),
-    ]).then(([directory, themes]) => {
-      this._userIconThemeDirectory = directory;
-      for (const theme of themes) {
-        this.iconThemes.set(theme, new UserIconTheme(directory, theme));
+    window.api.getIconThemes().then((info) => {
+      this._userIconThemeDirectory = info.userIconDirectory;
+      for (const theme of info.fileIconThemes) {
+        this.iconThemes.set(theme.name, new FileIconTheme(theme));
       }
     });
   }

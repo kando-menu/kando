@@ -29,8 +29,8 @@ First, Kando will look for menu-theme directories in your home directory:
 * <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `~/Library/Application Support/kando/menu-themes/`
 * <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `~/.config/kando/menu-themes/`
 
-Next, Kando will look for menu-theme directories in the installation directory.
-For this, look for the `resources/app/.webpack/renderer/assets/menu-themes/` directory in the installation directory.
+> [!CAUTION]
+> Kando will also attempt to load menu themes from `resources/app/.webpack/renderer/assets/menu-themes/` in the installation directory. This can be interesting if you are packaging themes using a package manager. However, as an end user, you should not put your themes there, as they might be overwritten during an update.
 
 If you are running Kando from the source code via `npm start`, it will look for themes in the `assets/menu-themes/` directory.
 
