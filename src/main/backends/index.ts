@@ -58,6 +58,12 @@ export function getBackend(): Backend | null {
       return new HyprBackend();
     }
 
+    if (desktop === 'X-Cinnamon' && session === 'x11') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { CinnamonBackend } = require('./linux/cinnamon/x11/backend');
+      return new CinnamonBackend();
+    }
+
     if (session === 'x11') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { X11Backend } = require('./linux/x11/backend');
