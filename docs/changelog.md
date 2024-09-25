@@ -25,6 +25,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
 
+#### :bug: Fixed
+
+- On Cinnamon, the menu is now drawn properly on top of fullscreen windows. Thanks to [@LucaBoschetto](https://github.com/LucaBoschetto) for the fix!
 
 ## [Kando 1.4.0](https://github.com/kando-menu/kando/releases/tag/v1.4.0)
 
