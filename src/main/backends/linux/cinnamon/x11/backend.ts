@@ -12,13 +12,13 @@ import { X11Backend } from '../../x11/backend';
 
 /** This backend is used on Cinnamon with X11. */
 export class CinnamonBackend extends X11Backend {
-    /**
-     * On Cinnamon, the 'normal' window type is used. The 'dock' window type makes the window
-     * not show on top of other applications' full-screen windows.
-     */
-    public getBackendInfo() {
-        const info = super.getBackendInfo();
-        info.windowType = 'normal';
-        return info;
-    }
+  /**
+   * On Cinnamon, the 'normal' window type is used. The 'dock' window type makes the
+   * window not show on top of other applications' full-screen windows.
+   */
+  public getBackendInfo() {
+    const info = super.getBackendInfo();
+    info.windowType = 'normal';
+    return info;
+  }
 }
