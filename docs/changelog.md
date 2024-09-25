@@ -21,6 +21,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### :tada: Added
+
+- Icon themes are now also loaded from `resources/app/.webpack/renderer/assets/icon-themes/` in the installation directory. This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update.
+- Support for symbolic links in the `icon-themes` directory. You can now create a symbolic link to an icon theme in the `icon-themes` directory and Kando will load the icons from the linked directory.
+
 #### :wrench: Changed
 
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
