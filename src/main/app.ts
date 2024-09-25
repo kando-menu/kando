@@ -726,7 +726,10 @@ export class KandoApp {
 
     // Allow the renderer to retrieve all available menu themes.
     ipcMain.handle('get-all-menu-themes', async () => {
-      const themes = await this.listMenuThemes();
+      const themes = await this.listSubdirectories([
+        path.join(app.getPath('userData'), `menu-themes`),
+        path.join(__dirname, `../renderer/assets/menu-themes`),
+      ]);
 
       // Load all descriptions in parallel.
       const descriptions = await Promise.all(
@@ -1100,36 +1103,32 @@ export class KandoApp {
   }
 
   /**
-   * This lists all available menu themes. It will first look in the user's data directory
-   * and then in the app's assets directory.
+   * This returns a list of all unique subdirectory names in the given directories. This
+   * is used to find all available menu and icon themes.
    *
-   * @returns A list of all available menu-theme directory names.
+   * @returns A list of all unique subdirectory names.
    */
-  private async listMenuThemes() {
-    const testPaths = [
-      path.join(app.getPath('userData'), `menu-themes`),
-      path.join(__dirname, `../renderer/assets/menu-themes`),
-    ];
+  private async listSubdirectories(paths: string[]) {
+    const subdirectories = new Set<string>();
 
-    const themes = new Set<string>();
-
-    for (const testPath of testPaths) {
+    for (const testPath of paths) {
       const exists = await fs.promises
         .access(testPath, fs.constants.F_OK)
         .then(() => true)
         .catch(() => false);
 
       if (exists) {
-        const files = await fs.promises.readdir(testPath, { withFileTypes: true });
+        const files = await fs.promises.readdir(testPath);
         for (const file of files) {
-          if (file.isDirectory()) {
-            themes.add(file.name);
+          const fileInfo = await fs.promises.stat(path.join(testPath, file));
+          if (fileInfo.isDirectory()) {
+            subdirectories.add(file);
           }
         }
       }
     }
 
-    return Array.from(themes);
+    return Array.from(subdirectories);
   }
 
   /**

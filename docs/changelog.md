@@ -17,6 +17,15 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### :wrench: Changed
+
+- Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
+
+
 ## [Kando 1.4.0](https://github.com/kando-menu/kando/releases/tag/v1.4.0)
 
 **Release Date:** 2024-09-15
