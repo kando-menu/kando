@@ -84,6 +84,7 @@ If you discovered a cool new way to open menus, please let us know! You can eith
 ### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
 
 * [Input Remapper](https://github.com/sezanzeb/input-remapper) is a tool which allows you to remap mouse buttons to keyboard shortcuts. It works both on **X11 and Wayland**.
+* [Touchegg](https://github.com/JoseExposito/touchegg#readme) is a multitouch gesture recognizer for Linux. You can use it to open a Kando menu with touchpad gestures. It only works on **X11**.
 * **KDE Plasma** comes with built-in support for remapping mouse buttons to keyboard shortcuts. You can find [this feature](https://www.phoronix.com/news/KDE-Rebind-Extra-Mouse-Buttons) in the system settings under "System Settings" / "Mouse & Touchpad" / "Add Binding".
 * There's a [Configurable Button](https://store.kde.org/p/1297839/) widget for **KDE Plasma** which allows running `kando --menu "menu name"` when clicked.
 * On **GNOME Shell**, you can use the [CHC-E (Custom Hot Corners - Extended)](https://extensions.gnome.org/extension/4167/custom-hot-corners-extended/) extension to run arbitrary commands when you move your mouse to a corner of the screen.
