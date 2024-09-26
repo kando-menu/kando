@@ -37,9 +37,6 @@ Promise.all([
     fallbackLng: locales.fallbackLng,
   });
 
-  console.log('Current locale:');
-  console.log(locales.current);
-
   Object.keys(locales.data).forEach((key) => {
     i18next.addResourceBundle(
       key,

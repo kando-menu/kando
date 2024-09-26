@@ -40,6 +40,9 @@ To add your own icons to Kando, follow these steps:
 4. **Restart Kando.** Icon themes are only loaded when Kando starts.
 5. Select your icon theme in the icon-theme dropdown in the icon picker in Kando's menu editor.
 
+> [!CAUTION]
+> Kando will also load icon themes from `resources/app/.webpack/renderer/assets/icon-themes/` in the installation directory. This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update.
+
 ### Some Tips for Creating Icon Themes
 
 * You can organize your icons in subdirectories. Kando will load them recursively. The directory will be part of the icon's name and therefore you can use the search bar to filter by directory.

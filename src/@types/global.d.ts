@@ -16,6 +16,7 @@ import {
   IMenuSettings,
   IShowMenuOptions,
   IShowEditorOptions,
+  IIconThemesInfo,
 } from '../common';
 
 // Declare the API to the host process. See preload.ts for more information on the exposed
@@ -46,9 +47,7 @@ declare global {
       getCurrentMenuThemeColors: () => Promise<Record<string, string>>;
       getIsDarkMode: () => Promise<boolean>;
       darkModeChanged: (callback: (darkMode: boolean) => void) => void;
-      getUserIconThemeDirectory: () => Promise<string>;
-      getUserIconThemes: () => Promise<Array<string>>;
-      listUserIcons: (string: iconTheme) => Promise<Array<string>>;
+      getIconThemes: () => Promise<IIconThemesInfo>;
       showDevTools: () => void;
       reloadMenuTheme: () => void;
       movePointer: (dist: IVec2) => void;

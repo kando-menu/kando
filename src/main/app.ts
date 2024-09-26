@@ -33,6 +33,7 @@ import {
   IMenuSettings,
   IAppSettings,
   IShowMenuRequest,
+  IIconThemesInfo,
 } from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
@@ -654,63 +655,32 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
-    // Allow the renderer to retrieve the path to the user's icon theme directory.
-    ipcMain.handle('get-user-icon-theme-directory', () => {
-      return path.join(app.getPath('userData'), 'icon-themes');
-    });
+    // Allow the renderer to retrieve all icons of all file icon themes.
+    ipcMain.handle('get-icon-themes', async () => {
+      const info: IIconThemesInfo = {
+        userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
+        fileIconThemes: [],
+      };
 
-    // Allow the renderer to retrieve all subdirectories of the icon-themes directory.
-    ipcMain.handle('get-user-icon-themes', async () => {
-      return new Promise<string[]>((resolve) => {
-        const iconThemesDir = path.join(app.getPath('userData'), 'icon-themes');
-        fs.readdir(iconThemesDir, { withFileTypes: true }, (err, dirents) => {
-          // We ignore ENOENT errors as they just mean that the directory does not exist.
-          // All other errors are printed to the console.
-          if (err) {
-            if (err.code !== 'ENOENT') {
-              console.error(err);
-            }
+      const themes = await this.listSubdirectories([
+        path.join(app.getPath('userData'), 'icon-themes'),
+        path.join(__dirname, '../renderer/assets/icon-themes'),
+      ]);
 
-            resolve([]);
-            return;
-          }
+      await Promise.all(
+        themes.map(async (theme) => {
+          const directory = await this.findIconThemePath(theme);
+          const icons = await this.listIconsRecursively(directory);
 
-          const iconThemes = dirents
-            .filter((dirent) => dirent.isDirectory())
-            .map((dirent) => dirent.name);
-
-          resolve(iconThemes);
-        });
-      });
-    });
-
-    // Allow the renderer to retrieve all files in the given icon theme directory.
-    ipcMain.handle('list-user-icons', async (event, iconTheme: string) => {
-      return new Promise<string[]>((resolve) => {
-        const iconDir = path.join(app.getPath('userData'), 'icon-themes', iconTheme);
-        fs.readdir(iconDir, { withFileTypes: true, recursive: true }, (err, files) => {
-          if (err) {
-            console.error(err);
-            resolve([]);
-            return;
-          }
-
-          // Filter by mimetype to only return image files.
-          files = files.filter((file) => {
-            if (!file.isFile()) {
-              return false;
-            }
-
-            const mimeType = mime.lookup(file.name);
-            return mimeType && mimeType.startsWith('image/');
+          info.fileIconThemes.push({
+            name: theme,
+            directory,
+            icons,
           });
+        })
+      );
 
-          // We return the relative path of the files to the icon theme directory.
-          resolve(
-            files.map((file) => path.relative(iconDir, path.join(file.path, file.name)))
-          );
-        });
-      });
+      return info;
     });
 
     // Allow the renderer to retrieve the description of the current menu theme. We also
@@ -727,8 +697,8 @@ export class KandoApp {
     // Allow the renderer to retrieve all available menu themes.
     ipcMain.handle('get-all-menu-themes', async () => {
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), `menu-themes`),
-        path.join(__dirname, `../renderer/assets/menu-themes`),
+        path.join(app.getPath('userData'), 'menu-themes'),
+        path.join(__dirname, '../renderer/assets/menu-themes'),
       ]);
 
       // Load all descriptions in parallel.
@@ -1100,6 +1070,72 @@ export class KandoApp {
     console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
 
     return path.join(__dirname, `../renderer/assets/menu-themes/default/theme.json5`);
+  }
+
+  /**
+   * This finds the path to the given icon-theme directory name. If the theme is not
+   * found, an empty string is returned. Kando will first look for the theme in the user's
+   * data directory. If it is not found there, it will look in the app's assets
+   * directory.
+   *
+   * @param theme The name of the icon theme's directory.
+   * @returns The absolute path to the icon-theme directory.
+   */
+  private async findIconThemePath(theme: string) {
+    const testPaths = [
+      path.join(app.getPath('userData'), 'icon-themes'),
+      path.join(__dirname, '../renderer/assets/icon-themes'),
+    ];
+
+    for (const testPath of testPaths) {
+      const themePath = path.join(testPath, theme);
+      const exists = await fs.promises
+        .access(themePath, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false);
+
+      if (exists) {
+        return themePath;
+      }
+    }
+
+    console.error(`Icon theme "${theme}" not found. Will look ugly.`);
+
+    return '';
+  }
+
+  /**
+   * This returns a list of all image files in the given directory and its subdirectories.
+   * The paths are relative to the icon theme directory.
+   *
+   * @param directory The directory to search for image files.
+   * @returns A list of all image files in the directory.
+   */
+  private async listIconsRecursively(directory: string) {
+    return new Promise<string[]>((resolve) => {
+      fs.readdir(directory, { withFileTypes: true, recursive: true }, (err, files) => {
+        if (err) {
+          console.error(err);
+          resolve([]);
+          return;
+        }
+
+        // Filter by mimetype to only return image files.
+        files = files.filter((file) => {
+          if (!file.isFile()) {
+            return false;
+          }
+
+          const mimeType = mime.lookup(file.name);
+          return mimeType && mimeType.startsWith('image/');
+        });
+
+        // We return the relative path of the files to the icon theme directory.
+        resolve(
+          files.map((file) => path.relative(directory, path.join(file.path, file.name)))
+        );
+      });
+    });
   }
 
   /**

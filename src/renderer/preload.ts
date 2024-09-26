@@ -109,26 +109,9 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('dark-mode-changed', (e, darkMode) => callback(darkMode));
   },
 
-  /** This will return the path to the user's icon theme directory in the config directory. */
-  getUserIconThemeDirectory: function () {
-    return ipcRenderer.invoke('get-user-icon-theme-directory');
-  },
-
-  /**
-   * This will return all subdirectories of the icon-themes directory in the config
-   * directory.
-   */
-  getUserIconThemes: function () {
-    return ipcRenderer.invoke('get-user-icon-themes');
-  },
-
-  /**
-   * This will return all files in the given icon theme directory.
-   *
-   * @param iconTheme The icon theme to list.
-   */
-  listUserIcons: function (iconTheme: string) {
-    return ipcRenderer.invoke('list-user-icons', iconTheme);
+  /** This will return a IIconThemesInfo describing all available icon themes. */
+  getIconThemes: function () {
+    return ipcRenderer.invoke('get-icon-themes');
   },
 
   /** This will show the web developer tools. */

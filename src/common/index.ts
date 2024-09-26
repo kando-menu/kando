@@ -111,6 +111,40 @@ export interface IMenuThemeDescription {
   }[];
 }
 
+/** This interface describes a icon theme consisting of a collection of icon files. */
+export interface IFileIconThemeDescription {
+  /**
+   * The ID of the theme. This is used to identify the theme in the settings file. It is
+   * also the directory name of the icon theme.
+   */
+  name: string;
+
+  /**
+   * The absolute path to the directory where the theme is stored, including the name as
+   * the last part of the path.
+   */
+  directory: string;
+
+  /**
+   * A list of all available icons in this theme. These are the filenames of the icons
+   * relative to the theme directory. In case of nested directories, the filenames can
+   * actually be paths.
+   */
+  icons: string[];
+}
+
+/**
+ * This interface is used to pass information about all available icon themes to the
+ * renderer process.
+ */
+export interface IIconThemesInfo {
+  /** The absolute path to the directory where the user may store custom icon themes. */
+  userIconDirectory: string;
+
+  /** All available file icon themes. */
+  fileIconThemes: IFileIconThemeDescription[];
+}
+
 /**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
