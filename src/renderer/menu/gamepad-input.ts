@@ -78,22 +78,24 @@ export class GamepadInput extends EventEmitter {
 
         gamepad.axes.forEach((axis, j) => {
           if (state.axes[j] !== axis) {
+            state.axes[j] = axis;
             this.emit('axis', i, j, axis);
           }
-          state.axes[j] = axis;
         });
 
         gamepad.buttons.forEach((button, j) => {
-          if (state.buttons[j].pressed !== button.pressed) {
+          const oldState = state.buttons[j];
+          state.buttons[j] = button;
+
+          if (oldState.pressed !== button.pressed) {
             this.emit(button.pressed ? 'buttondown' : 'buttonup', i, j);
           }
-          if (state.buttons[j].touched !== button.touched) {
+          if (oldState.touched !== button.touched) {
             this.emit(button.touched ? 'touchdown' : 'touchup', i, j);
           }
-          if (state.buttons[j].value !== button.value) {
+          if (oldState.value !== button.value) {
             this.emit('buttonvalue', i, j, button.value);
           }
-          state.buttons[j] = button;
         });
       }
     });
