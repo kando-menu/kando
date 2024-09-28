@@ -10,6 +10,8 @@
 
 import { EventEmitter } from 'events';
 
+const AXIS_DEADZONE = 0.2;
+
 /**
  * This interface describes the state of a gamepad. It contains the current values of all
  * axes and buttons.
@@ -77,9 +79,10 @@ export class GamepadInput extends EventEmitter {
         const state = this.gamepadStates[i];
 
         gamepad.axes.forEach((axis, j) => {
-          if (state.axes[j] !== axis) {
-            state.axes[j] = axis;
-            this.emit('axis', i, j, axis);
+          const value = Math.abs(axis) < AXIS_DEADZONE ? 0 : axis;
+          if (state.axes[j] !== value) {
+            state.axes[j] = value;
+            this.emit('axis', i, j, value);
           }
         });
 
@@ -90,11 +93,16 @@ export class GamepadInput extends EventEmitter {
           if (oldState.pressed !== button.pressed) {
             this.emit(button.pressed ? 'buttondown' : 'buttonup', i, j);
           }
+
           if (oldState.touched !== button.touched) {
             this.emit(button.touched ? 'touchdown' : 'touchup', i, j);
           }
-          if (oldState.value !== button.value) {
-            this.emit('buttonvalue', i, j, button.value);
+
+          const value = Math.abs(button.value) < AXIS_DEADZONE ? 0 : button.value;
+          const oldStateValue =
+            Math.abs(oldState.value) < AXIS_DEADZONE ? 0 : oldState.value;
+          if (oldStateValue !== value) {
+            this.emit('buttonvalue', i, j, value);
           }
         });
       }
