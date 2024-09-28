@@ -430,13 +430,12 @@ export class KandoApp {
           });
         }
 
-        // Some platforms require the window to be one pixel larger than the work area.
-        // Else there will be a small gap between the window and the screen edge.
+        // Move and resize the window to the work area of the screen where the pointer is.
         this.window.setBounds({
           x: workarea.x,
           y: workarea.y,
-          width: workarea.width + 1,
-          height: workarea.height + 1,
+          width: workarea.width,
+          height: workarea.height,
         });
 
         // On all platforms except Windows, we show the window after we moved it.
