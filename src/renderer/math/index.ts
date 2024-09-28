@@ -30,6 +30,12 @@ export function getLength(vec: IVec2): number {
   return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
+/** This method normalizes the given vector. */
+export function normalize(vec: IVec2): IVec2 {
+  const length = getLength(vec);
+  return { x: vec.x / length, y: vec.y / length };
+}
+
 /** This method returns the distance between the two given vectors. */
 export function getDistance(vec1: IVec2, vec2: IVec2): number {
   return getLength({ x: vec1.x - vec2.x, y: vec1.y - vec2.y });
