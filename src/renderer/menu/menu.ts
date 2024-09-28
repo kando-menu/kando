@@ -16,6 +16,7 @@ import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GestureDetection } from './gesture-detection';
 import { InputState, InputTracker } from './input-tracker';
+import { GamepadInput } from './gamepad-input';
 import { MenuTheme } from './menu-theme';
 import { closestEquivalentAngle } from '../math';
 
@@ -96,6 +97,12 @@ export class Menu extends EventEmitter {
   private input: InputTracker = new InputTracker();
 
   /**
+   * The gamepad input is used to detect gamepad input. It polls the gamepad state and
+   * emits events when buttons are pressed or the thumbsticks are moved.
+   */
+  private gamepadInput: GamepadInput = new GamepadInput();
+
+  /**
    * The constructor will attach event listeners to the given container element. It will
    * also initialize the input tracker and the gesture detection.
    *
@@ -171,6 +178,66 @@ export class Menu extends EventEmitter {
     this.container.addEventListener('touchstart', onPointerDownEvent);
     this.container.addEventListener('touchmove', onMotionEvent);
     this.container.addEventListener('touchend', onPointerUpEvent);
+
+    this.gamepadInput.on('buttondown', (gamepadIndex: number, buttonIndex: number) => {
+      // We close the menu if the X button is pressed.
+      // See https://w3c.github.io/gamepad/#remapping.
+      if (buttonIndex === 2) {
+        this.emit('cancel');
+        return;
+      }
+
+      // We also close the menu if any button is pressed while the center of the root menu
+      // is hovered.
+      if (this.hoveredItem === this.root && this.selectionChain.length === 1) {
+        this.emit('cancel');
+        return;
+      }
+
+      if (this.hoveredItem) {
+        this.selectItem(this.hoveredItem);
+      }
+    });
+
+    this.gamepadInput.on('axis', (gamepadIndex: number, axisIndex: number) => {
+      if (axisIndex > 3) {
+        return;
+      }
+
+      const centerPosition = this.getCenterItemPosition();
+      const gamepadState = this.gamepadInput.getState(gamepadIndex);
+
+      // Left stick axes. See https://w3c.github.io/gamepad/#remapping
+      let xAxis = 0;
+      let yAxis = 1;
+
+      // If the right stick was changed.
+      if (axisIndex === 2 || axisIndex === 3) {
+        xAxis = 2;
+        yAxis = 3;
+      }
+
+      const x = gamepadState.axes[xAxis];
+      const y = gamepadState.axes[yAxis];
+
+      const pointerPosition = {
+        x: centerPosition.x,
+        y: centerPosition.y,
+      };
+
+      if (Math.abs(x) > 0.3 || Math.abs(y) > 0.3) {
+        const dir = math.normalize({ x, y });
+        pointerPosition.x += dir.x * 200;
+        pointerPosition.y += dir.y * 200;
+      }
+
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: pointerPosition.x,
+        clientY: pointerPosition.y,
+      });
+
+      this.input.onMotionEvent(mouseEvent, centerPosition);
+    });
 
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
     // and keyup events.
