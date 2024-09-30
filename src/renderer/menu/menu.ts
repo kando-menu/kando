@@ -138,8 +138,6 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      this.redraw();
-
       this.input.onPointerDownEvent(event, this.getCenterItemPosition());
       this.gestures.reset();
     };
@@ -180,23 +178,33 @@ export class Menu extends EventEmitter {
     this.container.addEventListener('touchend', onPointerUpEvent);
 
     this.gamepadInput.on('buttondown', (gamepadIndex: number, buttonIndex: number) => {
-      // We close the menu if the X button is pressed.
-      // See https://w3c.github.io/gamepad/#remapping.
-      if (buttonIndex === 2) {
-        this.emit('cancel');
-        return;
-      }
+      const pointerPosition = this.gamepadInput.getEmulatedPointerPosition(
+        gamepadIndex,
+        this.getCenterItemPosition()
+      );
 
-      // We also close the menu if any button is pressed while the center of the root menu
-      // is hovered.
-      if (this.hoveredItem === this.root && this.selectionChain.length === 1) {
-        this.emit('cancel');
-        return;
-      }
+      const mouseEvent = new MouseEvent('mousedown', {
+        clientX: pointerPosition.x,
+        clientY: pointerPosition.y,
+        button: buttonIndex,
+      });
 
-      if (this.hoveredItem) {
-        this.selectItem(this.hoveredItem);
-      }
+      onPointerDownEvent(mouseEvent);
+    });
+
+    this.gamepadInput.on('buttonup', (gamepadIndex: number, buttonIndex: number) => {
+      const pointerPosition = this.gamepadInput.getEmulatedPointerPosition(
+        gamepadIndex,
+        this.getCenterItemPosition()
+      );
+
+      const mouseEvent = new MouseEvent('mouseup', {
+        clientX: pointerPosition.x,
+        clientY: pointerPosition.y,
+        button: buttonIndex,
+      });
+
+      onPointerUpEvent(mouseEvent);
     });
 
     this.gamepadInput.on('axis', (gamepadIndex: number, axisIndex: number) => {
@@ -204,39 +212,20 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      const centerPosition = this.getCenterItemPosition();
-      const gamepadState = this.gamepadInput.getState(gamepadIndex);
+      const pointerPosition = this.gamepadInput.getEmulatedPointerPosition(
+        gamepadIndex,
+        this.getCenterItemPosition()
+      );
 
-      // Left stick axes. See https://w3c.github.io/gamepad/#remapping
-      let xAxis = 0;
-      let yAxis = 1;
-
-      // If the right stick was changed.
-      if (axisIndex === 2 || axisIndex === 3) {
-        xAxis = 2;
-        yAxis = 3;
-      }
-
-      const x = gamepadState.axes[xAxis];
-      const y = gamepadState.axes[yAxis];
-
-      const pointerPosition = {
-        x: centerPosition.x,
-        y: centerPosition.y,
-      };
-
-      if (Math.abs(x) > 0.3 || Math.abs(y) > 0.3) {
-        const dir = math.normalize({ x, y });
-        pointerPosition.x += dir.x * 200;
-        pointerPosition.y += dir.y * 200;
-      }
+      const isAnyButtonPressed = this.gamepadInput.isAnyButtonPressed(gamepadIndex);
 
       const mouseEvent = new MouseEvent('mousemove', {
         clientX: pointerPosition.x,
         clientY: pointerPosition.y,
+        buttons: isAnyButtonPressed ? 1 : 0,
       });
 
-      this.input.onMotionEvent(mouseEvent, centerPosition);
+      onMotionEvent(mouseEvent);
     });
 
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown

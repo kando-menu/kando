@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
+import { IVec2 } from '../../common';
 
 const AXIS_DEADZONE = 0.2;
 
@@ -17,7 +18,7 @@ const AXIS_DEADZONE = 0.2;
  * axes and buttons.
  */
 export interface IGamepadState {
-  axes: number[];
+  axes: { value: number; timestamp: number }[];
   buttons: GamepadButton[];
 }
 
@@ -57,8 +58,64 @@ export class GamepadInput extends EventEmitter {
   }
 
   /** Returns the current state of the gamepad with the given index. */
-  public getState(gamepadIndex: number): IGamepadState {
-    return this.gamepadStates[gamepadIndex];
+  public getEmulatedPointerPosition(gamepadIndex: number, centerPosition: IVec2) {
+    const gamepadState = this.gamepadStates[gamepadIndex];
+    const latestAxis = this.getLatestAxis(gamepadIndex);
+
+    // Left stick axes. See https://w3c.github.io/gamepad/#remapping
+    let xAxis = 0;
+    let yAxis = 1;
+
+    // If the right stick was changed.
+    if (latestAxis === 2 || latestAxis === 3) {
+      xAxis = 2;
+      yAxis = 3;
+    }
+
+    const x = gamepadState.axes[xAxis].value;
+    const y = gamepadState.axes[yAxis].value;
+
+    const pointerPosition = {
+      x: centerPosition.x,
+      y: centerPosition.y,
+    };
+
+    if (Math.abs(x) > 0.3 || Math.abs(y) > 0.3) {
+      pointerPosition.x += x * 300;
+      pointerPosition.y += y * 300;
+    }
+
+    return pointerPosition;
+  }
+
+  /**
+   * Returns the index of the axis which was changed most recently.
+   *
+   * @param gamepadIndex - The index of the gamepad to check.
+   * @returns The index of the axis which was changed most recently.
+   */
+  public getLatestAxis(gamepadIndex: number) {
+    const state = this.gamepadStates[gamepadIndex];
+    let latestAxis = 0;
+    let latestTimestamp = 0;
+    state.axes.forEach((axis, i) => {
+      if (axis.timestamp > latestTimestamp) {
+        latestAxis = i;
+        latestTimestamp = axis.timestamp;
+      }
+    });
+    return latestAxis;
+  }
+
+  /**
+   * Returns true if any button of the gamepad with the given index is pressed.
+   *
+   * @param gamepadIndex - The index of the gamepad to check.
+   * @returns True if any button of the gamepad with the given index is pressed.
+   */
+  public isAnyButtonPressed(gamepadIndex: number) {
+    const state = this.gamepadStates[gamepadIndex];
+    return state.buttons.some((button) => button.pressed);
   }
 
   /** This method is called every frame to poll the gamepad API. */
@@ -67,7 +124,7 @@ export class GamepadInput extends EventEmitter {
       if (gamepad) {
         if (!this.gamepadStates[i]) {
           this.gamepadStates[i] = {
-            axes: gamepad.axes.map(() => 0),
+            axes: gamepad.axes.map(() => ({ value: 0, timestamp: 0 })),
             buttons: gamepad.buttons.map(() => ({
               pressed: false,
               touched: false,
@@ -80,8 +137,9 @@ export class GamepadInput extends EventEmitter {
 
         gamepad.axes.forEach((axis, j) => {
           const value = Math.abs(axis) < AXIS_DEADZONE ? 0 : axis;
-          if (state.axes[j] !== value) {
-            state.axes[j] = value;
+          if (state.axes[j].value !== value) {
+            state.axes[j].value = value;
+            state.axes[j].timestamp = Date.now();
             this.emit('axis', i, j, value);
           }
         });
