@@ -177,56 +177,42 @@ export class Menu extends EventEmitter {
     this.container.addEventListener('touchmove', onMotionEvent);
     this.container.addEventListener('touchend', onPointerUpEvent);
 
-    this.gamepadInput.on('buttondown', (gamepadIndex: number, buttonIndex: number) => {
-      const pointerPosition = this.gamepadInput.getEmulatedPointerPosition(
-        gamepadIndex,
-        this.getCenterItemPosition()
-      );
-
+    this.gamepadInput.on('buttondown', (button: number, stickPosition: IVec2) => {
+      const centerItemPosition = this.getCenterItemPosition();
       const mouseEvent = new MouseEvent('mousedown', {
-        clientX: pointerPosition.x,
-        clientY: pointerPosition.y,
-        button: buttonIndex,
+        clientX: stickPosition.x + centerItemPosition.x,
+        clientY: stickPosition.y + centerItemPosition.y,
+        button: button,
       });
 
       onPointerDownEvent(mouseEvent);
     });
 
-    this.gamepadInput.on('buttonup', (gamepadIndex: number, buttonIndex: number) => {
-      const pointerPosition = this.gamepadInput.getEmulatedPointerPosition(
-        gamepadIndex,
-        this.getCenterItemPosition()
-      );
-
+    this.gamepadInput.on('buttonup', (button: number, stickPosition: IVec2) => {
+      const centerItemPosition = this.getCenterItemPosition();
       const mouseEvent = new MouseEvent('mouseup', {
-        clientX: pointerPosition.x,
-        clientY: pointerPosition.y,
-        button: buttonIndex,
+        clientX: stickPosition.x + centerItemPosition.x,
+        clientY: stickPosition.y + centerItemPosition.y,
+        button: button,
       });
 
       onPointerUpEvent(mouseEvent);
     });
 
-    this.gamepadInput.on('axis', (gamepadIndex: number, axisIndex: number) => {
-      if (axisIndex > 3) {
-        return;
+    this.gamepadInput.on(
+      'stickmotion',
+      (stickPosition: IVec2, anyButtonPressed: boolean) => {
+        const centerItemPosition = this.getCenterItemPosition();
+
+        const mouseEvent = new MouseEvent('mousemove', {
+          clientX: stickPosition.x + centerItemPosition.x,
+          clientY: stickPosition.y + centerItemPosition.y,
+          buttons: anyButtonPressed ? 1 : 0,
+        });
+
+        onMotionEvent(mouseEvent);
       }
-
-      const pointerPosition = this.gamepadInput.getEmulatedPointerPosition(
-        gamepadIndex,
-        this.getCenterItemPosition()
-      );
-
-      const isAnyButtonPressed = this.gamepadInput.isAnyButtonPressed(gamepadIndex);
-
-      const mouseEvent = new MouseEvent('mousemove', {
-        clientX: pointerPosition.x,
-        clientY: pointerPosition.y,
-        buttons: isAnyButtonPressed ? 1 : 0,
-      });
-
-      onMotionEvent(mouseEvent);
-    });
+    );
 
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
     // and keyup events.
