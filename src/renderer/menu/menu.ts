@@ -177,6 +177,9 @@ export class Menu extends EventEmitter {
     this.container.addEventListener('touchmove', onMotionEvent);
     this.container.addEventListener('touchend', onPointerUpEvent);
 
+    // When a gamepad button is pressed, we handle it like a mouse button press. The click
+    // position is the position of the thumbstick relative to the center of the currently
+    // selected item.
     this.gamepadInput.on('buttondown', (button: number, stickPosition: IVec2) => {
       const centerItemPosition = this.getCenterItemPosition();
       const mouseEvent = new MouseEvent('mousedown', {
@@ -188,6 +191,7 @@ export class Menu extends EventEmitter {
       onPointerDownEvent(mouseEvent);
     });
 
+    // When a gamepad button is released, we handle it like a mouse button release.
     this.gamepadInput.on('buttonup', (button: number, stickPosition: IVec2) => {
       const centerItemPosition = this.getCenterItemPosition();
       const mouseEvent = new MouseEvent('mouseup', {
@@ -199,6 +203,7 @@ export class Menu extends EventEmitter {
       onPointerUpEvent(mouseEvent);
     });
 
+    // When the thumbstick is moved, we handle it like a mouse movement.
     this.gamepadInput.on(
       'stickmotion',
       (stickPosition: IVec2, anyButtonPressed: boolean) => {
@@ -215,7 +220,7 @@ export class Menu extends EventEmitter {
     );
 
     // In order to keep track of any pressed key for the turbo mode, we listen to keydown
-    // and keyup events.
+    // and keyup events. This is also used to select items with the keyboard.
     document.addEventListener('keydown', (event) => {
       if (this.container.classList.contains('hidden')) {
         return;
