@@ -15,6 +15,8 @@ SPDX-License-Identifier: CC-BY-4.0
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
 [![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
 [![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
+[![contributions](https://img.shields.io/badge/🎉_Contributions-welcome-green.svg?labelColor=303030)](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22contributions+welcome%22)
+
 
 # What is Kando?
 
