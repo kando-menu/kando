@@ -8,37 +8,29 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IIconTheme } from '../icon-theme-registry';
+import { SimpleIconsTheme } from './simple-icons-theme';
 
 /**
- * This class implements an icon theme that is used if the user has not selected a valid
- * icon theme.
+ * This class implements an icon theme that uses the Simple Icons font as icons. It colors
+ * the icons using the `si--color` class.
  */
-export class FallbackTheme implements IIconTheme {
-  /** Not required as this is not a user-selectable theme. */
+export class SimpleIconsColoredTheme extends SimpleIconsTheme {
+  /** Returns a human-readable name of the icon theme. */
   get name() {
-    return '';
-  }
-
-  /** Not required as this is not a user-selectable theme. */
-  public async listIcons(): Promise<Array<string>> {
-    return [];
+    return 'Simple Icons (Colored)';
   }
 
   /**
-   * Creates a div with a question mark icon.
+   * Creates a div element that contains the icon with the given name.
    *
+   * @param icon One of the icons returned by `listIcons`.
    * @returns A div element that contains the icon.
    */
-  createDiv() {
-    const containerDiv = document.createElement('div');
-    containerDiv.classList.add('icon-container');
+  createIcon(icon: string) {
+    const containerDiv = super.createIcon(icon);
 
-    const iconDiv = document.createElement('i');
-    containerDiv.appendChild(iconDiv);
-
-    iconDiv.classList.add('emoji-icon');
-    iconDiv.innerText = '❓';
+    const iconDiv = containerDiv.childNodes[0] as HTMLElement;
+    iconDiv.classList.add('si--color');
 
     return containerDiv;
   }

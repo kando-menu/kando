@@ -9,20 +9,14 @@
 // SPDX-License-Identifier: MIT
 }}
 
-<div class="fs-1 kando-font">{{strings/heading}}</div>
-<div class="fs-5 mb-3">{{{strings/subheading}}}</div>
-
 <div class='d-flex'>
-  <select class="form-select fs-3 kando-font form-control" id="kando-properties-icon-theme-select">
-    {{#each themes}}
-      <option value="{{key}}">{{name}}</option>
-    {{/each}}
-  </select>
+  <input type="text" class="icon-list-picker-filter fs-3 kando-font form-control flex-grow-1 mt-3" placeholder="{{strings/placeholder}}" />
 </div>
 
-<div id="kando-properties-icon-picker"></div>
-
-<div class='d-flex justify-content-end'>
-  <button class="btn btn-secondary fs-3 kando-font me-3 my-3 px-5 ms-auto" id="kando-properties-icon-picker-cancel">{{strings/cancel}}</button>
-  <button class="btn btn-secondary fs-3 kando-font my-3 px-5" id="kando-properties-icon-picker-ok">{{strings/done}}</button>
+<div class='scrollbox mx-2' style="height: 30vh;">
+  <div class="scrollbox-content">
+    <div class="icon-list-picker-grid" class="justify-content-start"></div>
+  </div>
 </div>
+
+<span class="spinner"></span>

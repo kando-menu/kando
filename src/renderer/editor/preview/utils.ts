@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../math';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 
 /**
@@ -172,9 +172,7 @@ export function computeItemAnglesWithDropIndex(
 export function createCenterDiv(item: IEditorMenuItem) {
   const div = document.createElement('div');
   div.classList.add('kando-menu-preview-center');
-  div.appendChild(
-    IconThemeRegistry.getInstance().getTheme(item.iconTheme).createDiv(item.icon)
-  );
+  div.appendChild(IconThemeRegistry.getInstance().createIcon(item.iconTheme, item.icon));
   return div;
 }
 
@@ -189,9 +187,7 @@ export function createChildDiv(item: IEditorMenuItem) {
   div.classList.add('kando-menu-preview-child');
 
   // Add the icon of the child.
-  div.appendChild(
-    IconThemeRegistry.getInstance().getTheme(item.iconTheme).createDiv(item.icon)
-  );
+  div.appendChild(IconThemeRegistry.getInstance().createIcon(item.iconTheme, item.icon));
 
   // If the child can have children, we add container for the grandchildren. The actual
   // grandchildren divs are added on demand as their number may change if items are
@@ -237,9 +233,10 @@ export function createLockDiv(
     div.classList.add('locked');
   }
 
-  const icon = IconThemeRegistry.getInstance()
-    .getTheme('material-symbols-rounded')
-    .createDiv(initiallyLocked ? 'lock' : 'lock_open');
+  const icon = IconThemeRegistry.getInstance().createIcon(
+    'material-symbols-rounded',
+    initiallyLocked ? 'lock' : 'lock_open'
+  );
   div.appendChild(icon);
 
   div.addEventListener('pointerdown', (e) => {

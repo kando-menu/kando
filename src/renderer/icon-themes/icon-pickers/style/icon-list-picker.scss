@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-#kando-menu-properties-icon-picker {
+.icon-list-picker {
   .spinner {
     $size: 128px;
 
@@ -42,13 +42,13 @@
     opacity: 1;
   }
 
-  &.loading #kando-properties-icon-picker-grid {
+  &.loading .icon-list-picker-grid {
     pointer-events: none;
     visibility: hidden;
   }
 }
 
-#kando-properties-icon-picker-grid {
+.icon-list-picker-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(calc(32px + 2vw), 1fr));
   transition: opacity 150ms ease;

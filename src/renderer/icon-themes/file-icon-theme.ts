@@ -10,28 +10,29 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IIconTheme } from '../icon-theme-registry';
+import { IconListTheme } from './icon-list-theme';
+import { IFileIconThemeDescription } from '../../common';
 
 /**
- * This class implements an icon theme that uses the Material Symbols Rounded font as
- * icons.
+ * This class is used for custom icon themes loaded from a icon-themes directory on the
+ * user's file system.
  */
-export class MaterialSymbolsTheme implements IIconTheme {
-  /** This array contains all available icon names. It is initialized in the constructor. */
-  private iconNames: Array<string> = [];
-
-  constructor() {
-    // Load material symbols type definition as text file.
-    const string = require('!!raw-loader!material-symbols/index.d.ts').default;
-
-    // Use regex to extract all icon names. All the names are simply enclosed by quotes in
-    // the type definition file above, so the regex is quite simple.
-    this.iconNames = string.match(/"(.*?)"/g).map((name: string) => name.slice(1, -1));
+export class FileIconTheme extends IconListTheme {
+  /**
+   * Creates a new FileIconTheme.
+   *
+   * @param description The description of the icon theme.
+   */
+  constructor(private description: IFileIconThemeDescription) {
+    super();
   }
 
-  /** Returns a human-readable name of the icon theme. */
+  /**
+   * The name of the icon corresponds to the name of the directory in the icon-themes
+   * subdirectory of Kando's config directory.
+   */
   get name() {
-    return 'Material Symbols Rounded';
+    return this.description.name;
   }
 
   /**
@@ -41,7 +42,7 @@ export class MaterialSymbolsTheme implements IIconTheme {
    * @returns An array of icon names that match the search term.
    */
   public async listIcons(searchTerm: string) {
-    return matchSorter(this.iconNames, searchTerm);
+    return matchSorter(this.description.icons, searchTerm);
   }
 
   /**
@@ -50,15 +51,15 @@ export class MaterialSymbolsTheme implements IIconTheme {
    * @param icon One of the icons returned by `listIcons`.
    * @returns A div element that contains the icon.
    */
-  createDiv(icon: string) {
+  createIcon(icon: string) {
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('icon-container');
 
-    const iconDiv = document.createElement('i');
-    containerDiv.appendChild(iconDiv);
+    const iconDiv = document.createElement('img');
+    iconDiv.src = `file://${this.description.directory}/${icon}`;
+    iconDiv.draggable = false;
 
-    iconDiv.classList.add('material-symbols-rounded');
-    iconDiv.innerText = icon;
+    containerDiv.appendChild(iconDiv);
 
     return containerDiv;
   }

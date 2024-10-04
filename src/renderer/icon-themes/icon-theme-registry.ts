@@ -8,12 +8,48 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { SimpleIconsTheme } from './icon-themes/simple-icons-theme';
-import { SimpleIconsColoredTheme } from './icon-themes/simple-icons-colored-theme';
-import { MaterialSymbolsTheme } from './icon-themes/material-symbols-theme';
-import { EmojiTheme } from './icon-themes/emoji-theme';
-import { FileIconTheme } from './icon-themes/file-icon-theme';
-import { FallbackTheme } from './icon-themes/fallback-theme';
+import { SimpleIconsTheme } from './simple-icons-theme';
+import { SimpleIconsColoredTheme } from './simple-icons-colored-theme';
+import { MaterialSymbolsTheme } from './material-symbols-theme';
+import { EmojiTheme } from './emoji-theme';
+import { FileIconTheme } from './file-icon-theme';
+import { FallbackTheme } from './fallback-theme';
+
+/**
+ * This interface describes an icon picker. An icon picker is a UI element that allows the
+ * user to pick an icon from an icon theme.
+ */
+export interface IIconPicker {
+  /**
+   * Registers a callback that is called when the user selects an icon.
+   *
+   * @param callback A callback that is called when the user selects an icon. The callback
+   *   receives the selected icon as an argument.
+   */
+  onSelect(callback: (icon: string) => void): void;
+
+  /**
+   * Registers a callback that is called when the icon picker should be closed. This could
+   * be for instance if the user double-clicks an icon.
+   *
+   * @param callback A callback that is called when the icon picker should be closed.
+   */
+  onClose(callback: () => void): void;
+
+  /**
+   * Initializes the icon picker. This method will be called after the icon picker is
+   * appended to the DOM.
+   *
+   * @param selectedIcon The icon that is currently selected.
+   */
+  init(selectedIcon: string): void;
+
+  /** Can be used to clean up resources when the icon picker is no longer needed. */
+  deinit(): void;
+
+  /** Returns the HTML element of the icon picker. */
+  getElement(): HTMLElement;
+}
 
 /**
  * This interface describes an icon theme. An icon theme is a collection of icons that can
@@ -25,23 +61,20 @@ export interface IIconTheme {
   name: string;
 
   /**
-   * Returns a list icons from this theme that match the given search term. This can be
-   * implemented asynchronously if retrieving the list of icons is an expensive
-   * operation.
-   *
-   * @param searchTerm The search term to filter the icons.
-   * @returns A promise that resolves to an array of icon names that match the search
-   *   term.
-   */
-  listIcons(searchTerm: string): Promise<Array<string>>;
-
-  /**
    * Creates a div element that contains the icon with the given name.
    *
    * @param icon One of the icons returned by `listIcons`.
    * @returns A div element that contains the icon.
    */
-  createDiv(icon: string): HTMLElement;
+  createIcon(icon: string): HTMLElement;
+
+  /**
+   * Creates an IIconPicker instance that allows the user to pick an icon from the icon
+   * theme.
+   *
+   * @returns An IIconPicker instance.
+   */
+  createIconPicker(): IIconPicker;
 }
 
 /**
@@ -117,5 +150,27 @@ export class IconThemeRegistry {
    */
   public getTheme(key: string): IIconTheme {
     return this.iconThemes.get(key) || this.fallbackTheme;
+  }
+
+  /**
+   * Create an icon div from the given icon name.
+   *
+   * @param theme The icon theme to use.
+   * @param icon The name of the icon.
+   * @returns A div element that contains the icon.
+   */
+  public createIcon(theme: string, icon: string): HTMLElement {
+    return this.getTheme(theme).createIcon(icon);
+  }
+
+  /**
+   * Creates an IIConPicker instance that allows the user to pick an icon from the icon
+   * theme.
+   *
+   * @param theme The icon theme to use.
+   * @returns An IIconPicker instance.
+   */
+  createIconPicker(theme: string): IIconPicker {
+    return this.getTheme(theme).createIconPicker();
   }
 }
