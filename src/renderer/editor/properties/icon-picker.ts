@@ -137,7 +137,7 @@ export class IconPicker extends EventEmitter {
     this.picker = IconThemeRegistry.getInstance().createIconPicker(theme);
 
     this.pickerContainer.innerHTML = '';
-    this.pickerContainer.appendChild(this.picker.getElement());
+    this.pickerContainer.appendChild(this.picker.getFragment());
 
     this.picker.init(this.initialIcon);
     this.picker.onSelect((icon) => this.emit('select', icon, theme));

@@ -30,8 +30,8 @@ declare global {
  * even with a large number of icons.
  */
 export class IconListPicker implements IIconPicker {
-  /** The container to which the icon picker is appended. */
-  private element: HTMLElement = null;
+  /** The HTML elements of the icon picker. */
+  private fragment: DocumentFragment = null;
 
   /** This callback is called when the user selects an icon. */
   private onSelectCallback: (icon: string) => void = null;
@@ -44,6 +44,9 @@ export class IconListPicker implements IIconPicker {
 
   /** The div containing the grid of icons. */
   private iconGrid: HTMLElement = null;
+
+  /** The spinner. */
+  private spinner: HTMLElement = null;
 
   /** The icon that is currently selected. */
   private selectedIcon: string = null;
@@ -61,7 +64,11 @@ export class IconListPicker implements IIconPicker {
    */
   private tooltips: Tooltip[] = [];
 
-  /** Creates a new IconPicker and appends it to the given container. */
+  /**
+   * Creates a new IconPicker for the given theme.
+   *
+   * @param theme The theme for which the icon picker is created.
+   */
   constructor(private theme: IconListTheme) {
     const data = {
       strings: {
@@ -70,22 +77,23 @@ export class IconListPicker implements IIconPicker {
     };
 
     const template = require('./templates/icon-list-picker.hbs');
-    this.element = document.createElement('div');
-    this.element.innerHTML = template(data);
+    this.fragment = document.createRange().createContextualFragment(template(data));
 
-    // Store a reference to the icon grid, the filter input and the theme select field.
-    this.iconGrid = this.element.querySelector('.icon-list-picker-grid');
+    // Store a reference to the icon grid, the spinner, the filter input, and the theme
+    // select field.
+    this.iconGrid = this.fragment.querySelector('.icon-list-picker-grid');
+    this.spinner = this.fragment.querySelector('.icon-list-picker-spinner');
 
-    this.filterInput = this.element.querySelector(
+    this.filterInput = this.fragment.querySelector(
       '.icon-list-picker-filter'
     ) as HTMLInputElement;
 
     this.filterInput.addEventListener('input', () => this.loadIcons());
   }
 
-  /** Returns the HTML element of the icon picker. */
-  public getElement() {
-    return this.element;
+  /** Returns the HTML fragment of the icon picker. */
+  public getFragment() {
+    return this.fragment;
   }
 
   /** Registers a callback that is called when the user selects an icon. */
@@ -135,7 +143,8 @@ export class IconListPicker implements IIconPicker {
 
     // Clear existing icons.
     this.iconGrid.innerHTML = '';
-    this.element.classList.add('loading');
+    this.iconGrid.classList.add('loading');
+    this.spinner.classList.add('loading');
 
     if (this.observer) {
       this.observer.disconnect();
@@ -216,7 +225,8 @@ export class IconListPicker implements IIconPicker {
       } else {
         // The loading operation is finished. Clean up and scroll to the selected icon.
         this.loadAbortController = null;
-        this.element.classList.remove('loading');
+        this.iconGrid.classList.remove('loading');
+        this.spinner.classList.remove('loading');
 
         const scrollbox = this.iconGrid.parentElement.parentElement;
         if (this.selectedIconDiv) {

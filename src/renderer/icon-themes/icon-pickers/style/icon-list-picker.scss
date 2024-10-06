@@ -8,43 +8,36 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.icon-list-picker {
-  .spinner {
-    $size: 128px;
+.icon-list-picker-spinner {
+  $size: 128px;
 
-    position: absolute;
-    top: calc(50% - $size / 2);
-    left: calc(50% - $size / 2);
+  position: absolute;
+  top: calc(50% - $size / 2);
+  left: calc(50% - $size / 2);
 
-    pointer-events: none;
-    opacity: 0;
+  pointer-events: none;
+  opacity: 0;
 
-    width: $size;
-    height: $size;
-    border-radius: 50%;
-    border-top: 3px solid #fff;
-    border-right: 3px solid transparent;
-    animation: spinnerRotation 1s linear infinite;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  border-top: 3px solid #fff;
+  border-right: 3px solid transparent;
+  animation: spinnerRotation 1s linear infinite;
 
-    transition: opacity 500ms ease;
-  }
+  transition: opacity 500ms ease;
 
-  @keyframes spinnerRotation {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  &.loading .spinner {
+  &.loading {
     opacity: 1;
   }
+}
 
-  &.loading .icon-list-picker-grid {
-    pointer-events: none;
-    visibility: hidden;
+@keyframes spinnerRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
@@ -52,6 +45,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(calc(32px + 2vw), 1fr));
   transition: opacity 150ms ease;
+
+  &.loading {
+    pointer-events: none;
+    visibility: hidden;
+  }
 
   & > div {
     aspect-ratio: 1 / 1;

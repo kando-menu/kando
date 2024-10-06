@@ -14,6 +14,7 @@ import { MaterialSymbolsTheme } from './material-symbols-theme';
 import { EmojiTheme } from './emoji-theme';
 import { FileIconTheme } from './file-icon-theme';
 import { FallbackTheme } from './fallback-theme';
+import { Base64Theme } from './base64-theme';
 
 /**
  * This interface describes an icon picker. An icon picker is a UI element that allows the
@@ -47,8 +48,8 @@ export interface IIconPicker {
   /** Can be used to clean up resources when the icon picker is no longer needed. */
   deinit(): void;
 
-  /** Returns the HTML element of the icon picker. */
-  getElement(): HTMLElement;
+  /** Returns the HTML fragment of the icon picker. */
+  getFragment(): DocumentFragment;
 }
 
 /**
@@ -103,6 +104,7 @@ export class IconThemeRegistry {
     this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
     this.iconThemes.set('emoji', new EmojiTheme());
+    this.iconThemes.set('base64', new Base64Theme());
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
     window.api.getIconThemes().then((info) => {
