@@ -8,8 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import i18next from 'i18next';
-
 import { IIconPicker } from '../icon-theme-registry';
 
 /**
