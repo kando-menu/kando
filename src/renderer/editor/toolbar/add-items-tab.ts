@@ -10,7 +10,7 @@
 
 import { ToolbarDraggable } from './toolbar-draggable';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
 import { DnDManager } from '../common/dnd-manager';
 import { IMenuItem } from '../../../common';
 
@@ -39,9 +39,10 @@ export class AddItemsTab {
       data.push({
         name: type.defaultName,
         description: type.genericDescription,
-        icon: IconThemeRegistry.getInstance()
-          .getTheme(type.defaultIconTheme)
-          .createDiv(type.defaultIcon).outerHTML,
+        icon: IconThemeRegistry.getInstance().createIcon(
+          type.defaultIconTheme,
+          type.defaultIcon
+        ).outerHTML,
         typeName,
       });
     });

@@ -19,7 +19,7 @@ import {
   deepCopyMenuItem,
 } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
 import { ToolbarDraggable } from './toolbar-draggable';
@@ -115,9 +115,10 @@ export class TemplatesTab extends DropTargetTab {
           name: menu.root.name,
           description:
             (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) || 'Not bound.',
-          icon: IconThemeRegistry.getInstance()
-            .getTheme(menu.root.iconTheme)
-            .createDiv(menu.root.icon).outerHTML,
+          icon: IconThemeRegistry.getInstance().createIcon(
+            menu.root.iconTheme,
+            menu.root.icon
+          ).outerHTML,
           index,
         };
       }
@@ -129,9 +130,8 @@ export class TemplatesTab extends DropTargetTab {
         isMenu: false,
         name: item.name,
         description: typeInfo?.getDescription(item),
-        icon: IconThemeRegistry.getInstance()
-          .getTheme(item.iconTheme)
-          .createDiv(item.icon).outerHTML,
+        icon: IconThemeRegistry.getInstance().createIcon(item.iconTheme, item.icon)
+          .outerHTML,
         index,
       };
     });

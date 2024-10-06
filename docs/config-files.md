@@ -97,8 +97,8 @@ Each menu item is a JSON object with the following properties:
 Property | Default Value | Description
 -------- | ------------- | -----------
 `name` | `"undefined"` | The name of the menu item. This is shown in the center of the menu when the item is hovered. The name of the root item defines the name of the menu.
-`iconTheme` | `""` | This can either be one of the built-in icon themes (`"material-symbols-rounded"`, `"simple-icons"`, `"simple-icons-colored"`, or `"emoji"`) or a subdirectory of the `icon-themes` subdirectory in Kando's config directory. The built-in icon themes use icons from [Google's Material Symbols](https://fonts.google.com/icons) or [Simple Icons](https://simpleicons.org/) respectively.
-`icon` | `""` | The name of the icon from the given icon theme or an emoji like `"🚀"`.
+`iconTheme` | `""` | This can either be one of the built-in icon themes (`"material-symbols-rounded"`, `"simple-icons"`, `"simple-icons-colored"`, `"base64"`, or `"emoji"`) or a subdirectory of the `icon-themes` subdirectory in Kando's config directory. The built-in icon themes use icons from [Google's Material Symbols](https://fonts.google.com/icons) or [Simple Icons](https://simpleicons.org/) respectively.
+`icon` | `""` | The name of the icon from the given icon theme, an emoji like `"🚀"` (if the `iconTheme` is `"emoji"`), or a base64-encode image like `"data:image/gif;base64,..."` (if the icon theme is `"base64"`).
 `angle` | _auto_ | If given, this defines the angle of the menu item in degrees. If this is not given, the angle is calculated automatically. 0° means that the item is at the top of the menu, 90° means that the item is on the right side of the menu, and so on. All sibling items are evenly distributed around the items with given angles.
 `type` | `"submenu"` | The type of the menu item. There are several types available. See below for details.
 `data` | `{}` | Depending on the type of the item, this can contain additional data. See below for details.

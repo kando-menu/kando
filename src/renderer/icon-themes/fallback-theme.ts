@@ -8,30 +8,38 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { SimpleIconsTheme } from './simple-icons-theme';
+import { IIconPicker, IIconTheme } from './icon-theme-registry';
 
 /**
- * This class implements an icon theme that uses the Simple Icons font as icons. It colors
- * the icons using the `si--color` class.
+ * This class implements an icon theme that is used if the user has not selected a valid
+ * icon theme.
  */
-export class SimpleIconsColoredTheme extends SimpleIconsTheme {
-  /** Returns a human-readable name of the icon theme. */
+export class FallbackTheme implements IIconTheme {
+  /** Not required as this is not a user-selectable theme. */
   get name() {
-    return 'Simple Icons (Colored)';
+    return '';
   }
 
   /**
-   * Creates a div element that contains the icon with the given name.
+   * Creates a div with a question mark icon.
    *
-   * @param icon One of the icons returned by `listIcons`.
    * @returns A div element that contains the icon.
    */
-  createDiv(icon: string) {
-    const containerDiv = super.createDiv(icon);
+  createIcon() {
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('icon-container');
 
-    const iconDiv = containerDiv.childNodes[0] as HTMLElement;
-    iconDiv.classList.add('si--color');
+    const iconDiv = document.createElement('i');
+    containerDiv.appendChild(iconDiv);
+
+    iconDiv.classList.add('emoji-icon');
+    iconDiv.innerText = '❓';
 
     return containerDiv;
+  }
+
+  /** Not required as this is not a user-selectable theme. */
+  createIconPicker(): IIconPicker {
+    return null;
   }
 }
