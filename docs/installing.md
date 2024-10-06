@@ -198,7 +198,8 @@ This will create several packages in the `out/` directory.
 * Per default, Kando runs under **XWayland** on Wayland compositors. If you want to run it natively, you can set the environment variable `ELECTRON_OZONE_PLATFORM_HINT=wayland` before starting Kando. This is not yet fully tested but should work on most distributions.
 * On **Hyprland**, you will need some window rules for Kando:
   ```
-  windowrule = noblur, kando 
+  windowrule = noblur, kando
+  windowrule = opaque, kando
   windowrule = size 100% 100%, kando
   windowrule = noborder, kando
   windowrule = noanim, kando
