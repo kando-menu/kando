@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
+- **Support for base64 icons!** This allows you to directly embed base64 encoded images. This will be especially helpful for menus which are dynamically generated via some sort of API in the future. Use `"base64"` as the icon theme and provide the base64 encoded image as the `"icon"`. This will be a string starting with something like `"data:image/svg+xml;base64, ..."`. This even supports animated gifs!
 - Icon themes are now also loaded from `resources/app/.webpack/renderer/assets/icon-themes/` in the installation directory. This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update.
 - Support for symbolic links in the `icon-themes` directory. You can now create a symbolic link to an icon theme in the `icon-themes` directory and Kando will load the icons from the linked directory.
 
