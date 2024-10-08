@@ -56,7 +56,8 @@
             "uri-hint": "Esto será abierto.",
             "tip-1": "Puedes usar el elemento de tipo URI para abrir un sitio web utilizando el protocolo http://.",
             "name": "Abrir URI",
-            "description": "Abrir archivos o sitios web."
+            "description": "Abrir archivos o sitios web.",
+            "tip-6": "Utilice {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú."
         }
     },
     "toolbar": {
@@ -71,7 +72,11 @@
             "reset-color-picker": "Reiniciar colores por defecto",
             "label": "Temas del menú",
             "dark-mode": "Usa temas y colores separados para el modo claro y oscuro",
-            "author": "Por {{author}}"
+            "author": "Por {{author}}",
+            "caption": "En el futuro, tendremos un repositorio en línea para temas de menú.¡ Por ahora, puedes <a {{tutorialLink}}>aprender a crear tus propios temas</a> y compartirlos en <un {{discordLink}}>Servidor de Discord de Kando</a>!",
+            "system-mode-subheading": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
+            "system-mode-subheading-dark": "Actualmente, su sistema está en modo oscuro. Las configuraciones anteriores solo se utilizarán en modo oscuro.",
+            "system-mode-subheading-light": "Su sistema está actualmente en modo claro. Las configuraciones anteriores solo se usarán en modo claro."
         },
         "menus-tab": {
             "create-menu-button": "Crear un menú!",
@@ -84,12 +89,18 @@
             "label": "Papelera",
             "subheading": "Cuando reinicies Kando, esto desaparecerá.",
             "heading": "Puedes eliminar menús y elementos descargándolos aquí!"
+        },
+        "templates-tab": {
+            "heading": "¡Suelte aquí menús y elementos del menú y utilícelos como plantillas!",
+            "subheading": "Crear copias de los elementos almacenados moviéndolos a la pestaña de menús o a la vista previa arriba.",
+            "label": "Plantillas"
         }
     },
     "properties": {
         "icon-picker": {
             "placeholder": "Buscando iconos…",
-            "heading": "Selecciona un ícono"
+            "heading": "Selecciona un ícono",
+            "subheading": "Añade tus propias colecciones de iconos colocando una carpeta con imágenes en {{path}}. Necesitarás reiniciar Kando. Aprende más <a {{- link}}>aquí</a>."
         },
         "macro-picker": {
             "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
@@ -108,7 +119,9 @@
             "centered-mode-hint": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
             "heading": "Configura el comportamiento del menú.",
             "centered-mode": "Modo Centrado.",
-            "anchored-mode": "Modo Fijado"
+            "anchored-mode": "Modo Fijado",
+            "anchored-mode-checked-hint": "Al marcar esto, se deshabilitará el modo de marcado.",
+            "subheading": "Antes de habilitar estas opciones, recomendamos aprender el comportamiento por defecto de Kando. Lee sobre por qué nos gusta <a {{- link}}>aquí</a>."
         },
         "common": {
             "menu-behavior": "Comportamiento del menú",
@@ -134,7 +147,12 @@
             "top-placeholder": "Arriba",
             "bottom-placeholder": "Abajo",
             "pointer-position-hint": "Tu cursor está en  {{x}} x {{y}} actualmente.",
-            "app-hint": "Muestra el menú solo si una aplicación específica está enfocada."
+            "app-hint": "Muestra el menú solo si una aplicación específica está enfocada.",
+            "subheading": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
+            "app-tooltip": "Utilice la aplicación que estaba activa cuando se sbrió el Kando.",
+            "window-hint": "Mostrar el menú solo si el título de la ventana activo contiene un texto dado.",
+            "window-tooltip": "Usar la ventana que estaba activa cuando se abrió Kando.",
+            "screen-hint": "Mostrar el menú solo si el puntero está en una zona determinada de la pantalla."
         },
         "hotkey-picker": {
             "label": "Atajo",
@@ -154,7 +172,14 @@
         "config-guide-button": "Guia de Config",
         "discord-button": "Chatea en Discord",
         "buy-me-a-coffee-button": "Kando en Ko-fi",
-        "sponsors-button": "Lista de Sponsors"
+        "sponsors-button": "Lista de Sponsors",
+        "intro-text": "Kando viene con un menú básico de ejemplo. ¡Puedes jugar con él, pero deberías crear tus propios menús pronto! Puede abrir el editor de menús haciendo clic en el icono de engranaje en la esquina inferior derecha de la pantalla.",
+        "introduction-tab-slide-2-caption": "Regresar: Puedes subir un nivel haciendo clic en el elemento central.",
+        "introduction-tab-slide-1-caption": "Haz clic en cualquier lugar: No tienes que hacer clic exactamente en el elemento, ¡sólo tienes que hacer clic en algún lugar de su área!",
+        "introduction-tab-slide-3-caption": "Modo de marcado: Arrastre sobre un elemento para entrar en el modo de marcado. Si pausa el movimiento del puntero o hace un giro, se abrirá el submenú arrastrado actualmente.",
+        "introduction-tab-slide-4-caption": "Modo Turbo: Si mantiene pulsada una tecla después de abrir el menú, puede realizar selecciones moviendo simplemente el puntero. ¡Esta es la forma más rápida de seleccionar elementos!",
+        "introduction-tab-slide-5-caption": "Sin selecciones accidentales: las acciones solo se llevan a cabo tan pronto como se suelta el botón del mouse en \"modo de marcado\" o una tecla del teclado en \"modo turbo\". ¡Usa esto para explorar el menú!",
+        "reload-menu-theme-button-tooltip": "Los cambios de CSS se aplican inmediatamente. Para realizar cambios en el archivo theme.json, deberá volver a abrir el menú."
     },
     "example-menu": {
         "name": "Menú de ejemplo",
@@ -198,16 +223,34 @@
             "documents": "Documentos",
             "desktop": "Escritorio",
             "home": "Inicio",
-            "music": "Música"
+            "music": "Música",
+            "submenu": "Favoritos"
         },
         "windows": {
             "submenu": "Ventanas",
-            "close-window": "Cerrar ventana"
+            "close-window": "Cerrar ventana",
+            "mission-control": "Mission Control",
+            "toggle-maximize": "Alternar maximizar",
+            "tile-right": "Ajustar a la derecha",
+            "tile-left": "Ajustar a la izquierda"
         },
-        "next-workspace": "Siguiente espacio de trabajo"
+        "next-workspace": "Siguiente espacio de trabajo",
+        "previous-workspace": "Espacio de trabajo anterior"
     },
     "main": {
         "is-running-header": "Kando ya está ejecutándose.",
-        "failed-to-start-header": "Kando ha fallado en iniciarse."
+        "failed-to-start-header": "Kando ha fallado en iniciarse.",
+        "is-running-message": "¡Consulta el icono de la bandeja del sistema para ver algunas opciones!"
+    },
+    "backends": {
+        "hyprland": {
+            "shortcut-hint": "Utilice hyprland.conf para vincular esto."
+        },
+        "gnome": {
+            "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: {{- link}}"
+        },
+        "kde-wayland": {
+            "shortcut-hint": "Utilice la configuración del sistema de KDE para enlazar esto."
+        }
     }
 }
