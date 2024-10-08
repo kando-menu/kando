@@ -2,13 +2,14 @@
     "items": {
         "command": {
             "tip-2": "Si la dirección al ejecutable contiene espacios, deberias de \"ponerlo en comillas\".",
-            "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrio el menu.",
-            "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrio el menu.",
+            "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
+            "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrió el menú.",
             "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
             "command": "Comando",
             "command-hint": "Esto se ejecutará.",
             "name": "Ejecutar comando",
-            "description": "Ejecuta cualquier comando del shell."
+            "description": "Ejecuta cualquier comando del shell.",
+            "tip-1": "Puedes usar el tipo de elemento de Comando para lanzar aplicaciones o scripts."
         },
         "hotkey": {
             "tip-2": "Si no puedes grabar una tecla porque la utiliza el sistema, prueba a escribir directamente su nombre.",
@@ -24,7 +25,7 @@
             "description": "Escribe una macro del teclado."
         },
         "submenu": {
-            "tip-1": "Los submenús pueden utilizarse para agrupar items.",
+            "tip-1": "Los submenús pueden utilizarse para agrupar elementos.",
             "tip-3": "Los submenús permiten crear estructuras de menú complejas.",
             "tip-4": "Evite añadir más de doce elementos a un submenú. Ocho es un buen número.",
             "tip-6": "Puede reordenar los elementos arrastrándolos en la vista previa.",
@@ -33,27 +34,62 @@
             "tip-10": "Puedes copiar menús y elementos arrastrándolos mientras mantienes pulsada la tecla Ctrl.",
             "name": "Submenú",
             "description": "Contiene otras opciones de menú.",
-            "detailed-description_one": "Contiene un item del menú.",
-            "detailed-description_many": "Contiene {{count}} items del menú.",
+            "detailed-description_one": "Contiene un elemento del menú.Contiene {{count}} elementos del menú.",
+            "detailed-description_many": "",
             "detailed-description_other": "",
-            "tip-11": "Puede abrir menús desde la línea de comandos mediante el indicador --menu.",
-            "tip-8": "Puedes eliminar elementos arrastrándolos a la papelera de la barra de herramientas."
+            "tip-11": "Puede abrir menús desde la línea de comandos mediante el indicador --menú.",
+            "tip-8": "Puedes eliminar elementos arrastrándolos a la papelera de la barra de herramientas.",
+            "tip-2": "También puedes anidar submenús dentro de submenús.",
+            "tip-5": "Puedes usar lo íconos de bloqueo en la vista previa para fijar la posición de un elemento en el menú."
         },
         "common": {
             "delayed-option": "Ejecutar después de cerrar el menú",
             "delayed-option-hint": "Útil si la acción se dirige a una ventana que necesita ser enfocada.",
             "not-configured": "No configurado"
+        },
+        "uri": {
+            "tip-2": "Puedes usar el elemento de tipo URI para abrir un archivo o carpeta usando el protocolo file://.",
+            "tip-3": "Puedes usar el elemento de tipo URI para abrir un link mailto:.",
+            "tip-5": "Usa {{app_name}} para insertar el nombre de la ventana que fué enfocada cuando abriste el menú.",
+            "tip-4": "Usa {{app_name}} para insertar el nombre de la aplicación que fué enfocada cuando abriste el menú.",
+            "uri": "URI",
+            "uri-hint": "Esto será abierto.",
+            "tip-1": "Puedes usar el elemento de tipo URI para abrir un sitio web utilizando el protocolo http://.",
+            "name": "Abrir URI",
+            "description": "Abrir archivos o sitios web."
         }
     },
     "toolbar": {
         "editor-themes-tab": {
             "heading": "¡Aquí habrá una lista de temas de editor disponibles!",
-            "subheading": "En el futuro, será posible tematizar todo el editor de menú."
+            "subheading": "En el futuro, será posible tematizar todo el editor de menú.",
+            "label": "Temas del editor"
+        },
+        "menu-themes-tab": {
+            "edit-colors": "Editar Colores",
+            "close-color-picker": "Cerrar el editor de color",
+            "reset-color-picker": "Reiniciar colores por defecto",
+            "label": "Temas del menú",
+            "dark-mode": "Usa temas y colores separados para el modo claro y oscuro",
+            "author": "Por {{author}}"
+        },
+        "menus-tab": {
+            "create-menu-button": "Crear un menú!",
+            "label": "Menús"
+        },
+        "add-items-tab": {
+            "label": "Elementos de Menú"
+        },
+        "trash-tab": {
+            "label": "Papelera",
+            "subheading": "Cuando reinicies Kando, esto desaparecerá.",
+            "heading": "Puedes eliminar menús y elementos descargándolos aquí!"
         }
     },
     "properties": {
         "icon-picker": {
-            "placeholder": "Buscando iconos…"
+            "placeholder": "Buscando iconos…",
+            "heading": "Selecciona un ícono"
         },
         "macro-picker": {
             "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
@@ -63,7 +99,115 @@
             "label": "ID de acceso directo global"
         },
         "shortcut-picker": {
-            "label": "Tecla de acceso directo"
+            "label": "Tecla de acceso directo",
+            "recording": "Presiona un atajo…",
+            "hint": "Esto abrirá el menú."
+        },
+        "advanced-options": {
+            "anchored-mode-hint": "Abrir submenús en la misma posición que el menú origen.",
+            "centered-mode-hint": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
+            "heading": "Configura el comportamiento del menú.",
+            "centered-mode": "Modo Centrado.",
+            "anchored-mode": "Modo Fijado"
+        },
+        "common": {
+            "menu-behavior": "Comportamiento del menú",
+            "menu-behavior-hint": "Configura opciones avanzadas para el menú.",
+            "menu-conditions": "Condiciones de menú",
+            "menu-conditions-hint": "Elige cuándo el menú debería de mostrarse.",
+            "cancel": "Cancelar",
+            "not-bound": "No asignado",
+            "done": "Hecho."
+        },
+        "condition-picker": {
+            "heading": "Selecciona las condiciones de menú",
+            "app": "Limitar a Apps específicas",
+            "app-placeholder": "Nombre de App",
+            "window": "Limitar a títulos de ventana específicos",
+            "window-placeholder": "Título de ventana",
+            "screen": "Limitar a área de ventana específica",
+            "left-placeholder": "Izquierda",
+            "app-checked-hint": "Esto soporta expresiones regulares cómo /firefox|chrome/i.",
+            "window-checked-hint": "Esto soporta expresiones regulares cómo /youtube|vimeo/i.",
+            "screen-checked-hint": "En pixeles, relativo a la ezquina superior izquierda de tu pantalla principal.",
+            "right-placeholder": "Derecha",
+            "top-placeholder": "Arriba",
+            "bottom-placeholder": "Abajo",
+            "pointer-position-hint": "Tu cursor está en  {{x}} x {{y}} actualmente.",
+            "app-hint": "Muestra el menú solo si una aplicación específica está enfocada."
+        },
+        "hotkey-picker": {
+            "label": "Atajo",
+            "hint": "Esto será simulado.",
+            "recording": "Presiona un atajo…"
         }
+    },
+    "sidebar": {
+        "welcome": "Bienvenid@ a Kando!",
+        "watch-intro-button": "Aprende cómo usar Kando",
+        "new-version-button": "Una nueva versión de Kando está disponible!",
+        "introduction-tab-header": "Introducción",
+        "development-tab-header": "Desarrollo",
+        "dev-tools-button": "Mostrar herramientas de desarrollo",
+        "dev-tools-button-tooltip": "Abrir las herramientas de desarrollo web para inspeccionar la UI.",
+        "reload-menu-theme-button": "Recargar el tema de Menú actual",
+        "config-guide-button": "Guia de Config",
+        "discord-button": "Chatea en Discord",
+        "buy-me-a-coffee-button": "Kando en Ko-fi",
+        "sponsors-button": "Lista de Sponsors"
+    },
+    "example-menu": {
+        "name": "Menú de ejemplo",
+        "apps": {
+            "submenu": "Apps",
+            "safari": "Safari",
+            "web-browser": "Navegador",
+            "email": "Correo Electrónico",
+            "apple-music": "Música",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "finder": "Finder",
+            "file-browser": "Administrador de Archivos",
+            "terminal": "Terminal"
+        },
+        "web-links": {
+            "google": "Google",
+            "submenu": "Sitios Web",
+            "kando-on-github": "Kando en GitHub",
+            "kando-on-kofi": "Kando en Ko-fi",
+            "kando-on-youtube": "Kando en YouTube",
+            "kando-on-discord": "Kando en Discord"
+        },
+        "clipboard": {
+            "copy": "Copiar",
+            "cut": "Cortar",
+            "submenu": "Portapapeles",
+            "paste": "Pegar"
+        },
+        "audio": {
+            "submenu": "Sonido",
+            "next-track": "Siguiente pista",
+            "mute": "Silencio",
+            "play-pause": "Reproducir / Pausa",
+            "previous-track": "Anterior pista"
+        },
+        "bookmarks": {
+            "downloads": "Descargas",
+            "videos": "Videos",
+            "pictures": "Imágenes",
+            "documents": "Documentos",
+            "desktop": "Escritorio",
+            "home": "Inicio",
+            "music": "Música"
+        },
+        "windows": {
+            "submenu": "Ventanas",
+            "close-window": "Cerrar ventana"
+        },
+        "next-workspace": "Siguiente espacio de trabajo"
+    },
+    "main": {
+        "is-running-header": "Kando ya está ejecutándose.",
+        "failed-to-start-header": "Kando ha fallado en iniciarse."
     }
 }
