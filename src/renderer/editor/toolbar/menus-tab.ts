@@ -240,6 +240,7 @@ export class MenusTab extends DropTargetTab {
       shortcut: '',
       shortcutID: '',
       centered: false,
+      warpMouse: false,
       anchored: false,
     };
 

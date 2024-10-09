@@ -277,6 +277,9 @@ export interface IMenu {
    */
   centered: boolean;
 
+  /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
+  warpMouse: boolean;
+
   /**
    * If true, the menu will be "anchored". This means that any submenus will be opened at
    * the same position as the parent menu.
@@ -302,6 +305,7 @@ export function deepCopyMenu(menu: IMenu): IMenu {
     shortcut: menu.shortcut,
     shortcutID: menu.shortcutID,
     centered: menu.centered,
+    warpMouse: menu.warpMouse,
     anchored: menu.anchored,
     conditions: structuredClone(menu.conditions),
   };
@@ -336,6 +340,12 @@ export interface IShowMenuOptions {
    * opened at the mouse pointer.
    */
   centeredMode: boolean;
+
+  /**
+   * If this is set, the mouse pointer will be warped to the center of the menu when the
+   * menu is opened.
+   */
+  warpMouse: boolean;
 
   /**
    * If this is set, the menu will be "anchored". This means that any submenus will be

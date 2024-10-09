@@ -76,6 +76,8 @@ Property | Default Value | Description
 `shortcutID` | `""` | On some platforms, Kando can not bind shortcuts directly. In this case, you can use this property to assign an ID which can be used in the global shortcut configuration of your desktop environment. This should be lowercase and contain only ASCII characters and dashes. For example, `"main-trigger"`.
 `root` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
+`warpMouse` | `false` | Whether the mouse cursor should be moved to the center of the menu when the menu is opened in `centered` mode.
+`anchored` | `false` | Whether the submenus should be opened at the position where the menu was opened initially. If this is `false`, the submenus will be opened at the position of the mouse cursor.
 `conditions` | `{}` | A dictionary of conditions which must be met for the menu to be shown. See below for details.
 
 ### Menu Conditions
