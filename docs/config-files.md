@@ -76,6 +76,8 @@ Property | Default Value | Description
 `shortcutID` | `""` | On some platforms, Kando can not bind shortcuts directly. In this case, you can use this property to assign an ID which can be used in the global shortcut configuration of your desktop environment. This should be lowercase and contain only ASCII characters and dashes. For example, `"main-trigger"`.
 `root` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
+`warpMouse` | `false` | Whether the mouse cursor should be moved to the center of the menu when the menu is opened in `centered` mode.
+`anchored` | `false` | Whether the submenus should be opened at the position where the menu was opened initially. If this is `false`, the submenus will be opened at the position of the mouse cursor.
 `conditions` | `{}` | A dictionary of conditions which must be met for the menu to be shown. See below for details.
 
 ### Menu Conditions
@@ -97,8 +99,8 @@ Each menu item is a JSON object with the following properties:
 Property | Default Value | Description
 -------- | ------------- | -----------
 `name` | `"undefined"` | The name of the menu item. This is shown in the center of the menu when the item is hovered. The name of the root item defines the name of the menu.
-`iconTheme` | `""` | This can either be one of the built-in icon themes (`"material-symbols-rounded"`, `"simple-icons"`, `"simple-icons-colored"`, or `"emoji"`) or a subdirectory of the `icon-themes` subdirectory in Kando's config directory. The built-in icon themes use icons from [Google's Material Symbols](https://fonts.google.com/icons) or [Simple Icons](https://simpleicons.org/) respectively.
-`icon` | `""` | The name of the icon from the given icon theme or an emoji like `"🚀"`.
+`iconTheme` | `""` | This can either be one of the built-in icon themes (`"material-symbols-rounded"`, `"simple-icons"`, `"simple-icons-colored"`, `"base64"`, or `"emoji"`) or a subdirectory of the `icon-themes` subdirectory in Kando's config directory. The built-in icon themes use icons from [Google's Material Symbols](https://fonts.google.com/icons) or [Simple Icons](https://simpleicons.org/) respectively.
+`icon` | `""` | The name of the icon from the given icon theme, an emoji like `"🚀"` (if the `iconTheme` is `"emoji"`), or a base64-encode image like `"data:image/gif;base64,..."` (if the icon theme is `"base64"`).
 `angle` | _auto_ | If given, this defines the angle of the menu item in degrees. If this is not given, the angle is calculated automatically. 0° means that the item is at the top of the menu, 90° means that the item is on the right side of the menu, and so on. All sibling items are evenly distributed around the items with given angles.
 `type` | `"submenu"` | The type of the menu item. There are several types available. See below for details.
 `data` | `{}` | Depending on the type of the item, this can contain additional data. See below for details.

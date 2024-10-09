@@ -13,7 +13,7 @@ import i18next from 'i18next';
 import { ToolbarDraggable } from './toolbar-draggable';
 import { DropTargetTab } from './drop-target-tab';
 import { IMenu, IMenuSettings, deepCopyMenu } from '../../../common';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
 
@@ -98,9 +98,7 @@ export class MenusTab extends DropTargetTab {
     const parent = icon.parentElement;
     icon.remove();
     parent.append(
-      IconThemeRegistry.getInstance()
-        .getTheme(menu.root.iconTheme)
-        .createDiv(menu.root.icon)
+      IconThemeRegistry.getInstance().createIcon(menu.root.iconTheme, menu.root.icon)
     );
 
     // Update the shortcut.
@@ -144,9 +142,10 @@ export class MenusTab extends DropTargetTab {
       description:
         (this.showShortcutIDs ? menu.shortcutID : menu.shortcut) ||
         i18next.t('properties.common.not-bound'),
-      icon: IconThemeRegistry.getInstance()
-        .getTheme(menu.root.iconTheme)
-        .createDiv(menu.root.icon).outerHTML,
+      icon: IconThemeRegistry.getInstance().createIcon(
+        menu.root.iconTheme,
+        menu.root.icon
+      ).outerHTML,
       index,
     }));
 
@@ -241,6 +240,7 @@ export class MenusTab extends DropTargetTab {
       shortcut: '',
       shortcutID: '',
       centered: false,
+      warpMouse: false,
       anchored: false,
     };
 

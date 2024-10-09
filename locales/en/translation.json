@@ -79,6 +79,8 @@
       "subheading": "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a {{- link}}>here</a>.",
       "centered-mode": "Centered Mode",
       "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
+      "warp-mouse": "Warp Mouse in Centered Mode",
+      "warp-mouse-hint": "Move the pointer to the center of the menu when it opens.",
       "anchored-mode": "Anchored Mode",
       "anchored-mode-hint": "Open submenus at the same position as the parent menu.",
       "anchored-mode-checked-hint": "Checking this, will disable Marking Mode."

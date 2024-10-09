@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuThemeDescription } from '../../common';
-import { IconThemeRegistry } from '../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../icon-themes/icon-theme-registry';
 import { closestEquivalentAngle } from '../math';
 import { IRenderedMenuItem } from './rendered-menu-item';
 
@@ -167,9 +167,10 @@ export class MenuTheme {
       if (layer.content === 'name') {
         layerDiv.innerText = item.name;
       } else if (layer.content === 'icon') {
-        const icon = IconThemeRegistry.getInstance()
-          .getTheme(item.iconTheme)
-          .createDiv(item.icon);
+        const icon = IconThemeRegistry.getInstance().createIcon(
+          item.iconTheme,
+          item.icon
+        );
         layerDiv.appendChild(icon);
       }
 

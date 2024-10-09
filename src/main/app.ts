@@ -472,6 +472,7 @@ export class KandoApp {
             zoomFactor: this.window.webContents.getZoomFactor(),
             centeredMode: this.lastMenu.centered,
             anchoredMode: this.lastMenu.anchored,
+            warpMouse: this.lastMenu.warpMouse,
           },
           {
             appName: info.appName,

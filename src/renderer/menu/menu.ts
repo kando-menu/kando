@@ -323,7 +323,10 @@ export class Menu extends EventEmitter {
 
     this.options = options;
 
-    this.input.deferredTurboMode = options.centeredMode;
+    // If the pointer is not warped to the center of the menu, we should not enter
+    // turbo-mode right away.
+    this.input.deferredTurboMode = !options.warpMouse && options.centeredMode;
+
     this.input.update(this.getInitialMenuPosition());
     this.input.ignoreNextMotionEvents();
 
@@ -332,6 +335,18 @@ export class Menu extends EventEmitter {
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
     this.selectItem(this.root);
+
+    // If the menu is opened at the screen's center, we have to warp the mouse pointer to
+    // the center of the menu.
+    if (this.options.warpMouse && this.options.centeredMode) {
+      const position = this.getCenterItemPosition();
+      const offset = {
+        x: Math.trunc(position.x - this.options.mousePosition.x),
+        y: Math.trunc(position.y - this.options.mousePosition.y),
+      };
+
+      this.emit('move-pointer', offset);
+    }
 
     // Finally, show the menu.
     this.container.classList.remove('hidden');
@@ -517,7 +532,8 @@ export class Menu extends EventEmitter {
       this.selectionChain.push(item);
     }
 
-    // Clamp the position of the newly selected submenu to the viewport.
+    // Clamp the position of the newly selected menu to the viewport. We warp the mouse
+    // pointer if the menu is shifted.
     if (item.children?.length > 0) {
       const position = this.getCenterItemPosition();
 

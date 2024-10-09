@@ -34,6 +34,11 @@ $rfs-breakpoint: 1400px;
 @import './preview/style';
 @import './properties/style';
 
+// The widgets used to configure the icon-themes are currently located in the icon-themes
+// directory. They are only used in the editor and not by the menu itself.
+@import '../icon-themes/icon-pickers/style/icon-list-picker.scss';
+@import '../icon-themes/icon-pickers/style/base64-picker.scss';
+
 // Handle pointer events -----------------------------------------------------------------
 
 // As the editor UI elements are always drawn on top of the actual pie menu, we have to

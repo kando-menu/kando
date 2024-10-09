@@ -36,6 +36,12 @@ export class AdvancedOptionsPicker extends EventEmitter {
    */
   private anchoredModeCheckbox: HTMLInputElement = null;
 
+  /**
+   * The warp mouse checkbox is a checkbox that allows the user to toggle whether the
+   * mouse should be warped to the center of the menu when it is opened.
+   */
+  private warpMouseCheckbox: HTMLInputElement = null;
+
   /** The currently active menu. */
   private menu: IMenu = null;
 
@@ -59,6 +65,8 @@ export class AdvancedOptionsPicker extends EventEmitter {
         }),
         centeredMode: i18next.t('properties.advanced-options.centered-mode'),
         centeredModeHint: i18next.t('properties.advanced-options.centered-mode-hint'),
+        warpMouse: i18next.t('properties.advanced-options.warp-mouse'),
+        warpMouseHint: i18next.t('properties.advanced-options.warp-mouse-hint'),
         anchoredMode: i18next.t('properties.advanced-options.anchored-mode'),
         anchoredModeHint: i18next.t('properties.advanced-options.anchored-mode-hint'),
         anchoredModeCheckedHint: i18next.t(
@@ -75,6 +83,16 @@ export class AdvancedOptionsPicker extends EventEmitter {
     this.centeredModeCheckbox.addEventListener('change', () => {
       if (this.menu) {
         this.menu.centered = this.centeredModeCheckbox.checked;
+      }
+    });
+
+    // Update the 'warpMouse' property of the menu when the checkbox changes.
+    this.warpMouseCheckbox = container.querySelector(
+      '#kando-menu-properties-warp-mouse'
+    ) as HTMLInputElement;
+    this.warpMouseCheckbox.addEventListener('change', () => {
+      if (this.menu) {
+        this.menu.warpMouse = this.warpMouseCheckbox.checked;
       }
     });
 
@@ -112,6 +130,7 @@ export class AdvancedOptionsPicker extends EventEmitter {
   public setMenu(menu: IMenu) {
     this.menu = menu;
     this.centeredModeCheckbox.checked = menu.centered;
+    this.warpMouseCheckbox.checked = menu.warpMouse;
     this.anchoredModeCheckbox.checked = menu.anchored;
   }
 }

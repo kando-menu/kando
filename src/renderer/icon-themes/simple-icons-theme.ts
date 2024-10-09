@@ -10,14 +10,16 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IIconTheme } from '../icon-theme-registry';
+import { IconListTheme } from './icon-list-theme';
 
 /** This class implements an icon theme that uses the Simple Icons font as icons. */
-export class SimpleIconsTheme implements IIconTheme {
+export class SimpleIconsTheme extends IconListTheme {
   /** This array contains all available icon names. It is initialized in the constructor. */
   private iconNames: Array<string> = [];
 
   constructor() {
+    super();
+
     // Load simple-icons.css as text file.
     const string =
       require('!!raw-loader!simple-icons-font/font/simple-icons.css').default;
@@ -54,7 +56,7 @@ export class SimpleIconsTheme implements IIconTheme {
    * @param icon One of the icons returned by `listIcons`.
    * @returns A div element that contains the icon.
    */
-  createDiv(icon: string) {
+  createIcon(icon: string) {
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('icon-container');
 

@@ -16,7 +16,7 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { PreviewDraggable } from './preview-draggable';
 import { PreviewDropTarget } from './preview-drop-target';
 import { IVec2, IMenu } from '../../../common';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
 import { DnDManager } from '../common/dnd-manager';
 
 /**
@@ -162,9 +162,10 @@ export class Preview extends EventEmitter {
     const icon = this.activeItem.div.querySelector('.icon-container');
     icon.remove();
     this.activeItem.div.prepend(
-      IconThemeRegistry.getInstance()
-        .getTheme(this.activeItem.iconTheme)
-        .createDiv(this.activeItem.icon)
+      IconThemeRegistry.getInstance().createIcon(
+        this.activeItem.iconTheme,
+        this.activeItem.icon
+      )
     );
   }
 
@@ -387,9 +388,10 @@ export class Preview extends EventEmitter {
       this.backlink = document.createElement('div');
       this.backlink.classList.add('kando-menu-preview-backlink');
       this.backlink.appendChild(
-        IconThemeRegistry.getInstance()
-          .getTheme('material-symbols-rounded')
-          .createDiv('arrow_back')
+        IconThemeRegistry.getInstance().createIcon(
+          'material-symbols-rounded',
+          'arrow_back'
+        )
       );
       container.appendChild(this.backlink);
 

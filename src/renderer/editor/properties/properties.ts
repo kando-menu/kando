@@ -15,7 +15,7 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu, IBackendInfo, IShowEditorOptions } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { ConditionPicker } from './condition-picker';
-import { IconThemeRegistry } from '../../../common/icon-theme-registry';
+import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
 import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';
@@ -181,9 +181,10 @@ export class Properties extends EventEmitter {
         this.activeItem.icon = icon;
         this.activeItem.iconTheme = theme;
 
-        this.iconButton.innerHTML = IconThemeRegistry.getInstance()
-          .getTheme(theme)
-          .createDiv(icon).outerHTML;
+        this.iconButton.innerHTML = IconThemeRegistry.getInstance().createIcon(
+          theme,
+          icon
+        ).outerHTML;
 
         this.emit('changed-icon');
       }
@@ -357,9 +358,10 @@ export class Properties extends EventEmitter {
     this.activeItem = item;
     this.nameInput.value = item.name;
 
-    this.iconButton.innerHTML = IconThemeRegistry.getInstance()
-      .getTheme(item.iconTheme)
-      .createDiv(item.icon).outerHTML;
+    this.iconButton.innerHTML = IconThemeRegistry.getInstance().createIcon(
+      item.iconTheme,
+      item.icon
+    ).outerHTML;
 
     const settings = ItemConfigRegistry.getInstance().getConfigWidget(item);
 
