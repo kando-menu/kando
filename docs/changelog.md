@@ -32,6 +32,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
+- The "Command" actions will now be executed using the user's home directory as the working directory. Before Kando's installation directory was used.
 
 #### :bug: Fixed
 

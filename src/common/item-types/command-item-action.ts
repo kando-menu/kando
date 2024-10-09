@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { exec } from 'child_process';
+import * as os from 'os';
 
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
@@ -52,7 +53,12 @@ export class CommandItemAction implements IItemAction {
       const env = { ...process.env };
       delete env.CHROME_DESKTOP;
 
-      exec(command, { env }, (error) => {
+      const options = {
+        env,
+        cwd: os.homedir(),
+      };
+
+      exec(command, options, (error) => {
         if (error) {
           reject(error.message);
         } else {
