@@ -46,6 +46,12 @@
       "detailed-description_one": "Contains one menu item.",
       "detailed-description_other": "Contains {{count}} menu items."
     },
+    "text": {
+      "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text.",
+      "placeholder": "Insert any text…",
+      "name": "Paste Text",
+      "description": "Inserts the given text."
+    },
     "uri": {
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
       "tip-2": "You can use the URI item type to open a file or folder using the file:// protocol.",

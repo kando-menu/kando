@@ -15,13 +15,13 @@ import { EventEmitter } from 'events';
  * the user to type or "record" any text. This is useful for recording key combinations,
  * macros, or other text-based input.
  *
- * The class is abstract and must be extended to implement the actual validation and
- * normalization of the input.
+ * This class does not implement the normalization and validation of the input. This
+ * should be done by derived classes.
  *
  * @fires change - When the user selects a valid new input. The event contains the new and
  *   validated input text.
  */
-export abstract class TextPicker extends EventEmitter {
+export class TextPicker extends EventEmitter {
   /** The div which contains the input field. */
   private container: HTMLElement = null;
 
@@ -184,7 +184,9 @@ export abstract class TextPicker extends EventEmitter {
    * @param value The input to normalize.
    * @returns The normalized value.
    */
-  protected abstract normalizeInput(value: string): string;
+  protected normalizeInput(value: string): string {
+    return value;
+  }
 
   /**
    * Derived methods should check if the given input is valid.
@@ -192,10 +194,13 @@ export abstract class TextPicker extends EventEmitter {
    * @param value The normalized value to validate.
    * @returns True if the value is valid, false otherwise.
    */
-  protected abstract isValid(value: string): boolean;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected isValid(value: string): boolean {
+    return true;
+  }
 
   /**
-   * During recording, this method is called for each KeyboardEvent. Dervied classes
+   * During recording, this method is called for each KeyboardEvent. Derived classes
    * should implement this method to transform the KeyboardEvent into a string
    * representation of the input. Derived classes should directly modify the input field
    * even if the input is not yet complete or valid. The input field will be reset to its
@@ -206,5 +211,8 @@ export abstract class TextPicker extends EventEmitter {
    * @param event The KeyboardEvent to get the shortcut for.
    * @returns False if the recording should be continued, true otherwise.
    */
-  protected abstract recordInput(event: KeyboardEvent): boolean;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected recordInput(event: KeyboardEvent): boolean {
+    return false;
+  }
 }

@@ -34,6 +34,7 @@ export class CommandItemAction implements IItemAction {
    * Runs the command.
    *
    * @param item The item for which the action should be executed.
+   * @param backend The backend which is currently in use.
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns A promise which resolves when the command has been successfully executed.
    */
