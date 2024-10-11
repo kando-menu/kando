@@ -42,9 +42,9 @@ Property | Default Value | Description
 
 Property | Default Value | Description
 -------- | ------------- | -----------
-`centerDeadZone` | 50 | Clicking inside this radius (in pixels) will select the parent element or close the menu.
-`minParentDistance` | 150 | The distance in pixels at which the parent menu item is placed if a submenu is selected close to the parent.
-`dragThreshold` | 15 | This is the threshold in pixels which is used to differentiate between a click and a drag. If the mouse is moved more than this threshold before the mouse button is released, an item is dragged.
+`centerDeadZone` | `50` | Clicking inside this radius (in pixels) will select the parent element or close the menu.
+`minParentDistance` | `150` | The distance in pixels at which the parent menu item is placed if a submenu is selected close to the parent.
+`dragThreshold` | `15` | This is the threshold in pixels which is used to differentiate between a click and a drag. If the mouse is moved more than this threshold before the mouse button is released, an item is dragged.
 `fadeInDuration` | `150` | The duration of the fade-in animation in milliseconds. Set to `0` to disable the animation.
 `fadeOutDuration` | `200` | The duration of the fade-out animation in milliseconds. Set to `0` to disable the animation. Some actions are only executed after the fade-out animation has finished, so reducing this value can make the menu much "snappier".
 `enableMarkingMode` | `true` | If enabled, items can be selected by dragging the mouse over them.
