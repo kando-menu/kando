@@ -150,10 +150,9 @@ export class Menu extends EventEmitter {
     super();
 
     this.container = container;
-    this.options = { ...new MenuOptions(), ...options };
 
-    this.input.dragThreshold = this.options.dragThreshold;
-    this.input.enableTurboMode = this.options.enableTurboMode;
+    // Use the default options and overwrite them with the given options.
+    this.setOptions({ ...new MenuOptions(), ...options });
 
     // Store the fade-in and fade-out durations as CSS variables.
     CSS.registerProperty({
@@ -396,45 +395,27 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * Sets the fade-in duration in milliseconds for future menu-open animations.
+   * Allow changing the options at run-time.
    *
-   * @param duration The duration in milliseconds.
+   * @param options The new options.
    */
-  public setFadeInDuration(duration: number) {
-    this.options.fadeInDuration = duration;
-    this.container.style.setProperty('--fade-in-duration', `${duration}ms`);
-  }
+  public setOptions(options: Partial<MenuOptions>) {
+    this.options = { ...this.options, ...options };
 
-  /**
-   * Sets the fade-out duration in milliseconds for future menu-close animations.
-   *
-   * @param duration The duration in milliseconds.
-   */
-  public setFadeOutDuration(duration: number) {
-    this.options.fadeOutDuration = duration;
-    this.container.style.setProperty('--fade-out-duration', `${duration}ms`);
-  }
+    this.container.style.setProperty(
+      '--fade-in-duration',
+      `${this.options.fadeInDuration}ms`
+    );
 
-  /**
-   * Enables or disables marking mode. In marking mode, items can be selected by dragging
-   * the mouse over them.
-   *
-   * @param enabled If true, marking mode is enabled.
-   */
-  public enableMarkingMode(enabled: boolean) {
-    this.options.enableMarkingMode = enabled;
-    this.input.enableMarkingMode = enabled;
-  }
+    this.container.style.setProperty(
+      '--fade-out-duration',
+      `${this.options.fadeOutDuration}ms`
+    );
 
-  /**
-   * Enables or disables turbo mode. In turbo mode, items can be selected by hovering over
-   * them while holding down a keyboard key.
-   *
-   * @param enabled If true, turbo mode is enabled.
-   */
-  public enableTurboMode(enabled: boolean) {
-    this.options.enableTurboMode = enabled;
-    this.input.enableTurboMode = enabled;
+    this.input.enableMarkingMode = this.options.enableMarkingMode;
+    this.input.enableTurboMode = this.options.enableTurboMode;
+    this.input.dragThreshold = this.options.dragThreshold;
+    this.input.enableTurboMode = this.options.enableTurboMode;
   }
 
   // --------------------------------------------------------------------- private methods

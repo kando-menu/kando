@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { MenuOptions } from '../renderer/menu/menu';
+
 /**
  * A simple 2D vector.
  *
@@ -427,18 +429,6 @@ export interface IAppSettings {
   /** A scale factor for the menu. */
   zoomFactor: number;
 
-  /** The duration of the fade in animation in milliseconds. */
-  fadeInDuration: number;
-
-  /** The duration of the fade out animation in milliseconds. */
-  fadeOutDuration: number;
-
-  /** If enabled, items can be selected by dragging the mouse over them. */
-  enableMarkingMode: boolean;
-
-  /**
-   * If enabled, items can be selected by hovering over them while holding down a keyboard
-   * key.
-   */
-  enableTurboMode: boolean;
+  /** The options which are passed to the menu. */
+  menuOptions: MenuOptions;
 }

@@ -122,10 +122,15 @@ export class KandoApp {
         sidebarVisible: true,
         enableVersionCheck: true,
         zoomFactor: 1,
-        fadeInDuration: 150,
-        fadeOutDuration: 200,
-        enableMarkingMode: true,
-        enableTurboMode: true,
+        menuOptions: {
+          centerDeadZone: 50,
+          minParentDistance: 150,
+          dragThreshold: 15,
+          fadeInDuration: 150,
+          fadeOutDuration: 200,
+          enableMarkingMode: true,
+          enableTurboMode: true,
+        },
       },
     });
 
@@ -1041,7 +1046,7 @@ export class KandoApp {
         this.hideTimeout = null;
 
         resolve();
-      }, this.appSettings.get().fadeOutDuration);
+      }, this.appSettings.get().menuOptions.fadeOutDuration);
     });
   }
 

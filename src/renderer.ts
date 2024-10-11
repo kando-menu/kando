@@ -73,12 +73,11 @@ Promise.all([
 
   // Now, we create a new menu and a new editor. The menu is responsible for rendering
   // the menu items and the editor is responsible for rendering the editor UI.
-  const menu = new Menu(document.getElementById('kando-menu'), menuTheme, {
-    fadeInDuration: settings.fadeInDuration,
-    fadeOutDuration: settings.fadeOutDuration,
-    enableMarkingMode: settings.enableMarkingMode,
-    enableTurboMode: settings.enableTurboMode,
-  });
+  const menu = new Menu(
+    document.getElementById('kando-menu'),
+    menuTheme,
+    settings.menuOptions
+  );
   const editor = new Editor(document.getElementById('kando-editor'), info);
 
   // Show the menu when the main process requests it.
@@ -105,10 +104,7 @@ Promise.all([
   });
 
   // Tell the menu about settings changes.
-  window.api.appSettings.onChange('fadeInDuration', (t) => menu.setFadeInDuration(t));
-  window.api.appSettings.onChange('fadeOutDuration', (t) => menu.setFadeOutDuration(t));
-  window.api.appSettings.onChange('enableMarkingMode', (b) => menu.enableMarkingMode(b));
-  window.api.appSettings.onChange('enableTurboMode', (b) => menu.enableTurboMode(b));
+  window.api.appSettings.onChange('menuOptions', (options) => menu.setOptions(options));
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the
