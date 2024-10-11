@@ -205,11 +205,16 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
+      // Go back using the mouse back button.
+      if ((event as MouseEvent).button === 3) {
+        this.selectParent();
+        return;
+      }
+
       // Go back or hide the menu on right click events.
       if ((event as MouseEvent).button === 2) {
-        if (this.options.rmbSelectsParent && this.selectionChain.length > 1) {
-          const parent = this.selectionChain[this.selectionChain.length - 2];
-          this.selectItem(parent);
+        if (this.options.rmbSelectsParent) {
+          this.selectParent();
         } else {
           this.emit('cancel');
         }
@@ -267,14 +272,12 @@ export class Menu extends EventEmitter {
       const anyModifierPressed =
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
       const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
-      if (!anyModifierPressed && menuKeys.includes(event.key)) {
+      if (!anyModifierPressed && event.key === 'Backspace') {
+        this.selectParent();
+      } else if (!anyModifierPressed && menuKeys.includes(event.key)) {
         const index = menuKeys.indexOf(event.key);
         if (index === 0) {
-          if (this.selectionChain.length > 1) {
-            this.selectItem(this.selectionChain[this.selectionChain.length - 2]);
-          } else {
-            this.emit('cancel');
-          }
+          this.selectParent();
         } else {
           const currentItem = this.selectionChain[this.selectionChain.length - 1];
           if (currentItem.children) {
@@ -643,6 +646,18 @@ export class Menu extends EventEmitter {
     if (item.type !== 'submenu') {
       this.container.classList.add('selected');
       this.emit('select', item.path);
+    }
+  }
+
+  /**
+   * This method will select the parent of the currently selected item. If the currently
+   * selected item is the root item, the "cancel" event will be emitted.
+   */
+  private selectParent() {
+    if (this.selectionChain.length > 1) {
+      this.selectItem(this.selectionChain[this.selectionChain.length - 2]);
+    } else {
+      this.emit('cancel');
     }
   }
 
