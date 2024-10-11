@@ -426,4 +426,10 @@ export interface IAppSettings {
 
   /** A scale factor for the menu. */
   zoomFactor: number;
+
+  /** The duration of the fade in animation in milliseconds. */
+  fadeInDuration: number;
+
+  /** The duration of the fade out animation in milliseconds. */
+  fadeOutDuration: number;
 }

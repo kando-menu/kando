@@ -25,13 +25,15 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - **Paste-Text Action!** You can now paste text into the currently focused window using the new "Paste Text" action. This uses your clipboard internally, so it can paste any text including special characters like emojis 🎊!
 - **Support for base64 icons!** This allows you to directly embed base64 encoded images. This will be especially helpful for menus which are dynamically generated via some sort of API in the future. Use `"base64"` as the icon theme and provide the base64 encoded image as the `"icon"`. This will be a string starting with something like `"data:image/svg+xml;base64, ..."`. This even supports animated gifs!
-- Added an option to the menu editor which **allows warping the mouse pointer to the center of the menu** when the menu is opened in centered mode. This allows to directly engage in turbor mode even if the menu is shown at the center of the screen.
+- Added an option to the menu editor which **allows warping the mouse pointer to the center of the menu** when the menu is opened in centered mode. This allows to directly engage in turbo mode even if the menu is shown at the center of the screen.
+- It is now possible to **change the fade-in and fade-out duration of the menu!** For now, it is only possible to change this via the `fadeInDuration` and `fadeOutDuration` properties in the `config.json` file. The values are given in milliseconds and default to 150ms and 200ms respectively. In the future, this will be exposed in the settings UI.
 - Icon themes are now also loaded from `resources/app/.webpack/renderer/assets/icon-themes/` in the installation directory. This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update.
 - Support for symbolic links in the `icon-themes` directory. You can now create a symbolic link to an icon theme in the `icon-themes` directory and Kando will load the icons from the linked directory.
 - Several **translation updates**. Thanks to all the contributors!
 
 #### :wrench: Changed
 
+- The default fade-out animation is now faster. This should make the menu feel more responsive especially for actions which are executed only after the menu is fully hidden.
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
 - The "Command" actions will now be executed using the user's home directory as the working directory. Before Kando's installation directory was used.
 

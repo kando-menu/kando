@@ -9,16 +9,18 @@
 // SPDX-License-Identifier: MIT
 
 #kando-menu {
-  transition: opacity 150ms ease;
+  transition: opacity var(--fade-in-duration) ease;
 
   // When the menu is hidden or shown, we fade it to / from transparent.
   &.hidden {
+    transition: opacity var(--fade-out-duration) ease;
     opacity: 0;
 
     // We also want to delay the fade-out animation if a node is selected. Else the
     // selected node would disappear before the position transition is finished.
     &.selected {
-      transition-delay: 150ms;
+      transition: opacity calc(var(--fade-out-duration) * 0.5) ease;
+      transition-delay: calc(var(--fade-out-duration) * 0.5);
     }
   }
 

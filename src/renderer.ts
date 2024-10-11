@@ -30,7 +30,8 @@ Promise.all([
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
-]).then(async ([locales, info, themeDescription, colors]) => {
+  window.api.appSettings.get(),
+]).then(async ([locales, info, themeDescription, colors, settings]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -72,7 +73,10 @@ Promise.all([
 
   // Now, we create a new menu and a new editor. The menu is responsible for rendering
   // the menu items and the editor is responsible for rendering the editor UI.
-  const menu = new Menu(document.getElementById('kando-menu'), menuTheme);
+  const menu = new Menu(document.getElementById('kando-menu'), menuTheme, {
+    fadeInDuration: settings.fadeInDuration,
+    fadeOutDuration: settings.fadeOutDuration,
+  });
   const editor = new Editor(document.getElementById('kando-editor'), info);
 
   // Show the menu when the main process requests it.
@@ -96,6 +100,15 @@ Promise.all([
   // Show the update available button when the main process requests it.
   window.api.showUpdateAvailableButton(() => {
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
+  });
+
+  // Tell the menu about the current fade durations.
+  window.api.appSettings.onChange('fadeInDuration', (fadeInDuration) => {
+    menu.setFadeInDuration(fadeInDuration);
+  });
+
+  window.api.appSettings.onChange('fadeOutDuration', (fadeOutDuration) => {
+    menu.setFadeOutDuration(fadeOutDuration);
   });
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this

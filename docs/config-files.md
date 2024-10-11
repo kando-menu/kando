@@ -35,6 +35,8 @@ Property | Default Value | Description
 `enableDarkModeForMenuThemes` | `false` | Whether Kando should use the dark menu theme if the system is in dark mode.
 `sidebarVisible` | `true` | Whether the left sidebar is currently visible.
 `zoomFactor` | `1.0` | The zoom factor of the menu. This can be used to scale the menu on high-resolution screens.
+`fadeInDuration` | `150` | The duration of the fade-in animation in milliseconds. Set to `0` to disable the animation.
+`fadeOutDuration` | `200` | The duration of the fade-out animation in milliseconds. Set to `0` to disable the animation. Some actions are only executed after the fade-out animation has finished, so reducing this value can make the menu much "snappier".
 `enableVersionCheck` | `true` | If set to `true`, Kando will check for new version regularly, and show a notification if a new version is available.
 
 ## The Menu Configuration: `menus.json`
