@@ -37,6 +37,8 @@ Property | Default Value | Description
 `zoomFactor` | `1.0` | The zoom factor of the menu. This can be used to scale the menu on high-resolution screens.
 `fadeInDuration` | `150` | The duration of the fade-in animation in milliseconds. Set to `0` to disable the animation.
 `fadeOutDuration` | `200` | The duration of the fade-out animation in milliseconds. Set to `0` to disable the animation. Some actions are only executed after the fade-out animation has finished, so reducing this value can make the menu much "snappier".
+`enableMarkingMode` | `true` | If enabled, items can be selected by dragging the mouse over them.
+`enableTurboMode` | `true` | If enabled, items can be selected by hovering over them while holding down a keyboard key.
 `enableVersionCheck` | `true` | If set to `true`, Kando will check for new version regularly, and show a notification if a new version is available.
 
 ## The Menu Configuration: `menus.json`

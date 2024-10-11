@@ -30,11 +30,27 @@ export class MenuOptions {
    */
   minParentDistance = 150;
 
+  /**
+   * This is the threshold in pixels which is used to differentiate between a click and a
+   * drag. If the mouse is moved more than this threshold before the mouse button is
+   * released, an item is dragged.
+   */
+  dragThreshold = 15;
+
   /** The time in milliseconds it takes to fade in the menu. */
   fadeInDuration = 150;
 
   /** The time in milliseconds it takes to fade out the menu. */
   fadeOutDuration = 200;
+
+  /** If enabled, items can be selected by dragging the mouse over them. */
+  enableMarkingMode = true;
+
+  /**
+   * If enabled, items can be selected by hovering over them while holding down a keyboard
+   * key.
+   */
+  enableTurboMode = true;
 }
 
 /**
@@ -135,6 +151,9 @@ export class Menu extends EventEmitter {
 
     this.container = container;
     this.options = { ...new MenuOptions(), ...options };
+
+    this.input.dragThreshold = this.options.dragThreshold;
+    this.input.enableTurboMode = this.options.enableTurboMode;
 
     // Store the fade-in and fade-out durations as CSS variables.
     CSS.registerProperty({
@@ -258,7 +277,7 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      const wasTurboMode = this.input.turboMode;
+      const wasTurboMode = this.input.state === InputState.eTurboMode;
 
       this.input.onKeyUpEvent(event);
 
@@ -277,8 +296,8 @@ export class Menu extends EventEmitter {
 
     // If the mouse pointer (or a modifier key) is held down, forward the motion event
     // to the gesture selection.
-    this.input.on('pointer-motion', (coords: IVec2, dragged: boolean) => {
-      if (dragged) {
+    this.input.on('pointer-motion', (coords: IVec2) => {
+      if (this.input.isDragging) {
         this.gestures.onMotionEvent(coords);
       }
       this.redraw();
@@ -394,6 +413,28 @@ export class Menu extends EventEmitter {
   public setFadeOutDuration(duration: number) {
     this.options.fadeOutDuration = duration;
     this.container.style.setProperty('--fade-out-duration', `${duration}ms`);
+  }
+
+  /**
+   * Enables or disables marking mode. In marking mode, items can be selected by dragging
+   * the mouse over them.
+   *
+   * @param enabled If true, marking mode is enabled.
+   */
+  public enableMarkingMode(enabled: boolean) {
+    this.options.enableMarkingMode = enabled;
+    this.input.enableMarkingMode = enabled;
+  }
+
+  /**
+   * Enables or disables turbo mode. In turbo mode, items can be selected by hovering over
+   * them while holding down a keyboard key.
+   *
+   * @param enabled If true, turbo mode is enabled.
+   */
+  public enableTurboMode(enabled: boolean) {
+    this.options.enableTurboMode = enabled;
+    this.input.enableTurboMode = enabled;
   }
 
   // --------------------------------------------------------------------- private methods
@@ -706,7 +747,7 @@ export class Menu extends EventEmitter {
 
     // If the mouse is dragged over a menu item, make that item the dragged item.
     if (
-      this.input.state === InputState.eDragging &&
+      this.input.isDragging &&
       !this.draggedItem &&
       this.input.distance > this.options.centerDeadZone &&
       this.hoveredItem
@@ -717,7 +758,7 @@ export class Menu extends EventEmitter {
     // Abort item-dragging when dragging the item over the center of the currently active
     // menu.
     if (
-      this.input.state === InputState.eDragging &&
+      this.input.isDragging &&
       this.draggedItem &&
       this.input.distance < this.options.centerDeadZone
     ) {
@@ -812,7 +853,7 @@ export class Menu extends EventEmitter {
 
         for (let j = 0; j < item.children?.length; ++j) {
           const child = item.children[j] as IRenderedMenuItem;
-          if (child === this.draggedItem && this.input.state === InputState.eDragging) {
+          if (child === this.draggedItem && this.input.isDragging) {
             child.position = this.input.relativePosition;
             child.nodeDiv.style.transform = `translate(${child.position.x}px, ${child.position.y}px)`;
           } else {

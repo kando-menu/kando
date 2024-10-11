@@ -76,6 +76,8 @@ Promise.all([
   const menu = new Menu(document.getElementById('kando-menu'), menuTheme, {
     fadeInDuration: settings.fadeInDuration,
     fadeOutDuration: settings.fadeOutDuration,
+    enableMarkingMode: settings.enableMarkingMode,
+    enableTurboMode: settings.enableTurboMode,
   });
   const editor = new Editor(document.getElementById('kando-editor'), info);
 
@@ -102,14 +104,11 @@ Promise.all([
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
 
-  // Tell the menu about the current fade durations.
-  window.api.appSettings.onChange('fadeInDuration', (fadeInDuration) => {
-    menu.setFadeInDuration(fadeInDuration);
-  });
-
-  window.api.appSettings.onChange('fadeOutDuration', (fadeOutDuration) => {
-    menu.setFadeOutDuration(fadeOutDuration);
-  });
+  // Tell the menu about settings changes.
+  window.api.appSettings.onChange('fadeInDuration', (t) => menu.setFadeInDuration(t));
+  window.api.appSettings.onChange('fadeOutDuration', (t) => menu.setFadeOutDuration(t));
+  window.api.appSettings.onChange('enableMarkingMode', (b) => menu.enableMarkingMode(b));
+  window.api.appSettings.onChange('enableTurboMode', (b) => menu.enableTurboMode(b));
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the

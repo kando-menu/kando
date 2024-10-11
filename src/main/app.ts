@@ -124,6 +124,8 @@ export class KandoApp {
         zoomFactor: 1,
         fadeInDuration: 150,
         fadeOutDuration: 200,
+        enableMarkingMode: true,
+        enableTurboMode: true,
       },
     });
 

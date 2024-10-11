@@ -432,4 +432,13 @@ export interface IAppSettings {
 
   /** The duration of the fade out animation in milliseconds. */
   fadeOutDuration: number;
+
+  /** If enabled, items can be selected by dragging the mouse over them. */
+  enableMarkingMode: boolean;
+
+  /**
+   * If enabled, items can be selected by hovering over them while holding down a keyboard
+   * key.
+   */
+  enableTurboMode: boolean;
 }
