@@ -66,6 +66,12 @@ export class MenuOptions {
    * selected.
    */
   gesturePauseTimeout = 100;
+
+  /**
+   * If enabled, the parent of a selected item will be selected on a right mouse button
+   * click. Else the menu will be closed directly.
+   */
+  rmbSelectsParent = false;
 }
 
 /**
@@ -199,9 +205,14 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      // Hide the menu on right click events.
+      // Go back or hide the menu on right click events.
       if ((event as MouseEvent).button === 2) {
-        this.emit('cancel');
+        if (this.options.rmbSelectsParent && this.selectionChain.length > 1) {
+          const parent = this.selectionChain[this.selectionChain.length - 2];
+          this.selectItem(parent);
+        } else {
+          this.emit('cancel');
+        }
         return;
       }
 

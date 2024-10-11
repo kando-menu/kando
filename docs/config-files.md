@@ -53,6 +53,7 @@ Property | Default Value | Description
 `gestureMinStrokeAngle` | `20` | Smaller turns will not lead to selections (in degrees).
 `gestureJitterThreshold` | `10` | Smaller pointer movements will not be considered at all during gesture recognition (in pixels).
 `gesturePauseTimeout` | `100` | If the pointer is stationary for this many milliseconds, the current item will be selected during gesture recognition.
+`rmbSelectsParent` | `false` | If enabled, the parent of a selected item will be selected on a right mouse button click. Else the menu will be closed directly.
 
 ## The Menu Configuration: `menus.json`
 

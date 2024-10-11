@@ -134,6 +134,7 @@ export class KandoApp {
           gestureMinStrokeAngle: 20,
           gestureJitterThreshold: 10,
           gesturePauseTimeout: 100,
+          rmbSelectsParent: false,
         },
       },
     });
