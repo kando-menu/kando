@@ -130,6 +130,10 @@ export class KandoApp {
           fadeOutDuration: 200,
           enableMarkingMode: true,
           enableTurboMode: true,
+          gestureMinStrokeLength: 150,
+          gestureMinStrokeAngle: 20,
+          gestureJitterThreshold: 10,
+          gesturePauseTimeout: 100,
         },
       },
     });

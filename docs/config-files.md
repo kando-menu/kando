@@ -49,6 +49,10 @@ Property | Default Value | Description
 `fadeOutDuration` | `200` | The duration of the fade-out animation in milliseconds. Set to `0` to disable the animation. Some actions are only executed after the fade-out animation has finished, so reducing this value can make the menu much "snappier".
 `enableMarkingMode` | `true` | If enabled, items can be selected by dragging the mouse over them.
 `enableTurboMode` | `true` | If enabled, items can be selected by hovering over them while holding down a keyboard key.
+`gestureMinStrokeLength` | `150` | Shorter gesture strokes will not lead to selections (in pixels).
+`gestureMinStrokeAngle` | `20` | Smaller turns will not lead to selections (in degrees).
+`gestureJitterThreshold` | `10` | Smaller pointer movements will not be considered at all during gesture recognition (in pixels).
+`gesturePauseTimeout` | `100` | If the pointer is stationary for this many milliseconds, the current item will be selected during gesture recognition.
 
 ## The Menu Configuration: `menus.json`
 

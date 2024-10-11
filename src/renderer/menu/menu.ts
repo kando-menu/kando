@@ -51,6 +51,21 @@ export class MenuOptions {
    * key.
    */
   enableTurboMode = true;
+
+  /** Shorter gestures will not lead to selections. */
+  gestureMinStrokeLength = 150;
+
+  /** Smaller turns will not lead to selections. */
+  gestureMinStrokeAngle = 20;
+
+  /** Smaller movements will not be considered. */
+  gestureJitterThreshold = 10;
+
+  /**
+   * If the pointer is stationary for this many milliseconds, the current item will be
+   * selected.
+   */
+  gesturePauseTimeout = 100;
 }
 
 /**
@@ -416,6 +431,11 @@ export class Menu extends EventEmitter {
     this.input.enableTurboMode = this.options.enableTurboMode;
     this.input.dragThreshold = this.options.dragThreshold;
     this.input.enableTurboMode = this.options.enableTurboMode;
+
+    this.gestures.minStrokeLength = this.options.gestureMinStrokeLength;
+    this.gestures.minStrokeAngle = this.options.gestureMinStrokeAngle;
+    this.gestures.jitterThreshold = this.options.gestureJitterThreshold;
+    this.gestures.pauseTimeout = this.options.gesturePauseTimeout;
   }
 
   // --------------------------------------------------------------------- private methods
