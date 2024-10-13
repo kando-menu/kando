@@ -375,8 +375,15 @@ export class Menu extends EventEmitter {
     this.input.deferredTurboMode =
       !showMenuOptions.warpMouse && showMenuOptions.centeredMode;
 
-    this.input.update(this.getInitialMenuPosition());
+    // On some wayland compositors (for instance KWin), one or two initial mouse motion
+    // events are sent containing wrong coordinates. They seem to be the coordinates of
+    // the last mouse motion event over any XWayland surface before Kando's window was
+    // opened. We simply ignore these events. This code is currently used on all platforms
+    // but I think it's not an issue. Instead, we pass the initial menu position as a
+    // first motion event to the input tracker.
     this.input.ignoreNextMotionEvents();
+    this.input.update(this.getInitialMenuPosition());
+    this.gestures.onMotionEvent(this.getInitialMenuPosition());
 
     this.root = root;
     this.setupPaths(this.root);
