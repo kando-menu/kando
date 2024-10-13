@@ -136,7 +136,7 @@ export class GestureDetection extends EventEmitter {
   }
 
   /**
-   * This method resets the gesture detection. For instnce, it should be called if the
+   * This method resets the gesture detection. For instance, it should be called if the
    * left mouse button is released.
    *
    * @param lastCorner - If the gesture may continue, this parameter can be used to
