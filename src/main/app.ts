@@ -122,6 +122,20 @@ export class KandoApp {
         sidebarVisible: true,
         enableVersionCheck: true,
         zoomFactor: 1,
+        menuOptions: {
+          centerDeadZone: 50,
+          minParentDistance: 150,
+          dragThreshold: 15,
+          fadeInDuration: 150,
+          fadeOutDuration: 200,
+          enableMarkingMode: true,
+          enableTurboMode: true,
+          gestureMinStrokeLength: 150,
+          gestureMinStrokeAngle: 20,
+          gestureJitterThreshold: 10,
+          gesturePauseTimeout: 100,
+          rmbSelectsParent: false,
+        },
       },
     });
 
@@ -543,6 +557,11 @@ export class KandoApp {
         // system. In development mode, the app is loaded from the webpack dev server.
         // Hence, we have to disable webSecurity in development mode.
         webSecurity: process.env.NODE_ENV !== 'development',
+        // Background throttling is disabled to make sure that the menu is properly
+        // hidden. Else it can happen that the last frame of a previous menu is still
+        // visible when the new menu is shown. For now, I have not seen any issues with
+        // background throttling disabled.
+        backgroundThrottling: false,
         preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       transparent: true,
@@ -808,7 +827,7 @@ export class KandoApp {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hideWindow(400).then(() => {
+      this.hideWindow().then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
@@ -819,7 +838,7 @@ export class KandoApp {
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
-      this.hideWindow(300);
+      this.hideWindow();
     });
   }
 
@@ -1011,7 +1030,7 @@ export class KandoApp {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  private async hideWindow(delay = 0) {
+  private async hideWindow() {
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
@@ -1032,7 +1051,7 @@ export class KandoApp {
         this.hideTimeout = null;
 
         resolve();
-      }, delay);
+      }, this.appSettings.get().menuOptions.fadeOutDuration);
     });
   }
 

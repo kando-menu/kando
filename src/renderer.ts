@@ -30,7 +30,8 @@ Promise.all([
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
-]).then(async ([locales, info, themeDescription, colors]) => {
+  window.api.appSettings.get(),
+]).then(async ([locales, info, themeDescription, colors, settings]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -72,7 +73,11 @@ Promise.all([
 
   // Now, we create a new menu and a new editor. The menu is responsible for rendering
   // the menu items and the editor is responsible for rendering the editor UI.
-  const menu = new Menu(document.getElementById('kando-menu'), menuTheme);
+  const menu = new Menu(
+    document.getElementById('kando-menu'),
+    menuTheme,
+    settings.menuOptions
+  );
   const editor = new Editor(document.getElementById('kando-editor'), info);
 
   // Show the menu when the main process requests it.
@@ -97,6 +102,9 @@ Promise.all([
   window.api.showUpdateAvailableButton(() => {
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
+
+  // Tell the menu about settings changes.
+  window.api.appSettings.onChange('menuOptions', (options) => menu.setOptions(options));
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the

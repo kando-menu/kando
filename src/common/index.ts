@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { MenuOptions } from '../renderer/menu/menu';
+
 /**
  * A simple 2D vector.
  *
@@ -426,4 +428,7 @@ export interface IAppSettings {
 
   /** A scale factor for the menu. */
   zoomFactor: number;
+
+  /** The options which are passed to the menu. */
+  menuOptions: MenuOptions;
 }

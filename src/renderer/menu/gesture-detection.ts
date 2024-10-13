@@ -13,21 +13,6 @@ import { EventEmitter } from 'events';
 import * as math from '../math';
 import { IVec2 } from '../../common';
 
-/** Shorter gestures will not lead to selections. */
-const MIN_STROKE_LENGTH = 150;
-
-/** Smaller turns will not lead to selections. */
-const MIN_STROKE_ANGLE = 20;
-
-/** Smaller movements will not be considered. */
-const JITTER_THRESHOLD = 10;
-
-/**
- * If the pointer is stationary for this many milliseconds, the current item will be
- * selected.
- */
-const PAUSE_TIMEOUT = 100;
-
 /**
  * This class detects gestures. It is used to detect marking mode selections in the menu.
  * It is fed with motion events and emits a selection event if either the mouse pointer
@@ -50,7 +35,22 @@ export class GestureDetection extends EventEmitter {
    * This timer is used to detect pause-events where the pointer was stationary for some
    * time. These events also lead to selections.
    */
-  private pauseTimeout: NodeJS.Timeout = null;
+  private timeout: NodeJS.Timeout = null;
+
+  /** Shorter gestures will not lead to selections. */
+  public minStrokeLength = 150;
+
+  /** Smaller turns will not lead to selections. */
+  public minStrokeAngle = 20;
+
+  /** Smaller movements will not be considered. */
+  public jitterThreshold = 10;
+
+  /**
+   * If the pointer is stationary for this many milliseconds, the current item will be
+   * selected.
+   */
+  public pauseTimeout = 100;
 
   /**
    * This method detects the gestures. It should be called if the mouse pointer was moved
@@ -85,18 +85,18 @@ export class GestureDetection extends EventEmitter {
 
       const strokeLength = math.getLength(strokeDir);
 
-      if (strokeLength > MIN_STROKE_LENGTH) {
+      if (strokeLength > this.minStrokeLength) {
         // Calculate the vector E->M in the diagram above.
         const tipDir = { x: coords.x - this.strokeEnd.x, y: coords.y - this.strokeEnd.y };
 
         const tipLength = math.getLength(tipDir);
 
-        if (tipLength > JITTER_THRESHOLD) {
+        if (tipLength > this.jitterThreshold) {
           // If the tip vector is long enough, the pointer was not stationary. Remove
           // the timer again.
-          if (this.pauseTimeout !== null) {
-            clearTimeout(this.pauseTimeout);
-            this.pauseTimeout = null;
+          if (this.timeout !== null) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
           }
 
           // Now compute the angle between S->E and E->M.
@@ -107,7 +107,7 @@ export class GestureDetection extends EventEmitter {
 
           //  Emit the selection events if it exceeds the configured threshold. We pass
           //  the coordinates of E for the selection event.
-          if ((angle * 180) / Math.PI > MIN_STROKE_ANGLE) {
+          if ((angle * 180) / Math.PI > this.minStrokeAngle) {
             this.reset(this.strokeEnd);
             this.emit('selection', this.strokeEnd);
             return;
@@ -121,11 +121,11 @@ export class GestureDetection extends EventEmitter {
         // The stroke is long enough to become a gesture. We register a timer to detect
         // pause-events where the pointer was stationary for some time. These events
         // also lead to selections.
-        if (this.pauseTimeout === null) {
-          this.pauseTimeout = setTimeout(() => {
+        if (this.timeout === null) {
+          this.timeout = setTimeout(() => {
             this.reset(coords);
             this.emit('selection', coords);
-          }, PAUSE_TIMEOUT);
+          }, this.pauseTimeout);
         }
       } else {
         // The vector S->E is not long enough to be a gesture, so we only update the end
@@ -143,9 +143,9 @@ export class GestureDetection extends EventEmitter {
    *   provide the last corner of the gesture, e.g. the start of the next stroke.
    */
   public reset(lastCorner: IVec2 = null): void {
-    if (this.pauseTimeout !== null) {
-      clearTimeout(this.pauseTimeout);
-      this.pauseTimeout = null;
+    if (this.timeout !== null) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
     }
 
     this.strokeStart = lastCorner;

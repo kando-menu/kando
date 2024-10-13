@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { exec } from 'child_process';
+import * as os from 'os';
 
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
@@ -33,6 +34,7 @@ export class CommandItemAction implements IItemAction {
    * Runs the command.
    *
    * @param item The item for which the action should be executed.
+   * @param backend The backend which is currently in use.
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns A promise which resolves when the command has been successfully executed.
    */
@@ -52,7 +54,12 @@ export class CommandItemAction implements IItemAction {
       const env = { ...process.env };
       delete env.CHROME_DESKTOP;
 
-      exec(command, { env }, (error) => {
+      const options = {
+        env,
+        cwd: os.homedir(),
+      };
+
+      exec(command, options, (error) => {
         if (error) {
           reject(error.message);
         } else {

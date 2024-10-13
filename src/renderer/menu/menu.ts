@@ -20,8 +20,60 @@ import { GamepadInput } from './gamepad-input';
 import { MenuTheme } from './menu-theme';
 import { closestEquivalentAngle } from '../math';
 
-const CENTER_RADIUS = 50;
-const PARENT_DISTANCE = 150;
+/** These options can be given to the constructor of the menu. */
+export class MenuOptions {
+  /** Clicking inside this radius will select the parent element. */
+  centerDeadZone = 50;
+
+  /**
+   * The distance in pixels at which the parent menu item is placed if a submenu is
+   * selected close to the parent.
+   */
+  minParentDistance = 150;
+
+  /**
+   * This is the threshold in pixels which is used to differentiate between a click and a
+   * drag. If the mouse is moved more than this threshold before the mouse button is
+   * released, an item is dragged.
+   */
+  dragThreshold = 15;
+
+  /** The time in milliseconds it takes to fade in the menu. */
+  fadeInDuration = 150;
+
+  /** The time in milliseconds it takes to fade out the menu. */
+  fadeOutDuration = 200;
+
+  /** If enabled, items can be selected by dragging the mouse over them. */
+  enableMarkingMode = true;
+
+  /**
+   * If enabled, items can be selected by hovering over them while holding down a keyboard
+   * key.
+   */
+  enableTurboMode = true;
+
+  /** Shorter gestures will not lead to selections. */
+  gestureMinStrokeLength = 150;
+
+  /** Smaller turns will not lead to selections. */
+  gestureMinStrokeAngle = 20;
+
+  /** Smaller movements will not be considered. */
+  gestureJitterThreshold = 10;
+
+  /**
+   * If the pointer is stationary for this many milliseconds, the current item will be
+   * selected.
+   */
+  gesturePauseTimeout = 100;
+
+  /**
+   * If enabled, the parent of a selected item will be selected on a right mouse button
+   * click. Else the menu will be closed directly.
+   */
+  rmbSelectsParent = false;
+}
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -55,10 +107,16 @@ export class Menu extends EventEmitter {
   private root: IRenderedMenuItem = null;
 
   /**
+   * This holds some global options for the menu. These options can be set when the menu
+   * is created and will be used to configure the menu's behavior.
+   */
+  private options: MenuOptions = null;
+
+  /**
    * This holds some information which is passed to the menu when it is shown from the
    * main process. For instance, it holds the window size and the initial mouse position.
    */
-  private options: IShowMenuOptions;
+  private showMenuOptions: IShowMenuOptions;
 
   /**
    * The hovered item is the menu item which is currently hovered by the mouse. It is used
@@ -96,6 +154,9 @@ export class Menu extends EventEmitter {
    */
   private input: InputTracker = new InputTracker();
 
+  /** This timeout is used to clear the menu div after the fade-out animation. */
+  private hideTimeout: NodeJS.Timeout;
+
   /**
    * The gamepad input is used to detect gamepad input. It polls the gamepad state and
    * emits events when buttons are pressed or the thumbsticks are moved.
@@ -111,11 +172,30 @@ export class Menu extends EventEmitter {
    */
   constructor(
     private container: HTMLElement,
-    private theme: MenuTheme
+    private theme: MenuTheme,
+    options: Partial<MenuOptions> = {}
   ) {
     super();
 
     this.container = container;
+
+    // Use the default options and overwrite them with the given options.
+    this.setOptions({ ...new MenuOptions(), ...options });
+
+    // Store the fade-in and fade-out durations as CSS variables.
+    CSS.registerProperty({
+      name: '--fade-in-duration',
+      syntax: '<time>',
+      inherits: false,
+      initialValue: `${this.options.fadeInDuration}ms`,
+    });
+
+    CSS.registerProperty({
+      name: '--fade-out-duration',
+      syntax: '<time>',
+      inherits: false,
+      initialValue: `${this.options.fadeOutDuration}ms`,
+    });
 
     // When the mouse is moved, we store the absolute mouse position, as well as the mouse
     // position, distance, and angle relative to the currently selected item.
@@ -132,9 +212,19 @@ export class Menu extends EventEmitter {
       event.preventDefault();
       event.stopPropagation();
 
-      // Hide the menu on right click events.
+      // Go back using the mouse back button.
+      if ((event as MouseEvent).button === 3) {
+        this.selectParent();
+        return;
+      }
+
+      // Go back or hide the menu on right click events.
       if ((event as MouseEvent).button === 2) {
-        this.emit('cancel');
+        if (this.options.rmbSelectsParent) {
+          this.selectParent();
+        } else {
+          this.emit('cancel');
+        }
         return;
       }
 
@@ -156,7 +246,7 @@ export class Menu extends EventEmitter {
       if (
         this.input.state === InputState.eClicked &&
         this.selectionChain.length === 1 &&
-        this.input.distance < CENTER_RADIUS
+        this.input.distance < this.options.centerDeadZone
       ) {
         this.emit('cancel');
         return;
@@ -229,14 +319,12 @@ export class Menu extends EventEmitter {
       const anyModifierPressed =
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
       const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
-      if (!anyModifierPressed && menuKeys.includes(event.key)) {
+      if (!anyModifierPressed && event.key === 'Backspace') {
+        this.selectParent();
+      } else if (!anyModifierPressed && menuKeys.includes(event.key)) {
         const index = menuKeys.indexOf(event.key);
         if (index === 0) {
-          if (this.selectionChain.length > 1) {
-            this.selectItem(this.selectionChain[this.selectionChain.length - 2]);
-          } else {
-            this.emit('cancel');
-          }
+          this.selectParent();
         } else {
           const currentItem = this.selectionChain[this.selectionChain.length - 1];
           if (currentItem.children) {
@@ -264,7 +352,7 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      const wasTurboMode = this.input.turboMode;
+      const wasTurboMode = this.input.state === InputState.eTurboMode;
 
       this.input.onKeyUpEvent(event);
 
@@ -283,8 +371,8 @@ export class Menu extends EventEmitter {
 
     // If the mouse pointer (or a modifier key) is held down, forward the motion event
     // to the gesture selection.
-    this.input.on('pointer-motion', (coords: IVec2, dragged: boolean) => {
-      if (dragged) {
+    this.input.on('pointer-motion', (coords: IVec2) => {
+      if (this.input.isDragging) {
         this.gestures.onMotionEvent(coords);
       }
       this.redraw();
@@ -297,7 +385,7 @@ export class Menu extends EventEmitter {
       // children in marking mode in order to prevent unwanted actions. This way the user
       // can always check if the correct action was selected before executing it.
       if (
-        !this.options.anchoredMode &&
+        !this.showMenuOptions.anchoredMode &&
         this.draggedItem &&
         this.draggedItem.children?.length > 0
       ) {
@@ -316,16 +404,23 @@ export class Menu extends EventEmitter {
    * given root item and all its children. It will also set up the angles and positions of
    * all items and show the menu.
    *
-   * @param options Some additional information on how to show the menu.
+   * @param showMenuOptions Some additional information on how to show the menu.
    */
-  public show(root: IRenderedMenuItem, options: IShowMenuOptions) {
+  public show(root: IRenderedMenuItem, showMenuOptions: IShowMenuOptions) {
+    // Cancel any ongoing hiding.
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout = null;
+    }
+
     this.clear();
 
-    this.options = options;
+    this.showMenuOptions = showMenuOptions;
 
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
-    this.input.deferredTurboMode = !options.warpMouse && options.centeredMode;
+    this.input.deferredTurboMode =
+      !showMenuOptions.warpMouse && showMenuOptions.centeredMode;
 
     this.input.update(this.getInitialMenuPosition());
     this.input.ignoreNextMotionEvents();
@@ -338,11 +433,11 @@ export class Menu extends EventEmitter {
 
     // If the menu is opened at the screen's center, we have to warp the mouse pointer to
     // the center of the menu.
-    if (this.options.warpMouse && this.options.centeredMode) {
+    if (this.showMenuOptions.warpMouse && this.showMenuOptions.centeredMode) {
       const position = this.getCenterItemPosition();
       const offset = {
-        x: Math.trunc(position.x - this.options.mousePosition.x),
-        y: Math.trunc(position.y - this.options.mousePosition.y),
+        x: Math.trunc(position.x - this.showMenuOptions.mousePosition.x),
+        y: Math.trunc(position.y - this.showMenuOptions.mousePosition.y),
       };
 
       this.emit('move-pointer', offset);
@@ -355,6 +450,9 @@ export class Menu extends EventEmitter {
   /** Hides the menu. */
   public hide() {
     this.container.classList.add('hidden');
+    this.hideTimeout = setTimeout(() => {
+      this.clear();
+    }, this.options.fadeOutDuration);
   }
 
   /** Removes all DOM elements from the menu and resets the root menu item. */
@@ -370,6 +468,35 @@ export class Menu extends EventEmitter {
     this.hoveredItem = null;
     this.draggedItem = null;
     this.selectionChain = [];
+  }
+
+  /**
+   * Allow changing the options at run-time.
+   *
+   * @param options The new options.
+   */
+  public setOptions(options: Partial<MenuOptions>) {
+    this.options = { ...this.options, ...options };
+
+    this.container.style.setProperty(
+      '--fade-in-duration',
+      `${this.options.fadeInDuration}ms`
+    );
+
+    this.container.style.setProperty(
+      '--fade-out-duration',
+      `${this.options.fadeOutDuration}ms`
+    );
+
+    this.input.enableMarkingMode = this.options.enableMarkingMode;
+    this.input.enableTurboMode = this.options.enableTurboMode;
+    this.input.dragThreshold = this.options.dragThreshold;
+    this.input.enableTurboMode = this.options.enableTurboMode;
+
+    this.gestures.minStrokeLength = this.options.gestureMinStrokeLength;
+    this.gestures.minStrokeAngle = this.options.gestureMinStrokeAngle;
+    this.gestures.jitterThreshold = this.options.gestureJitterThreshold;
+    this.gestures.pauseTimeout = this.options.gesturePauseTimeout;
   }
 
   // --------------------------------------------------------------------- private methods
@@ -450,8 +577,8 @@ export class Menu extends EventEmitter {
       }
 
       if (item === this.root) {
-        const maxCenterTextSize = CENTER_RADIUS * 2.0;
-        const padding = CENTER_RADIUS * 0.1;
+        const maxCenterTextSize = this.options.centerDeadZone * 2.0;
+        const padding = this.options.centerDeadZone * 0.1;
         this.centerText = new CenterText(rootContainer, maxCenterTextSize - padding);
       }
     }
@@ -491,13 +618,13 @@ export class Menu extends EventEmitter {
     // center. There is the special case where we select the root item. In this case, we
     // simply position the root element at the mouse position.
     if (item === this.root) {
-      this.root.position = this.options.anchoredMode
+      this.root.position = this.showMenuOptions.anchoredMode
         ? this.getInitialMenuPosition()
         : this.input.absolutePosition;
     } else if (selectedParent) {
       const center = this.selectionChain[this.selectionChain.length - 1];
 
-      if (this.options.anchoredMode) {
+      if (this.showMenuOptions.anchoredMode) {
         this.root.position = math.add(this.root.position, center.position);
       } else {
         const offset = math.add(this.input.relativePosition, center.position);
@@ -505,16 +632,16 @@ export class Menu extends EventEmitter {
       }
     } else {
       // Compute the ideal position of the new item. The distance to the parent item is
-      // set to be at least PARENT_DISTANCE. This is to avoid that the menu is
-      // too close to the parent item. In anchored mode, the distance is set to
-      // PARENT_DISTANCE.
-      const distance = this.options.anchoredMode
-        ? PARENT_DISTANCE
-        : Math.max(PARENT_DISTANCE, this.input.distance);
+      // set to be at least this.options.minParentDistance. This is to avoid that the menu
+      // is too close to the parent item. In anchored mode, the distance is set to
+      // this.options.minParentDistance.
+      const distance = this.showMenuOptions.anchoredMode
+        ? this.options.minParentDistance
+        : Math.max(this.options.minParentDistance, this.input.distance);
 
       item.position = math.getDirection(item.angle, distance);
 
-      if (this.options.anchoredMode) {
+      if (this.showMenuOptions.anchoredMode) {
         this.root.position = math.subtract(this.root.position, item.position);
       } else {
         const offset = math.subtract(this.input.relativePosition, item.position);
@@ -540,7 +667,7 @@ export class Menu extends EventEmitter {
       const clampedPosition = math.clampToMonitor(
         position,
         this.theme.maxMenuRadius,
-        this.options.windowSize
+        this.showMenuOptions.windowSize
       );
 
       const offset = {
@@ -566,6 +693,18 @@ export class Menu extends EventEmitter {
     if (item.type !== 'submenu') {
       this.container.classList.add('selected');
       this.emit('select', item.path);
+    }
+  }
+
+  /**
+   * This method will select the parent of the currently selected item. If the currently
+   * selected item is the root item, the "cancel" event will be emitted.
+   */
+  private selectParent() {
+    if (this.selectionChain.length > 1) {
+      this.selectItem(this.selectionChain[this.selectionChain.length - 2]);
+    } else {
+      this.emit('cancel');
     }
   }
 
@@ -682,9 +821,9 @@ export class Menu extends EventEmitter {
 
     // If the mouse is dragged over a menu item, make that item the dragged item.
     if (
-      this.input.state === InputState.eDragging &&
+      this.input.isDragging &&
       !this.draggedItem &&
-      this.input.distance > CENTER_RADIUS &&
+      this.input.distance > this.options.centerDeadZone &&
       this.hoveredItem
     ) {
       this.dragItem(this.hoveredItem);
@@ -693,9 +832,9 @@ export class Menu extends EventEmitter {
     // Abort item-dragging when dragging the item over the center of the currently active
     // menu.
     if (
-      this.input.state === InputState.eDragging &&
+      this.input.isDragging &&
       this.draggedItem &&
-      this.input.distance < CENTER_RADIUS
+      this.input.distance < this.options.centerDeadZone
     ) {
       this.dragItem(null);
       this.updateConnectors();
@@ -734,7 +873,7 @@ export class Menu extends EventEmitter {
   private computeHoveredItem(): IRenderedMenuItem {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected item.
-    if (this.input.distance < CENTER_RADIUS) {
+    if (this.input.distance < this.options.centerDeadZone) {
       if (this.selectionChain.length > 1) {
         return this.selectionChain[this.selectionChain.length - 2];
       }
@@ -788,7 +927,7 @@ export class Menu extends EventEmitter {
 
         for (let j = 0; j < item.children?.length; ++j) {
           const child = item.children[j] as IRenderedMenuItem;
-          if (child === this.draggedItem && this.input.state === InputState.eDragging) {
+          if (child === this.draggedItem && this.input.isDragging) {
             child.position = this.input.relativePosition;
             child.nodeDiv.style.transform = `translate(${child.position.x}px, ${child.position.y}px)`;
           } else {
@@ -1019,12 +1158,12 @@ export class Menu extends EventEmitter {
    */
   private getInitialMenuPosition() {
     return {
-      x: this.options.centeredMode
-        ? (this.options.windowSize.x / this.options.zoomFactor) * 0.5
-        : this.options.mousePosition.x,
-      y: this.options.centeredMode
-        ? (this.options.windowSize.y / this.options.zoomFactor) * 0.5
-        : this.options.mousePosition.y,
+      x: this.showMenuOptions.centeredMode
+        ? (this.showMenuOptions.windowSize.x / this.showMenuOptions.zoomFactor) * 0.5
+        : this.showMenuOptions.mousePosition.x,
+      y: this.showMenuOptions.centeredMode
+        ? (this.showMenuOptions.windowSize.y / this.showMenuOptions.zoomFactor) * 0.5
+        : this.showMenuOptions.mousePosition.y,
     };
   }
 }

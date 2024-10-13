@@ -13,6 +13,7 @@ import { SubmenuItemConfig } from './item-types/submenu-item-config';
 import { CommandItemConfig } from './item-types/command-item-config';
 import { HotkeyItemConfig } from './item-types/hotkey-item-config';
 import { MacroItemConfig } from './item-types/macro-item-config';
+import { TextItemConfig } from './item-types/text-item-config';
 import { URIItemConfig } from './item-types/uri-item-config';
 
 /**
@@ -58,8 +59,9 @@ export class ItemConfigRegistry {
     this.configs.set('command', new CommandItemConfig());
     this.configs.set('hotkey', new HotkeyItemConfig());
     this.configs.set('macro', new MacroItemConfig());
-    this.configs.set('uri', new URIItemConfig());
     this.configs.set('submenu', new SubmenuItemConfig());
+    this.configs.set('text', new TextItemConfig());
+    this.configs.set('uri', new URIItemConfig());
   }
 
   /**

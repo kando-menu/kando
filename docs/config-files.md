@@ -36,6 +36,24 @@ Property | Default Value | Description
 `sidebarVisible` | `true` | Whether the left sidebar is currently visible.
 `zoomFactor` | `1.0` | The zoom factor of the menu. This can be used to scale the menu on high-resolution screens.
 `enableVersionCheck` | `true` | If set to `true`, Kando will check for new version regularly, and show a notification if a new version is available.
+`menuOptions` | _see below_ | The parameters configure the general behavior of the menus.
+
+### The `menuOptions` Property
+
+Property | Default Value | Description
+-------- | ------------- | -----------
+`centerDeadZone` | `50` | Clicking inside this radius (in pixels) will select the parent element or close the menu.
+`minParentDistance` | `150` | The distance in pixels at which the parent menu item is placed if a submenu is selected close to the parent.
+`dragThreshold` | `15` | This is the threshold in pixels which is used to differentiate between a click and a drag. If the mouse is moved more than this threshold before the mouse button is released, an item is dragged.
+`fadeInDuration` | `150` | The duration of the fade-in animation in milliseconds. Set to `0` to disable the animation.
+`fadeOutDuration` | `200` | The duration of the fade-out animation in milliseconds. Set to `0` to disable the animation. Some actions are only executed after the fade-out animation has finished, so reducing this value can make the menu much "snappier".
+`enableMarkingMode` | `true` | If enabled, items can be selected by dragging the mouse over them.
+`enableTurboMode` | `true` | If enabled, items can be selected by hovering over them while holding down a keyboard key.
+`gestureMinStrokeLength` | `150` | Shorter gesture strokes will not lead to selections (in pixels).
+`gestureMinStrokeAngle` | `20` | Smaller turns will not lead to selections (in degrees).
+`gestureJitterThreshold` | `10` | Smaller pointer movements will not be considered at all during gesture recognition (in pixels).
+`gesturePauseTimeout` | `100` | If the pointer is stationary for this many milliseconds, the current item will be selected during gesture recognition.
+`rmbSelectsParent` | `false` | If enabled, the parent of a selected item will be selected on a right mouse button click. Else the menu will be closed directly.
 
 ## The Menu Configuration: `menus.json`
 

@@ -33,6 +33,7 @@ export class URIItemAction implements IItemAction {
    * Replaces placeholders in the URI string with actual values.
    *
    * @param uri The URI string.
+   * @param backend The backend which is currently in use.
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns The URI string with placeholders replaced.
    */

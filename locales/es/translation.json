@@ -13,13 +13,13 @@
         },
         "hotkey": {
             "tip-2": "Si no puedes grabar una tecla porque la utiliza el sistema, prueba a escribir directamente su nombre.",
-            "name": "Simular Hotkey",
-            "description": "Presiona una hotkey.",
+            "name": "Simular tecla de acceso rápido",
+            "description": "Presiona una tecla de acceso rápido.",
             "tip-3": "Haga click en este link para ver todos los nombres de clave válidos.",
             "tip-1": "Al grabar una Hotkey, no es necesario pulsar todas las teclas a la vez. Puedes pulsarlas una tras otra."
         },
         "macro": {
-            "tip-1": "Por defecto, Kando añade un retardo de 10ms antes de cada evento de tecla. Puede cambiar esto con la propiedad \"delay\".",
+            "tip-1": "Por defecto, Kando añade un retraso de 10ms antes de cada evento clave. Puede cambiar esto con la propiedad \"delay\".",
             "tip-2": "Haga click en este enlace para ver todos los nombres de clave válidos.",
             "name": "Simular Macro",
             "description": "Escribe una macro del teclado."
@@ -34,9 +34,9 @@
             "tip-10": "Puedes copiar menús y elementos arrastrándolos mientras mantienes pulsada la tecla Ctrl.",
             "name": "Submenú",
             "description": "Contiene otras opciones de menú.",
-            "detailed-description_one": "Contiene un elemento del menú.Contiene {{count}} elementos del menú.",
-            "detailed-description_many": "",
-            "detailed-description_other": "",
+            "detailed-description_one": "Contiene un elemento en el menú.",
+            "detailed-description_many": "Contiene {{count}} elementos en el menú.",
+            "detailed-description_other": "Contiene {{count}} elementos en el menú.",
             "tip-11": "Puede abrir menús desde la línea de comandos mediante el indicador --menú.",
             "tip-8": "Puedes eliminar elementos arrastrándolos a la papelera de la barra de herramientas.",
             "tip-2": "También puedes anidar submenús dentro de submenús.",
@@ -50,7 +50,7 @@
         "uri": {
             "tip-2": "Puedes usar el elemento de tipo URI para abrir un archivo o carpeta usando el protocolo file://.",
             "tip-3": "Puedes usar el elemento de tipo URI para abrir un link mailto:.",
-            "tip-5": "Usa {{app_name}} para insertar el nombre de la ventana que fué enfocada cuando abriste el menú.",
+            "tip-5": "Use {{window_name}} para insertar el nombre de la ventana que estaba activa cuando abrió el menú.",
             "tip-4": "Usa {{app_name}} para insertar el nombre de la aplicación que fué enfocada cuando abriste el menú.",
             "uri": "URI",
             "uri-hint": "Esto será abierto.",
@@ -88,7 +88,7 @@
         "trash-tab": {
             "label": "Papelera",
             "subheading": "Cuando reinicies Kando, esto desaparecerá.",
-            "heading": "Puedes eliminar menús y elementos descargándolos aquí!"
+            "heading": "¡Puede eliminar menús y elementos de menú soltándolos aquí!"
         },
         "templates-tab": {
             "heading": "¡Suelte aquí menús y elementos del menú y utilícelos como plantillas!",
@@ -117,8 +117,8 @@
         "advanced-options": {
             "anchored-mode-hint": "Abrir submenús en la misma posición que el menú origen.",
             "centered-mode-hint": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
-            "heading": "Configura el comportamiento del menú.",
-            "centered-mode": "Modo Centrado.",
+            "heading": "Modificar el comportamiento del menú",
+            "centered-mode": "Modo centrado",
             "anchored-mode": "Modo Fijado",
             "anchored-mode-checked-hint": "Al marcar esto, se deshabilitará el modo de marcado.",
             "subheading": "Antes de habilitar estas opciones, recomendamos aprender el comportamiento por defecto de Kando. Lee sobre por qué nos gusta <a {{- link}}>aquí</a>."
@@ -134,8 +134,8 @@
         },
         "condition-picker": {
             "heading": "Selecciona las condiciones de menú",
-            "app": "Limitar a Apps específicas",
-            "app-placeholder": "Nombre de App",
+            "app": "Limitar a aplicaciones específicas",
+            "app-placeholder": "Nombre de la aplicación",
             "window": "Limitar a títulos de ventana específicos",
             "window-placeholder": "Título de ventana",
             "screen": "Limitar a área de ventana específica",
@@ -146,7 +146,7 @@
             "right-placeholder": "Derecha",
             "top-placeholder": "Arriba",
             "bottom-placeholder": "Abajo",
-            "pointer-position-hint": "Tu cursor está en  {{x}} x {{y}} actualmente.",
+            "pointer-position-hint": "Tu ratón está actualmente en {{x}} x {{y}}.",
             "app-hint": "Muestra el menú solo si una aplicación específica está enfocada.",
             "subheading": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
             "app-tooltip": "Utilice la aplicación que estaba activa cuando se sbrió el Kando.",
@@ -157,7 +157,7 @@
         "hotkey-picker": {
             "label": "Atajo",
             "hint": "Esto será simulado.",
-            "recording": "Presiona un atajo…"
+            "recording": "Pulsa una tecla…"
         }
     },
     "sidebar": {
@@ -184,7 +184,7 @@
     "example-menu": {
         "name": "Menú de ejemplo",
         "apps": {
-            "submenu": "Apps",
+            "submenu": "Aplicaciones",
             "safari": "Safari",
             "web-browser": "Navegador",
             "email": "Correo Electrónico",
@@ -238,8 +238,8 @@
         "previous-workspace": "Espacio de trabajo anterior"
     },
     "main": {
-        "is-running-header": "Kando ya está ejecutándose.",
-        "failed-to-start-header": "Kando ha fallado en iniciarse.",
+        "is-running-header": "Kando se esta ejecutándo",
+        "failed-to-start-header": "Kando no se ha iniciado",
         "is-running-message": "¡Consulta el icono de la bandeja del sistema para ver algunas opciones!"
     },
     "backends": {
