@@ -70,7 +70,7 @@
     "commander": "^12.0.0",
     "dbus-final": "github:Jelmerro/dbus-final",
     "electron-squirrel-startup": "^1.0.0",
-    "emojilib": "^3.0.12",
+    "emojilib": "^4.0.0",
     "handlebars": "^4.7.8",
     "i18next": "^23.15.2",
     "i18next-fs-backend": "^2.3.2",
