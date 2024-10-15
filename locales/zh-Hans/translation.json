@@ -85,6 +85,12 @@
             "tip-5": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
             "tip-6": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
             "tip-2": "使用 file:// 协议来打开文件和文件夹。"
+        },
+        "text": {
+            "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板中将包含文本。",
+            "placeholder": "插入任意文本…",
+            "name": "粘贴文本",
+            "description": "插入给定文本。"
         }
     },
     "properties": {
@@ -105,7 +111,9 @@
             "centered-mode-hint": "在屏幕中心而非光标位置打开菜单。",
             "anchored-mode": "锚定模式",
             "anchored-mode-hint": "在与父菜单相同的位置打开子菜单。",
-            "anchored-mode-checked-hint": "如果开启，将无法使用画笔模式。"
+            "anchored-mode-checked-hint": "如果开启，将无法使用画笔模式。",
+            "warp-mouse-hint": "当菜单开启时将光标移动到它中央。",
+            "warp-mouse": "在居中模式下牵引光标"
         },
         "icon-picker": {
             "heading": "选择一个图标",
