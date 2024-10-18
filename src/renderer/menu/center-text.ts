@@ -124,7 +124,7 @@ export class CenterText {
 
       // Get number of lines required to fit the text.
       const bounds = await this.getBoundingClientRectAsync(tmpDiv);
-      const actualLines = Math.ceil(bounds.height / this.lineHeight);
+      const actualLines = Math.floor(bounds.height / this.lineHeight);
 
       // If the text fits into the available space, we are done.
       if (actualLines <= targetLines) {
