@@ -329,7 +329,10 @@ export class Menu extends EventEmitter {
 
     // If the menu is opened at the screen's center, we have to warp the mouse pointer to
     // the center of the menu.
-    if (this.showMenuOptions.warpMouse && this.showMenuOptions.centeredMode) {
+    if (
+      !this.showMenuOptions.centeredMode ||
+      (this.showMenuOptions.warpMouse && this.showMenuOptions.centeredMode)
+    ) {
       const position = this.getCenterItemPosition();
       const offset = {
         x: Math.trunc(position.x - this.showMenuOptions.mousePosition.x),
@@ -575,10 +578,10 @@ export class Menu extends EventEmitter {
         this.emit('move-pointer', offset);
         this.root.position = math.add(this.root.position, offset);
       }
-    }
 
-    // Update the mouse info based on the newly selected item's position.
-    this.pointerInput.setCurrentCenter(this.latestInput.absolutePosition);
+      // Update the mouse info based on the newly selected item's position.
+      this.pointerInput.setCurrentCenter(clampedPosition);
+    }
 
     // Finally update the CSS classes of all DOM nodes according to the new selection chain
     // and update the connectors.
@@ -1058,13 +1061,17 @@ export class Menu extends EventEmitter {
    * @returns The initial position of the root item.
    */
   private getInitialMenuPosition() {
-    return {
-      x: this.showMenuOptions.centeredMode
-        ? (this.showMenuOptions.windowSize.x / this.showMenuOptions.zoomFactor) * 0.5
-        : this.showMenuOptions.mousePosition.x,
-      y: this.showMenuOptions.centeredMode
-        ? (this.showMenuOptions.windowSize.y / this.showMenuOptions.zoomFactor) * 0.5
-        : this.showMenuOptions.mousePosition.y,
-    };
+    if (this.showMenuOptions.centeredMode) {
+      return {
+        x: (this.showMenuOptions.windowSize.x / this.showMenuOptions.zoomFactor) * 0.5,
+        y: (this.showMenuOptions.windowSize.y / this.showMenuOptions.zoomFactor) * 0.5,
+      };
+    }
+
+    return math.clampToMonitor(
+      this.showMenuOptions.mousePosition,
+      this.theme.maxMenuRadius,
+      this.showMenuOptions.windowSize
+    );
   }
 }
