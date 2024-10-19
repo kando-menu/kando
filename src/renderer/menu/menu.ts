@@ -15,7 +15,7 @@ import { IShowMenuOptions, IVec2 } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { PointerInput } from './pointer-input';
-import { ButtonState, IInputState } from './input-device';
+import { ButtonState, IInputState, SelectionType } from './input-device';
 import { MenuTheme } from './menu-theme';
 import { closestEquivalentAngle } from '../math';
 
@@ -190,11 +190,7 @@ export class Menu extends EventEmitter {
       initialValue: `${this.options.fadeOutDuration}ms`,
     });
 
-    this.pointerInput.on('select-parent', () => {
-      this.selectParent();
-    });
-
-    this.pointerInput.on('close-menu', () => {
+    this.pointerInput.onCloseMenu(() => {
       if (this.options.rmbSelectsParent) {
         this.selectParent();
       } else {
@@ -202,35 +198,33 @@ export class Menu extends EventEmitter {
       }
     });
 
-    this.pointerInput.on('update-state', (state) => {
+    this.pointerInput.onUpdateState((state: IInputState) => {
       this.latestInput = state;
       this.redraw();
     });
 
-    this.pointerInput.on('select-active', (coords: IVec2) => {
+    this.pointerInput.onSelection((coords: IVec2, type: SelectionType) => {
+      if (type === SelectionType.eParent) {
+        this.selectParent();
+        return;
+      }
+
       // If there is an item currently dragged, select it. We only select items which have
       // children in marking mode in order to prevent unwanted actions. This way the user
       // can always check if the correct action was selected before executing it.
-      if (
-        !this.showMenuOptions.anchoredMode &&
-        this.draggedItem &&
-        this.draggedItem.children?.length > 0
-      ) {
-        // The selection event reports where the selection most likely occurred (e.g. the
-        // position where the mouse pointer actually made a turn). We pretend that the
-        // mouse pointer is currently at that position, so that the newly selected item
-        // will be moved to this position.
-        this.selectItem(this.draggedItem, coords);
+      const item = this.hoveredItem || this.clickedItem || this.draggedItem;
+      if (type === SelectionType.eSubmenuOnly && item && item.children?.length > 0) {
+        this.selectItem(item, coords);
         return;
       }
 
       // If there is a clicked item, select it. If the clicked item is the root item, the
       // menu will be closed.
-      if (this.clickedItem) {
-        if (this.selectionChain.length === 1 && this.clickedItem === this.root) {
+      if (type === SelectionType.eActiveItem && item) {
+        if (this.selectionChain.length === 1 && item === this.root) {
           this.emit('cancel');
         } else {
-          this.selectItem(this.clickedItem, coords);
+          this.selectItem(item, coords);
         }
         return;
       }

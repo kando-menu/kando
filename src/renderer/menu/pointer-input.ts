@@ -10,7 +10,7 @@
 
 import * as math from '../math';
 import { IVec2 } from '../../common';
-import { InputDevice, ButtonState, IInputState } from './input-device';
+import { InputDevice, ButtonState, IInputState, SelectionType } from './input-device';
 import { GestureDetector } from './gesture-detector';
 
 /**
@@ -59,7 +59,7 @@ export class PointerInput extends InputDevice {
 
     // Forward selection events from the gesture detector.
     this.gestureDetector.on('selection', (position: IVec2) => {
-      this.emit('select-active', position);
+      this.selectCallback(position, SelectionType.eSubmenuOnly);
     });
   }
 
@@ -201,19 +201,17 @@ export class PointerInput extends InputDevice {
 
     // Go back using the mouse back button.
     if ((event as MouseEvent).button === 3) {
-      this.emit('select-parent');
+      this.selectCallback(this.pointerPosition, SelectionType.eParent);
       return;
     }
 
     // Go back or hide the menu on right click events.
     if ((event as MouseEvent).button === 2) {
-      this.emit('close-menu');
+      this.closeCallback();
       return;
     }
 
-    if (this.buttonState === ButtonState.eClicked) {
-      this.emit('select-active', this.pointerPosition);
-    }
+    this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
 
     this.clickPosition = null;
 
@@ -251,8 +249,7 @@ export class PointerInput extends InputDevice {
     if (!stillAnyModifierPressed) {
       // Select the active item if turbo mode ended due to a key release.
       if (this.buttonState === ButtonState.eDragged) {
-        this.gestureDetector.reset();
-        this.emit('select-active', this.pointerPosition);
+        this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
       }
 
       this.anyKeyPressed = false;
@@ -344,7 +341,7 @@ export class PointerInput extends InputDevice {
           angle: math.getAngle(math.subtract(pointer, this.currentCenter)),
         };
 
-        this.emit('update-state', state);
+        this.stateCallback(state);
       }
     }
   }

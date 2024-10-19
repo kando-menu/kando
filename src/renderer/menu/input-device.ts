@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { EventEmitter } from 'events';
 import { IVec2 } from '../../common';
 
 /**
@@ -23,6 +22,17 @@ export enum ButtonState {
   eReleased,
   eClicked,
   eDragged,
+}
+
+/**
+ * This enum is used to provide a hint what should be selected. This can be useful if a
+ * specific button is used to navigate to a parent item. Or if a selection should only
+ * open a submenu but not select a final item.
+ */
+export enum SelectionType {
+  eActiveItem,
+  eSubmenuOnly,
+  eParent,
 }
 
 /**
@@ -57,28 +67,63 @@ export interface IInputState {
   angle: number;
 }
 
-/**
- * This is a base class for all input devices. The implementation can widely differ,
- * however derived classes should emit the following events:
- *
- * @fires update-state - This event should be emitted whenever the input state changes.
- *   The event data should contain the new state. See the InputState class for more
- *   information.
- * @fires select-active - This event should be emitted whenever the item currently under
- *   the pointer should be selected. The event data should contain the position where the
- *   selection most likely happened. When some sort of gesture recognition is used, the
- *   selection could have been at some point in the past.
- * @fires select-parent - This event should be emitted whenever the parent item should be
- *   selected.
- * @fires close-menu - This event should be emitted whenever the menu should be closed.
- */
-export abstract class InputDevice extends EventEmitter {
+/** This is a base class for all input devices. */
+export abstract class InputDevice {
+  /**
+   * This callback should be called whenever the input state changes. See the InputState
+   * class for more information.
+   */
+  protected stateCallback: (state: IInputState) => void = () => {};
+
+  /**
+   * This callback should be called whenever an item should be selected. The type can
+   * provide a hint what should be selected. See the SelectionType enum for more
+   * information.
+   */
+  protected selectCallback: (position: IVec2, type: SelectionType) => void = () => {};
+
+  /** This callback should be called whenever the menu should be closed. */
+  protected closeCallback: () => void = () => {};
+
   /**
    * This method will be called whenever a new item is selected. Derived classes may use
    * this information to compute absolute input positions.
    *
    * @param center - The center coordinates of the newly selected item.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public setCurrentCenter(center: IVec2) {}
+  public abstract setCurrentCenter(center: IVec2): void;
+
+  /**
+   * This method will be called whenever the input state changes. Derived classes should
+   * call the stateCallback with the new state.
+   *
+   * @param callback - This will be called whenever the input state changes.
+   */
+  public onUpdateState(callback: (state: IInputState) => void) {
+    this.stateCallback = callback;
+  }
+
+  /**
+   * This method will be called should be emitted whenever the item currently under the
+   * pointer should be selected. The event data should contain the position where the
+   * selection most likely happened. When some sort of gesture recognition is used, the
+   * selection could have been at some point in the past.
+   *
+   * Also, the selection type can provide a hint what should be selected. See the
+   * SelectionType enum for more information.
+   *
+   * @param callback - This will be called whenever an item should be selected.
+   */
+  public onSelection(callback: (position: IVec2, type: SelectionType) => void) {
+    this.selectCallback = callback;
+  }
+
+  /**
+   * This event should be emitted whenever the parent item should be selected.
+   *
+   * @param callback - This will be called when the menu should be closed.
+   */
+  public onCloseMenu(callback: () => void) {
+    this.closeCallback = callback;
+  }
 }
