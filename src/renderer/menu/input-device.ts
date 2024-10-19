@@ -11,6 +11,14 @@
 import { EventEmitter } from 'events';
 import { IVec2 } from '../../common';
 
+/**
+ * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen
+ * input. This enum is used for all input devices. Some devices may not have or require
+ * physical buttons, (like touchscreens) and will get into the eDragged state by some
+ * other means. An example is the "Turbo Mode" of the PointerInput where items are dragged
+ * when a modifier key is hold down on the keyboard. In this case, the button state will
+ * be set to eDragged.
+ */
 export enum ButtonState {
   eReleased,
   eClicked,
@@ -18,17 +26,15 @@ export enum ButtonState {
 }
 
 /**
- * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen
- * input. This enum is used for all input devices. Some devices may not have or require
- * physical buttons, (like touchscreens) and will get into the eDragged state by some
- * other means. Another example is the "Turbo Mode" of the PointerInput where items are
- * dragged when a modifier key is hold down on the keyboard.
+ * This interface describes the state of an input device. It is used to communicate the
+ * current state of the input device to the menu. The menu will then decide how to
+ * interpret this state.
  */
 export interface IInputState {
-  /*
-   * This enum is used to store the logical state of the input device. This will be set to
-   * clicked once a button is pressed. If the input device is moved more than a couple of
-   * pixels before the button is released, it is set to dragged.
+  /**
+   * The logical button state of the input device. This will be set to clicked once a
+   * button is pressed. If the input device is moved more than a couple of pixels before
+   * the button is released, it is set to dragged.
    */
   button: ButtonState;
 
