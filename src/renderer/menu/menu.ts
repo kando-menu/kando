@@ -191,12 +191,10 @@ export class Menu extends EventEmitter {
     });
 
     this.pointerInput.on('select-parent', () => {
-      window.api.log('select-parent');
       this.selectParent();
     });
 
     this.pointerInput.on('close-menu', () => {
-      window.api.log('close-menu');
       if (this.options.rmbSelectsParent) {
         this.selectParent();
       } else {
@@ -205,13 +203,11 @@ export class Menu extends EventEmitter {
     });
 
     this.pointerInput.on('update-state', (state) => {
-      window.api.log('update-state');
       this.latestInput = state;
       this.redraw();
     });
 
     this.pointerInput.on('select-active', (coords: IVec2) => {
-      window.api.log('select-active');
       // If there is an item currently dragged, select it. We only select items which have
       // children in marking mode in order to prevent unwanted actions. This way the user
       // can always check if the correct action was selected before executing it.
@@ -228,18 +224,14 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      // If there is a clicked item, select it.
+      // If there is a clicked item, select it. If the clicked item is the root item, the
+      // menu will be closed.
       if (this.clickedItem) {
-        this.selectItem(this.clickedItem, coords);
-        return;
-      }
-
-      // Hide the menu if we clicked the center of the root menu.
-      if (
-        this.selectionChain.length === 1 &&
-        this.latestInput.distance < this.options.centerDeadZone
-      ) {
-        this.emit('cancel');
+        if (this.selectionChain.length === 1 && this.clickedItem === this.root) {
+          this.emit('cancel');
+        } else {
+          this.selectItem(this.clickedItem, coords);
+        }
         return;
       }
     });
@@ -334,7 +326,6 @@ export class Menu extends EventEmitter {
     // Tell the input devices where the menu was opened.
     const initialPosition = this.getInitialMenuPosition();
     this.pointerInput.setCurrentCenter(initialPosition);
-    this.pointerInput.setInitialPosition(showMenuOptions.mousePosition);
 
     this.root = root;
     this.setupPaths(this.root);

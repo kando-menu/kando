@@ -65,7 +65,9 @@ export class PointerInput extends InputDevice {
 
   /** @inheritdoc */
   public setCurrentCenter(center: IVec2) {
-    this.currentCenter = center;
+    this.updateState(center, center, this.buttonState);
+    this.gestureDetector.reset();
+    this.keydownPosition = center;
   }
 
   /**
@@ -87,12 +89,6 @@ export class PointerInput extends InputDevice {
     this.deferredTurboMode = true;
   }
 
-  public setInitialPosition(position: IVec2) {
-    this.updateState(position, ButtonState.eReleased);
-    this.gestureDetector.reset();
-    this.keydownPosition = position;
-  }
-
   /*
    * This method is called when the pointer is moved. It will update the current state and
    * emit an update-state event.
@@ -102,8 +98,6 @@ export class PointerInput extends InputDevice {
   public onMotionEvent(event: MouseEvent | TouchEvent) {
     event.preventDefault();
     event.stopPropagation();
-
-    window.api.log('onMotionEvent');
 
     // Ignore mouse motion events if requested.
     if (this.ignoreMotionEvents > 0) {
@@ -120,7 +114,9 @@ export class PointerInput extends InputDevice {
     let newButtonState = this.buttonState;
 
     if (this.buttonState === ButtonState.eClicked && !inClickZone) {
-      newButtonState = ButtonState.eReleased;
+      newButtonState = this.enableMarkingMode
+        ? ButtonState.eDragged
+        : ButtonState.eReleased;
     }
 
     // We check if the turbo mode should be activated. This is the case if any key is
@@ -148,20 +144,16 @@ export class PointerInput extends InputDevice {
 
     if (shouldEnterTurboMode) {
       newButtonState = ButtonState.eDragged;
-    } else if (
-      event instanceof MouseEvent &&
-      this.buttonState === ButtonState.eDragged &&
-      event.buttons === 0
-    ) {
-      newButtonState = ButtonState.eReleased;
     }
 
     // Store the absolute mouse position, as well as the mouse position, distance, and
     // angle relative to the currently selected item.
-    this.updateState(event, newButtonState);
+    this.updateState(event, this.currentCenter, newButtonState);
 
     // This can potentially lead to a selection event.
-    this.gestureDetector.onMotionEvent(this.currentCenter);
+    if (this.buttonState === ButtonState.eDragged) {
+      this.gestureDetector.onMotionEvent(this.pointerPosition);
+    }
   }
 
   /**
@@ -191,7 +183,7 @@ export class PointerInput extends InputDevice {
 
     // Store the absolute mouse position, as well as the mouse position, distance, and
     // angle relative to the currently selected item.
-    this.updateState(event, ButtonState.eClicked);
+    this.updateState(event, this.currentCenter, ButtonState.eClicked);
 
     // A new gesture may start here.
     this.gestureDetector.reset();
@@ -227,7 +219,7 @@ export class PointerInput extends InputDevice {
 
     // Store the absolute mouse position, as well as the mouse position, distance, and
     // angle relative to the currently selected item.
-    this.updateState(event, ButtonState.eReleased);
+    this.updateState(event, this.currentCenter, ButtonState.eReleased);
 
     this.gestureDetector.reset();
   }
@@ -267,7 +259,7 @@ export class PointerInput extends InputDevice {
       this.deferredTurboMode = false;
 
       if (this.buttonState === ButtonState.eDragged) {
-        this.updateState(this.pointerPosition, ButtonState.eReleased);
+        this.updateState(this.pointerPosition, this.currentCenter, ButtonState.eReleased);
       }
     }
   }
@@ -313,25 +305,34 @@ export class PointerInput extends InputDevice {
    * relative to the currently selected item.
    *
    * @param pointer Either a mouse or touch event or an IVec2.
+   * @param currentCenter The current center of the menu.
    * @param button The current button state.
    */
-  private updateState(pointer: MouseEvent | TouchEvent | IVec2, button: ButtonState) {
+  private updateState(
+    pointer: MouseEvent | TouchEvent | IVec2,
+    currentCenter: IVec2,
+    button: ButtonState
+  ) {
     if (pointer instanceof MouseEvent) {
-      this.updateState({ x: pointer.clientX, y: pointer.clientY }, button);
+      this.updateState({ x: pointer.clientX, y: pointer.clientY }, currentCenter, button);
     } else if (pointer instanceof TouchEvent) {
       this.updateState(
         {
           x: pointer.touches[0].clientX,
           y: pointer.touches[0].clientY,
         },
+        currentCenter,
         button
       );
     } else {
       if (
+        this.currentCenter.x !== currentCenter.x ||
+        this.currentCenter.y !== currentCenter.y ||
         this.buttonState !== button ||
         this.pointerPosition.x !== pointer.x ||
         this.pointerPosition.y !== pointer.y
       ) {
+        this.currentCenter = currentCenter;
         this.buttonState = button;
         this.pointerPosition = pointer;
 
