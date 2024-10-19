@@ -1,7 +1,93 @@
 {
     "items": {
         "command": {
-            "command": "Komanda"
+            "command": "Komanda",
+            "description": "Paleidžia bet kokią apvalkalo komandą."
+        },
+        "uri": {
+            "uri": "URI",
+            "uri-hint": "Tai bus atverta.",
+            "name": "Atverti URI",
+            "description": "Atveria failus ar internetines svetaines."
+        },
+        "text": {
+            "placeholder": "Įterpkite bet kokį tekstą…",
+            "name": "Įdėti tekstą",
+            "description": "Įdeda nurodytą tekstą."
         }
+    },
+    "example-menu": {
+        "apps": {
+            "gimp": "GIMP",
+            "web-browser": "Saityno naršyklė",
+            "safari": "Safari",
+            "apple-music": "Muzika",
+            "submenu": "Programos",
+            "email": "El. paštas",
+            "file-browser": "Failų naršyklė",
+            "terminal": "Terminalas"
+        },
+        "clipboard": {
+            "submenu": "Iškarpinė",
+            "cut": "Iškirpti",
+            "paste": "Įdėti",
+            "copy": "Kopijuoti"
+        },
+        "web-links": {
+            "google": "Google",
+            "submenu": "Saityno nuorodos"
+        },
+        "audio": {
+            "play-pause": "Atkurti / Pristabdyti",
+            "next-track": "Kitas takelis",
+            "mute": "Nutildyti",
+            "previous-track": "Ankstesnis takelis"
+        },
+        "name": "Pavyzdinis meniu",
+        "next-workspace": "Kita darbo sritis",
+        "windows": {
+            "submenu": "Langai",
+            "mission-control": "Mission Control",
+            "toggle-maximize": "Perjungti išskleidimą",
+            "close-window": "Užverti langą"
+        },
+        "previous-workspace": "Ankstesnė darbo sritis",
+        "bookmarks": {
+            "downloads": "Atsiuntimai",
+            "videos": "Vaizdo įrašai",
+            "documents": "Dokumentai",
+            "desktop": "Darbalaukis",
+            "music": "Muzika"
+        }
+    },
+    "properties": {
+        "condition-picker": {
+            "app-placeholder": "Programos pavadinimas",
+            "left-placeholder": "Kairė",
+            "right-placeholder": "Dešinė",
+            "top-placeholder": "Viršus",
+            "bottom-placeholder": "Apačia",
+            "pointer-position-hint": "Šiuo metu jūsų pelė yra ties {{x}} x {{y}}."
+        },
+        "icon-picker": {
+            "placeholder": "Ieškoti piktogramų…"
+        },
+        "macro-picker": {
+            "recording": "Paspauskite klavišus…"
+        },
+        "shortcut-picker": {
+            "hint": "Tai atvers meniu."
+        },
+        "common": {
+            "done": "Atlikta",
+            "cancel": "Atsisakyti",
+            "menu-behavior": "Meniu elgsena"
+        },
+        "advanced-options": {
+            "centered-mode": "Centruota veiksena"
+        }
+    },
+    "main": {
+        "is-running-header": "Kando jau veikia"
     }
 }
