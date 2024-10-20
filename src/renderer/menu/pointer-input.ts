@@ -304,8 +304,9 @@ export class PointerInput extends InputDevice {
       ) {
         this.gestureDetector.reset();
         this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
-        this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
       }
+
+      this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
     }
   }
 
