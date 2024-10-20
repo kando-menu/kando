@@ -317,6 +317,12 @@ export class Menu extends EventEmitter {
     // first motion event to the input tracker.
     this.pointerInput.ignoreNextMotionEvents();
 
+    // In anchored mode, we have to disable turbo and marking mode.
+    this.pointerInput.enableMarkingMode =
+      this.options.enableMarkingMode && !showMenuOptions.anchoredMode;
+    this.pointerInput.enableTurboMode =
+      this.options.enableTurboMode && !showMenuOptions.anchoredMode;
+
     // Tell the input devices where the menu was opened.
     const initialPosition = this.getInitialMenuPosition();
     this.pointerInput.setCurrentCenter(initialPosition, this.options.centerDeadZone);
