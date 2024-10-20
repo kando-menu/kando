@@ -319,7 +319,7 @@ export class Menu extends EventEmitter {
 
     // Tell the input devices where the menu was opened.
     const initialPosition = this.getInitialMenuPosition();
-    this.pointerInput.setCurrentCenter(initialPosition);
+    this.pointerInput.setCurrentCenter(initialPosition, this.options.centerDeadZone);
 
     this.root = root;
     this.setupPaths(this.root);
@@ -580,7 +580,7 @@ export class Menu extends EventEmitter {
       }
 
       // Update the mouse info based on the newly selected item's position.
-      this.pointerInput.setCurrentCenter(clampedPosition);
+      this.pointerInput.setCurrentCenter(clampedPosition, this.options.centerDeadZone);
     }
 
     // Finally update the CSS classes of all DOM nodes according to the new selection chain

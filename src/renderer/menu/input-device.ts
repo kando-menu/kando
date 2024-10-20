@@ -86,12 +86,13 @@ export abstract class InputDevice {
   protected closeCallback: () => void = () => {};
 
   /**
-   * This method will be called whenever a new item is selected. Derived classes may use
-   * this information to compute absolute input positions.
+   * This method will be called whenever a new submenu is selected. Derived classes may
+   * use this information to compute absolute input positions.
    *
-   * @param center - The center coordinates of the newly selected item.
+   * @param center - The center coordinates of the newly selected submenu.
+   * @param radius - The interactive radius of the newly selected submenu.
    */
-  public abstract setCurrentCenter(center: IVec2): void;
+  public abstract setCurrentCenter(center: IVec2, radius: number): void;
 
   /**
    * This method will be called whenever the input state changes. Derived classes should

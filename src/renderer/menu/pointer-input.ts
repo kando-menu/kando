@@ -53,6 +53,43 @@ export class PointerInput extends InputDevice {
    */
   public gestureDetector: GestureDetector = new GestureDetector();
 
+  /** The current pointer position. */
+  private pointerPosition: IVec2 = { x: 0, y: 0 };
+
+  /** The current input state. */
+  private buttonState = ButtonState.eReleased;
+
+  /**
+   * If set to true, the turbo mode can only be activated after a key is released. This is
+   * useful if the menu is not opened under the mouse pointer.
+   */
+  private deferredTurboMode = false;
+
+  /** The position where the mouse was when the user pressed a mouse button the last time. */
+  private clickPosition: IVec2 = { x: 0, y: 0 };
+
+  /** The position where the mouse was when the user pressed a keyboard key the last time. */
+  private keydownPosition: IVec2 = { x: 0, y: 0 };
+
+  /** The position of the currently selected submenu. */
+  private centerPosition: IVec2 = { x: 0, y: 0 };
+
+  /** The interactive radius of the currently selected item. */
+  private centerRadius = 0;
+
+  /**
+   * This is set to true once a key is pressed. If the pointer is moved at least
+   * this.dragThreshold before the key is released, the turbo mode will be activated.
+   */
+  private anyKeyPressed = false;
+
+  /**
+   * If set to a value greater than 0, this will be decremented by 1 every time the the
+   * mouse moves and the corresponding event is ignored. See the documentation of the
+   * ignoreNextMotionEvents() method for more information.
+   */
+  private ignoreMotionEvents = 0;
+
   /** Creates a new PointerInput instance. */
   constructor() {
     super();
@@ -64,10 +101,11 @@ export class PointerInput extends InputDevice {
   }
 
   /** @inheritdoc */
-  public setCurrentCenter(center: IVec2) {
-    this.updateState(center, center, this.buttonState);
+  public setCurrentCenter(center: IVec2, radius: number) {
+    this.update(center, center, this.buttonState);
     this.gestureDetector.reset();
     this.keydownPosition = center;
+    this.centerRadius = radius;
   }
 
   /**
@@ -148,7 +186,7 @@ export class PointerInput extends InputDevice {
 
     // Store the absolute mouse position, as well as the mouse position, distance, and
     // angle relative to the currently selected item.
-    this.updateState(event, this.currentCenter, newButtonState);
+    this.update(event, this.centerPosition, newButtonState);
 
     // This can potentially lead to a selection event.
     if (this.buttonState === ButtonState.eDragged) {
@@ -183,7 +221,7 @@ export class PointerInput extends InputDevice {
 
     // Store the absolute mouse position, as well as the mouse position, distance, and
     // angle relative to the currently selected item.
-    this.updateState(event, this.currentCenter, ButtonState.eClicked);
+    this.update(event, this.centerPosition, ButtonState.eClicked);
 
     // A new gesture may start here.
     this.gestureDetector.reset();
@@ -199,6 +237,8 @@ export class PointerInput extends InputDevice {
     event.preventDefault();
     event.stopPropagation();
 
+    this.gestureDetector.reset();
+
     // Go back using the mouse back button.
     if ((event as MouseEvent).button === 3) {
       this.selectCallback(this.pointerPosition, SelectionType.eParent);
@@ -211,15 +251,21 @@ export class PointerInput extends InputDevice {
       return;
     }
 
-    this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
+    const clickSelection = this.buttonState === ButtonState.eClicked;
+
+    // Do not trigger marking-mode selections on the center item.
+    const markingModeSelection =
+      this.buttonState === ButtonState.eDragged &&
+      math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
+    if (clickSelection || markingModeSelection) {
+      this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
+    }
 
     this.clickPosition = null;
 
     // Store the absolute mouse position, as well as the mouse position, distance, and
     // angle relative to the currently selected item.
-    this.updateState(event, this.currentCenter, ButtonState.eReleased);
-
-    this.gestureDetector.reset();
+    this.update(event, this.centerPosition, ButtonState.eReleased);
   }
 
   /**
@@ -247,98 +293,67 @@ export class PointerInput extends InputDevice {
       event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
     if (!stillAnyModifierPressed) {
-      // Select the active item if turbo mode ended due to a key release.
-      if (this.buttonState === ButtonState.eDragged) {
-        this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
-      }
-
       this.anyKeyPressed = false;
       this.deferredTurboMode = false;
 
-      if (this.buttonState === ButtonState.eDragged) {
-        this.updateState(this.pointerPosition, this.currentCenter, ButtonState.eReleased);
+      // Select the active item if turbo mode ended due to a key release. But do not
+      // trigger selections on the center item in turbo mode.
+      if (
+        this.buttonState === ButtonState.eDragged &&
+        math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius
+      ) {
+        this.gestureDetector.reset();
+        this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
+        this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
       }
     }
   }
 
   // Private interface -------------------------------------------------------------------
 
-  /** The current pointer position. */
-  private pointerPosition: IVec2 = { x: 0, y: 0 };
-
-  /** The current input state. */
-  private buttonState = ButtonState.eReleased;
-
   /**
-   * If set to true, the turbo mode can only be activated after a key is released. This is
-   * useful if the menu is not opened under the mouse pointer.
-   */
-  private deferredTurboMode = false;
-
-  /** The position where the mouse was when the user pressed a mouse button the last time. */
-  private clickPosition: IVec2 = { x: 0, y: 0 };
-
-  /** The position where the mouse was when the user pressed a keyboard key the last time. */
-  private keydownPosition: IVec2 = { x: 0, y: 0 };
-
-  /** The position of the currently selected item. */
-  private currentCenter: IVec2 = { x: 0, y: 0 };
-
-  /**
-   * This is set to true once a key is pressed. If the pointer is moved at least
-   * this.dragThreshold before the key is released, the turbo mode will be activated.
-   */
-  private anyKeyPressed = false;
-
-  /**
-   * If set to a value greater than 0, this will be decremented by 1 every time the the
-   * mouse moves and the corresponding event is ignored. See the documentation of the
-   * ignoreNextMotionEvents() method for more information.
-   */
-  private ignoreMotionEvents = 0;
-
-  /**
-   * Store the absolute mouse position, as well as the mouse position, distance, and angle
-   * relative to the currently selected item.
+   * Store the absolute mouse position, as well as the current center of the menu, and the
+   * current button state. If either of these values changed, a new state will be
+   * emitted.
    *
    * @param pointer Either a mouse or touch event or an IVec2.
-   * @param currentCenter The current center of the menu.
+   * @param center The current center of the menu.
    * @param button The current button state.
    */
-  private updateState(
+  private update(
     pointer: MouseEvent | TouchEvent | IVec2,
-    currentCenter: IVec2,
+    center: IVec2,
     button: ButtonState
   ) {
     if (pointer instanceof MouseEvent) {
-      this.updateState({ x: pointer.clientX, y: pointer.clientY }, currentCenter, button);
+      this.update({ x: pointer.clientX, y: pointer.clientY }, center, button);
     } else if (pointer instanceof TouchEvent) {
-      this.updateState(
+      this.update(
         {
           x: pointer.touches[0].clientX,
           y: pointer.touches[0].clientY,
         },
-        currentCenter,
+        center,
         button
       );
     } else {
       if (
-        this.currentCenter.x !== currentCenter.x ||
-        this.currentCenter.y !== currentCenter.y ||
+        this.centerPosition.x !== center.x ||
+        this.centerPosition.y !== center.y ||
         this.buttonState !== button ||
         this.pointerPosition.x !== pointer.x ||
         this.pointerPosition.y !== pointer.y
       ) {
-        this.currentCenter = currentCenter;
+        this.centerPosition = center;
         this.buttonState = button;
         this.pointerPosition = pointer;
 
         const state: IInputState = {
           button,
           absolutePosition: pointer,
-          relativePosition: math.subtract(pointer, this.currentCenter),
-          distance: math.getLength(math.subtract(pointer, this.currentCenter)),
-          angle: math.getAngle(math.subtract(pointer, this.currentCenter)),
+          relativePosition: math.subtract(pointer, this.centerPosition),
+          distance: math.getLength(math.subtract(pointer, this.centerPosition)),
+          angle: math.getAngle(math.subtract(pointer, this.centerPosition)),
         };
 
         this.stateCallback(state);
