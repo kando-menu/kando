@@ -21,6 +21,9 @@ There are three ways to open the menu editor:
 In the editor, you can create new menus, and edit existing menus.
 Drag new items from the toolbar to the menu preview, reorder them, and change their properties on the right side of the screen.
 
+> [!TIP]
+> There are several advanced options which are not yet exposed in the editor UI. See the [Config-File Documentation](config-files.md) for all advanced options.
+
 ## Tips for Creating Efficient Menu Layouts :rocket:
 
 When designing your own menus, keep the following tips in mind:
