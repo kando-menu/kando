@@ -136,6 +136,10 @@ export class KandoApp {
           gesturePauseTimeout: 100,
           rmbSelectsParent: false,
         },
+        editorOptions: {
+          showSidebarButtonVisible: true,
+          showEditorButtonVisible: true,
+        },
       },
     });
 

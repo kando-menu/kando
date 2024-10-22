@@ -27,6 +27,18 @@ import {
 } from '../../common';
 import { DnDManager } from './common/dnd-manager';
 
+/** These options can be given to the constructor of the menu editor. */
+export class EditorOptions {
+  /**
+   * Set this to false to hide the show-sidebar button. It will still be clickable,
+   * though.
+   */
+  showSidebarButtonVisible = true;
+
+  /** Set this to false to hide the show-editor button. It will still be clickable, though. */
+  showEditorButtonVisible = true;
+}
+
 /**
  * This class is responsible for the entire editor. It contains the preview, the
  * properties view, the sidebar and the toolbar. It is an event emitter and will emit the
@@ -41,6 +53,12 @@ export class Editor extends EventEmitter {
 
   /** This is the backend info which is retrieved from the main process. */
   private backend: IBackendInfo = null;
+
+  /**
+   * This holds some global options for the menu editor. These options can be set when the
+   * editor is created and will be used to configure it's behavior.
+   */
+  private options: EditorOptions = null;
 
   /**
    * The background is an opaque div which is shown when the editor is open. It
@@ -97,12 +115,23 @@ export class Editor extends EventEmitter {
   /**
    * This constructor creates the HTML elements for the menu editor and wires up all the
    * functionality.
+   *
+   * @param container All the menu editor components will be appended to this container.
+   * @param backend Provides information on the currently used backend of Kando.
+   * @param options Use this to tweak the behavior of the menu editor.
    */
-  constructor(container: HTMLElement, backend: IBackendInfo) {
+  constructor(
+    container: HTMLElement,
+    backend: IBackendInfo,
+    options: Partial<EditorOptions> = {}
+  ) {
     super();
 
     this.container = container;
     this.backend = backend;
+
+    // Use the default options and overwrite them with the given options.
+    this.setOptions({ ...new EditorOptions(), ...options });
 
     // Initialize the background.
     this.background = new Background();
@@ -172,6 +201,25 @@ export class Editor extends EventEmitter {
         delay: { show: 500, hide: 0 },
       });
     });
+  }
+
+  /**
+   * Allow changing the options at run-time.
+   *
+   * @param options The new options.
+   */
+  public setOptions(options: Partial<EditorOptions>) {
+    this.options = { ...this.options, ...options };
+
+    this.container.style.setProperty(
+      '--show-sidebar-button-opacity',
+      `${this.options.showSidebarButtonVisible ? 1 : 0}`
+    );
+
+    this.container.style.setProperty(
+      '--show-editor-button-opacity',
+      `${this.options.showEditorButtonVisible ? 1 : 0}`
+    );
   }
 
   /**
