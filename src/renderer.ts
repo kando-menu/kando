@@ -27,11 +27,12 @@ import { MenuTheme } from './renderer/menu/menu-theme';
 // backend info, the menu theme, and the menu theme colors.
 Promise.all([
   window.api.getLocales(),
+  window.api.getVersion(),
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
   window.api.appSettings.get(),
-]).then(async ([locales, info, themeDescription, colors, settings]) => {
+]).then(async ([locales, version, info, themeDescription, colors, settings]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -82,6 +83,7 @@ Promise.all([
   const editor = new Editor(
     document.getElementById('kando-editor'),
     info,
+    version,
     settings.editorOptions
   );
 

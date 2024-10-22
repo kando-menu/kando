@@ -17,6 +17,7 @@ import {
   IShowMenuOptions,
   IShowEditorOptions,
   IIconThemesInfo,
+  IVersionInfo,
 } from '../common';
 
 // Declare the API to the host process. See preload.ts for more information on the exposed
@@ -41,6 +42,7 @@ declare global {
         set: (data: IMenuSettings) => void;
         getCurrentMenu: () => Promise<number>;
       };
+      getVersion: () => Promise<IVersionInfo>;
       getBackendInfo: () => Promise<IBackendInfo>;
       getMenuTheme: () => Promise<IMenuThemeDescription>;
       getAllMenuThemes: () => Promise<Array<IMenuThemeDescription>>;

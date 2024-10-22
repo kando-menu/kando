@@ -10,9 +10,12 @@
 }}
 
 <div>
-  <p>
-    {{intro}}
-  </p>
+  <div class='row mb-3' style="user-select: text;">
+    {{#each infos}}
+      <div class='col-6'>{{label}}:</div>
+      <div class='col-6'>{{value}}</div>
+    {{/each}}
+  </div>
   <div class='row g-2'>
     {{#each buttons}}
       <span class='{{class}}'>
@@ -20,15 +23,6 @@
                 data-bs-title='{{tooltip}}'>
           <i class='material-symbols-rounded inline-icon'>{{icon}}</i>
           {{title}}
-        </button>
-      </span>
-    {{/each}}
-    {{#each entries}}
-      <span class='input-group {{class}}'>
-        <input id='{{id}}-entry' type="text" class="form-control" placeholder="{{placeholder}}">
-        <button id='{{id}}-button' class='btn btn-secondary' data-bs-toggle='tooltip'
-                data-bs-title='{{tooltip}}'>
-          <i class='material-symbols-rounded inline-icon'>{{icon}}</i>
         </button>
       </span>
     {{/each}}

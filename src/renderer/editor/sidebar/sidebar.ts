@@ -10,6 +10,8 @@
 
 import i18next from 'i18next';
 
+import { IBackendInfo, IVersionInfo } from '../../../common';
+
 /**
  * This class is responsible for the sidebar on the left screen edge. It contains some
  * information about Kando in general.
@@ -43,9 +45,12 @@ export class Sidebar {
   /**
    * This constructor creates the HTML elements for the sidebar and wires up all the
    * functionality.
+   *
+   * @param backend Provides information on the currently used backend of Kando.
+   * @param version This will be shown in the developer-options tab.
    */
-  constructor() {
-    this.loadContent();
+  constructor(backend: IBackendInfo, version: IVersionInfo) {
+    this.loadContent(backend, version);
     this.initVisibility();
     this.initIntroductionVideos();
     this.initButtons();
@@ -83,10 +88,15 @@ export class Sidebar {
     return this.container;
   }
 
-  /** This method loads the HTML content of the sidebar. */
-  private loadContent() {
-    const introduction = require('./templates/introduction-tab.hbs');
-    const buttonTab = require('./templates/button-tab.hbs');
+  /**
+   * This method loads the HTML content of the sidebar.
+   *
+   * @param backend Provides information on the currently used backend of Kando.
+   * @param version This will be shown in the developer-options tab.
+   */
+  private loadContent(backend: IBackendInfo, version: IVersionInfo) {
+    const introTab = require('./templates/introduction-tab.hbs');
+    const devTab = require('./templates/dev-tab.hbs');
     const sidebar = require('./templates/sidebar.hbs');
 
     // Initialize the sidebar content.
@@ -108,7 +118,7 @@ export class Sidebar {
           id: 'sidebar-tab-introduction',
           icon: 'school',
           title: i18next.t('sidebar.introduction-tab-header'),
-          content: introduction({
+          content: introTab({
             id: 'introduction-slides',
             slides: [
               {
@@ -133,7 +143,7 @@ export class Sidebar {
           id: 'sidebar-tab-debugging',
           icon: 'ads_click',
           title: i18next.t('sidebar.development-tab-header'),
-          content: buttonTab({
+          content: devTab({
             buttons: [
               {
                 id: 'dev-tools-button',
@@ -146,6 +156,28 @@ export class Sidebar {
                 icon: 'palette',
                 title: i18next.t('sidebar.reload-menu-theme-button'),
                 tooltip: i18next.t('sidebar.reload-menu-theme-button-tooltip'),
+              },
+            ],
+            infos: [
+              {
+                label: i18next.t('sidebar.backend'),
+                value: backend.name,
+              },
+              {
+                label: i18next.t('sidebar.kando-version'),
+                value: version.kandoVersion,
+              },
+              {
+                label: i18next.t('sidebar.electron-version'),
+                value: version.electronVersion,
+              },
+              {
+                label: i18next.t('sidebar.chrome-version'),
+                value: version.chromeVersion,
+              },
+              {
+                label: i18next.t('sidebar.node-version'),
+                value: version.nodeVersion,
               },
             ],
           }),

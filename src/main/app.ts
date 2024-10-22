@@ -673,6 +673,16 @@ export class KandoApp {
       return Math.max(index, 0);
     });
 
+    // Allow the renderer to retrieve information about the current app version.
+    ipcMain.handle('get-version', () => {
+      return {
+        kandoVersion: app.getVersion(),
+        electronVersion: process.versions.electron,
+        chromeVersion: process.versions.chrome,
+        nodeVersion: process.versions.node,
+      };
+    });
+
     // Allow the renderer to retrieve information about the backend.
     ipcMain.handle('get-backend-info', () => {
       return this.backend.getBackendInfo();

@@ -222,7 +222,12 @@
     "dev-tools-button": "Show Developer Tools",
     "dev-tools-button-tooltip": "Open the web developer tools for inspecting the UI.",
     "reload-menu-theme-button": "Reload Current Menu Theme",
-    "reload-menu-theme-button-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu."
+    "reload-menu-theme-button-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu.",
+    "kando-version": "Kando Version",
+    "electron-version": "Electron Version",
+    "chrome-version": "Chrome Version",
+    "node-version": "Node Version",
+    "backend": "Kando Backend"
   },
   "toolbar": {
     "menu-themes-tab": {

@@ -24,6 +24,12 @@ export interface IVec2 {
 /** This interface describes some information about the currently used backend. */
 export interface IBackendInfo {
   /**
+   * The name of the backend. This is shown in the user interface so that users can see
+   * which backend is currently active.
+   */
+  name: string;
+
+  /**
    * Each backend should return a suitable window type here. The window type determines
    * how Kando's window is drawn. The most suitable type is dependent on the operating
    * system and the window manager. For example, on GNOME, the window type "dock" seems to
@@ -49,6 +55,14 @@ export interface IBackendInfo {
    * required.
    */
   shortcutHint?: string;
+}
+
+/** This interface describes some information about the current version of Kando. */
+export interface IVersionInfo {
+  kandoVersion: string;
+  electronVersion: string;
+  chromeVersion: string;
+  nodeVersion: string;
 }
 
 /**
