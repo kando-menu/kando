@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { MenuOptions } from '../renderer/menu/menu';
+import { EditorOptions } from '../renderer/editor/editor';
 
 /**
  * A simple 2D vector.
@@ -431,4 +432,7 @@ export interface IAppSettings {
 
   /** The options which are passed to the menu. */
   menuOptions: MenuOptions;
+
+  /** The options which are passed to the menu editor. */
+  editorOptions: EditorOptions;
 }

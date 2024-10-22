@@ -162,6 +162,7 @@ export class Menu extends EventEmitter {
    *
    * @param container The HTML element which contains the menu.
    * @param theme The theme to use for rendering the menu.
+   * @param options Use this to tweak the behavior of the menu.
    */
   constructor(
     private container: HTMLElement,
@@ -174,21 +175,6 @@ export class Menu extends EventEmitter {
 
     // Use the default options and overwrite them with the given options.
     this.setOptions({ ...new MenuOptions(), ...options });
-
-    // Store the fade-in and fade-out durations as CSS variables.
-    CSS.registerProperty({
-      name: '--fade-in-duration',
-      syntax: '<time>',
-      inherits: false,
-      initialValue: `${this.options.fadeInDuration}ms`,
-    });
-
-    CSS.registerProperty({
-      name: '--fade-out-duration',
-      syntax: '<time>',
-      inherits: false,
-      initialValue: `${this.options.fadeOutDuration}ms`,
-    });
 
     this.pointerInput.onCloseMenu(() => {
       if (this.options.rmbSelectsParent) {

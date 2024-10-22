@@ -25,6 +25,14 @@
 #kando-editor.visible.edit-mode #leave-edit-mode-button {
   pointer-events: all;
   transform: translateY(0px);
+  opacity: var(--show-editor-button-opacity);
+}
+
+#kando-editor.visible:not(.edit-mode) #enter-edit-mode-button {
+  opacity: var(--show-editor-button-opacity);
+}
+
+#kando-editor.visible.edit-mode #leave-edit-mode-button {
   opacity: 1;
 }
 
