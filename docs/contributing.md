@@ -14,7 +14,7 @@ We are happy to receive contributions in the form of **pull requests** on GitHub
 Feel free to fork the repository, implement your changes and create a merge request to the `main` branch!
 
 > [!TIP]
-> There are always some issues labeled as [good first issue](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Feel free to pick one of these and ask for some pointers for how to get started in the comments!
+> There are always some issues labelled as [good first issue](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Feel free to pick one of these and ask for some pointers for how to get started in the comments!
 
 ### Code Style
 

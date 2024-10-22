@@ -21,7 +21,7 @@ import { IVec2 } from '../../common';
  * @fires selection - This event is emitted when a selection is detected. The event data
  *   contains the coordinates of the location where the selection event occurred.
  */
-export class GestureDetection extends EventEmitter {
+export class GestureDetector extends EventEmitter {
   /**
    * This will be initialized with the coordinates of the first motion event after the
    * last reset() call.
@@ -136,7 +136,7 @@ export class GestureDetection extends EventEmitter {
   }
 
   /**
-   * This method resets the gesture detection. For instnce, it should be called if the
+   * This method resets the gesture detection. For instance, it should be called if the
    * left mouse button is released.
    *
    * @param lastCorner - If the gesture may continue, this parameter can be used to

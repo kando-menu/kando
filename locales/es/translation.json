@@ -58,6 +58,12 @@
             "name": "Abrir URI",
             "description": "Abrir archivos o sitios web.",
             "tip-6": "Utilice {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú."
+        },
+        "text": {
+            "tip-1": "Esta acción utiliza el portapapeles para pegar el texto. Después de usar la acción, el portapapeles contendrá el texto.",
+            "placeholder": "Inserta cualquier texto…",
+            "name": "Pegar texto",
+            "description": "Inserta el texto indicado."
         }
     },
     "toolbar": {
@@ -121,7 +127,8 @@
             "centered-mode": "Modo centrado",
             "anchored-mode": "Modo Fijado",
             "anchored-mode-checked-hint": "Al marcar esto, se deshabilitará el modo de marcado.",
-            "subheading": "Antes de habilitar estas opciones, recomendamos aprender el comportamiento por defecto de Kando. Lee sobre por qué nos gusta <a {{- link}}>aquí</a>."
+            "subheading": "Antes de habilitar estas opciones, recomendamos aprender el comportamiento por defecto de Kando. Lee sobre por qué nos gusta <a {{- link}}>aquí</a>.",
+            "warp-mouse-hint": "Mueva el puntero al centro del menú cuando se abra."
         },
         "common": {
             "menu-behavior": "Comportamiento del menú",

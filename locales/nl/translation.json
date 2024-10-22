@@ -2,7 +2,9 @@
     "items": {
         "command": {
             "tip-1": "Het commando-itemtype kan worden gebruikt om programma's of scripts te starten.",
-            "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet."
+            "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet.",
+            "tip-4": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
+            "tip-3": "Gebruik {{app_name}} om de naam in te voegen van de app die gefocust was toen je het menu opende."
         }
     }
 }
