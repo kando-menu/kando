@@ -118,11 +118,13 @@ export class Editor extends EventEmitter {
    *
    * @param container All the menu editor components will be appended to this container.
    * @param backend Provides information on the currently used backend of Kando.
+   * @param version The version string will be displayed in the sidebar.
    * @param options Use this to tweak the behavior of the menu editor.
    */
   constructor(
     container: HTMLElement,
     backend: IBackendInfo,
+    version: string,
     options: Partial<EditorOptions> = {}
   ) {
     super();
@@ -168,7 +170,7 @@ export class Editor extends EventEmitter {
     this.properties.on('changed-shortcut', handleItemChange);
 
     // Initialize the sidebar.
-    this.sidebar = new Sidebar();
+    this.sidebar = new Sidebar(version);
     this.container.appendChild(this.sidebar.getContainer());
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and

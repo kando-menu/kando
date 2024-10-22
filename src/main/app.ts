@@ -673,6 +673,11 @@ export class KandoApp {
       return Math.max(index, 0);
     });
 
+    // Allow the renderer to retrieve information about the current app version.
+    ipcMain.handle('get-version', () => {
+      return app.getVersion();
+    });
+
     // Allow the renderer to retrieve information about the backend.
     ipcMain.handle('get-backend-info', () => {
       return this.backend.getBackendInfo();

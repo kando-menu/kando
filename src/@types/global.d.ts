@@ -41,6 +41,7 @@ declare global {
         set: (data: IMenuSettings) => void;
         getCurrentMenu: () => Promise<number>;
       };
+      getVersion: () => Promise<string>;
       getBackendInfo: () => Promise<IBackendInfo>;
       getMenuTheme: () => Promise<IMenuThemeDescription>;
       getAllMenuThemes: () => Promise<Array<IMenuThemeDescription>>;

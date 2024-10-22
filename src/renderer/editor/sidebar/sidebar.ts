@@ -43,9 +43,11 @@ export class Sidebar {
   /**
    * This constructor creates the HTML elements for the sidebar and wires up all the
    * functionality.
+   *
+   * @param version This will be shown in the developer-options tab.
    */
-  constructor() {
-    this.loadContent();
+  constructor(version: string) {
+    this.loadContent(version);
     this.initVisibility();
     this.initIntroductionVideos();
     this.initButtons();
@@ -83,10 +85,14 @@ export class Sidebar {
     return this.container;
   }
 
-  /** This method loads the HTML content of the sidebar. */
-  private loadContent() {
-    const introduction = require('./templates/introduction-tab.hbs');
-    const buttonTab = require('./templates/button-tab.hbs');
+  /**
+   * This method loads the HTML content of the sidebar.
+   *
+   * @param version This will be shown in the developer-options tab.
+   */
+  private loadContent(version: string) {
+    const introTab = require('./templates/introduction-tab.hbs');
+    const devTab = require('./templates/dev-tab.hbs');
     const sidebar = require('./templates/sidebar.hbs');
 
     // Initialize the sidebar content.
@@ -108,7 +114,7 @@ export class Sidebar {
           id: 'sidebar-tab-introduction',
           icon: 'school',
           title: i18next.t('sidebar.introduction-tab-header'),
-          content: introduction({
+          content: introTab({
             id: 'introduction-slides',
             slides: [
               {
@@ -133,7 +139,7 @@ export class Sidebar {
           id: 'sidebar-tab-debugging',
           icon: 'ads_click',
           title: i18next.t('sidebar.development-tab-header'),
-          content: buttonTab({
+          content: devTab({
             buttons: [
               {
                 id: 'dev-tools-button',
@@ -146,6 +152,12 @@ export class Sidebar {
                 icon: 'palette',
                 title: i18next.t('sidebar.reload-menu-theme-button'),
                 tooltip: i18next.t('sidebar.reload-menu-theme-button-tooltip'),
+              },
+            ],
+            infos: [
+              {
+                label: i18next.t('sidebar.version-info'),
+                value: version,
               },
             ],
           }),
