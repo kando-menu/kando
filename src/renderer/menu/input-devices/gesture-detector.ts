@@ -10,8 +10,8 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../math';
-import { IVec2 } from '../../common';
+import * as math from '../../math';
+import { IVec2 } from '../../../common';
 
 /**
  * This class detects gestures. It is used to detect marking mode selections in the menu.

@@ -14,9 +14,9 @@ import * as math from '../math';
 import { IShowMenuOptions, IVec2 } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
-import { GamepadInput } from './gamepad-input';
-import { PointerInput } from './pointer-input';
-import { ButtonState, IInputState, SelectionType } from './input-device';
+import { GamepadInput } from './input-devices/gamepad-input';
+import { PointerInput } from './input-devices/pointer-input';
+import { ButtonState, IInputState, SelectionType } from './input-devices/input-device';
 import { MenuTheme } from './menu-theme';
 import { closestEquivalentAngle } from '../math';
 
@@ -149,6 +149,12 @@ export class Menu extends EventEmitter {
   private pointerInput: PointerInput = new PointerInput();
 
   /**
+   * The gamepad input is used to detect gamepad input. It polls the gamepad state and
+   * emits events when buttons are pressed or the thumbsticks are moved.
+   */
+  private gamepadInput: GamepadInput = new GamepadInput();
+
+  /**
    * This object contains information on the latest pointer state. Is it updated whenever
    * an input pointer is moved.
    */
@@ -156,12 +162,6 @@ export class Menu extends EventEmitter {
 
   /** This timeout is used to clear the menu div after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
-
-  /**
-   * The gamepad input is used to detect gamepad input. It polls the gamepad state and
-   * emits events when buttons are pressed or the thumbsticks are moved.
-   */
-  private gamepadInput: GamepadInput = new GamepadInput();
 
   /**
    * The constructor will attach event listeners to the given container element. It will

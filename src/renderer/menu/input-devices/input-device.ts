@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../../common';
+import { IVec2 } from '../../../common';
 
 /**
  * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen

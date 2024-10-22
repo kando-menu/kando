@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IVec2 } from '../../common';
+import { IVec2 } from '../../../common';
 
 const AXIS_DEADZONE = 0.3;
 
