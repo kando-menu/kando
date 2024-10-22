@@ -675,7 +675,12 @@ export class KandoApp {
 
     // Allow the renderer to retrieve information about the current app version.
     ipcMain.handle('get-version', () => {
-      return app.getVersion();
+      return {
+        kandoVersion: app.getVersion(),
+        electronVersion: process.versions.electron,
+        chromeVersion: process.versions.chrome,
+        nodeVersion: process.versions.node,
+      };
     });
 
     // Allow the renderer to retrieve information about the backend.

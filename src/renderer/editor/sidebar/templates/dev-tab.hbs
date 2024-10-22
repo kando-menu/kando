@@ -10,11 +10,13 @@
 }}
 
 <div>
-  <div class='row g-2'>
+  <div class='row mb-3' style="user-select: text;">
     {{#each infos}}
       <div class='col-6'>{{label}}:</div>
       <div class='col-6'>{{value}}</div>
     {{/each}}
+  </div>
+  <div class='row g-2'>
     {{#each buttons}}
       <span class='{{class}}'>
         <button id='{{id}}' class='btn btn-secondary w-100' data-bs-toggle='tooltip'

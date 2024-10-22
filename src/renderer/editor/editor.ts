@@ -24,6 +24,7 @@ import {
   IShowEditorOptions,
   deepCopyMenu,
   deepCopyMenuItem,
+  IVersionInfo,
 } from '../../common';
 import { DnDManager } from './common/dnd-manager';
 
@@ -124,7 +125,7 @@ export class Editor extends EventEmitter {
   constructor(
     container: HTMLElement,
     backend: IBackendInfo,
-    version: string,
+    version: IVersionInfo,
     options: Partial<EditorOptions> = {}
   ) {
     super();
@@ -170,7 +171,7 @@ export class Editor extends EventEmitter {
     this.properties.on('changed-shortcut', handleItemChange);
 
     // Initialize the sidebar.
-    this.sidebar = new Sidebar(version);
+    this.sidebar = new Sidebar(backend, version);
     this.container.appendChild(this.sidebar.getContainer());
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and

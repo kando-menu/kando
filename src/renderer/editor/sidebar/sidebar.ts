@@ -10,6 +10,8 @@
 
 import i18next from 'i18next';
 
+import { IBackendInfo, IVersionInfo } from '../../../common';
+
 /**
  * This class is responsible for the sidebar on the left screen edge. It contains some
  * information about Kando in general.
@@ -44,10 +46,11 @@ export class Sidebar {
    * This constructor creates the HTML elements for the sidebar and wires up all the
    * functionality.
    *
+   * @param backend Provides information on the currently used backend of Kando.
    * @param version This will be shown in the developer-options tab.
    */
-  constructor(version: string) {
-    this.loadContent(version);
+  constructor(backend: IBackendInfo, version: IVersionInfo) {
+    this.loadContent(backend, version);
     this.initVisibility();
     this.initIntroductionVideos();
     this.initButtons();
@@ -88,9 +91,10 @@ export class Sidebar {
   /**
    * This method loads the HTML content of the sidebar.
    *
+   * @param backend Provides information on the currently used backend of Kando.
    * @param version This will be shown in the developer-options tab.
    */
-  private loadContent(version: string) {
+  private loadContent(backend: IBackendInfo, version: IVersionInfo) {
     const introTab = require('./templates/introduction-tab.hbs');
     const devTab = require('./templates/dev-tab.hbs');
     const sidebar = require('./templates/sidebar.hbs');
@@ -156,8 +160,24 @@ export class Sidebar {
             ],
             infos: [
               {
-                label: i18next.t('sidebar.version-info'),
-                value: version,
+                label: i18next.t('sidebar.backend'),
+                value: backend.name,
+              },
+              {
+                label: i18next.t('sidebar.kando-version'),
+                value: version.kandoVersion,
+              },
+              {
+                label: i18next.t('sidebar.electron-version'),
+                value: version.electronVersion,
+              },
+              {
+                label: i18next.t('sidebar.chrome-version'),
+                value: version.chromeVersion,
+              },
+              {
+                label: i18next.t('sidebar.node-version'),
+                value: version.nodeVersion,
               },
             ],
           }),
