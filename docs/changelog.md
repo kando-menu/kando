@@ -37,6 +37,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - The default fade-out animation is now faster. This should make the menu feel more responsive especially for actions which are executed only after the menu is fully hidden.
+- Completely refactored how mouse, touch, and keyboard events are handled. This should make the code more maintainable and easier to extend in the future. However, this can also introduce new bugs. Please report any issues you encounter!
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
 - Icon themes are now also loaded from symbolic-link subdirectories in the `icon-themes` directories. Kando will load the icons from the linked directory.
 - The "Command" actions will now be executed using the user's home directory as the working directory. Before Kando's installation directory was used.
