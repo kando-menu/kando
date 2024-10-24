@@ -14,9 +14,9 @@ import * as math from '../math';
 import { IShowMenuOptions, IVec2 } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
-import { GamepadInput } from './input-devices/gamepad-input';
-import { PointerInput } from './input-devices/pointer-input';
-import { ButtonState, IInputState, SelectionType } from './input-devices/input-device';
+import { GamepadInput } from './input-methods/gamepad-input';
+import { PointerInput } from './input-methods/pointer-input';
+import { ButtonState, IInputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
 import { closestEquivalentAngle } from '../math';
 

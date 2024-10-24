@@ -11,12 +11,9 @@
 import { IVec2 } from '../../../common';
 
 /**
- * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen
- * input. This enum is used for all input devices. Some devices may not have or require
- * physical buttons, (like touchscreens) and will get into the eDragged state by some
- * other means. An example is the "Turbo Mode" of the PointerInput where items are dragged
- * when a modifier key is hold down on the keyboard. In this case, the button state will
- * be set to eDragged.
+ * The logical button state of the input device. This will be set to clicked once a button
+ * is pressed. If the input device is moved more than a couple of pixels before the button
+ * is released, it is set to dragged.
  */
 export enum ButtonState {
   eReleased,
@@ -37,18 +34,21 @@ export enum SelectionType {
 
 /**
  * This interface describes the state of an input device. It is used to communicate the
- * current state of the input device to the menu. The menu will then decide how to
+ * current state of the input method to the menu. The menu will then decide how to
  * interpret this state.
  */
 export interface IInputState {
   /**
-   * The logical button state of the input device. This will be set to clicked once a
-   * button is pressed. If the input device is moved more than a couple of pixels before
-   * the button is released, it is set to dragged.
+   * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen
+   * input. This enum is used for all input methods. Some devices may not have or require
+   * physical buttons, (like touchscreens) and will get into the eDragged state by some
+   * other means. An example is the "Turbo Mode" of the PointerInput where items are
+   * dragged when a modifier key is hold down on the keyboard. In this case, the button
+   * state will be set to eDragged.
    */
   button: ButtonState;
 
-  /** The pointer position in absolute coordinates. */
+  /** The pointer position in absolute screen coordinates. */
   absolutePosition: IVec2;
 
   /** The pointer position relative to the center of the currently selected item. */
@@ -67,8 +67,8 @@ export interface IInputState {
   angle: number;
 }
 
-/** This is a base class for all input devices. */
-export abstract class InputDevice {
+/** This is a base class for all input methods. */
+export abstract class InputMethod {
   /**
    * This callback should be called whenever the input state changes. See the InputState
    * class for more information.

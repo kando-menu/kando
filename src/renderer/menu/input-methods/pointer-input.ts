@@ -10,7 +10,7 @@
 
 import * as math from '../../math';
 import { IVec2 } from '../../../common';
-import { InputDevice, ButtonState, IInputState, SelectionType } from './input-device';
+import { InputMethod, ButtonState, IInputState, SelectionType } from './input-method';
 import { GestureDetector } from './gesture-detector';
 
 /**
@@ -29,7 +29,7 @@ import { GestureDetector } from './gesture-detector';
  *   pressed.
  * @fires close-menu - This event is emitted if the right mouse button is pressed.
  */
-export class PointerInput extends InputDevice {
+export class PointerInput extends InputMethod {
   /**
    * This is the threshold in pixels which is used to differentiate between a click and a
    * drag. If the mouse is moved more than this threshold before the mouse button is
