@@ -37,6 +37,7 @@ Property | Default Value | Description
 `zoomFactor` | `1.0` | The zoom factor of the menu. This can be used to scale the menu on high-resolution screens.
 `enableVersionCheck` | `true` | If set to `true`, Kando will check for new version regularly, and show a notification if a new version is available.
 `menuOptions` | _see below_ | The parameters configure the general behavior of the menus.
+`editorOptions` | _see below_ | The parameters configure the behavior of the menu editor.
 
 ### The `menuOptions` Property
 
@@ -54,6 +55,13 @@ Property | Default Value | Description
 `gestureJitterThreshold` | `10` | Smaller pointer movements will not be considered at all during gesture recognition (in pixels).
 `gesturePauseTimeout` | `100` | If the pointer is stationary for this many milliseconds, the current item will be selected during gesture recognition.
 `rmbSelectsParent` | `false` | If enabled, the parent of a selected item will be selected on a right mouse button click. Else the menu will be closed directly.
+
+### The `editorOptions` Property
+
+Property | Default Value | Description
+-------- | ------------- | -----------
+`showSidebarButtonVisible` | `true` | Set this to `false` to hide the show-sidebar button. It will still be clickable, though.
+`showEditorButtonVisible` | `true` | Set this to `false` to hide the show-editor button. It will still be clickable, though.
 
 ## The Menu Configuration: `menus.json`
 

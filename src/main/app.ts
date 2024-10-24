@@ -136,6 +136,10 @@ export class KandoApp {
           gesturePauseTimeout: 100,
           rmbSelectsParent: false,
         },
+        editorOptions: {
+          showSidebarButtonVisible: true,
+          showEditorButtonVisible: true,
+        },
       },
     });
 
@@ -667,6 +671,16 @@ export class KandoApp {
         .findIndex((m) => m.root.name === this.lastMenu.root.name);
 
       return Math.max(index, 0);
+    });
+
+    // Allow the renderer to retrieve information about the current app version.
+    ipcMain.handle('get-version', () => {
+      return {
+        kandoVersion: app.getVersion(),
+        electronVersion: process.versions.electron,
+        chromeVersion: process.versions.chrome,
+        nodeVersion: process.versions.node,
+      };
     });
 
     // Allow the renderer to retrieve information about the backend.

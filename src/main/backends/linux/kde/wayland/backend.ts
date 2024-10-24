@@ -85,6 +85,7 @@ export class KDEWaylandBackend implements Backend {
    */
   public getBackendInfo() {
     return {
+      name: 'KDE Wayland Backend',
       windowType: 'toolbar',
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.kde-wayland.shortcut-hint'),

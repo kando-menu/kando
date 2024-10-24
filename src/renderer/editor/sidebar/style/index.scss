@@ -26,6 +26,13 @@
 #kando-editor.visible #hide-sidebar-button.visible {
   pointer-events: all;
   transform: translateX(0px);
+}
+
+#kando-editor.visible #show-sidebar-button.visible {
+  opacity: var(--show-sidebar-button-opacity);
+}
+
+#kando-editor.visible #hide-sidebar-button.visible {
   opacity: 1;
 }
 

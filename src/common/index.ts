@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { MenuOptions } from '../renderer/menu/menu';
+import { EditorOptions } from '../renderer/editor/editor';
 
 /**
  * A simple 2D vector.
@@ -22,6 +23,12 @@ export interface IVec2 {
 
 /** This interface describes some information about the currently used backend. */
 export interface IBackendInfo {
+  /**
+   * The name of the backend. This is shown in the user interface so that users can see
+   * which backend is currently active.
+   */
+  name: string;
+
   /**
    * Each backend should return a suitable window type here. The window type determines
    * how Kando's window is drawn. The most suitable type is dependent on the operating
@@ -48,6 +55,14 @@ export interface IBackendInfo {
    * required.
    */
   shortcutHint?: string;
+}
+
+/** This interface describes some information about the current version of Kando. */
+export interface IVersionInfo {
+  kandoVersion: string;
+  electronVersion: string;
+  chromeVersion: string;
+  nodeVersion: string;
 }
 
 /**
@@ -431,4 +446,7 @@ export interface IAppSettings {
 
   /** The options which are passed to the menu. */
   menuOptions: MenuOptions;
+
+  /** The options which are passed to the menu editor. */
+  editorOptions: EditorOptions;
 }

@@ -25,6 +25,7 @@ export class WindowsBackend implements Backend {
    */
   public getBackendInfo() {
     return {
+      name: 'Windows Backend',
       windowType: 'toolbar',
       supportsShortcuts: true,
     };

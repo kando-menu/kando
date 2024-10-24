@@ -76,6 +76,11 @@ contextBridge.exposeInMainWorld('api', {
     },
   },
 
+  /** Returns the current version string of Kando. */
+  getVersion: function () {
+    return ipcRenderer.invoke('get-version');
+  },
+
   /** This will return some information about the currently used backend. */
   getBackendInfo: function () {
     return ipcRenderer.invoke('get-backend-info');

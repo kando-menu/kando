@@ -27,11 +27,12 @@ import { MenuTheme } from './renderer/menu/menu-theme';
 // backend info, the menu theme, and the menu theme colors.
 Promise.all([
   window.api.getLocales(),
+  window.api.getVersion(),
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
   window.api.appSettings.get(),
-]).then(async ([locales, info, themeDescription, colors, settings]) => {
+]).then(async ([locales, version, info, themeDescription, colors, settings]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -78,7 +79,13 @@ Promise.all([
     menuTheme,
     settings.menuOptions
   );
-  const editor = new Editor(document.getElementById('kando-editor'), info);
+
+  const editor = new Editor(
+    document.getElementById('kando-editor'),
+    info,
+    version,
+    settings.editorOptions
+  );
 
   // Show the menu when the main process requests it.
   window.api.showMenu((root, menuOptions, editorOptions) => {
@@ -103,8 +110,9 @@ Promise.all([
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
 
-  // Tell the menu about settings changes.
-  window.api.appSettings.onChange('menuOptions', (options) => menu.setOptions(options));
+  // Tell the menu and the editor about settings changes.
+  window.api.appSettings.onChange('menuOptions', (o) => menu.setOptions(o));
+  window.api.appSettings.onChange('editorOptions', (o) => editor.setOptions(o));
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the

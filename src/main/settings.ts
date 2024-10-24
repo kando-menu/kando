@@ -11,7 +11,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import chokidar from 'chokidar';
-import isEqual from 'lodash.isequal';
+import lodash from 'lodash';
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -253,7 +253,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     try {
       console.log('Loading settings from', this.filePath);
       const data = fs.readJSONSync(this.filePath);
-      return { ...defaultSettings, ...data };
+      return lodash.merge({}, defaultSettings, data);
     } catch (error) {
       if (error.code === 'ENOENT') {
         // The settings file does not exist yet. Create it.
@@ -288,7 +288,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     for (const key in newSettings) {
       if (
         Object.prototype.hasOwnProperty.call(newSettings, key) &&
-        !isEqual(newSettings[key], oldSettings[key])
+        !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
         this.emit(key, this.settings[key], oldSettings[key]);
       }

@@ -25,11 +25,19 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - **Paste-Text Action:** You can now paste text into the currently focused window using the new "Paste Text" action. This uses your clipboard internally, so it can paste any text including special characters like emojis 🎊!
 - **Support for base64 icons:** This allows you to directly embed base64 encoded images. This will be especially helpful for menus which are dynamically generated via some sort of API in the future. Use `"base64"` as the icon theme and provide the base64 encoded image as the `"icon"`. This will be a string starting with something like `"data:image/svg+xml;base64, ..."`. This even supports animated gifs!
+- **Version information in the sidebar:** The sidebar now shows some version information in the development tab. This includes the version of Kando, the version of Electron, and the currently used backend.
 - An option to the menu editor which **allows warping the mouse pointer to the center of the menu** when the menu is opened in centered mode. This allows to directly engage in turbo mode even if the menu is shown at the center of the screen.
-- **Change the fade-in and fade-out duration of the menu:** For now, it is only possible to change this via the `"menuOptions": {"fadeInDuration": 150}` and `"menuOptions": {"fadeOutDuration": 250}` properties in the `config.json` file. In the future, this will be exposed in the settings UI.
-- **Disable Marking Mode and Turbo Mode altogether:** This can be useful if you never use these features and want to avoid accidental selections. For now, this can be done via the `"menuOptions": {"enableMarkingMode": true}` and `"menuOptions": {"enableTurboMode": true}` in your `config.json`. In the future, this will be exposed in the settings UI.
-- **Select parent with mouse and keyboard:** Your mouse's navigate-back button as well as <kbd>Backspace</kbd> will now select the parent menu.
-- **Optionally select parent with RMB:** If you set `"menuOptions": {"rmbSelectsParent": true}`, your right mouse button will now select the parent menu instead of closing the menu.
+- **Adjustable fade-in and fade-out duration of the menu:** For now, it is only possible to change this via the `"menuOptions": {"fadeInDuration": 150}` and `"menuOptions": {"fadeOutDuration": 250}` properties in the `config.json` file. In the future, this will be exposed in the settings UI.
+- **Possibility to hide sidebar and editor buttons:** You can now add
+  ```json
+  "editorOptions": {
+    "showSidebarButtonVisible": false,
+    "showEditorButtonVisible": false
+  }
+  ```
+  to your `config.json` to hide the show-sidebar and the show-editor buttons respectively. They will still be clickable, so you can still use them if you aim carefully.
+- **Possibility to disable Marking Mode and Turbo Mode altogether:** This can be useful if you never use these features and want to avoid accidental selections. For now, this can be done via the `"menuOptions": {"enableMarkingMode": true}` and `"menuOptions": {"enableTurboMode": true}` in your `config.json`. In the future, this will be exposed in the settings UI.
+- **New options to select parent with mouse and keyboard:** Your mouse's navigate-back button as well as <kbd>Backspace</kbd> will now select the parent menu. Also, if you set `"menuOptions": {"rmbSelectsParent": true}`, your right mouse button will now select the parent menu instead of closing the menu.
 - **More configurable properties:** Some variables which were constants before are now configurable via the `config.json`. See the [corresponding documentation](https://github.com/kando-menu/kando/blob/main/docs/config-files.md#the-menuoptions-property) for details.
 - **Icon themes are now also loaded from the installation directory:** This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update. The directory is `resources/app/.webpack/renderer/assets/icon-themes/`.
 - **Several  translation updates:** Thanks to all the contributors!

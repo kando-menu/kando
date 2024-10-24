@@ -18,6 +18,7 @@ export class CinnamonBackend extends X11Backend {
    */
   public getBackendInfo() {
     const info = super.getBackendInfo();
+    info.name = 'Cinnamon Backend';
     info.windowType = 'normal';
     return info;
   }
