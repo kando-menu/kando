@@ -44,6 +44,7 @@ export class Gamepad extends EventEmitter {
   /** This flag is set to true when the poll method should stop polling. */
   private stopPolling = false;
 
+  /** This property contains the last stick position as normalized 2D coordinates. */
   private lastStickPosition: IVec2 = { x: 0, y: 0 };
 
   /** Creates a new GamepadInput instance and starts polling the gamepad API. */
@@ -131,12 +132,11 @@ export class Gamepad extends EventEmitter {
     const x = gamepadState.axes[xAxis];
     const y = gamepadState.axes[yAxis];
 
-    const stickPosition = { x: 0, y: 0 };
-
-    if (Math.abs(x) > this.axisDeadzone || Math.abs(y) > this.axisDeadzone) {
-      stickPosition.x = (x * (Math.abs(x) - this.axisDeadzone)) / (1 - this.axisDeadzone);
-      stickPosition.y = (y * (Math.abs(y) - this.axisDeadzone)) / (1 - this.axisDeadzone);
-    }
+    const tilt = Math.sqrt(x * x + y * y);
+    const stickPosition = {
+      x: tilt > this.axisDeadzone ? x : 0,
+      y: tilt > this.axisDeadzone ? y : 0,
+    };
 
     if (
       stickPosition.x !== this.lastStickPosition.x ||

@@ -191,99 +191,8 @@ export class Menu extends EventEmitter {
     // Use the default options and overwrite them with the given options.
     this.setOptions({ ...new MenuOptions(), ...options });
 
-    this.pointerInput.onCloseMenu(() => {
-      if (this.options.rmbSelectsParent) {
-        this.selectParent();
-      } else {
-        this.emit('cancel');
-      }
-    });
-
-    this.pointerInput.onUpdateState((state: IInputState) => {
-      this.latestInput = state;
-      this.redraw();
-    });
-
-    this.pointerInput.onSelection((coords: IVec2, type: SelectionType) => {
-      if (type === SelectionType.eParent) {
-        this.selectParent();
-        return;
-      }
-
-      // If there is an item currently dragged, select it. We only select items which have
-      // children in marking mode in order to prevent unwanted actions. This way the user
-      // can always check if the correct action was selected before executing it.
-      const item = this.hoveredItem || this.clickedItem || this.draggedItem;
-      if (type === SelectionType.eSubmenuOnly && item && item.children?.length > 0) {
-        this.selectItem(item, coords);
-        return;
-      }
-
-      // If there is a clicked item, select it. If the clicked item is the root item, the
-      // menu will be closed.
-      if (type === SelectionType.eActiveItem && item) {
-        if (this.selectionChain.length === 1 && item === this.root) {
-          this.emit('cancel');
-        } else {
-          this.selectItem(item, coords);
-        }
-        return;
-      }
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (this.container.classList.contains('hidden')) {
-        return;
-      }
-
-      const anyModifierPressed =
-        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
-      const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
-      if (!anyModifierPressed && event.key === 'Backspace') {
-        this.selectParent();
-      } else if (!anyModifierPressed && menuKeys.includes(event.key)) {
-        const index = menuKeys.indexOf(event.key);
-        if (index === 0) {
-          this.selectParent();
-        } else {
-          const currentItem = this.selectionChain[this.selectionChain.length - 1];
-          if (currentItem.children) {
-            const child = currentItem.children[index - 1];
-            if (child) {
-              this.selectItem(child);
-            }
-          }
-        }
-      } else if (event.key !== 'Escape') {
-        this.pointerInput.onKeyDownEvent();
-      }
-    });
-
-    // If the last modifier is released while a menu item is dragged around, we select it.
-    // This enables selections in "Turbo-Mode", where items can be selected with mouse
-    // movements without pressing the left mouse button but by holding a keyboard key
-    // instead.
-    document.addEventListener('keyup', (event) => {
-      if (this.container.classList.contains('hidden')) {
-        return;
-      }
-
-      if (event.key === 'Escape') {
-        return;
-      }
-
-      this.pointerInput.onKeyUpEvent(event);
-    });
-
-    // prettier-ignore
-    {
-    container.addEventListener('mousedown',  (e) => this.pointerInput.onPointerDownEvent(e));
-    container.addEventListener('mousemove',  (e) => this.pointerInput.onMotionEvent(e));
-    container.addEventListener('mouseup',    (e) => this.pointerInput.onPointerUpEvent(e));
-    container.addEventListener('touchstart', (e) => this.pointerInput.onPointerDownEvent(e));
-    container.addEventListener('touchmove',  (e) => this.pointerInput.onMotionEvent(e));
-    container.addEventListener('touchend',   (e) => this.pointerInput.onPointerUpEvent(e));
-    }
+    // Initialize the input devices.
+    this.initializeInput();
   }
 
   /**
@@ -327,6 +236,7 @@ export class Menu extends EventEmitter {
     // Tell the input devices where the menu was opened.
     const initialPosition = this.getInitialMenuPosition();
     this.pointerInput.setCurrentCenter(initialPosition, this.options.centerDeadZone);
+    this.gamepadInput.setCurrentCenter(initialPosition);
 
     this.root = root;
     this.setupPaths(this.root);
@@ -402,9 +312,129 @@ export class Menu extends EventEmitter {
     this.pointerInput.gestureDetector.pauseTimeout = this.options.gesturePauseTimeout;
     this.pointerInput.gestureDetector.fixedStrokeLength = this.options.fixedStrokeLength;
     this.pointerInput.gestureDetector.centerDeadZone = this.options.centerDeadZone;
+
+    this.gamepadInput.parentDistance = this.options.minParentDistance;
   }
 
   // --------------------------------------------------------------------- private methods
+
+  /**
+   * This method initializes the input devices. It attaches event listeners to the input
+   * devices and sets up the gesture detection.
+   */
+  private initializeInput() {
+    const onCloseMenu = () => {
+      if (this.options.rmbSelectsParent) {
+        this.selectParent();
+      } else {
+        this.emit('cancel');
+      }
+    };
+
+    const onUpdateState = (state: IInputState) => {
+      this.latestInput = state;
+      this.redraw();
+    };
+
+    const onSelection = (coords: IVec2, type: SelectionType) => {
+      if (type === SelectionType.eParent) {
+        this.selectParent(coords);
+        return;
+      }
+
+      // If there is an item currently dragged, select it. We only select items which have
+      // children in marking mode in order to prevent unwanted actions. This way the user
+      // can always check if the correct action was selected before executing it.
+      const item = this.hoveredItem || this.clickedItem || this.draggedItem;
+      if (type === SelectionType.eSubmenuOnly && item && item.children?.length > 0) {
+        this.selectItem(item, coords);
+        return;
+      }
+
+      // If there is a clicked item, select it. If the clicked item is the root item, the
+      // menu will be closed.
+      if (type === SelectionType.eActiveItem && item) {
+        if (this.selectionChain.length === 1 && item === this.root) {
+          this.emit('cancel');
+        } else {
+          this.selectItem(item, coords);
+        }
+        return;
+      }
+    };
+
+    this.pointerInput.onCloseMenu(onCloseMenu);
+    this.gamepadInput.onCloseMenu(onCloseMenu);
+
+    this.pointerInput.onUpdateState(onUpdateState);
+    this.gamepadInput.onUpdateState(onUpdateState);
+
+    this.pointerInput.onSelection(onSelection);
+    this.gamepadInput.onSelection(onSelection);
+
+    document.addEventListener('keydown', (event) => {
+      if (this.container.classList.contains('hidden')) {
+        return;
+      }
+
+      const anyModifierPressed =
+        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+      const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
+      if (!anyModifierPressed && event.key === 'Backspace') {
+        this.selectParent();
+      } else if (!anyModifierPressed && menuKeys.includes(event.key)) {
+        const index = menuKeys.indexOf(event.key);
+        if (index === 0) {
+          this.selectParent();
+        } else {
+          const currentItem = this.selectionChain[this.selectionChain.length - 1];
+          if (currentItem.children) {
+            const child = currentItem.children[index - 1];
+            if (child) {
+              this.selectItem(child, this.getCenterItemPosition());
+            }
+          }
+        }
+      } else if (event.key !== 'Escape') {
+        this.pointerInput.onKeyDownEvent();
+      }
+    });
+
+    // If the last modifier is released while a menu item is dragged around, we select it.
+    // This enables selections in "Turbo-Mode", where items can be selected with mouse
+    // movements without pressing the left mouse button but by holding a keyboard key
+    // instead.
+    document.addEventListener('keyup', (event) => {
+      if (this.container.classList.contains('hidden')) {
+        return;
+      }
+
+      if (event.key === 'Escape') {
+        return;
+      }
+
+      this.pointerInput.onKeyUpEvent(event);
+    });
+
+    this.container.addEventListener('mousedown', (e) =>
+      this.pointerInput.onPointerDownEvent(e)
+    );
+    this.container.addEventListener('mousemove', (e) =>
+      this.pointerInput.onMotionEvent(e)
+    );
+    this.container.addEventListener('mouseup', (e) =>
+      this.pointerInput.onPointerUpEvent(e)
+    );
+    this.container.addEventListener('touchstart', (e) =>
+      this.pointerInput.onPointerDownEvent(e)
+    );
+    this.container.addEventListener('touchmove', (e) =>
+      this.pointerInput.onMotionEvent(e)
+    );
+    this.container.addEventListener('touchend', (e) =>
+      this.pointerInput.onPointerUpEvent(e)
+    );
+  }
 
   /**
    * This method creates the DOM tree for the given menu item and all its children. For
@@ -519,44 +549,6 @@ export class Menu extends EventEmitter {
     // Is the item the parent of the currently active item?
     const selectedParent = this.isParentOfCenterItem(item);
 
-    // Now we have to position the root element of the menu at a position so that the
-    // newly selected menu item is at the mouse position or at the given coordinates (if
-    // any is provided). For this, we first compute ideal position of the new item based
-    // on its angle and the mouse distance to the currently center. There is the special
-    // case where we select the root item. In this case, we simply position the root
-    // element at the mouse position.
-    if (item === this.root) {
-      this.root.position = this.showMenuOptions.anchoredMode
-        ? this.getInitialMenuPosition()
-        : coords || this.latestInput.absolutePosition;
-    } else if (selectedParent) {
-      const center = this.selectionChain[this.selectionChain.length - 1];
-
-      if (this.showMenuOptions.anchoredMode) {
-        this.root.position = math.add(this.root.position, center.position);
-      } else {
-        const offset = math.add(this.latestInput.relativePosition, center.position);
-        this.root.position = math.add(this.root.position, offset);
-      }
-    } else {
-      // Compute the ideal position of the new item. The distance to the parent item is
-      // set to be at least this.options.minParentDistance. This is to avoid that the menu
-      // is too close to the parent item. In anchored mode, the distance is set to
-      // this.options.minParentDistance.
-      const distance = this.showMenuOptions.anchoredMode
-        ? this.options.minParentDistance
-        : Math.max(this.options.minParentDistance, this.latestInput.distance);
-
-      item.position = math.getDirection(item.angle, distance);
-
-      if (this.showMenuOptions.anchoredMode) {
-        this.root.position = math.subtract(this.root.position, item.position);
-      } else {
-        const offset = math.subtract(this.latestInput.relativePosition, item.position);
-        this.root.position = math.add(this.root.position, offset);
-      }
-    }
-
     // If the menu item is the parent of the currently selected item, we have to pop the
     // currently selected item from the list of selected menu items. If the item is a
     // child of the currently selected item, we have to push it to the list of selected
@@ -565,6 +557,48 @@ export class Menu extends EventEmitter {
       this.selectionChain.pop();
     } else {
       this.selectionChain.push(item);
+    }
+
+    // Now we have to position the root element of the menu at a position so that the
+    // newly selected menu item is at the mouse position or at the given coordinates (if
+    // any is provided). For this, we first compute ideal position of the new item based
+    // on its angle and the mouse distance to the current center. There is the special
+    // case where we selected the root item. In this case, we simply position the root
+    // element at the mouse position.
+    if (item === this.root) {
+      this.root.position = this.showMenuOptions.anchoredMode
+        ? this.getInitialMenuPosition()
+        : coords || this.latestInput.absolutePosition;
+    } else {
+      // First we compute the distance to the parent item. In anchored mode, the distance
+      // is set to this.options.minParentDistance. If a parent was selected, we keep the
+      // original offset, if a child was selected, we use the latest input distance.
+      let distance = this.options.minParentDistance;
+
+      if (!this.showMenuOptions.anchoredMode) {
+        if (selectedParent) {
+          distance = math.getLength(item.position);
+        } else {
+          distance = Math.max(this.options.minParentDistance, this.latestInput.distance);
+        }
+      }
+
+      // Compute the item's position based on its angle the computed distance.
+      item.position = math.getDirection(item.angle, distance);
+
+      // Now we want to move the root item so that the newly selected item is at the given
+      // coordinates or at the mouse position. In anchored mode we want to always use the
+      // initial menu position.
+      let targetAbsolutePosition = { x: 0, y: 0 };
+
+      if (this.showMenuOptions.anchoredMode) {
+        targetAbsolutePosition = this.getInitialMenuPosition();
+      } else {
+        targetAbsolutePosition = coords || this.latestInput.absolutePosition;
+      }
+
+      const offset = math.subtract(targetAbsolutePosition, this.getCenterItemPosition());
+      this.root.position = math.add(this.root.position, offset);
     }
 
     // Clamp the position of the newly selected menu to the viewport. We warp the mouse
@@ -590,6 +624,7 @@ export class Menu extends EventEmitter {
 
       // Update the mouse info based on the newly selected item's position.
       this.pointerInput.setCurrentCenter(clampedPosition, this.options.centerDeadZone);
+      this.gamepadInput.setCurrentCenter(clampedPosition);
     }
 
     // Finally update the CSS classes of all DOM nodes according to the new selection chain
@@ -607,10 +642,13 @@ export class Menu extends EventEmitter {
   /**
    * This method will select the parent of the currently selected item. If the currently
    * selected item is the root item, the "cancel" event will be emitted.
+   *
+   * @param coords The position where the selection most likely happened. If it is not
+   *   given, the latest pointer input position is used.
    */
-  private selectParent() {
+  private selectParent(coords?: IVec2) {
     if (this.selectionChain.length > 1) {
-      this.selectItem(this.selectionChain[this.selectionChain.length - 2]);
+      this.selectItem(this.selectionChain[this.selectionChain.length - 2], coords);
     } else {
       this.emit('cancel');
     }

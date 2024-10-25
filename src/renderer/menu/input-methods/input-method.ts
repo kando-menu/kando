@@ -76,9 +76,9 @@ export abstract class InputMethod {
   protected stateCallback: (state: IInputState) => void = () => {};
 
   /**
-   * This callback should be called whenever an item should be selected. The type can
-   * provide a hint what should be selected. See the SelectionType enum for more
-   * information.
+   * This callback should be called whenever an item should be selected. The position
+   * should be the absolute pointer position. The type can provide a hint what should be
+   * selected. See the SelectionType enum for more information.
    */
   protected selectCallback: (position: IVec2, type: SelectionType) => void = () => {};
 

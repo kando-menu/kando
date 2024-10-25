@@ -14,40 +14,65 @@ import { Gamepad } from './gamepad';
 import { InputMethod, ButtonState, IInputState, SelectionType } from './input-method';
 
 /**
- * This class detects mouse or touch gestures. It listens to motion, button, and key
- * events and calls the InputMethod's callbacks accordingly. It supports the so-called
- * "Marking Mode" and the "Turbo Mode". In marking mode, items can be dragged around and
- * are selected when the mouse is stationary for some time or makes a sharp turn. "Turbo
- * Mode" works similar to marking mode, but requires a modifier key to be pressed instead
- * of the mouse button.
+ * The GamepadInput is currently quite simple. With the analog sticks, the user can
+ * "hover" over items, with the X button the menu can be closed, with the B button the
+ * parent item is selected. All other buttons select the currently hovered item.
+ *
+ * Selected items are placed always at the initial menu position, similar to how the
+ * "anchored mode" works with mouse input.
  */
 export class GamepadInput extends InputMethod {
+  /** When an item is selected, it will be placed at this distance from the parent. */
+  public parentDistance = 250;
+
   /** Provides a high-level interface to the gamepad API. */
   private gamepad: Gamepad = new Gamepad();
 
-  /** Creates a new PointerInput instance. */
+  /** The absolute position of the currently selected item. */
+  private centerPosition: IVec2 = { x: 0, y: 0 };
+
+  /** Creates a new GamepadInput instance. */
   constructor() {
     super();
 
-    this.gamepad.on('buttondown', (buttonIndex: number, stickPosition: IVec2) => {
-      window.api.log(
-        'buttondown ' + buttonIndex + ' ' + stickPosition.x + ' ' + stickPosition.y
-      );
+    // Close the menu on X and select the parent on B. All other buttons select the
+    // current item.
+    this.gamepad.on('buttondown', (buttonIndex: number) => {
+      if (buttonIndex === 2) {
+        this.closeCallback();
+        return;
+      }
+
+      if (buttonIndex === 1) {
+        this.selectCallback(this.centerPosition, SelectionType.eParent);
+        return;
+      }
+
+      this.selectCallback(this.centerPosition, SelectionType.eActiveItem);
     });
 
-    this.gamepad.on('buttonup', (buttonIndex: number, stickPosition: IVec2) => {
-      window.api.log(
-        'buttonup ' + buttonIndex + ' ' + stickPosition.x + ' ' + stickPosition.y
-      );
-    });
-
-    this.gamepad.on('stickmotion', (stickPosition: IVec2, anyButtonDown: boolean) => {
-      window.api.log(
-        'stickmotion ' + stickPosition.x + ' ' + stickPosition.y + ' ' + anyButtonDown
-      );
+    this.gamepad.on('stickmotion', (stickPosition: IVec2) => {
+      this.updateState(stickPosition);
     });
   }
 
   /** @inheritdoc */
-  public setCurrentCenter(center: IVec2, radius: number) {}
+  public setCurrentCenter(center: IVec2) {
+    this.centerPosition = center;
+  }
+
+  /** Computes a new IInputState and publishes it via the state callback. */
+  private updateState(stickPosition: IVec2) {
+    const relativePosition = math.multiply(stickPosition, this.parentDistance);
+
+    const state: IInputState = {
+      button: ButtonState.eReleased,
+      absolutePosition: math.add(this.centerPosition, relativePosition),
+      relativePosition: relativePosition,
+      distance: math.getLength(relativePosition),
+      angle: math.getAngle(relativePosition),
+    };
+
+    this.stateCallback(state);
+  }
 }
