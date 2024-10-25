@@ -53,6 +53,20 @@ export class GestureDetector extends EventEmitter {
   public pauseTimeout = 100;
 
   /**
+   * This is used if fixedStrokeLength is greater than zero to allow for distance-based
+   * selections.
+   */
+  public centerDeadZone = 50;
+
+  /**
+   * If set to a value greater than 0, items will be instantly selected if the mouse
+   * travelled more than centerDeadZone + fixedStrokeLength pixels in marking or turbo
+   * mode. Any other gesture detection based on angles or motion speed will be disabled in
+   * this case.
+   */
+  public fixedStrokeLength = 0;
+
+  /**
    * This method detects the gestures. It should be called if the mouse pointer was moved
    * while the left mouse button is held down. Consider the diagram below:
    *
@@ -84,6 +98,22 @@ export class GestureDetector extends EventEmitter {
       };
 
       const strokeLength = math.getLength(strokeDir);
+
+      // If fixedStrokeLength is set, we only need to check if the stroke is long enough.
+      if (this.fixedStrokeLength > 0) {
+        const minStrokeLength = this.fixedStrokeLength + this.centerDeadZone;
+        if (strokeLength > minStrokeLength) {
+          const idealCoords = {
+            x: this.strokeStart.x + (strokeDir.x / strokeLength) * minStrokeLength,
+            y: this.strokeStart.y + (strokeDir.y / strokeLength) * minStrokeLength,
+          };
+
+          this.reset(idealCoords);
+          this.emit('selection', idealCoords);
+        }
+        this.strokeEnd = coords;
+        return;
+      }
 
       if (strokeLength > this.minStrokeLength) {
         // Calculate the vector E->M in the diagram above.

@@ -69,6 +69,14 @@ export class MenuOptions {
   gesturePauseTimeout = 100;
 
   /**
+   * If set to a value greater than 0, items will be instantly selected if the mouse
+   * travelled more than centerDeadZone + fixedStrokeLength pixels in marking or turbo
+   * mode. Any other gesture detection based on angles or motion speed will be disabled in
+   * this case.
+   */
+  fixedStrokeLength = 0;
+
+  /**
    * If enabled, the parent of a selected item will be selected on a right mouse button
    * click. Else the menu will be closed directly.
    */
@@ -392,6 +400,8 @@ export class Menu extends EventEmitter {
     this.pointerInput.gestureDetector.jitterThreshold =
       this.options.gestureJitterThreshold;
     this.pointerInput.gestureDetector.pauseTimeout = this.options.gesturePauseTimeout;
+    this.pointerInput.gestureDetector.fixedStrokeLength = this.options.fixedStrokeLength;
+    this.pointerInput.gestureDetector.centerDeadZone = this.options.centerDeadZone;
   }
 
   // --------------------------------------------------------------------- private methods
