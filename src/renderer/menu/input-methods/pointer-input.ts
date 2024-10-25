@@ -195,8 +195,15 @@ export class PointerInput extends InputMethod {
     event.preventDefault();
     event.stopPropagation();
 
-    // Ignore right mouse button events.
+    // Go back or hide the menu on right click events.
     if ((event as MouseEvent).button === 2) {
+      this.closeCallback();
+      return;
+    }
+
+    // Go back using the mouse back button.
+    if ((event as MouseEvent).button === 3) {
+      this.selectCallback(this.pointerPosition, SelectionType.eParent);
       return;
     }
 
@@ -228,18 +235,6 @@ export class PointerInput extends InputMethod {
     event.stopPropagation();
 
     this.gestureDetector.reset();
-
-    // Go back using the mouse back button.
-    if ((event as MouseEvent).button === 3) {
-      this.selectCallback(this.pointerPosition, SelectionType.eParent);
-      return;
-    }
-
-    // Go back or hide the menu on right click events.
-    if ((event as MouseEvent).button === 2) {
-      this.closeCallback();
-      return;
-    }
 
     const clickSelection = this.buttonState === ButtonState.eClicked;
 
