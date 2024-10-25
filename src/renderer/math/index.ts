@@ -51,6 +51,11 @@ export function subtract(vec1: IVec2, vec2: IVec2): IVec2 {
   return { x: vec1.x - vec2.x, y: vec1.y - vec2.y };
 }
 
+/** This multiplies a vector with a scalar. */
+export function multiply(vec: IVec2, scalar: number): IVec2 {
+  return { x: vec.x * scalar, y: vec.y * scalar };
+}
+
 /**
  * This returns the angular difference between the two given angles using the shortest
  * path. The result will always be between 0° and 180°.
