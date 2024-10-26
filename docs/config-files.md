@@ -54,7 +54,10 @@ Property | Default Value | Description
 `gestureMinStrokeAngle` | `20` | Smaller turns will not lead to selections (in degrees).
 `gestureJitterThreshold` | `10` | Smaller pointer movements will not be considered at all during gesture recognition (in pixels).
 `gesturePauseTimeout` | `100` | If the pointer is stationary for this many milliseconds, the current item will be selected during gesture recognition.
+`fixedStrokeLength` | `0` | If set to a value greater than 0, items will be instantly selected if the mouse travelled more than `centerDeadZone` + `fixedStrokeLength` pixels in marking or turbo mode. Any other gesture detection based on angles or motion speed will be disabled in this case.
 `rmbSelectsParent` | `false` | If enabled, the parent of a selected item will be selected on a right mouse button click. Else the menu will be closed directly.
+`gamepadBackButton` | `1` | This button will select the parent item when using a gamepad. Set to -1 to disable. See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
+`gamepadCloseButton` | `2` | This button will close the menu when using a gamepad. Set to -1 to disable. See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
 
 ### The `editorOptions` Property
 

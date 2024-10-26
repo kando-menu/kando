@@ -8,28 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import * as math from '../math';
-import { IVec2 } from '../../common';
-import { InputDevice, ButtonState, IInputState, SelectionType } from './input-device';
+import * as math from '../../math';
+import { IVec2 } from '../../../common';
+import { InputMethod, ButtonState, IInputState, SelectionType } from './input-method';
 import { GestureDetector } from './gesture-detector';
 
 /**
  * This class detects mouse or touch gestures. It listens to motion, button, and key
- * events and emits events accordingly. It supports the so-called "Marking Mode" and the
- * "Turbo Mode". In marking mode, items can be dragged around and are selected when the
- * mouse is stationary for some time or makes a sharp turn. "Turbo Mode" works similar to
- * marking mode, but requires a modifier key to be pressed instead of the mouse button.
- *
- * @fires update-state - This event is emitted whenever the input state changes. The event
- *   data contains the new state.
- * @fires select-active - This is emitted whenever the item currently under the mouse
- *   pointer should be selected. The event data contains the position where the selection
- *   most likely happened.
- * @fires select-parent - This event is emitted if the back-button on the mouse is
- *   pressed.
- * @fires close-menu - This event is emitted if the right mouse button is pressed.
+ * events and calls the InputMethod's callbacks accordingly. It supports the so-called
+ * "Marking Mode" and the "Turbo Mode". In marking mode, items can be dragged around and
+ * are selected when the mouse is stationary for some time or makes a sharp turn. "Turbo
+ * Mode" works similar to marking mode, but requires a modifier key to be pressed instead
+ * of the mouse button.
  */
-export class PointerInput extends InputDevice {
+export class PointerInput extends InputMethod {
   /**
    * This is the threshold in pixels which is used to differentiate between a click and a
    * drag. If the mouse is moved more than this threshold before the mouse button is
@@ -104,6 +96,7 @@ export class PointerInput extends InputDevice {
   public setCurrentCenter(center: IVec2, radius: number) {
     this.update(center, center, this.buttonState);
     this.gestureDetector.reset();
+    this.gestureDetector.onMotionEvent(center);
     this.keydownPosition = center;
     this.centerRadius = radius;
   }
@@ -128,8 +121,7 @@ export class PointerInput extends InputDevice {
   }
 
   /*
-   * This method is called when the pointer is moved. It will update the current state and
-   * emit an update-state event.
+   * This method should be called when the pointer is moved.
    *
    * @param event The mouse or touch event.
    */
@@ -195,9 +187,8 @@ export class PointerInput extends InputDevice {
   }
 
   /**
-   * This method is called when a mouse button is pressed. We store the click position so
-   * that we can differentiate between a click and a drag operation. It will emit an
-   * update-state event.
+   * This method should be called when a mouse button is pressed or a touch event is
+   * detected.
    *
    * @param event The mouse or touch event.
    */
@@ -205,8 +196,15 @@ export class PointerInput extends InputDevice {
     event.preventDefault();
     event.stopPropagation();
 
-    // Ignore right mouse button events.
+    // Go back or hide the menu on right click events.
     if ((event as MouseEvent).button === 2) {
+      this.closeCallback();
+      return;
+    }
+
+    // Go back using the mouse back button.
+    if ((event as MouseEvent).button === 3) {
+      this.selectCallback(this.pointerPosition, SelectionType.eParent);
       return;
     }
 
@@ -228,8 +226,8 @@ export class PointerInput extends InputDevice {
   }
 
   /**
-   * This method is called when a mouse button is released. This can lead to a selection
-   * event. It will also emit an update-state event.
+   * This method should be called when a mouse button is released or a touch event is
+   * detected.
    *
    * @param event The mouse or touch event.
    */
@@ -238,18 +236,6 @@ export class PointerInput extends InputDevice {
     event.stopPropagation();
 
     this.gestureDetector.reset();
-
-    // Go back using the mouse back button.
-    if ((event as MouseEvent).button === 3) {
-      this.selectCallback(this.pointerPosition, SelectionType.eParent);
-      return;
-    }
-
-    // Go back or hide the menu on right click events.
-    if ((event as MouseEvent).button === 2) {
-      this.closeCallback();
-      return;
-    }
 
     const clickSelection = this.buttonState === ButtonState.eClicked;
 
@@ -268,11 +254,7 @@ export class PointerInput extends InputDevice {
     this.update(event, this.centerPosition, ButtonState.eReleased);
   }
 
-  /**
-   * If any key is pressed, the turbo mode will be activated as long as turbo mode is not
-   * deferred. In this case, a key has to be released first before the turbo mode will be
-   * activated.
-   */
+  /** This method should be called when a key is pressed. */
   public onKeyDownEvent() {
     if (!this.deferredTurboMode) {
       this.anyKeyPressed = true;
@@ -284,7 +266,7 @@ export class PointerInput extends InputDevice {
   }
 
   /**
-   * If the last key is released, the turbo mode will be deactivated.
+   * This method should be called when a key is released.
    *
    * @param event The keyboard event.
    */

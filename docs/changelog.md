@@ -23,10 +23,19 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
+- **Gamepad support:** You can now navigate through the menu using a gamepad. The sticks are used to highlight items, and any button can be pressed to select a highlighted item. X closes the menu, and B selects the parent menu item. The button mapping can be configured in your `config.json` like this:
+  ```json
+  "menuOptions": {
+    "gamepadBackButton": 1,
+    "gamepadCloseButton": 2
+  }
+  ```
+  See [here](https://w3c.github.io/gamepad/#remapping) for the mapping of the button indices.
 - **Paste-Text Action:** You can now paste text into the currently focused window using the new "Paste Text" action. This uses your clipboard internally, so it can paste any text including special characters like emojis 🎊!
 - **Support for base64 icons:** This allows you to directly embed base64 encoded images. This will be especially helpful for menus which are dynamically generated via some sort of API in the future. Use `"base64"` as the icon theme and provide the base64 encoded image as the `"icon"`. This will be a string starting with something like `"data:image/svg+xml;base64, ..."`. This even supports animated gifs!
 - **Version information in the sidebar:** The sidebar now shows some version information in the development tab. This includes the version of Kando, the version of Electron, and the currently used backend.
 - An option to the menu editor which **allows warping the mouse pointer to the center of the menu** when the menu is opened in centered mode. This allows to directly engage in turbo mode even if the menu is shown at the center of the screen.
+- **An experimental Fixed-Stroke-Length Mode:** If you set `"menuOptions": {"fixedStrokeLength": <number of pixels>}` to a value greater than 0, Marking Mode and Turbo will be disabled. Instead, submenus will be opened when the mouse is moved the given distance from the center of the menu. 
 - **Adjustable fade-in and fade-out duration of the menu:** For now, it is only possible to change this via the `"menuOptions": {"fadeInDuration": 150}` and `"menuOptions": {"fadeOutDuration": 250}` properties in the `config.json` file. In the future, this will be exposed in the settings UI.
 - **Possibility to hide sidebar and editor buttons:** You can now add
   ```json
@@ -45,6 +54,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - The default fade-out animation is now faster. This should make the menu feel more responsive especially for actions which are executed only after the menu is fully hidden.
+- Completely refactored how mouse, touch, and keyboard events are handled. This should make the code more maintainable and easier to extend in the future. However, this can also introduce new bugs. Please report any issues you encounter!
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
 - Icon themes are now also loaded from symbolic-link subdirectories in the `icon-themes` directories. Kando will load the icons from the linked directory.
 - The "Command" actions will now be executed using the user's home directory as the working directory. Before Kando's installation directory was used.

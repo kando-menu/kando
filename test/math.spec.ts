@@ -9,12 +9,42 @@
 // SPDX-License-Identifier: MIT
 
 import {
+  normalize,
   computeItemAngles,
   computeItemWedges,
   getAngularDifference,
   isAngleBetween,
 } from '../src/renderer/math';
 import { expect } from 'chai';
+
+describe('normalize', () => {
+  it('should return normalized 2D vectors', () => {
+    expect(normalize({ x: 1, y: 0 })).to.deep.equal({ x: 1, y: 0 });
+    expect(normalize({ x: 0, y: 1 })).to.deep.equal({ x: 0, y: 1 });
+    expect(normalize({ x: 1, y: 1 })).to.deep.equal({
+      x: 0.7071067811865475,
+      y: 0.7071067811865475,
+    });
+    expect(normalize({ x: -1, y: 0 })).to.deep.equal({ x: -1, y: 0 });
+    expect(normalize({ x: 0, y: -1 })).to.deep.equal({ x: 0, y: -1 });
+    expect(normalize({ x: -1, y: -1 })).to.deep.equal({
+      x: -0.7071067811865475,
+      y: -0.7071067811865475,
+    });
+    expect(normalize({ x: 0.5, y: 0 })).to.deep.equal({ x: 1, y: 0 });
+    expect(normalize({ x: 0, y: 0.5 })).to.deep.equal({ x: 0, y: 1 });
+    expect(normalize({ x: 0.5, y: 0.5 })).to.deep.equal({
+      x: 0.7071067811865475,
+      y: 0.7071067811865475,
+    });
+    expect(normalize({ x: -0.5, y: 0 })).to.deep.equal({ x: -1, y: 0 });
+    expect(normalize({ x: 0, y: -0.5 })).to.deep.equal({ x: 0, y: -1 });
+    expect(normalize({ x: -0.5, y: -0.5 })).to.deep.equal({
+      x: -0.7071067811865475,
+      y: -0.7071067811865475,
+    });
+  });
+});
 
 describe('getAngularDifference', () => {
   it('should work for angles between 0 and 360', () => {

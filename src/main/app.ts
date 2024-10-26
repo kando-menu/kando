@@ -134,7 +134,10 @@ export class KandoApp {
           gestureMinStrokeAngle: 20,
           gestureJitterThreshold: 10,
           gesturePauseTimeout: 100,
+          fixedStrokeLength: 0,
           rmbSelectsParent: false,
+          gamepadBackButton: 1,
+          gamepadCloseButton: 2,
         },
         editorOptions: {
           showSidebarButtonVisible: true,
