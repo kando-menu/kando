@@ -86,7 +86,7 @@ export class MenuOptions {
    * This button will select the parent item when using a gamepad. Set to -1 to disable.
    * See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
    */
-  gampadBackButton = 1;
+  gamepadBackButton = 1;
 
   /**
    * This button will close the menu when using a gamepad. Set to -1 to disable. See
@@ -326,7 +326,7 @@ export class Menu extends EventEmitter {
     this.pointerInput.gestureDetector.centerDeadZone = this.options.centerDeadZone;
 
     this.gamepadInput.parentDistance = this.options.minParentDistance;
-    this.gamepadInput.backButton = this.options.gampadBackButton;
+    this.gamepadInput.backButton = this.options.gamepadBackButton;
     this.gamepadInput.closeButton = this.options.gamepadCloseButton;
   }
 
