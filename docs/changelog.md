@@ -23,6 +23,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
+- **Gamepad support:** You can now navigate through the menu using a gamepad. The sticks are used to highlight items, and any button can be pressed to select a highlighted item. X closes the menu, and B selects the parent menu item. The button mapping can be configured in your `config.json` like this:
+  ```json
+  "menuOptions": {
+    "gamepadBackButton": 1,
+    "gamepadCloseButton": 2
+  }
+  ```
+  See [here](https://w3c.github.io/gamepad/#remapping) for the mapping of the button indices.
 - **Paste-Text Action:** You can now paste text into the currently focused window using the new "Paste Text" action. This uses your clipboard internally, so it can paste any text including special characters like emojis 🎊!
 - **Support for base64 icons:** This allows you to directly embed base64 encoded images. This will be especially helpful for menus which are dynamically generated via some sort of API in the future. Use `"base64"` as the icon theme and provide the base64 encoded image as the `"icon"`. This will be a string starting with something like `"data:image/svg+xml;base64, ..."`. This even supports animated gifs!
 - **Version information in the sidebar:** The sidebar now shows some version information in the development tab. This includes the version of Kando, the version of Electron, and the currently used backend.
