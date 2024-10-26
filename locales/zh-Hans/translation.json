@@ -26,7 +26,12 @@
         "buy-me-a-coffee-button": "Ko-fi 上赞助 Kando",
         "sponsors-button": "赞助者名单",
         "introduction-tab-slide-4-caption": "极速模式：如果您在打开菜单后按住一个键盘按键不放，就可以直接移动鼠标光标进行选择。这是最快的操作方法！",
-        "introduction-tab-slide-5-caption": "不会误触：最终操作只会在松开鼠标或键盘按键时触发。利用这个技巧探索一下菜单吧！"
+        "introduction-tab-slide-5-caption": "不会误触：最终操作只会在松开鼠标或键盘按键时触发。利用这个技巧探索一下菜单吧！",
+        "kando-version": "Kando 版本",
+        "electron-version": "Electron 版本",
+        "chrome-version": "Chrome 版本",
+        "node-version": "Node 版本",
+        "backend": "Kando 后端"
     },
     "items": {
         "command": {
