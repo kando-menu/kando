@@ -345,11 +345,20 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      // If there is an item currently dragged, select it. We only select items which have
-      // children in marking mode in order to prevent unwanted actions. This way the user
-      // can always check if the correct action was selected before executing it.
+      // If there is an item currently dragged, select it. If we are in Marking Mode or
+      // Turbo Mode, the selection type will be eSubmenuOnly. In this case, we only select
+      // subemnus in order to prevent unwanted actions. This way the user can always check
+      // if the correct action was selected before executing it.
+      // We also do not trigger selections of the parent item when moving the mouse in the
+      // center zone of the menu. This feels more natural and prevents accidental
+      // selections.
       const item = this.hoveredItem || this.clickedItem || this.draggedItem;
-      if (type === SelectionType.eSubmenuOnly && item && item.children?.length > 0) {
+      if (
+        type === SelectionType.eSubmenuOnly &&
+        item &&
+        item.type === 'submenu' &&
+        this.latestInput.distance > this.options.centerDeadZone
+      ) {
         this.selectItem(item, coords);
         return;
       }
