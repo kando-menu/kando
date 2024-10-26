@@ -96,6 +96,7 @@ export class PointerInput extends InputMethod {
   public setCurrentCenter(center: IVec2, radius: number) {
     this.update(center, center, this.buttonState);
     this.gestureDetector.reset();
+    this.gestureDetector.onMotionEvent(center);
     this.keydownPosition = center;
     this.centerRadius = radius;
   }

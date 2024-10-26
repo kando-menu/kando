@@ -245,29 +245,18 @@ export class Menu extends EventEmitter {
     this.pointerInput.enableTurboMode =
       this.options.enableTurboMode && !showMenuOptions.anchoredMode;
 
-    // Tell the input devices where the menu was opened.
-    const initialPosition = this.getInitialMenuPosition();
-    this.pointerInput.setCurrentCenter(initialPosition, this.options.centerDeadZone);
-    this.gamepadInput.setCurrentCenter(initialPosition);
-
     this.root = root;
     this.setupPaths(this.root);
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
-    this.selectItem(this.root);
+    this.selectItem(this.root, this.getInitialMenuPosition());
 
-    // If the menu is opened at the screen's center, we have to warp the mouse pointer to
-    // the center of the menu.
-    if (
-      !this.showMenuOptions.centeredMode ||
-      (this.showMenuOptions.warpMouse && this.showMenuOptions.centeredMode)
-    ) {
-      const position = this.getCenterItemPosition();
-      const offset = {
-        x: Math.trunc(position.x - this.showMenuOptions.mousePosition.x),
-        y: Math.trunc(position.y - this.showMenuOptions.mousePosition.y),
-      };
-
+    // If required, move the pointer to the center of the menu.
+    if (showMenuOptions.warpMouse && showMenuOptions.centeredMode) {
+      const offset = math.subtract(
+        this.getInitialMenuPosition(),
+        showMenuOptions.mousePosition
+      );
       this.emit('move-pointer', offset);
     }
 
@@ -615,9 +604,9 @@ export class Menu extends EventEmitter {
       this.root.position = math.add(this.root.position, offset);
     }
 
-    // Clamp the position of the newly selected menu to the viewport. We warp the mouse
+    // Clamp the position of the newly selected submenu to the viewport. We warp the mouse
     // pointer if the menu is shifted.
-    if (item.children?.length > 0) {
+    if (item.type === 'submenu') {
       const position = this.getCenterItemPosition();
 
       const clampedPosition = math.clampToMonitor(
@@ -1132,10 +1121,6 @@ export class Menu extends EventEmitter {
       };
     }
 
-    return math.clampToMonitor(
-      this.showMenuOptions.mousePosition,
-      this.theme.maxMenuRadius,
-      this.showMenuOptions.windowSize
-    );
+    return this.showMenuOptions.mousePosition;
   }
 }
