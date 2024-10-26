@@ -136,6 +136,8 @@ export class KandoApp {
           gesturePauseTimeout: 100,
           fixedStrokeLength: 0,
           rmbSelectsParent: false,
+          gamepadBackButton: 1,
+          gamepadCloseButton: 2,
         },
         editorOptions: {
           showSidebarButtonVisible: true,
