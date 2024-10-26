@@ -25,6 +25,12 @@ export class GamepadInput extends InputMethod {
   /** When an item is selected, it will be placed at this distance from the parent. */
   public parentDistance = 250;
 
+  /** The index of the button that selects the parent item. */
+  public backButton = 1;
+
+  /** The index of the button that closes the menu. */
+  public closeButton = 2;
+
   /** Provides a high-level interface to the gamepad API. */
   private gamepad: Gamepad = new Gamepad();
 
@@ -38,12 +44,12 @@ export class GamepadInput extends InputMethod {
     // Close the menu on X and select the parent on B. All other buttons select the
     // current item.
     this.gamepad.on('buttondown', (buttonIndex: number) => {
-      if (buttonIndex === 2) {
+      if (this.closeButton >= 0 && buttonIndex === this.closeButton) {
         this.closeCallback();
         return;
       }
 
-      if (buttonIndex === 1) {
+      if (this.backButton >= 0 && buttonIndex === this.backButton) {
         this.selectCallback(this.centerPosition, SelectionType.eParent);
         return;
       }
