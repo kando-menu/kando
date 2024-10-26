@@ -42,7 +42,7 @@ export class Gamepad extends EventEmitter {
   private gamepadStates: IGamepadState[] = [];
 
   /** This flag is set to true when the poll method should stop polling. */
-  private stopPolling = false;
+  private stopPolling = true;
 
   /** This property contains the last stick position as normalized 2D coordinates. */
   private lastStickPosition: IVec2 = { x: 0, y: 0 };
@@ -50,12 +50,19 @@ export class Gamepad extends EventEmitter {
   /** Creates a new GamepadInput instance and starts polling the gamepad API. */
   constructor() {
     super();
-    this.poll();
-  }
 
-  /** Stops polling the gamepad API. */
-  public destroy() {
-    this.stopPolling = true;
+    // Start polling the gamepad API when the window is focused.
+    window.addEventListener('focus', () => {
+      if (this.stopPolling) {
+        this.stopPolling = false;
+        this.poll();
+      }
+    });
+
+    // Stop polling the gamepad API when the window is blurred.
+    window.addEventListener('blur', () => {
+      this.stopPolling = true;
+    });
   }
 
   /** This method is called every frame to poll the gamepad API. */
