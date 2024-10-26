@@ -632,7 +632,10 @@ export class Menu extends EventEmitter {
       };
 
       if (offset.x !== 0 || offset.y !== 0) {
-        this.emit('move-pointer', offset);
+        if (!this.showMenuOptions.anchoredMode) {
+          this.emit('move-pointer', offset);
+        }
+
         this.root.position = math.add(this.root.position, offset);
       }
 
