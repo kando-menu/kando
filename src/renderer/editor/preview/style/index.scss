@@ -369,7 +369,6 @@
     height: $preview-child-size;
     left: calc(50% - $preview-child-size / 2 - var(--dir-x) * $preview-child-distance);
     top: calc(50% - $preview-child-size / 2 - var(--dir-y) * $preview-child-distance);
-    z-index: -1;
 
     transform: rotate(calc(var(--rotation) - 90deg));
 
