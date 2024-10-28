@@ -63,6 +63,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :bug: Fixed
 
 - On Cinnamon, the menu is now drawn properly on top of fullscreen windows. Thanks to [@LucaBoschetto](https://github.com/LucaBoschetto) for the fix!
+- A crash which happened when pressing <kbd>Ctrl</kbd>+<kbd>W</kbd> while the menu was open.
 
 ## [Kando 1.4.0](https://github.com/kando-menu/kando/releases/tag/v1.4.0)
 
