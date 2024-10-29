@@ -42,7 +42,6 @@
     "electron": "^33.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.31.0",
-    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "handlebars-loader": "^1.7.3",
     "i18next-parser": "^9.0.2",
     "mocha": "^10.7.3",
