@@ -58,7 +58,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Menu themes are now also loaded from symbolic-link subdirectories in the `menu-themes` directories.
 - Icon themes are now also loaded from symbolic-link subdirectories in the `icon-themes` directories. Kando will load the icons from the linked directory.
 - The "Command" actions will now be executed using the user's home directory as the working directory. Before Kando's installation directory was used.
-- Many dependencies have been updated. This includes Electron, which is now at version 33. This should bring some performance improvements and bug fixes, but can also introduce new issues. Please report any problems you encounter!
+- Many dependencies have been updated. This includes Electron, which is now at version 31. This should bring some performance improvements and bug fixes, but can also introduce new issues. Please report any problems you encounter!
 
 #### :bug: Fixed
 
