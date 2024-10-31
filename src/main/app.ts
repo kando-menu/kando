@@ -602,6 +602,11 @@ export class KandoApp {
         this.appSettings.set({ zoomFactor: 1 });
         event.preventDefault();
       }
+
+      // We prevent CMD+W to close the window.
+      if (input.meta && input.key === 'w') {
+        event.preventDefault();
+      }
     });
 
     // We set the window to be always on top. This way, Kando will be visible even on
