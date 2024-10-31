@@ -584,9 +584,25 @@ export class KandoApp {
       show: false,
     });
 
-    // Remove the default menu. This disables some default shortcuts like CMD+W which are
+    // Remove the default menu. This disables all default shortcuts like CMD+W which are
     // not needed in Kando.
     this.window.setMenu(null);
+
+    // However, we still want to allow the user to zoom the menu using Ctrl+, Ctrl-, and
+    // Ctrl+0. We have to handle these shortcuts manually.
+    this.window.webContents.on('before-input-event', (event, input) => {
+      if (input.control && (input.key === '+' || input.key === '-')) {
+        let zoomFactor = this.window.webContents.getZoomFactor();
+        zoomFactor = input.key === '+' ? zoomFactor + 0.1 : zoomFactor - 0.1;
+        this.appSettings.set({ zoomFactor });
+        event.preventDefault();
+      }
+
+      if (input.control && input.key === '0') {
+        this.appSettings.set({ zoomFactor: 1 });
+        event.preventDefault();
+      }
+    });
 
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
