@@ -23,7 +23,12 @@
         "discord-button": "Discord-Chat",
         "buy-me-a-coffee-button": "Kando auf Ko-fi",
         "sponsors-button": "Sponsorenliste",
-        "new-version-button": "Eine neue Version von Kando ist verfügbar!"
+        "new-version-button": "Eine neue Version von Kando ist verfügbar!",
+        "electron-version": "Electron Version",
+        "kando-version": "Kando Version",
+        "backend": "Kando Backend",
+        "chrome-version": "Chrome Version",
+        "node-version": "Node Version"
     },
     "example-menu": {
         "apps": {
@@ -139,6 +144,12 @@
             "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
             "description": "Öffnet Dateien oder Webseiten.",
             "name": "URI Öffnen"
+        },
+        "text": {
+            "tip-1": "Diese Aktion verwendet die Zwischenablage, um den Text einzufügen. Nach der Aktion wird die Zwischenablage den Text enthalten.",
+            "placeholder": "Fügen Sie einen Text ein…",
+            "name": "Text Einfügen",
+            "description": "Fügt den gegebenen Text ein."
         }
     },
     "properties": {
@@ -180,7 +191,9 @@
             "anchored-mode": "Verankerter Modus",
             "anchored-mode-hint": "Öffnen Sie Untermenüs an der gleichen Position wie das übergeordnete Menü.",
             "anchored-mode-checked-hint": "Wenn Sie dies aktivieren, wird der Markierungsmodus deaktiviert.",
-            "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor."
+            "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor.",
+            "warp-mouse": "Maus im Zentrierten Modus versetzen",
+            "warp-mouse-hint": "Bewegt den Mauszeiger zum Menü wenn es geöffnet wird."
         },
         "hotkey-picker": {
             "label": "Hotkey",
