@@ -16,6 +16,7 @@
   --icon-size: 40px;
   --connector-width: 10px;
   --menu-transition: transform 200ms ease, opacity 200ms ease;
+  --connector-transition: width 200ms ease, opacity 200ms ease;
 
   transition: var(--menu-transition);
 
@@ -156,7 +157,7 @@
   /* Connectors ----------------------------------------------------------------------- */
 
   .connector {
-    transition: var(--menu-transition);
+    transition: var(--connector-transition);
     height: var(--connector-width);
     top: calc(-1 * var(--connector-width) / 2);
     background-color: var(--label-background-color);

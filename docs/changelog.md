@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
+- Improved the length transition of the connector lines of the "Rainbow Labels" theme. 
 
 #### :bug: Fixed
 
