@@ -32,6 +32,7 @@
   opacity: var(--show-editor-button-opacity);
 }
 
+#kando-editor.visible:not(.edit-mode) #enter-edit-mode-button:hover,
 #kando-editor.visible.edit-mode #leave-edit-mode-button {
   opacity: 1;
 }

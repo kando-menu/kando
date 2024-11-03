@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### :wrench: Changed
+
+- The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
+
 ## [Kando 1.5.1](https://github.com/kando-menu/kando/releases/tag/v1.5.1)
 
 **Release Date:** 2024-11-03

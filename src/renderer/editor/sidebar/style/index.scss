@@ -32,6 +32,7 @@
   opacity: var(--show-sidebar-button-opacity);
 }
 
+#kando-editor.visible #show-sidebar-button.visible:hover,
 #kando-editor.visible #hide-sidebar-button.visible {
   opacity: 1;
 }
