@@ -25,13 +25,17 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
 
+#### :bug: Fixed
+
+- A regression which allowed selecting items with the right mouse button in marking or turbo mode.
+
 ## [Kando 1.5.1](https://github.com/kando-menu/kando/releases/tag/v1.5.1)
 
 **Release Date:** 2024-11-03
 
 #### :bug: Fixed
 
-- Fixed a regression introduced in 1.5.0 which caused the first configured menu to be merged with the example menu.
+- A regression introduced in 1.5.0 which caused the first configured menu to be merged with the example menu.
 
 ## [Kando 1.5.0](https://github.com/kando-menu/kando/releases/tag/v1.5.0)
 

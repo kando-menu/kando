@@ -340,6 +340,11 @@ export class Menu extends EventEmitter {
     };
 
     const onSelection = (coords: IVec2, type: SelectionType) => {
+      // Ignore all input if the menu is in the process of hiding.
+      if (this.container.classList.contains('hidden')) {
+        return;
+      }
+
       if (type === SelectionType.eParent) {
         this.selectParent(coords);
         return;
