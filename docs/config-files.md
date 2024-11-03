@@ -264,7 +264,7 @@ This type is used to paste the given text into the active window.
     "text": "Hello World!"
   }
 }
-
+```
 
 <p align="center"><img src ="img/hr.svg" /></p>
 
