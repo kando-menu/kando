@@ -23,7 +23,7 @@ export class MacroItemConfig implements IItemConfig {
   public getTipOfTheDay(): string {
     const tips = [
       i18next.t('items.macro.tip-1'),
-      '<a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#menu-shortcuts-vs-simulated-hotkeys" target="_blank">' +
+      '<a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys" target="_blank">' +
         i18next.t('items.macro.tip-2') +
         '</a>',
     ];

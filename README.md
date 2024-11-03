@@ -67,7 +67,7 @@ For both approaches there are instructions available in the [:memo: Installation
 
 Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
 This is great to get a first impression!
-To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](docs/usage.md).
+To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](docs/getting-started.md).
 
 Once you are familiar with the basics, you can start creating your own menus.
 Learn how to create your own menus in the [:memo: Configuration Guide](docs/configuring.md)!

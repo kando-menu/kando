@@ -23,7 +23,7 @@ If you chose the installer, you will find Kando in your start menu after the ins
 As the executables are not signed, Windows will show a warning when you try to run them.
 Just click on "More info" and then on "Run anyway".
 
-Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
+Continue reading the [:memo: Usage Guide](getting-started.md) to learn how to interact with Kando!
 
 ## <img height="20" width="26" src="https://cdn.simpleicons.org/apple" /> Downloading Kando for macOS
 
@@ -42,7 +42,7 @@ If you chose the installer, you will find Kando in your launchpad after the inst
 > [!IMPORTANT]
 > After downloading and installing, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
 
-Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
+Continue reading the [:memo: Usage Guide](getting-started.md) to learn how to interact with Kando!
 
 ## <img height="20" width="26" src="https://cdn.simpleicons.org/linux/black" /> Downloading Kando for Linux
 
@@ -65,7 +65,7 @@ Thereafter, you can run Kando from your main menu.
 > [!IMPORTANT]
 > After downloading and installing, make sure to read the [platform-spedific notes below](https://github.com/kando-menu/kando/blob/main/docs/installing.md#platform-specific-notes)!
 
-Continue reading the [:memo: Usage Guide](usage.md) to learn how to interact with Kando!
+Continue reading the [:memo: Usage Guide](getting-started.md) to learn how to interact with Kando!
 
 ## :gear: Building Kando Yourself
 
@@ -238,6 +238,6 @@ Depending on your platform, the `kando` executable will be located in different 
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>
-  <a href="usage.md">Using Kando <img src ="img/right-arrow.png"/></a>
+  <a href="getting-started.md">Getting Started <img src ="img/right-arrow.png"/></a>
   <img src="img/nav-space.svg"/>
 </p>

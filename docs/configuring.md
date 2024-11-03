@@ -24,14 +24,14 @@ Drag new items from the toolbar to the menu preview, reorder them, and change th
 > [!TIP]
 > There are several advanced options which are not yet exposed in the editor UI. See the [Config-File Documentation](config-files.md) for all advanced options.
 
-## Tips for Creating Efficient Menu Layouts :rocket:
+## 🚀 Tips for Creating Efficient Menu Layouts
 
 When designing your own menus, keep the following tips in mind:
 * **Avoid too many items in a single menu.** Instead, create submenus. Eight items per menu is a good rule of thumb, and you should never have more than twelve items in a single menu.
 * **Deeply nested menus are not a problem.** Kando is designed to handle deeply nested menus. You can use the marking mode to quickly select items which are in subsubsubmenus.
 * **Use the fixed-angle locks to create a clean layout.** Even if you have an odd number of items, you can use fixed angles to lock items to the top, bottom, left, or right side of the menu.
 
-## Adding Custom Icon Themes :sparkles:
+## ✨ Adding Custom Icon Themes
 
 To add your own icons to Kando, follow these steps:
 1. Create a new `icon-themes` directory in Kando's configuration directory if it does not yet exist. Depending on your OS, this will be the following locations:
@@ -54,8 +54,40 @@ To add your own icons to Kando, follow these steps:
   * [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme): Here you could use the content from the `Papirus/64x64` directory.
   * [Tela](https://github.com/vinceliuice/Tela-icon-theme): Here you find the icons in the `src/scalable` directory.
 
+## 🖱️ Opening Menus without the Keyboard
 
-## Menu Shortcuts vs. Simulated Hotkeys :keyboard:
+While Kando does not have a cross-platform way to open menus with a mouse button, there are many platform-dependent third-party tools which can help you with this.
+With some creativity, you can open menus not only with mouse buttons but also with gestures, desktop widgets, or in many other ways.
+
+You can either make the third-party tool open the menu by simulation the shortcut for the menu, or it can directly call the Kando executable with the `--menu "menu name"` argument.
+
+* <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows: `%localappdata%\Kando\app-<version number>\Kando.exe --menu "Menu Name"`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS: `/Applications/Kando.app/Contents/MacOS/Kando --menu "Menu Name"`
+* <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux: `/usr/bin/kando --menu "Menu Name"`
+
+Below are some applications which can help you to open menus in various ways.
+If you discovered a cool new way to open menus, please let us know! You can either open an issue, open a pull request, or join the [Discord server](https://discord.gg/hZwbVSDkhy) to discuss your idea!
+
+### <img height="14" width="26" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows
+
+* [AutoHotkey](https://www.autohotkey.com/) is a powerful scripting language for Windows. You can use it to run the kando command when you press a mouse button or to remap a mouse button to a keyboard shortcut which opens a Kando menu.
+* [GestureSign](https://www.microsoft.com/store/productId/9N45WQVK2QQW?ocid=pdpshare) allows opening a Kando menu with multi-touch taps and gestures on both touchpad and touchscreen.
+
+### <img height="14" width="26" src="https://cdn.simpleicons.org/apple" /> macOS
+
+* [Karabiner-Elements](https://karabiner-elements.pqrs.org/) can be used to remap mouse buttons to keyboard shortcuts.
+* [BetterTouchTool](https://folivora.ai/) allows opening a Kando menu via touchpad gestures.
+* [BetterMouse](https://better-mouse.com/) is a tool which allows you to remap mouse buttons to keyboard shortcuts.
+
+### <img height="14" width="26" src="https://cdn.simpleicons.org/linux/black" /> Linux
+
+* [Input Remapper](https://github.com/sezanzeb/input-remapper) is a tool which allows you to remap mouse buttons to keyboard shortcuts. It works both on **X11 and Wayland**.
+* [Touchegg](https://github.com/JoseExposito/touchegg#readme) is a multitouch gesture recognizer for Linux. You can use it to open a Kando menu with touchpad gestures. It only works on **X11**.
+* **KDE Plasma** comes with built-in support for remapping mouse buttons to keyboard shortcuts. You can find [this feature](https://www.phoronix.com/news/KDE-Rebind-Extra-Mouse-Buttons) in the system settings under "System Settings" / "Mouse & Touchpad" / "Add Binding".
+* There's a [Configurable Button](https://store.kde.org/p/1297839/) widget for **KDE Plasma** which allows running `kando --menu "menu name"` when clicked.
+* On **GNOME Shell**, you can use the [CHC-E (Custom Hot Corners - Extended)](https://extensions.gnome.org/extension/4167/custom-hot-corners-extended/) extension to run arbitrary commands when you move your mouse to a corner of the screen.
+
+## :keyboard: Menu Shortcuts vs. Simulated Hotkeys
 
 With Kando, you can bind a menu to a keyboard shortcut and use menu items to simulate keyboard hotkeys or macros.
 This is a bit confusing as all are configured similarly, but use different formats.
@@ -273,7 +305,7 @@ Note that not all key codes are available on all platforms.
 
 <p align="center">
   <img src="img/nav-space.svg"/>
-  <a href="usage.md"><img src ="img/left-arrow.png"/> Using Kando</a>
+  <a href="getting-started.md"><img src ="img/left-arrow.png"/> Getting Started</a>
   <img src="img/nav-space.svg"/>
   <a href="README.md"><img src ="img/home.png"/> Index</a>
   <img src="img/nav-space.svg"/>

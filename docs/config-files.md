@@ -101,7 +101,7 @@ They are JSON objects with the following properties:
 
 Property | Default Value | Description
 -------- | ------------- | -----------
-`shortcut` | `""` | The shortcut which opens the menu. This is a string which can contain multiple keys separated by `+`. For example, `"Ctrl+Shift+K"` or `"Cmd+Shift+K"`. If empty, the menu will not have a shortcut. See [Menu Shortcuts vs. Simulated Hotkeys](configuring.md#menu-shortcuts-vs-simulated-hotkeys) for details.
+`shortcut` | `""` | The shortcut which opens the menu. This is a string which can contain multiple keys separated by `+`. For example, `"Ctrl+Shift+K"` or `"Cmd+Shift+K"`. If empty, the menu will not have a shortcut. See [Menu Shortcuts vs. Simulated Hotkeys](configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys) for details.
 `shortcutID` | `""` | On some platforms, Kando can not bind shortcuts directly. In this case, you can use this property to assign an ID which can be used in the global shortcut configuration of your desktop environment. This should be lowercase and contain only ASCII characters and dashes. For example, `"main-trigger"`.
 `root` | _mandatory_ | The root menu item of the menu given as a Menu Item Description. See below for details.
 `centered` | `false` | Whether the menu should be centered on the screen. If this is `false`, the menu will be opened at the position of the mouse cursor.
@@ -184,7 +184,7 @@ For instance, this menu item will open GitHub in the default browser:
 This type is used to simulate simple keyboard events.
 The `data` property of the menu item must contain a `hotkey` property which contains the hotkey to simulate.
 See [Menu Shortcuts vs.
-Simulated Hotkeys](configuring.md#menu-shortcuts-vs-simulated-hotkeys) for details on the format of the `hotkey` property.
+Simulated Hotkeys](configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys) for details on the format of the `hotkey` property.
 The optional `delayed` property will ensure that the hotkey is simulated _after_ the Kando window is closed.
 This can be used if the hotkey should be captured by another window.
 For instance, this menu item will paste the clipboard content:
@@ -204,7 +204,7 @@ For instance, this menu item will paste the clipboard content:
 #### `"macro"`
 This type is used to simulate a more comples sequence of keyboard events.
 The `data` property of the menu item must contain a `macro` property which contains the sequence of key codes to simulate.
-See [Menu Shortcuts vs. Simulated Hotkeys](configuring.md#menu-shortcuts-vs-simulated-hotkeys) for details on key code format.
+See [Menu Shortcuts vs. Simulated Hotkeys](configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys) for details on key code format.
 The optional `delayed` property will ensure that the macro is simulated _after_ the Kando window is closed.
 This can be used if the macro should be captured by another window.
 For instance, this menu item will type "Hi" on most keyboard layouts:

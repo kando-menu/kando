@@ -21,7 +21,7 @@ If you want to improve this documentation, please [open a pull request](https://
 ## Getting Started
 
 * [Installation](installing.md)
-* [Usage](usage.md)
+* [Getting Started](getting-started.md)
 * [Configuration](configuring.md)
 
 ## Advanced Topics
