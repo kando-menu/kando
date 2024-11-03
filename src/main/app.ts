@@ -152,7 +152,7 @@ export class KandoApp {
       file: 'menus.json',
       directory: app.getPath('userData'),
       defaults: {
-        menus: [this.createExampleMenu()],
+        menus: [],
         templates: [],
       },
     });
@@ -160,7 +160,7 @@ export class KandoApp {
     // Try migrating settings from an old version of Kando.
     this.migrateSettings();
 
-    // We ensure that there is always a menu avaliable. If the user deletes all menus,
+    // We ensure that there is always a menu available. If the user deletes all menus,
     // we create a new example menu when Kando is started the next time.
     if (this.menuSettings.get('menus').length === 0) {
       this.menuSettings.set({

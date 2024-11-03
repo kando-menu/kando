@@ -17,7 +17,16 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [Kando 1.5.1](https://github.com/kando-menu/kando/releases/tag/v1.5.1)
+
+**Release Date:** 2024-11-03
+
+#### :bug: Fixed
+
+- Fixed a regression introduced in 1.5.0 which caused the first configured menu to be merged with the example menu.
+
 ## [Kando 1.5.0](https://github.com/kando-menu/kando/releases/tag/v1.5.0)
+
 
 **Release Date:** 2024-11-03
 
