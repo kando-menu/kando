@@ -48,8 +48,8 @@
             "detailed-description_other": "Contient {{count}} éléments."
         },
         "uri": {
-            "tip-1": "Il est possible d'utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole http://",
-            "tip-2": "Il est possible d'utiliser un élément de type URI pour ouvrir un fichier ou un dossier à l'aide du protocole file://",
+            "tip-1": "Il est possible d'utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole \"http://\".",
+            "tip-2": "Il est possible d'utiliser un élément de type URI pour ouvrir un fichier ou un dossier à l'aide du protocole \"file://\".",
             "tip-4": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
             "tip-5": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
             "uri-hint": "Ce lien sera ouvert.",
@@ -57,7 +57,13 @@
             "name": "Ouvrir un URI",
             "description": "Ouvre des fichiers ou des sites web.",
             "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
-            "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien mailto:"
+            "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien \"mailto:\"."
+        },
+        "text": {
+            "tip-1": "Cette action utilise votre presse-papiers pour coller le texte. Après avoir utilisé l'action, le presse-papiers contiendra toujours le texte.",
+            "placeholder": "Insérez du texte…",
+            "name": "Coller le texte",
+            "description": "Insère le texte en question."
         }
     },
     "main": {
@@ -83,7 +89,9 @@
             "anchored-mode-hint": "Ouvrir les sous-menus au même endroit que le menu parent.",
             "anchored-mode-checked-hint": "Cocher cette case désactivera le mode Marquage.",
             "subheading": "Avant d'activer ces options, nous vous recommandons d'apprendre le comportement par défaut de Kando. Lisez pourquoi nous le préférons <a {{- link}}>ici</a>.",
-            "centered-mode-hint": "Ouvrir le menu au centre de l'écran au lieu du curseur."
+            "centered-mode-hint": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
+            "warp-mouse-hint": "Déplace le pointeur au centre du menu à son ouverture.",
+            "warp-mouse": "Recentre également le curseur lorsqu'en Mode Centré"
         },
         "condition-picker": {
             "subheading": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
@@ -216,7 +224,12 @@
         "buy-me-a-coffee-button": "Kando sur Ko-fi",
         "sponsors-button": "Liste des Sponsors",
         "new-version-button": "Une nouvelle version de Kando est disponible !",
-        "introduction-tab-header": "Introduction"
+        "introduction-tab-header": "Introduction",
+        "electron-version": "Version d'Electron",
+        "kando-version": "Version de Kando",
+        "node-version": "Version de Node",
+        "backend": "Interface système",
+        "chrome-version": "Version de Chrome"
     },
     "toolbar": {
         "menu-themes-tab": {
@@ -224,7 +237,7 @@
             "system-mode-subheading": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
             "system-mode-subheading-dark": "Votre système est actuellement en mode sombre. Les paramètres ci-dessus ne seront utilisés qu'en mode sombre.",
             "system-mode-subheading-light": "Votre système est actuellement en mode clair. Les paramètres ci-dessus ne seront utilisés qu'en mode clair.",
-            "caption": "À l'avenir, nous disposerons d'un répertoire en ligne pour les thèmes de menu. Pour l'instant, vous pouvez <a {{tutorialLink}}>apprendre à créer vos propres thèmes</a> et les partager dans le <a {{discordLink}}>Serveur Discord de Kando</a>!",
+            "caption": "À l'avenir, nous disposerons d'un répertoire en ligne pour les thèmes de menu. Pour l'instant, vous pouvez <a {{tutorialLink}}>apprendre à créer vos propres thèmes</a> et les partager dans le <a {{discordLink}}>Serveur Discord de Kando</a> !",
             "edit-colors": "Modifier les couleurs",
             "dark-mode": "Utiliser des Thèmes et des Couleurs Différents pour le Mode Clair et le Mode Sombre",
             "close-color-picker": "Fermer l'éditeur de couleurs",
