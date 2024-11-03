@@ -252,6 +252,19 @@ For instance, this menu item will type "Hi" on most keyboard layouts:
 }
 ```
 
+#### `"text"`
+This type is used to paste the given text into the active window.
+```json
+{
+  "name": "Paste Text",
+  "icon": "translate",
+  "iconTheme": "material-symbols-rounded",
+  "type": "text",
+  "data": {
+    "text": "Hello World!"
+  }
+}
+
 
 <p align="center"><img src ="img/hr.svg" /></p>
 
