@@ -22,7 +22,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 **Kando is a cross-platform pie menu for your desktop.** It offers an unconventional, fast, highly efficient, and fun way of interacting with your computer! You can use Kando to launch applications, simulate keyboard shortcuts, open files, and much more. 
 
-Kando is designed to be used with 🖱️ mouse, 🖊️ stylus, or 👆 touch input. If you have both hands at your keyboard most of the time, Kando is maybe not the right tool for you.
+Kando is designed to be used with 🖱️ mouse, 🖊️ stylus, 👆 touch, or 🎮 controller input. If you have both hands at your keyboard most of the time, Kando is maybe not the right tool for you.
 
 You are welcome to join the 💬 [Discord server](https://discord.gg/hZwbVSDkhy) to discuss the project, ask questions, or just to hang out with other Kando enthusiasts!
 
