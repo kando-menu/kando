@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
+- If `XDG_SESSION_TYPE` is set to `tty`, Kando will now try to use the X11 backend on Linux instead of refusing to start. In most cases, this should work. But there will be a warning in the console if the X11 backend is used in this case.
 - Improved the length transition of the connector lines of the "Rainbow Labels" theme. 
 
 #### :bug: Fixed

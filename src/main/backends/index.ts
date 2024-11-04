@@ -70,7 +70,17 @@ export function getBackend(): Backend | null {
       return new X11Backend();
     }
 
-    console.log('This is an unsupported combination! Kando will not work here :(');
+    if (session === 'tty') {
+      console.warn(
+        'XDG_SESSION_TYPE is set to "tty". This is unusual - Kando will try to use the X11 backend.'
+      );
+
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { X11Backend } = require('./linux/x11/backend');
+      return new X11Backend();
+    }
+
+    console.error('This is an unsupported combination! Kando will not work here :(');
     return null;
   }
 
