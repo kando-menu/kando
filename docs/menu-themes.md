@@ -11,6 +11,9 @@ Kando allows you to create custom themes for the menus.
 A theme defines several layers which will be painted on top of each other for each menu item.
 Depending on the menu item's state (e.g. active, child, parent, hovered, etc.), the layers can be styled differently using [CSS](https://www.w3schools.com/css/).
 
+> [!TIP]
+> Kando comes with a few themes pre-installed. You can find more themes in the [Kando Menu Themes Repository](https://github.com/kando-menu/menu-themes)!
+
 ## 🧬 Anatomy of a Menu Theme
 
 A menu theme is a directory containing at least three files: `theme.json`, `theme.css`, and `preview.jpg`.
@@ -187,9 +190,8 @@ The menu should be shown in the center of the image, the default themes use a re
 
 # 🛳️ Distributing your Theme
 
-In the future, we plan to add a repository for sharing themes.
-For now, you are invited to share your themes in [Kando's Discord Server](https://discord.gg/hZwbVSDkhy).
-If the community likes your theme, we can even make it a default theme in Kando!
+You are invited to show your themes in [Kando's Discord Server](https://discord.gg/hZwbVSDkhy)!
+You can also contribute your themes to the [Kando Menu Themes Repository](https://github.com/kando-menu/menu-themes) by creating a pull request.
 
 <p align="center"><img src ="img/hr.svg" /></p>
 
