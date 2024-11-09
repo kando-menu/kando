@@ -2,7 +2,8 @@
     "items": {
         "command": {
             "command": "Komanda",
-            "description": "Paleidžia bet kokią apvalkalo komandą."
+            "description": "Paleidžia bet kokią apvalkalo komandą.",
+            "name": "Paleisti komandą"
         },
         "uri": {
             "uri": "URI",
@@ -14,6 +15,22 @@
             "placeholder": "Įterpkite bet kokį tekstą…",
             "name": "Įdėti tekstą",
             "description": "Įdeda nurodytą tekstą."
+        },
+        "submenu": {
+            "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
+            "detailed-description_one": "Talpina {{count}} meniu elementą.",
+            "detailed-description_few": "Talpina {{count}} meniu elementus.",
+            "detailed-description_other": "Talpina {{count}} meniu elementų.",
+            "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
+            "tip-2": "Be to, galite įterpti vienus submeniu į kitus.",
+            "tip-3": "Submeniu gali būti naudojami sudėtingų meniu struktūrų kūrimui.",
+            "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje.",
+            "name": "Submeniu",
+            "description": "Talpina savyje kitus meniu elementus."
+        },
+        "common": {
+            "delayed-option": "Įvykdyti užvėrus meniu",
+            "not-configured": "Nesukonfigūruota"
         }
     },
     "example-menu": {
@@ -67,10 +84,15 @@
             "right-placeholder": "Dešinė",
             "top-placeholder": "Viršus",
             "bottom-placeholder": "Apačia",
-            "pointer-position-hint": "Šiuo metu jūsų pelė yra ties {{x}} x {{y}}."
+            "pointer-position-hint": "Šiuo metu jūsų pelė yra ties {{x}} x {{y}}.",
+            "window-hint": "Rodyti meniu tik tuo atveju, jei fokusuoto lango antraštėje yra nurodytas tekstas.",
+            "screen-hint": "Rodyti meniu tik tuo atveju, jei pelės rodyklė yra nurodytoje ekrano srityje.",
+            "window-checked-hint": "Tai palaiko reguliariuosius reiškinius, tokius kaip /youtube|vimeo/i.",
+            "window-placeholder": "Lango antraštė"
         },
         "icon-picker": {
-            "placeholder": "Ieškoti piktogramų…"
+            "placeholder": "Ieškoti piktogramų…",
+            "heading": "Pasirinkti piktogramą"
         },
         "macro-picker": {
             "recording": "Paspauskite klavišus…"
@@ -81,13 +103,20 @@
         "common": {
             "done": "Atlikta",
             "cancel": "Atsisakyti",
-            "menu-behavior": "Meniu elgsena"
+            "menu-behavior": "Meniu elgsena",
+            "menu-conditions": "Meniu sąlygos",
+            "menu-conditions-hint": "Pasirinkite kada meniu turėtų būti rodomas.",
+            "menu-behavior-hint": "Derinti išplėstines meniu parinktis."
         },
         "advanced-options": {
-            "centered-mode": "Centruota veiksena"
+            "centered-mode": "Centruota veiksena",
+            "heading": "Derinti meniu elgseną",
+            "centered-mode-hint": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
+            "anchored-mode-hint": "Atverti submeniu toje pačioje vietoje kaip ir viršesnį meniu."
         }
     },
     "main": {
-        "is-running-header": "Kando jau veikia"
+        "is-running-header": "Kando jau veikia",
+        "failed-to-start-header": "Nepavyko paleisti Kando"
     }
 }
