@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+#### :tada: Added
+
+- A `centerTextWrapWidth` property to the menu-theme metadata. This allows to specify the width at which the text in the center item should wrap. The default is 90 pixels.
+
 #### :wrench: Changed
 
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.

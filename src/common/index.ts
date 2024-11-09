@@ -104,6 +104,9 @@ export interface IMenuThemeDescription {
    */
   maxMenuRadius: number;
 
+  /** The width of the text wrap in the center of the menu in pixels. */
+  centerTextWrapWidth: number;
+
   /**
    * If this is true, children of a menu item will be drawn below the parent. Otherwise
    * they will be drawn above.

@@ -94,6 +94,11 @@ export class MenuTheme {
     return this.description.maxMenuRadius;
   }
 
+  /** Returns the wrap-width of the center text. */
+  public get centerTextWrapWidth() {
+    return this.description.centerTextWrapWidth;
+  }
+
   /**
    * Returns true if children of a menu item should be drawn below the parent. Otherwise
    * they will be drawn above.
@@ -109,6 +114,10 @@ export class MenuTheme {
    */
   public loadDescription(description: IMenuThemeDescription) {
     this.description = description;
+
+    // Use defaults if some properties are not set.
+    this.description.maxMenuRadius = this.description.maxMenuRadius || 150;
+    this.description.centerTextWrapWidth = this.description.centerTextWrapWidth || 90;
 
     // Remove any old theme first.
     const oldTheme = document.getElementById('kando-menu-theme');

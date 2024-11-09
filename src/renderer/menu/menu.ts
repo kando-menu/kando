@@ -529,9 +529,7 @@ export class Menu extends EventEmitter {
       }
 
       if (item === this.root) {
-        const maxCenterTextSize = this.options.centerDeadZone * 2.0;
-        const padding = this.options.centerDeadZone * 0.1;
-        this.centerText = new CenterText(rootContainer, maxCenterTextSize - padding);
+        this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
       }
     }
   }
