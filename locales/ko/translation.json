@@ -56,6 +56,12 @@
             "uri-hint": "이 URI를 열어요.",
             "name": "URI 열기",
             "description": "파일이나 웹사이트를 열어요."
+        },
+        "text": {
+            "placeholder": "아무 텍스트나 넣어보세요…",
+            "description": "지정된 텍스트를 삽입해요.",
+            "tip-1": "이 동작은 시스템의 클립보드를 사용하여 텍스트를 붙여넣어요. 동작이 실행된 이후에도 클립보드에 텍스트가 남아있을 거예요.",
+            "name": "텍스트 붙여넣기"
         }
     },
     "main": {
@@ -81,7 +87,9 @@
             "anchored-mode-checked-hint": "이 옵션을 활성화하면 마킹 모드가 비활성화돼요.",
             "subheading": "이 설정을 변경하기 전에, Kando의 기본적인 특성을 배워보는 것을 추천해요. 왜 그런지는 <a {{- link}}>여기서</a> 확인해 보세요.",
             "centered-mode-hint": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
-            "heading": "메뉴 설정하기"
+            "heading": "메뉴 설정하기",
+            "warp-mouse": "중앙 정렬 모드에서 마우스 재정렬",
+            "warp-mouse-hint": "메뉴가 열릴 때 커서를 메뉴 중앙으로 움직여요."
         },
         "condition-picker": {
             "heading": "메뉴 조건 선택하기",
@@ -214,7 +222,12 @@
         "dev-tools-button-tooltip": "UI를 검사할 때 쓰는 웹 개발자 도구를 열어요.",
         "reload-menu-theme-button": "현재 메뉴 테마 새로고침하기",
         "reload-menu-theme-button-tooltip": "CSS 변경은 즉시 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
-        "dev-tools-button": "개발자 도구 열기"
+        "dev-tools-button": "개발자 도구 열기",
+        "backend": "Kando 백엔드",
+        "kando-version": "Kando 버전",
+        "electron-version": "Electron 버전",
+        "chrome-version": "Chrome 버전",
+        "node-version": "Node 버전"
     },
     "toolbar": {
         "menu-themes-tab": {
