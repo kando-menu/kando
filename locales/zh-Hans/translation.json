@@ -92,7 +92,7 @@
             "tip-2": "使用 file:// 协议来打开文件和文件夹。"
         },
         "text": {
-            "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板中将包含文本。",
+            "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。",
             "placeholder": "插入任意文本…",
             "name": "粘贴文本",
             "description": "插入给定文本。"
@@ -198,7 +198,8 @@
             "edit-colors": "编辑颜色",
             "close-color-picker": "关闭颜色编辑器",
             "reset-color-picker": "重置所有颜色至默认值",
-            "caption": "在未来，我们会有一个在线的菜单主题仓库。现在，您可以 <a {{tutorialLink}}>了解如何创建主题</a>，并在 <a {{discordLink}}>Kando 的 Discord 群</a> 里和我们分享！"
+            "caption": "在未来，我们会有一个在线的菜单主题仓库。现在，您可以 <a {{tutorialLink}}>了解如何创建主题</a>，并在 <a {{discordLink}}>Kando 的 Discord 群</a> 里和我们分享！",
+            "hint": "您可以在<a {{repositoryLink}}>主题仓库</a>下载主题，也可以<a {{tutorialLink}}>了解如何创建主题</a>，并在<a{{discordLink}}>Kando的Discord群</a>里和我们分享！"
         }
     },
     "example-menu": {

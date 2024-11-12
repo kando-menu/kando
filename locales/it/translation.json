@@ -58,6 +58,12 @@
             "tip-6": "Usa {{pointer_x}} e {{pointer_y}} per inserire la posizione del puntatore all’apertura del menù.",
             "uri": "URI",
             "uri-hint": "Questo verrà aperto."
+        },
+        "text": {
+            "description": "Inserisci il testo fornito.",
+            "name": "Incolla il testo",
+            "placeholder": "Inserisci un testo qualsiasi…",
+            "tip-1": "Questa azione utilizza la tua clipboard per incollare il testo. Dopo aver utilizzato l'azione, la clipboard conterrà il testo."
         }
     },
     "properties": {
@@ -104,7 +110,9 @@
             "anchored-mode-checked-hint": "Spuntando questo, disabiliterà la Modalità Tracciatura.",
             "heading": "Modifica il Comportamento del Menù",
             "subheading": "Prima di abilitare queste opzioni, ti raccomandiamo di imparare il comportamento standard di Kando. Leggi il perché ci piace <a {{- link}}>qui</a>.",
-            "centered-mode": "Modalità Centrata"
+            "centered-mode": "Modalità Centrata",
+            "warp-mouse": "Trasporta il Mouse in Modalità Centrata",
+            "warp-mouse-hint": "Muove il cursore del mouse al centro del menu quando viene aperto."
         },
         "icon-picker": {
             "heading": "Scegli una Icona",
@@ -199,7 +207,12 @@
         "dev-tools-button": "Mostra Strumenti per Sviluppatori",
         "dev-tools-button-tooltip": "Apri gli strumenti per sviluppatori web per ispezionare l’Interfaccia Utente.",
         "reload-menu-theme-button": "Ricarica l’Attuale Tema di Menù",
-        "reload-menu-theme-button-tooltip": "Le modifiche del CSS verranno applicate immediatamente, per vedere l’effetto delle modifiche del file theme.json, dovrai riaprire il menù."
+        "reload-menu-theme-button-tooltip": "Le modifiche del CSS verranno applicate immediatamente, per vedere l’effetto delle modifiche del file theme.json, dovrai riaprire il menù.",
+        "kando-version": "Versione di Kando",
+        "electron-version": "Versione di Electron",
+        "backend": "Interfaccia di sistema",
+        "chrome-version": "Versione di Chrome",
+        "node-version": "Versione di Node"
     },
     "toolbar": {
         "menu-themes-tab": {
@@ -212,7 +225,8 @@
             "dark-mode": "Usa Temi e Colori differenti per le Modalità Chiara e Scura",
             "close-color-picker": "Chiudi l’editor dei colori",
             "reset-color-picker": "Ripristina tutti i colori ai valori di default",
-            "label": "Temi di Menù"
+            "label": "Temi di Menù",
+            "hint": "Puoi scaricare nuovi temi dall'<a{{repositoryLink}}>archivio dei temi</a>. Puoi anche <{{tutorialLink}}> imparare come creare i tuoi temi</a> e condividerli sul <a{{discordLink}}>Server Discord di Kando</a>!"
         },
         "menus-tab": {
             "label": "Menù",
