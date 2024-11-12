@@ -243,7 +243,7 @@
             "close-color-picker": "Fermer l'éditeur de couleurs",
             "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
             "label": "Thèmes de menu",
-            "hint": "Il est possible de télécharger des thèmes à partir du <a {{repositoryLink}}>repository de thèmes</a>. Vous pouvez également <a {{tutorialLink}}>apprendre à créer les vôtres</a> et les partager sur le <a {{discordLink}}>serveur Discord de Kando </a> !"
+            "hint": "Il est possible de télécharger des thèmes à partir du <a {{repositoryLink}}>répertoire de thèmes</a>. Vous pouvez également <a {{tutorialLink}}>apprendre à créer les vôtres</a> et les partager sur le <a {{discordLink}}>serveur Discord de Kando </a> !"
         },
         "add-items-tab": {
             "label": "Éléments de Menu"
