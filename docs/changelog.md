@@ -36,6 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :bug: Fixed
 
 - A regression which allowed selecting items with the right mouse button in marking or turbo mode.
+- The RPM package now does not contain the debug information in `/usr/lib/.build-id` anymore. This should avoid any conflicts with other Electron-based applications.
 
 ## [Kando 1.5.1](https://github.com/kando-menu/kando/releases/tag/v1.5.1)
 
