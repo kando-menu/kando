@@ -14,7 +14,7 @@ import {
   computeItemWedges,
   getAngularDifference,
   isAngleBetween,
-} from '../src/renderer/math';
+} from '../src/renderer/common/math';
 import { expect } from 'chai';
 
 describe('normalize', () => {
