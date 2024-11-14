@@ -11,7 +11,10 @@
 import i18next from 'i18next';
 import { EventEmitter } from 'events';
 
-import { IconThemeRegistry, IIconPicker } from '../../icon-themes/icon-theme-registry';
+import {
+  IconThemeRegistry,
+  IIconPicker,
+} from '../../common/icon-themes/icon-theme-registry';
 
 /**
  * This class is responsible for displaying the icon picker of the menu editor. It emits

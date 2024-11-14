@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import * as math from '../../math';
-import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
+import * as math from '../../common/math';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 
 /**

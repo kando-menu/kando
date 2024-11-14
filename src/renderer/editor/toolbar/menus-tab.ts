@@ -13,7 +13,7 @@ import i18next from 'i18next';
 import { ToolbarDraggable } from './toolbar-draggable';
 import { DropTargetTab } from './drop-target-tab';
 import { IMenu, IMenuSettings, deepCopyMenu } from '../../../common';
-import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
 

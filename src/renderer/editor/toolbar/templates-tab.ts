@@ -19,7 +19,7 @@ import {
   deepCopyMenuItem,
 } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
-import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
 import { ToolbarDraggable } from './toolbar-draggable';

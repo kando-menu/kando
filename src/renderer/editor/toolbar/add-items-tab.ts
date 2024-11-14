@@ -10,7 +10,7 @@
 
 import { ToolbarDraggable } from './toolbar-draggable';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
-import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
 import { DnDManager } from '../common/dnd-manager';
 import { IMenuItem } from '../../../common';
 

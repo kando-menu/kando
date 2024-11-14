@@ -10,13 +10,13 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../../math';
+import * as math from '../../common/math';
 import * as utils from './utils';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { PreviewDraggable } from './preview-draggable';
 import { PreviewDropTarget } from './preview-drop-target';
 import { IVec2, IMenu } from '../../../common';
-import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
 import { DnDManager } from '../common/dnd-manager';
 
 /**

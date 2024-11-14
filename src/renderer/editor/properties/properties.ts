@@ -15,7 +15,7 @@ import { IEditorMenuItem } from '../common/editor-menu-item';
 import { IMenu, IBackendInfo, IShowEditorOptions } from '../../../common';
 import { IconPicker } from './icon-picker';
 import { ConditionPicker } from './condition-picker';
-import { IconThemeRegistry } from '../../icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
 import { TextPicker } from './text-picker';
 import { ShortcutPicker } from './shortcut-picker';
 import { ShortcutIDPicker } from './shortcut-id-picker';

@@ -10,7 +10,7 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../math';
+import * as math from '../common/math';
 import { IShowMenuOptions, IVec2 } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
@@ -18,7 +18,6 @@ import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
 import { ButtonState, IInputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
-import { closestEquivalentAngle } from '../math';
 
 /** These options can be given to the constructor of the menu. */
 export class MenuOptions {
@@ -953,7 +952,7 @@ export class Menu extends EventEmitter {
           angle = math.getAngle(nextItem.position);
         }
 
-        angle = closestEquivalentAngle(item.lastConnectorAngle, angle);
+        angle = math.closestEquivalentAngle(item.lastConnectorAngle, angle);
         item.lastConnectorAngle = angle;
 
         item.connectorDiv.style.width = `${length}px`;
