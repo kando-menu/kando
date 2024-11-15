@@ -57,6 +57,12 @@ export class CommandItemAction implements IItemAction {
       const env = { ...process.env };
       delete env.CHROME_DESKTOP;
 
+      // If we are inside a flatpak container, we cannot execute commands directly on the host.
+      // Instead we need to use flatpak-spawn.
+      if (env.container && env.container === 'flatpak') {
+        command = 'flatpak-spawn --host ' + command;
+      }
+
       // We are only interested in a potential error output.
       const stdio: StdioOptions = ['ignore', 'ignore', 'pipe'];
 
