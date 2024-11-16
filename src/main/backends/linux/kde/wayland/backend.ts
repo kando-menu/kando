@@ -361,7 +361,15 @@ export class KDEWaylandBackend implements Backend {
    */
   private async getKWinVersion(): Promise<number[]> {
     return new Promise((resolve, reject) => {
-      exec('kwin_wayland --version', (error, stdout) => {
+      let command = 'kwin_wayland --version';
+
+      // If we are inside a flatpak container, we cannot execute commands directly on the host.
+      // Instead we need to use flatpak-spawn.
+      if (process.env.container && process.env.container === 'flatpak') {
+        command = 'flatpak-spawn --host ' + command;
+      }
+
+      exec(command, (error, stdout) => {
         if (error) {
           reject(error);
           return;
