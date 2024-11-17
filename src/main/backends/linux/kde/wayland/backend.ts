@@ -297,10 +297,10 @@ export class KDEWaylandBackend implements Backend {
    * @returns The full path to the script.
    */
   private storeScript(name: string, script: string) {
-    const tmpDir = os.tmpdir() + '/kando';
-    fs.mkdirSync(tmpDir, { recursive: true });
+    const scriptDir = app.getPath('sessionData') + '/kwin_scripts';
+    fs.mkdirSync(scriptDir, { recursive: true });
 
-    const scriptPath = tmpDir + '/' + name;
+    const scriptPath = scriptDir + '/' + name;
     fs.writeFileSync(scriptPath, script);
 
     return scriptPath;
