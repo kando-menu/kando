@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import i18next from 'i18next';
-import os from 'os';
+import { app } from 'electron';
 import fs from 'fs';
 import DBus from 'dbus-final';
 import { exec } from 'child_process';
@@ -109,8 +109,8 @@ export class KDEWaylandBackend implements Backend {
     const property = this.kwinVersion[0] >= 6 ? 'activeWindow' : 'activeClient';
     this.wmInfoScriptPath = this.storeScript(
       'get-info.js',
-      `callDBus('org.kandomenu.kando', '/org/kandomenu/kando', 
-               'org.kandomenu.kando', 'sendWMInfo',
+      `callDBus('menu.kando.Kando', '/menu/kando/Kando', 
+               'menu.kando.Kando', 'sendWMInfo',
                workspace.${property} ? workspace.${property}.caption : "",
                workspace.${property} ? workspace.${property}.resourceClass : "",
                workspace.cursorPos.x, workspace.cursorPos.y,
@@ -123,7 +123,7 @@ export class KDEWaylandBackend implements Backend {
     );
 
     // Create the D-Bus interface for the KWin script to communicate with.
-    this.kandoInterface = new CustomInterface('org.kandomenu.kando');
+    this.kandoInterface = new CustomInterface('menu.kando.Kando');
     CustomInterface.configureMembers({
       methods: {
         sendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
@@ -141,8 +141,8 @@ export class KDEWaylandBackend implements Backend {
 
     const bus = DBus.sessionBus();
 
-    await bus.requestName('org.kandomenu.kando', 0);
-    bus.export('/org/kandomenu/kando', this.kandoInterface);
+    await bus.requestName('menu.kando.Kando', 0);
+    bus.export('/menu/kando/Kando', this.kandoInterface);
 
     // Acquire the KWin scripting interface to run the scripts.
     const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
@@ -270,8 +270,8 @@ export class KDEWaylandBackend implements Backend {
           if(registerShortcut('${id}', 'Kando - ${id}', '',
             () => {
               console.log('Kando: Triggered.');
-              callDBus('org.kandomenu.kando', '/org/kandomenu/kando',
-                       'org.kandomenu.kando', 'trigger', '${id}',
+              callDBus('menu.kando.Kando', '/menu/kando/Kando',
+                       'menu.kando.Kando', 'trigger', '${id}',
                        () => console.log('Kando: Triggered.'));
             }
           )) {
