@@ -32,7 +32,7 @@
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.9",
-    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^7.17.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "chai": "^4.5.0",
