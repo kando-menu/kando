@@ -151,7 +151,14 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   public readonly defaults: T;
 
-  /** Creates a new settings object. See documentation of the class for details. */
+  /**
+   * Creates a new settings object. If the settings file does not exist yet, the default
+   * settings are used. If the settings file exists but does not contain all properties,
+   * the missing properties are added from the default settings. If the settings file
+   * contains a syntax error, an exception is thrown.
+   *
+   * See documentation of the class for more details.
+   */
   constructor(options: Options<T>) {
     super();
 
@@ -235,7 +242,13 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     this.watcher = chokidar.watch(this.filePath, { ignoreInitial: true });
     this.watcher.on('change', () => {
       const oldSettings = { ...this.settings };
-      this.settings = this.loadSettings(this.defaults);
+      try {
+        this.settings = this.loadSettings(this.defaults);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        return;
+      }
+
       this.emitEvents(this.settings, oldSettings);
     });
   }
@@ -259,7 +272,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         // The settings file does not exist yet. Create it.
         this.saveSettings(defaultSettings);
       } else {
-        console.warn(`${error}`);
+        throw error;
       }
 
       return defaultSettings;
