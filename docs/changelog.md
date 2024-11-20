@@ -28,6 +28,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :wrench: Changed
 
+- Kando will now refuse to start if the `config.json` file or the `menus.json` file is not valid JSON. Before it used to start with the default configuration which could have resulted in data loss.
 - Kando now notices when it's running in a Flatpak container and adapts accordingly. For instance, commands are then executed with `flatpak-spawn`. This will make it possible to distribute Kando via Flathub in the future!
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
 - How processes are spawned by the command action. They are now detached from the parent process. This should prevent launched applications from being closed when Kando is closed.
