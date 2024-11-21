@@ -32,6 +32,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Kando now notices when it's running in a Flatpak container and adapts accordingly. For instance, commands are then executed with `flatpak-spawn`. This will make it possible to distribute Kando via Flathub in the future!
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
 - How processes are spawned by the command action. They are now detached from the parent process. This should prevent launched applications from being closed when Kando is closed.
+- The checks for `XDG_CURRENT_DESKTOP` and `XDG_SESSION_TYPE` on Linux are now case-insensitive. This should make Kando work on systems where these variables are set in a different case for whatever reason.
 - If `XDG_SESSION_TYPE` is set to `tty`, Kando will now try to use the X11 backend on Linux instead of refusing to start. In most cases, this should work. But there will be a warning in the console if the X11 backend is used in this case.
 - Improved the length transition of the connector lines of the "Rainbow Labels" theme.
 - **Several  translation updates:** Thanks to all the contributors!
