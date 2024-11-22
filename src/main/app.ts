@@ -44,7 +44,7 @@ const soundConfigPath = path.join(app.getPath('userData'), 'sound-config.json');
 const defaultSoundConfig = {
   enableSounds: true,
   volume: 0.5,
-  current_sound_config_path: 'sound-themes/default/sound.json5',
+  currentSoundConfigPath: 'sound-themes/default/sound.json5',
 };
 
 
@@ -59,7 +59,7 @@ ipcMain.handle('get-sound-config', async () => {
   const defaultSoundConfig = {
     enableSounds: true,
     volume: 0.5,
-    current_sound_config_path: 'sound-themes/default/sound.json5',
+    currentSoundConfigPath: 'sound-themes/default/sound.json5',
   };
 
   try {
@@ -75,7 +75,7 @@ ipcMain.handle('get-sound-config', async () => {
     const currentConfigFullPath = path.join(
       app.getPath('appData'),
       'kando',
-      parsedConfig.current_sound_config_path
+      parsedConfig.currentSoundConfigPath
     );
 
     const soundConfigContents = await fs.promises.readFile(currentConfigFullPath, 'utf-8');
