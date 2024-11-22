@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import './renderer/index.scss';
+import { Howl } from 'howler';
 
 import i18next from 'i18next';
 
@@ -32,7 +33,8 @@ Promise.all([
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
   window.api.appSettings.get(),
-]).then(async ([locales, version, info, themeDescription, colors, settings]) => {
+  window.api.getSoundConfig()
+]).then(async ([locales, version, info, themeDescription, colors, settings, soundConfig]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -93,8 +95,30 @@ Promise.all([
     editor.show(editorOptions);
   });
 
-  // Show the editor when the main process requests it.
+  window.api.getSoundConfig().then((soundConfig) => {
+    if (soundConfig && soundConfig.resolvedPaths && soundConfig.enableSounds) {
+      const { closeMenu, openMenu, buttonHover } = soundConfig.resolvedPaths;
+  
+      const sounds = {
+        closeMenu: new Howl({ src: [closeMenu], volume: soundConfig.volume }),
+        openMenu: new Howl({ src: [openMenu], volume: soundConfig.volume }),
+        buttonHover: new Howl({ src: [buttonHover], volume: soundConfig.volume }),
+      };
+    }
+  });
+
   window.api.showEditor((editorOptions) => {
+    if (soundConfig && soundConfig.resolvedPaths && soundConfig.enableSounds) {
+      const { openMenu } = soundConfig.resolvedPaths;
+  
+      const openMenuSound = new Howl({
+        src: [openMenu],
+        volume: soundConfig.volume,
+      });
+  
+      openMenuSound.play();
+    }
+
     editor.show(editorOptions);
     editor.enterEditMode();
   });
