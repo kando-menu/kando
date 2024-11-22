@@ -32,9 +32,8 @@ Promise.all([
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
-  window.api.appSettings.get(),
-  window.api.getSoundConfig()
-]).then(async ([locales, version, info, themeDescription, colors, settings, soundConfig]) => {
+  window.api.appSettings.get()
+]).then(async ([locales, version, info, themeDescription, colors, settings]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -93,18 +92,6 @@ Promise.all([
   window.api.showMenu((root, menuOptions, editorOptions) => {
     menu.show(root, menuOptions);
     editor.show(editorOptions);
-  });
-
-  window.api.getSoundConfig().then((soundConfig) => {
-    if (soundConfig && soundConfig.resolvedPaths && soundConfig.enableSounds) {
-      const { closeMenu, openMenu, buttonHover } = soundConfig.resolvedPaths;
-  
-      const sounds = {
-        closeMenu: new Howl({ src: [closeMenu], volume: soundConfig.volume }),
-        openMenu: new Howl({ src: [openMenu], volume: soundConfig.volume }),
-        buttonHover: new Howl({ src: [buttonHover], volume: soundConfig.volume }),
-      };
-    }
   });
 
   window.api.showEditor((editorOptions) => {
