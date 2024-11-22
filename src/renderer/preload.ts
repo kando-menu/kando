@@ -8,270 +8,170 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, contextBridge } from 'electron';
-import {
-  IVec2,
-  IMenuItem,
-  IAppSettings,
-  IMenuSettings,
-  IShowMenuOptions,
-  IShowEditorOptions,
-} from '../common';
+import './renderer/index.scss';
 import { Howl } from 'howler';
 
-const cachedSounds: Record<string, Howl> = {};
+import i18next from 'i18next';
 
-async function preloadSounds() {
-  try {
-    const soundConfig = await ipcRenderer.invoke('get-sound-config');
-    if (!soundConfig || !soundConfig.resolvedPaths || !soundConfig.enableSounds) {
-      console.warn('Sound configuration is missing or disabled.');
-      return;
-    }
-
-    const { closeMenu, openMenu, buttonHover } = soundConfig.resolvedPaths;
-    const volume = Math.min(Math.max(soundConfig.volume, 0), 1); // Clamp volume between 0 and 1
-
-    const resolveAndCacheSound = async (key: string, filePath: string) => {
-      const fileExists = await ipcRenderer.invoke('check-file-exists', filePath.replace('file:///', ''));
-      if (fileExists) {
-        cachedSounds[key] = new Howl({ src: [filePath], volume, html5: true });
-      } else {
-        console.error(`Sound file not found: ${filePath}`);
-      }
-    };
-
-    await resolveAndCacheSound('buttonHover', buttonHover);
-    await resolveAndCacheSound('openMenu', openMenu);
-    await resolveAndCacheSound('closeMenu', closeMenu);
-
-  } catch (error) {
-    console.error('Failed to preload sounds:', error);
-  }
-}
-
-preloadSounds();
+import { Menu } from './renderer/menu/menu';
+import { Editor } from './renderer/editor/editor';
+import { MenuTheme } from './renderer/menu/menu-theme';
 
 /**
- * There is a well-defined API between the host process and the renderer process. The
- * renderer process can call the functions below to interact with the host process or
- * register callbacks to be called by the host process.
+ * This file is the main entry point for Kando's renderer process. It is responsible for
+ * drawing the menu and the editor, as well as handling user input.
  */
-contextBridge.exposeInMainWorld('api', {
-  /**
-   * This will return the current locale and all localization strings loaded by i18next
-   * for the current and all potential fallback locales.
-   */
-  getLocales: function () {
-    return ipcRenderer.invoke('get-locales');
-  },
 
-  getSoundConfig: () => ipcRenderer.invoke('get-sound-config'),
+// Wire up the menu and the editor -------------------------------------------------------
 
-  /**
-   * The appSettings object can be used to read and write the app settings. The settings
-   * are persisted in the host process. When a setting is changed, the host process will
-   * notify the renderer process.
-   */
-  appSettings: {
-    get(): Promise<IAppSettings> {
-      return ipcRenderer.invoke('app-settings-get');
-    },
-    getKey<K extends keyof IAppSettings>(key: K): Promise<IAppSettings[K]> {
-      return ipcRenderer.invoke(`app-settings-get-${key}`);
-    },
-    setKey<K extends keyof IAppSettings>(key: K, value: IAppSettings[K]) {
-      ipcRenderer.send(`app-settings-set-${key}`, value);
-    },
-    onChange<K extends keyof IAppSettings>(
-      key: K,
-      callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
-    ) {
-      ipcRenderer.on(`app-settings-changed-${key}`, (event, newValue, oldValue) => {
-        callback(newValue, oldValue);
-      });
-    },
-  },
+// We need some information from the main process before we can start. This includes the
+// backend info, the menu theme, and the menu theme colors.
+Promise.all([
+  window.api.getLocales(),
+  window.api.getVersion(),
+  window.api.getBackendInfo(),
+  window.api.getMenuTheme(),
+  window.api.getCurrentMenuThemeColors(),
+  window.api.appSettings.get(),
+]).then(async ([locales, version, info, themeDescription, colors, settings, soundConfig]) => {
+  // Initialize i18next with the current locale and the english fallback locale.
+  await i18next.init({
+    lng: locales.current,
+    fallbackLng: locales.fallbackLng,
+  });
 
-  /**
-   * The menuSettings object can be used to read and write the menu settings. This is
-   * primarily used by the menu editor. When a menu should be shown, the host process will
-   * call the showMenu callback further below. For now, it is not forseen that the menu
-   * editor reloads the menu settings when they change on disc. Hence, there is no
-   * onChange callback.
-   */
-  menuSettings: {
-    get(): Promise<IMenuSettings> {
-      return ipcRenderer.invoke('menu-settings-get');
-    },
-    set(data: IMenuSettings) {
-      ipcRenderer.send('menu-settings-set', data);
-    },
-    getCurrentMenu(): Promise<number> {
-      return ipcRenderer.invoke('menu-settings-get-current-menu');
-    },
-  },
-
-  /** Returns the current version string of Kando. */
-  getVersion: function () {
-    return ipcRenderer.invoke('get-version');
-  },
-
-  /** This will return some information about the currently used backend. */
-  getBackendInfo: function () {
-    return ipcRenderer.invoke('get-backend-info');
-  },
-
-  /** This will return the descriptions of the currently used menu theme. */
-  getMenuTheme: function () {
-    return ipcRenderer.invoke('get-menu-theme');
-  },
-
-  /** This will return all available menu themes. */
-  getAllMenuThemes: function () {
-    return ipcRenderer.invoke('get-all-menu-themes');
-  },
-
-  /**
-   * This will return the accent colors of the currently used menu theme. This may depend
-   * on the current system theme (light or dark).
-   */
-  getCurrentMenuThemeColors: function () {
-    return ipcRenderer.invoke('get-current-menu-theme-colors');
-  },
-
-  /** This will return whether the dark mode is currently enabled for the system. */
-  getIsDarkMode: function () {
-    return ipcRenderer.invoke('get-is-dark-mode');
-  },
-
-  /** This will be called by the host process when the dark mode is toggled for the system. */
-  darkModeChanged(callback: (darkMode: boolean) => void) {
-    ipcRenderer.on('dark-mode-changed', (e, darkMode) => callback(darkMode));
-  },
-
-  /** This will return a IIconThemesInfo describing all available icon themes. */
-  getIconThemes: function () {
-    return ipcRenderer.invoke('get-icon-themes');
-  },
-
-  /** This will show the web developer tools. */
-  showDevTools: function () {
-    ipcRenderer.send('show-dev-tools');
-  },
-
-  /** This will reload the current menu theme. */
-  reloadMenuTheme: function () {
-    ipcRenderer.send('reload-menu-theme');
-  },
-
-  /**
-   * This will print the given message to the console of the host process.
-   *
-   * @param message The message to print.
-   */
-  log: function (message: string) {
-    ipcRenderer.send('log', message);
-  },
-
-  /**
-   * This will be called by the host process when a new menu should be shown.
-   *
-   * @param callback This callback will be called when a new menu should be shown.
-   */
-  showMenu: function (
-    callback: (
-      root: IMenuItem,
-      menuOptions: IShowMenuOptions,
-      editorOptions: IShowEditorOptions
-    ) => void
-  ) {
-    ipcRenderer.on('show-menu', (event, root, menuOptions, editorOptions) =>
-      callback(root, menuOptions, editorOptions)
+  Object.keys(locales.data).forEach((key) => {
+    i18next.addResourceBundle(
+      key,
+      'translation',
+      locales.data[key].translation,
+      true,
+      true
     );
-  },
+  });
 
-  /**
-   * This will be called by the host process when the user should be shown the editor.
-   *
-   * @param callback This callback will be called when the editor should be shown.
-   */
-  showEditor: function (callback: (editorOptions: IShowEditorOptions) => void) {	
-    ipcRenderer.on('show-editor', (event, editorOptions) => callback(editorOptions));
-  },
+  // First, we create a new menu theme and load the description we got from the main
+  // process.
+  const menuTheme = new MenuTheme();
+  menuTheme.loadDescription(themeDescription);
+  menuTheme.setColors(colors);
 
-  /**
-   * This will be called by the host process when the editor should be hidden. This
-   * happens for instance when the user clicks on an external link.
-   *
-   * @param callback This callback will be called when the editor should be hidden.
-   */
-  hideEditor: function (callback: () => void) {
-    ipcRenderer.on('hide-editor', callback);
-  },
+  const reloadMenuTheme = async () => {
+    Promise.all([window.api.getMenuTheme(), window.api.getCurrentMenuThemeColors()]).then(
+      ([themeDescription, colors]) => {
+        menuTheme.loadDescription(themeDescription);
+        menuTheme.setColors(colors);
+      }
+    );
+  };
 
-  /**
-   * This will be called when the user enters the edit mode. This ensures that a currently
-   * selected shortcut can be assigned to a new menu.
-   */
-  unbindShortcuts: function () {
-    ipcRenderer.send('unbind-shortcuts');
-  },
+  // We also listen for changes to the menu theme and the menu theme colors.
+  window.api.appSettings.onChange('menuThemeColors', () => reloadMenuTheme());
+  window.api.appSettings.onChange('darkMenuThemeColors', () => reloadMenuTheme());
+  window.api.appSettings.onChange('menuTheme', () => reloadMenuTheme());
+  window.api.appSettings.onChange('darkMenuTheme', () => reloadMenuTheme());
+  window.api.appSettings.onChange('enableDarkModeForMenuThemes', () => reloadMenuTheme());
+  window.api.darkModeChanged(() => reloadMenuTheme());
 
-  /**
-   * This will be called by the host process when the user should be shown a button to
-   * update the app.
-   *
-   * @param callback This callback will be called when the button should be shown.
-   */
-  showUpdateAvailableButton: function (callback: () => void) {
-    ipcRenderer.on('show-update-available-button', callback);
-  },
+  // Now, we create a new menu and a new editor. The menu is responsible for rendering
+  // the menu items and the editor is responsible for rendering the editor UI.
+  const menu = new Menu(
+    document.getElementById('kando-menu'),
+    menuTheme,
+    settings.menuOptions
+  );
 
-  /**
-   * This will be called by the render process when the user hovers a menu item.
-   *
-   * @param path The path of the hovered menu item.
-   */
-  hoverItem: function (path: string) {
-    if (cachedSounds.buttonHover) cachedSounds.buttonHover.play();
-    ipcRenderer.send('hover-item', path);
-  },
+  const editor = new Editor(
+    document.getElementById('kando-editor'),
+    info,
+    version,
+    settings.editorOptions
+  );
 
-  /**
-   * This will be called by the render process when the user unhovers a menu item.
-   *
-   * @param path The path of the unhovered menu item.
-   */
-  unhoverItem: function (path: string) {
-    ipcRenderer.send('unhover-item', path);
-  },
+  // Show the menu when the main process requests it.
+  window.api.showMenu((root, menuOptions, editorOptions) => {
+    menu.show(root, menuOptions);
+    editor.show(editorOptions);
+  });
 
-  /**
-   * This will be called by the render process when the user selects a menu item.
-   *
-   * @param path The path of the selected menu item.
-   */
-  selectItem: function (path: string) {
-    if (cachedSounds.openMenu) cachedSounds.openMenu.play();
-    ipcRenderer.send('select-item', path);
-  },
+  window.api.showEditor((editorOptions) => {
+    if (soundConfig && soundConfig.resolvedPaths && soundConfig.enableSounds) {
+      const { openMenu } = soundConfig.resolvedPaths;
+  
+      const openMenuSound = new Howl({
+        src: [openMenu],
+        volume: soundConfig.volume,
+      });
+  
+      openMenuSound.play();
+    }
 
-  /**
-   * This will be called by the render process when the user cancels a selection in the
-   * menu.
-   */
-  cancelSelection: function () {
-    if (cachedSounds.closeMenu) cachedSounds.closeMenu.play();
-    ipcRenderer.send('cancel-selection');
-  },
+    editor.show(editorOptions);
+    editor.enterEditMode();
+  });
 
-  /**
-   * This can be used to warp the mouse pointer to a different position.
-   *
-   * @param dist The distance to move the mouse pointer.
-   */
-  movePointer: function (dist: IVec2) {
-    ipcRenderer.send('move-pointer', dist);
-  },
+  // Hide the editor when the main process requests it.
+  window.api.hideEditor(() => {
+    editor.hide();
+    window.api.cancelSelection();
+  });
+
+  // Show the update available button when the main process requests it.
+  window.api.showUpdateAvailableButton(() => {
+    document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
+  });
+
+  // Tell the menu and the editor about settings changes.
+  window.api.appSettings.onChange('menuOptions', (o) => menu.setOptions(o));
+  window.api.appSettings.onChange('editorOptions', (o) => editor.setOptions(o));
+
+  // Sometimes, the user may select an item too close to the edge of the screen. In this
+  // case, we can not open the menu directly under the pointer. To make sure that the
+  // menu is still exactly under the pointer, we move the pointer a little bit.
+  menu.on('move-pointer', (dist) => {
+    window.api.movePointer(dist);
+  });
+
+  // Hide Kando's window when the user aborts a selection.
+  menu.on('cancel', () => {
+    menu.hide();
+    editor.hide();
+    window.api.cancelSelection();
+  });
+
+  // Hide Kando's window when the user selects an item and notify the main process.
+  menu.on('select', (path) => {
+    menu.hide();
+    editor.hide();
+    window.api.selectItem(path);
+  });
+
+  // Report hover and unhover events to the main process.
+  menu.on('hover', (path) => window.api.hoverItem(path));
+  menu.on('unhover', (path) => window.api.unhoverItem(path));
+
+  // Hide the menu when the user enters edit mode.
+  editor.on('enter-edit-mode', () => {
+    menu.hide();
+    window.api.unbindShortcuts();
+  });
+
+  // Hide Kando's window when the user leaves edit mode.
+  editor.on('leave-edit-mode', () => {
+    editor.hide();
+    window.api.cancelSelection();
+  });
+
+  // Hide the menu or the editor when the user presses escape.
+  document.body.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') {
+      menu.hide();
+      editor.hide();
+      window.api.cancelSelection();
+    }
+  });
+
+  // This is helpful during development as it shows us when the renderer process has
+  // finished reloading.
+  window.api.log("Successfully loaded Kando's renderer process.");
 });
