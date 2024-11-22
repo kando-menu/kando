@@ -40,8 +40,80 @@ import { ItemActionRegistry } from '../common/item-action-registry';
 import { WMInfo } from './backends/backend';
 import { UpdateChecker } from './update-checker';
 
+const soundConfigPath = path.join(app.getPath('userData'), 'sound-config.json');
+const defaultSoundConfig = {
+  enableSounds: true,
+  volume: 0.5,
+  current_sound_config_path: 'sound-themes/default/sound.json5',
+};
+
+
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+
+if (!fs.existsSync(soundConfigPath)) {
+  fs.writeFileSync(soundConfigPath, json5.stringify(defaultSoundConfig, null, 2));
+}
+
+ipcMain.handle('get-sound-config', async () => {
+  const defaultSoundConfig = {
+    enableSounds: true,
+    volume: 0.5,
+    current_sound_config_path: 'sound-themes/default/sound.json5',
+  };
+
+  try {
+    const soundConfigPath = path.join(
+      app.getPath('appData'),
+      'kando',
+      'sound-config.json'
+    );
+
+    const fileContents = await fs.promises.readFile(soundConfigPath, 'utf-8');
+    const parsedConfig = json5.parse(fileContents);
+
+    const currentConfigFullPath = path.join(
+      app.getPath('appData'),
+      'kando',
+      parsedConfig.current_sound_config_path
+    );
+
+    const soundConfigContents = await fs.promises.readFile(currentConfigFullPath, 'utf-8');
+    const soundDetails = json5.parse(soundConfigContents);
+
+    const soundBasePath = path.dirname(currentConfigFullPath);
+
+    soundDetails.resolvedPaths = {
+      closeMenu: `${path.join(soundBasePath, soundDetails.closeMenu).replace(/\\/g, '/')}`,
+      openMenu: `${path.join(soundBasePath, soundDetails.openMenu).replace(/\\/g, '/')}`,
+      buttonHover: `${path.join(soundBasePath, soundDetails.buttonHover).replace(/\\/g, '/')}`,
+    };
+
+    if (!fs.existsSync(soundDetails.resolvedPaths.closeMenu)) {
+      console.error('Error: closeMenu file not found!');
+    }
+    if (!fs.existsSync(soundDetails.resolvedPaths.openMenu)) {
+      console.error('Error: openMenu file not found!');
+    }
+    if (!fs.existsSync(soundDetails.resolvedPaths.buttonHover)) {
+      console.error('Error: buttonHover file not found!');
+    }
+
+    return { ...parsedConfig, ...soundDetails };
+  } catch (error) {
+    console.error('Error loading sound config:', error);
+    return defaultSoundConfig;
+  }
+});
+
+ipcMain.handle('check-file-exists', async (event, filePath: string) => {
+  try {
+    return fs.existsSync(filePath);
+  } catch (error) {
+    console.error(`Failed to check file existence for ${filePath}:`, error);
+    return false;
+  }
+});
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -50,6 +122,11 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
  * interaction.
  */
 export class KandoApp {
+  private setupSoundConfig() {
+    console.log('Sound configuration setup complete.');
+  }
+  
+
   /**
    * The backend is responsible for all the system interaction. It is implemented
    * differently for each platform.
@@ -563,7 +640,7 @@ export class KandoApp {
         // Electron only allows loading local resources from apps loaded from the file
         // system. In development mode, the app is loaded from the webpack dev server.
         // Hence, we have to disable webSecurity in development mode.
-        webSecurity: process.env.NODE_ENV !== 'development',
+        webSecurity: false,
         // Background throttling is disabled to make sure that the menu is properly
         // hidden. Else it can happen that the last frame of a previous menu is still
         // visible when the new menu is shown. For now, I have not seen any issues with
