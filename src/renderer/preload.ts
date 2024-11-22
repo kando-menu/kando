@@ -19,7 +19,7 @@ import {
 } from '../common';
 import { Howl } from 'howler';
 
-let cachedSounds: Record<string, Howl> = {};
+const cachedSounds: Record<string, Howl> = {};
 
 async function preloadSounds() {
   try {
