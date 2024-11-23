@@ -47,7 +47,6 @@ const defaultSoundConfig = {
   currentSoundConfigPath: 'sound-themes/default/sound.json5',
 };
 
-
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
@@ -78,7 +77,10 @@ ipcMain.handle('get-sound-config', async () => {
       parsedConfig.currentSoundConfigPath
     );
 
-    const soundConfigContents = await fs.promises.readFile(currentConfigFullPath, 'utf-8');
+    const soundConfigContents = await fs.promises.readFile(
+      currentConfigFullPath,
+      'utf-8'
+    );
     const soundDetails = json5.parse(soundConfigContents);
 
     const soundBasePath = path.dirname(currentConfigFullPath);
@@ -125,7 +127,6 @@ export class KandoApp {
   private setupSoundConfig() {
     console.log('Sound configuration setup complete.');
   }
-  
 
   /**
    * The backend is responsible for all the system interaction. It is implemented
