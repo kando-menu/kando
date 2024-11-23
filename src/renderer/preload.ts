@@ -19,7 +19,7 @@ import {
 } from '../common';
 import { Howl } from 'howler';
 
-const cachedSounds: Record<string, Howl> = {};
+let cachedSounds: Record<string, Howl> = {};
 
 async function preloadSounds() {
   try {
@@ -33,7 +33,10 @@ async function preloadSounds() {
     const volume = Math.min(Math.max(soundConfig.volume, 0), 1); // Clamp volume between 0 and 1
 
     const resolveAndCacheSound = async (key: string, filePath: string) => {
-      const fileExists = await ipcRenderer.invoke('check-file-exists', filePath.replace('file:///', ''));
+      const fileExists = await ipcRenderer.invoke(
+        'check-file-exists',
+        filePath.replace('file:///', '')
+      );
       if (fileExists) {
         cachedSounds[key] = new Howl({ src: [filePath], volume, html5: true });
       } else {
@@ -44,7 +47,6 @@ async function preloadSounds() {
     await resolveAndCacheSound('buttonHover', buttonHover);
     await resolveAndCacheSound('openMenu', openMenu);
     await resolveAndCacheSound('closeMenu', closeMenu);
-
   } catch (error) {
     console.error('Failed to preload sounds:', error);
   }
@@ -196,7 +198,7 @@ contextBridge.exposeInMainWorld('api', {
    *
    * @param callback This callback will be called when the editor should be shown.
    */
-  showEditor: function (callback: (editorOptions: IShowEditorOptions) => void) {	
+  showEditor: function (callback: (editorOptions: IShowEditorOptions) => void) {
     ipcRenderer.on('show-editor', (event, editorOptions) => callback(editorOptions));
   },
 
@@ -234,12 +236,9 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the hovered menu item.
    */
   hoverItem: function (path: string) {
-    if (cachedSounds.buttonHover) {
-      cachedSounds.buttonHover.play();
-    }
+    if (cachedSounds.buttonHover) cachedSounds.buttonHover.play();
     ipcRenderer.send('hover-item', path);
   },
-  
 
   /**
    * This will be called by the render process when the user unhovers a menu item.
@@ -256,9 +255,7 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the selected menu item.
    */
   selectItem: function (path: string) {
-    if (cachedSounds.openMenu) {
-      cachedSounds.openMenu.play();
-    }
+    if (cachedSounds.openMenu) cachedSounds.openMenu.play();
     ipcRenderer.send('select-item', path);
   },
 
@@ -267,11 +264,9 @@ contextBridge.exposeInMainWorld('api', {
    * menu.
    */
   cancelSelection: function () {
-    if (cachedSounds.closeMenu) {
-      cachedSounds.closeMenu.play();
-    }
+    if (cachedSounds.closeMenu) cachedSounds.closeMenu.play();
     ipcRenderer.send('cancel-selection');
-  },    
+  },
 
   /**
    * This can be used to warp the mouse pointer to a different position.
