@@ -257,7 +257,7 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the selected menu item.
    */
   selectItem: function (path: string) {
-    if (cachedSounds.openMenu) { 
+    if (cachedSounds.openMenu) {
       cachedSounds.openMenu.play();
     }
     ipcRenderer.send('select-item', path);
