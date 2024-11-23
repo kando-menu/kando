@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+	// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: CC0-1.0
 
 import type { ForgeConfig } from '@electron-forge/shared-types';
@@ -107,8 +107,15 @@ const config: ForgeConfig = {
       // necessary for the development build. In the production build, webpack will serve
       // the app from a file instead of a server in which case electron will not enforce
       // the Content Security Policy.
-      devContentSecurityPolicy:
-        "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; img-src 'self' file: data:; font-src 'self' file: data:; style-src-elem 'self' 'unsafe-inline' file: data:",
+    devContentSecurityPolicy: 
+      "default-src 'self' 'unsafe-inline' data:; " + 
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; " + 
+      "img-src 'self' file: data:; " + 
+      "font-src 'self' file: data:; " + 
+      "style-src-elem 'self' 'unsafe-inline' file: data:; " + 
+      "media-src 'self' file: data:; "+
+      "connect-src 'self' file:; ",
+
       mainConfig,
       renderer: {
         config: rendererConfig,

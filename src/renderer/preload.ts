@@ -17,6 +17,42 @@ import {
   IShowMenuOptions,
   IShowEditorOptions,
 } from '../common';
+import { Howl } from 'howler';
+
+const cachedSounds: Record<string, Howl> = {};
+
+async function preloadSounds() {
+  try {
+    const soundConfig = await ipcRenderer.invoke('get-sound-config');
+    if (!soundConfig || !soundConfig.resolvedPaths || !soundConfig.enableSounds) {
+      console.warn('Sound configuration is missing or disabled.');
+      return;
+    }
+
+    const { closeMenu, openMenu, buttonHover } = soundConfig.resolvedPaths;
+    const volume = Math.min(Math.max(soundConfig.volume, 0), 1); // Clamp volume between 0 and 1
+
+    const resolveAndCacheSound = async (key: string, filePath: string) => {
+      const fileExists = await ipcRenderer.invoke(
+        'check-file-exists',
+        filePath.replace('file:///', '')
+      );
+      if (fileExists) {
+        cachedSounds[key] = new Howl({ src: [filePath], volume, html5: true });
+      } else {
+        console.error(`Sound file not found: ${filePath}`);
+      }
+    };
+
+    await resolveAndCacheSound('buttonHover', buttonHover);
+    await resolveAndCacheSound('openMenu', openMenu);
+    await resolveAndCacheSound('closeMenu', closeMenu);
+  } catch (error) {
+    console.error('Failed to preload sounds:', error);
+  }
+}
+
+preloadSounds();
 
 /**
  * There is a well-defined API between the host process and the renderer process. The
@@ -31,6 +67,8 @@ contextBridge.exposeInMainWorld('api', {
   getLocales: function () {
     return ipcRenderer.invoke('get-locales');
   },
+
+  getSoundConfig: () => ipcRenderer.invoke('get-sound-config'),
 
   /**
    * The appSettings object can be used to read and write the app settings. The settings
@@ -198,6 +236,9 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the hovered menu item.
    */
   hoverItem: function (path: string) {
+    if (cachedSounds.buttonHover) {
+      cachedSounds.buttonHover.play();
+    }
     ipcRenderer.send('hover-item', path);
   },
 
@@ -216,6 +257,9 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the selected menu item.
    */
   selectItem: function (path: string) {
+    if (cachedSounds.openMenu) {
+      cachedSounds.openMenu.play();
+    }
     ipcRenderer.send('select-item', path);
   },
 
@@ -224,6 +268,9 @@ contextBridge.exposeInMainWorld('api', {
    * menu.
    */
   cancelSelection: function () {
+    if (cachedSounds.closeMenu) {
+      cachedSounds.closeMenu.play();
+    }
     ipcRenderer.send('cancel-selection');
   },
 

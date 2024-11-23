@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import './renderer/index.scss';
+import { Howl } from 'howler';
 
 import i18next from 'i18next';
 
@@ -93,8 +94,18 @@ Promise.all([
     editor.show(editorOptions);
   });
 
-  // Show the editor when the main process requests it.
   window.api.showEditor((editorOptions) => {
+    if (soundConfig && soundConfig.resolvedPaths && soundConfig.enableSounds) {
+      const { openMenu } = soundConfig.resolvedPaths;
+
+      const openMenuSound = new Howl({
+        src: [openMenu],
+        volume: soundConfig.volume,
+      });
+
+      openMenuSound.play();
+    }
+
     editor.show(editorOptions);
     editor.enterEditMode();
   });
