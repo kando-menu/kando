@@ -32,7 +32,7 @@ Promise.all([
   window.api.getBackendInfo(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
-  window.api.appSettings.get()
+  window.api.appSettings.get(),
 ]).then(async ([locales, version, info, themeDescription, colors, settings]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
@@ -97,12 +97,12 @@ Promise.all([
   window.api.showEditor((editorOptions) => {
     if (soundConfig && soundConfig.resolvedPaths && soundConfig.enableSounds) {
       const { openMenu } = soundConfig.resolvedPaths;
-  
+
       const openMenuSound = new Howl({
         src: [openMenu],
         volume: soundConfig.volume,
       });
-  
+
       openMenuSound.play();
     }
 
