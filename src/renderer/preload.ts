@@ -236,7 +236,9 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the hovered menu item.
    */
   hoverItem: function (path: string) {
-    if (cachedSounds.buttonHover) cachedSounds.buttonHover.play();
+    if (cachedSounds.buttonHover) {
+      cachedSounds.buttonHover.play();
+    }
     ipcRenderer.send('hover-item', path);
   },
 
@@ -255,7 +257,9 @@ contextBridge.exposeInMainWorld('api', {
    * @param path The path of the selected menu item.
    */
   selectItem: function (path: string) {
-    if (cachedSounds.openMenu) cachedSounds.openMenu.play();
+    if (cachedSounds.openMenu) { 
+      cachedSounds.openMenu.play();
+    }
     ipcRenderer.send('select-item', path);
   },
 
@@ -264,7 +268,9 @@ contextBridge.exposeInMainWorld('api', {
    * menu.
    */
   cancelSelection: function () {
-    if (cachedSounds.closeMenu) cachedSounds.closeMenu.play();
+    if (cachedSounds.closeMenu) {
+      cachedSounds.closeMenu.play();
+    }
     ipcRenderer.send('cancel-selection');
   },
 
