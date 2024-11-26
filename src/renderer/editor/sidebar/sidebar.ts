@@ -107,7 +107,7 @@ export class Sidebar {
         welcome: i18next.t('sidebar.welcome'),
         introText: i18next.t('sidebar.intro-text'),
         watchIntro: i18next.t('sidebar.watch-intro-button'),
-        configGuide: i18next.t('sidebar.config-guide-button'),
+        documentation: i18next.t('sidebar.documentation-button'),
         discord: i18next.t('sidebar.discord-button'),
         buyMeACoffee: i18next.t('sidebar.buy-me-a-coffee-button'),
         sponsors: i18next.t('sidebar.sponsors-button'),
