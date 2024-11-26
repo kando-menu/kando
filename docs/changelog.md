@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
+- **A new Homepage!** All the documentation is now available at [kando.menu](https://kando.menu). This makes the documentation much more accessible and easier to navigate. It is also possible to search the documentation now and contributing is very easy!
 - A `centerTextWrapWidth` property to the menu-theme metadata. This allows to specify the width at which the text in the center item should wrap. The default is 90 pixels.
 - A [repository to share your menu themes](https://github.com/kando-menu/menu-themes)! In the future, these will be browsable and installable from within Kando. For now, you can share your themes there by creating a pull request.
 
@@ -86,7 +87,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   to your `config.json` to hide the show-sidebar and the show-editor buttons respectively. They will still be clickable, so you can still use them if you aim carefully.
 - **Possibility to disable Marking Mode and Turbo Mode altogether:** This can be useful if you never use these features and want to avoid accidental selections. For now, this can be done via the `"menuOptions": {"enableMarkingMode": true}` and `"menuOptions": {"enableTurboMode": true}` in your `config.json`. In the future, this will be exposed in the settings UI.
 - **New options to select parent with mouse and keyboard:** Your mouse's navigate-back button as well as <kbd>Backspace</kbd> will now select the parent menu. Also, if you set `"menuOptions": {"rmbSelectsParent": true}`, your right mouse button will now select the parent menu instead of closing the menu.
-- **More configurable properties:** Some variables which were constants before are now configurable via the `config.json`. See the [corresponding documentation](https://github.com/kando-menu/kando/blob/main/docs/config-files.md#the-menuoptions-property) for details.
+- **More configurable properties:** Some variables which were constants before are now configurable via the `config.json`. See the [corresponding documentation](https://kando.menu/reference/config-files/) for details.
 - **Icon themes are now also loaded from the installation directory:** This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update. The directory is `resources/app/.webpack/renderer/assets/icon-themes/`.
 - **Several  translation updates:** Thanks to all the contributors!
 
@@ -145,7 +146,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There is [a guide available](https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
+- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There is [a guide available](https://kando.menu/advanced-usage/create-menu-themes/) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
   - There are currently four initial themes available: "Default", "Clean Circle", "Neon Lights", and "Rainbow Labels". The two latter themes are somewhat experimental and may change in the future. If you create a cool theme, we can consider adding it to the default themes!
   - For each theme you can specify some colors, like the background color or the text color.
   - Kando is aware of system color mode (light or dark) and you can select different colors and / or themes for each mode.
@@ -184,7 +185,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **Custom Icon Themes:** You can now use your own icons in Kando! Read the [corresponding documentation](configuring.md#adding-custom-icon-themes-sparkles) to learn how it is done.
+- **Custom Icon Themes:** You can now use your own icons in Kando! Read the [corresponding documentation](https://kando.menu/advanced-usage/customizing/#icon-themes) to learn how it is done.
 - **Icon-Name Tooltips in the Icon Picker:** When hovering over an icon in the icon picker, the name of the icon is now shown as a tooltip. This should make it easier to find an icon again. Thanks to [@pushkardev123](https://github.com/pushkardev123) for this contribution!
 - **Copy Items:** If <kbd>Ctrl</kbd> or <kbd>Command</kbd> is pressed while dragging a menu or menu item in the editor, the item will be duplicated instead of moved. Due to an [issue in electron](https://github.com/electron/electron/issues/8730), the cursor graphic does not change when dragging or copying items on macOS. The operation is still performed correctly, though.
 - **Menu Templates:** The stash tab is now called "Templates". In addition to menu items, you can now also store entire menus in there. Move them back to the menus tab or the preview to create unlimited copies of the same menu, submenu, or menu item!
@@ -262,8 +263,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Support for HiDPI screens. Kando will now properly warp the mouse pointer to the center of a menu item even if display scaling is enabled.
 - Better example menus. When you launch Kando for the first time (or delete your `menus.json` file), you will now see a more useful example menu. This menu depends on the platform you are using. There are some hard-coded applications and keyboard shortcuts, but you can easily change them in the menu editor.
-- Some initial usage documentation. You can read it [here](getting-started.md).
-- Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys).
+- Some initial usage documentation. You can read it [here](https://kando.menu/getting-started/intro/).
+- Some documentation about the [format of the shortcuts and hotkeys used in Kando](https://kando.menu/reference/valid-keys/).
 - Issue templates. If you now [open a new issue](https://github.com/kando-menu/kando/issues/new/choose), you can choose from different templates.
 - A [Code of Conduct](code-of-conduct.md). This is a set of rules which defines the behavior of contributors and users in the Kando community. It is important to read and understand this document before contributing to Kando.
 
@@ -570,13 +571,3 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - Navigation in the menu using mouse gestures.
   - A short tutorial explaining the basic concepts.
 
-<p align="center"><img src ="img/hr.svg" /></p>
-
-<p align="center">
-  <img src="img/nav-space.svg"/>
-  <a href="code-of-conduct.md"><img src ="img/left-arrow.png"/> Code of Conduct</a>
-  <img src="img/nav-space.svg"/>
-  <a href="README.md"><img src ="img/home.png"/> Index</a>
-  <img src="img/nav-space.svg"/>
-  <a href="contributing.md">Contributing Guidelines <img src ="img/right-arrow.png"/></a>
-</p>

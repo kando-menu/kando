@@ -207,7 +207,7 @@
     "welcome": "Welcome to Kando!",
     "intro-text": "Kando comes with a basic example menu. You can play with it, but you should create your own menus soon! You can open the menu editor by clicking on the gear icon in the lower right corner of the screen.",
     "watch-intro-button": "Learn how to use Kando",
-    "config-guide-button": "Config Guide",
+    "documentation-button": "Documentation",
     "discord-button": "Chat on Discord",
     "buy-me-a-coffee-button": "Kando on Ko-fi",
     "sponsors-button": "List of Sponsors",

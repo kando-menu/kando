@@ -60,7 +60,7 @@ export class IconPicker extends EventEmitter {
         heading: i18next.t('properties.icon-picker.heading'),
         subheading: i18next.t('properties.icon-picker.subheading', {
           path: IconThemeRegistry.getInstance().userIconThemeDirectory,
-          link: 'href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#adding-custom-icon-themes-sparkles" target="_blank"',
+          link: 'href="https://kando.menu/advanced-usage/customizing/#icon-themes" target="_blank"',
         }),
         cancel: i18next.t('properties.common.cancel'),
         done: i18next.t('properties.common.done'),

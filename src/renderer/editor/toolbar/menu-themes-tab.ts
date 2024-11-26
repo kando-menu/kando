@@ -155,7 +155,7 @@ export class MenuThemesTab {
         hint: i18next.t('toolbar.menu-themes-tab.hint', {
           repositoryLink: 'target=_blank href=https://github.com/kando-menu/menu-themes',
           tutorialLink:
-            'target=_blank href=https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md',
+            'target=_blank href=https://kando.menu/advanced-usage/create-menu-themes/',
           discordLink: 'target=_blank href=https://discord.gg/hZwbVSDkhy',
         }),
         editColors: i18next.t('toolbar.menu-themes-tab.edit-colors'),
