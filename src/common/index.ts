@@ -166,6 +166,55 @@ export interface IIconThemesInfo {
 }
 
 /**
+ * This interface is used to describe a sound theme. It contains the properties which can
+ * be defined in the JSON file of a sound theme. All paths are relative to the theme
+ * directory.
+ */
+export interface ISoundThemeDescription {
+  /**
+   * The ID of the theme. This is used to identify the theme in the settings file. It is
+   * also the directory name of the theme and is set by Kando when loading the theme.json
+   * file. So the path to the theme.json file is this.directory/this.id/theme.json.
+   */
+  id: string;
+
+  /**
+   * The absolute path to the directory where the theme is stored. This is set by Kando
+   * when loading the theme.json file.
+   */
+  directory: string;
+
+  /** A human readable name of the theme. */
+  name: string;
+
+  /** The author of the theme. */
+  author: string;
+
+  /** The version of the theme. Should be a semantic version string like "1.0.0". */
+  themeVersion: string;
+
+  /** The version of the Kando sound theme engine this theme is compatible with. */
+  engineVersion: number;
+
+  /** The license of the theme. For instance "CC-BY-4.0". */
+  license: string;
+
+  sounds: {
+    /** The sound to play when a menu is opened. */
+    openMenu?: string;
+
+    /** The sound to play when a menu is closed. */
+    closeMenu?: string;
+
+    /** The sound to play when a menu item is selected. */
+    selectItem?: string;
+
+    /** The sound to play when a menu item is hovered. */
+    hoverItem?: string;
+  };
+}
+
+/**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
  * delay in milliseconds.
@@ -437,6 +486,12 @@ export interface IAppSettings {
    * in dark mode.
    */
   enableDarkModeForMenuThemes: boolean;
+
+  /** The name of the current sound theme. */
+  soundTheme: string;
+
+  /** The overall volume of the sound effects. */
+  soundVolume: number;
 
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: boolean;

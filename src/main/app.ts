@@ -34,88 +34,16 @@ import {
   IAppSettings,
   IShowMenuRequest,
   IIconThemesInfo,
+  ISoundThemeDescription,
+  IMenuThemeDescription,
 } from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
 import { WMInfo } from './backends/backend';
 import { UpdateChecker } from './update-checker';
 
-const soundConfigPath = path.join(app.getPath('userData'), 'sound-config.json');
-const defaultSoundConfig = {
-  enableSounds: true,
-  volume: 0.5,
-  currentSoundConfigPath: 'sound-themes/default/sound.json5',
-};
-
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-
-if (!fs.existsSync(soundConfigPath)) {
-  fs.writeFileSync(soundConfigPath, json5.stringify(defaultSoundConfig, null, 2));
-}
-
-ipcMain.handle('get-sound-config', async () => {
-  const defaultSoundConfig = {
-    enableSounds: true,
-    volume: 0.5,
-    currentSoundConfigPath: 'sound-themes/default/sound.json5',
-  };
-
-  try {
-    const soundConfigPath = path.join(
-      app.getPath('appData'),
-      'kando',
-      'sound-config.json'
-    );
-
-    const fileContents = await fs.promises.readFile(soundConfigPath, 'utf-8');
-    const parsedConfig = json5.parse(fileContents);
-
-    const currentConfigFullPath = path.join(
-      app.getPath('appData'),
-      'kando',
-      parsedConfig.currentSoundConfigPath
-    );
-
-    const soundConfigContents = await fs.promises.readFile(
-      currentConfigFullPath,
-      'utf-8'
-    );
-    const soundDetails = json5.parse(soundConfigContents);
-
-    const soundBasePath = path.dirname(currentConfigFullPath);
-
-    soundDetails.resolvedPaths = {
-      closeMenu: `${path.join(soundBasePath, soundDetails.closeMenu).replace(/\\/g, '/')}`,
-      openMenu: `${path.join(soundBasePath, soundDetails.openMenu).replace(/\\/g, '/')}`,
-      buttonHover: `${path.join(soundBasePath, soundDetails.buttonHover).replace(/\\/g, '/')}`,
-    };
-
-    if (!fs.existsSync(soundDetails.resolvedPaths.closeMenu)) {
-      console.error('Error: closeMenu file not found!');
-    }
-    if (!fs.existsSync(soundDetails.resolvedPaths.openMenu)) {
-      console.error('Error: openMenu file not found!');
-    }
-    if (!fs.existsSync(soundDetails.resolvedPaths.buttonHover)) {
-      console.error('Error: buttonHover file not found!');
-    }
-
-    return { ...parsedConfig, ...soundDetails };
-  } catch (error) {
-    console.error('Error loading sound config:', error);
-    return defaultSoundConfig;
-  }
-});
-
-ipcMain.handle('check-file-exists', async (event, filePath: string) => {
-  try {
-    return fs.existsSync(filePath);
-  } catch (error) {
-    console.error(`Failed to check file existence for ${filePath}:`, error);
-    return false;
-  }
-});
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -124,10 +52,6 @@ ipcMain.handle('check-file-exists', async (event, filePath: string) => {
  * interaction.
  */
 export class KandoApp {
-  private setupSoundConfig() {
-    console.log('Sound configuration setup complete.');
-  }
-
   /**
    * The backend is responsible for all the system interaction. It is implemented
    * differently for each platform.
@@ -197,6 +121,8 @@ export class KandoApp {
         menuThemeColors: {},
         darkMenuThemeColors: {},
         enableDarkModeForMenuThemes: false,
+        soundTheme: 'none',
+        soundVolume: 0.5,
         sidebarVisible: true,
         enableVersionCheck: true,
         zoomFactor: 1,
@@ -641,7 +567,7 @@ export class KandoApp {
         // Electron only allows loading local resources from apps loaded from the file
         // system. In development mode, the app is loaded from the webpack dev server.
         // Hence, we have to disable webSecurity in development mode.
-        webSecurity: false,
+        webSecurity: process.env.NODE_ENV !== 'development',
         // Background throttling is disabled to make sure that the menu is properly
         // hidden. Else it can happen that the last frame of a previous menu is still
         // visible when the new menu is shown. For now, I have not seen any issues with
@@ -828,7 +754,7 @@ export class KandoApp {
       const useDarkVariant =
         this.appSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
-      return this.loadMenuDescription(
+      return this.loadMenuThemeDescription(
         this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
       );
     });
@@ -842,7 +768,7 @@ export class KandoApp {
 
       // Load all descriptions in parallel.
       const descriptions = await Promise.all(
-        themes.map((theme) => this.loadMenuDescription(theme))
+        themes.map((theme) => this.loadMenuThemeDescription(theme))
       );
 
       // Sort by the name property of the description.
@@ -877,6 +803,11 @@ export class KandoApp {
         darkMode = nativeTheme.shouldUseDarkColors;
         this.window.webContents.send('dark-mode-changed', darkMode);
       }
+    });
+
+    // Allow the renderer to retrieve the description of the current sound theme.
+    ipcMain.handle('get-sound-theme', async () => {
+      return this.loadSoundThemeDescription(this.appSettings.get('soundTheme'));
     });
 
     // Once the editor is shown, we unbind all shortcuts to make sure that the
@@ -1176,18 +1107,22 @@ export class KandoApp {
   }
 
   /**
-   * This finds the path to the menu theme's JSON or JSON5 file with the given directory
-   * name. If the theme is not found, the default theme is used instead. Kando will first
+   * This finds the path to a menu or sound theme's JSON or JSON5 file with the given
+   * directory names. So this searches for a "directory/theme.json(5)" file. It will first
    * look for the theme in the user's data directory. If it is not found there, it will
    * look in the app's assets directory.
    *
-   * @param theme The name of the menu theme's directory.
+   * If the theme is not found, an empty string is returned.
+   *
+   * @param directory The name of the directory where the theme is located. For now, this
+   *   should be either "menu-themes" or "sound-themes".
+   * @param theme The name of the theme's subdirectory.
    * @returns The absolute path to the menu theme's directory.
    */
-  private async findMenuThemePath(theme: string) {
+  private async findThemePath(directory: string, theme: string) {
     const testPaths = [
-      path.join(app.getPath('userData'), `menu-themes/${theme}`),
-      path.join(__dirname, `../renderer/assets/menu-themes/${theme}`),
+      path.join(app.getPath('userData'), `${directory}/${theme}`),
+      path.join(__dirname, `../renderer/assets/${directory}/${theme}`),
     ];
 
     const testFiles = ['theme.json', 'theme.json5'];
@@ -1206,9 +1141,7 @@ export class KandoApp {
       }
     }
 
-    console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
-
-    return path.join(__dirname, `../renderer/assets/menu-themes/default/theme.json5`);
+    return '';
   }
 
   /**
@@ -1314,10 +1247,57 @@ export class KandoApp {
    * @param theme The name of the menu theme.
    * @returns The description of the menu theme.
    */
-  private async loadMenuDescription(theme: string) {
-    const metaFile = await this.findMenuThemePath(theme);
+  private async loadMenuThemeDescription(theme: string) {
+    let metaFile = await this.findThemePath('menu-themes', theme);
+
+    if (!metaFile) {
+      console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
+      metaFile = path.join(
+        __dirname,
+        `../renderer/assets/menu-themes/default/theme.json5`
+      );
+    }
+
     const content = await fs.promises.readFile(metaFile);
-    const description = json5.parse(content.toString());
+    const description = json5.parse(content.toString()) as IMenuThemeDescription;
+    const directory = path.dirname(metaFile);
+    description.id = path.basename(directory);
+    description.directory = path.dirname(directory);
+    return description;
+  }
+
+  /**
+   * This loads the description of the sound theme with the given name. If the theme is
+   * not found, an empty theme is used instead. In this case, an error message is printed
+   * to the console except for the 'none' theme.
+   *
+   * @param theme The name of the sound theme.
+   * @returns The description of the sound theme.
+   */
+  private async loadSoundThemeDescription(theme: string) {
+    const metaFile = await this.findThemePath('sound-themes', theme);
+
+    if (!metaFile) {
+      if (theme !== 'none') {
+        console.error(`Sound theme "${theme}" not found. No sounds will be played.`);
+      }
+
+      const description: ISoundThemeDescription = {
+        id: 'none',
+        name: 'None',
+        directory: '',
+        engineVersion: 1,
+        themeVersion: '',
+        author: '',
+        license: '',
+        sounds: {},
+      };
+
+      return description;
+    }
+
+    const content = await fs.promises.readFile(metaFile);
+    const description = json5.parse(content.toString()) as ISoundThemeDescription;
     const directory = path.dirname(metaFile);
     description.id = path.basename(directory);
     description.directory = path.dirname(directory);

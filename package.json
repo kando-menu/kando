@@ -31,6 +31,7 @@
     "@electron-forge/maker-zip": "^7.4.0",
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@types/chai": "^4.3.11",
+    "@types/howler": "^2.2.12",
     "@types/mocha": "^10.0.9",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
