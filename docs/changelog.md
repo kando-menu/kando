@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
+- **A new Homepage!** All the documentation is now available at [kando.menu](https://kando.menu). This makes the documentation much more accessible and easier to navigate. It is also possible to search the documentation now and contributing is very easy!
 - A `centerTextWrapWidth` property to the menu-theme metadata. This allows to specify the width at which the text in the center item should wrap. The default is 90 pixels.
 - A [repository to share your menu themes](https://github.com/kando-menu/menu-themes)! In the future, these will be browsable and installable from within Kando. For now, you can share your themes there by creating a pull request.
 
