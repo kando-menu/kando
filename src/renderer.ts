@@ -163,4 +163,7 @@ Promise.all([
   // This is helpful during development as it shows us when the renderer process has
   // finished reloading.
   window.api.log("Successfully loaded Kando's renderer process.");
+
+  // Notify the main process that we are ready.
+  window.api.rendererReady();
 });
