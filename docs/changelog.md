@@ -572,3 +572,4 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - Navigation in the menu using mouse gestures.
   - A short tutorial explaining the basic concepts.
 
+<p align="center"><img src ="img/hr.svg" /></p>
