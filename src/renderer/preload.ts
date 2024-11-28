@@ -32,8 +32,6 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-locales');
   },
 
-  getSoundConfig: () => ipcRenderer.invoke('get-sound-config'),
-
   /**
    * The appSettings object can be used to read and write the app settings. The settings
    * are persisted in the host process. When a setting is changed, the host process will
@@ -134,6 +132,11 @@ contextBridge.exposeInMainWorld('api', {
   /** This will reload the current menu theme. */
   reloadMenuTheme: function () {
     ipcRenderer.send('reload-menu-theme');
+  },
+
+  /** This will reload the current menu theme. */
+  reloadSoundTheme: function () {
+    ipcRenderer.send('reload-sound-theme');
   },
 
   /**

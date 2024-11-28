@@ -552,6 +552,15 @@ export class KandoApp {
     );
   }
 
+  /** This is called when the --reload-sound-theme command line option is passed. */
+  public reloadSoundTheme() {
+    this.window.webContents.send(
+      `app-settings-changed-soundTheme`,
+      this.appSettings.get('soundTheme'),
+      this.appSettings.get('soundTheme')
+    );
+  }
+
   /**
    * This creates the main window. It is a transparent window which covers the whole
    * screen. It is not shown in any task bar and has no frame. It is used to display the
@@ -824,6 +833,11 @@ export class KandoApp {
     // Reload the current menu theme if requested.
     ipcMain.on('reload-menu-theme', async () => {
       this.reloadMenuTheme();
+    });
+
+    // Reload the current sound theme if requested.
+    ipcMain.on('reload-sound-theme', async () => {
+      this.reloadSoundTheme();
     });
 
     // Print a message to the console of the host process.

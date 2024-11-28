@@ -157,6 +157,11 @@ export class Sidebar {
                 title: i18next.t('sidebar.reload-menu-theme-button'),
                 tooltip: i18next.t('sidebar.reload-menu-theme-button-tooltip'),
               },
+              {
+                id: 'reload-sound-theme-button',
+                icon: 'music_note',
+                title: i18next.t('sidebar.reload-sound-theme-button'),
+              },
             ],
             infos: [
               {
@@ -274,6 +279,12 @@ export class Sidebar {
       .querySelector('#reload-menu-theme-button')
       .addEventListener('click', () => {
         window.api.reloadMenuTheme();
+      });
+
+    this.container
+      .querySelector('#reload-sound-theme-button')
+      .addEventListener('click', () => {
+        window.api.reloadSoundTheme();
       });
   }
 }

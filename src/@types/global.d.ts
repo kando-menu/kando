@@ -53,6 +53,7 @@ declare global {
       getIconThemes: () => Promise<IIconThemesInfo>;
       showDevTools: () => void;
       reloadMenuTheme: () => void;
+      reloadSoundTheme: () => void;
       movePointer: (dist: IVec2) => void;
       log: (message: string) => void;
       showMenu: (
