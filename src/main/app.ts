@@ -640,10 +640,17 @@ export class KandoApp {
       return { action: 'deny' };
     });
 
+    // We return a promise which resolves when the renderer process is ready.
+    const promise = new Promise<void>((resolve) => {
+      ipcMain.on('renderer-ready', () => resolve());
+    });
+
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     // Apply the stored zoom factor to the window.
     this.window.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));
+
+    return promise;
   }
 
   /**

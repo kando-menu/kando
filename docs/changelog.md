@@ -41,6 +41,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :bug: Fixed
 
 - A regression which allowed selecting items with the right mouse button in marking or turbo mode.
+- A regression which made the command line arguments not work if Kando was not running yet.
 - The RPM package now does not contain the debug information in `/usr/lib/.build-id` anymore. This should avoid any conflicts with other Electron-based applications.
 
 ## [Kando 1.5.1](https://github.com/kando-menu/kando/releases/tag/v1.5.1)
@@ -571,3 +572,4 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - Navigation in the menu using mouse gestures.
   - A short tutorial explaining the basic concepts.
 
+<p align="center"><img src ="img/hr.svg" /></p>

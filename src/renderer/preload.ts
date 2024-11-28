@@ -25,6 +25,14 @@ import {
  */
 contextBridge.exposeInMainWorld('api', {
   /**
+   * This will be called by the renderer process when it is fully loaded. This is used to
+   * notify the host process that the renderer process is ready to receive messages.
+   */
+  rendererReady: function () {
+    ipcRenderer.send('renderer-ready');
+  },
+
+  /**
    * This will return the current locale and all localization strings loaded by i18next
    * for the current and all potential fallback locales.
    */
