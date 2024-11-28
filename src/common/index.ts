@@ -166,6 +166,39 @@ export interface IIconThemesInfo {
 }
 
 /**
+ * Sound themes can define different sounds for different actions. This enum is used to
+ * identify the different sounds.
+ */
+export enum SoundType {
+  eOpenMenu = 'openMenu',
+  eCloseMenu = 'closeMenu',
+  eSelectItem = 'selectItem',
+  eSelectSubmenu = 'selectSubmenu',
+  eSelectParent = 'selectParent',
+  eHoverItem = 'hoverItem',
+  eHoverSubmenu = 'hoverSubmenu',
+  eHoverParent = 'hoverParent',
+}
+
+/**
+ * This interface is used to describe a sound effect. It contains the path to the sound
+ * file and some optional properties like the volume and pitch shift.
+ */
+export interface ISoundEffect {
+  /** The path to the sound file. */
+  file: string;
+
+  /** The volume of the sound. */
+  volume?: number;
+
+  /** The maximum pitch shift. */
+  maxPitch?: number;
+
+  /** The minimum pitch shift. */
+  minPitch?: number;
+}
+
+/**
  * This interface is used to describe a sound theme. It contains the properties which can
  * be defined in the JSON file of a sound theme. All paths are relative to the theme
  * directory.
@@ -199,19 +232,11 @@ export interface ISoundThemeDescription {
   /** The license of the theme. For instance "CC-BY-4.0". */
   license: string;
 
-  sounds: {
-    /** The sound to play when a menu is opened. */
-    openMenu?: string;
-
-    /** The sound to play when a menu is closed. */
-    closeMenu?: string;
-
-    /** The sound to play when a menu item is selected. */
-    selectItem?: string;
-
-    /** The sound to play when a menu item is hovered. */
-    hoverItem?: string;
-  };
+  /**
+   * All available sound effects. If a given sound is not defined here, no sound will be
+   * played for the corresponding action.
+   */
+  sounds: Record<SoundType, ISoundEffect>;
 }
 
 /**

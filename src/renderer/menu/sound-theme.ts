@@ -10,18 +10,7 @@
 
 import { Howl } from 'howler';
 
-import { ISoundThemeDescription } from '../../common';
-
-/**
- * Sound themes can define different sounds for different actions. This enum is used to
- * identify the different sounds.
- */
-export enum SoundType {
-  eOpenMenu = 'openMenu',
-  eCloseMenu = 'closeMenu',
-  eSelectItem = 'selectItem',
-  eHoverItem = 'hoverItem',
-}
+import { ISoundThemeDescription, SoundType } from '../../common';
 
 /** This class is responsible for loading a sound theme and playing sounds. */
 export class SoundTheme {
@@ -35,19 +24,12 @@ export class SoundTheme {
   private volume: number = 0.5;
 
   /**
-   * Creates a new MenuTheme. This will register the custom CSS properties used by the
-   * theme.
-   */
-  constructor() {}
-
-  /**
    * Loads the given theme description.
    *
    * @param description The description of the sound theme to load.
    */
   public loadDescription(description: ISoundThemeDescription) {
     this.description = description;
-    window.api.log(JSON.stringify(description));
   }
 
   /**
@@ -67,14 +49,20 @@ export class SoundTheme {
   public playSound(type: SoundType) {
     const sound = this.description.sounds[type];
     if (sound) {
-      const path =
-        'file://' + this.description.directory + '/' + this.description.id + '/' + sound;
+      const volume = (sound.volume || 1) * this.volume;
+      const src =
+        'file://' +
+        this.description.directory +
+        '/' +
+        this.description.id +
+        '/' +
+        sound.file;
+      const minRate = sound.minPitch || 1;
+      const maxRate = sound.maxPitch || 1;
+      const rate = Math.random() * (maxRate - minRate) + minRate;
+
       try {
-        new Howl({
-          src: [path],
-          volume: this.volume,
-          rate: Math.random() * 0.2 + 0.9,
-        }).play();
+        new Howl({ src: [src], volume, rate }).play();
       } catch (error) {
         window.api.log(`Error playing sound ${type}: ${error}`);
       }

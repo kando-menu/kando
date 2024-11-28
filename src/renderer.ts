@@ -15,7 +15,7 @@ import i18next from 'i18next';
 import { Menu } from './renderer/menu/menu';
 import { Editor } from './renderer/editor/editor';
 import { MenuTheme } from './renderer/menu/menu-theme';
-import { SoundTheme, SoundType } from './renderer/menu/sound-theme';
+import { SoundTheme } from './renderer/menu/sound-theme';
 
 /**
  * This file is the main entry point for Kando's renderer process. It is responsible for
@@ -107,6 +107,7 @@ Promise.all([
     const menu = new Menu(
       document.getElementById('kando-menu'),
       menuTheme,
+      soundTheme,
       settings.menuOptions
     );
 
@@ -119,7 +120,6 @@ Promise.all([
 
     // Show the menu when the main process requests it.
     window.api.showMenu((root, menuOptions, editorOptions) => {
-      soundTheme.playSound(SoundType.eOpenMenu);
       menu.show(root, menuOptions);
       editor.show(editorOptions);
     });
@@ -155,7 +155,6 @@ Promise.all([
 
     // Hide Kando's window when the user aborts a selection.
     menu.on('cancel', () => {
-      soundTheme.playSound(SoundType.eCloseMenu);
       menu.hide();
       editor.hide();
       window.api.cancelSelection();
@@ -163,7 +162,6 @@ Promise.all([
 
     // Hide Kando's window when the user selects an item and notify the main process.
     menu.on('select', (path) => {
-      soundTheme.playSound(SoundType.eSelectItem);
       menu.hide();
       editor.hide();
       window.api.selectItem(path);
@@ -171,7 +169,6 @@ Promise.all([
 
     // Report hover and unhover events to the main process.
     menu.on('hover', (path) => {
-      soundTheme.playSound(SoundType.eHoverItem);
       window.api.hoverItem(path);
     });
 
