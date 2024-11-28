@@ -104,6 +104,11 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-all-menu-themes');
   },
 
+  /** This will return the descriptions of the currently used sound theme. */
+  getSoundTheme: function () {
+    return ipcRenderer.invoke('get-sound-theme');
+  },
+
   /**
    * This will return the accent colors of the currently used menu theme. This may depend
    * on the current system theme (light or dark).
@@ -135,6 +140,11 @@ contextBridge.exposeInMainWorld('api', {
   /** This will reload the current menu theme. */
   reloadMenuTheme: function () {
     ipcRenderer.send('reload-menu-theme');
+  },
+
+  /** This will reload the current menu theme. */
+  reloadSoundTheme: function () {
+    ipcRenderer.send('reload-sound-theme');
   },
 
   /**

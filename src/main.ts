@@ -32,6 +32,10 @@ interface CLIOptions {
   // This optional parameter is specified using the --reload-menu-theme option. It is used
   // to reload the current menu theme from disk.
   reloadMenuTheme?: boolean;
+
+  // This optional parameter is specified using the --reload-sound-theme option. It is
+  // used to reload the current sound theme from disk.
+  reloadSoundTheme?: boolean;
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -48,6 +52,7 @@ program
   .option('-m, --menu <menu>', 'show the menu with the given name')
   .option('-s, --settings', 'show the menu editor')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
+  .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .allowUnknownOption(true);
 
 program.parse();
