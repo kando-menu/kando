@@ -664,8 +664,6 @@ export class KandoApp {
     if (language === "auto") {
       app.getLocale()
     }
-    console.log("app.getLocale:", app.getLocale());
-    console.log("language:", language)
     ipcMain.handle('get-locales', () => {
       return {
         current: language,
