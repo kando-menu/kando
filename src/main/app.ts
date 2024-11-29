@@ -660,9 +660,9 @@ export class KandoApp {
    */
   private initRendererIPC() {
     // Allow the renderer to retrieve the i18next locales.
-    const language = this.appSettings.get("language")
-    if (language === "auto") {
-      app.getLocale()
+    const language = this.appSettings.get('language');
+    if (language === 'auto') {
+      app.getLocale();
     }
     ipcMain.handle('get-locales', () => {
       return {
