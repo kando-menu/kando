@@ -490,7 +490,7 @@ export interface IMenuSettings {
 export interface IAppSettings {
   /** The name of the theme to use for the menu. */
   menuTheme: string;
-
+  language: string;
   /** The name of the theme which should be used for the dark mode. */
   darkMenuTheme: string;
 
