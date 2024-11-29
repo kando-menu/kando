@@ -38,6 +38,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The checks for `XDG_CURRENT_DESKTOP` and `XDG_SESSION_TYPE` on Linux are now case-insensitive. This should make Kando work on systems where these variables are set in a different case for whatever reason.
 - If `XDG_SESSION_TYPE` is set to `tty`, Kando will now try to use the X11 backend on Linux instead of refusing to start. In most cases, this should work. But there will be a warning in the console if the X11 backend is used in this case.
 - Improved the length transition of the connector lines of the "Rainbow Labels" theme.
+- Upgraded many dependencies. This could potentially introduce new bugs. Please report any issues you encounter!
 - **Several  translation updates:** Thanks to all the contributors!
 
 #### :bug: Fixed
