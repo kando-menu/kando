@@ -116,6 +116,7 @@ export class KandoApp {
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
+        language: 'auto',
         menuTheme: 'default',
         darkMenuTheme: 'default',
         menuThemeColors: {},
@@ -659,9 +660,15 @@ export class KandoApp {
    */
   private initRendererIPC() {
     // Allow the renderer to retrieve the i18next locales.
+    const language = this.appSettings.get("language")
+    if (language === "auto") {
+      app.getLocale()
+    }
+    console.log("app.getLocale:", app.getLocale());
+    console.log("language:", language)
     ipcMain.handle('get-locales', () => {
       return {
-        current: app.getLocale(),
+        current: language,
         data: i18next.store.data,
         fallbackLng: i18next.options.fallbackLng,
       };
