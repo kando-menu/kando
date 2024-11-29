@@ -149,7 +149,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There is [a guide available](https://kando.menu/advanced-usage/create-menu-themes/) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
+- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There is [a guide available](https://kando.menu/getting-involved/create-menu-themes/) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
   - There are currently four initial themes available: "Default", "Clean Circle", "Neon Lights", and "Rainbow Labels". The two latter themes are somewhat experimental and may change in the future. If you create a cool theme, we can consider adding it to the default themes!
   - For each theme you can specify some colors, like the background color or the text color.
   - Kando is aware of system color mode (light or dark) and you can select different colors and / or themes for each mode.
