@@ -45,8 +45,8 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Works both on Plasma 5 and Plasma 6. See [here](https://kando.menu/getting-started/installation-linux/#-kde-plasma-on-wayland) for how to bind global shortcuts.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Hyprland | :heavy_check_mark: | See [here](https://kando.menu/getting-started/installation-linux/#-hyprland) for the required configs.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Works both on Plasma 5 and Plasma 6. See [here](https://kando.menu/installation-on-linux/#-kde-plasma-on-wayland) for how to bind global shortcuts.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Hyprland | :heavy_check_mark: | See [here](https://kando.menu/installation-on-linux/#-hyprland) for the required configs.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Cinnamon | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> XFCE | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> MATE | :heavy_check_mark: |
@@ -55,22 +55,22 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :heavy_check_mark: | Requires a compositor for the transparency to work.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :heavy_check_mark: | Requires a compositor for the transparency to work.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> i3 | :heavy_check_mark: | Requires a compositor for the transparency to work.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> dusk | :heavy_check_mark: | Requires a compositor for the transparency to work. See [here](https://kando.menu/getting-started/installation-linux/#dusk) for the required config.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> dusk | :heavy_check_mark: | Requires a compositor for the transparency to work. See [here](https://kando.menu/installation-on-linux/#dusk) for the required config.
 
 
 # :package: Installation
 
 You can either download a prebuilt binary or compile Kando yourself.
-For both approaches there are instructions available in the [:memo: Documentation](https://kando.menu/getting-started/intro/).
+For both approaches there are instructions available in the [:memo: Documentation](https://kando.menu/intro/).
 
 # :rocket: Getting Started
 
 Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
 This is great to get a first impression!
-To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](https://kando.menu/getting-started/usage/).
+To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](https://kando.menu/usage/).
 
 Once you are familiar with the basics, you can start creating your own menus.
-Learn how to create your own menus in the [:memo: Configuration Guide](https://kando.menu/getting-started/creating-menus/)!
+Learn how to create your own menus in the [:memo: Configuration Guide](https://kando.menu/creating-menus/)!
 
 # :revolving_hearts: I want to contribute!
 

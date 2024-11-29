@@ -5,4 +5,4 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # :tada: Kando has a new Homepage!
 
-This content has been moved to: https://kando.menu/getting-involved/create-menu-themes/
+This content has been moved to: https://kando.menu/create-menu-themes/

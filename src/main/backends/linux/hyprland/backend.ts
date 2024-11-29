@@ -29,7 +29,7 @@ export class HyprBackend extends WLRBackend {
       `
 The Hyprland backend is still a bit experimental!
 You have to perform some manual steps to make Kando work properly.
-See https://kando.menu/getting-started/installation-linux/#-hyprland
+See https://kando.menu/installation-on-linux/#-hyprland
 for more information.
 `
     );
