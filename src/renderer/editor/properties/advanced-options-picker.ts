@@ -61,7 +61,7 @@ export class AdvancedOptionsPicker extends EventEmitter {
       strings: {
         heading: i18next.t('properties.advanced-options.heading'),
         subheading: i18next.t('properties.advanced-options.subheading', {
-          link: 'target="_blank" href="https://github.com/kando-menu/kando/blob/main/docs/getting-started.md"',
+          link: 'target="_blank" href="https://kando.menu/usage/"',
         }),
         centeredMode: i18next.t('properties.advanced-options.centered-mode'),
         centeredModeHint: i18next.t('properties.advanced-options.centered-mode-hint'),

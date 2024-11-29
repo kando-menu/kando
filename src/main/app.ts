@@ -34,6 +34,8 @@ import {
   IAppSettings,
   IShowMenuRequest,
   IIconThemesInfo,
+  ISoundThemeDescription,
+  IMenuThemeDescription,
 } from '../common';
 import { Settings, DeepReadonly } from './settings';
 import { ItemActionRegistry } from '../common/item-action-registry';
@@ -119,6 +121,8 @@ export class KandoApp {
         menuThemeColors: {},
         darkMenuThemeColors: {},
         enableDarkModeForMenuThemes: false,
+        soundTheme: 'none',
+        soundVolume: 0.5,
         sidebarVisible: true,
         enableVersionCheck: true,
         zoomFactor: 1,
@@ -548,6 +552,15 @@ export class KandoApp {
     );
   }
 
+  /** This is called when the --reload-sound-theme command line option is passed. */
+  public reloadSoundTheme() {
+    this.window.webContents.send(
+      `app-settings-changed-soundTheme`,
+      this.appSettings.get('soundTheme'),
+      this.appSettings.get('soundTheme')
+    );
+  }
+
   /**
    * This creates the main window. It is a transparent window which covers the whole
    * screen. It is not shown in any task bar and has no frame. It is used to display the
@@ -627,10 +640,17 @@ export class KandoApp {
       return { action: 'deny' };
     });
 
+    // We return a promise which resolves when the renderer process is ready.
+    const promise = new Promise<void>((resolve) => {
+      ipcMain.on('renderer-ready', () => resolve());
+    });
+
     await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     // Apply the stored zoom factor to the window.
     this.window.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));
+
+    return promise;
   }
 
   /**
@@ -750,7 +770,7 @@ export class KandoApp {
       const useDarkVariant =
         this.appSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
-      return this.loadMenuDescription(
+      return this.loadMenuThemeDescription(
         this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
       );
     });
@@ -764,7 +784,7 @@ export class KandoApp {
 
       // Load all descriptions in parallel.
       const descriptions = await Promise.all(
-        themes.map((theme) => this.loadMenuDescription(theme))
+        themes.map((theme) => this.loadMenuThemeDescription(theme))
       );
 
       // Sort by the name property of the description.
@@ -801,6 +821,11 @@ export class KandoApp {
       }
     });
 
+    // Allow the renderer to retrieve the description of the current sound theme.
+    ipcMain.handle('get-sound-theme', async () => {
+      return this.loadSoundThemeDescription(this.appSettings.get('soundTheme'));
+    });
+
     // Once the editor is shown, we unbind all shortcuts to make sure that the
     // user can select the bound shortcuts in the menu editor.
     ipcMain.on('unbind-shortcuts', () => {
@@ -815,6 +840,11 @@ export class KandoApp {
     // Reload the current menu theme if requested.
     ipcMain.on('reload-menu-theme', async () => {
       this.reloadMenuTheme();
+    });
+
+    // Reload the current sound theme if requested.
+    ipcMain.on('reload-sound-theme', async () => {
+      this.reloadSoundTheme();
     });
 
     // Print a message to the console of the host process.
@@ -1098,18 +1128,22 @@ export class KandoApp {
   }
 
   /**
-   * This finds the path to the menu theme's JSON or JSON5 file with the given directory
-   * name. If the theme is not found, the default theme is used instead. Kando will first
+   * This finds the path to a menu or sound theme's JSON or JSON5 file with the given
+   * directory names. So this searches for a "directory/theme.json(5)" file. It will first
    * look for the theme in the user's data directory. If it is not found there, it will
    * look in the app's assets directory.
    *
-   * @param theme The name of the menu theme's directory.
+   * If the theme is not found, an empty string is returned.
+   *
+   * @param directory The name of the directory where the theme is located. For now, this
+   *   should be either "menu-themes" or "sound-themes".
+   * @param theme The name of the theme's subdirectory.
    * @returns The absolute path to the menu theme's directory.
    */
-  private async findMenuThemePath(theme: string) {
+  private async findThemePath(directory: string, theme: string) {
     const testPaths = [
-      path.join(app.getPath('userData'), `menu-themes/${theme}`),
-      path.join(__dirname, `../renderer/assets/menu-themes/${theme}`),
+      path.join(app.getPath('userData'), `${directory}/${theme}`),
+      path.join(__dirname, `../renderer/assets/${directory}/${theme}`),
     ];
 
     const testFiles = ['theme.json', 'theme.json5'];
@@ -1128,9 +1162,7 @@ export class KandoApp {
       }
     }
 
-    console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
-
-    return path.join(__dirname, `../renderer/assets/menu-themes/default/theme.json5`);
+    return '';
   }
 
   /**
@@ -1236,10 +1268,57 @@ export class KandoApp {
    * @param theme The name of the menu theme.
    * @returns The description of the menu theme.
    */
-  private async loadMenuDescription(theme: string) {
-    const metaFile = await this.findMenuThemePath(theme);
+  private async loadMenuThemeDescription(theme: string) {
+    let metaFile = await this.findThemePath('menu-themes', theme);
+
+    if (!metaFile) {
+      console.error(`Menu theme "${theme}" not found. Using default theme instead.`);
+      metaFile = path.join(
+        __dirname,
+        `../renderer/assets/menu-themes/default/theme.json5`
+      );
+    }
+
     const content = await fs.promises.readFile(metaFile);
-    const description = json5.parse(content.toString());
+    const description = json5.parse(content.toString()) as IMenuThemeDescription;
+    const directory = path.dirname(metaFile);
+    description.id = path.basename(directory);
+    description.directory = path.dirname(directory);
+    return description;
+  }
+
+  /**
+   * This loads the description of the sound theme with the given name. If the theme is
+   * not found, an empty theme is used instead. In this case, an error message is printed
+   * to the console except for the 'none' theme.
+   *
+   * @param theme The name of the sound theme.
+   * @returns The description of the sound theme.
+   */
+  private async loadSoundThemeDescription(theme: string) {
+    const metaFile = await this.findThemePath('sound-themes', theme);
+
+    if (!metaFile) {
+      if (theme !== 'none') {
+        console.error(`Sound theme "${theme}" not found. No sounds will be played.`);
+      }
+
+      const description: ISoundThemeDescription = {
+        id: 'none',
+        name: 'None',
+        directory: '',
+        engineVersion: 1,
+        themeVersion: '',
+        author: '',
+        license: '',
+        sounds: {},
+      };
+
+      return description;
+    }
+
+    const content = await fs.promises.readFile(metaFile);
+    const description = json5.parse(content.toString()) as ISoundThemeDescription;
     const directory = path.dirname(metaFile);
     description.id = path.basename(directory);
     description.directory = path.dirname(directory);

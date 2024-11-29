@@ -136,14 +136,5 @@ For answers to common questions about this code of conduct, see the FAQ at
 https://www.contributor-covenant.org/faq. Translations are available at
 https://www.contributor-covenant.org/translations.
 
+
 <p align="center"><img src ="img/hr.svg" /></p>
-
-
-<p align="center">
-  <img src="img/nav-space.svg"/>
-  <img src="img/nav-space.svg"/>
-  <img src="img/nav-space.svg"/>
-  <a href="README.md"><img src ="img/home.png"/> Index</a>
-  <img src="img/nav-space.svg"/>
-  <a href="changelog.md">Changelog <img src ="img/right-arrow.png"/></a>
-</p>

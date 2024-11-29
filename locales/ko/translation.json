@@ -240,7 +240,8 @@
             "dark-mode": "라이트와 다크 모드 각각 다른 테마와 색상 사용하기",
             "close-color-picker": "색상 편집기 닫기",
             "reset-color-picker": "색상 모두 기본값으로 초기화하기",
-            "label": "메뉴 테마"
+            "label": "메뉴 테마",
+            "hint": "<a {{repositoryLink}}>테마 저장소</a>에서 테마들을 찾을 수 있어요. <a {{tutorialLink}}>직접 테마를 제작</a>하고 <a {{discordLink}}>Kando의 Discord 서버</a>에 공유해도 좋아요!"
         },
         "menus-tab": {
             "create-menu-button": "메뉴 생성하기!",

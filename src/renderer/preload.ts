@@ -25,6 +25,14 @@ import {
  */
 contextBridge.exposeInMainWorld('api', {
   /**
+   * This will be called by the renderer process when it is fully loaded. This is used to
+   * notify the host process that the renderer process is ready to receive messages.
+   */
+  rendererReady: function () {
+    ipcRenderer.send('renderer-ready');
+  },
+
+  /**
    * This will return the current locale and all localization strings loaded by i18next
    * for the current and all potential fallback locales.
    */
@@ -96,6 +104,11 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('get-all-menu-themes');
   },
 
+  /** This will return the descriptions of the currently used sound theme. */
+  getSoundTheme: function () {
+    return ipcRenderer.invoke('get-sound-theme');
+  },
+
   /**
    * This will return the accent colors of the currently used menu theme. This may depend
    * on the current system theme (light or dark).
@@ -127,6 +140,11 @@ contextBridge.exposeInMainWorld('api', {
   /** This will reload the current menu theme. */
   reloadMenuTheme: function () {
     ipcRenderer.send('reload-menu-theme');
+  },
+
+  /** This will reload the current menu theme. */
+  reloadSoundTheme: function () {
+    ipcRenderer.send('reload-sound-theme');
   },
 
   /**

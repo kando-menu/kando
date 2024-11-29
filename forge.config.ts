@@ -108,7 +108,14 @@ const config: ForgeConfig = {
       // the app from a file instead of a server in which case electron will not enforce
       // the Content Security Policy.
       devContentSecurityPolicy:
-        "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; img-src 'self' file: data:; font-src 'self' file: data:; style-src-elem 'self' 'unsafe-inline' file: data:",
+        "default-src 'self' 'unsafe-inline' data:; " +
+        "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; " +
+        "img-src 'self' file: data:; " +
+        "font-src 'self' file: data:; " +
+        "style-src-elem 'self' 'unsafe-inline' file: data:; " +
+        "media-src 'self' file: data:; " +
+        "connect-src 'self' file:; ",
+
       mainConfig,
       renderer: {
         config: rendererConfig,

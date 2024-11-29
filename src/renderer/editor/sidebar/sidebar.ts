@@ -107,7 +107,7 @@ export class Sidebar {
         welcome: i18next.t('sidebar.welcome'),
         introText: i18next.t('sidebar.intro-text'),
         watchIntro: i18next.t('sidebar.watch-intro-button'),
-        configGuide: i18next.t('sidebar.config-guide-button'),
+        documentation: i18next.t('sidebar.documentation-button'),
         discord: i18next.t('sidebar.discord-button'),
         buyMeACoffee: i18next.t('sidebar.buy-me-a-coffee-button'),
         sponsors: i18next.t('sidebar.sponsors-button'),
@@ -156,6 +156,11 @@ export class Sidebar {
                 icon: 'palette',
                 title: i18next.t('sidebar.reload-menu-theme-button'),
                 tooltip: i18next.t('sidebar.reload-menu-theme-button-tooltip'),
+              },
+              {
+                id: 'reload-sound-theme-button',
+                icon: 'music_note',
+                title: i18next.t('sidebar.reload-sound-theme-button'),
               },
             ],
             infos: [
@@ -274,6 +279,12 @@ export class Sidebar {
       .querySelector('#reload-menu-theme-button')
       .addEventListener('click', () => {
         window.api.reloadMenuTheme();
+      });
+
+    this.container
+      .querySelector('#reload-sound-theme-button')
+      .addEventListener('click', () => {
+        window.api.reloadSoundTheme();
       });
   }
 }

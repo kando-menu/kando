@@ -11,13 +11,14 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../math';
-import { IShowMenuOptions, IVec2 } from '../../common';
+import { IShowMenuOptions, IVec2, SoundType } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
 import { ButtonState, IInputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
+import { SoundTheme } from './sound-theme';
 import { closestEquivalentAngle } from '../math';
 
 /** These options can be given to the constructor of the menu. */
@@ -189,11 +190,13 @@ export class Menu extends EventEmitter {
    *
    * @param container The HTML element which contains the menu.
    * @param theme The theme to use for rendering the menu.
+   * @param soundTheme The theme to use for playing sounds.
    * @param options Use this to tweak the behavior of the menu.
    */
   constructor(
     private container: HTMLElement,
     private theme: MenuTheme,
+    private soundTheme: SoundTheme,
     options: Partial<MenuOptions> = {}
   ) {
     super();
@@ -262,6 +265,9 @@ export class Menu extends EventEmitter {
 
     // Finally, show the menu.
     this.container.classList.remove('hidden');
+
+    // Play the open sound.
+    this.soundTheme.playSound(SoundType.eOpenMenu);
   }
 
   /** Hides the menu. */
@@ -330,7 +336,7 @@ export class Menu extends EventEmitter {
       if (this.options.rmbSelectsParent) {
         this.selectParent();
       } else {
-        this.emit('cancel');
+        this.cancelHide();
       }
     };
 
@@ -372,7 +378,7 @@ export class Menu extends EventEmitter {
       // menu will be closed.
       if (type === SelectionType.eActiveItem && item) {
         if (this.selectionChain.length === 1 && item === this.root) {
-          this.emit('cancel');
+          this.cancelHide();
         } else {
           this.selectItem(item, coords);
         }
@@ -535,6 +541,15 @@ export class Menu extends EventEmitter {
   }
 
   /**
+   * This method closes the menu in case the selection should be canceled. This should be
+   * called if nothing is selected but the menu should be closed.
+   */
+  private cancelHide() {
+    this.soundTheme.playSound(SoundType.eCloseMenu);
+    this.emit('cancel');
+  }
+
+  /**
    * Selects the given menu item. This will either push the item to the list of selected
    * items or pop the last item from the list of selected items if the newly selected item
    * is the parent of the previously selected item.
@@ -645,6 +660,19 @@ export class Menu extends EventEmitter {
       this.gamepadInput.setCurrentCenter(clampedPosition);
     }
 
+    // Choose a sound effect to play. We do not play a sound effect for the initial
+    // selection of the root item.
+    if (item !== this.root || selectedParent) {
+      let soundType = SoundType.eSelectItem;
+      if (item.type === 'submenu') {
+        soundType = SoundType.eSelectSubmenu;
+      }
+      if (selectedParent) {
+        soundType = SoundType.eSelectParent;
+      }
+      this.soundTheme.playSound(soundType);
+    }
+
     // Finally update the CSS classes of all DOM nodes according to the new selection chain
     // and update the connectors.
     this.updateCSSClasses();
@@ -666,9 +694,10 @@ export class Menu extends EventEmitter {
    */
   private selectParent(coords?: IVec2) {
     if (this.selectionChain.length > 1) {
+      this.soundTheme.playSound(SoundType.eSelectParent);
       this.selectItem(this.selectionChain[this.selectionChain.length - 2], coords);
     } else {
-      this.emit('cancel');
+      this.cancelHide();
     }
   }
 
@@ -681,6 +710,23 @@ export class Menu extends EventEmitter {
   private hoverItem(item?: IRenderedMenuItem) {
     if (this.hoveredItem === item) {
       return;
+    }
+
+    // Choose the sound effect to play. We only play a sound if a new item is hovered and
+    // if there was a previously hovered item. This ensures that no hover effect is played
+    // when we enter a submenu - i this case the previously hovered item is null.
+    if (item && this.hoveredItem !== null) {
+      let soundType = SoundType.eHoverItem;
+
+      if (item.type === 'submenu') {
+        soundType = SoundType.eHoverSubmenu;
+      }
+
+      if (this.isParentOfCenterItem(item)) {
+        soundType = SoundType.eHoverParent;
+      }
+
+      this.soundTheme.playSound(soundType);
     }
 
     if (this.hoveredItem) {

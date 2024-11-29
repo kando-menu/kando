@@ -14,7 +14,7 @@ SPDX-License-Identifier: CC-BY-4.0
 [![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
 [![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
-[![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](docs/README.md)
+[![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](https://kando.menu)
 [![contributions](https://img.shields.io/badge/🎉_Contributions-welcome-green.svg?labelColor=303030)](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22contributions+welcome%22)
 
 
@@ -45,8 +45,8 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Works both on Plasma 5 and Plasma 6. See [platform-specific notes](docs/installing.md#platform-specific-notes) for some details.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Hyprland | :heavy_check_mark: | See [platform-specific notes](docs/installing.md#platform-specific-notes) for some details.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Works both on Plasma 5 and Plasma 6. See [here](https://kando.menu/installation-on-linux/#-kde-plasma-on-wayland) for how to bind global shortcuts.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Hyprland | :heavy_check_mark: | See [here](https://kando.menu/installation-on-linux/#-hyprland) for the required configs.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Cinnamon | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> XFCE | :heavy_check_mark: |
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> MATE | :heavy_check_mark: |
@@ -55,22 +55,22 @@ Tested Environment | Status | Notes
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :heavy_check_mark: | Requires a compositor for the transparency to work.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :heavy_check_mark: | Requires a compositor for the transparency to work.
 <img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> i3 | :heavy_check_mark: | Requires a compositor for the transparency to work.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> dusk | :heavy_check_mark: | Requires a compositor for the transparency to work. See [platform-specific notes](docs/installing.md#platform-specific-notes) for some details.
+<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> dusk | :heavy_check_mark: | Requires a compositor for the transparency to work. See [here](https://kando.menu/installation-on-linux/#dusk) for the required config.
 
 
 # :package: Installation
 
 You can either download a prebuilt binary or compile Kando yourself.
-For both approaches there are instructions available in the [:memo: Installation Guide](docs/installing.md).
+For both approaches there are instructions available in the [:memo: Documentation](https://kando.menu/intro/).
 
 # :rocket: Getting Started
 
 Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
 This is great to get a first impression!
-To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](docs/getting-started.md).
+To learn some basics about the interaction with Kando, you can have a look at the [:memo: Usage Guide](https://kando.menu/usage/).
 
 Once you are familiar with the basics, you can start creating your own menus.
-Learn how to create your own menus in the [:memo: Configuration Guide](docs/configuring.md)!
+Learn how to create your own menus in the [:memo: Configuration Guide](https://kando.menu/creating-menus/)!
 
 # :revolving_hearts: I want to contribute!
 

@@ -31,7 +31,8 @@
         "electron-version": "Electron 版本",
         "chrome-version": "Chrome 版本",
         "node-version": "Node 版本",
-        "backend": "Kando 后端"
+        "backend": "Kando 后端",
+        "documentation-button": "在线文档"
     },
     "items": {
         "command": {
