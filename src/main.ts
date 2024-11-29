@@ -12,6 +12,7 @@ import { app } from 'electron';
 import { program } from 'commander';
 import i18next from 'i18next';
 import i18Backend from 'i18next-fs-backend';
+import fs from 'fs';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -115,8 +116,33 @@ const handleCommandLine = (options: CLIOptions) => {
 app
   .whenReady()
   .then(() => {
+    const configPath = path.join(app.getPath('appData'), 'kando', 'config.json');
+    let config = { language: 'auto' }; // Default configuration
+    if (fs.existsSync(configPath)) {
+      config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    }
+  
+    const { language } = config;
+  
+    // Determine the language to use
+    const systemLanguage = app.getLocale();
+    const localesPath = path.join(__dirname, 'locales');
+    const availableLanguages = fs.existsSync(localesPath)
+      ? fs.readdirSync(localesPath)
+      : [];
+  
+    const resolvedLanguage =
+      language === 'auto'
+        ? systemLanguage
+        : availableLanguages.includes(language)
+        ? language
+        : (console.warn(
+            `Language "${language}" not found. Falling back to system language "${systemLanguage}".`
+          ),
+          systemLanguage);
+
     return i18next.use(i18Backend).init({
-      lng: app.getLocale(),
+      lng: language,
       fallbackLng: {
         /* eslint-disable @typescript-eslint/naming-convention */
         'en-US': ['en'],
