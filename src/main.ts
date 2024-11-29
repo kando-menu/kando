@@ -121,25 +121,25 @@ app
     if (fs.existsSync(configPath)) {
       config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     }
-  
+
     const { language } = config;
-  
+
     // Determine the language to use
     const systemLanguage = app.getLocale();
     const localesPath = path.join(__dirname, 'locales');
     const availableLanguages = fs.existsSync(localesPath)
       ? fs.readdirSync(localesPath)
       : [];
-  
+
     const resolvedLanguage =
       language === 'auto'
         ? systemLanguage
         : availableLanguages.includes(language)
-        ? language
-        : (console.warn(
-            `Language "${language}" not found. Falling back to system language "${systemLanguage}".`
-          ),
-          systemLanguage);
+          ? language
+          : (console.warn(
+              `Language "${language}" not found. Falling back to system language "${systemLanguage}".`
+            ),
+            systemLanguage);
 
     return i18next.use(i18Backend).init({
       lng: resolvedLanguage,
