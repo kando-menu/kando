@@ -142,7 +142,7 @@ app
           systemLanguage);
 
     return i18next.use(i18Backend).init({
-      lng: language,
+      lng: resolvedLanguage,
       fallbackLng: {
         /* eslint-disable @typescript-eslint/naming-convention */
         'en-US': ['en'],
