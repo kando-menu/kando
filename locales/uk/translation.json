@@ -217,7 +217,9 @@
         "backend": "Kando Бекенд",
         "kando-version": "Версія Kando",
         "electron-version": "Версія Electron",
-        "node-version": "Версія Node"
+        "node-version": "Версія Node",
+        "reload-sound-theme-button": "Перезавантажити поточну звукову тему",
+        "documentation-button": "Документація"
     },
     "toolbar": {
         "menu-themes-tab": {
