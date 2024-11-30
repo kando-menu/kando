@@ -488,6 +488,12 @@ export interface IMenuSettings {
  * the themes to use for the menu and the editor.
  */
 export interface IAppSettings {
+  /**
+   * The locale to use. If set to 'auto', the system's locale will be used. If the locale
+   * is not available, english will be used.
+   */
+  locale: string;
+
   /** The name of the theme to use for the menu. */
   menuTheme: string;
 

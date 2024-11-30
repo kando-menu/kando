@@ -28,6 +28,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A [repository to share your sound themes](https://github.com/kando-menu/sound-themes)! For now, Kando does not ship with any sound themes, but you can download and share your sound themes there.
 - A [repository to share your menu themes](https://github.com/kando-menu/menu-themes)! In the future, these will be browsable and installable from within Kando. For now, you can share your themes there by creating a pull request.
 - A `centerTextWrapWidth` property to the menu-theme metadata. This allows to specify the width at which the text in the center item should wrap. The default is 90 pixels.
+- The possibility to override the automatically detected system locale in the settings using the `locale` property. This can be useful if you want to use a different language than the system locale.
 
 #### :wrench: Changed
 

@@ -116,6 +116,7 @@ export class KandoApp {
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
+        locale: 'auto',
         menuTheme: 'default',
         darkMenuTheme: 'default',
         menuThemeColors: {},
@@ -160,6 +161,12 @@ export class KandoApp {
         templates: [],
       },
     });
+
+    // Tell i18next to use a specific locale if it is set in the settings.
+    const locale = this.appSettings.get('locale');
+    if (locale !== 'auto') {
+      i18next.changeLanguage(locale);
+    }
 
     // Try migrating settings from an old version of Kando.
     this.migrateSettings();
@@ -661,7 +668,7 @@ export class KandoApp {
     // Allow the renderer to retrieve the i18next locales.
     ipcMain.handle('get-locales', () => {
       return {
-        current: app.getLocale(),
+        current: i18next.language,
         data: i18next.store.data,
         fallbackLng: i18next.options.fallbackLng,
       };
