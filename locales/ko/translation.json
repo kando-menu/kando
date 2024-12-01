@@ -227,7 +227,9 @@
         "kando-version": "Kando 버전",
         "electron-version": "Electron 버전",
         "chrome-version": "Chrome 버전",
-        "node-version": "Node 버전"
+        "node-version": "Node 버전",
+        "reload-sound-theme-button": "현재 소리 테마 새로고침하기",
+        "documentation-button": "설명서"
     },
     "toolbar": {
         "menu-themes-tab": {
