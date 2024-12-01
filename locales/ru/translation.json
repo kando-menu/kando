@@ -84,12 +84,12 @@
             "kando-on-discord": "Kando в Discord",
             "submenu": "Веб-ссылки",
             "google": "Google",
-            "kando-on-github": "Kando в GitHub",
-            "kando-on-kofi": "Кандо в Ko-fi",
+            "kando-on-github": "Kando на GitHub",
+            "kando-on-kofi": "Кандо на Ko-fi",
             "kando-on-youtube": "Kando в YouTube"
         },
         "windows": {
-            "submenu": "Windows",
+            "submenu": "Окна",
             "mission-control": "Mission Control",
             "toggle-maximize": "Развернуть",
             "tile-right": "Окно вправо",
@@ -97,13 +97,13 @@
             "tile-left": "Окно влево"
         },
         "bookmarks": {
-            "submenu": "Заметки",
+            "submenu": "Папки",
             "downloads": "Загрузки",
             "videos": "Видео",
             "pictures": "Фото",
             "documents": "Документы",
             "desktop": "Рабочий стол",
-            "home": "Домой",
+            "home": "Домашняя папка",
             "music": "Музыка"
         },
         "previous-workspace": "Предыдущий рабочий стол",
