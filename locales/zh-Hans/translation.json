@@ -32,7 +32,8 @@
         "chrome-version": "Chrome 版本",
         "node-version": "Node 版本",
         "backend": "Kando 后端",
-        "documentation-button": "在线文档"
+        "documentation-button": "在线文档",
+        "reload-sound-theme-button": "重载当前声音主题"
     },
     "items": {
         "command": {
