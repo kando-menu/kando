@@ -73,7 +73,7 @@
     "emojilib": "^4.0.0",
     "handlebars": "^4.7.8",
     "howler": "^2.2.4",
-    "i18next": "^23.16.5",
+    "i18next": "^24.0.2",
     "i18next-fs-backend": "^2.6.0",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
