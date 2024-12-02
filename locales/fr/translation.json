@@ -229,7 +229,9 @@
         "kando-version": "Version de Kando",
         "node-version": "Version de Node",
         "backend": "Interface système",
-        "chrome-version": "Version de Chrome"
+        "chrome-version": "Version de Chrome",
+        "reload-sound-theme-button": "Recharger le Thème Sonore Actuel",
+        "documentation-button": "Documentation"
     },
     "toolbar": {
         "menu-themes-tab": {
