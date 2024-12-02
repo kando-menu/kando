@@ -81,8 +81,8 @@
     "match-sorter": "^7.0.0",
     "material-symbols": "^0.27.1",
     "mime-types": "^2.1.35",
-    "node-addon-api": "^8.2.2",
+    "node-addon-api": "^8.3.0",
     "octokit": "^4.0.2",
-    "simple-icons-font": "^13.18.0"
+    "simple-icons-font": "^13.19.0"
   }
 }
