@@ -34,7 +34,7 @@
     "@types/howler": "^2.2.12",
     "@types/mocha": "^10.0.10",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
-    "@typescript-eslint/parser": "^7.17.0",
+    "@typescript-eslint/parser": "^8.16.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "chai": "^4.5.0",
     "cmake-js": "^7.3.0",
