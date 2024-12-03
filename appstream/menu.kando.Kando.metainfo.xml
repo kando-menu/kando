@@ -50,15 +50,19 @@
     <screenshots>
         <screenshot type="default">
             <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot01.jpeg</image>
+            <caption>Kando hero image</caption>
         </screenshot>
         <screenshot>
             <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot02.jpeg</image>
+            <caption>Kando using the Clean Circle theme</caption>
         </screenshot>
         <screenshot>
             <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot03.jpeg</image>
+            <caption>Kando using the Minecraft theme</caption>
         </screenshot>
         <screenshot>
             <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot04.jpeg</image>
+            <caption>Kando's settings menu</caption>
         </screenshot>
     </screenshots>
 

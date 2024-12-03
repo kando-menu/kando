@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :wrench: Changed
 
+- The app images for Linux now contains an SVG icon and appstream metadata.
 - Improved the vertical alignment of the text in the "Rainbow Labels" theme when using a zoom level other than 100%. Thanks to [@elfi-ox](https://github.com/elfi-ox) for finding this fix!
 
 ## [Kando 1.6.0](https://github.com/kando-menu/kando/releases/tag/v1.6.0)

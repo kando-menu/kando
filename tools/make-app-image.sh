@@ -29,9 +29,13 @@ echo "Creating AppImage for Kando $VERSION..."
 
 # Copy desktop file, icon, and all the other stuff.
 cp -a "$INPUT_DIR"/* .
-cp "$SCRIPT_DIR/appstream/menu.kando.Kando.desktop" .
-cp "$SCRIPT_DIR/appstream/menu.kando.Kando.svg" .
-cp resources/app/.webpack/main/assets/icon*png ./menu.kando.Kando.png && ln -s ./menu.kando.Kando.png ./.DirIcon
+mkdir -p usr/share/metainfo
+mkdir -p usr/share/applications
+cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.metainfo.xml" usr/share/metainfo/menu.kando.Kando.appdata.xml
+cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.desktop" usr/share/applications/
+ln -s usr/share/applications/menu.kando.Kando.desktop ./menu.kando.Kando.desktop
+cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.svg" .
+cp "$SCRIPT_DIR/../assets/icons/icon.png" ./menu.kando.Kando.png
 
 # Create the AppRun file.
 # --no-sandbox is required as workaround for https://github.com/electron/electron/issues/17972
