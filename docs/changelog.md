@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+#### :wrench: Changed
+
+- Improved the vertical alignment of the text in the "Rainbow Labels" theme when using a zoom level other than 100%. Thanks to [@elfi-ox](https://github.com/elfi-ox) for finding this fix!
+
 ## [Kando 1.6.0](https://github.com/kando-menu/kando/releases/tag/v1.6.0)
 
 **Release Date:** 2024-12-01
@@ -62,13 +70,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [Kando 1.5.0](https://github.com/kando-menu/kando/releases/tag/v1.5.0)
 
-
 **Release Date:** 2024-11-03
 
 <a href="https://www.youtube.com/watch?v=XVu_ea9gpCY">
 <img align="right" width="400px" src="img/player16.jpg"></img>
 </a>
-
 
 #### :tada: Added
 
