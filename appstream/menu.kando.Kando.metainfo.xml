@@ -32,10 +32,10 @@
             tool for you.
         </p>
         <p>
-            If you are using Kando on Wayland, some additional setup might be required. For
-            instance, on GNOME you will need to install the Kando Integration extension. You can
-            read more on https://kando.menu/installation-on-linux/. Kando will also tell you this
-            when you try to start it.
+            If you are using Kando on Wayland, some additional setup may be required. For instance,
+            on GNOME you will need to install the Kando Integration extension. You can read more on
+            https://kando.menu/installation-on-linux/. Kando will also tell you this when you start
+            it for the first time.
         </p>
     </description>
 
