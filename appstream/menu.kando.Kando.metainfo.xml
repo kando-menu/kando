@@ -31,6 +31,12 @@
             If you have both hands at your keyboard most of the time, Kando is maybe not the right
             tool for you.
         </p>
+        <p>
+            If you are using Kando on Wayland, some additional setup might be required. For
+            instance, on GNOME you will need to install the Kando Integration extension. You can
+            read more on https://kando.menu/installation-on-linux/. Kando will also tell you this
+            when you try to start it.
+        </p>
     </description>
 
     <url type="homepage">https://kando.menu/</url>
