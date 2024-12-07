@@ -33,30 +33,9 @@ You are welcome to join the 💬 [Discord server](https://discord.gg/hZwbVSDkhy)
 
 ## Platform Support
 
-Implementing a menu like Kando in a cross-platform manner is not exactly easy.
-Things like getting the mouse position before opening a window, simulating key presses, or getting the name of the currently focused application window has to be implemented differently on each platform.
-
-For now, Kando has been tested on the following platforms:
-
-Tested Environment | Status | Notes
-:-- | :---: | ---
-<img height="14" width="14" src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Windows_logo_-_2021_%28Black%29.svg" /> Windows | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/apple" /> macOS | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / X11 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> GNOME / Wayland | :heavy_check_mark: | Requires [adapter GNOME Shell extension](https://github.com/kando-menu/gnome-shell-integration) which provides a DBus interface for Kando to communicate with.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / X11 | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> KDE / Wayland | :heavy_check_mark: | Works both on Plasma 5 and Plasma 6. See [here](https://kando.menu/installation-on-linux/#-kde-plasma-on-wayland) for how to bind global shortcuts.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Hyprland | :heavy_check_mark: | See [here](https://kando.menu/installation-on-linux/#-hyprland) for the required configs.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Cinnamon | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> XFCE | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> MATE | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Budgie | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXQt | :heavy_check_mark: |
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> LXDE | :heavy_check_mark: | Requires a compositor for the transparency to work.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> Openbox | :heavy_check_mark: | Requires a compositor for the transparency to work.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> i3 | :heavy_check_mark: | Requires a compositor for the transparency to work.
-<img height="14" width="14" src="https://cdn.simpleicons.org/linux/black" /> dusk | :heavy_check_mark: | Requires a compositor for the transparency to work. See [here](https://kando.menu/installation-on-linux/#dusk) for the required config.
-
+Kando runs on Windows, macOS, and Linux.
+On Linux, most desktop environments are supported, however some require additional configuration.
+Have a look at the [installation guide](https://kando.menu/installation-on-linux/) for more information.
 
 # :package: Installation
 
@@ -96,9 +75,5 @@ While direct contributions are the most awesome way to support the development, 
     <img alt="Sponsors List" src="https://schneegans.github.io/sponsors/sponsors_light_small.svg#gh-light-mode-only">
   </picture>
 </a>
-
-## Credits
-
-This README uses icons from [Simple Icons](https://simpleicons.org/).
 
 <p align="center"><img src ="docs/img/hr.svg" /></p>
