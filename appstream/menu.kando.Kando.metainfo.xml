@@ -7,7 +7,7 @@
     <id>menu.kando.Kando</id>
 
     <name>Kando</name>
-    <summary>Cross-Platform Pie Menu</summary>
+    <summary>Do things with utmost efficiency</summary>
 
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>MIT</project_license>
@@ -41,7 +41,7 @@
 
     <url type="homepage">https://kando.menu/</url>
     <url type="bugtracker">https://github.com/kando-menu/kando/issues</url>
-    <url type="donation">https://schneegans.github.io/sponsors/</url>
+    <url type="donation">https://kando.menu/donating/</url>
     <url type="translate">https://hosted.weblate.org/engage/kando/</url>
     <url type="help">https://discord.gg/hZwbVSDkhy</url>
 
@@ -55,20 +55,24 @@
 
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot01.jpeg</image>
-            <caption>Kando hero image</caption>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot01.png</image>
+            <caption>Kando's example menu</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot02.jpeg</image>
-            <caption>Kando using the Clean Circle theme</caption>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot02.png</image>
+            <caption>An example submenu to control your media player</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot03.jpeg</image>
-            <caption>Kando using the Minecraft theme</caption>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot03.png</image>
+            <caption>Kando using a Minecraft-style theme</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/fd300b0377a80706917864c5ccee32e87327c55a/tools/appstream/screenshots/screenshot04.jpeg</image>
-            <caption>Kando's settings menu</caption>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot04.png</image>
+            <caption>A custom submenu for Firefox</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot05.png</image>
+            <caption>Kando using the included Neon-Lights theme</caption>
         </screenshot>
     </screenshots>
 
