@@ -13,6 +13,9 @@ import path from 'path';
 import chokidar from 'chokidar';
 import lodash from 'lodash';
 
+import os from 'os';
+import { Notification } from 'electron';
+
 /**
  * This type is used to define all possible events which can be emitted by the
  * PropertyChangeEmitter class below.
@@ -287,7 +290,34 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   private saveSettings(updatedSettings: T) {
     this.watcher?.unwatch(this.filePath);
-    fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+    try {
+      fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+    } catch (error) {
+      if (error.code === 'EROFS') {
+        const tmpBaseDir = os.tmpdir() + '/kando/';
+        fs.mkdirSync(tmpBaseDir, { recursive: true });
+        const baseName = path.basename(this.filePath);
+        const tmpDir = tmpBaseDir + baseName;
+        const errorMessage =
+          'The ' +
+          baseName +
+          ' file was read-only. It will temporarily be saved to: ' +
+          tmpDir;
+        console.log(errorMessage);
+
+        if (Notification.isSupported()) {
+          const notification = new Notification({
+            title: 'Error.',
+            body: errorMessage,
+            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+          });
+
+          notification.show();
+        }
+
+        fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
+      }
+    }
     this.watcher?.add(this.filePath);
   }
 
