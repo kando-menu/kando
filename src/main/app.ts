@@ -125,6 +125,7 @@ export class KandoApp {
         soundTheme: 'none',
         soundVolume: 0.5,
         sidebarVisible: true,
+        ignoreWriteProtectedConfigFiles: false,
         enableVersionCheck: true,
         zoomFactor: 1,
         menuOptions: {
@@ -193,6 +194,20 @@ export class KandoApp {
     // When the app settings change, we need to apply the zoom factor to the window.
     this.appSettings.onChange('zoomFactor', (newValue) => {
       this.window.webContents.setZoomFactor(newValue);
+    });
+
+    // Check if we want to silently handle read-only config files
+    this.appSettings.ignoreWriteProtectedConfigFiles = this.appSettings.get(
+      'ignoreWriteProtectedConfigFiles'
+    );
+    this.menuSettings.ignoreWriteProtectedConfigFiles = this.appSettings.get(
+      'ignoreWriteProtectedConfigFiles'
+    );
+
+    // When ignoreWriteProtectedConfigFiles becomes true we want to apply this immidiatly
+    this.appSettings.onChange('ignoreWriteProtectedConfigFiles', (newValue) => {
+      this.appSettings.ignoreWriteProtectedConfigFiles = newValue;
+      this.menuSettings.ignoreWriteProtectedConfigFiles = newValue;
     });
 
     // Initialize the IPC communication to the renderer process.

@@ -138,6 +138,8 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   /** This is the path to the settings file. */
   private readonly filePath: string;
 
+  public ignoreWriteProtectedConfigFiles = false;
+
   /** This is the watcher which is used to watch the settings file for changes. */
   private watcher: chokidar.FSWatcher | null;
 
@@ -293,29 +295,35 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     try {
       fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
     } catch (error) {
-      if (error.code === 'EROFS') {
+      // Handle read-only config files correctly.
+      if (error.code === 'EROFS' || error.code === 'EACCES') {
+        // Generate a temporary directory to write the files to for easy reference and write to it.
         const tmpBaseDir = os.tmpdir() + '/kando/';
         fs.mkdirSync(tmpBaseDir, { recursive: true });
         const baseName = path.basename(this.filePath);
         const tmpDir = tmpBaseDir + baseName;
-        const errorMessage =
-          'The ' +
-          baseName +
-          ' file was read-only. It will temporarily be saved to: ' +
-          tmpDir;
-        console.log(errorMessage);
-
-        if (Notification.isSupported()) {
-          const notification = new Notification({
-            title: 'Error.',
-            body: errorMessage,
-            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-          });
-
-          notification.show();
-        }
-
         fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
+
+        // If the config option ignoreWriteProtectedConfigFiles is not set; notify the user that their hard work has not been permanently saved.
+        if (!this.ignoreWriteProtectedConfigFiles) {
+          const errorMessage =
+            'The ' +
+            baseName +
+            ' file was read-only. It will temporarily be saved to: ' +
+            tmpDir +
+            " Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning";
+          console.log(errorMessage);
+
+          if (Notification.isSupported()) {
+            const notification = new Notification({
+              title: 'Could not save file.',
+              body: errorMessage,
+              icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+            });
+
+            notification.show();
+          }
+        }
       }
     }
     this.watcher?.add(this.filePath);

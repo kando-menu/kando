@@ -527,6 +527,9 @@ export interface IAppSettings {
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: boolean;
 
+  /** Whether to silently handle read-only config files * */
+  ignoreWriteProtectedConfigFiles: boolean;
+
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
 
