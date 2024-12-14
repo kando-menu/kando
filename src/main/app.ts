@@ -204,7 +204,7 @@ export class KandoApp {
       'ignoreWriteProtectedConfigFiles'
     );
 
-    // When ignoreWriteProtectedConfigFiles becomes true we want to apply this immidiatly
+    // When ignoreWriteProtectedConfigFiles becomes true we want to apply this immediately.
     this.appSettings.onChange('ignoreWriteProtectedConfigFiles', (newValue) => {
       this.appSettings.ignoreWriteProtectedConfigFiles = newValue;
       this.menuSettings.ignoreWriteProtectedConfigFiles = newValue;

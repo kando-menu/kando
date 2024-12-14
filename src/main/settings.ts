@@ -138,6 +138,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   /** This is the path to the settings file. */
   private readonly filePath: string;
 
+  /** If set to true, no notification will be shown when the JSON file cannot be written. */
   public ignoreWriteProtectedConfigFiles = false;
 
   /** This is the watcher which is used to watch the settings file for changes. */
