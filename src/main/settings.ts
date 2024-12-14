@@ -299,10 +299,10 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       // Handle read-only config files correctly.
       if (error.code === 'EROFS' || error.code === 'EACCES') {
         // Generate a temporary directory to write the files to for easy reference and write to it.
-        const tmpBaseDir = os.tmpdir() + '/kando/';
+        const tmpBaseDir = path.join(os.tmpdir(), 'kando');
         fs.mkdirSync(tmpBaseDir, { recursive: true });
         const baseName = path.basename(this.filePath);
-        const tmpDir = tmpBaseDir + baseName;
+        const tmpDir = path.join(tmpBaseDir, baseName);
         fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
 
         // If the config option ignoreWriteProtectedConfigFiles is not set; notify the user that their hard work has not been permanently saved.
@@ -313,7 +313,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
             ' file was read-only. It will temporarily be saved to: ' +
             tmpDir +
             " Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning";
-          console.log(errorMessage);
+          console.warn(errorMessage);
 
           if (Notification.isSupported()) {
             const notification = new Notification({
