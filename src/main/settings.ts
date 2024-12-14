@@ -297,33 +297,39 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
     } catch (error) {
       // Handle read-only config files correctly.
-      if (error.code === 'EROFS' || error.code === 'EACCES') {
-        // Generate a temporary directory to write the files to for easy reference and write to it.
-        const tmpBaseDir = path.join(os.tmpdir(), 'kando');
-        fs.mkdirSync(tmpBaseDir, { recursive: true });
-        const baseName = path.basename(this.filePath);
-        const tmpDir = path.join(tmpBaseDir, baseName);
-        fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
+      // Generate a temporary directory to write the files to for easy reference and write to it.
+      const tmpBaseDir = path.join(os.tmpdir(), 'kando');
+      fs.mkdirSync(tmpBaseDir, { recursive: true });
+      const baseName = path.basename(this.filePath);
+      const tmpDir = path.join(tmpBaseDir, baseName);
+      fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
 
-        // If the config option ignoreWriteProtectedConfigFiles is not set; notify the user that their hard work has not been permanently saved.
-        if (!this.ignoreWriteProtectedConfigFiles) {
-          const errorMessage =
-            'The ' +
-            baseName +
-            ' file was read-only. It will temporarily be saved to: ' +
-            tmpDir +
-            " Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning";
-          console.warn(errorMessage);
+      // Check if the error is a read-only error as other errors should never be silenced.
+      const isReadOnlyError =
+        error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM';
+      const errorMessage = isReadOnlyError
+        ? 'The ' +
+          baseName +
+          ' file was read-only. It will temporarily be saved to: ' +
+          tmpDir +
+          " Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning"
+        : 'There was an error while writing to the ' +
+          baseName +
+          ' file. It will be temporarily saved to : ' +
+          tmpDir;
 
-          if (Notification.isSupported()) {
-            const notification = new Notification({
-              title: 'Could not save file.',
-              body: errorMessage,
-              icon: path.join(__dirname, require('../../assets/icons/icon.png')),
-            });
+      // If the config option ignoreWriteProtectedConfigFiles is not set or the error is not a read-only error; notify the user that their hard work has not been permanently saved.
+      if (!this.ignoreWriteProtectedConfigFiles || !isReadOnlyError) {
+        console.warn(errorMessage);
 
-            notification.show();
-          }
+        if (Notification.isSupported()) {
+          const notification = new Notification({
+            title: 'Could not save file.',
+            body: errorMessage,
+            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+          });
+
+          notification.show();
         }
       }
     }
