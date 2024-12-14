@@ -24,14 +24,17 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :tada: Added
 
 - **Flatpak Support!** Kando is now [available on Flathub](https://flathub.org/apps/menu.kando.Kando). This should make it easier to install Kando on Linux distributions which support Flatpak!
+- The possibility to silence the notification which is shown when a config file cannot be written by setting `"ignoreWriteProtectedConfigFiles": true` in the `config.json`. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
 
 #### :wrench: Changed
 
-- If `menus.json` or `config.json` cannot be written, Kando will now show a notification instead of crashing. Also, a copy of the file will be saved to a temporary location. This should prevent any data loss. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
-- The notification which is shown when a config file cannot be written can now be silenced by setting `"ignoreWriteProtectedConfigFiles": true` in the `config.json`.
 - The app images for Linux now contain an SVG icon and appstream metadata.
 - Improved the vertical alignment of the text in the "Rainbow Labels" theme when using a zoom level other than 100%. Thanks to [@elfi-ox](https://github.com/elfi-ox) for finding this fix!
 - The x86_64 macOS build is now created on macOS 13.
+
+#### :bug: Fixed
+
+- A crash if `menus.json` or `config.json` cannot be written. Kando will now show a notification instead. Also, a copy of the file will be saved to a temporary location. This should prevent any data loss. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
 
 ## [Kando 1.6.0](https://github.com/kando-menu/kando/releases/tag/v1.6.0)
 
