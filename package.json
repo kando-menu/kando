@@ -78,7 +78,7 @@
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",
-    "match-sorter": "^7.0.0",
+    "match-sorter": "^8.0.0",
     "material-symbols": "^0.27.2",
     "mime-types": "^2.1.35",
     "node-addon-api": "^8.3.0",
