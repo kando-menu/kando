@@ -993,11 +993,22 @@ export class KandoApp {
     this.bindingShortcuts = false;
   }
 
-  /** This updates the menu of the tray icon. It is called when the menu settings change. */
-  private updateTrayMenu(reloadIcon = false) {
-    if (reloadIcon) {
+  /**
+   * This updates the menu of the tray icon. It is called when the menu settings change or
+   * when the tray icon flavor changes.
+   */
+  private updateTrayMenu(flavorChanged = false) {
+    // If the flavor of the tray icon has changed, we have to destroy the old tray icon
+    // and create a new one.
+    if (flavorChanged) {
       this.tray?.destroy();
       this.tray = null;
+    }
+
+    // If the tray icon flavor is set to 'none', we do not show a tray icon.
+    let flavor = this.appSettings.get('trayIconFlavor');
+    if (flavor === 'none') {
+      return;
     }
 
     // The tray icons are not bundled via webpack, as the different resolutions for HiDPI
@@ -1008,8 +1019,6 @@ export class KandoApp {
       if (os.platform() === 'darwin') {
         this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
-        let flavor = this.appSettings.get('trayIconFlavor');
-
         if (flavor !== 'light' && flavor !== 'dark' && flavor !== 'color') {
           console.warn(`Unknown tray icon flavor: '${flavor}'. Using 'color' instead.`);
           flavor = 'color';
