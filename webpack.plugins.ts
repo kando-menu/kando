@@ -24,17 +24,12 @@ export const plugins: any[] = [
   }),
 ];
 
-// The tray icons are loaded dynamically, so we copy them directly to the output directory.
+// The macOS tray icons are loaded dynamically, so we copy them directly to the output
+// directory.
 if (os.platform() === 'darwin') {
   plugins.push(
     new CopyPlugin({
       patterns: [{ from: 'trayTemplate*.png', to: 'assets/', context: 'assets/icons/' }],
-    })
-  );
-} else {
-  plugins.push(
-    new CopyPlugin({
-      patterns: [{ from: 'tray-*.png', to: 'assets/', context: 'assets/icons/' }],
     })
   );
 }

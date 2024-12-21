@@ -1015,9 +1015,21 @@ export class KandoApp {
           flavor = 'color';
         }
 
-        this.tray = new Tray(
-          path.join(__dirname, `../../assets/icons/tray-${flavor}.png`)
-        );
+        let iconPath;
+
+        switch (flavor) {
+          case 'light':
+            iconPath = path.join(__dirname, require('../../assets/icons/tray-light.png'));
+            break;
+          case 'dark':
+            iconPath = path.join(__dirname, require('../../assets/icons/tray-dark.png'));
+            break;
+          case 'color':
+            iconPath = path.join(__dirname, require('../../assets/icons/tray-color.png'));
+            break;
+        }
+
+        this.tray = new Tray(iconPath);
       }
 
       this.tray.setToolTip('Kando');
