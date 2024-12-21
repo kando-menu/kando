@@ -998,7 +998,7 @@ export class KandoApp {
         this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
         this.tray = new Tray(
-          path.join(__dirname, require('../../assets/icons/icon.png'))
+          path.join(__dirname, require('../../assets/icons/tray.png'))
         );
       }
       this.tray.setToolTip('Kando');
