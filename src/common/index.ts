@@ -530,6 +530,9 @@ export interface IAppSettings {
   /** Whether to silently handle read-only config files. */
   ignoreWriteProtectedConfigFiles: boolean;
 
+  /** The tray icon flavor. */
+  trayIconFlavor: 'light' | 'dark' | 'color';
+
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
 

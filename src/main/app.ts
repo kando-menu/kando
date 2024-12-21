@@ -126,6 +126,7 @@ export class KandoApp {
         soundVolume: 0.5,
         sidebarVisible: true,
         ignoreWriteProtectedConfigFiles: false,
+        trayIconFlavor: 'color',
         enableVersionCheck: true,
         zoomFactor: 1,
         menuOptions: {
@@ -208,6 +209,11 @@ export class KandoApp {
     this.appSettings.onChange('ignoreWriteProtectedConfigFiles', (newValue) => {
       this.appSettings.ignoreWriteProtectedConfigFiles = newValue;
       this.menuSettings.ignoreWriteProtectedConfigFiles = newValue;
+    });
+
+    // Update the tray icon if the tray icon flavor changes.
+    this.appSettings.onChange('trayIconFlavor', () => {
+      this.updateTrayMenu(true);
     });
 
     // Initialize the IPC communication to the renderer process.
@@ -988,19 +994,32 @@ export class KandoApp {
   }
 
   /** This updates the menu of the tray icon. It is called when the menu settings change. */
-  private updateTrayMenu() {
+  private updateTrayMenu(reloadIcon = false) {
+    if (reloadIcon) {
+      this.tray?.destroy();
+      this.tray = null;
+    }
+
+    // The tray icons are not bundled via webpack, as the different resolutions for HiDPI
+    // displays on macOS or the flavors on Linux and Windows are loaded at runtime.
+    // Instead, the tray icons are copied to the assets directory during the build
+    // process. See webpack.plugins.ts for more information.
     if (!this.tray) {
       if (os.platform() === 'darwin') {
-        // On macOS, the tray icons are not bundled via webpack, as the different
-        // resolutions for HiDPI displays are loaded at runtime. Instead, the tray icons
-        // are copied to the assets directory during the build process.
-        // See webpack.plugins.ts for more information.
         this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
+        let flavor = this.appSettings.get('trayIconFlavor');
+
+        if (flavor !== 'light' && flavor !== 'dark' && flavor !== 'color') {
+          console.warn(`Unknown tray icon flavor: '${flavor}'. Using 'color' instead.`);
+          flavor = 'color';
+        }
+
         this.tray = new Tray(
-          path.join(__dirname, require('../../assets/icons/tray.png'))
+          path.join(__dirname, `../../assets/icons/tray-${flavor}.png`)
         );
       }
+
       this.tray.setToolTip('Kando');
     }
 
