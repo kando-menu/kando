@@ -20,9 +20,3 @@ path = "src/main/example-menus/**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "CC0-1.0"
-
-[[annotations]]
-path = ["docs/img/**", "icons/**", "assets/icons/**", "assets/videos/**", "assets/images/**"]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
-SPDX-License-Identifier = "CC-BY-4.0"

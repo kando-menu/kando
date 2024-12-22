@@ -24,10 +24,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :tada: Added
 
 - **Flatpak Support!** Kando is now [available on Flathub](https://flathub.org/apps/menu.kando.Kando). This should make it easier to install Kando on Linux distributions which support Flatpak!
+- The possiblity to **change or hide the tray icon** via the `config.json`. You can now specify a flavor using `trayIconFlavor: 'light' | 'dark' | 'color' | 'none'`. The light, dark, and color flavors are only available on Windows and Linux. On macOS, the color always depends on your system colors. The default is `'color'`.
 - The possibility to silence the notification which is shown when a config file cannot be written by setting `"ignoreWriteProtectedConfigFiles": true` in the `config.json`. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
 
 #### :wrench: Changed
 
+- What happens if you run a second instance of Kando without passing any command line arguments. Before, an error message was shown. Now, the existing instance of Kando will show the settings dialog instead. This makes it possible to use Kando without a tray icon.
 - The app images for Linux now contain an SVG icon and appstream metadata.
 - Improved the vertical alignment of the text in the "Rainbow Labels" theme when using a zoom level other than 100%. Thanks to [@elfi-ox](https://github.com/elfi-ox) for finding this fix!
 - The x86_64 macOS build is now created on macOS 13.

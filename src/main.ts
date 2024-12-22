@@ -150,12 +150,9 @@ app
 
     // Show the menu passed via --menu when a second instance is started.
     app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
-      // If no option was passed, we show a notification to the user.
+      // If no option was passed, we show the settings.
       if (!handleCommandLine(options)) {
-        KandoApp.showError(
-          i18next.t('main.is-running-header'),
-          i18next.t('main.is-running-message')
-        );
+        kando.showEditor();
       }
     });
 
