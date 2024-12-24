@@ -1028,13 +1028,13 @@ export class KandoApp {
 
         switch (flavor) {
           case 'light':
-            iconPath = path.join(__dirname, require('../../assets/icons/tray-light.png'));
+            iconPath = path.join(__dirname, require('../../assets/icons/trayLight.png'));
             break;
           case 'dark':
-            iconPath = path.join(__dirname, require('../../assets/icons/tray-dark.png'));
+            iconPath = path.join(__dirname, require('../../assets/icons/trayDark.png'));
             break;
           case 'color':
-            iconPath = path.join(__dirname, require('../../assets/icons/tray-color.png'));
+            iconPath = path.join(__dirname, require('../../assets/icons/trayColor.png'));
             break;
         }
 

@@ -7,6 +7,7 @@ version = 1
 path = ["*.svg", "*.ico", "*.png", "*.icns"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = [ 
-    "Simon Schneegans <code@simonschneegans.de>"
+    "Simon Schneegans <code@simonschneegans.de>",
+    "Bingies24 <@bingies24 on Discord, YouTube, and GitHub>"
 ]
 SPDX-License-Identifier = "CC-BY-4.0"
