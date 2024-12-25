@@ -5,7 +5,7 @@
 Version=1.0
 Type=Application
 Name=Kando
-Comment=The Cross-Platform Pie Menu.
+Comment=Do things with utmost efficiency
 Categories=Utility;
 Icon=menu.kando.Kando
 Exec=AppRun %U
