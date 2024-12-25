@@ -53,6 +53,11 @@
 
     <content_rating type="oars-1.1" />
 
+    <branding>
+        <color type="primary" scheme_preference="light">#e8a8a8</color>
+        <color type="primary" scheme_preference="dark">#3e1527</color>
+    </branding>
+
     <screenshots>
         <screenshot type="default">
             <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot01.png</image>
