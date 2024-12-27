@@ -21,9 +21,13 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2024-12-27
 
+<a href="https://www.youtube.com/watch?v=t7S6Opf11Vs">
+<img align="right" width="400px" src="img/player18.jpg"></img>
+</a>
+
 #### :tada: Added
 
-- **A new Icon!** We have updated the Kando icon. This is now used on the new website and in various places in the application. Read more about this change [here](https://ko-fi.com/post/A-New-Icon-for-Kando-X8X317HVLF). Thanks a lot to [@bingies24](https://github.com/bingies24) for contributing to this!
+- **A new Icon!** We have updated the 🌸 Kando icon. This is now used on the new website and in various places in the application. Read more about this change [here](https://ko-fi.com/post/A-New-Icon-for-Kando-X8X317HVLF). Thanks a lot to [@bingies24](https://github.com/bingies24) for contributing to this!
 - **Flatpak Support!** Kando is now [available on Flathub](https://flathub.org/apps/menu.kando.Kando). This should make it easier to install Kando on Linux distributions which support Flatpak!
 - The possiblity to **change or hide the tray icon** via the `config.json`. You can now specify a flavor using `trayIconFlavor: 'light' | 'dark' | 'color' | 'none'`. The light, dark, and color flavors are only available on Windows and Linux. On macOS, the color always depends on your system colors. The default is `'color'`.
 - The possibility to silence the notification which is shown when a config file cannot be written by setting `"ignoreWriteProtectedConfigFiles": true` in the `config.json`. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
