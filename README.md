@@ -14,13 +14,13 @@ SPDX-License-Identifier: CC-BY-4.0
 [![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
 [![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
-[![docs](https://img.shields.io/badge/Documentation-online-purple.svg?labelColor=303030)](https://kando.menu)
+[![docs](https://img.shields.io/badge/🌸_Docs_at-kando.menu-9f3b67.svg?labelColor=303030)](https://kando.menu)
 [![contributions](https://img.shields.io/badge/🎉_Contributions-welcome-green.svg?labelColor=303030)](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22contributions+welcome%22)
 
 
 # What is Kando?
 
-**Kando is a cross-platform pie menu for your desktop.** It offers an unconventional, fast, highly efficient, and fun way of interacting with your computer! You can use Kando to launch applications, simulate keyboard shortcuts, open files, and much more. 
+**🌸 Kando is a cross-platform pie menu for your desktop.** It offers an unconventional, fast, highly efficient, and fun way of interacting with your computer! You can use Kando to launch applications, simulate keyboard shortcuts, open files, and much more. 
 
 Kando is designed to be used with 🖱️ mouse, 🖊️ stylus, 👆 touch, or 🎮 controller input. If you have both hands at your keyboard most of the time, Kando is maybe not the right tool for you.
 
