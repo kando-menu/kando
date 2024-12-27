@@ -35,7 +35,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - What happens if you run a second instance of Kando without passing any command line arguments. Before, an error message was shown. Now, the existing instance of Kando will show the settings dialog instead. This makes it possible to use Kando without a tray icon.
-- The app images for Linux now contain an SVG icon and appstream metadata.
+- The app images for Linux now contain an SVG icon.
 - Improved the vertical alignment of the text in the "Rainbow Labels" theme when using a zoom level other than 100%. Thanks to [@elfi-ox](https://github.com/elfi-ox) for finding this fix!
 - The x86_64 macOS build is now created on macOS 13.
 

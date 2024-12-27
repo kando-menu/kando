@@ -31,7 +31,6 @@ echo "Creating AppImage for Kando $VERSION..."
 cp -a "$INPUT_DIR"/* .
 mkdir -p usr/share/metainfo
 mkdir -p usr/share/applications
-cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.metainfo.xml" usr/share/metainfo/menu.kando.Kando.appdata.xml
 cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.desktop" usr/share/applications/
 ln -s usr/share/applications/menu.kando.Kando.desktop ./menu.kando.Kando.desktop
 cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.svg" .
