@@ -44,7 +44,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.31.0",
     "handlebars-loader": "^1.7.3",
-    "i18next-parser": "^9.0.2",
+    "i18next-parser": "^9.1.0",
     "mocha": "^10.8.2",
     "node-loader": "^2.1.0",
     "prettier": "^3.4.2",
@@ -82,7 +82,7 @@
     "material-symbols": "^0.27.2",
     "mime-types": "^2.1.35",
     "node-addon-api": "^8.3.0",
-    "octokit": "^4.0.2",
+    "octokit": "^4.0.3",
     "simple-icons-font": "^13.20.0"
   }
 }
