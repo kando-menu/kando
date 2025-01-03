@@ -531,7 +531,7 @@ export interface IAppSettings {
   ignoreWriteProtectedConfigFiles: boolean;
 
   /** The tray icon flavor. */
-  trayIconFlavor: 'light' | 'dark' | 'color' | 'none';
+  trayIconFlavor: 'light' | 'dark' | 'color' |'black'|'white'| 'none';
 
   /** Whether the sidebar should be shown in the editor. */
   sidebarVisible: boolean;
