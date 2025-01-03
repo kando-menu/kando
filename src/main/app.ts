@@ -1019,7 +1019,13 @@ export class KandoApp {
       if (os.platform() === 'darwin') {
         this.tray = new Tray(path.join(__dirname, '../renderer/assets/trayTemplate.png'));
       } else {
-        if (flavor !== 'light' && flavor !== 'dark' && flavor !== 'color'&& flavor !== 'black'&& flavor !== 'white') {
+        if (
+          flavor !== 'light' &&
+          flavor !== 'dark' &&
+          flavor !== 'color' &&
+          flavor !== 'black' &&
+          flavor !== 'white'
+        ) {
           console.warn(`Unknown tray icon flavor: '${flavor}'. Using 'color' instead.`);
           flavor = 'color';
         }
@@ -1040,8 +1046,8 @@ export class KandoApp {
             iconPath = path.join(__dirname, require('../../assets/icons/trayBlack.png'));
             break;
           case 'white':
-              iconPath = path.join(__dirname, require('../../assets/icons/trayWhite.png'));
-              break;
+            iconPath = path.join(__dirname, require('../../assets/icons/trayWhite.png'));
+            break;
         }
 
         this.tray = new Tray(iconPath);
