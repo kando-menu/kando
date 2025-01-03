@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+name: Deploy to Winget
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release asset
+        uses: dsaltares/fetch-gh-release-asset@1.1.2
+        with:
+          regex: true
+          file: 'Kando-.*\.exe'
+      - name: Publish to Winget
+        uses: vedantmgoyal9/winget-releaser@v2
+        with:
+          identifier: KandoMenu.Kando
+          installers-regex: 'Kando-.*\.exe$'
+          token: ${{ secrets.WINGET_TOKEN }}
