@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+[[annotations]]
+path = ["loading.gif", "loading.blend"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "CC-BY-4.0"

@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :wrench: Changed
 
+- The Windows installer now shows a custom gif animation instead of the default Squirrel animation.
 - The Windows installer now uses the new Kando icon instead of the default Electron icon.
 - On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
 
