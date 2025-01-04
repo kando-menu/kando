@@ -25,6 +25,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - **Two new tray icon flavors!** There is now also a `'white'` and a `'black'` flavor. You can choose them in your `config.json` using the `trayIconFlavor` property. The default is still `'color'`. Thanks to [@kartik-raj7](https://github.com/kartik-raj7) for the contribution!
 
+#### :wrench: Changed
+
+- The Windows installer now uses the new Kando icon instead of the default Electron icon.
+- On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
+
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
 
 **Release Date:** 2024-12-27

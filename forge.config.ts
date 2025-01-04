@@ -14,7 +14,11 @@ import { rendererConfig } from './webpack.renderer.config';
 
 // This is used to create the Windows installer. See the link below for the available options.
 // https://js.electronforge.io/interfaces/_electron_forge_maker_squirrel.InternalOptions.SquirrelWindowsOptions.html
-const makerSquirrel = new MakerSquirrel({});
+const makerSquirrel = new MakerSquirrel({
+  setupIcon: 'assets/icons/icon.ico',
+  iconUrl:
+    'https://raw.githubusercontent.com/kando-menu/kando/main/assets/icons/icon.ico',
+});
 
 // This is used on all platforms to create a ZIP archive of the app. See the link below for the
 // available options.
