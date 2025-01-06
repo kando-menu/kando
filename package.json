@@ -83,6 +83,6 @@
     "mime-types": "^2.1.35",
     "node-addon-api": "^8.3.0",
     "octokit": "^4.0.3",
-    "simple-icons-font": "^14.0.1"
+    "simple-icons-font": "^14.1.0"
   }
 }
