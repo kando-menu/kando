@@ -75,7 +75,7 @@ if (!gotTheLock) {
 
 // Start the app. We import the KandoApp class here to make the code above as fast as
 // possible.
-import { KandoApp } from './main/app';
+import { KandoApp } from './app';
 import path from 'path';
 
 // It is not very nice that electron stores all its cache data in the user's config

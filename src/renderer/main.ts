@@ -8,14 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import './renderer/index.scss';
+import './index.scss';
 
 import i18next from 'i18next';
 
-import { Menu } from './renderer/menu/menu';
-import { Editor } from './renderer/editor/editor';
-import { MenuTheme } from './renderer/menu/menu-theme';
-import { SoundTheme } from './renderer/menu/sound-theme';
+import { Menu } from './menu/menu';
+import { Editor } from './editor/editor';
+import { MenuTheme } from './menu/menu-theme';
+import { SoundTheme } from './menu/sound-theme';
 
 /**
  * This file is the main entry point for Kando's renderer process. It is responsible for
