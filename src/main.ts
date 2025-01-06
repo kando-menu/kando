@@ -53,7 +53,8 @@ program
   .option('-s, --settings', 'show the menu editor')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
-  .allowUnknownOption(true);
+  .allowUnknownOption(true)
+  .allowExcessArguments(true);
 
 program.parse();
 const options = program.opts() as CLIOptions;
