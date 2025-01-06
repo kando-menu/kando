@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+[[annotations]]
+path = ["tsconfig.json", "package.json", "package-lock.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "locales/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/main/example-menus/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "CC0-1.0"

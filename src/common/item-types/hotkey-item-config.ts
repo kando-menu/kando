@@ -23,7 +23,7 @@ export class HotkeyItemConfig implements IItemConfig {
     const tips = [
       i18next.t('items.hotkey.tip-1'),
       i18next.t('items.hotkey.tip-2'),
-      '<a href="https://github.com/kando-menu/kando/blob/main/docs/configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys" target="_blank">' +
+      '<a href="https://kando.menu/valid-keynames/" target="_blank">' +
         i18next.t('items.hotkey.tip-3') +
         '</a>',
     ];

@@ -229,7 +229,9 @@
         "kando-version": "Version de Kando",
         "node-version": "Version de Node",
         "backend": "Interface système",
-        "chrome-version": "Version de Chrome"
+        "chrome-version": "Version de Chrome",
+        "reload-sound-theme-button": "Recharger le Thème Sonore Actuel",
+        "documentation-button": "Documentation"
     },
     "toolbar": {
         "menu-themes-tab": {
@@ -243,7 +245,7 @@
             "close-color-picker": "Fermer l'éditeur de couleurs",
             "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
             "label": "Thèmes de menu",
-            "hint": "Il est possible de télécharger des thèmes à partir du <a {{repositoryLink}}>repository de thèmes</a>. Vous pouvez également <a {{tutorialLink}}>apprendre à créer les vôtres</a> et les partager sur le <a {{discordLink}}>serveur Discord de Kando </a> !"
+            "hint": "Il est possible de télécharger des thèmes à partir du <a {{repositoryLink}}>répertoire de thèmes</a>. Vous pouvez également <a {{tutorialLink}}>apprendre à créer les vôtres</a> et les partager sur le <a {{discordLink}}>serveur Discord de Kando </a> !"
         },
         "add-items-tab": {
             "label": "Éléments de Menu"

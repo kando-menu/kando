@@ -1,0 +1,201 @@
+{
+    "items": {
+        "common": {
+            "delayed-option": "Suorita valikon sulkemisen jälkeen",
+            "delayed-option-hint": "Hyödyllinen, jos toiminto kohdistuu ikkunaan joka tulee olla kohdistettuna.",
+            "not-configured": "Ei määritetty"
+        },
+        "command": {
+            "command": "Komento",
+            "command-hint": "Tämä suoritetaan.",
+            "description": "Suorittaa komentorivikomennon.",
+            "name": "Suorita komento"
+        },
+        "macro": {
+            "name": "Simuloi makro"
+        },
+        "text": {
+            "placeholder": "Syötä mitä tahansa tekstiä…",
+            "name": "Liitä teksti"
+        },
+        "uri": {
+            "description": "Avaa tiedostoja tai verkkosivuja.",
+            "uri-hint": "Tämä avataan.",
+            "name": "Avaa URI"
+        },
+        "submenu": {
+            "detailed-description_one": "Sisältää yhden valikkotietueen.",
+            "detailed-description_other": "Sisältää {{count}} valikkotietuetta.",
+            "name": "Alivalikko",
+            "description": "Sisältää muita valikkotietueita."
+        }
+    },
+    "properties": {
+        "common": {
+            "menu-behavior": "Valikon toiminta",
+            "done": "Valmis",
+            "menu-conditions": "Valikon ehdollisuudet",
+            "menu-behavior-hint": "Muokkaa valikon lisäasetuksia.",
+            "menu-conditions-hint": "Valitse milloin valikko näytetään.",
+            "cancel": "Peru"
+        },
+        "advanced-options": {
+            "heading": "Muokkaa valikon toimintaa",
+            "centered-mode": "Keskitetty tila",
+            "centered-mode-hint": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
+            "anchored-mode": "Ankkuroitu tila",
+            "anchored-mode-hint": "Avaa alivalikot samaan sijaintiin kuin ylätason valikko.",
+            "subheading": "Ennen kuin muokkaat näitä asetuksia, suosittelemme opettelemaan Kandon oletustoiminnan. <a {{- link}}>Lue tästä</a>, miksi tykkäämme oletusasetuksista."
+        },
+        "condition-picker": {
+            "app": "Rajaa tiettyihin sovelluksiin",
+            "window-placeholder": "Ikkunan otsikko",
+            "window-checked-hint": "Tämä tukee säännöllisiä lausekkeita kuten /youtube|vimeo/i.",
+            "screen": "Rajaa tiettyyn näytön alueeseen",
+            "right-placeholder": "Oikea",
+            "top-placeholder": "Yläosa",
+            "pointer-position-hint": "Hiiren sijainti on tällä hetkellä {{x}} x {{y}}.",
+            "left-placeholder": "Vasen",
+            "app-placeholder": "Sovelluksen nimi",
+            "heading": "Valitse valikon ehdollisuudet",
+            "window": "Rajaa tiettyihin ikkunaotsikkoihin",
+            "bottom-placeholder": "Alaosa"
+        },
+        "macro-picker": {
+            "recording": "Paina näppäimiä…"
+        },
+        "shortcut-picker": {
+            "recording": "Paina pikanäppäintä…",
+            "hint": "Tämä avaa valikon.",
+            "label": "Pikanäppäin"
+        },
+        "icon-picker": {
+            "placeholder": "Etsi kuvakkeita…",
+            "heading": "Valitse kuvake"
+        }
+    },
+    "main": {
+        "is-running-header": "Kando on jo käynnissä",
+        "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
+        "is-running-message": "Katso valinnat ilmoitusalueen kuvakkeesta!"
+    },
+    "example-menu": {
+        "name": "Valikon esimerkki",
+        "apps": {
+            "submenu": "Sovellukset",
+            "web-browser": "Verkkoselain",
+            "apple-music": "Musiikki",
+            "file-browser": "Tiedostonhallinta",
+            "terminal": "Pääte",
+            "email": "Sähköposti",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "finder": "Finder",
+            "safari": "Safari"
+        },
+        "web-links": {
+            "google": "Google",
+            "kando-on-github": "Kando GitHubissa",
+            "kando-on-discord": "Kando Discordissa",
+            "kando-on-kofi": "Kando Ko-fi:ssa",
+            "kando-on-youtube": "Kando YouTubessa",
+            "submenu": "Verkkolinkit"
+        },
+        "next-workspace": "Seuraava työtila",
+        "clipboard": {
+            "submenu": "Leikepöytä",
+            "paste": "Liitä",
+            "copy": "Kopioi",
+            "cut": "Leikkaa"
+        },
+        "audio": {
+            "submenu": "Ääni",
+            "previous-track": "Edellinen kappale",
+            "next-track": "Seuraava kappale",
+            "play-pause": "Toista/keskeytä",
+            "mute": "Mykistä"
+        },
+        "windows": {
+            "submenu": "Ikkunat",
+            "mission-control": "Mission Control",
+            "toggle-maximize": "Suurenna päällä/pois",
+            "tile-right": "Laatoita oikealle",
+            "close-window": "Sulje ikkuna",
+            "tile-left": "Laatoita vasemmalle"
+        },
+        "bookmarks": {
+            "home": "Koti",
+            "videos": "Videot",
+            "downloads": "Lataukset",
+            "submenu": "Kirjanmerkit",
+            "documents": "Asiakirjat",
+            "desktop": "Työpöytä",
+            "music": "Musiikki",
+            "pictures": "Kuvat"
+        },
+        "previous-workspace": "Edellinen työtila"
+    },
+    "backends": {
+        "hyprland": {
+            "shortcut-hint": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."
+        },
+        "kde-wayland": {
+            "shortcut-hint": "Käytä KDE:n järjestelmäasetuksia sitoaksesi tämän."
+        },
+        "gnome": {
+            "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: {{- link}}"
+        }
+    },
+    "sidebar": {
+        "welcome": "Tervetuloa, tämä on Kando!",
+        "watch-intro-button": "Opettele käyttämään Kandoa",
+        "documentation-button": "Dokumentaatio",
+        "discord-button": "Keskustele Discordissa",
+        "buy-me-a-coffee-button": "Kando Ko-fi:ssa",
+        "introduction-tab-slide-1-caption": "Napsauta missä tahansa: sinun ei välttämättä tarvitse napsauttaa täsmällisesti yksittäistä kohdetta, riittää että napsautat sen aktivointialuetta!",
+        "introduction-tab-slide-2-caption": "Siirry takaisin: palaa yksi taso ylöspäin napsauttamalla keskimmäistä kohdetta.",
+        "development-tab-header": "Kehitys",
+        "dev-tools-button": "Näytä kehittäjätyökalut",
+        "dev-tools-button-tooltip": "Avaa web-kehittäjän työkalut käyttöliittymän tutkimiseksi.",
+        "reload-menu-theme-button": "Lataa nykyinen valikkoteema uudelleen",
+        "reload-sound-theme-button": "Lataa nykyinen ääniteema uudelleen",
+        "backend": "Kando-taustaosa",
+        "kando-version": "Kando-versio",
+        "electron-version": "Electron-versio",
+        "chrome-version": "Chrome-versio",
+        "node-version": "Node-versio",
+        "new-version-button": "Uusi Kando-versio on saatavilla!",
+        "intro-text": "Kando sisältää yksinkertaisen esimerkkivalikon. Voit kokeilla sitä, mutta kokeile luoda oma valikko pian! Voit avata valikkomuokkaimen napsauttamalla hammasrataskuvaketta näytön oikeasta alareunasta.",
+        "introduction-tab-header": "Esittely",
+        "reload-menu-theme-button-tooltip": "CSS-muutokset tulevat voimaan välittömästi, mutta theme.json-tiedostoon tehtyjen muutosten osalta valikko tulee avata uudelleen.",
+        "sponsors-button": "Sponsorilista"
+    },
+    "toolbar": {
+        "menu-themes-tab": {
+            "author": "tekijä {{author}}",
+            "system-mode-subheading-dark": "Järjestelmässäsi on käytössä tumma teema. Yllä olevat asetukset ovat käytössä vain tumman teeman tilassa.",
+            "system-mode-subheading-light": "Järjestelmässäsi on käytössä vaalea teema. Yllä olevat asetukset ovat käytössä vain vaalean teeman tilassa.",
+            "edit-colors": "Muokkaa värejä",
+            "dark-mode": "Käytä eri teemoja ja värejä vaalealle sekä tummalle teemalle",
+            "reset-color-picker": "Palauta kaikkien värien oletusarvot",
+            "label": "Valikkoteemat",
+            "close-color-picker": "Sulje värimuokkain"
+        },
+        "menus-tab": {
+            "label": "Valikot",
+            "create-menu-button": "Luo valikko!"
+        },
+        "templates-tab": {
+            "heading": "Pudota valikkoja sekä valikkotietueita tänne ja käytä niitä mallipohjina!",
+            "label": "Mallipohjat"
+        },
+        "add-items-tab": {
+            "label": "Valikkotietueet"
+        },
+        "trash-tab": {
+            "label": "Roskakori",
+            "heading": "Voit poistaa valikkoja ja valikkotietueita pudottamalla ne tänne!",
+            "subheading": "Kun käynnistät Kandon uudelleen, ne ovat poissa."
+        }
+    }
+}

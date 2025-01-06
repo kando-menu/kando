@@ -23,19 +23,74 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- A `centerTextWrapWidth` property to the menu-theme metadata. This allows to specify the width at which the text in the center item should wrap. The default is 90 pixels.
-- A [repository to share your menu themes](https://github.com/kando-menu/menu-themes)! In the future, these will be browsable and installable from within Kando. For now, you can share your themes there by creating a pull request.
+- **Two new tray icon flavors!** There is now also a `'white'` and a `'black'` flavor. You can choose them in your `config.json` using the `trayIconFlavor` property. The default is still `'color'`. Thanks to [@kartik-raj7](https://github.com/kartik-raj7) for the contribution!
 
 #### :wrench: Changed
 
+- The Windows installer now shows a custom gif animation instead of the default Squirrel animation.
+- The Windows installer now uses the new Kando icon instead of the default Electron icon.
+- On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
+
+## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
+
+**Release Date:** 2024-12-27
+
+<a href="https://www.youtube.com/watch?v=t7S6Opf11Vs">
+<img align="right" width="400px" src="img/player18.jpg"></img>
+</a>
+
+#### :tada: Added
+
+- **A new Icon!** We have updated the 🌸 Kando icon. This is now used on the new website and in various places in the application. Read more about this change [here](https://ko-fi.com/post/A-New-Icon-for-Kando-X8X317HVLF). Thanks a lot to [@bingies24](https://github.com/bingies24) for contributing to this!
+- **Flatpak Support!** Kando is now [available on Flathub](https://flathub.org/apps/menu.kando.Kando). This should make it easier to install Kando on Linux distributions which support Flatpak!
+- The possiblity to **change or hide the tray icon** via the `config.json`. You can now specify a flavor using `trayIconFlavor: 'light' | 'dark' | 'color' | 'none'`. The light, dark, and color flavors are only available on Windows and Linux. On macOS, the color always depends on your system colors. The default is `'color'`.
+- The possibility to silence the notification which is shown when a config file cannot be written by setting `"ignoreWriteProtectedConfigFiles": true` in the `config.json`. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
+
+#### :wrench: Changed
+
+- What happens if you run a second instance of Kando without passing any command line arguments. Before, an error message was shown. Now, the existing instance of Kando will show the settings dialog instead. This makes it possible to use Kando without a tray icon.
+- The app images for Linux now contain an SVG icon.
+- Improved the vertical alignment of the text in the "Rainbow Labels" theme when using a zoom level other than 100%. Thanks to [@elfi-ox](https://github.com/elfi-ox) for finding this fix!
+- The x86_64 macOS build is now created on macOS 13.
+
+#### :bug: Fixed
+
+- A crash if `menus.json` or `config.json` cannot be written. Kando will now show a notification instead. Also, a copy of the file will be saved to a temporary location. This should prevent any data loss. Thanks to [@mrhappy200](https://github.com/mrhappy200) for this!
+
+## [Kando 1.6.0](https://github.com/kando-menu/kando/releases/tag/v1.6.0)
+
+**Release Date:** 2024-12-01
+
+<a href="https://www.youtube.com/watch?v=NiijnliUe_Y">
+<img align="right" width="400px" src="img/player17.jpg"></img>
+</a>
+
+#### :tada: Added
+
+- **A new Homepage!** All the documentation is now available at [kando.menu](https://kando.menu). This makes the documentation much more accessible and easier to navigate. It is also possible to search the documentation now and contributing is very easy!
+- **Sound Themes!** You can now add sound effects to your menus. You can read more about this on the new homepage: https://kando.menu/create-sound-themes/. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing to this feature!
+- A [repository to share your sound themes](https://github.com/kando-menu/sound-themes)! For now, Kando does not ship with any sound themes, but you can download and share your sound themes there.
+- A [repository to share your menu themes](https://github.com/kando-menu/menu-themes)! In the future, these will be browsable and installable from within Kando. For now, you can share your themes there by creating a pull request.
+- A `centerTextWrapWidth` property to the menu-theme metadata. This allows to specify the width at which the text in the center item should wrap. The default is 90 pixels.
+- The possibility to override the automatically detected system locale in the settings using the `locale` property. This can be useful if you want to use a different language than the system locale.
+
+#### :wrench: Changed
+
+- Kando will now refuse to start if the `config.json` file or the `menus.json` file is not valid JSON. Before it used to start with the default configuration which could have resulted in data loss.
+- Kando now notices when it's running in a Flatpak container and adapts accordingly. For instance, commands are then executed with `flatpak-spawn`. This will make it possible to distribute Kando via Flathub in the future!
 - The show-sidebar and show-editor buttons are now shown when hovered even if they are made invisible via the `config.json`.
+- How processes are spawned by the command action. They are now detached from the parent process. This should prevent launched applications from being closed when Kando is closed.
+- The checks for `XDG_CURRENT_DESKTOP` and `XDG_SESSION_TYPE` on Linux are now case-insensitive. This should make Kando work on systems where these variables are set in a different case for whatever reason.
 - If `XDG_SESSION_TYPE` is set to `tty`, Kando will now try to use the X11 backend on Linux instead of refusing to start. In most cases, this should work. But there will be a warning in the console if the X11 backend is used in this case.
-- Improved the length transition of the connector lines of the "Rainbow Labels" theme. 
+- Improved the length transition of the connector lines of the "Rainbow Labels" theme.
+- Upgraded many dependencies. This could potentially introduce new bugs. Please report any issues you encounter!
 - **Several  translation updates:** Thanks to all the contributors!
 
 #### :bug: Fixed
 
 - A regression which allowed selecting items with the right mouse button in marking or turbo mode.
+- A regression which made the command line arguments not work if Kando was not running yet.
+- The RPM package now does not contain the debug information in `/usr/lib/.build-id` anymore. This should avoid any conflicts with other Electron-based applications.
 
 ## [Kando 1.5.1](https://github.com/kando-menu/kando/releases/tag/v1.5.1)
 
@@ -47,13 +102,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [Kando 1.5.0](https://github.com/kando-menu/kando/releases/tag/v1.5.0)
 
-
 **Release Date:** 2024-11-03
 
 <a href="https://www.youtube.com/watch?v=XVu_ea9gpCY">
 <img align="right" width="400px" src="img/player16.jpg"></img>
 </a>
-
 
 #### :tada: Added
 
@@ -81,7 +134,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   to your `config.json` to hide the show-sidebar and the show-editor buttons respectively. They will still be clickable, so you can still use them if you aim carefully.
 - **Possibility to disable Marking Mode and Turbo Mode altogether:** This can be useful if you never use these features and want to avoid accidental selections. For now, this can be done via the `"menuOptions": {"enableMarkingMode": true}` and `"menuOptions": {"enableTurboMode": true}` in your `config.json`. In the future, this will be exposed in the settings UI.
 - **New options to select parent with mouse and keyboard:** Your mouse's navigate-back button as well as <kbd>Backspace</kbd> will now select the parent menu. Also, if you set `"menuOptions": {"rmbSelectsParent": true}`, your right mouse button will now select the parent menu instead of closing the menu.
-- **More configurable properties:** Some variables which were constants before are now configurable via the `config.json`. See the [corresponding documentation](https://github.com/kando-menu/kando/blob/main/docs/config-files.md#the-menuoptions-property) for details.
+- **More configurable properties:** Some variables which were constants before are now configurable via the `config.json`. See the [corresponding documentation](https://kando.menu/config-files/) for details.
 - **Icon themes are now also loaded from the installation directory:** This can be interesting if you are packaging icon themes using a package manager. However, as an end user, you should not put your icon themes there, as they might be overwritten during an update. The directory is `resources/app/.webpack/renderer/assets/icon-themes/`.
 - **Several  translation updates:** Thanks to all the contributors!
 
@@ -140,7 +193,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There is [a guide available](https://github.com/kando-menu/kando/blob/main/docs/menu-themes.md) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
+- **Menu Themes!** You can now change the appearance of your menus by selecting a theme in the menu editor. There is [a guide available](https://kando.menu/create-menu-themes/) which explains how to create your own themes! In the future, we will have a theme store where you can share your themes with others. For now, you can share your themes in the [Kando Discord server](https://discord.gg/hZwbVSDkhy).
   - There are currently four initial themes available: "Default", "Clean Circle", "Neon Lights", and "Rainbow Labels". The two latter themes are somewhat experimental and may change in the future. If you create a cool theme, we can consider adding it to the default themes!
   - For each theme you can specify some colors, like the background color or the text color.
   - Kando is aware of system color mode (light or dark) and you can select different colors and / or themes for each mode.
@@ -179,7 +232,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **Custom Icon Themes:** You can now use your own icons in Kando! Read the [corresponding documentation](configuring.md#adding-custom-icon-themes-sparkles) to learn how it is done.
+- **Custom Icon Themes:** You can now use your own icons in Kando! Read the [corresponding documentation](https://kando.menu/icon-themes/) to learn how it is done.
 - **Icon-Name Tooltips in the Icon Picker:** When hovering over an icon in the icon picker, the name of the icon is now shown as a tooltip. This should make it easier to find an icon again. Thanks to [@pushkardev123](https://github.com/pushkardev123) for this contribution!
 - **Copy Items:** If <kbd>Ctrl</kbd> or <kbd>Command</kbd> is pressed while dragging a menu or menu item in the editor, the item will be duplicated instead of moved. Due to an [issue in electron](https://github.com/electron/electron/issues/8730), the cursor graphic does not change when dragging or copying items on macOS. The operation is still performed correctly, though.
 - **Menu Templates:** The stash tab is now called "Templates". In addition to menu items, you can now also store entire menus in there. Move them back to the menus tab or the preview to create unlimited copies of the same menu, submenu, or menu item!
@@ -257,8 +310,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Support for HiDPI screens. Kando will now properly warp the mouse pointer to the center of a menu item even if display scaling is enabled.
 - Better example menus. When you launch Kando for the first time (or delete your `menus.json` file), you will now see a more useful example menu. This menu depends on the platform you are using. There are some hard-coded applications and keyboard shortcuts, but you can easily change them in the menu editor.
-- Some initial usage documentation. You can read it [here](getting-started.md).
-- Some documentation about the [format of the shortcuts and hotkeys used in Kando](configuring.md#keyboard-menu-shortcuts-vs-simulated-hotkeys).
+- Some initial usage documentation. You can read it [here](https://kando.menu/intro/).
+- Some documentation about the [format of the shortcuts and hotkeys used in Kando](https://kando.menu/valid-keynames/).
 - Issue templates. If you now [open a new issue](https://github.com/kando-menu/kando/issues/new/choose), you can choose from different templates.
 - A [Code of Conduct](code-of-conduct.md). This is a set of rules which defines the behavior of contributors and users in the Kando community. It is important to read and understand this document before contributing to Kando.
 
@@ -566,12 +619,3 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - A short tutorial explaining the basic concepts.
 
 <p align="center"><img src ="img/hr.svg" /></p>
-
-<p align="center">
-  <img src="img/nav-space.svg"/>
-  <a href="code-of-conduct.md"><img src ="img/left-arrow.png"/> Code of Conduct</a>
-  <img src="img/nav-space.svg"/>
-  <a href="README.md"><img src ="img/home.png"/> Index</a>
-  <img src="img/nav-space.svg"/>
-  <a href="contributing.md">Contributing Guidelines <img src ="img/right-arrow.png"/></a>
-</p>

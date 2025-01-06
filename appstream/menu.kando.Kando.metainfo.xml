@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
+<component type="desktop-application">
+    <id>menu.kando.Kando</id>
+
+    <name>Kando</name>
+    <summary>Do things with utmost efficiency</summary>
+
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>MIT</project_license>
+
+    <supports>
+        <control>pointing</control>
+        <control>keyboard</control>
+        <control>touch</control>
+        <control>gamepad</control>
+        <control>tablet</control>
+    </supports>
+
+    <description>
+        <p>
+            Kando is a cross-platform pie menu for your desktop. It offers an unconventional, fast,
+            highly efficient, and fun way of interacting with your computer! You can use Kando to
+            launch applications, simulate keyboard shortcuts, open files, and much more.
+        </p>
+        <p>
+            Kando is designed to be used with 🖱️ mouse, 🖊️ stylus, 👆 touch, or 🎮 controller input.
+            If you have both hands at your keyboard most of the time, Kando is maybe not the right
+            tool for you.
+        </p>
+        <p>
+            If you are using Kando on Wayland, some additional setup may be required. For instance,
+            on GNOME you will need to install the Kando Integration extension. You can read more on
+            https://kando.menu/installation-on-linux/. Kando will also tell you this when you start
+            it for the first time.
+        </p>
+    </description>
+
+    <url type="homepage">https://kando.menu/</url>
+    <url type="bugtracker">https://github.com/kando-menu/kando/issues</url>
+    <url type="donation">https://kando.menu/donating/</url>
+    <url type="translate">https://hosted.weblate.org/engage/kando/</url>
+    <url type="help">https://discord.gg/hZwbVSDkhy</url>
+
+    <launchable type="desktop-id">menu.kando.Kando.desktop</launchable>
+
+    <developer id="io.github.schneegans">
+        <name>Simon Schneegans</name>
+    </developer>
+
+    <content_rating type="oars-1.1" />
+
+    <branding>
+        <color type="primary" scheme_preference="light">#e8a8a8</color>
+        <color type="primary" scheme_preference="dark">#3e1527</color>
+    </branding>
+
+    <screenshots>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot01.png</image>
+            <caption>Kando's example menu</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot02.png</image>
+            <caption>An example submenu to control your media player</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot03.png</image>
+            <caption>Kando using a Minecraft-style theme</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot04.png</image>
+            <caption>A custom submenu for Firefox</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot05.png</image>
+            <caption>Kando using the included Neon-Lights theme</caption>
+        </screenshot>
+    </screenshots>
+
+    <releases>
+        <release version="1.7.0" date="2024-12-27">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.7.0</url>
+        </release>
+        <release version="1.6.0" date="2024-12-01">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.6.0</url>
+        </release>
+        <release version="1.5.1" date="2024-11-03T13:17:48Z">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.5.1</url>
+        </release>
+        <release version="1.5.0" date="2024-11-03T12:23:04Z">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.5.0</url>
+        </release>
+        <release version="1.4.0" date="2024-09-15">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.4.0</url>
+        </release>
+        <release version="1.3.0" date="2024-08-26">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.3.0</url>
+        </release>
+        <release version="1.2.0" date="2024-07-19">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.2.0</url>
+        </release>
+        <release version="1.1.0" date="2024-06-20">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.1.0</url>
+        </release>
+        <release version="1.0.0" date="2024-06-07">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v1.0.0</url>
+        </release>
+    </releases>
+</component>

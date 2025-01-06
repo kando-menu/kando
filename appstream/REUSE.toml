@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+[[annotations]]
+path = ["screenshots/*.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["menu.kando.Kando.svg"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = [
+    "Simon Schneegans <code@simonschneegans.de>",
+    "Bingies24 <@bingies24 on Discord, YouTube, and GitHub>"
+]
+SPDX-License-Identifier = "CC-BY-4.0"

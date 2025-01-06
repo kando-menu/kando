@@ -29,36 +29,39 @@ export { Backend };
  */
 export function getBackend(): Backend | null {
   if (os.platform() === 'linux') {
-    const desktop = process.env.XDG_CURRENT_DESKTOP;
-    const session = process.env.XDG_SESSION_TYPE;
+    let desktop = process.env.XDG_CURRENT_DESKTOP || '';
+    let session = process.env.XDG_SESSION_TYPE || '';
 
     console.log(`Running on Linux (${desktop} on ${session}).`);
 
-    if ((desktop === 'GNOME' || desktop === 'Unity') && session === 'wayland') {
+    desktop = desktop.toLowerCase();
+    session = session.toLowerCase();
+
+    if ((desktop === 'gnome' || desktop === 'unity') && session === 'wayland') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { GnomeBackend } = require('./linux/gnome/wayland/backend');
       return new GnomeBackend();
     }
 
-    if (desktop === 'KDE' && session === 'x11') {
+    if (desktop === 'kde' && session === 'x11') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { KDEX11Backend } = require('./linux/kde/x11/backend');
       return new KDEX11Backend();
     }
 
-    if (desktop === 'KDE' && session === 'wayland') {
+    if (desktop === 'kde' && session === 'wayland') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { KDEWaylandBackend } = require('./linux/kde/wayland/backend');
       return new KDEWaylandBackend();
     }
 
-    if (desktop === 'Hyprland') {
+    if (desktop === 'hyprland') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { HyprBackend } = require('./linux/hyprland/backend');
       return new HyprBackend();
     }
 
-    if (desktop === 'X-Cinnamon' && session === 'x11') {
+    if (desktop === 'x-cinnamon' && session === 'x11') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { CinnamonBackend } = require('./linux/cinnamon/x11/backend');
       return new CinnamonBackend();

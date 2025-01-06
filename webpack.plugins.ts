@@ -24,8 +24,8 @@ export const plugins: any[] = [
   }),
 ];
 
-// On macOS, we have to copy the tray icons as the HiDPI icons are loaded at runtime.
-// Therefore, we cannot bundle them with webpack.
+// The macOS tray icons are loaded dynamically, so we copy them directly to the output
+// directory.
 if (os.platform() === 'darwin') {
   plugins.push(
     new CopyPlugin({

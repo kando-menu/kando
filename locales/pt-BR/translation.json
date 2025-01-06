@@ -58,6 +58,12 @@
             "tip-4": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
             "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
             "description": "Abre arquivos ou sites."
+        },
+        "text": {
+            "placeholder": "Insira qualquer texto…",
+            "description": "Insere o texto fornecido.",
+            "tip-1": "Esta ação usa sua área de transferência para colar o texto. Depois de usar a ação, a área de transferência conterá o texto.",
+            "name": "Pasta texto"
         }
     },
     "properties": {
@@ -77,7 +83,9 @@
             "anchored-mode-checked-hint": "Verificando isso, desativará o Modo de Marcação.",
             "heading": "Ajuste o Comportamento do Menu",
             "subheading": "Antes de ativar essas opções, recomendamos aprender o comportamento padrão de Kando. Leia sobre por que nós gostamos <a {{- link}}>aqui</a>.",
-            "centered-mode": "Modo Centralizado"
+            "centered-mode": "Modo Centralizado",
+            "warp-mouse": "Mouse de urdidura no modo centrado",
+            "warp-mouse-hint": "Mova o ponteiro para o centro do menu quando ele abrir."
         },
         "condition-picker": {
             "heading": "Selecione as Condições do Menu",
@@ -204,7 +212,14 @@
         "intro-text": "Kando vem com um menu de exemplo básico. Você pode experimentar com ele, mas você deve criar seus próprios menus! Você pode abrir o editor de menu clicando no ícone de engrenagem no canto inferior direito da tela.",
         "watch-intro-button": "Aprenda a usar Kando",
         "config-guide-button": "Guia de Configuração",
-        "reload-menu-theme-button-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu."
+        "reload-menu-theme-button-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu.",
+        "reload-sound-theme-button": "Recarregue o tema do som atual",
+        "documentation-button": "Documentação",
+        "backend": "Ao longo do back -end",
+        "node-version": "Versão do nó",
+        "kando-version": "Ao longo da versão",
+        "electron-version": "Versão eletrônica",
+        "chrome-version": "Versão Chrome"
     },
     "toolbar": {
         "menu-themes-tab": {
@@ -217,7 +232,8 @@
             "dark-mode": "Use Temas e Cores Separados para o Modo Claro e Escuro",
             "reset-color-picker": "Resetar todas as cores aos seus padrões",
             "caption": "No futuro, teremos um repositório online para temas de menu. Por agora, você pode <a {{tutorialLink}}>aprender como criar seus próprios temas</a> e compartilhá-los no <a {{discordLink}}> Servidor do Discord do Kando</a>!",
-            "label": "Temas de Menu"
+            "label": "Temas de Menu",
+            "hint": "Você pode baixar temas do <a {{repositoryLink}}>repositório de temas</a>. Você também pode <a {{tutorialLink}}>aprender a criar seus próprios temas</a> e compartilhá-los no <a {{discordLink}}>Servidor Discord do Kando</a>!"
         },
         "menus-tab": {
             "create-menu-button": "Criar um menu!",

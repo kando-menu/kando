@@ -11,7 +11,7 @@
 import { app } from 'electron';
 import { program } from 'commander';
 import i18next from 'i18next';
-import i18Backend from 'i18next-fs-backend';
+import i18Backend from 'i18next-fs-backend/cjs';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -32,6 +32,10 @@ interface CLIOptions {
   // This optional parameter is specified using the --reload-menu-theme option. It is used
   // to reload the current menu theme from disk.
   reloadMenuTheme?: boolean;
+
+  // This optional parameter is specified using the --reload-sound-theme option. It is
+  // used to reload the current sound theme from disk.
+  reloadSoundTheme?: boolean;
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -48,6 +52,7 @@ program
   .option('-m, --menu <menu>', 'show the menu with the given name')
   .option('-s, --settings', 'show the menu editor')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
+  .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .allowUnknownOption(true);
 
 program.parse();
@@ -145,12 +150,9 @@ app
 
     // Show the menu passed via --menu when a second instance is started.
     app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
-      // If no option was passed, we show a notification to the user.
+      // If no option was passed, we show the settings.
       if (!handleCommandLine(options)) {
-        KandoApp.showError(
-          i18next.t('main.is-running-header'),
-          i18next.t('main.is-running-message')
-        );
+        kando.showEditor();
       }
     });
 

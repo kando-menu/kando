@@ -13,6 +13,9 @@ import path from 'path';
 import chokidar from 'chokidar';
 import lodash from 'lodash';
 
+import os from 'os';
+import { Notification } from 'electron';
+
 /**
  * This type is used to define all possible events which can be emitted by the
  * PropertyChangeEmitter class below.
@@ -135,6 +138,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   /** This is the path to the settings file. */
   private readonly filePath: string;
 
+  /** If set to true, no notification will be shown when the JSON file cannot be written. */
+  public ignoreWriteProtectedConfigFiles = false;
+
   /** This is the watcher which is used to watch the settings file for changes. */
   private watcher: chokidar.FSWatcher | null;
 
@@ -151,7 +157,14 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   public readonly defaults: T;
 
-  /** Creates a new settings object. See documentation of the class for details. */
+  /**
+   * Creates a new settings object. If the settings file does not exist yet, the default
+   * settings are used. If the settings file exists but does not contain all properties,
+   * the missing properties are added from the default settings. If the settings file
+   * contains a syntax error, an exception is thrown.
+   *
+   * See documentation of the class for more details.
+   */
   constructor(options: Options<T>) {
     super();
 
@@ -235,7 +248,13 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     this.watcher = chokidar.watch(this.filePath, { ignoreInitial: true });
     this.watcher.on('change', () => {
       const oldSettings = { ...this.settings };
-      this.settings = this.loadSettings(this.defaults);
+      try {
+        this.settings = this.loadSettings(this.defaults);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        return;
+      }
+
       this.emitEvents(this.settings, oldSettings);
     });
   }
@@ -259,7 +278,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         // The settings file does not exist yet. Create it.
         this.saveSettings(defaultSettings);
       } else {
-        console.warn(`${error}`);
+        throw error;
       }
 
       return defaultSettings;
@@ -274,7 +293,46 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   private saveSettings(updatedSettings: T) {
     this.watcher?.unwatch(this.filePath);
-    fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+    try {
+      fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+    } catch (error) {
+      // Handle read-only config files correctly.
+      // Generate a temporary directory to write the files to for easy reference and write to it.
+      const tmpBaseDir = path.join(os.tmpdir(), 'kando');
+      fs.mkdirSync(tmpBaseDir, { recursive: true });
+      const baseName = path.basename(this.filePath);
+      const tmpDir = path.join(tmpBaseDir, baseName);
+      fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
+
+      // Check if the error is a read-only error as other errors should never be silenced.
+      const isReadOnlyError =
+        error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM';
+      const errorMessage = isReadOnlyError
+        ? 'The ' +
+          baseName +
+          ' file was read-only. It will temporarily be saved to: ' +
+          tmpDir +
+          " Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning"
+        : 'There was an error while writing to the ' +
+          baseName +
+          ' file. It will be temporarily saved to : ' +
+          tmpDir;
+
+      // If the config option ignoreWriteProtectedConfigFiles is not set or the error is not a read-only error; notify the user that their hard work has not been permanently saved.
+      if (!this.ignoreWriteProtectedConfigFiles || !isReadOnlyError) {
+        console.warn(errorMessage);
+
+        if (Notification.isSupported()) {
+          const notification = new Notification({
+            title: 'Could not save file.',
+            body: errorMessage,
+            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+          });
+
+          notification.show();
+        }
+      }
+    }
     this.watcher?.add(this.filePath);
   }
 

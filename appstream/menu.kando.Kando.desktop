@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: CC0-1.0
 
 [Desktop Entry]
-Name=Kando
-Comment=The Cross-Platform Pie Menu.
-GenericName=Pie Menu
-Exec=kando %U
-Icon=kando
+Version=1.0
 Type=Application
-StartupNotify=true
+Name=Kando
+Comment=Do things with utmost efficiency
 Categories=Utility;
+Icon=menu.kando.Kando
+Exec=AppRun %U
+Terminal=false
