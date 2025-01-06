@@ -9,8 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuThemeDescription } from '../../common';
-import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
-import { closestEquivalentAngle } from '../common/math';
+import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
+import { closestEquivalentAngle } from '../../common/math';
 import { IRenderedMenuItem } from './rendered-menu-item';
 
 /**

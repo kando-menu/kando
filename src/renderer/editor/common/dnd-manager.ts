@@ -10,7 +10,7 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../../common/math';
+import * as math from '../../../common/math';
 import { IDraggable } from './draggable';
 import { IDropTarget } from './drop-target';
 

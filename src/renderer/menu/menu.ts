@@ -10,7 +10,7 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../common/math';
+import * as math from '../../common/math';
 import { IShowMenuOptions, IVec2, SoundType } from '../../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';

@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as utils from './utils';
-import * as math from '../../common/math';
+import * as math from '../../../common/math';
 import { IDropTarget } from '../common/drop-target';
 import { IVec2, deepCopyMenuItem } from '../../../common';
 import { IEditorMenuItem } from '../common/editor-menu-item';

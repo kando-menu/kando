@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import * as math from '../../common/math';
+import * as math from '../../../common/math';
 import { IVec2 } from '../../../common';
 import { InputMethod, ButtonState, IInputState, SelectionType } from './input-method';
 import { GestureDetector } from './gesture-detector';

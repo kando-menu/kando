@@ -15,7 +15,7 @@ import { ToolbarDraggable } from './toolbar-draggable';
 import { IMenu, IMenuItem, deepCopyMenu, deepCopyMenuItem } from '../../../common';
 import { IEditorMenuItem } from '../common/editor-menu-item';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
-import { IconThemeRegistry } from '../../common/icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
 import { IDraggable } from '../common/draggable';
 import { DnDManager } from '../common/dnd-manager';
 
