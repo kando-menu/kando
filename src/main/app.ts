@@ -264,7 +264,7 @@ export class KandoApp {
       }
     });
 
-    this.appSettings.turn_autostart(this.appSettings.get("enableAutostart"));
+    this.appSettings.turnAutostart(this.appSettings.get('enableAutostart'));
   }
 
   /**
