@@ -34,7 +34,7 @@ export class CommandItemConfig implements IItemConfig {
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
     // Add the checkbox for the delayed execution mode.
     const fragment = utils.renderTemplate(
-      require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
+      require('../../editor/properties/templates/checkbox-option.hbs'),
       {
         label: i18next.t('items.common.delayed-option'),
         hint: i18next.t('items.common.delayed-option-hint'),
@@ -51,14 +51,11 @@ export class CommandItemConfig implements IItemConfig {
     });
 
     fragment.append(
-      utils.renderTemplate(
-        require('../../renderer/editor/properties/templates/text-option.hbs'),
-        {
-          placeholder: i18next.t('items.common.not-configured'),
-          label: i18next.t('items.command.command'),
-          hint: i18next.t('items.command.command-hint'),
-        }
-      )
+      utils.renderTemplate(require('../../editor/properties/templates/text-option.hbs'), {
+        placeholder: i18next.t('items.common.not-configured'),
+        label: i18next.t('items.command.command'),
+        hint: i18next.t('items.command.command-hint'),
+      })
     );
 
     // Get the input element and set the current value.

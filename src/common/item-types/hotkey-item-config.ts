@@ -11,7 +11,7 @@
 import i18next from 'i18next';
 
 import { IMenuItem } from '..';
-import { HotkeyPicker } from '../../renderer/editor/properties/hotkey-picker';
+import { HotkeyPicker } from '../../editor/properties/hotkey-picker';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './hotkey-item-type';
 import * as utils from './utils';
@@ -38,7 +38,7 @@ export class HotkeyItemConfig implements IItemConfig {
     // Add the checkbox for the delayed execution mode.
     fragment.append(
       utils.renderTemplate(
-        require('../../renderer/editor/properties/templates/checkbox-option.hbs'),
+        require('../../editor/properties/templates/checkbox-option.hbs'),
         {
           label: i18next.t('items.common.delayed-option'),
           hint: i18next.t('items.common.delayed-option-hint'),

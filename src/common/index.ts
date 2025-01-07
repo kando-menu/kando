@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuOptions } from '../renderer/menu/menu';
-import { EditorOptions } from '../renderer/editor/editor';
+import { MenuOptions } from '../menu/menu';
+import { EditorOptions } from '../editor/editor';
 
 /**
  * A simple 2D vector.

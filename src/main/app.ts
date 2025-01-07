@@ -42,8 +42,10 @@ import { ItemActionRegistry } from '../common/item-action-registry';
 import { WMInfo } from './backends/backend';
 import { UpdateChecker } from './update-checker';
 
-declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const MENU_WINDOW_WEBPACK_ENTRY: string;
+declare const EDITOR_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const EDITOR_WINDOW_WEBPACK_ENTRY: string;
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -610,7 +612,7 @@ export class KandoApp {
         // visible when the new menu is shown. For now, I have not seen any issues with
         // background throttling disabled.
         backgroundThrottling: false,
-        preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        preload: MENU_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       transparent: true,
       resizable: false,
@@ -673,7 +675,7 @@ export class KandoApp {
       ipcMain.on('renderer-ready', () => resolve());
     });
 
-    await this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+    await this.window.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
 
     // Apply the stored zoom factor to the window.
     this.window.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));

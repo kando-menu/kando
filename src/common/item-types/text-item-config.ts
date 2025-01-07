@@ -13,7 +13,7 @@ import i18next from 'i18next';
 import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './text-item-type';
-import { TextPicker } from '../../renderer/editor/properties/text-picker';
+import { TextPicker } from '../../editor/properties/text-picker';
 
 /** This class provides the configuration widgets for insert-text items. */
 export class TextItemConfig implements IItemConfig {
