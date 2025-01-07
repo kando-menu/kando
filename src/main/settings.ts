@@ -14,7 +14,7 @@ import chokidar from 'chokidar';
 import lodash from 'lodash';
 
 import os from 'os';
-import {Notification } from 'electron';
+import { Notification } from 'electron';
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -24,13 +24,12 @@ type PropertyChangeEvents<T> = {
   [K in keyof T]: (newValue: T[K], oldValue: T[K]) => void;
 };
 
-interface BackgroundInterface{
+interface BackgroundInterface {
   requestBackground(
     appId: string,
     options: { reason: string; autostart: boolean }
   ): Promise<void>;
 }
-
 
 /**
  * This type is used to make all properties of an object readonly. It is used to make sure
@@ -364,7 +363,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   public turnAutostart(enabled: boolean) {
     const env = { ...process.env };
     delete env.CHROME_DESKTOP;
-  
+
     const requestFlatpakAutoStart = async (
       backgroundInterface: BackgroundInterface,
       enabled: boolean
@@ -379,7 +378,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         console.error('Failed to request auto-start in Flatpak:', err);
       }
     };
-  
+
     if (env.container && env.container === 'flatpak') {
       const dbus = require('dbus-final');
       const sessionBus = dbus.sessionBus();
@@ -390,16 +389,16 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       const backgroundInterface = proxyObject.getInterface(
         'org.freedesktop.portal.Background'
       ) as BackgroundInterface;
-  
+
       requestFlatpakAutoStart(backgroundInterface, enabled);
     } else {
       const autoLaunch = require('auto-launch');
-  
+
       const kandoAutoLauncher = new autoLaunch({
         name: 'Kando',
         path: process.execPath,
       });
-  
+
       if (enabled === true) {
         kandoAutoLauncher.enable();
         console.log('Autostart is enabled');
@@ -409,4 +408,4 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       }
     }
   }
-}  
+}
