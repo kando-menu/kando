@@ -45,6 +45,8 @@ import { UpdateChecker } from './update-checker';
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
+let turnShortcutsVar = true;
+
 /**
  * This class contains the main host process logic of Kando. It is responsible for
  * creating the transparent window and for handling IPC communication with the renderer
@@ -1083,6 +1085,11 @@ export class KandoApp {
       click: () => this.showEditor(),
     });
 
+    template.push({
+      label: 'Enable/Disable shortcuts',
+      click: () => this.turnShortcuts(),
+    });
+
     template.push({ type: 'separator' });
 
     // Add an entry to quit the application.
@@ -1093,6 +1100,17 @@ export class KandoApp {
 
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);
+  }
+
+  private turnShortcuts() {
+    turnShortcutsVar = !turnShortcutsVar;
+    if (turnShortcutsVar === true) {
+      this.bindShortcuts();
+      console.log('Shortcuts are enabled!');
+    } else {
+      this.backend.unbindAllShortcuts();
+      console.log('Shortcuts are disabled!');
+    }
   }
 
   /**
