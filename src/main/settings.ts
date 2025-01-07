@@ -14,7 +14,9 @@ import chokidar from 'chokidar';
 import lodash from 'lodash';
 
 import os from 'os';
-import { Notification } from 'electron';
+import { app, Notification } from 'electron';
+import { KandoApp } from './app';
+import { defaultApp } from 'process';
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -352,4 +354,54 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       }
     }
   }
+
+  public turn_autostart(enabled: boolean) {
+    const env = { ...process.env };
+    delete env.CHROME_DESKTOP;
+  
+    if (env.container && env.container === 'flatpak') {
+      const dbus = require('dbus-final');
+  
+      const sessionBus = dbus.sessionBus();
+      const proxyObject = sessionBus.getProxyObject(
+        'org.freedesktop.portal.Desktop',
+        '/org/freedesktop/portal/desktop'
+      );
+      const backgroundInterface = proxyObject.getInterface(
+        'org.freedesktop.portal.Background'
+      );
+  
+      async function requestFlatpakAutoStart() {
+        try {
+          await backgroundInterface.RequestBackground(
+            'Kando',
+            {
+              reason: 'Allow Kando to start automatically at login.',
+              autostart: enabled,
+            }
+          );
+          console.log(`Autostart is ${enabled ? 'enabled' : 'disabled'} in Flatpak`);
+        } catch (err) {
+          console.error('Failed to request auto-start in Flatpak:', err);
+        }
+      }
+  
+      requestFlatpakAutoStart();
+    } else {
+      var AutoLaunch = require('auto-launch');
+  
+      var KandoAutoLauncher = new AutoLaunch({
+        name: 'Kando',
+        path: process.execPath,
+      });
+  
+      if (enabled === true) {
+        KandoAutoLauncher.enable();
+        console.log("Autostart is enabled");
+      } else {
+        KandoAutoLauncher.disable();
+        console.log("Autostart is disabled");
+      }
+    }
+  }  
 }

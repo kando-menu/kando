@@ -116,6 +116,7 @@ export class KandoApp {
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
+        enableAutostart: false,
         locale: 'auto',
         menuTheme: 'default',
         darkMenuTheme: 'default',
@@ -262,6 +263,8 @@ export class KandoApp {
         notification.show();
       }
     });
+
+    this.appSettings.turn_autostart(this.appSettings.get("enableAutostart"));
   }
 
   /**
