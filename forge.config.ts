@@ -127,7 +127,7 @@ const config: ForgeConfig = {
         entryPoints: [
           {
             html: './src/menu/index.html',
-            js: './src/menu/main.ts',
+            js: './src/menu/index.ts',
             name: 'menu_window',
             preload: {
               js: './src/menu/preload.ts',
@@ -135,7 +135,7 @@ const config: ForgeConfig = {
           },
           {
             html: './src/editor/index.html',
-            js: './src/editor/main.ts',
+            js: './src/editor/index.ts',
             name: 'editor_window',
             preload: {
               js: './src/editor/preload.ts',
