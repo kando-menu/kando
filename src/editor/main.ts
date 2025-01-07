@@ -100,5 +100,5 @@ Promise.all([
   window.api.log("Successfully loaded Kando's Editor process.");
 
   // Notify the main process that we are ready.
-  window.api.rendererReady();
+  window.api.editorWindowReady();
 });

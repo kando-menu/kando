@@ -68,7 +68,8 @@ export class KandoApp {
    * covers the whole screen. It is always on top and has no frame. It is used to display
    * the pie menu.
    */
-  private window: BrowserWindow;
+  private menuWindow: BrowserWindow;
+  private editorWindow: BrowserWindow;
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
@@ -188,7 +189,7 @@ export class KandoApp {
     // not shown. If the window is shown, the shortcuts are already unbound and will be
     // rebound when the window is hidden.
     this.menuSettings.onChange('menus', async () => {
-      if (!this.window.isVisible()) {
+      if (!this.menuWindow.isVisible()) {
         await this.bindShortcuts();
       }
       this.updateTrayMenu();
@@ -196,7 +197,7 @@ export class KandoApp {
 
     // When the app settings change, we need to apply the zoom factor to the window.
     this.appSettings.onChange('zoomFactor', (newValue) => {
-      this.window.webContents.setZoomFactor(newValue);
+      this.menuWindow.webContents.setZoomFactor(newValue);
     });
 
     // Check if we want to silently handle read-only config files
@@ -222,7 +223,8 @@ export class KandoApp {
     this.initRendererIPC();
 
     // Create and load the main window.
-    await this.initWindow();
+    await this.initMenuWindow();
+    await this.initEditorWindow();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -244,7 +246,7 @@ export class KandoApp {
       );
 
       // Show the update-available button in the sidebar.
-      this.window.webContents.send('show-update-available-button');
+      this.editorWindow.webContents.send('show-update-available-button');
 
       // Show the sidebar if it is hidden.
       this.appSettings.set({ sidebarVisible: true });
@@ -272,10 +274,10 @@ export class KandoApp {
    */
   public saveSettings() {
     // Save the current zoom factor to the settings.
-    if (this.window) {
+    if (this.menuWindow) {
       this.appSettings.set(
         {
-          zoomFactor: this.window.webContents.getZoomFactor(),
+          zoomFactor: this.menuWindow.webContents.getZoomFactor(),
         },
         false
       );
@@ -439,7 +441,7 @@ export class KandoApp {
         if (
           oldTrigger &&
           oldTrigger != newTrigger &&
-          this.window.isVisible() &&
+          this.menuWindow.isVisible() &&
           !this.hideTimeout
         ) {
           this.backend.bindShortcut({
@@ -468,7 +470,7 @@ export class KandoApp {
         // On Windows, we have to show the window before we can move it. Otherwise, the
         // window will not be moved to the correct monitor.
         if (process.platform === 'win32') {
-          this.showWindow();
+          this.showMenuWindow();
 
           // Also, there is this long-standing issue with Windows where the window is not
           // scaled correctly when it is moved to another monitor with a different DPI
@@ -477,7 +479,7 @@ export class KandoApp {
           // screen and make sure that it is only on this monitor by reducing its size to
           // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
           // scale the window to the correct size.
-          this.window.setBounds({
+          this.menuWindow.setBounds({
             x: workarea.x,
             y: workarea.y,
             width: 1,
@@ -486,7 +488,7 @@ export class KandoApp {
         }
 
         // Move and resize the window to the work area of the screen where the pointer is.
-        this.window.setBounds({
+        this.menuWindow.setBounds({
           x: workarea.x,
           y: workarea.y,
           width: workarea.width,
@@ -495,14 +497,14 @@ export class KandoApp {
 
         // On all platforms except Windows, we show the window after we moved it.
         if (process.platform !== 'win32') {
-          this.showWindow();
+          this.showMenuWindow();
         }
 
         // Usually, the menu is shown at the pointer position. However, if the menu is
         // centered, we show it in the center of the screen.
         const mousePosition = {
-          x: (info.pointerX - workarea.x) / this.window.webContents.getZoomFactor(),
-          y: (info.pointerY - workarea.y) / this.window.webContents.getZoomFactor(),
+          x: (info.pointerX - workarea.x) / this.menuWindow.webContents.getZoomFactor(),
+          y: (info.pointerY - workarea.y) / this.menuWindow.webContents.getZoomFactor(),
         };
 
         // We have to pass the size of the window to the renderer because window.innerWidth
@@ -518,13 +520,13 @@ export class KandoApp {
         // opened which is not nice if it is not opened at the pointer position.
         // We also send the name of the current application and window to the renderer.
         // It will be used as an example in the condition picker of the menu editor.
-        this.window.webContents.send(
+        this.menuWindow.webContents.send(
           'show-menu',
           this.lastMenu.root,
           {
             mousePosition,
             windowSize,
-            zoomFactor: this.window.webContents.getZoomFactor(),
+            zoomFactor: this.menuWindow.webContents.getZoomFactor(),
             centeredMode: this.lastMenu.centered,
             anchoredMode: this.lastMenu.anchored,
             warpMouse: this.lastMenu.warpMouse,
@@ -558,15 +560,15 @@ export class KandoApp {
     this.backend
       .getWMInfo()
       .then((info) => {
-        this.window.webContents.send('show-editor', {
+        this.editorWindow.webContents.send('show-editor', {
           appName: info.appName,
           windowName: info.windowName,
           windowPosition: {
-            x: this.window.getPosition()[0],
-            y: this.window.getPosition()[1],
+            x: this.editorWindow.getPosition()[0],
+            y: this.editorWindow.getPosition()[1],
           },
         });
-        this.showWindow();
+        this.editorWindow.show();
       })
       .catch((err) => {
         console.error('Failed to settings: ' + err);
@@ -575,7 +577,7 @@ export class KandoApp {
 
   /** This is called when the --reload-menu-theme command line option is passed. */
   public reloadMenuTheme() {
-    this.window.webContents.send(
+    this.menuWindow.webContents.send(
       `app-settings-changed-menuTheme`,
       this.appSettings.get('menuTheme'),
       this.appSettings.get('menuTheme')
@@ -584,7 +586,7 @@ export class KandoApp {
 
   /** This is called when the --reload-sound-theme command line option is passed. */
   public reloadSoundTheme() {
-    this.window.webContents.send(
+    this.menuWindow.webContents.send(
       `app-settings-changed-soundTheme`,
       this.appSettings.get('soundTheme'),
       this.appSettings.get('soundTheme')
@@ -596,10 +598,10 @@ export class KandoApp {
    * screen. It is not shown in any task bar and has no frame. It is used to display the
    * pie menu and potentially other UI elements such as the menu editor.
    */
-  private async initWindow() {
+  private async initMenuWindow() {
     const display = screen.getPrimaryDisplay();
 
-    this.window = new BrowserWindow({
+    this.menuWindow = new BrowserWindow({
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
@@ -629,13 +631,13 @@ export class KandoApp {
 
     // Remove the default menu. This disables all default shortcuts like CMD+W which are
     // not needed in Kando.
-    this.window.setMenu(null);
+    this.menuWindow.setMenu(null);
 
     // However, we still want to allow the user to zoom the menu using Ctrl+, Ctrl-, and
     // Ctrl+0. We have to handle these shortcuts manually.
-    this.window.webContents.on('before-input-event', (event, input) => {
+    this.menuWindow.webContents.on('before-input-event', (event, input) => {
       if (input.control && (input.key === '+' || input.key === '-')) {
-        let zoomFactor = this.window.webContents.getZoomFactor();
+        let zoomFactor = this.menuWindow.webContents.getZoomFactor();
         zoomFactor = input.key === '+' ? zoomFactor + 0.1 : zoomFactor - 0.1;
         this.appSettings.set({ zoomFactor });
         event.preventDefault();
@@ -654,7 +656,7 @@ export class KandoApp {
 
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
-    this.window.setAlwaysOnTop(true, 'screen-saver');
+    this.menuWindow.setAlwaysOnTop(true, 'screen-saver');
 
     // We set the Activation Policy to Accessory so that Kando doesn't show in dock
     // or the CMD Tab App Switcher. This is only for MacOS.
@@ -662,23 +664,56 @@ export class KandoApp {
       app.setActivationPolicy('accessory');
     }
 
-    // If the user clicks on a link, we close Kando's window and open the link in the
-    // default browser.
-    this.window.webContents.setWindowOpenHandler(({ url }) => {
-      this.window.webContents.send('hide-editor');
+    // We return a promise which resolves when the renderer process is ready.
+    const promise = new Promise<void>((resolve) => {
+      ipcMain.on('menu-window-ready', () => resolve());
+    });
+
+    await this.menuWindow.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
+
+    // Apply the stored zoom factor to the window.
+    this.menuWindow.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));
+
+    return promise;
+  }
+
+  private async initEditorWindow() {
+    this.editorWindow = new BrowserWindow({
+      webPreferences: {
+        contextIsolation: true,
+        sandbox: true,
+        // Electron only allows loading local resources from apps loaded from the file
+        // system. In development mode, the app is loaded from the webpack dev server.
+        // Hence, we have to disable webSecurity in development mode.
+        webSecurity: process.env.NODE_ENV !== 'development',
+        // Background throttling is disabled to make sure that the menu is properly
+        // hidden. Else it can happen that the last frame of a previous menu is still
+        // visible when the new menu is shown. For now, I have not seen any issues with
+        // background throttling disabled.
+        backgroundThrottling: false,
+        preload: EDITOR_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      },
+      width: 800,
+      height: 600,
+      show: false,
+    });
+
+    // Remove the default menu. This disables all default shortcuts like CMD+W which are
+    // not needed in Kando.
+    this.editorWindow.setMenu(null);
+
+    // If the user clicks on a link, we open the link in the default browser.
+    this.editorWindow.webContents.setWindowOpenHandler(({ url }) => {
       shell.openExternal(url);
       return { action: 'deny' };
     });
 
     // We return a promise which resolves when the renderer process is ready.
     const promise = new Promise<void>((resolve) => {
-      ipcMain.on('renderer-ready', () => resolve());
+      ipcMain.on('editor-window-ready', () => resolve());
     });
 
-    await this.window.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
-
-    // Apply the stored zoom factor to the window.
-    this.window.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));
+    await this.editorWindow.loadURL(EDITOR_WINDOW_WEBPACK_ENTRY);
 
     return promise;
   }
@@ -714,8 +749,15 @@ export class KandoApp {
       this.appSettings.onChange(
         key,
         (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
-          if (this.window) {
-            this.window.webContents.send(
+          if (this.menuWindow) {
+            this.menuWindow.webContents.send(
+              `app-settings-changed-${key}`,
+              newValue,
+              oldValue
+            );
+          }
+          if (this.editorWindow) {
+            this.editorWindow.webContents.send(
               `app-settings-changed-${key}`,
               newValue,
               oldValue
@@ -847,7 +889,7 @@ export class KandoApp {
     nativeTheme.on('updated', () => {
       if (darkMode !== nativeTheme.shouldUseDarkColors) {
         darkMode = nativeTheme.shouldUseDarkColors;
-        this.window.webContents.send('dark-mode-changed', darkMode);
+        this.menuWindow.webContents.send('dark-mode-changed', darkMode);
       }
     });
 
@@ -864,7 +906,7 @@ export class KandoApp {
 
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
-      this.window.webContents.openDevTools();
+      this.editorWindow.webContents.openDevTools();
     });
 
     // Reload the current menu theme if requested.
@@ -890,7 +932,7 @@ export class KandoApp {
       // On macOS, the pointer movement seems to be scaled automatically. We have to
       // scale the movement manually on other platforms.
       if (os.platform() !== 'darwin') {
-        const bounds = this.window.getBounds();
+        const bounds = this.menuWindow.getBounds();
         const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
         scale = display.scaleFactor;
       }
@@ -929,7 +971,7 @@ export class KandoApp {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hideWindow().then(() => {
+      this.hideMenuWindow().then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
@@ -940,7 +982,7 @@ export class KandoApp {
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('cancel-selection', () => {
-      this.hideWindow();
+      this.hideMenuWindow();
     });
   }
 
@@ -1127,36 +1169,36 @@ export class KandoApp {
   }
 
   /** This shows the window. */
-  private showWindow() {
+  private showMenuWindow() {
     // Cancel any ongoing window-hiding.
     if (this.hideTimeout) {
       clearTimeout(this.hideTimeout);
       this.hideTimeout = null;
     }
     // On Windows, we have to remove the ignore-mouse-events property when
-    // un-minimizing the window. See the hideWindow() method for more information on
+    // un-minimizing the window. See the hideMenuWindow() method for more information on
     // this workaround
     if (process.platform === 'win32') {
-      this.window.setIgnoreMouseEvents(false);
+      this.menuWindow.setIgnoreMouseEvents(false);
     }
 
     // On MacOS we need to ensure the window is on the current workspace before showing.
     // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
     if (process.platform === 'darwin') {
-      this.window.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
+      this.menuWindow.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
       setTimeout(() => {
-        this.window.setVisibleOnAllWorkspaces(false, {
+        this.menuWindow.setVisibleOnAllWorkspaces(false, {
           skipTransformProcessType: true,
         });
       }, 100);
     }
 
-    this.window.show();
+    this.menuWindow.show();
 
     // There seems to be an issue with GNOME Shell 44.1 where the window does not
     // get focus when it is shown. This is a workaround for that issue.
     setTimeout(() => {
-      this.window.focus();
+      this.menuWindow.focus();
     }, 100);
   }
 
@@ -1178,7 +1220,7 @@ export class KandoApp {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  private async hideWindow() {
+  private async hideMenuWindow() {
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
@@ -1188,12 +1230,12 @@ export class KandoApp {
 
       this.hideTimeout = setTimeout(() => {
         if (process.platform === 'win32') {
-          this.window.setIgnoreMouseEvents(true);
-          this.window.minimize();
+          this.menuWindow.setIgnoreMouseEvents(true);
+          this.menuWindow.minimize();
         } else if (process.platform === 'darwin') {
           app.hide();
         } else {
-          this.window.hide();
+          this.menuWindow.hide();
         }
 
         this.hideTimeout = null;

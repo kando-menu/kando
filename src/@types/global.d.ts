@@ -26,7 +26,8 @@ import {
 declare global {
   interface Window {
     api: {
-      rendererReady: () => void;
+      menuWindowReady: () => void;
+      editorWindowReady: () => void;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getLocales: () => Promise<{ current: string; data: any; fallbackLng: any }>;
       appSettings: {

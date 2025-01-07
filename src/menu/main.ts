@@ -148,5 +148,5 @@ Promise.all([
   window.api.log("Successfully loaded Kando's Menu process.");
 
   // Notify the main process that we are ready.
-  window.api.rendererReady();
+  window.api.menuWindowReady();
 });
