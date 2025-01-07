@@ -134,11 +134,11 @@ const config: ForgeConfig = {
             },
           },
           {
-            html: './src/editor/index.html',
-            js: './src/editor/index.ts',
-            name: 'editor_window',
+            html: './src/settings/index.html',
+            js: './src/settings/index.ts',
+            name: 'settings_window',
             preload: {
-              js: './src/editor/preload.ts',
+              js: './src/settings/preload.ts',
             },
           },
         ],

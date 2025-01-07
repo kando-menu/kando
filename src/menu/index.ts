@@ -18,10 +18,10 @@ import { SoundTheme } from './sound-theme';
 
 /**
  * This file is the main entry point for Kando's renderer process. It is responsible for
- * drawing the menu and the editor, as well as handling user input.
+ * drawing the menu and the settings, as well as handling user input.
  */
 
-// Wire up the menu and the editor -------------------------------------------------------
+// Wire up the menu and the settings -------------------------------------------------------
 
 // We need some information from the main process before we can start. This includes the
 // backend info, the menu theme, and the menu theme colors.
@@ -87,8 +87,8 @@ Promise.all([
     soundTheme.setVolume(volume);
   });
 
-  // Now, we create a new menu and a new editor. The menu is responsible for rendering
-  // the menu items and the editor is responsible for rendering the editor UI.
+  // Now, we create a new menu and a new settings. The menu is responsible for rendering
+  // the menu items and the settings is responsible for rendering the settings UI.
   const menu = new Menu(
     document.getElementById('kando-menu'),
     menuTheme,
@@ -97,7 +97,7 @@ Promise.all([
   );
 
   // Show the menu when the main process requests it.
-  window.api.showMenu((root, menuOptions, editorOptions) => {
+  window.api.showMenu((root, menuOptions, settingsOptions) => {
     menu.show(root, menuOptions);
   });
 
@@ -106,7 +106,7 @@ Promise.all([
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
 
-  // Tell the menu and the editor about settings changes.
+  // Tell the menu and the settings about settings changes.
   window.api.appSettings.onChange('menuOptions', (o) => menu.setOptions(o));
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
@@ -135,7 +135,7 @@ Promise.all([
 
   menu.on('unhover', (path) => window.api.unhoverItem(path));
 
-  // Hide the menu or the editor when the user presses escape.
+  // Hide the menu or the settings when the user presses escape.
   document.body.addEventListener('keydown', (ev) => {
     if (ev.key === 'Escape') {
       menu.hide();

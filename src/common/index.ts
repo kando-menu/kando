@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { MenuOptions } from '../menu/menu';
-import { EditorOptions } from '../editor/editor';
+import { SettingsOptions } from '../settings/settings';
 
 /**
  * A simple 2D vector.
@@ -49,7 +49,7 @@ export interface IBackendInfo {
   supportsShortcuts: boolean;
 
   /**
-   * This hint is shown in the editor next to the shortcut-id input field if
+   * This hint is shown in the settings next to the shortcut-id input field if
    * supportsShortcuts is false. It should very briefly explain how to change the
    * shortcuts in the operating system. If supportsShortcuts is true, this is not
    * required.
@@ -323,7 +323,7 @@ export interface IMenuItem {
 /**
  * This function creates a deep copy of an IMenuItem. It can also be used to strip all
  * properties from an menu item object which are not present in an IMenuItem. This is for
- * instance used before saving the menu settings.
+ * instance used before saving the settings.
  *
  * @param item The menu item to copy.
  * @returns The copied menu item.
@@ -450,18 +450,18 @@ export interface IShowMenuOptions {
 
 /**
  * This interface is used to describe the additional information that is passed to the
- * Editor's `show()` method from the main to the renderer process.
+ * Settings's `show()` method from the main to the renderer process.
  */
-export interface IShowEditorOptions {
+export interface IShowSettingsOptions {
   /**
    * The name of the application that is currently focused. This will be used as a
-   * condition example in the condition picker of the menu editor.
+   * condition example in the condition picker of the settings.
    */
   appName: string;
 
   /**
    * The name of the window that is currently focused. This will also be used as a
-   * condition example in the condition picker of the menu editor.
+   * condition example in the condition picker of the settings.
    */
   windowName: string;
 
@@ -473,8 +473,8 @@ export interface IShowEditorOptions {
 }
 
 /**
- * This interface describes the content of the menu settings file. It contains the
- * configured menus as well as the templates.
+ * This interface describes the content of the settings file. It contains the configured
+ * menus as well as the templates.
  */
 export interface IMenuSettings {
   menus: Array<IMenu>;
@@ -485,7 +485,7 @@ export interface IMenuSettings {
 
 /**
  * This interface describes the content of the app settings file. It contains the names of
- * the themes to use for the menu and the editor.
+ * the themes to use for the menu and the settings.
  */
 export interface IAppSettings {
   /**
@@ -533,7 +533,7 @@ export interface IAppSettings {
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';
 
-  /** Whether the sidebar should be shown in the editor. */
+  /** Whether the sidebar should be shown in the settings. */
   sidebarVisible: boolean;
 
   /** A scale factor for the menu. */
@@ -542,6 +542,6 @@ export interface IAppSettings {
   /** The options which are passed to the menu. */
   menuOptions: MenuOptions;
 
-  /** The options which are passed to the menu editor. */
-  editorOptions: EditorOptions;
+  /** The options which are passed to the settings. */
+  settingsOptions: SettingsOptions;
 }

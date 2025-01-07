@@ -15,7 +15,7 @@ import {
   IAppSettings,
   IMenuSettings,
   IShowMenuOptions,
-  IShowEditorOptions,
+  IShowSettingsOptions,
   IIconThemesInfo,
   IVersionInfo,
 } from '../common';
@@ -27,7 +27,7 @@ declare global {
   interface Window {
     api: {
       menuWindowReady: () => void;
-      editorWindowReady: () => void;
+      settingsWindowReady: () => void;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getLocales: () => Promise<{ current: string; data: any; fallbackLng: any }>;
       appSettings: {
@@ -62,11 +62,11 @@ declare global {
         func: (
           root: IMenuItem,
           menuOptions: IShowMenuOptions,
-          editorOptions: IShowEditorOptions
+          settingsOptions: IShowSettingsOptions
         ) => void
       ) => void;
-      showEditor: (func: (editorOptions: IShowEditorOptions) => void) => void;
-      hideEditor: (func: () => void) => void;
+      showSettings: (func: (settingsOptions: IShowSettingsOptions) => void) => void;
+      hideSettings: (func: () => void) => void;
       unbindShortcuts: () => void;
       showUpdateAvailableButton: (func: () => void) => void;
       hoverItem: (path: string) => void;

@@ -137,7 +137,7 @@ export class IconThemeRegistry {
    * Use this method to get all available icon themes.
    *
    * @returns A map containing all available icon themes. The keys are the unique names
-   *   used in the menu settings.
+   *   used in the settings.
    */
   public getThemes(): Map<string, IIconTheme> {
     return this.iconThemes;

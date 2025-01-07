@@ -44,8 +44,8 @@ import { UpdateChecker } from './update-checker';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MENU_WINDOW_WEBPACK_ENTRY: string;
-declare const EDITOR_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
-declare const EDITOR_WINDOW_WEBPACK_ENTRY: string;
+declare const SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -69,7 +69,7 @@ export class KandoApp {
    * the pie menu.
    */
   private menuWindow: BrowserWindow;
-  private editorWindow: BrowserWindow;
+  private settingsWindow: BrowserWindow;
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
@@ -156,7 +156,7 @@ export class KandoApp {
       },
     });
 
-    // We load the menu settings from the user's home directory. If the settings file does
+    // We load the settings from the user's home directory. If the settings file does
     // not exist, it will be created with the default values.
     this.menuSettings = new Settings<IMenuSettings>({
       file: 'menus.json',
@@ -184,7 +184,7 @@ export class KandoApp {
       });
     }
 
-    // When the menu settings change, we need to rebind the shortcuts and update the
+    // When the settings change, we need to rebind the shortcuts and update the
     // tray menu. Rebinding the shortcuts is only necessary when the window is currently
     // not shown. If the window is shown, the shortcuts are already unbound and will be
     // rebound when the window is hidden.
@@ -224,7 +224,7 @@ export class KandoApp {
 
     // Create and load the main window.
     await this.initMenuWindow();
-    await this.initEditorWindow();
+    await this.initSettingsWindow();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -246,7 +246,7 @@ export class KandoApp {
       );
 
       // Show the update-available button in the sidebar.
-      this.editorWindow.webContents.send('show-update-available-button');
+      this.settingsWindow.webContents.send('show-update-available-button');
 
       // Show the sidebar if it is hidden.
       this.appSettings.set({ sidebarVisible: true });
@@ -519,7 +519,7 @@ export class KandoApp {
         // activated. Else, the turbo mode would be activated immediately when the menu is
         // opened which is not nice if it is not opened at the pointer position.
         // We also send the name of the current application and window to the renderer.
-        // It will be used as an example in the condition picker of the menu editor.
+        // It will be used as an example in the condition picker of the settings.
         this.menuWindow.webContents.send(
           'show-menu',
           this.lastMenu.root,
@@ -551,24 +551,24 @@ export class KandoApp {
   }
 
   /**
-   * This is called when the user wants to open the menu editor. This can be either
-   * triggered by the tray icon or by running a second instance of the app. We send the
-   * name of the current application and window to the renderer. It will be used as an
-   * example in the condition picker of the menu editor.
+   * This is called when the user wants to open the settings. This can be either triggered
+   * by the tray icon or by running a second instance of the app. We send the name of the
+   * current application and window to the renderer. It will be used as an example in the
+   * condition picker of the settings.
    */
-  public showEditor() {
+  public showSettings() {
     this.backend
       .getWMInfo()
       .then((info) => {
-        this.editorWindow.webContents.send('show-editor', {
+        this.settingsWindow.webContents.send('show-settings', {
           appName: info.appName,
           windowName: info.windowName,
           windowPosition: {
-            x: this.editorWindow.getPosition()[0],
-            y: this.editorWindow.getPosition()[1],
+            x: this.settingsWindow.getPosition()[0],
+            y: this.settingsWindow.getPosition()[1],
           },
         });
-        this.editorWindow.show();
+        this.settingsWindow.show();
       })
       .catch((err) => {
         console.error('Failed to settings: ' + err);
@@ -596,7 +596,7 @@ export class KandoApp {
   /**
    * This creates the main window. It is a transparent window which covers the whole
    * screen. It is not shown in any task bar and has no frame. It is used to display the
-   * pie menu and potentially other UI elements such as the menu editor.
+   * pie menu and potentially other UI elements such as the settings.
    */
   private async initMenuWindow() {
     const display = screen.getPrimaryDisplay();
@@ -677,8 +677,8 @@ export class KandoApp {
     return promise;
   }
 
-  private async initEditorWindow() {
-    this.editorWindow = new BrowserWindow({
+  private async initSettingsWindow() {
+    this.settingsWindow = new BrowserWindow({
       webPreferences: {
         contextIsolation: true,
         sandbox: true,
@@ -691,7 +691,7 @@ export class KandoApp {
         // visible when the new menu is shown. For now, I have not seen any issues with
         // background throttling disabled.
         backgroundThrottling: false,
-        preload: EDITOR_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        preload: SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       width: 800,
       height: 600,
@@ -700,20 +700,20 @@ export class KandoApp {
 
     // Remove the default menu. This disables all default shortcuts like CMD+W which are
     // not needed in Kando.
-    this.editorWindow.setMenu(null);
+    this.settingsWindow.setMenu(null);
 
     // If the user clicks on a link, we open the link in the default browser.
-    this.editorWindow.webContents.setWindowOpenHandler(({ url }) => {
+    this.settingsWindow.webContents.setWindowOpenHandler(({ url }) => {
       shell.openExternal(url);
       return { action: 'deny' };
     });
 
     // We return a promise which resolves when the renderer process is ready.
     const promise = new Promise<void>((resolve) => {
-      ipcMain.on('editor-window-ready', () => resolve());
+      ipcMain.on('settings-window-ready', () => resolve());
     });
 
-    await this.editorWindow.loadURL(EDITOR_WINDOW_WEBPACK_ENTRY);
+    await this.settingsWindow.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
 
     return promise;
   }
@@ -756,8 +756,8 @@ export class KandoApp {
               oldValue
             );
           }
-          if (this.editorWindow) {
-            this.editorWindow.webContents.send(
+          if (this.settingsWindow) {
+            this.settingsWindow.webContents.send(
               `app-settings-changed-${key}`,
               newValue,
               oldValue
@@ -770,10 +770,10 @@ export class KandoApp {
     // We also allow getting the entire app settings object.
     ipcMain.handle('app-settings-get', () => this.appSettings.get());
 
-    // Allow the renderer to retrieve the menu settings.
+    // Allow the renderer to retrieve the settings.
     ipcMain.handle('menu-settings-get', () => this.menuSettings.get());
 
-    // Allow the renderer to alter the menu settings.
+    // Allow the renderer to alter the settings.
     ipcMain.on('menu-settings-set', (event, settings) => {
       this.menuSettings.set(settings);
     });
@@ -898,15 +898,15 @@ export class KandoApp {
       return this.loadSoundThemeDescription(this.appSettings.get('soundTheme'));
     });
 
-    // Once the editor is shown, we unbind all shortcuts to make sure that the
-    // user can select the bound shortcuts in the menu editor.
+    // Once the settings is shown, we unbind all shortcuts to make sure that the
+    // user can select the bound shortcuts in the settings.
     ipcMain.on('unbind-shortcuts', () => {
       this.backend.unbindAllShortcuts();
     });
 
     // Show the web developer tools if requested.
     ipcMain.on('show-dev-tools', () => {
-      this.editorWindow.webContents.openDevTools();
+      this.settingsWindow.webContents.openDevTools();
     });
 
     // Reload the current menu theme if requested.
@@ -988,7 +988,7 @@ export class KandoApp {
 
   /**
    * This binds the shortcuts for all menus. It will unbind all shortcuts first. This
-   * method is called once initially and then whenever the menu settings change.
+   * method is called once initially and then whenever the settings change.
    */
   private async bindShortcuts() {
     // This async function should not be run twice at the same time.
@@ -1038,8 +1038,8 @@ export class KandoApp {
   }
 
   /**
-   * This updates the menu of the tray icon. It is called when the menu settings change or
-   * when the tray icon flavor changes.
+   * This updates the menu of the tray icon. It is called when the settings change or when
+   * the tray icon flavor changes.
    */
   private updateTrayMenu(flavorChanged = false) {
     // If the flavor of the tray icon has changed, we have to destroy the old tray icon
@@ -1121,10 +1121,10 @@ export class KandoApp {
 
     template.push({ type: 'separator' });
 
-    // Add an entry to show the editor.
+    // Add an entry to show the settings.
     template.push({
       label: 'Show Settings',
-      click: () => this.showEditor(),
+      click: () => this.showSettings(),
     });
 
     template.push({ type: 'separator' });
@@ -1560,7 +1560,7 @@ export class KandoApp {
       }
     }
 
-    // Up to Kando 1.1.0, there was a `stash` property in the menu settings. This was
+    // Up to Kando 1.1.0, there was a `stash` property in the settings. This was
     // changed to `templates` in Kando 1.2.0.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const settings = this.menuSettings.getMutable() as any;

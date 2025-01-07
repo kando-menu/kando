@@ -1,0 +1,61 @@
+{{! //////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/menu/kando           //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+}}
+
+<!--
+  This is the button in the lower right corner which opens the settings.
+-->
+<button id='enter-edit-mode-button' class='btn btn-dark fs-4'>
+  <i class='material-symbols-rounded inline-icon'>settings</i>
+</button>
+
+<!--
+  This is the settings's toolbar. It contains the tabs for the different settings
+  sections.
+-->
+<div id="kando-settings-toolbar" class='d-flex flex-column'>
+
+  <!--
+    This is the button which closes the settings.
+  -->
+  <button id='leave-edit-mode-button' class='btn btn-dark rounded-end-circle fs-4'>
+    <i class='material-symbols-rounded inline-icon'>close</i>
+  </button>
+
+  <!--
+    This is the tab bar. It contains the buttons for the different settings
+    sections.
+  -->
+  <ul class='nav nav-tabs kando-font'>
+    {{#each tabs}}
+      <li  class='nav-item' {{#if gapBefore}} style="margin-left: auto" {{/if}}>
+        <button id='{{id}}-header' class='nav-link fs-4 {{#if active}} active {{/if}}'
+                data-bs-toggle='tab' data-bs-target='#{{id}}'>
+          <i class='material-symbols-rounded inline-icon d-none d-lg-inline-block'>{{icon}}</i>
+          {{title}}
+          {{#if hasCounter}}
+            <span id="{{id}}-counter" class="counter">0</span>
+          {{/if}}
+        </button>
+      </li>
+    {{/each}}
+  </ul>
+
+  <!--
+    This is the tab content. It contains the actual content of the tabs.
+  -->
+  <div class='tab-content flex-grow-1'>
+    {{#each tabs}}
+      <div class='tab-pane h-100 {{#if active}} active {{/if}}' id='{{id}}'>
+        {{{content}}}
+      </div>
+    {{/each}}
+  </div>
+</div>

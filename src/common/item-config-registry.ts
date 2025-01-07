@@ -18,21 +18,21 @@ import { URIItemConfig } from './item-types/uri-item-config';
 
 /**
  * This interface is required for generating the configuration widget for a specific item
- * type in the menu editor. You can find the implementations in the `item-configs`
+ * type in the settings. You can find the implementations in the `item-configs`
  * directory.
  */
 export interface IItemConfig {
   /**
    * The tip returned by this method will be shown below the item properties in the menu
-   * editor. It could be used to give the user some hints on how to configure the item. It
-   * is also fine to return a random tip here, this way the user will learn something new
-   * every time he selects an item of this kind. You can also return an empty string if
-   * you don't want to show a tip.
+   * settings. It could be used to give the user some hints on how to configure the item.
+   * It is also fine to return a random tip here, this way the user will learn something
+   * new every time he selects an item of this kind. You can also return an empty string
+   * if you don't want to show a tip.
    */
   getTipOfTheDay(): string;
 
   /**
-   * This method returns an DocumentFragment that will be shown in the menu editor for
+   * This method returns an DocumentFragment that will be shown in the settings for
    * editing the given item. Whenever the user changes the settings of the item, the item
    * is updated accordingly. If an item type does not need any special settings, this
    * method can return null.

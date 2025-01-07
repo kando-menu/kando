@@ -15,7 +15,7 @@ import i18Backend from 'i18next-fs-backend/cjs';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
- * handling the lifecycle of the app. The drawing of the menu and the editor is done in
+ * handling the lifecycle of the app. The drawing of the menu and the settings is done in
  * the renderer process (see renderer.ts).
  */
 
@@ -26,7 +26,7 @@ interface CLIOptions {
   menu?: string;
 
   // This optional parameter is specified using the --settings option. It is used to show
-  // the menu editor when the app or a second instance of the app is started.
+  // the settings when the app or a second instance of the app is started.
   settings?: boolean;
 
   // This optional parameter is specified using the --reload-menu-theme option. It is used
@@ -50,7 +50,7 @@ program
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
   .option('-m, --menu <menu>', 'show the menu with the given name')
-  .option('-s, --settings', 'show the menu editor')
+  .option('-s, --settings', 'show the settings')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .allowUnknownOption(true)
@@ -101,7 +101,7 @@ const handleCommandLine = (options: CLIOptions) => {
   }
 
   if (options.settings) {
-    kando.showEditor();
+    kando.showSettings();
     return true;
   }
 
@@ -153,7 +153,7 @@ app
     app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
       // If no option was passed, we show the settings.
       if (!handleCommandLine(options)) {
-        kando.showEditor();
+        kando.showSettings();
       }
     });
 

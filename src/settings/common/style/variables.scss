@@ -1,0 +1,53 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// In the future, we will extract some more styling variables.
+$kando-text-color: #e4e4e4;
+$kando-highlight-color: #ffc8c8;
+$kando-highlight-color-red: red($kando-highlight-color);
+$kando-highlight-color-green: green($kando-highlight-color);
+$kando-highlight-color-blue: blue($kando-highlight-color);
+
+// Below this aspect ratio, the settings will be displayed in a vertical layout.
+$settings-aspect-breakpoint: 0.9;
+
+// We use a golden ratio to determine the width of the preview and the properties area.
+$preview-properties-ratio: 0.618;
+
+// Outer padding of the settings area. The small bottom padding is used when the toolbar is
+// collapsed. The large bottom padding is used when the toolbar is expanded.
+$settings-padding-left: 7vw;
+$settings-padding-right: 7vw;
+$settings-padding-top: 7vh;
+$settings-padding-bottom-large: 7vh;
+$settings-padding-bottom-small: 1vh;
+
+// The area where the menu preview is displayed uses this fixed aspect ratio.
+$preview-aspect-ratio: 1.5;
+
+// The scale of the preview components is computed using container size queries (cqmin).
+// So you usually consider the values to be in percent of the preview areas's height
+// (because this is smaller than its width).
+$preview-center-size: 22cqmin;
+$preview-child-size: 12cqmin;
+$preview-child-distance: 26cqmin;
+$preview-grandchild-size: 3cqmin;
+$preview-active-outline-offset: 1.5cqmin;
+$preview-backlink-width: 4cqmin;
+$preview-backlink-inner-length: 8cqmin;
+$preview-backlink-outer-length: 30cqmin;
+$preview-label-distance: 19cqmin;
+$preview-label-max-size: 30cqmin;
+$preview-lock-size: 5cqmin;
+
+// The toolbar height is usually 20% of the viewport height but at least 250px.
+$toolbar-height: max(250px, 20vh);
+$toolbar-tab-height: 2.5rem;
+$toolbar-menu-button-icon-size: 4.25rem;
