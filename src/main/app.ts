@@ -267,12 +267,16 @@ export class KandoApp {
       }
     });
 
-    this.toggleAutostart(this.appSettings.get('enableAutostart'));
+    // Enable or disable autostart depending on the settings.
+    this.enableAutostart(this.appSettings.get('enableAutostart'));
+
+    this.appSettings.onChange('enableAutostart', (newValue) => {
+      this.enableAutostart(newValue);
+    });
   }
 
-  private toggleAutostart(enabled: boolean) {
+  private enableAutostart(enable: boolean) {
     const env = { ...process.env };
-    delete env.CHROME_DESKTOP;
 
     if (env.container && env.container === 'flatpak') {
       /** There will be flatpak code */
@@ -284,12 +288,10 @@ export class KandoApp {
         path: process.execPath,
       });
 
-      if (enabled === true) {
+      if (enable) {
         kandoAutoLauncher.enable();
-        console.log('Autostart is enabled');
       } else {
         kandoAutoLauncher.disable();
-        console.log('Autostart is disabled');
       }
     }
   }

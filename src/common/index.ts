@@ -489,8 +489,10 @@ export interface IMenuSettings {
  */
 export interface IAppSettings {
   /**
-   * Run Kando on startup, uses already created module, for flapack it will use dbus to
-   * request permissions if option is enabled (true)
+   * If true, Kando will be started at login. In most cases, this will use
+   * https://www.npmjs.com/package/auto-launch. So after Kando got uninstalled, the
+   * autostart entry may still exist. If running inside a Flatpak, the corresponding
+   * desktop portal will be used.
    */
   enableAutostart: boolean;
 
