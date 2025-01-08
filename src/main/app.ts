@@ -74,6 +74,9 @@ export class KandoApp {
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
 
+  /** This variable determines is we binding shortcuts or not */
+  private turnShortcutsVar = true;
+
   /**
    * This is the tray icon which is displayed in the system tray. In the future it will be
    * possible to disable this icon.
@@ -1083,6 +1086,18 @@ export class KandoApp {
       click: () => this.showEditor(),
     });
 
+    if (this.turnShortcutsVar === true) {
+      template.push({
+        label: 'Disable shortcuts',
+        click: () => this.turnShortcuts(),
+      });
+    } else {
+      template.push({
+        label: 'Enable shortcuts',
+        click: () => this.turnShortcuts(),
+      });
+    }
+
     template.push({ type: 'separator' });
 
     // Add an entry to quit the application.
@@ -1093,6 +1108,18 @@ export class KandoApp {
 
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);
+  }
+
+  private turnShortcuts() {
+    this.turnShortcutsVar = !this.turnShortcutsVar;
+    if (this.turnShortcutsVar === true) {
+      this.bindShortcuts();
+      console.log('Shortcuts are enabled!');
+    } else {
+      this.backend.unbindAllShortcuts();
+      console.log('Shortcuts are disabled!');
+    }
+    this.updateTrayMenu();
   }
 
   /**
