@@ -45,8 +45,6 @@ import { UpdateChecker } from './update-checker';
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-let turnShortcutsVar = true;
-
 /**
  * This class contains the main host process logic of Kando. It is responsible for
  * creating the transparent window and for handling IPC communication with the renderer
@@ -75,6 +73,9 @@ export class KandoApp {
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
+
+  /** This variable determines is we binding shortcuts or not */
+  private turnShortcutsVar = true;
 
   /**
    * This is the tray icon which is displayed in the system tray. In the future it will be
@@ -1085,10 +1086,17 @@ export class KandoApp {
       click: () => this.showEditor(),
     });
 
-    template.push({
-      label: 'Enable/Disable shortcuts',
-      click: () => this.turnShortcuts(),
-    });
+    if (this.turnShortcutsVar === true) {
+      template.push({
+        label: 'Disable shortcuts',
+        click: () => this.turnShortcuts(),
+      });
+    } else {
+      template.push({
+        label: 'Enable shortcuts',
+        click: () => this.turnShortcuts(),
+      });
+    }
 
     template.push({ type: 'separator' });
 
@@ -1103,14 +1111,15 @@ export class KandoApp {
   }
 
   private turnShortcuts() {
-    turnShortcutsVar = !turnShortcutsVar;
-    if (turnShortcutsVar === true) {
+    this.turnShortcutsVar = !this.turnShortcutsVar;
+    if (this.turnShortcutsVar === true) {
       this.bindShortcuts();
       console.log('Shortcuts are enabled!');
     } else {
       this.backend.unbindAllShortcuts();
       console.log('Shortcuts are disabled!');
     }
+    this.updateTrayMenu()
   }
 
   /**
