@@ -119,6 +119,7 @@ export class KandoApp {
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
+        enableAutostart: false,
         locale: 'auto',
         menuTheme: 'default',
         darkMenuTheme: 'default',
@@ -265,6 +266,32 @@ export class KandoApp {
         notification.show();
       }
     });
+
+    this.toggleAutostart(this.appSettings.get('enableAutostart'));
+  }
+
+  private toggleAutostart(enabled: boolean) {
+    const env = { ...process.env };
+    delete env.CHROME_DESKTOP;
+
+    if (env.container && env.container === 'flatpak') {
+      /** There will be flatpak code */
+    } else {
+      const autoLaunch = require('auto-launch');
+
+      const kandoAutoLauncher = new autoLaunch({
+        name: 'Kando',
+        path: process.execPath,
+      });
+
+      if (enabled === true) {
+        kandoAutoLauncher.enable();
+        console.log('Autostart is enabled');
+      } else {
+        kandoAutoLauncher.disable();
+        console.log('Autostart is disabled');
+      }
+    }
   }
 
   /**

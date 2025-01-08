@@ -65,6 +65,7 @@
     "@types/bootstrap": "^5.2.10",
     "@types/lodash.isequal": "^4.5.8",
     "@types/mime-types": "^2.1.4",
+    "auto-launch": "^5.0.6",
     "bootstrap": "^5.3.1",
     "chokidar": "^4.0.3",
     "commander": "^13.0.0",
