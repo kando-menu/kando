@@ -24,13 +24,6 @@ type PropertyChangeEvents<T> = {
   [K in keyof T]: (newValue: T[K], oldValue: T[K]) => void;
 };
 
-interface BackgroundInterface {
-  requestBackground(
-    appId: string,
-    options: { reason: string; autostart: boolean }
-  ): Promise<void>;
-}
-
 /**
  * This type is used to make all properties of an object readonly. It is used to make sure
  * that the settings object cannot be modified from outside of the class except through
@@ -356,55 +349,6 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
         this.emit(key, this.settings[key], oldSettings[key]);
-      }
-    }
-  }
-
-  public turnAutostart(enabled: boolean) {
-    const env = { ...process.env };
-    delete env.CHROME_DESKTOP;
-
-    const requestFlatpakAutoStart = async (
-      backgroundInterface: BackgroundInterface,
-      enabled: boolean
-    ) => {
-      try {
-        await backgroundInterface.requestBackground('Kando', {
-          reason: 'Allow Kando to start automatically at login.',
-          autostart: enabled,
-        });
-        console.log(`Autostart is ${enabled ? 'enabled' : 'disabled'} in Flatpak`);
-      } catch (err) {
-        console.error('Failed to request auto-start in Flatpak:', err);
-      }
-    };
-
-    if (env.container && env.container === 'flatpak') {
-      const dbus = require('dbus-final');
-      const sessionBus = dbus.sessionBus();
-      const proxyObject = sessionBus.getProxyObject(
-        'org.freedesktop.portal.Desktop',
-        '/org/freedesktop/portal/desktop'
-      );
-      const backgroundInterface = proxyObject.getInterface(
-        'org.freedesktop.portal.Background'
-      ) as BackgroundInterface;
-
-      requestFlatpakAutoStart(backgroundInterface, enabled);
-    } else {
-      const autoLaunch = require('auto-launch');
-
-      const kandoAutoLauncher = new autoLaunch({
-        name: 'Kando',
-        path: process.execPath,
-      });
-
-      if (enabled === true) {
-        kandoAutoLauncher.enable();
-        console.log('Autostart is enabled');
-      } else {
-        kandoAutoLauncher.disable();
-        console.log('Autostart is disabled');
       }
     }
   }
