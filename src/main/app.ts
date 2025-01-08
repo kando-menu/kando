@@ -1089,7 +1089,7 @@ export class KandoApp {
     // Add an entry to pause or unpause the shortcuts.
     if (this.inhibitShortcuts) {
       template.push({
-        label: i18next.t('main.uninhibitShortcuts'),
+        label: i18next.t('main.un-inhibit-shortcuts'),
         click: () => {
           this.inhibitShortcuts = false;
           this.bindShortcuts();
@@ -1098,7 +1098,7 @@ export class KandoApp {
       });
     } else {
       template.push({
-        label: i18next.t('main.inhibitShortcuts'),
+        label: i18next.t('main.inhibit-shortcuts'),
         click: () => {
           this.inhibitShortcuts = true;
           this.backend.unbindAllShortcuts();
