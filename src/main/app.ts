@@ -74,8 +74,8 @@ export class KandoApp {
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
 
-  /** This variable determines is we binding shortcuts or not */
-  private turnShortcutsVar = true;
+  /** True if shortcuts are currently inhibited. */
+  private inhibitShortcuts = false;
 
   /**
    * This is the tray icon which is displayed in the system tray. In the future it will be
@@ -951,7 +951,7 @@ export class KandoApp {
    */
   private async bindShortcuts() {
     // This async function should not be run twice at the same time.
-    if (this.bindingShortcuts) {
+    if (this.bindingShortcuts || this.inhibitShortcuts) {
       return;
     }
 
@@ -1086,15 +1086,24 @@ export class KandoApp {
       click: () => this.showEditor(),
     });
 
-    if (this.turnShortcutsVar === true) {
+    // Add an entry to pause or unpause the shortcuts.
+    if (this.inhibitShortcuts) {
       template.push({
-        label: 'Disable shortcuts',
-        click: () => this.turnShortcuts(),
+        label: i18next.t('main.uninhibitShortcuts'),
+        click: () => {
+          this.inhibitShortcuts = false;
+          this.bindShortcuts();
+          this.updateTrayMenu();
+        },
       });
     } else {
       template.push({
-        label: 'Enable shortcuts',
-        click: () => this.turnShortcuts(),
+        label: i18next.t('main.inhibitShortcuts'),
+        click: () => {
+          this.inhibitShortcuts = true;
+          this.backend.unbindAllShortcuts();
+          this.updateTrayMenu();
+        },
       });
     }
 
@@ -1108,18 +1117,6 @@ export class KandoApp {
 
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);
-  }
-
-  private turnShortcuts() {
-    this.turnShortcutsVar = !this.turnShortcutsVar;
-    if (this.turnShortcutsVar === true) {
-      this.bindShortcuts();
-      console.log('Shortcuts are enabled!');
-    } else {
-      this.backend.unbindAllShortcuts();
-      console.log('Shortcuts are disabled!');
-    }
-    this.updateTrayMenu();
   }
 
   /**
