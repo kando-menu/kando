@@ -47,9 +47,6 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('menu-window-ready', () => resolve());
   });
 
-  /** This flag is used to determine if the bindShortcuts() method is currently running. */
-  private bindingShortcuts = false;
-
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
 
@@ -567,60 +564,5 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('cancel-selection', () => {
       this.hide();
     });
-  }
-
-  /**
-   * This binds the shortcuts for all menus. It will unbind all shortcuts first. This
-   * method is called once initially and then whenever the settings change.
-   */
-  private async bindShortcuts() {
-    // This async function should not be run twice at the same time.
-    if (this.bindingShortcuts) {
-      return;
-    }
-
-    this.bindingShortcuts = true;
-
-    // First, we unbind all shortcuts.
-    await this.backend.unbindAllShortcuts();
-
-    // Then, we collect all unique shortcuts and the corresponding menus.
-    const triggers = new Map<string, DeepReadonly<IMenu>[]>();
-    for (const menu of this.menuSettings.get('menus')) {
-      const trigger = this.backend.getBackendInfo().supportsShortcuts
-        ? menu.shortcut
-        : menu.shortcutID;
-
-      if (trigger) {
-        if (!triggers.has(trigger)) {
-          triggers.set(trigger, []);
-        }
-        triggers.get(trigger).push(menu);
-      }
-    }
-
-    // Finally, we bind the shortcuts. If there are multiple menus with the same
-    // shortcut, the shortcut will open the first menu for now.
-    for (const [trigger] of triggers) {
-      try {
-        await this.backend.bindShortcut({
-          trigger,
-          action: () => {
-            this.menuWindow.showMenu({
-              trigger: trigger,
-              name: '',
-            });
-
-            // We use the opportunity to check for updates. If an update is available, we show
-            // a notification to the user. This notification is only shown once per app start.
-            this.updateChecker.checkForUpdates();
-          },
-        });
-      } catch (error) {
-        Notification.showError('Failed to bind shortcut ' + trigger, error.message);
-      }
-    }
-
-    this.bindingShortcuts = false;
   }
 }
