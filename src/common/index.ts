@@ -488,7 +488,10 @@ export interface IMenuSettings {
  * the themes to use for the menu and the editor.
  */
 export interface IAppSettings {
+  /** Run Kando on startup, uses already created module, for flapack it will use dbus to 
+   * request permissions if option is enabled (true) */
   enableAutostart: boolean;
+
   /**
    * The locale to use. If set to 'auto', the system's locale will be used. If the locale
    * is not available, english will be used.
