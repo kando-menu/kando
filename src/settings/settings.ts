@@ -40,7 +40,7 @@ export class SettingsOptions {
    * Set this to false to hide the show-settings button. It will still be clickable,
    * though.
    */
-  showSettingsButtonVisible = true;
+  showEditorButtonVisible = true;
 }
 
 /**
@@ -224,7 +224,7 @@ export class Settings extends EventEmitter {
 
     this.container.style.setProperty(
       '--show-settings-button-opacity',
-      `${this.options.showSettingsButtonVisible ? 1 : 0}`
+      `${this.options.showEditorButtonVisible ? 1 : 0}`
     );
   }
 

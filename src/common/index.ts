@@ -543,5 +543,5 @@ export interface IAppSettings {
   menuOptions: MenuOptions;
 
   /** The options which are passed to the settings. */
-  settingsOptions: SettingsOptions;
+  editorOptions: SettingsOptions;
 }
