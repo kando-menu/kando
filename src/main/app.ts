@@ -1119,7 +1119,7 @@ export class KandoApp {
       this.backend.unbindAllShortcuts();
       console.log('Shortcuts are disabled!');
     }
-    this.updateTrayMenu()
+    this.updateTrayMenu();
   }
 
   /**
