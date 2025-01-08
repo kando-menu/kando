@@ -74,6 +74,9 @@ export class KandoApp {
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
 
+  /** True if shortcuts are currently inhibited. */
+  private inhibitShortcuts = false;
+
   /**
    * This is the tray icon which is displayed in the system tray. In the future it will be
    * possible to disable this icon.
@@ -948,7 +951,7 @@ export class KandoApp {
    */
   private async bindShortcuts() {
     // This async function should not be run twice at the same time.
-    if (this.bindingShortcuts) {
+    if (this.bindingShortcuts || this.inhibitShortcuts) {
       return;
     }
 
@@ -1082,6 +1085,27 @@ export class KandoApp {
       label: 'Show Settings',
       click: () => this.showEditor(),
     });
+
+    // Add an entry to pause or unpause the shortcuts.
+    if (this.inhibitShortcuts) {
+      template.push({
+        label: i18next.t('main.un-inhibit-shortcuts'),
+        click: () => {
+          this.inhibitShortcuts = false;
+          this.bindShortcuts();
+          this.updateTrayMenu();
+        },
+      });
+    } else {
+      template.push({
+        label: i18next.t('main.inhibit-shortcuts'),
+        click: () => {
+          this.inhibitShortcuts = true;
+          this.backend.unbindAllShortcuts();
+          this.updateTrayMenu();
+        },
+      });
+    }
 
     template.push({ type: 'separator' });
 

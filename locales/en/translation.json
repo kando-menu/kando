@@ -66,9 +66,9 @@
     }
   },
   "main": {
-    "is-running-header": "Kando is already running",
-    "is-running-message": "Check the system tray icon for some options!",
-    "failed-to-start-header": "Kando failed to start"
+    "failed-to-start-header": "Kando failed to start",
+    "un-inhibit-shortcuts": "Re-enable Shortcuts",
+    "inhibit-shortcuts": "Temporarily Disable Shortcuts"
   },
   "properties": {
     "common": {
