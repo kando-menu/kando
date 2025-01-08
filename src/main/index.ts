@@ -13,6 +13,8 @@ import { program } from 'commander';
 import i18next from 'i18next';
 import i18Backend from 'i18next-fs-backend/cjs';
 
+import { Notification } from './notification';
+
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
  * handling the lifecycle of the app. The drawing of the menu and the settings is done in
@@ -138,11 +140,6 @@ app
   })
   .then(() => kando.init())
   .then(() => {
-    // Save some settings when the app is closed.
-    app.on('before-quit', () => {
-      kando.saveSettings();
-    });
-
     // Show a nifty message when the app is about to quit.
     app.on('will-quit', async () => {
       await kando.quit();
@@ -164,7 +161,7 @@ app
     handleCommandLine(options);
   })
   .catch((error) => {
-    KandoApp.showError(i18next.t('main.failed-to-start-header'), error.message);
+    Notification.showError(i18next.t('main.failed-to-start-header'), error.message);
     app.quit();
     process.exitCode = 1;
   });
