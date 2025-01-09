@@ -16,7 +16,7 @@ import json5 from 'json5';
 import { BrowserWindow, ipcMain, shell, Tray, Menu, app, nativeTheme } from 'electron';
 import i18next from 'i18next';
 
-import { MenuWindow } from './menuWindow';
+import { MenuWindow } from './menu-window';
 import { Backend, getBackend } from './backends';
 import {
   IMenuItem,
@@ -28,7 +28,7 @@ import {
   ISoundThemeDescription,
   IMenuThemeDescription,
 } from '../common';
-import { Settings } from './settings';
+import { Settings, DeepReadonly } from './settings';
 import { Notification } from './notification';
 import { UpdateChecker } from './update-checker';
 

@@ -40,7 +40,7 @@ export class MenuWindow extends BrowserWindow {
   public lastMenu?: DeepReadonly<IMenu>;
 
   /** This contains the last WMInfo which was received. */
-  public lastWMInfo?: WMInfo;
+  private lastWMInfo?: WMInfo;
 
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
@@ -346,7 +346,20 @@ export class MenuWindow extends BrowserWindow {
         clearTimeout(this.hideTimeout);
       }
 
-      this.bindShortcuts();
+      const useID = !this.backend.getBackendInfo().supportsShortcuts;
+      const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
+
+      if (lastTrigger) {
+        this.backend.bindShortcut({
+          trigger: lastTrigger,
+          action: () => {
+            this.showMenu({
+              trigger: lastTrigger,
+              name: '',
+            });
+          },
+        });
+      }
 
       this.hideTimeout = setTimeout(() => {
         if (process.platform === 'win32') {
