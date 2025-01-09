@@ -10,7 +10,8 @@
 
 import './index.scss';
 
-import i18next from 'i18next';
+import { MenuWindowWithApi } from './@types/preload';
+declare const window: MenuWindowWithApi;
 
 import { Menu } from './menu';
 import { MenuTheme } from './menu-theme';
@@ -26,28 +27,11 @@ import { SoundTheme } from './sound-theme';
 // We need some information from the main process before we can start. This includes the
 // backend info, the menu theme, and the menu theme colors.
 Promise.all([
-  window.api.getLocales(),
   window.api.getMenuTheme(),
   window.api.getCurrentMenuThemeColors(),
   window.api.getSoundTheme(),
   window.api.appSettings.get(),
-]).then(async ([locales, themeDescription, colors, soundThemeDescription, settings]) => {
-  // Initialize i18next with the current locale and the english fallback locale.
-  await i18next.init({
-    lng: locales.current,
-    fallbackLng: locales.fallbackLng,
-  });
-
-  Object.keys(locales.data).forEach((key) => {
-    i18next.addResourceBundle(
-      key,
-      'translation',
-      locales.data[key].translation,
-      true,
-      true
-    );
-  });
-
+]).then(async ([themeDescription, colors, soundThemeDescription, settings]) => {
   // First, we create a new menu theme and load the description we got from the main
   // process.
   const menuTheme = new MenuTheme();
@@ -97,13 +81,8 @@ Promise.all([
   );
 
   // Show the menu when the main process requests it.
-  window.api.showMenu((root, menuOptions, settingsOptions) => {
+  window.api.showMenu((root, menuOptions) => {
     menu.show(root, menuOptions);
-  });
-
-  // Show the update available button when the main process requests it.
-  window.api.showUpdateAvailableButton(() => {
-    document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
 
   // Tell the menu and the settings about settings changes.

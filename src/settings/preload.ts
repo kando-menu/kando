@@ -9,6 +9,9 @@
 // SPDX-License-Identifier: MIT
 
 import { ipcRenderer, contextBridge } from 'electron';
+
+import { SettingsWindowAPI } from './@types/preload';
+
 import {
   IVec2,
   IMenuItem,
@@ -257,4 +260,4 @@ contextBridge.exposeInMainWorld('api', {
   movePointer: function (dist: IVec2) {
     ipcRenderer.send('move-pointer', dist);
   },
-});
+} as SettingsWindowAPI);

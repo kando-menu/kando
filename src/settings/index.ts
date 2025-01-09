@@ -12,6 +12,9 @@ import './index.scss';
 
 import i18next from 'i18next';
 
+import { SettingsWindowWithApi } from './@types/preload';
+declare const window: SettingsWindowWithApi;
+
 import { Settings } from './settings';
 
 /**
