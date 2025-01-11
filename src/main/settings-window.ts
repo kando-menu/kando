@@ -8,29 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { BrowserWindow, shell, ipcMain } from 'electron';
-
-import { Settings } from './utils/settings';
-import { IMenuSettings, IAppSettings } from '../common';
-import { Backend } from './backends';
+import { BrowserWindow, shell } from 'electron';
 
 declare const SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
 
 /** This is window which contains the settings of Kando. */
 export class SettingsWindow extends BrowserWindow {
-  /** This will resolve once the window has fully loaded. */
-  private windowLoaded = new Promise<void>((resolve) => {
-    ipcMain.on('settings-window.ready', () => {
-      resolve();
-    });
-  });
-
-  constructor(
-    private appSettings: Settings<IAppSettings>,
-    private menuSettings: Settings<IMenuSettings>,
-    private backend: Backend
-  ) {
+  constructor() {
     super({
       webPreferences: {
         contextIsolation: true,
@@ -55,13 +40,12 @@ export class SettingsWindow extends BrowserWindow {
       shell.openExternal(url);
       return { action: 'deny' };
     });
-  }
 
-  async load() {
-    // this.initMenuRendererAPI();
+    this.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
 
-    await this.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
-
-    return this.windowLoaded;
+    // Show the window when the renderer is ready.
+    this.webContents.on('dom-ready', () => {
+      this.show();
+    });
   }
 }

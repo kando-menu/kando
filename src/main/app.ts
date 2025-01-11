@@ -271,30 +271,27 @@ export class KandoApp {
    * condition picker of the settings.
    */
   public showSettings() {
-    this.backend
-      .getWMInfo()
-      .then(async (info) => {
-        this.settingsWindow = new SettingsWindow(
-          this.appSettings,
-          this.menuSettings,
-          this.backend
-        );
+    // Focus the settings window if it is already open.
+    if (this.settingsWindow) {
+      this.settingsWindow.focus();
+      return;
+    }
 
-        await this.settingsWindow.load();
+    this.settingsWindow = new SettingsWindow();
 
-        // this.settingsWindow.webContents.send('show-settings', {
-        //   appName: info.appName,
-        //   windowName: info.windowName,
-        //   windowPosition: {
-        //     x: this.settingsWindow.getPosition()[0],
-        //     y: this.settingsWindow.getPosition()[1],
-        //   },
-        // });
-        this.settingsWindow.show();
-      })
-      .catch((err) => {
-        console.error('Failed to settings: ' + err);
-      });
+    // Reset the member variable when the window is closed.
+    this.settingsWindow.on('closed', () => {
+      this.settingsWindow = undefined;
+    });
+
+    // this.settingsWindow.webContents.send('show-settings', {
+    //   appName: info.appName,
+    //   windowName: info.windowName,
+    //   windowPosition: {
+    //     x: this.settingsWindow.getPosition()[0],
+    //     y: this.settingsWindow.getPosition()[1],
+    //   },
+    // });
   }
 
   /** This is called when the --reload-menu-theme command line option is passed. */
