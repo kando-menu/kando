@@ -283,15 +283,6 @@ export class KandoApp {
     this.settingsWindow.on('closed', () => {
       this.settingsWindow = undefined;
     });
-
-    // this.settingsWindow.webContents.send('show-settings', {
-    //   appName: info.appName,
-    //   windowName: info.windowName,
-    //   windowPosition: {
-    //     x: this.settingsWindow.getPosition()[0],
-    //     y: this.settingsWindow.getPosition()[1],
-    //   },
-    // });
   }
 
   /** This is called when the --reload-menu-theme command line option is passed. */

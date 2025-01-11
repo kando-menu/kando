@@ -8,13 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { BrowserWindow, shell } from 'electron';
+import { BrowserWindow, shell, ipcMain } from 'electron';
 
 declare const SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
 
 /** This is window which contains the settings of Kando. */
 export class SettingsWindow extends BrowserWindow {
+  /** This will resolve once the window has fully loaded. */
+  private windowLoaded = new Promise<void>((resolve) => {
+    ipcMain.on('settings-window.ready', () => {
+      resolve();
+    });
+  });
+
   constructor() {
     super({
       webPreferences: {
@@ -44,7 +51,7 @@ export class SettingsWindow extends BrowserWindow {
     this.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
 
     // Show the window when the renderer is ready.
-    this.webContents.on('dom-ready', () => {
+    this.windowLoaded.then(() => {
       this.show();
     });
   }

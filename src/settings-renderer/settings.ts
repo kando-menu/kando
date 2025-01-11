@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from './settings-window-api';
-declare const window: WindowWithAPIs;
-
 import { Tooltip } from 'bootstrap';
 
 import { Sidebar } from './sidebar/sidebar';
@@ -18,12 +15,7 @@ import { Toolbar } from './toolbar/toolbar';
 import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import {
-  IBackendInfo,
-  IMenuSettings,
-  IShowSettingsOptions,
-  IVersionInfo,
-} from '../common';
+import { IBackendInfo, IMenuSettings, IVersionInfo } from '../common';
 import { DnDManager } from './common/dnd-manager';
 
 /** These options can be given to the constructor of the settings. */
@@ -115,10 +107,18 @@ export class Settings {
    * functionality.
    *
    * @param container All the settings components will be appended to this container.
+   * @param menuSettings The current menu settings.
+   * @param currentMenu The index of the currently selected menu.
    * @param backend Provides information on the currently used backend of Kando.
    * @param version The version string will be displayed in the sidebar.
    */
-  constructor(container: HTMLElement, backend: IBackendInfo, version: IVersionInfo) {
+  constructor(
+    container: HTMLElement,
+    menuSettings: IMenuSettings,
+    currentMenu: number,
+    backend: IBackendInfo,
+    version: IVersionInfo
+  ) {
     this.container = container;
     this.backend = backend;
 
@@ -187,27 +187,16 @@ export class Settings {
         delay: { show: 500, hide: 0 },
       });
     });
-  }
 
-  /**
-   * This is used to show the entire settings. Most likely, this will only show the
-   * sidebar, the other components are hidden by default and will only be shown when
-   * enterEditMode() is called.
-   */
-  public show(options: IShowSettingsOptions) {
-    this.properties.setOptions(options);
-    this.container.classList.add('visible');
-
-    // Get the current settings from the main process and pass them to the respective
-    // components.
-    Promise.all([
-      window.commonAPI.menuSettings.get(),
-      window.commonAPI.menuSettings.getCurrentMenu(),
-    ]).then(([menuSettings, currentMenu]) => {
-      this.menuSettings = menuSettings;
-      this.currentMenu = currentMenu;
-      this.preview.setMenu(menuSettings.menus[currentMenu]);
-      this.toolbar.init(menuSettings, currentMenu);
+    this.properties.setOptions({
+      appName: 'foo',
+      windowName: 'bar',
+      windowPosition: { x: 0, y: 0 },
     });
+
+    this.menuSettings = menuSettings;
+    this.currentMenu = currentMenu;
+    this.preview.setMenu(menuSettings.menus[currentMenu]);
+    this.toolbar.init(menuSettings, currentMenu);
   }
 }

@@ -19,21 +19,20 @@
   transition:
     transform 150ms ease,
     opacity 150ms ease;
+
+  // This adds a tiny animation when the menu (and with it the settings) is shown or hidden.
+  &.visible {
+    pointer-events: all;
+    transform: translateX(0px);
+  }
 }
 
-// This adds a tiny animation when the menu (and with it the settings) is shown or hidden.
-#kando-settings.visible #show-sidebar-button.visible,
-#kando-settings.visible #hide-sidebar-button.visible {
-  pointer-events: all;
-  transform: translateX(0px);
-}
-
-#kando-settings.visible #show-sidebar-button.visible {
+#show-sidebar-button.visible {
   opacity: var(--show-sidebar-button-opacity);
 }
 
-#kando-settings.visible #show-sidebar-button.visible:hover,
-#kando-settings.visible #hide-sidebar-button.visible {
+#show-sidebar-button.visible:hover,
+#hide-sidebar-button.visible {
   opacity: 1;
 }
 
@@ -159,7 +158,7 @@
 }
 
 // Show the sidebar items when the sidebar and the settings are visible.
-#kando-settings.visible #kando-settings-sidebar-area.visible .sidebar-item {
+#kando-settings-sidebar-area.visible .sidebar-item {
   pointer-events: all;
   transform: translateX(0px);
   opacity: 1;

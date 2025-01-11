@@ -30,8 +30,10 @@ import { Settings } from './settings';
 Promise.all([
   window.commonAPI.getLocales(),
   window.commonAPI.getVersion(),
+  window.commonAPI.menuSettings.get(),
+  window.commonAPI.menuSettings.getCurrentMenu(),
   window.settingsAPI.getBackendInfo(),
-]).then(async ([locales, version, info]) => {
+]).then(async ([locales, version, menuSettings, currentMenu, info]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -49,21 +51,18 @@ Promise.all([
   });
 
   // Create the settings object. This will handle the rendering of the settings window.
-  const settings = new Settings(document.getElementById('kando-settings'), info, version);
+  const settings = new Settings(
+    document.getElementById('kando-settings'),
+    menuSettings,
+    currentMenu,
+    info,
+    version
+  );
 
   // Show the update available button when the main process requests it.
   window.settingsAPI.showUpdateAvailableButton(() => {
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
-
-  // Hide the menu or the settings when the user presses escape.
-  document.body.addEventListener('keydown', (ev) => {
-    if (ev.key === 'Escape') {
-      settings.hide();
-    }
-  });
-
-  settings.show({ appName: 'foo', windowName: 'bar', windowPosition: { x: 0, y: 0 } });
 
   /*
    // Send the settings to the main process.
