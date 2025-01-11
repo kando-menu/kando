@@ -16,6 +16,7 @@ import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
 
 import { Settings } from './settings';
+import { deepCopyMenu, deepCopyMenuItem, IMenu, IMenuItem } from '../common';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is
@@ -64,20 +65,19 @@ Promise.all([
     document.getElementById('sidebar-show-new-version-button').classList.remove('d-none');
   });
 
-  /*
-   // Send the settings to the main process.
-   if (this.menuSettings) {
+  // Save the settings when the user closes the settings window.
+  window.addEventListener('unload', function () {
     // Before sending the settings back to the main process, we have to make sure
     // that the menu items are converted back to IMenuItem objects. This is because
     // ISettingsMenuItem objects contain properties (such as DOM nodes) which neither need to
     // be saved to disc nor can they be cloned using the structured clone algorithm
     // which is used by Electron for IPC.
-    this.menuSettings.menus.forEach((menu) => {
+    menuSettings.menus.forEach((menu) => {
       menu.root = deepCopyMenuItem(menu.root);
     });
 
     // Also the templates needs to be converted back to IMenu and IMenuItem objects.
-    this.menuSettings.templates = this.menuSettings.templates.map((thing) => {
+    menuSettings.templates = menuSettings.templates.map((thing) => {
       if ((thing as IMenu).root) {
         return deepCopyMenu(thing as IMenu);
       } else {
@@ -85,9 +85,8 @@ Promise.all([
       }
     });
 
-    window.commonAPI.menuSettings.set(this.menuSettings);
-    this.menuSettings = null;
-  }*/
+    window.commonAPI.menuSettings.set(menuSettings);
+  });
 
   // This is helpful during development as it shows us when the renderer process has
   // finished reloading.
