@@ -10,7 +10,7 @@
 
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/settings';
+import { DeepReadonly } from '../../main/utils/settings';
 import { IItemData } from './uri-item-type';
 import { WMInfo, Backend } from '../../main/backends/backend';
 import { shell } from 'electron';

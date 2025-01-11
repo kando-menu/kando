@@ -13,7 +13,7 @@ import * as os from 'os';
 
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/settings';
+import { DeepReadonly } from '../../main/utils/settings';
 import { IItemData } from './command-item-type';
 import { Backend, WMInfo } from '../../main/backends/backend';
 

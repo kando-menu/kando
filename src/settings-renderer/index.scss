@@ -8,6 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+// For now, we support two different (hard-coded) font icon themes. The first one is the
+// Material Design Icons font, the second one is the Simple Icons font. Both are
+// available as npm packages.
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols/rounded';
+@import '../../node_modules/simple-icons-font/font/simple-icons.css';
+
 // The settings consists of several components:
 // * The background is drawn behind all other settings components but in front of the
 //   actual pie menu. It basically hides the pie menu while editing.
@@ -38,6 +45,23 @@ $rfs-breakpoint: 1400px;
 // directory. They are only used in the settings and not by the menu itself.
 @import '../common/icon-themes/icon-pickers/style/icon-list-picker.scss';
 @import '../common/icon-themes/icon-pickers/style/base64-picker.scss';
+
+// General Styling -----------------------------------------------------------------------
+
+// We ensure that the settings cover the entire viewport.
+
+body {
+  overflow: hidden;
+  user-select: none;
+}
+
+#kando-settings {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+}
 
 // Handle pointer events -----------------------------------------------------------------
 

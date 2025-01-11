@@ -16,7 +16,7 @@ import { HotkeyItemAction } from './item-types/hotkey-item-action';
 import { MacroItemAction } from './item-types/macro-item-action';
 import { TextItemAction } from './item-types/text-item-action';
 import { URIItemAction } from './item-types/uri-item-action';
-import { DeepReadonly } from '../main/settings';
+import { DeepReadonly } from '../main/utils/settings';
 
 /**
  * This interface describes the action of a menu item. The action is what happens when the

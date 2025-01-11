@@ -8,8 +8,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from './settings-window-api';
+declare const window: WindowWithAPIs;
+
 import { Tooltip } from 'bootstrap';
-import { EventEmitter } from 'events';
 
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
@@ -45,13 +47,9 @@ export class SettingsOptions {
 
 /**
  * This class is responsible for the entire settings. It contains the preview, the
- * properties view, the sidebar and the toolbar. It is an event emitter and will emit the
- * following events:
- *
- * @fires enter-edit-mode - This is emitted when the user enters edit mode.
- * @fires leave-edit-mode - This is emitted when the user leaves edit mode.
+ * properties view, the sidebar and the toolbar.
  */
-export class Settings extends EventEmitter {
+export class Settings {
   /** The container is the HTML element which contains the settings. */
   private container: HTMLElement = null;
 
@@ -123,21 +121,10 @@ export class Settings extends EventEmitter {
    * @param container All the settings components will be appended to this container.
    * @param backend Provides information on the currently used backend of Kando.
    * @param version The version string will be displayed in the sidebar.
-   * @param options Use this to tweak the behavior of the settings.
    */
-  constructor(
-    container: HTMLElement,
-    backend: IBackendInfo,
-    version: IVersionInfo,
-    options: Partial<SettingsOptions> = {}
-  ) {
-    super();
-
+  constructor(container: HTMLElement, backend: IBackendInfo, version: IVersionInfo) {
     this.container = container;
     this.backend = backend;
-
-    // Use the default options and overwrite them with the given options.
-    this.setOptions({ ...new SettingsOptions(), ...options });
 
     // Initialize the background.
     this.background = new Background();
@@ -210,25 +197,6 @@ export class Settings extends EventEmitter {
   }
 
   /**
-   * Allow changing the options at run-time.
-   *
-   * @param options The new options.
-   */
-  public setOptions(options: Partial<SettingsOptions>) {
-    this.options = { ...this.options, ...options };
-
-    this.container.style.setProperty(
-      '--show-sidebar-button-opacity',
-      `${this.options.showSidebarButtonVisible ? 1 : 0}`
-    );
-
-    this.container.style.setProperty(
-      '--show-settings-button-opacity',
-      `${this.options.showEditorButtonVisible ? 1 : 0}`
-    );
-  }
-
-  /**
    * This is used to show the entire settings. Most likely, this will only show the
    * sidebar, the other components are hidden by default and will only be shown when
    * enterEditMode() is called.
@@ -263,16 +231,14 @@ export class Settings extends EventEmitter {
     // Get the current settings from the main process and pass them to the respective
     // components.
     Promise.all([
-      window.api.menuSettings.get(),
-      window.api.menuSettings.getCurrentMenu(),
+      window.commonAPI.menuSettings.get(),
+      window.commonAPI.menuSettings.getCurrentMenu(),
     ]).then(([menuSettings, currentMenu]) => {
       this.menuSettings = menuSettings;
       this.currentMenu = currentMenu;
       this.preview.setMenu(menuSettings.menus[currentMenu]);
       this.toolbar.init(menuSettings, currentMenu);
     });
-
-    this.emit('enter-edit-mode');
   }
 
   /**
@@ -318,11 +284,9 @@ export class Settings extends EventEmitter {
         }
       });
 
-      window.api.menuSettings.set(this.menuSettings);
+      window.commonAPI.menuSettings.set(this.menuSettings);
       this.menuSettings = null;
     }
-
-    this.emit('leave-edit-mode');
   }
 
   /** This method returns true if the settings is currently in edit mode. */

@@ -12,7 +12,7 @@ import JSON5 from 'json5';
 import i18next from 'i18next';
 
 import { IMenuItem } from '..';
-import { MacroPicker } from '../../settings/properties/macro-picker';
+import { MacroPicker } from '../../settings-renderer/properties/macro-picker';
 import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './macro-item-type';
 import * as utils from './utils';
@@ -38,7 +38,7 @@ export class MacroItemConfig implements IItemConfig {
     // Add the checkbox for the delayed execution mode.
     fragment.append(
       utils.renderTemplate(
-        require('../../settings/properties/templates/checkbox-option.hbs'),
+        require('../../settings-renderer/properties/templates/checkbox-option.hbs'),
         {
           label: i18next.t('items.common.delayed-option'),
           hint: i18next.t('items.common.delayed-option-hint'),

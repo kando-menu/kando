@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import i18next from 'i18next';
 
 import { Tooltip } from 'bootstrap';
@@ -77,25 +80,28 @@ export class MenuThemesTab {
     this.tabContent = container.querySelector('#kando-menu-themes-tab');
 
     // Redraw the tab whenever the system switches between dark and light mode.
-    window.api.darkModeChanged((darkMode) => {
+    window.commonAPI.darkModeChanged((darkMode) => {
       this.darkMode = darkMode;
       this.redraw();
     });
 
     // We also have to redraw the tab whenever the user changes the separate-theme-and-
     // colors-for-dark-mode setting.
-    window.api.appSettings.onChange('enableDarkModeForMenuThemes', (enableDarkMode) => {
-      this.enableDarkMode = enableDarkMode;
-      this.redraw();
-    });
+    window.commonAPI.appSettings.onChange(
+      'enableDarkModeForMenuThemes',
+      (enableDarkMode) => {
+        this.enableDarkMode = enableDarkMode;
+        this.redraw();
+      }
+    );
   }
 
   /** This method is called initially by the toolbar whenever the settings is opened. */
   public async init() {
     [this.allMenuThemes, this.darkMode, this.enableDarkMode] = await Promise.all([
-      window.api.getAllMenuThemes(),
-      window.api.getIsDarkMode(),
-      window.api.appSettings.getKey('enableDarkModeForMenuThemes'),
+      window.commonAPI.getAllMenuThemes(),
+      window.commonAPI.getIsDarkMode(),
+      window.commonAPI.appSettings.getKey('enableDarkModeForMenuThemes'),
     ]);
 
     this.redraw();
@@ -109,8 +115,8 @@ export class MenuThemesTab {
     // We need the current theme and the color overrides. Both may depend on the dark mode
     // system setting.
     const [currentTheme, colorOverrides] = await Promise.all([
-      window.api.getMenuTheme(),
-      window.api.appSettings.getKey(
+      window.commonAPI.getMenuTheme(),
+      window.commonAPI.appSettings.getKey(
         this.darkMode && this.enableDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors'
       ),
     ]);
@@ -186,9 +192,9 @@ export class MenuThemesTab {
         // settings file.
         const theme = button.getAttribute('data-theme-id');
         if (this.darkMode && this.enableDarkMode) {
-          window.api.appSettings.setKey('darkMenuTheme', theme);
+          window.commonAPI.appSettings.setKey('darkMenuTheme', theme);
         } else {
-          window.api.appSettings.setKey('menuTheme', theme);
+          window.commonAPI.appSettings.setKey('menuTheme', theme);
         }
       });
     });
@@ -198,7 +204,10 @@ export class MenuThemesTab {
       '#kando-menu-theme-enable-dark-mode'
     ) as HTMLInputElement;
     checkbox.addEventListener('change', () => {
-      window.api.appSettings.setKey('enableDarkModeForMenuThemes', checkbox.checked);
+      window.commonAPI.appSettings.setKey(
+        'enableDarkModeForMenuThemes',
+        checkbox.checked
+      );
     });
 
     // Add all color pickers. There's one color picker for each theme card.
@@ -349,9 +358,9 @@ export class MenuThemesTab {
       this.submitChangesTimeout = null;
 
       if (this.darkMode && this.enableDarkMode) {
-        window.api.appSettings.setKey('darkMenuThemeColors', this.colorOverrides);
+        window.commonAPI.appSettings.setKey('darkMenuThemeColors', this.colorOverrides);
       } else {
-        window.api.appSettings.setKey('menuThemeColors', this.colorOverrides);
+        window.commonAPI.appSettings.setKey('menuThemeColors', this.colorOverrides);
       }
     }, 500);
   }

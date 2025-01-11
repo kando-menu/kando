@@ -13,10 +13,11 @@ import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { BrowserWindow, ipcMain, shell, Tray, Menu, app, nativeTheme } from 'electron';
+import { ipcMain, shell, Tray, Menu, app, nativeTheme } from 'electron';
 import i18next from 'i18next';
 
 import { MenuWindow } from './menu-window';
+import { SettingsWindow } from './settings-window';
 import { Backend, getBackend } from './backends';
 import {
   IMenuItem,
@@ -28,12 +29,9 @@ import {
   ISoundThemeDescription,
   IMenuThemeDescription,
 } from '../common';
-import { Settings, DeepReadonly } from './settings';
-import { Notification } from './notification';
-import { UpdateChecker } from './update-checker';
-
-declare const SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
-declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
+import { Settings, DeepReadonly } from './utils/settings';
+import { Notification } from './utils/notification';
+import { UpdateChecker } from './utils/update-checker';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -57,7 +55,7 @@ export class KandoApp {
    * the pie menu.
    */
   private menuWindow: MenuWindow;
-  private settingsWindow: BrowserWindow;
+  private settingsWindow?: SettingsWindow;
 
   /** True if shortcuts are currently inhibited. */
   private inhibitShortcuts = false;
@@ -199,14 +197,13 @@ export class KandoApp {
       app.setActivationPolicy('accessory');
     }
 
-    // Initialize the IPC communication to the renderer process.
-    this.initRendererIPC();
+    // Initialize the common IPC communication to the renderer process. This will be
+    // available in both the menu window and the settings window.
+    this.initCommonRendererAPI();
 
     // Create and load the main window.
     this.menuWindow = new MenuWindow(this.appSettings, this.menuSettings, this.backend);
     await this.menuWindow.load();
-
-    await this.initSettingsWindow();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -228,7 +225,9 @@ export class KandoApp {
       );
 
       // Show the update-available button in the sidebar.
-      this.settingsWindow.webContents.send('show-update-available-button');
+      this.settingsWindow.webContents.send(
+        'settings-window.show-update-available-button'
+      );
 
       // Show the sidebar if it is hidden.
       this.appSettings.set({ sidebarVisible: true });
@@ -274,15 +273,24 @@ export class KandoApp {
   public showSettings() {
     this.backend
       .getWMInfo()
-      .then((info) => {
-        this.settingsWindow.webContents.send('show-settings', {
-          appName: info.appName,
-          windowName: info.windowName,
-          windowPosition: {
-            x: this.settingsWindow.getPosition()[0],
-            y: this.settingsWindow.getPosition()[1],
-          },
-        });
+      .then(async (info) => {
+        this.settingsWindow = new SettingsWindow(
+          this.appSettings,
+          this.menuSettings,
+          this.backend
+        );
+
+        await this.settingsWindow.load();
+
+        // this.settingsWindow.webContents.send('show-settings', {
+        //   appName: info.appName,
+        //   windowName: info.windowName,
+        //   windowPosition: {
+        //     x: this.settingsWindow.getPosition()[0],
+        //     y: this.settingsWindow.getPosition()[1],
+        //   },
+        // });
+        this.settingsWindow.webContents.openDevTools();
         this.settingsWindow.show();
       })
       .catch((err) => {
@@ -308,54 +316,44 @@ export class KandoApp {
     );
   }
 
-  private async initSettingsWindow() {
-    this.settingsWindow = new BrowserWindow({
-      webPreferences: {
-        contextIsolation: true,
-        sandbox: true,
-        // Electron only allows loading local resources from apps loaded from the file
-        // system. In development mode, the app is loaded from the webpack dev server.
-        // Hence, we have to disable webSecurity in development mode.
-        webSecurity: process.env.NODE_ENV !== 'development',
-        // Background throttling is disabled to make sure that the menu is properly
-        // hidden. Else it can happen that the last frame of a previous menu is still
-        // visible when the new menu is shown. For now, I have not seen any issues with
-        // background throttling disabled.
-        backgroundThrottling: false,
-        preload: SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY,
-      },
-      width: 800,
-      height: 600,
-      show: false,
-    });
-
-    // Remove the default menu. This disables all default shortcuts like CMD+W which are
-    // not needed in Kando.
-    this.settingsWindow.setMenu(null);
-
-    // If the user clicks on a link, we open the link in the default browser.
-    this.settingsWindow.webContents.setWindowOpenHandler(({ url }) => {
-      shell.openExternal(url);
-      return { action: 'deny' };
-    });
-
-    // We return a promise which resolves when the renderer process is ready.
-    const promise = new Promise<void>((resolve) => {
-      ipcMain.on('settings-window-ready', () => resolve());
-    });
-
-    await this.settingsWindow.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
-
-    return promise;
-  }
-
   /**
    * Setup IPC communication with the renderer process. See ../renderer/preload.ts for
    * more information on the exposed functionality.
    */
-  private initRendererIPC() {
+  private initCommonRendererAPI() {
+    // Allow the renderer to retrieve information about the backend.
+    ipcMain.handle('settings-window.get-backend-info', () => {
+      return this.backend.getBackendInfo();
+    });
+
+    // Show the web developer tools if requested.
+    ipcMain.on('settings-window.show-dev-tools', () => {
+      this.settingsWindow.webContents.openDevTools();
+      this.menuWindow.webContents.openDevTools();
+    });
+
+    // Reload the current menu theme if requested.
+    ipcMain.on('settings-window.reload-menu-theme', async () => {
+      this.reloadMenuTheme();
+    });
+
+    // Reload the current sound theme if requested.
+    ipcMain.on('settings-window.reload-sound-theme', async () => {
+      this.reloadSoundTheme();
+    });
+    // Once the settings is shown, we unbind all shortcuts to make sure that the
+    // user can select the bound shortcuts in the settings.
+    ipcMain.on('settings-window.unbind-shortcuts', () => {
+      this.backend.unbindAllShortcuts();
+    });
+
+    // Print a message to the console of the host process.
+    ipcMain.on('common.log', (event, message) => {
+      console.log(message);
+    });
+
     // Allow the renderer to retrieve the i18next locales.
-    ipcMain.handle('get-locales', () => {
+    ipcMain.handle('common.get-locales', () => {
       return {
         current: i18next.language,
         data: i18next.store.data,
@@ -369,10 +367,10 @@ export class KandoApp {
       const key = k as keyof IAppSettings;
 
       // Allow the renderer process to read the value of this setting.
-      ipcMain.handle(`app-settings-get-${key}`, () => this.appSettings.get(key));
+      ipcMain.handle(`common.app-settings-get-${key}`, () => this.appSettings.get(key));
 
       // Allow the renderer process to set the value of this setting.
-      ipcMain.on(`app-settings-set-${key}`, (event, value) =>
+      ipcMain.on(`common.app-settings-set-${key}`, (event, value) =>
         this.appSettings.set({ [key]: value } as Partial<IAppSettings>)
       );
 
@@ -382,14 +380,14 @@ export class KandoApp {
         (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
           if (this.menuWindow) {
             this.menuWindow.webContents.send(
-              `app-settings-changed-${key}`,
+              `common.app-settings-changed-${key}`,
               newValue,
               oldValue
             );
           }
           if (this.settingsWindow) {
             this.settingsWindow.webContents.send(
-              `app-settings-changed-${key}`,
+              `common.app-settings-changed-${key}`,
               newValue,
               oldValue
             );
@@ -399,20 +397,20 @@ export class KandoApp {
     }
 
     // We also allow getting the entire app settings object.
-    ipcMain.handle('app-settings-get', () => this.appSettings.get());
+    ipcMain.handle('common.app-settings-get', () => this.appSettings.get());
 
     // Allow the renderer to retrieve the settings.
-    ipcMain.handle('menu-settings-get', () => this.menuSettings.get());
+    ipcMain.handle('common.menu-settings-get', () => this.menuSettings.get());
 
     // Allow the renderer to alter the settings.
-    ipcMain.on('menu-settings-set', (event, settings) => {
+    ipcMain.on('common.menu-settings-set', (event, settings) => {
       this.menuSettings.set(settings);
     });
 
     // This should return the index of the currently selected menu. For now, we just
     // return the index of a menu with the same name as the last menu. If the user uses
     // the same name for multiple menus, this will not work as expected.
-    ipcMain.handle('menu-settings-get-current-menu', () => {
+    ipcMain.handle('common.menu-settings-get-current-menu', () => {
       if (!this.menuWindow.lastMenu) {
         return 0;
       }
@@ -425,7 +423,7 @@ export class KandoApp {
     });
 
     // Allow the renderer to retrieve information about the current app version.
-    ipcMain.handle('get-version', () => {
+    ipcMain.handle('common.get-version', () => {
       return {
         kandoVersion: app.getVersion(),
         electronVersion: process.versions.electron,
@@ -434,13 +432,8 @@ export class KandoApp {
       };
     });
 
-    // Allow the renderer to retrieve information about the backend.
-    ipcMain.handle('get-backend-info', () => {
-      return this.backend.getBackendInfo();
-    });
-
     // Allow the renderer to retrieve all icons of all file icon themes.
-    ipcMain.handle('get-icon-themes', async () => {
+    ipcMain.handle('common.get-icon-themes', async () => {
       const info: IIconThemesInfo = {
         userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
         fileIconThemes: [],
@@ -469,7 +462,7 @@ export class KandoApp {
 
     // Allow the renderer to retrieve the description of the current menu theme. We also
     // return the path to the CSS file of the theme, so that the renderer can load it.
-    ipcMain.handle('get-menu-theme', async () => {
+    ipcMain.handle('common.get-menu-theme', async () => {
       const useDarkVariant =
         this.appSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
@@ -479,7 +472,7 @@ export class KandoApp {
     });
 
     // Allow the renderer to retrieve all available menu themes.
-    ipcMain.handle('get-all-menu-themes', async () => {
+    ipcMain.handle('common.get-all-menu-themes', async () => {
       const themes = await this.listSubdirectories([
         path.join(app.getPath('userData'), 'menu-themes'),
         path.join(__dirname, '../renderer/assets/menu-themes'),
@@ -497,7 +490,7 @@ export class KandoApp {
     // Allow the renderer to retrieve the current menu theme override colors. We return
     // the colors for the current theme and for the dark theme if the user enabled dark
     // mode for menu themes and if the system is currently in dark mode.
-    ipcMain.handle('get-current-menu-theme-colors', async () => {
+    ipcMain.handle('common.get-current-menu-theme-colors', async () => {
       const useDarkVariant =
         this.appSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
@@ -511,7 +504,7 @@ export class KandoApp {
     });
 
     // Allow the renderer to retrieve the current system theme.
-    ipcMain.handle('get-is-dark-mode', () => {
+    ipcMain.handle('common.get-is-dark-mode', () => {
       return nativeTheme.shouldUseDarkColors;
     });
 
@@ -520,39 +513,13 @@ export class KandoApp {
     nativeTheme.on('updated', () => {
       if (darkMode !== nativeTheme.shouldUseDarkColors) {
         darkMode = nativeTheme.shouldUseDarkColors;
-        this.menuWindow.webContents.send('dark-mode-changed', darkMode);
+        this.menuWindow.webContents.send('common.dark-mode-changed', darkMode);
       }
     });
 
     // Allow the renderer to retrieve the description of the current sound theme.
-    ipcMain.handle('get-sound-theme', async () => {
+    ipcMain.handle('common.get-sound-theme', async () => {
       return this.loadSoundThemeDescription(this.appSettings.get('soundTheme'));
-    });
-
-    // Once the settings is shown, we unbind all shortcuts to make sure that the
-    // user can select the bound shortcuts in the settings.
-    ipcMain.on('unbind-shortcuts', () => {
-      this.backend.unbindAllShortcuts();
-    });
-
-    // Show the web developer tools if requested.
-    ipcMain.on('show-dev-tools', () => {
-      this.settingsWindow.webContents.openDevTools();
-    });
-
-    // Reload the current menu theme if requested.
-    ipcMain.on('reload-menu-theme', async () => {
-      this.reloadMenuTheme();
-    });
-
-    // Reload the current sound theme if requested.
-    ipcMain.on('reload-sound-theme', async () => {
-      this.reloadSoundTheme();
-    });
-
-    // Print a message to the console of the host process.
-    ipcMain.on('log', (event, message) => {
-      console.log(message);
     });
   }
 

@@ -34,7 +34,7 @@ export class URIItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
     const fragment = utils.renderTemplate(
-      require('../../settings/properties/templates/text-option.hbs'),
+      require('../../settings-renderer/properties/templates/text-option.hbs'),
       {
         placeholder: i18next.t('items.common.not-configured'),
         label: i18next.t('items.uri.uri'),

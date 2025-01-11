@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import i18next from 'i18next';
 
 import { IBackendInfo, IVersionInfo } from '../../common';
@@ -79,7 +82,7 @@ export class Sidebar {
       }
 
       this.visible = visible;
-      window.api.appSettings.setKey('sidebarVisible', visible);
+      window.commonAPI.appSettings.setKey('sidebarVisible', visible);
     }
   }
 
@@ -207,12 +210,12 @@ export class Sidebar {
       .addEventListener('click', () => this.setVisibility(false));
 
     // Update of the visibility when the app settings are changed from somewhere else.
-    window.api.appSettings.onChange('sidebarVisible', (visible) => {
+    window.commonAPI.appSettings.onChange('sidebarVisible', (visible) => {
       this.setVisibility(visible);
     });
 
     // Initialize the visibility from the app settings.
-    window.api.appSettings.getKey('sidebarVisible').then((visible) => {
+    window.commonAPI.appSettings.getKey('sidebarVisible').then((visible) => {
       this.setVisibility(visible);
     });
   }
@@ -272,19 +275,19 @@ export class Sidebar {
   private initButtons() {
     // Show the dev tools if the button is clicked.
     this.container.querySelector('#dev-tools-button').addEventListener('click', () => {
-      window.api.showDevTools();
+      window.settingsAPI.showDevTools();
     });
 
     this.container
       .querySelector('#reload-menu-theme-button')
       .addEventListener('click', () => {
-        window.api.reloadMenuTheme();
+        window.settingsAPI.reloadMenuTheme();
       });
 
     this.container
       .querySelector('#reload-sound-theme-button')
       .addEventListener('click', () => {
-        window.api.reloadSoundTheme();
+        window.settingsAPI.reloadSoundTheme();
       });
   }
 }

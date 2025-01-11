@@ -11,7 +11,7 @@
 import { IMenuItem, IKeySequence } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { Backend } from '../../main/backends/backend';
-import { DeepReadonly } from '../../main/settings';
+import { DeepReadonly } from '../../main/utils/settings';
 import { IItemData } from './macro-item-type';
 
 /**

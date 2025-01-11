@@ -8,7 +8,34 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+// For now, we support two different (hard-coded) font icon themes. The first one is the
+// Material Design Icons font, the second one is the Simple Icons font. Both are
+// available as npm packages.
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols/rounded';
+@import '../../node_modules/simple-icons-font/font/simple-icons.css';
+
+// General Styling -----------------------------------------------------------------------
+
+// We ensure that the window's background is transparent and that the menu container
+// covers the entire viewport.
+
+body {
+  font-family: sans-serif;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+// Menu Styling --------------------------------------------------------------------------
+
 #kando-menu {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+
   transition: opacity var(--fade-in-duration) ease;
 
   // When the menu is hidden or shown, we fade it to / from transparent.

@@ -12,6 +12,10 @@ import path from 'path';
 
 import { Notification as ElectronNotification } from 'electron';
 
+/**
+ * This class provides a static method to show notifications. It will print the message to
+ * the console and show a notification if possible.
+ */
 export class Notification {
   /**
    * This prints a message to the console and shows a notification if possible.

@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../common-window-api';
+declare const window: WindowWithAPIs;
+
 import { SimpleIconsTheme } from './simple-icons-theme';
 import { SimpleIconsColoredTheme } from './simple-icons-colored-theme';
 import { MaterialSymbolsTheme } from './material-symbols-theme';
@@ -107,7 +110,7 @@ export class IconThemeRegistry {
     this.iconThemes.set('base64', new Base64Theme());
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
-    window.api.getIconThemes().then((info) => {
+    window.commonAPI.getIconThemes().then((info) => {
       this._userIconThemeDirectory = info.userIconDirectory;
       for (const theme of info.fileIconThemes) {
         this.iconThemes.set(theme.name, new FileIconTheme(theme));

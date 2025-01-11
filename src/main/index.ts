@@ -13,7 +13,7 @@ import { program } from 'commander';
 import i18next from 'i18next';
 import i18Backend from 'i18next-fs-backend/cjs';
 
-import { Notification } from './notification';
+import { Notification } from './utils/notification';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for

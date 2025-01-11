@@ -64,7 +64,7 @@ export class SoundTheme {
       try {
         new Howl({ src: [src], volume, rate }).play();
       } catch (error) {
-        window.api.log(`Error playing sound ${type}: ${error}`);
+        window.commonAPI.log(`Error playing sound ${type}: ${error}`);
       }
     }
   }

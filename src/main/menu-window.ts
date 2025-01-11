@@ -11,7 +11,7 @@
 import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
-import { Settings, DeepReadonly } from './settings';
+import { Settings, DeepReadonly } from './utils/settings';
 import {
   IMenuSettings,
   IAppSettings,
@@ -22,15 +22,14 @@ import {
 import { Backend } from './backends';
 import { WMInfo } from './backends/backend';
 import { ItemActionRegistry } from '../common/item-action-registry';
-import { Notification } from './notification';
+import { Notification } from './utils/notification';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MENU_WINDOW_WEBPACK_ENTRY: string;
 
 /**
- * This creates the main window. It is a transparent window which covers the whole screen.
- * It is not shown in any task bar and has no frame. It is used to display the pie menu
- * and potentially other UI elements such as the settings.
+ * This is the window which contains the pie menu. It is a transparent window which covers
+ * the whole screen. It is not shown in any task bar and has no frame.
  */
 export class MenuWindow extends BrowserWindow {
   /**
@@ -44,7 +43,9 @@ export class MenuWindow extends BrowserWindow {
 
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
-    ipcMain.on('menu-window-ready', () => resolve());
+    ipcMain.on('menu-window.ready', () => {
+      resolve();
+    });
   });
 
   /** This timeout is used to hide the window after the fade-out animation. */
@@ -132,7 +133,7 @@ export class MenuWindow extends BrowserWindow {
   }
 
   async load() {
-    this.initIPC();
+    this.initMenuRendererAPI();
 
     await this.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
 
@@ -264,7 +265,7 @@ export class MenuWindow extends BrowserWindow {
         // We also send the name of the current application and window to the renderer.
         // It will be used as an example in the condition picker of the settings.
         this.webContents.send(
-          'show-menu',
+          'menu-window.show-menu',
           this.lastMenu.root,
           {
             mousePosition,
@@ -513,13 +514,13 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
-   * Setup IPC communication with the renderer process. See ../renderer/preload.ts for
-   * more information on the exposed functionality.
+   * Setup IPC communication with the renderer process. See
+   * ../menu-renderer/menu-window-api.ts for the corresponding renderer API.
    */
-  private initIPC() {
+  private initMenuRendererAPI() {
     // Move the mouse pointer. This is used to move the pointer to the center of the
     // menu when the menu is opened too close to the screen edge.
-    ipcMain.on('move-pointer', (event, dist) => {
+    ipcMain.on('menu-window.move-pointer', (event, dist) => {
       let scale = 1;
 
       // On macOS, the pointer movement seems to be scaled automatically. We have to
@@ -536,7 +537,7 @@ export class MenuWindow extends BrowserWindow {
     // When the user selects an item, we execute the corresponding action. Depending on
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
-    ipcMain.on('select-item', (event, path) => {
+    ipcMain.on('menu-window.select-item', (event, path) => {
       const execute = (item: DeepReadonly<IMenuItem>) => {
         ItemActionRegistry.getInstance()
           .execute(item, this.backend, this.lastWMInfo)
@@ -572,9 +573,19 @@ export class MenuWindow extends BrowserWindow {
       });
     });
 
+    // When the user hovers a menu item, we report this to the main process.
+    ipcMain.on('menu-window.hover-item', (/*event, path*/) => {
+      // Nothing to do here yet.
+    });
+
+    // When the user unhovers a menu item, we report this to the main process.
+    ipcMain.on('menu-window.unhover-item', (/*event, path*/) => {
+      // Nothing to do here yet.
+    });
+
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
-    ipcMain.on('cancel-selection', () => {
+    ipcMain.on('menu-window.cancel-selection', () => {
       this.hide();
     });
   }
