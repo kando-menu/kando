@@ -8,46 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// Show- and hide-toolbar buttons --------------------------------------------------------
-
-#enter-edit-mode-button,
-#leave-edit-mode-button {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(20px);
-
-  transition:
-    transform 150ms ease,
-    opacity 150ms ease;
-}
-
-#kando-settings.visible:not(.edit-mode) #enter-edit-mode-button,
-#kando-settings.visible.edit-mode #leave-edit-mode-button {
-  pointer-events: all;
-  transform: translateY(0px);
-  opacity: var(--show-settings-button-opacity);
-}
-
-#kando-settings.visible:not(.edit-mode) #enter-edit-mode-button {
-  opacity: var(--show-settings-button-opacity);
-}
-
-#kando-settings.visible:not(.edit-mode) #enter-edit-mode-button:hover,
-#kando-settings.visible.edit-mode #leave-edit-mode-button {
-  opacity: 1;
-}
-
-#enter-edit-mode-button {
-  border-top-left-radius: 50%;
-  right: 10px;
-  bottom: 10px;
-}
-
-#leave-edit-mode-button {
-  right: -55px;
-  top: 1vh;
-}
-
 // The toolbar itself --------------------------------------------------------------------
 
 #kando-settings-toolbar {
@@ -56,10 +16,6 @@
   left: $settings-padding-left;
   right: $settings-padding-right;
   padding-top: 1vh;
-
-  opacity: 0;
-  display: none;
-  transform: translateY(20px);
 
   transition:
     bottom 250ms cubic-bezier(0.775, 1.325, 0.535, 1),
@@ -164,16 +120,6 @@
       grid-template-columns: repeat(auto-fill, minmax(calc(200px + 10vw), 1fr));
     }
   }
-}
-
-#kando-settings.edit-mode #kando-settings-toolbar,
-#kando-settings.leaving-edit-mode #kando-settings-toolbar {
-  display: block;
-}
-
-#kando-settings.visible.edit-mode #kando-settings-toolbar {
-  transform: none;
-  opacity: 1;
 }
 
 // The menu tab buttons are attached to the #kando-settings container during drag-and-drop

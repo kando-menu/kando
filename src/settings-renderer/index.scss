@@ -63,20 +63,6 @@ body {
   right: 0px;
 }
 
-// Handle pointer events -----------------------------------------------------------------
-
-// As the settings UI elements are always drawn on top of the actual pie menu, we have to
-// make sure that they do not intercept pointer events if the settings is not in edit-mode.
-// The sidebar and the show-toolbar button make sure to receive pointer events themselves.
-
-#kando-settings {
-  pointer-events: none;
-
-  &.edit-mode {
-    pointer-events: all;
-  }
-}
-
 // Basic UI styling ----------------------------------------------------------------------
 body {
   --bs-body-line-height: 1.3;

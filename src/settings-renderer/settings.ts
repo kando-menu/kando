@@ -20,12 +20,8 @@ import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import {
   IBackendInfo,
-  IMenu,
-  IMenuItem,
   IMenuSettings,
   IShowSettingsOptions,
-  deepCopyMenu,
-  deepCopyMenuItem,
   IVersionInfo,
 } from '../common';
 import { DnDManager } from './common/dnd-manager';
@@ -169,9 +165,6 @@ export class Settings {
     this.toolbar = new Toolbar(backend, this.dndManager);
     this.container.appendChild(this.toolbar.getContainer());
 
-    this.toolbar.on('enter-edit-mode', () => this.enterEditMode());
-    this.toolbar.on('leave-edit-mode', () => this.leaveEditMode());
-
     this.toolbar.on('expand', () => {
       this.preview.hide();
       this.properties.hide();
@@ -204,29 +197,6 @@ export class Settings {
   public show(options: IShowSettingsOptions) {
     this.properties.setOptions(options);
     this.container.classList.add('visible');
-  }
-
-  /**
-   * This is used to hide the entire settings, including the sidebar. We also leave edit
-   * mode if it is currently active. Else, the settings would be shown right away when the
-   * user opens the menu again.
-   */
-  public hide() {
-    this.container.classList.remove('visible');
-    this.leaveEditMode();
-  }
-
-  /**
-   * This shows the other components of the settings, such as the toolbar and the
-   * background. To make sure that enough space is available, the sidebar is hidden.
-   */
-  public enterEditMode() {
-    if (this.isInEditMode()) {
-      return;
-    }
-
-    this.container.classList.add('edit-mode');
-    this.sidebar.setVisibility(false);
 
     // Get the current settings from the main process and pass them to the respective
     // components.
@@ -239,58 +209,5 @@ export class Settings {
       this.preview.setMenu(menuSettings.menus[currentMenu]);
       this.toolbar.init(menuSettings, currentMenu);
     });
-  }
-
-  /**
-   * This hides the edit-mode components of the settings, such as the toolbar and the
-   * background. The sidebar will remain visible if it is currently shown. The current
-   * settings will be sent back to the main process and saved to disc over there.
-   */
-  public leaveEditMode() {
-    if (!this.isInEditMode()) {
-      return;
-    }
-
-    // We remove the menu from the preview. Else it will be visible for a split second
-    // when the settings is opened the next time.
-    this.preview.setMenu(null);
-
-    // We remove the edit-mode class from the container. This will trigger some fade-out
-    // animations. As most elements are set to 'display: none' when the edit-mode class is
-    // not present (for performance reasons), we temporarily add the 'leaving-edit-mode'
-    // class which elements can use to keep their visibility until the animations are
-    // done.
-    this.container.classList.remove('edit-mode');
-    this.container.classList.add('leaving-edit-mode');
-    setTimeout(() => this.container.classList.remove('leaving-edit-mode'), 500);
-
-    // Send the settings to the main process.
-    if (this.menuSettings) {
-      // Before sending the settings back to the main process, we have to make sure
-      // that the menu items are converted back to IMenuItem objects. This is because
-      // ISettingsMenuItem objects contain properties (such as DOM nodes) which neither need to
-      // be saved to disc nor can they be cloned using the structured clone algorithm
-      // which is used by Electron for IPC.
-      this.menuSettings.menus.forEach((menu) => {
-        menu.root = deepCopyMenuItem(menu.root);
-      });
-
-      // Also the templates needs to be converted back to IMenu and IMenuItem objects.
-      this.menuSettings.templates = this.menuSettings.templates.map((thing) => {
-        if ((thing as IMenu).root) {
-          return deepCopyMenu(thing as IMenu);
-        } else {
-          return deepCopyMenuItem(thing as IMenuItem);
-        }
-      });
-
-      window.commonAPI.menuSettings.set(this.menuSettings);
-      this.menuSettings = null;
-    }
-  }
-
-  /** This method returns true if the settings is currently in edit mode. */
-  public isInEditMode(): boolean {
-    return this.container.classList.contains('edit-mode');
   }
 }

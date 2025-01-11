@@ -23,8 +23,6 @@ import { MenuThemesTab } from './menu-themes-tab';
  * This class is responsible for the toolbar on the bottom of the settings screen. It is
  * an event emitter which emits the following events:
  *
- * @fires enter-edit-mode - This event is emitted when the user enters edit mode.
- * @fires leave-edit-mode - This event is emitted when the user leaves edit mode.
  * @fires expand - This event is emitted when a tab is selected which should cover the
  *   entire settings.
  * @fires collapse - This event is emitted when a tab is selected which should not cover
@@ -66,7 +64,6 @@ export class Toolbar extends EventEmitter {
     super();
 
     this.loadContent();
-    this.initVisibility();
     this.initTabs();
 
     // Initialize the menus tab and forward its events.
@@ -160,31 +157,8 @@ export class Toolbar extends EventEmitter {
           gapBefore: true,
           content: '',
         },
-        {
-          id: 'kando-settings-themes-tab',
-          icon: 'palette',
-          title: i18next.t('toolbar.settings-themes-tab.label'),
-          content: emptyTab({
-            heading: i18next.t('toolbar.settings-themes-tab.heading'),
-            subheading: i18next.t('toolbar.settings-themes-tab.subheading'),
-          }),
-        },
       ],
     });
-  }
-
-  /**
-   * There are two buttons in the toolbar which are used to enter and leave edit mode.
-   * This method wires up the functionality of these buttons.
-   */
-  private initVisibility() {
-    this.container
-      .querySelector('#enter-edit-mode-button')
-      .addEventListener('click', () => this.emit('enter-edit-mode'));
-
-    this.container
-      .querySelector('#leave-edit-mode-button')
-      .addEventListener('click', () => this.emit('leave-edit-mode'));
   }
 
   /**
@@ -197,7 +171,6 @@ export class Toolbar extends EventEmitter {
       { id: 'kando-add-items-tab', large: false },
       { id: 'kando-templates-tab', large: false },
       { id: 'kando-trash-tab', large: false },
-      { id: 'kando-settings-themes-tab', large: true },
       { id: 'kando-menu-themes-tab', large: true },
     ];
 

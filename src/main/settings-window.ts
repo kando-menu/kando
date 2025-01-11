@@ -41,8 +41,8 @@ export class SettingsWindow extends BrowserWindow {
         webSecurity: process.env.NODE_ENV !== 'development',
         preload: SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
-      width: 800,
-      height: 600,
+      width: 1200,
+      height: 800,
       show: false,
     });
 

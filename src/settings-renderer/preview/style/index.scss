@@ -18,6 +18,10 @@
   transition: opacity 150ms ease;
   opacity: 0;
 
+  &.visible {
+    opacity: 1;
+  }
+
   // This is set so that dragged items are drawn on top of the toolbar.
   z-index: 1;
 
@@ -452,8 +456,4 @@
       }
     }
   }
-}
-
-#kando-settings.edit-mode #kando-menu-preview-area.visible {
-  opacity: 1;
 }

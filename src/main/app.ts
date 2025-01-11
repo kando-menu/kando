@@ -290,7 +290,6 @@ export class KandoApp {
         //     y: this.settingsWindow.getPosition()[1],
         //   },
         // });
-        this.settingsWindow.webContents.openDevTools();
         this.settingsWindow.show();
       })
       .catch((err) => {

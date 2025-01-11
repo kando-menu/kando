@@ -17,7 +17,6 @@
   right: 0;
   bottom: 0;
   transition: opacity 250ms ease;
-  opacity: 0;
 
   background-color: rgb(29, 103, 187);
   background-image: linear-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px),
@@ -42,8 +41,4 @@
   border-image-slice: 40% fill;
   border-image-width: 70px 70px;
   border-image-outset: 0;
-}
-
-#kando-settings.visible.edit-mode #kando-settings-background {
-  opacity: 1;
 }

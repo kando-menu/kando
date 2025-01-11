@@ -41,9 +41,12 @@
     padding-left: 0;
   }
 
-  display: none;
   transition: opacity 150ms ease;
   opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 
   .wip {
     border-radius: 10px;
@@ -108,13 +111,4 @@
     width: 75%;
     font-style: italic;
   }
-}
-
-#kando-settings.edit-mode #kando-menu-properties-area,
-#kando-settings.leaving-edit-mode #kando-menu-properties-area {
-  display: block;
-}
-
-#kando-settings.edit-mode #kando-menu-properties-area.visible {
-  opacity: 1;
 }
