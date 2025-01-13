@@ -5,7 +5,9 @@
     "main": {
         "is-running-header": "Kando 已在运行",
         "is-running-message": "点击托盘图标以查看选项！",
-        "failed-to-start-header": "Kando 启动失败"
+        "failed-to-start-header": "Kando 启动失败",
+        "un-inhibit-shortcuts": "重新启用快捷键",
+        "inhibit-shortcuts": "暂时禁用快捷键"
     },
     "sidebar": {
         "welcome": "欢迎使用 Kando！",
