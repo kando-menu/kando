@@ -12,8 +12,6 @@ jobs:
   linux:
     name: Test Deploy for Linux
     runs-on: ubuntu-22.04
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,15 +21,27 @@ jobs:
         run: |
           sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
           npm install
-      - name: Create Release
+      - name: Fix Permissions
+        # Workaround for https://github.com/electron/electron/issues/17972
+        run: |
+          sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
+          sudo chown root node_modules/electron/dist/chrome-sandbox
+      - name: Create Packages
         run: |
           npm run make
+      - name: Create AppImage
+        run: |
+          tools/make-app-image.sh
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifacts
+          path: out/make/**/*
+          retention-days: 5
 
   windows:
     name: Test Deploy for Windows
     runs-on: windows-2022
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,6 +57,14 @@ jobs:
       - name: Create Release
         run: |
           npm run make
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: |
+            out/make/zip/win32/x64/*
+            out/make/squirrel.windows/x64/*.exe
+          retention-days: 5
 
   macos:
     name: Test Deploy for macOS
@@ -54,8 +72,6 @@ jobs:
       matrix:
         os: [macos-13, macos-14]
     runs-on: ${{ matrix.os }}
-    permissions:
-      contents: write
     steps:
       # https://github.com/electron/forge/issues/2807
       - run: python3 -m pip install setuptools --break-system-packages
@@ -67,6 +83,26 @@ jobs:
         run: |
           npm install
           npm install appdmg
+      - name: Add macOS certificates
+        env:
+          OSX_CERTIFICATE: ${{ secrets.OSX_CERTIFICATE }}
+          OSX_CERTIFICATE_PASSWORD: ${{ secrets.OSX_CERTIFICATE_PASSWORD }}
+        run: |
+          .github/osx_certificates.sh
       - name: Create Release
+        env:
+          KANDO_OSX_SIGN: true
+          KANDO_OSX_NOTARIZE: true
+          OSX_APP_SPECIFIC_ID: ${{ secrets.OSX_APP_SPECIFIC_ID }}
+          OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
+          OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
         run: |
           npm run make
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-artifacts
+          path: |
+            out/make/*.dmg
+            out/make/zip/darwin/**/*.zip
+          retention-days: 5
