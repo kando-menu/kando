@@ -69,7 +69,9 @@
     "main": {
         "is-running-header": "Kando est déjà en cours d'exécution",
         "is-running-message": "Utilisez l'icône de la barre des tâches pour plus d'options !",
-        "failed-to-start-header": "Le lancement de Kando a échoué"
+        "failed-to-start-header": "Le lancement de Kando a échoué",
+        "inhibit-shortcuts": "Désactiver temporairement les raccourcis",
+        "un-inhibit-shortcuts": "Réactiver les raccourcis"
     },
     "properties": {
         "common": {

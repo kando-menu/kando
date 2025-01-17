@@ -2,7 +2,9 @@
     "main": {
         "is-running-header": "Kando läuft bereits",
         "is-running-message": "Überprüfen Sie das Taskleistensymbol für einige Optionen!",
-        "failed-to-start-header": "Kando konnte nicht gestartet werden"
+        "failed-to-start-header": "Kando konnte nicht gestartet werden",
+        "un-inhibit-shortcuts": "Shortcuts wieder aktivieren",
+        "inhibit-shortcuts": "Deaktivierte Shortcuts"
     },
     "sidebar": {
         "introduction-tab-header": "Einführung",
@@ -176,11 +178,11 @@
             "pointer-position-hint": "Ihre Maus befindet sich derzeit bei {{x}} x {{y}}."
         },
         "common": {
-            "not-bound": "Nicht Gebunden",
+            "not-bound": "Nicht verknüpft",
             "done": "Fertig",
             "menu-conditions": "Menübedingungen",
-            "menu-conditions-hint": "Wählen Sie, wann das Menü angezeigt werden soll.",
-            "menu-behavior": "Menüverhalten",
+            "menu-conditions-hint": "Wählen, falls Menü angezeigt werden soll.",
+            "menu-behavior": "Menü-Eigenschaften",
             "menu-behavior-hint": "Optimieren Sie erweiterte Optionen für das Menü.",
             "cancel": "Abbrechen"
         },
