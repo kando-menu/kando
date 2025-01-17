@@ -5,8 +5,7 @@ name: Checks
 
 on:
   pull_request:
-    branches:
-      - '**'
+    types: [opened, reopened]
   push:
     branches:
       - '**'
