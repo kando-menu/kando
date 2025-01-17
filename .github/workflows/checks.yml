@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
         run: npm run test
 
   eslint:
-    name: Check ESLint
+    name: ESLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
         run: npm run lint
 
   prettier:
-    name: Check Prettier
+    name: Prettier
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
         run: npm run prettier
 
   reuse:
-    name: Check REUSE
+    name: REUSE
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

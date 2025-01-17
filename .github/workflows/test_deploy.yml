@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 # SPDX-License-Identifier: CC0-1.0
 
-name: Pull Request
+name: Test Deploy
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   linux:
-    name: Test Deploy for Linux
+    name: Linux
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-22.04-arm]
@@ -37,12 +37,12 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.version }}
+          name: build-${{ matrix.os }}
           path: out/make/**/*
-          retention-days: 5
+          retention-days: 7
 
   windows:
-    name: Test Deploy for Windows
+    name: Windows
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
@@ -66,10 +66,10 @@ jobs:
           path: |
             out/make/zip/win32/x64/*
             out/make/squirrel.windows/x64/*.exe
-          retention-days: 5
+          retention-days: 7
 
   macos:
-    name: Test Deploy for macOS
+    name: macOS
     strategy:
       matrix:
         os: [macos-13, macos-14]
@@ -103,8 +103,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.version }}
+          name: build-${{ matrix.os }}
           path: |
             out/make/*.dmg
             out/make/zip/darwin/**/*.zip
-          retention-days: 5
+          retention-days: 7
