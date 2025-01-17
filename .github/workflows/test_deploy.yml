@@ -5,13 +5,15 @@ name: Pull Request
 
 on:
   pull_request:
-    branches:
-      - '**'
+    types: [opened, reopened, synchronize]
 
 jobs:
   linux:
     name: Test Deploy for Linux
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-22.04-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,7 +37,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: linux-artifacts
+          name: build-${{ matrix.version }}
           path: out/make/**/*
           retention-days: 5
 
@@ -60,7 +62,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: windows-artifacts
+          name: build-windows-2022
           path: |
             out/make/zip/win32/x64/*
             out/make/squirrel.windows/x64/*.exe
@@ -101,7 +103,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: macos-artifacts
+          name: build-${{ matrix.version }}
           path: |
             out/make/*.dmg
             out/make/zip/darwin/**/*.zip
