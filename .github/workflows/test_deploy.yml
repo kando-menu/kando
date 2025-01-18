@@ -1,12 +1,11 @@
 # SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 # SPDX-License-Identifier: CC0-1.0
 
-name: Deploy
+name: Test Deploy
 
 on:
-  push:
-    tags:
-      - '**'
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   linux:
@@ -14,8 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-22.04-arm]
-    permissions:
-      contents: write
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,19 +34,16 @@ jobs:
       - name: Create AppImage
         run: |
           tools/make-app-image.sh
-      - name: Upload Packages
-        uses: svenstaro/upload-release-action@2.9.0
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          file: out/make/**/*
-          tag: ${{ github.ref }}
-          file_glob: true
-          prerelease: true
+          name: build-${{ matrix.os }}
+          path: out/make/**/*
+          retention-days: 7
 
   windows:
     name: Windows
     runs-on: windows-2022
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -64,20 +59,14 @@ jobs:
       - name: Create Release
         run: |
           npm run make
-      - name: Upload Zip
-        uses: svenstaro/upload-release-action@2.9.0
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          file: out/make/zip/win32/x64/*
-          tag: ${{ github.ref }}
-          file_glob: true
-          prerelease: true
-      - name: Upload Squirrel Installer
-        uses: svenstaro/upload-release-action@2.9.0
-        with:
-          file: out/make/squirrel.windows/x64/*.exe
-          tag: ${{ github.ref }}
-          file_glob: true
-          prerelease: true
+          name: build-windows-2022
+          path: |
+            out/make/zip/win32/x64/*
+            out/make/squirrel.windows/x64/*.exe
+          retention-days: 7
 
   macos:
     name: macOS
@@ -85,8 +74,6 @@ jobs:
       matrix:
         os: [macos-13, macos-14]
     runs-on: ${{ matrix.os }}
-    permissions:
-      contents: write
     steps:
       # https://github.com/electron/forge/issues/2807
       - run: python3 -m pip install setuptools --break-system-packages
@@ -113,17 +100,11 @@ jobs:
           OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
         run: |
           npm run make
-      - name: Upload DMG
-        uses: svenstaro/upload-release-action@2.9.0
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          file: out/make/*.dmg
-          tag: ${{ github.ref }}
-          file_glob: true
-          prerelease: true
-      - name: Upload Zip
-        uses: svenstaro/upload-release-action@2.9.0
-        with:
-          file: out/make/zip/darwin/**/*.zip
-          tag: ${{ github.ref }}
-          file_glob: true
-          prerelease: true
+          name: build-${{ matrix.os }}
+          path: |
+            out/make/*.dmg
+            out/make/zip/darwin/**/*.zip
+          retention-days: 7

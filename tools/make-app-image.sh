@@ -14,18 +14,39 @@ set -u
 # Get the directory of this script.
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 
-INPUT_DIR="$SCRIPT_DIR/../out/Kando-linux-x64"
+# Get the architecture.
+ARCH="$(uname -m)"
+if [ $ARCH = "x86_64" ]; then
+  ARCH_SHORT=x64
+elif [ $ARCH = "aarch64" ]; then
+  ARCH_SHORT=arm64
+else
+  echo "Unsupported architecture: $ARCH"
+  exit 1
+fi
+
+
+INPUT_DIR="$SCRIPT_DIR/../out/Kando-linux-$ARCH_SHORT"
 BUILD_DIR="$SCRIPT_DIR/../build/kando.AppDir"
 OUTPUT_DIR="$SCRIPT_DIR/../out/make/appimage"
 
+# Make sure that the input directory exists.
+if [ ! -d "$INPUT_DIR" ]; then
+  echo "Input directory $INPUT_DIR does not exist! Run 'npm run package' first."
+  exit 1
+fi
+
+echo "Building AppImage for $ARCH..."
+
 # Clean the build directory.
 mkdir -p "$OUTPUT_DIR"
-rm -r "$BUILD_DIR" || true
+if [ -d "$BUILD_DIR" ]; then
+  rm -r "$BUILD_DIR"
+fi
 mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
 
 VERSION=$(grep '"version":' ../../package.json | awk -F '"' '{print $4}')
-ARCH=x86_64
-echo "Creating AppImage for Kando $VERSION..."
+echo "Creating AppImage for Kando $VERSION on $ARCH..."
 
 # Copy desktop file, icon, and all the other stuff.
 cp -a "$INPUT_DIR"/* .
@@ -47,7 +68,7 @@ chmod a+x ./AppRun
 
 # Get the appimagetool.
 cd ..
-APPIMAGETOOL=$(wget -q https://api.github.com/repos/probonopd/go-appimage/releases -O - | sed 's/[()",{} ]/\n/g' | grep -oi 'https.*continuous.*tool.*86_64.*mage$')
+APPIMAGETOOL=$(wget -q https://api.github.com/repos/probonopd/go-appimage/releases -O - | sed 's/[()",{} ]/\n/g' | grep -oi "https.*continuous.*tool.*$ARCH.*mage$")
 echo "Downloading appimagetool from $APPIMAGETOOL..."
 wget -q "$APPIMAGETOOL" -O ./appimagetool
 chmod a+x ./appimagetool
