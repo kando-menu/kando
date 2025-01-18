@@ -35,7 +35,6 @@ $rfs-breakpoint: 1400px;
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
 @import './common/style';
-@import './background/style';
 @import './sidebar/style';
 @import './toolbar/style';
 @import './preview/style';
@@ -53,6 +52,7 @@ $rfs-breakpoint: 1400px;
 body {
   overflow: hidden;
   user-select: none;
+  background: transparent;
 }
 
 #kando-settings {

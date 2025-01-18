@@ -12,7 +12,6 @@ import { Tooltip } from 'bootstrap';
 
 import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
-import { Background } from './background/background';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
 import { IBackendInfo, IMenuSettings, IVersionInfo } from '../common';
@@ -49,12 +48,6 @@ export class Settings {
    * settings is created and will be used to configure it's behavior.
    */
   private options: SettingsOptions = null;
-
-  /**
-   * The background is an opaque div which is shown when the settings is open. It
-   * effectively hides the normal menu.
-   */
-  private background: Background = null;
 
   /**
    * The preview is shown in the center of the screen. It allows the user to edit one
@@ -121,10 +114,6 @@ export class Settings {
   ) {
     this.container = container;
     this.backend = backend;
-
-    // Initialize the background.
-    this.background = new Background();
-    this.container.appendChild(this.background.getContainer());
 
     // Initialize the preview.
     this.preview = new Preview(this.dndManager);
