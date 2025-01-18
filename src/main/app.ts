@@ -66,7 +66,7 @@ export class KandoApp {
    * covers the whole screen. It is always on top and has no frame. It is used to display
    * the pie menu.
    */
-  private window: BrowserWindow;
+  private window?: BrowserWindow;
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
@@ -189,7 +189,7 @@ export class KandoApp {
     // not shown. If the window is shown, the shortcuts are already unbound and will be
     // rebound when the window is hidden.
     this.menuSettings.onChange('menus', async () => {
-      if (!this.window.isVisible()) {
+      if (!this.window?.isVisible()) {
         await this.bindShortcuts();
       }
       this.updateTrayMenu();
@@ -197,7 +197,7 @@ export class KandoApp {
 
     // When the app settings change, we need to apply the zoom factor to the window.
     this.appSettings.onChange('zoomFactor', (newValue) => {
-      this.window.webContents.setZoomFactor(newValue);
+      this.window?.webContents.setZoomFactor(newValue);
     });
 
     // Check if we want to silently handle read-only config files
@@ -222,9 +222,6 @@ export class KandoApp {
     // Initialize the IPC communication to the renderer process.
     this.initRendererIPC();
 
-    // Create and load the main window.
-    await this.initWindow();
-
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
 
@@ -245,7 +242,7 @@ export class KandoApp {
       );
 
       // Show the update-available button in the sidebar.
-      this.window.webContents.send('show-update-available-button');
+      this.window?.webContents.send('show-update-available-button');
 
       // Show the sidebar if it is hidden.
       this.appSettings.set({ sidebarVisible: true });
@@ -406,9 +403,8 @@ export class KandoApp {
    * @param request Required information to select correct menu.
    */
   public showMenu(request: IShowMenuRequest) {
-    this.backend
-      .getWMInfo()
-      .then((info) => {
+    Promise.all([this.backend.getWMInfo(), this.initWindow()])
+      .then(([info]) => {
         // Select correct menu before showing it to user.
         const menu = this.chooseMenu(request, info);
 
@@ -556,9 +552,8 @@ export class KandoApp {
    * example in the condition picker of the menu editor.
    */
   public showEditor() {
-    this.backend
-      .getWMInfo()
-      .then((info) => {
+    Promise.all([this.backend.getWMInfo(), this.initWindow()])
+      .then(([info]) => {
         this.window.webContents.send('show-editor', {
           appName: info.appName,
           windowName: info.windowName,
@@ -598,6 +593,11 @@ export class KandoApp {
    * pie menu and potentially other UI elements such as the menu editor.
    */
   private async initWindow() {
+    // Bail out if the window is already created.
+    if (this.window) {
+      return;
+    }
+
     const display = screen.getPrimaryDisplay();
 
     this.window = new BrowserWindow({
