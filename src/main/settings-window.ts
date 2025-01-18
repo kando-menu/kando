@@ -33,7 +33,15 @@ export class SettingsWindow extends BrowserWindow {
         webSecurity: process.env.NODE_ENV !== 'development',
         preload: SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
-      transparent: true,
+      backgroundColor: '#00000000',
+      backgroundMaterial: 'acrylic',
+      titleBarStyle: 'hidden',
+      titleBarOverlay: {
+        color: '#ffffff00',
+        symbolColor: '#ffffff',
+        height: 30,
+      },
+      vibrancy: 'sidebar',
       width: 1200,
       height: 800,
       show: false,
@@ -54,6 +62,18 @@ export class SettingsWindow extends BrowserWindow {
     // Show the window when the renderer is ready.
     this.windowLoaded.then(() => {
       this.show();
+    });
+
+    this.on('maximize', () => {
+      console.log('maximize');
+      this.setBackgroundMaterial('none');
+      this.setBackgroundMaterial('acrylic');
+    });
+
+    this.on('unmaximize', () => {
+      console.log('unmaximize');
+      this.setBackgroundMaterial('none');
+      this.setBackgroundMaterial('acrylic');
     });
   }
 }
