@@ -69,7 +69,9 @@
     "main": {
         "is-running-header": "Kando вже працює",
         "is-running-message": "Перевірте піктограму в системному треї на наявність деяких опцій!",
-        "failed-to-start-header": "Kando не зміг запуститися"
+        "failed-to-start-header": "Kando не зміг запуститися",
+        "un-inhibit-shortcuts": "Увімкнути клавіші меню",
+        "inhibit-shortcuts": "Тимчасово вимкнути меню"
     },
     "properties": {
         "common": {
