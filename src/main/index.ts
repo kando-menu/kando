@@ -154,6 +154,9 @@ app
       }
     });
 
+    // Prevent the app from quitting when all windows are closed.
+    app.on('window-all-closed', () => {});
+
     // Show a message that the app is ready.
     console.log(`Kando ${app.getVersion()} is ready.`);
 
