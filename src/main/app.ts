@@ -846,7 +846,7 @@ export class KandoApp {
     // Allow the renderer to be notified when the system theme changes.
     let darkMode = nativeTheme.shouldUseDarkColors;
     nativeTheme.on('updated', () => {
-      if (darkMode !== nativeTheme.shouldUseDarkColors) {
+      if (this.window && darkMode !== nativeTheme.shouldUseDarkColors) {
         darkMode = nativeTheme.shouldUseDarkColors;
         this.window.webContents.send('dark-mode-changed', darkMode);
       }
