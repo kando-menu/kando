@@ -31,10 +31,11 @@ import { deepCopyMenu, deepCopyMenuItem, IMenu, IMenuItem } from '../common';
 Promise.all([
   window.commonAPI.getLocales(),
   window.commonAPI.getVersion(),
+  window.commonAPI.appSettings.get(),
   window.commonAPI.menuSettings.get(),
   window.commonAPI.menuSettings.getCurrentMenu(),
   window.settingsAPI.getBackendInfo(),
-]).then(async ([locales, version, menuSettings, currentMenu, info]) => {
+]).then(async ([locales, version, appSettings, menuSettings, currentMenu, info]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -54,6 +55,7 @@ Promise.all([
   // Create the settings object. This will handle the rendering of the settings window.
   const settings = new Settings(
     document.getElementById('kando-settings'),
+    appSettings,
     menuSettings,
     currentMenu,
     info,

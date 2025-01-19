@@ -82,7 +82,7 @@ export class MenuWindow extends BrowserWindow {
       y: display.workArea.y,
       width: display.workArea.width + 1,
       height: display.workArea.height + 1,
-      type: backend.getBackendInfo().windowType,
+      type: backend.getBackendInfo().menuWindowType,
       show: false,
     });
 

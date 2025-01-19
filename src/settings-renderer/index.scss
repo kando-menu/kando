@@ -47,8 +47,6 @@ $rfs-breakpoint: 1400px;
 
 // General Styling -----------------------------------------------------------------------
 
-// We ensure that the settings cover the entire viewport.
-
 body {
   overflow: hidden;
   user-select: none;
@@ -59,12 +57,17 @@ html {
   background: transparent;
 }
 
+// We ensure that the settings cover the entire viewport.
 #kando-settings {
   position: absolute;
   top: 0px;
   left: 0px;
   bottom: 0px;
   right: 0px;
+
+  &:not(.transparent) {
+    background: url('../../assets/images/settings-bg-01.webp');
+  }
 }
 
 // Basic UI styling ----------------------------------------------------------------------

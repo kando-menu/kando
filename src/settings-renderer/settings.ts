@@ -14,7 +14,7 @@ import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IBackendInfo, IMenuSettings, IVersionInfo } from '../common';
+import { IAppSettings, IBackendInfo, IMenuSettings, IVersionInfo } from '../common';
 import { DnDManager } from './common/dnd-manager';
 
 /** These options can be given to the constructor of the settings. */
@@ -107,6 +107,7 @@ export class Settings {
    */
   constructor(
     container: HTMLElement,
+    appSettings: IAppSettings,
     menuSettings: IMenuSettings,
     currentMenu: number,
     backend: IBackendInfo,
@@ -114,6 +115,10 @@ export class Settings {
   ) {
     this.container = container;
     this.backend = backend;
+
+    if (appSettings.transparentSettingsWindow) {
+      this.container.classList.add('transparent');
+    }
 
     // Initialize the preview.
     this.preview = new Preview(this.dndManager);

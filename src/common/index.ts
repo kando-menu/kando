@@ -31,15 +31,15 @@ export interface IBackendInfo {
 
   /**
    * Each backend should return a suitable window type here. The window type determines
-   * how Kando's window is drawn. The most suitable type is dependent on the operating
-   * system and the window manager. For example, on GNOME, the window type "dock" seems to
-   * work best, on KDE "toolbar" provides a better experience. On Windows, "toolbar" is
-   * the only type that works.
+   * how Kando's menu window is drawn. The most suitable type is dependent on the
+   * operating system and the window manager. For example, on GNOME, the window type
+   * "dock" seems to work best, on KDE "toolbar" provides a better experience. On Windows,
+   * "toolbar" is the only type that works.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
    *
    * @returns The window type to use for the pie menu window.
    */
-  windowType: string;
+  menuWindowType: string;
 
   /**
    * There are some backends which do not support custom shortcuts. In this case, the user
@@ -55,6 +55,16 @@ export interface IBackendInfo {
    * required.
    */
   shortcutHint?: string;
+
+  /**
+   * This determines whether the settings window can use transparency. There is an option
+   * in the settings to enable transparency, but if canUseTransparentSettingsWindow is
+   * false, the option will be disabled.
+   */
+  canUseTransparentSettingsWindow: boolean;
+
+  /** This determines whether the settings window should use transparency per default. */
+  shouldUseTransparentSettingsWindow: boolean;
 }
 
 /** This interface describes some information about the current version of Kando. */
@@ -529,6 +539,12 @@ export interface IAppSettings {
 
   /** Whether to silently handle read-only config files. */
   ignoreWriteProtectedConfigFiles: boolean;
+
+  /**
+   * If set to true, the settings window will attempt to use some sort of transparency.
+   * What that means exactly depends on the OS.
+   */
+  transparentSettingsWindow: boolean;
 
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';

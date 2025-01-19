@@ -8,7 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'node:os';
 import { BrowserWindow, shell, ipcMain } from 'electron';
+
+import { IAppSettings } from '../common';
+import { Settings } from './utils/settings';
 
 declare const SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
@@ -22,7 +26,9 @@ export class SettingsWindow extends BrowserWindow {
     });
   });
 
-  constructor() {
+  constructor(settings: Settings<IAppSettings>) {
+    const transparent = settings.get('transparentSettingsWindow');
+
     super({
       webPreferences: {
         contextIsolation: true,
@@ -34,14 +40,20 @@ export class SettingsWindow extends BrowserWindow {
         preload: SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       backgroundColor: '#00000000',
-      backgroundMaterial: 'acrylic',
       titleBarStyle: 'hidden',
       titleBarOverlay: {
         color: '#ffffff00',
         symbolColor: '#ffffff',
         height: 30,
       },
-      vibrancy: 'sidebar',
+      // Only on Linux we use a "real" transparent window. On Windows and macOS we use
+      // an acrylic background. On Linux, the desktop environment will be responsible
+      // for drawing a blurred background.
+      transparent: transparent && os.platform() === 'linux',
+      // For macOS.
+      vibrancy: transparent ? 'sidebar' : undefined,
+      // For Windows.
+      backgroundMaterial: transparent ? 'acrylic' : undefined,
       width: 1200,
       height: 800,
       show: false,
@@ -66,14 +78,10 @@ export class SettingsWindow extends BrowserWindow {
 
     this.on('maximize', () => {
       console.log('maximize');
-      this.setBackgroundMaterial('none');
-      this.setBackgroundMaterial('acrylic');
     });
 
     this.on('unmaximize', () => {
       console.log('unmaximize');
-      this.setBackgroundMaterial('none');
-      this.setBackgroundMaterial('acrylic');
     });
   }
 }

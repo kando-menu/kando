@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'node:os';
 import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../backend';
@@ -24,10 +25,30 @@ export class WindowsBackend implements Backend {
    * supported by Electron on Windows.
    */
   public getBackendInfo() {
+    // Vibrancy is only supported on Windows 11 22H2 (build 22621) or higher.
+    const release = os.release().split('.');
+    const major = parseInt(release[0]);
+    const minor = parseInt(release[1]);
+    const build = parseInt(release[2]);
+
+    const transparencySupported = major === 10 && minor === 0 && build >= 22621;
+
+    if (transparencySupported) {
+      console.log(
+        'Windows 10 build 22621 or higher detected. Using transparent settings window.'
+      );
+    } else {
+      console.log(
+        'Windows 10 build 22621 or higher not detected. Using normal settings window.'
+      );
+    }
+
     return {
       name: 'Windows Backend',
-      windowType: 'toolbar',
+      menuWindowType: 'toolbar',
       supportsShortcuts: true,
+      canUseTransparentSettingsWindow: transparencySupported,
+      shouldUseTransparentSettingsWindow: transparencySupported,
     };
   }
 

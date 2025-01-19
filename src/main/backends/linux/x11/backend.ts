@@ -13,6 +13,7 @@ import { native } from './native';
 import { Backend, Shortcut } from '../../backend';
 import { IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
+import { should } from 'chai';
 
 /**
  * This backend uses the XTest extension via native C++ code to simulate key presses and
@@ -30,8 +31,10 @@ export class X11Backend implements Backend {
   public getBackendInfo() {
     return {
       name: 'X11 Backend',
-      windowType: 'dock',
+      menuWindowType: 'dock',
       supportsShortcuts: true,
+      canUseTransparentSettingsWindow: true,
+      shouldUseTransparentSettingsWindow: false,
     };
   }
 

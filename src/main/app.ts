@@ -106,6 +106,8 @@ export class KandoApp {
         soundVolume: 0.5,
         sidebarVisible: true,
         ignoreWriteProtectedConfigFiles: false,
+        transparentSettingsWindow:
+          this.backend.getBackendInfo().shouldUseTransparentSettingsWindow,
         trayIconFlavor: 'color',
         enableVersionCheck: true,
         zoomFactor: 1,
@@ -277,7 +279,7 @@ export class KandoApp {
       return;
     }
 
-    this.settingsWindow = new SettingsWindow();
+    this.settingsWindow = new SettingsWindow(this.appSettings);
 
     // Reset the member variable when the window is closed.
     this.settingsWindow.on('closed', () => {
