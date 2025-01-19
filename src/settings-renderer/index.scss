@@ -67,6 +67,8 @@ html {
 
   &:not(.transparent) {
     background: url('../../assets/images/settings-bg-01.webp');
+    background-size: cover;
+    background-position: center;
   }
 }
 

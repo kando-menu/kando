@@ -121,6 +121,7 @@ export class Settings {
     }
 
     // Initialize the preview.
+    /*
     this.preview = new Preview(this.dndManager);
     this.container.appendChild(this.preview.getContainer());
 
@@ -133,8 +134,10 @@ export class Settings {
       this.editingMenu = false;
       this.properties.setItem(item);
     });
+    */
 
     // Initialize the properties view.
+    /*
     this.properties = new Properties(this.backend);
     this.container.appendChild(this.properties.getContainer());
 
@@ -146,16 +149,26 @@ export class Settings {
       }
     };
 
+    this.properties.setOptions({
+      appName: 'foo',
+      windowName: 'bar',
+      windowPosition: { x: 0, y: 0 },
+    });
+
     this.properties.on('changed-name', handleItemChange);
     this.properties.on('changed-icon', handleItemChange);
     this.properties.on('changed-shortcut', handleItemChange);
+    */
 
     // Initialize the sidebar.
+    /*
     this.sidebar = new Sidebar(backend, version);
     this.container.appendChild(this.sidebar.getContainer());
+    */
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
     // leaving edit mode. We wire up the corresponding events here.
+    /*
     this.toolbar = new Toolbar(backend, this.dndManager);
     this.container.appendChild(this.toolbar.getContainer());
 
@@ -174,6 +187,7 @@ export class Settings {
       this.properties.setMenu(this.menuSettings.menus[index]);
       this.preview.setMenu(this.menuSettings.menus[index]);
     });
+    */
 
     // Initialize all tooltips.
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((elem) => {
@@ -182,15 +196,9 @@ export class Settings {
       });
     });
 
-    this.properties.setOptions({
-      appName: 'foo',
-      windowName: 'bar',
-      windowPosition: { x: 0, y: 0 },
-    });
-
     this.menuSettings = menuSettings;
     this.currentMenu = currentMenu;
-    this.preview.setMenu(menuSettings.menus[currentMenu]);
-    this.toolbar.init(menuSettings, currentMenu);
+    // this.preview.setMenu(menuSettings.menus[currentMenu]);
+    // this.toolbar.init(menuSettings, currentMenu);
   }
 }
