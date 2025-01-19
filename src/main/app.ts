@@ -54,7 +54,7 @@ export class KandoApp {
    * covers the whole screen. It is always on top and has no frame. It is used to display
    * the pie menu.
    */
-  private menuWindow: MenuWindow;
+  private menuWindow?: MenuWindow;
   private settingsWindow?: SettingsWindow;
 
   /** True if shortcuts are currently inhibited. */
@@ -168,7 +168,7 @@ export class KandoApp {
     // not shown. If the window is shown, the shortcuts are already unbound and will be
     // rebound when the window is hidden.
     this.menuSettings.onChange('menus', async () => {
-      if (!this.menuWindow.isVisible()) {
+      if (!this.menuWindow?.isVisible()) {
         await this.bindShortcuts();
       }
       this.updateTrayMenu();
@@ -202,10 +202,6 @@ export class KandoApp {
     // Initialize the common IPC communication to the renderer process. This will be
     // available in both the menu window and the settings window.
     this.initCommonRendererAPI();
-
-    // Create and load the main window.
-    this.menuWindow = new MenuWindow(this.appSettings, this.menuSettings, this.backend);
-    await this.menuWindow.load();
 
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
@@ -262,7 +258,13 @@ export class KandoApp {
    *
    * @param request Required information to select correct menu.
    */
-  public showMenu(request: IShowMenuRequest) {
+  public async showMenu(request: IShowMenuRequest) {
+    // Create and load the main window if it does not exist yet.
+    if (!this.menuWindow) {
+      this.menuWindow = new MenuWindow(this.appSettings, this.menuSettings, this.backend);
+      await this.menuWindow.load();
+    }
+
     this.menuWindow.showMenu(request);
   }
 
@@ -289,7 +291,7 @@ export class KandoApp {
 
   /** This is called when the --reload-menu-theme command line option is passed. */
   public reloadMenuTheme() {
-    this.menuWindow.webContents.send(
+    this.menuWindow?.webContents.send(
       `app-settings-changed-menuTheme`,
       this.appSettings.get('menuTheme'),
       this.appSettings.get('menuTheme')
@@ -298,7 +300,7 @@ export class KandoApp {
 
   /** This is called when the --reload-sound-theme command line option is passed. */
   public reloadSoundTheme() {
-    this.menuWindow.webContents.send(
+    this.menuWindow?.webContents.send(
       `app-settings-changed-soundTheme`,
       this.appSettings.get('soundTheme'),
       this.appSettings.get('soundTheme')
@@ -318,7 +320,7 @@ export class KandoApp {
     // Show the web developer tools if requested.
     ipcMain.on('settings-window.show-dev-tools', () => {
       this.settingsWindow.webContents.openDevTools();
-      this.menuWindow.webContents.openDevTools();
+      this.menuWindow?.webContents.openDevTools();
     });
 
     // Reload the current menu theme if requested.
@@ -400,7 +402,7 @@ export class KandoApp {
     // return the index of a menu with the same name as the last menu. If the user uses
     // the same name for multiple menus, this will not work as expected.
     ipcMain.handle('common.menu-settings-get-current-menu', () => {
-      if (!this.menuWindow.lastMenu) {
+      if (!this.menuWindow?.lastMenu) {
         return 0;
       }
 
@@ -500,7 +502,7 @@ export class KandoApp {
     // Allow the renderer to be notified when the system theme changes.
     let darkMode = nativeTheme.shouldUseDarkColors;
     nativeTheme.on('updated', () => {
-      if (darkMode !== nativeTheme.shouldUseDarkColors) {
+      if (this.menuWindow && darkMode !== nativeTheme.shouldUseDarkColors) {
         darkMode = nativeTheme.shouldUseDarkColors;
         this.menuWindow.webContents.send('common.dark-mode-changed', darkMode);
       }
@@ -586,7 +588,7 @@ export class KandoApp {
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {
-          this.menuWindow.showMenu({
+          this.showMenu({
             trigger: '',
             name: menu.root.name,
           });
@@ -676,7 +678,7 @@ export class KandoApp {
         await this.backend.bindShortcut({
           trigger,
           action: () => {
-            this.menuWindow.showMenu({
+            this.showMenu({
               trigger: trigger,
               name: '',
             });
