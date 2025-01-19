@@ -8,21 +8,16 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// For now, we support two different (hard-coded) font icon themes. The first one is the
-// Material Design Icons font, the second one is the Simple Icons font. Both are
-// available as npm packages.
-$material-symbols-font-path: '~material-symbols/';
-@import 'material-symbols/rounded';
-@import '../../node_modules/simple-icons-font/font/simple-icons.css';
+.container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
 
-// General Styling -----------------------------------------------------------------------
-
-body {
-  overflow: hidden;
-  user-select: none;
-  background: transparent;
-}
-
-html {
-  background: transparent;
+  &:not(.transparent) {
+    background: url('../../../assets/images/settings-bg-01.webp');
+    background-size: cover;
+    background-position: center;
+  }
 }

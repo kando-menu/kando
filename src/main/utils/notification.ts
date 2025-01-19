@@ -31,7 +31,7 @@ export class Notification {
       const notification = new ElectronNotification({
         title: title + '.',
         body: message,
-        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+        icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
       });
 
       if (onClick) {
@@ -55,7 +55,7 @@ export class Notification {
       const notification = new ElectronNotification({
         title: title + '.',
         body: error,
-        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+        icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
       });
 
       notification.show();

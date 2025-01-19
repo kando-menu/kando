@@ -10,12 +10,14 @@
 
 import './index.scss';
 
+import React from 'react';
+import {createRoot} from 'react-dom/client';
 import i18next from 'i18next';
 
 import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
 
-import { Settings } from './settings';
+import App from './components/App'
 import { deepCopyMenu, deepCopyMenuItem, IMenu, IMenuItem } from '../common';
 
 /**
@@ -53,14 +55,8 @@ Promise.all([
   });
 
   // Create the settings object. This will handle the rendering of the settings window.
-  const settings = new Settings(
-    document.getElementById('kando-settings'),
-    appSettings,
-    menuSettings,
-    currentMenu,
-    info,
-    version
-  );
+  const root  = createRoot(document.body);
+  root.render(<App />);
 
   // Show the update available button when the main process requests it.
   window.settingsAPI.showUpdateAvailableButton(() => {

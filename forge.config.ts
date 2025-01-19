@@ -135,7 +135,7 @@ const config: ForgeConfig = {
           },
           {
             html: './src/settings-renderer/index.html',
-            js: './src/settings-renderer/index.ts',
+            js: './src/settings-renderer/index.tsx',
             name: 'settings_window',
             preload: {
               js: './src/settings-renderer/preload.ts',

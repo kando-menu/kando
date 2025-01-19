@@ -326,7 +326,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
           const notification = new Notification({
             title: 'Could not save file.',
             body: errorMessage,
-            icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+            icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
           });
 
           notification.show();

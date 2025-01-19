@@ -7,10 +7,31 @@ import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
 import { ignores } from './webpack.ignores';
 
-rules.push({
-  test: /\.s[ac]ss$/i,
-  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
-});
+// The settings renderer uses CSS modules, the menu renderer does not. So we use different
+// loaders for these files.
+rules.push(
+  {
+    test: /menu-renderer.*\.s[ac]ss$/i,
+    use: [
+      { loader: 'style-loader' },
+      {
+        loader: 'css-loader',
+      },
+      { loader: 'sass-loader' },
+    ],
+  },
+  {
+    test: /settings-renderer.*\.s[ac]ss$/i,
+    use: [
+      { loader: 'style-loader' },
+      {
+        loader: 'css-loader',
+        options: { modules: true },
+      },
+      { loader: 'sass-loader' },
+    ],
+  }
+);
 
 export const rendererConfig: Configuration = {
   module: {

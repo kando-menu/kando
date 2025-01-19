@@ -33,6 +33,8 @@
     "@types/chai": "^4.3.11",
     "@types/howler": "^2.2.12",
     "@types/mocha": "^10.0.10",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
@@ -57,7 +59,8 @@
     "ts-loader": "^9.5.2",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-plugin-css-modules": "^5.1.0"
   },
   "dependencies": {
     "@jaames/iro": "^5.5.2",
@@ -83,6 +86,8 @@
     "mime-types": "^2.1.35",
     "node-addon-api": "^8.3.0",
     "octokit": "^4.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "simple-icons-font": "^14.2.0"
   }
 }
