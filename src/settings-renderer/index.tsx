@@ -56,7 +56,11 @@ Promise.all([
 
   // Create the settings object. This will handle the rendering of the settings window.
   const root  = createRoot(document.body);
-  root.render(<App />);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 
   // Show the update available button when the main process requests it.
   window.settingsAPI.showUpdateAvailableButton(() => {

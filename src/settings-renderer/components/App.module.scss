@@ -16,10 +16,4 @@
   right: 0px;
 
   display: flex;
-
-  &:not(.transparent) {
-    background: url('../../../assets/images/settings-bg-01.webp');
-    background-size: cover;
-    background-position: center;
-  }
 }

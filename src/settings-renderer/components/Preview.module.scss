@@ -10,4 +10,10 @@
 
 .preview {
   flex-grow: 1;
+
+  &:not(.transparent) {
+    background: url('../../../assets/images/settings-bg-01.webp');
+    background-size: cover;
+    background-position: center;
+  }
 }
