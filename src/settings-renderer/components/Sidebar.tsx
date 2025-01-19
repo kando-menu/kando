@@ -8,18 +8,17 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.container {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
+import React from 'react'
 
-  display: flex;
+import * as classes from './Sidebar.module.scss'
 
-  &:not(.transparent) {
-    background: url('../../../assets/images/settings-bg-01.webp');
-    background-size: cover;
-    background-position: center;
-  }
+function component() {
+
+  return (
+    <div className={classes.sidebar}>
+        <div className={classes.headerbar} />
+    </div>
+  )
 }
+
+export default component

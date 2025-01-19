@@ -8,18 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.container {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
-
+.sidebar {
+  background-color: #24272f;
+  min-width: 300px;
   display: flex;
+  flex-direction: column;
+}
 
-  &:not(.transparent) {
-    background: url('../../../assets/images/settings-bg-01.webp');
-    background-size: cover;
-    background-position: center;
-  }
+.headerbar {
+  background-color: #101115;
+  height: 30px;
+  -webkit-app-region: drag;
 }

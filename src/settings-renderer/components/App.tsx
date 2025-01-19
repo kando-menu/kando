@@ -12,13 +12,16 @@ import React from 'react'
 
 import * as classes from './App.module.scss'
 
+import Sidebar from './Sidebar'
+import Preview from './Preview'
+
 function component() {
 
   return (
-    <div className={classes.container}>
-      <div className={classes.sidebar} />
-      <div className={classes.preview} />
-      <div className={classes.sidebar} />
+    <div className={classes.container }>
+      <Sidebar/>
+      <Preview/>
+      <Sidebar/>
     </div>
   )
 }
