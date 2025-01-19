@@ -30,6 +30,14 @@ export interface Native {
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
+
+  /**
+   * This fixes the acrylic effect on Windows after the window has been resized. See here:
+   * https://github.com/electron/electron/issues/42393
+   *
+   * @param hwnd The window handle.
+   */
+  fixAcrylicEffect(hwnd: number): void;
 }
 
 const native: Native = require('./../../../../../build/Release/NativeWin32.node');

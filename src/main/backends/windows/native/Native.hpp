@@ -51,6 +51,16 @@ class Native : public Napi::Addon<Native> {
    *            no arguments.
    */
   Napi::Value getActiveWindow(const Napi::CallbackInfo& info);
+
+  /**
+   * After maximizing a window, the acrylic effect is sometimes broken. This function
+   * is called after window creation to fix the acrylic effect. See here:
+   * https://github.com/electron/electron/issues/42393
+   * 
+   * @param info The arguments passed to the fixAcrylicEffect function. It should contain
+   *           the window handle.
+   */
+  void fixAcrylicEffect(const Napi::CallbackInfo& info);
 };
 
 #endif // NATIVE_HPP

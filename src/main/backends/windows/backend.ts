@@ -140,4 +140,14 @@ export class WindowsBackend implements Backend {
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
   }
+
+  /**
+   * This fixes the acrylic effect on Windows after the window has been maximized. See
+   * here: https://github.com/electron/electron/issues/42393
+   *
+   * @param hwnd The window handle.
+   */
+  public async fixAcrylicEffect(hwnd: number) {
+    native.fixAcrylicEffect(hwnd);
+  }
 }

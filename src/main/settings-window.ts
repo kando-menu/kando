@@ -13,6 +13,8 @@ import { BrowserWindow, shell, ipcMain } from 'electron';
 
 import { IAppSettings } from '../common';
 import { Settings } from './utils/settings';
+import { Backend } from './backends';
+import { WindowsBackend } from './backends/windows/backend';
 
 declare const SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
@@ -26,7 +28,7 @@ export class SettingsWindow extends BrowserWindow {
     });
   });
 
-  constructor(settings: Settings<IAppSettings>) {
+  constructor(backend: Backend, settings: Settings<IAppSettings>) {
     const transparent = settings.get('transparentSettingsWindow');
 
     super({
@@ -60,6 +62,15 @@ export class SettingsWindow extends BrowserWindow {
       show: false,
     });
 
+    // Due to an Electron issue, the acrylic effect on Windows is broken after maximizing
+    // the window (https://github.com/electron/electron/issues/42393). We can fix this by
+    // some direct calls to the Win32 API.
+    if (transparent && os.platform() === 'win32') {
+      (backend as WindowsBackend).fixAcrylicEffect(
+        this.getNativeWindowHandle().readInt32LE(0)
+      );
+    }
+
     // Remove the default menu. This disables all default shortcuts like CMD+W which are
     // not needed in Kando.
     this.setMenu(null);
@@ -75,14 +86,6 @@ export class SettingsWindow extends BrowserWindow {
     // Show the window when the renderer is ready.
     this.windowLoaded.then(() => {
       this.show();
-    });
-
-    this.on('maximize', () => {
-      console.log('maximize');
-    });
-
-    this.on('unmaximize', () => {
-      console.log('unmaximize');
     });
   }
 }

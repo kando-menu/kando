@@ -279,7 +279,7 @@ export class KandoApp {
       return;
     }
 
-    this.settingsWindow = new SettingsWindow(this.appSettings);
+    this.settingsWindow = new SettingsWindow(this.backend, this.appSettings);
 
     // Reset the member variable when the window is closed.
     this.settingsWindow.on('closed', () => {
