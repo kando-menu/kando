@@ -15,9 +15,20 @@
   bottom: 0px;
   right: 0px;
 
+  display: flex;
+
   &:not(.transparent) {
     background: url('../../../assets/images/settings-bg-01.webp');
     background-size: cover;
     background-position: center;
   }
+}
+
+.preview {
+  flex-grow: 1;
+}
+
+.sidebar {
+  background-color: #24272f;
+  min-width: 200px;
 }
