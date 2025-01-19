@@ -54,6 +54,7 @@ export class SettingsWindow extends BrowserWindow {
       vibrancy: transparent ? 'sidebar' : undefined,
       // For Windows.
       backgroundMaterial: transparent ? 'acrylic' : undefined,
+      fullscreenable: false,
       width: 1200,
       height: 800,
       show: false,
