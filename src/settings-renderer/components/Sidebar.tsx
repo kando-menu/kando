@@ -8,13 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import * as classes from './Sidebar.module.scss';
 
 interface IProps {
   title?: string;
   position: 'left' | 'right';
+  children?: ReactNode;
 }
 
 export default (props: IProps) => {
@@ -54,6 +55,7 @@ export default (props: IProps) => {
       {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
       <div ref={sidebar} className={sidebarClass}>
         <div className={classes.headerbar}>{props.title}</div>
+        <div className={classes.content}>{props.children}</div>
       </div>
       {props.position === 'left' && <div ref={resizer} className={resizerClass} />}
     </>

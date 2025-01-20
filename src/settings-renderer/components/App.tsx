@@ -9,15 +9,15 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import i18next from 'i18next';
 
 import { WindowWithAPIs } from '../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import * as classes from './App.module.scss';
 
-import Sidebar from './Sidebar';
 import Preview from './Preview';
+import Properties from './Properties';
+import MenuList from './MenuList';
 
 export default () => {
   const [transparent, setTransparent] = React.useState(true);
@@ -34,9 +34,9 @@ export default () => {
 
   return (
     <div className={containerClass}>
-      <Sidebar title={i18next.t('settings.title')} position="left" />
+      <MenuList />
       <Preview />
-      <Sidebar position="right" />
+      <Properties />
     </div>
   );
 };

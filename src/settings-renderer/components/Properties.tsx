@@ -8,8 +8,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-$text-primary: light-dark(#f0f0f0, #f0f0f0);
-$text-secondary: light-dark(#555555, #e0e0e0);
+import React from 'react';
 
-$background-primary: light-dark(#9f3b67, #101115);
-$background-secondary: light-dark(#fff, #24272f);
+import Sidebar from './Sidebar';
+
+export default () => {
+  return <Sidebar position="right">Properties</Sidebar>;
+};
