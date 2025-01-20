@@ -11,13 +11,13 @@
 import './index.scss';
 
 import React from 'react';
-import {createRoot} from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import i18next from 'i18next';
 
 import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
 
-import App from './components/App'
+import App from './components/App';
 import { deepCopyMenu, deepCopyMenuItem, IMenu, IMenuItem } from '../common';
 
 /**
@@ -55,7 +55,7 @@ Promise.all([
   });
 
   // Create the settings object. This will handle the rendering of the settings window.
-  const root  = createRoot(document.body);
+  const root = createRoot(document.body);
   root.render(
     <React.StrictMode>
       <App />

@@ -8,16 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react'
+import React from 'react';
 
-import * as classes from './Preview.module.scss'
+import * as classes from './Preview.module.scss';
 
 function component() {
-
-  return (
-    <div className={classes.preview}>
-    </div>
-  )
+  return <div className={classes.preview}></div>;
 }
 
-export default component
+export default component;

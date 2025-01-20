@@ -11,19 +11,32 @@
 import React from 'react';
 import i18next from 'i18next';
 
+import { WindowWithAPIs } from '../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import * as classes from './App.module.scss';
 
 import Sidebar from './Sidebar';
 import Preview from './Preview';
 
-function component() {
+export default () => {
+  const [transparent, setTransparent] = React.useState(true);
+
+  React.useEffect(() => {
+    window.commonAPI.appSettings.getKey('transparentSettingsWindow').then(setTransparent);
+    return window.commonAPI.appSettings.onChange(
+      'transparentSettingsWindow',
+      setTransparent
+    );
+  });
+
+  const containerClass = `${classes.container} ${transparent ? classes.transparent : ''}`;
+
   return (
-    <div className={classes.container}>
+    <div className={containerClass}>
       <Sidebar title={i18next.t('settings.title')} position="left" />
       <Preview />
       <Sidebar position="right" />
     </div>
   );
-}
-
-export default component;
+};
