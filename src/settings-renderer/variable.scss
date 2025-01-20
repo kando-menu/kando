@@ -8,20 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+$text-primary: light-dark(#333333, #f0f0f0);
+$text-secondary: light-dark(#555555, #e0e0e0);
 
-import * as classes from './Sidebar.module.scss';
-
-interface IProps {
-  title?: string;
-}
-
-function component(props: IProps) {
-  return (
-    <div className={classes.sidebar}>
-      <div className={classes.headerbar}>{props.title}</div>
-    </div>
-  );
-}
-
-export default component;
+$background-primary: light-dark(#f0cece, #101115);
+$background-secondary: light-dark(#fff, #24272f);

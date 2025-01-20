@@ -16,4 +16,12 @@
   right: 0px;
 
   display: flex;
+
+  &:not(.transparent) {
+    background: url('../../../assets/images/settings-bg-01.webp');
+    background-color: light-dark(#fff4, #0004);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+  }
 }

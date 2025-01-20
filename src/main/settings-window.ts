@@ -45,7 +45,7 @@ export class SettingsWindow extends BrowserWindow {
       titleBarStyle: 'hidden',
       titleBarOverlay: {
         color: '#ffffff00',
-        symbolColor: '#ffffff',
+        symbolColor: '#888',
         height: 30,
       },
       // Only on Linux we use a "real" transparent window. On Windows and macOS we use

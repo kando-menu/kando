@@ -1,4 +1,70 @@
 {
+  "properties": {
+    "icon-picker": {
+      "placeholder": "Search Icons…",
+      "heading": "Select an Icon",
+      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>."
+    },
+    "common": {
+      "not-bound": "Not Bound",
+      "done": "Done",
+      "cancel": "Cancel",
+      "menu-conditions": "Menu Conditions",
+      "menu-conditions-hint": "Choose when the menu should be shown.",
+      "menu-behavior": "Menu Behavior",
+      "menu-behavior-hint": "Tweak advanced options for the menu."
+    },
+    "advanced-options": {
+      "heading": "Tweak the Menu's Behavior",
+      "subheading": "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a {{- link}}>here</a>.",
+      "centered-mode": "Centered Mode",
+      "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
+      "warp-mouse": "Warp Mouse in Centered Mode",
+      "warp-mouse-hint": "Move the pointer to the center of the menu when it opens.",
+      "anchored-mode": "Anchored Mode",
+      "anchored-mode-hint": "Open submenus at the same position as the parent menu.",
+      "anchored-mode-checked-hint": "Checking this, will disable Marking Mode."
+    },
+    "condition-picker": {
+      "heading": "Select Menu Conditions",
+      "subheading": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
+      "app": "Limit to Specific Apps",
+      "app-hint": "Show the menu only if a specific application is focused.",
+      "app-checked-hint": "This supports regular expressions like /firefox|chrome/i.",
+      "app-placeholder": "App Name",
+      "app-tooltip": "Use the app which was focused when the Kando was opened.",
+      "window": "Limit to Specific Window Titles",
+      "window-hint": "Show the menu only if the focused window's title contains a given text.",
+      "window-checked-hint": "This supports regular expressions like /youtube|vimeo/i.",
+      "window-placeholder": "Window Title",
+      "window-tooltip": "Use the window which was focused when the Kando was opened.",
+      "screen": "Limit to Specific Screen Area",
+      "screen-hint": "Show the menu only if the pointer is in a given area on the screen.",
+      "screen-checked-hint": "In pixels, relative to the top left corner of your main display.",
+      "left-placeholder": "Left",
+      "right-placeholder": "Right",
+      "top-placeholder": "Top",
+      "bottom-placeholder": "Bottom",
+      "pointer-position-hint": "Your mouse is currently at {{x}} x {{y}}."
+    },
+    "hotkey-picker": {
+      "label": "Hotkey",
+      "hint": "This will be simulated.",
+      "recording": "Press a hotkey…"
+    },
+    "macro-picker": {
+      "placeholder": "Hit the record button to start recording!",
+      "recording": "Press the keys…"
+    },
+    "shortcut-id-picker": {
+      "label": "Global Shortcut ID"
+    },
+    "shortcut-picker": {
+      "label": "Shortcut",
+      "hint": "This will open the menu.",
+      "recording": "Press a shortcut…"
+    }
+  },
   "items": {
     "command": {
       "tip-1": "You can use the Command item type to launch applications or scripts.",
@@ -66,75 +132,9 @@
     }
   },
   "main": {
-    "failed-to-start-header": "Kando failed to start",
     "un-inhibit-shortcuts": "Re-enable Shortcuts",
-    "inhibit-shortcuts": "Temporarily Disable Shortcuts"
-  },
-  "properties": {
-    "common": {
-      "not-bound": "Not Bound",
-      "done": "Done",
-      "cancel": "Cancel",
-      "menu-conditions": "Menu Conditions",
-      "menu-conditions-hint": "Choose when the menu should be shown.",
-      "menu-behavior": "Menu Behavior",
-      "menu-behavior-hint": "Tweak advanced options for the menu."
-    },
-    "advanced-options": {
-      "heading": "Tweak the Menu's Behavior",
-      "subheading": "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a {{- link}}>here</a>.",
-      "centered-mode": "Centered Mode",
-      "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
-      "warp-mouse": "Warp Mouse in Centered Mode",
-      "warp-mouse-hint": "Move the pointer to the center of the menu when it opens.",
-      "anchored-mode": "Anchored Mode",
-      "anchored-mode-hint": "Open submenus at the same position as the parent menu.",
-      "anchored-mode-checked-hint": "Checking this, will disable Marking Mode."
-    },
-    "condition-picker": {
-      "heading": "Select Menu Conditions",
-      "subheading": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
-      "app": "Limit to Specific Apps",
-      "app-hint": "Show the menu only if a specific application is focused.",
-      "app-checked-hint": "This supports regular expressions like /firefox|chrome/i.",
-      "app-placeholder": "App Name",
-      "app-tooltip": "Use the app which was focused when the Kando was opened.",
-      "window": "Limit to Specific Window Titles",
-      "window-hint": "Show the menu only if the focused window's title contains a given text.",
-      "window-checked-hint": "This supports regular expressions like /youtube|vimeo/i.",
-      "window-placeholder": "Window Title",
-      "window-tooltip": "Use the window which was focused when the Kando was opened.",
-      "screen": "Limit to Specific Screen Area",
-      "screen-hint": "Show the menu only if the pointer is in a given area on the screen.",
-      "screen-checked-hint": "In pixels, relative to the top left corner of your main display.",
-      "left-placeholder": "Left",
-      "right-placeholder": "Right",
-      "top-placeholder": "Top",
-      "bottom-placeholder": "Bottom",
-      "pointer-position-hint": "Your mouse is currently at {{x}} x {{y}}."
-    },
-    "hotkey-picker": {
-      "label": "Hotkey",
-      "hint": "This will be simulated.",
-      "recording": "Press a hotkey…"
-    },
-    "icon-picker": {
-      "heading": "Select an Icon",
-      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>.",
-      "placeholder": "Search Icons…"
-    },
-    "macro-picker": {
-      "placeholder": "Hit the record button to start recording!",
-      "recording": "Press the keys…"
-    },
-    "shortcut-id-picker": {
-      "label": "Global Shortcut ID"
-    },
-    "shortcut-picker": {
-      "label": "Shortcut",
-      "hint": "This will open the menu.",
-      "recording": "Press a shortcut…"
-    }
+    "inhibit-shortcuts": "Temporarily Disable Shortcuts",
+    "failed-to-start-header": "Kando failed to start"
   },
   "example-menu": {
     "name": "Example Menu",
@@ -203,6 +203,9 @@
       "shortcut-hint": "Use KDE's system settings to bind this."
     }
   },
+  "settings": {
+    "title": "Kando Settings"
+  },
   "sidebar": {
     "welcome": "Welcome to Kando!",
     "intro-text": "Kando comes with a basic example menu. You can play with it, but you should create your own menus soon! You can open the menu editor by clicking on the gear icon in the lower right corner of the screen.",
@@ -259,11 +262,6 @@
       "label": "Trash",
       "heading": "You can delete menus and menu items by dropping them here!",
       "subheading": "When you restart Kando, they will be gone."
-    },
-    "editor-themes-tab": {
-      "label": "Editor Themes",
-      "heading": "Here will be a list of available editor themes!",
-      "subheading": "In the future, it will be possible to theme the entire menu editor."
     }
   }
 }

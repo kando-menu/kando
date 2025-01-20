@@ -8,15 +8,18 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@import '../variable.scss';
+
 .sidebar {
-  background-color: #24272f;
+  background-color: $background-secondary;
   min-width: 300px;
   display: flex;
   flex-direction: column;
 }
 
 .headerbar {
-  background-color: #101115;
+  background-color: $background-primary;
+  color: $text-primary;
   height: 30px;
   -webkit-app-region: drag;
 }

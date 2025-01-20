@@ -8,22 +8,22 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react'
+import React from 'react';
+import i18next from 'i18next';
 
-import * as classes from './App.module.scss'
+import * as classes from './App.module.scss';
 
-import Sidebar from './Sidebar'
-import Preview from './Preview'
+import Sidebar from './Sidebar';
+import Preview from './Preview';
 
 function component() {
-
   return (
-    <div className={classes.container }>
-      <Sidebar/>
-      <Preview/>
-      <Sidebar/>
+    <div className={classes.container}>
+      <Sidebar title={i18next.t('settings.title')} />
+      <Preview />
+      <Sidebar />
     </div>
-  )
+  );
 }
 
-export default component
+export default component;
