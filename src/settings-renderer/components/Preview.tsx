@@ -12,8 +12,6 @@ import React from 'react';
 
 import * as classes from './Preview.module.scss';
 
-function component() {
+export default () => {
   return <div className={classes.preview}></div>;
-}
-
-export default component;
+};

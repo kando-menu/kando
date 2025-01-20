@@ -29,11 +29,13 @@
 }
 
 .left .headerbar {
-  padding-left: env(titlebar-area-x, 10);
+  padding-left: calc(10px + env(titlebar-area-x, 0));
 }
 
 .right .headerbar {
-  padding-right: calc(100vw - env(titlebar-area-x, 10) - env(titlebar-area-width, 0));
+  padding-right: calc(
+    100vw - 10px - env(titlebar-area-x, 0) - env(titlebar-area-width, 0)
+  );
 }
 
 .resizer {

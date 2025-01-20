@@ -17,27 +17,28 @@ interface IProps {
   position: 'left' | 'right';
 }
 
-function component(props: IProps) {
+export default (props: IProps) => {
   const positionClass = props.position === 'left' ? classes.left : classes.right;
   const sidebarClass = classes.sidebar + ' ' + positionClass;
   const resizerClass = classes.resizer + ' ' + positionClass;
 
-  const resizer = React.createRef<HTMLDivElement>();
-  const sidebar = React.createRef<HTMLDivElement>();
+  const resizer = React.useRef<HTMLDivElement>(null);
+  const sidebar = React.useRef<HTMLDivElement>(null);
 
-  const makeResizable = () => {
-    function resize(e: MouseEvent) {
+  React.useEffect(() => {
+    const resize = (e: MouseEvent) => {
       if (props.position === 'left') {
         sidebar.current.style.width = e.clientX + 'px';
       } else {
         sidebar.current.style.width = window.innerWidth - e.clientX + 'px';
       }
-    }
+    };
 
-    function stopResize() {
+    const stopResize = () => {
       document.removeEventListener('mousemove', resize);
+      document.removeEventListener('mouseup', stopResize);
       document.body.style.cursor = '';
-    }
+    };
 
     if (resizer && sidebar) {
       resizer.current.addEventListener('mousedown', function () {
@@ -46,11 +47,7 @@ function component(props: IProps) {
         document.body.style.cursor = 'col-resize';
       });
     }
-  };
-
-  React.useEffect(() => {
-    makeResizable();
-  });
+  }, []);
 
   return (
     <>
@@ -61,6 +58,4 @@ function component(props: IProps) {
       {props.position === 'left' && <div ref={resizer} className={resizerClass} />}
     </>
   );
-}
-
-export default component;
+};

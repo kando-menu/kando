@@ -28,7 +28,7 @@ export default () => {
       'transparentSettingsWindow',
       setTransparent
     );
-  });
+  }, []);
 
   const containerClass = `${classes.container} ${transparent ? classes.transparent : ''}`;
 
