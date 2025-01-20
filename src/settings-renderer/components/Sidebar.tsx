@@ -18,8 +18,9 @@ interface IProps {
 }
 
 function component(props: IProps) {
-  const resizerClass =
-    classes.resizer + ' ' + (props.position === 'left' ? classes.left : classes.right);
+  const positionClass = props.position === 'left' ? classes.left : classes.right;
+  const sidebarClass = classes.sidebar + ' ' + positionClass;
+  const resizerClass = classes.resizer + ' ' + positionClass;
 
   const resizer = React.createRef<HTMLDivElement>();
   const sidebar = React.createRef<HTMLDivElement>();
@@ -54,7 +55,7 @@ function component(props: IProps) {
   return (
     <>
       {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
-      <div ref={sidebar} className={classes.sidebar}>
+      <div ref={sidebar} className={sidebarClass}>
         <div className={classes.headerbar}>{props.title}</div>
       </div>
       {props.position === 'left' && <div ref={resizer} className={resizerClass} />}

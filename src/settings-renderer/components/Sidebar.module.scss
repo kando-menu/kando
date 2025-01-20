@@ -28,6 +28,14 @@
   padding: 0 10px;
 }
 
+.left .headerbar {
+  padding-left: env(titlebar-area-x, 10);
+}
+
+.right .headerbar {
+  padding-right: calc(100vw - env(titlebar-area-x, 10) - env(titlebar-area-width, 0));
+}
+
 .resizer {
   width: 20px;
   cursor: ew-resize;
