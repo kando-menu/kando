@@ -46,7 +46,8 @@ export const COMMON_WINDOW_API = {
   /**
    * The appSettings object can be used to read and write the app settings. The settings
    * are persisted in the host process. When a setting is changed, the host process will
-   * notify the renderer process.
+   * notify the renderer process. The onChange callback can be used to listen for changes
+   * of a specific setting. It returns a function to disconnect the listener.
    */
   appSettings: {
     get: function (): Promise<IAppSettings> {
@@ -64,13 +65,21 @@ export const COMMON_WINDOW_API = {
     onChange: function <K extends keyof IAppSettings>(
       key: K,
       callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
-    ): void {
-      ipcRenderer.on(
-        `common.app-settings-changed-${key}`,
-        (event, newValue, oldValue) => {
-          callback(newValue, oldValue);
-        }
-      );
+    ): () => void {
+      const eventKey = `common.app-settings-changed-${key}`;
+      const wrappedCallback = (
+        event: Electron.IpcRendererEvent,
+        newValue: IAppSettings[K],
+        oldValue: IAppSettings[K]
+      ) => {
+        callback(newValue, oldValue);
+      };
+
+      ipcRenderer.on(eventKey, wrappedCallback);
+
+      return () => {
+        ipcRenderer.off(eventKey, wrappedCallback);
+      };
     },
   },
 
