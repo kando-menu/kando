@@ -53,7 +53,7 @@ export class SettingsWindow extends BrowserWindow {
       // for drawing a blurred background.
       transparent: transparent && os.platform() === 'linux',
       // For macOS.
-      vibrancy: transparent ? 'sidebar' : undefined,
+      vibrancy: transparent ? 'menu' : undefined,
       // For Windows.
       backgroundMaterial: transparent ? 'acrylic' : undefined,
       fullscreenable: false,
