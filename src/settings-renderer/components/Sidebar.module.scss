@@ -12,7 +12,8 @@
 
 .sidebar {
   background-color: $background-secondary;
-  min-width: 300px;
+  width: 300px;
+  min-width: 100px;
   display: flex;
   flex-direction: column;
 }
@@ -22,4 +23,35 @@
   color: $text-primary;
   height: 30px;
   -webkit-app-region: drag;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.resizer {
+  width: 20px;
+  cursor: ew-resize;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  &.left {
+    transform: translateX(-10px);
+  }
+
+  &.right {
+    transform: translateX(10px);
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 100%;
+    background-color: $background-primary;
+    margin: 0 auto;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
 }

@@ -19,9 +19,9 @@ import Preview from './Preview';
 function component() {
   return (
     <div className={classes.container}>
-      <Sidebar title={i18next.t('settings.title')} />
+      <Sidebar title={i18next.t('settings.title')} position="left" />
       <Preview />
-      <Sidebar />
+      <Sidebar position="right" />
     </div>
   );
 }

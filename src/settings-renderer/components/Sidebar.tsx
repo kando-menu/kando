@@ -14,13 +14,51 @@ import * as classes from './Sidebar.module.scss';
 
 interface IProps {
   title?: string;
+  position: 'left' | 'right';
 }
 
 function component(props: IProps) {
+  const resizerClass =
+    classes.resizer + ' ' + (props.position === 'left' ? classes.left : classes.right);
+
+  const resizer = React.createRef<HTMLDivElement>();
+  const sidebar = React.createRef<HTMLDivElement>();
+
+  const makeResizable = () => {
+    function resize(e: MouseEvent) {
+      if (props.position === 'left') {
+        sidebar.current.style.width = e.clientX + 'px';
+      } else {
+        sidebar.current.style.width = window.innerWidth - e.clientX + 'px';
+      }
+    }
+
+    function stopResize() {
+      document.removeEventListener('mousemove', resize);
+      document.body.style.cursor = '';
+    }
+
+    if (resizer && sidebar) {
+      resizer.current.addEventListener('mousedown', function () {
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopResize);
+        document.body.style.cursor = 'col-resize';
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    makeResizable();
+  });
+
   return (
-    <div className={classes.sidebar}>
-      <div className={classes.headerbar}>{props.title}</div>
-    </div>
+    <>
+      {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
+      <div ref={sidebar} className={classes.sidebar}>
+        <div className={classes.headerbar}>{props.title}</div>
+      </div>
+      {props.position === 'left' && <div ref={resizer} className={resizerClass} />}
+    </>
   );
 }
 
