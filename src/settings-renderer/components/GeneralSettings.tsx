@@ -8,32 +8,24 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@import '../variable.scss';
+import React from 'react';
+import { RiSettings4Fill } from 'react-icons/ri';
 
-.headerbar {
-  background-color: $background-header;
-  color: $text-primary;
-  min-height: env(titlebar-area-height, 30);
-  -webkit-app-region: drag;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+import Modal from './Modal';
+
+interface IProps {
+  visible: boolean;
+  onClose: () => void;
 }
 
-.headerbar > :nth-child(2) {
-  flex-grow: 1;
-}
-
-.noDrag {
-  -webkit-app-region: no-drag;
-}
-
-// .left .headerbar {
-//   padding-left: calc(10px + env(titlebar-area-x, 0));
-// }
-
-// .right .headerbar {
-//   padding-right: calc(
-//     100vw - 10px - env(titlebar-area-x, 0) - env(titlebar-area-width, 0)
-//   );
-// }
+export default (props: IProps) => {
+  return (
+    <Modal
+      visible={props.visible}
+      onClose={props.onClose}
+      icon={<RiSettings4Fill />}
+      title="General Settings">
+      General Settings
+    </Modal>
+  );
+};

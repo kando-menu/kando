@@ -10,30 +10,50 @@
 
 @import '../variable.scss';
 
-.headerbar {
-  background-color: $background-header;
-  color: $text-primary;
-  min-height: env(titlebar-area-height, 30);
-  -webkit-app-region: drag;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.headerbar > :nth-child(2) {
-  flex-grow: 1;
-}
-
-.noDrag {
+.modalBackground {
   -webkit-app-region: no-drag;
+  background-color: $modal-background;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  backdrop-filter: blur(5px);
+
+  transition: opacity 300ms;
+  opacity: 0;
 }
 
-// .left .headerbar {
-//   padding-left: calc(10px + env(titlebar-area-x, 0));
-// }
+:global(.modal-enter),
+:global(.modal-enter-done) {
+  &.modalBackground {
+    opacity: 1;
+  }
+}
 
-// .right .headerbar {
-//   padding-right: calc(
-//     100vw - 10px - env(titlebar-area-x, 0) - env(titlebar-area-width, 0)
-//   );
-// }
+.modal {
+  background-color: $background-normal;
+  border-radius: 10px;
+  overflow: hidden;
+
+  max-height: 80vh;
+  width: min(90vw, min(calc(200px + 50vw), 800px));
+
+  transition: transform 300ms;
+}
+
+:global(.modal-enter),
+:global(.modal-enter-done) {
+  .modal {
+    transform: translateY(-10px);
+  }
+}
+
+.content {
+  padding: 10px;
+}

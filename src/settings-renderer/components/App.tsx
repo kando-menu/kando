@@ -19,12 +19,15 @@ import { RiSettings4Fill, RiInformation2Fill, RiPaletteFill } from 'react-icons/
 
 import * as classes from './App.module.scss';
 
+import GeneralSettings from './GeneralSettings';
 import Button from './Button';
 import Sidebar from './Sidebar';
 import Preview from './Preview';
 import Properties from './Properties';
 import MenuList from './MenuList';
 import Headerbar from './Headerbar';
+
+import logo from '../../../assets/icons/trayColor.png';
 
 export default () => {
   const [transparent, setTransparent] = React.useState(true);
@@ -37,6 +40,19 @@ export default () => {
     );
   }, []);
 
+  const [settingsVisible, setSettingsVisible] = React.useState(false);
+
+  // Hide settings on escape
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (setSettingsVisible && event.key === 'Escape') {
+        setSettingsVisible(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const headerButtons = (
     <>
       <Button
@@ -47,16 +63,16 @@ export default () => {
         grouped
       />
       <Button
-        tooltip="Themes"
+        tooltip="Menu Themes"
         icon={<RiPaletteFill />}
         onClick={() => console.log('Themes button clicked')}
         variant="flat"
         grouped
       />
       <Button
-        tooltip="Settings"
+        tooltip="General Settings"
         icon={<RiSettings4Fill />}
-        onClick={() => console.log('Settings button clicked')}
+        onClick={() => setSettingsVisible(true)}
         variant="flat"
         grouped
       />
@@ -64,17 +80,27 @@ export default () => {
   );
 
   const leftHeaderbar = (
-    <Headerbar left={i18next.t('settings.title')} right={headerButtons} />
+    <Headerbar
+      left={<img src={logo} width={20} style={{ verticalAlign: 'middle' }} />}
+      center={i18next.t('settings.title')}
+      right={headerButtons}
+      paddingLeft={10}
+      paddingRight={5}
+    />
   );
   const rightHeaderbar = <Headerbar />;
 
   return (
     <>
       <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
+        <Tooltip id="main-tooltip" delayShow={200} />
         <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
         <Preview />
         <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
-        <Tooltip id="main-tooltip" delayShow={200} />
+        <GeneralSettings
+          visible={settingsVisible}
+          onClose={() => setSettingsVisible(false)}
+        />
       </div>
     </>
   );
