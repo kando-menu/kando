@@ -9,7 +9,6 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { RiSettings4Fill } from 'react-icons/ri';
 
 import Modal from './Modal';
 
@@ -20,11 +19,7 @@ interface IProps {
 
 export default (props: IProps) => {
   return (
-    <Modal
-      visible={props.visible}
-      onClose={props.onClose}
-      icon={<RiSettings4Fill />}
-      title="General Settings">
+    <Modal visible={props.visible} onClose={props.onClose} maxWidth={600}>
       General Settings
     </Modal>
   );

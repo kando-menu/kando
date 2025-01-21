@@ -23,8 +23,7 @@
   justify-content: center;
   align-items: center;
 
-
-  transition: opacity 300ms;
+  transition: opacity 200ms;
   opacity: 0;
 }
 
@@ -43,9 +42,9 @@
   box-shadow: 0 0 75px rgba(0, 0, 0, 0.4);
 
   max-height: 80vh;
-  width: min(90vw, min(calc(200px + 50vw), 800px));
+  width: min(90vw, calc(200px + 50vw));
 
-  transition: transform 300ms;
+  transition: transform 200ms;
 }
 
 :global(.modal-enter),
@@ -56,5 +55,5 @@
 }
 
 .content {
-  padding: 10px;
+  padding: 0 10px 10px 10px;
 }

@@ -15,6 +15,8 @@ $material-symbols-font-path: '~material-symbols/';
 @import 'material-symbols/rounded';
 @import '../../node_modules/simple-icons-font/font/simple-icons.css';
 
+@import './variable.scss';
+
 // Enable light mode and dark mode globally.
 :root {
   color-scheme: light dark;
@@ -32,4 +34,22 @@ body {
   user-select: none;
   background: transparent;
   font-family: sans-serif;
+}
+
+a {
+  color: $link;
+  text-decoration: none;
+  position: relative;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:active {
+    top: 1px;
+  }
+}
+
+img {
+  pointer-events: none;
 }

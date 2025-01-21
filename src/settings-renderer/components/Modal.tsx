@@ -11,7 +11,7 @@
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-import { RiCloseCircleLine } from 'react-icons/ri';
+import { RiCloseLargeFill } from 'react-icons/ri';
 
 import Headerbar from './Headerbar';
 
@@ -21,34 +21,33 @@ import Button from './Button';
 interface IProps {
   visible: boolean;
   onClose: () => void;
-  icon: React.ReactNode;
-  title: string;
   children: React.ReactNode;
+  maxWidth?: number;
 }
 
 export default (props: IProps) => {
   const ref = React.useRef(null);
 
+  const closeButton = (
+    <Button icon={<RiCloseLargeFill />} onClick={props.onClose} variant="flat" />
+  );
+
   return (
     <CSSTransition
       in={props.visible}
       nodeRef={ref}
-      timeout={300}
+      timeout={200}
       classNames="modal"
       unmountOnExit>
       <div ref={ref} onClick={props.onClose} className={classes.modalBackground}>
-        <div className={classes.modal} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={classes.modal}
+          onClick={(e) => e.stopPropagation()}
+          style={{ maxWidth: props.maxWidth }}>
           <Headerbar
-            left={props.icon}
-            center={props.title}
-            right={
-              <Button
-                icon={<RiCloseCircleLine />}
-                onClick={props.onClose}
-                variant="flat"
-              />
-            }
-            paddingLeft={10}
+            transparent
+            left={cIsMac ? closeButton : null}
+            right={!cIsMac ? closeButton : null}
           />
           <div className={classes.content}>{props.children}</div>
         </div>

@@ -13,7 +13,6 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
-import i18next from 'i18next';
 
 import { RiSettings4Fill, RiInformation2Fill, RiPaletteFill } from 'react-icons/ri';
 
@@ -29,8 +28,6 @@ import Properties from './Properties';
 import MenuList from './MenuList';
 import Headerbar from './Headerbar';
 
-import logo from '../../../assets/icons/trayColor.png';
-
 export default () => {
   const [transparent, setTransparent] = React.useState(true);
 
@@ -43,7 +40,7 @@ export default () => {
   }, []);
 
   const [settingsVisible, setSettingsVisible] = React.useState(false);
-  const [aboutVisible, setAboutVisible] = React.useState(false);
+  const [aboutVisible, setAboutVisible] = React.useState(true);
   const [themesVisible, setThemesVisible] = React.useState(false);
 
   // Hide settings on escape
@@ -91,13 +88,7 @@ export default () => {
     </>
   );
 
-  const leftHeaderbar = (
-    <Headerbar
-      left={!cIsMac && <img src={logo} width={20} className={classes.logo} style={{verticalAlign:"middle"}} />}
-      paddingLeft={10}
-      paddingRight={5}
-    />
-  );
+  const leftHeaderbar = <Headerbar paddingLeft={10} paddingRight={5} />;
   const centerHeaderbar = <Headerbar center={headerButtons} transparent />;
   const rightHeaderbar = <Headerbar />;
 

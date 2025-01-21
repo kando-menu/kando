@@ -8,13 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-$text-primary: light-dark(#3d3d3d, #fff);
-$text-secondary: light-dark(#555555, #b9bbbeab);
-$link: light-dark(#9f3b67, #f0cece);
+@import '../variable.scss';
 
-$background-header: light-dark(#ebebeb, #101115);
-$background-normal: light-dark(#fff, #24272f);
-$background-primary: light-dark(#f0cece, #9f3b67);
-$background-secondary: light-dark(#ddd, #555555);
+.hero,
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-$modal-background: light-dark(rgba(#c5c5c5, 0.3), rgba(#5c5c5c, 0.3));
+.hero {
+  max-width: 300px;
+  text-align: center;
+  font-size: 1.2em;
+  line-height: 1.2em;
+
+  color: $text-secondary;
+}

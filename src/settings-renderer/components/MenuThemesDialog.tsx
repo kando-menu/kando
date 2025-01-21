@@ -9,7 +9,6 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { RiPaletteFill } from 'react-icons/ri';
 
 import Modal from './Modal';
 
@@ -20,11 +19,7 @@ interface IProps {
 
 export default (props: IProps) => {
   return (
-    <Modal
-      visible={props.visible}
-      onClose={props.onClose}
-      icon={<RiPaletteFill />}
-      title="Menu Themes">
+    <Modal visible={props.visible} onClose={props.onClose} maxWidth={800}>
       Themes
     </Modal>
   );

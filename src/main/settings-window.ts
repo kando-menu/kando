@@ -59,6 +59,8 @@ export class SettingsWindow extends BrowserWindow {
       fullscreenable: false,
       width: 1200,
       height: 800,
+      minWidth: 600,
+      minHeight: 600,
       show: false,
       autoHideMenuBar: true,
     });
