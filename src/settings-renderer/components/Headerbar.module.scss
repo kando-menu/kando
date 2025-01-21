@@ -19,9 +19,10 @@
   justify-content: space-between;
   gap: 5px;
   white-space: nowrap;
-  
+
   &:not(.transparent) {
     background-color: $background-header;
+    border-bottom: 1px solid color-mix(in srgb, $text-primary 10%, transparent);
   }
 }
 

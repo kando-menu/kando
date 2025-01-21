@@ -25,7 +25,7 @@
 .resizer {
   width: 20px;
   cursor: ew-resize;
-  opacity: 0;
+  opacity: 0.1;
   transition: opacity 0.2s;
 
   &.left {
@@ -39,13 +39,13 @@
   &::before {
     content: '';
     display: block;
-    width: 5px;
+    width: 1px;
     height: 100%;
-    background-color: $background-header;
+    background-color: $text-primary;
     margin: 0 auto;
   }
 
   &:hover {
-    opacity: 1;
+    opacity: 0.4;
   }
 }
