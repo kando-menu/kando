@@ -16,10 +16,12 @@ interface IProps {
   onClick: () => void;
   icon?: React.ReactNode;
   label?: string;
+  tooltip?: string;
   variant?: 'secondary' | 'flat' | 'primary';
   size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
   block?: boolean;
+  grouped?: boolean;
 }
 
 export default (props: IProps) => {
@@ -32,10 +34,17 @@ export default (props: IProps) => {
     ' ' +
     (props.disabled ? classes.disabled : '') +
     ' ' +
+    (props.grouped ? classes.grouped : '') +
+    ' ' +
     (props.block ? classes.block : '');
 
   return (
-    <button onClick={props.onClick} className={className} disabled={props.disabled}>
+    <button
+      onClick={props.onClick}
+      className={className}
+      disabled={props.disabled}
+      data-tooltip-id="main-tooltip"
+      data-tooltip-content={props.tooltip}>
       {props.icon}
       {props.label}
     </button>

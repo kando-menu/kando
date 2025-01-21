@@ -60,6 +60,7 @@ export class SettingsWindow extends BrowserWindow {
       width: 1200,
       height: 800,
       show: false,
+      autoHideMenuBar: true,
     });
 
     // Due to an Electron issue, the acrylic effect on Windows is broken after maximizing
@@ -70,10 +71,6 @@ export class SettingsWindow extends BrowserWindow {
         this.getNativeWindowHandle().readInt32LE(0)
       );
     }
-
-    // Remove the default menu. This disables all default shortcuts like CMD+W which are
-    // not needed in Kando.
-    this.setMenu(null);
 
     // If the user clicks on a link, we open the link in the default browser.
     this.webContents.setWindowOpenHandler(({ url }) => {

@@ -20,22 +20,29 @@
   border-radius: 5px;
   font-size: inherit;
 
-  transition:
-    background-color 0.2s,
-    color 0.2s;
+  opacity: 0.8;
 
   &:hover {
-    background-color: $background-secondary;
-    color: $text-secondary;
+    opacity: 1;
   }
 
   &:active {
     transform: translateY(1px);
   }
+
+  &.grouped:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &.grouped:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
 .secondary {
-  background-color: $background-primary;
+  background-color: $background-secondary;
 }
 
 .flat {
@@ -48,21 +55,33 @@
 }
 
 .small {
-  padding: 5px 8px;
+  padding: 5px 7px;
   font-size: 0.8em;
   gap: 4px;
+
+  &.grouped {
+    padding: 5px;
+  }
 }
 
 .medium {
-  padding: 7px 12px;
+  padding: 7px 10px;
   font-size: 1em;
   gap: 6px;
+
+  &.grouped {
+    padding: 7px;
+  }
 }
 
 .large {
-  padding: 9px 16px;
+  padding: 9px 13px;
   font-size: 1.2em;
   gap: 8px;
+
+  &.grouped {
+    padding: 9px;
+  }
 }
 
 .disabled {

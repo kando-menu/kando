@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import { Tooltip } from 'react-tooltip';
 import i18next from 'i18next';
 
 import { RiSettings4Fill, RiInformation2Fill, RiPaletteFill } from 'react-icons/ri';
@@ -39,16 +40,25 @@ export default () => {
   const headerButtons = (
     <>
       <Button
-        onClick={() => console.log('About button clicked')}
+        tooltip="About Kando"
         icon={<RiInformation2Fill />}
+        onClick={() => console.log('About button clicked')}
+        variant="flat"
+        grouped
       />
       <Button
-        onClick={() => console.log('Themes button clicked')}
+        tooltip="Themes"
         icon={<RiPaletteFill />}
+        onClick={() => console.log('Themes button clicked')}
+        variant="flat"
+        grouped
       />
       <Button
-        onClick={() => console.log('Settings button clicked')}
+        tooltip="Settings"
         icon={<RiSettings4Fill />}
+        onClick={() => console.log('Settings button clicked')}
+        variant="flat"
+        grouped
       />
     </>
   );
@@ -59,10 +69,13 @@ export default () => {
   const rightHeaderbar = <Headerbar />;
 
   return (
-    <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
-      <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
-      <Preview />
-      <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
-    </div>
+    <>
+      <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
+        <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
+        <Preview />
+        <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
+        <Tooltip id="main-tooltip" delayShow={200} />
+      </div>
+    </>
   );
 };

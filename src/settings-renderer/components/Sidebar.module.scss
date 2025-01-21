@@ -11,9 +11,9 @@
 @import '../variable.scss';
 
 .sidebar {
-  background-color: $background-secondary;
+  background-color: $background-normal;
   width: 300px;
-  min-width: 100px;
+  min-width: min-content;
   display: flex;
   flex-direction: column;
 }
@@ -41,7 +41,7 @@
     display: block;
     width: 5px;
     height: 100%;
-    background-color: $background-primary;
+    background-color: $background-header;
     margin: 0 auto;
   }
 
