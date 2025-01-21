@@ -93,16 +93,13 @@ export default () => {
 
   const leftHeaderbar = (
     <Headerbar
-      left={!cIsMac && <img src={logo} width={20} style={{ verticalAlign: 'middle' }} />}
-      right={!cIsMac && headerButtons}
+      left={!cIsMac && <img src={logo} width={20} className={classes.logo} style={{verticalAlign:"middle"}} />}
       paddingLeft={10}
       paddingRight={5}
     />
   );
-  const centerHeaderbar = <Headerbar center={i18next.t('settings.title')} transparent />;
-  const rightHeaderbar = <Headerbar
-    right={cIsMac && headerButtons}
-  />;
+  const centerHeaderbar = <Headerbar center={headerButtons} transparent />;
+  const rightHeaderbar = <Headerbar />;
 
   return (
     <>
