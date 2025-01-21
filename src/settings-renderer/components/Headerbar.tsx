@@ -18,11 +18,12 @@ interface IProps {
   right?: string | ReactNode;
   paddingLeft?: number;
   paddingRight?: number;
+  transparent?: boolean;
 }
 
 export default (props: IProps) => {
   return (
-    <div className={classes.headerbar}>
+    <div className={classes.headerbar + (props.transparent ? ' ' + classes.transparent : '')}>
       <div
         className={typeof props.left === 'string' ? '' : classes.noDrag}
         style={{ paddingLeft: props.paddingLeft || 0 }}>

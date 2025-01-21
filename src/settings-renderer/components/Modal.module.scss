@@ -23,7 +23,6 @@
   justify-content: center;
   align-items: center;
 
-  backdrop-filter: blur(5px);
 
   transition: opacity 300ms;
   opacity: 0;
@@ -40,6 +39,8 @@
   background-color: $background-normal;
   border-radius: 10px;
   overflow: hidden;
+
+  box-shadow: 0 0 75px rgba(0, 0, 0, 0.4);
 
   max-height: 80vh;
   width: min(90vw, min(calc(200px + 50vw), 800px));

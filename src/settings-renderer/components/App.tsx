@@ -93,21 +93,23 @@ export default () => {
 
   const leftHeaderbar = (
     <Headerbar
-      left={<img src={logo} width={20} style={{ verticalAlign: 'middle' }} />}
-      center={i18next.t('settings.title')}
-      right={headerButtons}
+      left={!cIsMac && <img src={logo} width={20} style={{ verticalAlign: 'middle' }} />}
+      right={!cIsMac && headerButtons}
       paddingLeft={10}
       paddingRight={5}
     />
   );
-  const rightHeaderbar = <Headerbar />;
+  const centerHeaderbar = <Headerbar center={i18next.t('settings.title')} transparent />;
+  const rightHeaderbar = <Headerbar
+    right={cIsMac && headerButtons}
+  />;
 
   return (
     <>
       <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
         <Tooltip id="main-tooltip" delayShow={200} />
         <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
-        <Preview />
+        <Preview header={centerHeaderbar} />
         <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
         <GeneralSettingsDialog
           visible={settingsVisible}

@@ -11,17 +11,18 @@
 @import '../variable.scss';
 
 .headerbar {
-  background-color: $background-header;
   color: $text-primary;
   min-height: env(titlebar-area-height, 30);
   -webkit-app-region: drag;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 5px;
-}
-
-.headerbar > :nth-child(2) {
-  flex-grow: 1;
+  white-space: nowrap;
+  
+  &:not(.transparent) {
+    background-color: $background-header;
+  }
 }
 
 .noDrag {
