@@ -8,8 +8,24 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
-export default () => {
-  return <div>Properties</div>;
+import * as classes from './Headerbar.module.scss';
+
+interface IProps {
+  left?: string | ReactNode;
+  right?: string | ReactNode;
+}
+
+export default (props: IProps) => {
+  return (
+    <div className={classes.headerbar}>
+      <div className={typeof props.left === 'string' ? '' : classes.noDrag}>
+        {props.left}
+      </div>
+      <div className={typeof props.right === 'string' ? '' : classes.noDrag}>
+        {props.right}
+      </div>
+    </div>
+  );
 };

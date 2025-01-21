@@ -18,26 +18,6 @@
   flex-direction: column;
 }
 
-.headerbar {
-  background-color: $background-primary;
-  color: $text-primary;
-  height: env(titlebar-area-height, 30);
-  -webkit-app-region: drag;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-}
-
-.left .headerbar {
-  padding-left: calc(10px + env(titlebar-area-x, 0));
-}
-
-.right .headerbar {
-  padding-right: calc(
-    100vw - 10px - env(titlebar-area-x, 0) - env(titlebar-area-width, 0)
-  );
-}
-
 .content {
   padding: 10px;
 }

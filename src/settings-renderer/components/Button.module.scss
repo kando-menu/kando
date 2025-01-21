@@ -1,0 +1,75 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@import '../variable.scss';
+
+.button {
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+
+  color: $text-primary;
+  border: none;
+  border-radius: 5px;
+  font-size: inherit;
+
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  &:hover {
+    background-color: $background-secondary;
+    color: $text-secondary;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.secondary {
+  background-color: $background-primary;
+}
+
+.flat {
+  background-color: transparent;
+}
+
+.primary {
+  background-color: $background-primary;
+  color: $text-primary;
+}
+
+.small {
+  padding: 5px 8px;
+  font-size: 0.8em;
+  gap: 4px;
+}
+
+.medium {
+  padding: 7px 12px;
+  font-size: 1em;
+  gap: 6px;
+}
+
+.large {
+  padding: 9px 16px;
+  font-size: 1.2em;
+  gap: 8px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.block {
+  width: 100%;
+}
