@@ -19,7 +19,9 @@ import { RiSettings4Fill, RiInformation2Fill, RiPaletteFill } from 'react-icons/
 
 import * as classes from './App.module.scss';
 
-import GeneralSettings from './GeneralSettings';
+import AboutDialog from './AboutDialog';
+import GeneralSettingsDialog from './GeneralSettingsDialog';
+import MenuThemesDialog from './MenuThemesDialog';
 import Button from './Button';
 import Sidebar from './Sidebar';
 import Preview from './Preview';
@@ -41,12 +43,22 @@ export default () => {
   }, []);
 
   const [settingsVisible, setSettingsVisible] = React.useState(false);
+  const [aboutVisible, setAboutVisible] = React.useState(false);
+  const [themesVisible, setThemesVisible] = React.useState(false);
 
   // Hide settings on escape
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (setSettingsVisible && event.key === 'Escape') {
-        setSettingsVisible(false);
+      if (event.key === 'Escape') {
+        if (settingsVisible) {
+          setSettingsVisible(false);
+        }
+        if (aboutVisible) {
+          setAboutVisible(false);
+        }
+        if (themesVisible) {
+          setThemesVisible(false);
+        }
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -58,14 +70,14 @@ export default () => {
       <Button
         tooltip="About Kando"
         icon={<RiInformation2Fill />}
-        onClick={() => console.log('About button clicked')}
+        onClick={() => setAboutVisible(true)}
         variant="flat"
         grouped
       />
       <Button
         tooltip="Menu Themes"
         icon={<RiPaletteFill />}
-        onClick={() => console.log('Themes button clicked')}
+        onClick={() => setThemesVisible(true)}
         variant="flat"
         grouped
       />
@@ -97,9 +109,14 @@ export default () => {
         <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
         <Preview />
         <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
-        <GeneralSettings
+        <GeneralSettingsDialog
           visible={settingsVisible}
           onClose={() => setSettingsVisible(false)}
+        />
+        <AboutDialog visible={aboutVisible} onClose={() => setAboutVisible(false)} />
+        <MenuThemesDialog
+          visible={themesVisible}
+          onClose={() => setThemesVisible(false)}
         />
       </div>
     </>
