@@ -13,7 +13,7 @@ import React from 'react';
 import * as classes from './Button.module.scss';
 
 interface IProps {
-  onClick: () => void;
+  onClick?: () => void;
   icon?: React.ReactNode;
   label?: string;
   tooltip?: string;

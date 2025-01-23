@@ -8,44 +8,22 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@import '../variable.scss';
+import React from 'react';
 
-.hero,
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+const swirl = require('../../../assets/images/swirl1.svg');
 
-.hero {
-  max-width: 80%;
-  text-align: center;
-  font-size: 1.2em;
-  line-height: 1.5em;
-  font-weight: 300;
-  margin-top: 10px;
-
-  color: $text-primary;
-}
-
-.footer {
-  display: flex;
-  align-self: stretch;
-  gap: 10px;
-}
-
-.versionInfo {
-  flex-basis: 25%;
-  user-select: text;
-  color: $text-secondary;
-  font-size: 0.8em;
-  line-height: 1.4em;
-  white-space: nowrap;
-}
-
-.buttons {
-  flex-basis: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+export default () => {
+  return (
+    <img
+      src={swirl}
+      width={250}
+      style={{
+        opacity: 0.5,
+        marginTop: 30,
+        marginBottom: 30,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      }}
+    />
+  );
+};

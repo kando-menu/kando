@@ -86,10 +86,7 @@ export class SettingsWindow extends BrowserWindow {
     this.windowLoaded.then(() => {
       this.show();
 
-      // Show dev tools in development mode.
-      if (process.env.NODE_ENV === 'development') {
-        this.webContents.openDevTools();
-      }
+      this.webContents.openDevTools();
     });
   }
 }

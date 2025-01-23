@@ -40,7 +40,7 @@ export default () => {
   }, []);
 
   const [settingsVisible, setSettingsVisible] = React.useState(false);
-  const [aboutVisible, setAboutVisible] = React.useState(true);
+  const [aboutVisible, setAboutVisible] = React.useState(false);
   const [themesVisible, setThemesVisible] = React.useState(false);
 
   // Hide settings on escape
@@ -95,7 +95,6 @@ export default () => {
   return (
     <>
       <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
-        <Tooltip id="main-tooltip" delayShow={200} />
         <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
         <Preview header={centerHeaderbar} />
         <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
@@ -108,6 +107,7 @@ export default () => {
           visible={themesVisible}
           onClose={() => setThemesVisible(false)}
         />
+        <Tooltip id="main-tooltip" delayShow={500} />
       </div>
     </>
   );
