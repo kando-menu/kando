@@ -10,13 +10,12 @@
 
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
-
 import { RiCloseLargeFill } from 'react-icons/ri';
 
 import Headerbar from './Headerbar';
+import Button from './Button';
 
 import * as classes from './Modal.module.scss';
-import Button from './Button';
 
 interface IProps {
   visible: boolean;

@@ -10,7 +10,7 @@
 
 import React from 'react';
 
-const swirl = require('../../../assets/images/swirl1.svg');
+const swirl = require('../../../../assets/images/swirl1.svg');
 
 export default () => {
   return (

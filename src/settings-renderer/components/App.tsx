@@ -13,20 +13,19 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
-
 import { RiSettings4Fill, RiInformation2Fill, RiPaletteFill } from 'react-icons/ri';
-
-import * as classes from './App.module.scss';
 
 import AboutDialog from './AboutDialog';
 import GeneralSettingsDialog from './GeneralSettingsDialog';
 import MenuThemesDialog from './MenuThemesDialog';
-import Button from './Button';
-import Sidebar from './Sidebar';
+import Button from './widgets/Button';
+import Sidebar from './widgets/Sidebar';
 import Preview from './Preview';
 import Properties from './Properties';
 import MenuList from './MenuList';
-import Headerbar from './Headerbar';
+import Headerbar from './widgets/Headerbar';
+
+import * as classes from './App.module.scss';
 
 export default () => {
   const [transparent, setTransparent] = React.useState(true);

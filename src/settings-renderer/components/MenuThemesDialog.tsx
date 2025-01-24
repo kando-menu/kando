@@ -10,7 +10,7 @@
 
 import React from 'react';
 
-import Modal from './Modal';
+import Modal from './widgets/Modal';
 
 interface IProps {
   visible: boolean;

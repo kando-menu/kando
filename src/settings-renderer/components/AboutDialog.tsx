@@ -14,10 +14,11 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import { RiExternalLinkFill } from 'react-icons/ri';
 
+import Swirl from './widgets/Swirl';
+import Modal from './widgets/Modal';
+import Button from './widgets/Button';
+
 import * as classes from './AboutDialog.module.scss';
-import Swirl from './Swirl';
-import Modal from './Modal';
-import Button from './Button';
 
 const logo = require('../../../assets/icons/square-icon.svg');
 

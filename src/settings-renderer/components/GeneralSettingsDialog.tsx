@@ -13,9 +13,9 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 
-import Modal from './Modal';
-import Swirl from './Swirl';
-import Checkbox from './Checkbox';
+import Modal from './widgets/Modal';
+import Swirl from './widgets/Swirl';
+import Checkbox from './widgets/Checkbox';
 
 interface IProps {
   visible: boolean;
