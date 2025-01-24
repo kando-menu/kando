@@ -1366,7 +1366,7 @@ const KEY_CODES: Map<string, IKeyMapping> = new Map([
   [
     'numpadsubtract',
     {
-      windows: null,
+      windows: 0x004a,
       macos: 0x4e,
       linux: 0x0052,
     },
