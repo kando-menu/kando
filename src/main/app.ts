@@ -317,6 +317,11 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
+    // Allow the renderer to retrieve the path to the config directory.
+    ipcMain.handle('settings-window.get-config-directory', () => {
+      return app.getPath('userData');
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('settings-window.show-dev-tools', () => {
       this.settingsWindow.webContents.openDevTools();

@@ -32,6 +32,11 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-backend-info');
   },
 
+  /** This will return the path to Kando's config director. */
+  getConfigDirectory: (): Promise<string> => {
+    return ipcRenderer.invoke('settings-window.get-config-directory');
+  },
+
   /** This will show the web developer tools. */
   showDevTools: () => {
     ipcRenderer.send('settings-window.show-dev-tools');

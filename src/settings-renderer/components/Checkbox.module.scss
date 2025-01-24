@@ -1,0 +1,80 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@import '../variable.scss';
+
+.checkbox {
+  display: flex;
+  justify-content: space-between;
+
+  color: $text-primary;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  .info {
+    opacity: 0.2;
+    margin: 0.4em;
+    font-size: 1.2em;
+
+    &:hover {
+      opacity: 0.3;
+    }
+
+    svg {
+      position: relative;
+      top: 0.1em;
+    }
+  }
+
+  input {
+    appearance: none;
+    margin: 0;
+
+    background-color: $text-secondary;
+    width: 1.5em;
+    height: 1.5em;
+    opacity: 0.4;
+    border-radius: 50%;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 1.5em;
+      height: 1.5em;
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      border-radius: 50%;
+      background-color: $link;
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &:checked {
+      opacity: 1;
+    }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
