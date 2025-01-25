@@ -31,6 +31,7 @@ export class FileItemConfig implements IItemConfig {
       {
         placeholder: i18next.t('items.common.not-configured'),
         label: i18next.t('items.file.file'),
+        hint: i18next.t('items.file.file-hint'),
       }
     );
 
