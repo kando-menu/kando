@@ -38,7 +38,12 @@ export default (props: IProps) => {
           </span>
         )}
       </div>
-      <input type="checkbox" disabled={props.disabled} />
+      <input
+        type="checkbox"
+        disabled={props.disabled}
+        checked={props.initialValue || false}
+        onChange={(event) => props.onToggle && props.onToggle(event.target.checked)}
+      />
     </label>
   );
 };

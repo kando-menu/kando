@@ -9,8 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
 import Modal from './widgets/Modal';
+import SettingsKeyCheckbox from './widgets/SettingsKeyCheckbox';
 
 interface IProps {
   visible: boolean;
@@ -20,7 +22,11 @@ interface IProps {
 export default (props: IProps) => {
   return (
     <Modal visible={props.visible} onClose={props.onClose} maxWidth={800}>
-      Themes
+      <SettingsKeyCheckbox
+        label={i18next.t('toolbar.menu-themes-tab.dark-mode')}
+        info={i18next.t('toolbar.menu-themes-tab.system-mode-subheading')}
+        settingsKey="enableDarkModeForMenuThemes"
+      />
     </Modal>
   );
 };

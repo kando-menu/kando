@@ -86,7 +86,7 @@ export class SettingsWindow extends BrowserWindow {
     this.windowLoaded.then(() => {
       this.show();
 
-      this.webContents.openDevTools();
+      // this.webContents.openDevTools();
     });
   }
 }

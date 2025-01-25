@@ -15,7 +15,8 @@ import React from 'react';
 
 import Modal from './widgets/Modal';
 import Swirl from './widgets/Swirl';
-import Checkbox from './widgets/Checkbox';
+import SettingsKeyCheckbox from './widgets/SettingsKeyCheckbox';
+import SubSettingsKeyCheckbox from './widgets/SubSettingsKeyCheckbox';
 
 interface IProps {
   visible: boolean;
@@ -55,9 +56,40 @@ export default (props: IProps) => {
           </a>{' '}
           to open the directory where the config.json file is stored.
         </p>
+
         <Swirl />
+
         <h1>App Behavior</h1>
-        <Checkbox label="Transparent Settings Window" info="Make ofoo" />
+        <SettingsKeyCheckbox
+          label="Check for new bersions"
+          info="If enabled, Kando will show a notification when a new version is available."
+          settingsKey="enableVersionCheck"
+        />
+        <SettingsKeyCheckbox
+          label="Transparent settings window"
+          info="Requires a restart to take full effect."
+          settingsKey="transparentSettingsWindow"
+        />
+
+        <h1>Menu Behavior</h1>
+        <SubSettingsKeyCheckbox
+          label="Enable Marking Mode"
+          info="With Marking Mode enabled, you can select items by dragging the mouse over them."
+          settingsKey="menuOptions"
+          subKey="enableMarkingMode"
+        />
+        <SubSettingsKeyCheckbox
+          label="Enable Turbo Mode"
+          info="With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl."
+          settingsKey="menuOptions"
+          subKey="enableTurboMode"
+        />
+        <SubSettingsKeyCheckbox
+          label="Right mouse button selects parent"
+          info="If unchecked, the right mouse button will close the menu instead."
+          settingsKey="menuOptions"
+          subKey="rmbSelectsParent"
+        />
       </div>
     </Modal>
   );
