@@ -11,6 +11,7 @@
 import { IMenuItem } from '.';
 import { SubmenuItemConfig } from './item-types/submenu-item-config';
 import { CommandItemConfig } from './item-types/command-item-config';
+import { FileItemConfig } from './item-types/file-item-config';
 import { HotkeyItemConfig } from './item-types/hotkey-item-config';
 import { MacroItemConfig } from './item-types/macro-item-config';
 import { TextItemConfig } from './item-types/text-item-config';
@@ -57,6 +58,7 @@ export class ItemConfigRegistry {
    */
   private constructor() {
     this.configs.set('command', new CommandItemConfig());
+    this.configs.set('file', new FileItemConfig());
     this.configs.set('hotkey', new HotkeyItemConfig());
     this.configs.set('macro', new MacroItemConfig());
     this.configs.set('submenu', new SubmenuItemConfig());
