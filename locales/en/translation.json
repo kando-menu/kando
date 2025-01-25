@@ -16,6 +16,13 @@
       "delayed-option-hint": "Useful if the action targets a window that needs to be focused.",
       "not-configured": "Not configured"
     },
+    "file": {
+      "tip-1": "You can use this item type to open files or folders.",
+      "file": "File Path",
+      "file-hint": "This will be opened.",
+      "name": "Open File",
+      "description": "Opens a file or folder."
+    },
     "hotkey": {
       "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
       "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
@@ -54,7 +61,7 @@
     },
     "uri": {
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
-      "tip-2": "You can use the URI item type to open a file or folder using the file:// protocol.",
+      "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
       "tip-3": "You can use the URI item type to open a mailto: link.",
       "tip-4": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
       "tip-5": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
@@ -62,7 +69,7 @@
       "uri": "URI",
       "uri-hint": "This will be opened.",
       "name": "Open URI",
-      "description": "Opens files or websites."
+      "description": "Opens websites and more."
     }
   },
   "main": {

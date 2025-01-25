@@ -12,6 +12,7 @@ import { IMenuItem } from './index';
 import { Backend, WMInfo } from '../main/backends/backend';
 
 import { CommandItemAction } from './item-types/command-item-action';
+import { FileItemAction } from './item-types/file-item-action';
 import { HotkeyItemAction } from './item-types/hotkey-item-action';
 import { MacroItemAction } from './item-types/macro-item-action';
 import { TextItemAction } from './item-types/text-item-action';
@@ -68,6 +69,7 @@ export class ItemActionRegistry {
    */
   private constructor() {
     this.actions.set('command', new CommandItemAction());
+    this.actions.set('file', new FileItemAction());
     this.actions.set('hotkey', new HotkeyItemAction());
     this.actions.set('macro', new MacroItemAction());
     this.actions.set('text', new TextItemAction());
