@@ -43,7 +43,11 @@ export default (props: IProps) => {
   });
 
   return (
-    <Modal visible={props.visible} onClose={props.onClose} maxWidth={500}>
+    <Modal
+      title="About Kando"
+      visible={props.visible}
+      onClose={props.onClose}
+      maxWidth={500}>
       <div className={classes.container}>
         <img src={logo} width={128} />
         <div className={classes.hero}>

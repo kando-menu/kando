@@ -21,7 +21,11 @@ interface IProps {
 
 export default (props: IProps) => {
   return (
-    <Modal visible={props.visible} onClose={props.onClose} maxWidth={800}>
+    <Modal
+      title="Menu Themes"
+      visible={props.visible}
+      onClose={props.onClose}
+      maxWidth={800}>
       <SettingsKeyCheckbox
         label={i18next.t('toolbar.menu-themes-tab.dark-mode')}
         info={i18next.t('toolbar.menu-themes-tab.system-mode-subheading')}

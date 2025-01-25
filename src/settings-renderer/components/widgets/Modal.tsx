@@ -21,6 +21,7 @@ interface IProps {
   visible: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  title?: string;
   maxWidth?: number;
 }
 
@@ -45,8 +46,10 @@ export default (props: IProps) => {
           style={{ maxWidth: props.maxWidth }}>
           <Headerbar
             transparent
-            left={cIsMac ? closeButton : null}
+            left={cIsMac ? closeButton : props.title}
+            center={cIsMac ? props.title : null}
             right={!cIsMac ? closeButton : null}
+            paddingLeft={cIsMac ? 0 : 15}
           />
           <div className={classes.content}>{props.children}</div>
         </div>

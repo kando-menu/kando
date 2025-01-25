@@ -19,6 +19,7 @@
   justify-content: space-between;
   gap: 5px;
   white-space: nowrap;
+  font-weight: bold;
 
   &:not(.transparent) {
     background-color: $background-header;

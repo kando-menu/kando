@@ -39,14 +39,17 @@ export default (props: IProps) => {
   });
 
   return (
-    <Modal visible={props.visible} onClose={props.onClose} maxWidth={500}>
+    <Modal
+      title="General Settings"
+      visible={props.visible}
+      onClose={props.onClose}
+      maxWidth={500}>
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
           justifyContent: 'center',
-          margin: '0 20px 20px 20px',
         }}>
         <p>
           All settings of Kando are stored in a JSON file which you can also edit, share,
@@ -61,7 +64,7 @@ export default (props: IProps) => {
 
         <h1>App Behavior</h1>
         <SettingsKeyCheckbox
-          label="Check for new bersions"
+          label="Check for new versions"
           info="If enabled, Kando will show a notification when a new version is available."
           settingsKey="enableVersionCheck"
         />
