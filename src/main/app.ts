@@ -104,7 +104,6 @@ export class KandoApp {
         enableDarkModeForMenuThemes: false,
         soundTheme: 'none',
         soundVolume: 0.5,
-        sidebarVisible: true,
         ignoreWriteProtectedConfigFiles: false,
         transparentSettingsWindow:
           this.backend.getBackendInfo().shouldUseTransparentSettingsWindow,
@@ -128,10 +127,7 @@ export class KandoApp {
           gamepadBackButton: 1,
           gamepadCloseButton: 2,
         },
-        editorOptions: {
-          showSidebarButtonVisible: true,
-          showEditorButtonVisible: true,
-        },
+        hideSettingsButton: false,
       },
     });
 
@@ -226,9 +222,6 @@ export class KandoApp {
       this.settingsWindow.webContents.send(
         'settings-window.show-update-available-button'
       );
-
-      // Show the sidebar if it is hidden.
-      this.appSettings.set({ sidebarVisible: true });
 
       // Show a notification if possible.
       Notification.show(
@@ -986,23 +979,47 @@ export class KandoApp {
    */
   private migrateSettings() {
     // Up to Kando 0.9.0, the `root` property of the menu was called `nodes`.
-    const menus = this.menuSettings.getMutable('menus');
-    for (const menu of menus) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const oldMenu = menu as any;
-      if (oldMenu.nodes) {
-        menu.root = oldMenu.nodes as IMenuItem;
-        delete oldMenu.nodes;
+    {
+      const menus = this.menuSettings.getMutable('menus');
+      for (const menu of menus) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const oldMenu = menu as any;
+        if (oldMenu.nodes) {
+          menu.root = oldMenu.nodes as IMenuItem;
+          delete oldMenu.nodes;
+        }
       }
     }
 
     // Up to Kando 1.1.0, there was a `stash` property in the settings. This was
     // changed to `templates` in Kando 1.2.0.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const settings = this.menuSettings.getMutable() as any;
-    if (settings.stash) {
-      settings.templates = settings.stash;
-      delete settings.stash;
+    {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const settings = this.menuSettings.getMutable() as any;
+      if (settings.stash) {
+        settings.templates = settings.stash;
+        delete settings.stash;
+      }
+    }
+
+    // Up to Kando 1.7.0, there was a settings.editorOptions.showEditorButtonVisible
+    // property. This was changed to settings.hideSettingsButton.
+    {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const settings = this.appSettings.getMutable() as any;
+      if (settings.editorOptions?.showEditorButtonVisible === false) {
+        settings.hideSettingsButton = true;
+        delete settings.editorOptions;
+      }
+    }
+
+    // Up to Kando 1.7.0, there was a settings.sidebarVisible property. This was removed.
+    {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const settings = this.appSettings.getMutable() as any;
+      if ('sidebarVisible' in settings) {
+        delete settings.sidebarVisible;
+      }
     }
   }
 }

@@ -17,21 +17,6 @@ import { Properties } from './properties/properties';
 import { IAppSettings, IBackendInfo, IMenuSettings, IVersionInfo } from '../common';
 import { DnDManager } from './common/dnd-manager';
 
-/** These options can be given to the constructor of the settings. */
-export class SettingsOptions {
-  /**
-   * Set this to false to hide the show-sidebar button. It will still be clickable,
-   * though.
-   */
-  showSidebarButtonVisible = true;
-
-  /**
-   * Set this to false to hide the show-settings button. It will still be clickable,
-   * though.
-   */
-  showEditorButtonVisible = true;
-}
-
 /**
  * This class is responsible for the entire settings. It contains the preview, the
  * properties view, the sidebar and the toolbar.
@@ -42,12 +27,6 @@ export class Settings {
 
   /** This is the backend info which is retrieved from the main process. */
   private backend: IBackendInfo = null;
-
-  /**
-   * This holds some global options for the settings. These options can be set when the
-   * settings is created and will be used to configure it's behavior.
-   */
-  private options: SettingsOptions = null;
 
   /**
    * The preview is shown in the center of the screen. It allows the user to edit one

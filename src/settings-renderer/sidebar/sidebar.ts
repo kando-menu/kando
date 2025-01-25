@@ -82,7 +82,6 @@ export class Sidebar {
       }
 
       this.visible = visible;
-      window.commonAPI.appSettings.setKey('sidebarVisible', visible);
     }
   }
 
@@ -208,16 +207,6 @@ export class Sidebar {
     this.container
       .querySelector('#hide-sidebar-button')
       .addEventListener('click', () => this.setVisibility(false));
-
-    // Update of the visibility when the app settings are changed from somewhere else.
-    window.commonAPI.appSettings.onChange('sidebarVisible', (visible) => {
-      this.setVisibility(visible);
-    });
-
-    // Initialize the visibility from the app settings.
-    window.commonAPI.appSettings.getKey('sidebarVisible').then((visible) => {
-      this.setVisibility(visible);
-    });
   }
 
   /**

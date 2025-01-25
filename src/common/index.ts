@@ -549,15 +549,12 @@ export interface IAppSettings {
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';
 
-  /** Whether the sidebar should be shown in the settings. */
-  sidebarVisible: boolean;
-
   /** A scale factor for the menu. */
   zoomFactor: number;
 
   /** The options which are passed to the menu. */
   menuOptions: MenuOptions;
 
-  /** The options which are passed to the settings. */
-  editorOptions: SettingsOptions;
+  /** If true, the settings button will be hidden if not hovered. */
+  hideSettingsButton: boolean;
 }
