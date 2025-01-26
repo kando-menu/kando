@@ -83,10 +83,6 @@ export class SettingsWindow extends BrowserWindow {
     this.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
 
     // Show the window when the renderer is ready.
-    this.windowLoaded.then(() => {
-      this.show();
-
-      // this.webContents.openDevTools();
-    });
+    this.windowLoaded.then(() => this.show());
   }
 }

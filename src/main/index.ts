@@ -118,8 +118,8 @@ const handleCommandLine = (options: CLIOptions) => {
 
 app
   .whenReady()
+  .then(() => installExtension(REACT_DEVELOPER_TOOLS))
   .then(() => {
-    installExtension(REACT_DEVELOPER_TOOLS);
     return i18next.use(i18Backend).init({
       lng: app.getLocale(),
       fallbackLng: {
