@@ -135,6 +135,30 @@ export default (props: IProps) => {
         <Note marginTop={-10}>
           Usually, you can leave these settings at their default values.
         </Note>
+        <ManagedSpinbutton
+          label="Center click zone radius"
+          info="The size of the area in the middle of the menu which will either close or navigate a level up when clicked. Default is 50."
+          settingsKey="centerDeadZone"
+          min={0}
+          max={999}
+          step={10}
+        />
+        <ManagedSpinbutton
+          label="Minimum submenu distance"
+          info="If a submenu is opened close to the parent menu, the parent will be moved away to this distance. Default is 150."
+          settingsKey="minParentDistance"
+          min={0}
+          max={999}
+          step={10}
+        />
+        <ManagedSpinbutton
+          label="Movement threshold"
+          info="Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15."
+          settingsKey="dragThreshold"
+          min={0}
+          max={999}
+          step={10}
+        />
 
         <h1>Developer Options</h1>
         <div style={{ display: 'flex' }}>
