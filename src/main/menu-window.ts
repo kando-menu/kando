@@ -375,7 +375,7 @@ export class MenuWindow extends BrowserWindow {
         this.hideTimeout = null;
 
         resolve();
-      }, this.appSettings.get().menuOptions.fadeOutDuration);
+      }, this.appSettings.get().fadeOutDuration);
     });
   }
 

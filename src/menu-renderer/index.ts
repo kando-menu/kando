@@ -81,7 +81,7 @@ Promise.all([
     document.getElementById('kando-menu'),
     menuTheme,
     soundTheme,
-    settings.menuOptions
+    settings
   );
 
   // Show the menu when the main process requests it.
@@ -90,7 +90,27 @@ Promise.all([
   });
 
   // Tell the menu about settings changes.
-  window.commonAPI.appSettings.onChange('menuOptions', (o) => menu.setOptions(o));
+  const updateSettings = () => {
+    window.commonAPI.appSettings.get().then((settings) => {
+      menu.updateSettings(settings);
+    });
+  };
+
+  window.commonAPI.appSettings.onChange('centerDeadZone', updateSettings);
+  window.commonAPI.appSettings.onChange('minParentDistance', updateSettings);
+  window.commonAPI.appSettings.onChange('dragThreshold', updateSettings);
+  window.commonAPI.appSettings.onChange('fadeInDuration', updateSettings);
+  window.commonAPI.appSettings.onChange('fadeOutDuration', updateSettings);
+  window.commonAPI.appSettings.onChange('enableMarkingMode', updateSettings);
+  window.commonAPI.appSettings.onChange('enableTurboMode', updateSettings);
+  window.commonAPI.appSettings.onChange('gestureMinStrokeLength', updateSettings);
+  window.commonAPI.appSettings.onChange('gestureMinStrokeAngle', updateSettings);
+  window.commonAPI.appSettings.onChange('gestureJitterThreshold', updateSettings);
+  window.commonAPI.appSettings.onChange('gesturePauseTimeout', updateSettings);
+  window.commonAPI.appSettings.onChange('fixedStrokeLength', updateSettings);
+  window.commonAPI.appSettings.onChange('rmbSelectsParent', updateSettings);
+  window.commonAPI.appSettings.onChange('gamepadBackButton', updateSettings);
+  window.commonAPI.appSettings.onChange('gamepadCloseButton', updateSettings);
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the

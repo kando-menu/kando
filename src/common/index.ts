@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuOptions } from '../menu-renderer/menu';
-import { SettingsOptions } from '../settings-renderer/settings';
-
 /**
  * A simple 2D vector.
  *
@@ -552,9 +549,78 @@ export interface IAppSettings {
   /** A scale factor for the menu. */
   zoomFactor: number;
 
-  /** The options which are passed to the menu. */
-  menuOptions: MenuOptions;
-
   /** If true, the settings button will be hidden if not hovered. */
   hideSettingsButton: boolean;
+
+  /** Clicking inside this radius will select the parent element. */
+  centerDeadZone: number;
+
+  /**
+   * The distance in pixels at which the parent menu item is placed if a submenu is
+   * selected close to the parent.
+   */
+  minParentDistance: number;
+
+  /**
+   * This is the threshold in pixels which is used to differentiate between a click and a
+   * drag. If the mouse is moved more than this threshold before the mouse button is
+   * released, an item is dragged.
+   */
+  dragThreshold: number;
+
+  /** The time in milliseconds it takes to fade in the menu. */
+  fadeInDuration: number;
+
+  /** The time in milliseconds it takes to fade out the menu. */
+  fadeOutDuration: number;
+
+  /** If enabled, items can be selected by dragging the mouse over them. */
+  enableMarkingMode: boolean;
+
+  /**
+   * If enabled, items can be selected by hovering over them while holding down a keyboard
+   * key.
+   */
+  enableTurboMode: boolean;
+
+  /** Shorter gestures will not lead to selections. */
+  gestureMinStrokeLength: number;
+
+  /** Smaller turns will not lead to selections. */
+  gestureMinStrokeAngle: number;
+
+  /** Smaller movements will not be considered. */
+  gestureJitterThreshold: number;
+
+  /**
+   * If the pointer is stationary for this many milliseconds, the current item will be
+   * selected.
+   */
+  gesturePauseTimeout: number;
+
+  /**
+   * If set to a value greater than 0, items will be instantly selected if the mouse
+   * travelled more than centerDeadZone + fixedStrokeLength pixels in marking or turbo
+   * mode. Any other gesture detection based on angles or motion speed will be disabled in
+   * this case.
+   */
+  fixedStrokeLength: number;
+
+  /**
+   * If enabled, the parent of a selected item will be selected on a right mouse button
+   * click. Else the menu will be closed directly.
+   */
+  rmbSelectsParent: boolean;
+
+  /**
+   * This button will select the parent item when using a gamepad. Set to -1 to disable.
+   * See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
+   */
+  gamepadBackButton: number;
+
+  /**
+   * This button will close the menu when using a gamepad. Set to -1 to disable. See
+   * https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
+   */
+  gamepadCloseButton: number;
 }

@@ -110,23 +110,21 @@ export class KandoApp {
         trayIconFlavor: 'color',
         enableVersionCheck: true,
         zoomFactor: 1,
-        menuOptions: {
-          centerDeadZone: 50,
-          minParentDistance: 150,
-          dragThreshold: 15,
-          fadeInDuration: 150,
-          fadeOutDuration: 200,
-          enableMarkingMode: true,
-          enableTurboMode: true,
-          gestureMinStrokeLength: 150,
-          gestureMinStrokeAngle: 20,
-          gestureJitterThreshold: 10,
-          gesturePauseTimeout: 100,
-          fixedStrokeLength: 0,
-          rmbSelectsParent: false,
-          gamepadBackButton: 1,
-          gamepadCloseButton: 2,
-        },
+        centerDeadZone: 50,
+        minParentDistance: 150,
+        dragThreshold: 15,
+        fadeInDuration: 150,
+        fadeOutDuration: 200,
+        enableMarkingMode: true,
+        enableTurboMode: true,
+        gestureMinStrokeLength: 150,
+        gestureMinStrokeAngle: 20,
+        gestureJitterThreshold: 10,
+        gesturePauseTimeout: 100,
+        fixedStrokeLength: 0,
+        rmbSelectsParent: false,
+        gamepadBackButton: 1,
+        gamepadCloseButton: 2,
         hideSettingsButton: false,
       },
     });
@@ -1019,6 +1017,31 @@ export class KandoApp {
       const settings = this.appSettings.getMutable() as any;
       if ('sidebarVisible' in settings) {
         delete settings.sidebarVisible;
+      }
+    }
+
+    // Up to Kando 1.7.0, the following properties were stored in a settings.menuOptions
+    // object. Later they became top-level properties.
+    {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const settings = this.appSettings.getMutable() as any;
+      if (settings.menuOptions) {
+        settings.centerDeadZone = settings.menuOptions.centerDeadZone;
+        settings.minParentDistance = settings.menuOptions.minParentDistance;
+        settings.dragThreshold = settings.menuOptions.dragThreshold;
+        settings.fadeInDuration = settings.menuOptions.fadeInDuration;
+        settings.fadeOutDuration = settings.menuOptions.fadeOutDuration;
+        settings.enableMarkingMode = settings.menuOptions.enableMarkingMode;
+        settings.enableTurboMode = settings.menuOptions.enableTurboMode;
+        settings.gestureMinStrokeLength = settings.menuOptions.gestureMinStrokeLength;
+        settings.gestureMinStrokeAngle = settings.menuOptions.gestureMinStrokeAngle;
+        settings.gestureJitterThreshold = settings.menuOptions.gestureJitterThreshold;
+        settings.gesturePauseTimeout = settings.menuOptions.gesturePauseTimeout;
+        settings.fixedStrokeLength = settings.menuOptions.fixedStrokeLength;
+        settings.rmbSelectsParent = settings.menuOptions.rmbSelectsParent;
+        settings.gamepadBackButton = settings.menuOptions.gamepadBackButton;
+        settings.gamepadCloseButton = settings.menuOptions.gamepadCloseButton;
+        delete settings.menuOptions;
       }
     }
   }

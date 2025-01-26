@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
-import { IShowMenuOptions, IVec2, SoundType } from '../common';
+import { IAppSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
@@ -19,81 +19,6 @@ import { PointerInput } from './input-methods/pointer-input';
 import { ButtonState, IInputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
-
-/** These options can be given to the constructor of the menu. */
-export class MenuOptions {
-  /** Clicking inside this radius will select the parent element. */
-  centerDeadZone = 50;
-
-  /**
-   * The distance in pixels at which the parent menu item is placed if a submenu is
-   * selected close to the parent.
-   */
-  minParentDistance = 150;
-
-  /**
-   * This is the threshold in pixels which is used to differentiate between a click and a
-   * drag. If the mouse is moved more than this threshold before the mouse button is
-   * released, an item is dragged.
-   */
-  dragThreshold = 15;
-
-  /** The time in milliseconds it takes to fade in the menu. */
-  fadeInDuration = 150;
-
-  /** The time in milliseconds it takes to fade out the menu. */
-  fadeOutDuration = 200;
-
-  /** If enabled, items can be selected by dragging the mouse over them. */
-  enableMarkingMode = true;
-
-  /**
-   * If enabled, items can be selected by hovering over them while holding down a keyboard
-   * key.
-   */
-  enableTurboMode = true;
-
-  /** Shorter gestures will not lead to selections. */
-  gestureMinStrokeLength = 150;
-
-  /** Smaller turns will not lead to selections. */
-  gestureMinStrokeAngle = 20;
-
-  /** Smaller movements will not be considered. */
-  gestureJitterThreshold = 10;
-
-  /**
-   * If the pointer is stationary for this many milliseconds, the current item will be
-   * selected.
-   */
-  gesturePauseTimeout = 100;
-
-  /**
-   * If set to a value greater than 0, items will be instantly selected if the mouse
-   * travelled more than centerDeadZone + fixedStrokeLength pixels in marking or turbo
-   * mode. Any other gesture detection based on angles or motion speed will be disabled in
-   * this case.
-   */
-  fixedStrokeLength = 0;
-
-  /**
-   * If enabled, the parent of a selected item will be selected on a right mouse button
-   * click. Else the menu will be closed directly.
-   */
-  rmbSelectsParent = false;
-
-  /**
-   * This button will select the parent item when using a gamepad. Set to -1 to disable.
-   * See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
-   */
-  gamepadBackButton = 1;
-
-  /**
-   * This button will close the menu when using a gamepad. Set to -1 to disable. See
-   * https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
-   */
-  gamepadCloseButton = 2;
-}
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -125,12 +50,6 @@ export class Menu extends EventEmitter {
    * is shown and destroyed when the menu is hidden.
    */
   private root: IRenderedMenuItem = null;
-
-  /**
-   * This holds some global options for the menu. These options can be set when the menu
-   * is created and will be used to configure the menu's behavior.
-   */
-  private options: MenuOptions = null;
 
   /**
    * This holds some information which is passed to the menu when it is shown from the
@@ -196,14 +115,11 @@ export class Menu extends EventEmitter {
     private container: HTMLElement,
     private theme: MenuTheme,
     private soundTheme: SoundTheme,
-    options: Partial<MenuOptions> = {}
+    private settings: IAppSettings
   ) {
     super();
 
     this.container = container;
-
-    // Use the default options and overwrite them with the given options.
-    this.setOptions({ ...new MenuOptions(), ...options });
 
     // Initialize the input devices.
     this.initializeInput();
@@ -243,9 +159,9 @@ export class Menu extends EventEmitter {
 
     // In anchored mode, we have to disable turbo and marking mode.
     this.pointerInput.enableMarkingMode =
-      this.options.enableMarkingMode && !showMenuOptions.anchoredMode;
+      this.settings.enableMarkingMode && !showMenuOptions.anchoredMode;
     this.pointerInput.enableTurboMode =
-      this.options.enableTurboMode && !showMenuOptions.anchoredMode;
+      this.settings.enableTurboMode && !showMenuOptions.anchoredMode;
 
     this.root = root;
     this.setupPaths(this.root);
@@ -274,7 +190,7 @@ export class Menu extends EventEmitter {
     this.container.classList.add('hidden');
     this.hideTimeout = setTimeout(() => {
       this.clear();
-    }, this.options.fadeOutDuration);
+    }, this.settings.fadeOutDuration);
   }
 
   /** Removes all DOM elements from the menu and resets the root menu item. */
@@ -293,35 +209,36 @@ export class Menu extends EventEmitter {
    *
    * @param options The new options.
    */
-  public setOptions(options: Partial<MenuOptions>) {
-    this.options = { ...this.options, ...options };
+  public updateSettings(settings: IAppSettings) {
+    this.settings = settings;
 
     this.container.style.setProperty(
       '--fade-in-duration',
-      `${this.options.fadeInDuration}ms`
+      `${this.settings.fadeInDuration}ms`
     );
 
     this.container.style.setProperty(
       '--fade-out-duration',
-      `${this.options.fadeOutDuration}ms`
+      `${this.settings.fadeOutDuration}ms`
     );
 
-    this.pointerInput.enableMarkingMode = this.options.enableMarkingMode;
-    this.pointerInput.enableTurboMode = this.options.enableTurboMode;
-    this.pointerInput.dragThreshold = this.options.dragThreshold;
+    this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
+    this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
+    this.pointerInput.dragThreshold = this.settings.dragThreshold;
 
     this.pointerInput.gestureDetector.minStrokeLength =
-      this.options.gestureMinStrokeLength;
-    this.pointerInput.gestureDetector.minStrokeAngle = this.options.gestureMinStrokeAngle;
+      this.settings.gestureMinStrokeLength;
+    this.pointerInput.gestureDetector.minStrokeAngle =
+      this.settings.gestureMinStrokeAngle;
     this.pointerInput.gestureDetector.jitterThreshold =
-      this.options.gestureJitterThreshold;
-    this.pointerInput.gestureDetector.pauseTimeout = this.options.gesturePauseTimeout;
-    this.pointerInput.gestureDetector.fixedStrokeLength = this.options.fixedStrokeLength;
-    this.pointerInput.gestureDetector.centerDeadZone = this.options.centerDeadZone;
+      this.settings.gestureJitterThreshold;
+    this.pointerInput.gestureDetector.pauseTimeout = this.settings.gesturePauseTimeout;
+    this.pointerInput.gestureDetector.fixedStrokeLength = this.settings.fixedStrokeLength;
+    this.pointerInput.gestureDetector.centerDeadZone = this.settings.centerDeadZone;
 
-    this.gamepadInput.parentDistance = this.options.minParentDistance;
-    this.gamepadInput.backButton = this.options.gamepadBackButton;
-    this.gamepadInput.closeButton = this.options.gamepadCloseButton;
+    this.gamepadInput.parentDistance = this.settings.minParentDistance;
+    this.gamepadInput.backButton = this.settings.gamepadBackButton;
+    this.gamepadInput.closeButton = this.settings.gamepadCloseButton;
   }
 
   // --------------------------------------------------------------------- private methods
@@ -332,7 +249,7 @@ export class Menu extends EventEmitter {
    */
   private initializeInput() {
     const onCloseMenu = () => {
-      if (this.options.rmbSelectsParent) {
+      if (this.settings.rmbSelectsParent) {
         this.selectParent();
       } else {
         this.cancelHide();
@@ -367,7 +284,7 @@ export class Menu extends EventEmitter {
         type === SelectionType.eSubmenuOnly &&
         item &&
         item.type === 'submenu' &&
-        this.latestInput.distance > this.options.centerDeadZone
+        this.latestInput.distance > this.settings.centerDeadZone
       ) {
         this.selectItem(item, coords);
         return;
@@ -600,15 +517,15 @@ export class Menu extends EventEmitter {
         : coords || this.latestInput.absolutePosition;
     } else {
       // First we compute the distance to the parent item. In anchored mode, the distance
-      // is set to this.options.minParentDistance. If a parent was selected, we keep the
+      // is set to this.settings.minParentDistance. If a parent was selected, we keep the
       // original offset, if a child was selected, we use the latest input distance.
-      let distance = this.options.minParentDistance;
+      let distance = this.settings.minParentDistance;
 
       if (!this.showMenuOptions.anchoredMode) {
         if (selectedParent) {
           distance = math.getLength(item.position);
         } else {
-          distance = Math.max(this.options.minParentDistance, this.latestInput.distance);
+          distance = Math.max(this.settings.minParentDistance, this.latestInput.distance);
         }
       }
 
@@ -655,7 +572,7 @@ export class Menu extends EventEmitter {
       }
 
       // Update the mouse info based on the newly selected item's position.
-      this.pointerInput.setCurrentCenter(clampedPosition, this.options.centerDeadZone);
+      this.pointerInput.setCurrentCenter(clampedPosition, this.settings.centerDeadZone);
       this.gamepadInput.setCurrentCenter(clampedPosition);
     }
 
@@ -832,7 +749,7 @@ export class Menu extends EventEmitter {
     if (
       this.latestInput.button === ButtonState.eDragged &&
       !this.draggedItem &&
-      this.latestInput.distance > this.options.centerDeadZone &&
+      this.latestInput.distance > this.settings.centerDeadZone &&
       this.hoveredItem
     ) {
       this.dragItem(this.hoveredItem);
@@ -843,7 +760,7 @@ export class Menu extends EventEmitter {
     if (
       this.latestInput.button === ButtonState.eDragged &&
       this.draggedItem &&
-      this.latestInput.distance < this.options.centerDeadZone
+      this.latestInput.distance < this.settings.centerDeadZone
     ) {
       this.dragItem(null);
       this.updateConnectors();
@@ -882,7 +799,7 @@ export class Menu extends EventEmitter {
   private computeHoveredItem(): IRenderedMenuItem {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected item.
-    if (this.latestInput.distance < this.options.centerDeadZone) {
+    if (this.latestInput.distance < this.settings.centerDeadZone) {
       if (this.selectionChain.length > 1) {
         return this.selectionChain[this.selectionChain.length - 2];
       }
