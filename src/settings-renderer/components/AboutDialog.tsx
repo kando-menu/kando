@@ -12,7 +12,7 @@ import { WindowWithAPIs } from '../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
-import { RiExternalLinkFill } from 'react-icons/ri';
+import { TbExternalLink } from 'react-icons/tb';
 
 import Swirl from './widgets/Swirl';
 import Modal from './widgets/Modal';
@@ -77,7 +77,7 @@ export default (props: IProps) => {
           <div className={classes.buttons}>
             <Button
               label="Check latest release"
-              icon={<RiExternalLinkFill />}
+              icon={<TbExternalLink />}
               tooltip="https://github.com/kando-menu/kando/releases"
               onClick={() =>
                 window.open('https://github.com/kando-menu/kando/releases', '_blank')
@@ -86,7 +86,7 @@ export default (props: IProps) => {
             />
             <Button
               label="Read release notes"
-              icon={<RiExternalLinkFill />}
+              icon={<TbExternalLink />}
               tooltip="https://github.com/kando-menu/kando/blob/main/docs/changelog.md"
               block
               onClick={() =>

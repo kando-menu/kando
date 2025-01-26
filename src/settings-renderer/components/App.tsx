@@ -13,7 +13,11 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
-import { RiSettings4Fill, RiInformation2Fill, RiPaletteFill } from 'react-icons/ri';
+import {
+  TbSettingsFilled,
+  TbInfoSquareRoundedFilled,
+  TbPaletteFilled,
+} from 'react-icons/tb';
 
 import AboutDialog from './AboutDialog';
 import GeneralSettingsDialog from './GeneralSettingsDialog';
@@ -65,21 +69,21 @@ export default () => {
     <>
       <Button
         tooltip="About Kando"
-        icon={<RiInformation2Fill />}
+        icon={<TbInfoSquareRoundedFilled />}
         onClick={() => setAboutVisible(true)}
         variant="flat"
         grouped
       />
       <Button
         tooltip="Menu Themes"
-        icon={<RiPaletteFill />}
+        icon={<TbPaletteFilled />}
         onClick={() => setThemesVisible(true)}
         variant="flat"
         grouped
       />
       <Button
         tooltip="General Settings"
-        icon={<RiSettings4Fill />}
+        icon={<TbSettingsFilled />}
         onClick={() => setSettingsVisible(true)}
         variant="flat"
         grouped

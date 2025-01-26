@@ -21,6 +21,7 @@ interface IProps {
   size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
   block?: boolean;
+  grow?: boolean;
   grouped?: boolean;
 }
 
@@ -36,7 +37,9 @@ export default (props: IProps) => {
     ' ' +
     (props.grouped ? classes.grouped : '') +
     ' ' +
-    (props.block ? classes.block : '');
+    (props.block ? classes.block : '') +
+    ' ' +
+    (props.grow ? classes.grow : '');
 
   return (
     <button

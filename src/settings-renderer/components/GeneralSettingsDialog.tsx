@@ -13,6 +13,9 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 
+import { TbReload, TbCode } from 'react-icons/tb';
+
+import Button from './widgets/Button';
 import Modal from './widgets/Modal';
 import Swirl from './widgets/Swirl';
 import Note from './widgets/Note';
@@ -75,6 +78,19 @@ export default (props: IProps) => {
           info="Requires a restart to take full effect."
           settingsKey="transparentSettingsWindow"
         />
+        <ManagedDropdown
+          label="Tray icon flavor"
+          info="You can also choose to hide the tray icon completely."
+          settingsKey="trayIconFlavor"
+          options={[
+            { value: 'none', label: 'Hidden' },
+            { value: 'color', label: 'Color' },
+            { value: 'white', label: 'White' },
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'black', label: 'Black' },
+          ]}
+        />
 
         <h1>Menu Behavior</h1>
         <ManagedCheckbox
@@ -92,18 +108,34 @@ export default (props: IProps) => {
           info="If unchecked, the right mouse button will close the menu instead."
           settingsKey="rmbSelectsParent"
         />
-        <ManagedDropdown
-          label="Tray icon flavor"
-          info="You can also choose to hide the tray icon completely."
-          settingsKey="trayIconFlavor"
-          options={[
-            { value: 'none', label: 'Hidden' },
-            { value: 'color', label: 'Color' },
-            { value: 'white', label: 'White' },
-            { value: 'light', label: 'Light' },
-            { value: 'dark', label: 'Dark' },
-            { value: 'black', label: 'Black' },
-          ]}
+
+        <h1>Developer Options</h1>
+        <div style={{ display: 'flex' }}>
+          <Button
+            label="Reload menu theme"
+            icon={<TbReload />}
+            grouped
+            grow
+            onClick={() => {
+              window.settingsAPI.reloadMenuTheme();
+            }}
+          />
+          <Button
+            label="Reload sound theme"
+            icon={<TbReload />}
+            grouped
+            grow
+            onClick={() => {
+              window.settingsAPI.reloadSoundTheme();
+            }}
+          />
+        </div>
+        <Button
+          label="Show developer tools"
+          icon={<TbCode />}
+          onClick={() => {
+            window.settingsAPI.showDevTools();
+          }}
         />
       </div>
     </Modal>
