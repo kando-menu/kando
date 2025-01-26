@@ -12,18 +12,19 @@ import React from 'react';
 
 import InfoItem from './InfoItem';
 
-import * as classes from './Checkbox.module.scss';
+import * as classes from './Dropdown.module.scss';
 
 interface IProps {
-  onToggle?: (value: boolean) => void;
-  initialValue?: boolean;
+  onChange?: (value: string) => void;
+  options: { value: string; label: string }[];
+  initialValue?: string;
   label?: string;
   info?: string;
   disabled?: boolean;
 }
 
 export default (props: IProps) => {
-  const className = classes.checkbox + ' ' + (props.disabled ? classes.disabled : '');
+  const className = classes.dropdown + ' ' + (props.disabled ? classes.disabled : '');
 
   return (
     <label className={className}>
@@ -31,12 +32,19 @@ export default (props: IProps) => {
         {props.label}
         {props.info && <InfoItem info={props.info} />}
       </div>
-      <input
-        type="checkbox"
+      <select
         disabled={props.disabled}
-        checked={props.initialValue || false}
-        onChange={(event) => props.onToggle && props.onToggle(event.target.checked)}
-      />
+        value={props.initialValue || ''}
+        onChange={(event) => props.onChange && props.onChange(event.target.value)}>
+        {props.options.map((option) => (
+          <option
+            key={option.value}
+            value={option.value}
+            selected={option.value === props.initialValue}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </label>
   );
 };

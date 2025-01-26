@@ -10,33 +10,22 @@
 
 import React from 'react';
 
-import InfoItem from './InfoItem';
-
-import * as classes from './Checkbox.module.scss';
+import * as classes from './Note.module.scss';
 
 interface IProps {
-  onToggle?: (value: boolean) => void;
-  initialValue?: boolean;
-  label?: string;
-  info?: string;
-  disabled?: boolean;
+  children: React.ReactNode;
+  center?: boolean;
+  marginTop?: number;
+  marginBottom?: number;
 }
 
 export default (props: IProps) => {
-  const className = classes.checkbox + ' ' + (props.disabled ? classes.disabled : '');
-
+  const className = classes.note + ' ' + (props.center ? classes.center : '');
   return (
-    <label className={className}>
-      <div>
-        {props.label}
-        {props.info && <InfoItem info={props.info} />}
-      </div>
-      <input
-        type="checkbox"
-        disabled={props.disabled}
-        checked={props.initialValue || false}
-        onChange={(event) => props.onToggle && props.onToggle(event.target.checked)}
-      />
-    </label>
+    <div
+      className={className}
+      style={{ marginTop: props.marginTop || 0, marginBottom: props.marginBottom || 0 }}>
+      {props.children}
+    </div>
   );
 };

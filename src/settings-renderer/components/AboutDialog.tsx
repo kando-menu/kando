@@ -61,7 +61,7 @@ export default (props: IProps) => {
           </p>
           <p>💖 Simon</p>
         </div>
-        <Swirl />
+        <Swirl marginTop={30} marginBottom={20} />
         <div className={classes.footer}>
           <div className={classes.versionInfo}>
             Kando Version:

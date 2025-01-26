@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import Modal from './widgets/Modal';
-import SettingsKeyCheckbox from './widgets/SettingsKeyCheckbox';
+import ManagedCheckbox from './widgets/ManagedCheckbox';
 
 interface IProps {
   visible: boolean;
@@ -26,7 +26,7 @@ export default (props: IProps) => {
       visible={props.visible}
       onClose={props.onClose}
       maxWidth={800}>
-      <SettingsKeyCheckbox
+      <ManagedCheckbox
         label={i18next.t('toolbar.menu-themes-tab.dark-mode')}
         info={i18next.t('toolbar.menu-themes-tab.system-mode-subheading')}
         settingsKey="enableDarkModeForMenuThemes"

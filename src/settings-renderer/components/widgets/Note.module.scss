@@ -8,22 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
-import { RiInformation2Fill } from 'react-icons/ri';
+@import '../../variable.scss';
 
-import * as classes from './Info.module.scss';
+.note {
+  font-size: 0.8em;
+  color: $text-secondary;
 
-interface IProps {
-  info?: string;
+  &.center {
+    text-align: center;
+  }
 }
-
-export default (props: IProps) => {
-  return (
-    <span
-      className={classes.info}
-      data-tooltip-id="main-tooltip"
-      data-tooltip-content={props.info}>
-      <RiInformation2Fill />
-    </span>
-  );
-};

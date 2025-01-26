@@ -8,27 +8,35 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+@import '../../variable.scss';
 
-const swirl = require('../../../../assets/images/swirl1.svg');
+.dropdown {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-interface IProps {
-  marginTop?: number;
-  marginBottom?: number;
+  color: $text-primary;
+
+  select {
+    background-color: $background-secondary;
+
+    color: $text-primary;
+    border: none;
+    border-radius: 5px;
+    font-size: inherit;
+
+    padding: 5px 7px;
+    font-size: 1em;
+
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
 
-export default (props: IProps) => {
-  return (
-    <img
-      src={swirl}
-      width={250}
-      style={{
-        opacity: 0.5,
-        marginTop: props.marginTop || 0,
-        marginBottom: props.marginBottom || 0,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      }}
-    />
-  );
-};
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

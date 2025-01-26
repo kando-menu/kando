@@ -15,8 +15,9 @@ import React from 'react';
 
 import Modal from './widgets/Modal';
 import Swirl from './widgets/Swirl';
-import SettingsKeyCheckbox from './widgets/SettingsKeyCheckbox';
-import SubSettingsKeyCheckbox from './widgets/SubSettingsKeyCheckbox';
+import Note from './widgets/Note';
+import ManagedCheckbox from './widgets/ManagedCheckbox';
+import Dropdown from './widgets/Dropdown';
 
 interface IProps {
   visible: boolean;
@@ -51,47 +52,52 @@ export default (props: IProps) => {
           alignItems: 'stretch',
           justifyContent: 'center',
         }}>
-        <p>
+        <Note marginTop={20} center>
           All settings of Kando are stored in a JSON file which you can also edit, share,
           or backup. Click{' '}
           <a ref={configLinkRef} target="_blank">
             here
           </a>{' '}
           to open the directory where the config.json file is stored.
-        </p>
+        </Note>
 
-        <Swirl />
+        <Swirl marginTop={10} marginBottom={20} />
 
         <h1>App Behavior</h1>
-        <SettingsKeyCheckbox
+        <ManagedCheckbox
           label="Check for new versions"
           info="If enabled, Kando will show a notification when a new version is available."
           settingsKey="enableVersionCheck"
         />
-        <SettingsKeyCheckbox
+        <ManagedCheckbox
           label="Transparent settings window"
           info="Requires a restart to take full effect."
           settingsKey="transparentSettingsWindow"
         />
 
         <h1>Menu Behavior</h1>
-        <SubSettingsKeyCheckbox
+        <ManagedCheckbox
           label="Enable Marking Mode"
           info="With Marking Mode enabled, you can select items by dragging the mouse over them."
-          settingsKey="menuOptions"
-          subKey="enableMarkingMode"
+          settingsKey="enableMarkingMode"
         />
-        <SubSettingsKeyCheckbox
+        <ManagedCheckbox
           label="Enable Turbo Mode"
           info="With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl."
-          settingsKey="menuOptions"
-          subKey="enableTurboMode"
+          settingsKey="enableTurboMode"
         />
-        <SubSettingsKeyCheckbox
+        <ManagedCheckbox
           label="Right mouse button selects parent"
           info="If unchecked, the right mouse button will close the menu instead."
-          settingsKey="menuOptions"
-          subKey="rmbSelectsParent"
+          settingsKey="rmbSelectsParent"
+        />
+        <Dropdown
+          label="Menu Style"
+          info="Choose the style of the pie menu."
+          options={[
+            { value: 'classic', label: 'Classic' },
+            { value: 'modern', label: 'Modern' },
+          ]}
         />
       </div>
     </Modal>
