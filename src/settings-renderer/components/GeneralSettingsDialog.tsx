@@ -19,6 +19,7 @@ import Button from './widgets/Button';
 import Modal from './widgets/Modal';
 import Swirl from './widgets/Swirl';
 import Note from './widgets/Note';
+import ManagedSpinbutton from './widgets/ManagedSpinbutton';
 import ManagedCheckbox from './widgets/ManagedCheckbox';
 import ManagedDropdown from './widgets/ManagedDropdown';
 
@@ -75,8 +76,13 @@ export default (props: IProps) => {
         />
         <ManagedCheckbox
           label="Transparent settings window"
-          info="Requires a restart to take full effect."
+          info="Reopen the settings window to fully apply the effect."
           settingsKey="transparentSettingsWindow"
+        />
+        <ManagedCheckbox
+          label="Hide settings button"
+          info="The button in the screen corner that opens the settings will still be there, but invisible."
+          settingsKey="hideSettingsButton"
         />
         <ManagedDropdown
           label="Tray icon flavor"
@@ -108,6 +114,27 @@ export default (props: IProps) => {
           info="If unchecked, the right mouse button will close the menu instead."
           settingsKey="rmbSelectsParent"
         />
+        <ManagedSpinbutton
+          label="Fade-in duration"
+          info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150."
+          settingsKey="fadeInDuration"
+          min={0}
+          max={500}
+          step={10}
+        />
+        <ManagedSpinbutton
+          label="Fade-out duration"
+          info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200."
+          settingsKey="fadeOutDuration"
+          min={0}
+          max={500}
+          step={10}
+        />
+
+        <h1>Advanced Menu Options</h1>
+        <Note marginTop={-10}>
+          Usually, you can leave these settings at their default values.
+        </Note>
 
         <h1>Developer Options</h1>
         <div style={{ display: 'flex' }}>

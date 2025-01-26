@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from './menu-window-api';
+declare const window: WindowWithAPIs;
+
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
@@ -121,6 +124,8 @@ export class Menu extends EventEmitter {
 
     this.container = container;
 
+    this.updateSettings(settings);
+
     // Initialize the input devices.
     this.initializeInput();
   }
@@ -221,6 +226,8 @@ export class Menu extends EventEmitter {
       '--fade-out-duration',
       `${this.settings.fadeOutDuration}ms`
     );
+
+    window.commonAPI.log('Settings updated: ' + this.settings.fadeOutDuration);
 
     this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
     this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
