@@ -14,16 +14,16 @@ import InfoItem from './InfoItem';
 
 import * as classes from './Dropdown.module.scss';
 
-interface IProps {
-  onChange?: (value: string) => void;
-  options: { value: string; label: string }[];
-  initialValue?: string;
+interface IProps<T extends string> {
+  onChange?: (value: T) => void;
+  options: { value: T; label: string }[];
+  initialValue?: T;
   label?: string;
   info?: string;
   disabled?: boolean;
 }
 
-export default (props: IProps) => {
+export default <T extends string>(props: IProps<T>) => {
   const className = classes.dropdown + ' ' + (props.disabled ? classes.disabled : '');
 
   return (
@@ -35,12 +35,9 @@ export default (props: IProps) => {
       <select
         disabled={props.disabled}
         value={props.initialValue || ''}
-        onChange={(event) => props.onChange && props.onChange(event.target.value)}>
+        onChange={(event) => props.onChange && props.onChange(event.target.value as T)}>
         {props.options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            selected={option.value === props.initialValue}>
+          <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}

@@ -17,7 +17,7 @@ import Modal from './widgets/Modal';
 import Swirl from './widgets/Swirl';
 import Note from './widgets/Note';
 import ManagedCheckbox from './widgets/ManagedCheckbox';
-import Dropdown from './widgets/Dropdown';
+import ManagedDropdown from './widgets/ManagedDropdown';
 
 interface IProps {
   visible: boolean;
@@ -51,6 +51,7 @@ export default (props: IProps) => {
           flexDirection: 'column',
           alignItems: 'stretch',
           justifyContent: 'center',
+          gap: 5,
         }}>
         <Note marginTop={20} center>
           All settings of Kando are stored in a JSON file which you can also edit, share,
@@ -91,12 +92,17 @@ export default (props: IProps) => {
           info="If unchecked, the right mouse button will close the menu instead."
           settingsKey="rmbSelectsParent"
         />
-        <Dropdown
-          label="Menu Style"
-          info="Choose the style of the pie menu."
+        <ManagedDropdown
+          label="Tray icon flavor"
+          info="You can also choose to hide the tray icon completely."
+          settingsKey="trayIconFlavor"
           options={[
-            { value: 'classic', label: 'Classic' },
-            { value: 'modern', label: 'Modern' },
+            { value: 'none', label: 'Hidden' },
+            { value: 'color', label: 'Color' },
+            { value: 'white', label: 'White' },
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'black', label: 'Black' },
           ]}
         />
       </div>
