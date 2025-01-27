@@ -78,7 +78,9 @@
         "is-running-message": "Перевірте піктограму в системному треї на наявність деяких опцій!",
         "failed-to-start-header": "Kando не зміг запуститися",
         "un-inhibit-shortcuts": "Увімкнути клавіші меню",
-        "inhibit-shortcuts": "Тимчасово вимкнути меню"
+        "inhibit-shortcuts": "Тимчасово вимкнути меню",
+        "show-settings": "Налаштування",
+        "quit": "Вийти"
     },
     "properties": {
         "common": {
