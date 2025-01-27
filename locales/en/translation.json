@@ -74,8 +74,10 @@
   },
   "main": {
     "failed-to-start-header": "Kando failed to start",
+    "show-settings": "Show settings",
     "un-inhibit-shortcuts": "Re-enable Shortcuts",
-    "inhibit-shortcuts": "Temporarily Disable Shortcuts"
+    "inhibit-shortcuts": "Temporarily Disable Shortcuts",
+    "quit": "Quit"
   },
   "properties": {
     "common": {

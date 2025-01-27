@@ -1082,7 +1082,7 @@ export class KandoApp {
 
     // Add an entry to show the editor.
     template.push({
-      label: 'Show Settings',
+      label: i18next.t('main.show-settings'),
       click: () => this.showEditor(),
     });
 
@@ -1111,7 +1111,7 @@ export class KandoApp {
 
     // Add an entry to quit the application.
     template.push({
-      label: 'Quit',
+      label: i18next.t('main.quit'),
       role: 'quit',
     });
 
