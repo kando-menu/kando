@@ -146,7 +146,7 @@ export default (props: IProps) => {
             settingsKey="centerDeadZone"
             min={0}
             max={999}
-            step={10}
+            step={50}
           />
           <ManagedSpinbutton
             label="Minimum submenu distance"
@@ -154,12 +154,52 @@ export default (props: IProps) => {
             settingsKey="minParentDistance"
             min={0}
             max={999}
-            step={10}
+            step={50}
           />
           <ManagedSpinbutton
             label="Movement threshold"
             info="Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15px."
             settingsKey="dragThreshold"
+            min={0}
+            max={999}
+            step={10}
+          />
+          <ManagedSpinbutton
+            label="Minimum Gesture Length"
+            info="Straight movements must be at least this long to trigger a selection. Default is 150px."
+            settingsKey="gestureMinStrokeLength"
+            min={0}
+            max={999}
+            step={50}
+          />
+          <ManagedSpinbutton
+            label="Minimum Gesture Angle"
+            info="Smaller deviations from straight movements will not trigger selections. Default is 20°."
+            settingsKey="gestureMinStrokeAngle"
+            min={0}
+            max={30}
+            step={1}
+          />
+          <ManagedSpinbutton
+            label="Minimum Gesture Angle"
+            info="Smaller movements will not be considered in the gesture detection. Default is 10px."
+            settingsKey="gestureJitterThreshold"
+            min={0}
+            max={50}
+            step={1}
+          />
+          <ManagedSpinbutton
+            label="Gesture Pause Timeout"
+            info="Stop your gesture for this long to trigger a selection. Default is 100ms."
+            settingsKey="gesturePauseTimeout"
+            min={0}
+            max={999}
+            step={50}
+          />
+          <ManagedSpinbutton
+            label="Fixed Stroke Length"
+            info="Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px."
+            settingsKey="fixedStrokeLength"
             min={0}
             max={999}
             step={10}
