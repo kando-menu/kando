@@ -23,6 +23,10 @@ interface IProps {
   children: React.ReactNode;
   title?: string;
   maxWidth?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
 }
 
 export default (props: IProps) => {
@@ -51,7 +55,16 @@ export default (props: IProps) => {
             right={!cIsMac ? closeButton : null}
             paddingLeft={cIsMac ? 0 : 15}
           />
-          <div className={classes.content}>{props.children}</div>
+          <div
+            className={classes.content}
+            style={{
+              paddingTop: props.paddingTop,
+              paddingBottom: props.paddingBottom,
+              paddingLeft: props.paddingLeft,
+              paddingRight: props.paddingRight,
+            }}>
+            {props.children}
+          </div>
         </div>
       </div>
     </CSSTransition>
