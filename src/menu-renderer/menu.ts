@@ -227,8 +227,6 @@ export class Menu extends EventEmitter {
       `${this.settings.fadeOutDuration}ms`
     );
 
-    window.commonAPI.log('Settings updated: ' + this.settings.fadeOutDuration);
-
     this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
     this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
     this.pointerInput.dragThreshold = this.settings.dragThreshold;

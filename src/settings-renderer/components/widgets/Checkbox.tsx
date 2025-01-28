@@ -23,7 +23,7 @@ interface IProps {
 }
 
 export default (props: IProps) => {
-  const className = classes.checkbox + ' ' + (props.disabled ? classes.disabled : '');
+  const className = classes.row + ' ' + (props.disabled ? classes.disabled : '');
 
   return (
     <label className={className}>

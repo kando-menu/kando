@@ -10,7 +10,7 @@
 
 @import '../../variables.scss';
 
-.spinbutton {
+.row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,11 +18,16 @@
   color: $text-primary;
 
   input {
+    &::-webkit-inner-spin-button {
+      appearance: none;
+    }
+
     background-color: $background-secondary;
 
     color: $text-primary;
+    text-align: center;
     border: none;
-    border-radius: 5px;
+    border-radius: 0;
     font-size: inherit;
 
     padding: 5px 7px;
@@ -34,6 +39,10 @@
       opacity: 1;
     }
   }
+}
+
+.spinbutton {
+  display: flex;
 }
 
 .disabled {
