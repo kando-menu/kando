@@ -52,8 +52,8 @@ export default (props: IProps) => {
       maxWidth={500}
       paddingTop={0}
       paddingBottom={0}
-      paddingRight={5}>
-      <Scrollbox maxHeight={600}>
+      paddingRight={10}>
+      <Scrollbox maxHeight={'min(80vh, 600px)'}>
         <div
           style={{
             display: 'flex',

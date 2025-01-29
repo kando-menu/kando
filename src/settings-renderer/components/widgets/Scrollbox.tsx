@@ -14,7 +14,7 @@ import * as classes from './Scrollbox.module.scss';
 
 interface IProps {
   children: React.ReactNode;
-  maxHeight?: number;
+  maxHeight?: string | number;
 }
 
 export default (props: IProps) => {

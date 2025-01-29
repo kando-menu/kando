@@ -13,18 +13,52 @@ import React from 'react';
 import * as classes from './Button.module.scss';
 
 interface IProps {
+  /** Function to call when the button is clicked. */
   onClick?: () => void;
+
+  /** Optional icon to display inside the button. */
   icon?: React.ReactNode;
+
+  /** Optional label text to display inside the button. */
   label?: string;
+
+  /** Optional tooltip text to display when hovering over the button. */
   tooltip?: string;
-  variant?: 'secondary' | 'flat' | 'primary';
+
+  /**
+   * Variant style of the button. Primary uses a more prominent color, flat has no
+   * background. Defaults to 'secondary'.
+   */
+  variant?: 'primary' | 'secondary' | 'flat';
+
+  /** Size of the button. Defaults to 'medium'. */
   size?: 'small' | 'medium' | 'large';
+
+  /** Whether the button is disabled. Defaults to false. */
   disabled?: boolean;
+
+  /** Whether the button should take the full width of its container. Defaults to false. */
   block?: boolean;
+
+  /**
+   * Whether the button should grow to fill available space. Uses flex-grow and defaults
+   * to false.
+   */
   grow?: boolean;
+
+  /**
+   * Whether the button is part of a group of buttons. This will make the corners of only
+   * the first and last button in the group round. Defaults to false.
+   */
   grouped?: boolean;
 }
 
+/**
+ * A customizable button component.
+ *
+ * @param props - The properties for the button component.
+ * @returns A button element.
+ */
 export default (props: IProps) => {
   const className =
     classes.button +

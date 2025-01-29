@@ -14,9 +14,16 @@ import { TbInfoCircleFilled } from 'react-icons/tb';
 import * as classes from './InfoItem.module.scss';
 
 interface IProps {
-  info?: string;
+  /** Text to display in the tooltip. */
+  info: string;
 }
 
+/**
+ * A component that displays an information icon with a tooltip.
+ *
+ * @param props - The properties for the info item component.
+ * @returns An info item element.
+ */
 export default (props: IProps) => {
   return (
     <span

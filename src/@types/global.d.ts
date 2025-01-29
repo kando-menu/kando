@@ -8,10 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-declare global {
-  // These are set by webpack in webpack.plugins.ts so that we can use them in the
-  // renderer process.
-  declare const cIsMac: boolean;
-  declare const cIsWindows: boolean;
-  declare const cIsLinux: boolean;
-}
+// These are set by webpack in webpack.plugins.ts so that we can use them in the
+// renderer process.
+declare const cIsMac: boolean;
+declare const cIsWindows: boolean;
+declare const cIsLinux: boolean;

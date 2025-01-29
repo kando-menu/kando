@@ -38,17 +38,13 @@
 
   .content {
     margin: 15px 0;
-    padding-right: 4px;
+    padding-right: 10px;
   }
 
   &::-webkit-scrollbar-track {
-    background-color: rgba(128, 128, 128, 0);
+    background-color: rgba(128, 128, 128, 0.1);
     border-radius: 3px;
     margin: 15px 0;
-  }
-
-  &:hover::-webkit-scrollbar-track {
-    background-color: rgba(128, 128, 128, 0.1);
   }
 
   &::-webkit-scrollbar {
@@ -57,12 +53,8 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(128, 128, 128, 0);
-    border-radius: 3px;
-  }
-
-  &:hover::-webkit-scrollbar-thumb {
     background-color: rgba(128, 128, 128, 0.5);
+    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
