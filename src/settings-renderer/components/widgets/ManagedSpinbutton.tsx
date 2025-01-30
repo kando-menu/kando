@@ -29,6 +29,9 @@ interface IProps<K extends keyof IAppSettings> {
   /** Whether the spinbutton is disabled. Defaults to false. */
   disabled?: boolean;
 
+  /** Optional minimum width of the spinbutton. Useful to align multiple spinbuttons. */
+  width?: number;
+
   /** Optional minimum value of the spinbutton. */
   min?: number;
 
@@ -68,6 +71,7 @@ export default <K extends NumberKeys<IAppSettings>>(props: IProps<K>) => {
       label={props.label}
       info={props.info}
       initialValue={state}
+      width={props.width}
       onChange={(value) => window.commonAPI.appSettings.setKey(props.settingsKey, value)}
       disabled={props.disabled}
       min={props.min}

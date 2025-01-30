@@ -116,11 +116,6 @@ export const COMMON_WINDOW_API = {
     return ipcRenderer.invoke('common.get-menu-theme');
   },
 
-  /** This will return all available menu themes. */
-  getAllMenuThemes: (): Promise<Array<IMenuThemeDescription>> => {
-    return ipcRenderer.invoke('common.get-all-menu-themes');
-  },
-
   /**
    * This will return the accent colors of the currently used menu theme. This may depend
    * on the current system theme (light or dark).

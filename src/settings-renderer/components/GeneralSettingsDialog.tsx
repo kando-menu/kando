@@ -16,13 +16,13 @@ import React from 'react';
 import { TbReload, TbCode } from 'react-icons/tb';
 
 import Button from './widgets/Button';
-import Modal from './widgets/Modal';
-import Swirl from './widgets/Swirl';
-import Scrollbox from './widgets/Scrollbox';
-import Note from './widgets/Note';
-import ManagedSpinbutton from './widgets/ManagedSpinbutton';
 import ManagedCheckbox from './widgets/ManagedCheckbox';
 import ManagedDropdown from './widgets/ManagedDropdown';
+import ManagedSpinbutton from './widgets/ManagedSpinbutton';
+import Modal from './widgets/Modal';
+import Note from './widgets/Note';
+import Scrollbox from './widgets/Scrollbox';
+import Swirl from './widgets/Swirl';
 
 interface IProps {
   visible: boolean;
@@ -44,6 +44,9 @@ export default (props: IProps) => {
     });
   });
 
+  // We make sure that the spinbuttons have a consistent width.
+  const spinbuttonWidth = 60;
+
   return (
     <Modal
       title="General Settings"
@@ -52,7 +55,7 @@ export default (props: IProps) => {
       maxWidth={500}
       paddingTop={0}
       paddingBottom={0}
-      paddingRight={10}>
+      paddingRight={5}>
       <Scrollbox maxHeight={'min(80vh, 600px)'}>
         <div
           style={{
@@ -123,6 +126,7 @@ export default (props: IProps) => {
             label="Fade-in duration"
             info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
             settingsKey="fadeInDuration"
+            width={spinbuttonWidth}
             min={0}
             max={500}
             step={10}
@@ -131,6 +135,7 @@ export default (props: IProps) => {
             label="Fade-out duration"
             info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200ms."
             settingsKey="fadeOutDuration"
+            width={spinbuttonWidth}
             min={0}
             max={500}
             step={10}
@@ -144,6 +149,7 @@ export default (props: IProps) => {
             label="Center click zone radius"
             info="The size of the area in the middle of the menu which will either close or navigate a level up when clicked. Default is 50px."
             settingsKey="centerDeadZone"
+            width={spinbuttonWidth}
             min={0}
             max={999}
             step={50}
@@ -152,6 +158,7 @@ export default (props: IProps) => {
             label="Minimum submenu distance"
             info="If a submenu is opened close to the parent menu, the parent will be moved away to this distance. Default is 150px."
             settingsKey="minParentDistance"
+            width={spinbuttonWidth}
             min={0}
             max={999}
             step={50}
@@ -160,6 +167,7 @@ export default (props: IProps) => {
             label="Movement threshold"
             info="Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15px."
             settingsKey="dragThreshold"
+            width={spinbuttonWidth}
             min={0}
             max={999}
             step={10}
@@ -168,6 +176,7 @@ export default (props: IProps) => {
             label="Minimum Gesture Length"
             info="Straight movements must be at least this long to trigger a selection. Default is 150px."
             settingsKey="gestureMinStrokeLength"
+            width={spinbuttonWidth}
             min={0}
             max={999}
             step={50}
@@ -176,6 +185,7 @@ export default (props: IProps) => {
             label="Minimum Gesture Angle"
             info="Smaller deviations from straight movements will not trigger selections. Default is 20°."
             settingsKey="gestureMinStrokeAngle"
+            width={spinbuttonWidth}
             min={0}
             max={30}
             step={1}
@@ -184,6 +194,7 @@ export default (props: IProps) => {
             label="Minimum Gesture Angle"
             info="Smaller movements will not be considered in the gesture detection. Default is 10px."
             settingsKey="gestureJitterThreshold"
+            width={spinbuttonWidth}
             min={0}
             max={50}
             step={1}
@@ -192,6 +203,7 @@ export default (props: IProps) => {
             label="Gesture Pause Timeout"
             info="Stop your gesture for this long to trigger a selection. Default is 100ms."
             settingsKey="gesturePauseTimeout"
+            width={spinbuttonWidth}
             min={0}
             max={999}
             step={50}
@@ -200,6 +212,7 @@ export default (props: IProps) => {
             label="Fixed Stroke Length"
             info="Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px."
             settingsKey="fixedStrokeLength"
+            width={spinbuttonWidth}
             min={0}
             max={999}
             step={10}

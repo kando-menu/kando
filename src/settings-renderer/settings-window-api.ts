@@ -11,7 +11,7 @@
 import { ipcRenderer } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { IBackendInfo } from '../common';
+import { IBackendInfo, IMenuThemeDescription } from '../common';
 
 /**
  * These functions are available in the settings window's renderer process. They are
@@ -32,9 +32,19 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-backend-info');
   },
 
-  /** This will return the path to Kando's config director. */
+  /** This will return the path to Kando's config directory. */
   getConfigDirectory: (): Promise<string> => {
     return ipcRenderer.invoke('settings-window.get-config-directory');
+  },
+
+  /** This will return the path to the user's menu themes directory. */
+  getMenuThemesDirectory: (): Promise<string> => {
+    return ipcRenderer.invoke('settings-window.get-menu-themes-directory');
+  },
+
+  /** This will return all available menu themes. */
+  getAllMenuThemes: (): Promise<Array<IMenuThemeDescription>> => {
+    return ipcRenderer.invoke('settings-window.get-all-menu-themes');
   },
 
   /** This will show the web developer tools. */

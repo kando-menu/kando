@@ -313,6 +313,27 @@ export class KandoApp {
       return app.getPath('userData');
     });
 
+    // Allow the renderer to retrieve the path to the menu themes directory.
+    ipcMain.handle('settings-window.get-menu-themes-directory', () => {
+      return path.join(app.getPath('userData'), 'menu-themes');
+    });
+
+    // Allow the renderer to retrieve all available menu themes.
+    ipcMain.handle('settings-window.get-all-menu-themes', async () => {
+      const themes = await this.listSubdirectories([
+        path.join(app.getPath('userData'), 'menu-themes'),
+        path.join(__dirname, '../renderer/assets/menu-themes'),
+      ]);
+
+      // Load all descriptions in parallel.
+      const descriptions = await Promise.all(
+        themes.map((theme) => this.loadMenuThemeDescription(theme))
+      );
+
+      // Sort by the name property of the description.
+      return descriptions.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on('settings-window.show-dev-tools', () => {
       this.settingsWindow.webContents.openDevTools();
@@ -456,22 +477,6 @@ export class KandoApp {
       return this.loadMenuThemeDescription(
         this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
       );
-    });
-
-    // Allow the renderer to retrieve all available menu themes.
-    ipcMain.handle('common.get-all-menu-themes', async () => {
-      const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'menu-themes'),
-        path.join(__dirname, '../renderer/assets/menu-themes'),
-      ]);
-
-      // Load all descriptions in parallel.
-      const descriptions = await Promise.all(
-        themes.map((theme) => this.loadMenuThemeDescription(theme))
-      );
-
-      // Sort by the name property of the description.
-      return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
     // Allow the renderer to retrieve the current menu theme override colors. We return

@@ -8,44 +8,31 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@import '../../variables.scss';
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  color: $text-primary;
-
-  input {
-    &::-webkit-inner-spin-button {
-      appearance: none;
-    }
-
-    background-color: $background-secondary;
-
-    color: $text-primary;
-    text-align: center;
-    border: none;
-    border-radius: 0;
-    font-size: inherit;
-
-    padding: 4px 0px;
-    font-size: 1em;
-
-    opacity: 0.8;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-}
-
-.spinbutton {
+.container {
   display: flex;
 }
 
-.disabled {
-  pointer-events: none;
-  opacity: 0.5;
+.sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 15px;
+}
+
+.themesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.themeCard {
+  height: 300px;
+  background-color: rgba(121, 121, 121, 0.575);
+  border-radius: 5px;
+}
+
+.themePreview {
+  width: 100%;
+  aspect-ratio: 1;
 }

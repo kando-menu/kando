@@ -36,6 +36,9 @@ interface IProps {
   /** Whether the spinbutton is disabled. Defaults to false. */
   disabled?: boolean;
 
+  /** Optional minimum width of the spinbutton. Useful to align multiple spinbuttons. */
+  width?: number;
+
   /** Optional minimum value of the spinbutton. */
   min?: number;
 
@@ -113,6 +116,7 @@ export default (props: IProps) => {
           disabled={props.disabled}
           value={value}
           min={props.min}
+          style={{ width: props.width }}
           title="" // Remove the tooltip that is shown when a value is not a multiple of the step.
           max={props.max}
           step={props.step}
