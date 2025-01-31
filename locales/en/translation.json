@@ -139,8 +139,10 @@
     }
   },
   "main": {
+    "show-settings": "Show Settings",
     "un-inhibit-shortcuts": "Re-enable Shortcuts",
     "inhibit-shortcuts": "Temporarily Disable Shortcuts",
+    "quit": "Quit",
     "failed-to-start-header": "Kando failed to start"
   },
   "example-menu": {
@@ -210,8 +212,36 @@
       "shortcut-hint": "Use KDE's system settings to bind this."
     }
   },
-  "settings": {
-    "title": "Kando Settings"
+  "toolbar": {
+    "menu-themes-tab": {
+      "system-mode-subheading": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
+      "author": "by {{author}}",
+      "system-mode-subheading-dark": "Your system is currently in dark mode. The settings above will only be used in dark mode.",
+      "system-mode-subheading-light": "Your system is currently in light mode. The settings above will only be used in light mode.",
+      "hint": "You can download themes from the <a {{repositoryLink}}>theme repository</a>. You can also <a {{tutorialLink}}>learn how to create your own themes</a> and share them in <a {{discordLink}}>Kando's Discord Server</a>!",
+      "edit-colors": "Edit Colors",
+      "dark-mode": "Use Separate Themes and Colors for Light and Dark Mode",
+      "close-color-picker": "Close the color editor",
+      "reset-color-picker": "Reset all colors to their defaults",
+      "label": "Menu Themes"
+    },
+    "menus-tab": {
+      "create-menu-button": "Create a menu!",
+      "label": "Menus"
+    },
+    "templates-tab": {
+      "heading": "Drop menus and menu items here and use them as templates!",
+      "subheading": "Create copies of the stored items by moving them to the menus tab or to the preview above.",
+      "label": "Templates"
+    },
+    "add-items-tab": {
+      "label": "Menu Items"
+    },
+    "trash-tab": {
+      "label": "Trash",
+      "heading": "You can delete menus and menu items by dropping them here!",
+      "subheading": "When you restart Kando, they will be gone."
+    }
   },
   "sidebar": {
     "welcome": "Welcome to Kando!",
@@ -239,36 +269,5 @@
     "electron-version": "Electron Version",
     "chrome-version": "Chrome Version",
     "node-version": "Node Version"
-  },
-  "toolbar": {
-    "menu-themes-tab": {
-      "author": "by {{author}}",
-      "system-mode-subheading": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
-      "system-mode-subheading-dark": "Your system is currently in dark mode. The settings above will only be used in dark mode.",
-      "system-mode-subheading-light": "Your system is currently in light mode. The settings above will only be used in light mode.",
-      "hint": "You can download themes from the <a {{repositoryLink}}>theme repository</a>. You can also <a {{tutorialLink}}>learn how to create your own themes</a> and share them in <a {{discordLink}}>Kando's Discord Server</a>!",
-      "edit-colors": "Edit Colors",
-      "dark-mode": "Use Separate Themes and Colors for Light and Dark Mode",
-      "close-color-picker": "Close the color editor",
-      "reset-color-picker": "Reset all colors to their defaults",
-      "label": "Menu Themes"
-    },
-    "menus-tab": {
-      "create-menu-button": "Create a menu!",
-      "label": "Menus"
-    },
-    "templates-tab": {
-      "heading": "Drop menus and menu items here and use them as templates!",
-      "subheading": "Create copies of the stored items by moving them to the menus tab or to the preview above.",
-      "label": "Templates"
-    },
-    "add-items-tab": {
-      "label": "Menu Items"
-    },
-    "trash-tab": {
-      "label": "Trash",
-      "heading": "You can delete menus and menu items by dropping them here!",
-      "subheading": "When you restart Kando, they will be gone."
-    }
   }
 }
