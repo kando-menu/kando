@@ -9,14 +9,15 @@
 // SPDX-License-Identifier: MIT
 
 import { WindowWithAPIs } from '../settings-window-api';
-import { IMenuThemeDescription } from '../../common';
 declare const window: WindowWithAPIs;
 
-import React from 'react';
-import i18next from 'i18next';
-import { TbExternalLink, TbFolderOpen } from 'react-icons/tb';
+import React, { ReactNode } from 'react';
+import { TbExternalLink, TbFolderOpen, TbCircleCheck } from 'react-icons/tb';
+import lodash from 'lodash';
 
+import { IMenuThemeDescription } from '../../common';
 import Button from './widgets/Button';
+import ColorButton from './widgets/ColorButton';
 import Modal from './widgets/Modal';
 import Note from './widgets/Note';
 import Scrollbox from './widgets/Scrollbox';
@@ -31,70 +32,116 @@ interface IProps {
   onClose: () => void;
 }
 
+// This is called when the user clicks the "Open theme directory" button.
+const openThemeDirectory = () => {
+  window.settingsAPI
+    .getMenuThemesDirectory()
+    .then((dir) => window.open('file://' + dir, '_blank'));
+};
+
 export default (props: IProps) => {
   const [themes, setThemes] = React.useState<Array<IMenuThemeDescription>>([]);
-  const [currentTheme, setCurrentTheme] = React.useState<string>('');
-  const [currentDarkTheme, setCurrentDarkTheme] = React.useState<string>('');
   const [darkMode, setDarkMode] = React.useState<boolean>(false);
+  const [currentThemeID, setCurrentThemeID] = React.useState<string>('');
+  const [currentDarkThemeID, setCurrentDarkThemeID] = React.useState<string>('');
+  const [colors, setColors] = React.useState<Record<string, Record<string, string>>>({});
+  const [darkColors, setDarkColors] = React.useState<
+    Record<string, Record<string, string>>
+  >({});
   const [useDarkMode, setUseDarkMode] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    if (!props.visible) {
+      return;
+    }
+
     Promise.all([
       window.settingsAPI.getAllMenuThemes(),
       window.commonAPI.getIsDarkMode(),
       window.commonAPI.appSettings.getKey('menuTheme'),
       window.commonAPI.appSettings.getKey('darkMenuTheme'),
+      window.commonAPI.appSettings.getKey('menuThemeColors'),
+      window.commonAPI.appSettings.getKey('darkMenuThemeColors'),
       window.commonAPI.appSettings.getKey('enableDarkModeForMenuThemes'),
-    ]).then(([themes, darkMode, menuTheme, darkMenuTheme, useDarkMode]) => {
-      setThemes(themes);
-      setDarkMode(darkMode);
-      setCurrentTheme(menuTheme);
-      setCurrentDarkTheme(darkMenuTheme);
-      setUseDarkMode(useDarkMode);
-    });
+    ]).then(
+      ([themes, darkMode, menuTheme, darkMenuTheme, colors, darkColors, useDarkMode]) => {
+        console.log('Got themes!');
+        setThemes(themes);
+        setDarkMode(darkMode);
+        setCurrentThemeID(menuTheme);
+        setCurrentDarkThemeID(darkMenuTheme);
+        setColors(colors);
+        setDarkColors(darkColors);
+        setUseDarkMode(useDarkMode);
+      }
+    );
 
-    window.commonAPI.appSettings.onChange('menuTheme', setCurrentTheme);
-    window.commonAPI.appSettings.onChange('darkMenuTheme', setCurrentDarkTheme);
-    window.commonAPI.appSettings.onChange('enableDarkModeForMenuThemes', setUseDarkMode);
-    window.commonAPI.darkModeChanged(setDarkMode);
-  }, []);
+    const disconnectors = [
+      window.commonAPI.appSettings.onChange('menuTheme', setCurrentThemeID),
+      window.commonAPI.appSettings.onChange('darkMenuTheme', setCurrentDarkThemeID),
+      window.commonAPI.appSettings.onChange('menuThemeColors', setColors),
+      window.commonAPI.appSettings.onChange('darkMenuThemeColors', setDarkColors),
+      window.commonAPI.appSettings.onChange(
+        'enableDarkModeForMenuThemes',
+        setUseDarkMode
+      ),
+      window.commonAPI.darkModeChanged((darkMode) => {
+        console.log('Dark mode changed to', darkMode);
+        setDarkMode(darkMode);
+      }),
+    ];
 
-  // This is called when the user clicks the "Open theme directory" button.
-  const openThemeDirectory = () => {
-    window.settingsAPI
-      .getMenuThemesDirectory()
-      .then((dir) => window.open('file://' + dir, '_blank'));
-  };
+    return () => {
+      disconnectors.forEach((disconnect) => disconnect());
+    };
+  }, [props.visible]);
 
   // This is called when the user clicks on a theme. If different settings are used for
   // dark and light mode, we have to set the correct setting.
   const selectTheme = (themeID: string) => {
-    if (useDarkMode) {
-      if (darkMode && currentDarkTheme !== themeID) {
-        window.commonAPI.appSettings.setKey('darkMenuTheme', themeID);
-      }
-      if (!darkMode && currentTheme !== themeID) {
-        window.commonAPI.appSettings.setKey('menuTheme', themeID);
-      }
-    } else {
-      if (currentTheme !== themeID) {
-        window.commonAPI.appSettings.setKey('menuTheme', themeID);
-      }
-    }
+    const key = darkMode && useDarkMode ? 'darkMenuTheme' : 'menuTheme';
+    window.commonAPI.appSettings.setKey(key, themeID);
   };
 
   // Returns true if the given theme should be highlighted. This incorporates the
   // current theme and dark mode settings.
   const isSelected = (themeID: string) => {
-    if (useDarkMode) {
-      return (
-        (darkMode && currentDarkTheme === themeID) ||
-        (!darkMode && currentTheme === themeID)
-      );
-    } else {
-      return currentTheme === themeID;
-    }
+    const currentID = darkMode && useDarkMode ? currentDarkThemeID : currentThemeID;
+    return currentID === themeID;
   };
+
+  const currentTheme = themes.find((theme) => isSelected(theme.id));
+  let accentColors: ReactNode = null;
+
+  if (currentTheme && Object.keys(currentTheme.colors).length > 0) {
+    const currentColorOverrides =
+      darkMode && useDarkMode ? darkColors[currentTheme.id] : colors[currentTheme.id];
+
+    const currentColors = lodash.merge({}, currentTheme.colors, currentColorOverrides);
+    accentColors = (
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        {Object.keys(currentColors).map((key, index) => {
+          return (
+            <ColorButton
+              key={index}
+              name={key}
+              color={currentColors[key]}
+              onChange={(color) => {
+                // const newColors = { ...currentColorOverrides, [key]: color };
+                // const key =
+                //   darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
+                // window.commonAPI.appSettings.setKey(currentTheme.id, newColors);
+              }}
+            />
+          );
+        })}
+      </div>
+    );
+  } else {
+    accentColors = (
+      <Note marginTop={-10}>The selected theme does not expose any accent colors.</Note>
+    );
+  }
 
   return (
     <Modal
@@ -109,26 +156,26 @@ export default (props: IProps) => {
       <div className={classes.container}>
         <div className={classes.sidebar}>
           <Note>
-            Menu themes define how your menus look like. If you enable the option below,
-            you can choose a different theme and accent colors if your system is in dark
-            or light mode.
+            If you enable the option below, you can choose a different theme and accent
+            colors if your system is in dark or light mode.
           </Note>
-          <Swirl marginTop={10} marginBottom={20} />
           <ManagedCheckbox
             label={'Dark and light mode'}
-            info={i18next.t('toolbar.menu-themes-tab.system-mode-subheading')}
             settingsKey="enableDarkModeForMenuThemes"
           />
           <ManagedSpinbutton
             label="Menu Scale"
-            info="The scale of the menu. Default is 1."
             settingsKey="zoomFactor"
             width={40}
             min={0.5}
             max={5}
             step={0.1}
           />
+          <h1>Accent Colors</h1>
+          {accentColors}
+
           <div style={{ flexGrow: 1 }} />
+          <Swirl marginTop={10} marginBottom={20} />
           <Button
             label="Get themes online"
             icon={<TbExternalLink />}
@@ -173,14 +220,15 @@ export default (props: IProps) => {
                 <div
                   key={theme.id}
                   className={className}
+                  style={{ backgroundImage: `url("${previewPath}")` }}
                   onClick={() => selectTheme(theme.id)}>
-                  <div
-                    className={classes.themePreview}
-                    style={{ backgroundImage: `url("${previewPath}")` }}
-                  />
-
-                  <div>{theme.name}</div>
-                  <div>{theme.author}</div>
+                  {isSelected(theme.id) && (
+                    <div className={classes.selectedOverlay}>
+                      <TbCircleCheck />
+                    </div>
+                  )}
+                  <div className={classes.themeName}>{theme.name}</div>
+                  <div className={classes.themeAuthor}>by {theme.author}</div>
                 </div>
               );
             })}
