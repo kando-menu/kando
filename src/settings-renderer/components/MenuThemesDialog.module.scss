@@ -8,12 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@import '../variables.scss';
+
 .container {
   display: flex;
 }
 
 .sidebar {
-  width: 300px;
+  width: calc(200px + 10vw);
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -27,12 +29,28 @@
 }
 
 .themeCard {
-  height: 300px;
-  background-color: rgba(121, 121, 121, 0.575);
+  background-color: $background-secondary;
   border-radius: 5px;
+  overflow: hidden;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.selected {
+    border: 2px solid $text-primary;
+    opacity: 1;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 .themePreview {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 3/2;
+  background-size: cover;
+  background-position: center;
 }

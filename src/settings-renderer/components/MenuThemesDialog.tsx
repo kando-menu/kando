@@ -33,9 +33,30 @@ interface IProps {
 
 export default (props: IProps) => {
   const [themes, setThemes] = React.useState<Array<IMenuThemeDescription>>([]);
+  const [currentTheme, setCurrentTheme] = React.useState<string>('');
+  const [currentDarkTheme, setCurrentDarkTheme] = React.useState<string>('');
+  const [darkMode, setDarkMode] = React.useState<boolean>(false);
+  const [useDarkMode, setUseDarkMode] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    window.settingsAPI.getAllMenuThemes().then(setThemes);
+    Promise.all([
+      window.settingsAPI.getAllMenuThemes(),
+      window.commonAPI.getIsDarkMode(),
+      window.commonAPI.appSettings.getKey('menuTheme'),
+      window.commonAPI.appSettings.getKey('darkMenuTheme'),
+      window.commonAPI.appSettings.getKey('enableDarkModeForMenuThemes'),
+    ]).then(([themes, darkMode, menuTheme, darkMenuTheme, useDarkMode]) => {
+      setThemes(themes);
+      setDarkMode(darkMode);
+      setCurrentTheme(menuTheme);
+      setCurrentDarkTheme(darkMenuTheme);
+      setUseDarkMode(useDarkMode);
+    });
+
+    window.commonAPI.appSettings.onChange('menuTheme', setCurrentTheme);
+    window.commonAPI.appSettings.onChange('darkMenuTheme', setCurrentDarkTheme);
+    window.commonAPI.appSettings.onChange('enableDarkModeForMenuThemes', setUseDarkMode);
+    window.commonAPI.darkModeChanged(setDarkMode);
   }, []);
 
   // This is called when the user clicks the "Open theme directory" button.
@@ -43,6 +64,36 @@ export default (props: IProps) => {
     window.settingsAPI
       .getMenuThemesDirectory()
       .then((dir) => window.open('file://' + dir, '_blank'));
+  };
+
+  // This is called when the user clicks on a theme. If different settings are used for
+  // dark and light mode, we have to set the correct setting.
+  const selectTheme = (themeID: string) => {
+    if (useDarkMode) {
+      if (darkMode && currentDarkTheme !== themeID) {
+        window.commonAPI.appSettings.setKey('darkMenuTheme', themeID);
+      }
+      if (!darkMode && currentTheme !== themeID) {
+        window.commonAPI.appSettings.setKey('menuTheme', themeID);
+      }
+    } else {
+      if (currentTheme !== themeID) {
+        window.commonAPI.appSettings.setKey('menuTheme', themeID);
+      }
+    }
+  };
+
+  // Returns true if the given theme should be highlighted. This incorporates the
+  // current theme and dark mode settings.
+  const isSelected = (themeID: string) => {
+    if (useDarkMode) {
+      return (
+        (darkMode && currentDarkTheme === themeID) ||
+        (!darkMode && currentTheme === themeID)
+      );
+    } else {
+      return currentTheme === themeID;
+    }
   };
 
   return (
@@ -113,11 +164,19 @@ export default (props: IProps) => {
               if (cIsWindows) {
                 previewPath = previewPath.replace(/\\/g, '/');
               }
+
+              // Highlight the selected theme.
+              const className =
+                classes.themeCard + ' ' + (isSelected(theme.id) ? classes.selected : '');
+
               return (
-                <div key={theme.id} className={classes.themeCard}>
+                <div
+                  key={theme.id}
+                  className={className}
+                  onClick={() => selectTheme(theme.id)}>
                   <div
                     className={classes.themePreview}
-                    style={{ backgroundImage: `url(${previewPath})` }}
+                    style={{ backgroundImage: `url("${previewPath}")` }}
                   />
 
                   <div>{theme.name}</div>
