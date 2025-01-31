@@ -129,9 +129,20 @@ export const COMMON_WINDOW_API = {
     return ipcRenderer.invoke('common.get-is-dark-mode');
   },
 
-  /** This will be called by the host process when the dark mode is toggled for the system. */
-  darkModeChanged: (callback: (darkMode: boolean) => void): void => {
-    ipcRenderer.on('common.dark-mode-changed', (e, darkMode) => callback(darkMode));
+  /**
+   * This will be called by the host process when the dark mode is toggled for the system.
+   * It returns a function to disconnect the listener.
+   */
+  darkModeChanged: (callback: (darkMode: boolean) => void): (() => void) => {
+    const wrappedCallback = (event: Electron.IpcRendererEvent, darkMode: boolean) => {
+      callback(darkMode);
+    };
+
+    ipcRenderer.on('common.dark-mode-changed', wrappedCallback);
+
+    return () => {
+      ipcRenderer.off('common.dark-mode-changed', wrappedCallback);
+    };
   },
 
   /** This will return the descriptions of the currently used sound theme. */

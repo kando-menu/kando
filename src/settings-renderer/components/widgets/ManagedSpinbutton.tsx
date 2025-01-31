@@ -63,7 +63,7 @@ export default <K extends NumberKeys<IAppSettings>>(props: IProps<K>) => {
   // Fetch the initial value from the app settings and set up a listener for changes.
   React.useEffect(() => {
     window.commonAPI.appSettings.getKey(props.settingsKey).then(setState);
-    window.commonAPI.appSettings.onChange(props.settingsKey, setState);
+    return window.commonAPI.appSettings.onChange(props.settingsKey, setState);
   }, [props.settingsKey]);
 
   return (

@@ -30,20 +30,6 @@ interface IProps {
 }
 
 export default (props: IProps) => {
-  const configLinkRef = React.useRef<HTMLAnchorElement>(null);
-
-  React.useEffect(() => {
-    if (!props.visible) {
-      return;
-    }
-
-    window.settingsAPI.getConfigDirectory().then((dir) => {
-      if (configLinkRef.current) {
-        configLinkRef.current.href = 'file://' + dir;
-      }
-    });
-  });
-
   // We make sure that the spinbuttons have a consistent width.
   const spinbuttonWidth = 60;
 
@@ -55,6 +41,7 @@ export default (props: IProps) => {
       maxWidth={500}
       paddingTop={0}
       paddingBottom={0}
+      paddingLeft={5}
       paddingRight={5}>
       <Scrollbox maxHeight={'min(80vh, 600px)'}>
         <div
@@ -68,7 +55,13 @@ export default (props: IProps) => {
           <Note center>
             All settings of Kando are stored in a JSON file which you can also edit,
             share, or backup. Click{' '}
-            <a ref={configLinkRef} target="_blank">
+            <a
+              onClick={() =>
+                window.settingsAPI.getConfigDirectory().then((dir) => {
+                  window.open('file://' + dir, '_blank');
+                })
+              }
+              style={{ cursor: 'pointer' }}>
               here
             </a>{' '}
             to open the directory where the config.json file is stored.
