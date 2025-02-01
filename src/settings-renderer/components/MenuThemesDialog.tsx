@@ -125,7 +125,7 @@ export default (props: IProps) => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 10,
+          gap: 20,
           alignItems: 'center',
         }}>
         <div
@@ -206,10 +206,11 @@ export default (props: IProps) => {
             step={0.1}
           />
 
+          <div style={{ flexGrow: 1 }} />
           <h1 style={{ textAlign: 'center' }}>{currentTheme?.name} Accent Colors</h1>
           {accentColorsNode}
-
           <div style={{ flexGrow: 1 }} />
+
           <Swirl marginTop={10} marginBottom={20} />
           <Button
             label="Get themes online"
