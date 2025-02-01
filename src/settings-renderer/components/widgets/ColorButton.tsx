@@ -44,6 +44,7 @@ export default (props: IProps) => {
     <Popover
       visible={isPopoverOpen}
       onClickOutside={() => setIsPopoverOpen(false)}
+      position="bottom"
       content={
         <>
           {props.name}

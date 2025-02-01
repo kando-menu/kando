@@ -24,6 +24,9 @@ interface IProps {
   /** Content to display inside the popover. */
   content: React.ReactNode;
 
+  /** Where the popover should be positioned. Defaults to 'top'. */
+  position?: 'top' | 'bottom';
+
   /** The popover target. It will be used to position the popover relative to it. */
   children: React.ReactNode;
 }
@@ -47,25 +50,33 @@ export default (props: IProps) => {
       return;
     }
 
-    // Position the popover above the target element.
+    // Position the popover above or below the target element.
     const triangleSize = 10;
+    const windowPadding = 10;
     const targetRect = popoverTarget.current.getBoundingClientRect();
     const contentRect = popoverContent.current.getBoundingClientRect();
-    const yDiff = targetRect.top - contentRect.height - triangleSize;
     const xDiff = targetRect.left - contentRect.width / 2 + targetRect.width / 2;
 
-    // Clamp to window bounds left and right. Vertical position is not clamped yet,
-    // ideally we would position the popover below the target element if there is not
-    // // enough space above it.
-    const windowPadding = 10;
+    // Clamp to window bounds left and right.
     const clampedXDiff = Math.max(
       windowPadding,
       Math.min(window.innerWidth - contentRect.width - windowPadding, xDiff)
     );
 
+    let yDiff = 0;
+
+    if (props.position === 'bottom') {
+      yDiff = targetRect.bottom + triangleSize;
+      popoverTriangle.current.classList.add(classes.top);
+      popoverTriangle.current.classList.remove(classes.bottom);
+    } else {
+      yDiff = targetRect.top - contentRect.height - triangleSize;
+      popoverTriangle.current.classList.add(classes.bottom);
+      popoverTriangle.current.classList.remove(classes.top);
+    }
+
     popoverContent.current.style.top = `${yDiff}px`;
     popoverContent.current.style.left = `${clampedXDiff}px`;
-    popoverTriangle.current.style.top = `${contentRect.height - 1}px`;
     popoverTriangle.current.style.left = `${contentRect.width / 2 - triangleSize + xDiff - clampedXDiff}px`;
 
     // Dismiss the popover when the user clicks outside of it.
