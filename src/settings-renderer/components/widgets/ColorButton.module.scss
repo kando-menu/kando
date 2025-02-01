@@ -21,6 +21,10 @@
     border-color: light-dark(black, white);
   }
 
+  &:active {
+    transform: translateY(1px);
+  }
+
   .color {
     position: relative;
     width: 80%;
@@ -52,10 +56,37 @@
   }
 }
 
+.colorInput {
+  background-color: $background-secondary;
+
+  color: $text-primary;
+  text-align: center;
+  border: none;
+  font-size: inherit;
+  border-radius: 0 0 4px 4px;
+  width: 100%;
+
+  padding: 4px 0px;
+  font-size: 1em;
+
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.popoverHeader {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 15px;
+  color: white;
+}
+
 :global(.react-colorful__saturation) {
   border-radius: 4px 4px 0 0 !important;
 }
 
 :global(.react-colorful__last-control) {
-  border-radius: 0 0 4px 4px !important;
+  border-radius: 0 !important;
 }

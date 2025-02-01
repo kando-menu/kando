@@ -34,21 +34,47 @@ interface IProps {
  */
 export default (props: IProps) => {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [color, setColor] = React.useState(chroma(props.color).css());
+  const [cssColor, setCSSColor] = React.useState(chroma(props.color).css());
+  const [inputColor, setInputColor] = React.useState(chroma(props.color).css());
 
   React.useEffect(() => {
-    setColor(chroma(props.color).css());
+    setCSSColor(chroma(props.color).css());
+    setInputColor(chroma(props.color).css());
   }, [props.color]);
 
   return (
     <Popover
       visible={isPopoverOpen}
-      onClickOutside={() => setIsPopoverOpen(false)}
+      onClickOutside={() => {
+        if (props.onChange) {
+          props.onChange(cssColor);
+        }
+        setIsPopoverOpen(false);
+      }}
       position="bottom"
       content={
         <>
-          {props.name}
-          <RgbaStringColorPicker color={color} onChange={setColor} />
+          {props.name && <div className={classes.popoverHeader}>{props.name}</div>}
+          <RgbaStringColorPicker
+            color={cssColor}
+            onChange={(newColor) => {
+              setCSSColor(newColor);
+              setInputColor(newColor);
+            }}
+          />
+          <input
+            type="text"
+            value={inputColor}
+            onChange={(event) => {
+              setInputColor(event.target.value);
+              try {
+                setCSSColor(chroma(event.target.value).css());
+              } catch (e) {
+                // ignore
+              }
+            }}
+            className={classes.colorInput}
+          />
         </>
       }>
       <div
@@ -56,7 +82,7 @@ export default (props: IProps) => {
         data-tooltip-id="main-tooltip"
         data-tooltip-content={props.name}
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
-        <div className={classes.color} style={{ backgroundColor: color }} />
+        <div className={classes.color} style={{ backgroundColor: cssColor }} />
       </div>
     </Popover>
   );

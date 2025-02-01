@@ -110,34 +110,69 @@ export default (props: IProps) => {
   };
 
   const currentTheme = themes.find((theme) => isSelected(theme.id));
-  let accentColors: ReactNode = null;
+  let accentColorsNode: ReactNode = null;
 
   if (currentTheme && Object.keys(currentTheme.colors).length > 0) {
-    const currentColorOverrides =
-      darkMode && useDarkMode ? darkColors[currentTheme.id] : colors[currentTheme.id];
+    const currentColorOverrides = darkMode && useDarkMode ? darkColors : colors;
 
-    const currentColors = lodash.merge({}, currentTheme.colors, currentColorOverrides);
-    accentColors = (
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        {Object.keys(currentColors).map((key, index) => {
-          return (
-            <ColorButton
-              key={index}
-              name={key}
-              color={currentColors[key]}
-              onChange={(color) => {
-                // const newColors = { ...currentColorOverrides, [key]: color };
-                // const key =
-                //   darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
-                // window.commonAPI.appSettings.setKey(currentTheme.id, newColors);
-              }}
-            />
-          );
-        })}
+    const currentColors = lodash.merge(
+      {},
+      currentTheme.colors,
+      currentColorOverrides[currentTheme.id]
+    );
+    accentColorsNode = (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+          alignItems: 'center',
+        }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 10,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}>
+          {Object.keys(currentColors).map((key, index) => {
+            return (
+              <ColorButton
+                key={index}
+                name={key}
+                color={currentColors[key]}
+                onChange={(color) => {
+                  if (!currentColorOverrides[currentTheme.id]) {
+                    currentColorOverrides[currentTheme.id] = {};
+                  }
+
+                  currentColorOverrides[currentTheme.id][key] = color;
+                  const settingsKey =
+                    darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
+                  window.commonAPI.appSettings.setKey(settingsKey, currentColorOverrides);
+                }}
+              />
+            );
+          })}
+        </div>
+        <Button
+          label="Reset Colors"
+          size="small"
+          onClick={() => {
+            if (darkMode && useDarkMode) {
+              delete darkColors[currentTheme.id];
+            } else {
+              delete colors[currentTheme.id];
+            }
+            const settingsKey =
+              darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
+            window.commonAPI.appSettings.setKey(settingsKey, darkColors);
+          }}
+        />
       </div>
     );
   } else {
-    accentColors = (
+    accentColorsNode = (
       <Note marginTop={-10}>The selected theme does not expose any accent colors.</Note>
     );
   }
@@ -155,8 +190,8 @@ export default (props: IProps) => {
       <div className={classes.container}>
         <div className={classes.sidebar}>
           <Note>
-            If you enable the option below, you can choose a different theme and accent
-            colors if your system is in dark or light mode.
+            If you enable the option below, you can choose a different theme if your
+            system is in dark or light mode.
           </Note>
           <ManagedCheckbox
             label={'Dark and light mode'}
@@ -170,8 +205,9 @@ export default (props: IProps) => {
             max={5}
             step={0.1}
           />
-          <h1>Accent Colors</h1>
-          {accentColors}
+
+          <h1 style={{ textAlign: 'center' }}>{currentTheme?.name} Accent Colors</h1>
+          {accentColorsNode}
 
           <div style={{ flexGrow: 1 }} />
           <Swirl marginTop={10} marginBottom={20} />
