@@ -65,7 +65,6 @@ export default (props: IProps) => {
       window.commonAPI.appSettings.getKey('enableDarkModeForMenuThemes'),
     ]).then(
       ([themes, darkMode, menuTheme, darkMenuTheme, colors, darkColors, useDarkMode]) => {
-        console.log('Got themes!');
         setThemes(themes);
         setDarkMode(darkMode);
         setCurrentThemeID(menuTheme);

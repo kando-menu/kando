@@ -51,3 +51,11 @@
     }
   }
 }
+
+:global(.react-colorful__saturation) {
+  border-radius: 4px 4px 0 0 !important;
+}
+
+:global(.react-colorful__last-control) {
+  border-radius: 0 0 4px 4px !important;
+}

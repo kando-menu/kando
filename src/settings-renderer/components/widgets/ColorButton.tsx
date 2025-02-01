@@ -10,8 +10,10 @@
 
 import React from 'react';
 import { RgbaStringColorPicker } from 'react-colorful';
+import chroma from 'chroma-js';
 
 import * as classes from './ColorButton.module.scss';
+import Popover from './Popover';
 
 interface IProps {
   /** Function to call when the color is changed. */
@@ -32,19 +34,29 @@ interface IProps {
  */
 export default (props: IProps) => {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [color, setColor] = React.useState(props.color);
+  const [color, setColor] = React.useState(chroma(props.color).css());
 
   React.useEffect(() => {
-    setColor(props.color);
+    setColor(chroma(props.color).css());
   }, [props.color]);
 
   return (
-    <div
-      className={classes.colorButton}
-      data-tooltip-id="main-tooltip"
-      data-tooltip-content={props.name}
-      onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
-      <div className={classes.color} style={{ backgroundColor: color }} />
-    </div>
+    <Popover
+      visible={isPopoverOpen}
+      onClickOutside={() => setIsPopoverOpen(false)}
+      content={
+        <>
+          {props.name}
+          <RgbaStringColorPicker color={color} onChange={setColor} />
+        </>
+      }>
+      <div
+        className={classes.colorButton}
+        data-tooltip-id="main-tooltip"
+        data-tooltip-content={props.name}
+        onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
+        <div className={classes.color} style={{ backgroundColor: color }} />
+      </div>
+    </Popover>
   );
 };

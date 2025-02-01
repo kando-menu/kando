@@ -110,8 +110,8 @@ export default () => {
           visible={themesVisible}
           onClose={() => setThemesVisible(false)}
         />
-        <Tooltip id="main-tooltip" delayShow={500} />
       </div>
+      <Tooltip id="main-tooltip" delayShow={500} />
     </>
   );
 };

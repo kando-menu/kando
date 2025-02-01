@@ -8,24 +8,31 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.container {
+@import '../../variables.scss';
+
+.popover {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
+  padding: 5px;
+  border-radius: 6px;
+  background-color: black;
 
-  display: flex;
-
-  &:not(.transparent) {
-    background: url('../../../assets/images/settings-bg-01.webp');
-    background-color: light-dark(#fff8, #0004);
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: overlay;
-  }
+  transition: opacity 200ms;
+  opacity: 0;
 }
 
-:global(.react-tooltip) {
-  z-index: 1000;
+.popoverTriangle {
+  position: absolute;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid black;
+}
+
+:global(.popover-enter),
+:global(.popover-enter-done) {
+  &.popover {
+    opacity: 1;
+  }
 }
