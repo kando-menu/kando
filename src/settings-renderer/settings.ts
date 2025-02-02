@@ -14,7 +14,7 @@ import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
-import { IAppSettings, IBackendInfo, IMenuSettings, IVersionInfo } from '../common';
+import { IAppSettings, IBackendInfo, IMenuSettings } from '../common';
 import { DnDManager } from './common/dnd-manager';
 
 /**
@@ -89,8 +89,7 @@ export class Settings {
     appSettings: IAppSettings,
     menuSettings: IMenuSettings,
     currentMenu: number,
-    backend: IBackendInfo,
-    version: IVersionInfo
+    backend: IBackendInfo
   ) {
     this.container = container;
     this.backend = backend;

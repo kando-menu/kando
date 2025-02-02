@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from './menu-window-api';
-declare const window: WindowWithAPIs;
-
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';

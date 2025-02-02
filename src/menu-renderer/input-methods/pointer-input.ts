@@ -271,8 +271,14 @@ export class PointerInput extends InputMethod {
    * @param event The keyboard event.
    */
   public onKeyUpEvent(event: KeyboardEvent) {
+    // On some (all?) Linux environments, event.metaKey is not false even if the key has
+    // been released with this event. Therefore, we explicitly check if the key was
+    // released: https://github.com/kando-menu/kando/issues/788
     const stillAnyModifierPressed =
-      event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+      event.ctrlKey ||
+      (event.key === 'Meta' ? false : event.metaKey) ||
+      event.shiftKey ||
+      event.altKey;
 
     if (!stillAnyModifierPressed) {
       this.anyKeyPressed = false;

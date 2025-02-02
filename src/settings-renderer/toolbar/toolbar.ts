@@ -116,7 +116,6 @@ export class Toolbar extends EventEmitter {
 
   /** This method loads the HTML content of the toolbar. */
   private loadContent() {
-    const emptyTab = require('./templates/empty-tab.hbs');
     const toolbar = require('./templates/toolbar.hbs');
 
     this.container = document.createElement('div');
