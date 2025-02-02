@@ -24,21 +24,20 @@
     appearance: none;
     margin: 0;
 
-    background-color: $text-secondary;
+    background-color: color-mix(in srgb, $text-secondary 40%, transparent);
     width: 1.5em;
     height: 1.5em;
-    opacity: 0.4;
     border-radius: 50%;
 
     &::before {
-      content: '';
+      content: '✔';
       display: block;
-      width: 1.5em;
-      height: 1.5em;
+      margin-top: -0.3em;
+      margin-left: 0.075em;
       transform: scale(0);
       transition: 120ms transform ease-in-out;
-      border-radius: 50%;
-      background-color: $link;
+      color: $link;
+      font-size: 2em;
     }
 
     &:checked::before {
@@ -46,15 +45,11 @@
     }
 
     &:hover {
-      opacity: 0.5;
+      background-color: color-mix(in srgb, $text-secondary 50%, transparent);
     }
 
     &:active {
       transform: translateY(1px);
-    }
-
-    &:checked {
-      opacity: 1;
     }
   }
 }
