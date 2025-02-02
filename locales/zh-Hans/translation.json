@@ -7,7 +7,9 @@
         "is-running-message": "点击托盘图标以查看选项！",
         "failed-to-start-header": "Kando 启动失败",
         "un-inhibit-shortcuts": "重新启用快捷键",
-        "inhibit-shortcuts": "暂时禁用快捷键"
+        "inhibit-shortcuts": "暂时禁用快捷键",
+        "show-settings": "显示设置窗口",
+        "quit": "退出"
     },
     "sidebar": {
         "welcome": "欢迎使用 Kando！",
@@ -85,7 +87,7 @@
         },
         "uri": {
             "tip-1": "使用 http:// 协议来打开网站。",
-            "description": "打开文件或网页。",
+            "description": "打开网页或调用其它URI方案。",
             "tip-3": "使用 mailto: 协议来打开邮箱。",
             "uri": "URI",
             "uri-hint": "该链接将被打开。",
@@ -93,13 +95,20 @@
             "tip-4": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
             "tip-5": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
             "tip-6": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
-            "tip-2": "使用 file:// 协议来打开文件和文件夹。"
+            "tip-2": "您可以使用它来调用自定义URI方案，如 slack:// 或 zoommtg:// 。"
         },
         "text": {
             "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。",
             "placeholder": "插入任意文本…",
             "name": "粘贴文本",
             "description": "插入给定文本。"
+        },
+        "file": {
+            "name": "打开文件",
+            "description": "打开一个文件或文件夹。",
+            "file": "文件路径",
+            "file-hint": "该目标将被打开。",
+            "tip-1": "您可以使用此菜单项打开文件或文件夹。"
         }
     },
     "properties": {
