@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React, {ReactNode} from 'react';
+import React, { ReactNode } from 'react';
 
 import * as classes from './Preview.module.scss';
 
@@ -17,7 +17,5 @@ interface IProps {
 }
 
 export default (props: IProps) => {
-  return <div className={classes.preview}>
-    {props.header}
-  </div>;
+  return <div className={classes.preview}>{props.header}</div>;
 };
