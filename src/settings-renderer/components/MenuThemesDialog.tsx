@@ -13,6 +13,7 @@ declare const window: WindowWithAPIs;
 
 import React, { ReactNode } from 'react';
 import { TbExternalLink, TbFolderOpen, TbCircleCheck } from 'react-icons/tb';
+import { RiResetLeftLine } from 'react-icons/ri';
 import lodash from 'lodash';
 
 import { IMenuThemeDescription } from '../../common';
@@ -121,19 +122,34 @@ export default (props: IProps) => {
       currentColorOverrides[currentTheme.id]
     );
     accentColorsNode = (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 20,
-          alignItems: 'center',
-        }}>
+      <>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+          }}>
+          <h1>Accent Colors</h1>
+          <Button
+            label="Reset"
+            icon={<RiResetLeftLine />}
+            onClick={() => {
+              if (darkMode && useDarkMode) {
+                delete darkColors[currentTheme.id];
+              } else {
+                delete colors[currentTheme.id];
+              }
+              const settingsKey =
+                darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
+              window.commonAPI.appSettings.setKey(settingsKey, darkColors);
+            }}
+          />
+        </div>
         <div
           style={{
             display: 'flex',
             gap: 10,
             flexWrap: 'wrap',
-            justifyContent: 'center',
           }}>
           {Object.keys(currentColors).map((key, index) => {
             return (
@@ -155,25 +171,14 @@ export default (props: IProps) => {
             );
           })}
         </div>
-        <Button
-          label="Reset Colors"
-          size="small"
-          onClick={() => {
-            if (darkMode && useDarkMode) {
-              delete darkColors[currentTheme.id];
-            } else {
-              delete colors[currentTheme.id];
-            }
-            const settingsKey =
-              darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
-            window.commonAPI.appSettings.setKey(settingsKey, darkColors);
-          }}
-        />
-      </div>
+      </>
     );
   } else {
     accentColorsNode = (
-      <Note marginTop={-10}>The selected theme does not expose any accent colors.</Note>
+      <>
+        <h1>Accent Colors</h1>
+        <Note marginTop={-10}>The selected theme does not expose any accent colors.</Note>
+      </>
     );
   }
 
@@ -206,8 +211,6 @@ export default (props: IProps) => {
             step={0.1}
           />
 
-          <div style={{ flexGrow: 1 }} />
-          <h1 style={{ textAlign: 'center' }}>{currentTheme?.name} Accent Colors</h1>
           {accentColorsNode}
           <div style={{ flexGrow: 1 }} />
 
