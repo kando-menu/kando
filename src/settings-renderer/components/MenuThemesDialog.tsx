@@ -194,7 +194,7 @@ export default (props: IProps) => {
       paddingRight={5}>
       <div className={classes.container}>
         <div className={classes.sidebar}>
-          <Note>
+          <Note marginTop={-6}>
             If you enable the option below, you can choose a different theme if your
             system is in dark or light mode.
           </Note>
