@@ -17,7 +17,6 @@ import { MenusTab } from './menus-tab';
 import { TrashTab } from './trash-tab';
 import { TemplatesTab } from './templates-tab';
 import { DnDManager } from '../common/dnd-manager';
-import { MenuThemesTab } from './menu-themes-tab';
 
 /**
  * This class is responsible for the toolbar on the bottom of the settings screen. It is
@@ -49,9 +48,6 @@ export class Toolbar extends EventEmitter {
   /** This manages the templates tab of the toolbar. */
   private templatesTab: TemplatesTab = null;
 
-  /** This manages the menu themes tab of the toolbar. */
-  private menuThemesTab: MenuThemesTab = null;
-
   /**
    * This constructor creates the HTML elements for the toolbar and wires up all the
    * functionality.
@@ -82,9 +78,6 @@ export class Toolbar extends EventEmitter {
       !backend.supportsShortcuts,
       dndManager
     );
-
-    // Initialize the menu themes tab and forward its events.
-    this.menuThemesTab = new MenuThemesTab(this.container);
   }
 
   /** This method returns the container of the settings toolbar. */
@@ -102,7 +95,6 @@ export class Toolbar extends EventEmitter {
   public init(menuSettings: IMenuSettings, currentMenu: number) {
     this.menusTab.init(menuSettings, currentMenu);
     this.templatesTab.init(menuSettings);
-    this.menuThemesTab.init();
   }
 
   /**
