@@ -72,11 +72,11 @@ export class ItemTypeRegistry {
    * instance of this class.
    */
   private constructor() {
+    this.types.set('submenu', new SubmenuItemType());
     this.types.set('command', new CommandItemType());
     this.types.set('file', new FileItemType());
     this.types.set('hotkey', new HotkeyItemType());
     this.types.set('macro', new MacroItemType());
-    this.types.set('submenu', new SubmenuItemType());
     this.types.set('text', new TextItemType());
     this.types.set('uri', new URIItemType());
   }

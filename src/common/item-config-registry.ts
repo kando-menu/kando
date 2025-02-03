@@ -57,11 +57,11 @@ export class ItemConfigRegistry {
    * instance of this class.
    */
   private constructor() {
+    this.configs.set('submenu', new SubmenuItemConfig());
     this.configs.set('command', new CommandItemConfig());
     this.configs.set('file', new FileItemConfig());
     this.configs.set('hotkey', new HotkeyItemConfig());
     this.configs.set('macro', new MacroItemConfig());
-    this.configs.set('submenu', new SubmenuItemConfig());
     this.configs.set('text', new TextItemConfig());
     this.configs.set('uri', new URIItemConfig());
   }
