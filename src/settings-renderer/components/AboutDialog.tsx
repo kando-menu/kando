@@ -12,7 +12,7 @@ import { WindowWithAPIs } from '../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
-import { TbExternalLink } from 'react-icons/tb';
+import { TbExternalLink, TbInfoSquareRoundedFilled } from 'react-icons/tb';
 
 import Swirl from './widgets/Swirl';
 import Modal from './widgets/Modal';
@@ -45,6 +45,7 @@ export default (props: IProps) => {
   return (
     <Modal
       title="About Kando"
+      icon={<TbInfoSquareRoundedFilled />}
       visible={props.visible}
       onClose={props.onClose}
       maxWidth={500}>

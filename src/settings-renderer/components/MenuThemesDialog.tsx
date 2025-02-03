@@ -12,8 +12,13 @@ import { WindowWithAPIs } from '../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React, { ReactNode } from 'react';
-import { TbExternalLink, TbFolderOpen, TbCircleCheck } from 'react-icons/tb';
-import { RiResetLeftLine } from 'react-icons/ri';
+import {
+  TbExternalLink,
+  TbFolderOpen,
+  TbCircleCheck,
+  TbPaletteFilled,
+} from 'react-icons/tb';
+import { RiDeleteBack2Fill } from 'react-icons/ri';
 import lodash from 'lodash';
 
 import { IMenuThemeDescription } from '../../common';
@@ -123,16 +128,52 @@ export default (props: IProps) => {
     );
     accentColorsNode = (
       <>
+        <h1>
+          Theme Colors
+          {useDarkMode ? (darkMode ? ' (Dark Mode)' : ' (Light Mode)') : ''}
+        </h1>
+        <Note marginTop={-10}>
+          The set of available accent colors depends on the selected theme.
+        </Note>
         <div
           style={{
             display: 'flex',
+            gap: 10,
             justifyContent: 'space-between',
-            alignItems: 'baseline',
           }}>
-          <h1>Accent Colors</h1>
+          <div
+            style={{
+              display: 'flex',
+              gap: 10,
+              flexWrap: 'wrap',
+            }}>
+            {Object.keys(currentColors).map((key, index) => {
+              return (
+                <ColorButton
+                  key={index}
+                  name={key}
+                  color={currentColors[key]}
+                  onChange={(color) => {
+                    if (!currentColorOverrides[currentTheme.id]) {
+                      currentColorOverrides[currentTheme.id] = {};
+                    }
+
+                    currentColorOverrides[currentTheme.id][key] = color;
+                    const settingsKey =
+                      darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
+                    window.commonAPI.appSettings.setKey(
+                      settingsKey,
+                      currentColorOverrides
+                    );
+                  }}
+                />
+              );
+            })}
+          </div>
           <Button
-            label="Reset"
-            icon={<RiResetLeftLine />}
+            icon={<RiDeleteBack2Fill />}
+            size="small"
+            tooltip="Reset colors to theme defaults."
             onClick={() => {
               if (darkMode && useDarkMode) {
                 delete darkColors[currentTheme.id];
@@ -145,46 +186,23 @@ export default (props: IProps) => {
             }}
           />
         </div>
-        <div
-          style={{
-            display: 'flex',
-            gap: 10,
-            flexWrap: 'wrap',
-          }}>
-          {Object.keys(currentColors).map((key, index) => {
-            return (
-              <ColorButton
-                key={index}
-                name={key}
-                color={currentColors[key]}
-                onChange={(color) => {
-                  if (!currentColorOverrides[currentTheme.id]) {
-                    currentColorOverrides[currentTheme.id] = {};
-                  }
-
-                  currentColorOverrides[currentTheme.id][key] = color;
-                  const settingsKey =
-                    darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
-                  window.commonAPI.appSettings.setKey(settingsKey, currentColorOverrides);
-                }}
-              />
-            );
-          })}
-        </div>
       </>
     );
   } else {
     accentColorsNode = (
       <>
-        <h1>Accent Colors</h1>
+        <h1>Theme Colors</h1>
         <Note marginTop={-10}>The selected theme does not expose any accent colors.</Note>
       </>
     );
   }
 
+  const spinbuttonWidth = 40;
+
   return (
     <Modal
       title="Menu Themes"
+      icon={<TbPaletteFilled />}
       visible={props.visible}
       onClose={props.onClose}
       maxWidth={1200}
@@ -195,26 +213,46 @@ export default (props: IProps) => {
       <div className={classes.container}>
         <div className={classes.sidebar}>
           <Note marginTop={-6}>
-            If you enable the option below, you can choose a different theme if your
-            system is in dark or light mode.
+            The options below are used regardless of the selected theme.
           </Note>
-          <ManagedCheckbox
-            label={'Dark and light mode'}
-            settingsKey="enableDarkModeForMenuThemes"
+
+          <ManagedSpinbutton
+            label="Fade-in time"
+            info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
+            settingsKey="fadeInDuration"
+            width={spinbuttonWidth}
+            min={0}
+            max={500}
+            step={10}
           />
           <ManagedSpinbutton
-            label="Menu Scale"
+            label="Fade-out time"
+            info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200ms."
+            settingsKey="fadeOutDuration"
+            width={spinbuttonWidth}
+            min={0}
+            max={500}
+            step={10}
+          />
+          <ManagedSpinbutton
+            label="Menu scale"
+            info="A global scale factor for all menus. Default is 1."
             settingsKey="zoomFactor"
-            width={40}
+            width={spinbuttonWidth}
             min={0.5}
             max={5}
             step={0.1}
+          />
+          <ManagedCheckbox
+            label={'Dark and light mode'}
+            info="If enabled, you can choose a different theme and a different set of accent colors if your system is currently in dark or light mode."
+            settingsKey="enableDarkModeForMenuThemes"
           />
 
           {accentColorsNode}
           <div style={{ flexGrow: 1 }} />
 
-          <Swirl marginTop={10} marginBottom={20} />
+          <Swirl width={280} marginTop={10} marginBottom={20} />
           <Button
             label="Get themes online"
             icon={<TbExternalLink />}

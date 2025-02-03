@@ -13,7 +13,7 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 
-import { TbReload, TbCode } from 'react-icons/tb';
+import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
 
 import Button from './widgets/Button';
 import ManagedCheckbox from './widgets/ManagedCheckbox';
@@ -36,6 +36,7 @@ export default (props: IProps) => {
   return (
     <Modal
       title="General Settings"
+      icon={<TbSettingsFilled />}
       visible={props.visible}
       onClose={props.onClose}
       maxWidth={500}
@@ -114,24 +115,6 @@ export default (props: IProps) => {
             label="Right mouse button selects parent"
             info="If unchecked, the right mouse button will close the menu instead."
             settingsKey="rmbSelectsParent"
-          />
-          <ManagedSpinbutton
-            label="Fade-in duration"
-            info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
-            settingsKey="fadeInDuration"
-            width={spinbuttonWidth}
-            min={0}
-            max={500}
-            step={10}
-          />
-          <ManagedSpinbutton
-            label="Fade-out duration"
-            info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200ms."
-            settingsKey="fadeOutDuration"
-            width={spinbuttonWidth}
-            min={0}
-            max={500}
-            step={10}
           />
 
           <h1>Advanced Menu Options</h1>

@@ -51,7 +51,7 @@ export default (props: IProps) => {
         }
         setIsPopoverOpen(false);
       }}
-      position="bottom"
+      position="top"
       content={
         <>
           {props.name && <div className={classes.popoverHeader}>{props.name}</div>}

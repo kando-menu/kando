@@ -36,6 +36,9 @@ interface IProps {
    */
   title?: string;
 
+  /** Optional icon to display next to the title. */
+  icon?: React.ReactNode;
+
   /** Maximum width of the modal. */
   maxWidth?: number;
 
@@ -69,6 +72,15 @@ export default (props: IProps) => {
     <Button icon={<RiCloseLargeFill />} onClick={props.onClose} variant="flat" />
   );
 
+  // Both the title and the icon are optional. If no title is provided, only the icon will
+  // be displayed. If no icon is provided, only the title will be displayed.
+  const title = (
+    <div className={classes.title}>
+      {props.icon}
+      {props.title}
+    </div>
+  );
+
   return (
     <CSSTransition
       in={props.visible}
@@ -85,8 +97,8 @@ export default (props: IProps) => {
           style={{ maxWidth: props.maxWidth }}>
           <Headerbar
             transparent
-            left={cIsMac ? closeButton : props.title}
-            center={cIsMac ? props.title : null}
+            left={cIsMac ? closeButton : title}
+            center={cIsMac ? title : null}
             right={!cIsMac ? closeButton : null}
             // The macOS header bar has no padding on the left side as there is the close
             // button. On other platforms, there is some padding on the left side as there
