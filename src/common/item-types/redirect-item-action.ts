@@ -31,13 +31,17 @@ export class RedirectItemAction implements IItemAction {
 
   /**
    * Opens the menu.
-   * 
+   *
    * @param item The item for which the action should be executed.
    * @param backend The backend which is currently in use.
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns A promise which resolves when the menu has been successfully opened.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo): Promise<void> {
+  async execute(
+    item: DeepReadonly<IMenuItem>,
+    backend: Backend,
+    wmInfo: WMInfo
+  ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
         let menu = (item.data as IItemData).menu;
@@ -54,7 +58,7 @@ export class RedirectItemAction implements IItemAction {
           reject(new Error(errorMessage));
           return;
         }
-        
+
         // Try calling showMenu and catch any potential errors
         try {
           kando.showMenu({
@@ -69,7 +73,6 @@ export class RedirectItemAction implements IItemAction {
           this.showError(errorMessage, error.toString());
           reject(error);
         }
-
       } catch (error) {
         const errorMessage = 'Unexpected error in execute';
         console.error(errorMessage + ':', error);
@@ -81,6 +84,7 @@ export class RedirectItemAction implements IItemAction {
 
   /**
    * Show error notifications using Electron's Notification API.
+   *
    * @param message The title/message for the notification.
    * @param error The error details to show.
    */

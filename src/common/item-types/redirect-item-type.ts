@@ -14,9 +14,9 @@ import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 /**
- * For this type of menu items, the user can configure a menu that will be opened
- * when the item is clicked. If the `delayed` flag is set, the menu will be opened
- * after the Kando window has been closed.
+ * For this type of menu items, the user can configure a menu that will be opened when the
+ * item is clicked. If the `delayed` flag is set, the menu will be opened after the Kando
+ * window has been closed.
  */
 export interface IItemData {
   menu: string;

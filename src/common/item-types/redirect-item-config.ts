@@ -32,15 +32,17 @@ export class RedirectItemConfig implements IItemConfig {
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
     // Add the checkbox for the delayed execution mode.
     const fragment = utils.renderTemplate(
-        require('../../renderer/editor/properties/templates/text-option.hbs'),
-        {
-          placeholder: i18next.t('items.common.not-configured'),
-          label: i18next.t('items.redirect.redirect'),
-          hint: i18next.t('items.redirect.redirect-hint'),
-        }
+      require('../../renderer/editor/properties/templates/text-option.hbs'),
+      {
+        placeholder: i18next.t('items.common.not-configured'),
+        label: i18next.t('items.redirect.redirect'),
+        hint: i18next.t('items.redirect.redirect-hint'),
+      }
     );
 
-    const RedirectInput = fragment.querySelector('input[type="text"]') as HTMLInputElement;
+    const RedirectInput = fragment.querySelector(
+      'input[type="text"]'
+    ) as HTMLInputElement;
     RedirectInput.value = (item.data as IItemData).menu || '';
 
     // Listen for changes and update the item.
