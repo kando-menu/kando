@@ -91,7 +91,7 @@ export class RedirectItemAction implements IItemAction {
       const notification = new Notification({
         title: message + '.',
         body: error,
-        icon: path.join(__dirname, require('../../assets/icons/icon.png')),
+        icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
       });
 
       notification.show();
