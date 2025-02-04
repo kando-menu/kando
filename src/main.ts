@@ -89,6 +89,8 @@ app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 // Create the app and initialize it as soon as electron is ready.
 const kando = new KandoApp();
 
+export { kando };
+
 // This function is called when the app or a second instance is started with command line
 // arguments. It returns true a option was passed that was handled by the app.
 const handleCommandLine = (options: CLIOptions) => {

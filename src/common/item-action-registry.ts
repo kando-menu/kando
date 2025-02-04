@@ -17,6 +17,7 @@ import { HotkeyItemAction } from './item-types/hotkey-item-action';
 import { MacroItemAction } from './item-types/macro-item-action';
 import { TextItemAction } from './item-types/text-item-action';
 import { URIItemAction } from './item-types/uri-item-action';
+import { RedirectItemAction } from './item-types/redirect-item-action';
 import { DeepReadonly } from '../main/settings';
 
 /**
@@ -74,6 +75,7 @@ export class ItemActionRegistry {
     this.actions.set('macro', new MacroItemAction());
     this.actions.set('text', new TextItemAction());
     this.actions.set('uri', new URIItemAction());
+    this.actions.set('redirect', new RedirectItemAction());
   }
 
   /**
