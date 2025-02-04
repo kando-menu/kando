@@ -40,14 +40,14 @@ export class RedirectItemConfig implements IItemConfig {
       }
     );
 
-    const RedirectInput = fragment.querySelector(
+    const redirectInput = fragment.querySelector(
       'input[type="text"]'
     ) as HTMLInputElement;
-    RedirectInput.value = (item.data as IItemData).menu || '';
+    redirectInput.value = (item.data as IItemData).menu || '';
 
     // Listen for changes and update the item.
-    RedirectInput.addEventListener('input', () => {
-      (item.data as IItemData).menu = RedirectInput.value;
+    redirectInput.addEventListener('input', () => {
+      (item.data as IItemData).menu = redirectInput.value;
     });
 
     return fragment;
