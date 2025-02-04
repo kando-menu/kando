@@ -26,7 +26,7 @@ export class RedirectItemAction implements IItemAction {
     item: DeepReadonly<IMenuItem>,
     _backend: Backend, // eslint-disable-line @typescript-eslint/no-unused-vars
     _wmInfo: WMInfo // eslint-disable-line @typescript-eslint/no-unused-vars
-  ): Promise<void> {  
+  ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
         const menu = (item.data as IItemData).menu;
