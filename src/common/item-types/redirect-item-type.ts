@@ -19,7 +19,6 @@ import { IItemType } from '../item-type-registry';
  */
 export interface IItemData {
   menu: string;
-  delayed: boolean;
 }
 
 /** This class provides meta information for menu items that execute a command. */
