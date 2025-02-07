@@ -42,7 +42,6 @@ export class RedirectItemType implements IItemType {
   get defaultData(): IItemData {
     return {
       menu: '',
-      delayed: false,
     };
   }
 
