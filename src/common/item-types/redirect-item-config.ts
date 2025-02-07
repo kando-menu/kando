@@ -30,7 +30,6 @@ export class RedirectItemConfig implements IItemConfig {
 
   /** @inheritdoc */
   public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    // Add the checkbox for the delayed execution mode.
     const fragment = utils.renderTemplate(
       require('../../renderer/editor/properties/templates/text-option.hbs'),
       {
