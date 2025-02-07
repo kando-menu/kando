@@ -15,7 +15,7 @@ import { IItemConfig } from '../item-config-registry';
 import { IItemData } from './redirect-item-type';
 import * as utils from './utils';
 
-/** This class provides the configuration widgets for command items. */
+/** This class provides the configuration widgets for redirect items. */
 export class RedirectItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(): string {
