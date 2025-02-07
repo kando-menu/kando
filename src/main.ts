@@ -93,10 +93,7 @@ const kando = new KandoApp();
 // arguments. It returns true a option was passed that was handled by the app.
 const handleCommandLine = (options: CLIOptions) => {
   if (options.menu) {
-    kando.showMenu({
-      trigger: '',
-      name: options.menu,
-    });
+    kando.showMenu({ name: options.menu });
     return true;
   }
 
@@ -164,7 +161,7 @@ app
     handleCommandLine(options);
   })
   .catch((error) => {
-    KandoApp.showError(i18next.t('main.failed-to-start-header'), error.message);
+    KandoApp.showError(i18next.t('main.failed-to-start-header'), error.message || error);
     app.quit();
     process.exitCode = 1;
   });
