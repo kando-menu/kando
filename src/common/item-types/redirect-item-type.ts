@@ -21,7 +21,7 @@ export interface IItemData {
   menu: string;
 }
 
-/** This class provides meta information for menu items that execute a command. */
+/** This class provides meta information for menu items that open another menu. */
 export class RedirectItemType implements IItemType {
   get hasChildren(): boolean {
     return false;
