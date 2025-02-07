@@ -33,11 +33,13 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The Windows installer now shows a custom gif animation instead of the default Squirrel animation.
 - The Windows installer now uses the new Kando icon instead of the default Electron icon.
 - On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
+- The `--menu` command line flag will now produce an error message if the specified menu does not exist. Before, it would just open the first menu.
 
 #### :bug: Fixed
 
 - A bug which caused a black menu background on Linux when auto-starting Kando on login. The solution involves that the menu window is now initialized lazily. This means, that the first time a menu is opened, it may take a little longer to appear. But this should only happen once per session.
 - Simulating <kbd>Numpad Subtract</kbd> on Windows.
+- Selecting items with Turbo-Mode involving the <kbd>Meta</kbd> key on Linux. Thanks to [@gb2dev](https://github.com/gb2dev) for the fix!
 
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
 

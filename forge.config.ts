@@ -28,9 +28,7 @@ const makerZIP = new MakerZIP({});
 
 // This is used to create the macOS DMG file. See the link below for the available options.
 // https://js.electronforge.io/interfaces/_electron_forge_maker_dmg.MakerDMGConfig.html
-const makerDMG = new MakerDMG({
-  appPath: '', // https://github.com/electron/forge/issues/3712
-});
+const makerDMG = new MakerDMG({});
 
 // This is used to create the DEB package for Linux. See the link below for the available options.
 // https://js.electronforge.io/interfaces/_electron_forge_maker_deb.InternalOptions.MakerDebConfigOptions.html

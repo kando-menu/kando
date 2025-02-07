@@ -291,27 +291,49 @@ export class KandoApp {
   }
 
   /**
-   * This chooses the correct menu depending on environment.
+   * This chooses the correct menu depending on the environment.
+   *
+   * If the request contains a menu name, this menu is chosen. If no menu with the given
+   * name is found, an exception is thrown. No other conditions are checked in this case.
+   *
+   * If the request contains a trigger (shortcut or shortcutID), a list of menus bound to
+   * this trigger is assembled and the menu with the best matching conditions is chosen.
+   * If no menu with the given trigger is found, null is returned.
+   *
+   * If neither a menu name nor a trigger is given, null is returned.
    *
    * @param request Required information to select correct menu.
-   * @param info Informations about current desktop environment.
+   * @param info Information about current desktop environment.
    * @returns The selected menu or null if no menu was found.
    */
-  public chooseMenu(request: IShowMenuRequest, info: WMInfo) {
-    // Score of currently selected menu
-    let currentScore = 0;
-    // Temporary selected menu
-    let selectedMenu: DeepReadonly<IMenu>;
+  public chooseMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
     // Get list of current menus.
     const menus = this.menuSettings.get('menus');
 
-    for (const menu of menus) {
-      let menuScore = 0;
-      // We check if request has menu name, and if it matches checked menu.
-      // If that's the case we return it as chosen menu, there's no need to check rest.
-      if (request.name && request.name == menu.root.name) {
+    // We check if the request has a menu name. If that's the case we return it as chosen
+    // menu, there's no need to check the rest.
+    if (request.name != null) {
+      const menu = menus.find((m) => m.root.name === request.name);
+      if (menu) {
         return menu;
       }
+
+      throw new Error(`Menu with name "${request.name}" not found.`);
+    }
+
+    // If no trigger is given, we can stop here.
+    if (request.trigger == null) {
+      return null;
+    }
+
+    // Score of currently selected menu.
+    let currentScore = 0;
+
+    // Currently best matching menu.
+    let selectedMenu: DeepReadonly<IMenu>;
+
+    for (const menu of menus) {
+      let menuScore = 0;
 
       // Then we check if menu trigger matches our request, if not we skip this menu.
       if (request.trigger != menu.shortcut && request.trigger != menu.shortcutID) {
@@ -384,14 +406,14 @@ export class KandoApp {
       }
 
       // If our menuScore is higher than currentScore we need to select this menu
-      // As it matches more conditions than previous selection
+      // as it matches more conditions than the previous selection.
       if (menuScore > currentScore) {
         selectedMenu = menu;
         currentScore = menuScore;
       }
     }
 
-    // We finally return our last selected menu as choosen.
+    // We finally return our last selected menu as chosen.
     return selectedMenu;
   }
 
@@ -402,7 +424,7 @@ export class KandoApp {
    *
    * @param request Required information to select correct menu.
    */
-  public showMenu(request: IShowMenuRequest) {
+  public showMenu(request: Partial<IShowMenuRequest>) {
     Promise.all([this.backend.getWMInfo(), this.initWindow()])
       .then(([info]) => {
         // Select correct menu before showing it to user.
@@ -441,12 +463,7 @@ export class KandoApp {
         ) {
           this.backend.bindShortcut({
             trigger: oldTrigger,
-            action: () => {
-              this.showMenu({
-                trigger: oldTrigger,
-                name: '',
-              });
-            },
+            action: () => this.showMenu({ trigger: oldTrigger }),
           });
         }
 
@@ -540,8 +557,8 @@ export class KandoApp {
         // a notification to the user. This notification is only shown once per app start.
         this.updateChecker.checkForUpdates();
       })
-      .catch((err) => {
-        console.error('Failed to show menu: ' + err);
+      .catch((error) => {
+        KandoApp.showError('Failed to show menu', error.message || error);
       });
   }
 
@@ -924,7 +941,7 @@ export class KandoApp {
           execute(item);
         }
       } catch (error) {
-        KandoApp.showError('Failed to select item', error.message);
+        KandoApp.showError('Failed to select item', error.message || error);
       }
 
       // Also wait with the execution of the selected action until the fade-out
@@ -981,15 +998,10 @@ export class KandoApp {
       try {
         await this.backend.bindShortcut({
           trigger,
-          action: () => {
-            this.showMenu({
-              trigger: trigger,
-              name: '',
-            });
-          },
+          action: () => this.showMenu({ trigger: trigger }),
         });
       } catch (error) {
-        KandoApp.showError('Failed to bind shortcut ' + trigger, error.message);
+        KandoApp.showError('Failed to bind shortcut ' + trigger, error.message || error);
       }
     }
 
@@ -1069,12 +1081,7 @@ export class KandoApp {
           : menu.shortcutID) || i18next.t('properties.common.not-bound');
       template.push({
         label: `${menu.root.name} (${trigger})`,
-        click: () => {
-          this.showMenu({
-            trigger: '',
-            name: menu.root.name,
-          });
-        },
+        click: () => this.showMenu({ name: menu.root.name }),
       });
     }
 
@@ -1082,7 +1089,7 @@ export class KandoApp {
 
     // Add an entry to show the editor.
     template.push({
-      label: 'Show Settings',
+      label: i18next.t('main.show-settings'),
       click: () => this.showEditor(),
     });
 
@@ -1111,7 +1118,7 @@ export class KandoApp {
 
     // Add an entry to quit the application.
     template.push({
-      label: 'Quit',
+      label: i18next.t('main.quit'),
       role: 'quit',
     });
 

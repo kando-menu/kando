@@ -13,9 +13,6 @@ import i18next from 'i18next';
 import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
-/** For submenu items, no additional data is required. */
-export interface IItemData {}
-
 /** This class provides meta information for submenu items. */
 export class SubmenuItemType implements IItemType {
   get hasChildren(): boolean {
@@ -34,7 +31,7 @@ export class SubmenuItemType implements IItemType {
     return 'material-symbols-rounded';
   }
 
-  get defaultData(): IItemData {
+  get defaultData() {
     return {};
   }
 

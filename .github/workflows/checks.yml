@@ -5,7 +5,6 @@ name: Checks
 
 on:
   pull_request:
-    types: [opened, reopened]
   push:
     branches:
       - '**'
@@ -14,6 +13,8 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    # Do only run on pushes to the main repository or on pull requests from forks. This avoids running the tests twice on pull requests from the main repository.
+    if: (github.event_name == 'push' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,6 +30,8 @@ jobs:
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
+    # Do only run on pushes to the main repository or on pull requests from forks. This avoids running the tests twice on pull requests from the main repository.
+    if: (github.event_name == 'push' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,6 +47,8 @@ jobs:
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
+    # Do only run on pushes to the main repository or on pull requests from forks. This avoids running the tests twice on pull requests from the main repository.
+    if: (github.event_name == 'push' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -59,6 +64,8 @@ jobs:
   reuse:
     name: REUSE
     runs-on: ubuntu-latest
+    # Do only run on pushes to the main repository or on pull requests from forks. This avoids running the tests twice on pull requests from the main repository.
+    if: (github.event_name == 'push' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     steps:
       - uses: actions/checkout@v4
       - name: REUSE Compliance Check

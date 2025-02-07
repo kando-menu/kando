@@ -4,9 +4,6 @@ SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-<img src="img/banner02.png"></img>
-
-
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
@@ -135,6 +132,3 @@ enforcement ladder](https://github.com/mozilla/diversity).
 For answers to common questions about this code of conduct, see the FAQ at
 https://www.contributor-covenant.org/faq. Translations are available at
 https://www.contributor-covenant.org/translations.
-
-
-<p align="center"><img src ="img/hr.svg" /></p>
