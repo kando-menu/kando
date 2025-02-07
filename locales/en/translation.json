@@ -37,9 +37,9 @@
       "description": "Types a keyboard macro."
     },
     "redirect": {
-      "tip-1": "Use Consistent Letter Case for Menu Names",
-      "tip-2": "Avoid Empty or Undefined Menu Names",
-      "tip-3": "Avoid Recursive Redirects",
+      "tip-1": "Use consistent letter case for menu names.",
+      "tip-2": "Avoid empty or undefined menu names.",
+      "tip-3": "Avoid recursive redirects.",
       "redirect": "Redirect",
       "redirect-hint": "This menu will be opened",
       "name": "Redirect",
