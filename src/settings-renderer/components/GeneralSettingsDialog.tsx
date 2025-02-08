@@ -112,6 +112,11 @@ export default (props: IProps) => {
             settingsKey="enableTurboMode"
           />
           <ManagedCheckbox
+            label="Require click for Hover Mode selections"
+            info="If unchecked, items will be selected immediately when the mouse is moved over them for menus using Hover Mode."
+            settingsKey="hoverModeNeedsConfirmation"
+          />
+          <ManagedCheckbox
             label="Right mouse button selects parent"
             info="If unchecked, the right mouse button will close the menu instead."
             settingsKey="rmbSelectsParent"
