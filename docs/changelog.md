@@ -41,6 +41,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A bug which caused a black menu background on Linux when auto-starting Kando on login. The solution involves that the menu window is now initialized lazily. This means, that the first time a menu is opened, it may take a little longer to appear. But this should only happen once per session.
 - Simulating <kbd>Numpad Subtract</kbd> on Windows.
 - Selecting items with Turbo-Mode involving the <kbd>Meta</kbd> key on Linux. Thanks to [@gb2dev](https://github.com/gb2dev) for the fix!
+- The appearance of the application icon on KDE. The SVG variant of the icon contained clipping paths which are not supported by KDE.
 
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
 

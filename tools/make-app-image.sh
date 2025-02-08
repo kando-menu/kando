@@ -54,7 +54,7 @@ mkdir -p usr/share/metainfo
 mkdir -p usr/share/applications
 cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.desktop" usr/share/applications/
 ln -s usr/share/applications/menu.kando.Kando.desktop ./menu.kando.Kando.desktop
-cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.svg" .
+cp "$SCRIPT_DIR/../assets/icons/icon.svg" ./menu.kando.Kando.svg
 cp "$SCRIPT_DIR/../assets/icons/icon.png" ./menu.kando.Kando.png
 
 # Create the AppRun file.
