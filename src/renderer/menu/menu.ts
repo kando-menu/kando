@@ -248,6 +248,9 @@ export class Menu extends EventEmitter {
     this.pointerInput.enableTurboMode =
       this.options.enableTurboMode && !showMenuOptions.anchoredMode;
 
+    // Enable hover mode if configured for the menu.
+    this.pointerInput.enableHoverMode = showMenuOptions.hoverMode;
+
     this.root = root;
     this.setupPaths(this.root);
     this.setupAngles(this.root);

@@ -552,6 +552,7 @@ export class KandoApp {
             centeredMode: this.lastMenu.centered,
             anchoredMode: this.lastMenu.anchored,
             warpMouse: this.lastMenu.warpMouse,
+            hoverMode: this.lastMenu.hoverMode,
           },
           {
             appName: info.appName,

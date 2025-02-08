@@ -101,6 +101,8 @@
     "advanced-options": {
       "heading": "Tweak the Menu's Behavior",
       "subheading": "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a {{- link}}>here</a>.",
+      "hover-mode": "Hover Mode",
+      "hover-mode-hint": "For power users only! Select items by hovering over them.",
       "centered-mode": "Centered Mode",
       "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
       "warp-mouse": "Warp Mouse in Centered Mode",
