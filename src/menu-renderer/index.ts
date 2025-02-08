@@ -103,6 +103,7 @@ Promise.all([
   window.commonAPI.appSettings.onChange('fadeOutDuration', updateSettings);
   window.commonAPI.appSettings.onChange('enableMarkingMode', updateSettings);
   window.commonAPI.appSettings.onChange('enableTurboMode', updateSettings);
+  window.commonAPI.appSettings.onChange('hoverModeNeedsConfirmation', updateSettings);
   window.commonAPI.appSettings.onChange('gestureMinStrokeLength', updateSettings);
   window.commonAPI.appSettings.onChange('gestureMinStrokeAngle', updateSettings);
   window.commonAPI.appSettings.onChange('gestureJitterThreshold', updateSettings);

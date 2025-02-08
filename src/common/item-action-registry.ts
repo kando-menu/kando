@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IMenuItem } from './index';
-import { Backend, WMInfo } from '../main/backends/backend';
+import { KandoApp } from '../main/app';
 
 import { CommandItemAction } from './item-types/command-item-action';
 import { FileItemAction } from './item-types/file-item-action';
@@ -17,6 +17,7 @@ import { HotkeyItemAction } from './item-types/hotkey-item-action';
 import { MacroItemAction } from './item-types/macro-item-action';
 import { TextItemAction } from './item-types/text-item-action';
 import { URIItemAction } from './item-types/uri-item-action';
+import { RedirectItemAction } from './item-types/redirect-item-action';
 import { DeepReadonly } from '../main/utils/settings';
 
 /**
@@ -40,16 +41,11 @@ export interface IItemAction {
    * This will be called when the menu item is executed.
    *
    * @param item The menu item which is executed.
-   * @param backend The backend which is currently used. Use this to call system-dependent
-   *   functions.
-   * @param wmInfo Information on the window-manager state when the menu was opened.
+   * @param app The app which executed the action. Use this to retrieve information about
+   *   the current state of the app, the used backend, etc.
    * @returns A promise which resolves when the action has been successfully executed.
    */
-  execute: (
-    item: DeepReadonly<IMenuItem>,
-    backend: Backend,
-    wmInfo: WMInfo
-  ) => Promise<void>;
+  execute: (item: DeepReadonly<IMenuItem>, app: KandoApp) => Promise<void>;
 }
 
 /**
@@ -74,6 +70,7 @@ export class ItemActionRegistry {
     this.actions.set('macro', new MacroItemAction());
     this.actions.set('text', new TextItemAction());
     this.actions.set('uri', new URIItemAction());
+    this.actions.set('redirect', new RedirectItemAction());
   }
 
   /**
@@ -105,12 +102,11 @@ export class ItemActionRegistry {
    * This method executes the action of the given menu item.
    *
    * @param item The menu item which is executed.
-   * @param backend The backend which is currently used.
-   * @param wmInfo Information on the window-manager state when the menu was opened.
+   * @param app The app which executed the action.
    * @returns A promise which resolves when the action has been successfully executed.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo) {
-    return this.getAction(item.type).execute(item, backend, wmInfo);
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
+    return this.getAction(item.type).execute(item, app);
   }
 
   /**

@@ -388,6 +388,12 @@ export interface IMenu {
   anchored: boolean;
 
   /**
+   * If true, the menu will be in "hover mode". This means that the menu items can be
+   * selected by only hovering over them.
+   */
+  hoverMode: boolean;
+
+  /**
    * Conditions are matched before showing a menu. The one that has more conditions and
    * met them all is selected.
    */
@@ -408,6 +414,7 @@ export function deepCopyMenu(menu: IMenu): IMenu {
     centered: menu.centered,
     warpMouse: menu.warpMouse,
     anchored: menu.anchored,
+    hoverMode: menu.hoverMode,
     conditions: structuredClone(menu.conditions),
   };
 }
@@ -453,6 +460,12 @@ export interface IShowMenuOptions {
    * opened at the same position as the parent menu.
    */
   anchoredMode: boolean;
+
+  /**
+   * If this is set, the menu will be in "hover mode". This means that the menu items can
+   * be selected by only hovering over them.
+   */
+  hoverMode: boolean;
 }
 
 /**
@@ -582,6 +595,9 @@ export interface IAppSettings {
    * key.
    */
   enableTurboMode: boolean;
+
+  /** If enabled, menus using the hover mode require a final click for selecting items. */
+  hoverModeNeedsConfirmation: boolean;
 
   /** Shorter gestures will not lead to selections. */
   gestureMinStrokeLength: number;

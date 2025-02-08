@@ -10,9 +10,9 @@
 
 import { IMenuItem, IKeySequence } from '../index';
 import { IItemAction } from '../item-action-registry';
-import { Backend } from '../../main/backends/backend';
 import { DeepReadonly } from '../../main/utils/settings';
 import { IItemData } from './hotkey-item-type';
+import { KandoApp } from '../../main/app';
 
 /** This action simulates key presses. It can be used to simulate hotkeys. */
 export class HotkeyItemAction implements IItemAction {
@@ -33,11 +33,10 @@ export class HotkeyItemAction implements IItemAction {
    * pressed in the correct order.
    *
    * @param item The item for which the action should be executed.
-   * @param backend The backend which is currently used. This is used to simulate the key
-   *   presses.
+   * @param app The app which executed the action.
    * @returns A promise which resolves when the hotkey has been successfully simulated.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
     return new Promise<void>((resolve, reject) => {
       const keyNames = (item.data as IItemData).hotkey.split('+');
 
@@ -57,7 +56,7 @@ export class HotkeyItemAction implements IItemAction {
       }
 
       // Finally, we simulate the key presses using the backend.
-      backend.simulateKeys(keys).then(resolve, reject);
+      app.getBackend().simulateKeys(keys).then(resolve, reject);
     });
   }
 }

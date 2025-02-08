@@ -8,12 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { shell } from 'electron';
+
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/utils/settings';
 import { IItemData } from './uri-item-type';
-import { WMInfo, Backend } from '../../main/backends/backend';
-import { shell } from 'electron';
+import { WMInfo } from '../../main/backends/backend';
+import { KandoApp } from '../../main/app';
 
 /**
  * This action opens URIs with the default application. This can be used to open for
@@ -49,12 +51,12 @@ export class URIItemAction implements IItemAction {
    * Opens the URI with the default application.
    *
    * @param item The item for which the action should be executed.
-   * @param wmInfo Information about the window manager state when the menu was opened.
+   * @param app The app which executed the action.
    * @returns A promise which resolves when the URI has been successfully opened.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo) {
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
     let uri = (item.data as IItemData).uri;
-    uri = this.replacePlaceholders(uri, wmInfo);
+    uri = this.replacePlaceholders(uri, app.getLastWMInfo());
     return shell.openExternal(uri);
   }
 }

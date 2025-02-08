@@ -165,6 +165,11 @@ export class Menu extends EventEmitter {
     this.pointerInput.enableTurboMode =
       this.settings.enableTurboMode && !showMenuOptions.anchoredMode;
 
+    // Enable hover mode if configured for the menu.
+    this.pointerInput.enableHoverMode = showMenuOptions.hoverMode;
+    this.pointerInput.hoverModeNeedsConfirmation =
+      this.settings.hoverModeNeedsConfirmation;
+
     this.root = root;
     this.setupPaths(this.root);
     this.setupAngles(this.root);
@@ -227,6 +232,10 @@ export class Menu extends EventEmitter {
     this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
     this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
     this.pointerInput.dragThreshold = this.settings.dragThreshold;
+    this.pointerInput.hoverModeNeedsConfirmation =
+      this.settings.hoverModeNeedsConfirmation;
+
+    console.log(this.pointerInput.hoverModeNeedsConfirmation);
 
     this.pointerInput.gestureDetector.minStrokeLength =
       this.settings.gestureMinStrokeLength;
@@ -765,28 +774,21 @@ export class Menu extends EventEmitter {
       this.latestInput.distance < this.settings.centerDeadZone
     ) {
       this.dragItem(null);
-      this.updateConnectors();
     }
 
     // Abort item dragging if the mouse button was released.
     if (this.latestInput.button === ButtonState.eReleased && this.draggedItem) {
       this.dragItem(null);
-      this.updateConnectors();
     }
 
     // Un-click an item if mouse button was released.
     if (this.latestInput.button === ButtonState.eReleased && this.clickedItem) {
       this.clickItem(null);
-      this.updateConnectors();
     }
 
     // Update all transformations.
     this.updateTransform();
-
-    // If there is a item dragged around, we also have to redraw the connectors.
-    if (this.draggedItem) {
-      this.updateConnectors();
-    }
+    this.updateConnectors();
   }
 
   /**
@@ -857,10 +859,7 @@ export class Menu extends EventEmitter {
 
         for (let j = 0; j < item.children?.length; ++j) {
           const child = item.children[j] as IRenderedMenuItem;
-          if (
-            child === this.draggedItem &&
-            this.latestInput.button === ButtonState.eDragged
-          ) {
+          if (child === this.draggedItem || child === this.clickedItem) {
             child.position = this.latestInput.relativePosition;
             child.nodeDiv.style.transform = `translate(${child.position.x}px, ${child.position.y}px)`;
           } else {
@@ -894,10 +893,12 @@ export class Menu extends EventEmitter {
 
       // For the last element in the selection chain (which is the currently active menu
       // item displayed in the center), we only draw a connector if one of its children is
-      // currently dragged around or clicked. When clicked, the connector will be drawn
+      // currently dragged around or clicked. Otherwise, the connector will be drawn
       // with length 0 - hence it's invisible but we use it to rotate the connector to the
-      // correct angle. Once the item is selected, the connector will be drawn with the
-      // correct length.
+      // hovered child so that it will point about in the right direction when it becomes
+      // visible.
+      let drawConnector = true;
+
       if (i === this.selectionChain.length - 1) {
         if (this.isChildOfCenterItem(this.draggedItem)) {
           nextItem = this.draggedItem;
@@ -906,6 +907,11 @@ export class Menu extends EventEmitter {
         if (!nextItem && this.isChildOfCenterItem(this.clickedItem)) {
           nextItem = this.clickedItem;
         }
+
+        if (!nextItem && this.isChildOfCenterItem(this.hoveredItem)) {
+          nextItem = this.hoveredItem;
+          drawConnector = false;
+        }
       }
 
       if (nextItem) {
@@ -913,7 +919,7 @@ export class Menu extends EventEmitter {
         let angle = nextItem.angle;
 
         if (nextItem.position) {
-          length = math.getLength(nextItem.position);
+          length = drawConnector ? math.getLength(nextItem.position) : 0;
           angle = math.getAngle(nextItem.position);
         }
 

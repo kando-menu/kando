@@ -32,6 +32,7 @@ import {
 import { Settings, DeepReadonly } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
+import { WMInfo } from './backends/backend';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -81,6 +82,9 @@ export class KandoApp {
    */
   private menuSettings: Settings<IMenuSettings>;
 
+  /** This contains the last WMInfo which was received. */
+  private lastWMInfo?: WMInfo;
+
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
     // Bail out if the backend is not available.
@@ -117,6 +121,7 @@ export class KandoApp {
         fadeOutDuration: 200,
         enableMarkingMode: true,
         enableTurboMode: true,
+        hoverModeNeedsConfirmation: false,
         gestureMinStrokeLength: 150,
         gestureMinStrokeAngle: 20,
         gestureJitterThreshold: 10,
@@ -243,20 +248,64 @@ export class KandoApp {
   }
 
   /**
+   * Allow access to the app settings object.
+   *
+   * @returns The app settings object.
+   */
+  public getAppSettings() {
+    return this.appSettings;
+  }
+
+  /**
+   * Allow access to the menu settings object.
+   *
+   * @returns The menu settings object.
+   */
+  public getMenuSettings() {
+    return this.menuSettings;
+  }
+
+  /**
+   * Allow access to the backend object.
+   *
+   * @returns The backend object.
+   */
+  public getBackend() {
+    return this.backend;
+  }
+
+  /**
+   * Allow access to the last WMInfo object.
+   *
+   * @returns The last WMInfo object.
+   */
+  public getLastWMInfo() {
+    return this.lastWMInfo;
+  }
+
+  /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
    *
    * @param request Required information to select correct menu.
    */
-  public async showMenu(request: IShowMenuRequest) {
+  public async showMenu(request: Partial<IShowMenuRequest>) {
     // Create and load the main window if it does not exist yet.
     if (!this.menuWindow) {
-      this.menuWindow = new MenuWindow(this.appSettings, this.menuSettings, this.backend);
+      this.menuWindow = new MenuWindow(this);
       await this.menuWindow.load();
     }
 
-    this.menuWindow.showMenu(request);
+    this.backend
+      .getWMInfo()
+      .then((info) => {
+        this.lastWMInfo = info;
+        this.menuWindow.showMenu(request, info);
+      })
+      .catch((error) =>
+        Notification.showError('Failed to show menu', error.message || error)
+      );
   }
 
   /**
@@ -590,10 +639,7 @@ export class KandoApp {
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {
-          this.showMenu({
-            trigger: '',
-            name: menu.root.name,
-          });
+          this.showMenu({ name: menu.root.name });
 
           // We use the opportunity to check for updates. If an update is available, we show
           // a notification to the user. This notification is only shown once per app start.
@@ -680,10 +726,7 @@ export class KandoApp {
         await this.backend.bindShortcut({
           trigger,
           action: () => {
-            this.showMenu({
-              trigger: trigger,
-              name: '',
-            });
+            this.showMenu({ trigger: trigger });
 
             // We use the opportunity to check for updates. If an update is available, we show
             // a notification to the user. This notification is only shown once per app start.
@@ -691,7 +734,10 @@ export class KandoApp {
           },
         });
       } catch (error) {
-        Notification.showError('Failed to bind shortcut ' + trigger, error.message);
+        Notification.showError(
+          'Failed to bind shortcut ' + trigger,
+          error.message || error
+        );
       }
     }
 
@@ -1006,7 +1052,7 @@ export class KandoApp {
       }
     }
 
-    // Up to Kando 1.7.0, there was a settings.editorOptions.showEditorButtonVisible
+    // Up to Kando 1.8.0, there was a settings.editorOptions.showEditorButtonVisible
     // property. This was changed to settings.hideSettingsButton.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1017,7 +1063,7 @@ export class KandoApp {
       }
     }
 
-    // Up to Kando 1.7.0, there was a settings.sidebarVisible property. This was removed.
+    // Up to Kando 1.8.0, there was a settings.sidebarVisible property. This was removed.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const settings = this.appSettings.getMutable() as any;
@@ -1026,7 +1072,7 @@ export class KandoApp {
       }
     }
 
-    // Up to Kando 1.7.0, the following properties were stored in a settings.menuOptions
+    // Up to Kando 1.8.0, the following properties were stored in a settings.menuOptions
     // object. Later they became top-level properties.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1039,6 +1085,8 @@ export class KandoApp {
         settings.fadeOutDuration = settings.menuOptions.fadeOutDuration;
         settings.enableMarkingMode = settings.menuOptions.enableMarkingMode;
         settings.enableTurboMode = settings.menuOptions.enableTurboMode;
+        settings.hoverModeNeedsConfirmation =
+          settings.menuOptions.hoverModeNeedsConfirmation;
         settings.gestureMinStrokeLength = settings.menuOptions.gestureMinStrokeLength;
         settings.gestureMinStrokeAngle = settings.menuOptions.gestureMinStrokeAngle;
         settings.gestureJitterThreshold = settings.menuOptions.gestureJitterThreshold;

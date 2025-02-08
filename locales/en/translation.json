@@ -102,6 +102,15 @@
       "name": "Simulate Macro",
       "description": "Types a keyboard macro."
     },
+    "redirect": {
+      "tip-1": "Use consistent letter case for menu names.",
+      "tip-2": "Avoid empty or undefined menu names.",
+      "tip-3": "Avoid recursive redirects.",
+      "redirect": "Redirect",
+      "redirect-hint": "This menu will be opened",
+      "name": "Redirect",
+      "description": "Opens another menu"
+    },
     "submenu": {
       "tip-1": "Submenus can be used to group items.",
       "tip-2": "You can also nest submenus inside of submenus.",
@@ -142,8 +151,8 @@
     "show-settings": "Show Settings",
     "un-inhibit-shortcuts": "Re-enable Shortcuts",
     "inhibit-shortcuts": "Temporarily Disable Shortcuts",
-    "quit": "Quit",
-    "failed-to-start-header": "Kando failed to start"
+    "failed-to-start-header": "Kando failed to start",
+    "quit": "Quit"
   },
   "example-menu": {
     "name": "Example Menu",

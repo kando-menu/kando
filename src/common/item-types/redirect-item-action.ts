@@ -5,20 +5,18 @@
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: yar2001T <https://github.com/yar2000T>
 // SPDX-License-Identifier: MIT
-
-import { shell } from 'electron';
 
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/utils/settings';
-import { IItemData } from './file-item-type';
+import { IItemData } from './redirect-item-type';
+import { KandoApp } from '../../main/app';
 
-/** This action opens files with the default application. */
-export class FileItemAction implements IItemAction {
+export class RedirectItemAction implements IItemAction {
   /**
-   * Files are opened immediately.
+   * Redirects are always opened immediately.
    *
    * @returns False
    */
@@ -27,13 +25,19 @@ export class FileItemAction implements IItemAction {
   }
 
   /**
-   * Opens a file with the default application.
+   * This method opens the specified menu.
    *
    * @param item The item for which the action should be executed.
-   * @returns A promise which resolves when the file has been opened.
+   * @param app The app which executed the action.
+   * @returns A promise which resolves when the macro has been successfully simulated.
    */
-  async execute(item: DeepReadonly<IMenuItem>) {
-    await shell.openPath((item.data as IItemData).path);
-    return;
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
+    const menu = (item.data as IItemData).menu;
+
+    if (menu === '') {
+      throw new Error('Menu name should not be empty!');
+    }
+
+    app.showMenu({ name: menu });
   }
 }

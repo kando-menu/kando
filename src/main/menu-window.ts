@@ -11,18 +11,12 @@
 import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
-import { Settings, DeepReadonly } from './utils/settings';
-import {
-  IMenuSettings,
-  IAppSettings,
-  IShowMenuRequest,
-  IMenu,
-  IMenuItem,
-} from '../common';
-import { Backend } from './backends';
+import { DeepReadonly } from './utils/settings';
+import { IShowMenuRequest, IMenu, IMenuItem } from '../common';
 import { WMInfo } from './backends/backend';
 import { ItemActionRegistry } from '../common/item-action-registry';
 import { Notification } from './utils/notification';
+import { KandoApp } from './app';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MENU_WINDOW_WEBPACK_ENTRY: string;
@@ -38,9 +32,6 @@ export class MenuWindow extends BrowserWindow {
    */
   public lastMenu?: DeepReadonly<IMenu>;
 
-  /** This contains the last WMInfo which was received. */
-  private lastWMInfo?: WMInfo;
-
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
     ipcMain.on('menu-window.ready', () => {
@@ -51,11 +42,7 @@ export class MenuWindow extends BrowserWindow {
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
 
-  constructor(
-    private appSettings: Settings<IAppSettings>,
-    private menuSettings: Settings<IMenuSettings>,
-    private backend: Backend
-  ) {
+  constructor(private kando: KandoApp) {
     const display = screen.getPrimaryDisplay();
 
     super({
@@ -82,19 +69,19 @@ export class MenuWindow extends BrowserWindow {
       y: display.workArea.y,
       width: display.workArea.width + 1,
       height: display.workArea.height + 1,
-      type: backend.getBackendInfo().menuWindowType,
+      type: kando.getBackend().getBackendInfo().menuWindowType,
       show: false,
     });
 
     // When the app settings change, we need to apply the zoom factor to the window.
-    this.appSettings.onChange('zoomFactor', (newValue) => {
+    this.kando.getAppSettings().onChange('zoomFactor', (newValue) => {
       this.webContents.setZoomFactor(newValue);
     });
 
     // Save some settings when the app is closed.
     app.on('before-quit', () => {
       // Save the current zoom factor to the settings.
-      this.appSettings.set(
+      this.kando.getAppSettings().set(
         {
           zoomFactor: this.webContents.getZoomFactor(),
         },
@@ -112,12 +99,12 @@ export class MenuWindow extends BrowserWindow {
       if (input.control && (input.key === '+' || input.key === '-')) {
         let zoomFactor = this.webContents.getZoomFactor();
         zoomFactor = input.key === '+' ? zoomFactor + 0.1 : zoomFactor - 0.1;
-        this.appSettings.set({ zoomFactor });
+        this.kando.getAppSettings().set({ zoomFactor });
         event.preventDefault();
       }
 
       if (input.control && input.key === '0') {
-        this.appSettings.set({ zoomFactor: 1 });
+        this.kando.getAppSettings().set({ zoomFactor: 1 });
         event.preventDefault();
       }
 
@@ -138,7 +125,7 @@ export class MenuWindow extends BrowserWindow {
     await this.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
 
     // Apply the stored zoom factor to the window.
-    this.webContents.setZoomFactor(this.appSettings.get('zoomFactor'));
+    this.webContents.setZoomFactor(this.kando.getAppSettings().get('zoomFactor'));
 
     return this.windowLoaded;
   }
@@ -149,145 +136,131 @@ export class MenuWindow extends BrowserWindow {
    * the current window and pointer position and send them to the renderer process.
    *
    * @param request Required information to select correct menu.
+   * @param info Information about current desktop environment.
    */
-  public showMenu(request: IShowMenuRequest) {
-    this.backend
-      .getWMInfo()
-      .then((info) => {
-        // Select correct menu before showing it to user.
-        const menu = this.chooseMenu(request, info);
+  public showMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
+    // Select correct menu before showing it to user.
+    const menu = this.chooseMenu(request, info);
 
-        // If no menu was found, we can stop here.
-        if (!menu) {
-          console.log('No menu was found for the current conditions: ', info);
-          return;
-        }
+    // If no menu was found, we can stop here.
+    if (!menu) {
+      console.log('No menu was found for the current conditions: ', info);
+      return;
+    }
 
-        // We unbind the shortcut of the menu (if any) so that key-repeat events can be
-        // received by the renderer. These are necessary for the turbo-mode to work for
-        // single-key shortcuts. The shortcuts are rebound when the window is hidden.
-        // It is possible to open a menu while another one is already shown. If this
-        // happens, we will replace it without closing and opening the window. As the
-        // shortcut for the previous menu had been unbound when showing it, we have to
-        // rebind it here (if it was a different one).
-        const useID = !this.backend.getBackendInfo().supportsShortcuts;
-        const newTrigger = useID ? menu.shortcutID : menu.shortcut;
-        const oldTrigger = useID ? this.lastMenu?.shortcutID : this.lastMenu?.shortcut;
+    // We unbind the shortcut of the menu (if any) so that key-repeat events can be
+    // received by the renderer. These are necessary for the turbo-mode to work for
+    // single-key shortcuts. The shortcuts are rebound when the window is hidden.
+    // It is possible to open a menu while another one is already shown. If this
+    // happens, we will replace it without closing and opening the window. As the
+    // shortcut for the previous menu had been unbound when showing it, we have to
+    // rebind it here (if it was a different one).
+    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+    const newTrigger = useID ? menu.shortcutID : menu.shortcut;
+    const oldTrigger = useID ? this.lastMenu?.shortcutID : this.lastMenu?.shortcut;
 
-        // First, unbind the trigger for the new menu.
-        if (newTrigger) {
-          this.backend.unbindShortcut(newTrigger);
-        }
+    // First, unbind the trigger for the new menu.
+    if (newTrigger) {
+      this.kando.getBackend().unbindShortcut(newTrigger);
+    }
 
-        // If old and new trigger are the same, we don't need to rebind it. If the
-        // hideTimeout is set, the window is about to be hidden and the shortcuts have
-        // been rebound already.
-        if (
-          oldTrigger &&
-          oldTrigger != newTrigger &&
-          this.isVisible() &&
-          !this.hideTimeout
-        ) {
-          this.backend.bindShortcut({
-            trigger: oldTrigger,
-            action: () => {
-              this.showMenu({
-                trigger: oldTrigger,
-                name: '',
-              });
-            },
-          });
-        }
+    // If old and new trigger are the same, we don't need to rebind it. If the
+    // hideTimeout is set, the window is about to be hidden and the shortcuts have
+    // been rebound already.
+    if (oldTrigger && oldTrigger != newTrigger && this.isVisible() && !this.hideTimeout) {
+      this.kando.getBackend().bindShortcut({
+        trigger: oldTrigger,
+        action: () => {
+          this.kando.showMenu({ trigger: oldTrigger });
+        },
+      });
+    }
 
-        // Store the last menu to be able to execute the selected action later. The WMInfo
-        // will be passed to the action as well.
-        this.lastMenu = menu;
-        this.lastWMInfo = info;
+    // Store the last menu to be able to execute the selected action later. The WMInfo
+    // will be passed to the action as well.
+    this.lastMenu = menu;
 
-        // Get the work area of the screen where the pointer is located. We will move the
-        // window to this screen and show the menu at the pointer position.
-        const workarea = screen.getDisplayNearestPoint({
-          x: info.pointerX,
-          y: info.pointerY,
-        }).workArea;
+    // Get the work area of the screen where the pointer is located. We will move the
+    // window to this screen and show the menu at the pointer position.
+    const workarea = screen.getDisplayNearestPoint({
+      x: info.pointerX,
+      y: info.pointerY,
+    }).workArea;
 
-        // On Windows, we have to show the window before we can move it. Otherwise, the
-        // window will not be moved to the correct monitor.
-        if (process.platform === 'win32') {
-          this.show();
+    // On Windows, we have to show the window before we can move it. Otherwise, the
+    // window will not be moved to the correct monitor.
+    if (process.platform === 'win32') {
+      this.show();
 
-          // Also, there is this long-standing issue with Windows where the window is not
-          // scaled correctly when it is moved to another monitor with a different DPI
-          // scale: https://github.com/electron/electron/issues/10862
-          // To work around this, we first move the window to the top-left corner of the
-          // screen and make sure that it is only on this monitor by reducing its size to
-          // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
-          // scale the window to the correct size.
-          this.setBounds({
-            x: workarea.x,
-            y: workarea.y,
-            width: 1,
-            height: 1,
-          });
-        }
+      // Also, there is this long-standing issue with Windows where the window is not
+      // scaled correctly when it is moved to another monitor with a different DPI
+      // scale: https://github.com/electron/electron/issues/10862
+      // To work around this, we first move the window to the top-left corner of the
+      // screen and make sure that it is only on this monitor by reducing its size to
+      // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
+      // scale the window to the correct size.
+      this.setBounds({
+        x: workarea.x,
+        y: workarea.y,
+        width: 1,
+        height: 1,
+      });
+    }
 
-        // Move and resize the window to the work area of the screen where the pointer is.
-        this.setBounds({
+    // Move and resize the window to the work area of the screen where the pointer is.
+    this.setBounds({
+      x: workarea.x,
+      y: workarea.y,
+      width: workarea.width,
+      height: workarea.height,
+    });
+
+    // On all platforms except Windows, we show the window after we moved it.
+    if (process.platform !== 'win32') {
+      this.show();
+    }
+
+    // Usually, the menu is shown at the pointer position. However, if the menu is
+    // centered, we show it in the center of the screen.
+    const mousePosition = {
+      x: (info.pointerX - workarea.x) / this.webContents.getZoomFactor(),
+      y: (info.pointerY - workarea.y) / this.webContents.getZoomFactor(),
+    };
+
+    // We have to pass the size of the window to the renderer because window.innerWidth
+    // and window.innerHeight are not reliable when the window has just been resized.
+    const windowSize = {
+      x: workarea.width,
+      y: workarea.height,
+    };
+
+    // Send the menu to the renderer process. If the menu is centered, we delay the
+    // turbo mode. This way, a key has to be pressed first before the turbo mode is
+    // activated. Else, the turbo mode would be activated immediately when the menu is
+    // opened which is not nice if it is not opened at the pointer position.
+    // We also send the name of the current application and window to the renderer.
+    // It will be used as an example in the condition picker of the settings.
+    this.webContents.send(
+      'menu-window.show-menu',
+      this.lastMenu.root,
+      {
+        mousePosition,
+        windowSize,
+        zoomFactor: this.webContents.getZoomFactor(),
+        centeredMode: this.lastMenu.centered,
+        anchoredMode: this.lastMenu.anchored,
+        warpMouse: this.lastMenu.warpMouse,
+        hoverMode: this.lastMenu.hoverMode,
+      },
+      {
+        appName: info.appName,
+        windowName: info.windowName,
+        windowPosition: {
           x: workarea.x,
           y: workarea.y,
-          width: workarea.width,
-          height: workarea.height,
-        });
-
-        // On all platforms except Windows, we show the window after we moved it.
-        if (process.platform !== 'win32') {
-          this.show();
-        }
-
-        // Usually, the menu is shown at the pointer position. However, if the menu is
-        // centered, we show it in the center of the screen.
-        const mousePosition = {
-          x: (info.pointerX - workarea.x) / this.webContents.getZoomFactor(),
-          y: (info.pointerY - workarea.y) / this.webContents.getZoomFactor(),
-        };
-
-        // We have to pass the size of the window to the renderer because window.innerWidth
-        // and window.innerHeight are not reliable when the window has just been resized.
-        const windowSize = {
-          x: workarea.width,
-          y: workarea.height,
-        };
-
-        // Send the menu to the renderer process. If the menu is centered, we delay the
-        // turbo mode. This way, a key has to be pressed first before the turbo mode is
-        // activated. Else, the turbo mode would be activated immediately when the menu is
-        // opened which is not nice if it is not opened at the pointer position.
-        // We also send the name of the current application and window to the renderer.
-        // It will be used as an example in the condition picker of the settings.
-        this.webContents.send(
-          'menu-window.show-menu',
-          this.lastMenu.root,
-          {
-            mousePosition,
-            windowSize,
-            zoomFactor: this.webContents.getZoomFactor(),
-            centeredMode: this.lastMenu.centered,
-            anchoredMode: this.lastMenu.anchored,
-            warpMouse: this.lastMenu.warpMouse,
-          },
-          {
-            appName: info.appName,
-            windowName: info.windowName,
-            windowPosition: {
-              x: workarea.x,
-              y: workarea.y,
-            },
-          }
-        );
-      })
-      .catch((err) => {
-        console.error('Failed to show menu: ' + err);
-      });
+        },
+      }
+    );
   }
 
   /** This shows the window. */
@@ -347,17 +320,14 @@ export class MenuWindow extends BrowserWindow {
         clearTimeout(this.hideTimeout);
       }
 
-      const useID = !this.backend.getBackendInfo().supportsShortcuts;
+      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
 
       if (lastTrigger) {
-        this.backend.bindShortcut({
+        this.kando.getBackend().bindShortcut({
           trigger: lastTrigger,
           action: () => {
-            this.showMenu({
-              trigger: lastTrigger,
-              name: '',
-            });
+            this.kando.showMenu({ trigger: lastTrigger });
           },
         });
       }
@@ -375,32 +345,54 @@ export class MenuWindow extends BrowserWindow {
         this.hideTimeout = null;
 
         resolve();
-      }, this.appSettings.get().fadeOutDuration);
+      }, this.kando.getAppSettings().get().fadeOutDuration);
     });
   }
 
   /**
-   * This chooses the correct menu depending on environment.
+   * This chooses the correct menu depending on the environment.
+   *
+   * If the request contains a menu name, this menu is chosen. If no menu with the given
+   * name is found, an exception is thrown. No other conditions are checked in this case.
+   *
+   * If the request contains a trigger (shortcut or shortcutID), a list of menus bound to
+   * this trigger is assembled and the menu with the best matching conditions is chosen.
+   * If no menu with the given trigger is found, null is returned.
+   *
+   * If neither a menu name nor a trigger is given, null is returned.
    *
    * @param request Required information to select correct menu.
-   * @param info Informations about current desktop environment.
+   * @param info Information about current desktop environment.
    * @returns The selected menu or null if no menu was found.
    */
-  private chooseMenu(request: IShowMenuRequest, info: WMInfo) {
-    // Score of currently selected menu
-    let currentScore = 0;
-    // Temporary selected menu
-    let selectedMenu: DeepReadonly<IMenu>;
+  public chooseMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
     // Get list of current menus.
-    const menus = this.menuSettings.get('menus');
+    const menus = this.kando.getMenuSettings().get('menus');
+
+    // We check if the request has a menu name. If that's the case we return it as chosen
+    // menu, there's no need to check the rest.
+    if (request.name != null) {
+      const menu = menus.find((m) => m.root.name === request.name);
+      if (menu) {
+        return menu;
+      }
+
+      throw new Error(`Menu with name "${request.name}" not found.`);
+    }
+
+    // If no trigger is given, we can stop here.
+    if (request.trigger == null) {
+      return null;
+    }
+
+    // Score of currently selected menu.
+    let currentScore = 0;
+
+    // Currently best matching menu.
+    let selectedMenu: DeepReadonly<IMenu>;
 
     for (const menu of menus) {
       let menuScore = 0;
-      // We check if request has menu name, and if it matches checked menu.
-      // If that's the case we return it as chosen menu, there's no need to check rest.
-      if (request.name && request.name == menu.root.name) {
-        return menu;
-      }
 
       // Then we check if menu trigger matches our request, if not we skip this menu.
       if (request.trigger != menu.shortcut && request.trigger != menu.shortcutID) {
@@ -473,14 +465,14 @@ export class MenuWindow extends BrowserWindow {
       }
 
       // If our menuScore is higher than currentScore we need to select this menu
-      // As it matches more conditions than previous selection
+      // as it matches more conditions than the previous selection.
       if (menuScore > currentScore) {
         selectedMenu = menu;
         currentScore = menuScore;
       }
     }
 
-    // We finally return our last selected menu as choosen.
+    // We finally return our last selected menu as chosen.
     return selectedMenu;
   }
 
@@ -531,7 +523,9 @@ export class MenuWindow extends BrowserWindow {
         scale = display.scaleFactor;
       }
 
-      this.backend.movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
+      this.kando
+        .getBackend()
+        .movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
     // When the user selects an item, we execute the corresponding action. Depending on
@@ -540,7 +534,7 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('menu-window.select-item', (event, path) => {
       const execute = (item: DeepReadonly<IMenuItem>) => {
         ItemActionRegistry.getInstance()
-          .execute(item, this.backend, this.lastWMInfo)
+          .execute(item, this.kando)
           .catch((error) => {
             Notification.showError('Failed to execute action', error.message || error);
           });

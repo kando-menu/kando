@@ -37,6 +37,12 @@ export class AdvancedOptionsPicker extends EventEmitter {
   private anchoredModeCheckbox: HTMLInputElement = null;
 
   /**
+   * The hover mode checkbox is a checkbox that allows the user to toggle whether menu
+   * items should be activated on hover.
+   */
+  private hoverModeCheckbox: HTMLInputElement = null;
+
+  /**
    * The warp mouse checkbox is a checkbox that allows the user to toggle whether the
    * mouse should be warped to the center of the menu when it is opened.
    */
@@ -63,6 +69,8 @@ export class AdvancedOptionsPicker extends EventEmitter {
         subheading: i18next.t('properties.advanced-options.subheading', {
           link: 'target="_blank" href="https://kando.menu/usage/"',
         }),
+        hoverMode: i18next.t('properties.advanced-options.hover-mode'),
+        hoverModeHint: i18next.t('properties.advanced-options.hover-mode-hint'),
         centeredMode: i18next.t('properties.advanced-options.centered-mode'),
         centeredModeHint: i18next.t('properties.advanced-options.centered-mode-hint'),
         warpMouse: i18next.t('properties.advanced-options.warp-mouse'),
@@ -106,6 +114,16 @@ export class AdvancedOptionsPicker extends EventEmitter {
       }
     });
 
+    // Update the hover-mode property of the menu when the checkbox changes.
+    this.hoverModeCheckbox = container.querySelector(
+      '#kando-menu-properties-hover-mode'
+    ) as HTMLInputElement;
+    this.hoverModeCheckbox.addEventListener('change', () => {
+      if (this.menu) {
+        this.menu.hoverMode = this.hoverModeCheckbox.checked;
+      }
+    });
+
     // Close the picker when the user clicks the Cancel button.
     const doneButton = container.querySelector(
       '#kando-properties-advanced-options-picker-close'
@@ -132,5 +150,6 @@ export class AdvancedOptionsPicker extends EventEmitter {
     this.centeredModeCheckbox.checked = menu.centered;
     this.warpMouseCheckbox.checked = menu.warpMouse;
     this.anchoredModeCheckbox.checked = menu.anchored;
+    this.hoverModeCheckbox.checked = menu.hoverMode;
   }
 }
