@@ -17,6 +17,7 @@ import { MacroItemType } from './item-types/macro-item-type';
 import { SubmenuItemType } from './item-types/submenu-item-type';
 import { TextItemType } from './item-types/text-item-type';
 import { URIItemType } from './item-types/uri-item-type';
+import { RedirectItemType } from './item-types/redirect-item-type';
 
 /**
  * This interface describes meta information about a menu-item type. Every available type
@@ -72,13 +73,14 @@ export class ItemTypeRegistry {
    * instance of this class.
    */
   private constructor() {
+    this.types.set('submenu', new SubmenuItemType());
     this.types.set('command', new CommandItemType());
     this.types.set('file', new FileItemType());
     this.types.set('hotkey', new HotkeyItemType());
     this.types.set('macro', new MacroItemType());
-    this.types.set('submenu', new SubmenuItemType());
     this.types.set('text', new TextItemType());
     this.types.set('uri', new URIItemType());
+    this.types.set('redirect', new RedirectItemType());
   }
 
   /**
