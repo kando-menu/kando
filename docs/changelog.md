@@ -24,6 +24,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :tada: Added
 
 - **A new item type: Open File!** Use this to open files or directories with the default application. You could do this with the Command or Open URI item types before, but this new item type is more intuitive. Also, the Open URI type had issues with non-ASCII characters in the file path, which should be fixed with this new item type.
+- **A new item type: Redirect!** Use this to open a different menu when the item is selected. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
 - **Experimental support arm64 on Linux!** There is now an experimental arm64 build for Linux. Please test it and report any issues you encounter!
 - **Two new tray icon flavors!** There is now also a `'white'` and a `'black'` flavor. You can choose them in your `config.json` using the `trayIconFlavor` property. The default is still `'color'`. Thanks to [@kartik-raj7](https://github.com/kartik-raj7) for the contribution!
 - **The possibility to temporarily disable all shortcuts** by using the tray icon context menu. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
