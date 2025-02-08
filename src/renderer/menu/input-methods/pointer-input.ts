@@ -39,6 +39,12 @@ export class PointerInput extends InputMethod {
   public enableTurboMode = true;
 
   /**
+   * If enabled, items can be selected by hovering over them. Like turbo mode without any
+   * key. This is very advanced, but extremely fast.
+   */
+  public enableHoverMode = true;
+
+  /**
    * This is used to detect gestures in "Marking Mode" and "Turbo Mode". It is fed with
    * motion events and emits a selection event if either the mouse pointer was stationary
    * for some time or if the mouse pointer made a sharp turn.
@@ -86,9 +92,14 @@ export class PointerInput extends InputMethod {
   constructor() {
     super();
 
-    // Forward selection events from the gesture detector.
+    // Forward selection events from the gesture detector. In hover mode, we select any
+    // item that is hovered over. In marking and turbo mode, we only select submenus via
+    // gestures, final lactions need to be selected by pointer-up events.
     this.gestureDetector.on('selection', (position: IVec2) => {
-      this.selectCallback(position, SelectionType.eSubmenuOnly);
+      this.selectCallback(
+        position,
+        this.enableHoverMode ? SelectionType.eActiveItem : SelectionType.eSubmenuOnly
+      );
     });
   }
 
@@ -154,12 +165,13 @@ export class PointerInput extends InputMethod {
     // event. Also, the turbo mode is activated if any modifier key is pressed.
     let shouldEnterTurboMode = false;
     const canEnterTurboMode =
-      this.enableTurboMode &&
+      (this.enableTurboMode || this.enableHoverMode) &&
       !this.deferredTurboMode &&
       this.buttonState !== ButtonState.eDragged;
 
     if (canEnterTurboMode) {
       if (
+        this.enableHoverMode ||
         this.anyKeyPressed ||
         event.ctrlKey ||
         event.metaKey ||
