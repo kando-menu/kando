@@ -166,13 +166,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
-  &:has(>.dragged)>.connector,
-  &:has(>.clicked)>.connector {
+  &:has(>.dragged)>.connector {
     transition: none;
   }
 
   &:has(>.parent)>.connector,
   &:has(>.active.type-submenu)>.connector,
+  &:has(>.clicked.type-submenu)>.connector,
   &:has(>.dragged.type-submenu)>.connector {
     opacity: 1;
   }

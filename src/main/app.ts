@@ -150,6 +150,7 @@ export class KandoApp {
           fadeOutDuration: 200,
           enableMarkingMode: true,
           enableTurboMode: true,
+          hoverModeNeedsConfirmation: false,
           gestureMinStrokeLength: 150,
           gestureMinStrokeAngle: 20,
           gestureJitterThreshold: 10,

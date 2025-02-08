@@ -23,7 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :tada: Added
 
-- **A new way of interaction: Hover Mode!** This is for power users only: It's like turbo mode, but you don't have to press any keys. Just move the mouse to the item you want to select and wait a fraction of a second. This is by far the fastest way to navigate through your menus, but it can also lead to accidental selections as there is no way to visually confirm the selection before it happens. You can enable this in the settings under "Menu Behavior". Have fun blasting through your menus!
+- **A new way of interaction: Hover Mode!** This is for power users only: It's like turbo mode, but you don't have to press any keys. Just move the mouse to the item you want to select and wait a fraction of a second. This is by far the fastest way to navigate through your menus, but it can also lead to accidental selections as there is no way to visually confirm the selection before it happens. You can enable this in the settings under "Menu Behavior". You can set `"menuOptions": {"hoverModeNeedsConfirmation": true}` in your `config.json` to tweak the hover mode so that it requires a final click to select an item. This is a bit slower, but it can prevent accidental selections.
 - **A new item type: Open File!** Use this to open files or directories with the default application. You could do this with the Command or Open URI item types before, but this new item type is more intuitive. Also, the Open URI type had issues with non-ASCII characters in the file path, which should be fixed with this new item type.
 - **A new item type: Redirect!** Use this to open a different menu when the item is selected. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
 - **Experimental support arm64 on Linux!** There is now an experimental arm64 build for Linux. Please test it and report any issues you encounter!
@@ -32,6 +32,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :wrench: Changed
 
+- Menu items will now move to the mouse pointer on pointer-down events instead of pointer-up events. This makes the menu feel more responsive.
 - The Windows installer now shows a custom gif animation instead of the default Squirrel animation.
 - The Windows installer now uses the new Kando icon instead of the default Electron icon.
 - On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
