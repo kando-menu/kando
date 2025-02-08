@@ -44,6 +44,9 @@ export class PointerInput extends InputMethod {
    */
   public enableHoverMode = true;
 
+  /** If set to true, the hover mode will only select final actions with a mouse click. */
+  public hoverModeNeedsConfirmation = false;
+
   /**
    * This is used to detect gestures in "Marking Mode" and "Turbo Mode". It is fed with
    * motion events and emits a selection event if either the mouse pointer was stationary
@@ -98,7 +101,9 @@ export class PointerInput extends InputMethod {
     this.gestureDetector.on('selection', (position: IVec2) => {
       this.selectCallback(
         position,
-        this.enableHoverMode ? SelectionType.eActiveItem : SelectionType.eSubmenuOnly
+        this.enableHoverMode && !this.hoverModeNeedsConfirmation
+          ? SelectionType.eActiveItem
+          : SelectionType.eSubmenuOnly
       );
     });
   }

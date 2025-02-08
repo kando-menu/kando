@@ -154,8 +154,7 @@
     top: calc(-1 * var(--connector-width) / 2);
   }
 
-  &:has(.dragged)>.connector,
-  &:has(.clicked)>.connector {
+  &:has(.dragged)>.connector {
     transition: none;
   }
 

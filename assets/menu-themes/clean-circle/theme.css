@@ -133,9 +133,13 @@
   }
 
 
-  &.active:has(.hovered:not(.dragged.type-submenu))>.arrow-layer {
+  &.active:has(.hovered)>.arrow-layer {
     transform: rotate(var(--hovered-child-angle)) translateY(calc(-0.5 * var(--center-size) - 5px + 1px));
     opacity: 1;
+  }
+
+  &.active:has(.clicked)>.arrow-layer {
+    transform: rotate(var(--pointer-angle)) translateY(calc(-0.5 * var(--center-size) - 5px + 1px));
   }
 
   /* If the parent or a child node is clicked, we scale it down to normal size. */
@@ -193,13 +197,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
-  &:has(>.dragged)>.connector,
-  &:has(>.clicked)>.connector {
+  &:has(>.dragged)>.connector {
     transition: none;
   }
 
   &:has(>.parent)>.connector,
   &:has(>.active.type-submenu)>.connector,
+  &:has(>.clicked.type-submenu)>.connector,
   &:has(>.dragged.type-submenu)>.connector {
     opacity: 1;
   }
