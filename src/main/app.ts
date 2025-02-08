@@ -104,6 +104,16 @@ export class KandoApp {
    */
   private menuSettings: Settings<IMenuSettings>;
 
+  /** @returns The currently used backend. */
+  public getBackend() {
+    return this.backend;
+  }
+
+  /** @returns Information about the window manager state when the latest menu was opened. */
+  public getLastWMInfo() {
+    return this.lastWMInfo;
+  }
+
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
     // Bail out if the backend is not available.
@@ -922,7 +932,7 @@ export class KandoApp {
     ipcMain.on('select-item', (event, path) => {
       const execute = (item: DeepReadonly<IMenuItem>) => {
         ItemActionRegistry.getInstance()
-          .execute(item, this.backend, this.lastWMInfo)
+          .execute(item, this)
           .catch((error) => {
             KandoApp.showError('Failed to execute action', error.message || error);
           });

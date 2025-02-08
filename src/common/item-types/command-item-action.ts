@@ -15,7 +15,7 @@ import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './command-item-type';
-import { Backend, WMInfo } from '../../main/backends/backend';
+import { KandoApp } from '../../main/app';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
 export class CommandItemAction implements IItemAction {
@@ -37,20 +37,19 @@ export class CommandItemAction implements IItemAction {
    * if an error occurs after one second, it will not be detected.
    *
    * @param item The item for which the action should be executed.
-   * @param backend The backend which is currently in use.
-   * @param wmInfo Information about the window manager state when the menu was opened.
+   * @param app The app which executed the action.
    * @returns A promise which resolves when the command has been successfully started.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend, wmInfo: WMInfo) {
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
     return new Promise<void>((resolve, reject) => {
       let command = (item.data as IItemData).command;
 
       // Replace placeholders in the command string.
       command = command
-        .replace(/\{{app_name}}/g, wmInfo.appName)
-        .replace(/\{{window_name}}/g, wmInfo.windowName)
-        .replace(/\{{pointer_x}}/g, wmInfo.pointerX.toString())
-        .replace(/\{{pointer_y}}/g, wmInfo.pointerY.toString());
+        .replace(/\{{app_name}}/g, app.getLastWMInfo().appName)
+        .replace(/\{{window_name}}/g, app.getLastWMInfo().windowName)
+        .replace(/\{{pointer_x}}/g, app.getLastWMInfo().pointerX.toString())
+        .replace(/\{{pointer_y}}/g, app.getLastWMInfo().pointerY.toString());
 
       // Remove the CHROME_DESKTOP environment variable if it is set.
       // See https://github.com/kando-menu/kando/issues/552

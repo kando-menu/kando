@@ -9,13 +9,13 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
+import { clipboard } from 'electron';
 
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './text-item-type';
-import { Backend } from '../../main/backends/backend';
-import { clipboard } from 'electron';
+import { KandoApp } from '../../main/app';
 
 /** This action pastes some given text into the active window. */
 export class TextItemAction implements IItemAction {
@@ -33,10 +33,10 @@ export class TextItemAction implements IItemAction {
    * simulating a Ctrl+V key press.
    *
    * @param item The item for which the action should be executed.
-   * @param backend The backend which is currently in use.
+   * @param app The app which executed the action.
    * @returns A promise which resolves when the URI has been successfully opened.
    */
-  async execute(item: DeepReadonly<IMenuItem>, backend: Backend) {
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
     const text = (item.data as IItemData).text;
     if (text) {
       clipboard.writeText(text);
@@ -50,7 +50,7 @@ export class TextItemAction implements IItemAction {
         { name: ctrl, down: false, delay: 10 },
       ];
 
-      backend.simulateKeys(ctrlV);
+      app.getBackend().simulateKeys(ctrlV);
     }
   }
 }

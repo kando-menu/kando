@@ -12,8 +12,7 @@ import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './redirect-item-type';
-import { IItemData } from './redirect-item-type';
-import { kando } from '../../main';
+import { KandoApp } from '../../main/app';
 
 export class RedirectItemAction implements IItemAction {
   /**
@@ -29,18 +28,16 @@ export class RedirectItemAction implements IItemAction {
    * This method opens the specified menu.
    *
    * @param item The item for which the action should be executed.
+   * @param app The app which executed the action.
    * @returns A promise which resolves when the macro has been successfully simulated.
    */
-  async execute(item: DeepReadonly<IMenuItem>) {
+  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
     const menu = (item.data as IItemData).menu;
 
     if (menu === '') {
       throw new Error('Menu name should not be empty!');
     }
 
-    kando.showMenu({
-      trigger: '',
-      name: menu,
-    });
+    app.showMenu({ name: menu });
   }
 }

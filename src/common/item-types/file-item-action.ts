@@ -8,11 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { shell } from 'electron';
+
 import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/settings';
 import { IItemData } from './file-item-type';
-import { shell } from 'electron';
 
 /** This action opens files with the default application. */
 export class FileItemAction implements IItemAction {
