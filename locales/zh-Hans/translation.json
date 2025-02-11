@@ -109,6 +109,15 @@
             "file": "文件路径",
             "file-hint": "该目标将被打开。",
             "tip-1": "您可以使用此菜单项打开文件或文件夹。"
+        },
+        "redirect": {
+            "tip-1": "对于菜单名称请使用一致的字母大小写。",
+            "tip-2": "避免使用空的或未定义的菜单名。",
+            "tip-3": "避免循环重定向。",
+            "redirect": "重定向",
+            "redirect-hint": "该菜单将被唤出",
+            "name": "重定向",
+            "description": "打开另一个菜单"
         }
     },
     "properties": {
@@ -131,7 +140,9 @@
             "anchored-mode-hint": "在与父菜单相同的位置打开子菜单。",
             "anchored-mode-checked-hint": "如果开启，将无法使用画笔模式。",
             "warp-mouse-hint": "当菜单开启时将光标移动到它中央。",
-            "warp-mouse": "在居中模式下牵引光标"
+            "warp-mouse": "在居中模式下牵引光标",
+            "hover-mode": "悬停模式",
+            "hover-mode-hint": "仅限高级用户使用！将鼠标悬停在项目上选择项目。"
         },
         "icon-picker": {
             "heading": "选择一个图标",
