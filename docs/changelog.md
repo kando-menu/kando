@@ -45,6 +45,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Simulating <kbd>Numpad Subtract</kbd> on Windows.
 - Selecting items with Turbo-Mode involving the <kbd>Meta</kbd> key on Linux. Thanks to [@gb2dev](https://github.com/gb2dev) for the fix!
 - The appearance of the application icon on KDE. The SVG variant of the icon contained clipping paths which are not supported by KDE.
+- Support for Node 23.
 
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
 

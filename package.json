@@ -6,10 +6,10 @@
   "main": ".webpack/main",
   "scripts": {
     "install": "cmake-js compile",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "start": "tsx node_modules/@electron-forge/cli/src/electron-forge-start",
+    "package": "tsx node_modules/@electron-forge/cli/src/electron-forge-package",
+    "make": "tsx node_modules/@electron-forge/cli/src/electron-forge-make",
+    "publish": "tsx node_modules/@electron-forge/cli/src/electron-forge-publish",
     "lint": "eslint src",
     "prettier": "prettier --check src",
     "format": "prettier --write src",
@@ -59,6 +59,7 @@
     "ts-loader": "^9.5.2",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
   "dependencies": {
