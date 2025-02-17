@@ -69,7 +69,8 @@ body {
   --bs-body-color: #{$kando-text-color};
   --bs-secondary-color: rgba(255, 255, 255, 0.3);
   --bs-emphasis-color: rgba(255, 255, 255);
-  --bs-link-color-rgb: #{$kando-highlight-color-red}, #{$kando-highlight-color-green},
+  --bs-link-color-rgb:
+    #{$kando-highlight-color-red}, #{$kando-highlight-color-green},
     #{$kando-highlight-color-blue};
   --bs-link-hover-color-rgb: white;
 
