@@ -29,8 +29,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Experimental support arm64 on Linux!** There is now an experimental arm64 build for Linux. Please test it and report any issues you encounter!
 - **Two new tray icon flavors!** There is now also a `'white'` and a `'black'` flavor. You can choose them in your `config.json` using the `trayIconFlavor` property. The default is still `'color'`. Thanks to [@kartik-raj7](https://github.com/kartik-raj7) for the contribution!
 - **The possibility to temporarily disable all shortcuts** by using the tray icon context menu. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
-- **Several translation updates:** Thanks to all the contributors!
-- Support for **GNOME 48**.
+- Support for version two of the remote desktop portal which allows restoring the session after the application has been restarted. This means the annoying dialog asking for permissions on KDE Wayland will hopefully only appear once from now on.
+- Several translation updates: Thanks to all the contributors!
+- Support for GNOME 48.
 
 #### :wrench: Changed
 
