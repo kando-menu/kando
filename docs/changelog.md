@@ -38,6 +38,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
 - The appearance of the large variant of the Kando icon. The overall shape is now more similar to the medium variant. This is only used on Windows and macOS.
 - The `--menu` command line flag will now produce an error message if the specified menu does not exist. Before, it would just open the first menu.
+- On GNOME Wayland, the menu will now open more close to the pointer if a text-scaling factor other than one is used.
 
 #### :bug: Fixed
 
@@ -45,6 +46,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Simulating <kbd>Numpad Subtract</kbd> on Windows.
 - Selecting items with Turbo-Mode involving the <kbd>Meta</kbd> key on Linux. Thanks to [@gb2dev](https://github.com/gb2dev) for the fix!
 - The appearance of the application icon on KDE. The SVG variant of the icon contained clipping paths which are not supported by KDE.
+- Non-working shortcuts if you switch between Wayland and X11 sessions on GNOME. For this, the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now does deliberately nothing on X11.
 - Support for Node 23.
 
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
