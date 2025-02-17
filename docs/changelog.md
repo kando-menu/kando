@@ -46,6 +46,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Simulating <kbd>Numpad Subtract</kbd> on Windows.
 - Selecting items with Turbo-Mode involving the <kbd>Meta</kbd> key on Linux. Thanks to [@gb2dev](https://github.com/gb2dev) for the fix!
 - The appearance of the application icon on KDE. The SVG variant of the icon contained clipping paths which are not supported by KDE.
+- A freeze on newer versions of Hyprland when trying to warp the mouse pointer or simulating a keystroke.
 - Non-working shortcuts if you switch between Wayland and X11 sessions on GNOME. For this, the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now does deliberately nothing on X11.
 - Support for Node 23.
 
