@@ -32,6 +32,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Support for version two of the remote desktop portal which allows restoring the session after the application has been restarted. This means the annoying dialog asking for permissions on KDE Wayland will hopefully only appear once from now on.
 - Several translation updates: Thanks to all the contributors!
 - Support for GNOME 48.
+- Support for Node 23.
 
 #### :wrench: Changed
 
@@ -51,7 +52,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A freeze on newer versions of Hyprland when trying to warp the mouse pointer or simulating a keystroke.
 - On GNOME Wayland, the menu will now open more close to the pointer if a text-scaling factor other than one is used.
 - Non-working shortcuts if you switch between Wayland and X11 sessions on GNOME. For this, the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now does deliberately nothing on X11.
-- Support for Node 23.
+- Wrong menu clamping to the monitor bounds if the menu had been scaled.
 
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
 
