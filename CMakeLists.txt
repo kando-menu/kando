@@ -9,7 +9,7 @@ cmake_policy(SET CMP0042 NEW)
 project(kando-native)
 
 add_definitions(-DNAPI_VERSION=6)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 # Include Node-API wrappers.
 execute_process(COMMAND node -p "require('node-addon-api').include"

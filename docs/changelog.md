@@ -29,6 +29,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Experimental support arm64 on Linux!** There is now an experimental arm64 build for Linux. Please test it and report any issues you encounter!
 - **Two new tray icon flavors!** There is now also a `'white'` and a `'black'` flavor. You can choose them in your `config.json` using the `trayIconFlavor` property. The default is still `'color'`. Thanks to [@kartik-raj7](https://github.com/kartik-raj7) for the contribution!
 - **The possibility to temporarily disable all shortcuts** by using the tray icon context menu. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
+- Support for version two of the remote desktop portal which allows restoring the session after the application has been restarted. This means the annoying dialog asking for permissions on KDE Wayland will hopefully only appear once from now on.
+- Several translation updates: Thanks to all the contributors!
+- Support for GNOME 48.
 
 #### :wrench: Changed
 
@@ -45,6 +48,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Simulating <kbd>Numpad Subtract</kbd> on Windows.
 - Selecting items with Turbo-Mode involving the <kbd>Meta</kbd> key on Linux. Thanks to [@gb2dev](https://github.com/gb2dev) for the fix!
 - The appearance of the application icon on KDE. The SVG variant of the icon contained clipping paths which are not supported by KDE.
+- A freeze on newer versions of Hyprland when trying to warp the mouse pointer or simulating a keystroke.
+- On GNOME Wayland, the menu will now open more close to the pointer if a text-scaling factor other than one is used.
+- Non-working shortcuts if you switch between Wayland and X11 sessions on GNOME. For this, the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration) now does deliberately nothing on X11.
+- Support for Node 23.
 
 ## [Kando 1.7.0](https://github.com/kando-menu/kando/releases/tag/v1.7.0)
 
@@ -99,7 +106,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - If `XDG_SESSION_TYPE` is set to `tty`, Kando will now try to use the X11 backend on Linux instead of refusing to start. In most cases, this should work. But there will be a warning in the console if the X11 backend is used in this case.
 - Improved the length transition of the connector lines of the "Rainbow Labels" theme.
 - Upgraded many dependencies. This could potentially introduce new bugs. Please report any issues you encounter!
-- **Several  translation updates:** Thanks to all the contributors!
+- **Several translation updates:** Thanks to all the contributors!
 
 #### :bug: Fixed
 

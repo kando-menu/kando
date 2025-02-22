@@ -178,7 +178,8 @@ void Native::init(Napi::Env const& env) {
   mData.mRegistry = wl_display_get_registry(mData.mDisplay);
   wl_registry_add_listener(mData.mRegistry, &mData.mRegistryListener, &mData);
   wl_display_roundtrip(mData.mDisplay);
-  wl_display_dispatch(mData.mDisplay);
+  wl_display_dispatch_pending(mData.mDisplay);
+  wl_display_flush(mData.mDisplay);
 
   // Check if everything worked.
   if (!mData.mSeat) {

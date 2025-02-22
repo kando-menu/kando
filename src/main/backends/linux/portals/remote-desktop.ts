@@ -9,6 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import DBus from 'dbus-final';
+import fs from 'fs';
+import path from 'path';
+import { app } from 'electron';
+
 import { DesktopPortal } from './desktop-portal';
 
 /**
@@ -43,7 +47,10 @@ export class RemoteDesktop extends DesktopPortal {
    */
   public async movePointer(dx: number, dy: number) {
     await this.connect();
-    this.interface.NotifyPointerMotion(this.session.path, {}, dx, dy);
+
+    if (this.interface) {
+      this.interface.NotifyPointerMotion(this.session.path, {}, dx, dy);
+    }
   }
 
   /**
@@ -62,12 +69,14 @@ export class RemoteDesktop extends DesktopPortal {
     // https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/backends/native/meta-xkb-utils.c#L61
     // https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/backends/native/meta-xkb-utils.c#L123
     // As this works on KDE, too, I assume that this is the correct way to do it.
-    this.interface.NotifyKeyboardKeycode(
-      this.session.path,
-      {},
-      keycode - 8,
-      down ? 1 : 0
-    );
+    if (this.interface) {
+      this.interface.NotifyKeyboardKeycode(
+        this.session.path,
+        {},
+        keycode - 8,
+        down ? 1 : 0
+      );
+    }
   }
 
   /**
@@ -87,14 +96,44 @@ export class RemoteDesktop extends DesktopPortal {
    * should not be called directly.
    */
   private async connectImpl() {
-    await super.init();
+    try {
+      await super.init();
 
-    this.interface = this.portals.getInterface('org.freedesktop.portal.RemoteDesktop');
-    this.session = this.generateToken('session');
+      this.interface = this.portals.getInterface('org.freedesktop.portal.RemoteDesktop');
+      this.session = this.generateToken('session');
 
-    await this.createSession();
-    await this.requestDevices();
-    await this.start();
+      await this.createSession();
+      await this.requestDevices(1 | 2);
+      const result = await this.start();
+
+      // We check the result for two things: First, we check if the session was created
+      // successfully and we got access to the pointer and keyboard. Second, we check if
+      // a restore token was returned. If so, we save it to the app data directory so that
+      // we can use it in the next session and do not have to ask for permission again.
+      if (result.body?.length > 0) {
+        const response = result.body[1];
+
+        const devices = response.devices?.value;
+        if (devices != (1 | 2)) {
+          throw new Error('Not all devices were granted!');
+        }
+
+        const restoreToken = response.restore_token?.value;
+
+        // Save the token in th app data directory.
+        if (restoreToken) {
+          fs.writeFileSync(
+            path.join(app.getPath('userData'), 'session', 'rdp-token'),
+            restoreToken
+          );
+        }
+      }
+    } catch (e) {
+      this.interface = undefined;
+      this.session = undefined;
+
+      console.error('Failed to connect to remote desktop portal:', e);
+    }
   }
 
   /**
@@ -120,13 +159,34 @@ export class RemoteDesktop extends DesktopPortal {
    *
    * @returns A promise which is resolved when the devices are requested.
    */
-  private async requestDevices() {
+  private async requestDevices(devices: number) {
     return this.makeRequest((request) => {
-      this.interface.SelectDevices(this.session.path, {
+      // These options are always sent to the portal. If available, we also send a
+      // restore token to the portal. This token is used to restore the session in case
+      // the user has already granted access to the devices in a previous session.
+      const options: Record<string, DBus.Variant> = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handle_token: new DBus.Variant('s', request.token),
-        types: new DBus.Variant('u', 1 | 2),
-      });
+        types: new DBus.Variant('u', devices),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        persist_mode: new DBus.Variant('u', 2),
+      };
+
+      // Read previous token from app data directory (if any).
+      try {
+        const restoreToken = fs.readFileSync(
+          path.join(app.getPath('userData'), 'session', 'rdp-token'),
+          'utf8'
+        );
+
+        if (restoreToken.length == 36) {
+          options['restore_token'] = new DBus.Variant('s', restoreToken);
+        }
+      } catch {
+        // Ignore errors.
+      }
+
+      this.interface.SelectDevices(this.session.path, options);
     });
   }
 
