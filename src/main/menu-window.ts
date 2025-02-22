@@ -229,9 +229,11 @@ export class MenuWindow extends BrowserWindow {
 
     // We have to pass the size of the window to the renderer because window.innerWidth
     // and window.innerHeight are not reliable when the window has just been resized.
+    // Also, we incorporate the zoom factor of the window so that the clamping to the
+    // work area is done correctly.
     const windowSize = {
-      x: workarea.width,
-      y: workarea.height,
+      x: workarea.width / this.webContents.getZoomFactor(),
+      y: workarea.height / this.webContents.getZoomFactor(),
     };
 
     // Send the menu to the renderer process. If the menu is centered, we delay the
@@ -522,6 +524,10 @@ export class MenuWindow extends BrowserWindow {
         const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
         scale = display.scaleFactor;
       }
+
+      // Regardless of the platform, we have to scale the movement to the zoom factor of
+      // the window.
+      scale *= this.webContents.getZoomFactor();
 
       this.kando
         .getBackend()
