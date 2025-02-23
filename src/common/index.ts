@@ -398,6 +398,9 @@ export interface IMenu {
    * met them all is selected.
    */
   conditions?: IMenuConditions;
+
+  /** Tags can be used to group and filter menus. */
+  tags?: string[];
 }
 
 /**
@@ -416,6 +419,7 @@ export function deepCopyMenu(menu: IMenu): IMenu {
     anchored: menu.anchored,
     hoverMode: menu.hoverMode,
     conditions: structuredClone(menu.conditions),
+    tags: structuredClone(menu.tags),
   };
 }
 
