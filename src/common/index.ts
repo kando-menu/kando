@@ -503,8 +503,8 @@ export interface IShowSettingsOptions {
 export interface IMenuSettings {
   menus: Array<IMenu>;
 
-  /** The template menus and menu items. */
-  templates: Array<IMenu | IMenuItem>;
+  /** A temporary storage for menu items. */
+  stash: Array<IMenuItem>;
 }
 
 /**

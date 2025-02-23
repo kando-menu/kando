@@ -74,14 +74,8 @@ Promise.all([window.commonAPI.getLocales(), window.commonAPI.menuSettings.get()]
         menu.root = deepCopyMenuItem(menu.root);
       });
 
-      // Also the templates needs to be converted back to IMenu and IMenuItem objects.
-      menuSettings.templates = menuSettings.templates.map((thing) => {
-        if ((thing as IMenu).root) {
-          return deepCopyMenu(thing as IMenu);
-        } else {
-          return deepCopyMenuItem(thing as IMenuItem);
-        }
-      });
+      // Also the stash needs to be converted back to ordinary IMenuItem objects.
+      menuSettings.stash = menuSettings.stash.map((item) => deepCopyMenuItem(item));
 
       window.commonAPI.menuSettings.set(menuSettings);
     });
