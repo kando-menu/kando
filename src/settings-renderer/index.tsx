@@ -18,7 +18,7 @@ import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
 
 import App from './components/App';
-import { deepCopyMenu, deepCopyMenuItem, IMenu, IMenuItem } from '../common';
+import { deepCopyMenuItem } from '../common';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is

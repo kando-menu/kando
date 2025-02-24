@@ -8,30 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@import '../../variables.scss';
+@import '../variables.scss';
 
-.headerbar {
-  color: $text-primary;
-  min-height: env(titlebar-area-height, 30);
-  -webkit-app-region: drag;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-  white-space: nowrap;
-  font-weight: bold;
+.menuList {
+  background-color: $background-normal;
 }
-
-.noDrag {
-  -webkit-app-region: no-drag;
-}
-
-// .left .headerbar {
-//   padding-left: calc(10px + env(titlebar-area-x, 0));
-// }
-
-// .right .headerbar {
-//   padding-right: calc(
-//     100vw - 10px - env(titlebar-area-x, 0) - env(titlebar-area-width, 0)
-//   );
-// }

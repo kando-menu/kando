@@ -92,7 +92,7 @@ export default () => {
   );
 
   const leftHeaderbar = <Headerbar paddingLeft={10} paddingRight={5} />;
-  const centerHeaderbar = <Headerbar center={headerButtons} transparent />;
+  const centerHeaderbar = <Headerbar center={headerButtons} />;
   const rightHeaderbar = <Headerbar />;
 
   return (

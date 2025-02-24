@@ -10,6 +10,8 @@
 
 import React from 'react';
 
+import * as classes from './MenuList.module.scss';
+
 export default () => {
-  return <div>Menu List</div>;
+  return <div className={classes.menuList}>Menu List</div>;
 };

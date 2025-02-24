@@ -96,7 +96,6 @@ export default (props: IProps) => {
           onClick={(e) => e.stopPropagation()}
           style={{ maxWidth: props.maxWidth }}>
           <Headerbar
-            transparent
             left={cIsMac ? closeButton : title}
             center={cIsMac ? title : null}
             right={!cIsMac ? closeButton : null}

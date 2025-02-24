@@ -27,9 +27,6 @@ interface IProps {
 
   /** Padding to apply to the right side of the header bar. Defaults to 0. */
   paddingRight?: number;
-
-  /** Whether the header bar should be transparent. Defaults to false. */
-  transparent?: boolean;
 }
 
 /**
@@ -41,10 +38,7 @@ interface IProps {
  */
 export default (props: IProps) => {
   return (
-    <div
-      className={
-        classes.headerbar + (props.transparent ? ' ' + classes.transparent : '')
-      }>
+    <div className={classes.headerbar}>
       <div
         className={typeof props.left === 'string' ? '' : classes.noDrag}
         style={{ paddingLeft: props.paddingLeft || 0 }}>
