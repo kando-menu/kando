@@ -10,7 +10,6 @@
 
 import { Tooltip } from 'bootstrap';
 
-import { Sidebar } from './sidebar/sidebar';
 import { Toolbar } from './toolbar/toolbar';
 import { Preview } from './preview/preview';
 import { Properties } from './properties/properties';
@@ -39,12 +38,6 @@ export class Settings {
    * edit the properties of the currently selected menu item.
    */
   private properties: Properties = null;
-
-  /**
-   * The sidebar is displayed on the left screen edge. It contains some information about
-   * Kando in general.
-   */
-  private sidebar: Sidebar = null;
 
   /**
    * The toolbar is displayed on the bottom of the screen. It allows the user to switch
@@ -136,12 +129,6 @@ export class Settings {
     this.properties.on('changed-name', handleItemChange);
     this.properties.on('changed-icon', handleItemChange);
     this.properties.on('changed-shortcut', handleItemChange);
-    */
-
-    // Initialize the sidebar.
-    /*
-    this.sidebar = new Sidebar(backend, version);
-    this.container.appendChild(this.sidebar.getContainer());
     */
 
     // Initialize the toolbar. The toolbar also brings the buttons for entering and
