@@ -17,7 +17,7 @@
           {
             "type": "command",
             "data": {
-              "command": "explorer \"https://www.google.com\""
+              "command": "start \"\" \"https://kando.menu\""
             },
             "name": "example-menu.apps.web-browser",
             "icon": "globe",
@@ -26,7 +26,7 @@
           {
             "type": "command",
             "data": {
-              "command": "start mailto:"
+              "command": "start \"\" mailto:"
             },
             "name": "example-menu.apps.email",
             "icon": "mail",
@@ -44,7 +44,7 @@
           {
             "type": "command",
             "data": {
-              "command": "explorer"
+              "command": "start \"\" explorer"
             },
             "name": "example-menu.apps.file-browser",
             "icon": "folder_shared",
@@ -53,7 +53,7 @@
           {
             "type": "command",
             "data": {
-              "command": "start powershell"
+              "command": "start \"\" powershell"
             },
             "name": "example-menu.apps.terminal",
             "icon": "terminal",
@@ -283,7 +283,7 @@
           {
             "type": "command",
             "data": {
-              "command": "explorer %USERPROFILE%\\Downloads"
+              "command": "start \"\" %USERPROFILE%\\Downloads"
             },
             "name": "example-menu.bookmarks.downloads",
             "icon": "download",
@@ -328,7 +328,7 @@
           {
             "type": "command",
             "data": {
-              "command": "start %USERPROFILE%"
+              "command": "start \"\" %USERPROFILE%"
             },
             "name": "example-menu.bookmarks.home",
             "icon": "home",

@@ -42,6 +42,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - On Windows, Kando will now also show a custom icon in the Control Panel > Programs and Features section. Before, the Electron icon was shown there.
 - The appearance of the large variant of the Kando icon. The overall shape is now more similar to the medium variant. This is only used on Windows and macOS.
 - The `--menu` command line flag will now produce an error message if the specified menu does not exist. Before, it would just open the first menu.
+- The default menu menu on Windows does not use the `explorer` command anymore. This caused a notification to be shown that "the action could not be executed" even if it actually worked (see [#550](https://github.com/kando-menu/kando/issues/550)).
 
 #### :bug: Fixed
 

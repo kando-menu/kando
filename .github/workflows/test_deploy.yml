@@ -86,7 +86,7 @@ jobs:
           npm install
           npm install appdmg
       - name: Add macOS certificates
-        if: ${{ ! github.event.pull_request.head.repo.fork }}
+        if: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
         env:
           OSX_CERTIFICATE: ${{ secrets.OSX_CERTIFICATE }}
           OSX_CERTIFICATE_PASSWORD: ${{ secrets.OSX_CERTIFICATE_PASSWORD }}
@@ -94,8 +94,8 @@ jobs:
           .github/osx_certificates.sh
       - name: Create Release
         env:
-          KANDO_OSX_SIGN: ${{ ! github.event.pull_request.head.repo.fork }}
-          KANDO_OSX_NOTARIZE: ${{ ! github.event.pull_request.head.repo.fork }}
+          KANDO_OSX_SIGN: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
+          KANDO_OSX_NOTARIZE: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
           OSX_APP_SPECIFIC_ID: ${{ secrets.OSX_APP_SPECIFIC_ID }}
           OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
           OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
