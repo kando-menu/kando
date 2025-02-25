@@ -57,7 +57,7 @@
     "string-replace-loader": "^3.1.0",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.2",
-    "ts-mocha": "^10.0.0",
+    "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
