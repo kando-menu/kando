@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 //////////////////////////////////////////////////////////////////////////////////////////
 //   _  _ ____ _  _ ___  ____                                                           //
 //   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
@@ -53,10 +54,11 @@ describe('settings', () => {
     expect(settings.get('foo')).to.equal('🥳');
   });
 
-  it('should call onChange callbacks', () => {
+  it('should call callbacks', () => {
     let fooCalled = false;
     let barCalled = false;
     let nestedCalled = false;
+    let anyChangeCalled = false;
 
     settings.onChange('foo', (newValue, oldValue) => {
       expect(oldValue).to.equal('🥳');
@@ -76,12 +78,17 @@ describe('settings', () => {
       nestedCalled = true;
     });
 
+    settings.onAnyChange(() => {
+      anyChangeCalled = true;
+    });
+
     settings.set({ foo: 'newFoo', bar: 789, nested: { answer: 48 } });
     settings.disconnectAll();
 
     expect(fooCalled).to.be.true;
     expect(barCalled).to.be.true;
     expect(nestedCalled).to.be.true;
+    expect(anyChangeCalled).to.be.true;
   });
 
   it('should support multiple onChange callbacks', () => {
@@ -103,9 +110,30 @@ describe('settings', () => {
     expect(called2).to.be.true;
   });
 
-  it('should not call onChange callbacks if they were disconnected', () => {
+  it('should support multiple onAnyChange callbacks', () => {
     let called1 = false;
     let called2 = false;
+
+    settings.onAnyChange(() => {
+      called1 = true;
+    });
+
+    settings.onAnyChange(() => {
+      called2 = true;
+    });
+
+    settings.set({ foo: 'baobab' });
+    settings.disconnectAll();
+
+    expect(called1).to.be.true;
+    expect(called2).to.be.true;
+  });
+
+  it('should not call callbacks if they were disconnected', () => {
+    let called1 = false;
+    let called2 = false;
+    let called3 = false;
+    let called4 = false;
 
     const listener1 = () => {
       called1 = true;
@@ -115,29 +143,50 @@ describe('settings', () => {
       called2 = true;
     };
 
+    const listener3 = () => {
+      called3 = true;
+    };
+
+    const listener4 = () => {
+      called4 = true;
+    };
+
     settings.onChange('foo', listener1);
     settings.onChange('foo', listener2);
+    settings.onAnyChange(listener3);
+    settings.onAnyChange(listener4);
+
     settings.disconnect('foo', listener1);
+    settings.disconnectAnyChange(listener3);
 
     settings.set({ foo: 'foofoo' });
+
     settings.disconnectAll();
 
     expect(called1).to.be.false;
     expect(called2).to.be.true;
+    expect(called3).to.be.false;
+    expect(called4).to.be.true;
   });
 
   it('should not call onChange callbacks if the value did not change', () => {
-    let called = false;
+    let called1 = false;
+    let called2 = false;
 
     settings.onChange('nested', () => {
-      called = true;
+      called1 = true;
+    });
+
+    settings.onAnyChange(() => {
+      called2 = true;
     });
 
     settings.set({ nested: { answer: 48 } });
     settings.set({ nested: { answer: 48 } });
     settings.disconnectAll();
 
-    expect(called).to.be.false;
+    expect(called1).to.be.false;
+    expect(called2).to.be.false;
   });
 
   it('should not call onChange callbacks after it was closed', () => {

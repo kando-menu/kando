@@ -42,35 +42,37 @@ export type DeepReadonly<T> = {
  * @template T The type of the object which contains the properties.
  */
 class PropertyChangeEmitter<T> {
-  private events: Partial<Record<keyof T, Array<PropertyChangeEvents<T>[keyof T]>>> = {};
+  private propertyListeners: Partial<
+    Record<keyof T, Array<PropertyChangeEvents<T>[keyof T]>>
+  > = {};
 
   /**
-   * Connects the given listener to the given event. The listener will be called whenever
+   * Connects the given listener to the given key. The listener will be called whenever
    * the given event is emitted.
    *
-   * @param event The event to listen to. This must be a key of `T`.
+   * @param key The key to listen to. This must be a key of `T`.
    * @param listener The listener function which will be called when the event is emitted.
    *   The function must take two arguments of the same type as the property corresponding
-   *   to the given event. The first argument is the new value, the second argument is the
+   *   to the given key. The first argument is the new value, the second argument is the
    *   old value.
    */
-  public onChange<K extends keyof T>(event: K, listener: PropertyChangeEvents<T>[K]) {
-    if (!this.events[event]) {
-      this.events[event] = [];
+  public onChange<K extends keyof T>(key: K, listener: PropertyChangeEvents<T>[K]) {
+    if (!this.propertyListeners[key]) {
+      this.propertyListeners[key] = [];
     }
 
-    this.events[event].push(listener);
+    this.propertyListeners[key].push(listener);
   }
 
   /**
    * Disconnects the given listener from the given event. The listener will no longer be
    * called when the event is emitted.
    *
-   * @param event The event to disconnect from. This must be a key of `T`.
+   * @param key The key to disconnect from. This must be a key of `T`.
    * @param listener The listener function to disconnect.
    */
-  public disconnect<K extends keyof T>(event: K, listener: PropertyChangeEvents<T>[K]) {
-    const listeners = this.events[event];
+  public disconnect<K extends keyof T>(key: K, listener: PropertyChangeEvents<T>[K]) {
+    const listeners = this.propertyListeners[key];
     if (listeners) {
       const index = listeners.indexOf(listener);
       if (index >= 0) {
@@ -79,21 +81,22 @@ class PropertyChangeEmitter<T> {
     }
   }
 
-  /** Disconnects all listeners from all events. */
+  /** Disconnects all listeners from all propertyListeners. */
   public disconnectAll() {
-    this.events = {};
+    this.propertyListeners = {};
   }
 
   /**
-   * Emits the given event. This will call all listeners which are connected to the given
-   * event. It is called automatically by the `set()` method of the Settings class.
+   * Emits the listeners for the given key. This will call all listeners which are
+   * connected to the given event. It is called automatically by the `set()` method of the
+   * Settings class.
    *
-   * @param event The event to emit. This must be a key of `T`.
+   * @param key The key to emit an event for. This must be a key of `T`.
    * @param newValue The new value of the property.
    * @param oldValue The old value of the property.
    */
-  protected emit<K extends keyof T>(event: K, newValue: T[K], oldValue: T[K]) {
-    const listeners = this.events[event];
+  protected emit<K extends keyof T>(key: K, newValue: T[K], oldValue: T[K]) {
+    const listeners = this.propertyListeners[key];
     if (listeners) {
       listeners.forEach((listener) => listener(newValue, oldValue));
     }
@@ -143,6 +146,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
 
   /** This is the watcher which is used to watch the settings file for changes. */
   private watcher: chokidar.FSWatcher | null;
+
+  /** This array contains all listeners which are called when a setting changes. */
+  private anyChangeListeners: Array<(newSettings: T, oldSettings: T) => void> = [];
 
   /**
    * This is the current settings object. It is loaded from the settings file when the
@@ -230,6 +236,30 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       if (emitEvents) {
         this.emitEvents(this.settings, oldSettings);
       }
+    }
+  }
+
+  /**
+   * Connects the given listener to all events. The listener will be called whenever any
+   * setting changes. The callback function will be called after the specific event
+   * listeners registered with `onChange()` are called.
+   *
+   * @param listener The listener function which will be called when any setting changes.
+   */
+  public onAnyChange(listener: (newSettings: T, oldSettings: T) => void) {
+    this.anyChangeListeners.push(listener);
+  }
+
+  /**
+   * Disconnects the given listener from all events. The listener will no longer be called
+   * when any setting changes.
+   *
+   * @param listener The listener function to disconnect.
+   */
+  public disconnectAnyChange(listener: (newSettings: T, oldSettings: T) => void) {
+    const index = this.anyChangeListeners.indexOf(listener);
+    if (index >= 0) {
+      this.anyChangeListeners.splice(index, 1);
     }
   }
 
@@ -343,13 +373,20 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * @param oldSettings The old settings object.
    */
   private emitEvents(newSettings: T, oldSettings: T) {
+    let anyChanged = false;
+
     for (const key in newSettings) {
       if (
         Object.prototype.hasOwnProperty.call(newSettings, key) &&
         !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
         this.emit(key, this.settings[key], oldSettings[key]);
+        anyChanged = true;
       }
+    }
+
+    if (anyChanged) {
+      this.anyChangeListeners.forEach((listener) => listener(newSettings, oldSettings));
     }
   }
 }
