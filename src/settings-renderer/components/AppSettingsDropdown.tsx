@@ -8,13 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../../settings-window-api';
-declare const window: WindowWithAPIs;
-
 import React from 'react';
 
-import Dropdown from './Dropdown';
-import { IAppSettings } from '../../../common';
+import Dropdown from './widgets/Dropdown';
+import { useAppSetting } from '../state';
+import { IAppSettings } from '../../common';
 
 interface IProps<K extends keyof IAppSettings> {
   /** The key in the app settings to manage. */
@@ -34,9 +32,9 @@ interface IProps<K extends keyof IAppSettings> {
 }
 
 /**
- * Used to ensure that the settings key K used for the ManagedDropdown component refers to
- * a string property in the app settings. This adds some type safety to the component as
- * it should only be used with enum-like settings.
+ * Used to ensure that the settings key K used for the AppSettingsDropdown component
+ * refers to a string property in the app settings. This adds some type safety to the
+ * component as it should only be used with enum-like settings.
  */
 type EnumKeys<T> = {
   [K in keyof T]: T[K] extends string ? K : never;
@@ -50,13 +48,7 @@ type EnumKeys<T> = {
  * @returns A managed dropdown element.
  */
 export default <K extends EnumKeys<IAppSettings>>(props: IProps<K>) => {
-  const [state, setState] = React.useState<IAppSettings[K]>();
-
-  // Fetch the initial value from the app settings and set up a listener for changes.
-  React.useEffect(() => {
-    window.commonAPI.appSettings.getKey(props.settingsKey).then(setState);
-    return window.commonAPI.appSettings.onChange(props.settingsKey, setState);
-  }, [props.settingsKey]);
+  const [state, setState] = useAppSetting(props.settingsKey);
 
   return (
     <Dropdown
@@ -64,7 +56,7 @@ export default <K extends EnumKeys<IAppSettings>>(props: IProps<K>) => {
       label={props.label}
       info={props.info}
       initialValue={state}
-      onChange={(value) => window.commonAPI.appSettings.setKey(props.settingsKey, value)}
+      onChange={setState}
       disabled={props.disabled}
     />
   );

@@ -46,48 +46,38 @@ export const COMMON_WINDOW_API = {
   /**
    * The appSettings object can be used to read and write the app settings. The settings
    * are persisted in the host process. When a setting is changed, the host process will
-   * notify the renderer process. The onChange callback can be used to listen for changes
-   * of a specific setting. It returns a function to disconnect the listener.
+   * notify the renderer process.
    */
   appSettings: {
     get: function (): Promise<IAppSettings> {
       return ipcRenderer.invoke('common.app-settings-get');
     },
-    getKey: function <K extends keyof IAppSettings>(key: K): Promise<IAppSettings[K]> {
-      return ipcRenderer.invoke(`common.app-settings-get-${key}`);
+    set: function (settings: IAppSettings): void {
+      ipcRenderer.send(`common.app-settings-set`, settings);
     },
-    setKey: function <K extends keyof IAppSettings>(
-      key: K,
-      value: IAppSettings[K]
-    ): void {
-      ipcRenderer.send(`common.app-settings-set-${key}`, value);
-    },
-    onChange: function <K extends keyof IAppSettings>(
-      key: K,
-      callback: (newValue: IAppSettings[K], oldValue: IAppSettings[K]) => void
+    onChange: function (
+      callback: (newSettings: IAppSettings, oldSettings: IAppSettings) => void
     ): () => void {
-      const eventKey = `common.app-settings-changed-${key}`;
       const wrappedCallback = (
         event: Electron.IpcRendererEvent,
-        newValue: IAppSettings[K],
-        oldValue: IAppSettings[K]
+        newSettings: IAppSettings,
+        oldSettings: IAppSettings
       ) => {
-        callback(newValue, oldValue);
+        callback(newSettings, oldSettings);
       };
 
-      ipcRenderer.on(eventKey, wrappedCallback);
+      ipcRenderer.on('common.app-settings-changed', wrappedCallback);
 
       return () => {
-        ipcRenderer.off(eventKey, wrappedCallback);
+        ipcRenderer.off('common.app-settings-changed', wrappedCallback);
       };
     },
   },
 
   /**
-   * The menuSettings object can be used to read and write the settings. This is primarily
-   * used by the settings. When a menu should be shown, the host process will call the
-   * showMenu callback further below. For now, it is not forseen that the settings reloads
-   * the settings when they change on disc. Hence, there is no onChange callback.
+   * The menuSettings object can be used to read and write the configured menus. They are
+   * persisted in the host process. When a menu is changed, the host process will notify
+   * the renderer process.
    */
   menuSettings: {
     get: function (): Promise<IMenuSettings> {
@@ -95,6 +85,23 @@ export const COMMON_WINDOW_API = {
     },
     set: function (data: IMenuSettings): void {
       ipcRenderer.send('common.menu-settings-set', data);
+    },
+    onChange: function (
+      callback: (newSettings: IMenuSettings, oldSettings: IMenuSettings) => void
+    ): () => void {
+      const wrappedCallback = (
+        event: Electron.IpcRendererEvent,
+        newSettings: IMenuSettings,
+        oldSettings: IMenuSettings
+      ) => {
+        callback(newSettings, oldSettings);
+      };
+
+      ipcRenderer.on('common.menu-settings-changed', wrappedCallback);
+
+      return () => {
+        ipcRenderer.off('common.menu-settings-changed', wrappedCallback);
+      };
     },
     getCurrentMenu: function (): Promise<number> {
       return ipcRenderer.invoke('common.menu-settings-get-current-menu');

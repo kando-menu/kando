@@ -69,16 +69,6 @@ export const SETTINGS_WINDOW_API = {
   unbindShortcuts: () => {
     ipcRenderer.send('settings-window.unbind-shortcuts');
   },
-
-  /**
-   * This will be called by the host process when the user should be shown a button to
-   * update the app.
-   *
-   * @param callback This callback will be called when the button should be shown.
-   */
-  showUpdateAvailableButton: (func: () => void) => {
-    ipcRenderer.on('settings-window.show-update-available-button', func);
-  },
 };
 
 /**

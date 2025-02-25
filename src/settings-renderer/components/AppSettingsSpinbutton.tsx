@@ -8,13 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../../settings-window-api';
-declare const window: WindowWithAPIs;
-
 import React from 'react';
 
-import Spinbutton from './Spinbutton';
-import { IAppSettings } from '../../../common';
+import Spinbutton from './widgets/Spinbutton';
+import { useAppSetting } from '../state';
+import { IAppSettings } from '../../common';
 
 interface IProps<K extends keyof IAppSettings> {
   /** The key in the app settings to manage. */
@@ -43,8 +41,8 @@ interface IProps<K extends keyof IAppSettings> {
 }
 
 /**
- * Used to ensure that the settings key K used for the ManagedSpinbutton component refers
- * to a number property in the app settings.
+ * Used to ensure that the settings key K used for the AppSettingsSpinbutton component
+ * refers to a number property in the app settings.
  */
 type NumberKeys<T> = {
   [K in keyof T]: T[K] extends number ? K : never;
@@ -58,13 +56,7 @@ type NumberKeys<T> = {
  * @returns A managed spinbutton element.
  */
 export default <K extends NumberKeys<IAppSettings>>(props: IProps<K>) => {
-  const [state, setState] = React.useState(0);
-
-  // Fetch the initial value from the app settings and set up a listener for changes.
-  React.useEffect(() => {
-    window.commonAPI.appSettings.getKey(props.settingsKey).then(setState);
-    return window.commonAPI.appSettings.onChange(props.settingsKey, setState);
-  }, [props.settingsKey]);
+  const [state, setState] = useAppSetting(props.settingsKey);
 
   return (
     <Spinbutton
@@ -72,7 +64,7 @@ export default <K extends NumberKeys<IAppSettings>>(props: IProps<K>) => {
       info={props.info}
       initialValue={state}
       width={props.width}
-      onChange={(value) => window.commonAPI.appSettings.setKey(props.settingsKey, value)}
+      onChange={setState}
       disabled={props.disabled}
       min={props.min}
       max={props.max}

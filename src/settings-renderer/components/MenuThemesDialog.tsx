@@ -21,14 +21,16 @@ import {
 import { RiDeleteBack2Fill } from 'react-icons/ri';
 import lodash from 'lodash';
 
+import { useAppSetting } from '../state';
+
 import { IMenuThemeDescription } from '../../common';
 import Button from './widgets/Button';
 import ColorButton from './widgets/ColorButton';
 import Modal from './widgets/Modal';
 import Note from './widgets/Note';
 import Scrollbox from './widgets/Scrollbox';
-import ManagedCheckbox from './widgets/ManagedCheckbox';
-import ManagedSpinbutton from './widgets/ManagedSpinbutton';
+import AppSettingsCheckbox from './AppSettingsCheckbox';
+import AppSettingsSpinbutton from './AppSettingsSpinbutton';
 import Swirl from './widgets/Swirl';
 
 import * as classes from './MenuThemesDialog.module.scss';
@@ -48,13 +50,12 @@ const openThemeDirectory = () => {
 export default (props: IProps) => {
   const [themes, setThemes] = React.useState<Array<IMenuThemeDescription>>([]);
   const [darkMode, setDarkMode] = React.useState<boolean>(false);
-  const [currentThemeID, setCurrentThemeID] = React.useState<string>('');
-  const [currentDarkThemeID, setCurrentDarkThemeID] = React.useState<string>('');
-  const [colors, setColors] = React.useState<Record<string, Record<string, string>>>({});
-  const [darkColors, setDarkColors] = React.useState<
-    Record<string, Record<string, string>>
-  >({});
-  const [useDarkMode, setUseDarkMode] = React.useState<boolean>(false);
+
+  const [currentThemeID, setCurrentThemeID] = useAppSetting('menuTheme');
+  const [currentDarkThemeID, setCurrentDarkThemeID] = useAppSetting('darkMenuTheme');
+  const [colors, setColors] = useAppSetting('menuThemeColors');
+  const [darkColors, setDarkColors] = useAppSetting('darkMenuThemeColors');
+  const [useDarkMode] = useAppSetting('enableDarkModeForMenuThemes');
 
   React.useEffect(() => {
     if (!props.visible) {
@@ -64,48 +65,25 @@ export default (props: IProps) => {
     Promise.all([
       window.settingsAPI.getAllMenuThemes(),
       window.commonAPI.getIsDarkMode(),
-      window.commonAPI.appSettings.getKey('menuTheme'),
-      window.commonAPI.appSettings.getKey('darkMenuTheme'),
-      window.commonAPI.appSettings.getKey('menuThemeColors'),
-      window.commonAPI.appSettings.getKey('darkMenuThemeColors'),
-      window.commonAPI.appSettings.getKey('enableDarkModeForMenuThemes'),
-    ]).then(
-      ([themes, darkMode, menuTheme, darkMenuTheme, colors, darkColors, useDarkMode]) => {
-        setThemes(themes);
-        setDarkMode(darkMode);
-        setCurrentThemeID(menuTheme);
-        setCurrentDarkThemeID(darkMenuTheme);
-        setColors(colors);
-        setDarkColors(darkColors);
-        setUseDarkMode(useDarkMode);
-      }
-    );
+    ]).then(([themes, darkMode]) => {
+      setThemes(themes);
+      setDarkMode(darkMode);
+    });
 
-    const disconnectors = [
-      window.commonAPI.appSettings.onChange('menuTheme', setCurrentThemeID),
-      window.commonAPI.appSettings.onChange('darkMenuTheme', setCurrentDarkThemeID),
-      window.commonAPI.appSettings.onChange('menuThemeColors', setColors),
-      window.commonAPI.appSettings.onChange('darkMenuThemeColors', setDarkColors),
-      window.commonAPI.appSettings.onChange(
-        'enableDarkModeForMenuThemes',
-        setUseDarkMode
-      ),
-      window.commonAPI.darkModeChanged((darkMode) => {
-        console.log('Dark mode changed to', darkMode);
-        setDarkMode(darkMode);
-      }),
-    ];
-
-    return () => {
-      disconnectors.forEach((disconnect) => disconnect());
-    };
+    return window.commonAPI.darkModeChanged((darkMode) => {
+      console.log('Dark mode changed to', darkMode);
+      setDarkMode(darkMode);
+    });
   }, [props.visible]);
 
   // This is called when the user clicks on a theme. If different settings are used for
   // dark and light mode, we have to set the correct setting.
   const selectTheme = (themeID: string) => {
-    const key = darkMode && useDarkMode ? 'darkMenuTheme' : 'menuTheme';
-    window.commonAPI.appSettings.setKey(key, themeID);
+    if (darkMode && useDarkMode) {
+      setCurrentDarkThemeID(themeID);
+    } else {
+      setCurrentThemeID(themeID);
+    }
   };
 
   // Returns true if the given theme should be highlighted. This incorporates the
@@ -159,12 +137,12 @@ export default (props: IProps) => {
                     }
 
                     currentColorOverrides[currentTheme.id][key] = color;
-                    const settingsKey =
-                      darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
-                    window.commonAPI.appSettings.setKey(
-                      settingsKey,
-                      currentColorOverrides
-                    );
+
+                    if (darkMode && useDarkMode) {
+                      setDarkColors(currentColorOverrides);
+                    } else {
+                      setColors(currentColorOverrides);
+                    }
                   }}
                 />
               );
@@ -177,12 +155,11 @@ export default (props: IProps) => {
             onClick={() => {
               if (darkMode && useDarkMode) {
                 delete darkColors[currentTheme.id];
+                setDarkColors(darkColors);
               } else {
                 delete colors[currentTheme.id];
+                setColors(colors);
               }
-              const settingsKey =
-                darkMode && useDarkMode ? 'darkMenuThemeColors' : 'menuThemeColors';
-              window.commonAPI.appSettings.setKey(settingsKey, darkColors);
             }}
           />
         </div>
@@ -216,7 +193,7 @@ export default (props: IProps) => {
             The options below are used regardless of the selected theme.
           </Note>
 
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Fade-in time"
             info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
             settingsKey="fadeInDuration"
@@ -225,7 +202,7 @@ export default (props: IProps) => {
             max={500}
             step={10}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Fade-out time"
             info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200ms."
             settingsKey="fadeOutDuration"
@@ -234,7 +211,7 @@ export default (props: IProps) => {
             max={500}
             step={10}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Menu scale"
             info="A global scale factor for all menus. Default is 1."
             settingsKey="zoomFactor"
@@ -243,7 +220,7 @@ export default (props: IProps) => {
             max={5}
             step={0.1}
           />
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label={'Dark and light mode'}
             info="If enabled, you can choose a different theme and a different set of accent colors if your system is currently in dark or light mode."
             settingsKey="enableDarkModeForMenuThemes"

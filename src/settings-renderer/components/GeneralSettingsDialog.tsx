@@ -16,9 +16,9 @@ import React from 'react';
 import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
 
 import Button from './widgets/Button';
-import ManagedCheckbox from './widgets/ManagedCheckbox';
-import ManagedDropdown from './widgets/ManagedDropdown';
-import ManagedSpinbutton from './widgets/ManagedSpinbutton';
+import AppSettingsCheckbox from './AppSettingsCheckbox';
+import AppSettingsDropdown from './AppSettingsDropdown';
+import AppSettingsSpinbutton from './AppSettingsSpinbutton';
 import Modal from './widgets/Modal';
 import Note from './widgets/Note';
 import Scrollbox from './widgets/Scrollbox';
@@ -71,22 +71,22 @@ export default (props: IProps) => {
           <Swirl marginTop={10} marginBottom={20} />
 
           <h1>App Behavior</h1>
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Check for new versions"
             info="If enabled, Kando will show a notification when a new version is available."
             settingsKey="enableVersionCheck"
           />
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Transparent settings window"
             info="Reopen the settings window to fully apply the effect."
             settingsKey="transparentSettingsWindow"
           />
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Hide settings button"
             info="The button in the screen corner that opens the settings will still be there, but invisible."
             settingsKey="hideSettingsButton"
           />
-          <ManagedDropdown
+          <AppSettingsDropdown
             label="Tray icon flavor"
             info="You can also choose to hide the tray icon completely."
             settingsKey="trayIconFlavor"
@@ -101,22 +101,22 @@ export default (props: IProps) => {
           />
 
           <h1>Menu Behavior</h1>
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Enable Marking Mode"
             info="With Marking Mode enabled, you can select items by dragging the mouse over them."
             settingsKey="enableMarkingMode"
           />
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Enable Turbo Mode"
             info="With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl."
             settingsKey="enableTurboMode"
           />
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Require click for Hover Mode selections"
             info="If unchecked, items will be selected immediately when the mouse is moved over them for menus using Hover Mode."
             settingsKey="hoverModeNeedsConfirmation"
           />
-          <ManagedCheckbox
+          <AppSettingsCheckbox
             label="Right mouse button selects parent"
             info="If unchecked, the right mouse button will close the menu instead."
             settingsKey="rmbSelectsParent"
@@ -126,7 +126,7 @@ export default (props: IProps) => {
           <Note marginTop={-10}>
             Usually, you can leave these settings at their default values.
           </Note>
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Center click zone radius"
             info="The size of the area in the middle of the menu which will either close or navigate a level up when clicked. Default is 50px."
             settingsKey="centerDeadZone"
@@ -135,7 +135,7 @@ export default (props: IProps) => {
             max={999}
             step={50}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Minimum submenu distance"
             info="If a submenu is opened close to the parent menu, the parent will be moved away to this distance. Default is 150px."
             settingsKey="minParentDistance"
@@ -144,7 +144,7 @@ export default (props: IProps) => {
             max={999}
             step={50}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Movement threshold"
             info="Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15px."
             settingsKey="dragThreshold"
@@ -153,7 +153,7 @@ export default (props: IProps) => {
             max={999}
             step={10}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Minimum Gesture Length"
             info="Straight movements must be at least this long to trigger a selection. Default is 150px."
             settingsKey="gestureMinStrokeLength"
@@ -162,7 +162,7 @@ export default (props: IProps) => {
             max={999}
             step={50}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Minimum Gesture Angle"
             info="Smaller deviations from straight movements will not trigger selections. Default is 20°."
             settingsKey="gestureMinStrokeAngle"
@@ -171,7 +171,7 @@ export default (props: IProps) => {
             max={30}
             step={1}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Minimum Gesture Angle"
             info="Smaller movements will not be considered in the gesture detection. Default is 10px."
             settingsKey="gestureJitterThreshold"
@@ -180,7 +180,7 @@ export default (props: IProps) => {
             max={50}
             step={1}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Gesture Pause Timeout"
             info="Stop your gesture for this long to trigger a selection. Default is 100ms."
             settingsKey="gesturePauseTimeout"
@@ -189,7 +189,7 @@ export default (props: IProps) => {
             max={999}
             step={50}
           />
-          <ManagedSpinbutton
+          <AppSettingsSpinbutton
             label="Fixed Stroke Length"
             info="Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px."
             settingsKey="fixedStrokeLength"

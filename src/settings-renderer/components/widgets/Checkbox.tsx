@@ -16,7 +16,7 @@ import * as classes from './Checkbox.module.scss';
 
 interface IProps {
   /** Function to call when the checkbox is toggled. */
-  onToggle?: (value: boolean) => void;
+  onChange?: (value: boolean) => void;
 
   /** Initial value of the checkbox. Defaults to false. */
   initialValue?: boolean;
@@ -50,7 +50,7 @@ export default (props: IProps) => {
         type="checkbox"
         disabled={props.disabled}
         checked={props.initialValue || false}
-        onChange={(event) => props.onToggle && props.onToggle(event.target.checked)}
+        onChange={(event) => props.onChange && props.onChange(event.target.checked)}
       />
     </label>
   );

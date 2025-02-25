@@ -50,30 +50,13 @@ Promise.all([
     });
   };
 
-  window.commonAPI.appSettings.onChange('menuThemeColors', () => reloadMenuTheme());
-  window.commonAPI.appSettings.onChange('darkMenuThemeColors', () => reloadMenuTheme());
-  window.commonAPI.appSettings.onChange('menuTheme', () => reloadMenuTheme());
-  window.commonAPI.appSettings.onChange('darkMenuTheme', () => reloadMenuTheme());
-  window.commonAPI.appSettings.onChange('enableDarkModeForMenuThemes', () =>
-    reloadMenuTheme()
-  );
-  window.commonAPI.darkModeChanged(() => reloadMenuTheme());
+  window.commonAPI.darkModeChanged(reloadMenuTheme);
 
   // We also create a new sound theme and load the description we got from the main
   // process.
   const soundTheme = new SoundTheme();
   soundTheme.loadDescription(soundThemeDescription);
   soundTheme.setVolume(settings.soundVolume);
-
-  window.commonAPI.appSettings.onChange('soundTheme', () => {
-    window.commonAPI.getSoundTheme().then((description) => {
-      soundTheme.loadDescription(description);
-    });
-  });
-
-  window.commonAPI.appSettings.onChange('soundVolume', (volume) => {
-    soundTheme.setVolume(volume);
-  });
 
   // Now, we create the menu. It will be responsible for drawing the menu and handling
   // user input. It is re-used for every menu that is shown.
@@ -89,29 +72,23 @@ Promise.all([
     menu.show(root, menuOptions);
   });
 
-  // Tell the menu about settings changes.
-  const updateSettings = () => {
-    window.commonAPI.appSettings.get().then((settings) => {
-      menu.updateSettings(settings);
-    });
-  };
+  // Tell the menu about settings changes. This could check more detailed which setting
+  // has changed and only update the necessary parts. But for now, we just reload the
+  // whole menu theme.
+  window.commonAPI.appSettings.onChange((newSettings, oldSettings) => {
+    reloadMenuTheme();
+    menu.updateSettings(newSettings);
 
-  window.commonAPI.appSettings.onChange('centerDeadZone', updateSettings);
-  window.commonAPI.appSettings.onChange('minParentDistance', updateSettings);
-  window.commonAPI.appSettings.onChange('dragThreshold', updateSettings);
-  window.commonAPI.appSettings.onChange('fadeInDuration', updateSettings);
-  window.commonAPI.appSettings.onChange('fadeOutDuration', updateSettings);
-  window.commonAPI.appSettings.onChange('enableMarkingMode', updateSettings);
-  window.commonAPI.appSettings.onChange('enableTurboMode', updateSettings);
-  window.commonAPI.appSettings.onChange('hoverModeNeedsConfirmation', updateSettings);
-  window.commonAPI.appSettings.onChange('gestureMinStrokeLength', updateSettings);
-  window.commonAPI.appSettings.onChange('gestureMinStrokeAngle', updateSettings);
-  window.commonAPI.appSettings.onChange('gestureJitterThreshold', updateSettings);
-  window.commonAPI.appSettings.onChange('gesturePauseTimeout', updateSettings);
-  window.commonAPI.appSettings.onChange('fixedStrokeLength', updateSettings);
-  window.commonAPI.appSettings.onChange('rmbSelectsParent', updateSettings);
-  window.commonAPI.appSettings.onChange('gamepadBackButton', updateSettings);
-  window.commonAPI.appSettings.onChange('gamepadCloseButton', updateSettings);
+    if (newSettings.soundTheme !== oldSettings.soundTheme) {
+      window.commonAPI.getSoundTheme().then((description) => {
+        soundTheme.loadDescription(description);
+      });
+    }
+
+    if (newSettings.soundVolume !== oldSettings.soundVolume) {
+      soundTheme.setVolume(newSettings.soundVolume);
+    }
+  });
 
   // Sometimes, the user may select an item too close to the edge of the screen. In this
   // case, we can not open the menu directly under the pointer. To make sure that the

@@ -8,13 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../../settings-window-api';
-declare const window: WindowWithAPIs;
-
 import React from 'react';
 
-import Checkbox from './Checkbox';
-import { IAppSettings } from '../../../common';
+import Checkbox from './widgets/Checkbox';
+import { useAppSetting } from '../state';
+import { IAppSettings } from '../../common';
 
 interface IProps<K extends keyof IAppSettings> {
   /** The key in the app settings to manage. */
@@ -31,8 +29,8 @@ interface IProps<K extends keyof IAppSettings> {
 }
 
 /**
- * Used to ensure that the settings key K used for the ManagedCheckbox component refers to
- * a boolean property in the app settings.
+ * Used to ensure that the settings key K used for the AppSettingsCheckbox component
+ * refers to a boolean property in the app settings.
  */
 type BooleanKeys<T> = {
   [K in keyof T]: T[K] extends boolean ? K : never;
@@ -46,20 +44,14 @@ type BooleanKeys<T> = {
  * @returns A managed checkbox element.
  */
 export default <K extends BooleanKeys<IAppSettings>>(props: IProps<K>) => {
-  const [state, setState] = React.useState(false);
-
-  // Fetch the initial value from the app settings and set up a listener for changes.
-  React.useEffect(() => {
-    window.commonAPI.appSettings.getKey(props.settingsKey).then(setState);
-    return window.commonAPI.appSettings.onChange(props.settingsKey, setState);
-  }, [props.settingsKey]);
+  const [state, setState] = useAppSetting(props.settingsKey);
 
   return (
     <Checkbox
       label={props.label}
       info={props.info}
       initialValue={state}
-      onToggle={(value) => window.commonAPI.appSettings.setKey(props.settingsKey, value)}
+      onChange={setState}
       disabled={props.disabled}
     />
   );

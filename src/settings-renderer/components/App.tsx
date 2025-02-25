@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../settings-window-api';
-declare const window: WindowWithAPIs;
-
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 import {
@@ -18,6 +15,8 @@ import {
   TbInfoSquareRoundedFilled,
   TbPaletteFilled,
 } from 'react-icons/tb';
+
+import { useAppSetting } from '../state';
 
 import AboutDialog from './AboutDialog';
 import GeneralSettingsDialog from './GeneralSettingsDialog';
@@ -32,16 +31,7 @@ import Headerbar from './widgets/Headerbar';
 import * as classes from './App.module.scss';
 
 export default () => {
-  const [transparent, setTransparent] = React.useState(true);
-
-  React.useEffect(() => {
-    window.commonAPI.appSettings.getKey('transparentSettingsWindow').then(setTransparent);
-    return window.commonAPI.appSettings.onChange(
-      'transparentSettingsWindow',
-      setTransparent
-    );
-  }, []);
-
+  const [transparent] = useAppSetting('transparentSettingsWindow');
   const [settingsVisible, setSettingsVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [themesVisible, setThemesVisible] = React.useState(false);

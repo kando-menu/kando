@@ -62,9 +62,9 @@
     "ts-loader": "^9.5.2",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
-    "typescript-plugin-css-modules": "^5.1.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-plugin-css-modules": "^5.1.0"
   },
   "dependencies": {
     "@jaames/iro": "^5.5.2",
@@ -91,14 +91,15 @@
     "match-sorter": "^8.0.0",
     "material-symbols": "^0.28.2",
     "mime-types": "^2.1.35",
+    "node-addon-api": "^8.3.1",
+    "octokit": "^4.1.2",
     "react": "^19.0.0",
     "react-colorful": "^5.6.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-tooltip": "^5.28.0",
     "react-transition-group": "^4.4.5",
-    "node-addon-api": "^8.3.1",
-    "octokit": "^4.1.2",
-    "simple-icons-font": "^14.8.0"
+    "simple-icons-font": "^14.8.0",
+    "zustand": "^5.0.3"
   }
 }

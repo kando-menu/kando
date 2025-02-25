@@ -508,6 +508,19 @@ export interface IMenuSettings {
 }
 
 /**
+ * This function creates a default menu settings object. This is used when the settings
+ * file does not exist yet.
+ *
+ * @returns The default menu settings.
+ */
+export function getDefaultMenuSettings(): IMenuSettings {
+  return {
+    menus: [],
+    stash: [],
+  };
+}
+
+/**
  * This interface describes the content of the app settings file. It contains the names of
  * the themes to use for the menu and the settings.
  */
@@ -643,4 +656,45 @@ export interface IAppSettings {
    * https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
    */
   gamepadCloseButton: number;
+}
+
+/**
+ * This function creates a default app settings object. This is used when the settings
+ * file does not exist yet.
+ *
+ * @returns The default app settings.
+ */
+export function getDefaultAppSettings(): IAppSettings {
+  return {
+    locale: 'auto',
+    menuTheme: 'default',
+    darkMenuTheme: 'default',
+    menuThemeColors: {},
+    darkMenuThemeColors: {},
+    enableDarkModeForMenuThemes: false,
+    soundTheme: 'none',
+    soundVolume: 0.5,
+    ignoreWriteProtectedConfigFiles: false,
+    transparentSettingsWindow: false,
+    trayIconFlavor: 'color',
+    enableVersionCheck: true,
+    zoomFactor: 1,
+    centerDeadZone: 50,
+    minParentDistance: 150,
+    dragThreshold: 15,
+    fadeInDuration: 150,
+    fadeOutDuration: 200,
+    enableMarkingMode: true,
+    enableTurboMode: true,
+    hoverModeNeedsConfirmation: false,
+    gestureMinStrokeLength: 150,
+    gestureMinStrokeAngle: 20,
+    gestureJitterThreshold: 10,
+    gesturePauseTimeout: 100,
+    fixedStrokeLength: 0,
+    rmbSelectsParent: false,
+    gamepadBackButton: 1,
+    gamepadCloseButton: 2,
+    hideSettingsButton: false,
+  };
 }

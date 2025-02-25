@@ -28,6 +28,8 @@ import {
   IIconThemesInfo,
   ISoundThemeDescription,
   IMenuThemeDescription,
+  getDefaultAppSettings,
+  getDefaultMenuSettings,
 } from '../common';
 import { Settings, DeepReadonly } from './utils/settings';
 import { Notification } from './utils/notification';
@@ -95,42 +97,16 @@ export class KandoApp {
     await this.backend.init();
 
     // We load the settings from the user's home directory. If the settings file does not
-    // exist, it will be created with the default values.
+    // exist, it will be created with the default values. The only special setting is the
+    // transparentSettingsWindow setting which is set to true if the backend supports
+    // transparent windows.
     this.appSettings = new Settings<IAppSettings>({
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
-        locale: 'auto',
-        menuTheme: 'default',
-        darkMenuTheme: 'default',
-        menuThemeColors: {},
-        darkMenuThemeColors: {},
-        enableDarkModeForMenuThemes: false,
-        soundTheme: 'none',
-        soundVolume: 0.5,
-        ignoreWriteProtectedConfigFiles: false,
+        ...getDefaultAppSettings(),
         transparentSettingsWindow:
           this.backend.getBackendInfo().shouldUseTransparentSettingsWindow,
-        trayIconFlavor: 'color',
-        enableVersionCheck: true,
-        zoomFactor: 1,
-        centerDeadZone: 50,
-        minParentDistance: 150,
-        dragThreshold: 15,
-        fadeInDuration: 150,
-        fadeOutDuration: 200,
-        enableMarkingMode: true,
-        enableTurboMode: true,
-        hoverModeNeedsConfirmation: false,
-        gestureMinStrokeLength: 150,
-        gestureMinStrokeAngle: 20,
-        gestureJitterThreshold: 10,
-        gesturePauseTimeout: 100,
-        fixedStrokeLength: 0,
-        rmbSelectsParent: false,
-        gamepadBackButton: 1,
-        gamepadCloseButton: 2,
-        hideSettingsButton: false,
       },
     });
 
@@ -139,10 +115,7 @@ export class KandoApp {
     this.menuSettings = new Settings<IMenuSettings>({
       file: 'menus.json',
       directory: app.getPath('userData'),
-      defaults: {
-        menus: [],
-        stash: [],
-      },
+      defaults: getDefaultMenuSettings(),
     });
 
     // Tell i18next to use a specific locale if it is set in the settings.
@@ -219,11 +192,6 @@ export class KandoApp {
     this.updateChecker.on('update-available', () => {
       console.log(
         'A new version of Kando is available! Get it from https://github.com/kando-menu/kando/releases.'
-      );
-
-      // Show the update-available button in the sidebar.
-      this.settingsWindow.webContents.send(
-        'settings-window.show-update-available-button'
       );
 
       // Show a notification if possible.
@@ -418,50 +386,48 @@ export class KandoApp {
       };
     });
 
-    // Allow the renderer to access the app settings. We do this by exposing the
-    // a setter, a getter, and an on-change event for each key in the settings object.
-    for (const k of Object.keys(this.appSettings.defaults)) {
-      const key = k as keyof IAppSettings;
-
-      // Allow the renderer process to read the value of this setting.
-      ipcMain.handle(`common.app-settings-get-${key}`, () => this.appSettings.get(key));
-
-      // Allow the renderer process to set the value of this setting.
-      ipcMain.on(`common.app-settings-set-${key}`, (event, value) =>
-        this.appSettings.set({ [key]: value } as Partial<IAppSettings>)
-      );
-
-      // Notify the renderer process when a setting changes.
-      this.appSettings.onChange(
-        key,
-        (newValue: IAppSettings[typeof key], oldValue: IAppSettings[typeof key]) => {
-          if (this.menuWindow) {
-            this.menuWindow.webContents.send(
-              `common.app-settings-changed-${key}`,
-              newValue,
-              oldValue
-            );
-          }
-          if (this.settingsWindow) {
-            this.settingsWindow.webContents.send(
-              `common.app-settings-changed-${key}`,
-              newValue,
-              oldValue
-            );
-          }
-        }
-      );
-    }
-
     // We also allow getting the entire app settings object.
     ipcMain.handle('common.app-settings-get', () => this.appSettings.get());
+
+    // Allow the renderer to alter the settings.
+    ipcMain.on('common.app-settings-set', (event, settings) => {
+      this.appSettings.set(settings);
+    });
+
+    // Tell the renderers when the app settings change.
+    this.appSettings.onAnyChange((newSettings, oldSettings) => {
+      this.menuWindow?.webContents.send(
+        'common.app-settings-changed',
+        newSettings,
+        oldSettings
+      );
+      this.settingsWindow?.webContents.send(
+        'common.app-settings-changed',
+        newSettings,
+        oldSettings
+      );
+    });
 
     // Allow the renderer to retrieve the settings.
     ipcMain.handle('common.menu-settings-get', () => this.menuSettings.get());
 
-    // Allow the renderer to alter the settings.
+    // Allow the renderer to alter the menu settings.
     ipcMain.on('common.menu-settings-set', (event, settings) => {
       this.menuSettings.set(settings);
+    });
+
+    // Tell the renderers when the menu settings change.
+    this.menuSettings.onAnyChange((newSettings, oldSettings) => {
+      this.menuWindow?.webContents.send(
+        'common.menu-settings-changed',
+        newSettings,
+        oldSettings
+      );
+      this.settingsWindow?.webContents.send(
+        'common.menu-settings-changed',
+        newSettings,
+        oldSettings
+      );
     });
 
     // This should return the index of the currently selected menu. For now, we just
