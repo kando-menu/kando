@@ -1037,8 +1037,11 @@ export class KandoApp {
 
             settings.stash.push(itemOrMenu);
           } else {
-            // Else, it is a menu template. We add it as a menu with a template tag.
+            // Else, it is a menu template. We add it as a menu with a template tag. Also
+            // remove any bindings, so that the menu is not opened by a shortcut.
             itemOrMenu.tags = ['template'];
+            itemOrMenu.shortcut = '';
+            itemOrMenu.shortcutID = '';
             settings.menus.push(itemOrMenu);
           }
         }
