@@ -12,6 +12,23 @@ import React from 'react';
 
 import * as classes from './MenuList.module.scss';
 
+import { useMenus, useAppState } from '../state';
+
 export default () => {
-  return <div className={classes.menuList}>Menu List</div>;
+  const [menus, setMenus] = useMenus();
+  const backend = useAppState((state) => state.backendInfo);
+
+  return (
+    <div className={classes.menuList}>
+      {menus.map((menu, index) => {
+        const shortcut = backend.supportsShortcuts ? menu.shortcut : menu.shortcutID;
+        return (
+          <div key={index} className={classes.menu}>
+            <div className={classes.menuTitle}>{menu.root.name}</div>
+            <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
 };

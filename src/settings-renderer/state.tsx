@@ -11,18 +11,26 @@
 import { create } from 'zustand';
 
 import {
+  IMenu,
+  IMenuItem,
   IAppSettings,
   IMenuSettings,
   getDefaultAppSettings,
   getDefaultMenuSettings,
+  IBackendInfo,
+  IVersionInfo,
 } from '../common';
 
-// We have two global state objects: one for the applications settings stored in the
-// user's config.json and one for the menu settings stored in the user's menu.json.
-// In index.tsx we initialize these objects with the current settings from the main
-// process.
-// The main process will notify the renderer process whenever a setting changes on disk.
-// This is also wired up in index.tsx.
+// We have three global state objects: one for the applications settings stored in the
+// user's config.json, one for the menu settings stored in the user's menu.json, and one
+// for the current state of the settings dialog itself. The latter includes for instance
+// the currently selected menu.
+// In index.tsx we initialize these objects with information from the main process.
+// The main process will also notify the renderer process whenever a setting changes on
+// disk, which will lead automatically to a re-render of the components which use slices
+// of these objects.
+
+// App Settings State --------------------------------------------------------------------
 
 /**
  * Use this hook to access the entire app settings object. Usually you will only need a
@@ -43,10 +51,48 @@ export const useAppSetting = <T extends keyof IAppSettings>(key: T) => {
   return [value, setValue] as const;
 };
 
+// Menu Settings State -------------------------------------------------------------------
+
 /**
  * Use this hook to access the entire menu settings object. Usually you will only need the
  * menus or the stash. In this case, use the methods below.
  */
 export const useMenuSettings = create<IMenuSettings>(() => ({
   ...getDefaultMenuSettings(),
+}));
+
+/** Use this hook to access the menus from the menu settings. */
+export const useMenus = () => {
+  const menus = useMenuSettings((state) => state.menus);
+  const setMenus = (newMenus: Array<IMenu>) =>
+    useMenuSettings.setState((state) => ({ ...state, menus: newMenus }));
+  return [menus, setMenus] as const;
+};
+
+/** Use this hook to access the stash from the menu settings. */
+export const useStash = () => {
+  const stash = useMenuSettings((state) => state.stash);
+  const setStash = (newStash: Array<IMenuItem>) =>
+    useMenuSettings.setState((state) => ({ ...state, stash: newStash }));
+  return [stash, setStash] as const;
+};
+
+// App State -----------------------------------------------------------------------------
+
+type State = {
+  selectedMenu: number;
+  backendInfo: IBackendInfo | null;
+  versionInfo: IVersionInfo | null;
+};
+
+type Action = {
+  selectMenu: (which: number) => void;
+};
+
+/** This is the state of the settings dialog itself. */
+export const useAppState = create<State & Action>((set) => ({
+  selectedMenu: 0,
+  backendInfo: null,
+  versionInfo: null,
+  selectMenu: (which: number) => set({ selectedMenu: which }),
 }));

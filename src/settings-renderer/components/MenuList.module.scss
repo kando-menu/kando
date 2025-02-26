@@ -13,3 +13,20 @@
 .menuList {
   background-color: $background-normal;
 }
+
+.menu {
+  color: $text-primary;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: $background-secondary;
+  margin-bottom: 5px;
+}
+
+.menuTitle {
+  font-size: 1.2em;
+  margin-bottom: 3px;
+}
+
+.menuSubtitle {
+  font-size: 0.8em;
+}

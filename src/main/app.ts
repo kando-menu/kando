@@ -325,6 +325,16 @@ export class KandoApp {
       return this.backend.getBackendInfo();
     });
 
+    // Allow the renderer to retrieve information about the current app version.
+    ipcMain.handle('settings-window.get-version', () => {
+      return {
+        kandoVersion: app.getVersion(),
+        electronVersion: process.versions.electron,
+        chromeVersion: process.versions.chrome,
+        nodeVersion: process.versions.node,
+      };
+    });
+
     // Allow the renderer to retrieve the path to the config directory.
     ipcMain.handle('settings-window.get-config-directory', () => {
       return app.getPath('userData');
@@ -443,16 +453,6 @@ export class KandoApp {
         .findIndex((m) => m.root.name === this.menuWindow.lastMenu.root.name);
 
       return Math.max(index, 0);
-    });
-
-    // Allow the renderer to retrieve information about the current app version.
-    ipcMain.handle('common.get-version', () => {
-      return {
-        kandoVersion: app.getVersion(),
-        electronVersion: process.versions.electron,
-        chromeVersion: process.versions.chrome,
-        nodeVersion: process.versions.node,
-      };
     });
 
     // Allow the renderer to retrieve all icons of all file icon themes.

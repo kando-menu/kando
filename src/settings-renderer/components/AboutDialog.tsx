@@ -14,6 +14,7 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import { TbExternalLink, TbInfoSquareRoundedFilled } from 'react-icons/tb';
 
+import { useAppState } from '../state';
 import Swirl from './widgets/Swirl';
 import Modal from './widgets/Modal';
 import Button from './widgets/Button';
@@ -28,19 +29,7 @@ interface IProps {
 }
 
 export default (props: IProps) => {
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!props.visible) {
-      return;
-    }
-
-    window.commonAPI.getVersion().then((version) => {
-      if (ref.current) {
-        ref.current.innerHTML = `${version.kandoVersion}<br />${version.electronVersion}<br />${version.nodeVersion}<br />${version.chromeVersion}`;
-      }
-    });
-  });
+  const version = useAppState((state) => state.versionInfo);
 
   return (
     <Modal
@@ -74,7 +63,15 @@ export default (props: IProps) => {
             Chromium Version:
             <br />
           </div>
-          <div ref={ref} className={classes.versionInfo}></div>
+          <div className={classes.versionInfo}>
+            {version.kandoVersion}
+            <br />
+            {version.electronVersion}
+            <br />
+            {version.nodeVersion}
+            <br />
+            {version.chromeVersion}
+          </div>
           <div className={classes.buttons}>
             <Button
               label="Check latest release"

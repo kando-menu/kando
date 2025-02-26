@@ -14,7 +14,6 @@ import {
   IAppSettings,
   IMenuThemeDescription,
   ISoundThemeDescription,
-  IVersionInfo,
   IMenuSettings,
   IIconThemesInfo,
 } from '.';
@@ -106,11 +105,6 @@ export const COMMON_WINDOW_API = {
     getCurrentMenu: function (): Promise<number> {
       return ipcRenderer.invoke('common.menu-settings-get-current-menu');
     },
-  },
-
-  /** Returns the current version string of Kando. */
-  getVersion: (): Promise<IVersionInfo> => {
-    return ipcRenderer.invoke('common.get-version');
   },
 
   /** This will return a IIconThemesInfo describing all available icon themes. */

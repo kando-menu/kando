@@ -11,7 +11,7 @@
 import { ipcRenderer } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { IBackendInfo, IMenuThemeDescription } from '../common';
+import { IBackendInfo, IMenuThemeDescription, IVersionInfo } from '../common';
 
 /**
  * These functions are available in the settings window's renderer process. They are
@@ -30,6 +30,11 @@ export const SETTINGS_WINDOW_API = {
   /** This will return some information about the currently used backend. */
   getBackendInfo: (): Promise<IBackendInfo> => {
     return ipcRenderer.invoke('settings-window.get-backend-info');
+  },
+
+  /** Returns the current version string of Kando. */
+  getVersionInfo: (): Promise<IVersionInfo> => {
+    return ipcRenderer.invoke('settings-window.get-version');
   },
 
   /** This will return the path to Kando's config directory. */

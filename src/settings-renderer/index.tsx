@@ -18,7 +18,7 @@ import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
 
 import App from './components/App';
-import { useAppSettings, useMenuSettings } from './state';
+import { useAppSettings, useMenuSettings, useAppState } from './state';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is
@@ -34,7 +34,9 @@ Promise.all([
   window.commonAPI.getLocales(),
   window.commonAPI.appSettings.get(),
   window.commonAPI.menuSettings.get(),
-]).then(async ([locales, appSettings, menuSettings]) => {
+  window.settingsAPI.getBackendInfo(),
+  window.settingsAPI.getVersionInfo(),
+]).then(async ([locales, appSettings, menuSettings, backendInfo, versionInfo]) => {
   // Initialize i18next with the current locale and the english fallback locale.
   await i18next.init({
     lng: locales.current,
@@ -54,22 +56,26 @@ Promise.all([
   // Initialize the global state objects.
   useAppSettings.setState(appSettings);
   useMenuSettings.setState(menuSettings);
+  useAppState.setState({
+    backendInfo,
+    versionInfo,
+  });
 
-  window.commonAPI.appSettings.onChange((newSettings) =>
-    useAppSettings.setState(newSettings)
-  );
+  window.commonAPI.appSettings.onChange((newSettings) => {
+    useAppSettings.setState(newSettings);
+  });
 
-  window.commonAPI.menuSettings.onChange((newSettings) =>
-    useMenuSettings.setState(newSettings)
-  );
+  window.commonAPI.menuSettings.onChange((newSettings) => {
+    useMenuSettings.setState(newSettings);
+  });
 
-  useAppSettings.subscribe((newSettings) =>
-    window.commonAPI.appSettings.set(newSettings)
-  );
+  useAppSettings.subscribe((newSettings) => {
+    window.commonAPI.appSettings.set(newSettings);
+  });
 
-  useMenuSettings.subscribe((newSettings) =>
-    window.commonAPI.menuSettings.set(newSettings)
-  );
+  useMenuSettings.subscribe((newSettings) => {
+    window.commonAPI.menuSettings.set(newSettings);
+  });
 
   // Create the settings object. This will handle the rendering of the settings window.
   const root = createRoot(document.body);
