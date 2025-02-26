@@ -21,9 +21,8 @@ import {
 import { RiDeleteBack2Fill } from 'react-icons/ri';
 import lodash from 'lodash';
 
-import { useAppSetting } from '../state';
+import { useAppSetting, useAppState } from '../state';
 
-import { IMenuThemeDescription } from '../../common';
 import Button from './widgets/Button';
 import ColorButton from './widgets/ColorButton';
 import Modal from './widgets/Modal';
@@ -48,33 +47,14 @@ const openThemeDirectory = () => {
 };
 
 export default (props: IProps) => {
-  const [themes, setThemes] = React.useState<Array<IMenuThemeDescription>>([]);
-  const [darkMode, setDarkMode] = React.useState<boolean>(false);
+  const darkMode = useAppState((state) => state.darkMode);
+  const themes = useAppState((state) => state.menuThemes);
 
   const [currentThemeID, setCurrentThemeID] = useAppSetting('menuTheme');
   const [currentDarkThemeID, setCurrentDarkThemeID] = useAppSetting('darkMenuTheme');
   const [colors, setColors] = useAppSetting('menuThemeColors');
   const [darkColors, setDarkColors] = useAppSetting('darkMenuThemeColors');
   const [useDarkMode] = useAppSetting('enableDarkModeForMenuThemes');
-
-  React.useEffect(() => {
-    if (!props.visible) {
-      return;
-    }
-
-    Promise.all([
-      window.settingsAPI.getAllMenuThemes(),
-      window.commonAPI.getIsDarkMode(),
-    ]).then(([themes, darkMode]) => {
-      setThemes(themes);
-      setDarkMode(darkMode);
-    });
-
-    return window.commonAPI.darkModeChanged((darkMode) => {
-      console.log('Dark mode changed to', darkMode);
-      setDarkMode(darkMode);
-    });
-  }, [props.visible]);
 
   // This is called when the user clicks on a theme. If different settings are used for
   // dark and light mode, we have to set the correct setting.

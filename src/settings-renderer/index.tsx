@@ -34,59 +34,76 @@ Promise.all([
   window.commonAPI.getLocales(),
   window.commonAPI.appSettings.get(),
   window.commonAPI.menuSettings.get(),
+  window.commonAPI.getIsDarkMode(),
   window.settingsAPI.getBackendInfo(),
   window.settingsAPI.getVersionInfo(),
-]).then(async ([locales, appSettings, menuSettings, backendInfo, versionInfo]) => {
-  // Initialize i18next with the current locale and the english fallback locale.
-  await i18next.init({
-    lng: locales.current,
-    fallbackLng: locales.fallbackLng,
-  });
-
-  Object.keys(locales.data).forEach((key) => {
-    i18next.addResourceBundle(
-      key,
-      'translation',
-      locales.data[key].translation,
-      true,
-      true
-    );
-  });
-
-  // Initialize the global state objects.
-  useAppSettings.setState(appSettings);
-  useMenuSettings.setState(menuSettings);
-  useAppState.setState({
+  window.settingsAPI.getAllMenuThemes(),
+]).then(
+  async ([
+    locales,
+    appSettings,
+    menuSettings,
+    darkMode,
     backendInfo,
     versionInfo,
-  });
+    menuThemes,
+  ]) => {
+    // Initialize i18next with the current locale and the english fallback locale.
+    await i18next.init({
+      lng: locales.current,
+      fallbackLng: locales.fallbackLng,
+    });
 
-  window.commonAPI.appSettings.onChange((newSettings) => {
-    useAppSettings.setState(newSettings);
-  });
+    Object.keys(locales.data).forEach((key) => {
+      i18next.addResourceBundle(
+        key,
+        'translation',
+        locales.data[key].translation,
+        true,
+        true
+      );
+    });
 
-  window.commonAPI.menuSettings.onChange((newSettings) => {
-    useMenuSettings.setState(newSettings);
-  });
+    // Initialize the global state objects.
+    useAppSettings.setState(appSettings);
+    useMenuSettings.setState(menuSettings);
+    useAppState.setState({
+      backendInfo,
+      versionInfo,
+      darkMode,
+      menuThemes,
+    });
 
-  useAppSettings.subscribe((newSettings) => {
-    window.commonAPI.appSettings.set(newSettings);
-  });
+    window.commonAPI.appSettings.onChange((newSettings) => {
+      useAppSettings.setState(newSettings);
+    });
 
-  useMenuSettings.subscribe((newSettings) => {
-    window.commonAPI.menuSettings.set(newSettings);
-  });
+    window.commonAPI.menuSettings.onChange((newSettings) => {
+      useMenuSettings.setState(newSettings);
+    });
 
-  // Create the settings object. This will handle the rendering of the settings window.
-  const root = createRoot(document.body);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
+    window.commonAPI.darkModeChanged((darkMode) => {
+      useAppState.setState({ darkMode });
+    });
 
-  // Save the settings when the user closes the settings window.
-  /*window.addEventListener('unload', function () {
+    useAppSettings.subscribe((newSettings) => {
+      window.commonAPI.appSettings.set(newSettings);
+    });
+
+    useMenuSettings.subscribe((newSettings) => {
+      window.commonAPI.menuSettings.set(newSettings);
+    });
+
+    // Create the settings object. This will handle the rendering of the settings window.
+    const root = createRoot(document.body);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+
+    // Save the settings when the user closes the settings window.
+    /*window.addEventListener('unload', function () {
     // Before sending the settings back to the main process, we have to make sure
     // that the menu items are converted back to IMenuItem objects. This is because
     // ISettingsMenuItem objects contain properties (such as DOM nodes) which neither need to
@@ -102,10 +119,11 @@ Promise.all([
     window.commonAPI.menuSettings.set(menuSettings);
   });*/
 
-  // This is helpful during development as it shows us when the renderer process has
-  // finished reloading.
-  window.commonAPI.log("Successfully loaded Kando's Settings process.");
+    // This is helpful during development as it shows us when the renderer process has
+    // finished reloading.
+    window.commonAPI.log("Successfully loaded Kando's Settings process.");
 
-  // Notify the main process that we are ready.
-  window.settingsAPI.settingsWindowReady();
-});
+    // Notify the main process that we are ready.
+    window.settingsAPI.settingsWindowReady();
+  }
+);

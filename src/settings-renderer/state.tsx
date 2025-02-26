@@ -19,6 +19,7 @@ import {
   getDefaultMenuSettings,
   IBackendInfo,
   IVersionInfo,
+  IMenuThemeDescription,
 } from '../common';
 
 // We have three global state objects: one for the applications settings stored in the
@@ -81,8 +82,10 @@ export const useStash = () => {
 
 type State = {
   selectedMenu: number;
+  darkMode: boolean;
   backendInfo: IBackendInfo | null;
   versionInfo: IVersionInfo | null;
+  menuThemes: Array<IMenuThemeDescription>;
 };
 
 type Action = {
@@ -92,7 +95,9 @@ type Action = {
 /** This is the state of the settings dialog itself. */
 export const useAppState = create<State & Action>((set) => ({
   selectedMenu: 0,
+  darkMode: false,
   backendInfo: null,
   versionInfo: null,
+  menuThemes: [],
   selectMenu: (which: number) => set({ selectedMenu: which }),
 }));
