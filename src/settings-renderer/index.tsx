@@ -38,6 +38,7 @@ Promise.all([
   window.settingsAPI.getBackendInfo(),
   window.settingsAPI.getVersionInfo(),
   window.settingsAPI.getAllMenuThemes(),
+  window.settingsAPI.getCurrentMenu(),
 ]).then(
   async ([
     locales,
@@ -47,6 +48,7 @@ Promise.all([
     backendInfo,
     versionInfo,
     menuThemes,
+    selectedMenu,
   ]) => {
     // Initialize i18next with the current locale and the english fallback locale.
     await i18next.init({
@@ -72,6 +74,7 @@ Promise.all([
       versionInfo,
       darkMode,
       menuThemes,
+      selectedMenu,
     });
 
     window.commonAPI.appSettings.onChange((newSettings) => {

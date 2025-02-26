@@ -10,9 +10,12 @@
 
 import React from 'react';
 
-const swirl = require('../../../../assets/images/swirl1.svg');
+const swirl1 = require('../../../../assets/images/swirl1.svg');
+const swirl2 = require('../../../../assets/images/swirl2.svg');
+const swirl3 = require('../../../../assets/images/swirl3.svg');
 
 interface IProps {
+  variant: '1' | '2' | '3';
   marginTop?: number;
   marginBottom?: number;
   width?: number;
@@ -21,8 +24,8 @@ interface IProps {
 export default (props: IProps) => {
   return (
     <img
-      src={swirl}
-      width={props.width || 250}
+      src={props.variant === '1' ? swirl1 : props.variant === '2' ? swirl2 : swirl3}
+      width={props.width || 350}
       style={{
         opacity: 0.5,
         marginTop: props.marginTop || 0,

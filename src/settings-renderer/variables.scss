@@ -12,9 +12,13 @@ $text-primary: light-dark(#333, #ddd);
 $text-secondary: light-dark(#777, #999);
 $link: light-dark(#9f3b67, #f0cece);
 
-$background-header: light-dark(#ebebeb, #101115);
 $background-normal: light-dark(#fff, #24272f);
+$background-dark: light-dark(#ebebeb, #101115);
 $background-primary: light-dark(#f0cece, #9f3b67);
-$background-secondary: light-dark(#ddd, #555555);
+$background-secondary: light-dark(#ddd, rgba(255, 255, 255, 0.1));
+$background-secondary-hover: light-dark(#ddd, rgba(255, 255, 255, 0.15));
+$background-selected: light-dark(#ddd, rgba(123, 100, 100, 0.65));
+$background-selected-hover: light-dark(#ddd, rgba(123, 100, 100, 0.7));
+$border-selected: light-dark(#9f3b67, #f0cece);
 
-$modal-background: light-dark(rgba(#747474, 0.5), rgba(#5c5c5c, 0.3));
+$modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));

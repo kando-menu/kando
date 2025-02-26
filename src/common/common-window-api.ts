@@ -102,9 +102,6 @@ export const COMMON_WINDOW_API = {
         ipcRenderer.off('common.menu-settings-changed', wrappedCallback);
       };
     },
-    getCurrentMenu: function (): Promise<number> {
-      return ipcRenderer.invoke('common.menu-settings-get-current-menu');
-    },
   },
 
   /** This will return a IIconThemesInfo describing all available icon themes. */

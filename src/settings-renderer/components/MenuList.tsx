@@ -16,17 +16,25 @@ import { useMenus, useAppState } from '../state';
 
 export default () => {
   const [menus, setMenus] = useMenus();
+  const selectedMenu = useAppState((state) => state.selectedMenu);
+  const selectMenu = useAppState((state) => state.selectMenu);
   const backend = useAppState((state) => state.backendInfo);
 
   return (
     <div className={classes.menuList}>
       {menus.map((menu, index) => {
         const shortcut = backend.supportsShortcuts ? menu.shortcut : menu.shortcutID;
+        let className = classes.menu;
+
+        if (index === selectedMenu) {
+          className += ` ${classes.selected}`;
+        }
+
         return (
-          <div key={index} className={classes.menu}>
+          <button key={index} className={className} onClick={() => selectMenu(index)}>
             <div className={classes.menuTitle}>{menu.root.name}</div>
             <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
-          </div>
+          </button>
         );
       })}
     </div>

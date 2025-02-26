@@ -68,7 +68,7 @@ export default (props: IProps) => {
             to open the directory where the config.json file is stored.
           </Note>
 
-          <Swirl marginTop={10} marginBottom={20} />
+          <Swirl variant="3" marginTop={10} width={350} marginBottom={20} />
 
           <h1>App Behavior</h1>
           <AppSettingsCheckbox

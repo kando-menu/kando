@@ -335,6 +335,21 @@ export class KandoApp {
       };
     });
 
+    // This should return the index of the currently selected menu. For now, we just
+    // return the index of a menu with the same name as the last menu. If the user uses
+    // the same name for multiple menus, this will not work as expected.
+    ipcMain.handle('settings-window.get-current-menu', () => {
+      if (!this.menuWindow?.lastMenu) {
+        return 0;
+      }
+
+      const index = this.menuSettings
+        .get('menus')
+        .findIndex((m) => m.root.name === this.menuWindow.lastMenu.root.name);
+
+      return Math.max(index, 0);
+    });
+
     // Allow the renderer to retrieve the path to the config directory.
     ipcMain.handle('settings-window.get-config-directory', () => {
       return app.getPath('userData');
@@ -438,21 +453,6 @@ export class KandoApp {
         newSettings,
         oldSettings
       );
-    });
-
-    // This should return the index of the currently selected menu. For now, we just
-    // return the index of a menu with the same name as the last menu. If the user uses
-    // the same name for multiple menus, this will not work as expected.
-    ipcMain.handle('common.menu-settings-get-current-menu', () => {
-      if (!this.menuWindow?.lastMenu) {
-        return 0;
-      }
-
-      const index = this.menuSettings
-        .get('menus')
-        .findIndex((m) => m.root.name === this.menuWindow.lastMenu.root.name);
-
-      return Math.max(index, 0);
     });
 
     // Allow the renderer to retrieve all icons of all file icon themes.

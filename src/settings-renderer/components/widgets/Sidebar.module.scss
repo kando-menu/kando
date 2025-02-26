@@ -11,15 +11,11 @@
 @import '../../variables.scss';
 
 .sidebar {
-  background-color: $background-header;
+  background-color: $background-dark;
   width: 300px;
   min-width: min-content;
   display: flex;
   flex-direction: column;
-}
-
-.content {
-  padding: 10px;
 }
 
 .resizer {

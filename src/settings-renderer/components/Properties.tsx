@@ -10,6 +10,8 @@
 
 import React from 'react';
 
+import * as classes from './Properties.module.scss';
+
 export default () => {
-  return <div>Properties</div>;
+  return <div className={classes.properties}>Properties</div>;
 };

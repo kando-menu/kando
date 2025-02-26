@@ -37,6 +37,10 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-version');
   },
 
+  getCurrentMenu: function (): Promise<number> {
+    return ipcRenderer.invoke('settings-window.get-current-menu');
+  },
+
   /** This will return the path to Kando's config directory. */
   getConfigDirectory: (): Promise<string> => {
     return ipcRenderer.invoke('settings-window.get-config-directory');

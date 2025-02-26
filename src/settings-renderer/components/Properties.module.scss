@@ -10,50 +10,8 @@
 
 @import '../variables.scss';
 
-.menuList {
+.properties {
   flex-grow: 1;
   background-color: $background-normal;
   padding: 12px;
-  margin-left: 64px;
-  border-top-left-radius: 10px;
-}
-
-.menu {
-  display: block;
-  border: none;
-  color: $text-primary;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: $background-secondary;
-  margin-bottom: 8px;
-  text-align: left;
-  width: 100%;
-  border: 1px solid transparent;
-
-  &.selected {
-    background-color: $background-selected;
-    border: 1px solid $border-selected;
-    color: $text-primary;
-
-    &:hover {
-      background-color: $background-selected-hover;
-    }
-  }
-
-  &:hover {
-    background-color: $background-secondary-hover;
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-}
-
-.menuTitle {
-  font-size: 1rem;
-}
-
-.menuSubtitle {
-  color: $text-secondary;
-  font-size: 0.8rem;
 }

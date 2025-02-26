@@ -73,7 +73,7 @@ export default (props: IProps) => {
       {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
       <div ref={sidebar} className={classes.sidebar}>
         {props.header}
-        <div className={classes.content}>{props.content}</div>
+        {props.content}
       </div>
       {/* Render the resizer on the right if the sidebar is on the left. */}
       {props.position === 'left' && <div ref={resizer} className={resizerClass} />}

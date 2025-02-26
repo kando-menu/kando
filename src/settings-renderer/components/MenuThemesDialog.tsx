@@ -209,7 +209,7 @@ export default (props: IProps) => {
           {accentColorsNode}
           <div style={{ flexGrow: 1 }} />
 
-          <Swirl width={280} marginTop={10} marginBottom={20} />
+          <Swirl variant="1" width={200} marginTop={10} marginBottom={20} />
           <Button
             label="Get themes online"
             icon={<TbExternalLink />}
