@@ -54,7 +54,7 @@ export default () => {
           onClick={() => selectCollection(-1)}
           data-tooltip-id="main-tooltip"
           data-tooltip-content="All menus">
-          <ThemedIcon name="sell" theme="material-symbols-rounded" />
+          <ThemedIcon name="apps" theme="material-symbols-rounded" />
         </button>
         {menuCollections.map((collection, index) => {
           const className =
@@ -81,27 +81,42 @@ export default () => {
         </button>
       </div>
       <div className={classes.menuList}>
-        <Scrollbox>
-          {visibleMenus.map(({ menu, index }) => {
-            const shortcut = backend.supportsShortcuts ? menu.shortcut : menu.shortcutID;
-            const className =
-              classes.menu + ' ' + (index === selectedMenu ? classes.selected : '');
+        <div className={classes.menuListHeader}>
+          {menuCollections[selectedCollection]?.name || (
+            <a href="https://drag-and-drop.formkit.com/">here</a>
+          )}
+        </div>
+        <div className={classes.menuListContent}>
+          <Scrollbox>
+            {visibleMenus.map(({ menu, index }) => {
+              const shortcut = backend.supportsShortcuts
+                ? menu.shortcut
+                : menu.shortcutID;
+              const className =
+                classes.menu + ' ' + (index === selectedMenu ? classes.selected : '');
 
-            return (
-              <button key={index} className={className} onClick={() => selectMenu(index)}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 32, marginRight: 10 }}>
-                    <ThemedIcon name={menu.root.icon} theme={menu.root.iconTheme} />
+              return (
+                <button
+                  key={index}
+                  draggable={true}
+                  className={className}
+                  onClick={() => selectMenu(index)}>
+                  <div style={{ display: 'flex' }}>
+                    <div style={{ width: 32, marginRight: 10 }}>
+                      <ThemedIcon name={menu.root.icon} theme={menu.root.iconTheme} />
+                    </div>
+                    <div>
+                      <div className={classes.menuTitle}>{menu.root.name}</div>
+                      <div className={classes.menuSubtitle}>
+                        {shortcut || 'Not bound.'}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <div className={classes.menuTitle}>{menu.root.name}</div>
-                    <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </Scrollbox>
+                </button>
+              );
+            })}
+          </Scrollbox>
+        </div>
       </div>
     </div>
   );

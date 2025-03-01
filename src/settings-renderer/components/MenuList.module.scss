@@ -21,6 +21,22 @@
 }
 
 .menuList {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuListHeader {
+  min-height: env(titlebar-area-height, 30);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.menuListContent {
+  min-height: 0px; // This is important to make the scrollboxes work.
   background-color: $background-normal;
   padding: 0 5px;
   border-top-left-radius: 10px;
@@ -57,7 +73,7 @@
 .collection {
   width: 48px;
   height: 48px;
-  margin: 5px;
+  margin: 10px;
   border-radius: 50%;
   -webkit-app-region: no-drag;
 
