@@ -11,9 +11,10 @@
 @import '../variables.scss';
 
 .menuList {
+  min-height: 0px; // This is important to make the scrollbox work.
   flex-grow: 1;
   background-color: $background-normal;
-  padding: 12px;
+  padding: 0 5px;
   margin-left: 64px;
   border-top-left-radius: 10px;
 }
@@ -23,17 +24,19 @@
   border: none;
   color: $text-primary;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: $background-secondary;
   margin-bottom: 8px;
   text-align: left;
   width: 100%;
   border: 1px solid transparent;
+  transition: border-radius 0.2s;
 
   &.selected {
     background-color: $background-selected;
     border: 1px solid $border-selected;
     color: $text-primary;
+    border-radius: 5px;
 
     &:hover {
       background-color: $background-selected-hover;

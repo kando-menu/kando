@@ -19,19 +19,19 @@
 }
 
 .resizer {
-  width: 20px;
+  width: 10px;
   cursor: ew-resize;
   opacity: 0.1;
   transition: opacity 0.2s;
 
   &.left {
-    margin-right: -20px;
-    transform: translateX(-10px);
+    margin-right: -10px;
+    transform: translateX(-5px);
   }
 
   &.right {
-    margin-left: -20px;
-    transform: translateX(10px);
+    margin-left: -10px;
+    transform: translateX(5px);
   }
 
   &::before {

@@ -19,7 +19,9 @@ interface IProps {
 
 export default (props: IProps) => {
   return (
-    <div className={classes.scrollbox} style={{ maxHeight: props.maxHeight }}>
+    <div
+      className={classes.scrollbox}
+      style={{ maxHeight: props.maxHeight, height: '100%' }}>
       <div className={classes.content}>{props.children}</div>
     </div>
   );

@@ -13,6 +13,7 @@ import React from 'react';
 import * as classes from './MenuList.module.scss';
 
 import { useMenus, useAppState } from '../state';
+import Scrollbox from './widgets/Scrollbox';
 
 export default () => {
   const [menus, setMenus] = useMenus();
@@ -22,21 +23,23 @@ export default () => {
 
   return (
     <div className={classes.menuList}>
-      {menus.map((menu, index) => {
-        const shortcut = backend.supportsShortcuts ? menu.shortcut : menu.shortcutID;
-        let className = classes.menu;
+      <Scrollbox>
+        {menus.map((menu, index) => {
+          const shortcut = backend.supportsShortcuts ? menu.shortcut : menu.shortcutID;
+          let className = classes.menu;
 
-        if (index === selectedMenu) {
-          className += ` ${classes.selected}`;
-        }
+          if (index === selectedMenu) {
+            className += ` ${classes.selected}`;
+          }
 
-        return (
-          <button key={index} className={className} onClick={() => selectMenu(index)}>
-            <div className={classes.menuTitle}>{menu.root.name}</div>
-            <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
-          </button>
-        );
-      })}
+          return (
+            <button key={index} className={className} onClick={() => selectMenu(index)}>
+              <div className={classes.menuTitle}>{menu.root.name}</div>
+              <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
+            </button>
+          );
+        })}
+      </Scrollbox>
     </div>
   );
 };
