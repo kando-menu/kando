@@ -28,6 +28,22 @@ export default () => {
 
   const backend = useAppState((state) => state.backendInfo);
 
+  const visibleMenus = menus
+    .map((menu, index) => {
+      return { menu, index };
+    })
+    .filter((menu) => {
+      // If the user has not selected a collection, all menus are visible.
+      if (selectedCollection === -1) {
+        return true;
+      }
+
+      // Else, a menu must have all tags of the selected collection to be visible.
+      return menuCollections[selectedCollection].tags.every((tag) =>
+        menu.menu.tags?.includes(tag)
+      );
+    });
+
   return (
     <div className={classes.container}>
       <div className={classes.collectionsList}>
@@ -37,7 +53,7 @@ export default () => {
           }
           onClick={() => selectCollection(-1)}
           data-tooltip-id="main-tooltip"
-          data-tooltip-content="Show all menus">
+          data-tooltip-content="All menus">
           <ThemedIcon name="sell" theme="material-symbols-rounded" />
         </button>
         {menuCollections.map((collection, index) => {
@@ -66,7 +82,7 @@ export default () => {
       </div>
       <div className={classes.menuList}>
         <Scrollbox>
-          {menus.map((menu, index) => {
+          {visibleMenus.map(({ menu, index }) => {
             const shortcut = backend.supportsShortcuts ? menu.shortcut : menu.shortcutID;
             const className =
               classes.menu + ' ' + (index === selectedMenu ? classes.selected : '');
