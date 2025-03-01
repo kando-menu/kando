@@ -10,33 +10,35 @@
 
 @import '../variables.scss';
 
-.menuList {
-  min-height: 0px; // This is important to make the scrollbox work.
+.container {
+  min-height: 0px; // This is important to make the scrollboxes work.
   flex-grow: 1;
-  background-color: $background-normal;
-  padding: 0 5px;
-  margin-left: 64px;
-  border-top-left-radius: 10px;
+  display: flex;
 }
 
+.collectionsList {
+  -webkit-app-region: drag;
+}
+
+.menuList {
+  background-color: $background-normal;
+  padding: 0 5px;
+  border-top-left-radius: 10px;
+  flex-grow: 1;
+}
+
+.collection,
 .menu {
   display: block;
   border: none;
-  color: $text-primary;
-  padding: 10px;
-  border-radius: 8px;
   background-color: $background-secondary;
-  margin-bottom: 8px;
-  text-align: left;
-  width: 100%;
+  color: $text-primary;
   border: 1px solid transparent;
-  transition: border-radius 0.2s;
 
   &.selected {
     background-color: $background-selected;
     border: 1px solid $border-selected;
     color: $text-primary;
-    border-radius: 5px;
 
     &:hover {
       background-color: $background-selected-hover;
@@ -50,6 +52,30 @@
   &:active {
     transform: translateY(1px);
   }
+}
+
+.collection {
+  width: 48px;
+  height: 48px;
+  margin: 5px;
+  border-radius: 50%;
+  -webkit-app-region: no-drag;
+
+  &.transparent {
+    background-color: transparent;
+
+    &:hover {
+      background-color: $background-secondary;
+    }
+  }
+}
+
+.menu {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  text-align: left;
+  width: 100%;
 }
 
 .menuTitle {

@@ -12,10 +12,16 @@ import React, { ReactNode } from 'react';
 
 import * as classes from './Preview.module.scss';
 
+import Headerbar from './widgets/Headerbar';
+
 interface IProps {
-  header: ReactNode;
+  headerButtons: ReactNode;
 }
 
 export default (props: IProps) => {
-  return <div className={classes.preview}>{props.header}</div>;
+  return (
+    <div className={classes.preview}>
+      <Headerbar center={props.headerButtons} />
+    </div>
+  );
 };

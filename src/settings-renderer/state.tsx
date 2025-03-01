@@ -81,23 +81,44 @@ export const useStash = () => {
 // App State -----------------------------------------------------------------------------
 
 type State = {
+  /**
+   * The index of the currently selected menu. This is the index in the entire list of
+   * unfiltered menus as specified in the menu settings.
+   */
   selectedMenu: number;
+
+  /**
+   * The index of the currently selected menu collection. The special value of -1 means
+   * that no collection is selected and all menus are shown.
+   */
+  selectedCollection: number;
+
+  /** Whether the app is in dark mode. */
   darkMode: boolean;
+
+  /** Information about the backend. */
   backendInfo: IBackendInfo | null;
+
+  /** Information about the current version of Kando and some libraries. */
   versionInfo: IVersionInfo | null;
+
+  /** Descriptions of all available menu themes. */
   menuThemes: Array<IMenuThemeDescription>;
 };
 
 type Action = {
   selectMenu: (which: number) => void;
+  selectCollection: (which: number) => void;
 };
 
 /** This is the state of the settings dialog itself. */
 export const useAppState = create<State & Action>((set) => ({
   selectedMenu: 0,
+  selectedCollection: -1,
   darkMode: false,
   backendInfo: null,
   versionInfo: null,
   menuThemes: [],
   selectMenu: (which: number) => set({ selectedMenu: which }),
+  selectCollection: (which: number) => set({ selectedCollection: which }),
 }));

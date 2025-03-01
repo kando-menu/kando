@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 import * as classes from './Sidebar.module.scss';
 
@@ -16,11 +16,8 @@ interface IProps {
   /** Position of the sidebar, either 'left' or 'right'. */
   position: 'left' | 'right';
 
-  /** Content to display in the header of the sidebar. */
-  header: ReactNode;
-
   /** Content to display in the main area of the sidebar. */
-  content: ReactNode;
+  children: React.ReactNode;
 }
 
 /**
@@ -72,8 +69,7 @@ export default (props: IProps) => {
       {/* Render the resizer on the left if the sidebar is on the right. */}
       {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
       <div ref={sidebar} className={classes.sidebar}>
-        {props.header}
-        {props.content}
+        {props.children}
       </div>
       {/* Render the resizer on the right if the sidebar is on the left. */}
       {props.position === 'left' && <div ref={resizer} className={resizerClass} />}

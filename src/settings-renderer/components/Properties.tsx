@@ -12,6 +12,13 @@ import React from 'react';
 
 import * as classes from './Properties.module.scss';
 
+import Headerbar from './widgets/Headerbar';
+
 export default () => {
-  return <div className={classes.properties}>Properties</div>;
+  return (
+    <>
+      <Headerbar />
+      <div className={classes.properties}>Properties</div>
+    </>
+  );
 };

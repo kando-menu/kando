@@ -520,6 +520,21 @@ export function getDefaultMenuSettings(): IMenuSettings {
   };
 }
 
+/** The user can create menu collections to group menus according to their tags. */
+export interface IMenuCollection {
+  /** The name of the collection. */
+  name: string;
+
+  /** The icon of the collection. */
+  icon: string;
+
+  /** The theme from which the above icon should be used. */
+  iconTheme: string;
+
+  /** The tags which should be included in this collection. */
+  tags: string[];
+}
+
 /**
  * This interface describes the content of the app settings file. It contains the names of
  * the themes to use for the menu and the settings.
@@ -560,6 +575,9 @@ export interface IAppSettings {
 
   /** The overall volume of the sound effects. */
   soundVolume: number;
+
+  /** The currently configured menu collections. */
+  menuCollections: IMenuCollection[];
 
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: boolean;
@@ -674,6 +692,14 @@ export function getDefaultAppSettings(): IAppSettings {
     enableDarkModeForMenuThemes: false,
     soundTheme: 'none',
     soundVolume: 0.5,
+    menuCollections: [
+      {
+        name: 'Favorites',
+        icon: 'favorite',
+        iconTheme: 'material-symbols-rounded',
+        tags: ['favs'],
+      },
+    ],
     ignoreWriteProtectedConfigFiles: false,
     transparentSettingsWindow: false,
     trayIconFlavor: 'color',

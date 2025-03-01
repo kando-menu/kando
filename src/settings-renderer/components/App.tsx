@@ -26,7 +26,6 @@ import Sidebar from './widgets/Sidebar';
 import Preview from './Preview';
 import Properties from './Properties';
 import MenuList from './MenuList';
-import Headerbar from './widgets/Headerbar';
 
 import * as classes from './App.module.scss';
 
@@ -81,16 +80,16 @@ export default () => {
     </>
   );
 
-  const leftHeaderbar = <Headerbar paddingLeft={10} paddingRight={5} />;
-  const centerHeaderbar = <Headerbar center={headerButtons} />;
-  const rightHeaderbar = <Headerbar />;
-
   return (
     <>
       <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
-        <Sidebar position="left" header={leftHeaderbar} content={<MenuList />} />
-        <Preview header={centerHeaderbar} />
-        <Sidebar position="right" header={rightHeaderbar} content={<Properties />} />
+        <Sidebar position="left">
+          <MenuList />
+        </Sidebar>
+        <Preview headerButtons={headerButtons} />
+        <Sidebar position="right">
+          <Properties />
+        </Sidebar>
         <GeneralSettingsDialog
           visible={settingsVisible}
           onClose={() => setSettingsVisible(false)}
