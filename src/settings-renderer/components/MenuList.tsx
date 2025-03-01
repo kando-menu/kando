@@ -14,6 +14,7 @@ import * as classes from './MenuList.module.scss';
 
 import { useMenus, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
+import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
   const [menus, setMenus] = useMenus();
@@ -34,8 +35,15 @@ export default () => {
 
           return (
             <button key={index} className={className} onClick={() => selectMenu(index)}>
-              <div className={classes.menuTitle}>{menu.root.name}</div>
-              <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
+              <div style={{ display: 'flex' }}>
+                <div style={{ width: 32, marginRight: 10 }}>
+                  <ThemedIcon name={menu.root.icon} theme={menu.root.iconTheme} />
+                </div>
+                <div>
+                  <div className={classes.menuTitle}>{menu.root.name}</div>
+                  <div className={classes.menuSubtitle}>{shortcut || 'Not bound.'}</div>
+                </div>
+              </div>
             </button>
           );
         })}
