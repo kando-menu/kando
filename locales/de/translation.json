@@ -4,7 +4,9 @@
         "is-running-message": "Überprüfen Sie das Taskleistensymbol für einige Optionen!",
         "failed-to-start-header": "Kando konnte nicht gestartet werden",
         "un-inhibit-shortcuts": "Shortcuts wieder aktivieren",
-        "inhibit-shortcuts": "Deaktivierte Shortcuts"
+        "inhibit-shortcuts": "Deaktivierte Shortcuts",
+        "show-settings": "Einstellungen Öffnen",
+        "quit": "Beenden"
     },
     "sidebar": {
         "introduction-tab-header": "Einführung",
@@ -30,7 +32,9 @@
         "kando-version": "Kando Version",
         "backend": "Kando Backend",
         "chrome-version": "Chrome Version",
-        "node-version": "Node Version"
+        "node-version": "Node Version",
+        "reload-sound-theme-button": "Aktuelles Sound-Thema Neuladen",
+        "documentation-button": "Dokumentation"
     },
     "example-menu": {
         "apps": {
@@ -138,13 +142,13 @@
         "uri": {
             "uri-hint": "Dies wird geöffnet.",
             "tip-1": "Sie können den URI-Elementtyp verwenden, um eine Website über das http:// Protokoll zu öffnen.",
-            "tip-2": "Sie können den URI-Elementtyp verwenden, um eine Datei oder einen Ordner mit dem Protokoll file:// zu öffnen.",
+            "tip-2": "Sie können dies verwenden, um benutzerdefinierte URI-Schema wie slack:// oder zoommtg:// zu öffnen.",
             "tip-3": "Sie können den URI-Elementtyp verwenden, um einen mailto:-Link zu öffnen.",
             "uri": "URI",
             "tip-4": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
             "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
             "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
-            "description": "Öffnet Dateien oder Webseiten.",
+            "description": "Öffnet Webseiten und mehr.",
             "name": "URI Öffnen"
         },
         "text": {
@@ -152,6 +156,22 @@
             "placeholder": "Fügen Sie einen Text ein…",
             "name": "Text Einfügen",
             "description": "Fügt den gegebenen Text ein."
+        },
+        "file": {
+            "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen.",
+            "file": "Dateipfad",
+            "file-hint": "Das wird geöffnet.",
+            "name": "Datei Öffnen",
+            "description": "Öffnet eine Datei oder einen Ordner."
+        },
+        "redirect": {
+            "tip-1": "Verwenden Sie konsistente Groß- und Kleinschreibung für Menünamen.",
+            "tip-2": "Vermeiden Sie leere oder undefinierte Menünamen.",
+            "tip-3": "Vermeiden Sie rekursive Verknüpfungen.",
+            "redirect": "Verknüpfung",
+            "redirect-hint": "Dieses Menü wird geöffnet",
+            "name": "Verknüpfung",
+            "description": "Öffnet ein anderes Menü"
         }
     },
     "properties": {
@@ -195,7 +215,9 @@
             "anchored-mode-checked-hint": "Wenn Sie dies aktivieren, wird der Markierungsmodus deaktiviert.",
             "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor.",
             "warp-mouse": "Maus im Zentrierten Modus versetzen",
-            "warp-mouse-hint": "Bewegt den Mauszeiger zum Menü wenn es geöffnet wird."
+            "warp-mouse-hint": "Bewegt den Mauszeiger zum Menü wenn es geöffnet wird.",
+            "hover-mode": "Hover-Modus",
+            "hover-mode-hint": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren."
         },
         "hotkey-picker": {
             "label": "Hotkey",
@@ -231,7 +253,8 @@
             "system-mode-subheading-dark": "Ihr System befindet sich derzeit im dunklen Modus. Die obigen Einstellungen werden nur im dunklen Modus verwendet.",
             "system-mode-subheading-light": "Ihr System befindet sich derzeit im hellen Modus. Die obigen Einstellungen werden nur im hellen Modus verwendet.",
             "author": "von {{author}}",
-            "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen"
+            "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen",
+            "hint": "Sie können Designs vom <a {{repositoryLink}}> Theme-Repository</a> herunterladen. Sie können auch <a {{tutorialLink}}>lernen, eigene Designs zu erstellen</a> und sie dann in <a {{discordLink}}> Kando's Discord Server</a> zeigen!"
         },
         "trash-tab": {
             "label": "Papierkorb",
