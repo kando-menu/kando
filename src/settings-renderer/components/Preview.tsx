@@ -24,6 +24,12 @@ import Headerbar from './widgets/Headerbar';
 import Button from './widgets/Button';
 
 export default () => {
+  // This will force a re-render whenever the menu settings change. For now, this is
+  // necessary to update the undo/redo buttons. In the future, we might want to make
+  // this more fine-grained, maybe by directly subscribing to the past and future states
+  // of the temporal state.
+  useMenuSettings();
+
   const aboutDialogVisible = useAppState((state) => state.aboutDialogVisible);
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
   const themesDialogVisible = useAppState((state) => state.themesDialogVisible);
@@ -31,7 +37,7 @@ export default () => {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
 
-  // Hide settings on escape
+  // Hide settings on escape.
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -48,9 +54,8 @@ export default () => {
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [aboutDialogVisible, settingsDialogVisible, themesDialogVisible]);
 
-  const collections = useMenuSettings((state) => state.collections);
   const { futureStates, pastStates } = useMenuSettings.temporal.getState();
 
   const headerButtons = (
@@ -93,7 +98,6 @@ export default () => {
   return (
     <div className={classes.preview}>
       <Headerbar center={headerButtons} />
-      Collection Count {collections.length}
     </div>
   );
 };
