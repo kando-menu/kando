@@ -26,6 +26,13 @@ export default () => {
 
   const [animatedList] = useAutoAnimate();
 
+  // Make sure that the selected collection is valid. This could for instance happen if
+  // the currently selected collection is deleted by an external event (e.g. by editing
+  // the settings file) or by re-doing a previously undone deletion :).
+  if (selectedCollection >= collections.length) {
+    selectCollection(collections.length - 1);
+  }
+
   return (
     <Scrollbox hideScrollbar>
       <div className={classes.collectionsList} ref={animatedList}>
