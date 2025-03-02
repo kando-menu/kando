@@ -34,7 +34,7 @@ export default () => {
           }
           onClick={() => selectCollection(-1)}
           data-tooltip-id="main-tooltip"
-          data-tooltip-content="All Menus">
+          data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
           <ThemedIcon name="apps" theme="material-symbols-rounded" />
         </button>
         {menuCollections.map((collection, index) => {
@@ -49,8 +49,19 @@ export default () => {
               className={className}
               onClick={() => selectCollection(index)}
               data-tooltip-id="main-tooltip"
-              data-tooltip-content={collection.name}>
+              data-tooltip-content={index === selectedCollection ? '' : collection.name}>
               <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
+              <button
+                className={classes.deleteButton}
+                data-tooltip-id="main-tooltip"
+                data-tooltip-content="Delete collection"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setMenuCollections(menuCollections.filter((_, i) => i !== index));
+                  selectCollection(selectedCollection - 1);
+                }}>
+                <ThemedIcon name="delete" theme="material-symbols-rounded" />
+              </button>
             </button>
           );
         })}

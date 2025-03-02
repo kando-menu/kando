@@ -14,16 +14,14 @@
   -webkit-app-region: drag;
 }
 
-.collection {
+.collection,
+.deleteButton {
   display: block;
   border: none;
   background-color: $background-secondary;
   color: $text-primary;
   border: 1px solid transparent;
 
-  width: 48px;
-  height: 48px;
-  margin: 10px 0;
   border-radius: 50%;
   -webkit-app-region: no-drag;
 
@@ -41,7 +39,7 @@
     color: $text-primary;
 
     &:hover {
-      background-color: $background-selected-hover;
+      background-color: $background-selected;
     }
   }
 
@@ -52,4 +50,34 @@
   &:active {
     transform: translateY(1px);
   }
+}
+
+.collection {
+  width: 48px;
+  height: 48px;
+  margin: 10px 0;
+  position: relative;
+}
+
+.deleteButton {
+  opacity: 0;
+  background-color: $background-selected;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 25px;
+  height: 25px;
+
+  transition: opacity 0.2s;
+
+  &:hover {
+    background-color: $background-selected-hover;
+  }
+}
+
+.collection.selected .deleteButton {
+  opacity: 1;
+  pointer-events: all;
 }

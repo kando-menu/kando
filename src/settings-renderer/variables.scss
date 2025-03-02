@@ -17,8 +17,8 @@ $background-dark: light-dark(#ebebeb, #101115);
 $background-primary: light-dark(#f0cece, #9f3b67);
 $background-secondary: light-dark(#ddd, rgba(255, 255, 255, 0.1));
 $background-secondary-hover: light-dark(#ddd, rgba(255, 255, 255, 0.15));
-$background-selected: light-dark(#ddd, rgba(123, 100, 100, 0.65));
-$background-selected-hover: light-dark(#ddd, rgba(123, 100, 100, 0.7));
+$background-selected: light-dark(#ddd, rgb(100, 80, 80));
+$background-selected-hover: light-dark(#ddd, rgb(120, 100, 100));
 $border-selected: light-dark(#9f3b67, #f0cece);
 
 $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
