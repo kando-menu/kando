@@ -50,7 +50,8 @@ export default () => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const { undo, redo, futureStates, pastStates } = useMenuSettings.temporal.getState();
+  const collections = useMenuSettings((state) => state.collections);
+  const { futureStates, pastStates } = useMenuSettings.temporal.getState();
 
   const headerButtons = (
     <>
@@ -76,14 +77,14 @@ export default () => {
         tooltip="Undo"
         icon={<IoArrowUndo />}
         disabled={pastStates.length === 0}
-        onClick={undo}
+        onClick={() => useMenuSettings.temporal.getState().undo()}
         variant="flat"
       />
       <Button
         tooltip="Redo"
         icon={<IoArrowRedo />}
         disabled={futureStates.length === 0}
-        onClick={redo}
+        onClick={() => useMenuSettings.temporal.getState().redo()}
         variant="flat"
       />
     </>
@@ -92,6 +93,7 @@ export default () => {
   return (
     <div className={classes.preview}>
       <Headerbar center={headerButtons} />
+      Collection Count {collections.length}
     </div>
   );
 };

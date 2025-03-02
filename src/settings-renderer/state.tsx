@@ -10,6 +10,7 @@
 
 import { create } from 'zustand';
 import { temporal } from 'zundo';
+import lodash from 'lodash';
 
 import {
   IMenu,
@@ -67,12 +68,18 @@ type MenuStateActions = {
  * menus or the stash. In this case, use the methods below.
  */
 export const useMenuSettings = create(
-  temporal<IMenuSettings & MenuStateActions>((set) => ({
-    ...getDefaultMenuSettings(),
-    setMenus: (menus: Array<IMenu>) => set(() => ({ menus })),
-    setStash: (stash: Array<IMenuItem>) => set(() => ({ stash })),
-    setCollections: (collections: Array<IMenuCollection>) => set(() => ({ collections })),
-  }))
+  temporal<IMenuSettings & MenuStateActions>(
+    (set) => ({
+      ...getDefaultMenuSettings(),
+      setMenus: (menus: Array<IMenu>) => set(() => ({ menus })),
+      setStash: (stash: Array<IMenuItem>) => set(() => ({ stash })),
+      setCollections: (collections: Array<IMenuCollection>) =>
+        set(() => ({ collections })),
+    }),
+    {
+      equality: lodash.isEqual,
+    }
+  )
 );
 
 // App State -----------------------------------------------------------------------------
