@@ -8,20 +8,90 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React, { ReactNode } from 'react';
+import React from 'react';
+import {
+  TbSettingsFilled,
+  TbInfoSquareRoundedFilled,
+  TbPaletteFilled,
+} from 'react-icons/tb';
+import { IoArrowUndo, IoArrowRedo } from 'react-icons/io5';
 
 import * as classes from './Preview.module.scss';
 
+import { useAppState, useMenuSettings } from '../state';
+
 import Headerbar from './widgets/Headerbar';
+import Button from './widgets/Button';
 
-interface IProps {
-  headerButtons: ReactNode;
-}
+export default () => {
+  const aboutDialogVisible = useAppState((state) => state.aboutDialogVisible);
+  const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
+  const themesDialogVisible = useAppState((state) => state.themesDialogVisible);
+  const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
+  const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
+  const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
 
-export default (props: IProps) => {
+  // Hide settings on escape
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (settingsDialogVisible) {
+          setSettingsDialogVisible(false);
+        }
+        if (aboutDialogVisible) {
+          setAboutDialogVisible(false);
+        }
+        if (themesDialogVisible) {
+          setThemesDialogVisible(false);
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const { undo, redo, futureStates, pastStates } = useMenuSettings.temporal.getState();
+
+  const headerButtons = (
+    <>
+      <Button
+        tooltip="About Kando"
+        icon={<TbInfoSquareRoundedFilled />}
+        onClick={() => setAboutDialogVisible(true)}
+        variant="flat"
+      />
+      <Button
+        tooltip="Menu Themes"
+        icon={<TbPaletteFilled />}
+        onClick={() => setThemesDialogVisible(true)}
+        variant="flat"
+      />
+      <Button
+        tooltip="General Settings"
+        icon={<TbSettingsFilled />}
+        onClick={() => setSettingsDialogVisible(true)}
+        variant="flat"
+      />
+      <Button
+        tooltip="Undo"
+        icon={<IoArrowUndo />}
+        disabled={pastStates.length === 0}
+        onClick={undo}
+        variant="flat"
+      />
+      <Button
+        tooltip="Redo"
+        icon={<IoArrowRedo />}
+        disabled={futureStates.length === 0}
+        onClick={redo}
+        variant="flat"
+      />
+    </>
+  );
+
   return (
     <div className={classes.preview}>
-      <Headerbar center={props.headerButtons} />
+      <Headerbar center={headerButtons} />
     </div>
   );
 };

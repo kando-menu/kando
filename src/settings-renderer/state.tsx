@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { create } from 'zustand';
+import { temporal } from 'zundo';
 
 import {
   IMenu,
@@ -55,41 +56,28 @@ export const useAppSetting = <T extends keyof IAppSettings>(key: T) => {
 
 // Menu Settings State -------------------------------------------------------------------
 
+type MenuStateActions = {
+  setMenus: (newMenus: Array<IMenu>) => void;
+  setStash: (newStash: Array<IMenuItem>) => void;
+  setCollections: (newCollections: Array<IMenuCollection>) => void;
+};
+
 /**
  * Use this hook to access the entire menu settings object. Usually you will only need the
  * menus or the stash. In this case, use the methods below.
  */
-export const useMenuSettings = create<IMenuSettings>(() => ({
-  ...getDefaultMenuSettings(),
-}));
-
-/** Use this hook to access the menus from the menu settings. */
-export const useMenus = () => {
-  const menus = useMenuSettings((state) => state.menus);
-  const setMenus = (newMenus: Array<IMenu>) =>
-    useMenuSettings.setState((state) => ({ ...state, menus: newMenus }));
-  return [menus, setMenus] as const;
-};
-
-/** Use this hook to access the stash from the menu settings. */
-export const useStash = () => {
-  const stash = useMenuSettings((state) => state.stash);
-  const setStash = (newStash: Array<IMenuItem>) =>
-    useMenuSettings.setState((state) => ({ ...state, stash: newStash }));
-  return [stash, setStash] as const;
-};
-
-/** Use this hook to access the menu collections from the menu settings. */
-export const useCollections = () => {
-  const collections = useMenuSettings((state) => state.collections);
-  const setCollections = (newCollections: Array<IMenuCollection>) =>
-    useMenuSettings.setState((state) => ({ ...state, collections: newCollections }));
-  return [collections, setCollections] as const;
-};
+export const useMenuSettings = create(
+  temporal<IMenuSettings & MenuStateActions>((set) => ({
+    ...getDefaultMenuSettings(),
+    setMenus: (menus: Array<IMenu>) => set(() => ({ menus })),
+    setStash: (stash: Array<IMenuItem>) => set(() => ({ stash })),
+    setCollections: (collections: Array<IMenuCollection>) => set(() => ({ collections })),
+  }))
+);
 
 // App State -----------------------------------------------------------------------------
 
-type State = {
+type AppState = {
   /**
    * The index of the currently selected menu. This is the index in the entire list of
    * unfiltered menus as specified in the menu settings.
@@ -101,6 +89,15 @@ type State = {
    * that no collection is selected and all menus are shown.
    */
   selectedCollection: number;
+
+  /** Whether the about dialog is visible. */
+  aboutDialogVisible: boolean;
+
+  /** Whether the themes dialog is visible. */
+  themesDialogVisible: boolean;
+
+  /** Whether the settings dialog is visible. */
+  settingsDialogVisible: boolean;
 
   /** Whether the app is in dark mode. */
   darkMode: boolean;
@@ -115,19 +112,29 @@ type State = {
   menuThemes: Array<IMenuThemeDescription>;
 };
 
-type Action = {
+type AppStateActions = {
   selectMenu: (which: number) => void;
   selectCollection: (which: number) => void;
+  setAboutDialogVisible: (aboutDialogVisible: boolean) => void;
+  setThemesDialogVisible: (themesDialogVisible: boolean) => void;
+  setSettingsDialogVisible: (settingsDialogVisible: boolean) => void;
 };
 
 /** This is the state of the settings dialog itself. */
-export const useAppState = create<State & Action>((set) => ({
+export const useAppState = create<AppState & AppStateActions>((set) => ({
   selectedMenu: 0,
   selectedCollection: -1,
+  aboutDialogVisible: false,
+  themesDialogVisible: false,
+  settingsDialogVisible: false,
   darkMode: false,
   backendInfo: null,
   versionInfo: null,
   menuThemes: [],
-  selectMenu: (which: number) => set({ selectedMenu: which }),
-  selectCollection: (which: number) => set({ selectedCollection: which }),
+  selectMenu: (selectedMenu: number) => set({ selectedMenu }),
+  selectCollection: (selectedCollection: number) => set({ selectedCollection }),
+  setAboutDialogVisible: (aboutDialogVisible: boolean) => set({ aboutDialogVisible }),
+  setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
+  setSettingsDialogVisible: (settingsDialogVisible: boolean) =>
+    set({ settingsDialogVisible }),
 }));

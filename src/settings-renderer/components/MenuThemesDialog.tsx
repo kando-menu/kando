@@ -34,11 +34,6 @@ import Swirl from './widgets/Swirl';
 
 import * as classes from './MenuThemesDialog.module.scss';
 
-interface IProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
 // This is called when the user clicks the "Open theme directory" button.
 const openThemeDirectory = () => {
   window.settingsAPI
@@ -46,7 +41,10 @@ const openThemeDirectory = () => {
     .then((dir) => window.open('file://' + dir, '_blank'));
 };
 
-export default (props: IProps) => {
+export default () => {
+  const themesDialogVisible = useAppState((state) => state.themesDialogVisible);
+  const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
+
   const darkMode = useAppState((state) => state.darkMode);
   const themes = useAppState((state) => state.menuThemes);
 
@@ -160,8 +158,8 @@ export default (props: IProps) => {
     <Modal
       title="Menu Themes"
       icon={<TbPaletteFilled />}
-      visible={props.visible}
-      onClose={props.onClose}
+      visible={themesDialogVisible}
+      onClose={() => setThemesDialogVisible(false)}
       maxWidth={1200}
       paddingBottom={0}
       paddingTop={0}

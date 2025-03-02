@@ -13,18 +13,18 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import * as classes from './MenuList.module.scss';
 
-import { useMenus, useCollections, useAppState } from '../state';
+import { useMenuSettings, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
-  const [menus, setMenus] = useMenus();
-  const [menuCollections] = useCollections();
-
-  const selectedMenu = useAppState((state) => state.selectedMenu);
-  const selectMenu = useAppState((state) => state.selectMenu);
-
+  const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
+
+  const menus = useMenuSettings((state) => state.menus);
+  const selectedMenu = useAppState((state) => state.selectedMenu);
+
+  const selectMenu = useAppState((state) => state.selectMenu);
 
   const backend = useAppState((state) => state.backendInfo);
 
@@ -38,11 +38,6 @@ export default () => {
       // If the user has not selected a collection, all menus are visible.
       if (selectedCollection === -1) {
         return true;
-      }
-
-      // Do not show any menus if the selected collection has no tags.
-      if (menuCollections[selectedCollection].tags.length === 0) {
-        return false;
       }
 
       // Else, a menu must have all tags of the selected collection to be visible.

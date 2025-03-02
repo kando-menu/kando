@@ -13,12 +13,13 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import * as classes from './CollectionList.module.scss';
 
-import { useAppState, useCollections } from '../state';
+import { useAppState, useMenuSettings } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
-  const [menuCollections, setMenuCollections] = useCollections();
+  const collections = useMenuSettings((state) => state.collections);
+  const setCollections = useMenuSettings((state) => state.setCollections);
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
@@ -37,7 +38,7 @@ export default () => {
           data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
           <ThemedIcon name="apps" theme="material-symbols-rounded" />
         </button>
-        {menuCollections.map((collection, index) => {
+        {collections.map((collection, index) => {
           const className =
             classes.collection +
             ' ' +
@@ -51,17 +52,17 @@ export default () => {
               data-tooltip-id="main-tooltip"
               data-tooltip-content={index === selectedCollection ? '' : collection.name}>
               <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
-              <button
+              <div
                 className={classes.deleteButton}
                 data-tooltip-id="main-tooltip"
                 data-tooltip-content="Delete collection"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setMenuCollections(menuCollections.filter((_, i) => i !== index));
+                  setCollections(collections.filter((_, i) => i !== index));
                   selectCollection(selectedCollection - 1);
                 }}>
                 <ThemedIcon name="delete" theme="material-symbols-rounded" />
-              </button>
+              </div>
             </button>
           );
         })}
@@ -70,8 +71,8 @@ export default () => {
           data-tooltip-id="main-tooltip"
           data-tooltip-content="Create a new collection"
           onClick={() => {
-            setMenuCollections([
-              ...menuCollections,
+            setCollections([
+              ...collections,
               {
                 name: 'New Collection',
                 icon: 'sell',
@@ -79,7 +80,7 @@ export default () => {
                 tags: [],
               },
             ]);
-            selectCollection(menuCollections.length);
+            selectCollection(collections.length);
           }}>
           <ThemedIcon name="add" theme="material-symbols-rounded" />
         </button>

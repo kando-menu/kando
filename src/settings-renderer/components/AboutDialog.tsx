@@ -23,20 +23,18 @@ import * as classes from './AboutDialog.module.scss';
 
 const logo = require('../../../assets/icons/square-icon.svg');
 
-interface IProps {
-  visible: boolean;
-  onClose: () => void;
-}
+export default () => {
+  const aboutDialogVisible = useAppState((state) => state.aboutDialogVisible);
+  const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
 
-export default (props: IProps) => {
   const version = useAppState((state) => state.versionInfo);
 
   return (
     <Modal
       title="About Kando"
       icon={<TbInfoSquareRoundedFilled />}
-      visible={props.visible}
-      onClose={props.onClose}
+      visible={aboutDialogVisible}
+      onClose={() => setAboutDialogVisible(false)}
       maxWidth={500}>
       <div className={classes.container}>
         <img src={logo} width={128} />

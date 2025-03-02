@@ -235,8 +235,6 @@ export class Menu extends EventEmitter {
     this.pointerInput.hoverModeNeedsConfirmation =
       this.settings.hoverModeNeedsConfirmation;
 
-    console.log(this.pointerInput.hoverModeNeedsConfirmation);
-
     this.pointerInput.gestureDetector.minStrokeLength =
       this.settings.gestureMinStrokeLength;
     this.pointerInput.gestureDetector.minStrokeAngle =

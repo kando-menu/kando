@@ -66,9 +66,14 @@ Promise.all([
       );
     });
 
-    // Initialize the global state objects.
+    // Initialize the global state objects. Make sure to not record the initial state of
+    // the menu settings in the undo history.
     useAppSettings.setState(appSettings);
+
+    useMenuSettings.temporal.getState().pause();
     useMenuSettings.setState(menuSettings);
+    useMenuSettings.temporal.getState().resume();
+
     useAppState.setState({
       backendInfo,
       versionInfo,
@@ -94,7 +99,11 @@ Promise.all([
     });
 
     useMenuSettings.subscribe((newSettings) => {
-      window.commonAPI.menuSettings.set(newSettings);
+      window.commonAPI.menuSettings.set({
+        menus: newSettings.menus,
+        stash: newSettings.stash,
+        collections: newSettings.collections,
+      });
     });
 
     // Create the settings object. This will handle the rendering of the settings window.

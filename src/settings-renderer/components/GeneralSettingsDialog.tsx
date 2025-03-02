@@ -15,6 +15,8 @@ import React from 'react';
 
 import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
 
+import { useAppState } from '../state';
+
 import Button from './widgets/Button';
 import AppSettingsCheckbox from './AppSettingsCheckbox';
 import AppSettingsDropdown from './AppSettingsDropdown';
@@ -24,12 +26,10 @@ import Note from './widgets/Note';
 import Scrollbox from './widgets/Scrollbox';
 import Swirl from './widgets/Swirl';
 
-interface IProps {
-  visible: boolean;
-  onClose: () => void;
-}
+export default () => {
+  const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
+  const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
 
-export default (props: IProps) => {
   // We make sure that the spinbuttons have a consistent width.
   const spinbuttonWidth = 60;
 
@@ -37,8 +37,8 @@ export default (props: IProps) => {
     <Modal
       title="General Settings"
       icon={<TbSettingsFilled />}
-      visible={props.visible}
-      onClose={props.onClose}
+      visible={settingsDialogVisible}
+      onClose={() => setSettingsDialogVisible(false)}
       maxWidth={500}
       paddingTop={0}
       paddingBottom={0}

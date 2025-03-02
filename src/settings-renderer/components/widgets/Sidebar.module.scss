@@ -11,10 +11,18 @@
 @import '../../variables.scss';
 
 .sidebar {
+  min-height: 0px; // This is important to make the scrollboxes work.
   background-color: $background-dark;
   width: 300px;
   min-width: 200px;
   display: flex;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.column {
   flex-direction: column;
 }
 

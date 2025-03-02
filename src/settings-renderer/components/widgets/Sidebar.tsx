@@ -16,6 +16,9 @@ interface IProps {
   /** Position of the sidebar, either 'left' or 'right'. */
   position: 'left' | 'right';
 
+  /** The direction of the main axis. */
+  mainDirection: 'row' | 'column';
+
   /** Content to display in the main area of the sidebar. */
   children: React.ReactNode;
 }
@@ -62,13 +65,14 @@ export default (props: IProps) => {
   }, []);
 
   const positionClass = props.position === 'left' ? classes.left : classes.right;
+  const directionClass = props.mainDirection === 'row' ? classes.row : classes.column;
   const resizerClass = classes.resizer + ' ' + positionClass;
 
   return (
     <>
       {/* Render the resizer on the left if the sidebar is on the right. */}
       {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
-      <div ref={sidebar} className={classes.sidebar}>
+      <div ref={sidebar} className={classes.sidebar + ' ' + directionClass}>
         {props.children}
       </div>
       {/* Render the resizer on the right if the sidebar is on the left. */}
