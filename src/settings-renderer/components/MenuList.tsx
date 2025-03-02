@@ -23,8 +23,14 @@ export default () => {
 
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
-
   const selectMenu = useAppState((state) => state.selectMenu);
+
+  // Make sure that the selected menu is valid. This could for instance happen if
+  // the currently selected menu is deleted by an external event (e.g. by editing
+  // the settings file) or by re-doing a previously undone deletion :).
+  if (selectedMenu >= menus.length) {
+    selectMenu(menus.length - 1);
+  }
 
   const backend = useAppState((state) => state.backendInfo);
 
