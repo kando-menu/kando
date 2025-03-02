@@ -61,6 +61,10 @@ type MenuStateActions = {
   setMenus: (newMenus: Array<IMenu>) => void;
   setStash: (newStash: Array<IMenuItem>) => void;
   setCollections: (newCollections: Array<IMenuCollection>) => void;
+  addMenu: (tags: string[]) => void;
+  deleteMenu: (index: number) => void;
+  duplicateMenu: (index: number) => void;
+  addCollection: () => void;
 };
 
 /**
@@ -75,6 +79,52 @@ export const useMenuSettings = create(
       setStash: (stash: Array<IMenuItem>) => set(() => ({ stash })),
       setCollections: (collections: Array<IMenuCollection>) =>
         set(() => ({ collections })),
+      addMenu: (tags: string[]) =>
+        set((state) => ({
+          menus: [
+            ...state.menus,
+            {
+              shortcut: '',
+              shortcutID: '',
+              centered: false,
+              warpMouse: false,
+              anchored: false,
+              hoverMode: false,
+              tags,
+              root: {
+                type: 'submenu',
+                name: 'New Menu',
+                icon: 'apps',
+                iconTheme: 'material-symbols-rounded',
+                children: [],
+              },
+            },
+          ],
+        })),
+      deleteMenu: (index: number) =>
+        set((state) => ({
+          menus: state.menus.filter((_, i) => i !== index),
+        })),
+      duplicateMenu: (index: number) =>
+        set((state) => ({
+          menus: [
+            ...state.menus.slice(0, index + 1),
+            lodash.cloneDeep(state.menus[index]),
+            ...state.menus.slice(index + 1),
+          ],
+        })),
+      addCollection: () =>
+        set((state) => ({
+          collections: [
+            ...state.collections,
+            {
+              name: 'New Collection',
+              icon: 'sell',
+              iconTheme: 'material-symbols-rounded',
+              tags: [],
+            },
+          ],
+        })),
     }),
     {
       equality: lodash.isEqual,

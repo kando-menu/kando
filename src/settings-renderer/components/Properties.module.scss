@@ -11,7 +11,15 @@
 @import '../variables.scss';
 
 .properties {
+  position: relative;
   flex-grow: 1;
   background-color: $background-normal;
   padding: 12px;
+}
+
+.floatingButton {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 }

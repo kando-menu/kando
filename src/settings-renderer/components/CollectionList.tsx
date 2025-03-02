@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { TbTrash, TbApps } from 'react-icons/tb';
 
 import * as classes from './CollectionList.module.scss';
 
@@ -20,6 +21,7 @@ import ThemedIcon from './widgets/ThemedIcon';
 export default () => {
   const collections = useMenuSettings((state) => state.collections);
   const setCollections = useMenuSettings((state) => state.setCollections);
+  const addCollection = useMenuSettings((state) => state.addCollection);
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
@@ -43,7 +45,7 @@ export default () => {
           onClick={() => selectCollection(-1)}
           data-tooltip-id="main-tooltip"
           data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
-          <ThemedIcon name="apps" theme="material-symbols-rounded" />
+          <TbApps />
         </button>
         {collections.map((collection, index) => {
           const className =
@@ -68,7 +70,7 @@ export default () => {
                   setCollections(collections.filter((_, i) => i !== index));
                   selectCollection(selectedCollection - 1);
                 }}>
-                <ThemedIcon name="delete" theme="material-symbols-rounded" />
+                <TbTrash />
               </div>
             </button>
           );
@@ -78,15 +80,7 @@ export default () => {
           data-tooltip-id="main-tooltip"
           data-tooltip-content="Create a new collection"
           onClick={() => {
-            setCollections([
-              ...collections,
-              {
-                name: 'New Collection',
-                icon: 'sell',
-                iconTheme: 'material-symbols-rounded',
-                tags: [],
-              },
-            ]);
+            addCollection();
             selectCollection(collections.length);
           }}>
           <ThemedIcon name="add" theme="material-symbols-rounded" />

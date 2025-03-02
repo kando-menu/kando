@@ -11,11 +11,14 @@
 import React from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
+import { TbPlus } from 'react-icons/tb';
+
 import * as classes from './MenuList.module.scss';
 
 import { useMenuSettings, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
+import Button from './widgets/Button';
 
 export default () => {
   const menuCollections = useMenuSettings((state) => state.collections);
@@ -24,6 +27,7 @@ export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectMenu = useAppState((state) => state.selectMenu);
+  const addMenu = useMenuSettings((state) => state.addMenu);
 
   // Make sure that the selected menu is valid. This could for instance happen if
   // the currently selected menu is deleted by an external event (e.g. by editing
@@ -89,6 +93,18 @@ export default () => {
             })}
           </div>
         </Scrollbox>
+        <div className={classes.floatingButton}>
+          <Button
+            icon={<TbPlus />}
+            label="New Menu"
+            variant="floating"
+            size="medium"
+            onClick={() => {
+              addMenu(menuCollections[selectedCollection]?.tags);
+              selectMenu(menus.length);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

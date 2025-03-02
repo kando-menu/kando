@@ -19,6 +19,7 @@
   border: none;
   border-radius: 5px;
   font-size: inherit;
+  white-space: nowrap;
 
   opacity: 0.8;
 
@@ -57,6 +58,11 @@
 .primary {
   background-color: $background-primary;
   color: $text-primary;
+}
+
+.floating {
+  background-color: $background-dark;
+  border-radius: 50px;
 }
 
 .small {

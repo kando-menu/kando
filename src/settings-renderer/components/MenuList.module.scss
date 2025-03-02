@@ -31,6 +31,7 @@
 }
 
 .menuListContent {
+  position: relative;
   min-height: 0px; // This is important to make the scrollboxes work.
   background-color: $background-normal;
   padding: 0 5px;
@@ -84,4 +85,11 @@
 .menuSubtitle {
   color: $text-secondary;
   font-size: 0.8rem;
+}
+
+.floatingButton {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 }
