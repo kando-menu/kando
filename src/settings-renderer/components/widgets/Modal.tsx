@@ -66,6 +66,19 @@ interface IProps {
 export default (props: IProps) => {
   const ref = React.useRef(null);
 
+  // Hide on escape.
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (props.visible) {
+          props.onClose();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [props.visible]);
+
   // Define the close button with an icon. On macOS, the close button is displayed on the
   // left side of the header bar. On other platforms, it is displayed on the right side.
   const closeButton = (

@@ -30,31 +30,9 @@ export default () => {
   // of the temporal state.
   useMenuSettings();
 
-  const aboutDialogVisible = useAppState((state) => state.aboutDialogVisible);
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
-  const themesDialogVisible = useAppState((state) => state.themesDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
-  const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
-
-  // Hide settings on escape.
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (settingsDialogVisible) {
-          setSettingsDialogVisible(false);
-        }
-        if (aboutDialogVisible) {
-          setAboutDialogVisible(false);
-        }
-        if (themesDialogVisible) {
-          setThemesDialogVisible(false);
-        }
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [aboutDialogVisible, settingsDialogVisible, themesDialogVisible]);
 
   const { futureStates, pastStates } = useMenuSettings.temporal.getState();
 
