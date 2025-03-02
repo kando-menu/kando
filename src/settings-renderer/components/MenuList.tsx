@@ -13,13 +13,13 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import * as classes from './MenuList.module.scss';
 
-import { useMenus, useAppSetting, useAppState } from '../state';
+import { useMenus, useCollections, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
   const [menus, setMenus] = useMenus();
-  const [menuCollections] = useAppSetting('menuCollections');
+  const [menuCollections] = useCollections();
 
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectMenu = useAppState((state) => state.selectMenu);

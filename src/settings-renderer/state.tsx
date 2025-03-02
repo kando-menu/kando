@@ -20,6 +20,7 @@ import {
   IBackendInfo,
   IVersionInfo,
   IMenuThemeDescription,
+  IMenuCollection,
 } from '../common';
 
 // We have three global state objects: one for the applications settings stored in the
@@ -76,6 +77,14 @@ export const useStash = () => {
   const setStash = (newStash: Array<IMenuItem>) =>
     useMenuSettings.setState((state) => ({ ...state, stash: newStash }));
   return [stash, setStash] as const;
+};
+
+/** Use this hook to access the menu collections from the menu settings. */
+export const useCollections = () => {
+  const collections = useMenuSettings((state) => state.collections);
+  const setCollections = (newCollections: Array<IMenuCollection>) =>
+    useMenuSettings.setState((state) => ({ ...state, collections: newCollections }));
+  return [collections, setCollections] as const;
 };
 
 // App State -----------------------------------------------------------------------------

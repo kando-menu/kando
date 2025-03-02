@@ -496,30 +496,6 @@ export interface IShowSettingsOptions {
   windowPosition: IVec2;
 }
 
-/**
- * This interface describes the content of the settings file. It contains the configured
- * menus as well as the templates.
- */
-export interface IMenuSettings {
-  menus: Array<IMenu>;
-
-  /** A temporary storage for menu items. */
-  stash: Array<IMenuItem>;
-}
-
-/**
- * This function creates a default menu settings object. This is used when the settings
- * file does not exist yet.
- *
- * @returns The default menu settings.
- */
-export function getDefaultMenuSettings(): IMenuSettings {
-  return {
-    menus: [],
-    stash: [],
-  };
-}
-
 /** The user can create menu collections to group menus according to their tags. */
 export interface IMenuCollection {
   /** The name of the collection. */
@@ -533,6 +509,41 @@ export interface IMenuCollection {
 
   /** The tags which should be included in this collection. */
   tags: string[];
+}
+
+/**
+ * This interface describes the content of the settings file. It contains the configured
+ * menus as well as the templates.
+ */
+export interface IMenuSettings {
+  menus: Array<IMenu>;
+
+  /** A temporary storage for menu items. */
+  stash: Array<IMenuItem>;
+
+  /** The currently configured menu collections. */
+  collections: IMenuCollection[];
+}
+
+/**
+ * This function creates a default menu settings object. This is used when the settings
+ * file does not exist yet.
+ *
+ * @returns The default menu settings.
+ */
+export function getDefaultMenuSettings(): IMenuSettings {
+  return {
+    menus: [],
+    stash: [],
+    collections: [
+      {
+        name: 'Favorites',
+        icon: 'favorite',
+        iconTheme: 'material-symbols-rounded',
+        tags: ['favs'],
+      },
+    ],
+  };
 }
 
 /**
@@ -575,9 +586,6 @@ export interface IAppSettings {
 
   /** The overall volume of the sound effects. */
   soundVolume: number;
-
-  /** The currently configured menu collections. */
-  menuCollections: IMenuCollection[];
 
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: boolean;
@@ -692,14 +700,6 @@ export function getDefaultAppSettings(): IAppSettings {
     enableDarkModeForMenuThemes: false,
     soundTheme: 'none',
     soundVolume: 0.5,
-    menuCollections: [
-      {
-        name: 'Favorites',
-        icon: 'favorite',
-        iconTheme: 'material-symbols-rounded',
-        tags: ['favs'],
-      },
-    ],
     ignoreWriteProtectedConfigFiles: false,
     transparentSettingsWindow: false,
     trayIconFlavor: 'color',
