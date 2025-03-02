@@ -26,6 +26,7 @@ import Sidebar from './widgets/Sidebar';
 import Preview from './Preview';
 import Properties from './Properties';
 import MenuList from './MenuList';
+import CollectionList from './CollectionList';
 
 import * as classes from './App.module.scss';
 
@@ -84,7 +85,10 @@ export default () => {
     <>
       <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
         <Sidebar position="left">
-          <MenuList />
+          <div className={classes.leftSidebar}>
+            <CollectionList />
+            <MenuList />
+          </div>
         </Sidebar>
         <Preview headerButtons={headerButtons} />
         <Sidebar position="right">

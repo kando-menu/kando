@@ -35,7 +35,6 @@
       );
   overflow-y: auto;
   overflow-x: hidden;
-  width: 100%;
 
   .content {
     margin: 15px 0;
@@ -51,6 +50,12 @@
   &::-webkit-scrollbar {
     width: 6px;
     cursor: pointer;
+  }
+
+  &.hideScrollbar {
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
   }
 
   &::-webkit-scrollbar-thumb {

@@ -235,7 +235,7 @@ export default (props: IProps) => {
             block
           />
         </div>
-        <Scrollbox maxHeight={'min(80vh, 600px)'}>
+        <Scrollbox maxHeight={'min(80vh, 600px)'} width="100%">
           <div className={classes.themesGrid}>
             {themes.map((theme) => {
               let previewPath =

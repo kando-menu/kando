@@ -10,46 +10,30 @@
 
 @import '../variables.scss';
 
-.menuListHeader {
+.collectionsList {
   -webkit-app-region: drag;
 }
 
-.menuList {
-  min-width: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.menuListHeader {
-  min-height: env(titlebar-area-height, 30);
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-.menuListContent {
-  min-height: 0px; // This is important to make the scrollboxes work.
-  background-color: $background-normal;
-  padding: 0 5px;
-  border-top-left-radius: 10px;
-  flex-grow: 1;
-}
-
-.menu {
+.collection {
   display: block;
   border: none;
   background-color: $background-secondary;
   color: $text-primary;
   border: 1px solid transparent;
 
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  text-align: left;
-  width: 100%;
+  width: 48px;
+  height: 48px;
+  margin: 10px 0;
+  border-radius: 50%;
+  -webkit-app-region: no-drag;
+
+  &.transparent {
+    background-color: transparent;
+
+    &:hover {
+      background-color: $background-secondary;
+    }
+  }
 
   &.selected {
     background-color: $background-selected;
@@ -68,20 +52,4 @@
   &:active {
     transform: translateY(1px);
   }
-}
-
-.menuTitle,
-.menuSubtitle {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.menuTitle {
-  font-size: 1rem;
-}
-
-.menuSubtitle {
-  color: $text-secondary;
-  font-size: 0.8rem;
 }

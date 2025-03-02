@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import * as classes from './MenuList.module.scss';
 
@@ -24,9 +25,10 @@ export default () => {
   const selectMenu = useAppState((state) => state.selectMenu);
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
-  const selectCollection = useAppState((state) => state.selectCollection);
 
   const backend = useAppState((state) => state.backendInfo);
+
+  const [animatedList] = useAutoAnimate();
 
   const visibleMenus = menus
     .map((menu, index) => {
@@ -38,6 +40,11 @@ export default () => {
         return true;
       }
 
+      // Do not show any menus if the selected collection has no tags.
+      if (menuCollections[selectedCollection].tags.length === 0) {
+        return false;
+      }
+
       // Else, a menu must have all tags of the selected collection to be visible.
       return menuCollections[selectedCollection].tags.every((tag) =>
         menu.menu.tags?.includes(tag)
@@ -45,49 +52,13 @@ export default () => {
     });
 
   return (
-    <div className={classes.container}>
-      <div className={classes.collectionsList}>
-        <button
-          className={
-            classes.collection + ' ' + (selectedCollection == -1 ? classes.selected : '')
-          }
-          onClick={() => selectCollection(-1)}
-          data-tooltip-id="main-tooltip"
-          data-tooltip-content="All menus">
-          <ThemedIcon name="apps" theme="material-symbols-rounded" />
-        </button>
-        {menuCollections.map((collection, index) => {
-          const className =
-            classes.collection +
-            ' ' +
-            (index === selectedCollection ? classes.selected : '');
-
-          return (
-            <button
-              key={index}
-              className={className}
-              onClick={() => selectCollection(index)}
-              data-tooltip-id="main-tooltip"
-              data-tooltip-content={collection.name}>
-              <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
-            </button>
-          );
-        })}
-        <button
-          className={classes.collection + ' ' + classes.transparent}
-          data-tooltip-id="main-tooltip"
-          data-tooltip-content="Create a new collection">
-          <ThemedIcon name="add" theme="material-symbols-rounded" />
-        </button>
+    <div className={classes.menuList}>
+      <div className={classes.menuListHeader}>
+        {menuCollections[selectedCollection]?.name || 'All Menus'}
       </div>
-      <div className={classes.menuList}>
-        <div className={classes.menuListHeader}>
-          {menuCollections[selectedCollection]?.name || (
-            <a href="https://drag-and-drop.formkit.com/">here</a>
-          )}
-        </div>
-        <div className={classes.menuListContent}>
-          <Scrollbox>
+      <div className={classes.menuListContent}>
+        <Scrollbox>
+          <div ref={animatedList}>
             {visibleMenus.map(({ menu, index }) => {
               const shortcut = backend.supportsShortcuts
                 ? menu.shortcut
@@ -102,10 +73,10 @@ export default () => {
                   className={className}
                   onClick={() => selectMenu(index)}>
                   <div style={{ display: 'flex' }}>
-                    <div style={{ width: 32, marginRight: 10 }}>
+                    <div style={{ flexShrink: 0, width: 32, marginRight: 10 }}>
                       <ThemedIcon name={menu.root.icon} theme={menu.root.iconTheme} />
                     </div>
-                    <div>
+                    <div style={{ minWidth: 0 }}>
                       <div className={classes.menuTitle}>{menu.root.name}</div>
                       <div className={classes.menuSubtitle}>
                         {shortcut || 'Not bound.'}
@@ -115,8 +86,8 @@ export default () => {
                 </button>
               );
             })}
-          </Scrollbox>
-        </div>
+          </div>
+        </Scrollbox>
       </div>
     </div>
   );

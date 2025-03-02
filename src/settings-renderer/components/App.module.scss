@@ -29,3 +29,9 @@
 :global(.react-tooltip) {
   z-index: 1000;
 }
+
+.leftSidebar {
+  min-height: 0px; // This is important to make the scrollboxes work.
+  flex-grow: 1;
+  display: flex;
+}
