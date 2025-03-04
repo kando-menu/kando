@@ -99,13 +99,10 @@ export default () => {
   return (
     <div className={classes.menuList}>
       <div
-        className={
-          classes.menuListHeader +
-          ' ' +
-          (collectionDetailsVisible && selectedCollection !== -1
-            ? classes.editCollection
-            : ' ')
-        }>
+        className={cx({
+          menuListHeader: true,
+          editCollection: collectionDetailsVisible && selectedCollection !== -1,
+        })}>
         <input
           type="text"
           className={classes.collectionName}
@@ -165,12 +162,6 @@ export default () => {
                 ? menu.shortcut
                 : menu.shortcutID;
 
-              const className = cx({
-                menu: true,
-                selected: index === selectedMenu,
-                dragging: dnd.draggedType === 'menu' && dnd.draggedIndex === index,
-              });
-
               return (
                 <button
                   key={index}
@@ -181,15 +172,12 @@ export default () => {
                     enableAnimatedList(false);
                   }}
                   onDragEnd={() => {
-                    console.log('onDragEnd');
                     endDrag();
-                    console.log('endDrag');
                     enableAnimatedList(true);
-                    console.log('enableAnimatedList');
                   }}
-                  onDrop={(event) => {
-                    console.log('onDrop');
-                    event.preventDefault();
+                  onDrop={() => {
+                    endDrag();
+                    enableAnimatedList(true);
                   }}
                   onDragOver={(event) => {
                     if (dnd.draggedType === 'menu') {
@@ -225,7 +213,11 @@ export default () => {
                       startDrag('menu', index);
                     }
                   }}
-                  className={className}
+                  className={cx({
+                    menu: true,
+                    selected: index === selectedMenu,
+                    dragging: dnd.draggedType === 'menu' && dnd.draggedIndex === index,
+                  })}
                   onClick={() => selectMenu(index)}>
                   <div style={{ display: 'flex' }}>
                     <div style={{ flexShrink: 0, width: 32, marginRight: 10 }}>
