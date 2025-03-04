@@ -15,6 +15,25 @@
   flex-grow: 1;
   background-color: $background-normal;
   padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.icon {
+  -webkit-app-region: no-drag;
+  width: 70px;
+  height: 70px;
+  padding: 10px;
+  margin: -30px auto 0 auto;
+  background-color: $background-normal;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.name {
+  font-size: 1.2rem;
+  margin: 5px 0 10px 0;
+  text-align: center;
 }
 
 .floatingButton {

@@ -17,7 +17,9 @@ import { useAppState, useMenuSettings } from '../state';
 
 import Headerbar from './widgets/Headerbar';
 import Button from './widgets/Button';
+import ThemedIcon from './widgets/ThemedIcon';
 import TagInput from './widgets/TagInput';
+import Swirl from './widgets/Swirl';
 
 export default () => {
   const menus = useMenuSettings((state) => state.menus);
@@ -48,7 +50,16 @@ export default () => {
     <>
       <Headerbar />
       <div className={classes.properties}>
-        {menus[selectedMenu]?.root.name || 'No Menu Selected'}
+        <div className={classes.icon}>
+          <ThemedIcon
+            name={menus[selectedMenu]?.root.icon}
+            theme={menus[selectedMenu]?.root.iconTheme}
+          />
+        </div>
+        <div className={classes.name}>
+          {menus[selectedMenu]?.root.name || 'No Menu Selected'}
+        </div>
+        <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} />
         <TagInput
           tags={menuTags}
           onChange={(newTags) => {

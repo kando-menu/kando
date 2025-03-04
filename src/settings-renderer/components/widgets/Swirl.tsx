@@ -18,20 +18,20 @@ interface IProps {
   variant: '1' | '2' | '3';
   marginTop?: number;
   marginBottom?: number;
-  width?: number;
+  width?: number | string;
 }
 
 export default (props: IProps) => {
   return (
     <img
       src={props.variant === '1' ? swirl1 : props.variant === '2' ? swirl2 : swirl3}
-      width={props.width || 350}
       style={{
         opacity: 0.5,
         marginTop: props.marginTop || 0,
         marginBottom: props.marginBottom || 0,
         marginLeft: 'auto',
         marginRight: 'auto',
+        width: props.width || '350px',
       }}
     />
   );
