@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import AnimateHeight from 'react-animate-height';
+import AnimateHeight, { Height } from 'react-animate-height';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import { TbPlus, TbPencilCog, TbSearch, TbBackspaceFilled } from 'react-icons/tb';
@@ -52,7 +52,22 @@ export default () => {
 
   const backend = useAppState((state) => state.backendInfo);
 
-  const [animatedList] = useAutoAnimate();
+  const [animatedList] = useAutoAnimate({ duration: 300 });
+
+  const [animatedHeight, setAnimatedHeight] = React.useState<Height>('auto');
+  const animatedHeightDiv = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const element = animatedHeightDiv.current as HTMLDivElement;
+
+    const resizeObserver = new ResizeObserver(() => {
+      setAnimatedHeight(element.clientHeight);
+    });
+
+    resizeObserver.observe(element);
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   const visibleMenus = menus
     .map((menu, index) => {
@@ -121,8 +136,10 @@ export default () => {
         )}
       </div>
       <AnimateHeight
-        height={collectionDetailsVisible ? 'auto' : 0}
+        height={collectionDetailsVisible ? animatedHeight : 0}
         duration={300}
+        contentRef={animatedHeightDiv}
+        disableDisplayNone
         easing="ease-in-out">
         <div className={classes.collectionEditor}>
           {selectedCollection === -1 && (

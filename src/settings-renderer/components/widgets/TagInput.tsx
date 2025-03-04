@@ -47,8 +47,8 @@ export default (props: IProps) => {
       <div
         className={classes.container}
         // Focus the input field when the user clicks on the container.
-        onClick={() => {
-          const input = document.querySelector(
+        onClick={(event) => {
+          const input = event.currentTarget.querySelector(
             `.${classes.container} input`
           ) as HTMLInputElement;
           if (input) {
