@@ -59,11 +59,13 @@ export const useAppSetting = <T extends keyof IAppSettings>(key: T) => {
 
 type MenuStateActions = {
   addMenu: (tags: string[]) => void;
+  moveMenu: (from: number, to: number) => void;
   deleteMenu: (index: number) => void;
   duplicateMenu: (index: number) => void;
   editMenu: (index: number, menu: Partial<IMenu>) => void;
 
   addCollection: () => void;
+  moveCollection: (from: number, to: number) => void;
   deleteCollection: (index: number) => void;
   editCollection: (index: number, collection: Partial<IMenuCollection>) => void;
 };
@@ -99,6 +101,28 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
           })
         ),
 
+      moveMenu: (from: number, to: number) => {
+        if (from === to) {
+          return;
+        }
+
+        set(
+          produce((state) => {
+            if (
+              from < 0 ||
+              from >= state.menus.length ||
+              to < 0 ||
+              to >= state.menus.length
+            ) {
+              return;
+            }
+
+            const [item] = state.menus.splice(from, 1);
+            state.menus.splice(to, 0, item);
+          })
+        );
+      },
+
       deleteMenu: (index: number) =>
         set((state) => ({
           menus: state.menus.filter((_, i) => i !== index),
@@ -131,6 +155,27 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
             });
           })
         ),
+
+      moveCollection: (from: number, to: number) => {
+        if (from === to) {
+          return;
+        }
+
+        set(
+          produce((state) => {
+            if (
+              from < 0 ||
+              from >= state.collections.length ||
+              to < 0 ||
+              to >= state.collections.length
+            ) {
+              return;
+            }
+            const [item] = state.collections.splice(from, 1);
+            state.collections.splice(to, 0, item);
+          })
+        );
+      },
 
       deleteCollection: (index: number) =>
         set((state) => ({
@@ -185,6 +230,12 @@ type AppState = {
 
   /** Descriptions of all available menu themes. */
   menuThemes: Array<IMenuThemeDescription>;
+
+  /** The current state of the drag and drop system. */
+  dnd: {
+    draggedType: 'menu' | 'collection' | 'none';
+    draggedIndex: number;
+  };
 };
 
 type AppStateActions = {
@@ -193,6 +244,9 @@ type AppStateActions = {
   setAboutDialogVisible: (aboutDialogVisible: boolean) => void;
   setThemesDialogVisible: (themesDialogVisible: boolean) => void;
   setSettingsDialogVisible: (settingsDialogVisible: boolean) => void;
+
+  startDrag: (type: 'menu' | 'collection', index: number) => void;
+  endDrag: () => void;
 };
 
 /** This is the state of the settings dialog itself. */
@@ -206,10 +260,17 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   backendInfo: null,
   versionInfo: null,
   menuThemes: [],
+  dnd: {
+    draggedType: 'none',
+    draggedIndex: -1,
+  },
   selectMenu: (selectedMenu: number) => set({ selectedMenu }),
   selectCollection: (selectedCollection: number) => set({ selectedCollection }),
   setAboutDialogVisible: (aboutDialogVisible: boolean) => set({ aboutDialogVisible }),
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
   setSettingsDialogVisible: (settingsDialogVisible: boolean) =>
     set({ settingsDialogVisible }),
+  startDrag: (draggedType: 'menu' | 'collection', draggedIndex: number) =>
+    set({ dnd: { draggedType, draggedIndex } }),
+  endDrag: () => set({ dnd: { draggedType: 'none', draggedIndex: -1 } }),
 }));

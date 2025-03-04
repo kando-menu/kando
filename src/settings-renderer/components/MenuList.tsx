@@ -9,12 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import AnimateHeight, { Height } from 'react-animate-height';
+import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-
 import { TbPlus, TbPencilCog, TbSearch, TbBackspaceFilled } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
+const cx = classNames.bind(classes);
 
 import { useMenuSettings, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
@@ -52,22 +52,13 @@ export default () => {
 
   const backend = useAppState((state) => state.backendInfo);
 
-  const [animatedList] = useAutoAnimate({ duration: 300 });
+  const [animatedList, enableAnimatedList] = useAutoAnimate({ duration: 300 });
+  const [animatedEditor] = useAutoAnimate({ duration: 300 });
 
-  const [animatedHeight, setAnimatedHeight] = React.useState<Height>('auto');
-  const animatedHeightDiv = React.useRef<HTMLDivElement | null>(null);
-
-  React.useEffect(() => {
-    const element = animatedHeightDiv.current as HTMLDivElement;
-
-    const resizeObserver = new ResizeObserver(() => {
-      setAnimatedHeight(element.clientHeight);
-    });
-
-    resizeObserver.observe(element);
-
-    return () => resizeObserver.disconnect();
-  }, []);
+  const dnd = useAppState((state) => state.dnd);
+  const startDrag = useAppState((state) => state.startDrag);
+  const endDrag = useAppState((state) => state.endDrag);
+  const moveMenu = useMenuSettings((state) => state.moveMenu);
 
   const visibleMenus = menus
     .map((menu, index) => {
@@ -135,40 +126,37 @@ export default () => {
           />
         )}
       </div>
-      <AnimateHeight
-        height={collectionDetailsVisible ? animatedHeight : 0}
-        duration={300}
-        contentRef={animatedHeightDiv}
-        disableDisplayNone
-        easing="ease-in-out">
-        <div className={classes.collectionEditor}>
-          {selectedCollection === -1 && (
-            <div className={classes.searchInput}>
-              <input
-                type="text"
-                placeholder="Search menus..."
-                value={filterTerm}
-                onChange={(event) => setFilterTerm(event.target.value)}
+      <div ref={animatedEditor}>
+        {collectionDetailsVisible && (
+          <div className={classes.collectionEditor}>
+            {selectedCollection === -1 && (
+              <div className={classes.searchInput}>
+                <input
+                  type="text"
+                  placeholder="Search menus..."
+                  value={filterTerm}
+                  onChange={(event) => setFilterTerm(event.target.value)}
+                />
+                <Button
+                  grouped
+                  icon={<TbBackspaceFilled />}
+                  onClick={() => setFilterTerm('')}
+                />
+              </div>
+            )}
+            {selectedCollection !== -1 && (
+              <TagInput
+                tags={filterTags}
+                onChange={(newTags) => {
+                  editCollection(selectedCollection, { tags: newTags });
+                  setFilterTags(newTags);
+                }}
+                suggestions={allAvailableTags}
               />
-              <Button
-                grouped
-                icon={<TbBackspaceFilled />}
-                onClick={() => setFilterTerm('')}
-              />
-            </div>
-          )}
-          {selectedCollection !== -1 && (
-            <TagInput
-              tags={filterTags}
-              onChange={(newTags) => {
-                editCollection(selectedCollection, { tags: newTags });
-                setFilterTags(newTags);
-              }}
-              suggestions={allAvailableTags}
-            />
-          )}
-        </div>
-      </AnimateHeight>
+            )}
+          </div>
+        )}
+      </div>
       <div className={classes.menuListContent}>
         <Scrollbox>
           <div ref={animatedList}>
@@ -176,13 +164,67 @@ export default () => {
               const shortcut = backend.supportsShortcuts
                 ? menu.shortcut
                 : menu.shortcutID;
-              const className =
-                classes.menu + ' ' + (index === selectedMenu ? classes.selected : '');
+
+              const className = cx({
+                menu: true,
+                selected: index === selectedMenu,
+                dragging: dnd.draggedType === 'menu' && dnd.draggedIndex === index,
+              });
 
               return (
                 <button
                   key={index}
-                  draggable={true}
+                  draggable
+                  onDragStart={(event) => {
+                    event.dataTransfer.effectAllowed = 'move';
+                    startDrag('menu', index);
+                    enableAnimatedList(false);
+                  }}
+                  onDragEnd={() => {
+                    console.log('onDragEnd');
+                    endDrag();
+                    console.log('endDrag');
+                    enableAnimatedList(true);
+                    console.log('enableAnimatedList');
+                  }}
+                  onDrop={(event) => {
+                    console.log('onDrop');
+                    event.preventDefault();
+                  }}
+                  onDragOver={(event) => {
+                    if (dnd.draggedType === 'menu') {
+                      event.preventDefault();
+                    }
+                  }}
+                  onDragEnter={() => {
+                    if (dnd.draggedType === 'menu') {
+                      // If we swap with the selected menu, we need to update the
+                      // selection.
+                      if (index === selectedMenu) {
+                        selectMenu(dnd.draggedIndex);
+                      } else if (dnd.draggedIndex === selectedMenu) {
+                        selectMenu(index);
+                      }
+
+                      // Also, if we swap with a menu on the other side of the selection,
+                      // we need to update the selection.
+                      if (index < selectedMenu && selectedMenu < dnd.draggedIndex) {
+                        selectMenu(selectedMenu + 1);
+                      } else if (
+                        index > selectedMenu &&
+                        selectedMenu > dnd.draggedIndex
+                      ) {
+                        selectMenu(selectedMenu - 1);
+                      }
+
+                      // Swap the dragged menu with the menu we are currently hovering over.
+                      moveMenu(dnd.draggedIndex, index);
+
+                      // We are now dragging the menu which we just hovered over (it is
+                      // the same as before, but the index has changed).
+                      startDrag('menu', index);
+                    }
+                  }}
                   className={className}
                   onClick={() => selectMenu(index)}>
                   <div style={{ display: 'flex' }}>

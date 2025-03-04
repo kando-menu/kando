@@ -9,10 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbTrash, TbApps } from 'react-icons/tb';
 
 import * as classes from './CollectionList.module.scss';
+const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../state';
 import Scrollbox from './widgets/Scrollbox';
@@ -25,6 +27,10 @@ export default () => {
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
+
+  const dnd = useAppState((state) => state.dnd);
+  const startDrag = useAppState((state) => state.startDrag);
+  const endDrag = useAppState((state) => state.endDrag);
 
   const [animatedList] = useAutoAnimate();
 
@@ -40,47 +46,48 @@ export default () => {
       <Scrollbox hideScrollbar>
         <div ref={animatedList}>
           <button
-            className={
-              classes.collection +
-              ' ' +
-              (selectedCollection == -1 ? classes.selected : '')
-            }
+            className={cx({ collection: true, selected: selectedCollection === -1 })}
             onClick={() => selectCollection(-1)}
             data-tooltip-id="main-tooltip"
             data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
             <TbApps />
           </button>
-          {collections.map((collection, index) => {
-            const className =
-              classes.collection +
-              ' ' +
-              (index === selectedCollection ? classes.selected : '');
-
-            return (
-              <button
-                draggable
-                key={index}
-                className={className}
-                onClick={() => selectCollection(index)}
+          {collections.map((collection, index) => (
+            <button
+              draggable
+              onDragStart={(event) => {
+                event.dataTransfer.effectAllowed = 'move';
+                startDrag('collection', index);
+              }}
+              onDragEnd={endDrag}
+              onDragOver={(event) => {
+                if (dnd.draggedType === 'collection') {
+                  event.preventDefault();
+                }
+              }}
+              key={index}
+              className={cx({
+                collection: true,
+                selected: index === selectedCollection,
+                dragging: dnd.draggedType === 'collection' && dnd.draggedIndex === index,
+              })}
+              onClick={() => selectCollection(index)}
+              data-tooltip-id="main-tooltip"
+              data-tooltip-content={index === selectedCollection ? '' : collection.name}>
+              <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
+              <div
+                className={classes.deleteButton}
                 data-tooltip-id="main-tooltip"
-                data-tooltip-content={
-                  index === selectedCollection ? '' : collection.name
-                }>
-                <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
-                <div
-                  className={classes.deleteButton}
-                  data-tooltip-id="main-tooltip"
-                  data-tooltip-content="Delete collection"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    deleteCollection(index);
-                    selectCollection(selectedCollection - 1);
-                  }}>
-                  <TbTrash />
-                </div>
-              </button>
-            );
-          })}
+                data-tooltip-content="Delete collection"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteCollection(index);
+                  selectCollection(selectedCollection - 1);
+                }}>
+                <TbTrash />
+              </div>
+            </button>
+          ))}
           <button
             className={classes.collection + ' ' + classes.transparent}
             data-tooltip-id="main-tooltip"

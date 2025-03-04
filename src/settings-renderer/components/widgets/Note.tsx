@@ -9,8 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 
 import * as classes from './Note.module.scss';
+const cx = classNames.bind(classes);
 
 interface IProps {
   /** Content to display inside the note. */
@@ -33,10 +35,12 @@ interface IProps {
  * @returns A note element.
  */
 export default (props: IProps) => {
-  const className = classes.note + ' ' + (props.center ? classes.center : '');
   return (
     <div
-      className={className}
+      className={cx({
+        note: true,
+        center: props.center,
+      })}
       style={{ marginTop: props.marginTop || 0, marginBottom: props.marginBottom || 0 }}>
       {props.children}
     </div>

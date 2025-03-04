@@ -59,6 +59,11 @@
   position: relative;
   font-size: 1.8rem;
   line-height: 1.5rem;
+
+  &.dragging {
+    opacity: 0.5;
+    filter: blur(2px);
+  }
 }
 
 .deleteButton {

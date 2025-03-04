@@ -9,10 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 
 import InfoItem from './InfoItem';
 
 import * as classes from './Dropdown.module.scss';
+const cx = classNames.bind(classes);
 
 interface IProps<T extends string> {
   /** Function to call when the selected option changes. */
@@ -44,10 +46,12 @@ interface IProps<T extends string> {
  * @returns A dropdown element.
  */
 export default <T extends string>(props: IProps<T>) => {
-  const className = classes.dropdown + ' ' + (props.disabled ? classes.disabled : '');
-
   return (
-    <label className={className}>
+    <label
+      className={cx({
+        dropdown: true,
+        disabled: props.disabled,
+      })}>
       <div>
         {props.label}
         {props.info && <InfoItem info={props.info} />}

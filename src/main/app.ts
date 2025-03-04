@@ -402,15 +402,6 @@ export class KandoApp {
       console.log(message);
     });
 
-    // Allow the renderer to retrieve the i18next locales.
-    ipcMain.handle('common.get-locales', () => {
-      return {
-        current: i18next.language,
-        data: i18next.store.data,
-        fallbackLng: i18next.options.fallbackLng,
-      };
-    });
-
     // We also allow getting the entire app settings object.
     ipcMain.handle('common.app-settings-get', () => this.appSettings.get());
 
@@ -436,8 +427,15 @@ export class KandoApp {
     // Allow the renderer to retrieve the settings.
     ipcMain.handle('common.menu-settings-get', () => this.menuSettings.get());
 
+    // When there comes a menu-settings-set event from the renderer, we do not want to
+    // trigger the menu-settings-changed event in the settings window again. This is
+    // because the renderer already knows about the change. We have to send the change to
+    // the menu window, though.
+    let ignoreNextMenuSettingsChange = false;
+
     // Allow the renderer to alter the menu settings.
     ipcMain.on('common.menu-settings-set', (event, settings) => {
+      ignoreNextMenuSettingsChange = true;
       this.menuSettings.set(settings);
     });
 
@@ -448,11 +446,26 @@ export class KandoApp {
         newSettings,
         oldSettings
       );
+
+      if (ignoreNextMenuSettingsChange) {
+        ignoreNextMenuSettingsChange = false;
+        return;
+      }
+
       this.settingsWindow?.webContents.send(
         'common.menu-settings-changed',
         newSettings,
         oldSettings
       );
+    });
+
+    // Allow the renderer to retrieve the i18next locales.
+    ipcMain.handle('common.get-locales', () => {
+      return {
+        current: i18next.language,
+        data: i18next.store.data,
+        fallbackLng: i18next.options.fallbackLng,
+      };
     });
 
     // Allow the renderer to retrieve all icons of all file icon themes.

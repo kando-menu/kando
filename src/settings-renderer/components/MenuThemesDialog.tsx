@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React, { ReactNode } from 'react';
+import classNames from 'classnames/bind';
 import {
   TbExternalLink,
   TbFolderOpen,
@@ -34,6 +35,7 @@ import Swirl from './widgets/Swirl';
 import InfoItem from './widgets/InfoItem';
 
 import * as classes from './MenuThemesDialog.module.scss';
+const cx = classNames.bind(classes);
 
 // This is called when the user clicks the "Open theme directory" button.
 const openThemeDirectory = () => {
@@ -239,14 +241,13 @@ export default () => {
                 previewPath = previewPath.replace(/\\/g, '/');
               }
 
-              // Highlight the selected theme.
-              const className =
-                classes.themeCard + ' ' + (isSelected(theme.id) ? classes.selected : '');
-
               return (
                 <div
                   key={theme.id}
-                  className={className}
+                  className={cx({
+                    themeCard: true,
+                    selected: isSelected(theme.id),
+                  })}
                   style={{ backgroundImage: `url("${previewPath}")` }}
                   onClick={() => selectTheme(theme.id)}>
                   {isSelected(theme.id) && (

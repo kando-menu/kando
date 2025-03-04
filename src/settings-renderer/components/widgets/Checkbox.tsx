@@ -9,10 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 
 import InfoItem from './InfoItem';
 
 import * as classes from './Checkbox.module.scss';
+const cx = classNames.bind(classes);
 
 interface IProps {
   /** Function to call when the checkbox is toggled. */
@@ -38,10 +40,12 @@ interface IProps {
  * @returns A checkbox element.
  */
 export default (props: IProps) => {
-  const className = classes.row + ' ' + (props.disabled ? classes.disabled : '');
-
   return (
-    <label className={className}>
+    <label
+      className={cx({
+        row: true,
+        disabled: props.disabled,
+      })}>
       <div>
         {props.label}
         {props.info && <InfoItem info={props.info} />}

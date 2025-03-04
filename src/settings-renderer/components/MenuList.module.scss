@@ -106,6 +106,10 @@
   text-align: left;
   width: 100%;
 
+  * {
+    pointer-events: none;
+  }
+
   &.selected {
     background-color: $background-selected;
     border: 1px solid $border-selected;
@@ -122,6 +126,11 @@
 
   &:active {
     transform: translateY(1px);
+  }
+
+  &.dragging {
+    opacity: 0.5;
+    filter: blur(2px);
   }
 }
 

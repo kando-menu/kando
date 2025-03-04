@@ -9,8 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 
 import * as classes from './Button.module.scss';
+const cx = classNames.bind(classes);
 
 interface IProps {
   /** Function to call when the button is clicked. */
@@ -61,20 +63,15 @@ interface IProps {
  * @returns A button element.
  */
 export default (props: IProps) => {
-  const className =
-    classes.button +
-    ' ' +
-    classes[props.variant || 'secondary'] +
-    ' ' +
-    classes[props.size || 'medium'] +
-    ' ' +
-    (props.disabled ? classes.disabled : '') +
-    ' ' +
-    (props.grouped ? classes.grouped : '') +
-    ' ' +
-    (props.block ? classes.block : '') +
-    ' ' +
-    (props.grow ? classes.grow : '');
+  const className = cx({
+    button: true,
+    [props.variant || 'secondary']: true,
+    [props.size || 'medium']: true,
+    disabled: props.disabled,
+    grouped: props.grouped,
+    block: props.block,
+    grow: props.grow,
+  });
 
   return (
     <button
