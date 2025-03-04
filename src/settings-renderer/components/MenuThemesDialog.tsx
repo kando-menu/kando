@@ -31,6 +31,7 @@ import Scrollbox from './widgets/Scrollbox';
 import AppSettingsCheckbox from './AppSettingsCheckbox';
 import AppSettingsSpinbutton from './AppSettingsSpinbutton';
 import Swirl from './widgets/Swirl';
+import InfoItem from './widgets/InfoItem';
 
 import * as classes from './MenuThemesDialog.module.scss';
 
@@ -84,13 +85,11 @@ export default () => {
     );
     accentColorsNode = (
       <>
-        <h1>
-          Theme Colors
+        <div style={{ marginTop: 15, marginBottom: 10 }}>
+          Accent Colors
           {useDarkMode ? (darkMode ? ' (Dark Mode)' : ' (Light Mode)') : ''}
-        </h1>
-        <Note marginTop={-10}>
-          The set of available accent colors depends on the selected theme.
-        </Note>
+          <InfoItem info="The set of available accent colors depends on the selected theme." />
+        </div>
         <div
           style={{
             display: 'flex',
@@ -167,10 +166,6 @@ export default () => {
       paddingRight={5}>
       <div className={classes.container}>
         <div className={classes.sidebar}>
-          <Note marginTop={-6}>
-            The options below are used regardless of the selected theme.
-          </Note>
-
           <AppSettingsSpinbutton
             label="Fade-in time"
             info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
