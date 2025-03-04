@@ -10,10 +10,6 @@
 
 @import '../variables.scss';
 
-.menuListHeader {
-  -webkit-app-region: drag;
-}
-
 .menuList {
   min-width: 0;
   flex: 1;
@@ -22,12 +18,70 @@
 }
 
 .menuListHeader {
+  -webkit-app-region: drag;
   min-height: env(titlebar-area-height, 30);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   white-space: nowrap;
   font-weight: bold;
   margin-left: 10px;
+
+  button {
+    -webkit-app-region: no-drag;
+  }
+
+  &.editCollection {
+    -webkit-app-region: no-drag;
+  }
+}
+
+.collectionName {
+  position: relative;
+  pointer-events: none;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  background: transparent;
+  font-size: 1rem;
+  field-sizing: content;
+
+  transition: all 0.3s ease;
+}
+
+.editCollection .collectionName {
+  pointer-events: auto;
+  padding: 5px 15px;
+  margin: 10px 0;
+  background-color: $background-secondary;
+}
+
+.collectionEditor {
+  padding: 0 10px 10px 10px;
+  align-self: stretch;
+
+  .searchInput {
+    display: flex;
+
+    input {
+      background-color: $background-secondary;
+      width: 100%;
+      color: $text-primary;
+      border: none;
+      border-radius: 0;
+      border-radius: 5px 0 0 5px;
+
+      padding: 5px;
+      font-size: 1rem;
+
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
 }
 
 .menuListContent {

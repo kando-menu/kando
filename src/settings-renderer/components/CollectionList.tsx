@@ -20,7 +20,7 @@ import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
   const collections = useMenuSettings((state) => state.collections);
-  const setCollections = useMenuSettings((state) => state.setCollections);
+  const deleteCollection = useMenuSettings((state) => state.deleteCollection);
   const addCollection = useMenuSettings((state) => state.addCollection);
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
@@ -36,56 +36,63 @@ export default () => {
   }
 
   return (
-    <Scrollbox hideScrollbar>
-      <div className={classes.collectionsList} ref={animatedList}>
-        <button
-          className={
-            classes.collection + ' ' + (selectedCollection == -1 ? classes.selected : '')
-          }
-          onClick={() => selectCollection(-1)}
-          data-tooltip-id="main-tooltip"
-          data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
-          <TbApps />
-        </button>
-        {collections.map((collection, index) => {
-          const className =
-            classes.collection +
-            ' ' +
-            (index === selectedCollection ? classes.selected : '');
+    <div className={classes.collectionsList}>
+      <Scrollbox hideScrollbar>
+        <div ref={animatedList}>
+          <button
+            className={
+              classes.collection +
+              ' ' +
+              (selectedCollection == -1 ? classes.selected : '')
+            }
+            onClick={() => selectCollection(-1)}
+            data-tooltip-id="main-tooltip"
+            data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
+            <TbApps />
+          </button>
+          {collections.map((collection, index) => {
+            const className =
+              classes.collection +
+              ' ' +
+              (index === selectedCollection ? classes.selected : '');
 
-          return (
-            <button
-              key={index}
-              className={className}
-              onClick={() => selectCollection(index)}
-              data-tooltip-id="main-tooltip"
-              data-tooltip-content={index === selectedCollection ? '' : collection.name}>
-              <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
-              <div
-                className={classes.deleteButton}
+            return (
+              <button
+                draggable
+                key={index}
+                className={className}
+                onClick={() => selectCollection(index)}
                 data-tooltip-id="main-tooltip"
-                data-tooltip-content="Delete collection"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setCollections(collections.filter((_, i) => i !== index));
-                  selectCollection(selectedCollection - 1);
-                }}>
-                <TbTrash />
-              </div>
-            </button>
-          );
-        })}
-        <button
-          className={classes.collection + ' ' + classes.transparent}
-          data-tooltip-id="main-tooltip"
-          data-tooltip-content="Create a new collection"
-          onClick={() => {
-            addCollection();
-            selectCollection(collections.length);
-          }}>
-          <ThemedIcon name="add" theme="material-symbols-rounded" />
-        </button>
-      </div>
-    </Scrollbox>
+                data-tooltip-content={
+                  index === selectedCollection ? '' : collection.name
+                }>
+                <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
+                <div
+                  className={classes.deleteButton}
+                  data-tooltip-id="main-tooltip"
+                  data-tooltip-content="Delete collection"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    deleteCollection(index);
+                    selectCollection(selectedCollection - 1);
+                  }}>
+                  <TbTrash />
+                </div>
+              </button>
+            );
+          })}
+          <button
+            className={classes.collection + ' ' + classes.transparent}
+            data-tooltip-id="main-tooltip"
+            data-tooltip-content="Create a new collection"
+            onClick={() => {
+              addCollection();
+              selectCollection(collections.length);
+            }}>
+            <ThemedIcon name="add" theme="material-symbols-rounded" />
+          </button>
+        </div>
+      </Scrollbox>
+    </div>
   );
 };

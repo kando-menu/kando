@@ -66,32 +66,59 @@
 }
 
 .small {
-  padding: 5px 7px;
+  padding: 5px 9px;
   font-size: 0.8em;
   gap: 4px;
 
   &.grouped {
     padding: 5px;
+
+    &.flat:last-child,
+    &.floating:last-child {
+      padding-right: 9px;
+    }
+    &.flat:first-child,
+    &.floating:first-child {
+      padding-left: 9px;
+    }
   }
 }
 
 .medium {
-  padding: 7px 10px;
+  padding: 7px 15px;
   font-size: 1em;
   gap: 6px;
 
   &.grouped {
     padding: 7px;
+
+    &.flat:last-child,
+    &.floating:last-child {
+      padding-right: 15px;
+    }
+    &.flat:first-child,
+    &.floating:first-child {
+      padding-left: 15px;
+    }
   }
 }
 
 .large {
-  padding: 9px 13px;
+  padding: 9px 17px;
   font-size: 1.2em;
   gap: 8px;
 
   &.grouped {
     padding: 9px;
+
+    &.flat:last-child,
+    &.floating:last-child {
+      padding-right: 17px;
+    }
+    &.flat:last-child,
+    &.floating:first-child {
+      padding-left: 17px;
+    }
   }
 }
 

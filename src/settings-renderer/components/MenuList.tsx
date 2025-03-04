@@ -9,9 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import AnimateHeight from 'react-animate-height';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
-import { TbPlus } from 'react-icons/tb';
+import { TbPlus, TbPencilCog, TbSearch, TbBackspaceFilled } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 
@@ -19,6 +20,7 @@ import { useMenuSettings, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
 import Button from './widgets/Button';
+import TagInput from './widgets/TagInput';
 
 export default () => {
   const menuCollections = useMenuSettings((state) => state.collections);
@@ -28,6 +30,18 @@ export default () => {
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
+  const editCollection = useMenuSettings((state) => state.editCollection);
+
+  const [collectionDetailsVisible, setCollectionDetailsVisible] = React.useState(false);
+  const [filterTerm, setFilterTerm] = React.useState('');
+  const [filterTags, setFilterTags] = React.useState([]);
+
+  // Update the tag editor whenever the selected menu collection changes.
+  React.useEffect(() => {
+    if (selectedCollection !== -1) {
+      setFilterTags(menuCollections[selectedCollection].tags);
+    }
+  }, [selectedCollection, menuCollections]);
 
   // Make sure that the selected menu is valid. This could for instance happen if
   // the currently selected menu is deleted by an external event (e.g. by editing
@@ -54,13 +68,90 @@ export default () => {
       return menuCollections[selectedCollection].tags.every((tag) =>
         menu.menu.tags?.includes(tag)
       );
+    })
+    .filter((menu) => {
+      // If the user has not entered a filter term or if the filter bar is not visible,
+      // all menus are visible.
+      if (!filterTerm || !collectionDetailsVisible || selectedCollection !== -1) {
+        return true;
+      }
+
+      // Else, a menu must contain the filter term to be visible.
+      return menu.menu.root.name.toLowerCase().includes(filterTerm.toLowerCase());
     });
+
+  // Accumulate a list of all tags which are currently used in our collections and menus.
+  let allAvailableTags = menuCollections
+    .map((collection) => collection.tags)
+    .concat(menus.map((menu) => menu.tags))
+    .filter((tag) => tag)
+    .reduce((acc, tags) => acc.concat(tags), []);
+
+  // Remove duplicates.
+  allAvailableTags = Array.from(new Set(allAvailableTags));
 
   return (
     <div className={classes.menuList}>
-      <div className={classes.menuListHeader}>
-        {menuCollections[selectedCollection]?.name || 'All Menus'}
+      <div
+        className={
+          classes.menuListHeader +
+          ' ' +
+          (collectionDetailsVisible && selectedCollection !== -1
+            ? classes.editCollection
+            : ' ')
+        }>
+        <input
+          type="text"
+          className={classes.collectionName}
+          value={menuCollections[selectedCollection]?.name || 'All Menus'}
+        />
+        {selectedCollection === -1 && (
+          <Button
+            icon={<TbSearch />}
+            variant="flat"
+            onClick={() => setCollectionDetailsVisible(!collectionDetailsVisible)}
+          />
+        )}
+        {selectedCollection !== -1 && (
+          <Button
+            icon={<TbPencilCog />}
+            variant="flat"
+            onClick={() => setCollectionDetailsVisible(!collectionDetailsVisible)}
+          />
+        )}
       </div>
+      <AnimateHeight
+        height={collectionDetailsVisible ? 'auto' : 0}
+        duration={300}
+        easing="ease-in-out">
+        <div className={classes.collectionEditor}>
+          {selectedCollection === -1 && (
+            <div className={classes.searchInput}>
+              <input
+                type="text"
+                placeholder="Search menus..."
+                value={filterTerm}
+                onChange={(event) => setFilterTerm(event.target.value)}
+              />
+              <Button
+                grouped
+                icon={<TbBackspaceFilled />}
+                onClick={() => setFilterTerm('')}
+              />
+            </div>
+          )}
+          {selectedCollection !== -1 && (
+            <TagInput
+              tags={filterTags}
+              onChange={(newTags) => {
+                editCollection(selectedCollection, { tags: newTags });
+                setFilterTags(newTags);
+              }}
+              suggestions={allAvailableTags}
+            />
+          )}
+        </div>
+      </AnimateHeight>
       <div className={classes.menuListContent}>
         <Scrollbox>
           <div ref={animatedList}>

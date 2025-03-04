@@ -9,12 +9,11 @@
 // SPDX-License-Identifier: MIT
 
 import { create } from 'zustand';
+import { produce } from 'immer';
 import { temporal } from 'zundo';
 import lodash from 'lodash';
 
 import {
-  IMenu,
-  IMenuItem,
   IAppSettings,
   IMenuSettings,
   getDefaultAppSettings,
@@ -23,6 +22,7 @@ import {
   IVersionInfo,
   IMenuThemeDescription,
   IMenuCollection,
+  IMenu,
 } from '../common';
 
 // We have three global state objects: one for the applications settings stored in the
@@ -58,32 +58,29 @@ export const useAppSetting = <T extends keyof IAppSettings>(key: T) => {
 // Menu Settings State -------------------------------------------------------------------
 
 type MenuStateActions = {
-  setMenus: (newMenus: Array<IMenu>) => void;
-  setStash: (newStash: Array<IMenuItem>) => void;
-  setCollections: (newCollections: Array<IMenuCollection>) => void;
   addMenu: (tags: string[]) => void;
   deleteMenu: (index: number) => void;
   duplicateMenu: (index: number) => void;
+  editMenu: (index: number, menu: Partial<IMenu>) => void;
+
   addCollection: () => void;
+  deleteCollection: (index: number) => void;
+  editCollection: (index: number, collection: Partial<IMenuCollection>) => void;
 };
 
 /**
  * Use this hook to access the entire menu settings object. Usually you will only need the
  * menus or the stash. In this case, use the methods below.
  */
-export const useMenuSettings = create(
-  temporal<IMenuSettings & MenuStateActions>(
+export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
+  temporal(
     (set) => ({
       ...getDefaultMenuSettings(),
-      setMenus: (menus: Array<IMenu>) => set(() => ({ menus })),
-      setStash: (stash: Array<IMenuItem>) => set(() => ({ stash })),
-      setCollections: (collections: Array<IMenuCollection>) =>
-        set(() => ({ collections })),
+
       addMenu: (tags: string[]) =>
-        set((state) => ({
-          menus: [
-            ...state.menus,
-            {
+        set(
+          produce((state) => {
+            state.menus.push({
               shortcut: '',
               shortcutID: '',
               centered: false,
@@ -98,13 +95,15 @@ export const useMenuSettings = create(
                 iconTheme: 'material-symbols-rounded',
                 children: [],
               },
-            },
-          ],
-        })),
+            });
+          })
+        ),
+
       deleteMenu: (index: number) =>
         set((state) => ({
           menus: state.menus.filter((_, i) => i !== index),
         })),
+
       duplicateMenu: (index: number) =>
         set((state) => ({
           menus: [
@@ -113,18 +112,37 @@ export const useMenuSettings = create(
             ...state.menus.slice(index + 1),
           ],
         })),
+
+      editMenu: (index: number, menu: Partial<IMenu>) =>
+        set(
+          produce((state) => {
+            state.menus[index] = { ...state.menus[index], ...menu };
+          })
+        ),
+
       addCollection: () =>
-        set((state) => ({
-          collections: [
-            ...state.collections,
-            {
+        set(
+          produce((state) => {
+            state.collections.push({
               name: 'New Collection',
               icon: 'sell',
               iconTheme: 'material-symbols-rounded',
               tags: [],
-            },
-          ],
+            });
+          })
+        ),
+
+      deleteCollection: (index: number) =>
+        set((state) => ({
+          collections: state.collections.filter((_, i) => i !== index),
         })),
+
+      editCollection: (index: number, collection: Partial<IMenuCollection>) =>
+        set(
+          produce((state) => {
+            state.collections[index] = { ...state.collections[index], ...collection };
+          })
+        ),
     }),
     {
       equality: lodash.isEqual,

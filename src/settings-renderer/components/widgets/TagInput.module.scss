@@ -8,8 +8,40 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.preview {
-  flex-grow: 1;
-  background-color: rgba(255, 255, 255, 0.4);
-  color-scheme: only light;
+@import '../../variables.scss';
+
+.container,
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.container {
+  background-color: $background-secondary;
+  padding: 4px;
+  border-radius: 5px;
+  cursor: text;
+  font-size: 1.1rem;
+
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  input {
+    field-sizing: content;
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+  }
+}
+
+.suggestions {
+  justify-content: center;
+  margin: 8px;
+  font-size: 0.9rem;
 }

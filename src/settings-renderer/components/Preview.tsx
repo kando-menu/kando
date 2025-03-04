@@ -38,38 +38,47 @@ export default () => {
 
   const headerButtons = (
     <>
-      <Button
-        tooltip="About Kando"
-        icon={<TbInfoSquareRoundedFilled />}
-        onClick={() => setAboutDialogVisible(true)}
-        variant="flat"
-      />
-      <Button
-        tooltip="Menu Themes"
-        icon={<TbPaletteFilled />}
-        onClick={() => setThemesDialogVisible(true)}
-        variant="flat"
-      />
-      <Button
-        tooltip="General Settings"
-        icon={<TbSettingsFilled />}
-        onClick={() => setSettingsDialogVisible(true)}
-        variant="flat"
-      />
-      <Button
-        tooltip="Undo"
-        icon={<IoArrowUndo />}
-        disabled={pastStates.length === 0}
-        onClick={() => useMenuSettings.temporal.getState().undo()}
-        variant="flat"
-      />
-      <Button
-        tooltip="Redo"
-        icon={<IoArrowRedo />}
-        disabled={futureStates.length === 0}
-        onClick={() => useMenuSettings.temporal.getState().redo()}
-        variant="flat"
-      />
+      <span>
+        <Button
+          tooltip="About Kando"
+          icon={<TbInfoSquareRoundedFilled />}
+          onClick={() => setAboutDialogVisible(true)}
+          variant="flat"
+          grouped
+        />
+        <Button
+          tooltip="Menu Themes"
+          icon={<TbPaletteFilled />}
+          onClick={() => setThemesDialogVisible(true)}
+          variant="flat"
+          grouped
+        />
+        <Button
+          tooltip="General Settings"
+          icon={<TbSettingsFilled />}
+          onClick={() => setSettingsDialogVisible(true)}
+          variant="flat"
+          grouped
+        />
+      </span>
+      <span>
+        <Button
+          tooltip="Undo"
+          icon={<IoArrowUndo />}
+          disabled={pastStates.length === 0}
+          onClick={() => useMenuSettings.temporal.getState().undo()}
+          variant="flat"
+          grouped
+        />
+        <Button
+          tooltip="Redo"
+          icon={<IoArrowRedo />}
+          disabled={futureStates.length === 0}
+          onClick={() => useMenuSettings.temporal.getState().redo()}
+          variant="flat"
+          grouped
+        />
+      </span>
     </>
   );
 
