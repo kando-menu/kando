@@ -210,6 +210,9 @@ type AppState = {
    */
   selectedCollection: number;
 
+  /** Whether the search bar or the collection editor above the menu list is visible. */
+  collectionDetailsVisible: boolean;
+
   /** Whether the about dialog is visible. */
   aboutDialogVisible: boolean;
 
@@ -244,6 +247,7 @@ type AppStateActions = {
   setAboutDialogVisible: (aboutDialogVisible: boolean) => void;
   setThemesDialogVisible: (themesDialogVisible: boolean) => void;
   setSettingsDialogVisible: (settingsDialogVisible: boolean) => void;
+  setCollectionDetailsVisible: (collectionDetailsVisible: boolean) => void;
 
   startDrag: (type: 'menu' | 'collection', index: number) => void;
   endDrag: () => void;
@@ -253,6 +257,7 @@ type AppStateActions = {
 export const useAppState = create<AppState & AppStateActions>((set) => ({
   selectedMenu: 0,
   selectedCollection: -1,
+  collectionDetailsVisible: false,
   aboutDialogVisible: false,
   themesDialogVisible: false,
   settingsDialogVisible: false,
@@ -270,6 +275,8 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
   setSettingsDialogVisible: (settingsDialogVisible: boolean) =>
     set({ settingsDialogVisible }),
+  setCollectionDetailsVisible: (collectionDetailsVisible: boolean) =>
+    set({ collectionDetailsVisible }),
   startDrag: (draggedType: 'menu' | 'collection', draggedIndex: number) =>
     set({ dnd: { draggedType, draggedIndex } }),
   endDrag: () => set({ dnd: { draggedType: 'none', draggedIndex: -1 } }),

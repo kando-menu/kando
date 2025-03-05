@@ -24,6 +24,9 @@ export default () => {
   const collections = useMenuSettings((state) => state.collections);
   const deleteCollection = useMenuSettings((state) => state.deleteCollection);
   const addCollection = useMenuSettings((state) => state.addCollection);
+  const setCollectionDetailsVisible = useAppState(
+    (state) => state.setCollectionDetailsVisible
+  );
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
@@ -31,6 +34,7 @@ export default () => {
   const dnd = useAppState((state) => state.dnd);
   const startDrag = useAppState((state) => state.startDrag);
   const endDrag = useAppState((state) => state.endDrag);
+  const moveCollection = useMenuSettings((state) => state.moveCollection);
 
   const [animatedList] = useAutoAnimate();
 
@@ -54,6 +58,13 @@ export default () => {
           </button>
           {collections.map((collection, index) => (
             <button
+              key={index}
+              className={cx({
+                collection: true,
+                selected: index === selectedCollection,
+                dragging: dnd.draggedType === 'collection' && dnd.draggedIndex === index,
+              })}
+              onClick={() => selectCollection(index)}
               draggable
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = 'move';
@@ -65,13 +76,39 @@ export default () => {
                   event.preventDefault();
                 }
               }}
-              key={index}
-              className={cx({
-                collection: true,
-                selected: index === selectedCollection,
-                dragging: dnd.draggedType === 'collection' && dnd.draggedIndex === index,
-              })}
-              onClick={() => selectCollection(index)}
+              onDragEnter={() => {
+                if (dnd.draggedType === 'collection') {
+                  // If we swap with the selected collection, we need to update the
+                  // selection.
+                  if (index === selectedCollection) {
+                    selectCollection(dnd.draggedIndex);
+                  } else if (dnd.draggedIndex === selectedCollection) {
+                    selectCollection(index);
+                  }
+
+                  // Also, if we swap with a collection on the other side of the selection,
+                  // we need to update the selection.
+                  if (
+                    index < selectedCollection &&
+                    selectedCollection < dnd.draggedIndex
+                  ) {
+                    selectCollection(selectedCollection + 1);
+                  } else if (
+                    index > selectedCollection &&
+                    selectedCollection > dnd.draggedIndex
+                  ) {
+                    selectCollection(selectedCollection - 1);
+                  }
+
+                  // Swap the dragged collection with the collection we are currently
+                  // hovering over.
+                  moveCollection(dnd.draggedIndex, index);
+
+                  // We are now dragging the collection which we just hovered over (it is
+                  // the same as before, but the index has changed).
+                  startDrag('collection', index);
+                }
+              }}
               data-tooltip-id="main-tooltip"
               data-tooltip-content={index === selectedCollection ? '' : collection.name}>
               <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
@@ -95,6 +132,7 @@ export default () => {
             onClick={() => {
               addCollection();
               selectCollection(collections.length);
+              setCollectionDetailsVisible(true);
             }}>
             <ThemedIcon name="add" theme="material-symbols-rounded" />
           </button>
