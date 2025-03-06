@@ -21,6 +21,9 @@ import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
+  const menus = useMenuSettings((state) => state.menus);
+  const editMenu = useMenuSettings((state) => state.editMenu);
+
   const collections = useMenuSettings((state) => state.collections);
   const deleteCollection = useMenuSettings((state) => state.deleteCollection);
   const addCollection = useMenuSettings((state) => state.addCollection);
@@ -72,11 +75,18 @@ export default () => {
               }}
               onDragEnd={endDrag}
               onDragOver={(event) => {
-                if (dnd.draggedType === 'collection') {
+                if (dnd.draggedType === 'collection' || dnd.draggedType === 'menu') {
                   event.preventDefault();
                 }
               }}
-              onDragEnter={() => {
+              onDrop={() => {
+                if (dnd.draggedType === 'menu') {
+                  const currentTags = menus[dnd.draggedIndex].tags;
+                  const newTags = [...new Set([...currentTags, ...collection.tags])];
+                  editMenu(dnd.draggedIndex, { tags: newTags });
+                }
+              }}
+              onDragEnter={(event) => {
                 if (dnd.draggedType === 'collection') {
                   // If we swap with the selected collection, we need to update the
                   // selection.
@@ -107,6 +117,13 @@ export default () => {
                   // We are now dragging the collection which we just hovered over (it is
                   // the same as before, but the index has changed).
                   startDrag('collection', index);
+                } else if (dnd.draggedType === 'menu') {
+                  (event.target as HTMLElement).classList.add(classes.dragOver);
+                }
+              }}
+              onDragLeave={(event) => {
+                if (dnd.draggedType === 'menu') {
+                  (event.target as HTMLElement).classList.remove(classes.dragOver);
                 }
               }}
               data-tooltip-id="main-tooltip"

@@ -60,9 +60,17 @@
   font-size: 1.8rem;
   line-height: 1.5rem;
 
+  * {
+    pointer-events: none;
+  }
+
   &.dragging {
     opacity: 0.3;
     filter: blur(2px);
+  }
+
+  &.dragOver {
+    border: 1px solid $border-selected;
   }
 }
 
