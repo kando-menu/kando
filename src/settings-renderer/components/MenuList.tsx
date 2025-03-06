@@ -19,6 +19,8 @@ const cx = classNames.bind(classes);
 import { useMenuSettings, useAppState } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
+import Swirl from './widgets/Swirl';
+import Note from './widgets/Note';
 import Button from './widgets/Button';
 import CollectionDetails from './CollectionDetails';
 
@@ -81,6 +83,38 @@ export default () => {
       <div className={classes.menuListContent}>
         <Scrollbox>
           <div ref={animatedList}>
+            {menus.length === 0 && (
+              <div key="-1" className={classes.message}>
+                <h1>You have no menus!</h1>
+                <Note>
+                  You currently have no menus. Click the button below to create a first
+                  menu!
+                </Note>
+                <Swirl variant="3" marginTop={10} />
+              </div>
+            )}
+            {menus.length > 0 &&
+              visibleMenus.length === 0 &&
+              selectedCollection === -1 && (
+                <div key="-1" className={classes.message}>
+                  <h1>No Matching Menus</h1>
+                  <Note>Maybe try a different search term?</Note>
+                  <Swirl variant="3" marginTop={10} />
+                </div>
+              )}
+            {menus.length > 0 &&
+              visibleMenus.length === 0 &&
+              selectedCollection !== -1 && (
+                <div key="-1" className={classes.message}>
+                  <h1>No Matching Menus</h1>
+                  <Note>
+                    Edit the tags above or add a completely new menu to this collection
+                    with the button below.
+                  </Note>
+                  <Swirl variant="3" marginTop={10} />
+                </div>
+              )}
+
             {visibleMenus.map(({ menu, index }) => {
               const shortcut = backend.supportsShortcuts
                 ? menu.shortcut
@@ -159,6 +193,7 @@ export default () => {
             })}
           </div>
         </Scrollbox>
+
         <div className={classes.floatingButton}>
           <Button
             icon={<TbPlus />}

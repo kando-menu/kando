@@ -49,7 +49,7 @@ export default () => {
           </p>
           <p>💖 Simon</p>
         </div>
-        <Swirl variant="3" marginTop={30} marginBottom={20} />
+        <Swirl variant="3" marginTop={30} marginBottom={20} width={350} />
         <div className={classes.footer}>
           <div className={classes.versionInfo}>
             Kando Version:

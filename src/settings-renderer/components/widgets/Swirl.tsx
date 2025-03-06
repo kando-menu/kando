@@ -31,7 +31,7 @@ export default (props: IProps) => {
         marginBottom: props.marginBottom || 0,
         marginLeft: 'auto',
         marginRight: 'auto',
-        width: props.width || '350px',
+        width: props.width,
       }}
     />
   );

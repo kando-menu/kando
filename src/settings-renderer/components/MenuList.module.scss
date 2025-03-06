@@ -88,3 +88,16 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  height: 70vh;
+
+  > * {
+    width: min(250px, 80%);
+  }
+}

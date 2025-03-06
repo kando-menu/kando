@@ -14,6 +14,8 @@ import Popover from './Popover';
 import ThemedIcon from './ThemedIcon';
 import Button from './Button';
 
+import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
+
 interface IProps {
   /** Function to call when the color is changed. */
   onChange?: (icon: string, theme: string) => void;
@@ -50,6 +52,21 @@ export default (props: IProps) => {
     setTheme(props.theme);
   }, [props.icon, props.theme]);
 
+  const iconPickerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (iconPickerRef.current && isPopoverOpen) {
+      const picker = IconThemeRegistry.getInstance().createIconPicker(theme);
+
+      iconPickerRef.current.innerHTML = '';
+      iconPickerRef.current.appendChild(picker.getFragment());
+
+      console.log('iconPickerRef.current', iconPickerRef.current);
+
+      picker.init(icon);
+    }
+  }, [props.theme, props.icon, isPopoverOpen]);
+
   return (
     <Popover
       visible={isPopoverOpen}
@@ -60,7 +77,14 @@ export default (props: IProps) => {
         setIsPopoverOpen(false);
       }}
       position="bottom"
-      content={<>Huhu</>}>
+      content={
+        <div
+          ref={iconPickerRef}
+          style={{
+            width: 500,
+            height: 400,
+          }}></div>
+      }>
       <Button
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         grouped={props.grouped}
