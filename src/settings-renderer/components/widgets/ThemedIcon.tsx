@@ -19,6 +19,9 @@ interface IProps {
 
   /** The name of the icon theme to take the icon from. */
   theme: string;
+
+  /** The size of the icon. */
+  size?: number | string;
 }
 
 /**
@@ -41,5 +44,10 @@ export default (props: IProps) => {
     }
   }, [props.theme, props.name]);
 
-  return <div className={classes.icon} ref={iconRef}></div>;
+  return (
+    <div
+      style={{ width: props.size, height: props.size }}
+      className={classes.icon}
+      ref={iconRef}></div>
+  );
 };
