@@ -14,8 +14,8 @@
   position: absolute;
   padding: 10px;
   border-radius: 10px;
-  background-color: black;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: $popover-background;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
 
   transition: opacity 200ms;
   opacity: 0;
@@ -31,12 +31,12 @@
 
   &.bottom {
     bottom: -9px;
-    border-top: 10px solid black;
+    border-top: 10px solid $popover-background;
   }
 
   &.top {
     top: -9px;
-    border-bottom: 10px solid black;
+    border-bottom: 10px solid $popover-background;
   }
 }
 

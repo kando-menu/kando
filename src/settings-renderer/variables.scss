@@ -18,8 +18,10 @@ $text-inverted: light-dark(#eee, #fff);
 $text-muted: light-dark(#777, #bbb);
 $text-link: light-dark($_key-dark, $_key-light);
 
+$popover-background: light-dark(white, black);
 $toolbar-background: light-dark(darken($_base-light, 10%), darken($_base-dark, 10%));
 $window-background: light-dark($_base-light, $_base-dark);
+$modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
 
 $widget-primary: light-dark($_key-light, $_key-dark);
 
@@ -60,5 +62,3 @@ $border-focused: 1px solid
     mix($_key-dark, darken($_base-light, 10%), 50%),
     mix($_key-light, lighten($_base-dark, 10%), 50%)
   );
-
-$modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
