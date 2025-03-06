@@ -17,8 +17,8 @@
   align-items: center;
   height: 20px;
 
-  background-color: $background-secondary;
-  color: $text-primary;
+  background-color: $widget-inverted;
+  color: $text-inverted;
   border: none;
 
   border-radius: 0 5px 5px 0;
@@ -31,6 +31,10 @@
     position: relative;
     opacity: 0;
     transition: opacity 0.1s;
+  }
+
+  &:hover {
+    background-color: $widget-inverted-hover;
   }
 
   &:hover svg {
@@ -51,7 +55,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: $text-primary;
+    background: $text-inverted;
     transition: opacity 0.1s;
   }
 
@@ -67,8 +71,12 @@
     left: -7px;
     width: 0;
     height: 0;
-    border-color: transparent $background-secondary transparent transparent;
+    border-color: transparent $widget-inverted transparent transparent;
     border-style: solid;
     border-width: 10px 7px 10px 0;
+  }
+
+  &:hover:before {
+    border-color: transparent $widget-inverted-hover transparent transparent;
   }
 }

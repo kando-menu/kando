@@ -42,7 +42,7 @@ export default () => {
 
   const backend = useAppState((state) => state.backendInfo);
 
-  const [animatedList, enableAnimatedList] = useAutoAnimate({ duration: 300 });
+  const [animatedList, enableAnimatedList] = useAutoAnimate({ duration: 250 });
 
   const dnd = useAppState((state) => state.dnd);
   const startDrag = useAppState((state) => state.startDrag);

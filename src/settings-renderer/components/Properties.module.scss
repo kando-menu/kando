@@ -13,7 +13,7 @@
 .properties {
   position: relative;
   flex-grow: 1;
-  background-color: $background-normal;
+  background-color: $window-background;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@
   height: 70px;
   padding: 10px;
   margin: -30px auto 0 auto;
-  background-color: $background-normal;
+  background-color: $window-background;
   border-radius: 50%;
   overflow: hidden;
 }

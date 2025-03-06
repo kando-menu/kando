@@ -15,21 +15,15 @@
   justify-content: center;
   align-items: center;
 
-  color: $text-primary;
+  color: $text-normal;
   border: none;
   border-radius: 5px;
   font-size: inherit;
   white-space: nowrap;
 
-  opacity: 0.8;
-
   svg {
     position: relative;
     top: -0.05em;
-  }
-
-  &:hover {
-    opacity: 1;
   }
 
   &:active {
@@ -48,21 +42,36 @@
 }
 
 .secondary {
-  background-color: $background-secondary;
+  background-color: $widget-normal;
+
+  &:hover {
+    background-color: $widget-normal-hover;
+  }
 }
 
 .flat {
   background-color: transparent;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .primary {
-  background-color: $background-primary;
-  color: $text-primary;
+  background-color: $widget-primary;
+  color: $text-normal;
 }
 
 .floating {
-  background-color: $background-dark;
+  background-color: $toolbar-background;
   border-radius: 50px;
+
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .small {

@@ -15,7 +15,7 @@
   height: 1.5em;
   border-radius: 50%;
 
-  border: 2px solid $text-primary;
+  border: 2px solid $text-normal;
 
   &:hover {
     border-color: light-dark(black, white);
@@ -58,9 +58,9 @@
 }
 
 .colorInput {
-  background-color: $background-secondary;
+  background-color: $widget-normal;
 
-  color: $text-primary;
+  color: $text-normal;
   text-align: center;
   border: none;
   font-size: inherit;

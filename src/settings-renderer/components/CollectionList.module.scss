@@ -18,8 +18,8 @@
 .deleteButton {
   display: block;
   border: none;
-  background-color: $background-secondary;
-  color: $text-primary;
+  background-color: $widget-dark;
+  color: $text-normal;
   border: 1px solid transparent;
 
   border-radius: 50%;
@@ -29,25 +29,25 @@
     background-color: transparent;
 
     &:hover {
-      background-color: $background-secondary;
+      background-color: $widget-dark;
     }
   }
 
   &.selected {
-    background-color: $background-selected;
-    border: 1px solid $border-selected;
-    color: $text-primary;
+    background-color: $widget-selected;
+    border: $border-selected;
+    color: $text-normal;
 
-    &:hover {
-      background-color: $background-selected;
+    &:hover:not(:has(:hover)) {
+      background-color: $widget-selected-hover;
     }
   }
 
-  &:hover {
-    background-color: $background-secondary-hover;
+  &:hover:not(:has(:hover)) {
+    background-color: $widget-dark-hover;
   }
 
-  &:active {
+  &:active:not(:has(:active)) {
     transform: translateY(1px);
   }
 }
@@ -60,6 +60,8 @@
   font-size: 1.8rem;
   line-height: 1.5rem;
 
+  transition: transform 0.2s;
+
   * {
     pointer-events: none;
   }
@@ -70,13 +72,14 @@
   }
 
   &.dragOver {
-    border: 1px solid $border-selected;
+    border: $border-selected;
+    transform: scale(1.3);
   }
 }
 
 .deleteButton {
   opacity: 0;
-  background-color: $background-selected;
+  background-color: $widget-selected;
   padding: 0;
   pointer-events: none;
   position: absolute;
@@ -90,7 +93,7 @@
   transition: opacity 0.2s;
 
   &:hover {
-    background-color: $background-selected-hover;
+    background-color: $widget-selected-hover;
   }
 }
 

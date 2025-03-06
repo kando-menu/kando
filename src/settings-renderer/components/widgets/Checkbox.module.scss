@@ -15,7 +15,7 @@
   justify-content: space-between;
   align-items: flex-end;
 
-  color: $text-primary;
+  color: $text-normal;
 
   &:active {
     transform: translateY(1px);
@@ -25,7 +25,7 @@
     appearance: none;
     margin: 0;
 
-    background-color: color-mix(in srgb, $text-secondary 40%, transparent);
+    background-color: color-mix(in srgb, $text-muted 40%, transparent);
     width: 1.5em;
     height: 1.5em;
     border-radius: 50%;
@@ -37,7 +37,7 @@
       margin-left: 0.075em;
       transform: scale(0);
       transition: 120ms transform ease-in-out;
-      color: $link;
+      color: $text-link;
       font-size: 2em;
     }
 
@@ -46,7 +46,7 @@
     }
 
     &:hover {
-      background-color: color-mix(in srgb, $text-secondary 50%, transparent);
+      background-color: color-mix(in srgb, $text-muted 50%, transparent);
     }
 
     &:active {

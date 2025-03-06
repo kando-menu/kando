@@ -25,7 +25,7 @@
   font-weight: 300;
   margin-top: 10px;
 
-  color: $text-primary;
+  color: $text-normal;
 }
 
 .footer {
@@ -37,7 +37,7 @@
 .versionInfo {
   flex-basis: 25%;
   user-select: text;
-  color: $text-secondary;
+  color: $text-muted;
   font-size: 0.8em;
   line-height: 1.4em;
   white-space: nowrap;

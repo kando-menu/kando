@@ -15,12 +15,12 @@
   justify-content: space-between;
   align-items: center;
 
-  color: $text-primary;
+  color: $text-normal;
 
   select {
-    background-color: $background-secondary;
+    background-color: $widget-normal;
 
-    color: $text-primary;
+    color: $text-normal;
     border: none;
     border-radius: 5px;
     font-size: inherit;

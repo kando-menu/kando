@@ -127,7 +127,8 @@ export default () => {
                 }
               }}
               data-tooltip-id="main-tooltip"
-              data-tooltip-content={index === selectedCollection ? '' : collection.name}>
+              data-tooltip-content={index === selectedCollection ? '' : collection.name}
+              data-tooltip-place="right">
               <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
               <div
                 className={classes.deleteButton}

@@ -15,16 +15,16 @@
   justify-content: space-between;
   align-items: center;
 
-  color: $text-primary;
+  color: $text-normal;
 
   input {
     &::-webkit-inner-spin-button {
       appearance: none;
     }
 
-    background-color: $background-secondary;
+    background-color: $widget-normal;
 
-    color: $text-primary;
+    color: $text-normal;
     text-align: center;
     border: none;
     border-radius: 0;

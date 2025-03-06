@@ -83,14 +83,16 @@ export default (props: IProps) => {
     const handleClick = (event: MouseEvent) => {
       if (
         popoverContent.current &&
-        !popoverContent.current.contains(event.target as Node)
+        !popoverContent.current.contains(event.target as Node) &&
+        popoverTarget.current &&
+        !popoverTarget.current.contains(event.target as Node)
       ) {
         props.onClickOutside();
       }
     };
 
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener('pointerup', handleClick);
+    return () => document.removeEventListener('pointerup', handleClick);
   }, [props.onClickOutside, props.visible]);
 
   return (

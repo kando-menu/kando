@@ -20,7 +20,7 @@
 .menuListContent {
   position: relative;
   min-height: 0px; // This is important to make the scrollboxes work.
-  background-color: $background-normal;
+  background-color: $window-background;
   padding: 0 5px;
   border-top-left-radius: 10px;
   flex-grow: 1;
@@ -29,8 +29,8 @@
 .menu {
   display: block;
   border: none;
-  background-color: $background-secondary;
-  color: $text-primary;
+  background-color: $widget-normal;
+  color: $text-normal;
   border: 1px solid transparent;
 
   padding: 10px;
@@ -44,17 +44,16 @@
   }
 
   &.selected {
-    background-color: $background-selected;
-    border: 1px solid $border-selected;
-    color: $text-primary;
+    background-color: $widget-selected;
+    border: $border-selected;
 
     &:hover {
-      background-color: $background-selected;
+      background-color: $widget-selected-hover;
     }
   }
 
   &:hover {
-    background-color: $background-secondary-hover;
+    background-color: $widget-normal-hover;
   }
 
   &:active {
@@ -79,7 +78,7 @@
 }
 
 .menuSubtitle {
-  color: $text-secondary;
+  color: $text-muted;
   font-size: 0.8rem;
 }
 

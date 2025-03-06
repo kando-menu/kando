@@ -11,7 +11,7 @@
 @import '../../variables.scss';
 
 .headerbar {
-  color: $text-primary;
+  color: $text-normal;
   min-height: env(titlebar-area-height, 30);
   -webkit-app-region: drag;
   display: flex;

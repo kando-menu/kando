@@ -10,45 +10,65 @@
 
 @import '../variables.scss';
 
-.menuListHeader {
+.collectionHeader {
   -webkit-app-region: drag;
   min-height: env(titlebar-area-height, 30);
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   white-space: nowrap;
+
+  .collectionName {
+    position: relative;
+    pointer-events: none;
+    border: none;
+    border-radius: 0;
+    font-weight: bold;
+    background: transparent;
+    font-size: 1rem;
+    width: 100%;
+  }
 
   button {
     -webkit-app-region: no-drag;
   }
+}
 
-  &.editCollection {
-    -webkit-app-region: no-drag;
+.showingCollection .collectionHeader {
+  // This weird selector selects the icon button in the collection-editor header. It's
+  // nested inside a popover target, therefore we need to dive a bit deeper.
+  > :first-child > * {
+    height: 100%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    max-width: 0;
+    padding: 0;
+    opacity: 0;
+    transition:
+      max-width 250ms ease,
+      padding 250ms ease,
+      opacity 250ms ease;
   }
 }
 
-.collectionName {
-  position: relative;
-  pointer-events: none;
-  outline: none;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  background: transparent;
-  font-size: 1rem;
-  width: 100%;
+.editingCollection .collectionHeader {
+  -webkit-app-region: no-drag;
+  margin: 10px 10px 10px 0;
 
-  transition: all 0.3s ease;
+  > :first-child > * {
+    max-width: 3em;
+    padding: 2px;
+    opacity: 1;
+  }
 }
 
-.editCollection .collectionName {
+.editingCollection .collectionName {
   pointer-events: auto;
-  padding: 5px 15px;
-  margin-top: 50px;
-  background-color: $background-secondary;
+  padding: 5px;
+  background-color: $widget-normal;
 }
 
-.collectionEditor {
+.collectionDetails {
   padding: 0 10px 10px 0;
   align-self: stretch;
 
@@ -56,9 +76,9 @@
     display: flex;
 
     input {
-      background-color: $background-secondary;
+      background-color: $widget-normal;
       width: 100%;
-      color: $text-primary;
+      color: $text-normal;
       border: none;
       border-radius: 0;
       border-radius: 5px 0 0 5px;
@@ -66,10 +86,8 @@
       padding: 5px;
       font-size: 1rem;
 
-      opacity: 0.8;
-
       &:hover {
-        opacity: 1;
+        background-color: $widget-normal-hover;
       }
     }
   }

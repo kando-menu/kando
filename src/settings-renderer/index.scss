@@ -47,11 +47,11 @@ body {
     'Helvetica Neue',
     sans-serif;
   line-height: 1.4em;
-  color: $text-primary;
+  color: $text-normal;
 }
 
 a {
-  color: $link;
+  color: $text-link;
   text-decoration: none;
   position: relative;
 
@@ -81,4 +81,19 @@ h1 {
 .react-tooltip {
   background: light-dark(#222, #000) !important;
   max-width: 300px;
+}
+
+// Tweak global focus outline.
+*:focus-visible {
+  outline: $border-focused;
+}
+
+button,
+input[type='text'],
+input[type='number'] {
+  position: relative;
+
+  &:focus-visible {
+    z-index: 1;
+  }
 }

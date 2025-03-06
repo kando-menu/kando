@@ -18,8 +18,8 @@ import * as classes from './CollectionDetails.module.scss';
 const cx = classNames.bind(classes);
 
 import { useMenuSettings, useAppState } from '../state';
-import ThemedIcon from './widgets/ThemedIcon';
 import Button from './widgets/Button';
+import IconChooserButton from './widgets/IconChooserButton';
 import TagInput from './widgets/TagInput';
 
 interface IProps {
@@ -42,14 +42,19 @@ export default (props: IProps) => {
   const [filterTerm, setFilterTerm] = React.useState('');
   const [filterTags, setFilterTags] = React.useState([]);
 
+  const [collectionName, setCollectionName] = React.useState('');
+
   // Update the tag editor whenever the selected menu collection changes.
   React.useEffect(() => {
     if (selectedCollection !== -1) {
       setFilterTags(menuCollections[selectedCollection].tags);
+      setCollectionName(menuCollections[selectedCollection].name);
+    } else {
+      setCollectionName('All Menus');
     }
   }, [selectedCollection, menuCollections]);
 
-  const [animatedEditor] = useAutoAnimate({ duration: 300 });
+  const [animatedEditor] = useAutoAnimate({ duration: 250 });
 
   // Accumulate a list of all tags which are currently used in our collections and menus.
   let allAvailableTags = menuCollections
@@ -62,26 +67,37 @@ export default (props: IProps) => {
   allAvailableTags = Array.from(new Set(allAvailableTags));
 
   return (
-    <>
-      <div
-        className={cx({
-          menuListHeader: true,
-          editCollection: collectionDetailsVisible && selectedCollection !== -1,
-        })}>
-        {collectionDetailsVisible && selectedCollection !== -1 && (
-          <>
-            Edit Collection
-            <ThemedIcon
-              size={'1em'}
-              name={menuCollections[selectedCollection]?.icon}
-              theme={menuCollections[selectedCollection]?.iconTheme}
-            />
-          </>
+    <div
+      ref={animatedEditor}
+      className={cx({
+        editingCollection: collectionDetailsVisible && selectedCollection !== -1,
+        showingCollection: selectedCollection !== -1,
+      })}>
+      <div className={classes.collectionHeader}>
+        {selectedCollection !== -1 && (
+          <IconChooserButton
+            grouped
+            size={'1.5em'}
+            icon={menuCollections[selectedCollection]?.icon}
+            theme={menuCollections[selectedCollection]?.iconTheme}
+          />
         )}
         <input
           type="text"
           className={classes.collectionName}
-          value={menuCollections[selectedCollection]?.name || 'All Menus'}
+          value={collectionName}
+          onChange={(event) => {
+            setCollectionName(event.target.value);
+          }}
+          onBlur={() => {
+            editCollection(selectedCollection, { name: collectionName });
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.currentTarget.blur();
+              setCollectionDetailsVisible(false);
+            }
+          }}
         />
         {selectedCollection === -1 && collectionDetailsVisible && (
           <Button
@@ -104,7 +120,8 @@ export default (props: IProps) => {
         {selectedCollection !== -1 && collectionDetailsVisible && (
           <Button
             icon={<TbCheck />}
-            variant="flat"
+            variant="secondary"
+            grouped
             onClick={() => setCollectionDetailsVisible(false)}
           />
         )}
@@ -116,43 +133,41 @@ export default (props: IProps) => {
           />
         )}
       </div>
-      <div ref={animatedEditor}>
-        {collectionDetailsVisible && (
-          <div className={classes.collectionEditor}>
-            {selectedCollection === -1 && (
-              <div className={classes.searchInput}>
-                <input
-                  type="text"
-                  placeholder="Search menus..."
-                  value={filterTerm}
-                  onChange={(event) => {
-                    setFilterTerm(event.target.value);
-                    props.onSearch(event.target.value);
-                  }}
-                />
-                <Button
-                  grouped
-                  icon={<TbBackspaceFilled />}
-                  onClick={() => {
-                    setFilterTerm('');
-                    props.onSearch('');
-                  }}
-                />
-              </div>
-            )}
-            {selectedCollection !== -1 && (
-              <TagInput
-                tags={filterTags}
-                onChange={(newTags) => {
-                  editCollection(selectedCollection, { tags: newTags });
-                  setFilterTags(newTags);
+      {collectionDetailsVisible && (
+        <div className={classes.collectionDetails}>
+          {selectedCollection === -1 && (
+            <div className={classes.searchInput}>
+              <input
+                type="text"
+                placeholder="Search menus..."
+                value={filterTerm}
+                onChange={(event) => {
+                  setFilterTerm(event.target.value);
+                  props.onSearch(event.target.value);
                 }}
-                suggestions={allAvailableTags}
               />
-            )}
-          </div>
-        )}
-      </div>
-    </>
+              <Button
+                grouped
+                icon={<TbBackspaceFilled />}
+                onClick={() => {
+                  setFilterTerm('');
+                  props.onSearch('');
+                }}
+              />
+            </div>
+          )}
+          {selectedCollection !== -1 && (
+            <TagInput
+              tags={filterTags}
+              onChange={(newTags) => {
+                editCollection(selectedCollection, { tags: newTags });
+                setFilterTags(newTags);
+              }}
+              suggestions={allAvailableTags}
+            />
+          )}
+        </div>
+      )}
+    </div>
   );
 };

@@ -19,16 +19,13 @@
 }
 
 .container {
-  background-color: $background-secondary;
+  background-color: $widget-normal;
   padding: 4px;
   border-radius: 5px;
   cursor: text;
-  font-size: 1.1rem;
-
-  opacity: 0.8;
 
   &:hover {
-    opacity: 1;
+    background-color: $widget-normal-hover;
   }
 
   input {
@@ -38,10 +35,14 @@
     font-size: 1rem;
     outline: none;
   }
+
+  &:has(input:focus) {
+    outline: $border-focused;
+  }
 }
 
 .suggestions {
   justify-content: center;
   margin: 8px;
-  font-size: 0.9rem;
+  opacity: 0.7;
 }

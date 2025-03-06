@@ -29,7 +29,7 @@
 
 .themeCard {
   position: relative;
-  background-color: $background-secondary;
+  background-color: $widget-normal;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -51,7 +51,7 @@
   }
 
   &.selected {
-    outline: 2px solid $link;
+    outline: 2px solid $text-link;
   }
 
   &:active {
@@ -111,7 +111,7 @@ $gradient-end: light-dark(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
   right: -2px;
   top: -2px;
   text-align: center;
-  background-color: $link;
+  background-color: $text-link;
   color: light-dark(white, black);
   font-size: 1.7em;
   padding: 2px 2px 25px 25px;
