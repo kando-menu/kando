@@ -201,7 +201,7 @@ export default () => {
             variant="floating"
             size="medium"
             onClick={() => {
-              addMenu(menuCollections[selectedCollection]?.tags);
+              addMenu(menuCollections[selectedCollection]?.tags || []);
               selectMenu(menus.length);
             }}
           />

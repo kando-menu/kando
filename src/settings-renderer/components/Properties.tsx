@@ -33,7 +33,7 @@ export default () => {
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
-    setMenuTags(menus[selectedMenu].tags || []);
+    setMenuTags(menus[selectedMenu]?.tags || []);
   }, [selectedMenu, menus]);
 
   // Accumulate a list of all tags which are currently used in our collections and menus.
@@ -45,6 +45,15 @@ export default () => {
 
   // Remove duplicates.
   allAvailableTags = Array.from(new Set(allAvailableTags));
+
+  if (selectedMenu === -1) {
+    return (
+      <>
+        <Headerbar />
+        <div className={classes.properties}></div>
+      </>
+    );
+  }
 
   return (
     <>
