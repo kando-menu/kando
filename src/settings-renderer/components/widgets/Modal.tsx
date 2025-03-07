@@ -82,7 +82,7 @@ export default (props: IProps) => {
   // Define the close button with an icon. On macOS, the close button is displayed on the
   // left side of the header bar. On other platforms, it is displayed on the right side.
   const closeButton = (
-    <Button icon={<RiCloseLargeFill />} onClick={props.onClose} variant="flat" />
+    <Button icon={<RiCloseLargeFill />} onClick={props.onClose} variant="tool" />
   );
 
   // Both the title and the icon are optional. If no title is provided, only the icon will

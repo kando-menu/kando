@@ -28,11 +28,11 @@ interface IProps {
   tooltip?: string;
 
   /**
-   * Variant style of the button. Primary uses a more prominent color, flat has no
-   * background. Defaults to 'secondary'. Floating has a dark background and more rounded
-   * corners.
+   * Variant style of the button. Primary uses a more prominent color, flat has only a
+   * background when hovered, tool has no background at all. Defaults to 'secondary'.
+   * Floating has a dark background and more rounded corners.
    */
-  variant?: 'primary' | 'secondary' | 'flat' | 'floating';
+  variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
 
   /** Size of the button. Defaults to 'medium'. */
   size?: 'small' | 'medium' | 'large';

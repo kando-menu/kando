@@ -13,8 +13,11 @@ import React from 'react';
 import Popover from './Popover';
 import ThemedIcon from './ThemedIcon';
 import Button from './Button';
+import Note from './Note';
 
 import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
+
+import * as classes from './IconChooserButton.module.scss';
 
 interface IProps {
   /** Function to call when the color is changed. */
@@ -27,13 +30,16 @@ interface IProps {
   theme: string;
 
   /** The size of the icon. */
-  size?: number | string;
+  iconSize?: number | string;
 
-  /**
-   * Whether the button is part of a group of buttons. This will make the corners of only
-   * the first and last button in the group round. Defaults to false.
-   */
+  /** Size of the button. Defaults to 'medium'. */
+  buttonSize?: 'small' | 'medium' | 'large';
+
+  /** Forwarded to the button component. */
   grouped?: boolean;
+
+  /** Forwards the variant to the button component. Defaults to 'secondary'. */
+  variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
 }
 
 /**
@@ -56,14 +62,11 @@ export default (props: IProps) => {
 
   React.useEffect(() => {
     if (iconPickerRef.current && isPopoverOpen) {
-      const picker = IconThemeRegistry.getInstance().createIconPicker(theme);
-
-      iconPickerRef.current.innerHTML = '';
-      iconPickerRef.current.appendChild(picker.getFragment());
-
-      console.log('iconPickerRef.current', iconPickerRef.current);
-
-      picker.init(icon);
+      // const picker = IconThemeRegistry.getInstance().createIconPicker(theme);
+      // iconPickerRef.current.innerHTML = '';
+      // iconPickerRef.current.appendChild(picker.getFragment());
+      // console.log('iconPickerRef.current', iconPickerRef.current);
+      // picker.init(icon);
     }
   }, [props.theme, props.icon, isPopoverOpen]);
 
@@ -78,17 +81,20 @@ export default (props: IProps) => {
       }}
       position="bottom"
       content={
-        <div
-          ref={iconPickerRef}
-          style={{
-            width: 500,
-            height: 400,
-          }}></div>
+        <div className={classes.container}>
+          <Note>
+            Font Icons are monochrome but can be colored by your menu theme. All other
+            icon types can be colorful but will not be recolored. Learn how to add your
+            own icons here.
+          </Note>
+        </div>
       }>
       <Button
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         grouped={props.grouped}
-        icon={<ThemedIcon name={icon} theme={theme} size={props.size} />}
+        variant={props.variant}
+        size={props.buttonSize}
+        icon={<ThemedIcon name={icon} theme={theme} size={props.iconSize} />}
       />
     </Popover>
   );

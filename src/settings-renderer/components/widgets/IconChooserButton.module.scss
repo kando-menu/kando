@@ -8,42 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@import '../../variables.scss';
-
-.container,
-.suggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  overflow: hidden;
-}
-
 .container {
-  background-color: $widget-normal;
-  padding: 4px;
-  border-radius: 5px;
-  cursor: text;
-
-  &:hover {
-    background-color: $widget-normal-hover;
-  }
-
-  input {
-    field-sizing: content;
-    background-color: transparent;
-    border: none;
-    font-size: 1rem;
-    outline: none;
-  }
-
-  &:has(input:focus) {
-    outline: $border-focused;
-  }
-}
-
-.suggestions {
-  justify-content: center;
-  margin: 8px;
-  opacity: 0.7;
-  font-size: 0.8em;
+  width: 500px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
 }

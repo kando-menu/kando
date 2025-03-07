@@ -43,21 +43,21 @@ export default () => {
           tooltip="About Kando"
           icon={<TbInfoSquareRoundedFilled />}
           onClick={() => setAboutDialogVisible(true)}
-          variant="flat"
+          variant="tool"
           grouped
         />
         <Button
           tooltip="Menu Themes"
           icon={<TbPaletteFilled />}
           onClick={() => setThemesDialogVisible(true)}
-          variant="flat"
+          variant="tool"
           grouped
         />
         <Button
           tooltip="General Settings"
           icon={<TbSettingsFilled />}
           onClick={() => setSettingsDialogVisible(true)}
-          variant="flat"
+          variant="tool"
           grouped
         />
       </span>
@@ -67,7 +67,7 @@ export default () => {
           icon={<IoArrowUndo />}
           disabled={pastStates.length === 0}
           onClick={() => useMenuSettings.temporal.getState().undo()}
-          variant="flat"
+          variant="tool"
           grouped
         />
         <Button
@@ -75,7 +75,7 @@ export default () => {
           icon={<IoArrowRedo />}
           disabled={futureStates.length === 0}
           onClick={() => useMenuSettings.temporal.getState().redo()}
-          variant="flat"
+          variant="tool"
           grouped
         />
       </span>

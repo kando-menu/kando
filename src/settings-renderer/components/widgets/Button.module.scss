@@ -51,6 +51,14 @@
 
 .flat {
   background-color: transparent;
+
+  &:hover {
+    background-color: $widget-light;
+  }
+}
+
+.tool {
+  background-color: transparent;
   opacity: 0.8;
 
   &:hover {
@@ -113,7 +121,7 @@
 }
 
 .large {
-  padding: 9px 17px;
+  padding: 10px 18px;
   font-size: 1.2em;
   gap: 8px;
 

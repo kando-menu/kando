@@ -21,13 +21,18 @@
 
 .icon {
   -webkit-app-region: no-drag;
-  width: 70px;
-  height: 70px;
-  padding: 10px;
+  width: 6em;
+  height: 6em;
   margin: -30px auto 0 auto;
   background-color: $window-background;
   border-radius: 50%;
   overflow: hidden;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .name {

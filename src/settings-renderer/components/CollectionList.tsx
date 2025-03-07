@@ -146,7 +146,7 @@ export default () => {
           <button
             className={classes.collection + ' ' + classes.transparent}
             data-tooltip-id="main-tooltip"
-            data-tooltip-content="Create a new collection"
+            data-tooltip-content="Create a new collection. Use collections to group your menus by tags!"
             onClick={() => {
               addCollection();
               selectCollection(collections.length);

@@ -77,7 +77,7 @@ export default (props: IProps) => {
         {selectedCollection !== -1 && (
           <IconChooserButton
             grouped
-            size={'1.5em'}
+            iconSize="1.5em"
             icon={menuCollections[selectedCollection]?.icon}
             theme={menuCollections[selectedCollection]?.iconTheme}
           />
@@ -102,7 +102,7 @@ export default (props: IProps) => {
         {selectedCollection === -1 && collectionDetailsVisible && (
           <Button
             icon={<TbSearchOff />}
-            variant="flat"
+            variant="tool"
             onClick={() => {
               setCollectionDetailsVisible(false);
               setFilterTerm('');
@@ -113,7 +113,7 @@ export default (props: IProps) => {
         {selectedCollection === -1 && !collectionDetailsVisible && (
           <Button
             icon={<TbSearch />}
-            variant="flat"
+            variant="tool"
             onClick={() => setCollectionDetailsVisible(true)}
           />
         )}
@@ -128,7 +128,7 @@ export default (props: IProps) => {
         {selectedCollection !== -1 && !collectionDetailsVisible && (
           <Button
             icon={<RiPencilFill />}
-            variant="flat"
+            variant="tool"
             onClick={() => setCollectionDetailsVisible(true)}
           />
         )}

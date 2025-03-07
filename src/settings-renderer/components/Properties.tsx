@@ -17,7 +17,7 @@ import { useAppState, useMenuSettings } from '../state';
 
 import Headerbar from './widgets/Headerbar';
 import Button from './widgets/Button';
-import ThemedIcon from './widgets/ThemedIcon';
+import IconChooserButton from './widgets/IconChooserButton';
 import TagInput from './widgets/TagInput';
 import Swirl from './widgets/Swirl';
 
@@ -60,8 +60,11 @@ export default () => {
       <Headerbar />
       <div className={classes.properties}>
         <div className={classes.icon}>
-          <ThemedIcon
-            name={menus[selectedMenu]?.root.icon}
+          <IconChooserButton
+            iconSize="4em"
+            variant="flat"
+            buttonSize="large"
+            icon={menus[selectedMenu]?.root.icon}
             theme={menus[selectedMenu]?.root.iconTheme}
           />
         </div>

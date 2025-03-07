@@ -25,8 +25,14 @@ $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
 
 $widget-primary: light-dark($_key-light, $_key-dark);
 
-$widget-dark: light-dark(darken($_base-light, 20%), lighten($_base-dark, 10%));
-$widget-dark-hover: light-dark(darken($_base-light, 25%), lighten($_base-dark, 15%));
+$widget-dark: light-dark(
+  rgba(darken($_base-light, 30%), 0.5),
+  rgba(lighten($_base-dark, 30%), 0.5)
+);
+$widget-dark-hover: light-dark(
+  rgba(darken($_base-light, 40%), 0.5),
+  rgba(lighten($_base-dark, 40%), 0.5)
+);
 
 $widget-normal: light-dark(
   rgba(darken($_base-light, 20%), 0.5),
@@ -35,6 +41,15 @@ $widget-normal: light-dark(
 $widget-normal-hover: light-dark(
   rgba(darken($_base-light, 30%), 0.5),
   rgba(lighten($_base-dark, 30%), 0.5)
+);
+
+$widget-light: light-dark(
+  rgba(darken($_base-light, 10%), 0.5),
+  rgba(lighten($_base-dark, 10%), 0.5)
+);
+$widget-light-hover: light-dark(
+  rgba(darken($_base-light, 20%), 0.5),
+  rgba(lighten($_base-dark, 20%), 0.5)
 );
 
 $widget-inverted: light-dark(
