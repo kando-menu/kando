@@ -79,11 +79,12 @@ export default () => {
                   event.preventDefault();
                 }
               }}
-              onDrop={() => {
+              onDrop={(event) => {
                 if (dnd.draggedType === 'menu') {
-                  const currentTags = menus[dnd.draggedIndex].tags;
+                  const currentTags = menus[dnd.draggedIndex]?.tags || [];
                   const newTags = [...new Set([...currentTags, ...collection.tags])];
                   editMenu(dnd.draggedIndex, { tags: newTags });
+                  (event.target as HTMLElement).classList.remove(classes.dragOver);
                 }
               }}
               onDragEnter={(event) => {
