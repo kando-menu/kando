@@ -33,16 +33,6 @@ export class WindowsBackend implements Backend {
 
     const transparencySupported = major === 10 && minor === 0 && build >= 22621;
 
-    if (transparencySupported) {
-      console.log(
-        'Windows 10 build 22621 or higher detected. Using transparent settings window.'
-      );
-    } else {
-      console.log(
-        'Windows 10 build 22621 or higher not detected. Using normal settings window.'
-      );
-    }
-
     return {
       name: 'Windows Backend',
       menuWindowType: 'toolbar',
