@@ -8,9 +8,58 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@import '../../variables.scss';
+
 .container {
   width: 500px;
   height: 400px;
   display: flex;
   flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  select {
+    flex-grow: 1;
+    background-color: $widget-normal;
+
+    color: $text-normal;
+    border: none;
+    border-radius: 5px;
+    font-size: inherit;
+
+    padding: 5px 7px;
+
+    &:hover {
+      background-color: $widget-normal-hover;
+    }
+  }
+
+  .searchInput {
+    display: flex;
+    flex-grow: 1;
+
+    input {
+      background-color: $widget-normal;
+      width: 100%;
+      color: $text-normal;
+      border: none;
+      border-radius: 0;
+      border-radius: 5px 0 0 5px;
+
+      padding: 5px 10px;
+      font-size: 1rem;
+
+      &:hover {
+        background-color: $widget-normal-hover;
+      }
+    }
+  }
+}
+
+.iconPicker {
+  flex-grow: 1;
 }

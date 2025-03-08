@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { TbBackspaceFilled } from 'react-icons/tb';
 
 import Popover from './Popover';
 import ThemedIcon from './ThemedIcon';
@@ -49,9 +50,10 @@ interface IProps {
  * @returns A color button element.
  */
 export default (props: IProps) => {
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [icon, setIcon] = React.useState(props.icon);
   const [theme, setTheme] = React.useState(props.theme);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [filterTerm, setFilterTerm] = React.useState('');
 
   React.useEffect(() => {
     setIcon(props.icon);
@@ -82,10 +84,42 @@ export default (props: IProps) => {
       position="bottom"
       content={
         <div className={classes.container}>
+          <div className={classes.row}>
+            <select value={theme} onChange={(event) => setTheme(event.target.value)}>
+              {Array.from(IconThemeRegistry.getInstance().getThemes().entries()).map(
+                ([key, name]) => (
+                  <option key={key} value={key}>
+                    {name.name}
+                  </option>
+                )
+              )}
+            </select>
+            <div className={classes.searchInput}>
+              <input
+                type="text"
+                placeholder="Search menus..."
+                value={filterTerm}
+                onChange={(event) => {
+                  setFilterTerm(event.target.value);
+                }}
+              />
+              <Button
+                grouped
+                icon={<TbBackspaceFilled />}
+                onClick={() => {
+                  setFilterTerm('');
+                }}
+              />
+            </div>
+          </div>
+          <div className={classes.iconPicker} />
+
           <Note>
-            Font Icons are monochrome but can be colored by your menu theme. All other
-            icon types can be colorful but will not be recolored. Learn how to add your
-            own icons here.
+            <i>Font Icons</i> are monochrome but can be colored by your menu theme. All
+            other icon types can be colorful but will not be recolored.{' '}
+            <a href="https://kando.menu/create-menu-themes/" target="_blank">
+              Learn how to add your own icons here.
+            </a>
           </Note>
         </div>
       }>

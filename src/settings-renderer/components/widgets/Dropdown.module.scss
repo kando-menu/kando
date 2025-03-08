@@ -26,16 +26,9 @@
     font-size: inherit;
 
     padding: 5px 7px;
-    font-size: 1em;
-
-    opacity: 0.8;
 
     &:hover {
-      opacity: 1;
-    }
-
-    &:focus {
-      outline: none;
+      background-color: $widget-normal-hover;
     }
   }
 }

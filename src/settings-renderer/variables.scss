@@ -18,7 +18,7 @@ $text-inverted: light-dark(#eee, #fff);
 $text-muted: light-dark(#777, #bbb);
 $text-link: light-dark($_key-dark, $_key-light);
 
-$popover-background: light-dark(white, black);
+$popover-background: light-dark(darken($_base-light, 10%), darken($_base-dark, 10%));
 $toolbar-background: light-dark(darken($_base-light, 10%), darken($_base-dark, 10%));
 $window-background: light-dark($_base-light, $_base-dark);
 $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
