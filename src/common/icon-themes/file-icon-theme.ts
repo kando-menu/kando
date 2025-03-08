@@ -11,7 +11,7 @@
 import { matchSorter } from 'match-sorter';
 
 import { IconListTheme } from './icon-list-theme';
-import { IFileIconThemeDescription } from '../../../common';
+import { IFileIconThemeDescription } from '../../common';
 
 /**
  * This class is used for custom icon themes loaded from a icon-themes directory on the
