@@ -10,19 +10,17 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IconListTheme } from './icon-list-theme';
+import { IIconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that uses the Material Symbols Rounded font as
  * icons.
  */
-export class MaterialSymbolsTheme extends IconListTheme {
+export class MaterialSymbolsTheme implements IIconTheme {
   /** This array contains all available icon names. It is initialized in the constructor. */
   private iconNames: Array<string> = [];
 
   constructor() {
-    super();
-
     // Load material symbols type definition as text file.
     const string = require('!!raw-loader!material-symbols/index.d.ts').default;
 
@@ -34,16 +32,6 @@ export class MaterialSymbolsTheme extends IconListTheme {
   /** Returns a human-readable name of the icon theme. */
   get name() {
     return 'Material Symbols Rounded';
-  }
-
-  /**
-   * Returns a list icons from this theme that match the given search term.
-   *
-   * @param searchTerm The search term to filter the icons.
-   * @returns An array of icon names that match the search term.
-   */
-  public async listIcons(searchTerm: string) {
-    return matchSorter(this.iconNames, searchTerm);
   }
 
   /**
@@ -63,5 +51,16 @@ export class MaterialSymbolsTheme extends IconListTheme {
     iconDiv.innerText = icon;
 
     return containerDiv;
+  }
+
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'list' as const,
+      usesTextColor: true,
+      listIcons: (searchTerm: string) => {
+        return matchSorter(this.iconNames, searchTerm);
+      },
+    };
   }
 }

@@ -10,22 +10,20 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IconListTheme } from './icon-list-theme';
+import { IIconTheme } from './icon-theme-registry';
 import { IFileIconThemeDescription } from '../../common';
 
 /**
  * This class is used for custom icon themes loaded from a icon-themes directory on the
  * user's file system.
  */
-export class FileIconTheme extends IconListTheme {
+export class FileIconTheme implements IIconTheme {
   /**
    * Creates a new FileIconTheme.
    *
    * @param description The description of the icon theme.
    */
-  constructor(private description: IFileIconThemeDescription) {
-    super();
-  }
+  constructor(private description: IFileIconThemeDescription) {}
 
   /**
    * The name of the icon corresponds to the name of the directory in the icon-themes
@@ -33,16 +31,6 @@ export class FileIconTheme extends IconListTheme {
    */
   get name() {
     return this.description.name;
-  }
-
-  /**
-   * Returns a list icons from this theme that match the given search term.
-   *
-   * @param searchTerm The search term to filter the icons.
-   * @returns An array of icon names that match the search term.
-   */
-  public async listIcons(searchTerm: string) {
-    return matchSorter(this.description.icons, searchTerm);
   }
 
   /**
@@ -62,5 +50,16 @@ export class FileIconTheme extends IconListTheme {
     containerDiv.appendChild(iconDiv);
 
     return containerDiv;
+  }
+
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'list' as const,
+      usesTextColor: false,
+      listIcons: (searchTerm: string) => {
+        return matchSorter(this.description.icons, searchTerm);
+      },
+    };
   }
 }

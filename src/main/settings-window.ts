@@ -57,7 +57,7 @@ export class SettingsWindow extends BrowserWindow {
       // For Windows.
       backgroundMaterial: transparent ? 'acrylic' : undefined,
       fullscreenable: false,
-      width: 1200,
+      width: 1250,
       height: 800,
       minWidth: 600,
       minHeight: 600,

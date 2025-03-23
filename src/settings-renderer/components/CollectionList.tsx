@@ -83,7 +83,10 @@ export default () => {
                 if (dnd.draggedType === 'menu') {
                   const currentTags = menus[dnd.draggedIndex]?.tags || [];
                   const newTags = [...new Set([...currentTags, ...collection.tags])];
-                  editMenu(dnd.draggedIndex, { tags: newTags });
+                  editMenu(dnd.draggedIndex, (menu) => {
+                    menu.tags = newTags;
+                    return menu;
+                  });
                   (event.target as HTMLElement).classList.remove(classes.dragOver);
                 }
               }}

@@ -9,7 +9,6 @@
 // SPDX-License-Identifier: MIT
 
 import { IIconTheme } from './icon-theme-registry';
-import { Base64Picker } from './icon-pickers/base64-picker';
 
 /**
  * This class implements an icon theme that allows the user to enter base64 encoded images
@@ -39,13 +38,11 @@ export class Base64Theme implements IIconTheme {
     return containerDiv;
   }
 
-  /**
-   * Creates an icon picker for this theme. The icon picker allows the user to pick an
-   * icon from the theme.
-   *
-   * @returns An icon picker for this theme.
-   */
-  createIconPicker() {
-    return new Base64Picker();
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'base64' as const,
+      hint: "Base64 encoded icons provide an easy way to include any kind of icon into your menus. You can use a service like <a href='https://www.base64-image.de/' target='_blank'>www.base64-image.de</a> to convert any image into a base64 encoded string. This even works for animated gifs!",
+    };
   }
 }

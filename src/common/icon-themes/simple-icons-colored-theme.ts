@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { matchSorter } from 'match-sorter';
+
 import { SimpleIconsTheme } from './simple-icons-theme';
 
 /**
@@ -33,5 +35,16 @@ export class SimpleIconsColoredTheme extends SimpleIconsTheme {
     iconDiv.classList.add('si--color');
 
     return containerDiv;
+  }
+
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'list' as const,
+      usesTextColor: false,
+      listIcons: (searchTerm: string) => {
+        return matchSorter(this.iconNames, searchTerm);
+      },
+    };
   }
 }

@@ -20,42 +20,6 @@ import { FallbackTheme } from './fallback-theme';
 import { Base64Theme } from './base64-theme';
 
 /**
- * This interface describes an icon picker. An icon picker is a UI element that allows the
- * user to pick an icon from an icon theme.
- */
-export interface IIconPicker {
-  /**
-   * Registers a callback that is called when the user selects an icon.
-   *
-   * @param callback A callback that is called when the user selects an icon. The callback
-   *   receives the selected icon as an argument.
-   */
-  onSelect(callback: (icon: string) => void): void;
-
-  /**
-   * Registers a callback that is called when the icon picker should be closed. This could
-   * be for instance if the user double-clicks an icon.
-   *
-   * @param callback A callback that is called when the icon picker should be closed.
-   */
-  onClose(callback: () => void): void;
-
-  /**
-   * Initializes the icon picker. This method will be called after the icon picker is
-   * appended to the DOM.
-   *
-   * @param selectedIcon The icon that is currently selected.
-   */
-  init(selectedIcon: string): void;
-
-  /** Can be used to clean up resources when the icon picker is no longer needed. */
-  deinit(): void;
-
-  /** Returns the HTML fragment of the icon picker. */
-  getFragment(): DocumentFragment;
-}
-
-/**
  * This interface describes an icon theme. An icon theme is a collection of icons that can
  * be used in the application. The icon theme provides a method to list all icons that
  * match a given search term.
@@ -72,13 +36,27 @@ export interface IIconTheme {
    */
   createIcon(icon: string): HTMLElement;
 
-  /**
-   * Creates an IIconPicker instance that allows the user to pick an icon from the icon
-   * theme.
-   *
-   * @returns An IIconPicker instance.
-   */
-  createIconPicker(): IIconPicker;
+  iconPickerInfo: {
+    /**
+     * Type of the icon picker for this theme. This is used create an icon picker for the
+     * theme. Themes with the "list" type will show a filterable grid of icons, "text"
+     * themes will show a text input where the user can type the icon data.
+     */
+    type: 'list' | 'base64' | 'none';
+
+    /** This will be shown below the icon picker. */
+    hint?: string;
+
+    /**
+     * Returns a list icons from this theme that match the given search term. This will
+     * only be called for "list" type themes.
+     *
+     * @param searchTerm The search term to filter the icons.
+     * @returns A promise that resolves to an array of icon names that match the search
+     *   term.
+     */
+    listIcons?: (searchTerm: string) => Array<string>;
+  };
 }
 
 /**
@@ -169,13 +147,12 @@ export class IconThemeRegistry {
   }
 
   /**
-   * Creates an IIConPicker instance that allows the user to pick an icon from the icon
-   * theme.
+   * Returns information about the icon picker for this icon theme.
    *
    * @param theme The icon theme to use.
-   * @returns An IIconPicker instance.
+   * @returns Information about the icon picker for this icon theme.
    */
-  createIconPicker(theme: string): IIconPicker {
-    return this.getTheme(theme).createIconPicker();
+  public getIconPickerInfo(theme: string) {
+    return this.getTheme(theme).iconPickerInfo;
   }
 }

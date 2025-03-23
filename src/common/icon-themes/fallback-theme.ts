@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IIconPicker, IIconTheme } from './icon-theme-registry';
+import { IIconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that is used if the user has not selected a valid
@@ -38,8 +38,10 @@ export class FallbackTheme implements IIconTheme {
     return containerDiv;
   }
 
-  /** Not required as this is not a user-selectable theme. */
-  createIconPicker(): IIconPicker {
-    return null;
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'none' as const,
+    };
   }
 }

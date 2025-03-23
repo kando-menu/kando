@@ -66,6 +66,13 @@ export default () => {
             buttonSize="large"
             icon={menus[selectedMenu]?.root.icon}
             theme={menus[selectedMenu]?.root.iconTheme}
+            onChange={(icon, theme) => {
+              editMenu(selectedMenu, (menu) => {
+                menu.root.icon = icon;
+                menu.root.iconTheme = theme;
+                return menu;
+              });
+            }}
           />
         </div>
         <div className={classes.name}>
@@ -75,7 +82,10 @@ export default () => {
         <TagInput
           tags={menuTags}
           onChange={(newTags) => {
-            editMenu(selectedMenu, { tags: newTags });
+            editMenu(selectedMenu, (menu) => {
+              menu.tags = newTags;
+              return menu;
+            });
             setMenuTags(newTags);
           }}
           suggestions={allAvailableTags}

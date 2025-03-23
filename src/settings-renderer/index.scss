@@ -98,3 +98,23 @@ input[type='number'] {
     z-index: 1;
   }
 }
+
+*::-webkit-scrollbar-track {
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 3px;
+  margin: 15px 0;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  cursor: pointer;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.9);
+}

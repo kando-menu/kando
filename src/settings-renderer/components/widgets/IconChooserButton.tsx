@@ -15,6 +15,8 @@ import Popover from './Popover';
 import ThemedIcon from './ThemedIcon';
 import Button from './Button';
 import Note from './Note';
+import Base64IconPicker from './Base64IconPicker';
+import GridIconPicker from './GridIconPicker';
 
 import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
 
@@ -60,17 +62,41 @@ export default (props: IProps) => {
     setTheme(props.theme);
   }, [props.icon, props.theme]);
 
-  const iconPickerRef = React.useRef<HTMLDivElement>(null);
+  const pickerInfo = IconThemeRegistry.getInstance().getIconPickerInfo(theme);
 
-  React.useEffect(() => {
-    if (iconPickerRef.current && isPopoverOpen) {
-      // const picker = IconThemeRegistry.getInstance().createIconPicker(theme);
-      // iconPickerRef.current.innerHTML = '';
-      // iconPickerRef.current.appendChild(picker.getFragment());
-      // console.log('iconPickerRef.current', iconPickerRef.current);
-      // picker.init(icon);
+  const getPicker = () => {
+    if (pickerInfo.type === 'list') {
+      return (
+        <GridIconPicker
+          theme={theme}
+          selectedIcon={icon}
+          filterTerm={filterTerm}
+          onChange={(value) => {
+            setIcon(value);
+            if (props.onChange) {
+              props.onChange(value, theme);
+            }
+          }}
+          onClose={() => {
+            setIsPopoverOpen(false);
+          }}
+        />
+      );
+    } else if (pickerInfo.type === 'base64') {
+      return (
+        <Base64IconPicker
+          initialValue={icon}
+          onChange={(value) => {
+            setIcon(value);
+            if (props.onChange) {
+              props.onChange(value, theme);
+            }
+          }}
+        />
+      );
     }
-  }, [props.theme, props.icon, isPopoverOpen]);
+    return <></>;
+  };
 
   return (
     <Popover
@@ -94,32 +120,34 @@ export default (props: IProps) => {
                 )
               )}
             </select>
-            <div className={classes.searchInput}>
-              <input
-                type="text"
-                placeholder="Search menus..."
-                value={filterTerm}
-                onChange={(event) => {
-                  setFilterTerm(event.target.value);
-                }}
-              />
-              <Button
-                grouped
-                icon={<TbBackspaceFilled />}
-                onClick={() => {
-                  setFilterTerm('');
-                }}
-              />
-            </div>
+            {pickerInfo.type === 'list' && (
+              <div className={classes.searchInput}>
+                <input
+                  type="text"
+                  placeholder="Search icons..."
+                  value={filterTerm}
+                  onChange={(event) => {
+                    setFilterTerm(event.target.value);
+                  }}
+                />
+                <Button
+                  grouped
+                  icon={<TbBackspaceFilled />}
+                  onClick={() => {
+                    setFilterTerm('');
+                  }}
+                />
+              </div>
+            )}
           </div>
-          <div className={classes.iconPicker} />
-
+          {getPicker()}
           <Note>
-            <i>Font Icons</i> are monochrome but can be colored by your menu theme. All
-            other icon types can be colorful but will not be recolored.{' '}
-            <a href="https://kando.menu/create-menu-themes/" target="_blank">
-              Learn how to add your own icons here.
-            </a>
+            <div
+              dangerouslySetInnerHTML={
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                { __html: pickerInfo.hint }
+              }
+            />
           </Note>
         </div>
       }>

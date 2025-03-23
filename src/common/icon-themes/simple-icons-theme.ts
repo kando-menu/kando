@@ -10,16 +10,14 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IconListTheme } from './icon-list-theme';
+import { IIconTheme } from './icon-theme-registry';
 
 /** This class implements an icon theme that uses the Simple Icons font as icons. */
-export class SimpleIconsTheme extends IconListTheme {
+export class SimpleIconsTheme implements IIconTheme {
   /** This array contains all available icon names. It is initialized in the constructor. */
-  private iconNames: Array<string> = [];
+  protected iconNames: Array<string> = [];
 
   constructor() {
-    super();
-
     // Load simple-icons.css as text file.
     const string =
       require('!!raw-loader!simple-icons-font/font/simple-icons.css').default;
@@ -41,16 +39,6 @@ export class SimpleIconsTheme extends IconListTheme {
   }
 
   /**
-   * Returns a list icons from this theme that match the given search term.
-   *
-   * @param searchTerm The search term to filter the icons.
-   * @returns An array of icon names that match the search term.
-   */
-  public async listIcons(searchTerm: string) {
-    return matchSorter(this.iconNames, searchTerm);
-  }
-
-  /**
    * Creates a div element that contains the icon with the given name.
    *
    * @param icon One of the icons returned by `listIcons`.
@@ -67,5 +55,16 @@ export class SimpleIconsTheme extends IconListTheme {
     iconDiv.classList.add('si-' + icon);
 
     return containerDiv;
+  }
+
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'list' as const,
+      usesTextColor: true,
+      listIcons: (searchTerm: string) => {
+        return matchSorter(this.iconNames, searchTerm);
+      },
+    };
   }
 }

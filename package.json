@@ -37,6 +37,7 @@
     "@types/mocha": "^10.0.10",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
+    "@types/react-window": "^1.8.8",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
@@ -102,6 +103,8 @@
     "react-icons": "^5.4.0",
     "react-tooltip": "^5.28.0",
     "react-transition-group": "^4.4.5",
+    "react-virtualized-auto-sizer": "^1.0.25",
+    "react-window": "^1.8.11",
     "simple-icons-font": "^14.8.0",
     "zundo": "^2.1.0",
     "zustand": "^5.0.3"

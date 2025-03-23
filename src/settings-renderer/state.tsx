@@ -62,7 +62,7 @@ type MenuStateActions = {
   moveMenu: (from: number, to: number) => void;
   deleteMenu: (index: number) => void;
   duplicateMenu: (index: number) => void;
-  editMenu: (index: number, menu: Partial<IMenu>) => void;
+  editMenu: (index: number, callback: (menu: IMenu) => IMenu) => void;
 
   addCollection: () => void;
   moveCollection: (from: number, to: number) => void;
@@ -137,10 +137,10 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
           ],
         })),
 
-      editMenu: (index: number, menu: Partial<IMenu>) =>
+      editMenu: (index: number, callback: (menu: IMenu) => IMenu) =>
         set(
           produce((state) => {
-            state.menus[index] = { ...state.menus[index], ...menu };
+            state.menus[index] = callback(state.menus[index]);
           })
         ),
 

@@ -11,13 +11,13 @@
 import { matchSorter } from 'match-sorter';
 import emojis from 'emojilib';
 
-import { IconListTheme } from './icon-list-theme';
+import { IIconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that uses emojis as icons. It uses the `emojilib`
  * package to get a list of emojis and their descriptions.
  */
-export class EmojiTheme extends IconListTheme {
+export class EmojiTheme implements IIconTheme {
   /**
    * This array contains all emojis and their descriptions. Each inner array contains the
    * emoji itself as first element and all descriptions as following elements.
@@ -25,8 +25,6 @@ export class EmojiTheme extends IconListTheme {
   private icons: Array<Array<string>> = [];
 
   constructor() {
-    super();
-
     // Transform the emoji lib object into a nested array where each inner array contains
     // the emoji itself and all descriptions.
     this.icons = Object.entries(emojis).map(([emoji, descriptors]) => {
@@ -37,19 +35,6 @@ export class EmojiTheme extends IconListTheme {
   /** Returns a human-readable name of the icon theme. */
   get name() {
     return 'Emojis';
-  }
-
-  /**
-   * Returns a list of emojis that match the given search term. The search uses the
-   * description of the emojis.
-   *
-   * @param searchTerm The search term to filter the icons.
-   * @returns An array of emojis that match the search term.
-   */
-  public async listIcons(searchTerm: string) {
-    return matchSorter(this.icons, searchTerm, {
-      threshold: matchSorter.rankings.CONTAINS,
-    }).map(([emoji]) => emoji);
   }
 
   /**
@@ -69,5 +54,19 @@ export class EmojiTheme extends IconListTheme {
     iconDiv.innerText = icon;
 
     return containerDiv;
+  }
+
+  /** Returns information about the icon picker for this icon theme. */
+  get iconPickerInfo() {
+    return {
+      type: 'list' as const,
+      usesTextColor: false,
+      hint: 'This icon theme uses emojis as icons. You can use the search field to filter the list of emojis.',
+      listIcons: (searchTerm: string) => {
+        return matchSorter(this.icons, searchTerm, {
+          threshold: matchSorter.rankings.CONTAINS,
+        }).map(([emoji]) => emoji);
+      },
+    };
   }
 }

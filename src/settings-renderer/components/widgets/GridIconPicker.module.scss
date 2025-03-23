@@ -8,12 +8,26 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-textarea.base64-picker {
-  transition: box-shadow 150ms ease;
-  resize: none;
-  flex-grow: 1;
+@import '../../variables.scss';
 
-  &.invalid {
-    box-shadow: 0 0 15px rgba(255, 64, 64, 1) inset;
+.pickerIcon {
+  border-radius: 5px;
+
+  & > div {
+    margin: 4px;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &.selected {
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: 2px dashed white;
+    outline-offset: -2px;
   }
 }
