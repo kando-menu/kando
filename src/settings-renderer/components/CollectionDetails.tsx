@@ -80,6 +80,13 @@ export default (props: IProps) => {
             iconSize="1.5em"
             icon={menuCollections[selectedCollection]?.icon}
             theme={menuCollections[selectedCollection]?.iconTheme}
+            onChange={(icon, theme) => {
+              editCollection(selectedCollection, (collection) => {
+                collection.icon = icon;
+                collection.iconTheme = theme;
+                return collection;
+              });
+            }}
           />
         )}
         <input
@@ -90,7 +97,10 @@ export default (props: IProps) => {
             setCollectionName(event.target.value);
           }}
           onBlur={() => {
-            editCollection(selectedCollection, { name: collectionName });
+            editCollection(selectedCollection, (collection) => {
+              collection.name = collectionName;
+              return collection;
+            });
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
@@ -160,7 +170,10 @@ export default (props: IProps) => {
             <TagInput
               tags={filterTags}
               onChange={(newTags) => {
-                editCollection(selectedCollection, { tags: newTags });
+                editCollection(selectedCollection, (collection) => {
+                  collection.tags = newTags;
+                  return collection;
+                });
                 setFilterTags(newTags);
               }}
               suggestions={allAvailableTags}

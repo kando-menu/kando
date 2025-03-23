@@ -67,7 +67,10 @@ type MenuStateActions = {
   addCollection: () => void;
   moveCollection: (from: number, to: number) => void;
   deleteCollection: (index: number) => void;
-  editCollection: (index: number, collection: Partial<IMenuCollection>) => void;
+  editCollection: (
+    index: number,
+    callback: (collection: IMenuCollection) => IMenuCollection
+  ) => void;
 };
 
 /**
@@ -182,10 +185,13 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
           collections: state.collections.filter((_, i) => i !== index),
         })),
 
-      editCollection: (index: number, collection: Partial<IMenuCollection>) =>
+      editCollection: (
+        index: number,
+        callback: (collection: IMenuCollection) => IMenuCollection
+      ) =>
         set(
           produce((state) => {
-            state.collections[index] = { ...state.collections[index], ...collection };
+            state.collections[index] = callback(state.collections[index]);
           })
         ),
     }),
