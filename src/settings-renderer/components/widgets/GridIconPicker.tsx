@@ -17,7 +17,6 @@ import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-regist
 import ThemedIcon from './ThemedIcon';
 
 import * as classes from './GridIconPicker.module.scss';
-import { pick } from '@types/lodash';
 const cx = classNames.bind(classes);
 
 interface IProps {
@@ -38,22 +37,21 @@ interface IProps {
 }
 
 /**
- * An icon picker which shows a virtualized grid of icons. The icons are loaded
- * asynchronously in batches to avoid blocking the UI thread. Also, icons are only shown
- * when they are scrolled into view. Overall, this allows for decent performance even with
- * a large number of icons.
+ * An icon picker which shows a virtualized grid of icons. Icons are only shown when they
+ * are scrolled into view. Overall, this allows for decent performance even with a large
+ * number of icons.
  *
  * @param props - The properties for the icon picker component.
  * @returns A grid icon picker element.
  */
 export default (props: IProps) => {
+  const gridRef = React.createRef<Grid>();
   const theme = IconThemeRegistry.getInstance().getTheme(props.theme);
   const fetchedIcons = theme.iconPickerInfo.listIcons(props.filterTerm);
 
   const columns = 8;
-  const padding = 4;
   const rows = Math.ceil(fetchedIcons.length / columns);
-  const iconSize = 61;
+  const selectedIndex = fetchedIcons.findIndex((icon) => icon === props.selectedIcon);
 
   interface ICellProps {
     style: React.CSSProperties;
@@ -74,35 +72,40 @@ export default (props: IProps) => {
       <button
         className={cx({
           pickerIcon: true,
-          selected: icon === props.selectedIcon,
+          selected: index === selectedIndex,
         })}
         style={style}
         data-tooltip-id="main-tooltip"
         data-tooltip-content={icon}
-        onClick={() => {
-          if (props.onChange) {
-            props.onChange(icon);
-          }
-        }}
-        onDoubleClick={() => {
-          if (props.onClose) {
-            props.onClose();
-          }
-        }}>
-        <ThemedIcon name={icon} theme={props.theme} size={iconSize - 2 * padding} />
+        onClick={() => props.onChange(icon)}
+        onDoubleClick={props.onClose}>
+        <ThemedIcon name={icon} theme={props.theme} size={'80%'} />
       </button>
     );
   };
+
+  // Scroll to the selected icon.
+  React.useEffect(() => {
+    console.log('Scrolling to selected icon', selectedIndex);
+    if (gridRef.current) {
+      console.log('Scrolling to selected icon', selectedIndex);
+      gridRef.current.scrollToItem({
+        columnIndex: selectedIndex % columns,
+        rowIndex: Math.floor(selectedIndex / columns),
+      });
+    }
+  }, []);
 
   return (
     <div style={{ flexGrow: 1, minHeight: 0 }}>
       <AutoSizer>
         {({ width, height }: { width: number; height: number }) => (
           <Grid
+            ref={gridRef}
             columnCount={columns}
             rowCount={rows}
-            columnWidth={iconSize}
-            rowHeight={iconSize}
+            columnWidth={width / columns - 1}
+            rowHeight={width / columns - 1}
             height={height}
             width={width}>
             {cell}

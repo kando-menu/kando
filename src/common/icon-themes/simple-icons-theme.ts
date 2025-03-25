@@ -62,6 +62,7 @@ export class SimpleIconsTheme implements IIconTheme {
     return {
       type: 'list' as const,
       usesTextColor: true,
+      hint: "This is a built-in icon theme. Learn how to add your own icon themes <a href='https://kando.menu/icon-themes/' target='_blank'>here</a>.",
       listIcons: (searchTerm: string) => {
         return matchSorter(this.iconNames, searchTerm);
       },

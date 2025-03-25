@@ -52,31 +52,56 @@ interface IProps {
  * @returns A color button element.
  */
 export default (props: IProps) => {
-  const [icon, setIcon] = React.useState(props.icon);
-  const [theme, setTheme] = React.useState(props.theme);
+  // We store for each icon theme the icon which was selected last. Whenever a new theme is
+  // selected, we check if the current icon is available in the new theme. If not, we use the
+  // value from the icon map.
+  const [iconMap, setIconMap] = React.useState(new Map<string, string>());
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [filterTerm, setFilterTerm] = React.useState('');
 
-  React.useEffect(() => {
-    setIcon(props.icon);
-    setTheme(props.theme);
-  }, [props.icon, props.theme]);
+  const pickerInfo = IconThemeRegistry.getInstance().getIconPickerInfo(props.theme);
 
-  const pickerInfo = IconThemeRegistry.getInstance().getIconPickerInfo(theme);
+  // Store the selected icon for each theme in the icon map.
+  const onChange = (icon: string, theme: string) => {
+    const newIconMap = new Map(iconMap);
+    newIconMap.set(theme, icon);
+    setIconMap(newIconMap);
+
+    console.log('Icon map:', newIconMap);
+
+    if (props.onChange) {
+      props.onChange(icon, theme);
+    }
+  };
 
   const getPicker = () => {
     if (pickerInfo.type === 'list') {
+      // If the icon is not available in the new theme, we use the value from the icon map
+      // (which was the icon selected last time). If no icon was selected for this theme
+      // before, we use the first icon from the list.
+      let icon = props.icon;
+      const allIcons = IconThemeRegistry.getInstance()
+        .getTheme(props.theme)
+        .iconPickerInfo.listIcons('');
+      if (!allIcons.includes(icon)) {
+        const iconMapValue = iconMap.get(props.theme);
+        if (iconMapValue) {
+          console.log('Using icon from icon map:', iconMapValue);
+          icon = iconMapValue;
+        } else {
+          console.log('Using default icon:', allIcons[0]);
+          icon = allIcons[0];
+        }
+      } else {
+        console.log('Using selected icon:', icon);
+      }
+
       return (
         <GridIconPicker
-          theme={theme}
+          theme={props.theme}
           selectedIcon={icon}
           filterTerm={filterTerm}
-          onChange={(value) => {
-            setIcon(value);
-            if (props.onChange) {
-              props.onChange(value, theme);
-            }
-          }}
+          onChange={(value) => onChange(value, props.theme)}
           onClose={() => {
             setIsPopoverOpen(false);
           }}
@@ -85,13 +110,8 @@ export default (props: IProps) => {
     } else if (pickerInfo.type === 'base64') {
       return (
         <Base64IconPicker
-          initialValue={icon}
-          onChange={(value) => {
-            setIcon(value);
-            if (props.onChange) {
-              props.onChange(value, theme);
-            }
-          }}
+          initialValue={props.icon}
+          onChange={(value) => onChange(value, props.theme)}
         />
       );
     }
@@ -102,16 +122,16 @@ export default (props: IProps) => {
     <Popover
       visible={isPopoverOpen}
       onClickOutside={() => {
-        if (props.onChange) {
-          props.onChange(icon, theme);
-        }
+        onChange(props.icon, props.theme);
         setIsPopoverOpen(false);
       }}
       position="bottom"
       content={
         <div className={classes.container}>
           <div className={classes.row}>
-            <select value={theme} onChange={(event) => setTheme(event.target.value)}>
+            <select
+              value={props.theme}
+              onChange={(event) => onChange(props.icon, event.target.value)}>
               {Array.from(IconThemeRegistry.getInstance().getThemes().entries()).map(
                 ([key, name]) => (
                   <option key={key} value={key}>
@@ -141,12 +161,12 @@ export default (props: IProps) => {
             )}
           </div>
           {getPicker()}
-          <Note>
+          <Note marginTop={10}>
             <div
-              dangerouslySetInnerHTML={
+              dangerouslySetInnerHTML={{
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                { __html: pickerInfo.hint }
-              }
+                __html: pickerInfo.hint ? pickerInfo.hint : '',
+              }}
             />
           </Note>
         </div>
@@ -156,7 +176,7 @@ export default (props: IProps) => {
         grouped={props.grouped}
         variant={props.variant}
         size={props.buttonSize}
-        icon={<ThemedIcon name={icon} theme={theme} size={props.iconSize} />}
+        icon={<ThemedIcon name={props.icon} theme={props.theme} size={props.iconSize} />}
       />
     </Popover>
   );

@@ -61,7 +61,7 @@ export class EmojiTheme implements IIconTheme {
     return {
       type: 'list' as const,
       usesTextColor: false,
-      hint: 'This icon theme uses emojis as icons. You can use the search field to filter the list of emojis.',
+      hint: 'This icon theme uses emojis as icons.',
       listIcons: (searchTerm: string) => {
         return matchSorter(this.icons, searchTerm, {
           threshold: matchSorter.rankings.CONTAINS,
