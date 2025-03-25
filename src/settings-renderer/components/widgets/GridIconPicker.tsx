@@ -71,7 +71,7 @@ export default (props: IProps) => {
     const icon = fetchedIcons[index];
 
     return (
-      <div
+      <button
         className={cx({
           pickerIcon: true,
           selected: icon === props.selectedIcon,
@@ -90,7 +90,7 @@ export default (props: IProps) => {
           }
         }}>
         <ThemedIcon name={icon} theme={props.theme} size={iconSize - 2 * padding} />
-      </div>
+      </button>
     );
   };
 

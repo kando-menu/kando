@@ -11,7 +11,10 @@
 @import '../../variables.scss';
 
 .pickerIcon {
-  border-radius: 5px;
+  border-radius: 8px;
+  border: none;
+  padding: 0;
+  background-color: transparent;
 
   & > div {
     margin: 4px;
@@ -22,12 +25,12 @@
   }
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: $widget-light;
   }
 
   &.selected {
-    background-color: rgba(255, 255, 255, 0.2);
-    outline: 2px dashed white;
+    background-color: $widget-selected;
+    outline: $border-selected;
     outline-offset: -2px;
   }
 }
