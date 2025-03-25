@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use 'sass:color';
+
 $_base-dark: #24272f;
 $_base-light: #fff;
 $_key-dark: #9f3b67;
@@ -18,62 +20,64 @@ $text-inverted: light-dark(#eee, #fff);
 $text-muted: light-dark(#777, #bbb);
 $text-link: light-dark($_key-dark, $_key-light);
 
-$popover-background: light-dark(darken($_base-light, 10%), darken($_base-dark, 10%));
-$toolbar-background: light-dark(darken($_base-light, 10%), darken($_base-dark, 10%));
+$toolbar-background: light-dark(
+  color.adjust($_base-light, $lightness: -10%),
+  color.adjust($_base-dark, $lightness: -10%)
+);
 $window-background: light-dark($_base-light, $_base-dark);
 $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
 
 $widget-primary: light-dark($_key-light, $_key-dark);
 
 $widget-dark: light-dark(
-  rgba(darken($_base-light, 30%), 0.5),
-  rgba(lighten($_base-dark, 30%), 0.5)
+  rgba(color.adjust($_base-light, $lightness: -30%), 0.5),
+  rgba(color.adjust($_base-dark, $lightness: 30%), 0.5)
 );
 $widget-dark-hover: light-dark(
-  rgba(darken($_base-light, 40%), 0.5),
-  rgba(lighten($_base-dark, 40%), 0.5)
+  rgba(color.adjust($_base-light, $lightness: -40%), 0.5),
+  rgba(color.adjust($_base-dark, $lightness: 40%), 0.5)
 );
 
 $widget-normal: light-dark(
-  rgba(darken($_base-light, 20%), 0.5),
-  rgba(lighten($_base-dark, 20%), 0.5)
+  rgba(color.adjust($_base-light, $lightness: -20%), 0.5),
+  rgba(color.adjust($_base-dark, $lightness: 20%), 0.5)
 );
 $widget-normal-hover: light-dark(
-  rgba(darken($_base-light, 30%), 0.5),
-  rgba(lighten($_base-dark, 30%), 0.5)
+  rgba(color.adjust($_base-light, $lightness: -30%), 0.5),
+  rgba(color.adjust($_base-dark, $lightness: 30%), 0.5)
 );
 
 $widget-light: light-dark(
-  rgba(darken($_base-light, 10%), 0.5),
-  rgba(lighten($_base-dark, 10%), 0.5)
+  rgba(color.adjust($_base-light, $lightness: -10%), 0.5),
+  rgba(color.adjust($_base-dark, $lightness: 10%), 0.5)
 );
 $widget-light-hover: light-dark(
-  rgba(darken($_base-light, 20%), 0.5),
-  rgba(lighten($_base-dark, 20%), 0.5)
+  rgba(color.adjust($_base-light, $lightness: -20%), 0.5),
+  rgba(color.adjust($_base-dark, $lightness: 20%), 0.5)
 );
 
 $widget-inverted: light-dark(
-  rgba(darken($_base-light, 70%), 0.7),
-  rgba(lighten($_base-dark, 50%), 0.7)
+  rgba(color.adjust($_base-light, $lightness: -70%), 0.7),
+  rgba(color.adjust($_base-dark, $lightness: 50%), 0.7)
 );
 $widget-inverted-hover: light-dark(
-  rgba(darken($_base-light, 80%), 0.7),
-  rgba(lighten($_base-dark, 40%), 0.7)
+  rgba(color.adjust($_base-light, $lightness: -80%), 0.7),
+  rgba(color.adjust($_base-dark, $lightness: 40%), 0.7)
 );
 
 $widget-selected: light-dark(
-  rgba(mix($_key-dark, darken($_base-light, 10%), 20%), 0.5),
-  rgba(mix($_key-light, lighten($_base-dark, 10%), 30%), 0.5)
+  rgba(color.mix($_key-dark, color.adjust($_base-light, $lightness: -10%), 20%), 0.5),
+  rgba(color.mix($_key-light, color.adjust($_base-dark, $lightness: 10%), 30%), 0.5)
 );
 
 $widget-selected-hover: light-dark(
-  rgba(mix($_key-dark, darken($_base-light, 10%), 30%), 0.5),
-  rgba(mix($_key-light, lighten($_base-dark, 10%), 40%), 0.5)
+  rgba(color.mix($_key-dark, color.adjust($_base-light, $lightness: -10%), 30%), 0.5),
+  rgba(color.mix($_key-light, color.adjust($_base-dark, $lightness: 10%), 40%), 0.5)
 );
 
 $border-selected: 1px solid light-dark($_key-dark, $_key-light);
 $border-focused: 1px solid
   light-dark(
-    mix($_key-dark, darken($_base-light, 10%), 50%),
-    mix($_key-light, lighten($_base-dark, 10%), 50%)
+    color.mix($_key-dark, color.adjust($_base-light, $lightness: -10%), 50%),
+    color.mix($_key-light, color.adjust($_base-dark, $lightness: 10%), 50%)
   );
