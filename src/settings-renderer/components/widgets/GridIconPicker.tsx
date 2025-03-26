@@ -92,7 +92,7 @@ export default (props: IProps) => {
         rowIndex: Math.floor(selectedIndex / columns),
       });
     }
-  }, [gridInstance]);
+  }, [gridInstance, props.filterTerm]);
 
   return (
     <div style={{ flexGrow: 1, minHeight: 0 }}>

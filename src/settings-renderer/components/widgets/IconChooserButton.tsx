@@ -52,93 +52,56 @@ interface IProps {
  * @returns A color button element.
  */
 export default (props: IProps) => {
-  // We store for each icon theme the icon which was selected last. Whenever a new theme is
-  // selected, we check if the current icon is available in the new theme. If not, we use the
-  // value from the icon map.
-  const [iconMap, setIconMap] = React.useState(new Map<string, string>());
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [filterTerm, setFilterTerm] = React.useState('');
+  const [theme, setTheme] = React.useState(props.theme);
 
-  const pickerInfo = IconThemeRegistry.getInstance().getIconPickerInfo(props.theme);
+  React.useEffect(() => {
+    setTheme(props.theme);
+  }, [props.theme]);
 
-  // Store the selected icon for each theme in the icon map.
-  const onChange = (icon: string, theme: string) => {
-    const newIconMap = new Map(iconMap);
-    newIconMap.set(theme, icon);
-    setIconMap(newIconMap);
-
-    console.log('Icon map:', newIconMap);
-
-    if (props.onChange) {
-      props.onChange(icon, theme);
-    }
-  };
+  const pickerInfo = IconThemeRegistry.getInstance().getIconPickerInfo(theme);
 
   const getPicker = () => {
     if (pickerInfo.type === 'list') {
-      // If the icon is not available in the new theme, we use the value from the icon map
-      // (which was the icon selected last time). If no icon was selected for this theme
-      // before, we use the first icon from the list.
-      let icon = props.icon;
-      const allIcons = IconThemeRegistry.getInstance()
-        .getTheme(props.theme)
-        .iconPickerInfo.listIcons('');
-      if (!allIcons.includes(icon)) {
-        const iconMapValue = iconMap.get(props.theme);
-        if (iconMapValue) {
-          console.log('Using icon from icon map:', iconMapValue);
-          icon = iconMapValue;
-        } else {
-          console.log('Using default icon:', allIcons[0]);
-          icon = allIcons[0];
-        }
-      } else {
-        console.log('Using selected icon:', icon);
-      }
-
       return (
         <GridIconPicker
-          theme={props.theme}
-          selectedIcon={icon}
+          theme={theme}
+          selectedIcon={props.icon}
           filterTerm={filterTerm}
-          onChange={(value) => onChange(value, props.theme)}
-          onClose={() => {
-            setIsPopoverOpen(false);
-          }}
+          onChange={(value) => props.onChange(value, theme)}
+          onClose={() => setIsPopoverOpen(false)}
         />
       );
     } else if (pickerInfo.type === 'base64') {
       return (
         <Base64IconPicker
           initialValue={props.icon}
-          onChange={(value) => onChange(value, props.theme)}
+          onChange={(value) => props.onChange(value, theme)}
         />
       );
     }
     return <></>;
   };
 
+  const allThemes = Array.from(
+    IconThemeRegistry.getInstance().getThemes().entries()
+  ).sort((a, b) => a[1].name.localeCompare(b[1].name));
+
   return (
     <Popover
       visible={isPopoverOpen}
-      onClickOutside={() => {
-        onChange(props.icon, props.theme);
-        setIsPopoverOpen(false);
-      }}
+      onClickOutside={() => setIsPopoverOpen(false)}
       position="bottom"
       content={
         <div className={classes.container}>
           <div className={classes.row}>
-            <select
-              value={props.theme}
-              onChange={(event) => onChange(props.icon, event.target.value)}>
-              {Array.from(IconThemeRegistry.getInstance().getThemes().entries()).map(
-                ([key, name]) => (
-                  <option key={key} value={key}>
-                    {name.name}
-                  </option>
-                )
-              )}
+            <select value={theme} onChange={(event) => setTheme(event.target.value)}>
+              {allThemes.map(([key, name]) => (
+                <option key={key} value={key}>
+                  {name.name}
+                </option>
+              ))}
             </select>
             {pickerInfo.type === 'list' && (
               <div className={classes.searchInput}>

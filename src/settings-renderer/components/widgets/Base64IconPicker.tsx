@@ -30,36 +30,49 @@ interface IProps {
  * @returns A textarea element that allows the user to enter a base64 encoded image.
  */
 export default (props: IProps) => {
-  const [value, setValue] = React.useState(props.initialValue);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const [value, setValue] = React.useState('');
 
-  // Update the value when the initialValue prop changes. This is necessary because the
-  // initialValue prop might change after the component has been initialized.
-  React.useEffect(() => setValue(props.initialValue.toString()), [props.initialValue]);
-
-  const handleChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    setValue(newValue);
-
+  const isValidBase64Image = async (base64: string) => {
     const img = new Image();
-    img.src = newValue;
+    img.src = base64;
     const valid = await new Promise((resolve) => {
       img.onload = () => resolve(true);
       img.onerror = () => resolve(false);
     });
 
-    if (valid) {
-      e.target.classList.remove(classes.invalid);
-      props.onChange?.(newValue);
-    } else {
-      e.target.classList.add(classes.invalid);
-    }
+    return valid;
+  };
+
+  // Update the value when the initialValue prop changes. This is necessary because the
+  // initialValue prop might change after the component has been initialized.
+  React.useEffect(() => {
+    isValidBase64Image(props.initialValue).then((valid) => {
+      if (valid) {
+        setValue(props.initialValue);
+      }
+    });
+  }, [props.initialValue]);
+
+  const onChange = (text: string) => {
+    setValue(text);
+
+    isValidBase64Image(text).then((valid) => {
+      if (valid) {
+        textareaRef.current.classList.remove(classes.invalid);
+        props.onChange?.(text);
+      } else {
+        textareaRef.current.classList.add(classes.invalid);
+      }
+    });
   };
 
   return (
     <textarea
       className={classes.picker}
       value={value}
-      onChange={handleChange}
+      ref={textareaRef}
+      onChange={(e) => onChange(e.target.value)}
       spellCheck="false"
       placeholder="data:image/svg;base64,..."
     />
