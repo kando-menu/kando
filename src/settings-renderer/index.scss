@@ -8,14 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use './variables.scss' as *;
+
 // For now, we support two different (hard-coded) font icon themes. The first one is the
 // Material Design Icons font, the second one is the Simple Icons font. Both are
 // available as npm packages.
 $material-symbols-font-path: '~material-symbols/';
 @import 'material-symbols/rounded';
 @import '../../node_modules/simple-icons-font/font/simple-icons.css';
-
-@import './variables.scss';
 
 :root {
   // Enable light mode and dark mode globally.
