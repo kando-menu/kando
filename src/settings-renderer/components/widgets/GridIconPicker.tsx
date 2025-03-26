@@ -45,7 +45,7 @@ interface IProps {
  * @returns A grid icon picker element.
  */
 export default (props: IProps) => {
-  const gridRef = React.createRef<Grid>();
+  const [gridInstance, setGridInstance] = React.useState<Grid | null>(null);
   const theme = IconThemeRegistry.getInstance().getTheme(props.theme);
   const fetchedIcons = theme.iconPickerInfo.listIcons(props.filterTerm);
 
@@ -84,24 +84,22 @@ export default (props: IProps) => {
     );
   };
 
-  // Scroll to the selected icon.
   React.useEffect(() => {
-    console.log('Scrolling to selected icon', selectedIndex);
-    if (gridRef.current) {
-      console.log('Scrolling to selected icon', selectedIndex);
-      gridRef.current.scrollToItem({
+    if (gridInstance && selectedIndex >= 0) {
+      gridInstance.scrollToItem({
+        align: 'center',
         columnIndex: selectedIndex % columns,
         rowIndex: Math.floor(selectedIndex / columns),
       });
     }
-  }, []);
+  }, [gridInstance]);
 
   return (
     <div style={{ flexGrow: 1, minHeight: 0 }}>
       <AutoSizer>
         {({ width, height }: { width: number; height: number }) => (
           <Grid
-            ref={gridRef}
+            ref={setGridInstance}
             columnCount={columns}
             rowCount={rows}
             columnWidth={width / columns - 1}
