@@ -29,7 +29,7 @@ export class Notification {
 
     if (ElectronNotification.isSupported()) {
       const notification = new ElectronNotification({
-        title: title + '.',
+        title: title,
         body: message,
         icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
       });
@@ -53,7 +53,7 @@ export class Notification {
 
     if (ElectronNotification.isSupported()) {
       const notification = new ElectronNotification({
-        title: title + '.',
+        title: title,
         body: error,
         icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
       });
