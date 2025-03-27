@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2025-03-27
 
+<a href="https://www.youtube.com/watch?v=cE8FOOfI7II">
+<img align="right" width="400px" src="img/player19.jpg"></img>
+</a>
+
 #### :tada: Added
 
 - **A new way of interaction: Hover Mode!** This is for power users only: It's like turbo mode, but you don't have to press any keys. Just move the mouse to the item you want to select and wait a fraction of a second. This is by far the fastest way to navigate through your menus, but it can also lead to accidental selections as there is no way to visually confirm the selection before it happens. You can enable this in the settings under "Menu Behavior". You can set `"menuOptions": {"hoverModeNeedsConfirmation": true}` in your `config.json` to tweak the hover mode so that it requires a final click to select an item. This is a bit slower, but it can prevent accidental selections.
