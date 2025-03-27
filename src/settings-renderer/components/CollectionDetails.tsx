@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbCheck, TbSearch, TbSearchOff, TbBackspaceFilled } from 'react-icons/tb';
@@ -30,19 +31,42 @@ interface IProps {
 export default (props: IProps) => {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
+  const selectCollection = useAppState((state) => state.selectCollection);
 
   const collectionDetailsVisible = useAppState((state) => state.collectionDetailsVisible);
   const setCollectionDetailsVisible = useAppState(
     (state) => state.setCollectionDetailsVisible
   );
 
+  const menuSearchBarVisible = useAppState((state) => state.menuSearchBarVisible);
+  const setMenuSearchBarVisible = useAppState((state) => state.setMenuSearchBarVisible);
+
   const menus = useMenuSettings((state) => state.menus);
   const editCollection = useMenuSettings((state) => state.editCollection);
 
   const [filterTerm, setFilterTerm] = React.useState('');
   const [filterTags, setFilterTags] = React.useState([]);
-
   const [collectionName, setCollectionName] = React.useState('');
+  const searchbarRef = React.useRef<HTMLInputElement>(null);
+
+  // Show the search bar when the user presses Ctrl+F.
+  React.useEffect(() => {
+    MouseTrap.bind('mod+f', () => {
+      if (!menuSearchBarVisible || selectedCollection !== -1) {
+        selectCollection(-1);
+        setMenuSearchBarVisible(true);
+        setTimeout(() => {
+          if (searchbarRef.current) {
+            searchbarRef.current.focus();
+          }
+        }, 0);
+      }
+    });
+
+    return () => {
+      MouseTrap.unbind('mod+f');
+    };
+  }, []);
 
   // Update the tag editor whenever the selected menu collection changes.
   React.useEffect(() => {
@@ -109,22 +133,22 @@ export default (props: IProps) => {
             }
           }}
         />
-        {selectedCollection === -1 && collectionDetailsVisible && (
+        {selectedCollection === -1 && menuSearchBarVisible && (
           <Button
             icon={<TbSearchOff />}
             variant="tool"
             onClick={() => {
-              setCollectionDetailsVisible(false);
+              setMenuSearchBarVisible(false);
               setFilterTerm('');
               props.onSearch('');
             }}
           />
         )}
-        {selectedCollection === -1 && !collectionDetailsVisible && (
+        {selectedCollection === -1 && !menuSearchBarVisible && (
           <Button
             icon={<TbSearch />}
             variant="tool"
-            onClick={() => setCollectionDetailsVisible(true)}
+            onClick={() => setMenuSearchBarVisible(true)}
           />
         )}
         {selectedCollection !== -1 && collectionDetailsVisible && (
@@ -143,42 +167,43 @@ export default (props: IProps) => {
           />
         )}
       </div>
-      {collectionDetailsVisible && (
+      {menuSearchBarVisible && selectedCollection === -1 && (
         <div className={classes.collectionDetails}>
-          {selectedCollection === -1 && (
-            <div className={classes.searchInput}>
-              <input
-                type="text"
-                placeholder="Search menus..."
-                value={filterTerm}
-                onChange={(event) => {
-                  setFilterTerm(event.target.value);
-                  props.onSearch(event.target.value);
-                }}
-              />
-              <Button
-                grouped
-                icon={<TbBackspaceFilled />}
-                onClick={() => {
-                  setFilterTerm('');
-                  props.onSearch('');
-                }}
-              />
-            </div>
-          )}
-          {selectedCollection !== -1 && (
-            <TagInput
-              tags={filterTags}
-              onChange={(newTags) => {
-                editCollection(selectedCollection, (collection) => {
-                  collection.tags = newTags;
-                  return collection;
-                });
-                setFilterTags(newTags);
+          <div className={classes.searchInput}>
+            <input
+              ref={searchbarRef}
+              type="text"
+              placeholder="Search menus..."
+              value={filterTerm}
+              onChange={(event) => {
+                setFilterTerm(event.target.value);
+                props.onSearch(event.target.value);
               }}
-              suggestions={allAvailableTags}
             />
-          )}
+            <Button
+              grouped
+              icon={<TbBackspaceFilled />}
+              onClick={() => {
+                setFilterTerm('');
+                props.onSearch('');
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {collectionDetailsVisible && selectedCollection !== -1 && (
+        <div className={classes.collectionDetails}>
+          <TagInput
+            tags={filterTags}
+            onChange={(newTags) => {
+              editCollection(selectedCollection, (collection) => {
+                collection.tags = newTags;
+                return collection;
+              });
+              setFilterTags(newTags);
+            }}
+            suggestions={allAvailableTags}
+          />
         </div>
       )}
     </div>

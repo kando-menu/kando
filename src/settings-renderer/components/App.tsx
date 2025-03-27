@@ -10,8 +10,9 @@
 
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
+import MouseTrap from 'mousetrap';
 
-import { useAppSetting } from '../state';
+import { useAppSetting, useMenuSettings } from '../state';
 
 import AboutDialog from './AboutDialog';
 import GeneralSettingsDialog from './GeneralSettingsDialog';
@@ -27,6 +28,17 @@ import * as classes from './App.module.scss';
 
 export default () => {
   const [transparent] = useAppSetting('transparentSettingsWindow');
+
+  // Bind global undo/redo shortcuts.
+  React.useEffect(() => {
+    MouseTrap.bind('mod+z', () => useMenuSettings.temporal.getState().undo());
+    MouseTrap.bind('mod+y', () => useMenuSettings.temporal.getState().redo());
+
+    return () => {
+      MouseTrap.unbind('mod+z');
+      MouseTrap.unbind('mod+y');
+    };
+  }, []);
 
   return (
     <>
