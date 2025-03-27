@@ -157,6 +157,7 @@ export class KandoApp {
           gesturePauseTimeout: 100,
           fixedStrokeLength: 0,
           rmbSelectsParent: false,
+          enableGamepad: true,
           gamepadBackButton: 1,
           gamepadCloseButton: 2,
         },

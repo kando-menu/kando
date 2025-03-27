@@ -87,6 +87,12 @@ export class MenuOptions {
   rmbSelectsParent = false;
 
   /**
+   * If disabled, gamepad input will be ignored. This can be useful if the gamepad is not
+   * connected or if the user prefers to use the mouse.
+   */
+  enableGamepad = true;
+
+  /**
    * This button will select the parent item when using a gamepad. Set to -1 to disable.
    * See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
    */
@@ -330,6 +336,7 @@ export class Menu extends EventEmitter {
     this.pointerInput.gestureDetector.fixedStrokeLength = this.options.fixedStrokeLength;
     this.pointerInput.gestureDetector.centerDeadZone = this.options.centerDeadZone;
 
+    this.gamepadInput.enabled = this.options.enableGamepad;
     this.gamepadInput.parentDistance = this.options.minParentDistance;
     this.gamepadInput.backButton = this.options.gamepadBackButton;
     this.gamepadInput.closeButton = this.options.gamepadCloseButton;
@@ -397,8 +404,6 @@ export class Menu extends EventEmitter {
     };
 
     this.pointerInput.onCloseMenu(onCloseMenu);
-    this.gamepadInput.onCloseMenu(onCloseMenu);
-
     this.pointerInput.onUpdateState(onUpdateState);
     this.gamepadInput.onUpdateState(onUpdateState);
 
