@@ -15,6 +15,7 @@ jobs:
         with:
           regex: true
           file: 'Kando-.*\.exe'
+      - uses: actions/checkout@v4
       - name: Get latest tag
         uses: actions-ecosystem/action-get-latest-tag@v1.6.0
         id: get-latest-tag
