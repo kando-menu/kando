@@ -15,9 +15,13 @@ jobs:
         with:
           regex: true
           file: 'Kando-.*\.exe'
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1.6.0
+        id: get-latest-tag
       - name: Publish to Winget
         uses: vedantmgoyal9/winget-releaser@v2
         with:
           identifier: KandoMenu.Kando
           installers-regex: 'Kando-.*\.exe$'
+          release-tag: ${{ steps.get-latest-tag.outputs.tag }}
           token: ${{ secrets.WINGET_TOKEN }}
