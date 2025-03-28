@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IIconPicker } from '../icon-theme-registry';
 
 /**
@@ -30,10 +32,10 @@ export class Base64Picker implements IIconPicker {
 
     this.textArea = document.createElement('textarea');
     this.textArea.placeholder = [
-      'Base64 example:',
+      i18next.t('properties.icon-picker.base64-example'),
       'data:image/svg;base64,...',
       '',
-      'URL example:',
+      i18next.t('properties.icon-picker.url-example'),
       'https://cdn.simpleicons.org/simpleicons/white',
     ].join('\n');
     this.textArea.classList.add('base64-picker');

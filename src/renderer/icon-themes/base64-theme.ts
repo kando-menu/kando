@@ -18,7 +18,7 @@ import { Base64Picker } from './icon-pickers/base64-picker';
 export class Base64Theme implements IIconTheme {
   /** Returns a human-readable name of the icon theme. */
   get name() {
-    return 'Base64 or URL';
+    return 'Base64 / URL';
   }
 
   /**
