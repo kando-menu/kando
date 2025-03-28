@@ -9,7 +9,7 @@ import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import { includeIgnoreFile } from '@eslint/compat';
-import glboals from 'globals';
+import globals from 'globals';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -23,10 +23,10 @@ export default defineConfig([
   {
     languageOptions: {
       globals: {
-        ...glboals.browser,
-        ...glboals.node,
-        ...glboals.chai,
-        ...glboals.mocha,
+        ...globals.browser,
+        ...globals.node,
+        ...globals.chai,
+        ...globals.mocha,
       },
     },
     rules: {
