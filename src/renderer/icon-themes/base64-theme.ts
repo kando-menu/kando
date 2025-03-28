@@ -12,8 +12,8 @@ import { IIconTheme } from './icon-theme-registry';
 import { Base64Picker } from './icon-pickers/base64-picker';
 
 /**
- * This class implements an icon theme that allows the user to enter base64 encoded images
- * or URLs directly.
+ * This class implements an icon theme that allows the user to enter base64 encoded
+ * images, file: URI, or URLs directly.
  */
 export class Base64Theme implements IIconTheme {
   /** Returns a human-readable name of the icon theme. */
@@ -22,10 +22,10 @@ export class Base64Theme implements IIconTheme {
   }
 
   /**
-   * Creates a div element that contains the icon with the given base64 encoded image or
-   * URL.
+   * Creates a div element that contains the icon with the given base64 encoded image,
+   * file: URI, or URL.
    *
-   * @param icon The base64 encoded image or URL.
+   * @param icon The base64 encoded image, file: URI, or URL.
    * @returns A div element that contains the icon.
    */
   createIcon(icon: string) {
