@@ -98,6 +98,7 @@ const config: ForgeConfig = {
 
     // This makes sure that the app is not shown in the dock on macOS.
     extendInfo: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       LSUIElement: true,
     },
   },
