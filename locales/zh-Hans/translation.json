@@ -142,7 +142,7 @@
             "warp-mouse-hint": "当菜单开启时将光标移动到它中央。",
             "warp-mouse": "在居中模式下牵引光标",
             "hover-mode": "悬停模式",
-            "hover-mode-hint": "仅限高级用户使用！将鼠标悬停在项目上选择项目。"
+            "hover-mode-hint": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。"
         },
         "icon-picker": {
             "heading": "选择一个图标",
