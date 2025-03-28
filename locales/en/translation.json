@@ -141,6 +141,8 @@
     "icon-picker": {
       "heading": "Select an Icon",
       "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>.",
+      "base64-example": "Base64 example:",
+      "url-example": "URL example:",
       "placeholder": "Search Icons…"
     },
     "macro-picker": {

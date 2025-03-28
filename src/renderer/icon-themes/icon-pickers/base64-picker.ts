@@ -8,20 +8,22 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
+
 import { IIconPicker } from '../icon-theme-registry';
 
 /**
- * An icon picker which is only a text area. The user can enter a base64 encoded image
- * directly.
+ * An icon picker which is only a text area. The user can enter a base64 encoded image or
+ * URL directly.
  */
 export class Base64Picker implements IIconPicker {
   /** The container to which the icon picker is appended. */
   private fragment: DocumentFragment = null;
 
-  /** The textarea where the user can enter a base64 encoded image. */
+  /** The textarea where the user can enter a base64 encoded image or URL. */
   private textArea: HTMLTextAreaElement = null;
 
-  /** This callback is called when the user enters a valid base64 encoded image. */
+  /** This callback is called when the user enters a valid base64 encoded image or URL. */
   private onSelectCallback: (icon: string) => void = null;
 
   /** Creates a new IconPicker and appends it to the given container. */
@@ -29,7 +31,13 @@ export class Base64Picker implements IIconPicker {
     this.fragment = document.createDocumentFragment();
 
     this.textArea = document.createElement('textarea');
-    this.textArea.placeholder = 'data:image/svg;base64,...';
+    this.textArea.placeholder = [
+      i18next.t('properties.icon-picker.base64-example'),
+      'data:image/svg;base64,...',
+      '',
+      i18next.t('properties.icon-picker.url-example'),
+      'https://cdn.simpleicons.org/simpleicons/white',
+    ].join('\n');
     this.textArea.classList.add('base64-picker');
     this.textArea.classList.add('form-control');
     this.textArea.classList.add('my-3');

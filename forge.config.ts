@@ -113,7 +113,7 @@ const config: ForgeConfig = {
       devContentSecurityPolicy:
         "default-src 'self' 'unsafe-inline' data:; " +
         "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; " +
-        "img-src 'self' file: data:; " +
+        "img-src 'self' file: data: https:; " +
         "font-src 'self' file: data:; " +
         "style-src-elem 'self' 'unsafe-inline' file: data:; " +
         "media-src 'self' file: data:; " +
