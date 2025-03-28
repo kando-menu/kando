@@ -404,8 +404,6 @@ export class Menu extends EventEmitter {
     };
 
     this.pointerInput.onCloseMenu(onCloseMenu);
-    this.gamepadInput.onCloseMenu(onCloseMenu);
-
     this.pointerInput.onUpdateState(onUpdateState);
     this.gamepadInput.onUpdateState(onUpdateState);
 
