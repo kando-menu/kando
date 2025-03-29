@@ -1104,6 +1104,7 @@ export class KandoApp {
         settings.gesturePauseTimeout = settings.menuOptions.gesturePauseTimeout;
         settings.fixedStrokeLength = settings.menuOptions.fixedStrokeLength;
         settings.rmbSelectsParent = settings.menuOptions.rmbSelectsParent;
+        settings.enableGamepad = settings.menuOptions.enableGamepad;
         settings.gamepadBackButton = settings.menuOptions.gamepadBackButton;
         settings.gamepadCloseButton = settings.menuOptions.gamepadCloseButton;
         delete settings.menuOptions;
