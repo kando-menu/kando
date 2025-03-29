@@ -121,6 +121,11 @@ export default () => {
             info="If unchecked, the right mouse button will close the menu instead."
             settingsKey="rmbSelectsParent"
           />
+          <AppSettingsCheckbox
+            label="Enable gamepad support"
+            info="If checked, you can use a connected gamepad to control the menu."
+            settingsKey="enableGamepad"
+          />
 
           <h1>Advanced Menu Options</h1>
           <Note marginTop={-10}>
