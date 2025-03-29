@@ -31,6 +31,9 @@ export class GamepadInput extends InputMethod {
   /** The index of the button that closes the menu. */
   public closeButton = 2;
 
+  /** Whether the input method is enabled. */
+  public enabled = true;
+
   /** Provides a high-level interface to the gamepad API. */
   private gamepad: Gamepad = new Gamepad();
 
@@ -44,41 +47,49 @@ export class GamepadInput extends InputMethod {
     // Close the menu on X and select the parent on B. All other buttons select the
     // current item.
     this.gamepad.on('buttondown', (buttonIndex: number) => {
-      if (this.closeButton >= 0 && buttonIndex === this.closeButton) {
-        this.closeCallback();
-        return;
-      }
+      if (this.enabled) {
+        if (this.closeButton >= 0 && buttonIndex === this.closeButton) {
+          this.closeCallback();
+          return;
+        }
 
-      if (this.backButton >= 0 && buttonIndex === this.backButton) {
-        this.selectCallback(this.centerPosition, SelectionType.eParent);
-        return;
-      }
+        if (this.backButton >= 0 && buttonIndex === this.backButton) {
+          this.selectCallback(this.centerPosition, SelectionType.eParent);
+          return;
+        }
 
-      this.selectCallback(this.centerPosition, SelectionType.eActiveItem);
+        this.selectCallback(this.centerPosition, SelectionType.eActiveItem);
+      }
     });
 
     this.gamepad.on('stickmotion', (stickPosition: IVec2) => {
-      this.updateState(stickPosition);
+      if (this.enabled) {
+        this.updateState(stickPosition);
+      }
     });
   }
 
   /** @inheritdoc */
   public setCurrentCenter(center: IVec2) {
-    this.centerPosition = center;
+    if (this.enabled) {
+      this.centerPosition = center;
+    }
   }
 
   /** Computes a new IInputState and publishes it via the state callback. */
   private updateState(stickPosition: IVec2) {
-    const relativePosition = math.multiply(stickPosition, this.parentDistance);
+    if (this.enabled) {
+      const relativePosition = math.multiply(stickPosition, this.parentDistance);
 
-    const state: IInputState = {
-      button: ButtonState.eReleased,
-      absolutePosition: math.add(this.centerPosition, relativePosition),
-      relativePosition: relativePosition,
-      distance: math.getLength(relativePosition),
-      angle: math.getAngle(relativePosition),
-    };
+      const state: IInputState = {
+        button: ButtonState.eReleased,
+        absolutePosition: math.add(this.centerPosition, relativePosition),
+        relativePosition: relativePosition,
+        distance: math.getLength(relativePosition),
+        angle: math.getAngle(relativePosition),
+      };
 
-    this.stateCallback(state);
+      this.stateCallback(state);
+    }
   }
 }
