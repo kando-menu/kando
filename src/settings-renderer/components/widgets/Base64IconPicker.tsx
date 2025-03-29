@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
 import * as classes from './Base64IconPicker.module.scss';
 
@@ -74,7 +75,16 @@ export default (props: IProps) => {
       ref={textareaRef}
       onChange={(e) => onChange(e.target.value)}
       spellCheck="false"
-      placeholder="data:image/svg;base64,..."
+      placeholder={[
+        i18next.t('properties.icon-picker.base64-example'),
+        'data:image/svg;base64,...',
+        '',
+        i18next.t('properties.icon-picker.file-example'),
+        'file:///path/to/icon.png',
+        '',
+        i18next.t('properties.icon-picker.url-example'),
+        'https://cdn.simpleicons.org/simpleicons/white',
+      ].join('\n')}
     />
   );
 };
