@@ -14,6 +14,7 @@ import { WindowWithAPIs } from './menu-window-api';
 declare const window: WindowWithAPIs;
 
 import { Menu } from './menu';
+import { SettingsButton } from './settings-button';
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 
@@ -58,6 +59,21 @@ Promise.all([
   soundTheme.loadDescription(soundThemeDescription);
   soundTheme.setVolume(settings.soundVolume);
 
+  // Create the settings button. This is the button that is shown in one corner of the
+  // screen. It is used to open the settings dialog.
+  const settingsButton = new SettingsButton(
+    document.getElementById('settings-button') as HTMLButtonElement,
+    settings
+  );
+
+  // Show the settings dialog when the button is clicked.
+  settingsButton.on('click', () => {
+    menu.hide();
+    settingsButton.hide();
+    window.menuAPI.cancelSelection();
+    window.menuAPI.showSettings();
+  });
+
   // Now, we create the menu. It will be responsible for drawing the menu and handling
   // user input. It is re-used for every menu that is shown.
   const menu = new Menu(
@@ -70,6 +86,7 @@ Promise.all([
   // Show the menu when the main process requests it.
   window.menuAPI.showMenu((root, menuOptions) => {
     menu.show(root, menuOptions);
+    settingsButton.show();
   });
 
   // Tell the menu about settings changes. This could check more detailed which setting
@@ -78,6 +95,7 @@ Promise.all([
   window.commonAPI.appSettings.onChange((newSettings, oldSettings) => {
     reloadMenuTheme();
     menu.updateSettings(newSettings);
+    settingsButton.updateSettings(newSettings);
 
     if (newSettings.soundTheme !== oldSettings.soundTheme) {
       window.commonAPI.getSoundTheme().then((description) => {
@@ -100,12 +118,14 @@ Promise.all([
   // Hide Kando's window when the user aborts a selection.
   menu.on('cancel', () => {
     menu.hide();
+    settingsButton.hide();
     window.menuAPI.cancelSelection();
   });
 
   // Hide Kando's window when the user selects an item and notify the main process.
   menu.on('select', (path) => {
     menu.hide();
+    settingsButton.hide();
     window.menuAPI.selectItem(path);
   });
 
@@ -117,10 +137,11 @@ Promise.all([
   // Report unhover events to the main process.
   menu.on('unhover', (path) => window.menuAPI.unhoverItem(path));
 
-  // Hide the menu or the settings when the user presses escape.
+  // Hide the menu when the user presses escape.
   document.body.addEventListener('keydown', (ev) => {
     if (ev.key === 'Escape') {
       menu.hide();
+      settingsButton.hide();
       window.menuAPI.cancelSelection();
     }
   });

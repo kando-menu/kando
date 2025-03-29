@@ -588,5 +588,10 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('menu-window.cancel-selection', () => {
       this.hide();
     });
+
+    // Show the settings window when the user clicks on the settings button in the menu.
+    ipcMain.on('menu-window.show-settings', () => {
+      this.kando.showSettings();
+    });
   }
 }

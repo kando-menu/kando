@@ -81,6 +81,11 @@ export const MENU_WINDOW_API = {
   cancelSelection: () => {
     ipcRenderer.send('menu-window.cancel-selection');
   },
+
+  /** This will be called by the render process to show the settings window. */
+  showSettings: () => {
+    ipcRenderer.send('menu-window.show-settings');
+  },
 };
 
 /**

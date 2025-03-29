@@ -122,3 +122,45 @@ body {
     }
   }
 }
+
+// Settings Button -----------------------------------------------------------------------
+
+#settings-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+
+  width: 50px;
+  height: 50px;
+
+  cursor: pointer;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 40% 20% 20% 20%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  &.hidden {
+    transform: translateY(30%);
+    opacity: 0;
+  }
+
+  &.invisible {
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

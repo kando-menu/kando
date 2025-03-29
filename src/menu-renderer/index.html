@@ -16,14 +16,18 @@ SPDX-License-Identifier: MIT
     <title>Kando Menu</title>
   </head>
 
-  <!-- 
-    The body covers the whole window and contains the menu.
-  -->
   <body>
     <!--
       This is the main container for the menu. It will be filled with the menu's
       content by the renderer process.
     -->
     <div id="kando-menu"></div>
+
+    <!--
+      This is the settings button. When clicked, it will open the settings window.
+    -->
+    <button id="settings-button" class="hidden">
+      <i class="material-symbols-rounded">settings</i>
+    </button>
   </body>
 </html>
