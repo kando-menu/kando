@@ -19,10 +19,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [unreleased]
 
-### Added
+***Release Date:** TBD
 
-- Setting to enable or disable the gamepad input (#754).
+### :tada: Added
 
+- A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
+- Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 
