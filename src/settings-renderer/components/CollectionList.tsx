@@ -49,7 +49,7 @@ export default () => {
   }
 
   return (
-    <div className={classes.collectionsList}>
+    <div className={`${classes.collectionsList} ${cIsMac ? classes.safeAreaTop : ''}`}>
       <Scrollbox hideScrollbar>
         <div ref={animatedList}>
           <button
