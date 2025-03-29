@@ -11,6 +11,8 @@
 @use '../../variables.scss' as *;
 
 .popover {
+  -webkit-app-region: no-drag;
+
   position: absolute;
   padding: 10px;
   border-radius: 10px;
