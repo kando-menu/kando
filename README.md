@@ -61,10 +61,10 @@ Just drop a comment if you want to work on one of these issues, and we can discu
 
 While direct contributions are the most awesome way to support the development, **donations will encourage me to invest my spare time for developing free and open-source software**.
 
-[![kofi](https://img.shields.io/badge/Donate-on_Ko--fi-ff5e5b?logo=ko-fi)](https://ko-fi.com/schneegans)
-[![github](https://img.shields.io/badge/Donate-on_GitHub-purple?logo=github)](https://github.com/sponsors/Schneegans)
-[![paypal](https://img.shields.io/badge/Donate-on_PayPal-009cde?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=3F7UFL8KLVPXE)
-[![crypto](https://img.shields.io/badge/Donate-some_Crypto-f7931a?logo=bitcoin)](https://schneegans.cb.id)
+[![kofi](https://img.shields.io/badge/Donate%20on%20Ko--fi-FF6433?logo=kofi&logoColor=fff&style=flat-square)](https://ko-fi.com/schneegans)
+[![github](https://img.shields.io/badge/Donate%20on%20GitHub-EA4AAA?logo=githubsponsors&logoColor=fff&style=flat-square)](https://github.com/sponsors/Schneegans)
+[![paypal](https://img.shields.io/badge/Donate%20on%20PayPal-003087?logo=paypal&logoColor=fff&style=flat-square)](https://www.paypal.com/donate/?hosted_button_id=3F7UFL8KLVPXE)
+[![crypto](https://img.shields.io/badge/Donate%20some%20Crypto-F7931A?logo=bitcoin&logoColor=fff&style=flat-square)](https://schneegans.cb.id)
 
 
 **These awesome people have already donated to the development of my open-source projects:**
