@@ -49,7 +49,11 @@ export default () => {
   }
 
   return (
-    <div className={`${classes.collectionsList} ${cIsMac ? classes.safeAreaTop : ''}`}>
+    <div
+      className={cx({
+        collectionsList: true,
+        safeAreaTop: cIsMac,
+      })}>
       <Scrollbox hideScrollbar>
         <div ref={animatedList}>
           <button
