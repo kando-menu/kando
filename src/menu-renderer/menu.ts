@@ -245,6 +245,7 @@ export class Menu extends EventEmitter {
     this.pointerInput.gestureDetector.fixedStrokeLength = this.settings.fixedStrokeLength;
     this.pointerInput.gestureDetector.centerDeadZone = this.settings.centerDeadZone;
 
+    this.gamepadInput.enabled = this.settings.enableGamepad;
     this.gamepadInput.parentDistance = this.settings.minParentDistance;
     this.gamepadInput.backButton = this.settings.gamepadBackButton;
     this.gamepadInput.closeButton = this.settings.gamepadCloseButton;

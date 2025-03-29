@@ -1,10 +1,5 @@
 {
   "properties": {
-    "icon-picker": {
-      "placeholder": "Search Icons…",
-      "heading": "Select an Icon",
-      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>."
-    },
     "common": {
       "not-bound": "Not Bound",
       "done": "Done",
@@ -17,6 +12,8 @@
     "advanced-options": {
       "heading": "Tweak the Menu's Behavior",
       "subheading": "Before you enable these options, we recommend learning Kando's default behavior. Read about why we like it <a {{- link}}>here</a>.",
+      "hover-mode": "Hover Mode",
+      "hover-mode-hint": "For power users only! Select items by hovering over them.",
       "centered-mode": "Centered Mode",
       "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
       "warp-mouse": "Warp Mouse in Centered Mode",
@@ -51,6 +48,14 @@
       "label": "Hotkey",
       "hint": "This will be simulated.",
       "recording": "Press a hotkey…"
+    },
+    "icon-picker": {
+      "heading": "Select an Icon",
+      "subheading": "Add your own icon collections by putting a folder with images into {{path}}. You will need to restart Kando. Learn more <a {{- link}}>here</a>.",
+      "base64-example": "Base64 example:",
+      "file-example": "file: URI example:",
+      "url-example": "URL example:",
+      "placeholder": "Search Icons…"
     },
     "macro-picker": {
       "placeholder": "Hit the record button to start recording!",

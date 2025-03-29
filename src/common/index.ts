@@ -672,6 +672,12 @@ export interface IAppSettings {
   rmbSelectsParent: boolean;
 
   /**
+   * If disabled, gamepad input will be ignored. This can be useful if the gamepad is not
+   * connected or if the user prefers to use the mouse.
+   */
+  enableGamepad: true;
+
+  /**
    * This button will select the parent item when using a gamepad. Set to -1 to disable.
    * See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
    */
@@ -719,6 +725,7 @@ export function getDefaultAppSettings(): IAppSettings {
     gesturePauseTimeout: 100,
     fixedStrokeLength: 0,
     rmbSelectsParent: false,
+    enableGamepad: true,
     gamepadBackButton: 1,
     gamepadCloseButton: 2,
     hideSettingsButton: false,

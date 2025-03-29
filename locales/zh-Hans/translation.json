@@ -142,12 +142,14 @@
             "warp-mouse-hint": "当菜单开启时将光标移动到它中央。",
             "warp-mouse": "在居中模式下牵引光标",
             "hover-mode": "悬停模式",
-            "hover-mode-hint": "仅限高级用户使用！将鼠标悬停在项目上选择项目。"
+            "hover-mode-hint": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。"
         },
         "icon-picker": {
             "heading": "选择一个图标",
             "subheading": "如需自定义图标，请将图标包文件夹放在目录 {{path}} 中，然后重新启动 Kando。<a {{- link}}>点击了解详情</a>。",
-            "placeholder": "搜索图标…"
+            "placeholder": "搜索图标…",
+            "base64-example": "Base64 示例：",
+            "url-example": "URL 示例："
         },
         "condition-picker": {
             "top-placeholder": "上",
