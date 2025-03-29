@@ -127,8 +127,6 @@ body {
 
 #settings-button {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
 
   width: 50px;
   height: 50px;
@@ -139,7 +137,7 @@ body {
   color: white;
   border: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border-radius: 40% 20% 20% 20%;
+  border-radius: 20%;
 
   display: flex;
   align-items: center;
@@ -162,5 +160,29 @@ body {
     &:hover {
       opacity: 1;
     }
+  }
+
+  &.top-left {
+    top: 10px;
+    left: 10px;
+    border-bottom-right-radius: 40%;
+  }
+
+  &.top-right {
+    top: 10px;
+    right: 10px;
+    border-bottom-left-radius: 40%;
+  }
+
+  &.bottom-left {
+    bottom: 10px;
+    left: 10px;
+    border-top-right-radius: 40%;
+  }
+
+  &.bottom-right {
+    bottom: 10px;
+    right: 10px;
+    border-top-left-radius: 40%;
   }
 }

@@ -29,6 +29,9 @@ interface IProps<K extends keyof IAppSettings> {
 
   /** Whether the dropdown is disabled. Defaults to false. */
   disabled?: boolean;
+
+  /** Optional minimum width of the dropdown. */
+  minWidth?: number;
 }
 
 /**
@@ -58,6 +61,7 @@ export default <K extends EnumKeys<IAppSettings>>(props: IProps<K>) => {
       initialValue={state}
       onChange={setState}
       disabled={props.disabled}
+      minWidth={props.minWidth}
     />
   );
 };

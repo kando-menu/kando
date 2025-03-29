@@ -37,6 +37,9 @@ interface IProps<T extends string> {
 
   /** Whether the dropdown is disabled. Defaults to false. */
   disabled?: boolean;
+
+  /** Optional minimum width of the dropdown. */
+  minWidth?: number;
 }
 
 /**
@@ -59,6 +62,7 @@ export default <T extends string>(props: IProps<T>) => {
       <select
         disabled={props.disabled}
         value={props.initialValue}
+        style={{ minWidth: props.minWidth }}
         onChange={(event) => props.onChange && props.onChange(event.target.value as T)}>
         {props.options.map((option) => (
           <option key={option.value} value={option.value}>

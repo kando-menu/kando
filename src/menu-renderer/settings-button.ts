@@ -59,5 +59,13 @@ export class SettingsButton extends EventEmitter {
     } else {
       this.button.classList.remove('invisible');
     }
+
+    const positions = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
+    positions.forEach((position) => {
+      this.button.classList.toggle(
+        position,
+        settings.settingsButtonPosition === position
+      );
+    });
   }
 }

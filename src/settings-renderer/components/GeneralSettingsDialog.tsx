@@ -30,8 +30,9 @@ export default () => {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
 
-  // We make sure that the spinbuttons have a consistent width.
+  // We make sure that some widgets have a consistent width.
   const spinbuttonWidth = 60;
+  const dropdownWidth = 150;
 
   return (
     <Modal
@@ -87,9 +88,21 @@ export default () => {
             settingsKey="hideSettingsButton"
           />
           <AppSettingsDropdown
+            label="Settings button position"
+            settingsKey="settingsButtonPosition"
+            minWidth={dropdownWidth}
+            options={[
+              { value: 'top-left', label: 'Top Left' },
+              { value: 'top-right', label: 'Top Right' },
+              { value: 'bottom-left', label: 'Bottom Left' },
+              { value: 'bottom-right', label: 'Bottom Right' },
+            ]}
+          />
+          <AppSettingsDropdown
             label="Tray icon flavor"
             info="You can also choose to hide the tray icon completely."
             settingsKey="trayIconFlavor"
+            minWidth={dropdownWidth}
             options={[
               { value: 'none', label: 'Hidden' },
               { value: 'color', label: 'Color' },

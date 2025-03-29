@@ -608,6 +608,9 @@ export interface IAppSettings {
   /** If true, the settings button will be hidden if not hovered. */
   hideSettingsButton: boolean;
 
+  /** The position of the settings button. */
+  settingsButtonPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
   /** Clicking inside this radius will select the parent element. */
   centerDeadZone: number;
 
@@ -729,5 +732,6 @@ export function getDefaultAppSettings(): IAppSettings {
     gamepadBackButton: 1,
     gamepadCloseButton: 2,
     hideSettingsButton: false,
+    settingsButtonPosition: 'bottom-right',
   };
 }
