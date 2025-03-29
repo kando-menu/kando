@@ -83,12 +83,13 @@ export default () => {
             settingsKey="transparentSettingsWindow"
           />
           <AppSettingsCheckbox
-            label="Hide settings button"
-            info="The button in the screen corner that opens the settings will still be there, but invisible."
+            label="Invisible settings button"
+            info="You can still use the button, it will appear when you move the mouse over it."
             settingsKey="hideSettingsButton"
           />
           <AppSettingsDropdown
             label="Settings button position"
+            info="Choose the screen corner where the settings button will be shown."
             settingsKey="settingsButtonPosition"
             minWidth={dropdownWidth}
             options={[
