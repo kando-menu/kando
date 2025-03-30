@@ -55,7 +55,21 @@ export default () => {
         <AboutDialog />
         <MenuThemesDialog />
       </div>
-      <Tooltip id="main-tooltip" delayShow={500} />
+      <Tooltip
+        id="main-tooltip"
+        delayShow={500}
+        openEvents={{
+          click: true,
+          mouseover: true,
+          focus: true,
+        }}
+      />
+      <Tooltip
+        id="click-to-show-tooltip"
+        delayShow={0}
+        openEvents={{ click: true }}
+        closeEvents={{ click: true }}
+      />
     </>
   );
 };

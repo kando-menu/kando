@@ -11,8 +11,9 @@
 .container {
   flex-grow: 1;
   min-width: 400px;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.5);
   color-scheme: only light;
+  color: #eee;
 
   display: flex;
   flex-direction: column;
@@ -34,6 +35,10 @@
 }
 
 .itemArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   .header {
     display: flex;
     align-items: flex-end;
@@ -41,28 +46,28 @@
     .leftLine {
       background-image: linear-gradient(
         to left,
-        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 1) 0%,
         rgba(255, 255, 255, 0) 80%
       );
-      height: 2px;
+      height: 1px;
       flex-grow: 1;
     }
 
     .rightLine {
       background-image: linear-gradient(
         to right,
-        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 1) 0%,
         rgba(255, 255, 255, 0) 80%
       );
-      height: 2px;
+      height: 1px;
       flex-grow: 1;
     }
 
     .title {
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 1);
+      background-color: rgba(0, 0, 0, 0.3);
       border-radius: 8px 8px 0 0;
-      border-width: 3px 3px 0 3px;
+      border-width: 1px 1px 0 1px;
       padding: 5px 10px;
     }
   }
@@ -70,7 +75,7 @@
   .shadow {
     background-image: radial-gradient(
       ellipse at 50% 0%,
-      rgba(0, 0, 0, 0.2) 10%,
+      rgba(0, 0, 0, 0.3) 10%,
       rgba(0, 0, 0, 0) 70%
     );
     height: 80px;
@@ -78,6 +83,26 @@
   }
 
   .items {
-    height: 150px;
+    word-wrap: break-word;
+    text-align: center;
+    padding: 10px;
+
+    .item {
+      display: inline-block;
+      cursor: grab;
+      border-radius: 50%;
+      width: min(calc(20px + 2vw), 50px);
+      margin: 5px min(calc(4px + 0.4vw), 10px);
+      aspect-ratio: 1;
+      background-color: rgba(0, 0, 0, 0.2);
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
   }
 }

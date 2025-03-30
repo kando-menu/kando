@@ -19,9 +19,10 @@ import { IoArrowUndo, IoArrowRedo } from 'react-icons/io5';
 import * as classes from './Preview.module.scss';
 
 import { useAppState, useMenuSettings } from '../state';
-
+import { ItemTypeRegistry } from '../../common/item-type-registry';
 import Headerbar from './widgets/Headerbar';
 import Button from './widgets/Button';
+import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
   // This will force a re-render whenever the menu settings change. For now, this is
@@ -82,6 +83,8 @@ export default () => {
     </>
   );
 
+  const itemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
+
   return (
     <div className={classes.container}>
       <Headerbar center={headerButtons} />
@@ -91,11 +94,28 @@ export default () => {
       <div className={classes.itemArea}>
         <div className={classes.header}>
           <div className={classes.leftLine}></div>
-          <div className={classes.title}>Add Items</div>
+          <div className={classes.title}>Add Menu Items</div>
           <div className={classes.rightLine}></div>
         </div>
         <div className={classes.shadow}></div>
-        <div className={classes.items}></div>
+        <div className={classes.items}>
+          {itemTypes.map(([name, type]) => (
+            <div
+              key={name}
+              className={classes.item}
+              data-tooltip-id="click-to-show-tooltip"
+              data-tooltip-html={
+                '<strong>' + type.defaultName + '</strong><br>' + type.genericDescription
+              }
+              draggable>
+              <ThemedIcon
+                size={'100%'}
+                name={type.defaultIcon}
+                theme={type.defaultIconTheme}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
