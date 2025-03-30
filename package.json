@@ -53,7 +53,6 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron": "^31.0.0",
     "emojilib": "^4.0.1",
-    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.5",
     "eslint": "^9.23.0",
     "globals": "^16.0.0",
