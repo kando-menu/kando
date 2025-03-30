@@ -9,14 +9,18 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 
 import * as classes from './Preview.module.scss';
+const cx = classNames.bind(classes);
 
 import { ItemTypeRegistry } from '../../common/item-type-registry';
 import PreviewHeaderbar from './PreviewHeaderbar';
 import ThemedIcon from './widgets/ThemedIcon';
 
 export default () => {
+  const [draggedItemType, setDraggedItemType] = React.useState('');
+
   const itemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
 
   return (
@@ -36,12 +40,17 @@ export default () => {
           {itemTypes.map(([name, type]) => (
             <div
               key={name}
-              className={classes.item}
+              className={cx({
+                item: true,
+                dragging: draggedItemType === name,
+              })}
               data-tooltip-id="click-to-show-tooltip"
               data-tooltip-html={
                 '<strong>' + type.defaultName + '</strong><br>' + type.genericDescription
               }
-              draggable>
+              draggable
+              onDragStart={() => setDraggedItemType(name)}
+              onDragEnd={() => setDraggedItemType('')}>
               <ThemedIcon
                 size={'100%'}
                 name={type.defaultIcon}

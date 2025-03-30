@@ -28,7 +28,6 @@
   container-type: size;
 
   .preview {
-    background-color: rgba(94, 194, 219, 0.4);
     width: 100cqmin;
     height: 100cqmin;
   }
@@ -102,6 +101,11 @@
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      &.dragging {
+        opacity: 0.3;
+        filter: blur(2px);
       }
     }
   }
