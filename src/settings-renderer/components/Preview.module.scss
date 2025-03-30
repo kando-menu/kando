@@ -8,8 +8,76 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.preview {
+.container {
   flex-grow: 1;
+  min-width: 400px;
   background-color: rgba(255, 255, 255, 0.4);
   color-scheme: only light;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.previewArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  container-type: size;
+
+  .preview {
+    background-color: rgba(94, 194, 219, 0.4);
+    width: 100cqmin;
+    height: 100cqmin;
+  }
+}
+
+.itemArea {
+  .header {
+    display: flex;
+    align-items: flex-end;
+
+    .leftLine {
+      background-image: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 80%
+      );
+      height: 2px;
+      flex-grow: 1;
+    }
+
+    .rightLine {
+      background-image: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 80%
+      );
+      height: 2px;
+      flex-grow: 1;
+    }
+
+    .title {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 8px 8px 0 0;
+      border-width: 3px 3px 0 3px;
+      padding: 5px 10px;
+    }
+  }
+
+  .shadow {
+    background-image: radial-gradient(
+      ellipse at 50% 0%,
+      rgba(0, 0, 0, 0.2) 10%,
+      rgba(0, 0, 0, 0) 70%
+    );
+    height: 80px;
+    margin-bottom: -80px;
+  }
+
+  .items {
+    height: 150px;
+  }
 }

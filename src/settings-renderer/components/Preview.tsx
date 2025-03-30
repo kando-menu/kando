@@ -83,8 +83,20 @@ export default () => {
   );
 
   return (
-    <div className={classes.preview}>
+    <div className={classes.container}>
       <Headerbar center={headerButtons} />
+      <div className={classes.previewArea}>
+        <div className={classes.preview}></div>
+      </div>
+      <div className={classes.itemArea}>
+        <div className={classes.header}>
+          <div className={classes.leftLine}></div>
+          <div className={classes.title}>Add Items</div>
+          <div className={classes.rightLine}></div>
+        </div>
+        <div className={classes.shadow}></div>
+        <div className={classes.items}></div>
+      </div>
     </div>
   );
 };
