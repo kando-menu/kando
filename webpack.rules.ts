@@ -52,8 +52,4 @@ export const rules: Required<ModuleOptions>['rules'] = [
       filename: 'assets/[name].[hash:8][ext]',
     },
   },
-  {
-    test: /\.hbs$/i,
-    use: 'handlebars-loader',
-  },
 ];
