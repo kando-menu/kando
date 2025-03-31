@@ -21,6 +21,10 @@ import IconChooserButton from './widgets/IconChooserButton';
 import TagInput from './widgets/TagInput';
 import Swirl from './widgets/Swirl';
 
+/**
+ * This component shows the properties of the currently selected menu or menu item on the
+ * right side of the settings dialog.
+ */
 export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
