@@ -114,23 +114,6 @@ Promise.all([
       </React.StrictMode>
     );
 
-    // Save the settings when the user closes the settings window.
-    /*window.addEventListener('unload', function () {
-    // Before sending the settings back to the main process, we have to make sure
-    // that the menu items are converted back to IMenuItem objects. This is because
-    // ISettingsMenuItem objects contain properties (such as DOM nodes) which neither need to
-    // be saved to disc nor can they be cloned using the structured clone algorithm
-    // which is used by Electron for IPC.
-    menuSettings.menus.forEach((menu) => {
-      menu.root = deepCopyMenuItem(menu.root);
-    });
-
-    // Also the stash needs to be converted back to ordinary IMenuItem objects.
-    menuSettings.stash = menuSettings.stash.map((item) => deepCopyMenuItem(item));
-
-    window.commonAPI.menuSettings.set(menuSettings);
-  });*/
-
     // This is helpful during development as it shows us when the renderer process has
     // finished reloading.
     window.commonAPI.log("Successfully loaded Kando's Settings process.");
