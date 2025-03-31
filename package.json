@@ -67,7 +67,7 @@
     "lodash": "^4.17.21",
     "match-sorter": "^8.0.0",
     "material-symbols": "^0.29.2",
-    "mime-types": "^2.1.35",
+    "mime-types": "^3.0.1",
     "mocha": "^11.1.0",
     "node-addon-api": "^8.3.1",
     "node-loader": "^2.1.0",
