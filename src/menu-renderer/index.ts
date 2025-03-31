@@ -151,11 +151,11 @@ Promise.all([
       window.menuAPI.cancelSelection();
     }
 
-    if ((await window.commonAPI.appSettings.get()).useDefaultOsShowSettingsHotkey) {
-      // Show the settings window if 'cmd + ,' hotkey is pressed on macOS
-      // or 'ctrl + ,' is pressed on non macOS systems.
-      const keyIsComma = ev.key === ',';
-      if ((ev.metaKey && keyIsComma && cIsMac) || (ev.ctrlKey && keyIsComma && !cIsMac)) {
+    // Show the settings window if 'cmd + ,' hotkey is pressed on macOS
+    // or 'ctrl + ,' is pressed on non macOS systems.
+    const keyIsComma = ev.key === ',';
+    if ((ev.metaKey && keyIsComma && cIsMac) || (ev.ctrlKey && keyIsComma && !cIsMac)) {
+      if ((await window.commonAPI.appSettings.get()).useDefaultOsShowSettingsHotkey) {
         showSettings();
       }
     }
