@@ -28,6 +28,13 @@ interface IProps {
   onSearch: (term: string) => void;
 }
 
+/**
+ * This component encapsulates the widgets above the menu list. These widgets have several
+ * modi: If the show-all-menus button at the top of the collection list is selected, the
+ * details will show a search bar which can be shown or hidden with a button. If a
+ * collection is selected, the details will show the collection name and a set of widgets
+ * for editing the collection's name, icon, and tags.
+ */
 export default (props: IProps) => {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
@@ -78,7 +85,9 @@ export default (props: IProps) => {
     }
   }, [selectedCollection, menuCollections]);
 
-  const [animatedEditor] = useAutoAnimate({ duration: 250 });
+  // This is used to animate the height of the collection details when the user shows or
+  // hides the search bar or the collection details.
+  const [animatedRef] = useAutoAnimate({ duration: 250 });
 
   // Accumulate a list of all tags which are currently used in our collections and menus.
   let allAvailableTags = menuCollections
@@ -90,15 +99,18 @@ export default (props: IProps) => {
   // Remove duplicates.
   allAvailableTags = Array.from(new Set(allAvailableTags));
 
+  const showingCollection = selectedCollection !== -1;
+  const editingCollection = showingCollection && collectionDetailsVisible;
+
   return (
     <div
-      ref={animatedEditor}
+      ref={animatedRef}
       className={cx({
-        editingCollection: collectionDetailsVisible && selectedCollection !== -1,
-        showingCollection: selectedCollection !== -1,
+        editingCollection,
+        showingCollection,
       })}>
       <div className={classes.collectionHeader}>
-        {selectedCollection !== -1 && (
+        {showingCollection && (
           <IconChooserButton
             grouped
             iconSize="1.5em"
@@ -117,6 +129,7 @@ export default (props: IProps) => {
           type="text"
           className={classes.collectionName}
           value={collectionName}
+          tabIndex={editingCollection ? undefined : -1}
           onChange={(event) => {
             setCollectionName(event.target.value);
           }}
@@ -133,7 +146,7 @@ export default (props: IProps) => {
             }
           }}
         />
-        {selectedCollection === -1 && menuSearchBarVisible && (
+        {!showingCollection && menuSearchBarVisible && (
           <Button
             icon={<TbSearchOff />}
             variant="tool"
@@ -144,14 +157,14 @@ export default (props: IProps) => {
             }}
           />
         )}
-        {selectedCollection === -1 && !menuSearchBarVisible && (
+        {!showingCollection && !menuSearchBarVisible && (
           <Button
             icon={<TbSearch />}
             variant="tool"
             onClick={() => setMenuSearchBarVisible(true)}
           />
         )}
-        {selectedCollection !== -1 && collectionDetailsVisible && (
+        {showingCollection && collectionDetailsVisible && (
           <Button
             icon={<TbCheck />}
             variant="secondary"
@@ -159,7 +172,7 @@ export default (props: IProps) => {
             onClick={() => setCollectionDetailsVisible(false)}
           />
         )}
-        {selectedCollection !== -1 && !collectionDetailsVisible && (
+        {showingCollection && !collectionDetailsVisible && (
           <Button
             icon={<RiPencilFill />}
             variant="tool"
@@ -167,7 +180,7 @@ export default (props: IProps) => {
           />
         )}
       </div>
-      {menuSearchBarVisible && selectedCollection === -1 && (
+      {menuSearchBarVisible && !showingCollection && (
         <div className={classes.collectionDetails}>
           <div className={classes.searchInput}>
             <input
@@ -191,7 +204,7 @@ export default (props: IProps) => {
           </div>
         </div>
       )}
-      {collectionDetailsVisible && selectedCollection !== -1 && (
+      {editingCollection && (
         <div className={classes.collectionDetails}>
           <TagInput
             tags={filterTags}

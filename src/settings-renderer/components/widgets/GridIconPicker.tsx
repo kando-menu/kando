@@ -20,19 +20,25 @@ import * as classes from './GridIconPicker.module.scss';
 const cx = classNames.bind(classes);
 
 interface IProps {
-  /** Function to call when a new icon is selected. */
+  /** Function to call whenever a new icon is selected. */
   onChange?: (icon: string) => void;
 
-  /** Function to call when the picker should be closed. */
+  /**
+   * Function to call when the picker should be closed. This is emitted if the user
+   * double-clicks an icon.
+   */
   onClose?: () => void;
 
-  /** Initially selected icon. */
+  /**
+   * Initially selected icon. If this is not in the given theme, nothing will be selected.
+   * If it is in the theme, it will be selected and the grid will scroll to the icon.
+   */
   selectedIcon: string;
 
   /** The icon theme. */
   theme: string;
 
-  /** The current filter term. */
+  /** The current filter term. Only icons matching this will be shown. */
   filterTerm: string;
 }
 
@@ -40,6 +46,8 @@ interface IProps {
  * An icon picker which shows a virtualized grid of icons. Icons are only shown when they
  * are scrolled into view. Overall, this allows for decent performance even with a large
  * number of icons.
+ *
+ * The icons are retrieved from the IconThemeRegistry using the given theme name.
  *
  * @param props - The properties for the icon picker component.
  * @returns A grid icon picker element.

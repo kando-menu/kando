@@ -44,6 +44,12 @@ const openThemeDirectory = () => {
     .then((dir) => window.open('file://' + dir, '_blank'));
 };
 
+/**
+ * This dialog allows the user to select a theme for the menu. It shows a grid of
+ * available themes, each with a preview image. The user can select a theme by clicking on
+ * it. In addition, the user can configure some properties like the theme's accent
+ * colors.
+ */
 export default () => {
   const themesDialogVisible = useAppState((state) => state.themesDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);

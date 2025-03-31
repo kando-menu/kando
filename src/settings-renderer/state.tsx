@@ -33,6 +33,9 @@ import {
 // The main process will also notify the renderer process whenever a setting changes on
 // disk, which will lead automatically to a re-render of the components which use slices
 // of these objects.
+// The menu settings state object uses a temporal store. That means that every
+// modification to the state is stored in a history stack. The user can undo and redo
+// these changes.
 
 // App Settings State --------------------------------------------------------------------
 
@@ -57,26 +60,79 @@ export const useAppSetting = <T extends keyof IAppSettings>(key: T) => {
 
 // Menu Settings State -------------------------------------------------------------------
 
+/** These actions can be performed on the menu state. */
 type MenuStateActions = {
+  /**
+   * Appends a new menu to the list of menus. The given tags are given to the new menu.
+   *
+   * @param tags The tags of the new menu.
+   */
   addMenu: (tags: string[]) => void;
+
+  /**
+   * Moves a menu from one position to another.
+   *
+   * @param from The index of the menu to move.
+   * @param to The index to move the menu to.
+   */
   moveMenu: (from: number, to: number) => void;
+
+  /**
+   * Deletes a menu from the list of menus.
+   *
+   * @param index The index of the menu to delete.
+   */
   deleteMenu: (index: number) => void;
+
+  /**
+   * Duplicates a menu at the given index. The new menu is inserted after the original
+   * one.
+   *
+   * @param index The index of the menu to duplicate.
+   */
   duplicateMenu: (index: number) => void;
+
+  /**
+   * Edits the menu at the given index. The callback is called with the menu object and
+   * should return the modified menu object.
+   *
+   * @param index The index of the menu to edit.
+   * @param callback The callback to call with the menu object.
+   */
   editMenu: (index: number, callback: (menu: IMenu) => IMenu) => void;
 
+  /** Appends a new collection to the list of collections. */
   addCollection: () => void;
+
+  /**
+   * Moves a collection from one position to another.
+   *
+   * @param from The index of the collection to move.
+   * @param to The index to move the collection to.
+   */
   moveCollection: (from: number, to: number) => void;
+
+  /**
+   * Deletes a collection from the list of collections.
+   *
+   * @param index The index of the collection to delete.
+   */
   deleteCollection: (index: number) => void;
+
+  /**
+   * Edits the collection at the given index. The callback is called with the collection
+   * object and should return the modified collection object.
+   *
+   * @param index The index of the collection to edit.
+   * @param callback The callback to call with the collection object.
+   */
   editCollection: (
     index: number,
     callback: (collection: IMenuCollection) => IMenuCollection
   ) => void;
 };
 
-/**
- * Use this hook to access the entire menu settings object. Usually you will only need the
- * menus or the stash. In this case, use the methods below.
- */
+/** Use this hook to access a slice from the settings object. */
 export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
   temporal(
     (set) => ({
@@ -250,16 +306,71 @@ type AppState = {
   };
 };
 
+/** These actions can be performed on the app state. */
 type AppStateActions = {
+  /**
+   * Selects the given menu. This is the index in the entire list of unfiltered menus.
+   *
+   * @param which The index of the menu to select.
+   */
   selectMenu: (which: number) => void;
+
+  /**
+   * Selects the given collection. The special value of -1 means that no collection is
+   * selected and all menus are shown.
+   *
+   * @param which The index of the collection to select. -1 means all menus.
+   */
   selectCollection: (which: number) => void;
+
+  /**
+   * Shows or hides the about dialog.
+   *
+   * @param aboutDialogVisible Whether the about dialog is visible.
+   */
   setAboutDialogVisible: (aboutDialogVisible: boolean) => void;
+
+  /**
+   * Shows or hides the themes dialog.
+   *
+   * @param themesDialogVisible Whether the themes dialog is visible.
+   */
   setThemesDialogVisible: (themesDialogVisible: boolean) => void;
+
+  /**
+   * Shows or hides the general-settings dialog.
+   *
+   * @param settingsDialogVisible Whether the settings dialog is visible.
+   */
   setSettingsDialogVisible: (settingsDialogVisible: boolean) => void;
+
+  /**
+   * Shows or hides the collection editor above the menu list.
+   *
+   * @param collectionDetailsVisible Whether the collection editor is visible.
+   */
   setCollectionDetailsVisible: (collectionDetailsVisible: boolean) => void;
+
+  /**
+   * Shows or hides the search bar above the menu list.
+   *
+   * @param menuSearchBarVisible Whether the search bar is visible.
+   */
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) => void;
 
+  /**
+   * The currently dragged thing is stored in the app state. Calling this indicates that a
+   * drag operation just started.
+   *
+   * @param type The type of the dragged thing.
+   * @param index The index of the thing in it respective list.
+   */
   startDrag: (type: 'menu' | 'collection', index: number) => void;
+
+  /**
+   * This should be called when the drag operation ended. It resets the dragged thing in
+   * the app state.
+   */
   endDrag: () => void;
 };
 

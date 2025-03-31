@@ -18,6 +18,9 @@
   justify-content: space-between;
   white-space: nowrap;
 
+  // The collection name usually looks like a normal label, but it is actually an input
+  // which allows editing the collection's name. We have to ensure that it only looks like
+  // an input if the .collectionHeader has the .editingCollection class.
   .collectionName {
     position: relative;
     pointer-events: none;

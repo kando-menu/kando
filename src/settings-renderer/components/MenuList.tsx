@@ -24,6 +24,15 @@ import Note from './widgets/Note';
 import Button from './widgets/Button';
 import CollectionDetails from './CollectionDetails';
 
+/**
+ * This is a vertical list of buttons, one for each configured menu. They can be reordered
+ * via drag and drop. Clicking one of the buttons will make the corresponding menu the
+ * currently selected menu. The menu list only shows menus matching the currently selected
+ * collection or the currently selected filter term. If no collection is selected, all
+ * menus are shown.
+ *
+ * In addition, there is a floating button at the bottom which allows to add a new menu.
+ */
 export default () => {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
@@ -33,6 +42,7 @@ export default () => {
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
 
+  // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
 
   // Make sure that the selected menu is valid. This could for instance happen if
@@ -44,6 +54,7 @@ export default () => {
 
   const backend = useAppState((state) => state.backendInfo);
 
+  // Animate the filtering, addition, and removal of menus.
   const [animatedList, enableAnimatedList] = useAutoAnimate({ duration: 250 });
 
   const dnd = useAppState((state) => state.dnd);
@@ -51,6 +62,12 @@ export default () => {
   const endDrag = useAppState((state) => state.endDrag);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
 
+  // Compile a list of all menus which are currently visible. This is done by first
+  // filtering the menus by the selected collection and then by the filter term. The
+  // result is a list of objects which contain the menu and its index in the original
+  // list. This is necessary because the index of the menu in the original list is
+  // needed for the drag and drop functionality as well as a key for the auto-animate
+  // module.
   const visibleMenus = menus
     .map((menu, index) => {
       return { menu, index };

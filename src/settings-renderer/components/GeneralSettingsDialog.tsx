@@ -26,6 +26,7 @@ import Note from './widgets/Note';
 import Scrollbox from './widgets/Scrollbox';
 import Swirl from './widgets/Swirl';
 
+/** This dialog allows the user to configure some general settings of Kando. */
 export default () => {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);

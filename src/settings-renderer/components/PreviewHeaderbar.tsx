@@ -20,6 +20,10 @@ import { useAppState, useMenuSettings } from '../state';
 import Headerbar from './widgets/Headerbar';
 import Button from './widgets/Button';
 
+/**
+ * This is the toolbar at the top of the menu-preview area. It contains some buttons for
+ * undo/redo, and for opening the settings dialogs.
+ */
 export default () => {
   // This will force a re-render whenever the menu settings change. For now, this is
   // necessary to update the undo/redo buttons. In the future, we might want to make

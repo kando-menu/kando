@@ -18,6 +18,11 @@ import { ItemTypeRegistry } from '../../common/item-type-registry';
 import PreviewHeaderbar from './PreviewHeaderbar';
 import ThemedIcon from './widgets/ThemedIcon';
 
+/**
+ * This component encapsules the center area of the settings dialog. It contains some
+ * toolbar buttons at the top, the menu preview in the center, and the item types at the
+ * bottom.
+ */
 export default () => {
   const [draggedItemType, setDraggedItemType] = React.useState('');
 

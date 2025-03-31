@@ -27,7 +27,8 @@ interface IProps {
 }
 
 /**
- * A customizable color button component.
+ * A customizable color button component. Once clicked, a popover will open with a color
+ * picker and an input field to enter a color.
  *
  * @param props - The properties for the color button component.
  * @returns A color button element.

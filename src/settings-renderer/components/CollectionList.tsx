@@ -20,10 +20,16 @@ import { useAppState, useMenuSettings } from '../state';
 import Scrollbox from './widgets/Scrollbox';
 import ThemedIcon from './widgets/ThemedIcon';
 
+/**
+ * This is a vertical list of buttons, one for each configured menu collection. They can
+ * be reordered via drag and drop and deleted with a little trash icon.
+ *
+ * In addition, there is show-all-menus button at the top, and an add-new-collection
+ * button at the bottom. They are always there, even if no collection is configured.
+ */
 export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const editMenu = useMenuSettings((state) => state.editMenu);
-
   const collections = useMenuSettings((state) => state.collections);
   const deleteCollection = useMenuSettings((state) => state.deleteCollection);
   const addCollection = useMenuSettings((state) => state.addCollection);
@@ -39,6 +45,7 @@ export default () => {
   const endDrag = useAppState((state) => state.endDrag);
   const moveCollection = useMenuSettings((state) => state.moveCollection);
 
+  // Animate the addition and removal of collections.
   const [animatedList] = useAutoAnimate();
 
   // Make sure that the selected collection is valid. This could for instance happen if

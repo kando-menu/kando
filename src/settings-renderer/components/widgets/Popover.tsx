@@ -18,8 +18,10 @@ interface IProps {
   /** Whether the modal is visible. */
   visible: boolean;
 
-  /** Called when the user clicks outside the popover area. */
-  onClickOutside: () => void;
+  /**
+   * Called when the popover should be closed. This is the case when the user clicks
+   * outside the popover area or presses ESC.
+   */
 
   /** Content to display inside the popover. */
   content: React.ReactNode;
@@ -35,7 +37,8 @@ interface IProps {
  * A simple popover component. When props.visible becomes true, the popover will be faded
  * in with a CSS transition. When it becomes false, the popover will be faded out and its
  * content will be unmounted. The popover will be mounted to the body element and
- * positioned relative to the children of the Popover component.
+ * positioned relative to the children of the Popover component. The content of the
+ * popover is given via the content property.
  *
  * @param props - The properties for the modal component.
  * @returns A popover element.
@@ -45,6 +48,7 @@ export default (props: IProps) => {
   const popoverTriangle = React.useRef(null);
   const popoverTarget = React.useRef(null);
 
+  // Show the popover if props.visible is true.
   React.useEffect(() => {
     if (!props.visible) {
       return;
