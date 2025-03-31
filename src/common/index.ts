@@ -691,6 +691,12 @@ export interface IAppSettings {
    * https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
    */
   gamepadCloseButton: number;
+
+  /**
+   * If enabled, pressing 'cmd + ,' on macOS or 'ctrl + ,' on Linux or Windows will open
+   * the settings window. If disabled, the default hotkey will be ignored.
+   */
+  useDefaultOsShowSettingsHotkey: boolean;
 }
 
 /**
@@ -731,6 +737,7 @@ export function getDefaultAppSettings(): IAppSettings {
     enableGamepad: true,
     gamepadBackButton: 1,
     gamepadCloseButton: 2,
+    useDefaultOsShowSettingsHotkey: true,
     hideSettingsButton: false,
     settingsButtonPosition: 'bottom-right',
   };
