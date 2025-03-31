@@ -91,7 +91,7 @@ export default (props: IProps) => {
   return (
     <Popover
       visible={isPopoverOpen}
-      onClickOutside={() => setIsPopoverOpen(false)}
+      onClose={() => setIsPopoverOpen(false)}
       position="bottom"
       content={
         <div className={classes.container}>

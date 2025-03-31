@@ -22,6 +22,7 @@ interface IProps {
    * Called when the popover should be closed. This is the case when the user clicks
    * outside the popover area or presses ESC.
    */
+  onClose: () => void;
 
   /** Content to display inside the popover. */
   content: React.ReactNode;
@@ -91,13 +92,26 @@ export default (props: IProps) => {
         popoverTarget.current &&
         !popoverTarget.current.contains(event.target as Node)
       ) {
-        props.onClickOutside();
+        props.onClose();
+      }
+    };
+
+    // Dismiss the popover when the user presses ESC.
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        props.onClose();
+      }
+    };
       }
     };
 
     document.addEventListener('pointerup', handleClick);
-    return () => document.removeEventListener('pointerup', handleClick);
-  }, [props.onClickOutside, props.visible]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerup', handleClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [props.onClose, props.visible]);
 
   return (
     <>

@@ -46,7 +46,7 @@ export default (props: IProps) => {
   return (
     <Popover
       visible={isPopoverOpen}
-      onClickOutside={() => {
+      onClose={() => {
         if (props.onChange) {
           props.onChange(cssColor);
         }
