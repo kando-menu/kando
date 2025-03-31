@@ -66,12 +66,18 @@ Promise.all([
     settings
   );
 
-  // Show the settings dialog when the button is clicked.
-  settingsButton.on('click', () => {
+  // Helper function to group and re-use function calls
+  // associated with showing the settings window.
+  const showSettings = () => {
     menu.hide();
     settingsButton.hide();
     window.menuAPI.cancelSelection();
     window.menuAPI.showSettings();
+  };
+
+  // Show the settings dialog when the button is clicked.
+  settingsButton.on('click', () => {
+    showSettings();
   });
 
   // Now, we create the menu. It will be responsible for drawing the menu and handling
@@ -137,12 +143,21 @@ Promise.all([
   // Report unhover events to the main process.
   menu.on('unhover', (path) => window.menuAPI.unhoverItem(path));
 
-  // Hide the menu when the user presses escape.
-  document.body.addEventListener('keydown', (ev) => {
+  document.body.addEventListener('keydown', async (ev) => {
+    // Hide the menu when the user presses escape.
     if (ev.key === 'Escape') {
       menu.hide();
       settingsButton.hide();
       window.menuAPI.cancelSelection();
+    }
+
+    // Show the settings window if 'cmd + ,' hotkey is pressed on macOS
+    // or 'ctrl + ,' is pressed on non macOS systems.
+    const keyIsComma = ev.key === ',';
+    if ((ev.metaKey && keyIsComma && cIsMac) || (ev.ctrlKey && keyIsComma && !cIsMac)) {
+      if ((await window.commonAPI.appSettings.get()).useDefaultOsShowSettingsHotkey) {
+        showSettings();
+      }
     }
   });
 
