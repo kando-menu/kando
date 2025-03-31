@@ -102,11 +102,10 @@ export default (props: IProps) => {
         props.onClose();
       }
     };
-      }
-    };
 
     document.addEventListener('pointerup', handleClick);
     document.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.removeEventListener('pointerup', handleClick);
       document.removeEventListener('keydown', handleKeyDown);
