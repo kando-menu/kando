@@ -18,6 +18,7 @@ import { SubmenuItemType } from './item-types/submenu-item-type';
 import { TextItemType } from './item-types/text-item-type';
 import { URIItemType } from './item-types/uri-item-type';
 import { RedirectItemType } from './item-types/redirect-item-type';
+import { SettingsItemType } from './item-types/settings-item-type';
 
 /**
  * This interface describes meta information about a menu-item type. Every available type
@@ -81,6 +82,7 @@ export class ItemTypeRegistry {
     this.types.set('text', new TextItemType());
     this.types.set('uri', new URIItemType());
     this.types.set('redirect', new RedirectItemType());
+    this.types.set('settings', new SettingsItemType());
   }
 
   /**
