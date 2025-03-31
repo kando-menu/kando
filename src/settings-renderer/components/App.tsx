@@ -69,7 +69,7 @@ export default () => {
         delayShow={0}
         openEvents={{ click: true }}
         closeEvents={{ click: true }}
-        globalCloseEvents={{ escape: true }}
+        globalCloseEvents={{ escape: true, clickOutsideAnchor: true }}
       />
     </>
   );
