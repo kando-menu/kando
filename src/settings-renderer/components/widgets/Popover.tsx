@@ -103,12 +103,31 @@ export default (props: IProps) => {
       }
     };
 
+    // Get the first focusable element inside the popover when it becomes visible.
+    const focusableElements = popoverContent.current?.querySelectorAll(
+      'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusableElement = focusableElements?.[0] as HTMLElement;
+
+    // Trap focus within the popover.
+    const handleFocusIn = (event: FocusEvent) => {
+      if (
+        popoverContent.current &&
+        !popoverContent.current.contains(event.target as Node)
+      ) {
+        // Redirect focus back to the first focusable element.
+        firstFocusableElement?.focus();
+      }
+    };
+
     document.addEventListener('pointerup', handleClick);
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('focusin', handleFocusIn);
 
     return () => {
       document.removeEventListener('pointerup', handleClick);
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('focusin', handleFocusIn);
     };
   }, [props.onClose, props.visible]);
 
