@@ -21,9 +21,10 @@
     height: 100cqmin;
 
     .child,
-    .center {
+    .center,
+    .backLink {
       position: absolute;
-      padding: 1%;
+      padding: 1cqmin;
       aspect-ratio: 1;
 
       border-radius: 50cqmin;
@@ -63,6 +64,58 @@
 
       &:active {
         top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
+      }
+    }
+
+    .backLink {
+      position: relative;
+      width: 10cqmin;
+      padding: 0;
+
+      left: calc(50cqmin + 30cqmin * var(--dir-x));
+      top: calc(50cqmin + 30cqmin * var(--dir-y));
+
+      transform: translate(-50%, -50%) rotate(var(--angle));
+
+      &:active {
+        top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
+      }
+
+      // The ::before and ::after pseudo elements are used to draw the backlink line.
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        height: 4cqmin;
+        top: 3cqmin;
+      }
+
+      // The outer part.
+      &::before {
+        width: 12cqmin;
+        right: -12cqmin;
+
+        background: linear-gradient(
+          to left,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.1) 25%,
+          rgba(0, 0, 0, 0.1) 85%,
+          rgba(0, 0, 0, 0) 100%
+        );
+      }
+
+      // The inner part.
+      &::after {
+        width: 10cqmin;
+        left: -10cqmin;
+
+        background: linear-gradient(
+          to left,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.1) 15%,
+          rgba(0, 0, 0, 0.1) 75%,
+          rgba(0, 0, 0, 0) 100%
+        );
       }
     }
   }

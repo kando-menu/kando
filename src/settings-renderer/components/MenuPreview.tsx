@@ -10,6 +10,7 @@
 
 import React from 'react';
 import classNames from 'classnames/bind';
+import { TbChevronLeft } from 'react-icons/tb';
 
 import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
@@ -49,6 +50,8 @@ export default () => {
   // or the root menu is selected, the index is -1.
   let centerItem = menu.root;
   let selectedChild = -1;
+  let isRoot = true;
+  let parentAngle = 0;
   let childAngles = math.computeItemAngles(centerItem.children);
 
   for (let i = 0; i < selectedChildPath.length; i++) {
@@ -56,11 +59,10 @@ export default () => {
     const child = centerItem.children[childIndex];
     const type = ItemTypeRegistry.getInstance().getType(child.type);
     if (type?.hasChildren) {
+      isRoot = false;
+      parentAngle = (childAngles[childIndex] + 180) % 360;
       centerItem = child;
-      childAngles = math.computeItemAngles(
-        centerItem.children,
-        (childAngles[childIndex] + 180) % 360
-      );
+      childAngles = math.computeItemAngles(centerItem.children, parentAngle);
     } else {
       selectedChild = childIndex;
       break;
@@ -97,11 +99,32 @@ export default () => {
   };
 
   const childDirections = childAngles.map((angle) => math.getDirection(angle, 1));
+  const parentDirection = math.getDirection(parentAngle, 1);
 
   return (
     <div className={classes.previewArea}>
       <div className={classes.preview}>
-        <button onClick={() => selectParent()}>Select Parent</button>
+        {!isRoot && (
+          <div
+            className={classes.backLink}
+            onClick={() => selectParent()}
+            style={
+              {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                '--dir-x': parentDirection.x,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                '--dir-y': parentDirection.y,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                '--angle': `${parentAngle - 90}deg`,
+              } as React.CSSProperties
+            }>
+            <ThemedIcon
+              size="100%"
+              theme="material-symbols-rounded"
+              name="chevron_right"
+            />
+          </div>
+        )}
         <div
           className={cx({
             center: true,
