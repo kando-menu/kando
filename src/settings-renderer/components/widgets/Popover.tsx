@@ -141,7 +141,10 @@ export default (props: IProps) => {
           // The modal CSS class uses a 200ms transition when fading in and out, so we set the
           // timeout to 200ms to match this.
           timeout={200}
-          classNames="popover"
+          classNames={{
+            enter: classes.fadeEnter,
+            enterDone: classes.fadeEnterDone,
+          }}
           unmountOnExit>
           <div ref={popoverContent} className={classes.popover}>
             <div ref={popoverTriangle} className={classes.popoverTriangle} />

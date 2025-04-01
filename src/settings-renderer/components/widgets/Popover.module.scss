@@ -42,8 +42,8 @@
   }
 }
 
-:global(.popover-enter),
-:global(.popover-enter-done) {
+.fadeEnter,
+.fadeEnterDone {
   &.popover {
     opacity: 1;
   }

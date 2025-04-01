@@ -27,8 +27,8 @@
   opacity: 0;
 }
 
-:global(.modal-enter),
-:global(.modal-enter-done) {
+.fadeEnter,
+.fadeEnterDone {
   &.modalBackground {
     opacity: 1;
   }
