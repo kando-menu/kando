@@ -10,7 +10,7 @@
 
 import React from 'react';
 import classNames from 'classnames/bind';
-import { TbChevronLeft } from 'react-icons/tb';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
@@ -27,6 +27,9 @@ import { ItemTypeRegistry } from '../../common/item-type-registry';
  * items.
  */
 export default () => {
+  const [transitionKey, setTransitionKey] = React.useState<string>('');
+  const nodeRefs = React.useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({});
+
   const dnd = useAppState((state) => state.dnd);
   const startDrag = useAppState((state) => state.startDrag);
   const endDrag = useAppState((state) => state.endDrag);
@@ -72,10 +75,23 @@ export default () => {
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
   const selectChild = (which: number) => {
+    let newPath = [];
+
     if (selectedChild === -1) {
-      selectChildPath([...selectedChildPath, which]);
+      newPath = selectedChildPath.concat(which);
     } else {
-      selectChildPath([...selectedChildPath.slice(0, -1), which]);
+      newPath = selectedChildPath.slice(0, -1).concat(which);
+    }
+
+    selectChildPath(newPath);
+
+    // If the selected child is a submenu, we need to trigger a transition by changing
+    // the key of the CSSTransition component.
+    const child = centerItem.children[which];
+    const type = ItemTypeRegistry.getInstance().getType(child.type);
+    console.log('selected', child.type);
+    if (type?.hasChildren) {
+      setTransitionKey(newPath.join(''));
     }
   };
 
@@ -91,73 +107,103 @@ export default () => {
   // refers to an item, the last two indices are removed so that the parent submenu is
   // selected.
   const selectParent = () => {
+    let newPath = [];
+
     if (selectedChild === -1) {
-      selectChildPath(selectedChildPath.slice(0, -1));
+      newPath = selectedChildPath.slice(0, -1);
     } else {
-      selectChildPath(selectedChildPath.slice(0, -2));
+      newPath = selectedChildPath.slice(0, -2);
     }
+    selectChildPath(newPath);
+
+    // Trigger a transition by changing the key of the CSSTransition component.
+    setTransitionKey(newPath.join(''));
   };
 
   const childDirections = childAngles.map((angle) => math.getDirection(angle, 1));
   const parentDirection = math.getDirection(parentAngle, 1);
 
+  // Ensure a unique ref exists for the current transition key
+  if (!nodeRefs.current[transitionKey]) {
+    nodeRefs.current[transitionKey] = React.createRef();
+  }
+
   return (
     <div className={classes.previewArea}>
       <div className={classes.preview}>
-        {!isRoot && (
-          <div
-            className={classes.backLink}
-            onClick={() => selectParent()}
-            style={
-              {
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                '--dir-x': parentDirection.x,
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                '--dir-y': parentDirection.y,
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                '--angle': `${parentAngle - 90}deg`,
-              } as React.CSSProperties
-            }>
-            <ThemedIcon
-              size="100%"
-              theme="material-symbols-rounded"
-              name="chevron_right"
-            />
-          </div>
-        )}
-        <div
-          className={cx({
-            center: true,
-            selected: selectedChild === -1,
-          })}
-          onClick={() => selectCenter()}>
-          <ThemedIcon size={'100%'} theme={centerItem.iconTheme} name={centerItem.icon} />
-        </div>
-        {centerItem.children.map((child, index) => {
-          return (
-            <div
-              key={index}
-              className={cx({
-                child: true,
-                selected: selectedChild === index,
-                dragging: dnd.draggedType === 'item' && dnd.draggedIndex === index,
+        <TransitionGroup>
+          <CSSTransition
+            key={transitionKey}
+            nodeRef={nodeRefs.current[transitionKey]}
+            timeout={300}
+            classNames={{
+              enter: classes.fadeEnter,
+              enterActive: classes.fadeEnterActive,
+              exit: classes.fadeExit,
+              exitActive: classes.fadeExitActive,
+            }}>
+            <div ref={nodeRefs.current[transitionKey]}>
+              {!isRoot && (
+                <div
+                  className={classes.backLink}
+                  onClick={() => selectParent()}
+                  style={
+                    {
+                      // eslint-disable-next-line @typescript-eslint/naming-convention
+                      '--dir-x': parentDirection.x,
+                      // eslint-disable-next-line @typescript-eslint/naming-convention
+                      '--dir-y': parentDirection.y,
+                      // eslint-disable-next-line @typescript-eslint/naming-convention
+                      '--angle': `${parentAngle - 90}deg`,
+                    } as React.CSSProperties
+                  }>
+                  <ThemedIcon
+                    size="100%"
+                    theme="material-symbols-rounded"
+                    name="chevron_right"
+                  />
+                </div>
+              )}
+              <div
+                className={cx({
+                  center: true,
+                  selected: selectedChild === -1,
+                })}
+                onClick={() => selectCenter()}>
+                <ThemedIcon
+                  size={'100%'}
+                  theme={centerItem.iconTheme}
+                  name={centerItem.icon}
+                />
+              </div>
+              {centerItem.children.map((child, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={cx({
+                      child: true,
+                      selected: selectedChild === index,
+                      dragging: dnd.draggedType === 'item' && dnd.draggedIndex === index,
+                    })}
+                    draggable
+                    onDragStart={() => startDrag('item', index)}
+                    onDragEnd={() => endDrag()}
+                    onClick={() => selectChild(index)}
+                    style={
+                      {
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        '--dir-x': childDirections[index].x,
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        '--dir-y': childDirections[index].y,
+                      } as React.CSSProperties
+                    }>
+                    <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
+                  </div>
+                );
               })}
-              draggable
-              onDragStart={() => startDrag('item', index)}
-              onDragEnd={() => endDrag()}
-              onClick={() => selectChild(index)}
-              style={
-                {
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  '--dir-x': childDirections[index].x,
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  '--dir-y': childDirections[index].y,
-                } as React.CSSProperties
-              }>
-              <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
             </div>
-          );
-        })}
+          </CSSTransition>
+        </TransitionGroup>
       </div>
     </div>
   );
