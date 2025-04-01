@@ -1,0 +1,69 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+.previewArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  container-type: size;
+
+  .preview {
+    position: relative;
+    width: 100cqmin;
+    height: 100cqmin;
+
+    .child,
+    .center {
+      position: absolute;
+      padding: 1%;
+      aspect-ratio: 1;
+
+      border-radius: 50cqmin;
+      background-color: rgba(0, 0, 0, 0.2);
+
+      transform: translate(-50%, -50%);
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      &.selected {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    .center {
+      width: 25cqmin;
+      top: 50cqmin;
+      left: 50cqmin;
+
+      &:active {
+        top: calc(50cqmin + 1px);
+      }
+    }
+
+    .child {
+      width: 12cqmin;
+
+      left: calc(50cqmin + 30cqmin * var(--dir-x));
+      top: calc(50cqmin + 30cqmin * var(--dir-y));
+
+      &.dragging {
+        opacity: 0.3;
+        filter: blur(2px);
+      }
+
+      &:active {
+        top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
+      }
+    }
+  }
+}

@@ -26,6 +26,18 @@
   }
 }
 
+.previewArea {
+  flex-grow: 1;
+  min-width: 400px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color-scheme: only light;
+  color: #eee;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 :global(.react-tooltip) {
   z-index: 1000;
 }

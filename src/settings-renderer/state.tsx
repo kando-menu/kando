@@ -267,6 +267,14 @@ type AppState = {
   selectedMenu: number;
 
   /**
+   * A list of indices that represent the path to the currently selected menu. The first
+   * number is the index among the root's children. If empty, the root menu is selected.
+   * All indices should refer to submenus, except the last one which can be a submenu or
+   * an item.
+   */
+  selectedChildPath: number[];
+
+  /**
    * The index of the currently selected menu collection. The special value of -1 means
    * that no collection is selected and all menus are shown.
    */
@@ -301,7 +309,7 @@ type AppState = {
 
   /** The current state of the drag and drop system. */
   dnd: {
-    draggedType: 'menu' | 'item' | 'collection' | 'none';
+    draggedType: 'menu' | 'item' | 'new-item' | 'collection' | 'none';
     draggedIndex: number;
   };
 };
@@ -311,17 +319,28 @@ type AppStateActions = {
   /**
    * Selects the given menu. This is the index in the entire list of unfiltered menus.
    *
-   * @param which The index of the menu to select.
+   * @param selectedMenu The index of the menu to select.
    */
-  selectMenu: (which: number) => void;
+  selectMenu: (selectedMenu: number) => void;
+
+  /**
+   * Selects a (sub)child of the currently selected menu. The argument is a list of
+   * indices that represent the path to the currently selected child. The first number is
+   * the index among the root's children. If empty, the root menu is selected. All indices
+   * should refer to submenus, except the last one which can be a submenu or another
+   * item.
+   *
+   * @param selectedChildPath The path to the selected child.
+   */
+  selectChildPath: (selectedChildPath: number[]) => void;
 
   /**
    * Selects the given collection. The special value of -1 means that no collection is
    * selected and all menus are shown.
    *
-   * @param which The index of the collection to select. -1 means all menus.
+   * @param selectedCollection The index of the collection to select. -1 means all menus.
    */
-  selectCollection: (which: number) => void;
+  selectCollection: (selectedCollection: number) => void;
 
   /**
    * Shows or hides the about dialog.
@@ -365,7 +384,7 @@ type AppStateActions = {
    * @param type The type of the dragged thing.
    * @param index The index of the thing in it respective list.
    */
-  startDrag: (type: 'menu' | 'item' | 'collection', index: number) => void;
+  startDrag: (type: 'menu' | 'item' | 'new-item' | 'collection', index: number) => void;
 
   /**
    * This should be called when the drag operation ended. It resets the dragged thing in
@@ -377,6 +396,7 @@ type AppStateActions = {
 /** This is the state of the settings dialog itself. */
 export const useAppState = create<AppState & AppStateActions>((set) => ({
   selectedMenu: 0,
+  selectedChildPath: [],
   selectedCollection: -1,
   collectionDetailsVisible: false,
   menuSearchBarVisible: false,
@@ -391,7 +411,8 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
     draggedType: 'none',
     draggedIndex: -1,
   },
-  selectMenu: (selectedMenu: number) => set({ selectedMenu }),
+  selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),
+  selectChildPath: (selectedChildPath: number[]) => set({ selectedChildPath }),
   selectCollection: (selectedCollection: number) => set({ selectedCollection }),
   setAboutDialogVisible: (aboutDialogVisible: boolean) => set({ aboutDialogVisible }),
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
@@ -401,7 +422,9 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
     set({ collectionDetailsVisible }),
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) =>
     set({ menuSearchBarVisible }),
-  startDrag: (draggedType: 'menu' | 'item' | 'collection', draggedIndex: number) =>
-    set({ dnd: { draggedType, draggedIndex } }),
+  startDrag: (
+    draggedType: 'menu' | 'item' | 'new-item' | 'collection',
+    draggedIndex: number
+  ) => set({ dnd: { draggedType, draggedIndex } }),
   endDrag: () => set({ dnd: { draggedType: 'none', draggedIndex: -1 } }),
 }));

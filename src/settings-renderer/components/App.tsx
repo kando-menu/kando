@@ -19,7 +19,9 @@ import GeneralSettingsDialog from './GeneralSettingsDialog';
 import MenuThemesDialog from './MenuThemesDialog';
 
 import Sidebar from './widgets/Sidebar';
-import Preview from './Preview';
+import MenuPreview from './MenuPreview';
+import PreviewHeader from './PreviewHeader';
+import PreviewFooter from './PreviewFooter';
 import Properties from './Properties';
 import MenuList from './MenuList';
 import CollectionList from './CollectionList';
@@ -47,7 +49,11 @@ export default () => {
           <CollectionList />
           <MenuList />
         </Sidebar>
-        <Preview />
+        <div className={classes.previewArea}>
+          <PreviewHeader />
+          <MenuPreview />
+          <PreviewFooter />
+        </div>
         <Sidebar position="right" mainDirection="column">
           <Properties />
         </Sidebar>

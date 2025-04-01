@@ -8,31 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-.container {
-  flex-grow: 1;
-  min-width: 400px;
-  background-color: rgba(255, 255, 255, 0.5);
-  color-scheme: only light;
-  color: #eee;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.previewArea {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  container-type: size;
-
-  .preview {
-    width: 100cqmin;
-    height: 100cqmin;
-  }
-}
-
 .itemArea {
   display: flex;
   flex-direction: column;
@@ -81,15 +56,16 @@
     margin-bottom: -80px;
   }
 
-  .items {
+  .newItems {
     word-wrap: break-word;
     text-align: center;
     padding: 10px;
 
-    .item {
+    .newItem {
       display: inline-block;
       cursor: grab;
       border-radius: 50%;
+      padding: 1%;
       width: min(calc(20px + 2vw), 50px);
       margin: 5px min(calc(4px + 0.4vw), 10px);
       aspect-ratio: 1;
