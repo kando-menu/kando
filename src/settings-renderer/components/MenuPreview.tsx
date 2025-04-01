@@ -49,14 +49,20 @@ export default () => {
   // or the root menu is selected, the index is -1.
   let centerItem = menu.root;
   let selectedChild = -1;
+  let childAngles = math.computeItemAngles(centerItem.children);
 
   for (let i = 0; i < selectedChildPath.length; i++) {
-    const child = centerItem.children[selectedChildPath[i]];
+    const childIndex = selectedChildPath[i];
+    const child = centerItem.children[childIndex];
     const type = ItemTypeRegistry.getInstance().getType(child.type);
     if (type?.hasChildren) {
       centerItem = child;
+      childAngles = math.computeItemAngles(
+        centerItem.children,
+        (childAngles[childIndex] + 180) % 360
+      );
     } else {
-      selectedChild = selectedChildPath[i];
+      selectedChild = childIndex;
       break;
     }
   }
@@ -90,10 +96,6 @@ export default () => {
     }
   };
 
-  console.log('center angle', centerItem.angle);
-
-  const children = centerItem.children;
-  const childAngles = math.computeItemAngles(children, centerItem.angle);
   const childDirections = childAngles.map((angle) => math.getDirection(angle, 1));
 
   return (
@@ -108,7 +110,7 @@ export default () => {
           onClick={() => selectCenter()}>
           <ThemedIcon size={'100%'} theme={centerItem.iconTheme} name={centerItem.icon} />
         </div>
-        {children.map((child, index) => {
+        {centerItem.children.map((child, index) => {
           return (
             <div
               key={index}
