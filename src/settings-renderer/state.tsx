@@ -301,7 +301,7 @@ type AppState = {
 
   /** The current state of the drag and drop system. */
   dnd: {
-    draggedType: 'menu' | 'collection' | 'none';
+    draggedType: 'menu' | 'item' | 'collection' | 'none';
     draggedIndex: number;
   };
 };
@@ -365,7 +365,7 @@ type AppStateActions = {
    * @param type The type of the dragged thing.
    * @param index The index of the thing in it respective list.
    */
-  startDrag: (type: 'menu' | 'collection', index: number) => void;
+  startDrag: (type: 'menu' | 'item' | 'collection', index: number) => void;
 
   /**
    * This should be called when the drag operation ended. It resets the dragged thing in
@@ -401,7 +401,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
     set({ collectionDetailsVisible }),
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) =>
     set({ menuSearchBarVisible }),
-  startDrag: (draggedType: 'menu' | 'collection', draggedIndex: number) =>
+  startDrag: (draggedType: 'menu' | 'item' | 'collection', draggedIndex: number) =>
     set({ dnd: { draggedType, draggedIndex } }),
   endDrag: () => set({ dnd: { draggedType: 'none', draggedIndex: -1 } }),
 }));

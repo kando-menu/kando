@@ -14,6 +14,7 @@ import classNames from 'classnames/bind';
 import * as classes from './Preview.module.scss';
 const cx = classNames.bind(classes);
 
+import { useAppState, useMenuSettings } from '../state';
 import { ItemTypeRegistry } from '../../common/item-type-registry';
 import PreviewHeaderbar from './PreviewHeaderbar';
 import ThemedIcon from './widgets/ThemedIcon';
@@ -24,7 +25,12 @@ import ThemedIcon from './widgets/ThemedIcon';
  * bottom.
  */
 export default () => {
-  const [draggedItemType, setDraggedItemType] = React.useState('');
+  const dnd = useAppState((state) => state.dnd);
+  const startDrag = useAppState((state) => state.startDrag);
+  const endDrag = useAppState((state) => state.endDrag);
+
+  const menus = useMenuSettings((state) => state.menus);
+  const selectedMenu = useAppState((state) => state.selectedMenu);
 
   const itemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
 
@@ -42,20 +48,20 @@ export default () => {
         </div>
         <div className={classes.shadow}></div>
         <div className={classes.items}>
-          {itemTypes.map(([name, type]) => (
+          {itemTypes.map(([name, type], index) => (
             <div
               key={name}
               className={cx({
                 item: true,
-                dragging: draggedItemType === name,
+                dragging: dnd.draggedType === 'item' && dnd.draggedIndex === index,
               })}
               data-tooltip-id="click-to-show-tooltip"
               data-tooltip-html={
                 '<strong>' + type.defaultName + '</strong><br>' + type.genericDescription
               }
               draggable
-              onDragStart={() => setDraggedItemType(name)}
-              onDragEnd={() => setDraggedItemType('')}>
+              onDragStart={() => startDrag('item', index)}
+              onDragEnd={() => endDrag()}>
               <ThemedIcon
                 size={'100%'}
                 name={type.defaultIcon}
