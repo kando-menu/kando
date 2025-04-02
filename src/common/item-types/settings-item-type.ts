@@ -10,7 +10,6 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 /** This class provides meta information for the open settings menu item. */
@@ -39,9 +38,7 @@ export class SettingsItemType implements IItemType {
     return i18next.t('items.settings.description');
   }
 
-  getDescription(item: IMenuItem): string {
-    if (item.data == null) {
-      return i18next.t('items.settings.description');
-    }
+  getDescription(): string {
+    return i18next.t('items.settings.description');
   }
 }

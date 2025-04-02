@@ -10,7 +10,6 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
 
 /**
@@ -26,9 +25,7 @@ export class SettingsItemConfig implements IItemConfig {
   }
 
   /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    if (item.data == null) {
-      return null;
-    }
+  public getConfigWidget(): DocumentFragment | null {
+    return null;
   }
 }
