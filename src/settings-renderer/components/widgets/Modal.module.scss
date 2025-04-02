@@ -47,8 +47,8 @@
   transition: transform 200ms;
 }
 
-:global(.modal-enter),
-:global(.modal-enter-done) {
+.fadeEnter,
+.fadeEnterDone {
   .modal {
     transform: translateY(-10px);
   }
