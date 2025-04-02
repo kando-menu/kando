@@ -27,8 +27,9 @@ import { ItemTypeRegistry } from '../../common/item-type-registry';
  * items.
  */
 export default () => {
-  const [transitionKey, setTransitionKey] = React.useState<string>('');
-  const nodeRefs = React.useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({});
+  const [transitionPing, setTransitionPing] = React.useState(false);
+  const pingRef = React.useRef(null);
+  const pongRef = React.useRef(null);
 
   const dnd = useAppState((state) => state.dnd);
   const startDrag = useAppState((state) => state.startDrag);
@@ -75,23 +76,18 @@ export default () => {
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
   const selectChild = (which: number) => {
-    let newPath = [];
-
     if (selectedChild === -1) {
-      newPath = selectedChildPath.concat(which);
+      selectChildPath(selectedChildPath.concat(which));
     } else {
-      newPath = selectedChildPath.slice(0, -1).concat(which);
+      selectChildPath(selectedChildPath.slice(0, -1).concat(which));
     }
-
-    selectChildPath(newPath);
 
     // If the selected child is a submenu, we need to trigger a transition by changing
     // the key of the CSSTransition component.
     const child = centerItem.children[which];
     const type = ItemTypeRegistry.getInstance().getType(child.type);
-    console.log('selected', child.type);
     if (type?.hasChildren) {
-      setTransitionKey(newPath.join(''));
+      setTransitionPing(!transitionPing);
     }
   };
 
@@ -107,34 +103,26 @@ export default () => {
   // refers to an item, the last two indices are removed so that the parent submenu is
   // selected.
   const selectParent = () => {
-    let newPath = [];
-
     if (selectedChild === -1) {
-      newPath = selectedChildPath.slice(0, -1);
+      selectChildPath(selectedChildPath.slice(0, -1));
     } else {
-      newPath = selectedChildPath.slice(0, -2);
+      selectChildPath(selectedChildPath.slice(0, -2));
     }
-    selectChildPath(newPath);
 
     // Trigger a transition by changing the key of the CSSTransition component.
-    setTransitionKey(newPath.join(''));
+    setTransitionPing(!transitionPing);
   };
 
   const childDirections = childAngles.map((angle) => math.getDirection(angle, 1));
   const parentDirection = math.getDirection(parentAngle, 1);
-
-  // Ensure a unique ref exists for the current transition key
-  if (!nodeRefs.current[transitionKey]) {
-    nodeRefs.current[transitionKey] = React.createRef();
-  }
 
   return (
     <div className={classes.previewArea}>
       <div className={classes.preview}>
         <TransitionGroup>
           <CSSTransition
-            key={transitionKey}
-            nodeRef={nodeRefs.current[transitionKey]}
+            key={transitionPing ? 'ping' : 'pong'}
+            nodeRef={transitionPing ? pingRef : pongRef}
             timeout={300}
             classNames={{
               enter: classes.fadeEnter,
@@ -142,7 +130,7 @@ export default () => {
               exit: classes.fadeExit,
               exitActive: classes.fadeExitActive,
             }}>
-            <div ref={nodeRefs.current[transitionKey]}>
+            <div ref={transitionPing ? pingRef : pongRef}>
               {!isRoot && (
                 <div
                   className={classes.backLink}
