@@ -139,6 +139,11 @@
       "name": "Paste Text",
       "description": "Inserts the given text."
     },
+    "settings": {
+      "tip-1": "This action opens the Kando settings window.",
+      "name": "Open Settings",
+      "description": "Opens the Kando settings window."
+    },
     "uri": {
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
       "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",

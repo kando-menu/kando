@@ -19,6 +19,7 @@ import { TextItemAction } from './item-types/text-item-action';
 import { URIItemAction } from './item-types/uri-item-action';
 import { RedirectItemAction } from './item-types/redirect-item-action';
 import { DeepReadonly } from '../main/utils/settings';
+import { SettingsItemAction } from './item-types/settings-item-action';
 
 /**
  * This interface describes the action of a menu item. The action is what happens when the
@@ -71,6 +72,7 @@ export class ItemActionRegistry {
     this.actions.set('text', new TextItemAction());
     this.actions.set('uri', new URIItemAction());
     this.actions.set('redirect', new RedirectItemAction());
+    this.actions.set('settings', new SettingsItemAction());
   }
 
   /**

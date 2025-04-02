@@ -17,6 +17,7 @@ import { MacroItemConfig } from './item-types/macro-item-config';
 import { TextItemConfig } from './item-types/text-item-config';
 import { URIItemConfig } from './item-types/uri-item-config';
 import { RedirectItemConfig } from './item-types/redirect-item-config';
+import { SettingsItemConfig } from './item-types/settings-item-config';
 
 /**
  * This interface is required for generating the configuration widget for a specific item
@@ -66,6 +67,7 @@ export class ItemConfigRegistry {
     this.configs.set('text', new TextItemConfig());
     this.configs.set('uri', new URIItemConfig());
     this.configs.set('redirect', new RedirectItemConfig());
+    this.configs.set('settings', new SettingsItemConfig());
   }
 
   /**
