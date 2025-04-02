@@ -45,13 +45,6 @@ export default () => {
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
 
-  // Make sure that the selected menu is valid. This could for instance happen if
-  // the currently selected menu is deleted by an external event (e.g. by editing
-  // the settings file) or by re-doing a previously undone deletion :).
-  if (selectedMenu >= menus.length) {
-    selectMenu(menus.length - 1);
-  }
-
   const backend = useAppState((state) => state.backendInfo);
 
   // Animate the filtering, addition, and removal of menus.
@@ -61,6 +54,15 @@ export default () => {
   const startDrag = useAppState((state) => state.startDrag);
   const endDrag = useAppState((state) => state.endDrag);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
+
+  // Make sure that the selected menu is valid. This could for instance happen if
+  // the currently selected menu is deleted by an external event (e.g. by editing
+  // the settings file) or by re-doing a previously undone deletion :).
+  React.useEffect(() => {
+    if (selectedMenu >= menus.length) {
+      selectMenu(menus.length - 1);
+    }
+  }, [selectedMenu, menus]);
 
   // Compile a list of all menus which are currently visible. This is done by first
   // filtering the menus by the selected collection and then by the filter term. The
