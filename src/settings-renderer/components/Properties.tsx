@@ -28,17 +28,27 @@ import Swirl from './widgets/Swirl';
 export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
+  const selectedChildPath = useAppState((state) => state.selectedChildPath);
   const duplicateMenu = useMenuSettings((state) => state.duplicateMenu);
   const deleteMenu = useMenuSettings((state) => state.deleteMenu);
   const editMenu = useMenuSettings((state) => state.editMenu);
+  const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const menuCollections = useMenuSettings((state) => state.collections);
-
   const [menuTags, setMenuTags] = React.useState([]);
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
     setMenuTags(menus[selectedMenu]?.tags || []);
   }, [selectedMenu, menus]);
+
+  if (selectedMenu === -1 || selectedMenu >= menus.length) {
+    return (
+      <>
+        <Headerbar />
+        <div className={classes.properties}></div>
+      </>
+    );
+  }
 
   // Accumulate a list of all tags which are currently used in our collections and menus.
   let allAvailableTags = menuCollections
@@ -50,13 +60,11 @@ export default () => {
   // Remove duplicates.
   allAvailableTags = Array.from(new Set(allAvailableTags));
 
-  if (selectedMenu === -1) {
-    return (
-      <>
-        <Headerbar />
-        <div className={classes.properties}></div>
-      </>
-    );
+  let selectedItem = menus[selectedMenu].root;
+  let isRoot = true;
+  for (let i = 0; i < selectedChildPath.length; i++) {
+    selectedItem = selectedItem.children[selectedChildPath[i]];
+    isRoot = false;
   }
 
   return (
@@ -68,32 +76,35 @@ export default () => {
             iconSize="4em"
             variant="flat"
             buttonSize="large"
-            icon={menus[selectedMenu]?.root.icon}
-            theme={menus[selectedMenu]?.root.iconTheme}
+            icon={selectedItem.icon}
+            theme={selectedItem.iconTheme}
             onChange={(icon, theme) => {
-              editMenu(selectedMenu, (menu) => {
-                menu.root.icon = icon;
-                menu.root.iconTheme = theme;
-                return menu;
+              editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                item.icon = icon;
+                item.iconTheme = theme;
+                return item;
               });
             }}
           />
         </div>
-        <div className={classes.name}>
-          {menus[selectedMenu]?.root.name || 'No Menu Selected'}
-        </div>
+        <div className={classes.name}>{selectedItem.name}</div>
         <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} />
-        <TagInput
-          tags={menuTags}
-          onChange={(newTags) => {
-            editMenu(selectedMenu, (menu) => {
-              menu.tags = newTags;
-              return menu;
-            });
-            setMenuTags(newTags);
-          }}
-          suggestions={allAvailableTags}
-        />
+        {
+          // If the selected item is the root of the menu, we show the tag editor.
+          isRoot && (
+            <TagInput
+              tags={menuTags}
+              onChange={(newTags) => {
+                editMenu(selectedMenu, (menu) => {
+                  menu.tags = newTags;
+                  return menu;
+                });
+                setMenuTags(newTags);
+              }}
+              suggestions={allAvailableTags}
+            />
+          )
+        }
         <div className={classes.floatingButton}>
           <Button
             icon={<TbCopy />}

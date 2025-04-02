@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use '../variables.scss' as *;
+
 .previewArea {
   display: flex;
   justify-content: center;
@@ -22,21 +24,23 @@
 
     .child,
     .center,
-    .backLink {
+    .backLink,
+    .lock {
       position: absolute;
-      padding: 1cqmin;
+
       aspect-ratio: 1;
 
-      border-radius: 50cqmin;
-      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.3);
 
       transform: translate(-50%, -50%);
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.4);
       }
 
       &.selected {
+        border: $border-selected;
         background-color: rgba(0, 0, 0, 0.5);
       }
     }
@@ -45,14 +49,20 @@
       width: 25cqmin;
       top: 50cqmin;
       left: 50cqmin;
+      padding: 1cqmin;
 
       &:active {
         top: calc(50cqmin + 1px);
+      }
+
+      :global(.icon-container) {
+        clip-path: circle(50% at 50% 50%);
       }
     }
 
     .child {
       width: 12cqmin;
+      padding: 1cqmin;
 
       left: calc(50cqmin + 30cqmin * var(--dir-x));
       top: calc(50cqmin + 30cqmin * var(--dir-y));
@@ -65,12 +75,67 @@
       &:active {
         top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
       }
+
+      :global(.icon-container) {
+        clip-path: circle(50% at 50% 50%);
+      }
+    }
+
+    .lock {
+      width: 4cqmin;
+      padding: 0.5cqmin;
+
+      left: calc(50cqmin + 18cqmin * var(--dir-x));
+      top: calc(50cqmin + 18cqmin * var(--dir-y));
+
+      background-color: transparent;
+      color: $text-normal;
+      opacity: 0.5;
+
+      &.locked {
+        opacity: 1;
+        color: $key-light;
+        background-color: rgba(0, 0, 0, 0.2);
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      &:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        top: calc(50cqmin + 18cqmin * var(--dir-y) + 1px);
+      }
+    }
+
+    .grandChild {
+      position: absolute;
+      width: 4cqmin;
+      aspect-ratio: 1;
+
+      border-radius: 50%;
+
+      transform: translate(-50%, -50%);
+
+      left: calc(50% + 7cqmin * var(--dir-x));
+      top: calc(50% + 7cqmin * var(--dir-y));
+
+      background: linear-gradient(
+        var(--angle),
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 40%,
+        rgba(0, 0, 0, 0.2) 70%,
+        rgba(0, 0, 0, 0.2) 100%
+      );
     }
 
     .backLink {
       position: relative;
       width: 10cqmin;
-      padding: 0;
 
       left: calc(50cqmin + 30cqmin * var(--dir-x));
       top: calc(50cqmin + 30cqmin * var(--dir-y));
@@ -122,7 +187,9 @@
 }
 
 .transitionContainer {
-  transition: all 200ms ease-out;
+  transition:
+    opacity 250ms ease,
+    transform 350ms cubic-bezier(0.45, 1.45, 0.55, 1);
   position: absolute;
 
   &.fadeEnter {

@@ -20,6 +20,7 @@ import * as math from '../../common/math';
 
 import ThemedIcon from './widgets/ThemedIcon';
 import { ItemTypeRegistry } from '../../common/item-type-registry';
+import { IVec2, IMenuItem } from '../../common';
 
 /**
  * This component encapsules the center area of the settings dialog. It contains the
@@ -27,21 +28,30 @@ import { ItemTypeRegistry } from '../../common/item-type-registry';
  * items.
  */
 export default () => {
-  const [transitionPing, setTransitionPing] = React.useState(false);
-  const [transitionAngle, setTransitionAngle] = React.useState(0);
-  const pingRef = React.useRef(null);
-  const pongRef = React.useRef(null);
-
   const dnd = useAppState((state) => state.dnd);
   const startDrag = useAppState((state) => state.startDrag);
   const endDrag = useAppState((state) => state.endDrag);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
   const selectChildPath = useAppState((state) => state.selectChildPath);
-
   const menus = useMenuSettings((state) => state.menus);
-  const menu = menus[selectedMenu];
 
+  // When the user selects a submenu or navigates back to the parent menu, a short
+  // transition animation is shown. The new menu fades in from the direction of the
+  // selected child, the old menu fades out in the opposite direction. This is implemented
+  // using the CSSTransition component from react-transition-group. To trigger the
+  // transition, we need to change the key of the CSSTransition component. This is done
+  // by using a boolean state variable which is toggled whenever a transition is
+  // triggered. The transition direction is determined by the angle of the selected child.
+  // We also need to pass refs to the old and the new menu to the CSSTransition component,
+  // so that we can apply the transition classes to the correct elements. We use two refs
+  // and toggle between them whenever a new transition is triggered.
+  const [transitionPing, setTransitionPing] = React.useState(false);
+  const [transitionAngle, setTransitionAngle] = React.useState(0);
+  const pingRef = React.useRef(null);
+  const pongRef = React.useRef(null);
+
+  const menu = menus[selectedMenu];
   if (!menu) {
     return null;
   }
@@ -57,6 +67,7 @@ export default () => {
   let selectedChild = -1;
   let isRoot = true;
   let parentAngle = 0;
+
   let childAngles = math.computeItemAngles(centerItem.children);
 
   for (let i = 0; i < selectedChildPath.length; i++) {
@@ -116,27 +127,71 @@ export default () => {
     setTransitionAngle(parentAngle);
   };
 
+  // A small helper function to create CSS properties for the given direction and angle.
+  // This is used a couple of times below.
+  const makeCSSProperties = (
+    directionName: string,
+    direction: IVec2,
+    angleName?: string,
+    angle?: number
+  ) => {
+    const properties: Record<string, string | number> = {
+      [`--${directionName}-x`]: direction.x,
+      [`--${directionName}-y`]: direction.y,
+    };
+
+    if (angleName !== undefined && angle !== undefined) {
+      properties[`--${angleName}`] = `${angle}deg`;
+    }
+
+    return properties;
+  };
+
+  // Assembles a list of divs for the grandchild items of the given child item.
+  const getGrandchildDivs = (child: IMenuItem, childAngle: number) => {
+    if (!child.children || child.children.length === 0) {
+      return null;
+    }
+
+    const grandchildAngles = math.computeItemAngles(
+      child.children,
+      (childAngle + 180) % 360
+    );
+    const grandchildDirections = grandchildAngles.map((angle) =>
+      math.getDirection(angle, 1)
+    );
+
+    return child.children.map((grandChild, index) => {
+      return (
+        <div
+          key={index}
+          className={classes.grandChild}
+          style={makeCSSProperties(
+            'dir',
+            grandchildDirections[index],
+            'angle',
+            grandchildAngles[index]
+          )}
+        />
+      );
+    });
+  };
+
   const childDirections = childAngles.map((angle) => math.getDirection(angle, 1));
-  const parentDirection = math.getDirection(parentAngle, 1);
-  const transitionDirection = math.getDirection(transitionAngle, 1.0);
 
   return (
     <div className={classes.previewArea}>
       <div
         className={classes.preview}
-        style={
-          {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            '--transition-dir-x': transitionDirection.x,
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            '--transition-dir-y': transitionDirection.y,
-          } as React.CSSProperties
-        }>
+        style={makeCSSProperties(
+          'transition-dir',
+          math.getDirection(transitionAngle, 1.0)
+        )}>
         <TransitionGroup>
           <CSSTransition
             key={transitionPing ? 'ping' : 'pong'}
             nodeRef={transitionPing ? pingRef : pongRef}
-            timeout={200}
+            timeout={350}
             classNames={{
               enter: classes.fadeEnter,
               enterActive: classes.fadeEnterActive,
@@ -146,27 +201,27 @@ export default () => {
             <div
               ref={transitionPing ? pingRef : pongRef}
               className={classes.transitionContainer}>
-              {!isRoot && (
-                <div
-                  className={classes.backLink}
-                  onClick={() => selectParent()}
-                  style={
-                    {
-                      // eslint-disable-next-line @typescript-eslint/naming-convention
-                      '--dir-x': parentDirection.x,
-                      // eslint-disable-next-line @typescript-eslint/naming-convention
-                      '--dir-y': parentDirection.y,
-                      // eslint-disable-next-line @typescript-eslint/naming-convention
-                      '--angle': `${parentAngle - 90}deg`,
-                    } as React.CSSProperties
-                  }>
-                  <ThemedIcon
-                    size="100%"
-                    theme="material-symbols-rounded"
-                    name="chevron_right"
-                  />
-                </div>
-              )}
+              {
+                // Except for the root menu, in all submenus a back link is shown which
+                // allows the user to navigate back to the parent menu.
+                !isRoot && (
+                  <div
+                    className={classes.backLink}
+                    onClick={() => selectParent()}
+                    style={makeCSSProperties(
+                      'dir',
+                      math.getDirection(parentAngle, 1),
+                      'angle',
+                      parentAngle - 90
+                    )}>
+                    <ThemedIcon
+                      size="100%"
+                      theme="material-symbols-rounded"
+                      name="chevron_right"
+                    />
+                  </div>
+                )
+              }
               <div
                 className={cx({
                   center: true,
@@ -179,31 +234,54 @@ export default () => {
                   name={centerItem.icon}
                 />
               </div>
-              {centerItem.children.map((child, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={cx({
-                      child: true,
-                      selected: selectedChild === index,
-                      dragging: dnd.draggedType === 'item' && dnd.draggedIndex === index,
-                    })}
-                    draggable
-                    onDragStart={() => startDrag('item', index)}
-                    onDragEnd={() => endDrag()}
-                    onClick={() => selectChild(index)}
-                    style={
-                      {
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        '--dir-x': childDirections[index].x,
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        '--dir-y': childDirections[index].y,
-                      } as React.CSSProperties
-                    }>
-                    <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
-                  </div>
-                );
-              })}
+              {
+                // Add all child items. They are positioned via CSS properties.
+                centerItem.children.map((child, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={cx({
+                        child: true,
+                        selected: selectedChild === index,
+                        dragging:
+                          dnd.draggedType === 'item' && dnd.draggedIndex === index,
+                      })}
+                      draggable
+                      onDragStart={() => startDrag('item', index)}
+                      onDragEnd={() => endDrag()}
+                      onClick={() => selectChild(index)}
+                      style={makeCSSProperties('dir', childDirections[index])}>
+                      <ThemedIcon
+                        size={'100%'}
+                        theme={child.iconTheme}
+                        name={child.icon}
+                      />
+                      {getGrandchildDivs(child, childAngles[index])}
+                    </div>
+                  );
+                })
+              }
+              {
+                // Add the lock icons for each child item. When locked, the item cannot be
+                // reordered via drag and drop, but its fixed angle can be adjusted instead.
+                centerItem.children.map((child, index) => {
+                  return (
+                    <div
+                      key={'lock' + index}
+                      className={cx({
+                        lock: true,
+                        locked: child.angle !== undefined,
+                      })}
+                      style={makeCSSProperties('dir', childDirections[index])}>
+                      <ThemedIcon
+                        size={'100%'}
+                        theme={'material-symbols-rounded'}
+                        name={child.angle !== undefined ? 'lock' : 'lock_open'}
+                      />
+                    </div>
+                  );
+                })
+              }
             </div>
           </CSSTransition>
         </TransitionGroup>

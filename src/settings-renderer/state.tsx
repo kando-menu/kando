@@ -23,6 +23,7 @@ import {
   IMenuThemeDescription,
   IMenuCollection,
   IMenu,
+  IMenuItem,
 } from '../common';
 
 // We have three global state objects: one for the applications settings stored in the
@@ -100,6 +101,21 @@ type MenuStateActions = {
    * @param callback The callback to call with the menu object.
    */
   editMenu: (index: number, callback: (menu: IMenu) => IMenu) => void;
+
+  /**
+   * Edits a specific menu item. The callback is called with the menu item object and
+   * should return the modified menu item object.
+   *
+   * @param menuIndex The index of the menu to edit.
+   * @param itemPath The path to the item to edit. This is a list of indices that
+   *   represent the path to the item.
+   * @returns The modified menu item object.
+   */
+  editMenuItem: (
+    menuIndex: number,
+    itemPath: number[],
+    callback: (item: IMenuItem) => IMenuItem
+  ) => void;
 
   /** Appends a new collection to the list of collections. */
   addCollection: () => void;
@@ -200,6 +216,31 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
         set(
           produce((state) => {
             state.menus[index] = callback(state.menus[index]);
+          })
+        ),
+
+      editMenuItem: (
+        menuIndex: number,
+        itemPath: number[],
+        callback: (item: IMenuItem) => IMenuItem
+      ) =>
+        set(
+          produce((state) => {
+            let item = state.menus[menuIndex].root;
+            let parent = null;
+            for (let i = 0; i < itemPath.length; i++) {
+              parent = item;
+              item = item.children[itemPath[i]];
+            }
+
+            item = callback(item);
+
+            // If the parent was not changed above, we are editing the root item.
+            if (parent === null) {
+              state.menus[menuIndex].root = item;
+            } else {
+              parent.children[itemPath[itemPath.length - 1]] = item;
+            }
           })
         ),
 

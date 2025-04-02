@@ -69,14 +69,14 @@
       width: min(calc(20px + 2vw), 50px);
       margin: 5px min(calc(4px + 0.4vw), 10px);
       aspect-ratio: 1;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.3);
 
       &:active {
         transform: translateY(1px);
       }
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.4);
       }
 
       &.dragging {
