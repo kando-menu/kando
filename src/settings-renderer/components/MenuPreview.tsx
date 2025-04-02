@@ -28,6 +28,7 @@ import { ItemTypeRegistry } from '../../common/item-type-registry';
  */
 export default () => {
   const [transitionPing, setTransitionPing] = React.useState(false);
+  const [transitionAngle, setTransitionAngle] = React.useState(0);
   const pingRef = React.useRef(null);
   const pongRef = React.useRef(null);
 
@@ -88,6 +89,7 @@ export default () => {
     const type = ItemTypeRegistry.getInstance().getType(child.type);
     if (type?.hasChildren) {
       setTransitionPing(!transitionPing);
+      setTransitionAngle(childAngles[which]);
     }
   };
 
@@ -111,26 +113,39 @@ export default () => {
 
     // Trigger a transition by changing the key of the CSSTransition component.
     setTransitionPing(!transitionPing);
+    setTransitionAngle(parentAngle);
   };
 
   const childDirections = childAngles.map((angle) => math.getDirection(angle, 1));
   const parentDirection = math.getDirection(parentAngle, 1);
+  const transitionDirection = math.getDirection(transitionAngle, 1.0);
 
   return (
     <div className={classes.previewArea}>
-      <div className={classes.preview}>
+      <div
+        className={classes.preview}
+        style={
+          {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            '--transition-dir-x': transitionDirection.x,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            '--transition-dir-y': transitionDirection.y,
+          } as React.CSSProperties
+        }>
         <TransitionGroup>
           <CSSTransition
             key={transitionPing ? 'ping' : 'pong'}
             nodeRef={transitionPing ? pingRef : pongRef}
-            timeout={300}
+            timeout={200}
             classNames={{
               enter: classes.fadeEnter,
               enterActive: classes.fadeEnterActive,
               exit: classes.fadeExit,
               exitActive: classes.fadeExitActive,
             }}>
-            <div ref={transitionPing ? pingRef : pongRef}>
+            <div
+              ref={transitionPing ? pingRef : pongRef}
+              className={classes.transitionContainer}>
               {!isRoot && (
                 <div
                   className={classes.backLink}
