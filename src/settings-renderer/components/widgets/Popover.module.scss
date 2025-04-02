@@ -12,6 +12,7 @@
 
 .popover {
   -webkit-app-region: no-drag;
+  z-index: 100;
 
   position: absolute;
   padding: 10px;

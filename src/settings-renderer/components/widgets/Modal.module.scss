@@ -11,6 +11,8 @@
 @use '../../variables.scss' as *;
 
 .modalBackground {
+  z-index: 10;
+
   -webkit-app-region: no-drag;
   background-color: $modal-background;
   position: absolute;
