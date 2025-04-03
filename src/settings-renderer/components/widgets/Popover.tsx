@@ -151,7 +151,7 @@ export default (props: IProps) => {
             {props.content}
           </div>
         </CSSTransition>,
-        document.body
+        (document.getElementById('root-container') as HTMLElement) || document.body
       )}
     </>
   );

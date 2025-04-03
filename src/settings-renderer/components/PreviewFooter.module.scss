@@ -8,10 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use '../variables.scss' as *;
+
 .itemArea {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: #eee;
 
   .header {
     display: flex;
@@ -39,7 +42,7 @@
 
     .title {
       border: 1px solid rgba(255, 255, 255, 1);
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.2));
       border-radius: 8px 8px 0 0;
       border-width: 1px 1px 0 1px;
       padding: 5px 10px;
@@ -49,8 +52,8 @@
   .shadow {
     background-image: radial-gradient(
       ellipse at 50% 0%,
-      rgba(0, 0, 0, 0.3) 10%,
-      rgba(0, 0, 0, 0) 70%
+      light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.2)) 10%,
+      light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 70%
     );
     height: 80px;
     margin-bottom: -80px;
@@ -69,14 +72,14 @@
       width: min(calc(20px + 2vw), 50px);
       margin: 5px min(calc(4px + 0.4vw), 10px);
       aspect-ratio: 1;
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.2));
 
       &:active {
         transform: translateY(1px);
       }
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.3));
       }
 
       &.dragging {

@@ -48,6 +48,7 @@ export default () => {
   return (
     <>
       <div
+        id="root-container"
         className={cx({
           container: true,
           systemColors: settingsWindowColorScheme === 'system',
