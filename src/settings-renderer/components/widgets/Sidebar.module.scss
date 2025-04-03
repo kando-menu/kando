@@ -35,6 +35,7 @@
   cursor: ew-resize;
   opacity: 0.1;
   transition: opacity 0.2s;
+  z-index: 500;
 
   &.left {
     margin-right: -10px;
