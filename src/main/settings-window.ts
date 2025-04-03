@@ -29,7 +29,11 @@ export class SettingsWindow extends BrowserWindow {
   });
 
   constructor(backend: Backend, settings: Settings<IAppSettings>) {
-    const transparent = settings.get('transparentSettingsWindow');
+    const settingsWindowFlavor = settings.get('settingsWindowFlavor');
+    const transparent =
+      settingsWindowFlavor === 'transparent-light' ||
+      settingsWindowFlavor === 'transparent-dark' ||
+      settingsWindowFlavor === 'transparent-system';
 
     super({
       webPreferences: {

@@ -98,15 +98,17 @@ export class KandoApp {
 
     // We load the settings from the user's home directory. If the settings file does not
     // exist, it will be created with the default values. The only special setting is the
-    // transparentSettingsWindow setting which is set to true if the backend supports
-    // transparent windows.
+    // settingsWindowFlavor setting which is set to transparent only if the backend
+    // supports transparent windows.
     this.appSettings = new Settings<IAppSettings>({
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
         ...getDefaultAppSettings(),
-        transparentSettingsWindow:
-          this.backend.getBackendInfo().shouldUseTransparentSettingsWindow,
+        settingsWindowFlavor: this.backend.getBackendInfo()
+          .shouldUseTransparentSettingsWindow
+          ? 'transparent-light'
+          : 'sakura-light',
       },
     });
 

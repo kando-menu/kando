@@ -45,7 +45,6 @@ for more information.
       menuWindowType: 'splash',
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.hyprland.shortcut-hint'),
-      canUseTransparentSettingsWindow: true,
       shouldUseTransparentSettingsWindow: true,
     };
   }

@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use '../variables.scss' as *;
+
 .container {
   position: absolute;
   top: 0px;
@@ -17,25 +19,68 @@
 
   display: flex;
 
-  &:not(.transparent) {
-    background: url('../../../assets/images/settings-bg-01.webp');
-    background-color: light-dark(#fff8, #0004);
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: overlay;
+  &.systemColors {
+    color-scheme: light dark;
+  }
+
+  &.lightColors {
+    color-scheme: only light;
+  }
+
+  &.darkColors {
+    color-scheme: only dark;
   }
 }
 
-.previewArea {
+.centerArea {
   flex-grow: 1;
   min-width: 400px;
-  background-color: rgba(255, 255, 255, 0.5);
-  color-scheme: only light;
-  color: #eee;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+
+  &.sakuraSystemFlavor,
+  &.transparentSystemFlavor {
+    color-scheme: light dark;
+    background-color: light-dark(rgba($base-light, 0.5), rgba($base-dark, 0.5));
+  }
+
+  &.sakuraDarkFlavor,
+  &.transparentDarkFlavor {
+    color-scheme: only dark;
+    background-color: rgba($base-dark, 0.5);
+  }
+
+  &.sakuraLightFlavor,
+  &.transparentLightFlavor {
+    color-scheme: only light;
+    background-color: rgba($base-light, 0.5);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &.sakuraSystemFlavor {
+      background-image: url('../../../assets/images/settings-sakura-dark.webp');
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    &.sakuraSystemFlavor {
+      background-image: url('../../../assets/images/settings-sakura-light.webp');
+    }
+  }
+
+  &.sakuraLightFlavor {
+    background-image: url('../../../assets/images/settings-sakura-light.webp');
+  }
+
+  &.sakuraDarkFlavor {
+    background-image: url('../../../assets/images/settings-sakura-dark.webp');
+  }
 }
 
 :global(.react-tooltip) {

@@ -32,7 +32,6 @@ export class X11Backend implements Backend {
       name: 'X11 Backend',
       menuWindowType: 'dock',
       supportsShortcuts: true,
-      canUseTransparentSettingsWindow: true,
       shouldUseTransparentSettingsWindow: false,
     };
   }

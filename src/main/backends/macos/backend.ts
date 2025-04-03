@@ -24,7 +24,6 @@ export class MacosBackend implements Backend {
       name: 'macOS Backend',
       menuWindowType: 'normal',
       supportsShortcuts: true,
-      canUseTransparentSettingsWindow: true,
       shouldUseTransparentSettingsWindow: true,
     };
   }

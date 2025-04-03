@@ -53,13 +53,6 @@ export interface IBackendInfo {
    */
   shortcutHint?: string;
 
-  /**
-   * This determines whether the settings window can use transparency. There is an option
-   * in the settings to enable transparency, but if canUseTransparentSettingsWindow is
-   * false, the option will be disabled.
-   */
-  canUseTransparentSettingsWindow: boolean;
-
   /** This determines whether the settings window should use transparency per default. */
   shouldUseTransparentSettingsWindow: boolean;
 }
@@ -593,11 +586,20 @@ export interface IAppSettings {
   /** Whether to silently handle read-only config files. */
   ignoreWriteProtectedConfigFiles: boolean;
 
+  /** The color scheme of the settings window. */
+  settingsWindowColorScheme: 'light' | 'dark' | 'system';
+
   /**
-   * If set to true, the settings window will attempt to use some sort of transparency.
-   * What that means exactly depends on the OS.
+   * If set to 'transparent', the settings window will attempt to use some sort of
+   * transparency. What that means exactly depends on the OS.
    */
-  transparentSettingsWindow: boolean;
+  settingsWindowFlavor:
+    | 'sakura-light'
+    | 'sakura-dark'
+    | 'sakura-system'
+    | 'transparent-light'
+    | 'transparent-dark'
+    | 'transparent-system';
 
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';
@@ -716,7 +718,8 @@ export function getDefaultAppSettings(): IAppSettings {
     soundTheme: 'none',
     soundVolume: 0.5,
     ignoreWriteProtectedConfigFiles: false,
-    transparentSettingsWindow: false,
+    settingsWindowColorScheme: 'system',
+    settingsWindowFlavor: 'sakura-light',
     trayIconFlavor: 'color',
     enableVersionCheck: true,
     zoomFactor: 1,

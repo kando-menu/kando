@@ -37,7 +37,6 @@ export class WindowsBackend implements Backend {
       name: 'Windows Backend',
       menuWindowType: 'toolbar',
       supportsShortcuts: true,
-      canUseTransparentSettingsWindow: transparencySupported,
       shouldUseTransparentSettingsWindow: transparencySupported,
     };
   }

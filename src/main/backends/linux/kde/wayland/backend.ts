@@ -89,7 +89,6 @@ export class KDEWaylandBackend implements Backend {
       menuWindowType: 'toolbar',
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.kde-wayland.shortcut-hint'),
-      canUseTransparentSettingsWindow: true,
       shouldUseTransparentSettingsWindow: false,
     };
   }

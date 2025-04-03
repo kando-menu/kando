@@ -11,6 +11,7 @@
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 import MouseTrap from 'mousetrap';
+import classNames from 'classnames/bind';
 
 import { useAppSetting, useMenuSettings } from '../state';
 
@@ -27,9 +28,11 @@ import MenuList from './MenuList';
 import CollectionList from './CollectionList';
 
 import * as classes from './App.module.scss';
+const cx = classNames.bind(classes);
 
 export default () => {
-  const [transparent] = useAppSetting('transparentSettingsWindow');
+  const [settingsWindowColorScheme] = useAppSetting('settingsWindowColorScheme');
+  const [settingsWindowFlavor] = useAppSetting('settingsWindowFlavor');
 
   // Bind global undo/redo shortcuts.
   React.useEffect(() => {
@@ -44,12 +47,27 @@ export default () => {
 
   return (
     <>
-      <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
+      <div
+        className={cx({
+          container: true,
+          systemColors: settingsWindowColorScheme === 'system',
+          lightColors: settingsWindowColorScheme === 'light',
+          darkColors: settingsWindowColorScheme === 'dark',
+        })}>
         <Sidebar position="left" mainDirection="row">
           <CollectionList />
           <MenuList />
         </Sidebar>
-        <div className={classes.previewArea}>
+        <div
+          className={cx({
+            centerArea: true,
+            transparentLightFlavor: settingsWindowFlavor === 'transparent-light',
+            transparentDarkFlavor: settingsWindowFlavor === 'transparent-dark',
+            transparentSystemFlavor: settingsWindowFlavor === 'transparent-system',
+            sakuraLightFlavor: settingsWindowFlavor === 'sakura-light',
+            sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
+            sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
+          })}>
           <PreviewHeader />
           <MenuPreview />
           <PreviewFooter />

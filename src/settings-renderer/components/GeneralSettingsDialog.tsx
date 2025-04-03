@@ -33,7 +33,6 @@ export default () => {
 
   // We make sure that some widgets have a consistent width.
   const spinbuttonWidth = 60;
-  const dropdownWidth = 150;
 
   return (
     <Modal
@@ -79,11 +78,6 @@ export default () => {
             settingsKey="enableVersionCheck"
           />
           <AppSettingsCheckbox
-            label="Transparent settings window"
-            info="Reopen the settings window to fully apply the effect."
-            settingsKey="transparentSettingsWindow"
-          />
-          <AppSettingsCheckbox
             label="Invisible settings button"
             info="You can still use the button, it will appear when you move the mouse over it."
             settingsKey="hideSettingsButton"
@@ -92,7 +86,6 @@ export default () => {
             label="Settings button position"
             info="Choose the screen corner where the settings button will be shown."
             settingsKey="settingsButtonPosition"
-            minWidth={dropdownWidth}
             options={[
               { value: 'top-left', label: 'Top Left' },
               { value: 'top-right', label: 'Top Right' },
@@ -101,10 +94,32 @@ export default () => {
             ]}
           />
           <AppSettingsDropdown
+            label="Settings window color scheme"
+            info="If you choose 'system', the settings window will use the same color scheme as your operating system."
+            settingsKey="settingsWindowColorScheme"
+            options={[
+              { value: 'system', label: 'System' },
+              { value: 'light', label: 'Light' },
+              { value: 'dark', label: 'Dark' },
+            ]}
+          />
+          <AppSettingsDropdown
+            label="Settings window flavor"
+            info="If you choose a transparent flavor, you will have to restart the settings window to apply the effect."
+            settingsKey="settingsWindowFlavor"
+            options={[
+              { value: 'transparent-light', label: 'Transparent Light' },
+              { value: 'transparent-dark', label: 'Transparent Dark' },
+              { value: 'transparent-system', label: 'Transparent System' },
+              { value: 'sakura-light', label: 'Sakura Light' },
+              { value: 'sakura-dark', label: 'Sakura Dark' },
+              { value: 'sakura-system', label: 'Sakura System' },
+            ]}
+          />
+          <AppSettingsDropdown
             label="Tray icon flavor"
             info="You can also choose to hide the tray icon completely."
             settingsKey="trayIconFlavor"
-            minWidth={dropdownWidth}
             options={[
               { value: 'none', label: 'Hidden' },
               { value: 'color', label: 'Color' },
