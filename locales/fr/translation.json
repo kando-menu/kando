@@ -41,7 +41,7 @@
             "name": "Sous-Menu",
             "tip-1": "Les sous-menus peuvent être utilisés pour regrouper des éléments.",
             "tip-9": "Pour enregistrer un raccourcis, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
-            "tip-11": "Il est possible d'ouvrir un menus par ligne de commande avec l'argument --menu \"Nom du menu\".",
+            "tip-11": "Vous pouvez ouvrir des menus en ligne de commande avec l'argument --menu \"Nom du menu\".",
             "description": "Contient d'autres éléments.",
             "detailed-description_one": "Contient un élément.",
             "detailed-description_many": "Contient {{count}} éléments.",
@@ -49,13 +49,13 @@
         },
         "uri": {
             "tip-1": "Il est possible d'utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole \"http://\".",
-            "tip-2": "Il est possible d'utiliser un élément de type URI pour ouvrir un fichier ou un dossier à l'aide du protocole \"file://\".",
+            "tip-2": "Vous pouvez utliser ceci pour ouvrir des schémas d'URI tel que slack:// ou zoommtg://.",
             "tip-4": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
             "tip-5": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
             "uri-hint": "Ce lien sera ouvert.",
             "uri": "URI",
             "name": "Ouvrir un URI",
-            "description": "Ouvre des fichiers ou des sites web.",
+            "description": "Ouvre des sites web et plus encore.",
             "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
             "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien \"mailto:\"."
         },
@@ -64,14 +64,37 @@
             "placeholder": "Insérez du texte…",
             "name": "Coller le texte",
             "description": "Insère le texte en question."
+        },
+        "file": {
+            "name": "Ouvrir un fichier",
+            "file": "Chemin d'accès au fichier",
+            "file-hint": "Il va être ouvert.",
+            "description": "Ouvre un fichier ou dossier.",
+            "tip-1": "Tu peux utiliser ce type d'élément pour ouvrir des fichiers ou dossiers."
+        },
+        "settings": {
+            "tip-1": "Cette action ouvre la fenêtre de configuration de Kando.",
+            "description": "Ouvre la fenêtre de configuration de Kando.",
+            "name": "Ouvrir les Configurations"
+        },
+        "redirect": {
+            "tip-1": "Utilise des lettres majuscules cohérents pour les noms des menus.",
+            "tip-2": "Éviter des noms de menus vides ou indéfinis.",
+            "tip-3": "Éviter des renvois récursifs.",
+            "redirect": "Renvoi",
+            "redirect-hint": "Ce menu va être ouvert",
+            "name": "Renvoie",
+            "description": "Ouvre un autre menu"
         }
     },
     "main": {
         "is-running-header": "Kando est déjà en cours d'exécution",
         "is-running-message": "Utilisez l'icône de la barre des tâches pour plus d'options !",
         "failed-to-start-header": "Le lancement de Kando a échoué",
-        "inhibit-shortcuts": "Désactiver temporairement les raccourcis",
-        "un-inhibit-shortcuts": "Réactiver les raccourcis"
+        "inhibit-shortcuts": "Désactiver temporairement les Raccourcis",
+        "un-inhibit-shortcuts": "Réactiver les Raccourcis",
+        "show-settings": "Afficher les Configurations",
+        "quit": "Quitter"
     },
     "properties": {
         "common": {
@@ -93,7 +116,9 @@
             "subheading": "Avant d'activer ces options, nous vous recommandons d'apprendre le comportement par défaut de Kando. Lisez pourquoi nous le préférons <a {{- link}}>ici</a>.",
             "centered-mode-hint": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
             "warp-mouse-hint": "Déplace le pointeur au centre du menu à son ouverture.",
-            "warp-mouse": "Recentre également le curseur lorsqu'en Mode Centré"
+            "warp-mouse": "Recentre également le curseur lorsqu'en Mode Centré",
+            "hover-mode-hint": "Pour utilisateurs expérimentés seulement ! Selectionne les éléments en les survolant.",
+            "hover-mode": "Mode Survol"
         },
         "condition-picker": {
             "subheading": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
@@ -137,7 +162,9 @@
         "icon-picker": {
             "heading": "Sélectionner une Icône",
             "subheading": "Ajoutez vos propres collections d'icônes en plaçant un dossier d'images dans {{path}}. Un redémarrage de Kando sera nécessaire. Plus d'information <a {{- link}}>ici</a>.",
-            "placeholder": "Rechercher des Icônes…"
+            "placeholder": "Rechercher des Icônes…",
+            "base64-example": "Exemple Base64 :",
+            "url-example": "Exemple d'URL :"
         }
     },
     "example-menu": {
