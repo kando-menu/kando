@@ -14,10 +14,10 @@ import classNames from 'classnames/bind';
 import * as classes from './PreviewFooter.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState } from '../state';
-import { ItemTypeRegistry } from '../../common/item-type-registry';
+import { useAppState } from '../../state';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
 
-import ThemedIcon from './widgets/ThemedIcon';
+import ThemedIcon from '../common/ThemedIcon';
 
 /**
  * This component encapsules the list of item types which can be dragged to the menu

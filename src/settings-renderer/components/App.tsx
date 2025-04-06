@@ -15,17 +15,17 @@ import classNames from 'classnames/bind';
 
 import { useAppSetting, useMenuSettings } from '../state';
 
-import AboutDialog from './AboutDialog';
-import GeneralSettingsDialog from './GeneralSettingsDialog';
-import MenuThemesDialog from './MenuThemesDialog';
+import AboutDialog from './dialogs/AboutDialog';
+import GeneralSettingsDialog from './dialogs/GeneralSettingsDialog';
+import MenuThemesDialog from './dialogs/MenuThemesDialog';
 
-import Sidebar from './widgets/Sidebar';
-import MenuPreview from './MenuPreview';
-import PreviewHeader from './PreviewHeader';
-import PreviewFooter from './PreviewFooter';
-import Properties from './Properties';
-import MenuList from './MenuList';
-import CollectionList from './CollectionList';
+import Sidebar from './common/Sidebar';
+import MenuPreview from './menu-preview/MenuPreview';
+import PreviewHeader from './menu-preview/PreviewHeader';
+import PreviewFooter from './menu-preview/PreviewFooter';
+import Properties from './menu-properties/Properties';
+import MenuList from './menu-list/MenuList';
+import CollectionList from './menu-list/CollectionList';
 
 import * as classes from './App.module.scss';
 const cx = classNames.bind(classes);

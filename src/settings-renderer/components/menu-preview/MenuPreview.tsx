@@ -15,12 +15,12 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState, useMenuSettings } from '../state';
-import * as math from '../../common/math';
+import { useAppState, useMenuSettings } from '../../state';
+import * as math from '../../../common/math';
 
-import ThemedIcon from './widgets/ThemedIcon';
-import { ItemTypeRegistry } from '../../common/item-type-registry';
-import { IVec2, IMenuItem } from '../../common';
+import ThemedIcon from '../common/ThemedIcon';
+import { ItemTypeRegistry } from '../../../common/item-type-registry';
+import { IVec2, IMenuItem } from '../../../common';
 
 /**
  * This function returns the direction towards the parent of an item with the given angle.

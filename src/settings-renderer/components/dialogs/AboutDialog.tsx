@@ -8,20 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../settings-window-api';
+import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
 import { TbExternalLink, TbInfoSquareRoundedFilled } from 'react-icons/tb';
 
-import { useAppState } from '../state';
-import Swirl from './widgets/Swirl';
-import Modal from './widgets/Modal';
-import Button from './widgets/Button';
+import { useAppState } from '../../state';
+import Swirl from '../common/Swirl';
+import Modal from '../common/Modal';
+import Button from '../common/Button';
 
 import * as classes from './AboutDialog.module.scss';
 
-const logo = require('../../../assets/icons/square-icon.svg');
+const logo = require('../../../../assets/icons/square-icon.svg');
 
 /**
  * This dialog shows information about Kando, including the version number and links to

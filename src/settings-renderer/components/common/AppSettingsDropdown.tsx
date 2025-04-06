@@ -10,9 +10,9 @@
 
 import React from 'react';
 
-import Dropdown from './widgets/Dropdown';
-import { useAppSetting } from '../state';
-import { IAppSettings } from '../../common';
+import Dropdown from './Dropdown';
+import { useAppSetting } from '../../state';
+import { IAppSettings } from '../../../common';
 
 interface IProps<K extends keyof IAppSettings> {
   /** The key in the app settings to manage. */

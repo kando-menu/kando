@@ -16,9 +16,9 @@ import { TbTrash, TbApps } from 'react-icons/tb';
 import * as classes from './CollectionList.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState, useMenuSettings } from '../state';
-import Scrollbox from './widgets/Scrollbox';
-import ThemedIcon from './widgets/ThemedIcon';
+import { useAppState, useMenuSettings } from '../../state';
+import Scrollbox from '../common/Scrollbox';
+import ThemedIcon from '../common/ThemedIcon';
 
 /**
  * This is a vertical list of buttons, one for each configured menu collection. They can

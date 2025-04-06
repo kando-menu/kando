@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../settings-window-api';
+import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React, { ReactNode } from 'react';
@@ -22,17 +22,17 @@ import {
 import { RiDeleteBack2Fill } from 'react-icons/ri';
 import lodash from 'lodash';
 
-import { useAppSetting, useAppState } from '../state';
+import { useAppSetting, useAppState } from '../../state';
 
-import Button from './widgets/Button';
-import ColorButton from './widgets/ColorButton';
-import Modal from './widgets/Modal';
-import Note from './widgets/Note';
-import Scrollbox from './widgets/Scrollbox';
-import AppSettingsCheckbox from './AppSettingsCheckbox';
-import AppSettingsSpinbutton from './AppSettingsSpinbutton';
-import Swirl from './widgets/Swirl';
-import InfoItem from './widgets/InfoItem';
+import Button from '../common/Button';
+import ColorButton from '../common/ColorButton';
+import Modal from '../common/Modal';
+import Note from '../common/Note';
+import Scrollbox from '../common/Scrollbox';
+import AppSettingsCheckbox from '../common/AppSettingsCheckbox';
+import AppSettingsSpinbutton from '../common/AppSettingsSpinbutton';
+import Swirl from '../common/Swirl';
+import InfoItem from '../common/InfoItem';
 
 import * as classes from './MenuThemesDialog.module.scss';
 const cx = classNames.bind(classes);

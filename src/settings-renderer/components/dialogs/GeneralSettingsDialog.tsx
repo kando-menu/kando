@@ -8,23 +8,23 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../settings-window-api';
+import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
 
 import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
 
-import { useAppState } from '../state';
+import { useAppState } from '../../state';
 
-import Button from './widgets/Button';
-import AppSettingsCheckbox from './AppSettingsCheckbox';
-import AppSettingsDropdown from './AppSettingsDropdown';
-import AppSettingsSpinbutton from './AppSettingsSpinbutton';
-import Modal from './widgets/Modal';
-import Note from './widgets/Note';
-import Scrollbox from './widgets/Scrollbox';
-import Swirl from './widgets/Swirl';
+import Button from '../common/Button';
+import AppSettingsCheckbox from '../common/AppSettingsCheckbox';
+import AppSettingsDropdown from '../common/AppSettingsDropdown';
+import AppSettingsSpinbutton from '../common/AppSettingsSpinbutton';
+import Modal from '../common/Modal';
+import Note from '../common/Note';
+import Scrollbox from '../common/Scrollbox';
+import Swirl from '../common/Swirl';
 
 /** This dialog allows the user to configure some general settings of Kando. */
 export default () => {

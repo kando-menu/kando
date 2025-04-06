@@ -13,13 +13,13 @@ import React from 'react';
 import * as classes from './Properties.module.scss';
 import { TbCopy, TbTrash } from 'react-icons/tb';
 
-import { useAppState, useMenuSettings } from '../state';
+import { useAppState, useMenuSettings } from '../../state';
 
-import Headerbar from './widgets/Headerbar';
-import Button from './widgets/Button';
-import IconChooserButton from './widgets/IconChooserButton';
-import TagInput from './widgets/TagInput';
-import Swirl from './widgets/Swirl';
+import Headerbar from '../common/Headerbar';
+import Button from '../common/Button';
+import IconChooserButton from '../common/IconChooserButton';
+import TagInput from '../common/TagInput';
+import Swirl from '../common/Swirl';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the

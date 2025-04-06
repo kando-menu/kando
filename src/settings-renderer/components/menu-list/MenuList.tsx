@@ -16,12 +16,12 @@ import { TbPlus } from 'react-icons/tb';
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
 
-import { useMenuSettings, useAppState } from '../state';
-import Scrollbox from './widgets/Scrollbox';
-import ThemedIcon from './widgets/ThemedIcon';
-import Swirl from './widgets/Swirl';
-import Note from './widgets/Note';
-import Button from './widgets/Button';
+import { useMenuSettings, useAppState } from '../../state';
+import Scrollbox from '../common/Scrollbox';
+import ThemedIcon from '../common/ThemedIcon';
+import Swirl from '../common/Swirl';
+import Note from '../common/Note';
+import Button from '../common/Button';
 import CollectionDetails from './CollectionDetails';
 
 /**

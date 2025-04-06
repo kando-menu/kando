@@ -10,65 +10,49 @@
 
 import React from 'react';
 
-import Spinbutton from './widgets/Spinbutton';
-import { useAppSetting } from '../state';
-import { IAppSettings } from '../../common';
+import Checkbox from './Checkbox';
+import { useAppSetting } from '../../state';
+import { IAppSettings } from '../../../common';
 
 interface IProps<K extends keyof IAppSettings> {
   /** The key in the app settings to manage. */
   settingsKey: K;
 
-  /** Optional label text to display next to the spinbutton. */
+  /** Optional label text to display next to the checkbox. */
   label?: string;
 
   /** Optional information to display next to the label. */
   info?: string;
 
-  /** Whether the spinbutton is disabled. Defaults to false. */
+  /** Whether the checkbox is disabled. Defaults to false. */
   disabled?: boolean;
-
-  /** Optional minimum width of the spinbutton. Useful to align multiple spinbuttons. */
-  width?: number;
-
-  /** Optional minimum value of the spinbutton. */
-  min?: number;
-
-  /** Optional maximum value of the spinbutton. */
-  max?: number;
-
-  /** Step size for the spinbutton. Defaults to 1. */
-  step?: number;
 }
 
 /**
- * Used to ensure that the settings key K used for the AppSettingsSpinbutton component
- * refers to a number property in the app settings.
+ * Used to ensure that the settings key K used for the AppSettingsCheckbox component
+ * refers to a boolean property in the app settings.
  */
-type NumberKeys<T> = {
-  [K in keyof T]: T[K] extends number ? K : never;
+type BooleanKeys<T> = {
+  [K in keyof T]: T[K] extends boolean ? K : never;
 }[keyof T];
 
 /**
- * A managed spinbutton component that syncs its state with a number property of the app
+ * A managed checkbox component that syncs its state with a boolean property of the app
  * settings.
  *
- * @param props - The properties for the managed spinbutton component.
- * @returns A managed spinbutton element.
+ * @param props - The properties for the managed checkbox component.
+ * @returns A managed checkbox element.
  */
-export default <K extends NumberKeys<IAppSettings>>(props: IProps<K>) => {
+export default <K extends BooleanKeys<IAppSettings>>(props: IProps<K>) => {
   const [state, setState] = useAppSetting(props.settingsKey);
 
   return (
-    <Spinbutton
+    <Checkbox
       label={props.label}
       info={props.info}
       initialValue={state}
-      width={props.width}
       onChange={setState}
       disabled={props.disabled}
-      min={props.min}
-      max={props.max}
-      step={props.step}
     />
   );
 };
