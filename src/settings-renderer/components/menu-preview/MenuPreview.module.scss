@@ -36,8 +36,9 @@
 
       transform: translate(-50%, -50%);
       transition:
-        left 0.1s ease,
-        top 0.1s ease;
+        transform 0.2s ease,
+        left 0.2s ease,
+        top 0.2s ease;
 
       &:hover {
         background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.3));
@@ -74,6 +75,11 @@
       &.dragging {
         opacity: 0.3;
         filter: blur(2px);
+      }
+
+      &.dropping {
+        border: $border-selected;
+        transform: translate(-50%, -50%) scale(1.1);
       }
 
       &:active {
@@ -148,6 +154,11 @@
 
       &:active {
         top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
+      }
+
+      &.dropping {
+        border: $border-selected;
+        transform: translate(-50%, -50%) rotate(var(--angle)) scale(1.1);
       }
 
       // The ::before and ::after pseudo elements are used to draw the backlink line.

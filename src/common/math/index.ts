@@ -128,7 +128,7 @@ export function computeItemAngles(
   const itemAngles: number[] = [];
 
   // Shouldn't happen, but who knows...
-  if (items.length == 0) {
+  if (!items || items.length == 0) {
     return itemAngles;
   }
 
