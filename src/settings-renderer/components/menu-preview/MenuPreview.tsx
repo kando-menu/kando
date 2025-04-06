@@ -17,193 +17,10 @@ const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
 import * as math from '../../../common/math';
+import * as utils from './utils';
 
 import ThemedIcon from '../common/ThemedIcon';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
-import { IVec2, IMenuItem } from '../../../common';
-
-/**
- * This function returns the direction towards the parent of an item with the given angle.
- * This is the angle + 180 degrees. The result is normalized to the range [0, 360).
- *
- * @param item The angle of the item.
- * @returns The angle towards the parent of the given item.
- */
-function getParentAngle(angle: number): number {
-  return (angle + 180) % 360;
-}
-
-/**
- * This is used to compute the drop target during drag-and-drop operations in the menu
- * preview. It computes the drop index by testing all possible indices and choosing the
- * one which results in the smallest angle between the currently dragged item and the drop
- * position.
- *
- * It is also possible to drop the dragged item into a submenu. In this case, the drop
- * index will be the index of the submenu and the dropInto property will be set to true.
- *
- * Finally, if the dragged item is about to be dropped into the back-navigation link, the
- * drop index will be null and the dropInto property will be set to true as well.
- *
- * @param parentAngle The angle towards the parent of the current center item. For the
- *   root menu, this should be null.
- * @param children The angles of the children of the current center item. These also
- *   contain the dropTarget property which indicates whether the item is a valid drop
- *   target.
- * @param dragAngle The angle of the dragged item.
- * @param dragIndex If the dragged item is a child of centerItem, this is the index of the
- *   dragged item in centerItem.children. It will be excluded from the list of possible
- *   drop targets and ignored when computing item angles.
- * @returns The item index where to drop the dragged item. If dropInto is true, the
- *   dragged item should be dropped into the submenu at the given index.
- */
-function computeDropTarget(
-  parentAngle: number,
-  children: { angle: number; dropTarget: boolean }[],
-  dragAngle: number,
-  dragIndex?: number
-): {
-  dropIndex: number;
-  dropInto: boolean;
-} {
-  // First we assemble a list of all possible drop targets. We exclude the dragged item
-  // from the list of candidates, but we need to keep the index in the original list so
-  // that we can return it later.
-
-  const candidates = children
-    .map((child, i) => {
-      return { angle: child.angle, dropTarget: child.dropTarget, index: i };
-    })
-    .filter((_, i) => i !== dragIndex);
-
-  // Now we iterate over all possible drop indices and compute the angle between the
-  // dragged item and the drop position candidate. We choose the index which results in
-  // the smallest angle.
-  let bestIndex = 0;
-  let bestDiff = 180;
-
-  for (let i = 0; i <= children.length; i++) {
-    const { dropAngle } = computeItemAnglesWithDropIndex(candidates, i, parentAngle);
-
-    const diff = math.getAngularDifference(dragAngle, dropAngle);
-    if (diff < bestDiff) {
-      bestDiff = diff;
-      bestIndex = i;
-    }
-  }
-
-  // We check whether the back-navigation link is closer.
-  if (
-    parentAngle != null &&
-    math.getAngularDifference(dragAngle, parentAngle) < bestDiff
-  ) {
-    return { dropIndex: null, dropInto: true };
-  }
-
-  // Finally, we check whether a submenu is closer. There are some weird edge cases where
-  // it's not possible to drop something into a submenu (e.g. when the submenu is at the
-  // top of the menu). As a workaround, we add a small 5 degree region around each
-  // submenu. If the dragged item is within this region, we consider the submenu as the
-  // drop target.
-  let dropInto = false;
-  let dropIndex = bestIndex;
-
-  const itemAngles = math.computeItemAngles(candidates, parentAngle);
-  for (let i = 0; i < candidates.length; i++) {
-    const child = candidates[i];
-    if (child.dropTarget) {
-      const diff = math.getAngularDifference(dragAngle, itemAngles[i]);
-      if (diff < bestDiff || diff < 5) {
-        dropIndex = child.index;
-        bestDiff = diff;
-        dropInto = true;
-      }
-    }
-  }
-
-  return { dropIndex, dropInto };
-}
-
-/**
- * This is basically a variant of the math.computeItemAngles() function which is used
- * during drag-and-drop operations. It behaves similar to the computeItemAngles function,
- * but it allows to pass an additional drop index. The computed item angles will leave a
- * gap for the to-be-dropped item.
- *
- * @param items The Items for which the angles should be computed. They may already have
- *   an angle property. If so, this is considered a fixed angle.
- * @param dropIndex The index of the location where something is about to be dropped.
- * @param parentAngle The angle of the parent item. If given, there will be some reserved
- *   space.
- * @returns An array of angles in degrees and the angle for the to-be-dropped item.
- */
-function computeItemAnglesWithDropIndex(
-  items: { angle?: number }[],
-  dropIndex: number,
-  parentAngle?: number
-): { itemAngles: number[]; dropAngle: number } {
-  // Create a copy of the items array.
-  const itemsCopy = items.slice();
-
-  // Add an artificial item at the position where something is about to be dropped.
-  itemsCopy.splice(dropIndex, 0, {});
-
-  // Now compute the angles as usual.
-  const itemAngles = math.computeItemAngles(itemsCopy, parentAngle);
-
-  // We added an artificial item to leave an angular gap for the to-be-dropped item. We
-  // have to remove this again from the list of item angles as there is no real item at
-  // this position. We only wanted to affect the angles for the adjacent items.
-  // We will also return the angle for the to-be-dropped item (if given).
-  const dropAngle = itemAngles.splice(dropIndex, 1)[0];
-
-  return { itemAngles, dropAngle };
-}
-
-/**
- * A small helper function to create CSS properties for the given direction and angle.
- * This is used a couple of times below.
- *
- * @param directionName The name of the CSS property.
- * @param direction The direction vector.
- * @param angleName The name of the CSS property for the angle.
- * @param angle The angle in degrees.
- * @returns A map of CSS properties.
- */
-function makeCSSProperties(
-  directionName: string,
-  direction: IVec2,
-  angleName?: string,
-  angle?: number
-): React.CSSProperties {
-  const properties: Record<string, string | number> = {
-    [`--${directionName}-x`]: direction.x,
-    [`--${directionName}-y`]: direction.y,
-  };
-
-  if (angleName !== undefined && angle !== undefined) {
-    properties[`--${angleName}`] = `${angle}deg`;
-  }
-
-  return properties;
-}
-
-/**
- * This method returns the bounding box of the given element. Very similar to
- * `element.getBoundingClientRect()`, but in an async way.
- *
- * @param element The element to get the bounding box of.
- * @returns A promise that resolves to the bounding box of the element.
- */
-function getBoundingClientRectAsync(element: HTMLElement): Promise<DOMRectReadOnly> {
-  return new Promise((resolve) => {
-    const observer = new IntersectionObserver((entries) => {
-      observer.disconnect();
-      resolve(entries[0].boundingClientRect);
-    });
-    observer.observe(element);
-  });
-}
 
 /**
  * This component encapsules the center area of the settings dialog. It contains the
@@ -262,7 +79,7 @@ export default () => {
     const type = ItemTypeRegistry.getInstance().getType(child.type);
     if (type?.hasChildren) {
       isRoot = false;
-      parentAngle = getParentAngle(childAngles[childIndex]);
+      parentAngle = utils.getParentAngle(childAngles[childIndex]);
       centerItem = child;
       childAngles = math.computeItemAngles(centerItem.children, parentAngle);
     } else {
@@ -355,7 +172,10 @@ export default () => {
       return null;
     }
 
-    const grandchildAngles = math.computeItemAngles(items, getParentAngle(childAngle));
+    const grandchildAngles = math.computeItemAngles(
+      items,
+      utils.getParentAngle(childAngle)
+    );
     const grandchildDirections = grandchildAngles.map((angle) =>
       math.getDirection(angle, 1)
     );
@@ -365,7 +185,7 @@ export default () => {
         <div
           key={index}
           className={classes.grandChild}
-          style={makeCSSProperties(
+          style={utils.makeCSSProperties(
             'dir',
             grandchildDirections[index],
             'angle',
@@ -391,7 +211,7 @@ export default () => {
 
     // Compute container center in an async way. This would be possible in a
     // synchronous way, but it would block the UI thread.
-    getBoundingClientRectAsync(container).then((rect) => {
+    utils.getBoundingClientRectAsync(container).then((rect) => {
       const center = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2,
@@ -416,7 +236,7 @@ export default () => {
 
       // Compute the drop target index and whether the dragged item should be dropped
       // into a submenu.
-      const { dropIndex, dropInto } = computeDropTarget(
+      const { dropIndex, dropInto } = utils.computeDropTarget(
         parentAngle,
         children,
         dragAngle,
@@ -437,7 +257,7 @@ export default () => {
     <div className={classes.previewArea}>
       <div
         className={classes.preview}
-        style={makeCSSProperties(
+        style={utils.makeCSSProperties(
           'transition-dir',
           math.getDirection(transitionAngle, 1.0)
         )}>
@@ -463,7 +283,7 @@ export default () => {
                   <div
                     className={classes.backLink}
                     onClick={() => selectParent()}
-                    style={makeCSSProperties(
+                    style={utils.makeCSSProperties(
                       'dir',
                       math.getDirection(parentAngle, 1),
                       'angle',
@@ -505,7 +325,7 @@ export default () => {
                       onDragStart={() => startDrag('item', index)}
                       onDragEnd={() => endDrag()}
                       onClick={() => selectChild(index)}
-                      style={makeCSSProperties('dir', childDirections[index])}>
+                      style={utils.makeCSSProperties('dir', childDirections[index])}>
                       <ThemedIcon
                         size={'100%'}
                         theme={child.iconTheme}
@@ -527,7 +347,7 @@ export default () => {
                         lock: true,
                         locked: child.angle !== undefined,
                       })}
-                      style={makeCSSProperties('dir', childDirections[index])}>
+                      style={utils.makeCSSProperties('dir', childDirections[index])}>
                       <ThemedIcon
                         size={'100%'}
                         theme={'material-symbols-rounded'}
