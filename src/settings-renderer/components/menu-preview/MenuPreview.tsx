@@ -42,12 +42,6 @@ interface IRenderedMenuItem {
   /** The theme from which the above icon should be used. */
   iconTheme: string;
 
-  /**
-   * The angles of the child items. This is used to compute the position of the grandchild
-   * items. If the item has no children, this is empty.
-   */
-  childAngles: Array<number>;
-
   /** The fixed angle of the item. This is only set if the item is locked. */
   angle?: number;
 }
@@ -136,10 +130,6 @@ export default () => {
       icon: child.icon,
       iconTheme: child.iconTheme,
       angle: child.angle,
-      childAngles: math.computeItemAngles(
-        child.children,
-        utils.getParentAngle(childAngles[i])
-      ),
     };
     return item;
   });
@@ -156,7 +146,6 @@ export default () => {
       index: -1,
       icon: draggedType[1].defaultIcon,
       iconTheme: draggedType[1].defaultIconTheme,
-      childAngles: [],
     };
     renderedChildren.splice(dropIndex, 0, newItem);
     renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
@@ -205,10 +194,15 @@ export default () => {
   };
 
   // Assembles a list of divs for the grandchild items of the given child item.
-  const getGrandchildDivs = (grandchildAngles: number[]) => {
-    if (!grandchildAngles || grandchildAngles.length === 0) {
+  const getGrandchildDivs = (child: IRenderedMenuItem, angle: number) => {
+    if (!centerItem.children || !centerItem.children[child.index]?.children) {
       return null;
     }
+
+    const grandchildAngles = math.computeItemAngles(
+      centerItem.children[child.index].children,
+      utils.getParentAngle(angle)
+    );
 
     const grandchildDirections = grandchildAngles.map((angle) =>
       math.getDirection(angle, 1)
@@ -380,7 +374,7 @@ export default () => {
                         theme={child.iconTheme}
                         name={child.icon}
                       />
-                      {getGrandchildDivs(child.childAngles)}
+                      {getGrandchildDivs(child, renderedChildAngles[index])}
                     </div>
                   );
                 })
