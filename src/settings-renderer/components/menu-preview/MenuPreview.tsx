@@ -352,7 +352,8 @@ export default () => {
                 />
               </div>
               {
-                // Add all child items. They are positioned via CSS properties.
+                // Add all child items. They are positioned via CSS properties. Only items
+                // without fixed angles are draggable.
                 renderedChildren.map((child, index) => {
                   return (
                     <div
@@ -364,7 +365,7 @@ export default () => {
                         dragging: isDraggedChild(child),
                         dropping: dropInto && dropIndex === child.index,
                       })}
-                      draggable
+                      draggable={child.angle === undefined}
                       onDragStart={() => startDrag('item', index)}
                       onDragEnd={() => endDrag()}
                       onClick={() => selectChild(index)}
