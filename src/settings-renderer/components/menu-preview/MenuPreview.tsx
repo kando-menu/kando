@@ -90,10 +90,9 @@ export default () => {
   // First, we traverses the children of the current menu according to the selection path
   // and store the final (sub)menu. This is the menu which should be shown in the center.
   // This could either be the last item of the path (if a submenu is selected) or the
-  // last-but-one item (if a menu item is selected).
-  // If the selection path is empty, the root menu is the center item.
-  // We also store the index of the selected leaf child if it is not a submenu. If a
-  // submenu or the root menu is selected, the index is -1.
+  // last-but-one item (if a menu item is selected). If the selection path is empty, the
+  // root menu is the center item. We also store the index of the selected leaf child if
+  // it is not a submenu. If the center is selected, the index is -1.
   let centerItem = menu.root;
   let selectedChild = -1;
   let isRoot = true;
@@ -136,7 +135,6 @@ export default () => {
 
   // If there is currently a drag operation in progress, we need to modify the list of
   // rendered children. If it is an external drag, we need to add a new item at the drop
-  // position. If it is an internal drag, we need to move the dragged item to the drop
   // position.
   if (dnd.draggedType === 'new-item' && !dropInto && dropIndex !== null) {
     const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
@@ -148,6 +146,21 @@ export default () => {
       iconTheme: draggedType[1].defaultIconTheme,
     };
     renderedChildren.splice(dropIndex, 0, newItem);
+    renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
+  }
+
+  // If it is an internal drag, we need to move the dragged item to the drop position.
+  if (dnd.draggedType === 'item' && dropIndex !== null) {
+    // Remove the dragged item from the list of rendered children.
+    const draggedItem = renderedChildren.splice(dnd.draggedIndex, 1)[0];
+
+    // If it is not dropped into a submenu, we need to add it to the list of rendered
+    // children at the drop position.
+    if (!dropInto) {
+      draggedItem.key = 'dragged' + dropIndex;
+      renderedChildren.splice(dropIndex, 0, draggedItem);
+    }
+
     renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
   }
 
@@ -226,6 +239,7 @@ export default () => {
 
   const currentContainer = transitionPing ? pingRef : pongRef;
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    console.log('drag over');
     const container = currentContainer.current;
     if (!container) {
       return;
@@ -309,11 +323,25 @@ export default () => {
             }}>
             <div
               ref={currentContainer}
-              className={classes.transitionContainer}
+              className={cx({
+                transitionContainer: true,
+                dndOngoing: dnd.draggedType !== 'none',
+              })}
               onDragOver={onDragOver}
               onDragEnd={() => {
+                console.log('drag end');
+              }}
+              onDragLeave={() => {
+                console.log('drag leave');
+              }}
+              onDrop={() => {
+                console.log('drop');
                 setDropIndex(null);
                 setDropInto(false);
+                endDrag();
+              }}
+              onDragExit={() => {
+                console.log('drag exit');
               }}>
               {
                 // Except for the root menu, in all submenus a back link is shown which

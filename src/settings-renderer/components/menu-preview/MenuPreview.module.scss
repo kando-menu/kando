@@ -10,6 +10,16 @@
 
 @use '../../variables.scss' as *;
 
+$icon-padding: 1cqmin;
+$center-size: 25cqmin;
+$child-size: 12cqmin;
+$child-offset: 30cqmin;
+$grandchild-size: 4cqmin;
+$grandchild-offset: 7cqmin;
+$lock-size: 4cqmin;
+$lock-offset: 18cqmin;
+$backlink-size: 10cqmin;
+
 .previewArea {
   display: flex;
   justify-content: center;
@@ -28,17 +38,12 @@
     .backLink,
     .lock {
       position: absolute;
-
       aspect-ratio: 1;
-
       border-radius: 50%;
       background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.2));
 
-      transform: translate(-50%, -50%);
-      transition:
-        transform 0.2s ease,
-        left 0.2s ease,
-        top 0.2s ease;
+      transition: transform 0.2s ease;
+      border: 1px solid transparent;
 
       &:hover {
         background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.3));
@@ -50,13 +55,13 @@
     }
 
     .center {
-      width: 25cqmin;
-      top: 50cqmin;
-      left: 50cqmin;
-      padding: 1cqmin;
+      width: $center-size;
+      top: calc(50cqmin - $center-size / 2 - $icon-padding / 2);
+      left: calc(50cqmin - $center-size / 2 - $icon-padding / 2);
+      padding: $icon-padding;
 
       &:active {
-        top: calc(50cqmin + 1px);
+        top: calc(50cqmin - $center-size / 2 - $icon-padding / 2 + 1px);
       }
 
       :global(.icon-container) {
@@ -65,11 +70,15 @@
     }
 
     .child {
-      width: 12cqmin;
-      padding: 1cqmin;
+      width: $child-size;
+      top: calc(-1 * $child-size / 2 - $icon-padding / 2);
+      left: calc(-1 * $child-size / 2 - $icon-padding / 2);
+      padding: $icon-padding;
 
-      left: calc(50cqmin + 30cqmin * var(--dir-x));
-      top: calc(50cqmin + 30cqmin * var(--dir-y));
+      transform: translate(
+        calc(50cqmin + $child-offset * var(--dir-x)),
+        calc(50cqmin + $child-offset * var(--dir-y))
+      );
 
       &.dragging {
         opacity: 0.3;
@@ -78,11 +87,15 @@
 
       &.dropping {
         box-shadow: 0 0 10px light-dark($key-dark, $key-light);
-        transform: translate(-50%, -50%) scale(1.1);
+        transform: translate(
+            calc(50cqmin + $child-offset * var(--dir-x)),
+            calc(50cqmin + $child-offset * var(--dir-y))
+          )
+          scale(1.1);
       }
 
       &:active {
-        top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
+        top: calc(-1 * $child-size / 2 - $icon-padding / 2 + 1px);
       }
 
       :global(.icon-container) {
@@ -91,11 +104,15 @@
     }
 
     .lock {
-      width: 4cqmin;
-      padding: 0.5cqmin;
+      width: $lock-size;
+      top: calc(-1 * $lock-size / 2 - $icon-padding / 4);
+      left: calc(-1 * $lock-size / 2 - $icon-padding / 4);
+      padding: $icon-padding / 2;
 
-      left: calc(50cqmin + 18cqmin * var(--dir-x));
-      top: calc(50cqmin + 18cqmin * var(--dir-y));
+      transform: translate(
+        calc(50cqmin + $lock-offset * var(--dir-x)),
+        calc(50cqmin + $lock-offset * var(--dir-y))
+      );
 
       background-color: transparent;
       color: $text-normal;
@@ -117,21 +134,20 @@
       }
 
       &:active {
-        top: calc(50cqmin + 18cqmin * var(--dir-y) + 1px);
+        top: calc(-1 * $lock-size / 2 - $icon-padding / 4 + 1px);
       }
     }
 
     .grandChild {
       position: absolute;
-      width: 4cqmin;
       aspect-ratio: 1;
+      width: $grandchild-size;
+      top: calc(50% + $grandchild-offset * var(--dir-y));
+      left: calc(50% + $grandchild-offset * var(--dir-x));
 
       border-radius: 50%;
 
       transform: translate(-50%, -50%);
-
-      left: calc(50% + 7cqmin * var(--dir-x));
-      top: calc(50% + 7cqmin * var(--dir-y));
 
       background: linear-gradient(
         var(--angle),
@@ -144,20 +160,28 @@
 
     .backLink {
       position: relative;
-      width: 10cqmin;
+      width: $backlink-size;
 
-      left: calc(50cqmin + 30cqmin * var(--dir-x));
-      top: calc(50cqmin + 30cqmin * var(--dir-y));
+      left: -$backlink-size / 2;
+      top: -$backlink-size / 2;
 
-      transform: translate(-50%, -50%) rotate(var(--angle));
+      transform: translate(
+          calc(50cqmin + $child-offset * var(--dir-x)),
+          calc(50cqmin + $child-offset * var(--dir-y))
+        )
+        rotate(var(--angle));
 
       &:active {
-        top: calc(50cqmin + 30cqmin * var(--dir-y) + 1px);
+        top: calc(-1 * $backlink-size / 2 + 1px);
       }
 
       &.dropping {
         box-shadow: 0 0 10px light-dark($key-dark, $key-light);
-        transform: translate(-50%, -50%) rotate(var(--angle)) scale(1.1);
+        transform: translate(
+            calc(50cqmin + $child-offset * var(--dir-x)),
+            calc(50cqmin + $child-offset * var(--dir-y))
+          )
+          rotate(var(--angle)) scale(1.1);
       }
 
       // The ::before and ::after pseudo elements are used to draw the backlink line.
@@ -208,11 +232,15 @@
   width: 100%;
   height: 100%;
 
+  &.dndOngoing > * {
+    pointer-events: none;
+  }
+
   &.fadeEnter {
     opacity: 0;
     transform: translate(
-      calc(30cqmin * var(--transition-dir-x)),
-      calc(30cqmin * var(--transition-dir-y))
+      calc($child-offset * var(--transition-dir-x)),
+      calc($child-offset * var(--transition-dir-y))
     );
   }
 
@@ -224,8 +252,8 @@
   &.fadeExitActive {
     opacity: 0;
     transform: translate(
-      calc(-30cqmin * var(--transition-dir-x)),
-      calc(-30cqmin * var(--transition-dir-y))
+      calc(-1 * $child-offset * var(--transition-dir-x)),
+      calc(-1 * $child-offset * var(--transition-dir-y))
     );
     pointer-events: none;
   }
