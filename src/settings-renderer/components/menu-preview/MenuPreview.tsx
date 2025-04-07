@@ -152,7 +152,7 @@ export default () => {
     const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
     const draggedType = allItemTypes[dnd.draggedIndex];
     const newItem: IRenderedMenuItem = {
-      key: 'dragged',
+      key: 'dragged' + dropIndex,
       index: -1,
       icon: draggedType[1].defaultIcon,
       iconTheme: draggedType[1].defaultIconTheme,
@@ -259,11 +259,10 @@ export default () => {
       const internalDrag = dnd.draggedType === 'item';
       const dragIndex = internalDrag ? dnd.draggedIndex : null;
 
-      const children = childAngles.map((angle, i) => {
-        const child = centerItem.children[i];
+      const children = centerItem.children.map((child) => {
         const type = ItemTypeRegistry.getInstance().getType(child.type);
         return {
-          angle,
+          angle: child.angle,
           dropTarget: type?.hasChildren,
         };
       });
@@ -283,6 +282,14 @@ export default () => {
 
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  // Returns true if the given child is the currently dragged item.
+  const isDraggedChild = (child: IRenderedMenuItem) => {
+    return (
+      child.key.startsWith('dragged') ||
+      (dnd.draggedType === 'item' && dnd.draggedIndex === child.index)
+    );
   };
 
   const childDirections = renderedChildAngles.map((angle) => math.getDirection(angle, 1));
@@ -360,10 +367,7 @@ export default () => {
                       className={cx({
                         child: true,
                         selected: selectedChild >= 0 && selectedChild === child.index,
-                        dragging:
-                          child.key === 'dragged' ||
-                          (dnd.draggedType === 'item' &&
-                            dnd.draggedIndex === child.index),
+                        dragging: isDraggedChild(child),
                         dropping: dropInto && dropIndex === child.index,
                       })}
                       draggable
@@ -385,6 +389,11 @@ export default () => {
                 // Add the lock icons for each child item. When locked, the item cannot be
                 // reordered via drag and drop, but its fixed angle can be adjusted instead.
                 renderedChildren.map((child, index) => {
+                  // The dragged item does not have a lock icon.
+                  if (isDraggedChild(child)) {
+                    return null;
+                  }
+
                   return (
                     <div
                       key={'lock' + child.key}

@@ -46,7 +46,6 @@
 
       &.selected {
         border: $border-selected;
-        box-shadow: 0 0 10px light-dark($key-dark, $key-light);
       }
     }
 
@@ -78,7 +77,7 @@
       }
 
       &.dropping {
-        border: $border-selected;
+        box-shadow: 0 0 10px light-dark($key-dark, $key-light);
         transform: translate(-50%, -50%) scale(1.1);
       }
 
@@ -157,7 +156,7 @@
       }
 
       &.dropping {
-        border: $border-selected;
+        box-shadow: 0 0 10px light-dark($key-dark, $key-light);
         transform: translate(-50%, -50%) rotate(var(--angle)) scale(1.1);
       }
 

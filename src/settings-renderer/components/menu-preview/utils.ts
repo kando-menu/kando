@@ -48,7 +48,7 @@ export function getParentAngle(angle: number): number {
  */
 export function computeDropTarget(
   parentAngle: number,
-  children: { angle: number; dropTarget: boolean }[],
+  children: { angle?: number; dropTarget: boolean }[],
   dragAngle: number,
   dragIndex?: number
 ): {
@@ -58,7 +58,6 @@ export function computeDropTarget(
   // First we assemble a list of all possible drop targets. We exclude the dragged item
   // from the list of candidates, but we need to keep the index in the original list so
   // that we can return it later.
-
   const candidates = children
     .map((child, i) => {
       return { angle: child.angle, dropTarget: child.dropTarget, index: i };
@@ -71,9 +70,8 @@ export function computeDropTarget(
   let bestIndex = 0;
   let bestDiff = 180;
 
-  for (let i = 0; i <= children.length; i++) {
-    const { dropAngle } = computeItemAnglesWithDropIndex(candidates, i, parentAngle);
-
+  for (let i = 0; i <= candidates.length; i++) {
+    const dropAngle = computeDropAngle(candidates, i, parentAngle);
     const diff = math.getAngularDifference(dragAngle, dropAngle);
     if (diff < bestDiff) {
       bestDiff = diff;
@@ -114,23 +112,21 @@ export function computeDropTarget(
 }
 
 /**
- * This is basically a variant of the math.computeItemAngles() function which is used
- * during drag-and-drop operations. It behaves similar to the computeItemAngles function,
- * but it allows to pass an additional drop index. The computed item angles will leave a
- * gap for the to-be-dropped item.
+ * This computes the angle where an item would be rendered if it was inserted in the given
+ * position into a list of items.
  *
- * @param items The Items for which the angles should be computed. They may already have
- *   an angle property. If so, this is considered a fixed angle.
+ * @param items The list of items into which the item is about to be inserted. If an item
+ *   has an angle, it will be used as a fixed angle.
  * @param dropIndex The index of the location where something is about to be dropped.
  * @param parentAngle The angle of the parent item. If given, there will be some reserved
  *   space.
- * @returns An array of angles in degrees and the angle for the to-be-dropped item.
+ * @returns The angle of the to-be-dropped item.
  */
-function computeItemAnglesWithDropIndex(
+function computeDropAngle(
   items: { angle?: number }[],
   dropIndex: number,
   parentAngle?: number
-): { itemAngles: number[]; dropAngle: number } {
+): number {
   // Create a copy of the items array.
   const itemsCopy = items.slice();
 
@@ -140,13 +136,8 @@ function computeItemAnglesWithDropIndex(
   // Now compute the angles as usual.
   const itemAngles = math.computeItemAngles(itemsCopy, parentAngle);
 
-  // We added an artificial item to leave an angular gap for the to-be-dropped item. We
-  // have to remove this again from the list of item angles as there is no real item at
-  // this position. We only wanted to affect the angles for the adjacent items.
-  // We will also return the angle for the to-be-dropped item (if given).
-  const dropAngle = itemAngles.splice(dropIndex, 1)[0];
-
-  return { itemAngles, dropAngle };
+  // The drop angle is the angle of the item at the drop index.
+  return itemAngles[dropIndex];
 }
 
 /**
