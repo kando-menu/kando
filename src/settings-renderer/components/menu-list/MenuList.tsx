@@ -24,6 +24,27 @@ import Note from '../common/Note';
 import Button from '../common/Button';
 import CollectionDetails from './CollectionDetails';
 
+/** For rendering the menua, a list of these objects is created. */
+interface IRenderedMenu {
+  /** A unique key for react. */
+  key: string;
+
+  /** The original index in the list of menu. */
+  index: number;
+
+  /** The name of the menu. */
+  name: string;
+
+  /** The shortcut of the menu. */
+  shortcut: string;
+
+  /** The icon of the menu item. */
+  icon: string;
+
+  /** The theme from which the above icon should be used. */
+  iconTheme: string;
+}
+
 /**
  * This is a vertical list of buttons, one for each configured menu. They can be reordered
  * via drag and drop. Clicking one of the buttons will make the corresponding menu the
@@ -36,6 +57,7 @@ import CollectionDetails from './CollectionDetails';
 export default () => {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
+  const backend = useAppState((state) => state.backendInfo);
 
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
@@ -45,8 +67,6 @@ export default () => {
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
 
-  const backend = useAppState((state) => state.backendInfo);
-
   // Animate the filtering, addition, and removal of menus.
   const [animatedList, enableAnimatedList] = useAutoAnimate({ duration: 250 });
 
@@ -54,6 +74,10 @@ export default () => {
   const startDrag = useAppState((state) => state.startDrag);
   const endDrag = useAppState((state) => state.endDrag);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
+
+  // When a menu is dragged over another menu, we store the index of the menu
+  // we are currently hovering over. The dragged menu will be drawn there.
+  const [dropIndex, setDropIndex] = React.useState<number | null>(null);
 
   // Make sure that the selected menu is valid. This could for instance happen if
   // the currently selected menu is deleted by an external event (e.g. by editing
@@ -64,16 +88,47 @@ export default () => {
     }
   }, [selectedMenu, menus]);
 
-  // Compile a list of all menus which are currently visible. This is done by first
+  // We will compile a list of all menus which are currently visible. We will use a list
+  // of IRenderedMenu objects for this.
+  let renderedMenus = menus.map((menu, index) => {
+    const renderedMenu: IRenderedMenu = {
+      key: menu.root.name + menu.root.icon + menu.root.iconTheme,
+      index,
+      name: menu.root.name,
+      shortcut:
+        (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || 'Not bound.',
+      icon: menu.root.icon,
+      iconTheme: menu.root.iconTheme,
+    };
+
+    return renderedMenu;
+  });
+
+  // Ensure that all keys are unique. If there are multiple menus with the same key, we
+  // need to add an index to the key.
+  const keys = new Set();
+  renderedMenus.forEach((menu) => {
+    let key = menu.key;
+    let index = 0;
+    while (keys.has(key)) {
+      index++;
+      key = menu.key + index;
+    }
+    keys.add(key);
+    menu.key = key;
+  });
+
+  // If a drag is in progress, we need to move the dragged menu to the position of the
+  // menu we are currently hovering over. This is done by removing the dragged menu
+  // from the list and inserting it at the position of the hovered menu.
+  if (dnd.draggedType === 'menu' && dropIndex !== null) {
+    const draggedMenu = renderedMenus.splice(dnd.draggedIndex, 1)[0];
+    renderedMenus.splice(dropIndex, 0, draggedMenu);
+  }
+
   // filtering the menus by the selected collection and then by the filter term. The
-  // result is a list of objects which contain the menu and its index in the original
-  // list. This is necessary because the index of the menu in the original list is
-  // needed for the drag and drop functionality as well as a key for the auto-animate
-  // module.
-  const visibleMenus = menus
-    .map((menu, index) => {
-      return { menu, index };
-    })
+  // result is a list of IRenderedMenu objects.
+  renderedMenus = renderedMenus
     .filter((menu) => {
       // If the user has not selected a collection, all menus are visible.
       if (selectedCollection === -1) {
@@ -82,7 +137,7 @@ export default () => {
 
       // Else, a menu must have all tags of the selected collection to be visible.
       return menuCollections[selectedCollection].tags.every((tag) =>
-        menu.menu.tags?.includes(tag)
+        menus[menu.index].tags?.includes(tag)
       );
     })
     .filter((menu) => {
@@ -93,7 +148,7 @@ export default () => {
       }
 
       // Else, a menu must contain the filter term to be visible.
-      return menu.menu.root.name.toLowerCase().includes(filterTerm.toLowerCase());
+      return menu.name.toLowerCase().includes(filterTerm.toLowerCase());
     });
 
   return (
@@ -113,7 +168,7 @@ export default () => {
               </div>
             )}
             {menus.length > 0 &&
-              visibleMenus.length === 0 &&
+              renderedMenus.length === 0 &&
               selectedCollection === -1 && (
                 <div key="-1" className={classes.message}>
                   <h1>No Matching Menus</h1>
@@ -122,7 +177,7 @@ export default () => {
                 </div>
               )}
             {menus.length > 0 &&
-              visibleMenus.length === 0 &&
+              renderedMenus.length === 0 &&
               selectedCollection !== -1 && (
                 <div key="-1" className={classes.message}>
                   <h1>No Matching Menus</h1>
@@ -134,33 +189,50 @@ export default () => {
                 </div>
               )}
 
-            {visibleMenus.map(({ menu, index }) => {
-              const shortcut = backend.supportsShortcuts
-                ? menu.shortcut
-                : menu.shortcutID;
-
+            {renderedMenus.map((menu) => {
               return (
                 <button
-                  key={index}
+                  key={menu.key}
                   className={cx({
                     menu: true,
-                    selected: index === selectedMenu,
-                    dragging: dnd.draggedType === 'menu' && dnd.draggedIndex === index,
+                    selected: menu.index === selectedMenu,
+                    dragging:
+                      dnd.draggedType === 'menu' && dnd.draggedIndex === menu.index,
                   })}
-                  onClick={() => selectMenu(index)}
+                  onClick={() => selectMenu(menu.index)}
                   draggable
                   onDragStart={(event) => {
                     event.dataTransfer.effectAllowed = 'move';
-                    startDrag('menu', index);
+                    startDrag('menu', menu.index);
+                    setDropIndex(menu.index);
                     enableAnimatedList(false);
                   }}
                   onDragEnd={() => {
                     endDrag();
+                    setDropIndex(null);
                     enableAnimatedList(true);
                   }}
                   onDrop={() => {
+                    moveMenu(dnd.draggedIndex, dropIndex);
+
+                    // If the selected menu was dragged, we need to update the selected index.
+                    if (dnd.draggedIndex === selectedMenu) {
+                      selectMenu(dropIndex);
+                    }
+
+                    // If the dragged menu was dropped on the other side of the selected menu,
+                    // we need to update the selected index as well.
+                    if (dnd.draggedIndex < selectedMenu && dropIndex >= selectedMenu) {
+                      selectMenu(selectedMenu - 1);
+                    } else if (
+                      dnd.draggedIndex > selectedMenu &&
+                      dropIndex <= selectedMenu
+                    ) {
+                      selectMenu(selectedMenu + 1);
+                    }
+
                     endDrag();
-                    enableAnimatedList(true);
+                    setDropIndex(null);
                   }}
                   onDragOver={(event) => {
                     if (dnd.draggedType === 'menu') {
@@ -168,43 +240,25 @@ export default () => {
                     }
                   }}
                   onDragEnter={() => {
-                    if (dnd.draggedType === 'menu') {
-                      // If we swap with the selected menu, we need to update the
-                      // selection.
-                      if (index === selectedMenu) {
-                        selectMenu(dnd.draggedIndex);
-                      } else if (dnd.draggedIndex === selectedMenu) {
-                        selectMenu(index);
+                    if (dnd.draggedType === 'menu' && dnd.draggedIndex !== menu.index) {
+                      if (dnd.draggedIndex < menu.index) {
+                        setDropIndex(
+                          dropIndex >= menu.index ? menu.index - 1 : menu.index
+                        );
+                      } else {
+                        setDropIndex(
+                          dropIndex <= menu.index ? menu.index + 1 : menu.index
+                        );
                       }
-
-                      // Also, if we swap with a menu on the other side of the selection,
-                      // we need to update the selection.
-                      if (index < selectedMenu && selectedMenu < dnd.draggedIndex) {
-                        selectMenu(selectedMenu + 1);
-                      } else if (
-                        index > selectedMenu &&
-                        selectedMenu > dnd.draggedIndex
-                      ) {
-                        selectMenu(selectedMenu - 1);
-                      }
-
-                      // Swap the dragged menu with the menu we are currently hovering over.
-                      moveMenu(dnd.draggedIndex, index);
-
-                      // We are now dragging the menu which we just hovered over (it is
-                      // the same as before, but the index has changed).
-                      startDrag('menu', index);
                     }
                   }}>
                   <div style={{ display: 'flex' }}>
                     <div style={{ flexShrink: 0, width: 32, marginRight: 10 }}>
-                      <ThemedIcon name={menu.root.icon} theme={menu.root.iconTheme} />
+                      <ThemedIcon name={menu.icon} theme={menu.iconTheme} />
                     </div>
                     <div style={{ minWidth: 0 }}>
-                      <div className={classes.menuTitle}>{menu.root.name}</div>
-                      <div className={classes.menuSubtitle}>
-                        {shortcut || 'Not bound.'}
-                      </div>
+                      <div className={classes.menuTitle}>{menu.name}</div>
+                      <div className={classes.menuSubtitle}>{menu.shortcut}</div>
                     </div>
                   </div>
                 </button>
