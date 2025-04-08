@@ -80,6 +80,11 @@
             "placeholder": "Vložte libovolný text…",
             "name": "Vložit text",
             "description": "Vloží zadaný text."
+        },
+        "settings": {
+            "tip-1": "Tato akce otevře okno nastavení Kando.",
+            "name": "Otevřít nastavení",
+            "description": "Otevře okno nastavení Kando."
         }
     },
     "main": {
@@ -141,7 +146,9 @@
         "icon-picker": {
             "placeholder": "Hledat ikony…",
             "heading": "Vyberte ikonu",
-            "subheading": "Přidejte vlastní kolekce ikon umístěním složky s obrázky do {{path}}. Bude nutné restartovat Kando. Více informací <a {{- link}}>zde</a>."
+            "subheading": "Přidejte vlastní kolekce ikon umístěním složky s obrázky do {{path}}. Bude nutné restartovat Kando. Více informací <a {{- link}}>zde</a>.",
+            "base64-example": "Base64 příklad:",
+            "url-example": "URL příklad:"
         },
         "hotkey-picker": {
             "label": "Klávesová zkratka",
