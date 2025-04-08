@@ -46,7 +46,7 @@
             "tip-2": "서브메뉴 안에 서브메뉴도 넣을 수 있어요."
         },
         "uri": {
-            "tip-2": "URI 타입으로 file:// 프로토콜을 사용하여 파일이나 폴더를 열 수 있어요.",
+            "tip-2": "slack:// 또는 zoommtg://와 같은 URI를 사용할 수 있어요.",
             "tip-1": "URI 타입으로 http:// 프로토콜을 사용하여 웹사이트를 열 수 있어요.",
             "tip-3": "URI 타입으로 mailto: 링크를 열 수 있어요.",
             "tip-5": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
@@ -55,19 +55,44 @@
             "uri": "URI",
             "uri-hint": "이 URI를 열어요.",
             "name": "URI 열기",
-            "description": "파일이나 웹사이트를 열어요."
+            "description": "웹사이트 등을 열어요."
         },
         "text": {
             "placeholder": "아무 텍스트나 넣어보세요…",
             "description": "지정된 텍스트를 삽입해요.",
             "tip-1": "이 동작은 시스템의 클립보드를 사용하여 텍스트를 붙여넣어요. 동작이 실행된 이후에도 클립보드에 텍스트가 남아있을 거예요.",
             "name": "텍스트 붙여넣기"
+        },
+        "file": {
+            "tip-1": "이 아이템 타입으로 파일 또는 폴더를 열 수 있어요.",
+            "file": "파일 경로",
+            "file-hint": "이 경로가 열릴 거에요.",
+            "name": "파일 열기",
+            "description": "파일 또는 폴더를 열어요."
+        },
+        "redirect": {
+            "tip-1": "메뉴 이름이 영어라면 대문자를 일관성 있게 사용하는게 좋아요.",
+            "tip-2": "메뉴 이름을 설정하지 않거나 공백으로 설정하는 것은 좋지 않아요.",
+            "tip-3": "재귀적 리디렉트는 좋지 않아요.",
+            "redirect": "리디렉트",
+            "redirect-hint": "이 메뉴가 열릴 거에요",
+            "name": "리디렉트",
+            "description": "다른 메뉴를 열어요"
+        },
+        "settings": {
+            "tip-1": "이 동작은 Kando 설정 메뉴를 열어요.",
+            "name": "설정 열기",
+            "description": "Kando의 설정 메뉴가 열려요."
         }
     },
     "main": {
         "is-running-header": "Kando가 이미 실행 중이예요",
         "is-running-message": "시스템 트레이 아이콘으로 설정을 확인해 보세요!",
-        "failed-to-start-header": "Kando를 실행하지 못했어요"
+        "failed-to-start-header": "Kando를 실행하지 못했어요",
+        "un-inhibit-shortcuts": "단축키 재활성화",
+        "show-settings": "설정 열기",
+        "inhibit-shortcuts": "일시적으로 단축키 비활성화",
+        "quit": "종료"
     },
     "properties": {
         "common": {
@@ -89,7 +114,9 @@
             "centered-mode-hint": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
             "heading": "메뉴 설정하기",
             "warp-mouse": "중앙 정렬 모드에서 마우스 재정렬",
-            "warp-mouse-hint": "메뉴가 열릴 때 커서를 메뉴 중앙으로 움직여요."
+            "warp-mouse-hint": "메뉴가 열릴 때 커서를 메뉴 중앙으로 움직여요.",
+            "hover-mode": "호버 모드",
+            "hover-mode-hint": "숙련된 사용자 전용! 항목 위로 호버링해서 선택해요."
         },
         "condition-picker": {
             "heading": "메뉴 조건 선택하기",
@@ -121,7 +148,10 @@
         "icon-picker": {
             "heading": "아이콘 선택하기",
             "subheading": "{{path}}에 이미지가 들어있는 폴더를 넣어 아이콘을 직접 추가할 수 있어요. Kando의 재시작이 필요해요. 추가적인 정보는 <a {{- link}}>여기서</a> 참조하세요.",
-            "placeholder": "아이콘 검색…"
+            "placeholder": "아이콘 검색…",
+            "base64-example": "Base64 예시:",
+            "file-example": "file: URI 예시:",
+            "url-example": "URL 예시:"
         },
         "macro-picker": {
             "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
