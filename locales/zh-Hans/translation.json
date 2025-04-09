@@ -118,6 +118,11 @@
             "redirect-hint": "该菜单将被唤出",
             "name": "重定向",
             "description": "打开另一个菜单"
+        },
+        "settings": {
+            "tip-1": "此操作将打开Kando的设置窗口。",
+            "name": "打开设置",
+            "description": "打开Kando的设置窗口。"
         }
     },
     "properties": {
@@ -149,7 +154,8 @@
             "subheading": "如需自定义图标，请将图标包文件夹放在目录 {{path}} 中，然后重新启动 Kando。<a {{- link}}>点击了解详情</a>。",
             "placeholder": "搜索图标…",
             "base64-example": "Base64 示例：",
-            "url-example": "URL 示例："
+            "url-example": "URL 示例：",
+            "file-example": "file: URI 示例："
         },
         "condition-picker": {
             "top-placeholder": "上",
