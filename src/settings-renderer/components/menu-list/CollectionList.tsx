@@ -20,6 +20,15 @@ import { useAppState, useMenuSettings } from '../../state';
 import Scrollbox from '../common/Scrollbox';
 import ThemedIcon from '../common/ThemedIcon';
 
+/** For rendering the collections, a list of these objects is created. */
+interface IRenderedCollection {
+  /** A unique key for react. */
+  key: string;
+
+  /** The original index in the list of menu. */
+  index: number;
+}
+
 /**
  * This is a vertical list of buttons, one for each configured menu collection. They can
  * be reordered via drag and drop and deleted with a little trash icon.
@@ -45,8 +54,12 @@ export default () => {
   const endDrag = useAppState((state) => state.endDrag);
   const moveCollection = useMenuSettings((state) => state.moveCollection);
 
+  // When a collection is dragged over another collection, we store the index of that
+  // collection as drop index. The dragged collection will be drawn there.
+  const [dropIndex, setDropIndex] = React.useState<number | null>(null);
+
   // Animate the addition and removal of collections.
-  const [animatedList] = useAutoAnimate();
+  const [animatedList] = useAutoAnimate({ duration: 200 });
 
   // Make sure that the selected collection is valid. This could for instance happen if
   // the currently selected collection is deleted by an external event (e.g. by editing
@@ -56,6 +69,39 @@ export default () => {
       selectCollection(collections.length - 1);
     }
   }, [collections, selectedCollection]);
+
+  // Let's compile a list of all collections which are about to be rendered. If one
+  // collection is dragged currently around, we will have to reorder the list.
+  const renderedCollections = collections.map((collection, index) => {
+    const renderedCollection: IRenderedCollection = {
+      key: collection.name + collection.icon + collection.iconTheme,
+      index: index,
+    };
+
+    return renderedCollection;
+  });
+
+  // Ensure that all keys are unique. If there are multiple collections with the same key,
+  // we need to add an index to the key.
+  const keys = new Set();
+  renderedCollections.forEach((collection) => {
+    let key = collection.key;
+    let index = 0;
+    while (keys.has(key)) {
+      index++;
+      key = collection.key + index;
+    }
+    keys.add(key);
+    collection.key = key;
+  });
+
+  // If a drag is in progress, we need to move the dragged collection to the position of
+  // the collection we are currently hovering over. This is done by removing the dragged
+  // collection from the list and inserting it at the position of the hovered collection.
+  if (dnd.draggedType === 'collection' && dropIndex !== null) {
+    const draggedCollection = renderedCollections.splice(dnd.draggedIndex, 1)[0];
+    renderedCollections.splice(dropIndex, 0, draggedCollection);
+  }
 
   return (
     <div
@@ -72,21 +118,48 @@ export default () => {
             data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
             <TbApps />
           </button>
-          {collections.map((collection, index) => (
+          {renderedCollections.map((collection) => (
             <button
-              key={index}
+              key={collection.key}
               className={cx({
                 collection: true,
-                selected: index === selectedCollection,
-                dragging: dnd.draggedType === 'collection' && dnd.draggedIndex === index,
+                selected: collection.index === selectedCollection,
+                dragging:
+                  dnd.draggedType === 'collection' &&
+                  dnd.draggedIndex === collection.index,
               })}
-              onClick={() => selectCollection(index)}
+              onClick={() => selectCollection(collection.index)}
               draggable
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = 'move';
-                startDrag('collection', index);
+                startDrag('collection', collection.index);
+                setDropIndex(collection.index);
               }}
-              onDragEnd={endDrag}
+              onDragEnd={() => {
+                moveCollection(dnd.draggedIndex, dropIndex);
+
+                // If the selected menu was dragged, we need to update the selected index.
+                if (dnd.draggedIndex === selectedCollection) {
+                  selectCollection(dropIndex);
+                }
+
+                // If the dragged menu was dropped on the other side of the selected menu,
+                // we need to update the selected index as well.
+                if (
+                  dnd.draggedIndex < selectedCollection &&
+                  dropIndex >= selectedCollection
+                ) {
+                  selectCollection(selectedCollection - 1);
+                } else if (
+                  dnd.draggedIndex > selectedCollection &&
+                  dropIndex <= selectedCollection
+                ) {
+                  selectCollection(selectedCollection + 1);
+                }
+
+                endDrag();
+                setDropIndex(null);
+              }}
               onDragOver={(event) => {
                 if (dnd.draggedType === 'collection' || dnd.draggedType === 'menu') {
                   event.preventDefault();
@@ -95,7 +168,9 @@ export default () => {
               onDrop={(event) => {
                 if (dnd.draggedType === 'menu') {
                   const currentTags = menus[dnd.draggedIndex]?.tags || [];
-                  const newTags = [...new Set([...currentTags, ...collection.tags])];
+                  const newTags = [
+                    ...new Set([...currentTags, ...collections[collection.index].tags]),
+                  ];
                   editMenu(dnd.draggedIndex, (menu) => {
                     menu.tags = newTags;
                     return menu;
@@ -104,36 +179,23 @@ export default () => {
                 }
               }}
               onDragEnter={(event) => {
-                if (dnd.draggedType === 'collection') {
-                  // If we swap with the selected collection, we need to update the
-                  // selection.
-                  if (index === selectedCollection) {
-                    selectCollection(dnd.draggedIndex);
-                  } else if (dnd.draggedIndex === selectedCollection) {
-                    selectCollection(index);
+                if (
+                  dnd.draggedType === 'collection' &&
+                  dnd.draggedIndex !== collection.index
+                ) {
+                  if (dnd.draggedIndex < collection.index) {
+                    setDropIndex(
+                      dropIndex >= collection.index
+                        ? collection.index - 1
+                        : collection.index
+                    );
+                  } else {
+                    setDropIndex(
+                      dropIndex <= collection.index
+                        ? collection.index + 1
+                        : collection.index
+                    );
                   }
-
-                  // Also, if we swap with a collection on the other side of the selection,
-                  // we need to update the selection.
-                  if (
-                    index < selectedCollection &&
-                    selectedCollection < dnd.draggedIndex
-                  ) {
-                    selectCollection(selectedCollection + 1);
-                  } else if (
-                    index > selectedCollection &&
-                    selectedCollection > dnd.draggedIndex
-                  ) {
-                    selectCollection(selectedCollection - 1);
-                  }
-
-                  // Swap the dragged collection with the collection we are currently
-                  // hovering over.
-                  moveCollection(dnd.draggedIndex, index);
-
-                  // We are now dragging the collection which we just hovered over (it is
-                  // the same as before, but the index has changed).
-                  startDrag('collection', index);
                 } else if (dnd.draggedType === 'menu') {
                   (event.target as HTMLElement).classList.add(classes.dragOver);
                 }
@@ -144,16 +206,23 @@ export default () => {
                 }
               }}
               data-tooltip-id="main-tooltip"
-              data-tooltip-content={index === selectedCollection ? '' : collection.name}
+              data-tooltip-content={
+                collection.index === selectedCollection
+                  ? ''
+                  : collections[collection.index].name
+              }
               data-tooltip-place="right">
-              <ThemedIcon name={collection.icon} theme={collection.iconTheme} />
+              <ThemedIcon
+                name={collections[collection.index].icon}
+                theme={collections[collection.index].iconTheme}
+              />
               <div
                 className={classes.deleteButton}
                 data-tooltip-id="main-tooltip"
                 data-tooltip-content="Delete collection"
                 onClick={(event) => {
                   event.stopPropagation();
-                  deleteCollection(index);
+                  deleteCollection(collection.index);
                   selectCollection(selectedCollection - 1);
                 }}>
                 <TbTrash />

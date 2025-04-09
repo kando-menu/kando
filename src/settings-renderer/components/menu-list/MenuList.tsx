@@ -24,7 +24,7 @@ import Note from '../common/Note';
 import Button from '../common/Button';
 import CollectionDetails from './CollectionDetails';
 
-/** For rendering the menua, a list of these objects is created. */
+/** For rendering the menus, a list of these objects is created. */
 interface IRenderedMenu {
   /** A unique key for react. */
   key: string;
@@ -38,7 +38,7 @@ interface IRenderedMenu {
   /** The shortcut of the menu. */
   shortcut: string;
 
-  /** The icon of the menu item. */
+  /** The icon of the menu. */
   icon: string;
 
   /** The theme from which the above icon should be used. */
@@ -68,15 +68,15 @@ export default () => {
   const [filterTerm, setFilterTerm] = React.useState('');
 
   // Animate the filtering, addition, and removal of menus.
-  const [animatedList, enableAnimatedList] = useAutoAnimate({ duration: 250 });
+  const [animatedList] = useAutoAnimate({ duration: 200 });
 
   const dnd = useAppState((state) => state.dnd);
   const startDrag = useAppState((state) => state.startDrag);
   const endDrag = useAppState((state) => state.endDrag);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
 
-  // When a menu is dragged over another menu, we store the index of the menu
-  // we are currently hovering over. The dragged menu will be drawn there.
+  // When a menu is dragged over another menu, we store the index of that menu as drop
+  // index. The dragged menu will be drawn there.
   const [dropIndex, setDropIndex] = React.useState<number | null>(null);
 
   // Make sure that the selected menu is valid. This could for instance happen if
@@ -91,12 +91,13 @@ export default () => {
   // We will compile a list of all menus which are currently visible. We will use a list
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {
+    const shortcut =
+      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || 'Not bound.';
     const renderedMenu: IRenderedMenu = {
-      key: menu.root.name + menu.root.icon + menu.root.iconTheme,
+      key: menu.root.name + menu.root.icon + menu.root.iconTheme + shortcut,
       index,
       name: menu.root.name,
-      shortcut:
-        (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || 'Not bound.',
+      shortcut,
       icon: menu.root.icon,
       iconTheme: menu.root.iconTheme,
     };
@@ -205,14 +206,8 @@ export default () => {
                     event.dataTransfer.effectAllowed = 'move';
                     startDrag('menu', menu.index);
                     setDropIndex(menu.index);
-                    enableAnimatedList(false);
                   }}
                   onDragEnd={() => {
-                    endDrag();
-                    setDropIndex(null);
-                    enableAnimatedList(true);
-                  }}
-                  onDrop={() => {
                     moveMenu(dnd.draggedIndex, dropIndex);
 
                     // If the selected menu was dragged, we need to update the selected index.
