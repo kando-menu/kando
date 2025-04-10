@@ -41,10 +41,10 @@ export class MenuWindow extends BrowserWindow {
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
+  sameShortcutBehavior: string;
 
   constructor(private kando: KandoApp) {
     const display = screen.getPrimaryDisplay();
-
     super({
       webPreferences: {
         contextIsolation: true,
@@ -131,6 +131,31 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * Gets the next menu from an array of menus using the current menu.
+   *
+   * @param menus A list of menus.
+   * @param menu The current menu.
+   * @returns A menu or undefined.
+   */
+  async getNextMenu(
+    menus: readonly DeepReadonly<IMenu>[],
+    menu: DeepReadonly<IMenu>
+  ): Promise<DeepReadonly<IMenu> | undefined> {
+    if (!menus || menus.length === 0) {
+      return undefined;
+    }
+
+    const currentIndex = menus.indexOf(menu);
+
+    if (currentIndex === -1) {
+      return undefined;
+    }
+
+    const nextIndex = (currentIndex + 1) % menus.length;
+    return menus[nextIndex];
+  }
+
+  /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
@@ -138,7 +163,7 @@ export class MenuWindow extends BrowserWindow {
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
    */
-  public showMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
+  public async showMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
     // Select correct menu before showing it to user.
     const menu = this.chooseMenu(request, info);
 
@@ -164,16 +189,67 @@ export class MenuWindow extends BrowserWindow {
       this.kando.getBackend().unbindShortcut(newTrigger);
     }
 
+    this.sameShortcutBehavior = this.kando.getAppSettings().get('sameShortcutBehavior');
+
+    if (this.sameShortcutBehavior == 'cycle') {
+      const menus = this.kando
+        .getMenuSettings()
+        .get('menus')
+        .filter((menu) => {
+          return menu.shortcut == newTrigger || menu.shortcutID == newTrigger;
+        });
+
+      const nextMenu = await this.getNextMenu(menus, menu);
+
+      if (nextMenu) {
+        const newRequest = { trigger: newTrigger, name: nextMenu.root.name };
+
+        try {
+          await this.kando.getBackend().bindShortcut({
+            trigger: newTrigger,
+            action: () => {
+              this.kando.showMenu(newRequest);
+            },
+          });
+        } catch (error) {
+          Notification.showError(
+            'Failed to bind shortcut ' + newTrigger,
+            error.message || error
+          );
+        }
+      }
+    } else if (this.sameShortcutBehavior == 'close') {
+      try {
+        await this.kando.getBackend().bindShortcut({
+          trigger: newTrigger,
+          action: async () => {
+            await this.hide();
+          },
+        });
+      } catch (error) {
+        Notification.showError(
+          'Failed to bind shortcut ' + newTrigger,
+          error.message || error
+        );
+      }
+    }
     // If old and new trigger are the same, we don't need to rebind it. If the
     // hideTimeout is set, the window is about to be hidden and the shortcuts have
     // been rebound already.
-    if (oldTrigger && oldTrigger != newTrigger && this.isVisible() && !this.hideTimeout) {
-      this.kando.getBackend().bindShortcut({
-        trigger: oldTrigger,
-        action: () => {
-          this.kando.showMenu({ trigger: oldTrigger });
-        },
-      });
+    else if (this.sameShortcutBehavior == 'first') {
+      if (
+        oldTrigger &&
+        oldTrigger != newTrigger &&
+        this.isVisible() &&
+        !this.hideTimeout
+      ) {
+        this.kando.getBackend().bindShortcut({
+          trigger: oldTrigger,
+          action: () => {
+            this.kando.showMenu({ trigger: oldTrigger });
+          },
+        });
+      }
     }
 
     // Store the last menu to be able to execute the selected action later. The WMInfo
@@ -322,18 +398,6 @@ export class MenuWindow extends BrowserWindow {
         clearTimeout(this.hideTimeout);
       }
 
-      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-      const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
-
-      if (lastTrigger) {
-        this.kando.getBackend().bindShortcut({
-          trigger: lastTrigger,
-          action: () => {
-            this.kando.showMenu({ trigger: lastTrigger });
-          },
-        });
-      }
-
       this.hideTimeout = setTimeout(() => {
         if (process.platform === 'win32') {
           this.setIgnoreMouseEvents(true);
@@ -345,6 +409,22 @@ export class MenuWindow extends BrowserWindow {
         }
 
         this.hideTimeout = null;
+
+        // Need to set the next shortcut after the menu is hidden to ensure it doesn't re-open
+        // if the sameShortcutBehavior is set to 'close'.
+        const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+        const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
+
+        this.kando.getBackend().unbindShortcut(lastTrigger);
+
+        if (lastTrigger) {
+          this.kando.getBackend().bindShortcut({
+            trigger: lastTrigger,
+            action: () => {
+              this.kando.showMenu({ trigger: lastTrigger });
+            },
+          });
+        }
 
         resolve();
       }, this.kando.getAppSettings().get().fadeOutDuration);
