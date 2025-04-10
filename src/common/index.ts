@@ -692,6 +692,9 @@ export interface IAppSettings {
    */
   gamepadCloseButton: number;
 
+  /** Determines the behavior of pressing the trigger shortcut once the menu is open. */
+  sameShortcutBehavior: 'cycle' | 'close' | 'first';
+
   /**
    * If enabled, pressing 'cmd + ,' on macOS or 'ctrl + ,' on Linux or Windows will open
    * the settings window. If disabled, the default hotkey will be ignored.
@@ -737,6 +740,7 @@ export function getDefaultAppSettings(): IAppSettings {
     enableGamepad: true,
     gamepadBackButton: 1,
     gamepadCloseButton: 2,
+    sameShortcutBehavior: 'cycle',
     useDefaultOsShowSettingsHotkey: true,
     hideSettingsButton: false,
     settingsButtonPosition: 'bottom-right',
