@@ -56,9 +56,11 @@ $backlink-size: 10cqmin;
 
     .center {
       width: $center-size;
-      top: calc(50cqmin - $center-size / 2 - $icon-padding / 2);
-      left: calc(50cqmin - $center-size / 2 - $icon-padding / 2);
+      top: calc(-1 * $center-size / 2 - $icon-padding / 2);
+      left: calc(-1 * $center-size / 2 - $icon-padding / 2);
       padding: $icon-padding;
+
+      transform: translate(calc(50cqmin), calc(50cqmin));
 
       &:active {
         top: calc(50cqmin - $center-size / 2 - $icon-padding / 2 + 1px);
@@ -230,10 +232,6 @@ $backlink-size: 10cqmin;
   position: absolute;
   width: 100%;
   height: 100%;
-
-  &.dndOngoing > * {
-    pointer-events: none;
-  }
 
   &.fadeEnter {
     opacity: 0;
