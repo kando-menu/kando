@@ -196,8 +196,10 @@ export default () => {
                         : collection.index
                     );
                   }
+                  event.preventDefault();
                 } else if (dnd.draggedType === 'menu') {
                   (event.target as HTMLElement).classList.add(classes.dragOver);
+                  event.preventDefault();
                 }
               }}
               onDragLeave={(event) => {
