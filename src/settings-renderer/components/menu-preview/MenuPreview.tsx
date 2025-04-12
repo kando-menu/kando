@@ -239,7 +239,6 @@ export default () => {
 
   const currentContainer = transitionPing ? pingRef : pongRef;
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log('drag over');
     const container = currentContainer.current;
     if (!container) {
       return;
@@ -251,45 +250,42 @@ export default () => {
       return;
     }
 
-    // Compute container center in an async way. This would be possible in a
-    // synchronous way, but it would block the UI thread.
-    utils.getBoundingClientRectAsync(container).then((rect) => {
-      const center = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
+    // Compute container center.
+    const rect = container.getBoundingClientRect();
+    const center = {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    };
+
+    // Compute the angle of the drop position.
+    const x = e.clientX - center.x;
+    const y = e.clientY - center.y;
+    const dragAngle = math.getAngle({ x, y });
+
+    const internalDrag = dnd.draggedType === 'item';
+    const dragIndex = internalDrag ? dnd.draggedIndex : null;
+
+    const children = centerItem.children.map((child) => {
+      const type = ItemTypeRegistry.getInstance().getType(child.type);
+      return {
+        angle: child.angle,
+        dropTarget: type?.hasChildren,
       };
-
-      // Compute the angle of the drop position.
-      const x = e.clientX - center.x;
-      const y = e.clientY - center.y;
-      const dragAngle = math.getAngle({ x, y });
-
-      const internalDrag = dnd.draggedType === 'item';
-      const dragIndex = internalDrag ? dnd.draggedIndex : null;
-
-      const children = centerItem.children.map((child) => {
-        const type = ItemTypeRegistry.getInstance().getType(child.type);
-        return {
-          angle: child.angle,
-          dropTarget: type?.hasChildren,
-        };
-      });
-
-      // Compute the drop target index and whether the dragged item should be dropped
-      // into a submenu.
-      const { dropIndex, dropInto } = utils.computeDropTarget(
-        parentAngle,
-        children,
-        dragAngle,
-        dragIndex
-      );
-
-      setDropIndex(dropIndex);
-      setDropInto(dropInto);
     });
 
+    // Compute the drop target index and whether the dragged item should be dropped
+    // into a submenu.
+    const { dropIndex, dropInto } = utils.computeDropTarget(
+      parentAngle,
+      children,
+      dragAngle,
+      dragIndex
+    );
+
+    setDropIndex(dropIndex);
+    setDropInto(dropInto);
+
     e.preventDefault();
-    e.stopPropagation();
   };
 
   // Returns true if the given child is the currently dragged item.
