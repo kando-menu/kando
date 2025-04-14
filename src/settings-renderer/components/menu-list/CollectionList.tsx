@@ -120,8 +120,7 @@ export default () => {
               })}
               onClick={() => selectCollection(collection.index)}
               draggable
-              onDragStart={(event) => {
-                event.dataTransfer.effectAllowed = 'move';
+              onDragStart={() => {
                 startDrag('collection', collection.index);
                 setDropIndex(collection.index);
               }}

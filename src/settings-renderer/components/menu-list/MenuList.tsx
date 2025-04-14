@@ -192,8 +192,7 @@ export default () => {
                   })}
                   onClick={() => selectMenu(menu.index)}
                   draggable
-                  onDragStart={(event) => {
-                    event.dataTransfer.effectAllowed = 'move';
+                  onDragStart={() => {
                     startDrag('menu', menu.index);
                     setDropIndex(menu.index);
                   }}
