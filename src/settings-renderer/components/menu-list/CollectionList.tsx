@@ -19,6 +19,7 @@ const cx = classNames.bind(classes);
 import { useAppState, useMenuSettings } from '../../state';
 import Scrollbox from '../common/Scrollbox';
 import ThemedIcon from '../common/ThemedIcon';
+import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the collections, a list of these objects is created. */
 interface IRenderedCollection {
@@ -81,19 +82,8 @@ export default () => {
     return renderedCollection;
   });
 
-  // Ensure that all keys are unique. If there are multiple collections with the same key,
-  // we need to add an index to the key.
-  const keys = new Set();
-  renderedCollections.forEach((collection) => {
-    let key = collection.key;
-    let index = 0;
-    while (keys.has(key)) {
-      index++;
-      key = collection.key + index;
-    }
-    keys.add(key);
-    collection.key = key;
-  });
+  // Ensure that all keys are unique.
+  ensureUniqueKeys(renderedCollections);
 
   // If a drag is in progress, we need to move the dragged collection to the position of
   // the collection we are currently hovering over. This is done by removing the dragged

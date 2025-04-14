@@ -23,6 +23,7 @@ import Swirl from '../common/Swirl';
 import Note from '../common/Note';
 import Button from '../common/Button';
 import CollectionDetails from './CollectionDetails';
+import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the menus, a list of these objects is created. */
 interface IRenderedMenu {
@@ -105,19 +106,8 @@ export default () => {
     return renderedMenu;
   });
 
-  // Ensure that all keys are unique. If there are multiple menus with the same key, we
-  // need to add an index to the key.
-  const keys = new Set();
-  renderedMenus.forEach((menu) => {
-    let key = menu.key;
-    let index = 0;
-    while (keys.has(key)) {
-      index++;
-      key = menu.key + index;
-    }
-    keys.add(key);
-    menu.key = key;
-  });
+  // Ensure that all keys are unique.
+  ensureUniqueKeys(renderedMenus);
 
   // If a drag is in progress, we need to move the dragged menu to the position of the
   // menu we are currently hovering over. This is done by removing the dragged menu
