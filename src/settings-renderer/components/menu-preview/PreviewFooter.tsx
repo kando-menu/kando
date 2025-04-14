@@ -51,8 +51,10 @@ export default () => {
               '<strong>' + type.defaultName + '</strong><br>' + type.genericDescription
             }
             draggable
-            onDragStart={() => startDrag('new-item', index)}
-            onDragEnd={() => endDrag()}>
+            onDragStart={() => {
+              startDrag('new-item', index);
+            }}
+            onDragEnd={endDrag}>
             <ThemedIcon
               size={'100%'}
               name={type.defaultIcon}

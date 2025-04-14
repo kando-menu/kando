@@ -18,7 +18,8 @@ $grandchild-size: 4cqmin;
 $grandchild-offset: 7cqmin;
 $lock-size: 4cqmin;
 $lock-offset: 18cqmin;
-$backlink-size: 10cqmin;
+$backlink-size: 8cqmin;
+$backlink-offset: 30cqmin;
 
 .previewArea {
   display: flex;
@@ -63,7 +64,7 @@ $backlink-size: 10cqmin;
       transform: translate(calc(50cqmin), calc(50cqmin));
 
       &:active {
-        top: calc(50cqmin - $center-size / 2 - $icon-padding / 2 + 1px);
+        top: calc(-1 * $center-size / 2 - $icon-padding / 2 + 1px);
       }
 
       :global(.icon-container) {
@@ -85,7 +86,6 @@ $backlink-size: 10cqmin;
       &.dragging {
         opacity: 0.2;
         filter: blur(2px);
-        z-index: -1;
       }
 
       &.dropping {
@@ -164,25 +164,25 @@ $backlink-size: 10cqmin;
     .backLink {
       position: relative;
       width: $backlink-size;
-
-      left: -$backlink-size / 2;
-      top: -$backlink-size / 2;
+      left: calc(-1 * $backlink-size / 2 - $icon-padding / 2);
+      top: calc(-1 * $backlink-size / 2 - $icon-padding / 2);
+      padding: $icon-padding;
 
       transform: translate(
-          calc(50cqmin + $child-offset * var(--dir-x)),
-          calc(50cqmin + $child-offset * var(--dir-y))
+          calc(50cqmin + $backlink-offset * var(--dir-x)),
+          calc(50cqmin + $backlink-offset * var(--dir-y))
         )
         rotate(var(--angle));
 
       &:active {
-        top: calc(-1 * $backlink-size / 2 + 1px);
+        top: calc(-1 * $backlink-size / 2 - $icon-padding / 2 + 1px);
       }
 
       &.dropping {
         box-shadow: 0 0 10px light-dark($key-dark, $key-light);
         transform: translate(
-            calc(50cqmin + $child-offset * var(--dir-x)),
-            calc(50cqmin + $child-offset * var(--dir-y))
+            calc(50cqmin + $backlink-offset * var(--dir-x)),
+            calc(50cqmin + $backlink-offset * var(--dir-y))
           )
           rotate(var(--angle)) scale(1.1);
       }

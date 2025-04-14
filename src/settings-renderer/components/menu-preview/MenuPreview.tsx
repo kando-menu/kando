@@ -21,6 +21,7 @@ import * as utils from './utils';
 
 import ThemedIcon from '../common/ThemedIcon';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
+import { ensureUniqueKeys } from '../../utils';
 
 /**
  * For rendering the menu items around the center item, a list of these objects is
@@ -44,6 +45,18 @@ interface IRenderedMenuItem {
 
   /** The fixed angle of the item. This is only set if the item is locked. */
   angle?: number;
+}
+
+/**
+ * Small helper function which moves the item at the given index to the end of the array.
+ *
+ * @param array The array to modify.
+ * @param index The index of the item to move.
+ */
+function moveToEnd<T>(array: T[], index: number) {
+  const item = array[index];
+  array.splice(index, 1);
+  array.push(item);
 }
 
 /**
@@ -124,7 +137,7 @@ export default () => {
     const item: IRenderedMenuItem = {
       // We prepend the selected menu to the key so that there is no weird transition
       // animation when the selected menu changes.
-      key: selectedMenu + 'child' + i,
+      key: selectedMenu + child.name + child.icon + child.iconTheme,
       index: i,
       icon: child.icon,
       iconTheme: child.iconTheme,
@@ -134,35 +147,89 @@ export default () => {
   });
 
   // If there is currently a drag operation in progress, we need to modify the list of
-  // rendered children. If it is an external drag, we need to add a new item at the drop
-  // position.
-  if (dnd.draggedType === 'new-item' && !dropInto && dropIndex !== null) {
+  // rendered children. If it is an external drag, we draw a "drop-indicator" item at the
+  // drop position. We do not really insert it at the drop position because this confuses
+  // React (there will not be proper transitions as the items are swapping places when the
+  // dragged item is moved around). Instead, we just add it to the end of the list.
+  if (dnd.draggedType === 'new-item') {
     const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
     const draggedType = allItemTypes[dnd.draggedIndex];
     const newItem: IRenderedMenuItem = {
-      key: 'dragged' + dropIndex,
+      key: 'dragged',
       index: -1,
       icon: draggedType[1].defaultIcon,
       iconTheme: draggedType[1].defaultIconTheme,
     };
-    renderedChildren.splice(dropIndex, 0, newItem);
-    renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
+
+    // If dropIndex is null, the item is about to be dropped onto the back-navigation
+    // link. In this case, we use the parent angle. If the item is dropped into a submenu,
+    // we simply copy the angle of the submenu. In both cases there is no need to
+    // recompute the angles of the rendered children. Only in the last case where the item
+    // is about to be dropped somewhere among its siblings we need to recompute the
+    // angles.
+    if (dropIndex === null && dropInto) {
+      renderedChildren.push(newItem);
+      renderedChildAngles.push(parentAngle);
+    } else if (dropIndex !== null && dropInto) {
+      renderedChildren.push(newItem);
+      renderedChildAngles.push(renderedChildAngles[dropIndex]);
+    } else if (dropIndex !== null) {
+      // First insert the drop-indicator item at the drop position to compute the angles
+      // correctly.
+      renderedChildren.splice(dropIndex, 0, newItem);
+      renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
+
+      // Now move the item and the angle to the end of the lists.
+      moveToEnd(renderedChildren, dropIndex);
+      moveToEnd(renderedChildAngles, dropIndex);
+    }
   }
 
-  // If it is an internal drag, we need to move the dragged item to the drop position.
-  if (dnd.draggedType === 'item' && dropIndex !== null) {
-    // Remove the dragged item from the list of rendered children.
-    const draggedItem = renderedChildren.splice(dnd.draggedIndex, 1)[0];
+  // If it is an internal drag, we need to show the dragged item at the drop position.
+  // Again, in order to not confuse React, we do not really move the item in the list of
+  // rendered children. Instead, we only adapt the list of angles.
+  if (dnd.draggedType === 'item') {
+    // First create a copy of the children list. We will modify this to compute the
+    // angles of the children as if the dragged item was at the drop position.
+    const childrenCopy = [...renderedChildren];
 
-    // If it is not dropped into a submenu, we need to add it to the list of rendered
-    // children at the drop position.
+    // Remove the dragged item from the list.
+    const draggedItem = childrenCopy.splice(dnd.draggedIndex, 1)[0];
+
+    // If it is not dropped into a submenu, we need to add it at the drop position.
     if (!dropInto) {
-      draggedItem.key = 'dragged' + dropIndex;
-      renderedChildren.splice(dropIndex, 0, draggedItem);
+      childrenCopy.splice(dropIndex, 0, draggedItem);
     }
 
-    renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
+    // Now compute the angles of the children as if the dragged item was at the drop
+    // position.
+    renderedChildAngles = math.computeItemAngles(childrenCopy, parentAngle);
+
+    // Now there are a couple of cases to consider:
+    // 1. If the item is dropped onto the back-navigation link, we need to insert the
+    //    parent angle into the list of angles at the position of the dragged item.
+    // 2. If the item is dropped into a submenu, we need to insert the angle of the
+    //    submenu at the position of the dragged item.
+    // 3. If the item is dropped somewhere among its siblings, we need to move the angle
+    //    from the drop position to the position of the dragged item.
+    if (dropIndex === null && dropInto) {
+      renderedChildAngles.splice(dnd.draggedIndex, 0, parentAngle);
+    } else if (dropIndex !== null && dropInto) {
+      renderedChildAngles.splice(
+        dnd.draggedIndex,
+        0,
+        renderedChildAngles[dropIndex > dnd.draggedIndex ? dropIndex - 1 : dropIndex]
+      );
+    } else if (dropIndex !== null) {
+      const dropAngle = renderedChildAngles.splice(dropIndex, 1)[0];
+      renderedChildAngles.splice(dnd.draggedIndex, 0, dropAngle);
+    }
   }
+
+  // Make sure that all keys are unique.
+  ensureUniqueKeys(renderedChildren);
+
+  const childDirections = renderedChildAngles.map((angle) => math.getDirection(angle, 1));
 
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
@@ -207,7 +274,7 @@ export default () => {
   };
 
   // Assembles a list of divs for the grandchild items of the given child item.
-  const getGrandchildDivs = (child: IRenderedMenuItem, angle: number) => {
+  const renderGrandchildren = (child: IRenderedMenuItem, angle: number) => {
     if (!centerItem.children || !centerItem.children[child.index]?.children) {
       return null;
     }
@@ -235,6 +302,52 @@ export default () => {
         />
       );
     });
+  };
+
+  const renderChild = (child: IRenderedMenuItem, index: number) => {
+    return (
+      <div
+        key={child.key}
+        className={cx({
+          child: true,
+          selected: selectedChild >= 0 && selectedChild === child.index,
+          dragging: isDraggedChild(child),
+          dropping: dropInto && dropIndex === child.index,
+        })}
+        draggable={child.angle === undefined}
+        onDragStart={(event) => {
+          event.dataTransfer.effectAllowed = 'copyMove';
+          startDrag('item', index);
+        }}
+        onDragEnd={() => {
+          setDropIndex(null);
+          setDropInto(false);
+          endDrag();
+        }}
+        onClick={() => selectChild(index)}
+        style={utils.makeCSSProperties('dir', childDirections[index])}>
+        <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
+        {renderGrandchildren(child, renderedChildAngles[index])}
+      </div>
+    );
+  };
+
+  const renderLock = (child: IRenderedMenuItem, index: number) => {
+    return (
+      <div
+        key={child.key}
+        className={cx({
+          lock: true,
+          locked: child.angle !== undefined,
+        })}
+        style={utils.makeCSSProperties('dir', childDirections[index])}>
+        <ThemedIcon
+          size={'100%'}
+          theme={'material-symbols-rounded'}
+          name={child.angle !== undefined ? 'lock' : 'lock_open'}
+        />
+      </div>
+    );
   };
 
   const currentContainer = transitionPing ? pingRef : pongRef;
@@ -296,8 +409,6 @@ export default () => {
     );
   };
 
-  const childDirections = renderedChildAngles.map((angle) => math.getDirection(angle, 1));
-
   return (
     <div className={classes.previewArea}>
       <div
@@ -324,20 +435,38 @@ export default () => {
                 dndOngoing: dnd.draggedType !== 'none',
               })}
               onDragOver={onDragOver}
-              onDragEnd={() => {
-                console.log('drag end');
+              onDragLeave={(e) => {
+                if (
+                  dnd.draggedType === 'new-item' &&
+                  !currentContainer.current?.contains(e.relatedTarget)
+                ) {
+                  setDropIndex(null);
+                  setDropInto(false);
+                }
               }}
-              onDragLeave={() => {
-                console.log('drag leave');
-              }}
-              onDrop={() => {
-                console.log('drop');
+              onDrop={(event) => {
+                if (dnd.draggedType === 'item') {
+                  if (dropIndex === null && dropInto) {
+                    console.log('move item to parent');
+                  } else if (dropIndex !== null && dropInto) {
+                    console.log('move item to submenu');
+                  } else if (dropIndex !== null) {
+                    console.log('move item among siblings');
+                  }
+                } else if (dnd.draggedType === 'new-item') {
+                  if (dropIndex === null && dropInto) {
+                    console.log('create new item in parent');
+                  } else if (dropIndex !== null && dropInto) {
+                    console.log('create new item in submenu');
+                  } else if (dropIndex !== null) {
+                    console.log('create new item among siblings');
+                  }
+                }
+
                 setDropIndex(null);
                 setDropInto(false);
-                endDrag();
-              }}
-              onDragExit={() => {
-                console.log('drag exit');
+
+                event.preventDefault();
               }}>
               {
                 // Except for the root menu, in all submenus a back link is shown which
@@ -378,31 +507,7 @@ export default () => {
               {
                 // Add all child items. They are positioned via CSS properties. Only items
                 // without fixed angles are draggable.
-                renderedChildren.map((child, index) => {
-                  return (
-                    <div
-                      key={child.key}
-                      data-tooltip-content={child.key}
-                      className={cx({
-                        child: true,
-                        selected: selectedChild >= 0 && selectedChild === child.index,
-                        dragging: isDraggedChild(child),
-                        dropping: dropInto && dropIndex === child.index,
-                      })}
-                      draggable={child.angle === undefined}
-                      onDragStart={() => startDrag('item', index)}
-                      onDragEnd={() => endDrag()}
-                      onClick={() => selectChild(index)}
-                      style={utils.makeCSSProperties('dir', childDirections[index])}>
-                      <ThemedIcon
-                        size={'100%'}
-                        theme={child.iconTheme}
-                        name={child.icon}
-                      />
-                      {getGrandchildDivs(child, renderedChildAngles[index])}
-                    </div>
-                  );
-                })
+                renderedChildren.map(renderChild)
               }
               {
                 // Add the lock icons for each child item. When locked, the item cannot be
@@ -413,21 +518,7 @@ export default () => {
                     return null;
                   }
 
-                  return (
-                    <div
-                      key={'lock' + child.key}
-                      className={cx({
-                        lock: true,
-                        locked: child.angle !== undefined,
-                      })}
-                      style={utils.makeCSSProperties('dir', childDirections[index])}>
-                      <ThemedIcon
-                        size={'100%'}
-                        theme={'material-symbols-rounded'}
-                        name={child.angle !== undefined ? 'lock' : 'lock_open'}
-                      />
-                    </div>
-                  );
+                  return renderLock(child, index);
                 })
               }
             </div>
