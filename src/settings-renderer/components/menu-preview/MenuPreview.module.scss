@@ -83,7 +83,9 @@ $backlink-size: 10cqmin;
       );
 
       &.dragging {
-        opacity: 0.01;
+        opacity: 0.2;
+        filter: blur(2px);
+        z-index: -1;
       }
 
       &.dropping {
