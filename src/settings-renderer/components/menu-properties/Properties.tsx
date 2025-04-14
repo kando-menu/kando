@@ -29,8 +29,11 @@ export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const selectParent = useAppState((state) => state.selectParent);
   const duplicateMenu = useMenuSettings((state) => state.duplicateMenu);
+  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
   const deleteMenu = useMenuSettings((state) => state.deleteMenu);
+  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const menuCollections = useMenuSettings((state) => state.collections);
@@ -108,19 +111,32 @@ export default () => {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbCopy />}
-            tooltip="Duplicate menu"
+            tooltip={isRoot ? 'Duplicate menu' : 'Duplicate menu item'}
             variant="floating"
             size="large"
             grouped
-            onClick={() => duplicateMenu(selectedMenu)}
+            onClick={() => {
+              if (isRoot) {
+                duplicateMenu(selectedMenu);
+              } else {
+                duplicateMenuItem(selectedMenu, selectedChildPath);
+              }
+            }}
           />
           <Button
             icon={<TbTrash />}
-            tooltip="Delete menu"
+            tooltip={isRoot ? 'Delete menu' : 'Delete menu item'}
             variant="floating"
             size="large"
             grouped
-            onClick={() => deleteMenu(selectedMenu)}
+            onClick={() => {
+              if (isRoot) {
+                deleteMenu(selectedMenu);
+              } else {
+                deleteMenuItem(selectedMenu, selectedChildPath);
+                selectParent();
+              }
+            }}
           />
         </div>
       </div>

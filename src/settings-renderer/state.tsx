@@ -109,13 +109,31 @@ type MenuStateActions = {
    * @param menuIndex The index of the menu to edit.
    * @param itemPath The path to the item to edit. This is a list of indices that
    *   represent the path to the item.
-   * @returns The modified menu item object.
+   * @param callback The callback to call with the menu item object.
    */
   editMenuItem: (
     menuIndex: number,
     itemPath: number[],
     callback: (item: IMenuItem) => IMenuItem
   ) => void;
+
+  /**
+   * Deletes a menu item. The item is identified by its path in the menu tree.
+   *
+   * @param menuIndex The index of the menu to delete the item from.
+   * @param itemPath The path to the item to delete. This is a list of indices that
+   *   represent the path to the item.
+   */
+  deleteMenuItem: (menuIndex: number, itemPath: number[]) => void;
+
+  /**
+   * Duplicates a menu item. The item is identified by its path in the menu tree.
+   *
+   * @param menuIndex The index of the menu to duplicate the item from.
+   * @param itemPath The path to the item to duplicate. This is a list of indices that
+   *   represent the path to the item.
+   */
+  duplicateMenuItem: (menuIndex: number, itemPath: number[]) => void;
 
   /** Appends a new collection to the list of collections. */
   addCollection: () => void;
@@ -240,6 +258,50 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
               state.menus[menuIndex].root = item;
             } else {
               parent.children[itemPath[itemPath.length - 1]] = item;
+            }
+          })
+        ),
+
+      deleteMenuItem: (menuIndex: number, itemPath: number[]) =>
+        set(
+          produce((state) => {
+            let item = state.menus[menuIndex].root;
+            let parent = null;
+            for (let i = 0; i < itemPath.length; i++) {
+              parent = item;
+              item = item.children[itemPath[i]];
+            }
+
+            // If the parent was not changed above, we are attempting to delete the root
+            // item. This should not happen for now.
+            if (parent === null) {
+              console.warn(
+                'Deleting the root item is not supported. This should not happen.'
+              );
+            } else {
+              parent.children.splice(itemPath[itemPath.length - 1], 1);
+            }
+          })
+        ),
+
+      duplicateMenuItem: (menuIndex: number, itemPath: number[]) =>
+        set(
+          produce((state) => {
+            let item = state.menus[menuIndex].root;
+            let parent = null;
+            for (let i = 0; i < itemPath.length; i++) {
+              parent = item;
+              item = item.children[itemPath[i]];
+            }
+
+            // If the parent was not changed above, we are attempting to duplicate the
+            // root item. This should not happen for now.
+            if (parent === null) {
+              console.warn(
+                'Duplicating the root item is not supported. This should not happen.'
+              );
+            } else {
+              parent.children.push(lodash.cloneDeep(item));
             }
           })
         ),
@@ -376,6 +438,12 @@ type AppStateActions = {
   selectChildPath: (selectedChildPath: number[]) => void;
 
   /**
+   * Selects the parent of the currently selected child. This is a convenience function
+   * which could also be implemented with selectChildPath.
+   */
+  selectParent: () => void;
+
+  /**
    * Selects the given collection. The special value of -1 means that no collection is
    * selected and all menus are shown.
    *
@@ -454,6 +522,10 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   },
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),
   selectChildPath: (selectedChildPath: number[]) => set({ selectedChildPath }),
+  selectParent: () =>
+    set((state) => ({
+      selectedChildPath: state.selectedChildPath.slice(0, -1),
+    })),
   selectCollection: (selectedCollection: number) => set({ selectedCollection }),
   setAboutDialogVisible: (aboutDialogVisible: boolean) => set({ aboutDialogVisible }),
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
