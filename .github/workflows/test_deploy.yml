@@ -64,8 +64,8 @@ jobs:
         with:
           name: build-${{ matrix.os }}
           path: |
-            out/make/zip/win32/x64/*
-            out/make/squirrel.windows/x64/*.exe
+            out/make/zip/win32/*/*
+            out/make/squirrel.windows/*/*.exe
           retention-days: 7
 
   macos:
