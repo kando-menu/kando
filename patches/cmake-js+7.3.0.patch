@@ -1,0 +1,26 @@
+diff --git a/node_modules/cmake-js/lib/environment.js b/node_modules/cmake-js/lib/environment.js
+index d8e32d5..6859d65 100644
+--- a/node_modules/cmake-js/lib/environment.js
++++ b/node_modules/cmake-js/lib/environment.js
+@@ -11,7 +11,7 @@ const environment = module.exports = {
+     arch: os.arch(),
+     isX86: os.arch() === "ia32" || os.arch() === "x86",
+     isX64: os.arch() === "x64",
+-    isArm: os.arch() === "arm",
++    isArm: os.arch() === "arm" || os.arch() === "arm64",
+     runtime: "node",
+     runtimeVersion: process.versions.node,
+     home: process.env[(os.platform() === "win32") ? "USERPROFILE" : "HOME"],
+diff --git a/node_modules/cmake-js/lib/runtimePaths.js b/node_modules/cmake-js/lib/runtimePaths.js
+index ccde788..919196c 100644
+--- a/node_modules/cmake-js/lib/runtimePaths.js
++++ b/node_modules/cmake-js/lib/runtimePaths.js
+@@ -23,7 +23,7 @@ const runtimePaths = {
+             return {
+                 externalPath: NODE_MIRROR + "/v" + targetOptions.runtimeVersion + "/",
+                 winLibs: [{
+-                    dir: targetOptions.isX64 ? "win-x64" : "win-x86",
++                    dir: targetOptions.isX64 ? "win-x64" : (targetOptions.isArm ? "win-arm64" : "win-x86"),
+                     name: targetOptions.runtime + ".lib"
+                 }],
+                 tarPath: targetOptions.runtime + "-v" + targetOptions.runtimeVersion + "-headers.tar.gz",
