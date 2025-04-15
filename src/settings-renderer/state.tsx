@@ -301,7 +301,11 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
                 'Duplicating the root item is not supported. This should not happen.'
               );
             } else {
-              parent.children.push(lodash.cloneDeep(item));
+              parent.children.splice(
+                itemPath[itemPath.length - 1],
+                0,
+                lodash.cloneDeep(item)
+              );
             }
           })
         ),
