@@ -1,8 +1,8 @@
 diff --git a/node_modules/cmake-js/lib/environment.js b/node_modules/cmake-js/lib/environment.js
-index d8e32d5..6859d65 100644
+index d8e32d5..3f2632f 100644
 --- a/node_modules/cmake-js/lib/environment.js
 +++ b/node_modules/cmake-js/lib/environment.js
-@@ -11,7 +11,7 @@ const environment = module.exports = {
+@@ -11,13 +11,15 @@ const environment = module.exports = {
      arch: os.arch(),
      isX86: os.arch() === "ia32" || os.arch() === "x86",
      isX64: os.arch() === "x64",
@@ -11,11 +11,23 @@ index d8e32d5..6859d65 100644
      runtime: "node",
      runtimeVersion: process.versions.node,
      home: process.env[(os.platform() === "win32") ? "USERPROFILE" : "HOME"],
+     EOL: os.EOL
+ };
+ 
++console.log("Environment:", environment);
++
+ Object.defineProperties(environment, {
+     isPosix: {
+         get: function () {
 diff --git a/node_modules/cmake-js/lib/runtimePaths.js b/node_modules/cmake-js/lib/runtimePaths.js
-index ccde788..919196c 100644
+index ccde788..bb5603e 100644
 --- a/node_modules/cmake-js/lib/runtimePaths.js
 +++ b/node_modules/cmake-js/lib/runtimePaths.js
-@@ -23,7 +23,7 @@ const runtimePaths = {
+@@ -20,10 +20,11 @@ const runtimePaths = {
+             };
+         }
+         else {
++            console.log("targetOptions", targetOptions);
              return {
                  externalPath: NODE_MIRROR + "/v" + targetOptions.runtimeVersion + "/",
                  winLibs: [{
