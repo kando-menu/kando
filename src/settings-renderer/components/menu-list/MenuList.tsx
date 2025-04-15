@@ -80,15 +80,6 @@ export default () => {
   // index. The dragged menu will be drawn there.
   const [dropIndex, setDropIndex] = React.useState<number | null>(null);
 
-  // Make sure that the selected menu is valid. This could for instance happen if
-  // the currently selected menu is deleted by an external event (e.g. by editing
-  // the settings file) or by re-doing a previously undone deletion :).
-  React.useEffect(() => {
-    if (selectedMenu >= menus.length) {
-      selectMenu(menus.length - 1);
-    }
-  }, [selectedMenu, menus]);
-
   // We will compile a list of all menus which are currently visible. We will use a list
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {

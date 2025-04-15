@@ -541,3 +541,47 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   ) => set({ dnd: { draggedType, draggedIndex } }),
   endDrag: () => set({ dnd: { draggedType: 'none', draggedIndex: -1 } }),
 }));
+
+// Validate State ------------------------------------------------------------------------
+
+// This function is called whenever the app state or the menu settings change. It makes
+// sure that the current state is valid. For instance, if a menu is deleted, the selected
+// menu might be invalid.
+const validateState = () => {
+  const { menus, collections } = useMenuSettings.getState();
+  const {
+    selectedMenu,
+    selectMenu,
+    selectedCollection,
+    selectCollection,
+    selectedChildPath,
+    selectParent,
+  } = useAppState.getState();
+
+  // Make sure that the selected menu is valid. This could for instance happen if
+  // the currently selected menu is deleted by an external event (e.g. by editing
+  // the settings file) or by re-doing a previously undone deletion :).
+  if (selectedMenu >= menus.length) {
+    selectMenu(menus.length - 1);
+    return;
+  }
+
+  // Also make sure that the selected collection is valid.
+  if (selectedCollection >= collections.length) {
+    selectCollection(collections.length - 1);
+    return;
+  }
+
+  // Make sure that the selected child path is valid.
+  let selectedItem = menus[selectedMenu].root;
+  for (let i = 0; i < selectedChildPath.length; i++) {
+    selectedItem = selectedItem.children[selectedChildPath[i]];
+    if (selectedItem === undefined) {
+      selectParent();
+      return;
+    }
+  }
+};
+
+useAppState.subscribe(validateState);
+useMenuSettings.subscribe(validateState);

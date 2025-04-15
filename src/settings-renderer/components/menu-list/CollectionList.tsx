@@ -62,15 +62,6 @@ export default () => {
   // Animate the addition and removal of collections.
   const [animatedList] = useAutoAnimate({ duration: 200 });
 
-  // Make sure that the selected collection is valid. This could for instance happen if
-  // the currently selected collection is deleted by an external event (e.g. by editing
-  // the settings file) or by re-doing a previously undone deletion :).
-  React.useEffect(() => {
-    if (selectedCollection >= collections.length) {
-      selectCollection(collections.length - 1);
-    }
-  }, [collections, selectedCollection]);
-
   // Let's compile a list of all collections which are about to be rendered. If one
   // collection is dragged currently around, we will have to reorder the list.
   const renderedCollections = collections.map((collection, index) => {
