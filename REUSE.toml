@@ -4,7 +4,7 @@
 version = 1
 
 [[annotations]]
-path = ["tsconfig.json", "package.json", "package-lock.json"]
+path = ["tsconfig.json", "package.json", "package-lock.json", "patches/*" ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "CC0-1.0"
