@@ -19,7 +19,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
@@ -52,7 +52,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
@@ -92,7 +92,7 @@ jobs:
       # https://github.com/electron/forge/issues/2807
       - run: python3 -m pip install setuptools --break-system-packages
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
