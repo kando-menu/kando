@@ -14,7 +14,6 @@ import classNames from 'classnames/bind';
 import * as classes from './PreviewFooter.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState } from '../../state';
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 
 import ThemedIcon from '../common/ThemedIcon';
@@ -24,9 +23,7 @@ import ThemedIcon from '../common/ThemedIcon';
  * preview.
  */
 export default () => {
-  const dnd = useAppState((state) => state.dnd);
-  const startDrag = useAppState((state) => state.startDrag);
-  const endDrag = useAppState((state) => state.endDrag);
+  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
 
   const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
 
@@ -44,17 +41,18 @@ export default () => {
             key={name}
             className={cx({
               newItem: true,
-              dragging: dnd.draggedType === 'new-item' && dnd.draggedIndex === index,
+              dragging: dragIndex === index,
             })}
             data-tooltip-id="click-to-show-tooltip"
             data-tooltip-html={
               '<strong>' + type.defaultName + '</strong><br>' + type.genericDescription
             }
             draggable
-            onDragStart={() => {
-              startDrag('new-item', index);
+            onDragStart={(event) => {
+              event.dataTransfer.setData('kando/item-type', name);
+              setDragIndex(index);
             }}
-            onDragEnd={endDrag}>
+            onDragEnd={() => setDragIndex(null)}>
             <ThemedIcon
               size={'100%'}
               name={type.defaultIcon}

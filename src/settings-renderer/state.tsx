@@ -413,12 +413,6 @@ type AppState = {
 
   /** Descriptions of all available menu themes. */
   menuThemes: Array<IMenuThemeDescription>;
-
-  /** The current state of the drag and drop system. */
-  dnd: {
-    draggedType: 'menu' | 'item' | 'new-item' | 'collection' | 'none';
-    draggedIndex: number;
-  };
 };
 
 /** These actions can be performed on the app state. */
@@ -489,21 +483,6 @@ type AppStateActions = {
    * @param menuSearchBarVisible Whether the search bar is visible.
    */
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) => void;
-
-  /**
-   * The currently dragged thing is stored in the app state. Calling this indicates that a
-   * drag operation just started.
-   *
-   * @param type The type of the dragged thing.
-   * @param index The index of the thing in it respective list.
-   */
-  startDrag: (type: 'menu' | 'item' | 'new-item' | 'collection', index: number) => void;
-
-  /**
-   * This should be called when the drag operation ended. It resets the dragged thing in
-   * the app state.
-   */
-  endDrag: () => void;
 };
 
 /** This is the state of the settings dialog itself. */
@@ -520,10 +499,6 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   backendInfo: null,
   versionInfo: null,
   menuThemes: [],
-  dnd: {
-    draggedType: 'none',
-    draggedIndex: -1,
-  },
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),
   selectChildPath: (selectedChildPath: number[]) => set({ selectedChildPath }),
   selectParent: () =>
@@ -539,11 +514,6 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
     set({ collectionDetailsVisible }),
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) =>
     set({ menuSearchBarVisible }),
-  startDrag: (
-    draggedType: 'menu' | 'item' | 'new-item' | 'collection',
-    draggedIndex: number
-  ) => set({ dnd: { draggedType, draggedIndex } }),
-  endDrag: () => set({ dnd: { draggedType: 'none', draggedIndex: -1 } }),
 }));
 
 // Validate State ------------------------------------------------------------------------

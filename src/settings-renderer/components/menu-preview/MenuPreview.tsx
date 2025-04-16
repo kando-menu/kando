@@ -38,10 +38,10 @@ interface IRenderedMenuItem {
   index: number;
 
   /** The icon of the menu item. */
-  icon: string;
+  icon?: string;
 
   /** The theme from which the above icon should be used. */
-  iconTheme: string;
+  iconTheme?: string;
 
   /** The fixed angle of the item. This is only set if the item is locked. */
   angle?: number;
@@ -65,9 +65,6 @@ function moveToEnd<T>(array: T[], index: number) {
  * items.
  */
 export default () => {
-  const dnd = useAppState((state) => state.dnd);
-  const startDrag = useAppState((state) => state.startDrag);
-  const endDrag = useAppState((state) => state.endDrag);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
   const selectChildPath = useAppState((state) => state.selectChildPath);
@@ -75,9 +72,16 @@ export default () => {
 
   // During a drag-and-drop operation, the drop index will be set to the position where
   // the dragged item should be dropped. If dropInto is true, the dragged item should be
-  // dropped into the submenu at the given index.
+  // dropped into the submenu at the given index. If a child is dragged around, the
+  // drag index is set to the index of the dragged item. If a new item is dragged from
+  // outside the preview, the drag index is null.
+  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
   const [dropIndex, setDropIndex] = React.useState<number | null>(null);
   const [dropInto, setDropInto] = React.useState(false);
+
+  // If a new item is dragged from somewhere else, we need to show a drop indicator at the
+  // drop position. This piece of state contains the item which is about to be dropped.
+  const [draggedItem, setDraggedItem] = React.useState<IRenderedMenuItem | null>(null);
 
   // When the user selects a submenu or navigates back to the parent menu, a short
   // transition animation is shown. The new menu fades in from the direction of the
@@ -151,16 +155,7 @@ export default () => {
   // drop position. We do not really insert it at the drop position because this confuses
   // React (there will not be proper transitions as the items are swapping places when the
   // dragged item is moved around). Instead, we just add it to the end of the list.
-  if (dnd.draggedType === 'new-item') {
-    const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
-    const draggedType = allItemTypes[dnd.draggedIndex];
-    const newItem: IRenderedMenuItem = {
-      key: 'dragged',
-      index: -1,
-      icon: draggedType[1].defaultIcon,
-      iconTheme: draggedType[1].defaultIconTheme,
-    };
-
+  if (draggedItem) {
     // If dropIndex is null, the item is about to be dropped onto the back-navigation
     // link. In this case, we use the parent angle. If the item is dropped into a submenu,
     // we simply copy the angle of the submenu. In both cases there is no need to
@@ -168,15 +163,15 @@ export default () => {
     // is about to be dropped somewhere among its siblings we need to recompute the
     // angles.
     if (dropIndex === null && dropInto) {
-      renderedChildren.push(newItem);
+      renderedChildren.push(draggedItem);
       renderedChildAngles.push(parentAngle);
     } else if (dropIndex !== null && dropInto) {
-      renderedChildren.push(newItem);
+      renderedChildren.push(draggedItem);
       renderedChildAngles.push(renderedChildAngles[dropIndex]);
     } else if (dropIndex !== null) {
       // First insert the drop-indicator item at the drop position to compute the angles
       // correctly.
-      renderedChildren.splice(dropIndex, 0, newItem);
+      renderedChildren.splice(dropIndex, 0, draggedItem);
       renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
 
       // Now move the item and the angle to the end of the lists.
@@ -188,13 +183,13 @@ export default () => {
   // If it is an internal drag, we need to show the dragged item at the drop position.
   // Again, in order to not confuse React, we do not really move the item in the list of
   // rendered children. Instead, we only adapt the list of angles.
-  if (dnd.draggedType === 'item') {
+  if (dragIndex !== null) {
     // First create a copy of the children list. We will modify this to compute the
     // angles of the children as if the dragged item was at the drop position.
     const childrenCopy = [...renderedChildren];
 
     // Remove the dragged item from the list.
-    const draggedItem = childrenCopy.splice(dnd.draggedIndex, 1)[0];
+    const draggedItem = childrenCopy.splice(dragIndex, 1)[0];
 
     // If it is not dropped into a submenu, we need to add it at the drop position.
     if (!dropInto) {
@@ -213,16 +208,16 @@ export default () => {
     // 3. If the item is dropped somewhere among its siblings, we need to move the angle
     //    from the drop position to the position of the dragged item.
     if (dropIndex === null && dropInto) {
-      renderedChildAngles.splice(dnd.draggedIndex, 0, parentAngle);
+      renderedChildAngles.splice(dragIndex, 0, parentAngle);
     } else if (dropIndex !== null && dropInto) {
       renderedChildAngles.splice(
-        dnd.draggedIndex,
+        dragIndex,
         0,
-        renderedChildAngles[dropIndex > dnd.draggedIndex ? dropIndex - 1 : dropIndex]
+        renderedChildAngles[dropIndex > dragIndex ? dropIndex - 1 : dropIndex]
       );
     } else if (dropIndex !== null) {
       const dropAngle = renderedChildAngles.splice(dropIndex, 1)[0];
-      renderedChildAngles.splice(dnd.draggedIndex, 0, dropAngle);
+      renderedChildAngles.splice(dragIndex, 0, dropAngle);
     }
   }
 
@@ -317,16 +312,21 @@ export default () => {
         draggable={child.angle === undefined}
         onDragStart={(event) => {
           event.dataTransfer.effectAllowed = 'copyMove';
-          startDrag('item', index);
+          event.dataTransfer.setData('kando/child-index', index.toString());
+          setDragIndex(index);
+          setDropIndex(index);
+          setDropInto(false);
         }}
         onDragEnd={() => {
           setDropIndex(null);
+          setDragIndex(null);
           setDropInto(false);
-          endDrag();
         }}
         onClick={() => selectChild(index)}
         style={utils.makeCSSProperties('dir', childDirections[index])}>
-        <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
+        {child.iconTheme && child.icon && (
+          <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
+        )}
         {renderGrandchildren(child, renderedChildAngles[index])}
       </div>
     );
@@ -351,15 +351,18 @@ export default () => {
   };
 
   const currentContainer = transitionPing ? pingRef : pongRef;
-  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     const container = currentContainer.current;
     if (!container) {
       return;
     }
 
+    const internalDrag = dragIndex !== null;
+    const externalDrag = draggedItem !== null;
+
     // We are only interested in drag events for items and new items dragged from the
     // item list at the bottom.
-    if (dnd.draggedType !== 'item' && dnd.draggedType !== 'new-item') {
+    if (!internalDrag && !externalDrag) {
       return;
     }
 
@@ -371,12 +374,9 @@ export default () => {
     };
 
     // Compute the angle of the drop position.
-    const x = e.clientX - center.x;
-    const y = e.clientY - center.y;
+    const x = event.clientX - center.x;
+    const y = event.clientY - center.y;
     const dragAngle = math.getAngle({ x, y });
-
-    const internalDrag = dnd.draggedType === 'item';
-    const dragIndex = internalDrag ? dnd.draggedIndex : null;
 
     const children = centerItem.children.map((child) => {
       const type = ItemTypeRegistry.getInstance().getType(child.type);
@@ -398,14 +398,13 @@ export default () => {
     setDropIndex(dropIndex);
     setDropInto(dropInto);
 
-    e.preventDefault();
+    event.preventDefault();
   };
 
   // Returns true if the given child is the currently dragged item.
   const isDraggedChild = (child: IRenderedMenuItem) => {
     return (
-      child.key.startsWith('dragged') ||
-      (dnd.draggedType === 'item' && dnd.draggedIndex === child.index)
+      child.key.startsWith('dragged') || (dragIndex !== null && dragIndex === child.index)
     );
   };
 
@@ -430,22 +429,35 @@ export default () => {
             }}>
             <div
               ref={currentContainer}
-              className={cx({
-                transitionContainer: true,
-                dndOngoing: dnd.draggedType !== 'none',
-              })}
+              className={classes.transitionContainer}
+              onDragEnter={(event) => {
+                if (draggedItem === null && dragIndex === null) {
+                  const registry = ItemTypeRegistry.getInstance();
+                  const dataType = registry.getPreferredDataType(
+                    event.dataTransfer.types
+                  );
+
+                  if (dataType) {
+                    setDraggedItem({
+                      key: 'dragged',
+                      index: -1,
+                    });
+                  }
+                }
+              }}
               onDragOver={onDragOver}
-              onDragLeave={(e) => {
+              onDragLeave={(event) => {
                 if (
-                  dnd.draggedType === 'new-item' &&
-                  !currentContainer.current?.contains(e.relatedTarget)
+                  dragIndex === null &&
+                  !currentContainer.current?.contains(event.relatedTarget)
                 ) {
                   setDropIndex(null);
                   setDropInto(false);
+                  setDraggedItem(null);
                 }
               }}
               onDrop={(event) => {
-                if (dnd.draggedType === 'item') {
+                if (dragIndex !== null) {
                   if (dropIndex === null && dropInto) {
                     console.log('move item to parent');
                   } else if (dropIndex !== null && dropInto) {
@@ -453,7 +465,7 @@ export default () => {
                   } else if (dropIndex !== null) {
                     console.log('move item among siblings');
                   }
-                } else if (dnd.draggedType === 'new-item') {
+                } else if (event.dataTransfer.types.includes('kando/item-type')) {
                   if (dropIndex === null && dropInto) {
                     console.log('create new item in parent');
                   } else if (dropIndex !== null && dropInto) {
@@ -465,6 +477,8 @@ export default () => {
 
                 setDropIndex(null);
                 setDropInto(false);
+                setDraggedItem(null);
+                setDragIndex(null);
 
                 event.preventDefault();
               }}>

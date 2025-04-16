@@ -64,6 +64,7 @@ export default () => {
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
+  const moveMenu = useMenuSettings((state) => state.moveMenu);
 
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
@@ -71,13 +72,9 @@ export default () => {
   // Animate the filtering, addition, and removal of menus.
   const [animatedList] = useAutoAnimate({ duration: 200 });
 
-  const dnd = useAppState((state) => state.dnd);
-  const startDrag = useAppState((state) => state.startDrag);
-  const endDrag = useAppState((state) => state.endDrag);
-  const moveMenu = useMenuSettings((state) => state.moveMenu);
-
   // When a menu is dragged over another menu, we store the index of that menu as drop
   // index. The dragged menu will be drawn there.
+  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
   const [dropIndex, setDropIndex] = React.useState<number | null>(null);
 
   // We will compile a list of all menus which are currently visible. We will use a list
@@ -103,8 +100,8 @@ export default () => {
   // If a drag is in progress, we need to move the dragged menu to the position of the
   // menu we are currently hovering over. This is done by removing the dragged menu
   // from the list and inserting it at the position of the hovered menu.
-  if (dnd.draggedType === 'menu' && dropIndex !== null) {
-    const draggedMenu = renderedMenus.splice(dnd.draggedIndex, 1)[0];
+  if (dragIndex !== null && dropIndex !== null) {
+    const draggedMenu = renderedMenus.splice(dragIndex, 1)[0];
     renderedMenus.splice(dropIndex, 0, draggedMenu);
   }
 
@@ -178,45 +175,45 @@ export default () => {
                   className={cx({
                     menu: true,
                     selected: menu.index === selectedMenu,
-                    dragging:
-                      dnd.draggedType === 'menu' && dnd.draggedIndex === menu.index,
+                    dragging: dragIndex === menu.index,
                   })}
                   onClick={() => selectMenu(menu.index)}
                   draggable
-                  onDragStart={() => {
-                    startDrag('menu', menu.index);
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData('kando/menu-index', menu.index.toString());
+                    setDragIndex(menu.index);
                     setDropIndex(menu.index);
                   }}
                   onDragEnd={() => {
-                    moveMenu(dnd.draggedIndex, dropIndex);
+                    moveMenu(dragIndex, dropIndex);
 
                     // If the selected menu was dragged, we need to update the selected index.
-                    if (dnd.draggedIndex === selectedMenu) {
+                    if (dragIndex === selectedMenu) {
                       selectMenu(dropIndex);
                     }
 
                     // If the dragged menu was dropped on the other side of the selected menu,
                     // we need to update the selected index as well.
-                    if (dnd.draggedIndex < selectedMenu && dropIndex >= selectedMenu) {
+                    if (dragIndex < selectedMenu && dropIndex >= selectedMenu) {
                       selectMenu(selectedMenu - 1);
-                    } else if (
-                      dnd.draggedIndex > selectedMenu &&
-                      dropIndex <= selectedMenu
-                    ) {
+                    } else if (dragIndex > selectedMenu && dropIndex <= selectedMenu) {
                       selectMenu(selectedMenu + 1);
                     }
 
-                    endDrag();
+                    setDragIndex(null);
                     setDropIndex(null);
                   }}
                   onDragOver={(event) => {
-                    if (dnd.draggedType === 'menu') {
+                    if (event.dataTransfer.types.includes('kando/menu-index')) {
                       event.preventDefault();
                     }
                   }}
-                  onDragEnter={() => {
-                    if (dnd.draggedType === 'menu' && dnd.draggedIndex !== menu.index) {
-                      if (dnd.draggedIndex < menu.index) {
+                  onDragEnter={(event) => {
+                    if (
+                      event.dataTransfer.types.includes('kando/menu-index') &&
+                      dragIndex !== menu.index
+                    ) {
+                      if (dragIndex < menu.index) {
                         setDropIndex(
                           dropIndex >= menu.index ? menu.index - 1 : menu.index
                         );

@@ -115,4 +115,70 @@ export class ItemTypeRegistry {
   public getAllTypes() {
     return this.types;
   }
+
+  /**
+   * This is used during drag-and-drop operations: When some data is dragged into the
+   * settings menu, we try to create a corresponding menu item. Usually, the drag source
+   * offers the data in a variety of formats. Given a list of formats, this method returns
+   * the most specific one for which we have a corresponding item type.
+   *
+   * @param types An array of data types. This is usually something like 'text/plain',
+   *   'text/uri-list', or some of the Kando-specific types such as 'kando/item-type'.
+   * @returns The most specific type for which we have a corresponding item type. If no
+   *   such type is found, an empty string is returned.
+   */
+  public getPreferredDataType(types: readonly string[]): string {
+    const prefferedTypes = [
+      'kando/item-type', // This is used for new items dragged from the item type list.
+      'kando/menu-index', // This is used for menus dragged from the menu list.
+      'text/uri-list',
+      'text/plain',
+    ];
+
+    for (const preferredType of prefferedTypes) {
+      if (types.includes(preferredType)) {
+        return preferredType;
+      }
+    }
+
+    // If no preferred type is found, return an empty string.
+    return '';
+  }
+
+  /**
+   * Given a data type and the data itself, this method returns a new menu item fitting to
+   * the data type.
+   *
+   * @param type The data type.
+   * @param data The data itself.
+   * @returns A new menu item fitting to the data type. If no item could be created, null
+   *   is returned.
+   */
+  public createItem(type: string, data: string): IMenuItem {
+    if (type === 'kando/item-type') {
+      const itemType = this.types.get(data);
+      if (itemType) {
+        return {
+          type: data,
+          name: itemType.defaultName,
+          icon: itemType.defaultIcon,
+          iconTheme: itemType.defaultIconTheme,
+          data: itemType.defaultData,
+        };
+      }
+    } else if (type === 'text/plain') {
+      const itemType = this.types.get('text');
+      return {
+        type: 'text',
+        name: itemType.defaultName,
+        icon: itemType.defaultIcon,
+        iconTheme: itemType.defaultIconTheme,
+        data: {
+          text: data,
+        },
+      };
+    }
+
+    return null;
+  }
 }

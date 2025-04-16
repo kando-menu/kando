@@ -49,14 +49,11 @@ export default () => {
 
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
-
-  const dnd = useAppState((state) => state.dnd);
-  const startDrag = useAppState((state) => state.startDrag);
-  const endDrag = useAppState((state) => state.endDrag);
   const moveCollection = useMenuSettings((state) => state.moveCollection);
 
   // When a collection is dragged over another collection, we store the index of that
   // collection as drop index. The dragged collection will be drawn there.
+  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
   const [dropIndex, setDropIndex] = React.useState<number | null>(null);
 
   // Animate the addition and removal of collections.
@@ -79,8 +76,8 @@ export default () => {
   // If a drag is in progress, we need to move the dragged collection to the position of
   // the collection we are currently hovering over. This is done by removing the dragged
   // collection from the list and inserting it at the position of the hovered collection.
-  if (dnd.draggedType === 'collection' && dropIndex !== null) {
-    const draggedCollection = renderedCollections.splice(dnd.draggedIndex, 1)[0];
+  if (dragIndex !== null && dropIndex !== null) {
+    const draggedCollection = renderedCollections.splice(dragIndex, 1)[0];
     renderedCollections.splice(dropIndex, 0, draggedCollection);
   }
 
@@ -105,53 +102,58 @@ export default () => {
               className={cx({
                 collection: true,
                 selected: collection.index === selectedCollection,
-                dragging:
-                  dnd.draggedType === 'collection' &&
-                  dnd.draggedIndex === collection.index,
+                dragging: dragIndex === collection.index,
               })}
               onClick={() => selectCollection(collection.index)}
               draggable
-              onDragStart={() => {
-                startDrag('collection', collection.index);
+              onDragStart={(event) => {
+                event.dataTransfer.setData(
+                  'kando/collection-index',
+                  collection.index.toString()
+                );
+                setDragIndex(collection.index);
                 setDropIndex(collection.index);
               }}
               onDragEnd={() => {
-                moveCollection(dnd.draggedIndex, dropIndex);
+                moveCollection(dragIndex, dropIndex);
 
                 // If the selected menu was dragged, we need to update the selected index.
-                if (dnd.draggedIndex === selectedCollection) {
+                if (dragIndex === selectedCollection) {
                   selectCollection(dropIndex);
                 }
 
                 // If the dragged menu was dropped on the other side of the selected menu,
                 // we need to update the selected index as well.
-                if (
-                  dnd.draggedIndex < selectedCollection &&
-                  dropIndex >= selectedCollection
-                ) {
+                if (dragIndex < selectedCollection && dropIndex >= selectedCollection) {
                   selectCollection(selectedCollection - 1);
                 } else if (
-                  dnd.draggedIndex > selectedCollection &&
+                  dragIndex > selectedCollection &&
                   dropIndex <= selectedCollection
                 ) {
                   selectCollection(selectedCollection + 1);
                 }
 
-                endDrag();
+                setDragIndex(null);
                 setDropIndex(null);
               }}
               onDragOver={(event) => {
-                if (dnd.draggedType === 'collection' || dnd.draggedType === 'menu') {
+                if (
+                  event.dataTransfer.types.includes('kando/menu-index') ||
+                  event.dataTransfer.types.includes('kando/collection-index')
+                ) {
                   event.preventDefault();
                 }
               }}
               onDrop={(event) => {
-                if (dnd.draggedType === 'menu') {
-                  const currentTags = menus[dnd.draggedIndex]?.tags || [];
+                if (event.dataTransfer.types.includes('kando/menu-index')) {
+                  const menuIndex = parseInt(
+                    event.dataTransfer.getData('kando/menu-index')
+                  );
+                  const currentTags = menus[menuIndex]?.tags || [];
                   const newTags = [
                     ...new Set([...currentTags, ...collections[collection.index].tags]),
                   ];
-                  editMenu(dnd.draggedIndex, (menu) => {
+                  editMenu(menuIndex, (menu) => {
                     menu.tags = newTags;
                     return menu;
                   });
@@ -160,10 +162,10 @@ export default () => {
               }}
               onDragEnter={(event) => {
                 if (
-                  dnd.draggedType === 'collection' &&
-                  dnd.draggedIndex !== collection.index
+                  event.dataTransfer.types.includes('kando/collection-index') &&
+                  dragIndex !== collection.index
                 ) {
-                  if (dnd.draggedIndex < collection.index) {
+                  if (dragIndex < collection.index) {
                     setDropIndex(
                       dropIndex >= collection.index
                         ? collection.index - 1
@@ -177,13 +179,13 @@ export default () => {
                     );
                   }
                   event.preventDefault();
-                } else if (dnd.draggedType === 'menu') {
+                } else if (event.dataTransfer.types.includes('kando/menu-index')) {
                   (event.target as HTMLElement).classList.add(classes.dragOver);
                   event.preventDefault();
                 }
               }}
               onDragLeave={(event) => {
-                if (dnd.draggedType === 'menu') {
+                if (event.dataTransfer.types.includes('kando/menu-index')) {
                   (event.target as HTMLElement).classList.remove(classes.dragOver);
                 }
               }}
