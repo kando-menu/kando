@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
@@ -44,18 +44,17 @@ jobs:
 
   windows:
     name: Windows
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        os: [windows-2022, windows-11-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
-        # For some reason cmake.js sometimes skips the build step in CI on Windows in this
-        # case. So we install and execute cmake.js manually.
         run: |
-          npm install cmake-js -g
-          npx cmake-js install
           npm install
       - name: Create Release
         run: |
@@ -63,10 +62,10 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-windows-2022
+          name: build-${{ matrix.os }}
           path: |
-            out/make/zip/win32/x64/*
-            out/make/squirrel.windows/x64/*.exe
+            out/make/zip/win32/*/*
+            out/make/squirrel.windows/*/*.exe
           retention-days: 7
 
   macos:
@@ -79,7 +78,7 @@ jobs:
       # https://github.com/electron/forge/issues/2807
       - run: python3 -m pip install setuptools --break-system-packages
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
