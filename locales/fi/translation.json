@@ -28,6 +28,23 @@
             "detailed-description_other": "Sisältää {{count}} valikkotietuetta.",
             "name": "Alivalikko",
             "description": "Sisältää muita valikkotietueita."
+        },
+        "file": {
+            "file": "Tiedostopolku",
+            "file-hint": "Tämä avataan.",
+            "name": "Avaa tiedosto",
+            "description": "Avaa tiedoston tai kansion."
+        },
+        "settings": {
+            "tip-1": "Tämä toiminto avaa Kandon asetusikkunan.",
+            "name": "Avaa asetukset",
+            "description": "Avaa Kandon asetusikkunan."
+        },
+        "redirect": {
+            "redirect-hint": "Tämä valikko avataan",
+            "redirect": "Uudelleenohjaus",
+            "description": "Avaa toisen valikon",
+            "name": "Uudelleenohjaus"
         }
     },
     "properties": {
@@ -45,7 +62,9 @@
             "centered-mode-hint": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
             "anchored-mode": "Ankkuroitu tila",
             "anchored-mode-hint": "Avaa alivalikot samaan sijaintiin kuin ylätason valikko.",
-            "subheading": "Ennen kuin muokkaat näitä asetuksia, suosittelemme opettelemaan Kandon oletustoiminnan. <a {{- link}}>Lue tästä</a>, miksi tykkäämme oletusasetuksista."
+            "subheading": "Ennen kuin muokkaat näitä asetuksia, suosittelemme opettelemaan Kandon oletustoiminnan. <a {{- link}}>Lue tästä</a>, miksi tykkäämme oletusasetuksista.",
+            "hover-mode": "Kohdistustila",
+            "hover-mode-hint": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella."
         },
         "condition-picker": {
             "app": "Rajaa tiettyihin sovelluksiin",
@@ -59,7 +78,8 @@
             "app-placeholder": "Sovelluksen nimi",
             "heading": "Valitse valikon ehdollisuudet",
             "window": "Rajaa tiettyihin ikkunaotsikkoihin",
-            "bottom-placeholder": "Alaosa"
+            "bottom-placeholder": "Alaosa",
+            "app-checked-hint": "Tukee säännöllisiä lausekkeita kuten /firefox|chrome/i."
         },
         "macro-picker": {
             "recording": "Paina näppäimiä…"
@@ -71,13 +91,16 @@
         },
         "icon-picker": {
             "placeholder": "Etsi kuvakkeita…",
-            "heading": "Valitse kuvake"
+            "heading": "Valitse kuvake",
+            "base64-example": "Base64-esimerkki:"
         }
     },
     "main": {
         "is-running-header": "Kando on jo käynnissä",
         "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
-        "is-running-message": "Katso valinnat ilmoitusalueen kuvakkeesta!"
+        "is-running-message": "Katso valinnat ilmoitusalueen kuvakkeesta!",
+        "show-settings": "Näytä asetukset",
+        "quit": "Lopeta"
     },
     "example-menu": {
         "name": "Valikon esimerkki",
@@ -196,6 +219,10 @@
             "label": "Roskakori",
             "heading": "Voit poistaa valikkoja ja valikkotietueita pudottamalla ne tänne!",
             "subheading": "Kun käynnistät Kandon uudelleen, ne ovat poissa."
+        },
+        "editor-themes-tab": {
+            "label": "Muokkainteemat",
+            "heading": "Tässä tulee luettelo muokkainteemoista!"
         }
     }
 }
