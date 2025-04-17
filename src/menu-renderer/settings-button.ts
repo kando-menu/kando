@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IAppSettings } from '../common';
+import { IGeneralSettings } from '../common';
 
 /**
  * This class adds the functionality to the settings button which is shown in one corner
@@ -22,11 +22,11 @@ export class SettingsButton extends EventEmitter {
    * Adds the functionality to the settings button.
    *
    * @param button The button element.
-   * @param settings The app settings.
+   * @param settings The general settings.
    */
   constructor(
     private button: HTMLButtonElement,
-    settings: IAppSettings
+    settings: IGeneralSettings
   ) {
     super();
 
@@ -53,7 +53,7 @@ export class SettingsButton extends EventEmitter {
    *
    * @param options The new options.
    */
-  public updateSettings(settings: IAppSettings) {
+  public updateSettings(settings: IGeneralSettings) {
     if (settings.hideSettingsButton) {
       this.button.classList.add('invisible');
     } else {

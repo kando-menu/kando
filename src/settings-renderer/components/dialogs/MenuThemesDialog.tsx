@@ -22,17 +22,19 @@ import {
 import { RiDeleteBack2Fill } from 'react-icons/ri';
 import lodash from 'lodash';
 
-import { useAppSetting, useAppState } from '../../state';
+import { useAppState, useGeneralSetting } from '../../state';
 
-import Button from '../common/Button';
-import ColorButton from '../common/ColorButton';
-import Modal from '../common/Modal';
-import Note from '../common/Note';
-import Scrollbox from '../common/Scrollbox';
-import AppSettingsCheckbox from '../common/AppSettingsCheckbox';
-import AppSettingsSpinbutton from '../common/AppSettingsSpinbutton';
-import Swirl from '../common/Swirl';
-import InfoItem from '../common/InfoItem';
+import {
+  Button,
+  ColorButton,
+  Modal,
+  Note,
+  Scrollbox,
+  SettingsCheckbox,
+  SettingsSpinbutton,
+  Swirl,
+  InfoItem,
+} from '../common';
 
 import * as classes from './MenuThemesDialog.module.scss';
 const cx = classNames.bind(classes);
@@ -57,11 +59,11 @@ export default () => {
   const darkMode = useAppState((state) => state.darkMode);
   const themes = useAppState((state) => state.menuThemes);
 
-  const [currentThemeID, setCurrentThemeID] = useAppSetting('menuTheme');
-  const [currentDarkThemeID, setCurrentDarkThemeID] = useAppSetting('darkMenuTheme');
-  const [colors, setColors] = useAppSetting('menuThemeColors');
-  const [darkColors, setDarkColors] = useAppSetting('darkMenuThemeColors');
-  const [useDarkMode] = useAppSetting('enableDarkModeForMenuThemes');
+  const [currentThemeID, setCurrentThemeID] = useGeneralSetting('menuTheme');
+  const [currentDarkThemeID, setCurrentDarkThemeID] = useGeneralSetting('darkMenuTheme');
+  const [colors, setColors] = useGeneralSetting('menuThemeColors');
+  const [darkColors, setDarkColors] = useGeneralSetting('darkMenuThemeColors');
+  const [useDarkMode] = useGeneralSetting('enableDarkModeForMenuThemes');
 
   // This is called when the user clicks on a theme. If different settings are used for
   // dark and light mode, we have to set the correct setting.
@@ -174,7 +176,7 @@ export default () => {
       paddingRight={5}>
       <div className={classes.container}>
         <div className={classes.sidebar}>
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Fade-in time"
             info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
             settingsKey="fadeInDuration"
@@ -183,7 +185,7 @@ export default () => {
             max={500}
             step={10}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Fade-out time"
             info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200ms."
             settingsKey="fadeOutDuration"
@@ -192,7 +194,7 @@ export default () => {
             max={500}
             step={10}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Menu scale"
             info="A global scale factor for all menus. Default is 1."
             settingsKey="zoomFactor"
@@ -201,7 +203,7 @@ export default () => {
             max={5}
             step={0.1}
           />
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label={'Dark and light mode'}
             info="If enabled, you can choose a different theme and a different set of accent colors if your system is currently in dark or light mode."
             settingsKey="enableDarkModeForMenuThemes"

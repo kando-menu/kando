@@ -17,8 +17,7 @@ import {
 import { IoArrowUndo, IoArrowRedo } from 'react-icons/io5';
 
 import { useAppState, useMenuSettings } from '../../state';
-import Headerbar from '../common/Headerbar';
-import Button from '../common/Button';
+import { Headerbar, Button } from '../common';
 
 /**
  * This is the toolbar at the top of the menu-preview area. It contains some buttons for

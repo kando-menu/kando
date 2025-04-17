@@ -18,10 +18,8 @@ import { RiPencilFill } from 'react-icons/ri';
 import * as classes from './CollectionDetails.module.scss';
 const cx = classNames.bind(classes);
 
-import { useMenuSettings, useAppState } from '../../state';
-import Button from '../common/Button';
-import IconChooserButton from '../common/IconChooserButton';
-import TagInput from '../common/TagInput';
+import { useAppState, useMenuSettings } from '../../state';
+import { Button, IconChooserButton, TagInput } from '../common';
 
 interface IProps {
   /** When the search term changes. */

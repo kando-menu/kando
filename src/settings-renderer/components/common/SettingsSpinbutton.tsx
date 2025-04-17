@@ -11,11 +11,11 @@
 import React from 'react';
 
 import Spinbutton from './Spinbutton';
-import { useAppSetting } from '../../state';
-import { IAppSettings } from '../../../common';
+import { useGeneralSetting } from '../../state';
+import { IGeneralSettings } from '../../../common';
 
-interface IProps<K extends keyof IAppSettings> {
-  /** The key in the app settings to manage. */
+interface IProps<K extends keyof IGeneralSettings> {
+  /** The key in the general settings to manage. */
   settingsKey: K;
 
   /** Optional label text to display next to the spinbutton. */
@@ -41,8 +41,8 @@ interface IProps<K extends keyof IAppSettings> {
 }
 
 /**
- * Used to ensure that the settings key K used for the AppSettingsSpinbutton component
- * refers to a number property in the app settings.
+ * Used to ensure that the settings key K used for the GeneralSettingsSpinbutton component
+ * refers to a number property in the general settings.
  */
 type NumberKeys<T> = {
   [K in keyof T]: T[K] extends number ? K : never;
@@ -55,8 +55,8 @@ type NumberKeys<T> = {
  * @param props - The properties for the managed spinbutton component.
  * @returns A managed spinbutton element.
  */
-export default <K extends NumberKeys<IAppSettings>>(props: IProps<K>) => {
-  const [state, setState] = useAppSetting(props.settingsKey);
+export default <K extends NumberKeys<IGeneralSettings>>(props: IProps<K>) => {
+  const [state, setState] = useGeneralSetting(props.settingsKey);
 
   return (
     <Spinbutton

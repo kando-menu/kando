@@ -11,15 +11,15 @@
 import React from 'react';
 
 import Dropdown from './Dropdown';
-import { useAppSetting } from '../../state';
-import { IAppSettings } from '../../../common';
+import { useGeneralSetting } from '../../state';
+import { IGeneralSettings } from '../../../common';
 
-interface IProps<K extends keyof IAppSettings> {
-  /** The key in the app settings to manage. */
+interface IProps<K extends keyof IGeneralSettings> {
+  /** The key in the general settings to manage. */
   settingsKey: K;
 
   /** Array of options to display in the dropdown. Each option has a value and a label. */
-  options: { value: IAppSettings[K]; label: string }[];
+  options: { value: IGeneralSettings[K]; label: string }[];
 
   /** Optional label text to display next to the dropdown. */
   label?: string;
@@ -35,8 +35,8 @@ interface IProps<K extends keyof IAppSettings> {
 }
 
 /**
- * Used to ensure that the settings key K used for the AppSettingsDropdown component
- * refers to a string property in the app settings. This adds some type safety to the
+ * Used to ensure that the settings key K used for the GeneralSettingsDropdown component
+ * refers to a string property in the general settings. This adds some type safety to the
  * component as it should only be used with enum-like settings.
  */
 type EnumKeys<T> = {
@@ -45,13 +45,13 @@ type EnumKeys<T> = {
 
 /**
  * A managed dropdown component that syncs its state with a enum-like string property of
- * the app settings.
+ * the general settings.
  *
  * @param props - The properties for the managed dropdown component.
  * @returns A managed dropdown element.
  */
-export default <K extends EnumKeys<IAppSettings>>(props: IProps<K>) => {
-  const [state, setState] = useAppSetting(props.settingsKey);
+export default <K extends EnumKeys<IGeneralSettings>>(props: IProps<K>) => {
+  const [state, setState] = useGeneralSetting(props.settingsKey);
 
   return (
     <Dropdown

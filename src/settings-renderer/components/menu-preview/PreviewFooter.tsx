@@ -16,7 +16,7 @@ const cx = classNames.bind(classes);
 
 import { ItemTypeRegistry } from '../../../common/item-type-registry';
 
-import ThemedIcon from '../common/ThemedIcon';
+import { ThemedIcon } from '../common';
 
 /**
  * This component encapsules the list of item types which can be dragged to the menu

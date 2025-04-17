@@ -17,8 +17,7 @@ import * as classes from './CollectionList.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import Scrollbox from '../common/Scrollbox';
-import ThemedIcon from '../common/ThemedIcon';
+import { Scrollbox, ThemedIcon } from '../common';
 import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the collections, a list of these objects is created. */

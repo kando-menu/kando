@@ -15,9 +15,7 @@ import React from 'react';
 import { TbExternalLink, TbInfoSquareRoundedFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
-import Swirl from '../common/Swirl';
-import Modal from '../common/Modal';
-import Button from '../common/Button';
+import { Swirl, Modal, Button } from '../common';
 
 import * as classes from './AboutDialog.module.scss';
 

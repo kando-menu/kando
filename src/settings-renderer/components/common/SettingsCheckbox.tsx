@@ -11,11 +11,11 @@
 import React from 'react';
 
 import Checkbox from './Checkbox';
-import { useAppSetting } from '../../state';
-import { IAppSettings } from '../../../common';
+import { useGeneralSetting } from '../../state';
+import { IGeneralSettings } from '../../../common';
 
-interface IProps<K extends keyof IAppSettings> {
-  /** The key in the app settings to manage. */
+interface IProps<K extends keyof IGeneralSettings> {
+  /** The key in the general settings to manage. */
   settingsKey: K;
 
   /** Optional label text to display next to the checkbox. */
@@ -29,8 +29,8 @@ interface IProps<K extends keyof IAppSettings> {
 }
 
 /**
- * Used to ensure that the settings key K used for the AppSettingsCheckbox component
- * refers to a boolean property in the app settings.
+ * Used to ensure that the settings key K used for the GeneralSettingsCheckbox component
+ * refers to a boolean property in the general settings.
  */
 type BooleanKeys<T> = {
   [K in keyof T]: T[K] extends boolean ? K : never;
@@ -43,8 +43,8 @@ type BooleanKeys<T> = {
  * @param props - The properties for the managed checkbox component.
  * @returns A managed checkbox element.
  */
-export default <K extends BooleanKeys<IAppSettings>>(props: IProps<K>) => {
-  const [state, setState] = useAppSetting(props.settingsKey);
+export default <K extends BooleanKeys<IGeneralSettings>>(props: IProps<K>) => {
+  const [state, setState] = useGeneralSetting(props.settingsKey);
 
   return (
     <Checkbox

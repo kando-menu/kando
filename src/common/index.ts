@@ -540,10 +540,10 @@ export function getDefaultMenuSettings(): IMenuSettings {
 }
 
 /**
- * This interface describes the content of the app settings file. It contains the names of
- * the themes to use for the menu and the settings.
+ * This interface describes the content of the general settings file. It contains the
+ * names of the themes to use for the menu and the settings.
  */
-export interface IAppSettings {
+export interface IGeneralSettings {
   /**
    * The locale to use. If set to 'auto', the system's locale will be used. If the locale
    * is not available, english will be used.
@@ -702,12 +702,12 @@ export interface IAppSettings {
 }
 
 /**
- * This function creates a default app settings object. This is used when the settings
+ * This function creates a default general settings object. This is used when the settings
  * file does not exist yet.
  *
- * @returns The default app settings.
+ * @returns The default general settings.
  */
-export function getDefaultAppSettings(): IAppSettings {
+export function getDefaultGeneralSettings(): IGeneralSettings {
   return {
     locale: 'auto',
     menuTheme: 'default',

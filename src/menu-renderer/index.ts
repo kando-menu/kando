@@ -32,7 +32,7 @@ Promise.all([
   window.commonAPI.getMenuTheme(),
   window.commonAPI.getCurrentMenuThemeColors(),
   window.commonAPI.getSoundTheme(),
-  window.commonAPI.appSettings.get(),
+  window.commonAPI.generalSettings.get(),
 ]).then(async ([themeDescription, colors, soundThemeDescription, settings]) => {
   // First, we create a new menu theme and load the description we got from the main
   // process.
@@ -98,7 +98,7 @@ Promise.all([
   // Tell the menu about settings changes. This could check more detailed which setting
   // has changed and only update the necessary parts. But for now, we just reload the
   // whole menu theme.
-  window.commonAPI.appSettings.onChange((newSettings, oldSettings) => {
+  window.commonAPI.generalSettings.onChange((newSettings, oldSettings) => {
     reloadMenuTheme();
     menu.updateSettings(newSettings);
     settingsButton.updateSettings(newSettings);
@@ -155,7 +155,7 @@ Promise.all([
     // or 'ctrl + ,' is pressed on non macOS systems.
     const keyIsComma = ev.key === ',';
     if ((ev.metaKey && keyIsComma && cIsMac) || (ev.ctrlKey && keyIsComma && !cIsMac)) {
-      if ((await window.commonAPI.appSettings.get()).useDefaultOsShowSettingsHotkey) {
+      if ((await window.commonAPI.generalSettings.get()).useDefaultOsShowSettingsHotkey) {
         showSettings();
       }
     }

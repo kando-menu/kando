@@ -73,15 +73,15 @@ export class MenuWindow extends BrowserWindow {
       show: false,
     });
 
-    // When the app settings change, we need to apply the zoom factor to the window.
-    this.kando.getAppSettings().onChange('zoomFactor', (newValue) => {
+    // When the general settings change, we need to apply the zoom factor to the window.
+    this.kando.getGeneralSettings().onChange('zoomFactor', (newValue) => {
       this.webContents.setZoomFactor(newValue);
     });
 
     // Save some settings when the app is closed.
     app.on('before-quit', () => {
       // Save the current zoom factor to the settings.
-      this.kando.getAppSettings().set(
+      this.kando.getGeneralSettings().set(
         {
           zoomFactor: this.webContents.getZoomFactor(),
         },
@@ -99,12 +99,12 @@ export class MenuWindow extends BrowserWindow {
       if (input.control && (input.key === '+' || input.key === '-')) {
         let zoomFactor = this.webContents.getZoomFactor();
         zoomFactor = input.key === '+' ? zoomFactor + 0.1 : zoomFactor - 0.1;
-        this.kando.getAppSettings().set({ zoomFactor });
+        this.kando.getGeneralSettings().set({ zoomFactor });
         event.preventDefault();
       }
 
       if (input.control && input.key === '0') {
-        this.kando.getAppSettings().set({ zoomFactor: 1 });
+        this.kando.getGeneralSettings().set({ zoomFactor: 1 });
         event.preventDefault();
       }
 
@@ -125,7 +125,7 @@ export class MenuWindow extends BrowserWindow {
     await this.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
 
     // Apply the stored zoom factor to the window.
-    this.webContents.setZoomFactor(this.kando.getAppSettings().get('zoomFactor'));
+    this.webContents.setZoomFactor(this.kando.getGeneralSettings().get('zoomFactor'));
 
     return this.windowLoaded;
   }
@@ -347,7 +347,7 @@ export class MenuWindow extends BrowserWindow {
         this.hideTimeout = null;
 
         resolve();
-      }, this.kando.getAppSettings().get().fadeOutDuration);
+      }, this.kando.getGeneralSettings().get().fadeOutDuration);
     });
   }
 

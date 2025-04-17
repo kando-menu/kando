@@ -14,12 +14,7 @@ import * as classes from './Properties.module.scss';
 import { TbCopy, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings } from '../../state';
-
-import Headerbar from '../common/Headerbar';
-import Button from '../common/Button';
-import IconChooserButton from '../common/IconChooserButton';
-import TagInput from '../common/TagInput';
-import Swirl from '../common/Swirl';
+import { Headerbar, Button, IconChooserButton, TagInput, Swirl } from '../common';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the

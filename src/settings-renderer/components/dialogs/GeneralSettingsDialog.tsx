@@ -17,14 +17,16 @@ import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
 
-import Button from '../common/Button';
-import AppSettingsCheckbox from '../common/AppSettingsCheckbox';
-import AppSettingsDropdown from '../common/AppSettingsDropdown';
-import AppSettingsSpinbutton from '../common/AppSettingsSpinbutton';
-import Modal from '../common/Modal';
-import Note from '../common/Note';
-import Scrollbox from '../common/Scrollbox';
-import Swirl from '../common/Swirl';
+import {
+  Button,
+  SettingsCheckbox,
+  SettingsDropdown,
+  SettingsSpinbutton,
+  Modal,
+  Note,
+  Scrollbox,
+  Swirl,
+} from '../common';
 
 /** This dialog allows the user to configure some general settings of Kando. */
 export default () => {
@@ -72,17 +74,17 @@ export default () => {
           <Swirl variant="3" marginTop={10} width={350} marginBottom={20} />
 
           <h1>App Behavior</h1>
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Check for new versions"
             info="If enabled, Kando will show a notification when a new version is available."
             settingsKey="enableVersionCheck"
           />
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Invisible settings button"
             info="You can still use the button, it will appear when you move the mouse over it."
             settingsKey="hideSettingsButton"
           />
-          <AppSettingsDropdown
+          <SettingsDropdown
             label="Settings button position"
             info="Choose the screen corner where the settings button will be shown."
             settingsKey="settingsButtonPosition"
@@ -93,7 +95,7 @@ export default () => {
               { value: 'bottom-right', label: 'Bottom Right' },
             ]}
           />
-          <AppSettingsDropdown
+          <SettingsDropdown
             label="Settings window color scheme"
             info="If you choose 'system', the settings window will use the same color scheme as your operating system."
             settingsKey="settingsWindowColorScheme"
@@ -103,7 +105,7 @@ export default () => {
               { value: 'dark', label: 'Dark' },
             ]}
           />
-          <AppSettingsDropdown
+          <SettingsDropdown
             label="Settings window flavor"
             info="If you choose a transparent flavor, you will have to restart the settings window to apply the effect."
             settingsKey="settingsWindowFlavor"
@@ -116,7 +118,7 @@ export default () => {
               { value: 'sakura-system', label: 'Sakura System' },
             ]}
           />
-          <AppSettingsDropdown
+          <SettingsDropdown
             label="Tray icon flavor"
             info="You can also choose to hide the tray icon completely."
             settingsKey="trayIconFlavor"
@@ -131,27 +133,27 @@ export default () => {
           />
 
           <h1>Menu Behavior</h1>
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Enable Marking Mode"
             info="With Marking Mode enabled, you can select items by dragging the mouse over them."
             settingsKey="enableMarkingMode"
           />
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Enable Turbo Mode"
             info="With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl."
             settingsKey="enableTurboMode"
           />
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Require click for Hover Mode selections"
             info="If unchecked, items will be selected immediately when the mouse is moved over them for menus using Hover Mode."
             settingsKey="hoverModeNeedsConfirmation"
           />
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Right mouse button selects parent"
             info="If unchecked, the right mouse button will close the menu instead."
             settingsKey="rmbSelectsParent"
           />
-          <AppSettingsCheckbox
+          <SettingsCheckbox
             label="Enable gamepad support"
             info="If checked, you can use a connected gamepad to control the menu."
             settingsKey="enableGamepad"
@@ -161,7 +163,7 @@ export default () => {
           <Note marginTop={-10}>
             Usually, you can leave these settings at their default values.
           </Note>
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Center click zone radius"
             info="The size of the area in the middle of the menu which will either close or navigate a level up when clicked. Default is 50px."
             settingsKey="centerDeadZone"
@@ -170,7 +172,7 @@ export default () => {
             max={999}
             step={50}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Minimum submenu distance"
             info="If a submenu is opened close to the parent menu, the parent will be moved away to this distance. Default is 150px."
             settingsKey="minParentDistance"
@@ -179,7 +181,7 @@ export default () => {
             max={999}
             step={50}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Movement threshold"
             info="Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15px."
             settingsKey="dragThreshold"
@@ -188,7 +190,7 @@ export default () => {
             max={999}
             step={10}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Minimum Gesture Length"
             info="Straight movements must be at least this long to trigger a selection. Default is 150px."
             settingsKey="gestureMinStrokeLength"
@@ -197,7 +199,7 @@ export default () => {
             max={999}
             step={50}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Minimum Gesture Angle"
             info="Smaller deviations from straight movements will not trigger selections. Default is 20°."
             settingsKey="gestureMinStrokeAngle"
@@ -206,7 +208,7 @@ export default () => {
             max={30}
             step={1}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Minimum Gesture Angle"
             info="Smaller movements will not be considered in the gesture detection. Default is 10px."
             settingsKey="gestureJitterThreshold"
@@ -215,7 +217,7 @@ export default () => {
             max={50}
             step={1}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Gesture Pause Timeout"
             info="Stop your gesture for this long to trigger a selection. Default is 100ms."
             settingsKey="gesturePauseTimeout"
@@ -224,7 +226,7 @@ export default () => {
             max={999}
             step={50}
           />
-          <AppSettingsSpinbutton
+          <SettingsSpinbutton
             label="Fixed Stroke Length"
             info="Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px."
             settingsKey="fixedStrokeLength"

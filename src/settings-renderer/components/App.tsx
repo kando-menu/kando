@@ -13,26 +13,19 @@ import { Tooltip } from 'react-tooltip';
 import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 
-import { useAppSetting, useMenuSettings } from '../state';
-
-import AboutDialog from './dialogs/AboutDialog';
-import GeneralSettingsDialog from './dialogs/GeneralSettingsDialog';
-import MenuThemesDialog from './dialogs/MenuThemesDialog';
-
-import Sidebar from './common/Sidebar';
-import MenuPreview from './menu-preview/MenuPreview';
-import PreviewHeader from './menu-preview/PreviewHeader';
-import PreviewFooter from './menu-preview/PreviewFooter';
-import Properties from './menu-properties/Properties';
-import MenuList from './menu-list/MenuList';
-import CollectionList from './menu-list/CollectionList';
+import { useGeneralSetting, useMenuSettings } from '../state';
+import { AboutDialog, GeneralSettingsDialog, MenuThemesDialog } from './dialogs';
+import { MenuList, CollectionList } from './menu-list';
+import { MenuPreview, PreviewHeader, PreviewFooter } from './menu-preview';
+import { Properties } from './menu-properties';
+import { Sidebar } from './common';
 
 import * as classes from './App.module.scss';
 const cx = classNames.bind(classes);
 
 export default () => {
-  const [settingsWindowColorScheme] = useAppSetting('settingsWindowColorScheme');
-  const [settingsWindowFlavor] = useAppSetting('settingsWindowFlavor');
+  const [settingsWindowColorScheme] = useGeneralSetting('settingsWindowColorScheme');
+  const [settingsWindowFlavor] = useGeneralSetting('settingsWindowFlavor');
 
   // Bind global undo/redo shortcuts.
   React.useEffect(() => {

@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
-import { IAppSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
+import { IGeneralSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
@@ -115,7 +115,7 @@ export class Menu extends EventEmitter {
     private container: HTMLElement,
     private theme: MenuTheme,
     private soundTheme: SoundTheme,
-    private settings: IAppSettings
+    private settings: IGeneralSettings
   ) {
     super();
 
@@ -216,7 +216,7 @@ export class Menu extends EventEmitter {
    *
    * @param options The new options.
    */
-  public updateSettings(settings: IAppSettings) {
+  public updateSettings(settings: IGeneralSettings) {
     this.settings = settings;
 
     this.container.style.setProperty(

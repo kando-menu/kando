@@ -130,8 +130,8 @@ export class ItemTypeRegistry {
   public getPreferredDataType(types: readonly string[]): string {
     const prefferedTypes = [
       'kando/item-type', // This is used for new items dragged from the item type list.
-      'kando/menu-index', // This is used for menus dragged from the menu list.
-      'text/uri-list',
+      // 'kando/menu-index', // This is used for menus dragged from the menu list.
+      // 'text/uri-list',
       'text/plain',
     ];
 
