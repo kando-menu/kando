@@ -9,13 +9,14 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
+@use 'sass:color';
 
 $icon-padding: 1cqmin;
 $center-size: 25cqmin;
 $child-size: 12cqmin;
 $child-offset: 30cqmin;
 $grandchild-size: 4cqmin;
-$grandchild-offset: 7cqmin;
+$grandchild-offset: 7.2cqmin;
 $lock-size: 4cqmin;
 $lock-offset: 18cqmin;
 $backlink-size: 8cqmin;
@@ -52,6 +53,13 @@ $backlink-offset: 30cqmin;
 
       &.selected {
         border: $border-selected;
+        background-color: light-dark(
+          rgba(color.mix(color.adjust($base-dark, $lightness: 10%), $key-dark, 50%), 0.4),
+          rgba(
+            color.mix(color.adjust($base-light, $lightness: -10%), $key-light, 50%),
+            0.4
+          )
+        );
       }
     }
 
@@ -146,12 +154,15 @@ $backlink-offset: 30cqmin;
       position: absolute;
       aspect-ratio: 1;
       width: $grandchild-size;
-      top: calc(50% + $grandchild-offset * var(--dir-y));
-      left: calc(50% + $grandchild-offset * var(--dir-x));
+      top: calc(-1 * $grandchild-size / 2 + $child-size / 2 + $icon-padding);
+      left: calc(-1 * $grandchild-size / 2 + $child-size / 2 + $icon-padding);
+
+      transform: translate(
+        calc($grandchild-offset * var(--dir-x)),
+        calc($grandchild-offset * var(--dir-y))
+      );
 
       border-radius: 50%;
-
-      transform: translate(-50%, -50%);
 
       background: linear-gradient(
         var(--angle),

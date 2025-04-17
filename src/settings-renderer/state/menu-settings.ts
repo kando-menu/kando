@@ -100,6 +100,35 @@ type MenuStateActions = {
    */
   duplicateMenuItem: (menuIndex: number, itemPath: number[]) => void;
 
+  /**
+   * Moves a menu item from one position to another. The item is identified by its path in
+   * the menu tree. The target position is given by the menu index and the path to the
+   * item in the target menu. If either the source or target location is not valid, a
+   * warning is printed and nothing is moved.
+   *
+   * If the source and target menu are the same, the indices in the paths both refer to
+   * submenu indices as if no item was removed or inserted yet.
+   *
+   * @param fromMenuIndex The index of the menu to move the item from.
+   * @param fromPath The path to the item to move. This is a list of indices that
+   *   represent the path to the item. All indices except the last one have to address
+   *   submenus. As the root menu item can not be dragged, this should never be empty.
+   * @param toMenuIndex The index of the menu to move the item to. Can be the same as
+   *   fromMenuIndex.
+   * @param toPath The path to the item to move to. The last index will be the position
+   *   where the item is inserted into the submenu indicated by the last-but-one index. If
+   *   this path contains only one index, the item is inserted into the root menu at the
+   *   given position. The last index in the path can also be -1, which means that the
+   *   item is inserted at the end of the children array of the submenu.
+   * @returns
+   */
+  moveMenuItem: (
+    fromMenuIndex: number,
+    fromPath: number[],
+    toMenuIndex: number,
+    toPath: number[]
+  ) => void;
+
   /** Appends a new collection to the list of collections. */
   addCollection: () => void;
 
@@ -259,6 +288,44 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
           })
         ),
 
+      moveMenuItem: (
+        fromMenuIndex: number,
+        fromPath: number[],
+        toMenuIndex: number,
+        toPath: number[]
+      ) =>
+        set(
+          produce((state) => {
+            const fromMenu = state.menus[fromMenuIndex];
+            const toMenu = state.menus[toMenuIndex];
+
+            const {
+              item: fromItem,
+              index: fromIndex,
+              parent: fromParent,
+            } = getMenuItem(fromMenu.root, fromPath);
+
+            const toSubmenuPath = toPath.slice(0, toPath.length - 1);
+            let toIndex = toPath[toPath.length - 1];
+            const { item: toSubmenu } = getMenuItem(toMenu.root, toSubmenuPath);
+
+            // If the last index is -1, we want to insert the item at the end of the
+            // children array of the submenu.
+            if (toIndex === -1) {
+              toIndex = toSubmenu.children.length;
+            }
+
+            // Check if the source and target menus exist.
+            if (!fromItem || !fromParent || !toSubmenu) {
+              console.warn('Invalid source or target menu. Cannot move item.');
+              return;
+            }
+
+            fromParent.children.splice(fromIndex, 1);
+            toSubmenu.children.splice(toIndex, 0, fromItem);
+          })
+        ),
+
       addCollection: () =>
         set(
           produce((state) => {
@@ -313,7 +380,7 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
   )
 );
 
-// Helpers -------------------------------------------------------------------------------
+// Some internal helpers -----------------------------------------------------------------
 
 /**
  * This function returns the menu item at the given path. The path is a list of indices.
@@ -321,26 +388,26 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
  * @param root The root menu item.
  * @param itemPath The path to the item. This is a list of indices that represent the path
  *   to the item.
- * @returns The item and its parent. If the parent is null, the root item was selected.
+ * @returns The item, its index among its siblings, and its parent. If the itemPath is
+ *   empty, the root item is returned and both index and parent are null.
  */
 function getMenuItem(
   root: IMenuItem,
   itemPath: number[]
 ): {
   item: IMenuItem;
+  index: number | null;
   parent: IMenuItem | null;
 } {
   let item = root;
+  let index = null;
   let parent = null;
   for (let i = 0; i < itemPath.length; i++) {
     parent = item;
-    item = item.children[itemPath[i]];
+    index = itemPath[i];
+    item = item.children[index];
   }
 
   // If the parent was not changed above, we are editing the root item.
-  if (parent === null) {
-    return { item: root, parent: null };
-  } else {
-    return { item, parent };
-  }
+  return { item, index, parent };
 }

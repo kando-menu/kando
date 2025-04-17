@@ -177,6 +177,7 @@ export default () => {
                   draggable
                   onDragStart={(event) => {
                     event.dataTransfer.setData('kando/menu-index', menu.index.toString());
+                    event.dataTransfer.setData('kando/menu', JSON.stringify(menu));
                     setDragIndex(menu.index);
                     setDropIndex(menu.index);
                   }}

@@ -130,8 +130,8 @@ export class ItemTypeRegistry {
   public getPreferredDataType(types: readonly string[]): string {
     const prefferedTypes = [
       'kando/item-type', // This is used for new items dragged from the item type list.
-      // 'kando/menu-index', // This is used for menus dragged from the menu list.
-      // 'text/uri-list',
+      'kando/menu', // This is used for menus dragged from the menu list.
+      'text/uri-list',
       'text/plain',
     ];
 
@@ -164,8 +164,33 @@ export class ItemTypeRegistry {
           icon: itemType.defaultIcon,
           iconTheme: itemType.defaultIconTheme,
           data: itemType.defaultData,
+          children: itemType.hasChildren ? [] : undefined,
         };
       }
+    } else if (type === 'kando/menu') {
+      // This will be a IRenderedMenu as defined in
+      // settings-renderer/components/menu-list/MenuList.tsx
+      const menu = JSON.parse(data);
+      return {
+        type: 'redirect',
+        name: menu.name,
+        icon: menu.icon,
+        iconTheme: menu.iconTheme,
+        data: {
+          menu: menu.name,
+        },
+      };
+    } else if (type === 'text/uri-list') {
+      const itemType = this.types.get('uri');
+      return {
+        type: 'uri',
+        name: itemType.defaultName,
+        icon: itemType.defaultIcon,
+        iconTheme: itemType.defaultIconTheme,
+        data: {
+          uri: data,
+        },
+      };
     } else if (type === 'text/plain') {
       const itemType = this.types.get('text');
       return {

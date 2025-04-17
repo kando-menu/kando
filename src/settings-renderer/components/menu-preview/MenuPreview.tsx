@@ -69,6 +69,8 @@ export default () => {
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
   const selectChildPath = useAppState((state) => state.selectChildPath);
   const menus = useMenuSettings((state) => state.menus);
+  const editMenuItem = useMenuSettings((state) => state.editMenuItem);
+  const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
 
   // During a drag-and-drop operation, the drop index will be set to the position where
   // the dragged item should be dropped. If dropInto is true, the dragged item should be
@@ -112,19 +114,21 @@ export default () => {
   // it is not a submenu. If the center is selected, the index is -1.
   let centerItem = menu.root;
   let selectedChild = -1;
-  let isRoot = true;
-  let parentAngle = null;
+  let showingRootMenu = true;
   let childAngles = math.computeItemAngles(centerItem.children);
+  let parentAngle = null;
+  const centerItemPath: number[] = [];
 
   for (let i = 0; i < selectedChildPath.length; i++) {
     const childIndex = selectedChildPath[i];
     const child = centerItem.children[childIndex];
     const type = ItemTypeRegistry.getInstance().getType(child.type);
     if (type?.hasChildren) {
-      isRoot = false;
+      showingRootMenu = false;
       parentAngle = utils.getParentAngle(childAngles[childIndex]);
       centerItem = child;
       childAngles = math.computeItemAngles(centerItem.children, parentAngle);
+      centerItemPath.push(childIndex);
     } else {
       selectedChild = childIndex;
       break;
@@ -137,18 +141,19 @@ export default () => {
   // center item and later add or remove items from this list depending on the drag
   // operation.
   let renderedChildAngles = childAngles;
-  const renderedChildren = centerItem.children.map((child, i) => {
-    const item: IRenderedMenuItem = {
-      // We prepend the selected menu to the key so that there is no weird transition
-      // animation when the selected menu changes.
-      key: selectedMenu + child.name + child.icon + child.iconTheme,
-      index: i,
-      icon: child.icon,
-      iconTheme: child.iconTheme,
-      angle: child.angle,
-    };
-    return item;
-  });
+  const renderedChildren =
+    centerItem.children?.map((child, i) => {
+      const item: IRenderedMenuItem = {
+        // We prepend the selected menu to the key so that there is no weird transition
+        // animation when the selected menu changes.
+        key: selectedMenu + child.name + child.icon + child.iconTheme,
+        index: i,
+        icon: child.icon,
+        iconTheme: child.iconTheme,
+        angle: child.angle,
+      };
+      return item;
+    }) || [];
 
   // If there is currently a drag operation in progress, we need to modify the list of
   // rendered children. If it is an external drag, we draw a "drop-indicator" item at the
@@ -299,6 +304,8 @@ export default () => {
     });
   };
 
+  // Assembles a list of divs for the child items of the center item. Each child is
+  // rendered as a div with a contained icon and potentially a list of grandchild items.
   const renderChild = (child: IRenderedMenuItem, index: number) => {
     return (
       <div
@@ -332,6 +339,8 @@ export default () => {
     );
   };
 
+  // Renders the lock icon for the given child item. The lock is locked if the item has a
+  // fixed angle.
   const renderLock = (child: IRenderedMenuItem, index: number) => {
     return (
       <div
@@ -340,7 +349,21 @@ export default () => {
           lock: true,
           locked: child.angle !== undefined,
         })}
-        style={utils.makeCSSProperties('dir', childDirections[index])}>
+        style={utils.makeCSSProperties('dir', childDirections[index])}
+        onClick={() => {
+          // If the item is locked, we unlock it. If it is not locked, we lock it. This is
+          // done by removing the angle from the item or setting it to the current angle
+          // of the item.
+          const itemPath = centerItemPath.concat(index);
+          editMenuItem(selectedMenu, itemPath, (item) => {
+            if (item.angle !== undefined) {
+              delete item.angle;
+            } else {
+              item.angle = renderedChildAngles[index];
+            }
+            return item;
+          });
+        }}>
         <ThemedIcon
           size={'100%'}
           theme={'material-symbols-rounded'}
@@ -431,9 +454,14 @@ export default () => {
               ref={currentContainer}
               className={classes.transitionContainer}
               onDragEnter={(event) => {
+                // If we enter the container during an external drag, we check whether
+                // we could create a new item from the dragged data. If this is the case,
+                // we create a temporary dragged item which will be used as a "drop
+                // indicator" item.
                 if (draggedItem === null && dragIndex === null) {
-                  const registry = ItemTypeRegistry.getInstance();
-                  const dataType = registry.getPreferredDataType(
+                  console.log('items', event.dataTransfer.items);
+                  console.log('types', event.dataTransfer.types);
+                  const dataType = ItemTypeRegistry.getInstance().getPreferredDataType(
                     event.dataTransfer.types
                   );
 
@@ -447,6 +475,8 @@ export default () => {
               }}
               onDragOver={onDragOver}
               onDragLeave={(event) => {
+                // If we leave the container during an external drag, we reset the drop
+                // data so  that the drop indicator is hidden.
                 if (
                   dragIndex === null &&
                   !currentContainer.current?.contains(event.relatedTarget)
@@ -457,21 +487,62 @@ export default () => {
                 }
               }}
               onDrop={(event) => {
+                // If the drag index is set, we are moving an item around. In this case, we need to
+                // move the item to the new position. If it is not set, something new is dragged
+                // from somewhere else. In this case, we need to create a new item at the drop
+                // position.
                 if (dragIndex !== null) {
+                  const dragItemPath = centerItemPath.concat(dragIndex);
+
                   if (dropIndex === null && dropInto) {
-                    console.log('move item to parent');
+                    // Moving to the parent.
+                    const dropItemPath = centerItemPath.slice(0, -1).concat(-1);
+                    moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
                   } else if (dropIndex !== null && dropInto) {
-                    console.log('move item to submenu');
+                    // Moving to a submenu.
+                    const dropItemPath = centerItemPath.concat([dropIndex, -1]);
+                    moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
                   } else if (dropIndex !== null) {
-                    console.log('move item among siblings');
+                    // Moving to a sibling position.
+                    const dropItemPath = centerItemPath.concat(dropIndex);
+                    moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
                   }
-                } else if (event.dataTransfer.types.includes('kando/item-type')) {
-                  if (dropIndex === null && dropInto) {
-                    console.log('create new item in parent');
-                  } else if (dropIndex !== null && dropInto) {
-                    console.log('create new item in submenu');
-                  } else if (dropIndex !== null) {
-                    console.log('create new item among siblings');
+                } else {
+                  const preferredType =
+                    ItemTypeRegistry.getInstance().getPreferredDataType(
+                      event.dataTransfer.types
+                    );
+
+                  if (preferredType) {
+                    const item = ItemTypeRegistry.getInstance().createItem(
+                      preferredType,
+                      event.dataTransfer.getData(preferredType)
+                    );
+
+                    if (item) {
+                      if (dropIndex === null && dropInto) {
+                        // Create new item in parent.
+                        const parentPath = centerItemPath.slice(0, -1);
+                        editMenuItem(selectedMenu, parentPath, (parent) => {
+                          parent.children.push(item);
+                          return parent;
+                        });
+                      } else if (dropIndex !== null && dropInto) {
+                        // Create new item in submenu.
+                        const submenuPath = centerItemPath.concat(dropIndex);
+                        editMenuItem(selectedMenu, submenuPath, (submenu) => {
+                          submenu.children.push(item);
+                          return submenu;
+                        });
+                      } else if (dropIndex !== null) {
+                        // Create new item among siblings and select it.
+                        editMenuItem(selectedMenu, centerItemPath, (center) => {
+                          center.children.splice(dropIndex, 0, item);
+                          return center;
+                        });
+                        selectChildPath(centerItemPath.concat(dropIndex));
+                      }
+                    }
                   }
                 }
 
@@ -485,7 +556,7 @@ export default () => {
               {
                 // Except for the root menu, in all submenus a back link is shown which
                 // allows the user to navigate back to the parent menu.
-                !isRoot && (
+                !showingRootMenu && (
                   <div
                     className={cx({
                       backLink: true,
