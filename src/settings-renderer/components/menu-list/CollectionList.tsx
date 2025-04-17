@@ -156,7 +156,7 @@ export default () => {
                     menu.tags = newTags;
                     return menu;
                   });
-                  (event.target as HTMLElement).classList.remove(classes.dragOver);
+                  (event.target as HTMLElement).classList.remove(classes.dropping);
                 }
               }}
               onDragEnter={(event) => {
@@ -179,13 +179,13 @@ export default () => {
                   }
                   event.preventDefault();
                 } else if (event.dataTransfer.types.includes('kando/menu-index')) {
-                  (event.target as HTMLElement).classList.add(classes.dragOver);
+                  (event.target as HTMLElement).classList.add(classes.dropping);
                   event.preventDefault();
                 }
               }}
               onDragLeave={(event) => {
                 if (event.dataTransfer.types.includes('kando/menu-index')) {
-                  (event.target as HTMLElement).classList.remove(classes.dragOver);
+                  (event.target as HTMLElement).classList.remove(classes.dropping);
                 }
               }}
               data-tooltip-id="main-tooltip"

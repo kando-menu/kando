@@ -77,8 +77,8 @@
     opacity: 0.001;
   }
 
-  &.dragOver {
-    border: $border-selected;
+  &.dropping {
+    box-shadow: $drop-highlight;
     transform: scale(1.1);
   }
 }

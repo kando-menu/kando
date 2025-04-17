@@ -98,7 +98,7 @@ $backlink-offset: 30cqmin;
       }
 
       &.dropping {
-        box-shadow: 0 0 10px light-dark($key-dark, $key-light);
+        box-shadow: $drop-highlight;
         transform: translate(
             calc(50cqmin + $child-offset * var(--dir-x)),
             calc(50cqmin + $child-offset * var(--dir-y))
@@ -191,7 +191,7 @@ $backlink-offset: 30cqmin;
       }
 
       &.dropping {
-        box-shadow: 0 0 10px light-dark($key-dark, $key-light);
+        box-shadow: $drop-highlight;
         transform: translate(
             calc(50cqmin + $backlink-offset * var(--dir-x)),
             calc(50cqmin + $backlink-offset * var(--dir-y))

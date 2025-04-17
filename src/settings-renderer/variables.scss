@@ -75,6 +75,7 @@ $widget-selected-hover: light-dark(
   rgba(color.mix($key-light, color.adjust($base-dark, $lightness: 10%), 40%), 0.5)
 );
 
+$drop-highlight: 0 0 10px light-dark($key-dark, $key-light);
 $border-selected: 1px solid light-dark($key-dark, $key-light);
 $border-focused: 1px solid
   light-dark(
