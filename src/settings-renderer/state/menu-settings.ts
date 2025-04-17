@@ -21,9 +21,10 @@ import {
   IMenuItem,
 } from '../../common';
 
-// The menu settings state object uses a temporal store. That means that every
-// modification to the state is stored in a history stack. The user can undo and redo
-// these changes.
+// The menu settings state object allows access, modification, and change notification of
+// the settings stored in the user's menus.json. It uses a temporal store. That means that
+// every modification to the state is stored in a history stack. The user can undo and
+// redo these changes.
 
 /** These actions can be performed on the menu state. */
 type MenuStateActions = {

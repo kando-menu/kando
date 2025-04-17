@@ -12,6 +12,10 @@ import { create } from 'zustand';
 
 import { IBackendInfo, IVersionInfo, IMenuThemeDescription } from '../../common';
 
+// This state object contains all information about the settings dialog itself. The state
+// is not persisted to disk, so whenever the settings dialog is opened, the state is
+// initialized with the default values.
+
 type AppState = {
   /**
    * The index of the currently selected menu. This is the index in the entire list of
