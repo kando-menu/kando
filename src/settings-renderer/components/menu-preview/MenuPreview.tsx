@@ -231,7 +231,52 @@ export default () => {
   // current drag angle.
   if (angleDragOngoing) {
     const item = renderedChildren[dragIndex];
-    item.angle = dragAngle;
+
+    // Find the next and previous item with a fixed angle. If there is one, we need to
+    // ensure that the angle of the dragged item is between these two angles. As angles
+    // wrap around, this is a bit tricky.
+    const childCount = renderedChildren.length;
+    let nextAngle = null;
+    let prevAngle = null;
+    for (let i = 1; i < renderedChildren.length; i++) {
+      const nextItem = renderedChildren[(dragIndex + i) % childCount];
+      const prevItem = renderedChildren[(dragIndex - i + childCount) % childCount];
+
+      if (nextItem.angle !== undefined && nextAngle === null) {
+        nextAngle = nextItem.angle;
+      }
+
+      if (prevItem.angle !== undefined && prevAngle === null) {
+        prevAngle = prevItem.angle;
+      }
+    }
+
+    let angle = dragAngle;
+
+    if (prevAngle !== null && nextAngle !== null) {
+      // Make sure that prevAngle < angle < nextAngle.
+      prevAngle = math.getEquivalentAngleSmallerThan(
+        prevAngle,
+        math.getClosestEquivalentAngle(item.angle, dragAngle)
+      );
+      nextAngle = math.getEquivalentAngleLargerThan(
+        nextAngle,
+        math.getClosestEquivalentAngle(item.angle, dragAngle)
+      );
+
+      const margin = 15;
+      if (nextAngle - prevAngle < 2 * margin) {
+        angle = (prevAngle + nextAngle) / 2;
+      } else {
+        angle = Math.max(prevAngle + margin, Math.min(nextAngle - margin, angle));
+      }
+    }
+
+    item.angle = angle;
+
+    // Ensure that the angles are monotonically increasing.
+    math.ensureMonotonicIncreasing(renderedChildren);
+
     renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
   }
 
@@ -350,6 +395,14 @@ export default () => {
             setDragAngle(null);
             setDragIndex(null);
             angleDragMayStart = false;
+
+            // If the angle was changed, we need to update the item in the menu.
+            editMenuItem(selectedMenu, centerItemPath, (center) => {
+              center.children.forEach((item, i) => {
+                item.angle = renderedChildren[i].angle;
+              });
+              return center;
+            });
           } else {
             selectChild(index);
           }
