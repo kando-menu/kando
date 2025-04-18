@@ -67,14 +67,38 @@ export function getAngularDifference(angle1: number, angle2: number): number {
 
 /**
  * This method returns the angle which equivalent to the given angle (modulo 360) and
- * closest to the given before angle. The result can be negative.
+ * closest to the given angle. The result can be negative.
  */
-export function closestEquivalentAngle(before: number, angle: number): number {
-  if (before != null && Math.abs(before - angle) > 180) {
-    const fullTurns = Math.round((before - angle) / 360);
+export function getClosestEquivalentAngle(angle: number, to: number): number {
+  if (to != null && Math.abs(to - angle) > 180) {
+    const fullTurns = Math.round((to - angle) / 360);
     angle += fullTurns * 360;
   }
 
+  return angle;
+}
+
+/**
+ * Returns the largest angle which is equivalent to the given angle (modulo 360) but
+ * smaller or equal to the given reference angle.
+ */
+export function getEquivalentAngleSmallerThan(angle: number, than: number): number {
+  if (than != null) {
+    const fullTurns = Math.floor((than - angle) / 360);
+    angle += fullTurns * 360;
+  }
+  return angle;
+}
+
+/**
+ * Returns the smallest angle which is equivalent to the given angle (modulo 360) but
+ * larger or equal to the given reference angle.
+ */
+export function getEquivalentAngleLargerThan(angle: number, than: number): number {
+  if (than != null) {
+    const fullTurns = Math.ceil((than - angle) / 360);
+    angle += fullTurns * 360;
+  }
   return angle;
 }
 

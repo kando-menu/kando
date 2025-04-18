@@ -922,7 +922,7 @@ export class Menu extends EventEmitter {
           angle = math.getAngle(nextItem.position);
         }
 
-        angle = math.closestEquivalentAngle(item.lastConnectorAngle, angle);
+        angle = math.getClosestEquivalentAngle(angle, item.lastConnectorAngle);
         item.lastConnectorAngle = angle;
 
         item.connectorDiv.style.width = `${length}px`;
