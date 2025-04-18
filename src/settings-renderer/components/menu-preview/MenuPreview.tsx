@@ -48,18 +48,6 @@ interface IRenderedMenuItem {
 }
 
 /**
- * Small helper function which moves the item at the given index to the end of the array.
- *
- * @param array The array to modify.
- * @param index The index of the item to move.
- */
-function moveToEnd<T>(array: T[], index: number) {
-  const item = array[index];
-  array.splice(index, 1);
-  array.push(item);
-}
-
-/**
  * This component encapsules the center area of the settings dialog. It contains the
  * preview of the currently selected menu where the user can reorder and select menu
  * items.
@@ -71,19 +59,6 @@ export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
-
-  // During a drag-and-drop operation, the drop index will be set to the position where
-  // the dragged item should be dropped. If dropInto is true, the dragged item should be
-  // dropped into the submenu at the given index. If a child is dragged around, the
-  // drag index is set to the index of the dragged item. If a new item is dragged from
-  // outside the preview, the drag index is null.
-  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
-  const [dropIndex, setDropIndex] = React.useState<number | null>(null);
-  const [dropInto, setDropInto] = React.useState(false);
-
-  // If a new item is dragged from somewhere else, we need to show a drop indicator at the
-  // drop position. This piece of state contains the item which is about to be dropped.
-  const [draggedItem, setDraggedItem] = React.useState<IRenderedMenuItem | null>(null);
 
   // When the user selects a submenu or navigates back to the parent menu, a short
   // transition animation is shown. The new menu fades in from the direction of the
@@ -99,6 +74,32 @@ export default () => {
   const [transitionAngle, setTransitionAngle] = React.useState(0);
   const pingRef = React.useRef(null);
   const pongRef = React.useRef(null);
+  const currentContainer = transitionPing ? pingRef : pongRef;
+
+  // Drag-and-drop in the menu preview is very complex. It is handled using the state
+  // below. There are several scenarios to consider:
+  // 1. The user drags an item inside the menu preview from one place to another. In this
+  //    case, dragIndex indicates the dragged item in the list of children. The drop index
+  //    will be set to the position where the item should be dropped. The dropInto
+  //    property indicates whether the item should be dropped into the submenu at the
+  //    given index. Both tempItem and dragAngle are null in this case.
+  // 2. The user drags something from outside the menu preview into the menu preview. In
+  //    this case, the drag index is null. The drop index the dropInto property behave
+  //    exactly like in the first case. The tempItem is set to the item which is about to
+  //    be dropped. The dragAngle is null.
+  // 3. The user drags an item with a fixed angle inside the menu preview. In this case,
+  //    the drag index specifies the dragged item. The dropIndex and the tempItem are null
+  //    in this case. The dragAngle is set to the current angle of the dragged item.
+  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
+  const [dropIndex, setDropIndex] = React.useState<number | null>(null);
+  const [dropInto, setDropInto] = React.useState(false);
+  const [tempItem, setTempItem] = React.useState<IRenderedMenuItem | null>(null);
+  const [dragAngle, setDragAngle] = React.useState<number | null>(null);
+
+  // Some booleans which make the code below more readable.
+  const internalDragOngoing = dragIndex !== null && dropIndex !== null;
+  const externalDragOngoing = dragIndex === null && dropIndex !== null;
+  const angleDragOngoing = dragIndex !== null && dropIndex === null && dragAngle !== null;
 
   // Sanity check.
   const menu = menus[selectedMenu];
@@ -160,45 +161,45 @@ export default () => {
   // drop position. We do not really insert it at the drop position because this confuses
   // React (there will not be proper transitions as the items are swapping places when the
   // dragged item is moved around). Instead, we just add it to the end of the list.
-  if (draggedItem) {
+  if (externalDragOngoing) {
     // If dropIndex is null, the item is about to be dropped onto the back-navigation
     // link. In this case, we use the parent angle. If the item is dropped into a submenu,
     // we simply copy the angle of the submenu. In both cases there is no need to
     // recompute the angles of the rendered children. Only in the last case where the item
     // is about to be dropped somewhere among its siblings we need to recompute the
     // angles.
-    if (dropIndex === null && dropInto) {
-      renderedChildren.push(draggedItem);
+    if (dropIndex === -1 && dropInto) {
+      renderedChildren.push(tempItem);
       renderedChildAngles.push(parentAngle);
-    } else if (dropIndex !== null && dropInto) {
-      renderedChildren.push(draggedItem);
+    } else if (dropIndex >= 0 && dropInto) {
+      renderedChildren.push(tempItem);
       renderedChildAngles.push(renderedChildAngles[dropIndex]);
-    } else if (dropIndex !== null) {
+    } else if (dropIndex >= 0) {
       // First insert the drop-indicator item at the drop position to compute the angles
       // correctly.
-      renderedChildren.splice(dropIndex, 0, draggedItem);
+      renderedChildren.splice(dropIndex, 0, tempItem);
       renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
 
       // Now move the item and the angle to the end of the lists.
-      moveToEnd(renderedChildren, dropIndex);
-      moveToEnd(renderedChildAngles, dropIndex);
+      utils.moveToEnd(renderedChildren, dropIndex);
+      utils.moveToEnd(renderedChildAngles, dropIndex);
     }
   }
 
   // If it is an internal drag, we need to show the dragged item at the drop position.
   // Again, in order to not confuse React, we do not really move the item in the list of
   // rendered children. Instead, we only adapt the list of angles.
-  if (dragIndex !== null) {
+  if (internalDragOngoing) {
     // First create a copy of the children list. We will modify this to compute the
     // angles of the children as if the dragged item was at the drop position.
     const childrenCopy = [...renderedChildren];
 
     // Remove the dragged item from the list.
-    const draggedItem = childrenCopy.splice(dragIndex, 1)[0];
+    const tempItem = childrenCopy.splice(dragIndex, 1)[0];
 
     // If it is not dropped into a submenu, we need to add it at the drop position.
     if (!dropInto) {
-      childrenCopy.splice(dropIndex, 0, draggedItem);
+      childrenCopy.splice(dropIndex, 0, tempItem);
     }
 
     // Now compute the angles of the children as if the dragged item was at the drop
@@ -212,18 +213,26 @@ export default () => {
     //    submenu at the position of the dragged item.
     // 3. If the item is dropped somewhere among its siblings, we need to move the angle
     //    from the drop position to the position of the dragged item.
-    if (dropIndex === null && dropInto) {
+    if (dropIndex === -1 && dropInto) {
       renderedChildAngles.splice(dragIndex, 0, parentAngle);
-    } else if (dropIndex !== null && dropInto) {
+    } else if (dropIndex >= 0 && dropInto) {
       renderedChildAngles.splice(
         dragIndex,
         0,
         renderedChildAngles[dropIndex > dragIndex ? dropIndex - 1 : dropIndex]
       );
-    } else if (dropIndex !== null) {
+    } else if (dropIndex >= 0) {
       const dropAngle = renderedChildAngles.splice(dropIndex, 1)[0];
       renderedChildAngles.splice(dragIndex, 0, dropAngle);
     }
+  }
+
+  // If it is an angle drag, we need to update the angle of the dragged item to the
+  // current drag angle.
+  if (angleDragOngoing) {
+    const item = renderedChildren[dragIndex];
+    item.angle = dragAngle;
+    renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
   }
 
   // Make sure that all keys are unique.
@@ -307,6 +316,8 @@ export default () => {
   // Assembles a list of divs for the child items of the center item. Each child is
   // rendered as a div with a contained icon and potentially a list of grandchild items.
   const renderChild = (child: IRenderedMenuItem, index: number) => {
+    let angleDragMayStart = false;
+
     return (
       <div
         key={child.key}
@@ -329,7 +340,54 @@ export default () => {
           setDragIndex(null);
           setDropInto(false);
         }}
-        onClick={() => selectChild(index)}
+        onPointerDown={() => {
+          if (child.angle !== undefined) {
+            angleDragMayStart = true;
+          }
+        }}
+        onPointerUp={() => {
+          if (angleDragOngoing) {
+            setDragAngle(null);
+            setDragIndex(null);
+            angleDragMayStart = false;
+          } else {
+            selectChild(index);
+          }
+        }}
+        onPointerMove={(event) => {
+          if (angleDragOngoing || angleDragMayStart) {
+            // Compute the angle of the pointer position relative to the center of the
+            // preview area.
+            const container = currentContainer.current;
+            if (!container) {
+              return;
+            }
+
+            const rect = container.getBoundingClientRect();
+            const center = {
+              x: rect.left + rect.width / 2,
+              y: rect.top + rect.height / 2,
+            };
+            const x = event.clientX - center.x;
+            const y = event.clientY - center.y;
+            const angle = math.getAngle({ x, y });
+
+            // Only consider an initial angular differences of at least 15 degrees.
+            if (!angleDragOngoing) {
+              const angleDiff = math.getAngularDifference(dragAngle, angle);
+              if (Math.abs(angleDiff) < 15) {
+                return;
+              }
+
+              setDragIndex(index);
+              (event.target as HTMLElement).setPointerCapture(event.pointerId);
+            }
+
+            // Update the angle of the dragged item in 15 degree steps.
+            const steppedAngle = 15 * Math.round(angle / 15);
+            setDragAngle(steppedAngle);
+          }
+        }}
         style={utils.makeCSSProperties('dir', childDirections[index])}>
         {child.iconTheme && child.icon && (
           <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
@@ -373,19 +431,14 @@ export default () => {
     );
   };
 
-  const currentContainer = transitionPing ? pingRef : pongRef;
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     const container = currentContainer.current;
     if (!container) {
       return;
     }
 
-    const internalDrag = dragIndex !== null;
-    const externalDrag = draggedItem !== null;
-
-    // We are only interested in drag events for items and new items dragged from the
-    // item list at the bottom.
-    if (!internalDrag && !externalDrag) {
+    // We are only interested in drag events which could potentially lead to drops.
+    if (dragIndex === null && tempItem === null) {
       return;
     }
 
@@ -427,7 +480,8 @@ export default () => {
   // Returns true if the given child is the currently dragged item.
   const isDraggedChild = (child: IRenderedMenuItem) => {
     return (
-      child.key.startsWith('dragged') || (dragIndex !== null && dragIndex === child.index)
+      child.key.startsWith('dragged') ||
+      (internalDragOngoing && dragIndex === child.index)
     );
   };
 
@@ -458,20 +512,20 @@ export default () => {
                 // we could create a new item from the dragged data. If this is the case,
                 // we create a temporary dragged item which will be used as a "drop
                 // indicator" item.
-                if (draggedItem === null && dragIndex === null) {
-                  console.log('items', event.dataTransfer.items);
-                  console.log('types', event.dataTransfer.types);
+                if (tempItem === null && dragIndex === null) {
                   const dataType = ItemTypeRegistry.getInstance().getPreferredDataType(
                     event.dataTransfer.types
                   );
 
                   if (dataType) {
-                    setDraggedItem({
+                    setTempItem({
                       key: 'dragged',
                       index: -1,
                     });
                   }
                 }
+
+                event.preventDefault();
               }}
               onDragOver={onDragOver}
               onDragLeave={(event) => {
@@ -483,8 +537,10 @@ export default () => {
                 ) {
                   setDropIndex(null);
                   setDropInto(false);
-                  setDraggedItem(null);
+                  setTempItem(null);
                 }
+
+                event.preventDefault();
               }}
               onDrop={(event) => {
                 // If the drag index is set, we are moving an item around. In this case, we need to
@@ -494,15 +550,15 @@ export default () => {
                 if (dragIndex !== null) {
                   const dragItemPath = centerItemPath.concat(dragIndex);
 
-                  if (dropIndex === null && dropInto) {
+                  if (dropIndex === -1 && dropInto) {
                     // Moving to the parent.
                     const dropItemPath = centerItemPath.slice(0, -1).concat(-1);
                     moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
-                  } else if (dropIndex !== null && dropInto) {
+                  } else if (dropIndex >= 0 && dropInto) {
                     // Moving to a submenu.
                     const dropItemPath = centerItemPath.concat([dropIndex, -1]);
                     moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
-                  } else if (dropIndex !== null) {
+                  } else if (dropIndex >= 0) {
                     // Moving to a sibling position.
                     const dropItemPath = centerItemPath.concat(dropIndex);
                     moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
@@ -520,21 +576,21 @@ export default () => {
                     );
 
                     if (item) {
-                      if (dropIndex === null && dropInto) {
+                      if (dropIndex === -1 && dropInto) {
                         // Create new item in parent.
                         const parentPath = centerItemPath.slice(0, -1);
                         editMenuItem(selectedMenu, parentPath, (parent) => {
                           parent.children.push(item);
                           return parent;
                         });
-                      } else if (dropIndex !== null && dropInto) {
+                      } else if (dropIndex >= 0 && dropInto) {
                         // Create new item in submenu.
                         const submenuPath = centerItemPath.concat(dropIndex);
                         editMenuItem(selectedMenu, submenuPath, (submenu) => {
                           submenu.children.push(item);
                           return submenu;
                         });
-                      } else if (dropIndex !== null) {
+                      } else if (dropIndex >= 0) {
                         // Create new item among siblings and select it.
                         editMenuItem(selectedMenu, centerItemPath, (center) => {
                           center.children.splice(dropIndex, 0, item);
@@ -548,7 +604,7 @@ export default () => {
 
                 setDropIndex(null);
                 setDropInto(false);
-                setDraggedItem(null);
+                setTempItem(null);
                 setDragIndex(null);
 
                 event.preventDefault();
@@ -560,7 +616,7 @@ export default () => {
                   <div
                     className={cx({
                       backLink: true,
-                      dropping: dropInto && dropIndex === null,
+                      dropping: dropInto && dropIndex === -1,
                     })}
                     onClick={() => selectParent()}
                     style={utils.makeCSSProperties(

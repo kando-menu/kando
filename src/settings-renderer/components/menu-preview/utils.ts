@@ -32,7 +32,7 @@ export function getParentAngle(angle: number): number {
  * index will be the index of the submenu and the dropInto property will be set to true.
  *
  * Finally, if the dragged item is about to be dropped into the back-navigation link, the
- * drop index will be null and the dropInto property will be set to true as well.
+ * drop index will be -1 and the dropInto property will be set to true as well.
  *
  * @param parentAngle The angle towards the parent of the current center item. For the
  *   root menu, this should be null.
@@ -44,7 +44,8 @@ export function getParentAngle(angle: number): number {
  *   dragged item in centerItem.children. It will be excluded from the list of possible
  *   drop targets and ignored when computing item angles.
  * @returns The item index where to drop the dragged item. If dropInto is true, the
- *   dragged item should be dropped into the submenu at the given index.
+ *   dragged item should be dropped into the submenu at the given index. If dropIndex is
+ *   -1 the dragged item should be dropped into the back-navigation link.
  */
 export function computeDropTarget(
   parentAngle: number,
@@ -84,7 +85,7 @@ export function computeDropTarget(
     parentAngle != null &&
     math.getAngularDifference(dragAngle, parentAngle) < bestDiff
   ) {
-    return { dropIndex: null, dropInto: true };
+    return { dropIndex: -1, dropInto: true };
   }
 
   // Finally, we check whether a submenu is closer. There are some weird edge cases where
@@ -185,4 +186,16 @@ export function getBoundingClientRectAsync(
     });
     observer.observe(element);
   });
+}
+
+/**
+ * Small helper function which moves the item at the given index to the end of the array.
+ *
+ * @param array The array to modify.
+ * @param index The index of the item to move.
+ */
+export function moveToEnd<T>(array: T[], index: number) {
+  const item = array[index];
+  array.splice(index, 1);
+  array.push(item);
 }
