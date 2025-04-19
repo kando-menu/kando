@@ -91,10 +91,9 @@ $backlink-offset: 30cqmin;
         calc(50cqmin + $child-offset * var(--dir-y))
       );
 
-      // A low opacity seems to be required. Setting it to zero hides also the dragged copy
-      // at the pointer.
       &.dragging {
-        opacity: 0.001;
+        opacity: 0.5;
+        filter: blur(10px);
       }
 
       &.dropping {
