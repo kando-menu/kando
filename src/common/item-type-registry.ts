@@ -46,12 +46,6 @@ export interface IItemType {
    * shown in the add-new-item tab of the toolbar.
    */
   genericDescription: string;
-
-  /**
-   * This should return a human-readable description of a specific menu item of this kind.
-   * It will be shown in the trash and templates tab of the toolbar below the item name.
-   */
-  getDescription(item: IMenuItem): string;
 }
 
 /**
