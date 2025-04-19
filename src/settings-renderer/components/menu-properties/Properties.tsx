@@ -47,15 +47,12 @@ export default () => {
 
   // At the bottom of the properties, we show a tip of the day for the selected item. This
   // is a random tip, but we do not want to show a different tip every time the component
-  // is re-rendered. Therefore, we use a seed which is incremented every few seconds.
+  // is re-rendered. Therefore, we only increase the seed when the selected item changes.
   const [tipSeed, setTipSeed] = React.useState(0);
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setTipSeed((seed) => seed + 1);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+    setTipSeed((seed) => seed + 1);
+  }, [selectedMenu, selectedChildPath]);
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
