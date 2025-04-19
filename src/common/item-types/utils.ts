@@ -9,14 +9,27 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * This function renders a template with a given context and returns the result as a
- * DocumentFragment.
+ * This function returns a random number between 0 and 1. The seed is used to generate the
+ * random number. A very simplisitc implementation of a random number generator taken from
+ * https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript.
+ * For our purpose of choosing a random tip, this is sufficient.
  *
- * @param template - The template to render.
- * @param context - The context to render the template with.
- * @returns The rendered template as a DocumentFragment.
+ * @param seed The seed used to generate the random number.
+ * @returns A random number between 0 and 1.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function renderTemplate(template: any, context: any): DocumentFragment {
-  return document.createRange().createContextualFragment(template(context));
+function random(seed: number) {
+  const x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
+/**
+ * This function chooses a random tip from the given list of tips. The seed is used to
+ * generate the random number. This way, the same seed will always return the same tip.
+ *
+ * @param tips The list of tips to choose from.
+ * @param seed The seed used to generate the random number.
+ * @returns A random tip from the list of tips.
+ */
+export function chooseRandomTip(tips: string[], seed: number): string {
+  return tips[Math.floor(random(seed) * tips.length)];
 }

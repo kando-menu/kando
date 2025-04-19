@@ -11,17 +11,19 @@
 import i18next from 'i18next';
 
 import { IItemConfig } from '../item-config-registry';
+import { chooseRandomTip } from './utils';
 
 /** This class provides the configuration widgets for redirect items. */
 export class RedirectItemConfig implements IItemConfig {
   /** @inheritdoc */
-  public getTipOfTheDay(): string {
-    const tips = [
-      i18next.t('items.redirect.tip-1'),
-      i18next.t('items.redirect.tip-2'),
-      i18next.t('items.redirect.tip-3'),
-    ];
-
-    return tips[Math.floor(Math.random() * tips.length)];
+  public getTipOfTheDay(seed: number): string {
+    return chooseRandomTip(
+      [
+        i18next.t('items.redirect.tip-1'),
+        i18next.t('items.redirect.tip-2'),
+        i18next.t('items.redirect.tip-3'),
+      ],
+      seed
+    );
   }
 }

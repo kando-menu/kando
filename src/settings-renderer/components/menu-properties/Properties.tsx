@@ -45,6 +45,18 @@ export default () => {
   const menuCollections = useMenuSettings((state) => state.collections);
   const [menuTags, setMenuTags] = React.useState([]);
 
+  // At the bottom of the properties, we show a tip of the day for the selected item. This
+  // is a random tip, but we do not want to show a different tip every time the component
+  // is re-rendered. Therefore, we use a seed which is incremented every few seconds.
+  const [tipSeed, setTipSeed] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setTipSeed((seed) => seed + 1);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
     setMenuTags(menus[selectedMenu]?.tags || []);
@@ -199,13 +211,34 @@ export default () => {
                     You can bind multiple menus to the same shortcut and then choose under
                     which conditions each menu should be shown.
                   </Note>
+                  <Checkbox
+                    label="Limit to Specific Apps"
+                    info="Show the menu only if a specific application is focused."
+                    initialValue={menus[selectedMenu].conditions?.appName?.length > 0}
+                    onChange={(checked) => {}}
+                  />
+                  <Checkbox
+                    label="Limit to Specific Window Titles"
+                    info="Show the menu only if the focused window's title contains a given text."
+                    initialValue={menus[selectedMenu].conditions?.windowName?.length > 0}
+                    onChange={(checked) => {}}
+                  />
+                  <Checkbox
+                    label="Limit to Specific Screen Area"
+                    info="Show the menu only if the pointer is in a given area on the screen."
+                    initialValue={menus[selectedMenu].conditions?.appName?.length > 0}
+                    onChange={(checked) => {}}
+                  />
                 </>
               )
             }
             <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} marginTop={10} />
-            <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={50}>
+            <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={60}>
               {selectedItem &&
-                ItemConfigRegistry.getInstance().getTipOfTheDay(selectedItem.type)}
+                ItemConfigRegistry.getInstance().getTipOfTheDay(
+                  selectedItem.type,
+                  tipSeed
+                )}
             </Note>
           </div>
         </Scrollbox>

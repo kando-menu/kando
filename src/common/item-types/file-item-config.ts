@@ -11,13 +11,12 @@
 import i18next from 'i18next';
 
 import { IItemConfig } from '../item-config-registry';
+import { chooseRandomTip } from './utils';
 
 /** This class provides the configuration widgets for file items. */
 export class FileItemConfig implements IItemConfig {
   /** @inheritdoc */
-  public getTipOfTheDay(): string {
-    const tips = [i18next.t('items.file.tip-1')];
-
-    return tips[Math.floor(Math.random() * tips.length)];
+  public getTipOfTheDay(seed: number): string {
+    return chooseRandomTip([i18next.t('items.file.tip-1')], seed);
   }
 }

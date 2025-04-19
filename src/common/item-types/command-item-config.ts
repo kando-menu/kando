@@ -11,19 +11,21 @@
 import i18next from 'i18next';
 
 import { IItemConfig } from '../item-config-registry';
+import { chooseRandomTip } from './utils';
 
 /** This class provides the configuration widgets for command items. */
 export class CommandItemConfig implements IItemConfig {
   /** @inheritdoc */
-  public getTipOfTheDay(): string {
-    const tips = [
-      i18next.t('items.command.tip-1'),
-      i18next.t('items.command.tip-2'),
-      i18next.t('items.command.tip-3'),
-      i18next.t('items.command.tip-4'),
-      i18next.t('items.command.tip-5'),
-    ];
-
-    return tips[Math.floor(Math.random() * tips.length)];
+  public getTipOfTheDay(seed: number): string {
+    return chooseRandomTip(
+      [
+        i18next.t('items.command.tip-1'),
+        i18next.t('items.command.tip-2'),
+        i18next.t('items.command.tip-3'),
+        i18next.t('items.command.tip-4'),
+        i18next.t('items.command.tip-5'),
+      ],
+      seed
+    );
   }
 }

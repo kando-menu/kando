@@ -31,8 +31,11 @@ export interface IItemConfig {
    * It is also fine to return a random tip here, this way the user will learn something
    * new every time he selects an item of this kind. You can also return an empty string
    * if you don't want to show a tip.
+   *
+   * @param seed If you choose to return a random tip, you should ensure that the same
+   *   seed will always return the same tip.
    */
-  getTipOfTheDay(): string;
+  getTipOfTheDay(seed: number): string;
 
   /**
    * This method returns an DocumentFragment that will be shown in the settings for
@@ -83,14 +86,17 @@ export class ItemConfigRegistry {
   }
 
   /**
-   * Use this method to get a tip-of-the-day for a specific item type.
+   * Use this method to get a tip-of-the-day for a specific item type. The message is
+   * chosen randomly from a list of tips. However, the same seed will always return the
+   * same tip.
    *
    * @param typeName The name of the type you want to get a tip for.
+   * @param seed The seed used to choose the tip.
    * @returns A tip-of-the-day for the requested type.
    * @throws If the requested type is not available.
    */
-  public getTipOfTheDay(typeName: string) {
-    return this.getItemConfig(typeName).getTipOfTheDay();
+  public getTipOfTheDay(typeName: string, seed: number) {
+    return this.getItemConfig(typeName).getTipOfTheDay(seed);
   }
 
   /**
