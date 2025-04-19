@@ -17,6 +17,7 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 
 .icon {
@@ -37,7 +38,6 @@
 
 .name {
   font-size: 1.2rem;
-  margin: 5px 0 10px 0;
 }
 
 .floatingButton {

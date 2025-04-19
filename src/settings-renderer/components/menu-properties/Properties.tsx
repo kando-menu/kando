@@ -21,6 +21,8 @@ import {
   TagInput,
   Swirl,
   TextInput,
+  Checkbox,
+  Note,
 } from '../common';
 
 /**
@@ -119,6 +121,67 @@ export default () => {
               }}
               suggestions={allAvailableTags}
             />
+          )
+        }
+        {
+          // We also show the section for the menu behavior.
+          isRoot && (
+            <>
+              <h1>Menu Behavior</h1>
+              <Note marginTop={-8}>
+                Before you enable these options, we recommend learning Kando's default
+                behavior and why we like it{' '}
+                <a href="https://www.youtube.com/watch?v=elHUCarOiXQ" target="_blank">
+                  here
+                </a>
+                !
+              </Note>
+              <Checkbox
+                label="Centered Mode"
+                info="Open the menu in the screen's center instead of at the cursor."
+                initialValue={menus[selectedMenu].centered}
+                onChange={(centered) => {
+                  editMenu(selectedMenu, (menu) => {
+                    menu.centered = centered;
+                    return menu;
+                  });
+                }}
+              />
+              <Checkbox
+                label="Anchored Mode"
+                info="Open submenus at the same position as the parent menu."
+                initialValue={menus[selectedMenu].anchored}
+                onChange={(anchored) => {
+                  editMenu(selectedMenu, (menu) => {
+                    menu.anchored = anchored;
+                    return menu;
+                  });
+                }}
+              />
+              <Checkbox
+                label="Hover Mode"
+                info="For power users only! Select items by hovering over them."
+                initialValue={menus[selectedMenu].hoverMode}
+                onChange={(hoverMode) => {
+                  editMenu(selectedMenu, (menu) => {
+                    menu.hoverMode = hoverMode;
+                    return menu;
+                  });
+                }}
+              />
+            </>
+          )
+        }
+        {
+          // And the section for the menu conditions.
+          isRoot && (
+            <>
+              <h1>Menu Conditions</h1>
+              <Note marginTop={-8}>
+                You can bind multiple menus to the same shortcut and then choose under
+                which conditions each menu should be shown.
+              </Note>
+            </>
           )
         }
         <div className={classes.floatingButton}>

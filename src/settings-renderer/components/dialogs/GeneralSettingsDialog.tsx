@@ -160,7 +160,7 @@ export default () => {
           />
 
           <h1>Advanced Menu Options</h1>
-          <Note marginTop={-10}>
+          <Note marginTop={-8}>
             Usually, you can leave these settings at their default values.
           </Note>
           <SettingsSpinbutton
