@@ -14,8 +14,6 @@ import classNames from 'classnames/bind';
 import InfoItem from './InfoItem';
 
 import * as classes from './TextInput.module.scss';
-import { row } from './Checkbox.module.scss';
-import { disabled } from './Button.module.scss';
 const cx = classNames.bind(classes);
 
 interface IProps {
