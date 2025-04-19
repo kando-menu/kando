@@ -170,7 +170,7 @@ export default () => {
       visible={themesDialogVisible}
       onClose={() => setThemesDialogVisible(false)}
       maxWidth={1200}
-      paddingBottom={0}
+      paddingBottom={5}
       paddingTop={0}
       paddingLeft={0}
       paddingRight={5}>

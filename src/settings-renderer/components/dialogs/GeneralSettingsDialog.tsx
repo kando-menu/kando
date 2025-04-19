@@ -44,7 +44,7 @@ export default () => {
       onClose={() => setSettingsDialogVisible(false)}
       maxWidth={500}
       paddingTop={0}
-      paddingBottom={0}
+      paddingBottom={5}
       paddingLeft={5}
       paddingRight={5}>
       <Scrollbox maxHeight={'min(80vh, 600px)'}>

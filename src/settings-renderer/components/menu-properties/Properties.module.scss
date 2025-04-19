@@ -10,20 +10,26 @@
 
 @use '../../variables.scss' as *;
 
-.properties {
+.container {
   position: relative;
   flex-grow: 1;
   background-color: $window-background;
-  padding: 12px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
+  min-height: 0px; // This is important to make the scrollboxes work.
+}
+
+.properties {
+  display: flex;
   gap: 5px;
+  flex-direction: column;
 }
 
 .icon {
   -webkit-app-region: no-drag;
   width: 6em;
-  height: 6em;
+  height: 6.5em;
   margin: -30px auto 0 auto;
   background-color: $window-background;
   border-radius: 50%;
@@ -37,8 +43,8 @@
 }
 
 .name {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
 }
 
 .floatingButton {

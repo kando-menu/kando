@@ -20,6 +20,7 @@ import {
   IconChooserButton,
   TagInput,
   Swirl,
+  Scrollbox,
   TextInput,
   Checkbox,
   Note,
@@ -78,7 +79,7 @@ export default () => {
   return (
     <>
       <Headerbar />
-      <div className={classes.properties}>
+      <div className={classes.container}>
         <div className={classes.icon}>
           <IconChooserButton
             iconSize="4em"
@@ -95,100 +96,119 @@ export default () => {
             }}
           />
         </div>
-        <div className={classes.name}>
-          <TextInput
-            initialValue={selectedItem.name}
-            variant="flat"
-            onChange={(name) => {
-              editMenuItem(selectedMenu, selectedChildPath, (item) => {
-                item.name = name;
-                return item;
-              });
-            }}
-          />
-        </div>
-        {
-          // If the selected item is the root of the menu, we show the tag editor.
-          isRoot && (
-            <TagInput
-              tags={menuTags}
-              onChange={(newTags) => {
-                editMenu(selectedMenu, (menu) => {
-                  menu.tags = newTags;
-                  return menu;
-                });
-                setMenuTags(newTags);
-              }}
-              suggestions={allAvailableTags}
-            />
-          )
-        }
-        {
-          // We also show the section for the menu behavior.
-          isRoot && (
-            <>
-              <h1>Menu Behavior</h1>
-              <Note marginTop={-8}>
-                Before you enable these options, we recommend learning Kando's default
-                behavior and why we like it{' '}
-                <a href="https://www.youtube.com/watch?v=elHUCarOiXQ" target="_blank">
-                  here
-                </a>
-                !
-              </Note>
-              <Checkbox
-                label="Centered Mode"
-                info="Open the menu in the screen's center instead of at the cursor."
-                initialValue={menus[selectedMenu].centered}
-                onChange={(centered) => {
-                  editMenu(selectedMenu, (menu) => {
-                    menu.centered = centered;
-                    return menu;
+        <Scrollbox>
+          <div className={classes.properties}>
+            <div className={classes.name}>
+              <TextInput
+                initialValue={selectedItem.name}
+                variant="flat"
+                onChange={(name) => {
+                  editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                    item.name = name;
+                    return item;
                   });
                 }}
               />
-              <Checkbox
-                label="Anchored Mode"
-                info="Open submenus at the same position as the parent menu."
-                initialValue={menus[selectedMenu].anchored}
-                onChange={(anchored) => {
-                  editMenu(selectedMenu, (menu) => {
-                    menu.anchored = anchored;
-                    return menu;
-                  });
-                }}
-              />
-              <Checkbox
-                label="Hover Mode"
-                info="For power users only! Select items by hovering over them."
-                initialValue={menus[selectedMenu].hoverMode}
-                onChange={(hoverMode) => {
-                  editMenu(selectedMenu, (menu) => {
-                    menu.hoverMode = hoverMode;
-                    return menu;
-                  });
-                }}
-              />
-            </>
-          )
-        }
-        {
-          // And the section for the menu conditions.
-          isRoot && (
-            <>
-              <h1>Menu Conditions</h1>
-              <Note marginTop={-8}>
-                You can bind multiple menus to the same shortcut and then choose under
-                which conditions each menu should be shown.
-              </Note>
-            </>
-          )
-        }
-        <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} />
-        <Note center marginLeft={'10%'} marginRight={'10%'}>
-          {selectedItem &&
-            ItemConfigRegistry.getInstance().getTipOfTheDay(selectedItem.type)}
-        </Note>
+            </div>
+            {
+              // Show the hotkey selector for the root menu.
+              isRoot && (
+                <TextInput
+                  initialValue={selectedItem.name}
+                  onChange={(name) => {
+                    editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                      item.name = name;
+                      return item;
+                    });
+                  }}
+                />
+              )
+            }
+            {
+              // If the selected item is the root of the menu, we show the tag editor.
+              isRoot && (
+                <TagInput
+                  tags={menuTags}
+                  onChange={(newTags) => {
+                    editMenu(selectedMenu, (menu) => {
+                      menu.tags = newTags;
+                      return menu;
+                    });
+                    setMenuTags(newTags);
+                  }}
+                  suggestions={allAvailableTags}
+                />
+              )
+            }
+
+            {
+              // We also show the section for the menu behavior.
+              isRoot && (
+                <>
+                  <h1>Menu Behavior</h1>
+                  <Note marginTop={-8}>
+                    Before you enable these options, we recommend learning Kando's default
+                    behavior and why we like it{' '}
+                    <a href="https://www.youtube.com/watch?v=elHUCarOiXQ" target="_blank">
+                      here
+                    </a>
+                    !
+                  </Note>
+                  <Checkbox
+                    label="Centered Mode"
+                    info="Open the menu in the screen's center instead of at the cursor."
+                    initialValue={menus[selectedMenu].centered}
+                    onChange={(centered) => {
+                      editMenu(selectedMenu, (menu) => {
+                        menu.centered = centered;
+                        return menu;
+                      });
+                    }}
+                  />
+                  <Checkbox
+                    label="Anchored Mode"
+                    info="Open submenus at the same position as the parent menu."
+                    initialValue={menus[selectedMenu].anchored}
+                    onChange={(anchored) => {
+                      editMenu(selectedMenu, (menu) => {
+                        menu.anchored = anchored;
+                        return menu;
+                      });
+                    }}
+                  />
+                  <Checkbox
+                    label="Hover Mode"
+                    info="For power users only! Select items by hovering over them."
+                    initialValue={menus[selectedMenu].hoverMode}
+                    onChange={(hoverMode) => {
+                      editMenu(selectedMenu, (menu) => {
+                        menu.hoverMode = hoverMode;
+                        return menu;
+                      });
+                    }}
+                  />
+                </>
+              )
+            }
+            {
+              // And the section for the menu conditions.
+              isRoot && (
+                <>
+                  <h1>Menu Conditions</h1>
+                  <Note marginTop={-8}>
+                    You can bind multiple menus to the same shortcut and then choose under
+                    which conditions each menu should be shown.
+                  </Note>
+                </>
+              )
+            }
+            <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} marginTop={10} />
+            <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={50}>
+              {selectedItem &&
+                ItemConfigRegistry.getInstance().getTipOfTheDay(selectedItem.type)}
+            </Note>
+          </div>
+        </Scrollbox>
         <div className={classes.floatingButton}>
           <Button
             icon={<TbCopy />}
