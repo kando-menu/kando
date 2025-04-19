@@ -108,11 +108,12 @@ export default () => {
   }
 
   // First, we traverses the children of the current menu according to the selection path
-  // and store the final (sub)menu. This is the menu which should be shown in the center.
-  // This could either be the last item of the path (if a submenu is selected) or the
-  // last-but-one item (if a menu item is selected). If the selection path is empty, the
-  // root menu is the center item. We also store the index of the selected leaf child if
-  // it is not a submenu. If the center is selected, the index is -1.
+  // and store the final (sub)menu aka the centerItem. We also store some other
+  // information about the center item. The center item could either be the last item in
+  // selectedChildPath (if a submenu is selected) or the last-but-one item (if a menu item
+  // is selected). If the selection path is empty, the root menu is the center item. We
+  // also store the index of the selected leaf child if it is not a submenu. If the center
+  // is selected, the index is -1.
   let centerItem = menu.root;
   let selectedChild = -1;
   let showingRootMenu = true;
@@ -227,8 +228,12 @@ export default () => {
     }
   }
 
-  // If it is an angle drag, we need to update the angle of the dragged item to the
-  // current drag angle.
+  // If it is a fixed-angle drag, we need to update the angle of the dragged item to the
+  // current drag angle. This is surprisingly complex - if you come up with a better
+  // implementation, please let me know. The main problem is that you can drag items over
+  // the 0°/360° boundary on top, so if there are other fixed angles limiting the movement
+  // of the dragged item, they can be on both sides of that boundary making the
+  // computation a bit tricky.
   if (angleDragOngoing) {
     const item = renderedChildren[dragIndex];
 
@@ -253,8 +258,8 @@ export default () => {
 
     let angle = dragAngle;
 
+    // Make sure that prevAngle < angle < nextAngle.
     if (prevAngle !== null && nextAngle !== null) {
-      // Make sure that prevAngle < angle < nextAngle.
       prevAngle = math.getEquivalentAngleSmallerThan(
         prevAngle,
         math.getClosestEquivalentAngle(item.angle, dragAngle)
@@ -276,14 +281,11 @@ export default () => {
 
     // Ensure that the angles are monotonically increasing.
     math.ensureMonotonicIncreasing(renderedChildren);
-
     renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
   }
 
   // Make sure that all keys are unique.
   ensureUniqueKeys(renderedChildren);
-
-  const childDirections = renderedChildAngles.map((angle) => math.getDirection(angle, 1));
 
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
@@ -358,6 +360,9 @@ export default () => {
     });
   };
 
+  // Compute the x-y-coordinates of the child items.
+  const childDirections = renderedChildAngles.map((angle) => math.getDirection(angle, 1));
+
   // Assembles a list of divs for the child items of the center item. Each child is
   // rendered as a div with a contained icon and potentially a list of grandchild items.
   const renderChild = (child: IRenderedMenuItem, index: number) => {
@@ -416,14 +421,10 @@ export default () => {
               return;
             }
 
-            const rect = container.getBoundingClientRect();
-            const center = {
-              x: rect.left + rect.width / 2,
-              y: rect.top + rect.height / 2,
-            };
-            const x = event.clientX - center.x;
-            const y = event.clientY - center.y;
-            const angle = math.getAngle({ x, y });
+            const angle = utils.getAngleToCenter(container, {
+              x: event.clientX,
+              y: event.clientY,
+            });
 
             // Only consider an initial angular differences of at least 15 degrees.
             if (!angleDragOngoing) {
@@ -484,6 +485,9 @@ export default () => {
     );
   };
 
+  // Called if something is dragged over the menu preview. It computes the position where
+  // the item should be dropped and sets the drop index and whether it should be dropped
+  // into a submenu accordingly.
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     const container = currentContainer.current;
     if (!container) {
@@ -495,18 +499,12 @@ export default () => {
       return;
     }
 
-    // Compute container center.
-    const rect = container.getBoundingClientRect();
-    const center = {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2,
-    };
+    const dragAngle = utils.getAngleToCenter(container, {
+      x: event.clientX,
+      y: event.clientY,
+    });
 
-    // Compute the angle of the drop position.
-    const x = event.clientX - center.x;
-    const y = event.clientY - center.y;
-    const dragAngle = math.getAngle({ x, y });
-
+    // Compile a list of potential drop targets.
     const children = centerItem.children.map((child) => {
       const type = ItemTypeRegistry.getInstance().getType(child.type);
       return {
@@ -533,8 +531,8 @@ export default () => {
   // Returns true if the given child is the currently dragged item.
   const isDraggedChild = (child: IRenderedMenuItem) => {
     return (
-      child.key.startsWith('dragged') ||
-      (internalDragOngoing && dragIndex === child.index)
+      child.key.startsWith('dragged') || // For external drag-and-drop.
+      (internalDragOngoing && dragIndex === child.index) // For internal drag-and-drop.
     );
   };
 

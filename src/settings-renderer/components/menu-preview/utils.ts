@@ -189,6 +189,26 @@ export function getBoundingClientRectAsync(
 }
 
 /**
+ * This method returns the angle between the given pointer and the center of the given
+ * element.
+ *
+ * @param element The element to get the center of.
+ * @param pointer The pointer to get the angle to.
+ * @returns The angle between the pointer and the center of the element.
+ */
+export function getAngleToCenter(element: HTMLElement, pointer: IVec2) {
+  const rect = element.getBoundingClientRect();
+  const center = {
+    x: rect.x + rect.width / 2,
+    y: rect.y + rect.height / 2,
+  };
+  const x = pointer.x - center.x;
+  const y = pointer.y - center.y;
+
+  return math.getAngle({ x, y });
+}
+
+/**
  * Small helper function which moves the item at the given index to the end of the array.
  *
  * @param array The array to modify.
