@@ -24,6 +24,7 @@ import {
   Checkbox,
   Note,
 } from '../common';
+import { ItemConfigRegistry } from '../../../common/item-config-registry';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the
@@ -106,7 +107,6 @@ export default () => {
             }}
           />
         </div>
-        <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} />
         {
           // If the selected item is the root of the menu, we show the tag editor.
           isRoot && (
@@ -184,6 +184,11 @@ export default () => {
             </>
           )
         }
+        <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} />
+        <Note center marginLeft={'10%'} marginRight={'10%'}>
+          {selectedItem &&
+            ItemConfigRegistry.getInstance().getTipOfTheDay(selectedItem.type)}
+        </Note>
         <div className={classes.floatingButton}>
           <Button
             icon={<TbCopy />}

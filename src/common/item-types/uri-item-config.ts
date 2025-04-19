@@ -10,10 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
-import { IItemData } from './uri-item-type';
-import * as utils from './utils';
 
 /** This class provides the configuration widgets for URI items. */
 export class URIItemConfig implements IItemConfig {
@@ -29,28 +26,5 @@ export class URIItemConfig implements IItemConfig {
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
-  }
-
-  /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    const fragment = utils.renderTemplate(
-      require('../../settings-renderer/properties/templates/text-option.hbs'),
-      {
-        placeholder: i18next.t('items.common.not-configured'),
-        label: i18next.t('items.uri.uri'),
-        hint: i18next.t('items.uri.uri-hint'),
-      }
-    );
-
-    // Get the input element and set the current value.
-    const input = fragment.querySelector('input');
-    input.value = (item.data as IItemData).uri || '';
-
-    // Listen for changes and update the item.
-    input.addEventListener('input', () => {
-      (item.data as IItemData).uri = input.value;
-    });
-
-    return fragment;
   }
 }

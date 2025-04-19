@@ -22,10 +22,16 @@ interface IProps {
   center?: boolean;
 
   /** Margin to apply to the top of the note. Defaults to 0. */
-  marginTop?: number;
+  marginTop?: number | string;
 
   /** Margin to apply to the bottom of the note. Defaults to 0. */
-  marginBottom?: number;
+  marginBottom?: number | string;
+
+  /** Margin to apply to the left of the note. Defaults to 0. */
+  marginLeft?: number | string;
+
+  /** Margin to apply to the right of the note. Defaults to 0. */
+  marginRight?: number | string;
 }
 
 /**
@@ -41,7 +47,12 @@ export default (props: IProps) => {
         note: true,
         center: props.center,
       })}
-      style={{ marginTop: props.marginTop || 0, marginBottom: props.marginBottom || 0 }}>
+      style={{
+        marginTop: props.marginTop || 0,
+        marginBottom: props.marginBottom || 0,
+        marginLeft: props.marginLeft || 0,
+        marginRight: props.marginRight || 0,
+      }}>
       {props.children}
     </div>
   );

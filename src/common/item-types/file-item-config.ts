@@ -10,10 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
-import { IItemData } from './file-item-type';
-import * as utils from './utils';
 
 /** This class provides the configuration widgets for file items. */
 export class FileItemConfig implements IItemConfig {
@@ -22,28 +19,5 @@ export class FileItemConfig implements IItemConfig {
     const tips = [i18next.t('items.file.tip-1')];
 
     return tips[Math.floor(Math.random() * tips.length)];
-  }
-
-  /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    const fragment = utils.renderTemplate(
-      require('../../renderer/editor/properties/templates/text-option.hbs'),
-      {
-        placeholder: i18next.t('items.common.not-configured'),
-        label: i18next.t('items.file.file'),
-        hint: i18next.t('items.file.file-hint'),
-      }
-    );
-
-    // Get the input element and set the current value.
-    const input = fragment.querySelector('input');
-    input.value = (item.data as IItemData).path || '';
-
-    // Listen for changes and update the item.
-    input.addEventListener('input', () => {
-      (item.data as IItemData).path = input.value;
-    });
-
-    return fragment;
   }
 }

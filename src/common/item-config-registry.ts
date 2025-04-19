@@ -40,7 +40,7 @@ export interface IItemConfig {
    * is updated accordingly. If an item type does not need any special settings, this
    * method can return null.
    */
-  getConfigWidget(item: IMenuItem): DocumentFragment | null;
+  // getConfigWidget(item: IMenuItem): DocumentFragment | null;
 }
 
 /**
@@ -101,7 +101,7 @@ export class ItemConfigRegistry {
    * @throws If the item's type is not available.
    */
   public getConfigWidget(item: IMenuItem) {
-    return this.getItemConfig(item.type).getConfigWidget(item);
+    // return this.getItemConfig(item.type).getConfigWidget(item);
   }
 
   /**

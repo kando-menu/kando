@@ -10,10 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
-import { IItemData } from './redirect-item-type';
-import * as utils from './utils';
 
 /** This class provides the configuration widgets for redirect items. */
 export class RedirectItemConfig implements IItemConfig {
@@ -26,29 +23,5 @@ export class RedirectItemConfig implements IItemConfig {
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
-  }
-
-  /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    const fragment = utils.renderTemplate(
-      require('../../renderer/editor/properties/templates/text-option.hbs'),
-      {
-        placeholder: i18next.t('items.common.not-configured'),
-        label: i18next.t('items.redirect.redirect'),
-        hint: i18next.t('items.redirect.redirect-hint'),
-      }
-    );
-
-    const redirectInput = fragment.querySelector(
-      'input[type="text"]'
-    ) as HTMLInputElement;
-    redirectInput.value = (item.data as IItemData).menu || '';
-
-    // Listen for changes and update the item.
-    redirectInput.addEventListener('input', () => {
-      (item.data as IItemData).menu = redirectInput.value;
-    });
-
-    return fragment;
   }
 }

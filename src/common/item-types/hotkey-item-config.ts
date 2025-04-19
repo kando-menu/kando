@@ -10,11 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '..';
-import { HotkeyPicker } from '../../settings-renderer/properties/hotkey-picker';
 import { IItemConfig } from '../item-config-registry';
-import { IItemData } from './hotkey-item-type';
-import * as utils from './utils';
 
 /** This class provides the configuration widgets for hotkey items. */
 export class HotkeyItemConfig implements IItemConfig {
@@ -29,39 +25,5 @@ export class HotkeyItemConfig implements IItemConfig {
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
-  }
-
-  /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    const fragment = document.createDocumentFragment();
-
-    // Add the checkbox for the delayed execution mode.
-    fragment.append(
-      utils.renderTemplate(
-        require('../../settings-renderer/properties/templates/checkbox-option.hbs'),
-        {
-          label: i18next.t('items.common.delayed-option'),
-          hint: i18next.t('items.common.delayed-option-hint'),
-        }
-      )
-    );
-
-    const input = fragment.querySelector('.form-check-input') as HTMLInputElement;
-    input.checked = (item.data as IItemData).delayed || false;
-
-    input.addEventListener('change', () => {
-      (item.data as IItemData).delayed = input.checked;
-    });
-
-    // Add the hotkey picker.
-    const picker = new HotkeyPicker();
-    picker.setValue((item.data as IItemData).hotkey || '');
-    fragment.append(picker.getContainer());
-
-    picker.on('change', (value: string) => {
-      (item.data as IItemData).hotkey = value;
-    });
-
-    return fragment;
   }
 }

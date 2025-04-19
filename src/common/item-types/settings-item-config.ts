@@ -23,9 +23,4 @@ export class SettingsItemConfig implements IItemConfig {
 
     return tips[Math.floor(Math.random() * tips.length)];
   }
-
-  /** @inheritdoc */
-  public getConfigWidget(): DocumentFragment | null {
-    return null;
-  }
 }

@@ -10,10 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '..';
 import { IItemConfig } from '../item-config-registry';
-import { IItemData } from './command-item-type';
-import * as utils from './utils';
 
 /** This class provides the configuration widgets for command items. */
 export class CommandItemConfig implements IItemConfig {
@@ -28,48 +25,5 @@ export class CommandItemConfig implements IItemConfig {
     ];
 
     return tips[Math.floor(Math.random() * tips.length)];
-  }
-
-  /** @inheritdoc */
-  public getConfigWidget(item: IMenuItem): DocumentFragment | null {
-    // Add the checkbox for the delayed execution mode.
-    const fragment = utils.renderTemplate(
-      require('../../settings-renderer/properties/templates/checkbox-option.hbs'),
-      {
-        label: i18next.t('items.common.delayed-option'),
-        hint: i18next.t('items.common.delayed-option-hint'),
-      }
-    );
-
-    const delayedInput = fragment.querySelector(
-      'input[type="checkbox"]'
-    ) as HTMLInputElement;
-    delayedInput.checked = (item.data as IItemData).delayed || false;
-
-    delayedInput.addEventListener('change', () => {
-      (item.data as IItemData).delayed = delayedInput.checked;
-    });
-
-    fragment.append(
-      utils.renderTemplate(
-        require('../../settings-renderer/properties/templates/text-option.hbs'),
-        {
-          placeholder: i18next.t('items.common.not-configured'),
-          label: i18next.t('items.command.command'),
-          hint: i18next.t('items.command.command-hint'),
-        }
-      )
-    );
-
-    // Get the input element and set the current value.
-    const commandInput = fragment.querySelector('input[type="text"]') as HTMLInputElement;
-    commandInput.value = (item.data as IItemData).command || '';
-
-    // Listen for changes and update the item.
-    commandInput.addEventListener('input', () => {
-      (item.data as IItemData).command = commandInput.value;
-    });
-
-    return fragment;
   }
 }

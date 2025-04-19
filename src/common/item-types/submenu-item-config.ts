@@ -32,9 +32,4 @@ export class SubmenuItemConfig implements IItemConfig {
 
     return tips[Math.floor(Math.random() * tips.length)];
   }
-
-  /** Submenus do not have any special settings. Therefore, this method returns `null`. */
-  public getConfigWidget(): DocumentFragment | null {
-    return null;
-  }
 }
