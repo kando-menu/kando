@@ -31,4 +31,5 @@ export { default as Sidebar } from './Sidebar';
 export { default as Swirl } from './Swirl';
 export { default as Tag } from './Tag';
 export { default as TagInput } from './TagInput';
+export { default as TextInput } from './TextInput';
 export { default as ThemedIcon } from './ThemedIcon';

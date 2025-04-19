@@ -18,19 +18,16 @@
   color: $text-normal;
 
   input {
-    &::-webkit-inner-spin-button {
-      appearance: none;
-    }
-
     background-color: $widget-normal;
 
     color: $text-normal;
-    text-align: center;
     border: none;
-    border-radius: 0;
+    border-radius: 5px;
 
-    padding: 4px 0px;
+    padding: 4px;
     font-size: 1em;
+
+    flex-grow: 1;
 
     &:hover {
       background-color: $widget-normal-hover;
@@ -38,8 +35,18 @@
   }
 }
 
-.spinbutton {
-  display: flex;
+.flat input {
+  background-color: transparent;
+  text-align: center;
+
+  &:hover {
+    background-color: $widget-light;
+  }
+}
+
+.label {
+  flex-grow: 1;
+  white-space: nowrap;
 }
 
 .disabled {

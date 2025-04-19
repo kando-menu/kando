@@ -14,7 +14,14 @@ import * as classes from './Properties.module.scss';
 import { TbCopy, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Headerbar, Button, IconChooserButton, TagInput, Swirl } from '../common';
+import {
+  Headerbar,
+  Button,
+  IconChooserButton,
+  TagInput,
+  Swirl,
+  TextInput,
+} from '../common';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the
@@ -85,7 +92,18 @@ export default () => {
             }}
           />
         </div>
-        <div className={classes.name}>{selectedItem.name}</div>
+        <div className={classes.name}>
+          <TextInput
+            initialValue={selectedItem.name}
+            variant="flat"
+            onChange={(name) => {
+              editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                item.name = name;
+                return item;
+              });
+            }}
+          />
+        </div>
         <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} />
         {
           // If the selected item is the root of the menu, we show the tag editor.
