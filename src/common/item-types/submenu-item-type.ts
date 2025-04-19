@@ -10,7 +10,6 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 /** This class provides meta information for submenu items. */
@@ -37,11 +36,5 @@ export class SubmenuItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.submenu.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return i18next.t('items.submenu.detailed-description', {
-      count: item.children.length,
-    });
   }
 }

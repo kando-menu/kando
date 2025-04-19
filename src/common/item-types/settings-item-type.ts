@@ -37,8 +37,4 @@ export class SettingsItemType implements IItemType {
   get genericDescription(): string {
     return i18next.t('items.settings.description');
   }
-
-  getDescription(): string {
-    return i18next.t('items.settings.description');
-  }
 }

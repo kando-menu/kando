@@ -10,7 +10,6 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 /**
@@ -50,25 +49,5 @@ export class HotkeyItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.hotkey.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    const data = item.data as IItemData;
-    if (!data.hotkey) {
-      return i18next.t('items.common.not-configured');
-    }
-
-    // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and
-    // "Meta" to make the hotkey more readable.
-    return data.hotkey
-      .replace('ControlLeft', 'Ctrl')
-      .replace('ControlRight', 'Ctrl')
-      .replace('ShiftLeft', 'Shift')
-      .replace('ShiftRight', 'Shift')
-      .replace('AltLeft', 'Alt')
-      .replace('AltRight', 'Alt')
-      .replace('MetaLeft', 'Meta')
-      .replace('MetaRight', 'Meta')
-      .replace(/\+/g, ' + ');
   }
 }

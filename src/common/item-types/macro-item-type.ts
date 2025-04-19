@@ -10,7 +10,6 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 export interface IMacroEvent {
@@ -56,30 +55,5 @@ export class MacroItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.macro.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    const data = item.data as IItemData;
-    if (!data.macro) {
-      return i18next.t('items.common.not-configured');
-    }
-
-    // Remove all Left/Right suffixes from the modifiers "Control", "Shift", "Alt" and
-    // "Meta" to make the macro more readable. We prepend "↓" or "↑" to indicate key
-    // presses and releases.
-    return data.macro
-      .map((event) => {
-        const key = event.key
-          .replace('ControlLeft', 'Ctrl')
-          .replace('ControlRight', 'Ctrl')
-          .replace('ShiftLeft', 'Shift')
-          .replace('ShiftRight', 'Shift')
-          .replace('AltLeft', 'Alt')
-          .replace('AltRight', 'Alt')
-          .replace('MetaLeft', 'Meta')
-          .replace('MetaRight', 'Meta');
-        return `${event.type === 'keyDown' ? '↓' : '↑'}${key}`;
-      })
-      .join(' + ');
   }
 }

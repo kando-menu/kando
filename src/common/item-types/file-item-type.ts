@@ -10,7 +10,6 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
 import { IItemType } from '../item-type-registry';
 
 /**
@@ -47,9 +46,5 @@ export class FileItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.file.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).path || i18next.t('items.common.not-configured');
   }
 }
