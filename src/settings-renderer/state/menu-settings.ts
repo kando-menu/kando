@@ -173,7 +173,6 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
               shortcut: '',
               shortcutID: '',
               centered: false,
-              warpMouse: false,
               anchored: false,
               hoverMode: false,
               tags,

@@ -144,6 +144,11 @@ export default () => {
             settingsKey="enableTurboMode"
           />
           <SettingsCheckbox
+            label="Move pointer to the menu center"
+            info="If checked, the mouse pointer will be moved to the center of a menu or submenu when necessary. This could be the case if a menu is opened too close to the edge of the screen or if a menu is opened in Centered Mode."
+            settingsKey="warpMouse"
+          />
+          <SettingsCheckbox
             label="Require click for Hover Mode selections"
             info="If unchecked, items will be selected immediately when the mouse is moved over them for menus using Hover Mode."
             settingsKey="hoverModeNeedsConfirmation"

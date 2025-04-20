@@ -251,7 +251,6 @@ export class MenuWindow extends BrowserWindow {
         zoomFactor: this.webContents.getZoomFactor(),
         centeredMode: this.lastMenu.centered,
         anchoredMode: this.lastMenu.anchored,
-        warpMouse: this.lastMenu.warpMouse,
         hoverMode: this.lastMenu.hoverMode,
       },
       {

@@ -147,7 +147,7 @@ export class Menu extends EventEmitter {
 
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
-    if (!showMenuOptions.warpMouse && showMenuOptions.centeredMode) {
+    if (!this.settings.warpMouse && showMenuOptions.centeredMode) {
       this.pointerInput.deferTurboMode();
     }
 
@@ -177,7 +177,7 @@ export class Menu extends EventEmitter {
     this.selectItem(this.root, this.getInitialMenuPosition());
 
     // If required, move the pointer to the center of the menu.
-    if (showMenuOptions.warpMouse && showMenuOptions.centeredMode) {
+    if (this.settings.warpMouse && showMenuOptions.centeredMode) {
       const offset = math.subtract(
         this.getInitialMenuPosition(),
         showMenuOptions.mousePosition
@@ -574,7 +574,7 @@ export class Menu extends EventEmitter {
       };
 
       if (offset.x !== 0 || offset.y !== 0) {
-        if (!this.showMenuOptions.anchoredMode) {
+        if (!this.showMenuOptions.anchoredMode && this.settings.warpMouse) {
           this.emit('move-pointer', offset);
         }
 
