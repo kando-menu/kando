@@ -22,10 +22,11 @@ import {
   Swirl,
   Scrollbox,
   TextInput,
-  Checkbox,
   Note,
 } from '../common';
 import { ItemConfigRegistry } from '../../../common/item-config-registry';
+import MenuConditions from './MenuConditions';
+import MenuBehavior from './MenuBehavior';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the
@@ -149,83 +150,12 @@ export default () => {
                 />
               )
             }
-
             {
-              // We also show the section for the menu behavior.
+              // We also show the sections for the menu behavior and conditions.
               isRoot && (
                 <>
-                  <h1>Menu Behavior</h1>
-                  <Note marginTop={-8}>
-                    Before you enable these options, we recommend learning Kando's default
-                    behavior and why we like it{' '}
-                    <a href="https://www.youtube.com/watch?v=elHUCarOiXQ" target="_blank">
-                      here
-                    </a>
-                    !
-                  </Note>
-                  <Checkbox
-                    label="Centered Mode"
-                    info="Open the menu in the screen's center instead of at the cursor."
-                    initialValue={menus[selectedMenu].centered}
-                    onChange={(centered) => {
-                      editMenu(selectedMenu, (menu) => {
-                        menu.centered = centered;
-                        return menu;
-                      });
-                    }}
-                  />
-                  <Checkbox
-                    label="Anchored Mode"
-                    info="Open submenus at the same position as the parent menu."
-                    initialValue={menus[selectedMenu].anchored}
-                    onChange={(anchored) => {
-                      editMenu(selectedMenu, (menu) => {
-                        menu.anchored = anchored;
-                        return menu;
-                      });
-                    }}
-                  />
-                  <Checkbox
-                    label="Hover Mode"
-                    info="For power users only! Select items by hovering over them."
-                    initialValue={menus[selectedMenu].hoverMode}
-                    onChange={(hoverMode) => {
-                      editMenu(selectedMenu, (menu) => {
-                        menu.hoverMode = hoverMode;
-                        return menu;
-                      });
-                    }}
-                  />
-                </>
-              )
-            }
-            {
-              // And the section for the menu conditions.
-              isRoot && (
-                <>
-                  <h1>Menu Conditions</h1>
-                  <Note marginTop={-8}>
-                    You can bind multiple menus to the same shortcut and then choose under
-                    which conditions each menu should be shown.
-                  </Note>
-                  <Checkbox
-                    label="Limit to Specific Apps"
-                    info="Show the menu only if a specific application is focused."
-                    initialValue={menus[selectedMenu].conditions?.appName?.length > 0}
-                    onChange={(checked) => {}}
-                  />
-                  <Checkbox
-                    label="Limit to Specific Window Titles"
-                    info="Show the menu only if the focused window's title contains a given text."
-                    initialValue={menus[selectedMenu].conditions?.windowName?.length > 0}
-                    onChange={(checked) => {}}
-                  />
-                  <Checkbox
-                    label="Limit to Specific Screen Area"
-                    info="Show the menu only if the pointer is in a given area on the screen."
-                    initialValue={menus[selectedMenu].conditions?.appName?.length > 0}
-                    onChange={(checked) => {}}
-                  />
+                  <MenuBehavior />
+                  <MenuConditions />
                 </>
               )
             }
