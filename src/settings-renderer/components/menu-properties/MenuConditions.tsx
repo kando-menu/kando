@@ -9,12 +9,15 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { BiTargetLock } from 'react-icons/bi';
 
 import * as classes from './MenuConditions.module.scss';
+const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import { TextInput, Checkbox, Note } from '../common';
+import { Checkbox, Button, Note } from '../common';
 
 /** This component shows the conditions for displaying the currently selected menu. */
 export default () => {
@@ -22,6 +25,8 @@ export default () => {
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const editMenu = useMenuSettings((state) => state.editMenu);
 
+  const [appCondition, setAppCondition] = React.useState('');
+  const [windowCondition, setWindowCondition] = React.useState('');
   const [screenMinX, setScreenMinX] = React.useState('');
   const [screenMinY, setScreenMinY] = React.useState('');
   const [screenMaxX, setScreenMaxX] = React.useState('');
@@ -33,6 +38,9 @@ export default () => {
 
   // Initialize the conditions for the selected menu.
   React.useEffect(() => {
+    setAppCondition(menus[selectedMenu].conditions?.appName || '');
+    setWindowCondition(menus[selectedMenu].conditions?.windowName || '');
+
     setAppConditionVisible(!!menus[selectedMenu].conditions?.appName);
     setWindowConditionVisible(!!menus[selectedMenu].conditions?.windowName);
 
@@ -54,55 +62,6 @@ export default () => {
   const [windowConditionRef] = useAutoAnimate({ duration: 250 });
   const [screenConditionRef] = useAutoAnimate({ duration: 250 });
 
-  const saveAppCondition = (value: string) => {
-    editMenu(selectedMenu, (menu) => {
-      menu.conditions = menu.conditions || {};
-
-      if (value === null || value === '') {
-        delete menu.conditions.appName;
-      } else {
-        menu.conditions.appName = value;
-      }
-      return menu;
-    });
-  };
-
-  const saveWindowCondition = (value: string) => {
-    editMenu(selectedMenu, (menu) => {
-      menu.conditions = menu.conditions || {};
-
-      if (value === null || value === '') {
-        delete menu.conditions.windowName;
-      } else {
-        menu.conditions.windowName = value;
-      }
-      return menu;
-    });
-  };
-
-  const saveScreenCondition = () => {
-    editMenu(selectedMenu, (menu) => {
-      menu.conditions = menu.conditions || {};
-
-      if (
-        screenMinX === '' &&
-        screenMinY === '' &&
-        screenMaxX === '' &&
-        screenMaxY === ''
-      ) {
-        delete menu.conditions.screenArea;
-      } else {
-        menu.conditions.screenArea = {
-          xMin: screenMinX === '' ? null : parseInt(screenMinX),
-          yMin: screenMinY === '' ? null : parseInt(screenMinY),
-          xMax: screenMaxX === '' ? null : parseInt(screenMaxX),
-          yMax: screenMaxY === '' ? null : parseInt(screenMaxY),
-        };
-      }
-      return menu;
-    });
-  };
-
   return (
     <>
       <h1>Menu Conditions</h1>
@@ -117,17 +76,45 @@ export default () => {
         onChange={(value) => {
           setAppConditionVisible(value);
           if (!value) {
-            saveAppCondition(null);
+            setAppCondition('');
+            editMenu(selectedMenu, (menu) => {
+              if (menu.conditions?.appName) {
+                delete menu.conditions.appName;
+              }
+              return menu;
+            });
           }
         }}
       />
-      <div ref={appConditionRef}>
+      <div ref={appConditionRef} className={classes.conditionInput}>
         {appConditionVisible && (
-          <TextInput
-            initialValue={menus[selectedMenu].conditions?.appName || ''}
-            placeholder="e.g. /firefox|chrome/i"
-            onChange={(name) => saveAppCondition(name)}
-          />
+          <>
+            <input
+              type="text"
+              placeholder="e.g. /firefox|chrome/i"
+              value={appCondition}
+              onChange={(event) => setAppCondition(event.target.value)}
+              onBlur={() => {
+                editMenu(selectedMenu, (menu) => {
+                  menu.conditions = menu.conditions || {};
+
+                  if (appCondition === '') {
+                    delete menu.conditions.appName;
+                  } else {
+                    menu.conditions.appName = appCondition;
+                  }
+                  return menu;
+                });
+              }}
+            />
+            <Button
+              variant="secondary"
+              grouped
+              tooltip="Select a window"
+              icon={<BiTargetLock />}
+              onClick={() => {}}
+            />
+          </>
         )}
       </div>
       <Checkbox
@@ -137,17 +124,45 @@ export default () => {
         onChange={(value) => {
           setWindowConditionVisible(value);
           if (!value) {
-            saveWindowCondition(null);
+            setWindowCondition('');
+            editMenu(selectedMenu, (menu) => {
+              if (menu.conditions?.windowName) {
+                delete menu.conditions.windowName;
+              }
+              return menu;
+            });
           }
         }}
       />
-      <div ref={windowConditionRef}>
+      <div ref={windowConditionRef} className={classes.conditionInput}>
         {windowConditionVisible && (
-          <TextInput
-            initialValue={menus[selectedMenu].conditions?.windowName || ''}
-            placeholder="e.g. /youtube|vimeo/i"
-            onChange={(name) => saveWindowCondition(name)}
-          />
+          <>
+            <input
+              type="text"
+              placeholder="e.g. /youtube|vimeo/i"
+              value={windowCondition}
+              onChange={(event) => setWindowCondition(event.target.value)}
+              onBlur={() => {
+                editMenu(selectedMenu, (menu) => {
+                  menu.conditions = menu.conditions || {};
+
+                  if (windowCondition === '') {
+                    delete menu.conditions.windowName;
+                  } else {
+                    menu.conditions.windowName = windowCondition;
+                  }
+                  return menu;
+                });
+              }}
+            />
+            <Button
+              variant="secondary"
+              grouped
+              tooltip="Select a window"
+              icon={<BiTargetLock />}
+              onClick={() => {}}
+            />
+          </>
         )}
       </div>
       <Checkbox
@@ -171,23 +186,56 @@ export default () => {
           }
         }}
       />
-      <div ref={screenConditionRef} className={classes.screenCondition}>
-        {screenConditionVisible &&
-          [
-            { value: screenMinX, setValue: setScreenMinX, label: 'Left' },
-            { value: screenMaxX, setValue: setScreenMaxX, label: 'Right' },
-            { value: screenMinY, setValue: setScreenMinY, label: 'Top' },
-            { value: screenMaxY, setValue: setScreenMaxY, label: 'Bottom' },
-          ].map(({ value, setValue, label }, index) => (
-            <input
-              key={index}
-              value={value}
-              type="number"
-              onBlur={saveScreenCondition}
-              placeholder={label}
-              onChange={(event) => setValue(event.target.value)}
+      <div
+        ref={screenConditionRef}
+        className={cx(classes.conditionInput, classes.screenCondition)}>
+        {screenConditionVisible && (
+          <>
+            {[
+              { value: screenMinX, setValue: setScreenMinX, label: 'Left' },
+              { value: screenMaxX, setValue: setScreenMaxX, label: 'Right' },
+              { value: screenMinY, setValue: setScreenMinY, label: 'Top' },
+              { value: screenMaxY, setValue: setScreenMaxY, label: 'Bottom' },
+            ].map(({ value, setValue, label }, index) => (
+              <input
+                key={index}
+                value={value}
+                type="number"
+                onBlur={() => {
+                  editMenu(selectedMenu, (menu) => {
+                    menu.conditions = menu.conditions || {};
+
+                    if (
+                      screenMinX === '' &&
+                      screenMinY === '' &&
+                      screenMaxX === '' &&
+                      screenMaxY === ''
+                    ) {
+                      delete menu.conditions.screenArea;
+                    } else {
+                      menu.conditions.screenArea = {
+                        xMin: screenMinX === '' ? null : parseInt(screenMinX),
+                        yMin: screenMinY === '' ? null : parseInt(screenMinY),
+                        xMax: screenMaxX === '' ? null : parseInt(screenMaxX),
+                        yMax: screenMaxY === '' ? null : parseInt(screenMaxY),
+                      };
+                    }
+                    return menu;
+                  });
+                }}
+                placeholder={label}
+                onChange={(event) => setValue(event.target.value)}
+              />
+            ))}
+            <Button
+              variant="secondary"
+              grouped
+              tooltip="Select a screen area"
+              icon={<BiTargetLock />}
+              onClick={() => {}}
             />
-          ))}
+          </>
+        )}
       </div>
     </>
   );

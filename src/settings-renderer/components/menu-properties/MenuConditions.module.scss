@@ -10,36 +10,44 @@
 
 @use '../../variables.scss' as *;
 
-.screenCondition {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  color: $text-normal;
+.conditionInput {
+  > *:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  > *:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  display: flex;
 
   input {
-    &::-webkit-inner-spin-button {
-      appearance: none;
-    }
-
+    flex-grow: 1;
     background-color: $widget-normal;
 
     color: $text-normal;
-    text-align: center;
     border: none;
     border-radius: 0;
 
-    padding: 4px 0px;
+    padding: 4px;
     font-size: 1em;
 
     &:hover {
       background-color: $widget-normal-hover;
     }
+  }
+}
 
-    &:first-child {
-      border-radius: 5px 0px 0px 5px;
-    }
+.screenCondition {
+  input {
+    min-width: 0;
+    text-align: center;
+    padding: 4px 0px;
 
-    &:last-child {
-      border-radius: 0px 5px 5px 0px;
+    &::-webkit-inner-spin-button {
+      appearance: none;
     }
   }
 }
