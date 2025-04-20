@@ -402,7 +402,7 @@ export class MenuWindow extends BrowserWindow {
       }
 
       // If no other menu matches, we will choose the first one with no conditions set.
-      if (!menu.conditions) {
+      if (!menu.conditions || Object.keys(menu.conditions).length === 0) {
         if (!selectedMenu) {
           selectedMenu = menu;
         }
