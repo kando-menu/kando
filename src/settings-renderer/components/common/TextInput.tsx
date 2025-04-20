@@ -26,6 +26,9 @@ interface IProps {
   /** Initial value of the spinbutton. */
   initialValue: string;
 
+  /** Optional placeholder text to display when the spinbutton is empty. */
+  placeholder?: string;
+
   /** Optional label text to display next to the spinbutton. */
   label?: string;
 
@@ -69,6 +72,7 @@ export default (props: IProps) => {
         type="text"
         disabled={props.disabled}
         value={value}
+        placeholder={props.placeholder}
         onBlur={() => props.onChange?.(value)}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={(event) => {
