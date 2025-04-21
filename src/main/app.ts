@@ -30,11 +30,11 @@ import {
   IMenuThemeDescription,
   getDefaultGeneralSettings,
   getDefaultMenuSettings,
+  IWMInfo,
 } from '../common';
 import { Settings, DeepReadonly } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
-import { WMInfo } from './backends/backend';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -84,8 +84,8 @@ export class KandoApp {
    */
   private menuSettings: Settings<IMenuSettings>;
 
-  /** This contains the last WMInfo which was received. */
-  private lastWMInfo?: WMInfo;
+  /** This contains the last IWMInfo which was received. */
+  private lastWMInfo?: IWMInfo;
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -245,9 +245,9 @@ export class KandoApp {
   }
 
   /**
-   * Allow access to the last WMInfo object.
+   * Allow access to the last IWMInfo object.
    *
-   * @returns The last WMInfo object.
+   * @returns The last IWMInfo object.
    */
   public getLastWMInfo() {
     return this.lastWMInfo;
@@ -335,6 +335,11 @@ export class KandoApp {
         chromeVersion: process.versions.chrome,
         nodeVersion: process.versions.node,
       };
+    });
+
+    // Allow the renderer to retrieve information about the current window manager state.
+    ipcMain.handle('settings-window.get-wm-info', () => {
+      return this.backend.getWMInfo();
     });
 
     // Allow the renderer to retrieve the position of the settings window.

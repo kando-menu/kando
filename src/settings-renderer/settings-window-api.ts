@@ -11,7 +11,7 @@
 import { ipcRenderer } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { IBackendInfo, IMenuThemeDescription, IVersionInfo } from '../common';
+import { IBackendInfo, IMenuThemeDescription, IVersionInfo, IWMInfo } from '../common';
 
 /**
  * These functions are available in the settings window's renderer process. They are
@@ -35,6 +35,11 @@ export const SETTINGS_WINDOW_API = {
   /** Returns the current version string of Kando. */
   getVersionInfo: (): Promise<IVersionInfo> => {
     return ipcRenderer.invoke('settings-window.get-version');
+  },
+
+  /** Returns some information about the currently used window manager. */
+  getWMInfo: (): Promise<IWMInfo> => {
+    return ipcRenderer.invoke('settings-window.get-wm-info');
   },
 
   /** Returns the position of the top left corner of the settings window. */

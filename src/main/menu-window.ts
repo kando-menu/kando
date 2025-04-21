@@ -12,8 +12,7 @@ import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './utils/settings';
-import { IShowMenuRequest, IMenu, IMenuItem } from '../common';
-import { WMInfo } from './backends/backend';
+import { IShowMenuRequest, IMenu, IMenuItem, IWMInfo } from '../common';
 import { ItemActionRegistry } from '../common/item-action-registry';
 import { Notification } from './utils/notification';
 import { KandoApp } from './app';
@@ -138,7 +137,7 @@ export class MenuWindow extends BrowserWindow {
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
    */
-  public showMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
+  public showMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
     // Select correct menu before showing it to user.
     const menu = this.chooseMenu(request, info);
 
@@ -176,7 +175,7 @@ export class MenuWindow extends BrowserWindow {
       });
     }
 
-    // Store the last menu to be able to execute the selected action later. The WMInfo
+    // Store the last menu to be able to execute the selected action later. The IWMInfo
     // will be passed to the action as well.
     this.lastMenu = menu;
 
@@ -366,7 +365,7 @@ export class MenuWindow extends BrowserWindow {
    * @param info Information about current desktop environment.
    * @returns The selected menu or null if no menu was found.
    */
-  public chooseMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
+  public chooseMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
     // Get list of current menus.
     const menus = this.kando.getMenuSettings().get('menus');
 

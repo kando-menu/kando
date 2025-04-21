@@ -14,7 +14,7 @@ import { IMenuItem } from '../index';
 import { IItemAction } from '../item-action-registry';
 import { DeepReadonly } from '../../main/utils/settings';
 import { IItemData } from './uri-item-type';
-import { WMInfo } from '../../main/backends/backend';
+import { IWMInfo } from '../../common';
 import { KandoApp } from '../../main/app';
 
 /**
@@ -39,7 +39,7 @@ export class URIItemAction implements IItemAction {
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns The URI string with placeholders replaced.
    */
-  private replacePlaceholders(uri: string, wmInfo: WMInfo): string {
+  private replacePlaceholders(uri: string, wmInfo: IWMInfo): string {
     return uri
       .replace(/\{{app_name}}/g, wmInfo.appName)
       .replace(/\{{window_name}}/g, wmInfo.windowName)

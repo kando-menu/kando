@@ -66,6 +66,18 @@ export interface IVersionInfo {
 }
 
 /**
+ * This interface is used to transfer information required from the window manager when
+ * opening the pie menu. It contains the name of the currently focused app / window as
+ * well as the current pointer position.
+ */
+export interface IWMInfo {
+  windowName: string;
+  appName: string;
+  pointerX: number;
+  pointerY: number;
+}
+
+/**
  * The description of a menu theme. These are the properties which can be defined in the
  * JSON file of a menu theme.
  */

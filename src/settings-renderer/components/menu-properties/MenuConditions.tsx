@@ -19,6 +19,7 @@ const cx = classNames.bind(classes);
 import { useAppState, useMenuSettings } from '../../state';
 import { Checkbox, Button, Note } from '../common';
 import ScreenAreaPicker from './ScreenAreaPicker';
+import WindowPicker from './WindowPicker';
 
 /** This component shows the conditions for displaying the currently selected menu. */
 export default () => {
@@ -37,6 +38,8 @@ export default () => {
   const [windowConditionVisible, setWindowConditionVisible] = React.useState(false);
   const [screenConditionVisible, setScreenConditionVisible] = React.useState(false);
   const [screenAreaPickerVisible, setScreenAreaPickerVisible] = React.useState(false);
+  const [appPickerVisible, setAppPickerVisible] = React.useState(false);
+  const [windowPickerVisible, setWindowPickerVisible] = React.useState(false);
 
   // Initialize the conditions for the selected menu.
   React.useEffect(() => {
@@ -114,7 +117,9 @@ export default () => {
               grouped
               tooltip="Select a window"
               icon={<BiTargetLock />}
-              onClick={() => {}}
+              onClick={() => {
+                setAppPickerVisible(true);
+              }}
             />
           </>
         )}
@@ -162,7 +167,9 @@ export default () => {
               grouped
               tooltip="Select a window"
               icon={<BiTargetLock />}
-              onClick={() => {}}
+              onClick={() => {
+                setWindowPickerVisible(true);
+              }}
             />
           </>
         )}
@@ -241,6 +248,32 @@ export default () => {
           </>
         )}
       </div>
+      <WindowPicker
+        mode="application"
+        visible={appPickerVisible}
+        onSelect={(value) => {
+          setAppCondition(value);
+          editMenu(selectedMenu, (menu) => {
+            menu.conditions = menu.conditions || {};
+            menu.conditions.appName = value;
+            return menu;
+          });
+        }}
+        onClose={() => setAppPickerVisible(false)}
+      />
+      <WindowPicker
+        mode="title"
+        visible={windowPickerVisible}
+        onSelect={(value) => {
+          setWindowCondition(value);
+          editMenu(selectedMenu, (menu) => {
+            menu.conditions = menu.conditions || {};
+            menu.conditions.windowName = value;
+            return menu;
+          });
+        }}
+        onClose={() => setWindowPickerVisible(false)}
+      />
       <ScreenAreaPicker
         visible={screenAreaPickerVisible}
         onSelect={(top, left, bottom, right) => {

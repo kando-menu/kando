@@ -11,10 +11,9 @@
 import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
+import React from 'react';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { BiTargetLock } from 'react-icons/bi';
-
-import React from 'react';
 import { PiSelection } from 'react-icons/pi';
 
 import { Modal, Button } from '../common';
