@@ -65,10 +65,10 @@ interface IProps {
  * @returns A modal element.
  */
 export default (props: IProps) => {
-  const ref = React.useRef(null);
+  const modalContent = React.useRef(null);
 
-  // Hide on escape.
   React.useEffect(() => {
+    // Hide on escape.
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (props.visible) {
@@ -76,8 +76,27 @@ export default (props: IProps) => {
         }
       }
     };
+
+    // Get the first focusable element inside the modal when it becomes visible.
+    const focusableElements = modalContent.current?.querySelectorAll(
+      'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusableElement = focusableElements?.[0] as HTMLElement;
+
+    // Trap focus within the modal.
+    const handleFocusIn = (event: FocusEvent) => {
+      if (modalContent.current && !modalContent.current.contains(event.target as Node)) {
+        firstFocusableElement?.focus();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('focusin', handleFocusIn);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('focusin', handleFocusIn);
+    };
   }, [props.visible]);
 
   // Define the close button with an icon. On macOS, the close button is displayed on the
@@ -98,7 +117,7 @@ export default (props: IProps) => {
   return createPortal(
     <CSSTransition
       in={props.visible}
-      nodeRef={ref}
+      nodeRef={modalContent}
       // The modal CSS class uses a 200ms transition when fading in and out, so we set the
       // timeout to 200ms to match this.
       timeout={200}
@@ -107,7 +126,7 @@ export default (props: IProps) => {
         enterDone: classes.fadeEnterDone,
       }}
       unmountOnExit>
-      <div ref={ref} onClick={props.onClose} className={classes.modalBackground}>
+      <div ref={modalContent} onClick={props.onClose} className={classes.modalBackground}>
         <div
           className={classes.modal}
           onClick={(e) => e.stopPropagation()}

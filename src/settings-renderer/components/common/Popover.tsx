@@ -115,7 +115,6 @@ export default (props: IProps) => {
         popoverContent.current &&
         !popoverContent.current.contains(event.target as Node)
       ) {
-        // Redirect focus back to the first focusable element.
         firstFocusableElement?.focus();
       }
     };
