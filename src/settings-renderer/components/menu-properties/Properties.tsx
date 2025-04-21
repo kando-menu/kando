@@ -148,14 +148,15 @@ export default () => {
                 </>
               )
             }
-            <Swirl variant="2" width="min(250px, 80%)" marginBottom={20} marginTop={10} />
-            <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={60}>
-              {selectedItem &&
-                ItemConfigRegistry.getInstance().getTipOfTheDay(
+            <Swirl variant="2" width="min(250px, 80%)" marginBottom={30} marginTop={20} />
+            {!isRoot && selectedItem && (
+              <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={70}>
+                {ItemConfigRegistry.getInstance().getTipOfTheDay(
                   selectedItem.type,
                   tipSeed
                 )}
-            </Note>
+              </Note>
+            )}
           </div>
         </Scrollbox>
         <div className={classes.floatingButton}>
