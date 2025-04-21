@@ -96,9 +96,11 @@ export default () => {
     accentColorsNode = (
       <>
         <div style={{ marginTop: 15, marginBottom: 10 }}>
-          Accent Colors
-          {useDarkMode ? (darkMode ? ' (Dark Mode)' : ' (Light Mode)') : ''}
-          <InfoItem info="The set of available accent colors depends on the selected theme." />
+          <h1>
+            Accent Colors
+            {useDarkMode ? (darkMode ? ' (Dark)' : ' (Light)') : ''}
+            <InfoItem info="The set of available accent colors depends on the selected theme." />
+          </h1>
         </div>
         <div
           style={{
@@ -212,7 +214,7 @@ export default () => {
           {accentColorsNode}
           <div style={{ flexGrow: 1 }} />
 
-          <Swirl variant="1" width={200} marginTop={10} marginBottom={20} />
+          <Swirl variant="1" width={250} marginTop={10} marginBottom={20} />
           <Button
             label="Get themes online"
             icon={<TbExternalLink />}

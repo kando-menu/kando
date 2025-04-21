@@ -38,16 +38,29 @@ export default () => {
     };
   }, []);
 
+  // Set the global color scheme to the body element.
+  React.useEffect(() => {
+    const body = document.body;
+
+    if (settingsWindowColorScheme === 'system') {
+      body.classList.add('systemColors');
+    }
+    if (settingsWindowColorScheme === 'light') {
+      body.classList.add('lightColors');
+    }
+    if (settingsWindowColorScheme === 'dark') {
+      body.classList.add('darkColors');
+    }
+    return () => {
+      body.classList.remove('systemColors');
+      body.classList.remove('lightColors');
+      body.classList.remove('darkColors');
+    };
+  }, [settingsWindowColorScheme]);
+
   return (
     <>
-      <div
-        id="root-container"
-        className={cx({
-          container: true,
-          systemColors: settingsWindowColorScheme === 'system',
-          lightColors: settingsWindowColorScheme === 'light',
-          darkColors: settingsWindowColorScheme === 'dark',
-        })}>
+      <div className={classes.container}>
         <Sidebar position="left" mainDirection="row">
           <CollectionList />
           <MenuList />

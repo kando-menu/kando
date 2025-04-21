@@ -122,17 +122,6 @@ export default () => {
             </div>
             {
               // Show the hotkey selector for the root menu.
-              isRoot && (
-                <TextInput
-                  initialValue={selectedItem.name}
-                  onChange={(name) => {
-                    editMenuItem(selectedMenu, selectedChildPath, (item) => {
-                      item.name = name;
-                      return item;
-                    });
-                  }}
-                />
-              )
             }
             {
               // If the selected item is the root of the menu, we show the tag editor.

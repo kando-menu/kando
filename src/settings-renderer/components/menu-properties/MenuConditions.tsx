@@ -18,6 +18,7 @@ const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
 import { Checkbox, Button, Note } from '../common';
+import ScreenAreaPicker from './ScreenAreaPicker';
 
 /** This component shows the conditions for displaying the currently selected menu. */
 export default () => {
@@ -35,6 +36,7 @@ export default () => {
   const [appConditionVisible, setAppConditionVisible] = React.useState(false);
   const [windowConditionVisible, setWindowConditionVisible] = React.useState(false);
   const [screenConditionVisible, setScreenConditionVisible] = React.useState(false);
+  const [screenAreaPickerVisible, setScreenAreaPickerVisible] = React.useState(false);
 
   // Initialize the conditions for the selected menu.
   React.useEffect(() => {
@@ -65,9 +67,9 @@ export default () => {
   return (
     <>
       <h1>Menu Conditions</h1>
-      <Note marginTop={-8}>
-        You can bind multiple menus to the same shortcut and then choose under which
-        conditions each menu should be shown.
+      <Note marginTop={-5} marginBottom={5}>
+        You can bind multiple menus to the same shortcut and then choose when to show each
+        menu.
       </Note>
       <Checkbox
         label="Limit to Specific Apps"
@@ -232,11 +234,23 @@ export default () => {
               grouped
               tooltip="Select a screen area"
               icon={<BiTargetLock />}
-              onClick={() => {}}
+              onClick={() => {
+                setScreenAreaPickerVisible(true);
+              }}
             />
           </>
         )}
       </div>
+      <ScreenAreaPicker
+        visible={screenAreaPickerVisible}
+        onSelect={(minX, maxX, minY, maxY) => {
+          setScreenMinX(minX.toString());
+          setScreenMaxX(maxX.toString());
+          setScreenMinY(minY.toString());
+          setScreenMaxY(maxY.toString());
+        }}
+        onClose={() => setScreenAreaPickerVisible(false)}
+      />
     </>
   );
 };

@@ -19,18 +19,6 @@
 
   display: flex;
   color: $text-normal;
-
-  &.systemColors {
-    color-scheme: light dark;
-  }
-
-  &.lightColors {
-    color-scheme: only light;
-  }
-
-  &.darkColors {
-    color-scheme: only dark;
-  }
 }
 
 .centerArea {

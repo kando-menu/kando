@@ -9,13 +9,3 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
-
-.note {
-  font-size: 0.8em;
-  line-height: 1.5em;
-  color: $text-muted;
-
-  &.center {
-    text-align: center;
-  }
-}

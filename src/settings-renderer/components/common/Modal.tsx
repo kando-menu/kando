@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 import { RiCloseLargeFill } from 'react-icons/ri';
 
@@ -94,7 +95,7 @@ export default (props: IProps) => {
     </div>
   );
 
-  return (
+  return createPortal(
     <CSSTransition
       in={props.visible}
       nodeRef={ref}
@@ -132,6 +133,7 @@ export default (props: IProps) => {
           </div>
         </div>
       </div>
-    </CSSTransition>
+    </CSSTransition>,
+    document.body
   );
 };

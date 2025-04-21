@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { TbInfoCircleFilled } from 'react-icons/tb';
+import { TbInfoSquareRoundedFilled } from 'react-icons/tb';
 
 import * as classes from './InfoItem.module.scss';
 
@@ -30,7 +30,7 @@ export default (props: IProps) => {
       className={classes.info}
       data-tooltip-id="main-tooltip"
       data-tooltip-content={props.info}>
-      <TbInfoCircleFilled />
+      <TbInfoSquareRoundedFilled />
     </span>
   );
 };

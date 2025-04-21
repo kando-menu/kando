@@ -22,9 +22,9 @@ export default () => {
   return (
     <>
       <h1>Menu Behavior</h1>
-      <Note marginTop={-8}>
-        Before you enable these options, we recommend learning Kando's default behavior
-        and why we like it{' '}
+      <Note marginTop={-5} marginBottom={5}>
+        Before you enable these options, we recommend learning why we like Kando's default
+        behavior{' '}
         <a href="https://www.youtube.com/watch?v=elHUCarOiXQ" target="_blank">
           here
         </a>

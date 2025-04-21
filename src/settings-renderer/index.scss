@@ -42,6 +42,18 @@ body {
     'Helvetica Neue',
     sans-serif;
   line-height: 1.4em;
+
+  &.systemColors {
+    color-scheme: light dark;
+  }
+
+  &.lightColors {
+    color-scheme: only light;
+  }
+
+  &.darkColors {
+    color-scheme: only dark;
+  }
 }
 
 a {
@@ -68,6 +80,7 @@ img {
 }
 
 h1 {
+  color: $text-normal;
   font-size: 1em;
   margin: 1em 0 0.25em 0;
 }
