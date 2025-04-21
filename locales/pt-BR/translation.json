@@ -80,6 +80,10 @@
             "description": "Abre outro menu",
             "tip-1": "Use caixa de letra consistente para nomes de menu.",
             "redirect-hint": "Esse menu será aberto"
+        },
+        "settings": {
+            "name": "Abrir Ajustes",
+            "tip-1": "Está ação abrirá a janela de configurações Kando."
         }
     },
     "properties": {
@@ -134,7 +138,9 @@
         "icon-picker": {
             "heading": "Selecione um ícone",
             "placeholder": "Pesquisa ícones…",
-            "subheading": "Adicione suas próprias coleções de ícones colocando uma pasta com imagens em {{path}}. Você vai precisar reiniciar Kando. Saiba mais <a {{- link}}>aqui</a>."
+            "subheading": "Adicione suas próprias coleções de ícones colocando uma pasta com imagens em {{path}}. Você vai precisar reiniciar Kando. Saiba mais <a {{- link}}>aqui</a>.",
+            "base64-example": "Exemplo em Base64:",
+            "url-example": "URL de exemplo:"
         },
         "macro-picker": {
             "placeholder": "Aperte o botão de gravação para começar a gravar!",
@@ -208,10 +214,11 @@
     "main": {
         "is-running-header": "Kando já está em execução",
         "is-running-message": "Verifique o ícone da bandeja do sistema para algumas opções!",
-        "failed-to-start-header": "Kando não conseguiu iniciar",
+        "failed-to-start-header": "Kando não conseguiu se iniciar",
         "show-settings": "Mostrar Configurações",
         "quit": "Sair",
-        "inhibit-shortcuts": "Temporariamente desabilite atalhos"
+        "inhibit-shortcuts": "Desabilite os atalhos temporariamente",
+        "un-inhibit-shortcuts": "Reativar Atalhos"
     },
     "sidebar": {
         "welcome": "Bem-vindo ao Kando!",
