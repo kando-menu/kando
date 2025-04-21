@@ -337,6 +337,16 @@ export class KandoApp {
       };
     });
 
+    // Allow the renderer to retrieve the position of the settings window.
+    ipcMain.handle('settings-window.get-position', () => {
+      if (!this.settingsWindow) {
+        return { x: 0, y: 0 };
+      }
+
+      const bounds = this.settingsWindow.getBounds();
+      return { x: bounds.x, y: bounds.y };
+    });
+
     // This should return the index of the currently selected menu. For now, we just
     // return the index of a menu with the same name as the last menu. If the user uses
     // the same name for multiple menus, this will not work as expected.

@@ -28,6 +28,10 @@ $window-background: light-dark($base-light, $base-dark);
 $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
 
 $widget-primary: light-dark($key-light, $key-dark);
+$widget-primary-hover: light-dark(
+  color.adjust($key-light, $lightness: -10%),
+  color.adjust($key-dark, $lightness: 10%)
+);
 
 $widget-dark: light-dark(
   rgba(color.adjust($base-light, $lightness: -30%), 0.5),

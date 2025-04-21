@@ -169,7 +169,7 @@ export default () => {
       </div>
       <Checkbox
         label="Limit to Specific Screen Area"
-        info="Show the menu only if the pointer is in a given area on the screen. In pixels, relative to the top left corner of your main display."
+        info="Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction."
         initialValue={screenConditionVisible}
         onChange={(value) => {
           setScreenConditionVisible(value);
@@ -194,10 +194,10 @@ export default () => {
         {screenConditionVisible && (
           <>
             {[
-              { value: screenMinX, setValue: setScreenMinX, label: 'Left' },
-              { value: screenMaxX, setValue: setScreenMaxX, label: 'Right' },
               { value: screenMinY, setValue: setScreenMinY, label: 'Top' },
+              { value: screenMinX, setValue: setScreenMinX, label: 'Left' },
               { value: screenMaxY, setValue: setScreenMaxY, label: 'Bottom' },
+              { value: screenMaxX, setValue: setScreenMaxX, label: 'Right' },
             ].map(({ value, setValue, label }, index) => (
               <input
                 key={index}
@@ -243,11 +243,21 @@ export default () => {
       </div>
       <ScreenAreaPicker
         visible={screenAreaPickerVisible}
-        onSelect={(minX, maxX, minY, maxY) => {
-          setScreenMinX(minX.toString());
-          setScreenMaxX(maxX.toString());
-          setScreenMinY(minY.toString());
-          setScreenMaxY(maxY.toString());
+        onSelect={(top, left, bottom, right) => {
+          setScreenMinX(left.toString());
+          setScreenMaxX(right.toString());
+          setScreenMinY(top.toString());
+          setScreenMaxY(bottom.toString());
+          editMenu(selectedMenu, (menu) => {
+            menu.conditions = menu.conditions || {};
+            menu.conditions.screenArea = {
+              xMin: left,
+              yMin: top,
+              xMax: right,
+              yMax: bottom,
+            };
+            return menu;
+          });
         }}
         onClose={() => setScreenAreaPickerVisible(false)}
       />
