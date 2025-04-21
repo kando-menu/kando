@@ -60,7 +60,7 @@
     "handlebars": "^4.7.8",
     "handlebars-loader": "^1.7.3",
     "howler": "^2.2.4",
-    "i18next": "^24.2.3",
+    "i18next": "^25.0.1",
     "i18next-fs-backend": "^2.6.0",
     "i18next-parser": "^9.1.0",
     "json5": "^2.2.3",
