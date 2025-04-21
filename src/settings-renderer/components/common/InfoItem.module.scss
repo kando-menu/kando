@@ -8,13 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use '../../variables.scss' as *;
+
 .info {
-  opacity: 0.2;
+  color: $widget-normal;
   margin: 0.4em;
   font-size: 1.2em;
 
   &:hover {
-    opacity: 0.3;
+    color: $widget-normal-hover;
   }
 
   svg {

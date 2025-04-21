@@ -25,7 +25,7 @@
     appearance: none;
     margin: 0;
 
-    background-color: color-mix(in srgb, $text-muted 40%, transparent);
+    background-color: $widget-normal;
     width: 1.5em;
     height: 1.5em;
     border-radius: 50%;
@@ -46,7 +46,7 @@
     }
 
     &:hover {
-      background-color: color-mix(in srgb, $text-muted 50%, transparent);
+      background-color: $widget-normal-hover;
     }
 
     &:active {
