@@ -100,17 +100,6 @@ export class ItemConfigRegistry {
   }
 
   /**
-   * Use this method to get a configuration widget for a specific item type.
-   *
-   * @param item The item you want to configure.
-   * @returns A configuration widget for the requested type.
-   * @throws If the item's type is not available.
-   */
-  public getConfigWidget(item: IMenuItem) {
-    // return this.getItemConfig(item.type).getConfigWidget(item);
-  }
-
-  /**
    * This method returns the type object for the given type name.
    *
    * @param typeName The name of the type you want to get the config object for.
