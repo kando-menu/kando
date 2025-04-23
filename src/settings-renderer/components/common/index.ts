@@ -27,6 +27,7 @@ export { default as Scrollbox } from './Scrollbox';
 export { default as SettingsCheckbox } from './SettingsCheckbox';
 export { default as SettingsDropdown } from './SettingsDropdown';
 export { default as SettingsSpinbutton } from './SettingsSpinbutton';
+export { default as ShortcutPicker } from './ShortcutPicker';
 export { default as Sidebar } from './Sidebar';
 export { default as Swirl } from './Swirl';
 export { default as Tag } from './Tag';

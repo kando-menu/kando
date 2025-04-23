@@ -19,6 +19,8 @@ import {
   Button,
   IconChooserButton,
   TagInput,
+  InfoItem,
+  ShortcutPicker,
   Swirl,
   Scrollbox,
   TextInput,
@@ -106,37 +108,61 @@ export default () => {
             }}
           />
         </div>
+        <div className={classes.name}>
+          <TextInput
+            initialValue={selectedItem.name}
+            variant="flat"
+            onChange={(name) => {
+              editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                item.name = name;
+                return item;
+              });
+            }}
+          />
+        </div>
+        <Swirl variant="3" width="min(250px, 80%)" marginBottom={10} marginTop={10} />
         <Scrollbox>
           <div className={classes.properties}>
-            <div className={classes.name}>
-              <TextInput
-                initialValue={selectedItem.name}
-                variant="flat"
-                onChange={(name) => {
-                  editMenuItem(selectedMenu, selectedChildPath, (item) => {
-                    item.name = name;
-                    return item;
-                  });
-                }}
-              />
-            </div>
             {
               // Show the hotkey selector for the root menu.
+              isRoot && (
+                <div className={classes.row}>
+                  <div>
+                    Shortcut
+                    <InfoItem info="The shortcut to open this menu. A shortcut must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift." />
+                  </div>
+                  <ShortcutPicker
+                    initialValue={menus[selectedMenu].shortcut}
+                    onChange={(shortcut) => {
+                      editMenu(selectedMenu, (menu) => {
+                        menu.shortcut = shortcut;
+                        return menu;
+                      });
+                    }}
+                  />
+                </div>
+              )
             }
             {
               // If the selected item is the root of the menu, we show the tag editor.
               isRoot && (
-                <TagInput
-                  tags={menuTags}
-                  onChange={(newTags) => {
-                    editMenu(selectedMenu, (menu) => {
-                      menu.tags = newTags;
-                      return menu;
-                    });
-                    setMenuTags(newTags);
-                  }}
-                  suggestions={allAvailableTags}
-                />
+                <div className={classes.row} style={{ alignItems: 'flex-start' }}>
+                  <div style={{ marginTop: 2 }}>
+                    Tags
+                    <InfoItem info="Tags can be used to group menus in menu collections." />
+                  </div>
+                  <TagInput
+                    tags={menuTags}
+                    onChange={(newTags) => {
+                      editMenu(selectedMenu, (menu) => {
+                        menu.tags = newTags;
+                        return menu;
+                      });
+                      setMenuTags(newTags);
+                    }}
+                    suggestions={allAvailableTags}
+                  />
+                </div>
               )
             }
             {
@@ -148,7 +174,6 @@ export default () => {
                 </>
               )
             }
-            <Swirl variant="2" width="min(250px, 80%)" marginBottom={30} marginTop={20} />
             {!isRoot && selectedItem && (
               <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={70}>
                 {ItemConfigRegistry.getInstance().getTipOfTheDay(

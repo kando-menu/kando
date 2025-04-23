@@ -24,12 +24,32 @@
   display: flex;
   gap: 5px;
   flex-direction: column;
+  padding-bottom: 60px;
+}
+
+.row {
+  display: flex;
+
+  // Make children same width
+  & > * {
+    flex: 1;
+    white-space: nowrap;
+
+    &:last-child {
+      flex-grow: 2;
+      min-width: 0px;
+      max-width: 350px;
+    }
+  }
 }
 
 .icon {
   -webkit-app-region: no-drag;
+
+  // Why have width and height have to be set to different values?
+  // Otherwise the icon is not circular...
   width: 6em;
-  height: 6.5em;
+  height: 7.2em;
   margin: -30px auto 0 auto;
   background-color: $window-background;
   border-radius: 50%;
@@ -44,7 +64,6 @@
 
 .name {
   font-size: 1.3rem;
-  margin-bottom: 20px;
 }
 
 .floatingButton {
