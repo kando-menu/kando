@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from '.';
 import { SubmenuItemConfig } from './item-types/submenu-item-config';
 import { CommandItemConfig } from './item-types/command-item-config';
 import { FileItemConfig } from './item-types/file-item-config';
