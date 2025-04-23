@@ -10,7 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a menu that will be opened when the

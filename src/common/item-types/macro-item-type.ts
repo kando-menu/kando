@@ -10,7 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 export interface IMacroEvent {
   type: 'keyDown' | 'keyUp';
