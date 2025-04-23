@@ -10,12 +10,12 @@
 
 import { shell } from 'electron';
 
-import { IMenuItem } from '../index';
+import { IMenuItem } from '../../common/index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/utils/settings';
-import { IItemData } from './uri-item-type';
+import { DeepReadonly } from '../utils/settings';
+import { IItemData } from '../../common/item-types/uri-item-type';
 import { IWMInfo } from '../../common';
-import { KandoApp } from '../../main/app';
+import { KandoApp } from '../app';
 
 /**
  * This action opens URIs with the default application. This can be used to open for

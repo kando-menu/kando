@@ -8,18 +8,18 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from './index';
-import { KandoApp } from '../main/app';
+import { IMenuItem } from '../../common';
+import { KandoApp } from '../app';
+import { DeepReadonly } from '../utils/settings';
 
-import { CommandItemAction } from './item-types/command-item-action';
-import { FileItemAction } from './item-types/file-item-action';
-import { HotkeyItemAction } from './item-types/hotkey-item-action';
-import { MacroItemAction } from './item-types/macro-item-action';
-import { TextItemAction } from './item-types/text-item-action';
-import { URIItemAction } from './item-types/uri-item-action';
-import { RedirectItemAction } from './item-types/redirect-item-action';
-import { DeepReadonly } from '../main/utils/settings';
-import { SettingsItemAction } from './item-types/settings-item-action';
+import { CommandItemAction } from './command-item-action';
+import { FileItemAction } from './file-item-action';
+import { HotkeyItemAction } from './hotkey-item-action';
+import { MacroItemAction } from './macro-item-action';
+import { TextItemAction } from './text-item-action';
+import { URIItemAction } from './uri-item-action';
+import { RedirectItemAction } from './redirect-item-action';
+import { SettingsItemAction } from './settings-item-action';
 
 /**
  * This interface describes the action of a menu item. The action is what happens when the

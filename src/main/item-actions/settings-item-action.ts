@@ -8,10 +8,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from '../index';
+import { IMenuItem } from '../../common/index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/utils/settings';
-import { KandoApp } from '../../main/app';
+import { DeepReadonly } from '../utils/settings';
+import { KandoApp } from '../app';
 
 /** This action opens Kando settings. */
 export class SettingsItemAction implements IItemAction {

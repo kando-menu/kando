@@ -8,32 +8,18 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// import JSON5 from 'json5';
 import i18next from 'i18next';
 
-import { IItemConfig } from '../item-config-registry';
+import { IItemConfig } from './item-config-registry';
 import { chooseRandomTip } from './utils';
 
-/** This class provides the configuration widgets for macro items. */
-export class MacroItemConfig implements IItemConfig {
+/**
+ * This class provides the configuration widgets for opening the settings items. There is
+ * no configuration for this widget.
+ */
+export class SettingsItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(seed: number): string {
-    return chooseRandomTip(
-      [
-        i18next.t('items.macro.tip-1'),
-        '<a href="https://kando.menu/valid-keynames/" target="_blank">' +
-          i18next.t('items.macro.tip-2') +
-          '</a>',
-      ],
-      seed
-    );
+    return chooseRandomTip([i18next.t('items.settings.tip-1')], seed);
   }
-
-  // Add the macro picker.
-  // const picker = new MacroPicker();
-  // picker.setValue(
-  //   JSON5.stringify((item.data as IItemData).macro)
-  //     .replace(/\[/g, '')
-  //     .replace(/\]/g, '')
-  // );
 }

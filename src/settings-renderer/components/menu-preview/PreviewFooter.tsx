@@ -14,7 +14,7 @@ import classNames from 'classnames/bind';
 import * as classes from './PreviewFooter.module.scss';
 const cx = classNames.bind(classes);
 
-import { ItemTypeRegistry } from '../../../common/item-type-registry';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 import { ThemedIcon } from '../common';
 

@@ -13,7 +13,7 @@ import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './utils/settings';
 import { IShowMenuRequest, IMenu, IMenuItem, IWMInfo } from '../common';
-import { ItemActionRegistry } from '../common/item-action-registry';
+import { ItemActionRegistry } from './item-actions/item-action-registry';
 import { Notification } from './utils/notification';
 import { KandoApp } from './app';
 

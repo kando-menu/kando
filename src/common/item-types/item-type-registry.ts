@@ -8,17 +8,17 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from './index';
+import { IMenuItem } from '..';
 
-import { CommandItemType } from './item-types/command-item-type';
-import { FileItemType } from './item-types/file-item-type';
-import { HotkeyItemType } from './item-types/hotkey-item-type';
-import { MacroItemType } from './item-types/macro-item-type';
-import { SubmenuItemType } from './item-types/submenu-item-type';
-import { TextItemType } from './item-types/text-item-type';
-import { URIItemType } from './item-types/uri-item-type';
-import { RedirectItemType } from './item-types/redirect-item-type';
-import { SettingsItemType } from './item-types/settings-item-type';
+import { CommandItemType } from './command-item-type';
+import { FileItemType } from './file-item-type';
+import { HotkeyItemType } from './hotkey-item-type';
+import { MacroItemType } from './macro-item-type';
+import { SubmenuItemType } from './submenu-item-type';
+import { TextItemType } from './text-item-type';
+import { URIItemType } from './uri-item-type';
+import { RedirectItemType } from './redirect-item-type';
+import { SettingsItemType } from './settings-item-type';
 
 /**
  * This interface describes meta information about a menu-item type. Every available type

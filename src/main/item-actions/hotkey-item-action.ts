@@ -8,19 +8,16 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem, IKeySequence } from '../index';
+import { IMenuItem, IKeySequence } from '../../common/index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/utils/settings';
-import { IItemData } from './macro-item-type';
-import { KandoApp } from '../../main/app';
+import { DeepReadonly } from '../utils/settings';
+import { IItemData } from '../../common/item-types/hotkey-item-type';
+import { KandoApp } from '../app';
 
-/**
- * This action simulates multiple key presses and releases. It can be used to simulate
- * more complex macros than the simple hotkey action.
- */
-export class MacroItemAction implements IItemAction {
+/** This action simulates key presses. It can be used to simulate hotkeys. */
+export class HotkeyItemAction implements IItemAction {
   /**
-   * For macros, we can choose to execute them immediately or with a delay.
+   * For hotkeys, we can choose to execute them immediately or with a delay.
    *
    * @param item The item for which we want to know if the action should be executed
    *   immediately or with a delay.
@@ -31,24 +28,32 @@ export class MacroItemAction implements IItemAction {
   }
 
   /**
-   * This method simulates the macro.
+   * This method simulates key presses. It first presses all keys and then releases them
+   * again. We add a small delay between the key presses to make sure that the keys are
+   * pressed in the correct order.
    *
    * @param item The item for which the action should be executed.
    * @param app The app which executed the action.
-   * @returns A promise which resolves when the macro has been successfully simulated.
+   * @returns A promise which resolves when the hotkey has been successfully simulated.
    */
   async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
     return new Promise<void>((resolve, reject) => {
-      const data = item.data as IItemData;
+      const keyNames = (item.data as IItemData).hotkey.split('+');
 
+      // We simulate the key press by first pressing all keys and then releasing
+      // them again. We add a small delay between the key presses to make sure
+      // that the keys are pressed in the correct order.
       const keys: IKeySequence = [];
 
-      data.macro.forEach((event) => {
-        const delay = event.delay || 10;
-        const name = event.key;
-        const down = event.type === 'keyDown';
-        keys.push({ name, down, delay });
-      });
+      // First press all keys.
+      for (const key of keyNames) {
+        keys.push({ name: key, down: true, delay: 10 });
+      }
+
+      // Then release all keys.
+      for (const key of keyNames) {
+        keys.push({ name: key, down: false, delay: 10 });
+      }
 
       // Finally, we simulate the key presses using the backend.
       app.getBackend().simulateKeys(keys).then(resolve, reject);

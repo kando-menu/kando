@@ -11,11 +11,11 @@
 import os from 'node:os';
 import { clipboard } from 'electron';
 
-import { IMenuItem } from '../index';
+import { IMenuItem } from '../../common/index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/utils/settings';
-import { IItemData } from './text-item-type';
-import { KandoApp } from '../../main/app';
+import { DeepReadonly } from '../utils/settings';
+import { IItemData } from '../../common/item-types/text-item-type';
+import { KandoApp } from '../app';
 
 /** This action pastes some given text into the active window. */
 export class TextItemAction implements IItemAction {

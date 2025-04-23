@@ -8,15 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { SubmenuItemConfig } from './item-types/submenu-item-config';
-import { CommandItemConfig } from './item-types/command-item-config';
-import { FileItemConfig } from './item-types/file-item-config';
-import { HotkeyItemConfig } from './item-types/hotkey-item-config';
-import { MacroItemConfig } from './item-types/macro-item-config';
-import { TextItemConfig } from './item-types/text-item-config';
-import { URIItemConfig } from './item-types/uri-item-config';
-import { RedirectItemConfig } from './item-types/redirect-item-config';
-import { SettingsItemConfig } from './item-types/settings-item-config';
+import { SubmenuItemConfig } from './submenu-item-config';
+import { CommandItemConfig } from './command-item-config';
+import { FileItemConfig } from './file-item-config';
+import { HotkeyItemConfig } from './hotkey-item-config';
+import { MacroItemConfig } from './macro-item-config';
+import { TextItemConfig } from './text-item-config';
+import { URIItemConfig } from './uri-item-config';
+import { RedirectItemConfig } from './redirect-item-config';
+import { SettingsItemConfig } from './settings-item-config';
 
 /**
  * This interface is required for generating the configuration widget for a specific item

@@ -26,7 +26,7 @@ import {
   TextInput,
   Note,
 } from '../common';
-import { ItemConfigRegistry } from '../../../common/item-config-registry';
+import { ItemConfigRegistry } from './item-configs/item-config-registry';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
 

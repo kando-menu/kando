@@ -11,11 +11,11 @@
 import { spawn, StdioOptions } from 'child_process';
 import * as os from 'os';
 
-import { IMenuItem } from '../index';
+import { IMenuItem } from '../../common/index';
 import { IItemAction } from '../item-action-registry';
-import { DeepReadonly } from '../../main/utils/settings';
-import { IItemData } from './command-item-type';
-import { KandoApp } from '../../main/app';
+import { DeepReadonly } from '../utils/settings';
+import { IItemData } from '../../common/item-types/command-item-type';
+import { KandoApp } from '../app';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
 export class CommandItemAction implements IItemAction {

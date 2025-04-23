@@ -10,20 +10,21 @@
 
 import i18next from 'i18next';
 
-import { IItemConfig } from '../item-config-registry';
+import { IItemConfig } from './item-config-registry';
 import { chooseRandomTip } from './utils';
 
-/** This class provides the configuration widgets for hotkey items. */
-export class HotkeyItemConfig implements IItemConfig {
+/** This class provides the configuration widgets for URI items. */
+export class URIItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(seed: number): string {
     return chooseRandomTip(
       [
-        i18next.t('items.hotkey.tip-1'),
-        i18next.t('items.hotkey.tip-2'),
-        '<a href="https://kando.menu/valid-keynames/" target="_blank">' +
-          i18next.t('items.hotkey.tip-3') +
-          '</a>',
+        i18next.t('items.uri.tip-1'),
+        i18next.t('items.uri.tip-2'),
+        i18next.t('items.uri.tip-3'),
+        i18next.t('items.uri.tip-4'),
+        i18next.t('items.uri.tip-5'),
+        i18next.t('items.uri.tip-6'),
       ],
       seed
     );

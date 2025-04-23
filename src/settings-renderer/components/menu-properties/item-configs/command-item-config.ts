@@ -10,13 +10,22 @@
 
 import i18next from 'i18next';
 
-import { IItemConfig } from '../item-config-registry';
+import { IItemConfig } from './item-config-registry';
 import { chooseRandomTip } from './utils';
 
-/** This class provides the configuration widgets for file items. */
-export class FileItemConfig implements IItemConfig {
+/** This class provides the configuration widgets for command items. */
+export class CommandItemConfig implements IItemConfig {
   /** @inheritdoc */
   public getTipOfTheDay(seed: number): string {
-    return chooseRandomTip([i18next.t('items.file.tip-1')], seed);
+    return chooseRandomTip(
+      [
+        i18next.t('items.command.tip-1'),
+        i18next.t('items.command.tip-2'),
+        i18next.t('items.command.tip-3'),
+        i18next.t('items.command.tip-4'),
+        i18next.t('items.command.tip-5'),
+      ],
+      seed
+    );
   }
 }

@@ -20,7 +20,7 @@ import * as math from '../../../common/math';
 import * as utils from './utils';
 
 import { ThemedIcon } from '../common';
-import { ItemTypeRegistry } from '../../../common/item-type-registry';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 import { ensureUniqueKeys } from '../../utils';
 
 /**
