@@ -9,11 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { TbX, TbPlus } from 'react-icons/tb';
 
 import Tag from './Tag';
 
 import * as classes from './TagInput.module.scss';
-import { TbX, TbPlus } from 'react-icons/tb';
 
 interface IProps {
   /** The initial tags to display. */
@@ -38,23 +39,36 @@ interface IProps {
  * @returns A tag edit field.
  */
 export default (props: IProps) => {
+  const [suggestionsVisible, setSuggestionsVisible] = React.useState(false);
+  const inputRef = React.useRef(null);
+
+  const [containerRef] = useAutoAnimate({ duration: 250 });
+
   const suggestions = props.suggestions
     .filter((suggestion) => !props.tags.includes(suggestion))
     .sort();
 
+  const focusInput = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   return (
-    <>
+    <div
+      ref={containerRef}
+      onFocus={() => {
+        setSuggestionsVisible(true);
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setSuggestionsVisible(false);
+        }
+      }}>
       <div
-        className={classes.container}
+        className={classes.input}
         // Focus the input field when the user clicks on the container.
-        onClick={(event) => {
-          const input = event.currentTarget.querySelector(
-            `.${classes.container} input`
-          ) as HTMLInputElement;
-          if (input) {
-            input.focus();
-          }
-        }}>
+        onClick={focusInput}>
         {props.tags.map((tag, index) => (
           <Tag
             key={index}
@@ -68,6 +82,7 @@ export default (props: IProps) => {
           />
         ))}
         <input
+          ref={inputRef}
           placeholder={props.tags.length === 0 ? 'Add tags...' : ''}
           onKeyDown={(event) => {
             // Add tag on return if the input field is not empty.
@@ -89,7 +104,7 @@ export default (props: IProps) => {
           }}
         />
       </div>
-      {suggestions.length > 0 && (
+      {suggestions.length > 0 && suggestionsVisible && (
         <div className={classes.suggestions}>
           {suggestions.map((suggestion, index) => (
             <Tag
@@ -109,6 +124,6 @@ export default (props: IProps) => {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
