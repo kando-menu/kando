@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
 
 .collectionHeader {
   -webkit-app-region: drag;
@@ -79,19 +80,9 @@
     display: flex;
 
     input {
-      background-color: $widget-normal;
+      @include text-input;
       width: 100%;
-      color: $text-normal;
-      border: none;
-      border-radius: 0;
       border-radius: 5px 0 0 5px;
-
-      padding: 5px 10px;
-      font-size: 1rem;
-
-      &:hover {
-        background-color: $widget-normal-hover;
-      }
     }
   }
 }

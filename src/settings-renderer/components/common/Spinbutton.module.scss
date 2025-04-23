@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
 
 .row {
   display: flex;
@@ -18,23 +19,14 @@
   color: $text-normal;
 
   input {
+    @include text-input;
+
     &::-webkit-inner-spin-button {
       appearance: none;
     }
 
-    background-color: $widget-normal;
-
-    color: $text-normal;
     text-align: center;
-    border: none;
     border-radius: 0;
-
-    padding: 4px 0px;
-    font-size: 1em;
-
-    &:hover {
-      background-color: $widget-normal-hover;
-    }
   }
 }
 

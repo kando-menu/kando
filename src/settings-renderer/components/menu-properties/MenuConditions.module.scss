@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
 
 .conditionInput {
   > *:first-child {
@@ -24,19 +25,10 @@
   display: flex;
 
   input {
+    @include text-input;
+
     flex-grow: 1;
-    background-color: $widget-normal;
-
-    color: $text-normal;
-    border: none;
     border-radius: 0;
-
-    padding: 4px;
-    font-size: 1em;
-
-    &:hover {
-      background-color: $widget-normal-hover;
-    }
   }
 }
 

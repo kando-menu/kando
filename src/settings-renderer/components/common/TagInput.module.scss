@@ -9,8 +9,9 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
 
-.container,
+.input,
 .suggestions {
   display: flex;
   flex-wrap: wrap;
@@ -18,15 +19,9 @@
   overflow: hidden;
 }
 
-.container {
-  background-color: $widget-normal;
-  padding: 4px;
-  border-radius: 5px;
+.input {
+  @include text-input;
   cursor: text;
-
-  &:hover {
-    background-color: $widget-normal-hover;
-  }
 
   input {
     field-sizing: content;

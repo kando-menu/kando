@@ -8,39 +8,19 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@use '../../variables.scss' as *;
-@use '../../mixins.scss' as *;
+@use './variables.scss' as *;
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+@mixin text-input {
+  background-color: $widget-normal;
 
   color: $text-normal;
+  border: none;
+  border-radius: 5px;
 
-  input {
-    @include text-input;
-
-    flex-grow: 1;
-    min-width: 0;
-  }
-}
-
-.flat input {
-  background-color: transparent;
-  text-align: center;
+  padding: 4px 6px;
+  font-size: 1em;
 
   &:hover {
-    background-color: $widget-light;
+    background-color: $widget-normal-hover;
   }
-}
-
-.label {
-  flex-grow: 1;
-  white-space: nowrap;
-}
-
-.disabled {
-  pointer-events: none;
-  opacity: 0.5;
 }
