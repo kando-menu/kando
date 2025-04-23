@@ -26,6 +26,7 @@ $toolbar-background: light-dark(
 );
 $window-background: light-dark($base-light, $base-dark);
 $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
+$popover-background: light-dark($base-light, color.adjust($base-dark, $lightness: -5%));
 
 $widget-primary: light-dark($key-light, $key-dark);
 $widget-primary-hover: light-dark(
