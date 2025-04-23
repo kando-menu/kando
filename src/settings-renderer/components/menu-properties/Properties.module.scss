@@ -36,7 +36,7 @@
     white-space: nowrap;
 
     &:last-child {
-      flex-grow: 2;
+      flex: 2;
       min-width: 0px;
       max-width: 350px;
     }
@@ -64,6 +64,7 @@
 
 .name {
   font-size: 1.3rem;
+  margin: 0 8px;
 }
 
 .floatingButton {

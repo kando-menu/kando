@@ -20,9 +20,17 @@
 
   input {
     @include text-input;
+    min-width: 0px;
+    width: 100%;
+  }
 
-    flex-grow: 1;
-    min-width: 0;
+  .inputContainer {
+    flex: 2;
+    max-width: 350px;
+  }
+
+  &.fullWidth .inputContainer {
+    max-width: 100%;
   }
 }
 
@@ -36,7 +44,7 @@
 }
 
 .label {
-  flex-grow: 1;
+  flex: 1;
   white-space: nowrap;
 }
 

@@ -61,6 +61,7 @@ export default (props: IProps) => {
         row: true,
         flat: props.variant === 'flat',
         disabled: props.disabled,
+        fullWidth: !props.label,
       })}>
       {(props.label || props.info) && (
         <div className={classes.label}>
@@ -68,19 +69,21 @@ export default (props: IProps) => {
           {props.info && <InfoItem info={props.info} />}
         </div>
       )}
-      <input
-        type="text"
-        disabled={props.disabled}
-        value={value}
-        placeholder={props.placeholder}
-        onBlur={() => props.onChange?.(value)}
-        onChange={(event) => setValue(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            (event.target as HTMLInputElement).blur();
-          }
-        }}
-      />
+      <div className={classes.inputContainer}>
+        <input
+          type="text"
+          disabled={props.disabled}
+          value={value}
+          placeholder={props.placeholder}
+          onBlur={() => props.onChange?.(value)}
+          onChange={(event) => setValue(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              (event.target as HTMLInputElement).blur();
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };

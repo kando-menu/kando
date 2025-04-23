@@ -35,6 +35,7 @@ import MenuBehavior from './MenuBehavior';
  * right side of the settings dialog.
  */
 export default () => {
+  const backend = useAppState((state) => state.backendInfo);
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
@@ -81,12 +82,52 @@ export default () => {
   // Remove duplicates.
   allAvailableTags = Array.from(new Set(allAvailableTags));
 
+  // Get the currently selected menu item and whether it is the root item or not.
   let selectedItem = menus[selectedMenu].root;
   let isRoot = true;
   for (let i = 0; i < selectedChildPath.length; i++) {
     selectedItem = selectedItem.children[selectedChildPath[i]];
     isRoot = false;
   }
+
+  // Returns a shortcut picker if the current backend supports shortcuts, else it will
+  // return a text input for the shortcut ID.
+  const getShortcutPicker = () => {
+    if (backend.supportsShortcuts) {
+      return (
+        <div className={classes.row}>
+          <div>
+            Shortcut
+            <InfoItem info="The shortcut to open this menu. A shortcut must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift." />
+          </div>
+          <ShortcutPicker
+            initialValue={menus[selectedMenu].shortcut}
+            onChange={(shortcut) => {
+              editMenu(selectedMenu, (menu) => {
+                menu.shortcut = shortcut;
+                return menu;
+              });
+            }}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <TextInput
+          initialValue={menus[selectedMenu].shortcutID}
+          label="Shortcut ID"
+          placeholder="Not bound"
+          info={backend.shortcutHint}
+          onChange={(shortcutID) => {
+            editMenu(selectedMenu, (menu) => {
+              menu.shortcutID = shortcutID;
+              return menu;
+            });
+          }}
+        />
+      );
+    }
+  };
 
   return (
     <>
@@ -125,23 +166,7 @@ export default () => {
           <div className={classes.properties}>
             {
               // Show the hotkey selector for the root menu.
-              isRoot && (
-                <div className={classes.row}>
-                  <div>
-                    Shortcut
-                    <InfoItem info="The shortcut to open this menu. A shortcut must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift." />
-                  </div>
-                  <ShortcutPicker
-                    initialValue={menus[selectedMenu].shortcut}
-                    onChange={(shortcut) => {
-                      editMenu(selectedMenu, (menu) => {
-                        menu.shortcut = shortcut;
-                        return menu;
-                      });
-                    }}
-                  />
-                </div>
-              )
+              isRoot && getShortcutPicker()
             }
             {
               // If the selected item is the root of the menu, we show the tag editor.
