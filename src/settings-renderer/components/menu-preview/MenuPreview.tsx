@@ -367,13 +367,14 @@ export default () => {
   // rendered as a div with a contained icon and potentially a list of grandchild items.
   const renderChild = (child: IRenderedMenuItem, index: number) => {
     let angleDragMayStart = false;
+    const selected = selectedChild >= 0 && selectedChild === child.index;
 
     return (
       <div
         key={child.key}
         className={cx({
           child: true,
-          selected: selectedChild >= 0 && selectedChild === child.index,
+          selected,
           dragging: isDraggedChild(child),
           dropping: dropInto && dropIndex === child.index,
         })}
@@ -408,7 +409,7 @@ export default () => {
               });
               return center;
             });
-          } else {
+          } else if (!selected) {
             selectChild(index);
           }
         }}

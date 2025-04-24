@@ -13,7 +13,7 @@ import React from 'react';
 import * as classes from './Properties.module.scss';
 import { TbCopy, TbTrash } from 'react-icons/tb';
 
-import { useAppState, useMenuSettings } from '../../state';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
   Headerbar,
   Button,
@@ -24,9 +24,8 @@ import {
   Swirl,
   Scrollbox,
   TextInput,
-  Note,
 } from '../common';
-import { ItemConfigRegistry } from './item-configs/item-config-registry';
+import { getConfigComponent } from './item-configs';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
 
@@ -48,15 +47,6 @@ export default () => {
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const menuCollections = useMenuSettings((state) => state.collections);
   const [menuTags, setMenuTags] = React.useState([]);
-
-  // At the bottom of the properties, we show a tip of the day for the selected item. This
-  // is a random tip, but we do not want to show a different tip every time the component
-  // is re-rendered. Therefore, we only increase the seed when the selected item changes.
-  const [tipSeed, setTipSeed] = React.useState(0);
-
-  React.useEffect(() => {
-    setTipSeed((seed) => seed + 1);
-  }, [selectedMenu, selectedChildPath]);
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
@@ -83,12 +73,11 @@ export default () => {
   allAvailableTags = Array.from(new Set(allAvailableTags));
 
   // Get the currently selected menu item and whether it is the root item or not.
-  let selectedItem = menus[selectedMenu].root;
-  let isRoot = true;
-  for (let i = 0; i < selectedChildPath.length; i++) {
-    selectedItem = selectedItem.children[selectedChildPath[i]];
-    isRoot = false;
-  }
+  const { selectedItem, isRoot } = getSelectedChild(
+    menus,
+    selectedMenu,
+    selectedChildPath
+  );
 
   // Returns a shortcut picker if the current backend supports shortcuts, else it will
   // return a text input for the shortcut ID.
@@ -199,14 +188,7 @@ export default () => {
                 </>
               )
             }
-            {!isRoot && selectedItem && (
-              <Note center marginLeft={'10%'} marginRight={'10%'} marginBottom={70}>
-                {ItemConfigRegistry.getInstance().getTipOfTheDay(
-                  selectedItem.type,
-                  tipSeed
-                )}
-              </Note>
-            )}
+            {!isRoot && selectedItem && getConfigComponent(selectedItem.type)}
           </div>
         </Scrollbox>
         <div className={classes.floatingButton}>

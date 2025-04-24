@@ -19,4 +19,4 @@
 
 export { useGeneralSettings, useGeneralSetting } from './general-settings';
 export { useMenuSettings } from './menu-settings';
-export { useAppState } from './app-state';
+export { useAppState, getSelectedChild } from './app-state';

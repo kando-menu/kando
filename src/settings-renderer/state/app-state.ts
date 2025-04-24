@@ -10,7 +10,7 @@
 
 import { create } from 'zustand';
 
-import { IBackendInfo, IVersionInfo, IMenuThemeDescription } from '../../common';
+import { IBackendInfo, IVersionInfo, IMenuThemeDescription, IMenu } from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
 // is not persisted to disk, so whenever the settings dialog is opened, the state is
@@ -165,3 +165,39 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) =>
     set({ menuSearchBarVisible }),
 }));
+
+/**
+ * A utility function that returns the currently selected menu item in the settings
+ * dialog. It also returns a bool indicating whether the item is the root item of the menu
+ * or not. If anything goes wrong, null is returned.
+ *
+ * @param menus The list of all menus.
+ * @param selectedMenu The index of the currently selected menu.
+ * @param selectedChildPath The path to the currently selected
+ * @returns The selected menu item and whether it is the root item or not.
+ */
+export function getSelectedChild(
+  menus: IMenu[],
+  selectedMenu: number,
+  selectedChildPath: number[]
+) {
+  // If the selected menu is invalid, return null.
+  if (selectedMenu < 0 || selectedMenu >= menus.length) {
+    return { selectedItem: null, isRoot: false };
+  }
+
+  let selectedItem = menus[selectedMenu].root;
+  let isRoot = true;
+
+  for (let i = 0; i < selectedChildPath.length; i++) {
+    selectedItem = selectedItem.children[selectedChildPath[i]];
+    isRoot = false;
+
+    // If the selected child is invalid, return null.
+    if (!selectedItem) {
+      return { selectedItem: null, isRoot: false };
+    }
+  }
+
+  return { selectedItem, isRoot };
+}

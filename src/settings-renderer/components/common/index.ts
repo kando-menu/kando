@@ -23,6 +23,7 @@ export { default as InfoItem } from './InfoItem';
 export { default as Modal } from './Modal';
 export { default as Note } from './Note';
 export { default as Popover } from './Popover';
+export { default as RandomTip } from './RandomTip';
 export { default as Scrollbox } from './Scrollbox';
 export { default as SettingsCheckbox } from './SettingsCheckbox';
 export { default as SettingsDropdown } from './SettingsDropdown';
