@@ -8,18 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import React from 'react';
 import i18next from 'i18next';
 
-import { IItemConfig } from '.';
-import { chooseRandomTip } from './utils';
+import { RandomTip } from '../../common';
 
 /**
- * This class provides the configuration widgets for opening the settings items. There is
- * no configuration for this widget.
+ * The configuration component for settings items is quite simple - it only shows a random
+ * tip of the day.
  */
-export class SettingsItemConfig implements IItemConfig {
-  /** @inheritdoc */
-  public getTipOfTheDay(seed: number): string {
-    return chooseRandomTip([i18next.t('items.settings.tip-1')], seed);
-  }
-}
+export default () => {
+  return <RandomTip tips={[i18next.t('items.settings.tip-1')]} />;
+};
