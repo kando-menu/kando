@@ -17,7 +17,7 @@ import CommandItemConfig from './command-item-config';
 // import MacroItemConfig from './macro-item-config';
 // import TextItemConfig from './text-item-config';
 import URIItemConfig from './uri-item-config';
-// import RedirectItemConfig from './redirect-item-config';
+import RedirectItemConfig from './redirect-item-config';
 import SettingsItemConfig from './settings-item-config';
 
 /**
@@ -37,6 +37,10 @@ export function getConfigComponent(type: string): React.ReactElement {
 
   if (type === 'uri') {
     return <URIItemConfig />;
+  }
+
+  if (type === 'redirect') {
+    return <RedirectItemConfig />;
   }
 
   if (type === 'settings') {

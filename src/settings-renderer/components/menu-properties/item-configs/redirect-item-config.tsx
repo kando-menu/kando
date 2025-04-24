@@ -5,25 +5,66 @@
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// SPDX-FileCopyrightText: yar2001T <https://github.com/yar2000T>
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import React from 'react';
 import i18next from 'i18next';
 
-import { IItemConfig } from '.';
-import { chooseRandomTip } from './utils';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { RandomTip, Dropdown } from '../../common';
+import { IItemData } from '../../../../common/item-types/redirect-item-type';
 
-/** This class provides the configuration widgets for redirect items. */
-export class RedirectItemConfig implements IItemConfig {
-  /** @inheritdoc */
-  public getTipOfTheDay(seed: number): string {
-    return chooseRandomTip(
-      [
-        i18next.t('items.redirect.tip-1'),
-        i18next.t('items.redirect.tip-2'),
-        i18next.t('items.redirect.tip-3'),
-      ],
-      seed
-    );
+/**
+ * The configuration component for redirect items is primarily a text input field for the
+ * redirect.
+ */
+export default () => {
+  const menus = useMenuSettings((state) => state.menus);
+  const selectedMenu = useAppState((state) => state.selectedMenu);
+  const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const editMenuItem = useMenuSettings((state) => state.editMenuItem);
+  const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
+
+  // Sanity check. Should never happen, but just in case.
+  if (!selectedItem || selectedItem.type !== 'redirect') {
+    return <></>;
   }
-}
+
+  // Assemble a list of all existing menu names.
+  const menuNames = menus.map((menu) => menu.root.name);
+  const options = Array.from(new Set(menuNames)).map((name) => {
+    return { value: name, label: name };
+  });
+
+  const data = selectedItem.data as IItemData;
+
+  return (
+    <>
+      <Dropdown
+        label={i18next.t('items.redirect.redirect')}
+        info={i18next.t('items.redirect.redirect-hint')}
+        options={options}
+        initialValue={data.menu}
+        onChange={(menuName) => {
+          const menu = menus.find((menu) => menu.root.name === menuName);
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            item.name = menu?.root.name || '';
+            item.icon = menu?.root.icon || '';
+            item.iconTheme = menu?.root.iconTheme || '';
+            (item.data as IItemData).menu = menuName;
+            return item;
+          });
+        }}
+      />
+      <RandomTip
+        marginTop={50}
+        tips={[
+          i18next.t('items.redirect.tip-1'),
+          i18next.t('items.redirect.tip-2'),
+          i18next.t('items.redirect.tip-3'),
+        ]}
+      />
+    </>
+  );
+};

@@ -49,6 +49,9 @@ interface IProps<T extends string> {
  * @returns A dropdown element.
  */
 export default <T extends string>(props: IProps<T>) => {
+  const invalidSelection =
+    props.options.find((option) => option.value === props.initialValue) === undefined;
+
   return (
     <label
       className={cx({
@@ -61,11 +64,21 @@ export default <T extends string>(props: IProps<T>) => {
       </div>
       <select
         disabled={props.disabled}
-        value={props.initialValue}
         style={{ minWidth: props.minWidth }}
         onChange={(event) => props.onChange && props.onChange(event.target.value as T)}>
+        {
+          // If the initial value is invalid, we add a placeholder option.
+          invalidSelection && (
+            <option hidden disabled selected>
+              Select an option...
+            </option>
+          )
+        }
         {props.options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            selected={option.value === props.initialValue}>
             {option.label}
           </option>
         ))}
