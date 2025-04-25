@@ -11,17 +11,30 @@
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
-.spinbutton {
+.row {
   display: flex;
+  align-items: stretch;
 
-  input {
-    @include text-input;
+  color: $text-normal;
 
-    &::-webkit-inner-spin-button {
-      appearance: none;
+  .label {
+    flex: 1;
+    white-space: nowrap;
+  }
+
+  &.clickable:active {
+    transform: translateY(1px);
+  }
+
+  .widget {
+    min-width: 0px;
+
+    &.grow {
+      flex: 2;
+
+      &:only-child {
+        max-width: unset;
+      }
     }
-
-    text-align: center;
-    border-radius: 0;
   }
 }

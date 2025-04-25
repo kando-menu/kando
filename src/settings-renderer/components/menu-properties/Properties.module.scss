@@ -27,22 +27,6 @@
   padding-bottom: 60px;
 }
 
-.row {
-  display: flex;
-
-  // Make children same width
-  & > * {
-    flex: 1;
-    white-space: nowrap;
-
-    &:last-child {
-      flex: 2;
-      min-width: 0px;
-      max-width: 350px;
-    }
-  }
-}
-
 .icon {
   -webkit-app-region: no-drag;
 

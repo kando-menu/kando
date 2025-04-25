@@ -11,7 +11,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import InfoItem from './InfoItem';
+import SettingsRow from './SettingsRow';
 
 import * as classes from './Checkbox.module.scss';
 const cx = classNames.bind(classes);
@@ -41,21 +41,14 @@ interface IProps {
  */
 export default (props: IProps) => {
   return (
-    <label
-      className={cx({
-        row: true,
-        disabled: props.disabled,
-      })}>
-      <div>
-        {props.label}
-        {props.info && <InfoItem info={props.info} />}
-      </div>
+    <SettingsRow label={props.label} info={props.info} labelClickable>
       <input
         type="checkbox"
+        className={classes.checkbox}
         disabled={props.disabled}
         checked={props.initialValue || false}
         onChange={(event) => props.onChange && props.onChange(event.target.checked)}
       />
-    </label>
+    </SettingsRow>
   );
 };

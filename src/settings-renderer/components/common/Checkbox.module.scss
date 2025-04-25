@@ -10,52 +10,35 @@
 
 @use '../../variables.scss' as *;
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+.checkbox {
+  appearance: none;
+  margin: 0;
 
-  color: $text-normal;
+  background-color: $widget-normal;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+
+  &::before {
+    content: '✔';
+    display: block;
+    margin-top: -0.3em;
+    margin-left: 0.075em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    color: $text-link;
+    font-size: 2em;
+  }
+
+  &:checked::before {
+    transform: scale(1);
+  }
+
+  &:hover {
+    background-color: $widget-normal-hover;
+  }
 
   &:active {
     transform: translateY(1px);
   }
-
-  input {
-    appearance: none;
-    margin: 0;
-
-    background-color: $widget-normal;
-    width: 1.5em;
-    height: 1.5em;
-    border-radius: 50%;
-
-    &::before {
-      content: '✔';
-      display: block;
-      margin-top: -0.3em;
-      margin-left: 0.075em;
-      transform: scale(0);
-      transition: 120ms transform ease-in-out;
-      color: $text-link;
-      font-size: 2em;
-    }
-
-    &:checked::before {
-      transform: scale(1);
-    }
-
-    &:hover {
-      background-color: $widget-normal-hover;
-    }
-
-    &:active {
-      transform: translateY(1px);
-    }
-  }
-}
-
-.disabled {
-  pointer-events: none;
-  opacity: 0.5;
 }

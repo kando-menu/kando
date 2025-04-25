@@ -11,7 +11,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import InfoItem from './InfoItem';
+import SettingsRow from './SettingsRow';
 
 import * as classes from './TextInput.module.scss';
 const cx = classNames.bind(classes);
@@ -56,35 +56,25 @@ export default (props: IProps) => {
   React.useEffect(() => setValue(props.initialValue), [props.initialValue]);
 
   return (
-    <div
-      className={cx({
-        row: true,
-        flat: props.variant === 'flat',
-        disabled: props.disabled,
-        fullWidth: !props.label,
-      })}>
-      {(props.label || props.info) && (
-        <div className={classes.label}>
-          {props.label}
-          {props.info && <InfoItem info={props.info} />}
-        </div>
-      )}
-      <div className={classes.inputContainer}>
-        <input
-          type="text"
-          spellCheck="false"
-          disabled={props.disabled}
-          value={value}
-          placeholder={props.placeholder}
-          onBlur={() => props.onChange?.(value)}
-          onChange={(event) => setValue(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              (event.target as HTMLInputElement).blur();
-            }
-          }}
-        />
-      </div>
-    </div>
+    <SettingsRow label={props.label} info={props.info} grow>
+      <input
+        className={cx({
+          input: true,
+          flat: props.variant === 'flat',
+        })}
+        type="text"
+        spellCheck="false"
+        disabled={props.disabled}
+        value={value}
+        placeholder={props.placeholder}
+        onBlur={() => props.onChange?.(value)}
+        onChange={(event) => setValue(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            (event.target as HTMLInputElement).blur();
+          }
+        }}
+      />
+    </SettingsRow>
   );
 };

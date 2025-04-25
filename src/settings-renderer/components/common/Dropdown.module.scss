@@ -10,30 +10,18 @@
 
 @use '../../variables.scss' as *;
 
-.dropdown {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.select {
+  background-color: $widget-normal;
+  width: 100%;
 
   color: $text-normal;
+  border: none;
+  border-radius: 5px;
+  font-size: inherit;
 
-  select {
-    background-color: $widget-normal;
+  padding: 1px;
 
-    color: $text-normal;
-    border: none;
-    border-radius: 5px;
-    font-size: inherit;
-
-    padding: 1px;
-
-    &:hover {
-      background-color: $widget-normal-hover;
-    }
+  &:hover {
+    background-color: $widget-normal-hover;
   }
-}
-
-.disabled {
-  pointer-events: none;
-  opacity: 0.5;
 }

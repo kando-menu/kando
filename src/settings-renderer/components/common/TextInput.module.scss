@@ -11,44 +11,22 @@
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.input {
+  @include text-input;
+  min-width: 0px;
+  width: 100%;
 
-  color: $text-normal;
+  &.flat {
+    background-color: transparent;
+    text-align: center;
 
-  input {
-    @include text-input;
-    min-width: 0px;
-    width: 100%;
+    &:hover {
+      background-color: $widget-light;
+    }
   }
 
-  .inputContainer {
-    flex: 2;
-    max-width: 350px;
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
   }
-
-  &.fullWidth .inputContainer {
-    max-width: 100%;
-  }
-}
-
-.flat input {
-  background-color: transparent;
-  text-align: center;
-
-  &:hover {
-    background-color: $widget-light;
-  }
-}
-
-.label {
-  flex: 1;
-  white-space: nowrap;
-}
-
-.disabled {
-  pointer-events: none;
-  opacity: 0.5;
 }

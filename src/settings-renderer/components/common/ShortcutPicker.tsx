@@ -13,8 +13,7 @@ import { TbPlayerRecordFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
-import Button from './Button';
-import InfoItem from './InfoItem';
+import { Button, SettingsRow } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
@@ -127,13 +126,7 @@ export default (props: IProps) => {
   };
 
   return (
-    <div className={classes.row}>
-      {(props.label || props.info) && (
-        <div className={classes.label}>
-          {props.label}
-          {props.info && <InfoItem info={props.info} />}
-        </div>
-      )}
+    <SettingsRow label={props.label} info={props.info} grow>
       <div className={classes.shortcutPicker}>
         <input
           ref={inputRef}
@@ -184,7 +177,7 @@ export default (props: IProps) => {
           }}
         />
       </div>
-    </div>
+    </SettingsRow>
   );
 };
 

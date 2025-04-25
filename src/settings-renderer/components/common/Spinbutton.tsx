@@ -11,8 +11,7 @@
 import React from 'react';
 import { TbPlus, TbMinus } from 'react-icons/tb';
 
-import InfoItem from './InfoItem';
-import Button from './Button';
+import { Button, SettingsRow } from '.';
 
 import * as classes from './Spinbutton.module.scss';
 
@@ -95,11 +94,7 @@ export default (props: IProps) => {
   };
 
   return (
-    <div className={classes.row + ' ' + (props.disabled ? classes.disabled : '')}>
-      <div>
-        {props.label}
-        {props.info && <InfoItem info={props.info} />}
-      </div>
+    <SettingsRow label={props.label} info={props.info}>
       <div className={classes.spinbutton}>
         {/* Button to decrease the value. */}
         <Button
@@ -108,6 +103,7 @@ export default (props: IProps) => {
           size="small"
           grouped
           disabled={
+            props.disabled ||
             parseFloat(value) <= (props.min === undefined ? -Infinity : props.min)
           }
         />
@@ -134,9 +130,12 @@ export default (props: IProps) => {
           icon={<TbPlus />}
           size="small"
           grouped
-          disabled={parseFloat(value) >= (props.max === undefined ? Infinity : props.max)}
+          disabled={
+            props.disabled ||
+            parseFloat(value) >= (props.max === undefined ? Infinity : props.max)
+          }
         />
       </div>
-    </div>
+    </SettingsRow>
   );
 };

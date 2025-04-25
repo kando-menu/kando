@@ -9,12 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import classNames from 'classnames/bind';
 
-import InfoItem from './InfoItem';
+import SettingsRow from './SettingsRow';
 
 import * as classes from './Dropdown.module.scss';
-const cx = classNames.bind(classes);
 
 interface IProps<T extends string> {
   /** Function to call when the selected option changes. */
@@ -53,16 +51,9 @@ export default <T extends string>(props: IProps<T>) => {
     props.options.find((option) => option.value === props.initialValue) === undefined;
 
   return (
-    <label
-      className={cx({
-        dropdown: true,
-        disabled: props.disabled,
-      })}>
-      <div>
-        {props.label}
-        {props.info && <InfoItem info={props.info} />}
-      </div>
+    <SettingsRow label={props.label} info={props.info} grow maxWidth={200}>
       <select
+        className={classes.select}
         disabled={props.disabled}
         style={{ minWidth: props.minWidth }}
         value={invalidSelection ? '__invalid__' : props.initialValue}
@@ -81,6 +72,6 @@ export default <T extends string>(props: IProps<T>) => {
           </option>
         ))}
       </select>
-    </label>
+    </SettingsRow>
   );
 };

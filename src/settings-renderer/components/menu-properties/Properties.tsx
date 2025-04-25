@@ -19,7 +19,6 @@ import {
   Button,
   IconChooserButton,
   TagInput,
-  InfoItem,
   ShortcutPicker,
   Swirl,
   Scrollbox,
@@ -157,23 +156,19 @@ export default () => {
             {
               // If the selected item is the root of the menu, we show the tag editor.
               isRoot && (
-                <div className={classes.row} style={{ alignItems: 'flex-start' }}>
-                  <div style={{ marginTop: 2 }}>
-                    Tags
-                    <InfoItem info="Tags can be used to group menus in menu collections." />
-                  </div>
-                  <TagInput
-                    tags={menuTags}
-                    onChange={(newTags) => {
-                      editMenu(selectedMenu, (menu) => {
-                        menu.tags = newTags;
-                        return menu;
-                      });
-                      setMenuTags(newTags);
-                    }}
-                    suggestions={allAvailableTags}
-                  />
-                </div>
+                <TagInput
+                  label="Tags"
+                  info="Tags can be used to group menus in menu collections."
+                  tags={menuTags}
+                  onChange={(newTags) => {
+                    editMenu(selectedMenu, (menu) => {
+                      menu.tags = newTags;
+                      return menu;
+                    });
+                    setMenuTags(newTags);
+                  }}
+                  suggestions={allAvailableTags}
+                />
               )
             }
             {
