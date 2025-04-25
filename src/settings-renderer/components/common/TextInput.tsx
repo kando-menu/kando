@@ -40,6 +40,12 @@ interface IProps {
 
   /** The flat variant has no background color and shows the text centered. */
   variant?: 'normal' | 'flat';
+
+  /**
+   * Whether the text input should support multiple lines. In this case, the label will be
+   * displayed above the text input.
+   */
+  multiline?: boolean;
 }
 
 /**
@@ -56,25 +62,43 @@ export default (props: IProps) => {
   React.useEffect(() => setValue(props.initialValue), [props.initialValue]);
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow>
-      <input
-        className={cx({
-          input: true,
-          flat: props.variant === 'flat',
-        })}
-        type="text"
-        spellCheck="false"
-        disabled={props.disabled}
-        value={value}
-        placeholder={props.placeholder}
-        onBlur={() => props.onChange?.(value)}
-        onChange={(event) => setValue(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            (event.target as HTMLInputElement).blur();
-          }
-        }}
-      />
-    </SettingsRow>
+    <>
+      <SettingsRow label={props.label} info={props.info} grow>
+        {!props.multiline && (
+          <input
+            className={cx({
+              input: true,
+              flat: props.variant === 'flat',
+            })}
+            type="text"
+            spellCheck="false"
+            disabled={props.disabled}
+            value={value}
+            placeholder={props.placeholder}
+            onBlur={() => props.onChange?.(value)}
+            onChange={(event) => setValue(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                (event.target as HTMLInputElement).blur();
+              }
+            }}
+          />
+        )}
+      </SettingsRow>
+      {props.multiline && (
+        <textarea
+          className={cx({
+            input: true,
+            flat: props.variant === 'flat',
+          })}
+          spellCheck="false"
+          disabled={props.disabled}
+          value={value}
+          placeholder={props.placeholder}
+          onBlur={() => props.onChange?.(value)}
+          onChange={(event) => setValue(event.target.value)}
+        />
+      )}
+    </>
   );
 };

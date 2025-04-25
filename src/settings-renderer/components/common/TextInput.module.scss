@@ -30,3 +30,9 @@
     opacity: 0.5;
   }
 }
+
+textarea.input {
+  field-sizing: content;
+  resize: none;
+  min-height: 100px;
+}
