@@ -83,7 +83,7 @@
       "description": "Runs any shell command."
     },
     "common": {
-      "delayed-option": "Execute After Closing the Menu",
+      "delayed-option": "Execute after closing",
       "delayed-option-hint": "Useful if the action targets a window that needs to be focused.",
       "not-configured": "Not configured"
     },

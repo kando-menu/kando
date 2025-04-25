@@ -13,7 +13,28 @@
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
-.container {
+.row {
+  display: flex;
+
+  // Make children same width
+  & > * {
+    flex: 1;
+    white-space: nowrap;
+
+    &:last-child {
+      flex: 2;
+      min-width: 0px;
+      max-width: 350px;
+    }
+  }
+}
+
+.label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.shortcutPicker {
   display: flex;
   align-items: stretch;
 

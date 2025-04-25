@@ -13,7 +13,7 @@ import React from 'react';
 import SubmenuItemConfig from './submenu-item-config';
 import CommandItemConfig from './command-item-config';
 // import FileItemConfig from './file-item-config';
-// import HotkeyItemConfig from './hotkey-item-config';
+import HotkeyItemConfig from './hotkey-item-config';
 // import MacroItemConfig from './macro-item-config';
 // import TextItemConfig from './text-item-config';
 import URIItemConfig from './uri-item-config';
@@ -33,6 +33,10 @@ export function getConfigComponent(type: string): React.ReactElement {
 
   if (type === 'command') {
     return <CommandItemConfig />;
+  }
+
+  if (type === 'hotkey') {
+    return <HotkeyItemConfig />;
   }
 
   if (type === 'uri') {

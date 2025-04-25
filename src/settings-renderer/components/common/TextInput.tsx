@@ -23,19 +23,19 @@ interface IProps {
    */
   onChange?: (value: string) => void;
 
-  /** Initial value of the spinbutton. */
+  /** Initial value of the text input. */
   initialValue: string;
 
-  /** Optional placeholder text to display when the spinbutton is empty. */
+  /** Optional placeholder text to display when the text input is empty. */
   placeholder?: string;
 
-  /** Optional label text to display next to the spinbutton. */
+  /** Optional label text to display next to the text input. */
   label?: string;
 
   /** Optional information to display next to the label. */
   info?: string;
 
-  /** Whether the spinbutton is disabled. Defaults to false. */
+  /** Whether the text input is disabled. Defaults to false. */
   disabled?: boolean;
 
   /** The flat variant has no background color and shows the text centered. */
@@ -72,6 +72,7 @@ export default (props: IProps) => {
       <div className={classes.inputContainer}>
         <input
           type="text"
+          spellCheck="false"
           disabled={props.disabled}
           value={value}
           placeholder={props.placeholder}

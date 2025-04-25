@@ -84,38 +84,35 @@ export default () => {
   const getShortcutPicker = () => {
     if (backend.supportsShortcuts) {
       return (
-        <div className={classes.row}>
-          <div>
-            Shortcut
-            <InfoItem info="The shortcut to open this menu. A shortcut must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift." />
-          </div>
-          <ShortcutPicker
-            initialValue={menus[selectedMenu].shortcut}
-            onChange={(shortcut) => {
-              editMenu(selectedMenu, (menu) => {
-                menu.shortcut = shortcut;
-                return menu;
-              });
-            }}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <TextInput
-          initialValue={menus[selectedMenu].shortcutID}
-          label="Shortcut ID"
-          placeholder="Not bound"
-          info={backend.shortcutHint}
-          onChange={(shortcutID) => {
+        <ShortcutPicker
+          label="Shortcut"
+          info="This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!"
+          recordingPlaceholder="Type a shortcut..."
+          mode="key-names"
+          initialValue={menus[selectedMenu].shortcut}
+          onChange={(shortcut) => {
             editMenu(selectedMenu, (menu) => {
-              menu.shortcutID = shortcutID;
+              menu.shortcut = shortcut;
               return menu;
             });
           }}
         />
       );
     }
+    return (
+      <TextInput
+        initialValue={menus[selectedMenu].shortcutID}
+        label="Shortcut ID"
+        placeholder="Not bound"
+        info={backend.shortcutHint}
+        onChange={(shortcutID) => {
+          editMenu(selectedMenu, (menu) => {
+            menu.shortcutID = shortcutID;
+            return menu;
+          });
+        }}
+      />
+    );
   };
 
   return (
