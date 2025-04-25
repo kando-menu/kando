@@ -9,12 +9,10 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import classNames from 'classnames/bind';
 
 import SettingsRow from './SettingsRow';
 
 import * as classes from './Checkbox.module.scss';
-const cx = classNames.bind(classes);
 
 interface IProps {
   /** Function to call when the checkbox is toggled. */
