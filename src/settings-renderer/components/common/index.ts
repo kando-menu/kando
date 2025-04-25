@@ -16,6 +16,7 @@ export { default as Button } from './Button';
 export { default as Checkbox } from './Checkbox';
 export { default as ColorButton } from './ColorButton';
 export { default as Dropdown } from './Dropdown';
+export { default as FilePicker } from './FilePicker';
 export { default as GridIconPicker } from './GridIconPicker';
 export { default as Headerbar } from './Headerbar';
 export { default as IconChooserButton } from './IconChooserButton';

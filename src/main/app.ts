@@ -13,7 +13,7 @@ import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { ipcMain, shell, Tray, Menu, app, nativeTheme } from 'electron';
+import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
 import i18next from 'i18next';
 
 import { MenuWindow } from './menu-window';
@@ -408,10 +408,18 @@ export class KandoApp {
     ipcMain.on('settings-window.reload-sound-theme', async () => {
       this.reloadSoundTheme();
     });
-    // Once the settings is shown, we unbind all shortcuts to make sure that the
-    // user can select the bound shortcuts in the settings.
-    ipcMain.on('settings-window.unbind-shortcuts', () => {
-      this.backend.unbindAllShortcuts();
+
+    // Allow showing open-file dialogs.
+    ipcMain.handle('settings-window.open-file-picker', async (event, config) => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, config);
+
+      if (result.canceled) {
+        return '';
+      }
+
+      // We only want to return the first file. This is because the user can only select
+      // one file at a time.
+      return result.filePaths[0];
     });
 
     // Print a message to the console of the host process.

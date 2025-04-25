@@ -24,7 +24,7 @@ interface IProps {
    * Enter after typing a value, or when the user clicks outside of the text field. But
    * only if the shortcut is valid.
    */
-  onChange?: (value: string) => void;
+  onChange?: (shortcut: string) => void;
 
   /** Initial shortcut. */
   initialValue: string;

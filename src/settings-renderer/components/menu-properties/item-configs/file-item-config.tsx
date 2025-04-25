@@ -8,15 +8,49 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import React from 'react';
 import i18next from 'i18next';
 
-import { IItemConfig } from '.';
-import { chooseRandomTip } from './utils';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { RandomTip, FilePicker } from '../../common';
+import { IItemData } from '../../../../common/item-types/file-item-type';
 
-/** This class provides the configuration widgets for file items. */
-export class FileItemConfig implements IItemConfig {
-  /** @inheritdoc */
-  public getTipOfTheDay(seed: number): string {
-    return chooseRandomTip([i18next.t('items.file.tip-1')], seed);
+/**
+ * The configuration component for file items is primarily a text input field for the file
+ * path.
+ */
+export default () => {
+  const menus = useMenuSettings((state) => state.menus);
+  const selectedMenu = useAppState((state) => state.selectedMenu);
+  const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const editMenuItem = useMenuSettings((state) => state.editMenuItem);
+  const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
+
+  // Sanity check. Should never happen, but just in case.
+  if (!selectedItem || selectedItem.type !== 'file') {
+    return <></>;
   }
-}
+
+  const data = selectedItem.data as IItemData;
+
+  return (
+    <>
+      <FilePicker
+        label={i18next.t('items.file.file')}
+        info={i18next.t('items.file.file-hint')}
+        initialValue={data.path}
+        onChange={(path) => {
+          const parts = path.split(/[/\\]/);
+          const name = parts[parts.length - 1];
+
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            item.name = name;
+            (item.data as IItemData).path = path;
+            return item;
+          });
+        }}
+      />
+      <RandomTip marginTop={50} tips={[i18next.t('items.file.tip-1')]} />
+    </>
+  );
+};

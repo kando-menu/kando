@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, OpenDialogOptions } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import { IBackendInfo, IMenuThemeDescription, IVersionInfo, IWMInfo } from '../common';
@@ -82,12 +82,9 @@ export const SETTINGS_WINDOW_API = {
     ipcRenderer.send('settings-window.reload-sound-theme');
   },
 
-  /**
-   * This will be called when the user enters the edit mode. This ensures that a currently
-   * selected shortcut can be assigned to a new menu.
-   */
-  unbindShortcuts: () => {
-    ipcRenderer.send('settings-window.unbind-shortcuts');
+  /** This will open a file picker and return the selected file path. */
+  openFilePicker: (config: OpenDialogOptions): Promise<string> => {
+    return ipcRenderer.invoke('settings-window.open-file-picker', config);
   },
 };
 
