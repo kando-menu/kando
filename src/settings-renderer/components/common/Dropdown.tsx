@@ -65,20 +65,18 @@ export default <T extends string>(props: IProps<T>) => {
       <select
         disabled={props.disabled}
         style={{ minWidth: props.minWidth }}
+        value={invalidSelection ? '__invalid__' : props.initialValue}
         onChange={(event) => props.onChange && props.onChange(event.target.value as T)}>
         {
           // If the initial value is invalid, we add a placeholder option.
           invalidSelection && (
-            <option hidden disabled selected>
+            <option hidden disabled value="__invalid__">
               Select an option...
             </option>
           )
         }
         {props.options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            selected={option.value === props.initialValue}>
+          <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
