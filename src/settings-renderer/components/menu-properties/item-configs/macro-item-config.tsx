@@ -8,32 +8,58 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-// import JSON5 from 'json5';
+import React from 'react';
 import i18next from 'i18next';
 
-import { IItemConfig } from '.';
-import { chooseRandomTip } from './utils';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { RandomTip, MacroPicker, Checkbox } from '../../common';
+import { IItemData } from '../../../../common/item-types/macro-item-type';
 
-/** This class provides the configuration widgets for macro items. */
-export class MacroItemConfig implements IItemConfig {
-  /** @inheritdoc */
-  public getTipOfTheDay(seed: number): string {
-    return chooseRandomTip(
-      [
-        i18next.t('items.macro.tip-1'),
-        '<a href="https://kando.menu/valid-keynames/" target="_blank">' +
-          i18next.t('items.macro.tip-2') +
-          '</a>',
-      ],
-      seed
-    );
+/**
+ * The configuration component for macro items is text area with a record button next to
+ * it.
+ */
+export default () => {
+  const menus = useMenuSettings((state) => state.menus);
+  const selectedMenu = useAppState((state) => state.selectedMenu);
+  const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const editMenuItem = useMenuSettings((state) => state.editMenuItem);
+  const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
+
+  // Sanity check. Should never happen, but just in case.
+  if (!selectedItem || selectedItem.type !== 'macro') {
+    return <></>;
   }
 
-  // Add the macro picker.
-  // const picker = new MacroPicker();
-  // picker.setValue(
-  //   JSON5.stringify((item.data as IItemData).macro)
-  //     .replace(/\[/g, '')
-  //     .replace(/\]/g, '')
-  // );
-}
+  const data = selectedItem.data as IItemData;
+
+  return (
+    <>
+      <MacroPicker
+        recordingPlaceholder="Press any keys…"
+        initialValue={data.macro}
+        onChange={(value) => {
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            (item.data as IItemData).macro = value;
+            return item;
+          });
+        }}
+      />
+      <Checkbox
+        label={i18next.t('items.common.delayed-option')}
+        info={i18next.t('items.common.delayed-option-hint')}
+        initialValue={data.delayed}
+        onChange={(value) => {
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            (item.data as IItemData).delayed = value;
+            return item;
+          });
+        }}
+      />
+      <RandomTip
+        marginTop={50}
+        tips={[i18next.t('items.macro.tip-1'), i18next.t('items.macro.tip-2')]}
+      />
+    </>
+  );
+};

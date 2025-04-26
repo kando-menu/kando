@@ -14,7 +14,7 @@ import SubmenuItemConfig from './submenu-item-config';
 import CommandItemConfig from './command-item-config';
 import FileItemConfig from './file-item-config';
 import HotkeyItemConfig from './hotkey-item-config';
-// import MacroItemConfig from './macro-item-config';
+import MacroItemConfig from './macro-item-config';
 import TextItemConfig from './text-item-config';
 import URIItemConfig from './uri-item-config';
 import RedirectItemConfig from './redirect-item-config';
@@ -27,41 +27,17 @@ import SettingsItemConfig from './settings-item-config';
  * @returns The config component for the given menu item.
  */
 export function getConfigComponent(type: string): React.ReactElement {
-  if (type === 'submenu') {
-    return <SubmenuItemConfig />;
-  }
+  const components: Record<string, React.ReactElement> = {
+    submenu: <SubmenuItemConfig />,
+    command: <CommandItemConfig />,
+    file: <FileItemConfig />,
+    hotkey: <HotkeyItemConfig />,
+    macro: <MacroItemConfig />,
+    text: <TextItemConfig />,
+    uri: <URIItemConfig />,
+    redirect: <RedirectItemConfig />,
+    settings: <SettingsItemConfig />,
+  };
 
-  if (type === 'command') {
-    return <CommandItemConfig />;
-  }
-
-  if (type === 'file') {
-    return <FileItemConfig />;
-  }
-
-  if (type === 'hotkey') {
-    return <HotkeyItemConfig />;
-  }
-
-  // if (type === 'macro') {
-  //   return <MacroItemConfig />;
-  // }
-
-  if (type === 'text') {
-    return <TextItemConfig />;
-  }
-
-  if (type === 'uri') {
-    return <URIItemConfig />;
-  }
-
-  if (type === 'redirect') {
-    return <RedirectItemConfig />;
-  }
-
-  if (type === 'settings') {
-    return <SettingsItemConfig />;
-  }
-
-  return <></>;
+  return components[type] || <></>;
 }
