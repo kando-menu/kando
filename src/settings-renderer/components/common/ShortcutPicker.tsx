@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { TbPlayerRecordFilled } from 'react-icons/tb';
+import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
@@ -77,20 +77,6 @@ export default (props: IProps) => {
     return props.mode === 'key-names' ? new KeyNameImpl() : new KeyCodeImpl();
   }, [props.mode]);
 
-  // This function is called when the user clicks outside of the input field.
-  const cancelRecording = () => {
-    setRecording(false);
-    setShortcut(props.initialValue);
-    props.onChange?.(props.initialValue);
-  };
-
-  // This function is called when the user has selected a valid shortcut.
-  const finishRecording = (value: string) => {
-    setRecording(false);
-    setShortcut(value);
-    props.onChange?.(value);
-  };
-
   // This method checks if the given hotkey is valid. A hotkey is valid if it contains
   // exactly one key and any number of modifier keys. The key and modifier keys must be
   // valid key codes as defined by the impl.isValidKey and isValidModifier methods.
@@ -144,18 +130,31 @@ export default (props: IProps) => {
             if (recording) {
               const isComplete = impl.recordInput(event);
               if (isComplete) {
-                finishRecording(event.currentTarget.value);
+                setRecording(false);
+                setShortcut(event.currentTarget.value);
+                event.currentTarget.blur();
               }
               event.preventDefault();
             } else if (event.key === 'Enter') {
               event.currentTarget.blur();
             }
           }}
-          onBlur={() => {
+          onBlur={(event) => {
+            // If the user clicked the record button, the next focused element is the
+            // button. In this case, we ignore this event and handle stopping the
+            // recording in the button's onClick handler.
+            if (event.relatedTarget) {
+              return;
+            }
+
             if (recording) {
-              cancelRecording();
-            } else if (isValid(shortcut)) {
-              props.onChange?.(shortcut);
+              setRecording(false);
+            }
+
+            const newShortcut = event.currentTarget.value;
+
+            if (newShortcut && isValid(newShortcut)) {
+              props.onChange?.(newShortcut);
             } else {
               setShortcut(props.initialValue);
               props.onChange?.(props.initialValue);
@@ -165,13 +164,18 @@ export default (props: IProps) => {
         <Button
           variant="secondary"
           grouped
-          icon={<TbPlayerRecordFilled />}
+          icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
           onClick={() => {
             if (!recording) {
               setShortcut('');
               inputRef.current?.focus();
             } else {
-              props.onChange?.(props.initialValue);
+              if (shortcut && isValid(shortcut)) {
+                props.onChange?.(shortcut);
+              } else {
+                setShortcut(props.initialValue);
+                props.onChange?.(props.initialValue);
+              }
             }
             setRecording(!recording);
           }}
