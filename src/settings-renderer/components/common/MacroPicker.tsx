@@ -110,7 +110,12 @@ export default (props: IProps) => {
         grouped
         icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
         onClick={() => {
-          if (!recording) {
+          if (recording) {
+            const macro = convertToMacro(textValue);
+            if (macro) {
+              props.onChange?.(macro);
+            }
+          } else {
             setTextValue('');
             inputRef.current?.focus();
           }
