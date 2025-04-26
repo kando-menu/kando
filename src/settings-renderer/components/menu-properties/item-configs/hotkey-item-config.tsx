@@ -35,7 +35,7 @@ export default () => {
       <ShortcutPicker
         label="Hotkey"
         info="This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!"
-        recordingPlaceholder="Type a hotkey..."
+        recordingPlaceholder="Type a hotkey…"
         mode="key-codes"
         initialValue={data.hotkey}
         onChange={(value) => {

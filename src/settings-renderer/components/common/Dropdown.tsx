@@ -62,7 +62,7 @@ export default <T extends string>(props: IProps<T>) => {
           // If the initial value is invalid, we add a placeholder option.
           invalidSelection && (
             <option hidden disabled value="__invalid__">
-              Select an option...
+              Select an option…
             </option>
           )
         }
