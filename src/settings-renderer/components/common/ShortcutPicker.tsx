@@ -123,7 +123,18 @@ export default (props: IProps) => {
           placeholder={recording ? props.recordingPlaceholder : 'Not bound'}
           onChange={(event) => {
             if (!recording) {
-              setShortcut(impl.normalizeInput(event.target.value));
+              const start = event.target.selectionStart;
+              const end = event.target.selectionEnd;
+
+              const normalizedValue = impl.normalizeInput(event.target.value);
+              setShortcut(
+                isValid(normalizedValue) ? normalizedValue : event.target.value
+              );
+
+              // We restore the cursor position.
+              setTimeout(() => {
+                event.target.setSelectionRange(start, end);
+              }, 0);
             }
           }}
           onKeyDown={(event) => {
