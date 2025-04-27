@@ -32,6 +32,12 @@ export class MenuWindow extends BrowserWindow {
    */
   public lastMenu?: DeepReadonly<IMenu>;
 
+  /**
+   * This contains the request for the current menu. It is used to save the current menu
+   * request when the 'cycle' sameShortcutBehavior is enabled.
+   */
+  private lastRequest?: IShowMenuRequest;
+
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
     ipcMain.on('menu-window.ready', () => {
@@ -192,6 +198,8 @@ export class MenuWindow extends BrowserWindow {
     this.sameShortcutBehavior = this.kando.getAppSettings().get('sameShortcutBehavior');
 
     if (this.sameShortcutBehavior == 'cycle') {
+      this.lastRequest = { trigger: newTrigger, name: menu.root.name };
+
       const menus = this.kando
         .getMenuSettings()
         .get('menus')
@@ -421,7 +429,7 @@ export class MenuWindow extends BrowserWindow {
           this.kando.getBackend().bindShortcut({
             trigger: lastTrigger,
             action: () => {
-              this.kando.showMenu({ trigger: lastTrigger });
+              this.kando.showMenu(this.lastRequest ?? { trigger: lastTrigger });
             },
           });
         }

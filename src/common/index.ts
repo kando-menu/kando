@@ -740,7 +740,7 @@ export function getDefaultAppSettings(): IAppSettings {
     enableGamepad: true,
     gamepadBackButton: 1,
     gamepadCloseButton: 2,
-    sameShortcutBehavior: 'cycle',
+    sameShortcutBehavior: 'first',
     useDefaultOsShowSettingsHotkey: true,
     hideSettingsButton: false,
     settingsButtonPosition: 'bottom-right',
