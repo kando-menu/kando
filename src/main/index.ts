@@ -89,6 +89,18 @@ app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
 app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
 app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
+// Set deep link support for the app. This is used to open the app with a specific menu when
+// the app is already running. The URL scheme is "kando://menus?menuName=<menuName>".
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('kando', process.execPath, [
+      path.resolve(process.argv[1]),
+    ]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('kando');
+}
+
 // Create the app and initialize it as soon as electron is ready.
 const kando = new KandoApp();
 
@@ -150,6 +162,17 @@ app
       // If no option was passed, we show the settings.
       if (!handleCommandLine(options)) {
         kando.showSettings();
+      }
+    });
+
+    // Handle the case when the app is opened via a deep link. This is used to open the menu.
+    app.on('open-url', (e, url) => {
+      const parseUrl = new URL(url);
+      if (parseUrl.host === 'open-menu') {
+        const name = parseUrl.searchParams.get('name');
+        if (name) {
+          kando.showMenu({ name });
+        }
       }
     });
 
