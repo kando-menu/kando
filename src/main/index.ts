@@ -89,16 +89,21 @@ app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
 app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
 app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
-// Set deep link support for the app. This is used to open the app with a specific menu when
-// the app is already running. The URL scheme is "kando://menus?menuName=<menuName>".
+// Set deep link support for the app. This is used to send commands to the app when the
+// app is already running. For instance like this: kando://menu?name=<menuName>.
+let deepLinkSupport = false;
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient('kando', process.execPath, [
+    deepLinkSupport = app.setAsDefaultProtocolClient('kando', process.execPath, [
       path.resolve(process.argv[1]),
     ]);
   }
 } else {
-  app.setAsDefaultProtocolClient('kando');
+  deepLinkSupport = app.setAsDefaultProtocolClient('kando');
+}
+
+if (!deepLinkSupport) {
+  console.error('Failed to register kando:// protocol. Deep links will not work.');
 }
 
 // Create the app and initialize it as soon as electron is ready.
@@ -175,10 +180,7 @@ app
       if (argv.length > 0 && argv[argv.length - 1].startsWith('kando://')) {
         const deepLinkOptions = parseDeepLink(argv[argv.length - 1]);
         if (!handleCommandLine(deepLinkOptions)) {
-          Notification.showError(
-            'Invalid deep link',
-            'The deep link you provided is invalid.'
-          );
+          Notification.showError('Invalid link', 'The deep link could not be parsed.');
         }
         return;
       }
@@ -193,10 +195,7 @@ app
     // macOS, on Windows and Linux deep links are handled by the second-instance event.
     app.on('open-url', (e, url) => {
       if (!handleCommandLine(parseDeepLink(url))) {
-        Notification.showError(
-          'Invalid deep link',
-          'The deep link you provided is invalid.'
-        );
+        Notification.showError('Invalid link', 'The deep link could not be parsed.');
       }
     });
 
