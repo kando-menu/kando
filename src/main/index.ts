@@ -104,6 +104,18 @@ if (process.defaultApp) {
 // Create the app and initialize it as soon as electron is ready.
 const kando = new KandoApp();
 
+// This function is called when the app is started from a deep link. It parses the URL and
+// returns a CLIOptions object.
+const parseDeepLink = (url: string): CLIOptions => {
+  const parsedUrl = new URL(url);
+  return {
+    menu: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('name'),
+    settings: parsedUrl.host === 'settings',
+    reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
+    reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
+  };
+};
+
 // This function is called when the app or a second instance is started with command line
 // arguments. It returns true a option was passed that was handled by the app.
 const handleCommandLine = (options: CLIOptions) => {
@@ -159,20 +171,32 @@ app
 
     // Show the menu passed via --menu when a second instance is started.
     app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
+      // If the last argument is a valid deep link, we parse it and use this instead.
+      if (argv.length > 0 && argv[argv.length - 1].startsWith('kando://')) {
+        const deepLinkOptions = parseDeepLink(argv[argv.length - 1]);
+        if (!handleCommandLine(deepLinkOptions)) {
+          Notification.showError(
+            'Invalid deep link',
+            'The deep link you provided is invalid.'
+          );
+        }
+        return;
+      }
+
       // If no option was passed, we show the settings.
       if (!handleCommandLine(options)) {
         kando.showSettings();
       }
     });
 
-    // Handle the case when the app is opened via a deep link. This is used to open the menu.
+    // Handle the case when the app is opened via a deep link. This is only called on
+    // macOS, on Windows and Linux deep links are handled by the second-instance event.
     app.on('open-url', (e, url) => {
-      const parseUrl = new URL(url);
-      if (parseUrl.host === 'open-menu') {
-        const name = parseUrl.searchParams.get('name');
-        if (name) {
-          kando.showMenu({ name });
-        }
+      if (!handleCommandLine(parseDeepLink(url))) {
+        Notification.showError(
+          'Invalid deep link',
+          'The deep link you provided is invalid.'
+        );
       }
     });
 
