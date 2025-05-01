@@ -86,6 +86,11 @@
         opacity: 0.3;
         filter: blur(2px);
       }
+
+      :global(.icon-container) {
+        border-radius: 50%;
+        overflow: hidden;
+      }
     }
   }
 }
