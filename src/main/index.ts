@@ -89,11 +89,28 @@ app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
 app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
 app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
+// Set deep link support for the app. This is used to send commands to the app when the
+// app is already running. For instance like this: kando://menu?name=<menuName>.
+let deepLinkSupport = false;
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    deepLinkSupport = app.setAsDefaultProtocolClient('kando', process.execPath, [
+      path.resolve(process.argv[1]),
+    ]);
+  }
+} else {
+  deepLinkSupport = app.setAsDefaultProtocolClient('kando');
+}
+
+if (!deepLinkSupport) {
+  console.error('Failed to register kando:// protocol. Deep links will not work.');
+}
+
 // Create the app and initialize it as soon as electron is ready.
 const kando = new KandoApp();
 
-// This function is called when the app or a second instance is started with command line
-// arguments. It returns true a option was passed that was handled by the app.
+// Performs actions based on the command line arguments passed to the app. It returns true
+// a option was passed that was handled by the app.
 const handleCommandLine = (options: CLIOptions) => {
   if (options.menu) {
     kando.showMenu({ name: options.menu });
@@ -111,6 +128,38 @@ const handleCommandLine = (options: CLIOptions) => {
   }
 
   return false;
+};
+
+// This function is called when the app or a second instance is started with command line
+// arguments or via a deep link. The deep link takes precedence over the command line
+// arguments if both are present. The last boolean parameter is used to determine if the
+// settings should be shown if no command line arguments were passed.
+const handleArguments = (
+  commandLine?: CLIOptions,
+  deepLink?: string,
+  showSettingsIfEmpty: boolean
+) => {
+  if (deepLink && deepLink.startsWith('kando://')) {
+    const parsedUrl = new URL(deepLink);
+    const options = {
+      menu: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('name'),
+      settings: parsedUrl.host === 'settings',
+      reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
+      reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
+    };
+
+    if (!handleCommandLine(options)) {
+      Notification.showError('Invalid link', 'The deep link could not be parsed.');
+    }
+
+    return;
+  }
+
+  if (commandLine) {
+    if (!handleCommandLine(commandLine) && showSettingsIfEmpty) {
+      kando.showSettings();
+    }
+  }
 };
 
 app
@@ -145,12 +194,17 @@ app
       console.log('Good-Pie :)');
     });
 
-    // Show the menu passed via --menu when a second instance is started.
+    // Respond to commandline arguments passed to a second instance. On Windows and Linux
+    // this is also called when the app is opened via a deep link. In this case, the last
+    // argument is the deep link.
     app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
-      // If no option was passed, we show the settings.
-      if (!handleCommandLine(options)) {
-        kando.showSettings();
-      }
+      handleArguments(options, argv[argv.length - 1], true);
+    });
+
+    // Handle the case when the app is opened via a deep link. This is only called on
+    // macOS, on Windows and Linux deep links are handled by the second-instance event.
+    app.on('open-url', (e, url) => {
+      handleArguments(null, url, false);
     });
 
     // Prevent the app from quitting when all windows are closed.
@@ -159,8 +213,10 @@ app
     // Show a message that the app is ready.
     console.log(`Kando ${app.getVersion()} is ready.`);
 
-    // Finally, handle the command line arguments (if any).
-    handleCommandLine(options);
+    // Finally, handle the command line arguments (if any). If the app was started via a
+    // deep link, the last argument is a deep link. In this case, we parse it and use
+    // this instead of the command line arguments.
+    handleArguments(options, process.argv[process.argv.length - 1], false);
   })
   .catch((error) => {
     Notification.showError(
