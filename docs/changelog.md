@@ -34,6 +34,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :wrench: Changed
 
 - **[BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
+- Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 
