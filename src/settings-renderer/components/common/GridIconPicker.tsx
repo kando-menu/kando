@@ -110,6 +110,7 @@ export default (props: IProps) => {
             ref={setGridInstance}
             columnCount={columns}
             rowCount={rows}
+            overscanRowCount={10}
             columnWidth={width / columns - 1}
             rowHeight={width / columns - 1}
             height={height}
