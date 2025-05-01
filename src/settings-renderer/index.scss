@@ -96,6 +96,12 @@ h1 {
   outline: $border-focused;
 }
 
+// Fix background color of options in dropdowns.
+option {
+  background-color: $window-background;
+  color: $text-normal;
+}
+
 button,
 input[type='text'],
 input[type='number'] {
