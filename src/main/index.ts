@@ -135,8 +135,8 @@ const handleCommandLine = (options: CLIOptions) => {
 // arguments if both are present. The last boolean parameter is used to determine if the
 // settings should be shown if no command line arguments were passed.
 const handleArguments = (
-  commandLine?: CLIOptions,
-  deepLink?: string,
+  commandLine: CLIOptions | null,
+  deepLink: string | null,
   showSettingsIfEmpty: boolean
 ) => {
   if (deepLink && deepLink.startsWith('kando://')) {
