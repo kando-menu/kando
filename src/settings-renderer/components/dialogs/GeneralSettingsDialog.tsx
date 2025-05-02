@@ -174,9 +174,9 @@ export default () => {
             settingsKey="enableGamepad"
           />
 
-          <h1>Sound Theme</h1>
+          <h1>Menu Sounds</h1>
           <Note marginTop={-5}>
-            Learn how to add sound themes to Kando{' '}
+            Learn how to add new sound themes to Kando{' '}
             <a href="https://kando.menu/sound-themes/" target="_blank">
               here
             </a>
