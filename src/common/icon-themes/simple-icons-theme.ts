@@ -25,7 +25,7 @@ export class SimpleIconsTheme implements IIconTheme {
     // Use regex to extract all icon names. In the file above, all the names start with a
     // '.si-' and end before the next '::before'. We also ensure not to match the variants
     // with the '--color' suffix.
-    const regex = /\.si-([a-z0-9-]+(?<!-color))(?=::before)/g;
+    const regex = /\.si-([a-z0-9-_]+(?<!-color))(?=::before)/g;
     let match;
 
     while ((match = regex.exec(string)) !== null) {
