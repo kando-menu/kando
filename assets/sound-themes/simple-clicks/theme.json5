@@ -1,0 +1,60 @@
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: CC0-1.0
+
+{
+  name: 'Simple Clicks',
+  author: 'Simon Schneegans',
+  themeVersion: '1.0.0',
+  license: 'CC0-1.0',
+
+  // This theme was created for Kando's sound theme engine version 1.
+  // Kando will use this to check if the theme is compatible with the
+  // current version of Kando.
+  engineVersion: 1,
+
+  // This is a list of sound files which are played when certain events
+  // occur in the menu.
+  sounds: {
+    openMenu: {
+      file: 'select.wav',
+      volume: 0.3,
+    },
+    closeMenu: {
+      file: 'select.wav',
+      volume: 0.3,
+      minPitch: 0.7,
+      maxPitch: 0.7,
+    },
+    hoverItem: {
+      file: 'hover.wav',
+      minPitch: 0.9,
+      maxPitch: 1.0,
+    },
+    hoverParent: {
+      file: 'hover.wav',
+      minPitch: 0.8,
+      maxPitch: 0.8,
+    },
+    hoverSubmenu: {
+      file: 'hover.wav',
+      minPitch: 0.9,
+      maxPitch: 0.9,
+    },
+    selectItem: {
+      file: 'final.wav',
+      volume: 0.7,
+    },
+    selectParent: {
+      file: 'select.wav',
+      volume: 0.4,
+      minPitch: 0.7,
+      maxPitch: 0.7,
+    },
+    selectSubmenu: {
+      file: 'select.wav',
+      volume: 0.4,
+      minPitch: 0.9,
+      maxPitch: 0.9,
+    },
+  },
+}

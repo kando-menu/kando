@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+# https://pixabay.com/de/sound-effects/flashlight-switch-102792/
+[[annotations]]
+path = ["select.wav"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "freesound_community from Pixabay"
+SPDX-License-Identifier = "LicenseRef-Pixabay"
+
+# https://pixabay.com/de/sound-effects/click-21156/
+[[annotations]]
+path = ["final.wav"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "666HeroHero from Pixabay"
+SPDX-License-Identifier = "LicenseRef-Pixabay"
+
+# https://pixabay.com/de/sound-effects/button-being-pressed-103182/
+[[annotations]]
+path = ["hover.wav"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "freesound_community from Pixabay"
+SPDX-License-Identifier = "LicenseRef-Pixabay"
+ 
