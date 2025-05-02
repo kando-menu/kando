@@ -51,6 +51,12 @@ body {
     }
   }
 
+  // Up to Kando 1.8.0, bootstrap was included in the app. To not break existing themes,
+  // we continue using the box-sizing: border-box rule.
+  div {
+    box-sizing: border-box;
+  }
+
   // The menu consists of a tree of items. Their relative positions are computed in
   // JavaScript and then applied as inline styles. Each node has an additional div as
   // child with the class icon-container. This div is used to display the node's content.
