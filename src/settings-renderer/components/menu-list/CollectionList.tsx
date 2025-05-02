@@ -11,7 +11,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbTrash, TbApps } from 'react-icons/tb';
+import { TbTrash } from 'react-icons/tb';
 
 import * as classes from './CollectionList.module.scss';
 const cx = classNames.bind(classes);
