@@ -28,7 +28,7 @@ $backlink-offset: 30cqmin;
   align-items: center;
   flex-grow: 1;
   container-type: size;
-  color: #eee;
+  color: #fff;
 
   .preview {
     position: relative;
@@ -42,17 +42,17 @@ $backlink-offset: 30cqmin;
       position: absolute;
       aspect-ratio: 1;
       border-radius: 50%;
-      background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.2));
+      background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.3));
 
       transition: transform 0.2s ease;
-      border: 1px solid transparent;
+      border: 2px solid transparent;
 
       &:hover {
-        background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.3));
+        background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.4));
       }
 
       &.selected {
-        border: $border-selected;
+        border: 2px solid light-dark($key-dark, $key-light);
         background-color: light-dark(
           rgba(color.mix(color.adjust($base-dark, $lightness: 10%), $key-dark, 50%), 0.4),
           rgba(

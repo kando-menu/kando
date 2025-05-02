@@ -381,7 +381,10 @@ export default () => {
         draggable={child.angle === undefined}
         onDragStart={(event) => {
           event.dataTransfer.effectAllowed = 'copyMove';
-          event.dataTransfer.setData('kando/child-index', index.toString());
+          event.dataTransfer.setData(
+            'kando/child-path',
+            JSON.stringify(centerItemPath.concat(index))
+          );
           setDragIndex(index);
           setDropIndex(index);
           setDropInto(false);

@@ -39,6 +39,8 @@
   text-align: left;
   width: 100%;
 
+  transition: box-shadow 0.2s;
+
   * {
     pointer-events: none;
   }
@@ -64,6 +66,10 @@
   // at the pointer.
   &.dragging {
     opacity: 0.001;
+  }
+
+  &.dropping {
+    box-shadow: $drop-highlight;
   }
 }
 

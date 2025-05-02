@@ -61,6 +61,7 @@ export default () => {
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
+  const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
 
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
@@ -201,11 +202,45 @@ export default () => {
                     setDropIndex(null);
                   }}
                   onDragOver={(event) => {
-                    if (event.dataTransfer.types.includes('kando/menu-index')) {
+                    if (
+                      event.dataTransfer.types.includes('kando/menu-index') ||
+                      event.dataTransfer.types.includes('kando/child-path')
+                    ) {
                       event.preventDefault();
                     }
                   }}
+                  onDrop={(event) => {
+                    // If a menu item is dropped on a menu, we need to remove the menu
+                    // item from its current menu and add it to the new menu.
+                    if (
+                      event.dataTransfer.types.includes('kando/child-path') &&
+                      menu.index !== selectedMenu
+                    ) {
+                      const fromPath = JSON.parse(
+                        event.dataTransfer.getData('kando/child-path')
+                      );
+
+                      const toPath = [0];
+
+                      // We have to make sure that the menu item is moved in the drag-end
+                      // event, because else the drag-end event of the dragged menu item
+                      // will not be triggered as it's removed by the moveMenuItem state
+                      // update.
+                      const handleDragEnd = () => {
+                        moveMenuItem(selectedMenu, fromPath, menu.index, toPath);
+                        window.removeEventListener('dragend', handleDragEnd);
+                      };
+
+                      // Attach a one-time event listener for the dragend event.
+                      window.addEventListener('dragend', handleDragEnd);
+
+                      (event.target as HTMLElement).classList.remove(classes.dropping);
+                    }
+                  }}
                   onDragEnter={(event) => {
+                    // If we are dragging a menu over another menu, we need to set the
+                    // drop index to the index of the hovered menu. We need to check if
+                    // we are dropping before or after the dragged menu.
                     if (
                       event.dataTransfer.types.includes('kando/menu-index') &&
                       dragIndex !== menu.index
@@ -219,6 +254,25 @@ export default () => {
                           dropIndex <= menu.index ? menu.index + 1 : menu.index
                         );
                       }
+                    }
+
+                    // If we are dragging a menu item over a child item, we need to set
+                    // the drop index to the menu index as well, but no need to check
+                    // the drag index. We cannot drop a menu item into the current menu.
+                    if (
+                      event.dataTransfer.types.includes('kando/child-path') &&
+                      menu.index !== selectedMenu
+                    ) {
+                      (event.target as HTMLElement).classList.add(classes.dropping);
+                      setDropIndex(menu.index);
+                    }
+                  }}
+                  onDragLeave={(event) => {
+                    if (
+                      event.dataTransfer.types.includes('kando/child-path') &&
+                      menu.index !== selectedMenu
+                    ) {
+                      (event.target as HTMLElement).classList.remove(classes.dropping);
                     }
                   }}>
                   <div style={{ display: 'flex' }}>

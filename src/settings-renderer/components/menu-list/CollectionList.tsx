@@ -93,7 +93,7 @@ export default () => {
             onClick={() => selectCollection(-1)}
             data-tooltip-id="main-tooltip"
             data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
-            <TbApps />
+            <ThemedIcon name="all-menus.svg" theme="kando" />
           </button>
           {renderedCollections.map((collection) => (
             <button
