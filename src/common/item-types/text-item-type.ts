@@ -34,11 +34,11 @@ export class TextItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'translate';
+    return 'text-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {

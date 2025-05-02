@@ -31,11 +31,11 @@ export class FileItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'folder_open';
+    return 'file-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {

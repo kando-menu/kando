@@ -31,11 +31,11 @@ export class URIItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'public';
+    return 'uri-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {

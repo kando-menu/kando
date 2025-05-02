@@ -33,11 +33,11 @@ export class HotkeyItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'keyboard_external_input';
+    return 'hotkey-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {

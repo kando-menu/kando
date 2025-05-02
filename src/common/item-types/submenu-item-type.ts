@@ -23,11 +23,11 @@ export class SubmenuItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'apps';
+    return 'submenu-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData() {

@@ -33,11 +33,11 @@ export class CommandItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'terminal';
+    return 'command-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {

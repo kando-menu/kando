@@ -189,7 +189,7 @@ export default () => {
             options={soundThemeOptions}
           />
           <SettingsSpinbutton
-            label="Sound volume"
+            label="Volume"
             info="The overall volume of the sound theme. Default is 0.5."
             settingsKey="soundVolume"
             width={spinbuttonWidth}

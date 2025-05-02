@@ -39,11 +39,11 @@ export class MacroItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'keyboard_keys';
+    return 'macro-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {

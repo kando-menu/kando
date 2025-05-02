@@ -31,11 +31,11 @@ export class RedirectItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'redo';
+    return 'redirect-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {
