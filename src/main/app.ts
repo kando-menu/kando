@@ -394,10 +394,17 @@ export class KandoApp {
     });
 
     // Show the web developer tools if requested.
-    ipcMain.on('settings-window.show-dev-tools', () => {
-      this.settingsWindow.webContents.openDevTools();
-      this.menuWindow?.webContents.openDevTools();
-    });
+    ipcMain.on(
+      'settings-window.show-dev-tools',
+      (e, forWindow: 'menu-window' | 'settings-window') => {
+        if (forWindow === 'menu-window') {
+          this.menuWindow?.webContents.openDevTools();
+        }
+        if (forWindow === 'settings-window') {
+          this.settingsWindow.webContents.openDevTools();
+        }
+      }
+    );
 
     // Reload the current menu theme if requested.
     ipcMain.on('settings-window.reload-menu-theme', async () => {

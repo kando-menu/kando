@@ -262,13 +262,26 @@ export default () => {
               }}
             />
           </div>
-          <Button
-            label="Show developer tools"
-            icon={<TbCode />}
-            onClick={() => {
-              window.settingsAPI.showDevTools();
-            }}
-          />
+          <div style={{ display: 'flex' }}>
+            <Button
+              label="Show menu dev-tools"
+              icon={<TbCode />}
+              grouped
+              grow
+              onClick={() => {
+                window.settingsAPI.showDevTools('menu-window');
+              }}
+            />
+            <Button
+              label="Show settings dev-tools"
+              icon={<TbCode />}
+              grouped
+              grow
+              onClick={() => {
+                window.settingsAPI.showDevTools('settings-window');
+              }}
+            />
+          </div>
         </div>
       </Scrollbox>
     </Modal>

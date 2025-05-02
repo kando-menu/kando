@@ -68,8 +68,8 @@ export const SETTINGS_WINDOW_API = {
   },
 
   /** This will show the web developer tools. */
-  showDevTools: () => {
-    ipcRenderer.send('settings-window.show-dev-tools');
+  showDevTools: (forWindow: 'menu-window' | 'settings-window') => {
+    ipcRenderer.send('settings-window.show-dev-tools', forWindow);
   },
 
   /** This will reload the current menu theme. */
