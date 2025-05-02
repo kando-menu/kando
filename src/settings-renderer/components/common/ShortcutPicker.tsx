@@ -158,17 +158,19 @@ export default (props: IProps) => {
               return;
             }
 
-            if (recording) {
-              setRecording(false);
-            }
-
             const newShortcut = event.currentTarget.value;
 
-            if (newShortcut && isValid(newShortcut)) {
+            // If we were not recording, it is allowed that the shortcut is empty. In this
+            // case the shortcut was unbound.
+            if ((newShortcut || !recording) && isValid(newShortcut)) {
               props.onChange?.(newShortcut);
             } else {
               setShortcut(props.initialValue);
               props.onChange?.(props.initialValue);
+            }
+
+            if (recording) {
+              setRecording(false);
             }
           }}
         />
