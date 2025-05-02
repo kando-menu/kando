@@ -176,9 +176,9 @@ export default () => {
 
           <h1>Sound Theme</h1>
           <Note marginTop={-5}>
-            Learn{' '}
-            <a href="https://kando.menu/sound-themes/">
-              how to add sound themes to Kando
+            Learn how to add sound themes to Kando{' '}
+            <a href="https://kando.menu/sound-themes/" target="_blank">
+              here
             </a>
             !
           </Note>
