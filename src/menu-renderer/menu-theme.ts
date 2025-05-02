@@ -205,7 +205,7 @@ export class MenuTheme {
    * @param pointerAngle The angle towards the pointer.
    */
   public setChildProperties(item: IRenderedMenuItem, pointerAngle: number) {
-    let angleDiff = Math.abs(item.angle - pointerAngle);
+    let angleDiff = Math.abs(item.angle - pointerAngle) % 360;
     angleDiff = Math.min(angleDiff, 360 - angleDiff);
     item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
   }
