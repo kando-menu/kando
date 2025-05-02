@@ -393,6 +393,22 @@ export class KandoApp {
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    // Allow the renderer to retrieve all available sound themes.
+    ipcMain.handle('settings-window.get-all-sound-themes', async () => {
+      const themes = await this.listSubdirectories([
+        path.join(app.getPath('userData'), 'sound-themes'),
+        path.join(__dirname, '../renderer/assets/sound-themes'),
+      ]);
+
+      // Load all descriptions in parallel.
+      const descriptions = await Promise.all(
+        themes.map((theme) => this.loadSoundThemeDescription(theme))
+      );
+
+      // Sort by the name property of the description.
+      return descriptions.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on(
       'settings-window.show-dev-tools',

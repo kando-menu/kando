@@ -11,7 +11,13 @@
 import { ipcRenderer, OpenDialogOptions } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { IBackendInfo, IMenuThemeDescription, IVersionInfo, IWMInfo } from '../common';
+import {
+  IBackendInfo,
+  IMenuThemeDescription,
+  ISoundThemeDescription,
+  IVersionInfo,
+  IWMInfo,
+} from '../common';
 
 /**
  * These functions are available in the settings window's renderer process. They are
@@ -65,6 +71,11 @@ export const SETTINGS_WINDOW_API = {
   /** This will return all available menu themes. */
   getAllMenuThemes: (): Promise<Array<IMenuThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-menu-themes');
+  },
+
+  /** This will return all available sound themes. */
+  getAllSoundThemes: (): Promise<Array<ISoundThemeDescription>> => {
+    return ipcRenderer.invoke('settings-window.get-all-sound-themes');
   },
 
   /** This will show the web developer tools. */

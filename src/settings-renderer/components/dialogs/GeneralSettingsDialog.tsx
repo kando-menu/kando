@@ -32,6 +32,16 @@ import {
 export default () => {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
+  const soundThemes = useAppState((state) => state.soundThemes);
+
+  const soundThemeOptions = soundThemes.map((theme) => ({
+    value: theme.id,
+    label: theme.name,
+  }));
+  soundThemeOptions.unshift({
+    value: 'none',
+    label: 'None',
+  });
 
   // We make sure that some widgets have a consistent width.
   const spinbuttonWidth = 60;
@@ -162,6 +172,30 @@ export default () => {
             label="Enable gamepad support"
             info="If checked, you can use a connected gamepad to control the menu."
             settingsKey="enableGamepad"
+          />
+
+          <h1>Sound Theme</h1>
+          <Note marginTop={-5}>
+            Learn{' '}
+            <a href="https://kando.menu/sound-themes/">
+              how to add sound themes to Kando
+            </a>
+            !
+          </Note>
+          <SettingsDropdown
+            label="Sound theme"
+            info="A sound theme is a collection of sounds that are played when you interact with the menu."
+            settingsKey="soundTheme"
+            options={soundThemeOptions}
+          />
+          <SettingsSpinbutton
+            label="Sound volume"
+            info="The overall volume of the sound theme. Default is 0.5."
+            settingsKey="soundVolume"
+            width={spinbuttonWidth}
+            min={0}
+            max={1}
+            step={0.01}
           />
 
           <h1>Advanced Menu Options</h1>

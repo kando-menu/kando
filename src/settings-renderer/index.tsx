@@ -38,6 +38,7 @@ Promise.all([
   window.settingsAPI.getBackendInfo(),
   window.settingsAPI.getVersionInfo(),
   window.settingsAPI.getAllMenuThemes(),
+  window.settingsAPI.getAllSoundThemes(),
   window.settingsAPI.getCurrentMenu(),
 ]).then(
   async ([
@@ -48,6 +49,7 @@ Promise.all([
     backendInfo,
     versionInfo,
     menuThemes,
+    soundThemes,
     selectedMenu,
   ]) => {
     // Initialize i18next with the current locale and the english fallback locale.
@@ -123,6 +125,7 @@ Promise.all([
       versionInfo,
       darkMode,
       menuThemes,
+      soundThemes,
       selectedMenu,
     });
 

@@ -10,7 +10,13 @@
 
 import { create } from 'zustand';
 
-import { IBackendInfo, IVersionInfo, IMenuThemeDescription, IMenu } from '../../common';
+import {
+  IBackendInfo,
+  IVersionInfo,
+  IMenuThemeDescription,
+  ISoundThemeDescription,
+  IMenu,
+} from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
 // is not persisted to disk, so whenever the settings dialog is opened, the state is
@@ -63,6 +69,9 @@ type AppState = {
 
   /** Descriptions of all available menu themes. */
   menuThemes: Array<IMenuThemeDescription>;
+
+  /** Descriptions of all available sound themes. */
+  soundThemes: Array<ISoundThemeDescription>;
 };
 
 /** These actions can be performed on the app state. */
@@ -149,6 +158,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   backendInfo: null,
   versionInfo: null,
   menuThemes: [],
+  soundThemes: [],
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),
   selectChildPath: (selectedChildPath: number[]) => set({ selectedChildPath }),
   selectParent: () =>
