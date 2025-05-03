@@ -289,7 +289,7 @@ export default () => {
 
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
-  const selectChild = (which: number) => {
+  const selectChild = (which: number, doAnimation: boolean) => {
     if (selectedChild === -1) {
       selectChildPath(selectedChildPath.concat(which));
     } else {
@@ -298,11 +298,13 @@ export default () => {
 
     // If the selected child is a submenu, we need to trigger a transition by changing
     // the key of the CSSTransition component.
-    const child = centerItem.children[which];
-    const type = ItemTypeRegistry.getInstance().getType(child.type);
-    if (type?.hasChildren) {
-      setTransitionPing(!transitionPing);
-      setTransitionAngle(childAngles[which]);
+    if (doAnimation) {
+      const child = centerItem.children[which];
+      const type = ItemTypeRegistry.getInstance().getType(child.type);
+      if (type?.hasChildren) {
+        setTransitionPing(!transitionPing);
+        setTransitionAngle(childAngles[which]);
+      }
     }
   };
 
@@ -417,7 +419,7 @@ export default () => {
           // interaction, onPointerUp is also called at the end of a drag operation. In
           // this case we do not want to select the child.
           else if (!selected && dragIndex === null) {
-            selectChild(index);
+            selectChild(index, true);
           }
         }}
         onPointerMove={(event) => {
@@ -621,6 +623,20 @@ export default () => {
                     // Moving to a sibling position.
                     const dropItemPath = centerItemPath.concat(dropIndex);
                     moveMenuItem(selectedMenu, dragItemPath, selectedMenu, dropItemPath);
+
+                    // If the item was selected, we need to select the new position of the
+                    // item to ensure that it stays selected. Else there are the cases
+                    // where an unselected item was moved across the selected item - so
+                    // from before the selected child to after it or vice versa. In this
+                    // case we need to shift the selected child index by one in the
+                    // corresponding direction.
+                    if (selectedChild === dragIndex) {
+                      selectChild(dropIndex, false);
+                    } else if (dragIndex < selectedChild && selectedChild <= dropIndex) {
+                      selectChild(selectedChild - 1, false);
+                    } else if (dragIndex > selectedChild && selectedChild >= dropIndex) {
+                      selectChild(selectedChild + 1, false);
+                    }
                   }
                 } else {
                   const preferredType =
