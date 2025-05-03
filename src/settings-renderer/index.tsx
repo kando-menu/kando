@@ -13,6 +13,7 @@ import './index.scss';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import i18next from 'i18next';
+import { enableDragDropTouch } from 'drag-drop-touch';
 
 import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
@@ -160,6 +161,15 @@ Promise.all([
         <App />
       </React.StrictMode>
     );
+
+    // HTML5 drag and drop support is not available on touch devices. So we use a
+    // polyfill which translates touch events to drag and drop events. This is not
+    // perfect as it for instance does not support drag and drop to the desktop, but it
+    // works for most use cases.
+    enableDragDropTouch(document.body, document.body, {
+      forceListen: true,
+      allowDragScroll: false,
+    });
 
     // This is helpful during development as it shows us when the renderer process has
     // finished reloading.
