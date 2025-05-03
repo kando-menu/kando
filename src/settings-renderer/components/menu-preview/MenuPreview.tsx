@@ -412,7 +412,11 @@ export default () => {
               });
               return center;
             });
-          } else if (!selected) {
+          }
+          // Only select the child if it is not currently selected. Also, during touch
+          // interaction, onPointerUp is also called at the end of a drag operation. In
+          // this case we do not want to select the child.
+          else if (!selected && dragIndex === null) {
             selectChild(index);
           }
         }}
@@ -585,7 +589,7 @@ export default () => {
               onDragOver={onDragOver}
               onDragLeave={(event) => {
                 // If we leave the container during an external drag, we reset the drop
-                // data so  that the drop indicator is hidden.
+                // data so that the drop indicator is hidden.
                 if (
                   dragIndex === null &&
                   !currentContainer.current?.contains(event.relatedTarget)
