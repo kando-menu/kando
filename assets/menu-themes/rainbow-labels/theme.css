@@ -45,11 +45,13 @@
      the child items. */
   .icon-container {
     position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 5%;
+    left: 5%;
     opacity: 0;
-    clip-path: circle(45% at 50% 50%);
+    width: 90% !important;
+    height: 90% !important;
+    border-radius: 50%;
+    overflow: hidden;
     transition: var(--menu-transition);
     color: var(--icon-color);
   }

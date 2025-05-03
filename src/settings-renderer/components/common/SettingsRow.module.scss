@@ -1,0 +1,40 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
+
+.row {
+  display: flex;
+  align-items: stretch;
+
+  color: $text-normal;
+
+  .label {
+    flex: 1;
+    white-space: nowrap;
+  }
+
+  &.clickable:active {
+    transform: translateY(1px);
+  }
+
+  .widget {
+    min-width: 0px;
+
+    &.grow {
+      flex: 2;
+
+      &:only-child {
+        max-width: unset;
+      }
+    }
+  }
+}

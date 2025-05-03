@@ -10,8 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a command that will be executed
@@ -34,11 +33,11 @@ export class CommandItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'terminal';
+    return 'command-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {
@@ -50,9 +49,5 @@ export class CommandItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.command.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).command || i18next.t('items.common.not-configured');
   }
 }

@@ -59,7 +59,11 @@
     opacity: 0;
     color: var(--text-color);
     transition: var(--opacity-transition);
-    clip-path: circle(45% at 50% 50%);
+    margin: 5%;
+    width: 90% !important;
+    height: 90% !important;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
   /* All menu items have a border and are circles in this theme. */

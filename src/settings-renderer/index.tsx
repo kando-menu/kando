@@ -13,12 +13,13 @@ import './index.scss';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import i18next from 'i18next';
+import { enableDragDropTouch } from 'drag-drop-touch';
 
 import { WindowWithAPIs } from './settings-window-api';
 declare const window: WindowWithAPIs;
 
 import App from './components/App';
-import { useAppSettings, useMenuSettings, useAppState } from './state';
+import { useAppState, useGeneralSettings, useMenuSettings } from './state';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is
@@ -32,22 +33,24 @@ import { useAppSettings, useMenuSettings, useAppState } from './state';
 // We need some information from the main process before we can start.
 Promise.all([
   window.commonAPI.getLocales(),
-  window.commonAPI.appSettings.get(),
+  window.commonAPI.generalSettings.get(),
   window.commonAPI.menuSettings.get(),
   window.commonAPI.getIsDarkMode(),
   window.settingsAPI.getBackendInfo(),
   window.settingsAPI.getVersionInfo(),
   window.settingsAPI.getAllMenuThemes(),
+  window.settingsAPI.getAllSoundThemes(),
   window.settingsAPI.getCurrentMenu(),
 ]).then(
   async ([
     locales,
-    appSettings,
+    generalSettings,
     menuSettings,
     darkMode,
     backendInfo,
     versionInfo,
     menuThemes,
+    soundThemes,
     selectedMenu,
   ]) => {
     // Initialize i18next with the current locale and the english fallback locale.
@@ -66,9 +69,53 @@ Promise.all([
       );
     });
 
+    // Validate State ------------------------------------------------------------------------
+
+    // This function is called whenever the app state or the menu settings change. It makes
+    // sure that the current state is valid. For instance, if a menu is deleted, the selected
+    // menu might be invalid.
+    const validateState = () => {
+      const { menus, collections } = useMenuSettings.getState();
+      const {
+        selectedMenu,
+        selectMenu,
+        selectedCollection,
+        selectCollection,
+        selectedChildPath,
+        selectParent,
+      } = useAppState.getState();
+
+      // Make sure that the selected menu is valid. This could for instance happen if
+      // the currently selected menu is deleted by an external event (e.g. by editing
+      // the settings file) or by re-doing a previously undone deletion :).
+      if (selectedMenu >= menus.length) {
+        selectMenu(menus.length - 1);
+        return;
+      }
+
+      // Also make sure that the selected collection is valid.
+      if (selectedCollection >= collections.length) {
+        selectCollection(collections.length - 1);
+        return;
+      }
+
+      // Make sure that the selected child path is valid.
+      let selectedItem = menus[selectedMenu].root;
+      for (let i = 0; i < selectedChildPath.length; i++) {
+        selectedItem = selectedItem.children[selectedChildPath[i]];
+        if (selectedItem === undefined) {
+          selectParent();
+          return;
+        }
+      }
+    };
+
+    useAppState.subscribe(validateState);
+    useMenuSettings.subscribe(validateState);
+
     // Initialize the global state objects. Make sure to not record the initial state of
     // the menu settings in the undo history.
-    useAppSettings.setState(appSettings);
+    useGeneralSettings.setState(generalSettings);
 
     useMenuSettings.temporal.getState().pause();
     useMenuSettings.setState(menuSettings);
@@ -79,11 +126,12 @@ Promise.all([
       versionInfo,
       darkMode,
       menuThemes,
+      soundThemes,
       selectedMenu,
     });
 
-    window.commonAPI.appSettings.onChange((newSettings) => {
-      useAppSettings.setState(newSettings);
+    window.commonAPI.generalSettings.onChange((newSettings) => {
+      useGeneralSettings.setState(newSettings);
     });
 
     window.commonAPI.menuSettings.onChange((newSettings) => {
@@ -94,8 +142,8 @@ Promise.all([
       useAppState.setState({ darkMode });
     });
 
-    useAppSettings.subscribe((newSettings) => {
-      window.commonAPI.appSettings.set(newSettings);
+    useGeneralSettings.subscribe((newSettings) => {
+      window.commonAPI.generalSettings.set(newSettings);
     });
 
     useMenuSettings.subscribe((newSettings) => {
@@ -113,6 +161,15 @@ Promise.all([
         <App />
       </React.StrictMode>
     );
+
+    // HTML5 drag and drop support is not available on touch devices. So we use a
+    // polyfill which translates touch events to drag and drop events. This is not
+    // perfect as it for instance does not support drag and drop to the desktop, but it
+    // works for most use cases.
+    enableDragDropTouch(document.body, document.body, {
+      forceListen: true,
+      allowDragScroll: false,
+    });
 
     // This is helpful during development as it shows us when the renderer process has
     // finished reloading.

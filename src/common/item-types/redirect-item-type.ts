@@ -10,8 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a menu that will be opened when the
@@ -32,11 +31,11 @@ export class RedirectItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'redo';
+    return 'redirect-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {
@@ -47,9 +46,5 @@ export class RedirectItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.redirect.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).menu || i18next.t('items.common.not-configured');
   }
 }

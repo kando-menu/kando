@@ -11,7 +11,7 @@
 import os from 'node:os';
 import { BrowserWindow, shell, ipcMain } from 'electron';
 
-import { IAppSettings } from '../common';
+import { IGeneralSettings } from '../common';
 import { Settings } from './utils/settings';
 import { Backend } from './backends';
 import { WindowsBackend } from './backends/windows/backend';
@@ -28,8 +28,12 @@ export class SettingsWindow extends BrowserWindow {
     });
   });
 
-  constructor(backend: Backend, settings: Settings<IAppSettings>) {
-    const transparent = settings.get('transparentSettingsWindow');
+  constructor(backend: Backend, settings: Settings<IGeneralSettings>) {
+    const settingsWindowFlavor = settings.get('settingsWindowFlavor');
+    const transparent =
+      settingsWindowFlavor === 'transparent-light' ||
+      settingsWindowFlavor === 'transparent-dark' ||
+      settingsWindowFlavor === 'transparent-system';
 
     super({
       webPreferences: {

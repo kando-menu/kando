@@ -1,0 +1,93 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.colorButton {
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+
+  border: 2px solid $text-normal;
+
+  &:hover {
+    border-color: light-dark(black, white);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  .color {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    left: 10%;
+    top: 10%;
+    border-radius: 50%;
+
+    // Checkered background
+    &::after {
+      content: '';
+      z-index: -1;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+
+      background-image:
+        linear-gradient(45deg, #8888 25%, transparent 25%),
+        linear-gradient(-45deg, #8888 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #8888 75%),
+        linear-gradient(-45deg, transparent 75%, #8888 75%);
+      background-size: 1em 1em;
+      background-position:
+        0 0,
+        0 0.5em,
+        0.5em -0.5em,
+        -0.5em 0px;
+    }
+  }
+}
+
+.colorInput {
+  background-color: $widget-normal;
+
+  color: $text-normal;
+  text-align: center;
+  border: none;
+  font-size: inherit;
+  border-radius: 0 0 4px 4px;
+  width: 100%;
+
+  padding: 4px 0px;
+  font-size: 1em;
+
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.popoverHeader {
+  color: $text-normal;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+:global(.react-colorful__saturation) {
+  border-radius: 4px 4px 0 0 !important;
+}
+
+:global(.react-colorful__last-control) {
+  border-radius: 0 !important;
+}

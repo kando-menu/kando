@@ -10,74 +10,80 @@
 
 @use 'sass:color';
 
-$_base-dark: #24272f;
-$_base-light: #fff;
-$_key-dark: #9f3b67;
-$_key-light: #f0cece;
+$base-dark: #24272f;
+$base-light: #fff;
+$key-dark: #9f3b67;
+$key-light: #f0cece;
 
 $text-normal: light-dark(#333, #eee);
 $text-inverted: light-dark(#eee, #fff);
-$text-muted: light-dark(#777, #bbb);
-$text-link: light-dark($_key-dark, $_key-light);
+$text-muted: light-dark(#777, #aaa);
+$text-link: light-dark($key-dark, $key-light);
 
 $toolbar-background: light-dark(
-  color.adjust($_base-light, $lightness: -10%),
-  color.adjust($_base-dark, $lightness: -10%)
+  color.adjust($base-light, $lightness: -10%),
+  color.adjust($base-dark, $lightness: -10%)
 );
-$window-background: light-dark($_base-light, $_base-dark);
+$window-background: light-dark($base-light, $base-dark);
 $modal-background: light-dark(rgba(#747474, 0.5), rgba(156, 169, 205, 0.2));
+$popover-background: light-dark($base-light, color.adjust($base-dark, $lightness: -5%));
 
-$widget-primary: light-dark($_key-light, $_key-dark);
+$widget-primary: light-dark($key-light, $key-dark);
+$widget-primary-hover: light-dark(
+  color.adjust($key-light, $lightness: -10%),
+  color.adjust($key-dark, $lightness: 10%)
+);
 
 $widget-dark: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -30%), 0.5),
-  rgba(color.adjust($_base-dark, $lightness: 30%), 0.5)
+  rgba(color.adjust($base-light, $lightness: -30%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 30%), 0.5)
 );
 $widget-dark-hover: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -40%), 0.5),
-  rgba(color.adjust($_base-dark, $lightness: 40%), 0.5)
+  rgba(color.adjust($base-light, $lightness: -40%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 40%), 0.5)
 );
 
 $widget-normal: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -20%), 0.5),
-  rgba(color.adjust($_base-dark, $lightness: 20%), 0.5)
+  rgba(color.adjust($base-light, $lightness: -20%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 20%), 0.5)
 );
 $widget-normal-hover: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -30%), 0.5),
-  rgba(color.adjust($_base-dark, $lightness: 30%), 0.5)
+  rgba(color.adjust($base-light, $lightness: -30%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 30%), 0.5)
 );
 
 $widget-light: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -10%), 0.5),
-  rgba(color.adjust($_base-dark, $lightness: 10%), 0.5)
+  rgba(color.adjust($base-light, $lightness: -10%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 10%), 0.5)
 );
 $widget-light-hover: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -20%), 0.5),
-  rgba(color.adjust($_base-dark, $lightness: 20%), 0.5)
+  rgba(color.adjust($base-light, $lightness: -20%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 20%), 0.5)
 );
 
 $widget-inverted: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -70%), 0.7),
-  rgba(color.adjust($_base-dark, $lightness: 50%), 0.7)
+  rgba(color.adjust($base-light, $lightness: -70%), 0.7),
+  rgba(color.adjust($base-dark, $lightness: 50%), 0.7)
 );
 $widget-inverted-hover: light-dark(
-  rgba(color.adjust($_base-light, $lightness: -80%), 0.7),
-  rgba(color.adjust($_base-dark, $lightness: 40%), 0.7)
+  rgba(color.adjust($base-light, $lightness: -80%), 0.7),
+  rgba(color.adjust($base-dark, $lightness: 40%), 0.7)
 );
 
 $widget-selected: light-dark(
-  rgba(color.mix($_key-dark, color.adjust($_base-light, $lightness: -10%), 20%), 0.5),
-  rgba(color.mix($_key-light, color.adjust($_base-dark, $lightness: 10%), 30%), 0.5)
+  rgba(color.mix($key-dark, color.adjust($base-light, $lightness: -10%), 20%), 0.5),
+  rgba(color.mix($key-light, color.adjust($base-dark, $lightness: 10%), 30%), 0.5)
 );
 
 $widget-selected-hover: light-dark(
-  rgba(color.mix($_key-dark, color.adjust($_base-light, $lightness: -10%), 30%), 0.5),
-  rgba(color.mix($_key-light, color.adjust($_base-dark, $lightness: 10%), 40%), 0.5)
+  rgba(color.mix($key-dark, color.adjust($base-light, $lightness: -10%), 30%), 0.5),
+  rgba(color.mix($key-light, color.adjust($base-dark, $lightness: 10%), 40%), 0.5)
 );
 
-$border-selected: 1px solid light-dark($_key-dark, $_key-light);
+$drop-highlight: 0 0 10px light-dark($key-dark, $key-light);
+$border-selected: 1px solid light-dark($key-dark, $key-light);
 $border-focused: 1px solid
   light-dark(
-    color.mix($_key-dark, color.adjust($_base-light, $lightness: -10%), 50%),
-    color.mix($_key-light, color.adjust($_base-dark, $lightness: 10%), 50%)
+    color.mix($key-dark, color.adjust($base-light, $lightness: -10%), 50%),
+    color.mix($key-light, color.adjust($base-dark, $lightness: 10%), 50%)
   );

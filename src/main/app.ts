@@ -13,7 +13,7 @@ import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { ipcMain, shell, Tray, Menu, app, nativeTheme } from 'electron';
+import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
 import i18next from 'i18next';
 
 import { MenuWindow } from './menu-window';
@@ -23,18 +23,18 @@ import {
   IMenuItem,
   IMenu,
   IMenuSettings,
-  IAppSettings,
+  IGeneralSettings,
   IShowMenuRequest,
   IIconThemesInfo,
   ISoundThemeDescription,
   IMenuThemeDescription,
-  getDefaultAppSettings,
+  getDefaultGeneralSettings,
   getDefaultMenuSettings,
+  IWMInfo,
 } from '../common';
 import { Settings, DeepReadonly } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
-import { WMInfo } from './backends/backend';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -76,7 +76,7 @@ export class KandoApp {
    * This is the settings object which is used to store the general application settings
    * in the user's home directory.
    */
-  private appSettings: Settings<IAppSettings>;
+  private generalSettings: Settings<IGeneralSettings>;
 
   /**
    * This is the settings object which is used to store the configured menus in the user's
@@ -84,8 +84,8 @@ export class KandoApp {
    */
   private menuSettings: Settings<IMenuSettings>;
 
-  /** This contains the last WMInfo which was received. */
-  private lastWMInfo?: WMInfo;
+  /** This contains the last IWMInfo which was received. */
+  private lastWMInfo?: IWMInfo;
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -98,15 +98,17 @@ export class KandoApp {
 
     // We load the settings from the user's home directory. If the settings file does not
     // exist, it will be created with the default values. The only special setting is the
-    // transparentSettingsWindow setting which is set to true if the backend supports
-    // transparent windows.
-    this.appSettings = new Settings<IAppSettings>({
+    // settingsWindowFlavor setting which is set to transparent only if the backend
+    // supports transparent windows.
+    this.generalSettings = new Settings<IGeneralSettings>({
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: {
-        ...getDefaultAppSettings(),
-        transparentSettingsWindow:
-          this.backend.getBackendInfo().shouldUseTransparentSettingsWindow,
+        ...getDefaultGeneralSettings(),
+        settingsWindowFlavor: this.backend.getBackendInfo()
+          .shouldUseTransparentSettingsWindow
+          ? 'transparent-light'
+          : 'sakura-light',
       },
     });
 
@@ -119,7 +121,7 @@ export class KandoApp {
     });
 
     // Tell i18next to use a specific locale if it is set in the settings.
-    const locale = this.appSettings.get('locale');
+    const locale = this.generalSettings.get('locale');
     if (locale !== 'auto') {
       i18next.changeLanguage(locale);
     }
@@ -147,21 +149,21 @@ export class KandoApp {
     });
 
     // Check if we want to silently handle read-only config files
-    this.appSettings.ignoreWriteProtectedConfigFiles = this.appSettings.get(
+    this.generalSettings.ignoreWriteProtectedConfigFiles = this.generalSettings.get(
       'ignoreWriteProtectedConfigFiles'
     );
-    this.menuSettings.ignoreWriteProtectedConfigFiles = this.appSettings.get(
+    this.menuSettings.ignoreWriteProtectedConfigFiles = this.generalSettings.get(
       'ignoreWriteProtectedConfigFiles'
     );
 
     // When ignoreWriteProtectedConfigFiles becomes true we want to apply this immediately.
-    this.appSettings.onChange('ignoreWriteProtectedConfigFiles', (newValue) => {
-      this.appSettings.ignoreWriteProtectedConfigFiles = newValue;
+    this.generalSettings.onChange('ignoreWriteProtectedConfigFiles', (newValue) => {
+      this.generalSettings.ignoreWriteProtectedConfigFiles = newValue;
       this.menuSettings.ignoreWriteProtectedConfigFiles = newValue;
     });
 
     // Update the tray icon if the tray icon flavor changes.
-    this.appSettings.onChange('trayIconFlavor', () => {
+    this.generalSettings.onChange('trayIconFlavor', () => {
       this.updateTrayMenu(true);
     });
 
@@ -183,9 +185,9 @@ export class KandoApp {
     this.updateTrayMenu();
 
     // Show a notification if a new version of Kando is available.
-    this.updateChecker.enabled = this.appSettings.get('enableVersionCheck');
+    this.updateChecker.enabled = this.generalSettings.get('enableVersionCheck');
 
-    this.appSettings.onChange('enableVersionCheck', (newValue) => {
+    this.generalSettings.onChange('enableVersionCheck', (newValue) => {
       this.updateChecker.enabled = newValue;
     });
 
@@ -203,6 +205,12 @@ export class KandoApp {
         }
       );
     });
+
+    // Create and load the main window if it does not exist yet.
+    if (!this.generalSettings.get('lazyInitialization')) {
+      this.menuWindow = new MenuWindow(this);
+      await this.menuWindow.load();
+    }
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */
@@ -211,17 +219,17 @@ export class KandoApp {
       await this.backend.unbindAllShortcuts();
     }
 
-    this.appSettings.close();
+    this.generalSettings.close();
     this.menuSettings.close();
   }
 
   /**
-   * Allow access to the app settings object.
+   * Allow access to the general settings object.
    *
-   * @returns The app settings object.
+   * @returns The general settings object.
    */
-  public getAppSettings() {
-    return this.appSettings;
+  public getGeneralSettings() {
+    return this.generalSettings;
   }
 
   /**
@@ -243,9 +251,9 @@ export class KandoApp {
   }
 
   /**
-   * Allow access to the last WMInfo object.
+   * Allow access to the last IWMInfo object.
    *
-   * @returns The last WMInfo object.
+   * @returns The last IWMInfo object.
    */
   public getLastWMInfo() {
     return this.lastWMInfo;
@@ -289,7 +297,7 @@ export class KandoApp {
       return;
     }
 
-    this.settingsWindow = new SettingsWindow(this.backend, this.appSettings);
+    this.settingsWindow = new SettingsWindow(this.backend, this.generalSettings);
 
     // Reset the member variable when the window is closed.
     this.settingsWindow.on('closed', () => {
@@ -300,18 +308,18 @@ export class KandoApp {
   /** This is called when the --reload-menu-theme command line option is passed. */
   public reloadMenuTheme() {
     this.menuWindow?.webContents.send(
-      `app-settings-changed-menuTheme`,
-      this.appSettings.get('menuTheme'),
-      this.appSettings.get('menuTheme')
+      `general-settings-changed-menuTheme`,
+      this.generalSettings.get('menuTheme'),
+      this.generalSettings.get('menuTheme')
     );
   }
 
   /** This is called when the --reload-sound-theme command line option is passed. */
   public reloadSoundTheme() {
     this.menuWindow?.webContents.send(
-      `app-settings-changed-soundTheme`,
-      this.appSettings.get('soundTheme'),
-      this.appSettings.get('soundTheme')
+      `general-settings-changed-soundTheme`,
+      this.generalSettings.get('soundTheme'),
+      this.generalSettings.get('soundTheme')
     );
   }
 
@@ -333,6 +341,21 @@ export class KandoApp {
         chromeVersion: process.versions.chrome,
         nodeVersion: process.versions.node,
       };
+    });
+
+    // Allow the renderer to retrieve information about the current window manager state.
+    ipcMain.handle('settings-window.get-wm-info', () => {
+      return this.backend.getWMInfo();
+    });
+
+    // Allow the renderer to retrieve the position of the settings window.
+    ipcMain.handle('settings-window.get-position', () => {
+      if (!this.settingsWindow) {
+        return { x: 0, y: 0 };
+      }
+
+      const bounds = this.settingsWindow.getBounds();
+      return { x: bounds.x, y: bounds.y };
     });
 
     // This should return the index of the currently selected menu. For now, we just
@@ -376,11 +399,34 @@ export class KandoApp {
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
-    // Show the web developer tools if requested.
-    ipcMain.on('settings-window.show-dev-tools', () => {
-      this.settingsWindow.webContents.openDevTools();
-      this.menuWindow?.webContents.openDevTools();
+    // Allow the renderer to retrieve all available sound themes.
+    ipcMain.handle('settings-window.get-all-sound-themes', async () => {
+      const themes = await this.listSubdirectories([
+        path.join(app.getPath('userData'), 'sound-themes'),
+        path.join(__dirname, '../renderer/assets/sound-themes'),
+      ]);
+
+      // Load all descriptions in parallel.
+      const descriptions = await Promise.all(
+        themes.map((theme) => this.loadSoundThemeDescription(theme))
+      );
+
+      // Sort by the name property of the description.
+      return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
+
+    // Show the web developer tools if requested.
+    ipcMain.on(
+      'settings-window.show-dev-tools',
+      (e, forWindow: 'menu-window' | 'settings-window') => {
+        if (forWindow === 'menu-window') {
+          this.menuWindow?.webContents.openDevTools();
+        }
+        if (forWindow === 'settings-window') {
+          this.settingsWindow.webContents.openDevTools();
+        }
+      }
+    );
 
     // Reload the current menu theme if requested.
     ipcMain.on('settings-window.reload-menu-theme', async () => {
@@ -391,10 +437,18 @@ export class KandoApp {
     ipcMain.on('settings-window.reload-sound-theme', async () => {
       this.reloadSoundTheme();
     });
-    // Once the settings is shown, we unbind all shortcuts to make sure that the
-    // user can select the bound shortcuts in the settings.
-    ipcMain.on('settings-window.unbind-shortcuts', () => {
-      this.backend.unbindAllShortcuts();
+
+    // Allow showing open-file dialogs.
+    ipcMain.handle('settings-window.open-file-picker', async (event, config) => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, config);
+
+      if (result.canceled) {
+        return '';
+      }
+
+      // We only want to return the first file. This is because the user can only select
+      // one file at a time.
+      return result.filePaths[0];
     });
 
     // Print a message to the console of the host process.
@@ -402,23 +456,23 @@ export class KandoApp {
       console.log(message);
     });
 
-    // We also allow getting the entire app settings object.
-    ipcMain.handle('common.app-settings-get', () => this.appSettings.get());
+    // We also allow getting the entire general settings object.
+    ipcMain.handle('common.general-settings-get', () => this.generalSettings.get());
 
     // Allow the renderer to alter the settings.
-    ipcMain.on('common.app-settings-set', (event, settings) => {
-      this.appSettings.set(settings);
+    ipcMain.on('common.general-settings-set', (event, settings) => {
+      this.generalSettings.set(settings);
     });
 
-    // Tell the renderers when the app settings change.
-    this.appSettings.onAnyChange((newSettings, oldSettings) => {
+    // Tell the renderers when the general settings change.
+    this.generalSettings.onAnyChange((newSettings, oldSettings) => {
       this.menuWindow?.webContents.send(
-        'common.app-settings-changed',
+        'common.general-settings-changed',
         newSettings,
         oldSettings
       );
       this.settingsWindow?.webContents.send(
-        'common.app-settings-changed',
+        'common.general-settings-changed',
         newSettings,
         oldSettings
       );
@@ -500,10 +554,10 @@ export class KandoApp {
     // return the path to the CSS file of the theme, so that the renderer can load it.
     ipcMain.handle('common.get-menu-theme', async () => {
       const useDarkVariant =
-        this.appSettings.get('enableDarkModeForMenuThemes') &&
+        this.generalSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
       return this.loadMenuThemeDescription(
-        this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
+        this.generalSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
       );
     });
 
@@ -512,11 +566,13 @@ export class KandoApp {
     // mode for menu themes and if the system is currently in dark mode.
     ipcMain.handle('common.get-current-menu-theme-colors', async () => {
       const useDarkVariant =
-        this.appSettings.get('enableDarkModeForMenuThemes') &&
+        this.generalSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
 
-      const theme = this.appSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme');
-      const colorOverrides = this.appSettings.get(
+      const theme = this.generalSettings.get(
+        useDarkVariant ? 'darkMenuTheme' : 'menuTheme'
+      );
+      const colorOverrides = this.generalSettings.get(
         useDarkVariant ? 'darkMenuThemeColors' : 'menuThemeColors'
       );
 
@@ -540,7 +596,7 @@ export class KandoApp {
 
     // Allow the renderer to retrieve the description of the current sound theme.
     ipcMain.handle('common.get-sound-theme', async () => {
-      return this.loadSoundThemeDescription(this.appSettings.get('soundTheme'));
+      return this.loadSoundThemeDescription(this.generalSettings.get('soundTheme'));
     });
   }
 
@@ -557,7 +613,7 @@ export class KandoApp {
     }
 
     // If the tray icon flavor is set to 'none', we do not show a tray icon.
-    let flavor = this.appSettings.get('trayIconFlavor');
+    let flavor = this.generalSettings.get('trayIconFlavor');
     if (flavor === 'none') {
       return;
     }
@@ -1067,7 +1123,7 @@ export class KandoApp {
     // property. This was changed to settings.hideSettingsButton.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.appSettings.getMutable() as any;
+      const settings = this.generalSettings.getMutable() as any;
       if (settings.editorOptions?.showEditorButtonVisible === false) {
         settings.hideSettingsButton = true;
         delete settings.editorOptions;
@@ -1077,7 +1133,7 @@ export class KandoApp {
     // Up to Kando 1.8.0, there was a settings.sidebarVisible property. This was removed.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.appSettings.getMutable() as any;
+      const settings = this.generalSettings.getMutable() as any;
       if ('sidebarVisible' in settings) {
         delete settings.sidebarVisible;
       }
@@ -1087,7 +1143,7 @@ export class KandoApp {
     // object. Later they became top-level properties.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.appSettings.getMutable() as any;
+      const settings = this.generalSettings.getMutable() as any;
       if (settings.menuOptions) {
         settings.centerDeadZone = settings.menuOptions.centerDeadZone;
         settings.minParentDistance = settings.menuOptions.minParentDistance;

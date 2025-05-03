@@ -19,7 +19,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
@@ -47,20 +47,19 @@ jobs:
 
   windows:
     name: Windows
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        os: [windows-2022, windows-11-arm]
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies
-        # For some reason cmake.js sometimes skips the build step in CI on Windows in this
-        # case. So we install and execute cmake.js manually.
         run: |
-          npm install cmake-js -g
-          npx cmake-js install
           npm install
       - name: Create Release
         run: |
@@ -68,14 +67,14 @@ jobs:
       - name: Upload Zip
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/zip/win32/x64/*
+          file: out/make/zip/win32/*/*
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Squirrel Installer
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/squirrel.windows/x64/*.exe
+          file: out/make/squirrel.windows/*/*.exe
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
@@ -92,7 +91,7 @@ jobs:
       # https://github.com/electron/forge/issues/2807
       - run: python3 -m pip install setuptools --break-system-packages
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
       - name: Install Dependencies

@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
-import { IAppSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
+import { IGeneralSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
@@ -115,7 +115,7 @@ export class Menu extends EventEmitter {
     private container: HTMLElement,
     private theme: MenuTheme,
     private soundTheme: SoundTheme,
-    private settings: IAppSettings
+    private settings: IGeneralSettings
   ) {
     super();
 
@@ -147,7 +147,7 @@ export class Menu extends EventEmitter {
 
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
-    if (!showMenuOptions.warpMouse && showMenuOptions.centeredMode) {
+    if (!this.settings.warpMouse && showMenuOptions.centeredMode) {
       this.pointerInput.deferTurboMode();
     }
 
@@ -177,7 +177,7 @@ export class Menu extends EventEmitter {
     this.selectItem(this.root, this.getInitialMenuPosition());
 
     // If required, move the pointer to the center of the menu.
-    if (showMenuOptions.warpMouse && showMenuOptions.centeredMode) {
+    if (this.settings.warpMouse && showMenuOptions.centeredMode) {
       const offset = math.subtract(
         this.getInitialMenuPosition(),
         showMenuOptions.mousePosition
@@ -216,7 +216,7 @@ export class Menu extends EventEmitter {
    *
    * @param options The new options.
    */
-  public updateSettings(settings: IAppSettings) {
+  public updateSettings(settings: IGeneralSettings) {
     this.settings = settings;
 
     this.container.style.setProperty(
@@ -574,7 +574,7 @@ export class Menu extends EventEmitter {
       };
 
       if (offset.x !== 0 || offset.y !== 0) {
-        if (!this.showMenuOptions.anchoredMode) {
+        if (!this.showMenuOptions.anchoredMode && this.settings.warpMouse) {
           this.emit('move-pointer', offset);
         }
 
@@ -922,7 +922,7 @@ export class Menu extends EventEmitter {
           angle = math.getAngle(nextItem.position);
         }
 
-        angle = math.closestEquivalentAngle(item.lastConnectorAngle, angle);
+        angle = math.getClosestEquivalentAngle(angle, item.lastConnectorAngle);
         item.lastConnectorAngle = angle;
 
         item.connectorDiv.style.width = `${length}px`;
@@ -1097,8 +1097,8 @@ export class Menu extends EventEmitter {
   private getInitialMenuPosition() {
     if (this.showMenuOptions.centeredMode) {
       return {
-        x: (this.showMenuOptions.windowSize.x / this.showMenuOptions.zoomFactor) * 0.5,
-        y: (this.showMenuOptions.windowSize.y / this.showMenuOptions.zoomFactor) * 0.5,
+        x: this.showMenuOptions.windowSize.x * 0.5,
+        y: this.showMenuOptions.windowSize.y * 0.5,
       };
     }
 

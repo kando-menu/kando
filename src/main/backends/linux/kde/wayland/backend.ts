@@ -14,7 +14,7 @@ import fs from 'fs';
 import DBus from 'dbus-final';
 import { exec } from 'child_process';
 
-import { Backend, WMInfo, Shortcut } from '../../../backend';
+import { Backend, IWMInfo, Shortcut } from '../../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { IKeySequence } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
@@ -89,7 +89,6 @@ export class KDEWaylandBackend implements Backend {
       menuWindowType: 'toolbar',
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.kde-wayland.shortcut-hint'),
-      canUseTransparentSettingsWindow: true,
       shouldUseTransparentSettingsWindow: false,
     };
   }
@@ -390,7 +389,7 @@ export class KDEWaylandBackend implements Backend {
 // This class is available via DBus in the KWin script.
 class CustomInterface extends DBus.interface.Interface {
   // These callbacks are set by the KDEWaylandBackend class above.
-  public wmInfoCallback: (info: WMInfo) => void;
+  public wmInfoCallback: (info: IWMInfo) => void;
   public triggerCallback: (shortcutID: string) => void;
 
   // This is called by the get-info KWin script.

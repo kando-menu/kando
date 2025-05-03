@@ -11,23 +11,21 @@
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 import MouseTrap from 'mousetrap';
+import classNames from 'classnames/bind';
 
-import { useAppSetting, useMenuSettings } from '../state';
-
-import AboutDialog from './AboutDialog';
-import GeneralSettingsDialog from './GeneralSettingsDialog';
-import MenuThemesDialog from './MenuThemesDialog';
-
-import Sidebar from './widgets/Sidebar';
-import Preview from './Preview';
-import Properties from './Properties';
-import MenuList from './MenuList';
-import CollectionList from './CollectionList';
+import { useGeneralSetting, useMenuSettings } from '../state';
+import { AboutDialog, GeneralSettingsDialog, MenuThemesDialog } from './dialogs';
+import { MenuList, CollectionList } from './menu-list';
+import { MenuPreview, PreviewHeader, PreviewFooter } from './menu-preview';
+import { Properties } from './menu-properties';
+import { Sidebar } from './common';
 
 import * as classes from './App.module.scss';
+const cx = classNames.bind(classes);
 
 export default () => {
-  const [transparent] = useAppSetting('transparentSettingsWindow');
+  const [settingsWindowColorScheme] = useGeneralSetting('settingsWindowColorScheme');
+  const [settingsWindowFlavor] = useGeneralSetting('settingsWindowFlavor');
 
   // Bind global undo/redo shortcuts.
   React.useEffect(() => {
@@ -40,14 +38,47 @@ export default () => {
     };
   }, []);
 
+  // Set the global color scheme to the body element.
+  React.useEffect(() => {
+    const body = document.body;
+
+    if (settingsWindowColorScheme === 'system') {
+      body.classList.add('systemColors');
+    }
+    if (settingsWindowColorScheme === 'light') {
+      body.classList.add('lightColors');
+    }
+    if (settingsWindowColorScheme === 'dark') {
+      body.classList.add('darkColors');
+    }
+    return () => {
+      body.classList.remove('systemColors');
+      body.classList.remove('lightColors');
+      body.classList.remove('darkColors');
+    };
+  }, [settingsWindowColorScheme]);
+
   return (
     <>
-      <div className={`${classes.container} ${transparent ? classes.transparent : ''}`}>
+      <div className={classes.container}>
         <Sidebar position="left" mainDirection="row">
           <CollectionList />
           <MenuList />
         </Sidebar>
-        <Preview />
+        <div
+          className={cx({
+            centerArea: true,
+            transparentLightFlavor: settingsWindowFlavor === 'transparent-light',
+            transparentDarkFlavor: settingsWindowFlavor === 'transparent-dark',
+            transparentSystemFlavor: settingsWindowFlavor === 'transparent-system',
+            sakuraLightFlavor: settingsWindowFlavor === 'sakura-light',
+            sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
+            sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
+          })}>
+          <PreviewHeader />
+          <MenuPreview />
+          <PreviewFooter />
+        </div>
         <Sidebar position="right" mainDirection="column">
           <Properties />
         </Sidebar>

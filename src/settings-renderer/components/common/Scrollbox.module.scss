@@ -1,0 +1,49 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// This is used for scrolling content. The mask image ensures that the content is
+// beautifully faded to transparency at the top and at the bottom. We also apply some
+// custom styling to the scrollbar
+
+.scrollbox {
+  -webkit-mask-image:
+    -webkit-linear-gradient(
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 1) 10px,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 255, 255, 0) 49%
+    ),
+    -webkit-linear-gradient(
+        bottom,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 1) 10px,
+        rgba(255, 255, 255, 1) 49%,
+        rgba(255, 255, 255, 0) 49%
+      ),
+    -webkit-linear-gradient(
+        rgba(255, 255, 255, 0) 30%,
+        rgba(255, 255, 255, 1) 40%,
+        rgba(255, 255, 255, 1) 60%,
+        rgba(255, 255, 255, 0) 70%
+      );
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .content {
+    margin: 10px 0;
+    padding: 0 10px;
+  }
+
+  &.hideScrollbar {
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+  }
+}

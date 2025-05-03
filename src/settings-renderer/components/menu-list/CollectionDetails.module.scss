@@ -1,0 +1,88 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
+
+.collectionHeader {
+  -webkit-app-region: drag;
+  min-height: env(titlebar-area-height, 30);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  white-space: nowrap;
+
+  // The collection name usually looks like a normal label, but it is actually an input
+  // which allows editing the collection's name. We have to ensure that it only looks like
+  // an input if the .collectionHeader has the .editingCollection class.
+  .collectionName {
+    position: relative;
+    pointer-events: none;
+    border: none;
+    border-radius: 0;
+    font-weight: bold;
+    background: transparent;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  button {
+    -webkit-app-region: no-drag;
+  }
+}
+
+.showingCollection .collectionHeader {
+  // This weird selector selects the icon button in the collection-editor header. It's
+  // nested inside a popover target, therefore we need to dive a bit deeper.
+  > :first-child > * {
+    height: 100%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    max-width: 0;
+    padding: 0;
+    opacity: 0;
+    transition:
+      max-width 250ms ease,
+      padding 250ms ease,
+      opacity 250ms ease;
+  }
+}
+
+.editingCollection .collectionHeader {
+  -webkit-app-region: no-drag;
+  margin: 10px 10px 10px 0;
+
+  > :first-child > * {
+    max-width: 3em;
+    padding: 2px;
+    opacity: 1;
+  }
+}
+
+.editingCollection .collectionName {
+  pointer-events: auto;
+  padding: 5px;
+  background-color: $widget-normal;
+}
+
+.collectionDetails {
+  padding: 0 10px 10px 0;
+  align-self: stretch;
+
+  .searchInput {
+    display: flex;
+
+    input {
+      @include text-input;
+      width: 100%;
+      border-radius: 5px 0 0 5px;
+    }
+  }
+}

@@ -1,0 +1,156 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  color: $text-normal;
+  border: none;
+  border-radius: 5px;
+  font-size: inherit;
+  white-space: nowrap;
+
+  svg {
+    position: relative;
+    top: -0.05em;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &.grouped:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &.grouped:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+.secondary {
+  background-color: $widget-normal;
+
+  &:hover {
+    background-color: $widget-normal-hover;
+  }
+}
+
+.flat {
+  background-color: transparent;
+
+  &:hover {
+    background-color: $widget-light;
+  }
+}
+
+.tool {
+  background-color: transparent;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.primary {
+  background-color: $widget-primary;
+
+  &:hover {
+    background-color: $widget-primary-hover;
+  }
+}
+
+.floating {
+  background-color: $toolbar-background;
+  border-radius: 50px;
+
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.small {
+  padding: 5px 9px;
+  font-size: 0.8em;
+  gap: 4px;
+
+  &.grouped {
+    padding: 5px;
+
+    &.flat:last-child,
+    &.floating:last-child {
+      padding-right: 9px;
+    }
+    &.flat:first-child,
+    &.floating:first-child {
+      padding-left: 9px;
+    }
+  }
+}
+
+.medium {
+  padding: 7px 15px;
+  font-size: 1em;
+  gap: 6px;
+
+  &.grouped {
+    padding: 7px;
+
+    &.flat:last-child,
+    &.floating:last-child {
+      padding-right: 15px;
+    }
+    &.flat:first-child,
+    &.floating:first-child {
+      padding-left: 15px;
+    }
+  }
+}
+
+.large {
+  padding: 10px 18px;
+  font-size: 1.2em;
+  gap: 8px;
+
+  &.grouped {
+    padding: 9px;
+
+    &.flat:last-child,
+    &.floating:last-child {
+      padding-right: 17px;
+    }
+    &.flat:last-child,
+    &.floating:first-child {
+      padding-left: 17px;
+    }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.block {
+  width: 100%;
+}
+
+.grow {
+  flex-grow: 1;
+}

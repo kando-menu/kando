@@ -53,13 +53,6 @@ export interface IBackendInfo {
    */
   shortcutHint?: string;
 
-  /**
-   * This determines whether the settings window can use transparency. There is an option
-   * in the settings to enable transparency, but if canUseTransparentSettingsWindow is
-   * false, the option will be disabled.
-   */
-  canUseTransparentSettingsWindow: boolean;
-
   /** This determines whether the settings window should use transparency per default. */
   shouldUseTransparentSettingsWindow: boolean;
 }
@@ -70,6 +63,18 @@ export interface IVersionInfo {
   electronVersion: string;
   chromeVersion: string;
   nodeVersion: string;
+}
+
+/**
+ * This interface is used to transfer information required from the window manager when
+ * opening the pie menu. It contains the name of the currently focused app / window as
+ * well as the current pointer position.
+ */
+export interface IWMInfo {
+  windowName: string;
+  appName: string;
+  pointerX: number;
+  pointerY: number;
 }
 
 /**
@@ -378,9 +383,6 @@ export interface IMenu {
    */
   centered: boolean;
 
-  /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
-  warpMouse: boolean;
-
   /**
    * If true, the menu will be "anchored". This means that any submenus will be opened at
    * the same position as the parent menu.
@@ -415,7 +417,6 @@ export function deepCopyMenu(menu: IMenu): IMenu {
     shortcut: menu.shortcut,
     shortcutID: menu.shortcutID,
     centered: menu.centered,
-    warpMouse: menu.warpMouse,
     anchored: menu.anchored,
     hoverMode: menu.hoverMode,
     conditions: structuredClone(menu.conditions),
@@ -452,12 +453,6 @@ export interface IShowMenuOptions {
    * opened at the mouse pointer.
    */
   centeredMode: boolean;
-
-  /**
-   * If this is set, the mouse pointer will be warped to the center of the menu when the
-   * menu is opened.
-   */
-  warpMouse: boolean;
 
   /**
    * If this is set, the menu will be "anchored". This means that any submenus will be
@@ -547,10 +542,10 @@ export function getDefaultMenuSettings(): IMenuSettings {
 }
 
 /**
- * This interface describes the content of the app settings file. It contains the names of
- * the themes to use for the menu and the settings.
+ * This interface describes the content of the general settings file. It contains the
+ * names of the themes to use for the menu and the settings.
  */
-export interface IAppSettings {
+export interface IGeneralSettings {
   /**
    * The locale to use. If set to 'auto', the system's locale will be used. If the locale
    * is not available, english will be used.
@@ -593,14 +588,26 @@ export interface IAppSettings {
   /** Whether to silently handle read-only config files. */
   ignoreWriteProtectedConfigFiles: boolean;
 
+  /** The color scheme of the settings window. */
+  settingsWindowColorScheme: 'light' | 'dark' | 'system';
+
   /**
-   * If set to true, the settings window will attempt to use some sort of transparency.
-   * What that means exactly depends on the OS.
+   * If set to 'transparent', the settings window will attempt to use some sort of
+   * transparency. What that means exactly depends on the OS.
    */
-  transparentSettingsWindow: boolean;
+  settingsWindowFlavor:
+    | 'sakura-light'
+    | 'sakura-dark'
+    | 'sakura-system'
+    | 'transparent-light'
+    | 'transparent-dark'
+    | 'transparent-system';
 
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';
+
+  /** Whether to initialize the menu window when it is opened for the first time. */
+  lazyInitialization: boolean;
 
   /** A scale factor for the menu. */
   zoomFactor: number;
@@ -641,6 +648,9 @@ export interface IAppSettings {
    * key.
    */
   enableTurboMode: boolean;
+
+  /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
+  warpMouse: boolean;
 
   /** If enabled, menus using the hover mode require a final click for selecting items. */
   hoverModeNeedsConfirmation: boolean;
@@ -703,12 +713,12 @@ export interface IAppSettings {
 }
 
 /**
- * This function creates a default app settings object. This is used when the settings
+ * This function creates a default general settings object. This is used when the settings
  * file does not exist yet.
  *
- * @returns The default app settings.
+ * @returns The default general settings.
  */
-export function getDefaultAppSettings(): IAppSettings {
+export function getDefaultGeneralSettings(): IGeneralSettings {
   return {
     locale: 'auto',
     menuTheme: 'default',
@@ -719,8 +729,10 @@ export function getDefaultAppSettings(): IAppSettings {
     soundTheme: 'none',
     soundVolume: 0.5,
     ignoreWriteProtectedConfigFiles: false,
-    transparentSettingsWindow: false,
+    settingsWindowColorScheme: 'system',
+    settingsWindowFlavor: 'sakura-light',
     trayIconFlavor: 'color',
+    lazyMenuInitialization: false,
     enableVersionCheck: true,
     zoomFactor: 1,
     centerDeadZone: 50,
@@ -730,6 +742,7 @@ export function getDefaultAppSettings(): IAppSettings {
     fadeOutDuration: 200,
     enableMarkingMode: true,
     enableTurboMode: true,
+    warpMouse: true,
     hoverModeNeedsConfirmation: false,
     gestureMinStrokeLength: 150,
     gestureMinStrokeAngle: 20,

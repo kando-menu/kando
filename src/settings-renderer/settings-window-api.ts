@@ -8,10 +8,16 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, OpenDialogOptions } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { IBackendInfo, IMenuThemeDescription, IVersionInfo } from '../common';
+import {
+  IBackendInfo,
+  IMenuThemeDescription,
+  ISoundThemeDescription,
+  IVersionInfo,
+  IWMInfo,
+} from '../common';
 
 /**
  * These functions are available in the settings window's renderer process. They are
@@ -37,6 +43,17 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-version');
   },
 
+  /** Returns some information about the currently used window manager. */
+  getWMInfo: (): Promise<IWMInfo> => {
+    return ipcRenderer.invoke('settings-window.get-wm-info');
+  },
+
+  /** Returns the position of the top left corner of the settings window. */
+  getWindowPosition: (): Promise<{ x: number; y: number }> => {
+    return ipcRenderer.invoke('settings-window.get-position');
+  },
+
+  /** Returns the index of the last opened menu. */
   getCurrentMenu: function (): Promise<number> {
     return ipcRenderer.invoke('settings-window.get-current-menu');
   },
@@ -56,9 +73,14 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-all-menu-themes');
   },
 
+  /** This will return all available sound themes. */
+  getAllSoundThemes: (): Promise<Array<ISoundThemeDescription>> => {
+    return ipcRenderer.invoke('settings-window.get-all-sound-themes');
+  },
+
   /** This will show the web developer tools. */
-  showDevTools: () => {
-    ipcRenderer.send('settings-window.show-dev-tools');
+  showDevTools: (forWindow: 'menu-window' | 'settings-window') => {
+    ipcRenderer.send('settings-window.show-dev-tools', forWindow);
   },
 
   /** This will reload the current menu theme. */
@@ -71,12 +93,9 @@ export const SETTINGS_WINDOW_API = {
     ipcRenderer.send('settings-window.reload-sound-theme');
   },
 
-  /**
-   * This will be called when the user enters the edit mode. This ensures that a currently
-   * selected shortcut can be assigned to a new menu.
-   */
-  unbindShortcuts: () => {
-    ipcRenderer.send('settings-window.unbind-shortcuts');
+  /** This will open a file picker and return the selected file path. */
+  openFilePicker: (config: OpenDialogOptions): Promise<string> => {
+    return ipcRenderer.invoke('settings-window.open-file-picker', config);
   },
 };
 

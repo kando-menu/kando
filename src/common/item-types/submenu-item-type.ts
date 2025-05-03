@@ -10,8 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /** This class provides meta information for submenu items. */
 export class SubmenuItemType implements IItemType {
@@ -24,11 +23,11 @@ export class SubmenuItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'apps';
+    return 'submenu-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData() {
@@ -37,11 +36,5 @@ export class SubmenuItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.submenu.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return i18next.t('items.submenu.detailed-description', {
-      count: item.children.length,
-    });
   }
 }

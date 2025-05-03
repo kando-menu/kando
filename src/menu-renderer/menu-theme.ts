@@ -10,7 +10,7 @@
 
 import { IMenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
-import { closestEquivalentAngle } from '../common/math';
+import { getClosestEquivalentAngle } from '../common/math';
 import { IRenderedMenuItem } from './rendered-menu-item';
 
 /**
@@ -205,7 +205,7 @@ export class MenuTheme {
    * @param pointerAngle The angle towards the pointer.
    */
   public setChildProperties(item: IRenderedMenuItem, pointerAngle: number) {
-    let angleDiff = Math.abs(item.angle - pointerAngle);
+    let angleDiff = Math.abs(item.angle - pointerAngle) % 360;
     angleDiff = Math.min(angleDiff, 360 - angleDiff);
     item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
   }
@@ -224,13 +224,13 @@ export class MenuTheme {
     hoverAngle: number,
     parentHovered: boolean
   ) {
-    hoverAngle = closestEquivalentAngle(item.lastHoveredChildAngle, hoverAngle);
-    pointerAngle = closestEquivalentAngle(item.lastPointerAngle, pointerAngle);
+    hoverAngle = getClosestEquivalentAngle(hoverAngle, item.lastHoveredChildAngle);
+    pointerAngle = getClosestEquivalentAngle(pointerAngle, item.lastPointerAngle);
 
     // If both angles are set, we want to make sure that they are not 360° apart. This
     // ensures that themes can use both and transition between them smoothly.
     if (pointerAngle != null && hoverAngle != null) {
-      hoverAngle = closestEquivalentAngle(pointerAngle, hoverAngle);
+      hoverAngle = getClosestEquivalentAngle(hoverAngle, pointerAngle);
     }
 
     this.description.layers.forEach((layer) => {

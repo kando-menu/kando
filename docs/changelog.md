@@ -23,9 +23,20 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
-- A hotkey for opening the settings dialog when a menu is open. On macOS, this is <kbd>Command</kbd>+<kbd>,</kbd>. On Windows and Linux, it is <kbd>Ctrl</kbd>+<kbd>,</kbd>. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
+- **Support for deep links!** You can now use the `kando://` protocol to open Kando menus from other applications. This supports all command line parameters. For instance, `kando://menu?name=<menu-name>` will open the menu with the given name. Or `kando://settings` will open the settings dialog. On Linux, this only works if Kando has been properly installed with a `.desktop` file. Thanks to [@LitoMore](https://github.com/LitoMore) for this contribution!
+- **Experimental support arm64 on Windows!** There is now an experimental arm64 build for Windows. Please test it and report any issues you encounter!
+- **A new menu item type: Open Settings!** This allows you to open the Kando settings directly from a menu item. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
+- **A hotkey for opening the settings dialog** when a menu is open. On macOS, this is <kbd>Command</kbd>+<kbd>,</kbd>. On Windows and Linux, it is <kbd>Ctrl</kbd>+<kbd>,</kbd>. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
+- **A default sound theme!** You can enable it in the general settings.
+- **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons.
 - A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
+
+#### :wrench: Changed
+
+- **[BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
+- The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
+- Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 

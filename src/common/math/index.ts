@@ -67,15 +67,85 @@ export function getAngularDifference(angle1: number, angle2: number): number {
 
 /**
  * This method returns the angle which equivalent to the given angle (modulo 360) and
- * closest to the given before angle. The result can be negative.
+ * closest to the given angle. The result can be negative.
  */
-export function closestEquivalentAngle(before: number, angle: number): number {
-  if (before != null && Math.abs(before - angle) > 180) {
-    const fullTurns = Math.round((before - angle) / 360);
+export function getClosestEquivalentAngle(angle: number, to: number): number {
+  if (to != null && Math.abs(to - angle) > 180) {
+    const fullTurns = Math.round((to - angle) / 360);
     angle += fullTurns * 360;
   }
 
   return angle;
+}
+
+/**
+ * Returns the largest angle which is equivalent to the given angle (modulo 360) but
+ * smaller or equal to the given reference angle.
+ */
+export function getEquivalentAngleSmallerThan(angle: number, than: number): number {
+  if (than != null) {
+    const fullTurns = Math.floor((than - angle) / 360);
+    angle += fullTurns * 360;
+  }
+  return angle;
+}
+
+/**
+ * Returns the smallest angle which is equivalent to the given angle (modulo 360) but
+ * larger or equal to the given reference angle.
+ */
+export function getEquivalentAngleLargerThan(angle: number, than: number): number {
+  if (than != null) {
+    const fullTurns = Math.ceil((than - angle) / 360);
+    angle += fullTurns * 360;
+  }
+  return angle;
+}
+
+/**
+ * This method returns true if the given angle is between the given start and end angles.
+ * The angles are in degrees and start should be smaller than end. The method also works
+ * if the angle and the start and end angles are negative or larger than 360°.
+ *
+ * @param angle The angle to check.
+ * @param start The start angle.
+ * @param end The end angle.
+ */
+export function isAngleBetween(angle: number, start: number, end: number): boolean {
+  return (
+    (angle > start && angle <= end) ||
+    (angle - 360 > start && angle - 360 <= end) ||
+    (angle + 360 > start && angle + 360 <= end)
+  );
+}
+
+/**
+ * This method ensures that the given angles have increasing values. To ensure this, they
+ * will be increased or decreased by 360° if necessary. The center angle will be between
+ * 0° and 360°. The start angle may be negative and the end angle may be larger than 360°.
+ * But their mutual difference will be less than 360°.
+ *
+ * @param start The first angle.
+ * @param center The second angle.
+ * @param end The third angle.
+ * @returns An array of three angles.
+ */
+export function normalizeConsequtiveAngles(start: number, center: number, end: number) {
+  while (center < start) {
+    center += 360;
+  }
+
+  while (end < center) {
+    end += 360;
+  }
+
+  while (center >= 360) {
+    start -= 360;
+    center -= 360;
+    end -= 360;
+  }
+
+  return [start, center, end];
 }
 
 /**
@@ -128,7 +198,7 @@ export function computeItemAngles(
   const itemAngles: number[] = [];
 
   // Shouldn't happen, but who knows...
-  if (items.length == 0) {
+  if (!items || items.length == 0) {
     return itemAngles;
   }
 
@@ -150,11 +220,6 @@ export function computeItemAngles(
         fixedAngles[i].angle += 0.1;
       }
     }
-  }
-
-  // Make sure that the fixed angles are between 0° and 360°.
-  for (let i = 0; i < fixedAngles.length; i++) {
-    fixedAngles[i].angle = fixedAngles[i].angle % 360;
   }
 
   // Make sure that the fixed angles increase monotonically. If a fixed angle is larger
@@ -315,50 +380,16 @@ export function computeItemWedges(
   return wedges;
 }
 
-/**
- * This method returns true if the given angle is between the given start and end angles.
- * The angles are in degrees and start should be smaller than end. The method also works
- * if the angle and the start and end angles are negative or larger than 360°.
- *
- * @param angle The angle to check.
- * @param start The start angle.
- * @param end The end angle.
- */
-export function isAngleBetween(angle: number, start: number, end: number): boolean {
-  return (
-    (angle > start && angle <= end) ||
-    (angle - 360 > start && angle - 360 <= end) ||
-    (angle + 360 > start && angle + 360 <= end)
-  );
-}
-
-/**
- * This method ensures that the given angles have increasing values. To ensure this, they
- * will be increased or decreased by 360° if necessary. The center angle will be between
- * 0° and 360°. The start angle may be negative and the end angle may be larger than 360°.
- * But their mutual difference will be less than 360°.
- *
- * @param start The first angle.
- * @param center The second angle.
- * @param end The third angle.
- * @returns An array of three angles.
- */
-function normalizeConsequtiveAngles(start: number, center: number, end: number) {
-  while (center < start) {
-    center += 360;
-  }
-
-  while (end < center) {
-    end += 360;
-  }
-
-  while (center >= 360) {
-    start -= 360;
-    center -= 360;
-    end -= 360;
-  }
-
-  return [start, center, end];
+export function ensureMonotonicIncreasing(items: { angle?: number }[]) {
+  let lastAngle = -1;
+  items.forEach((item) => {
+    if (item.angle !== undefined) {
+      if (item.angle < lastAngle) {
+        item.angle += 360;
+      }
+      lastAngle = item.angle;
+    }
+  });
 }
 
 /**

@@ -17,11 +17,6 @@ $material-symbols-font-path: '~material-symbols/';
 @import 'material-symbols/rounded';
 @import '../../node_modules/simple-icons-font/font/simple-icons.css';
 
-:root {
-  // Enable light mode and dark mode globally.
-  color-scheme: light dark;
-}
-
 // The following styles are applied to the whole settings renderer. They are not
 // scoped to a specific component.
 
@@ -47,7 +42,18 @@ body {
     'Helvetica Neue',
     sans-serif;
   line-height: 1.4em;
-  color: $text-normal;
+
+  &.systemColors {
+    color-scheme: light dark;
+  }
+
+  &.lightColors {
+    color-scheme: only light;
+  }
+
+  &.darkColors {
+    color-scheme: only dark;
+  }
 }
 
 a {
@@ -74,6 +80,7 @@ img {
 }
 
 h1 {
+  color: $text-normal;
   font-size: 1em;
   margin: 1em 0 0.25em 0;
 }
@@ -89,6 +96,12 @@ h1 {
   outline: $border-focused;
 }
 
+// Fix background color of options in dropdowns.
+option {
+  background-color: $window-background;
+  color: $text-normal;
+}
+
 button,
 input[type='text'],
 input[type='number'] {
@@ -102,7 +115,7 @@ input[type='number'] {
 *::-webkit-scrollbar-track {
   background-color: rgba(128, 128, 128, 0.1);
   border-radius: 3px;
-  margin: 15px 0;
+  margin: 10px 0;
 }
 
 *::-webkit-scrollbar {

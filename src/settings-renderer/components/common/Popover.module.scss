@@ -1,0 +1,51 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.popover {
+  -webkit-app-region: no-drag;
+  z-index: 100;
+
+  position: absolute;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: $popover-background;
+  box-shadow: 0 5px 30px light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+
+  transition: opacity 200ms;
+  opacity: 0;
+}
+
+.popoverTriangle {
+  position: absolute;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+
+  &.bottom {
+    bottom: -9px;
+    border-top: 10px solid $popover-background;
+  }
+
+  &.top {
+    top: -9px;
+    border-bottom: 10px solid $popover-background;
+  }
+}
+
+.fadeEnter,
+.fadeEnterDone {
+  &.popover {
+    opacity: 1;
+  }
+}

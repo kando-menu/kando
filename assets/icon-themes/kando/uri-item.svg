@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
+<svg
+  width="256"
+  height="256"
+  viewBox="0 0 256 256"
+  version="1.1"
+  id="svg1"
+  xml:space="preserve"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><path
+     d="m 128,22.311482 c -58.183722,0 -105.688513,47.5048 -105.688513,105.688528 0,58.18372 47.504791,105.68852 105.688513,105.68852 58.18376,0 105.68852,-47.5048 105.68852,-105.68852 C 233.68852,69.816283 186.18376,22.311482 128,22.311482 Z m 0,21.391215 c 46.75867,0 84.29731,37.538633 84.29731,84.297313 0,46.75867 -37.53864,84.29731 -84.29731,84.29731 -46.75865,0 -84.297296,-37.53864 -84.297296,-84.29731 0,-46.75868 37.538646,-84.297313 84.297296,-84.297313 z"
+     id="path1-3"
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /><path
+     d="M 77.529384,60.526238 C 57.113639,75.853023 44.660624,99.501777 43.702704,124.94662 l 3.232994,3.29287 13.530672,13.47081 v 13.59055 l 13.530684,13.4708 v 24.36719 c 4.190913,3.53234 8.74105,6.64561 13.530672,9.27987 v -6.5857 L 101.05841,182.3622 V 168.77165 L 114.58907,155.30085 101.05841,141.7103 87.527726,128.23949 H 60.46637 V 114.64893 H 73.997054 V 101.17814 L 87.527726,87.587591 H 101.05841 V 74.116784 L 87.527726,60.526238 Z m 77.651726,0 v 13.590546 h -13.53069 l -13.53067,13.470807 13.53067,13.590549 13.53069,-13.590549 h 27.06135 l 13.94975,20.296019 v 6.76532 l 13.11161,13.59056 V 104.71047 C 204.15496,87.048759 193.37832,71.542361 178.65024,60.526238 Z m 54.12271,67.713252 -13.94978,0.77831 -13.11158,-14.36887 v -3.35272 h -16.5242 l -6.76534,-10.17793 h -17.3025 l -13.53067,13.53065 v 13.53068 l 13.53067,13.53069 h 13.53069 l 7.18443,10.17795 v 27.06133 l 18.26041,15.5064 c 5.68769,-4.55014 10.77666,-9.81872 15.14718,-15.686 V 141.7103 Z m 0,0"
+     fill-opacity="0.34902"
+     id="path2"
+     style="font-variation-settings:normal;opacity:0.5;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /></svg>

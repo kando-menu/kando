@@ -12,9 +12,8 @@ import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './utils/settings';
-import { IShowMenuRequest, IMenu, IMenuItem } from '../common';
-import { WMInfo } from './backends/backend';
-import { ItemActionRegistry } from '../common/item-action-registry';
+import { IShowMenuRequest, IMenu, IMenuItem, IWMInfo } from '../common';
+import { ItemActionRegistry } from './item-actions/item-action-registry';
 import { Notification } from './utils/notification';
 import { KandoApp } from './app';
 
@@ -79,15 +78,15 @@ export class MenuWindow extends BrowserWindow {
       show: false,
     });
 
-    // When the app settings change, we need to apply the zoom factor to the window.
-    this.kando.getAppSettings().onChange('zoomFactor', (newValue) => {
+    // When the general settings change, we need to apply the zoom factor to the window.
+    this.kando.getGeneralSettings().onChange('zoomFactor', (newValue) => {
       this.webContents.setZoomFactor(newValue);
     });
 
     // Save some settings when the app is closed.
     app.on('before-quit', () => {
       // Save the current zoom factor to the settings.
-      this.kando.getAppSettings().set(
+      this.kando.getGeneralSettings().set(
         {
           zoomFactor: this.webContents.getZoomFactor(),
         },
@@ -105,12 +104,12 @@ export class MenuWindow extends BrowserWindow {
       if (input.control && (input.key === '+' || input.key === '-')) {
         let zoomFactor = this.webContents.getZoomFactor();
         zoomFactor = input.key === '+' ? zoomFactor + 0.1 : zoomFactor - 0.1;
-        this.kando.getAppSettings().set({ zoomFactor });
+        this.kando.getGeneralSettings().set({ zoomFactor });
         event.preventDefault();
       }
 
       if (input.control && input.key === '0') {
-        this.kando.getAppSettings().set({ zoomFactor: 1 });
+        this.kando.getGeneralSettings().set({ zoomFactor: 1 });
         event.preventDefault();
       }
 
@@ -131,7 +130,7 @@ export class MenuWindow extends BrowserWindow {
     await this.loadURL(MENU_WINDOW_WEBPACK_ENTRY);
 
     // Apply the stored zoom factor to the window.
-    this.webContents.setZoomFactor(this.kando.getAppSettings().get('zoomFactor'));
+    this.webContents.setZoomFactor(this.kando.getGeneralSettings().get('zoomFactor'));
 
     return this.windowLoaded;
   }
@@ -169,7 +168,7 @@ export class MenuWindow extends BrowserWindow {
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
    */
-  public async showMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
+  public async showMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
     // Select correct menu before showing it to user.
     const menu = this.chooseMenu(request, info);
 
@@ -260,7 +259,7 @@ export class MenuWindow extends BrowserWindow {
       }
     }
 
-    // Store the last menu to be able to execute the selected action later. The WMInfo
+    // Store the last menu to be able to execute the selected action later. The IWMInfo
     // will be passed to the action as well.
     this.lastMenu = menu;
 
@@ -335,7 +334,6 @@ export class MenuWindow extends BrowserWindow {
         zoomFactor: this.webContents.getZoomFactor(),
         centeredMode: this.lastMenu.centered,
         anchoredMode: this.lastMenu.anchored,
-        warpMouse: this.lastMenu.warpMouse,
         hoverMode: this.lastMenu.hoverMode,
       },
       {
@@ -435,7 +433,7 @@ export class MenuWindow extends BrowserWindow {
         }
 
         resolve();
-      }, this.kando.getAppSettings().get().fadeOutDuration);
+      }, this.kando.getGeneralSettings().get().fadeOutDuration);
     });
   }
 
@@ -455,7 +453,7 @@ export class MenuWindow extends BrowserWindow {
    * @param info Information about current desktop environment.
    * @returns The selected menu or null if no menu was found.
    */
-  public chooseMenu(request: Partial<IShowMenuRequest>, info: WMInfo) {
+  public chooseMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
     // Get list of current menus.
     const menus = this.kando.getMenuSettings().get('menus');
 
@@ -490,7 +488,7 @@ export class MenuWindow extends BrowserWindow {
       }
 
       // If no other menu matches, we will choose the first one with no conditions set.
-      if (!menu.conditions) {
+      if (!menu.conditions || Object.keys(menu.conditions).length === 0) {
         if (!selectedMenu) {
           selectedMenu = menu;
         }

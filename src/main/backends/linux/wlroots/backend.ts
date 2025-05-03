@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { native } from './native';
-import { Backend, Shortcut, WMInfo } from '../../backend';
+import { Backend, Shortcut, IWMInfo } from '../../backend';
 import { IBackendInfo, IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 
@@ -66,7 +66,7 @@ export abstract class WLRBackend implements Backend {
   // of the methods in the Backend interface for more information.
   abstract init(): Promise<void>;
   abstract getBackendInfo(): IBackendInfo;
-  abstract getWMInfo(): Promise<WMInfo>;
+  abstract getWMInfo(): Promise<IWMInfo>;
   abstract bindShortcut(shortcut: Shortcut): Promise<void>;
   abstract unbindShortcut(trigger: string): Promise<void>;
   abstract unbindAllShortcuts(): Promise<void>;

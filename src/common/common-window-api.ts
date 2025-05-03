@@ -11,7 +11,7 @@
 import { ipcRenderer } from 'electron';
 
 import {
-  IAppSettings,
+  IGeneralSettings,
   IMenuThemeDescription,
   ISoundThemeDescription,
   IMenuSettings,
@@ -43,32 +43,32 @@ export const COMMON_WINDOW_API = {
   },
 
   /**
-   * The appSettings object can be used to read and write the app settings. The settings
-   * are persisted in the host process. When a setting is changed, the host process will
-   * notify the renderer process.
+   * The generalSettings object can be used to read and write the general settings. The
+   * settings are persisted in the host process. When a setting is changed, the host
+   * process will notify the renderer process.
    */
-  appSettings: {
-    get: function (): Promise<IAppSettings> {
-      return ipcRenderer.invoke('common.app-settings-get');
+  generalSettings: {
+    get: function (): Promise<IGeneralSettings> {
+      return ipcRenderer.invoke('common.general-settings-get');
     },
-    set: function (settings: IAppSettings): void {
-      ipcRenderer.send(`common.app-settings-set`, settings);
+    set: function (settings: IGeneralSettings): void {
+      ipcRenderer.send(`common.general-settings-set`, settings);
     },
     onChange: function (
-      callback: (newSettings: IAppSettings, oldSettings: IAppSettings) => void
+      callback: (newSettings: IGeneralSettings, oldSettings: IGeneralSettings) => void
     ): () => void {
       const wrappedCallback = (
         event: Electron.IpcRendererEvent,
-        newSettings: IAppSettings,
-        oldSettings: IAppSettings
+        newSettings: IGeneralSettings,
+        oldSettings: IGeneralSettings
       ) => {
         callback(newSettings, oldSettings);
       };
 
-      ipcRenderer.on('common.app-settings-changed', wrappedCallback);
+      ipcRenderer.on('common.general-settings-changed', wrappedCallback);
 
       return () => {
-        ipcRenderer.off('common.app-settings-changed', wrappedCallback);
+        ipcRenderer.off('common.general-settings-changed', wrappedCallback);
       };
     },
   },
