@@ -606,6 +606,9 @@ export interface IGeneralSettings {
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';
 
+  /** Whether to initialize the menu window when it is opened for the first time. */
+  lazyInitialization: boolean;
+
   /** A scale factor for the menu. */
   zoomFactor: number;
 
@@ -726,6 +729,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     settingsWindowColorScheme: 'system',
     settingsWindowFlavor: 'sakura-light',
     trayIconFlavor: 'color',
+    lazyMenuInitialization: false,
     enableVersionCheck: true,
     zoomFactor: 1,
     centerDeadZone: 50,

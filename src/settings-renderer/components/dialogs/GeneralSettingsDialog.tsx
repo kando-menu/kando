@@ -141,6 +141,11 @@ export default () => {
               { value: 'black', label: 'Black' },
             ]}
           />
+          <SettingsCheckbox
+            label="Lazy initialization"
+            info="If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled."
+            settingsKey="lazyInitialization"
+          />
 
           <h1>Menu Behavior</h1>
           <SettingsCheckbox

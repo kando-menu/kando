@@ -205,6 +205,12 @@ export class KandoApp {
         }
       );
     });
+
+    // Create and load the main window if it does not exist yet.
+    if (!this.generalSettings.get('lazyInitialization')) {
+      this.menuWindow = new MenuWindow(this);
+      await this.menuWindow.load();
+    }
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */
