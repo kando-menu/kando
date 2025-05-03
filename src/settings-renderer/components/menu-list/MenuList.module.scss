@@ -62,6 +62,11 @@
     transform: translateY(1px);
   }
 
+  // Leave some space at the bottom of the menu list for the floating button.
+  &:last-child {
+    margin-bottom: 75px;
+  }
+
   // A low opacity seems to be required. Setting it to zero hides also the dragged copy
   // at the pointer.
   &.dragging {
