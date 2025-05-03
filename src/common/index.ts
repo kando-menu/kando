@@ -729,7 +729,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     settingsWindowColorScheme: 'system',
     settingsWindowFlavor: 'sakura-light',
     trayIconFlavor: 'color',
-    lazyMenuInitialization: false,
+    lazyInitialization: false,
     enableVersionCheck: true,
     zoomFactor: 1,
     centerDeadZone: 50,
