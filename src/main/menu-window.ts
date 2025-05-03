@@ -194,7 +194,9 @@ export class MenuWindow extends BrowserWindow {
       this.kando.getBackend().unbindShortcut(newTrigger);
     }
 
-    this.sameShortcutBehavior = this.kando.getAppSettings().get('sameShortcutBehavior');
+    this.sameShortcutBehavior = this.kando
+      .getGeneralSettings()
+      .get('sameShortcutBehavior');
 
     if (this.sameShortcutBehavior == 'cycle') {
       this.lastRequest = { trigger: newTrigger, name: menu.root.name };
@@ -243,7 +245,7 @@ export class MenuWindow extends BrowserWindow {
     // If old and new trigger are the same, we don't need to rebind it. If the
     // hideTimeout is set, the window is about to be hidden and the shortcuts have
     // been rebound already.
-    else if (this.sameShortcutBehavior == 'first') {
+    else if (this.sameShortcutBehavior == 'nothing') {
       if (
         oldTrigger &&
         oldTrigger != newTrigger &&
