@@ -12,7 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
-import { TbExternalLink, TbInfoSquareRoundedFilled } from 'react-icons/tb';
+import { TbExternalLink, TbHeartFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
 import { Swirl, Modal, Button } from '../common';
@@ -34,7 +34,7 @@ export default () => {
   return (
     <Modal
       title="About Kando"
-      icon={<TbInfoSquareRoundedFilled />}
+      icon={<TbHeartFilled />}
       visible={aboutDialogVisible}
       onClose={() => setAboutDialogVisible(false)}
       maxWidth={500}>

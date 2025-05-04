@@ -9,11 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import {
-  TbSettingsFilled,
-  TbInfoSquareRoundedFilled,
-  TbPaletteFilled,
-} from 'react-icons/tb';
+import { TbSettingsFilled, TbHeartFilled, TbPaletteFilled } from 'react-icons/tb';
 import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 
 import { useAppState, useMenuSettings } from '../../state';
@@ -41,16 +37,16 @@ export default () => {
     <>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip="About Kando"
-          icon={<TbInfoSquareRoundedFilled />}
-          onClick={() => setAboutDialogVisible(true)}
+          tooltip="Introduction"
+          icon={<IoSchool />}
+          onClick={() => setIntroDialogVisible(true)}
           variant="tool"
           grouped
         />
         <Button
-          tooltip="Introduction"
-          icon={<IoSchool />}
-          onClick={() => setIntroDialogVisible(true)}
+          tooltip="About Kando"
+          icon={<TbHeartFilled />}
+          onClick={() => setAboutDialogVisible(true)}
           variant="tool"
           grouped
         />
