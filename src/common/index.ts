@@ -552,6 +552,9 @@ export interface IGeneralSettings {
    */
   locale: string;
 
+  /** If true, the introduction dialog will be shown when the settings window is opened. */
+  showIntroductionDialog: boolean;
+
   /** The name of the theme to use for the menu. */
   menuTheme: string;
 
@@ -718,6 +721,7 @@ export interface IGeneralSettings {
 export function getDefaultGeneralSettings(): IGeneralSettings {
   return {
     locale: 'auto',
+    showIntroductionDialog: true,
     menuTheme: 'default',
     darkMenuTheme: 'default',
     menuThemeColors: {},

@@ -14,7 +14,7 @@ import {
   TbInfoSquareRoundedFilled,
   TbPaletteFilled,
 } from 'react-icons/tb';
-import { IoArrowUndo, IoArrowRedo } from 'react-icons/io5';
+import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 
 import { useAppState, useMenuSettings } from '../../state';
 import { Headerbar, Button } from '../common';
@@ -31,6 +31,7 @@ export default () => {
   useMenuSettings();
 
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
+  const setIntroDialogVisible = useAppState((state) => state.setIntroDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
 
@@ -38,7 +39,7 @@ export default () => {
 
   const headerButtons = (
     <>
-      <span>
+      <span style={{ marginRight: '8px' }}>
         <Button
           tooltip="About Kando"
           icon={<TbInfoSquareRoundedFilled />}
@@ -46,6 +47,15 @@ export default () => {
           variant="tool"
           grouped
         />
+        <Button
+          tooltip="Introduction"
+          icon={<IoSchool />}
+          onClick={() => setIntroDialogVisible(true)}
+          variant="tool"
+          grouped
+        />
+      </span>
+      <span style={{ marginRight: '8px' }}>
         <Button
           tooltip="Menu Themes"
           icon={<TbPaletteFilled />}

@@ -97,6 +97,7 @@
     "simple-icons-font": "^14.12.3",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^4.0.0",
+    "swiper": "^11.2.6",
     "ts-loader": "^9.5.2",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",

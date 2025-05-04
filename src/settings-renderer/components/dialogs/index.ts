@@ -13,4 +13,5 @@
 
 export { default as AboutDialog } from './AboutDialog';
 export { default as GeneralSettingsDialog } from './GeneralSettingsDialog';
+export { default as IntroDialog } from './IntroDialog';
 export { default as MenuThemesDialog } from './MenuThemesDialog';

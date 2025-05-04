@@ -14,7 +14,12 @@ import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 
 import { useGeneralSetting, useMenuSettings } from '../state';
-import { AboutDialog, GeneralSettingsDialog, MenuThemesDialog } from './dialogs';
+import {
+  AboutDialog,
+  GeneralSettingsDialog,
+  MenuThemesDialog,
+  IntroDialog,
+} from './dialogs';
 import { MenuList, CollectionList } from './menu-list';
 import { MenuPreview, PreviewHeader, PreviewFooter } from './menu-preview';
 import { Properties } from './menu-properties';
@@ -84,6 +89,7 @@ export default () => {
         </Sidebar>
         <GeneralSettingsDialog />
         <AboutDialog />
+        <IntroDialog />
         <MenuThemesDialog />
       </div>
       <Tooltip

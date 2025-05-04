@@ -52,4 +52,8 @@ export const rules: Required<ModuleOptions>['rules'] = [
       filename: 'assets/[name].[hash:8][ext]',
     },
   },
+  {
+    test: /\.css$/,
+    use: ['style-loader', 'css-loader'],
+  },
 ];

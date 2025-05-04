@@ -52,6 +52,9 @@ type AppState = {
   /** Whether the about dialog is visible. */
   aboutDialogVisible: boolean;
 
+  /** Whether the introduction dialog is visible. */
+  introDialogVisible: boolean;
+
   /** Whether the themes dialog is visible. */
   themesDialogVisible: boolean;
 
@@ -116,6 +119,13 @@ type AppStateActions = {
   setAboutDialogVisible: (aboutDialogVisible: boolean) => void;
 
   /**
+   * Shows or hides the introduction dialog.
+   *
+   * @param introDialogVisible Whether the introduction dialog is visible.
+   */
+  setIntroDialogVisible: (introDialogVisible: boolean) => void;
+
+  /**
    * Shows or hides the themes dialog.
    *
    * @param themesDialogVisible Whether the themes dialog is visible.
@@ -152,6 +162,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   collectionDetailsVisible: false,
   menuSearchBarVisible: false,
   aboutDialogVisible: false,
+  introDialogVisible: false,
   themesDialogVisible: false,
   settingsDialogVisible: false,
   darkMode: false,
@@ -167,6 +178,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
     })),
   selectCollection: (selectedCollection: number) => set({ selectedCollection }),
   setAboutDialogVisible: (aboutDialogVisible: boolean) => set({ aboutDialogVisible }),
+  setIntroDialogVisible: (introDialogVisible: boolean) => set({ introDialogVisible }),
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
   setSettingsDialogVisible: (settingsDialogVisible: boolean) =>
     set({ settingsDialogVisible }),
