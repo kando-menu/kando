@@ -69,11 +69,11 @@ Promise.all([
       );
     });
 
-    // Validate State ------------------------------------------------------------------------
+    // Validate State --------------------------------------------------------------------
 
-    // This function is called whenever the app state or the menu settings change. It makes
-    // sure that the current state is valid. For instance, if a menu is deleted, the selected
-    // menu might be invalid.
+    // This function is called whenever the app state or the menu settings change. It
+    // makes sure that the current state is valid. For instance, if a menu is deleted, the
+    // selected menu might be invalid.
     const validateState = () => {
       const { menus, collections } = useMenuSettings.getState();
       const {
@@ -85,9 +85,9 @@ Promise.all([
         selectParent,
       } = useAppState.getState();
 
-      // Make sure that the selected menu is valid. This could for instance happen if
-      // the currently selected menu is deleted by an external event (e.g. by editing
-      // the settings file) or by re-doing a previously undone deletion :).
+      // Make sure that the selected menu is valid. This could for instance happen if the
+      // currently selected menu is deleted by an external event (e.g. by editing the
+      // settings file) or by re-doing a previously undone deletion :).
       if (selectedMenu >= menus.length) {
         selectMenu(menus.length - 1);
         return;
@@ -113,8 +113,9 @@ Promise.all([
     useAppState.subscribe(validateState);
     useMenuSettings.subscribe(validateState);
 
-    // Initialize the global state objects. Make sure to not record the initial state of
-    // the menu settings in the undo history.
+    // Initialize the global state objects -----------------------------------------------
+
+    // Make sure to not record the initial state of the menu settings in the undo history.
     useGeneralSettings.setState(generalSettings);
 
     useMenuSettings.temporal.getState().pause();
@@ -130,6 +131,7 @@ Promise.all([
       selectedMenu,
     });
 
+    // Update the state whenever the settings change in the main process.
     window.commonAPI.generalSettings.onChange((newSettings) => {
       useGeneralSettings.setState(newSettings);
     });
@@ -154,14 +156,6 @@ Promise.all([
       });
     });
 
-    // Create the settings object. This will handle the rendering of the settings window.
-    const root = createRoot(document.body);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
-
     // HTML5 drag and drop support is not available on touch devices. So we use a
     // polyfill which translates touch events to drag and drop events. This is not
     // perfect as it for instance does not support drag and drop to the desktop, but it
@@ -170,6 +164,14 @@ Promise.all([
       forceListen: true,
       allowDragScroll: false,
     });
+
+    // Create the settings dialog app object.
+    const root = createRoot(document.body);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
 
     // This is helpful during development as it shows us when the renderer process has
     // finished reloading.
