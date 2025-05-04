@@ -301,26 +301,22 @@ export default () => {
               }}
             />
           </div>
-          <div style={{ display: 'flex' }}>
-            <Button
-              label="Show menu dev-tools"
-              icon={<TbCode />}
-              grouped
-              grow
-              onClick={() => {
-                window.settingsAPI.showDevTools('menu-window');
-              }}
-            />
-            <Button
-              label="Show settings dev-tools"
-              icon={<TbCode />}
-              grouped
-              grow
-              onClick={() => {
-                window.settingsAPI.showDevTools('settings-window');
-              }}
-            />
-          </div>
+          <Button
+            label="Menu window development tools"
+            icon={<TbCode />}
+            grow
+            onClick={() => {
+              window.settingsAPI.showDevTools('menu-window');
+            }}
+          />
+          <Button
+            label="Settings window development tools"
+            icon={<TbCode />}
+            grow
+            onClick={() => {
+              window.settingsAPI.showDevTools('settings-window');
+            }}
+          />
         </div>
       </Scrollbox>
     </Modal>
