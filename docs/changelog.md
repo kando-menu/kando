@@ -23,6 +23,16 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
+- **A completely rewritten settings dialog!** The settings dialog is now a separate window and has a new design. This significantly improves the user experience and adds several new possibilities:
+  - **A general-settings dialog:** This exposes all the settings which were previously only available in the `config.json` file.
+  - **Support for undo/redo:** You can now undo and redo changes in the menu editor. This is done using the <kbd>Ctrl</kbd>+<kbd>Z</kbd> and <kbd>Ctrl</kbd>+<kbd>Y</kbd> shortcuts or with the corresponding buttons in the toolbar.
+  - **Menu Collections:** You can now assign tags to your menus and group them by tags. This allows you to organize your menus in a structured way.
+  - **Menus search:** You can now filter your menus by name!
+  - **Reordering menus:** You can now reorder your menus by dragging and dropping them in the settings dialog.
+  - **Direct drag-and-drop of menu items to other menus:** You can now drag and drop menu items from one menu to another in the settings dialog.
+  - **New default icons for the menu-item types:** All menu-item types now have some custom-made icons.
+  - **A file picker for the open-file item type:** This allows you to select files and directories using a file picker instead of typing the path manually.
+  - **Support for dark and light mode in the settings dialog:** The settings dialog now adapts to your system's color mode.
 - **Support for deep links!** You can now use the `kando://` protocol to open Kando menus from other applications. This supports all command line parameters. For instance, `kando://menu?name=<menu-name>` will open the menu with the given name. Or `kando://settings` will open the settings dialog. On Linux, this only works if Kando has been properly installed with a `.desktop` file. Thanks to [@LitoMore](https://github.com/LitoMore) for this contribution!
 - **Experimental support arm64 on Windows!** There is now an experimental arm64 build for Windows. Please test it and report any issues you encounter!
 - **A new menu item type: Open Settings!** This allows you to open the Kando settings directly from a menu item. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
