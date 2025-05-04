@@ -13,13 +13,12 @@
 
 .row {
   display: flex;
-  align-items: stretch;
 
   color: $text-normal;
 
   .label {
     flex: 1;
-    white-space: nowrap;
+    align-self: stretch;
   }
 
   &.clickable:active {
@@ -28,6 +27,7 @@
 
   .widget {
     min-width: 0px;
+    align-self: center;
 
     &.grow {
       flex: 2;

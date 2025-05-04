@@ -58,8 +58,7 @@ export default (props: IProps) => {
       })}>
       {(props.label || props.info) && (
         <div className={classes.label}>
-          {props.label}
-          {props.info && <InfoItem info={props.info} />}
+          {props.label}&nbsp;{props.info && <InfoItem info={props.info} />}
         </div>
       )}
       <div
