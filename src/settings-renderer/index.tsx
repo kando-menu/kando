@@ -151,7 +151,6 @@ Promise.all([
     useMenuSettings.subscribe((newSettings) => {
       window.commonAPI.menuSettings.set({
         menus: newSettings.menus,
-        stash: newSettings.stash,
         collections: newSettings.collections,
       });
     });

@@ -32,6 +32,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
 
+#### :fire: Removed
+
+- **[BREAKING]** As part of the settings redesign, the stash got removed. All stashed menus will be converted to normal menus with a `template` tag applied. **All stashed menu items will be lost!**
+
 #### :wrench: Changed
 
 - **[BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.

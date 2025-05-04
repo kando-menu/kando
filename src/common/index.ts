@@ -513,9 +513,6 @@ export interface IMenuCollection {
 export interface IMenuSettings {
   menus: Array<IMenu>;
 
-  /** A temporary storage for menu items. */
-  stash: Array<IMenuItem>;
-
   /** The currently configured menu collections. */
   collections: IMenuCollection[];
 }
@@ -529,7 +526,6 @@ export interface IMenuSettings {
 export function getDefaultMenuSettings(): IMenuSettings {
   return {
     menus: [],
-    stash: [],
     collections: [
       {
         name: 'Favorites',

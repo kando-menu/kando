@@ -1076,38 +1076,18 @@ export class KandoApp {
       }
     }
 
-    // Up to Kando 1.1.0, there was a `stash` property in the settings. This was
-    // changed to `templates` in Kando 1.2.0 - 1.7.0. Later, the `stash` property was
-    // re-introduced in Kando 1.8.0 but could only contain menu items (no entire menus).
-    // So if there is any `stash` property, we remove all menus from it.
-    {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.menuSettings.getMutable() as any;
-      if (settings.stash) {
-        settings.stash = settings.stash.filter(
-          (item: IMenuItem | IMenu) => 'type' in item
-        );
-      }
-    }
-
     // Up to Kando 1.8.0, there was a `templates` property in the menu settings. This was
     // removed. We we add all template menus as ordinary menus with a template tag. All
-    // template menus items are moved to the `stash` property.
+    // template menu-items are removed.
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const settings = this.menuSettings.getMutable() as any;
       if (settings.templates) {
         for (const itemOrMenu of settings.templates) {
-          // If there is a type property, it is a menu item. We move it to the stash.
-          if (itemOrMenu.type) {
-            if (!settings.stash) {
-              settings.stash = [];
-            }
-
-            settings.stash.push(itemOrMenu);
-          } else {
-            // Else, it is a menu template. We add it as a menu with a template tag. Also
-            // remove any bindings, so that the menu is not opened by a shortcut.
+          // If there is a type property, it is a menu item.
+          // Else, it is a menu template. We add it as a menu with a template tag. Also
+          // remove any bindings, so that the menu is not opened by a shortcut.
+          if (!itemOrMenu.type) {
             itemOrMenu.tags = ['template'];
             itemOrMenu.shortcut = '';
             itemOrMenu.shortcutID = '';
