@@ -66,6 +66,7 @@ interface IProps {
  */
 export default (props: IProps) => {
   const modalContent = React.useRef(null);
+  const pointerDownOnBackground = React.useRef(false);
 
   React.useEffect(() => {
     // Hide on escape.
@@ -126,11 +127,20 @@ export default (props: IProps) => {
         enterDone: classes.fadeEnterDone,
       }}
       unmountOnExit>
-      <div ref={modalContent} onClick={props.onClose} className={classes.modalBackground}>
-        <div
-          className={classes.modal}
-          onClick={(e) => e.stopPropagation()}
-          style={{ maxWidth: props.maxWidth }}>
+      <div
+        ref={modalContent}
+        onPointerDown={(event) => {
+          // Set the flag if the pointer down occurred on the background.
+          pointerDownOnBackground.current = event.target === modalContent.current;
+        }}
+        onClick={(event) => {
+          // Ensure that the click was on the background and the pointer down also started on the background.
+          if (pointerDownOnBackground.current && event.target === modalContent.current) {
+            props.onClose();
+          }
+        }}
+        className={classes.modalBackground}>
+        <div className={classes.modal} style={{ maxWidth: props.maxWidth }}>
           <Headerbar
             left={cIsMac ? closeButton : title}
             center={cIsMac ? title : null}

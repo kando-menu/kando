@@ -48,6 +48,7 @@ export default (props: IProps) => {
   const popoverContent = React.useRef(null);
   const popoverTriangle = React.useRef(null);
   const popoverTarget = React.useRef(null);
+  const pointerDownOutside = React.useRef(false);
 
   // Show the popover if props.visible is true.
   React.useEffect(() => {
@@ -84,9 +85,20 @@ export default (props: IProps) => {
     popoverContent.current.style.left = `${clampedXDiff}px`;
     popoverTriangle.current.style.left = `${contentRect.width / 2 - triangleSize + xDiff - clampedXDiff}px`;
 
+    // Set the flag if the pointer down occurred outside the popover and target.
+    const handlePointerDown = (event: PointerEvent) => {
+      pointerDownOutside.current =
+        popoverContent.current &&
+        !popoverContent.current.contains(event.target as Node) &&
+        popoverTarget.current &&
+        !popoverTarget.current.contains(event.target as Node);
+    };
+
     // Dismiss the popover when the user clicks outside of it.
     const handleClick = (event: MouseEvent) => {
+      // Ensure the click started outside the popover and target.
       if (
+        pointerDownOutside.current &&
         popoverContent.current &&
         !popoverContent.current.contains(event.target as Node) &&
         popoverTarget.current &&
@@ -119,11 +131,13 @@ export default (props: IProps) => {
       }
     };
 
+    document.addEventListener('pointerdown', handlePointerDown);
     document.addEventListener('pointerup', handleClick);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('focusin', handleFocusIn);
 
     return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('pointerup', handleClick);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focusin', handleFocusIn);
