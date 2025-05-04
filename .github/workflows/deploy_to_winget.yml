@@ -14,7 +14,7 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@1.1.2
         with:
           regex: true
-          file: 'Kando-.*\.exe'
+          file: 'Kando-.*x64\.exe'
       - uses: actions/checkout@v4
       - name: Get latest tag
         uses: actions-ecosystem/action-get-latest-tag@v1.6.0
@@ -23,6 +23,6 @@ jobs:
         uses: vedantmgoyal9/winget-releaser@v2
         with:
           identifier: KandoMenu.Kando
-          installers-regex: 'Kando-.*\.exe$'
+          installers-regex: 'Kando-.*x64\.exe$'
           release-tag: ${{ steps.get-latest-tag.outputs.tag }}
           token: ${{ secrets.WINGET_TOKEN }}
