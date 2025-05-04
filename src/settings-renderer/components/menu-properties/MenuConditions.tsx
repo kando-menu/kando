@@ -75,7 +75,7 @@ export default () => {
         menu.
       </Note>
       <Checkbox
-        label="Limit to Specific Apps"
+        label="Limit to specific apps"
         info="Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i."
         initialValue={appConditionVisible}
         onChange={(value) => {
@@ -125,7 +125,7 @@ export default () => {
         )}
       </div>
       <Checkbox
-        label="Limit to Specific Window Titles"
+        label="Limit to specific windows"
         info="Show the menu only if the focused window's title contains a given text. This supports regular expressions like /youtube|vimeo/i."
         initialValue={windowConditionVisible}
         onChange={(value) => {
@@ -175,7 +175,7 @@ export default () => {
         )}
       </div>
       <Checkbox
-        label="Limit to Specific Screen Area"
+        label="Limit to a screen area"
         info="Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction."
         initialValue={screenConditionVisible}
         onChange={(value) => {
