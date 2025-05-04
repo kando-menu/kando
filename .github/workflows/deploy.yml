@@ -65,16 +65,13 @@ jobs:
         run: |
           npm run make
       - name: Rename Executables
+        shell: pwsh
         run: |
-          if [[ "${{ matrix.os }}" == "windows-2022" ]]; then
-            for file in out/make/squirrel.windows/*/*.exe; do
-              mv "$file" "${file%.exe}-x64.exe"
-            done
-          elif [[ "${{ matrix.os }}" == "windows-11-arm" ]]; then
-            for file in out/make/squirrel.windows/*/*.exe; do
-              mv "$file" "${file%.exe}-arm64.exe"
-            done
-          fi
+          if ($env:Matrix_OS -eq "windows-2022") {
+            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-x64" + $_.Extension }
+          } elseif ($env:Matrix_OS -eq "windows-11-arm") {
+            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
+          }
       - name: Upload Zip
         uses: svenstaro/upload-release-action@2.9.0
         with:
