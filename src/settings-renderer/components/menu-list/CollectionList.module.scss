@@ -15,7 +15,7 @@
 
   // The safe area is for window buttons on macOS.
   &.safeAreaTop {
-    padding-top: calc(env(titlebar-area-height, 30) - 15px);
+    padding-top: calc(env(titlebar-area-height, 30) - 10px);
   }
 }
 

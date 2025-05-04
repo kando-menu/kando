@@ -259,6 +259,11 @@ export class KandoApp {
     return this.lastWMInfo;
   }
 
+  /** @returns True if the settings dialog is currently visible. */
+  public isSettingsDialogVisible() {
+    return this.settingsWindow?.isVisible();
+  }
+
   /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get

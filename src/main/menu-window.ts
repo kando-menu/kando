@@ -309,7 +309,10 @@ export class MenuWindow extends BrowserWindow {
    * - On Windows, we have to minimize the window instead. This leads to another issue:
    *   https://github.com/kando-menu/kando/issues/375. To make this weird little window
    *   really imperceptible, we make it ignore any mouse events.
-   * - On macOS, we have to "hide the app" in order to properly restore input focus.
+   * - On macOS, we have to "hide the app" in order to properly restore input focus. We
+   *   cannot do this when the settings are visible because this would hide them as well.
+   *   So we only do this if the settings are not visible. Kind of bad, but seems to be
+   *   the best solution...
    * - On Linux, it seems to work with a simple window.hide().
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
@@ -337,7 +340,10 @@ export class MenuWindow extends BrowserWindow {
           this.setIgnoreMouseEvents(true);
           this.minimize();
         } else if (process.platform === 'darwin') {
-          app.hide();
+          super.hide();
+          if (!this.kando.isSettingsDialogVisible()) {
+            app.hide();
+          }
         } else {
           super.hide();
         }
