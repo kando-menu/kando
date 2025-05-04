@@ -4,7 +4,7 @@
 version = 1
 
 [[annotations]]
-path = ["*.svg"]
+path = ["*.svg", "*.webp"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "CC-BY-4.0"

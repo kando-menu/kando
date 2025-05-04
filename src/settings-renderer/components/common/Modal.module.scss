@@ -1,0 +1,65 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.modalBackground {
+  z-index: 50;
+
+  -webkit-app-region: no-drag;
+  background-color: $modal-background;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: opacity 200ms;
+  opacity: 0;
+}
+
+.fadeEnter,
+.fadeEnterDone {
+  &.modalBackground {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background-color: $window-background;
+  border-radius: 10px;
+
+  box-shadow: 0 0 75px rgba(0, 0, 0, 0.4);
+
+  width: min(95vw, calc(300px + 50vw));
+
+  transition: transform 200ms;
+}
+
+.fadeEnter,
+.fadeEnterDone {
+  .modal {
+    transform: translateY(-10px);
+  }
+}
+
+.title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.content {
+  padding: 0 15px 15px 15px;
+}

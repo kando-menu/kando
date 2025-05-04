@@ -1,0 +1,194 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+// For now, we support two different (hard-coded) font icon themes. The first one is the
+// Material Design Icons font, the second one is the Simple Icons font. Both are
+// available as npm packages.
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols/rounded';
+@import '../../node_modules/simple-icons-font/font/simple-icons.css';
+
+// General Styling -----------------------------------------------------------------------
+
+// We ensure that the window's background is transparent and that the menu container
+// covers the entire viewport.
+
+body {
+  font-family: sans-serif;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+// Menu Styling --------------------------------------------------------------------------
+
+#kando-menu {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+
+  transition: opacity var(--fade-in-duration) ease;
+
+  // When the menu is hidden or shown, we fade it to / from transparent.
+  &.hidden {
+    transition: opacity var(--fade-out-duration) ease;
+    opacity: 0;
+
+    // We also want to delay the fade-out animation if a node is selected. Else the
+    // selected node would disappear before the position transition is finished.
+    &.selected {
+      transition: opacity calc(var(--fade-out-duration) * 0.5) ease;
+      transition-delay: calc(var(--fade-out-duration) * 0.5);
+    }
+  }
+
+  // Up to Kando 1.8.0, bootstrap was included in the app. To not break existing themes,
+  // we continue using the box-sizing: border-box rule.
+  div {
+    box-sizing: border-box;
+  }
+
+  // The menu consists of a tree of items. Their relative positions are computed in
+  // JavaScript and then applied as inline styles. Each node has an additional div as
+  // child with the class icon-container. This div is used to display the node's content.
+  .menu-node {
+    position: absolute;
+    pointer-events: none;
+
+    .icon-container {
+      container-type: size;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+
+      white-space: nowrap;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 75cqi;
+        font-style: normal;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    // Hide deeper levels than grandchildren.
+    &.grandchild > .menu-node {
+      display: none;
+    }
+  }
+
+  // Connectors --------------------------------------------------------------------------
+
+  // The connectors between the menu items are drawn as divs with a fixed height. Their
+  // width and rotation is computed in JavaScript and then applied as inline styles.
+  .connector {
+    position: absolute;
+    width: 0px;
+    left: 0;
+    transform-origin: 0% 50%;
+    z-index: -1;
+    display: none;
+  }
+
+  .menu-node.parent > .connector,
+  .menu-node.active > .connector,
+  .menu-node.active:has(> .menu-node.dragged) > .connector,
+  .menu-node.active:has(> .menu-node.clicked) > .connector {
+    display: block;
+  }
+
+  // Center Text -------------------------------------------------------------------------
+
+  // The text in the center of the menu is wrapped in a square div with a 10% padding.
+  .center-text {
+    position: absolute;
+    text-align: center;
+
+    overflow: hidden;
+    word-break: break-word;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
+}
+
+// Settings Button -----------------------------------------------------------------------
+
+#settings-button {
+  position: absolute;
+
+  width: 50px;
+  height: 50px;
+
+  cursor: pointer;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 20%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  &.hidden {
+    transform: translateY(30%);
+    opacity: 0;
+  }
+
+  &.invisible {
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &.top-left {
+    top: 10px;
+    left: 10px;
+    border-bottom-right-radius: 40%;
+  }
+
+  &.top-right {
+    top: 10px;
+    right: 10px;
+    border-bottom-left-radius: 40%;
+  }
+
+  &.bottom-left {
+    bottom: 10px;
+    left: 10px;
+    border-top-right-radius: 40%;
+  }
+
+  &.bottom-right {
+    bottom: 10px;
+    right: 10px;
+    border-top-left-radius: 40%;
+  }
+}

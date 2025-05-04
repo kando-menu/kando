@@ -14,7 +14,10 @@ import {
   computeItemWedges,
   getAngularDifference,
   isAngleBetween,
-} from '../src/renderer/math';
+  getClosestEquivalentAngle,
+  getEquivalentAngleSmallerThan,
+  getEquivalentAngleLargerThan,
+} from '../src/common/math';
 import { expect } from 'chai';
 
 describe('normalize', () => {
@@ -43,6 +46,90 @@ describe('normalize', () => {
       x: -0.7071067811865475,
       y: -0.7071067811865475,
     });
+  });
+});
+
+describe('getClosestEquivalentAngle', () => {
+  it('should return the same value if the angle is the same', () => {
+    expect(getClosestEquivalentAngle(0, 0)).to.equal(0);
+    expect(getClosestEquivalentAngle(500, 500)).to.equal(500);
+    expect(getClosestEquivalentAngle(-500, -500)).to.equal(-500);
+  });
+
+  it('should return the same value if the difference is less than 180', () => {
+    expect(getClosestEquivalentAngle(0, 0)).to.equal(0);
+    expect(getClosestEquivalentAngle(1, 0)).to.equal(1);
+    expect(getClosestEquivalentAngle(189, 10)).to.equal(189);
+    expect(getClosestEquivalentAngle(-189, -10)).to.equal(-189);
+  });
+
+  it('should return the equivalent angle if the difference is greater than 180', () => {
+    expect(getClosestEquivalentAngle(190, 0)).to.equal(-170);
+    expect(getClosestEquivalentAngle(-190, 0)).to.equal(170);
+    expect(getClosestEquivalentAngle(500, 0)).to.equal(140);
+    expect(getClosestEquivalentAngle(-500, 0)).to.equal(-140);
+  });
+});
+
+describe('getEquivalentAngleSmallerThan', () => {
+  it('should return the same value if the angle is the same', () => {
+    expect(getEquivalentAngleSmallerThan(0, 0)).to.equal(0);
+    expect(getEquivalentAngleSmallerThan(500, 500)).to.equal(500);
+    expect(getEquivalentAngleSmallerThan(-500, -500)).to.equal(-500);
+  });
+
+  it('should return the reference if larger by a multiple of 360', () => {
+    expect(getEquivalentAngleSmallerThan(410, 50)).to.equal(50);
+    expect(getEquivalentAngleSmallerThan(770, 50)).to.equal(50);
+    expect(getEquivalentAngleSmallerThan(310, -50)).to.equal(-50);
+    expect(getEquivalentAngleSmallerThan(670, -50)).to.equal(-50);
+  });
+
+  it('should return the smaller value if greater than reference', () => {
+    expect(getEquivalentAngleSmallerThan(300, 50)).to.equal(-60);
+    expect(getEquivalentAngleSmallerThan(500, 50)).to.equal(-220);
+  });
+
+  it('should return the same value if the difference is less than 360°', () => {
+    expect(getEquivalentAngleSmallerThan(30, 50)).to.equal(30);
+    expect(getEquivalentAngleSmallerThan(10, 350)).to.equal(10);
+    expect(getEquivalentAngleSmallerThan(-310, 40)).to.equal(-310);
+  });
+
+  it('should return larger value if the difference is more than 360°', () => {
+    expect(getEquivalentAngleSmallerThan(-310, 60)).to.equal(50);
+    expect(getEquivalentAngleSmallerThan(-670, 60)).to.equal(50);
+  });
+});
+
+describe('getEquivalentAngleLargerThan', () => {
+  it('should return the same value if the angle is the same', () => {
+    expect(getEquivalentAngleLargerThan(0, 0)).to.equal(0);
+    expect(getEquivalentAngleLargerThan(500, 500)).to.equal(500);
+    expect(getEquivalentAngleLargerThan(-500, -500)).to.equal(-500);
+  });
+
+  it('should return the reference if smaller by a multiple of 360', () => {
+    expect(getEquivalentAngleLargerThan(-410, -50)).to.equal(-50);
+    expect(getEquivalentAngleLargerThan(-770, -50)).to.equal(-50);
+    expect(getEquivalentAngleLargerThan(-310, 50)).to.equal(50);
+    expect(getEquivalentAngleLargerThan(-670, 50)).to.equal(50);
+  });
+
+  it('should return the larger value if less than reference', () => {
+    expect(getEquivalentAngleLargerThan(-300, -50)).to.equal(60);
+    expect(getEquivalentAngleLargerThan(-500, -50)).to.equal(220);
+  });
+
+  it('should return the same value if the difference is less than 360°', () => {
+    expect(getEquivalentAngleLargerThan(-30, -50)).to.equal(-30);
+    expect(getEquivalentAngleLargerThan(-10, -350)).to.equal(-10);
+    expect(getEquivalentAngleLargerThan(310, -40)).to.equal(310);
+  });
+
+  it('should return smaller value if the difference is more than 360°', () => {
+    expect(getEquivalentAngleLargerThan(310, -60)).to.equal(-50);
+    expect(getEquivalentAngleLargerThan(670, -60)).to.equal(-50);
   });
 });
 

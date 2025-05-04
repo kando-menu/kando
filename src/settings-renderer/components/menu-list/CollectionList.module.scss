@@ -1,0 +1,109 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.collectionsList {
+  -webkit-app-region: drag;
+
+  // The safe area is for window buttons on macOS.
+  &.safeAreaTop {
+    padding-top: calc(env(titlebar-area-height, 30) - 10px);
+  }
+}
+
+.collection,
+.deleteButton {
+  display: block;
+  border: none;
+  background-color: $widget-dark;
+  color: $text-normal;
+  border: 1px solid transparent;
+
+  border-radius: 50%;
+  -webkit-app-region: no-drag;
+
+  &.transparent {
+    background-color: transparent;
+
+    &:hover {
+      background-color: $widget-dark;
+    }
+  }
+
+  &.selected {
+    background-color: $widget-selected;
+    border: $border-selected;
+    color: $text-normal;
+
+    &:hover:not(:has(:hover)) {
+      background-color: $widget-selected-hover;
+    }
+  }
+
+  &:hover:not(:has(:hover)) {
+    background-color: $widget-dark-hover;
+  }
+
+  &:active:not(:has(:active)) {
+    transform: translateY(1px);
+  }
+}
+
+.collection {
+  width: 48px;
+  height: 48px;
+  margin: 10px 0;
+  position: relative;
+  font-size: 1.8rem;
+  line-height: 1.5rem;
+
+  transition: transform 0.2s;
+
+  * {
+    pointer-events: none;
+  }
+
+  // A low opacity seems to be required. Setting it to zero hides also the dragged copy
+  // at the pointer.
+  &.dragging {
+    opacity: 0.001;
+  }
+
+  &.dropping {
+    box-shadow: $drop-highlight;
+    transform: scale(1.1);
+  }
+}
+
+.deleteButton {
+  opacity: 0;
+  background-color: $widget-selected;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 25px;
+  height: 25px;
+  font-size: 1.2rem;
+  line-height: 1.9rem;
+
+  transition: opacity 0.2s;
+
+  &:hover {
+    background-color: $widget-selected-hover;
+  }
+}
+
+.collection.selected .deleteButton {
+  opacity: 1;
+  pointer-events: all;
+}

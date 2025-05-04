@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuOptions } from '../renderer/menu/menu';
-import { EditorOptions } from '../renderer/editor/editor';
-
 /**
  * A simple 2D vector.
  *
@@ -31,15 +28,15 @@ export interface IBackendInfo {
 
   /**
    * Each backend should return a suitable window type here. The window type determines
-   * how Kando's window is drawn. The most suitable type is dependent on the operating
-   * system and the window manager. For example, on GNOME, the window type "dock" seems to
-   * work best, on KDE "toolbar" provides a better experience. On Windows, "toolbar" is
-   * the only type that works.
+   * how Kando's menu window is drawn. The most suitable type is dependent on the
+   * operating system and the window manager. For example, on GNOME, the window type
+   * "dock" seems to work best, on KDE "toolbar" provides a better experience. On Windows,
+   * "toolbar" is the only type that works.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
    *
    * @returns The window type to use for the pie menu window.
    */
-  windowType: string;
+  menuWindowType: string;
 
   /**
    * There are some backends which do not support custom shortcuts. In this case, the user
@@ -49,12 +46,15 @@ export interface IBackendInfo {
   supportsShortcuts: boolean;
 
   /**
-   * This hint is shown in the editor next to the shortcut-id input field if
+   * This hint is shown in the settings next to the shortcut-id input field if
    * supportsShortcuts is false. It should very briefly explain how to change the
    * shortcuts in the operating system. If supportsShortcuts is true, this is not
    * required.
    */
   shortcutHint?: string;
+
+  /** This determines whether the settings window should use transparency per default. */
+  shouldUseTransparentSettingsWindow: boolean;
 }
 
 /** This interface describes some information about the current version of Kando. */
@@ -63,6 +63,18 @@ export interface IVersionInfo {
   electronVersion: string;
   chromeVersion: string;
   nodeVersion: string;
+}
+
+/**
+ * This interface is used to transfer information required from the window manager when
+ * opening the pie menu. It contains the name of the currently focused app / window as
+ * well as the current pointer position.
+ */
+export interface IWMInfo {
+  windowName: string;
+  appName: string;
+  pointerX: number;
+  pointerY: number;
 }
 
 /**
@@ -323,7 +335,7 @@ export interface IMenuItem {
 /**
  * This function creates a deep copy of an IMenuItem. It can also be used to strip all
  * properties from an menu item object which are not present in an IMenuItem. This is for
- * instance used before saving the menu settings.
+ * instance used before saving the settings.
  *
  * @param item The menu item to copy.
  * @returns The copied menu item.
@@ -371,9 +383,6 @@ export interface IMenu {
    */
   centered: boolean;
 
-  /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
-  warpMouse: boolean;
-
   /**
    * If true, the menu will be "anchored". This means that any submenus will be opened at
    * the same position as the parent menu.
@@ -391,6 +400,9 @@ export interface IMenu {
    * met them all is selected.
    */
   conditions?: IMenuConditions;
+
+  /** Tags can be used to group and filter menus. */
+  tags?: string[];
 }
 
 /**
@@ -405,10 +417,10 @@ export function deepCopyMenu(menu: IMenu): IMenu {
     shortcut: menu.shortcut,
     shortcutID: menu.shortcutID,
     centered: menu.centered,
-    warpMouse: menu.warpMouse,
     anchored: menu.anchored,
     hoverMode: menu.hoverMode,
     conditions: structuredClone(menu.conditions),
+    tags: structuredClone(menu.tags),
   };
 }
 
@@ -443,12 +455,6 @@ export interface IShowMenuOptions {
   centeredMode: boolean;
 
   /**
-   * If this is set, the mouse pointer will be warped to the center of the menu when the
-   * menu is opened.
-   */
-  warpMouse: boolean;
-
-  /**
    * If this is set, the menu will be "anchored". This means that any submenus will be
    * opened at the same position as the parent menu.
    */
@@ -463,18 +469,18 @@ export interface IShowMenuOptions {
 
 /**
  * This interface is used to describe the additional information that is passed to the
- * Editor's `show()` method from the main to the renderer process.
+ * Settings's `show()` method from the main to the renderer process.
  */
-export interface IShowEditorOptions {
+export interface IShowSettingsOptions {
   /**
    * The name of the application that is currently focused. This will be used as a
-   * condition example in the condition picker of the menu editor.
+   * condition example in the condition picker of the settings.
    */
   appName: string;
 
   /**
    * The name of the window that is currently focused. This will also be used as a
-   * condition example in the condition picker of the menu editor.
+   * condition example in the condition picker of the settings.
    */
   windowName: string;
 
@@ -485,27 +491,65 @@ export interface IShowEditorOptions {
   windowPosition: IVec2;
 }
 
+/** The user can create menu collections to group menus according to their tags. */
+export interface IMenuCollection {
+  /** The name of the collection. */
+  name: string;
+
+  /** The icon of the collection. */
+  icon: string;
+
+  /** The theme from which the above icon should be used. */
+  iconTheme: string;
+
+  /** The tags which should be included in this collection. */
+  tags: string[];
+}
+
 /**
- * This interface describes the content of the menu settings file. It contains the
- * configured menus as well as the templates.
+ * This interface describes the content of the settings file. It contains the configured
+ * menus as well as the templates.
  */
 export interface IMenuSettings {
   menus: Array<IMenu>;
 
-  /** The template menus and menu items. */
-  templates: Array<IMenu | IMenuItem>;
+  /** The currently configured menu collections. */
+  collections: IMenuCollection[];
 }
 
 /**
- * This interface describes the content of the app settings file. It contains the names of
- * the themes to use for the menu and the editor.
+ * This function creates a default menu settings object. This is used when the settings
+ * file does not exist yet.
+ *
+ * @returns The default menu settings.
  */
-export interface IAppSettings {
+export function getDefaultMenuSettings(): IMenuSettings {
+  return {
+    menus: [],
+    collections: [
+      {
+        name: 'Favorites',
+        icon: 'favorite',
+        iconTheme: 'material-symbols-rounded',
+        tags: ['favs'],
+      },
+    ],
+  };
+}
+
+/**
+ * This interface describes the content of the general settings file. It contains the
+ * names of the themes to use for the menu and the settings.
+ */
+export interface IGeneralSettings {
   /**
    * The locale to use. If set to 'auto', the system's locale will be used. If the locale
    * is not available, english will be used.
    */
   locale: string;
+
+  /** If true, the introduction dialog will be shown when the settings window is opened. */
+  showIntroductionDialog: boolean;
 
   /** The name of the theme to use for the menu. */
   menuTheme: string;
@@ -543,18 +587,171 @@ export interface IAppSettings {
   /** Whether to silently handle read-only config files. */
   ignoreWriteProtectedConfigFiles: boolean;
 
+  /** The color scheme of the settings window. */
+  settingsWindowColorScheme: 'light' | 'dark' | 'system';
+
+  /**
+   * If set to 'transparent', the settings window will attempt to use some sort of
+   * transparency. What that means exactly depends on the OS.
+   */
+  settingsWindowFlavor:
+    | 'sakura-light'
+    | 'sakura-dark'
+    | 'sakura-system'
+    | 'transparent-light'
+    | 'transparent-dark'
+    | 'transparent-system';
+
   /** The tray icon flavor. */
   trayIconFlavor: 'light' | 'dark' | 'color' | 'black' | 'white' | 'none';
 
-  /** Whether the sidebar should be shown in the editor. */
-  sidebarVisible: boolean;
+  /** Whether to initialize the menu window when it is opened for the first time. */
+  lazyInitialization: boolean;
 
   /** A scale factor for the menu. */
   zoomFactor: number;
 
-  /** The options which are passed to the menu. */
-  menuOptions: MenuOptions;
+  /** If true, the settings button will be hidden if not hovered. */
+  hideSettingsButton: boolean;
 
-  /** The options which are passed to the menu editor. */
-  editorOptions: EditorOptions;
+  /** The position of the settings button. */
+  settingsButtonPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+  /** Clicking inside this radius will select the parent element. */
+  centerDeadZone: number;
+
+  /**
+   * The distance in pixels at which the parent menu item is placed if a submenu is
+   * selected close to the parent.
+   */
+  minParentDistance: number;
+
+  /**
+   * This is the threshold in pixels which is used to differentiate between a click and a
+   * drag. If the mouse is moved more than this threshold before the mouse button is
+   * released, an item is dragged.
+   */
+  dragThreshold: number;
+
+  /** The time in milliseconds it takes to fade in the menu. */
+  fadeInDuration: number;
+
+  /** The time in milliseconds it takes to fade out the menu. */
+  fadeOutDuration: number;
+
+  /** If enabled, items can be selected by dragging the mouse over them. */
+  enableMarkingMode: boolean;
+
+  /**
+   * If enabled, items can be selected by hovering over them while holding down a keyboard
+   * key.
+   */
+  enableTurboMode: boolean;
+
+  /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
+  warpMouse: boolean;
+
+  /** If enabled, menus using the hover mode require a final click for selecting items. */
+  hoverModeNeedsConfirmation: boolean;
+
+  /** Shorter gestures will not lead to selections. */
+  gestureMinStrokeLength: number;
+
+  /** Smaller turns will not lead to selections. */
+  gestureMinStrokeAngle: number;
+
+  /** Smaller movements will not be considered. */
+  gestureJitterThreshold: number;
+
+  /**
+   * If the pointer is stationary for this many milliseconds, the current item will be
+   * selected.
+   */
+  gesturePauseTimeout: number;
+
+  /**
+   * If set to a value greater than 0, items will be instantly selected if the mouse
+   * travelled more than centerDeadZone + fixedStrokeLength pixels in marking or turbo
+   * mode. Any other gesture detection based on angles or motion speed will be disabled in
+   * this case.
+   */
+  fixedStrokeLength: number;
+
+  /**
+   * If enabled, the parent of a selected item will be selected on a right mouse button
+   * click. Else the menu will be closed directly.
+   */
+  rmbSelectsParent: boolean;
+
+  /**
+   * If disabled, gamepad input will be ignored. This can be useful if the gamepad is not
+   * connected or if the user prefers to use the mouse.
+   */
+  enableGamepad: true;
+
+  /**
+   * This button will select the parent item when using a gamepad. Set to -1 to disable.
+   * See https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
+   */
+  gamepadBackButton: number;
+
+  /**
+   * This button will close the menu when using a gamepad. Set to -1 to disable. See
+   * https://w3c.github.io/gamepad/#remapping for the mapping of numbers to buttons.
+   */
+  gamepadCloseButton: number;
+
+  /**
+   * If enabled, pressing 'cmd + ,' on macOS or 'ctrl + ,' on Linux or Windows will open
+   * the settings window. If disabled, the default hotkey will be ignored.
+   */
+  useDefaultOsShowSettingsHotkey: boolean;
+}
+
+/**
+ * This function creates a default general settings object. This is used when the settings
+ * file does not exist yet.
+ *
+ * @returns The default general settings.
+ */
+export function getDefaultGeneralSettings(): IGeneralSettings {
+  return {
+    locale: 'auto',
+    showIntroductionDialog: true,
+    menuTheme: 'default',
+    darkMenuTheme: 'default',
+    menuThemeColors: {},
+    darkMenuThemeColors: {},
+    enableDarkModeForMenuThemes: false,
+    soundTheme: 'none',
+    soundVolume: 0.5,
+    ignoreWriteProtectedConfigFiles: false,
+    settingsWindowColorScheme: 'system',
+    settingsWindowFlavor: 'sakura-light',
+    trayIconFlavor: 'color',
+    lazyInitialization: false,
+    enableVersionCheck: true,
+    zoomFactor: 1,
+    centerDeadZone: 50,
+    minParentDistance: 150,
+    dragThreshold: 15,
+    fadeInDuration: 150,
+    fadeOutDuration: 200,
+    enableMarkingMode: true,
+    enableTurboMode: true,
+    warpMouse: true,
+    hoverModeNeedsConfirmation: false,
+    gestureMinStrokeLength: 150,
+    gestureMinStrokeAngle: 20,
+    gestureJitterThreshold: 10,
+    gesturePauseTimeout: 100,
+    fixedStrokeLength: 0,
+    rmbSelectsParent: false,
+    enableGamepad: true,
+    gamepadBackButton: 1,
+    gamepadCloseButton: 2,
+    useDefaultOsShowSettingsHotkey: true,
+    hideSettingsButton: false,
+    settingsButtonPosition: 'bottom-right',
+  };
 }

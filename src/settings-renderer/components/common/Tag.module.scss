@@ -1,0 +1,82 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.tag {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+
+  background-color: $widget-inverted;
+  color: $text-inverted;
+  border: none;
+
+  border-radius: 0 5px 5px 0;
+  padding-left: 0;
+  font-size: inherit;
+  white-space: nowrap;
+  margin-left: 7px;
+
+  svg {
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+
+  &:hover {
+    background-color: $widget-inverted-hover;
+  }
+
+  &:hover svg {
+    opacity: 1;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  // The dot representing the hole in the tag. We hide it on hover to create some sort of
+  // transition to the close icon.
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0.2em;
+    top: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $text-inverted;
+    transition: opacity 0.1s;
+  }
+
+  &:hover:after {
+    opacity: 0;
+  }
+
+  // The triangle on the left side of the tag.
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-color: transparent $widget-inverted transparent transparent;
+    border-style: solid;
+    border-width: 10px 7px 10px 0;
+  }
+
+  &:hover:before {
+    border-color: transparent $widget-inverted-hover transparent transparent;
+  }
+}

@@ -10,8 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a piece of text that will be pasted
@@ -35,11 +34,11 @@ export class TextItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'translate';
+    return 'text-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {
@@ -50,9 +49,5 @@ export class TextItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.text.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).text || i18next.t('items.common.not-configured');
   }
 }

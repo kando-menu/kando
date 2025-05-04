@@ -101,6 +101,14 @@ const config: ForgeConfig = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       LSUIElement: true,
     },
+
+    // This is used to set the app name in the menu bar on macOS.
+    protocols: [
+      {
+        name: 'Kando',
+        schemes: ['kando'],
+      },
+    ],
   },
   rebuildConfig: {},
   makers: [makerSquirrel, makerZIP, makerDMG, makerDeb, makerRPM],
@@ -125,11 +133,19 @@ const config: ForgeConfig = {
         config: rendererConfig,
         entryPoints: [
           {
-            html: './src/renderer/index.html',
-            js: './src/renderer.ts',
-            name: 'main_window',
+            html: './src/menu-renderer/index.html',
+            js: './src/menu-renderer/index.ts',
+            name: 'menu_window',
             preload: {
-              js: './src/renderer/preload.ts',
+              js: './src/menu-renderer/preload.ts',
+            },
+          },
+          {
+            html: './src/settings-renderer/index.html',
+            js: './src/settings-renderer/index.tsx',
+            name: 'settings_window',
+            preload: {
+              js: './src/settings-renderer/preload.ts',
             },
           },
         ],

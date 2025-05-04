@@ -8,22 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IBackendInfo, IKeySequence } from '../../common';
-
-/**
- * This interface is used to transfer information required from the window manager when
- * opening the pie menu. It contains the name of the currently focused app / window as
- * well as the current pointer position.
- *
- * How to get the app name and the window name depends on the operating system and the
- * window manager.
- */
-export interface WMInfo {
-  windowName: string;
-  appName: string;
-  pointerX: number;
-  pointerY: number;
-}
+import { IBackendInfo, IKeySequence, IWMInfo } from '../../common';
 
 /**
  * This interface is used to pass information about a keyboard shortcut to the backend. If
@@ -67,7 +52,7 @@ export interface Backend {
    * @returns A promise which resolves to the name and app of the currently focused window
    *   as well as to the current pointer position.
    */
-  getWMInfo: () => Promise<WMInfo>;
+  getWMInfo: () => Promise<IWMInfo>;
 
   /**
    * Each backend must provide a way to move the pointer.

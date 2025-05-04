@@ -30,8 +30,9 @@ export class X11Backend implements Backend {
   public getBackendInfo() {
     return {
       name: 'X11 Backend',
-      windowType: 'dock',
+      menuWindowType: 'dock',
       supportsShortcuts: true,
+      shouldUseTransparentSettingsWindow: false,
     };
   }
 

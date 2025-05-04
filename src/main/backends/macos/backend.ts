@@ -22,8 +22,9 @@ export class MacosBackend implements Backend {
   public getBackendInfo() {
     return {
       name: 'macOS Backend',
-      windowType: 'normal',
+      menuWindowType: 'normal',
       supportsShortcuts: true,
+      shouldUseTransparentSettingsWindow: true,
     };
   }
 

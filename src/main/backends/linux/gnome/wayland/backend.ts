@@ -36,8 +36,9 @@ export class GnomeBackend implements Backend {
   public getBackendInfo() {
     return {
       name: 'GNOME Wayland Backend',
-      windowType: 'dock',
+      menuWindowType: 'dock',
       supportsShortcuts: true,
+      shouldUseTransparentSettingsWindow: false,
     };
   }
 

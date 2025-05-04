@@ -1,0 +1,133 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use './variables.scss' as *;
+
+// For now, we support two different (hard-coded) font icon themes. The first one is the
+// Material Design Icons font, the second one is the Simple Icons font. Both are
+// available as npm packages.
+$material-symbols-font-path: '~material-symbols/';
+@import 'material-symbols/rounded';
+@import '../../node_modules/simple-icons-font/font/simple-icons.css';
+
+// The following styles are applied to the whole settings renderer. They are not
+// scoped to a specific component.
+
+html {
+  background: transparent;
+}
+
+body {
+  overflow: hidden;
+  user-select: none;
+  background: transparent;
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+  line-height: 1.4em;
+
+  &.systemColors {
+    color-scheme: light dark;
+  }
+
+  &.lightColors {
+    color-scheme: only light;
+  }
+
+  &.darkColors {
+    color-scheme: only dark;
+  }
+}
+
+a {
+  color: $text-link;
+  text-decoration: none;
+  position: relative;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:active {
+    top: 1px;
+  }
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+img {
+  pointer-events: none;
+}
+
+h1 {
+  color: $text-normal;
+  font-size: 1em;
+  margin: 1em 0 0.25em 0;
+}
+
+.react-tooltip {
+  background: light-dark(#222, #000) !important;
+  max-width: 300px;
+  border-radius: 8px !important;
+}
+
+// Tweak global focus outline.
+*:focus-visible {
+  outline: $border-focused;
+}
+
+// Fix background color of options in dropdowns.
+option {
+  background-color: $window-background;
+  color: $text-normal;
+}
+
+button,
+input[type='text'],
+input[type='number'] {
+  position: relative;
+
+  &:focus-visible {
+    z-index: 1;
+  }
+}
+
+*::-webkit-scrollbar-track {
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 3px;
+  margin: 10px 0;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  cursor: pointer;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.9);
+}

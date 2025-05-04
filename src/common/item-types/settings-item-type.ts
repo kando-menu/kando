@@ -10,7 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /** This class provides meta information for the open settings menu item. */
 export class SettingsItemType implements IItemType {
@@ -23,11 +23,11 @@ export class SettingsItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'settings';
+    return 'settings-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): null {
@@ -35,10 +35,6 @@ export class SettingsItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.settings.description');
-  }
-
-  getDescription(): string {
     return i18next.t('items.settings.description');
   }
 }

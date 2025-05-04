@@ -10,8 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a URL that will be opened when the
@@ -32,11 +31,11 @@ export class URIItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'public';
+    return 'uri-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {
@@ -47,9 +46,5 @@ export class URIItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.uri.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).uri || i18next.t('items.common.not-configured');
   }
 }

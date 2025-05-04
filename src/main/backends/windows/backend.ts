@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import os from 'node:os';
 import { screen, globalShortcut } from 'electron';
 import { native } from './native';
 import { Backend, Shortcut } from '../backend';
@@ -24,10 +25,19 @@ export class WindowsBackend implements Backend {
    * supported by Electron on Windows.
    */
   public getBackendInfo() {
+    // Vibrancy is only supported on Windows 11 22H2 (build 22621) or higher.
+    const release = os.release().split('.');
+    const major = parseInt(release[0]);
+    const minor = parseInt(release[1]);
+    const build = parseInt(release[2]);
+
+    const transparencySupported = major === 10 && minor === 0 && build >= 22621;
+
     return {
       name: 'Windows Backend',
-      windowType: 'toolbar',
+      menuWindowType: 'toolbar',
       supportsShortcuts: true,
+      shouldUseTransparentSettingsWindow: transparencySupported,
     };
   }
 
@@ -118,5 +128,15 @@ export class WindowsBackend implements Backend {
   /** This unbinds all previously bound shortcuts. */
   public async unbindAllShortcuts() {
     globalShortcut.unregisterAll();
+  }
+
+  /**
+   * This fixes the acrylic effect on Windows after the window has been maximized. See
+   * here: https://github.com/electron/electron/issues/42393
+   *
+   * @param hwnd The window handle.
+   */
+  public async fixAcrylicEffect(hwnd: number) {
+    native.fixAcrylicEffect(hwnd);
   }
 }

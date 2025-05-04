@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
+<svg
+  width="256"
+  height="256"
+  viewBox="0 0 256 256"
+  version="1.1"
+  id="svg1"
+  xml:space="preserve"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><path
+     d="m -262.90308,69.630614 c -1.9044,-0.0455 -3.76344,0.72548 -5.12372,2.0404 -2.67523,2.72056 -2.67523,7.16413 0,9.88469 l 18.31842,18.27309 -18.31842,18.273096 c -2.67523,2.72054 -2.67523,7.16413 0,9.88467 2.72057,2.67523 7.11878,2.67523 9.83935,0 l 23.21544,-23.21542 c 2.72055,-2.72056 2.72055,-7.164126 0,-9.884686 l -23.21544,-23.21544 c -1.22425,-1.22425 -2.94728,-1.94973 -4.71563,-2.0404 z m 40.44563,47.609736 v 11.60774 h 34.82316 v -11.60772 z m 0,0"
+     id="path1-4"
+     style="font-variation-settings:normal;opacity:0.5;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /><path
+     style="font-variation-settings:normal;opacity:0.5;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     d="m 52.363354,43.197095 c 0,0 -12.606117,0 -12.606117,12.606109 v 37.818328 c 0,-12.606108 12.606117,-12.606108 12.606117,-12.606108 H 115.3939 l 25.2122,25.212216 h 63.03056 c 0,0 12.60611,0 12.60611,12.6061 V 81.015424 c 0,-12.606109 -12.60611,-12.606109 -12.60611,-12.606109 H 140.6061 l -25.2122,-25.21222 z"
+     id="path1" /><path
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     d="m 52.363354,93.621532 c 0,0 -12.606117,0 -12.606117,12.606108 v 72.9715 c -0.09293,15.34531 12.341354,27.87737 26.70498,27.87737 l 121.508243,0 c 15.7766,-0.18055 28.27231,-12.44239 28.27231,-27.38219 l 0,-48.25446 c 0,-12.60612 -12.60611,-12.60612 -12.60611,-12.60612 H 140.6061 L 115.3939,93.621532 Z"
+     id="path2-4" /></svg>

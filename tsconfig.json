@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "target": "ES6",
     "allowJs": true,
     "module": "commonjs",
@@ -12,12 +13,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "*": [
-        "node_modules/*"
-      ]
-    }
+      "*": ["node_modules/*"]
+    },
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
-  "include": [
-    "src/**/**/*"
-  ]
+  "include": ["src/**/**/*"]
 }

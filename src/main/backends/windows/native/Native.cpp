@@ -13,10 +13,10 @@
 #include <windows.h>
 #include <winuser.h>
 #include <stringapiset.h>
+#include <dwmapi.h>
 
 #include <codecvt>
 #include <string>
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +25,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
                            InstanceMethod("getActiveWindow", &Native::getActiveWindow),
+                           InstanceMethod("fixAcrylicEffect", &Native::fixAcrylicEffect),
                        });
 }
 
@@ -108,6 +109,27 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
   obj.Set("name", myconv.to_bytes(ws));
 
   return obj;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::fixAcrylicEffect(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
+  }
+
+  HWND hwnd = (HWND)info[0].As<Napi::Number>().Int64Value();
+
+  DWM_BLURBEHIND bb = {0};
+  bb.dwFlags = DWM_BB_ENABLE;
+  bb.fEnable = TRUE;
+  bb.hRgnBlur = NULL;
+  DwmEnableBlurBehindWindow(hwnd, &bb);
+
+  // DWMWCP_ROUND = 2 and DWMWA_WINDOW_CORNER_PREFERENCE = 33 are not always defined.
+  unsigned p = 2;
+  DwmSetWindowAttribute(hwnd, 33, &p, sizeof(p));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

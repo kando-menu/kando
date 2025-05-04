@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
+<svg
+  width="256"
+  height="256"
+  viewBox="0 0 256 256"
+  version="1.1"
+  id="svg1"
+  xml:space="preserve"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><path
+     d="m 76.544608,63.229619 c -4.839278,0 -9.089418,3.240217 -10.351828,7.953249 L 33.285711,192.45926 h 22.30273 l 6.901243,-21.50321 h 49.486836 l 6.7329,21.50321 h 22.30273 L 104.19158,71.182868 c -1.26241,-4.713032 -5.512567,-7.953249 -10.393901,-7.953249 z m 8.500298,21.503209 c 1.346581,0.04212 2.566915,0.252489 3.198111,2.609005 L 107.13724,149.41076 H 67.160621 L 81.888854,87.005188 c 0.504967,-2.104037 1.851548,-2.314438 3.156052,-2.27236 z m 0,0"
+     id="path1"
+     style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000" /><path
+     d="m 141.01215,41.642254 v 10.772643 h 21.54528 V 203.23191 h -21.54528 v 10.77264 h 26.93161 l 5.38632,-5.38632 5.38632,5.38632 h 26.93161 V 203.23191 H 184.10272 V 52.414897 h 21.54529 V 41.642254 H 178.7164 l -5.38632,5.386321 -5.38632,-5.386321 z m 0,0"
+     fill-opacity="0.34902"
+     id="path2-0"
+     style="font-variation-settings:normal;opacity:0.5;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /></svg>

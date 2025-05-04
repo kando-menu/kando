@@ -1,0 +1,278 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+@use 'sass:color';
+
+$icon-padding: 1cqmin;
+$center-size: 25cqmin;
+$child-size: 12cqmin;
+$child-offset: 30cqmin;
+$grandchild-size: 4cqmin;
+$grandchild-offset: 7.2cqmin;
+$lock-size: 4cqmin;
+$lock-offset: 18cqmin;
+$backlink-size: 8cqmin;
+$backlink-offset: 30cqmin;
+
+.previewArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  container-type: size;
+  color: #fff;
+
+  .preview {
+    position: relative;
+    width: 100cqmin;
+    height: 100cqmin;
+
+    .child,
+    .center,
+    .backLink,
+    .lock {
+      position: absolute;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.3));
+      touch-action: none;
+      transition: transform 0.2s ease;
+      border: 2px solid transparent;
+
+      &:hover {
+        background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.4));
+      }
+
+      &.selected {
+        border: 2px solid light-dark($key-dark, $key-light);
+        background-color: light-dark(
+          rgba(color.mix(color.adjust($base-dark, $lightness: 10%), $key-dark, 50%), 0.4),
+          rgba(
+            color.mix(color.adjust($base-light, $lightness: -10%), $key-light, 50%),
+            0.4
+          )
+        );
+      }
+    }
+
+    .center {
+      width: $center-size;
+      top: calc(-1 * $center-size / 2 - $icon-padding / 2);
+      left: calc(-1 * $center-size / 2 - $icon-padding / 2);
+      padding: $icon-padding;
+
+      transform: translate(calc(50cqmin), calc(50cqmin));
+
+      &:active {
+        top: calc(-1 * $center-size / 2 - $icon-padding / 2 + 1px);
+      }
+
+      :global(.icon-container) {
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    }
+
+    .child {
+      width: $child-size;
+      top: calc(-1 * $child-size / 2 - $icon-padding / 2);
+      left: calc(-1 * $child-size / 2 - $icon-padding / 2);
+      padding: $icon-padding;
+
+      transform: translate(
+        calc(50cqmin + $child-offset * var(--dir-x)),
+        calc(50cqmin + $child-offset * var(--dir-y))
+      );
+
+      &.dragging {
+        opacity: 0.5;
+        filter: blur(10px);
+      }
+
+      &.dropping {
+        box-shadow: $drop-highlight;
+        transform: translate(
+            calc(50cqmin + $child-offset * var(--dir-x)),
+            calc(50cqmin + $child-offset * var(--dir-y))
+          )
+          scale(1.1);
+      }
+
+      &:active {
+        top: calc(-1 * $child-size / 2 - $icon-padding / 2 + 1px);
+      }
+
+      :global(.icon-container) {
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    }
+
+    .lock {
+      width: $lock-size;
+      top: calc(-1 * $lock-size / 2 - $icon-padding / 4);
+      left: calc(-1 * $lock-size / 2 - $icon-padding / 4);
+      padding: $icon-padding / 2;
+
+      transform: translate(
+        calc(50cqmin + $lock-offset * var(--dir-x)),
+        calc(50cqmin + $lock-offset * var(--dir-y))
+      );
+
+      background-color: transparent;
+      color: $text-normal;
+      opacity: 0.5;
+
+      &.locked {
+        opacity: 1;
+        color: light-dark($key-dark, $key-light);
+        background-color: light-dark(rgba($base-dark, 0.2), rgba($base-light, 0.15));
+
+        &:hover {
+          background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.2));
+        }
+      }
+
+      &:hover {
+        opacity: 1;
+        background-color: light-dark(rgba($base-dark, 0.1), rgba($base-light, 0.1));
+      }
+
+      &:active {
+        top: calc(-1 * $lock-size / 2 - $icon-padding / 4 + 1px);
+      }
+    }
+
+    .grandChild {
+      position: absolute;
+      aspect-ratio: 1;
+      width: $grandchild-size;
+      top: calc(-1 * $grandchild-size / 2 + $child-size / 2 + $icon-padding);
+      left: calc(-1 * $grandchild-size / 2 + $child-size / 2 + $icon-padding);
+
+      transform: translate(
+        calc($grandchild-offset * var(--dir-x)),
+        calc($grandchild-offset * var(--dir-y))
+      );
+
+      border-radius: 50%;
+
+      background: linear-gradient(
+        var(--angle),
+        light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 0%,
+        light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 40%,
+        light-dark(rgba($base-dark, 0.2), rgba($base-light, 0.1)) 70%,
+        light-dark(rgba($base-dark, 0.2), rgba($base-light, 0.1)) 100%
+      );
+    }
+
+    .backLink {
+      position: relative;
+      width: $backlink-size;
+      left: calc(-1 * $backlink-size / 2 - $icon-padding / 2);
+      top: calc(-1 * $backlink-size / 2 - $icon-padding / 2);
+      padding: $icon-padding;
+
+      transform: translate(
+          calc(50cqmin + $backlink-offset * var(--dir-x)),
+          calc(50cqmin + $backlink-offset * var(--dir-y))
+        )
+        rotate(var(--angle));
+
+      &:active {
+        top: calc(-1 * $backlink-size / 2 - $icon-padding / 2 + 1px);
+      }
+
+      &.dropping {
+        box-shadow: $drop-highlight;
+        transform: translate(
+            calc(50cqmin + $backlink-offset * var(--dir-x)),
+            calc(50cqmin + $backlink-offset * var(--dir-y))
+          )
+          rotate(var(--angle)) scale(1.1);
+      }
+
+      // The ::before and ::after pseudo elements are used to draw the backlink line.
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        height: 4cqmin;
+        top: 3cqmin;
+      }
+
+      // The outer part.
+      &::before {
+        width: 12cqmin;
+        right: -12cqmin;
+
+        background: linear-gradient(
+          to left,
+          light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 0%,
+          light-dark(rgba($base-dark, 0.1), rgba($base-light, 0.1)) 25%,
+          light-dark(rgba($base-dark, 0.1), rgba($base-light, 0.1)) 85%,
+          light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 100%
+        );
+      }
+
+      // The inner part.
+      &::after {
+        width: 10cqmin;
+        left: -10cqmin;
+
+        background: linear-gradient(
+          to left,
+          light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 0%,
+          light-dark(rgba($base-dark, 0.1), rgba($base-light, 0.1)) 15%,
+          light-dark(rgba($base-dark, 0.1), rgba($base-light, 0.1)) 75%,
+          light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 100%
+        );
+      }
+    }
+  }
+}
+
+.transitionContainer {
+  transition:
+    opacity 250ms ease,
+    transform 350ms cubic-bezier(0.45, 1.45, 0.55, 1);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  &.fadeEnter {
+    opacity: 0;
+    transform: translate(
+      calc($child-offset * var(--transition-dir-x)),
+      calc($child-offset * var(--transition-dir-y))
+    );
+  }
+
+  &.fadeExit {
+    opacity: 1;
+    transform: none;
+  }
+
+  &.fadeExitActive {
+    opacity: 0;
+    transform: translate(
+      calc(-1 * $child-offset * var(--transition-dir-x)),
+      calc(-1 * $child-offset * var(--transition-dir-y))
+    );
+    pointer-events: none;
+  }
+
+  &.fadeEnterActive {
+    opacity: 1;
+    transform: none;
+    pointer-events: none;
+  }
+}

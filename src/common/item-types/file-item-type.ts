@@ -10,8 +10,7 @@
 
 import i18next from 'i18next';
 
-import { IMenuItem } from '../index';
-import { IItemType } from '../item-type-registry';
+import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a path that will be opened when the
@@ -32,11 +31,11 @@ export class FileItemType implements IItemType {
   }
 
   get defaultIcon(): string {
-    return 'folder_open';
+    return 'file-item.svg';
   }
 
   get defaultIconTheme(): string {
-    return 'material-symbols-rounded';
+    return 'kando';
   }
 
   get defaultData(): IItemData {
@@ -47,9 +46,5 @@ export class FileItemType implements IItemType {
 
   get genericDescription(): string {
     return i18next.t('items.file.description');
-  }
-
-  getDescription(item: IMenuItem): string {
-    return (item.data as IItemData).path || i18next.t('items.common.not-configured');
   }
 }

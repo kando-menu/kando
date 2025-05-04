@@ -53,7 +53,7 @@ export const rules: Required<ModuleOptions>['rules'] = [
     },
   },
   {
-    test: /\.hbs$/i,
-    use: 'handlebars-loader',
+    test: /\.css$/,
+    use: ['style-loader', 'css-loader'],
   },
 ];
