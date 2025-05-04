@@ -87,7 +87,7 @@ export default () => {
 
         <Note>
           <SettingsCheckbox
-            label="Show this dialog on startup"
+            label="Show this dialog again"
             settingsKey="showIntroductionDialog"
           />
         </Note>
