@@ -30,6 +30,7 @@ export default () => {
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
 
   const version = useAppState((state) => state.versionInfo);
+  const backend = useAppState((state) => state.backendInfo);
 
   return (
     <Modal
@@ -56,6 +57,10 @@ export default () => {
           <div className={classes.versionInfo}>
             Kando Version:
             <br />
+            Kando Backend:
+            <br />
+            License:
+            <br />
             Electron Version:
             <br />
             Node Version:
@@ -65,6 +70,10 @@ export default () => {
           </div>
           <div className={classes.versionInfo}>
             {version.kandoVersion}
+            <br />
+            {backend.name}
+            <br />
+            MIT
             <br />
             {version.electronVersion}
             <br />
@@ -93,6 +102,13 @@ export default () => {
                   '_blank'
                 )
               }
+            />
+            <Button
+              label="Source code"
+              icon={<TbExternalLink />}
+              tooltip="https://github.com/kando-menu/kando"
+              onClick={() => window.open('https://github.com/kando-menu/kando', '_blank')}
+              block
             />
           </div>
         </div>
