@@ -42,8 +42,8 @@ export default () => {
   return (
     <>
       <Dropdown
-        label={i18next.t('items.redirect.redirect')}
-        info={i18next.t('items.redirect.redirect-hint')}
+        label={i18next.t('menu-items.redirect.redirect')}
+        info={i18next.t('menu-items.redirect.redirect-hint')}
         options={options}
         initialValue={data.menu}
         onChange={(menuName) => {
@@ -60,9 +60,9 @@ export default () => {
       <RandomTip
         marginTop={50}
         tips={[
-          i18next.t('items.redirect.tip-1'),
-          i18next.t('items.redirect.tip-2'),
-          i18next.t('items.redirect.tip-3'),
+          i18next.t('menu-items.redirect.tip-1'),
+          i18next.t('menu-items.redirect.tip-2'),
+          i18next.t('menu-items.redirect.tip-3'),
         ]}
       />
     </>

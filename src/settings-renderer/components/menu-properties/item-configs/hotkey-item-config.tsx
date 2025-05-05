@@ -33,9 +33,9 @@ export default () => {
   return (
     <>
       <ShortcutPicker
-        label="Hotkey"
-        info="This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!"
-        recordingPlaceholder="Type a hotkey…"
+        label={i18next.t('menu-items.hotkey.hotkey')}
+        info={i18next.t('menu-items.hotkey.hotkey-hint')}
+        recordingPlaceholder={i18next.t('menu-items.hotkey.recording-placeholder')}
         mode="key-codes"
         initialValue={data.hotkey}
         onChange={(value) => {
@@ -46,8 +46,8 @@ export default () => {
         }}
       />
       <Checkbox
-        label={i18next.t('items.common.delayed-option')}
-        info={i18next.t('items.common.delayed-option-hint')}
+        label={i18next.t('menu-items.common.delayed-option')}
+        info={i18next.t('menu-items.common.delayed-option-hint')}
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -59,11 +59,9 @@ export default () => {
       <RandomTip
         marginTop={50}
         tips={[
-          i18next.t('items.hotkey.tip-1'),
-          i18next.t('items.hotkey.tip-2'),
-          i18next.t('items.hotkey.tip-3'),
-          i18next.t('items.hotkey.tip-4'),
-          i18next.t('items.hotkey.tip-5'),
+          i18next.t('menu-items.hotkey.tip-1'),
+          i18next.t('menu-items.hotkey.tip-2'),
+          i18next.t('menu-items.hotkey.tip-3'),
         ]}
       />
     </>

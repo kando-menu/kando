@@ -29,7 +29,7 @@ export class HotkeyItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.hotkey.name');
+    return i18next.t('menu-items.hotkey.name');
   }
 
   get defaultIcon(): string {
@@ -48,6 +48,6 @@ export class HotkeyItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.hotkey.description');
+    return i18next.t('menu-items.hotkey.description');
   }
 }

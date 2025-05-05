@@ -36,8 +36,8 @@ export default () => {
   return (
     <>
       <FilePicker
-        label={i18next.t('items.file.file')}
-        info={i18next.t('items.file.file-hint')}
+        label={i18next.t('menu-items.file.file')}
+        info={i18next.t('menu-items.file.file-hint')}
         initialValue={data.path}
         onChange={(path) => {
           const parts = path.split(/[/\\]/);
@@ -50,7 +50,7 @@ export default () => {
           });
         }}
       />
-      <RandomTip marginTop={50} tips={[i18next.t('items.file.tip-1')]} />
+      <RandomTip marginTop={50} tips={[i18next.t('menu-items.file.tip-1')]} />
     </>
   );
 };

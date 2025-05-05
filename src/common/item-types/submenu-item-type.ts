@@ -19,7 +19,7 @@ export class SubmenuItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.submenu.name');
+    return i18next.t('menu-items.submenu.name');
   }
 
   get defaultIcon(): string {
@@ -35,6 +35,6 @@ export class SubmenuItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.submenu.description');
+    return i18next.t('menu-items.submenu.description');
   }
 }
