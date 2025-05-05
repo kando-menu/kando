@@ -59,6 +59,16 @@ jobs:
       - name: Create Release
         run: |
           npm run make
+      - name: Rename Executables
+        shell: pwsh
+        env:
+          MATRIX_OS: ${{ matrix.os }}
+        run: |
+          if ($env:MATRIX_OS -eq "windows-2022") {
+            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-x64" + $_.Extension }
+          } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
+            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
+          }
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
