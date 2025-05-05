@@ -61,7 +61,9 @@ export default () => {
         tips={[
           i18next.t('menu-items.hotkey.tip-1'),
           i18next.t('menu-items.hotkey.tip-2'),
-          i18next.t('menu-items.hotkey.tip-3'),
+          i18next
+            .t('menu-items.hotkey.tip-3')
+            .replace('%s', 'https://kando.menu/valid-keynames/'),
         ]}
       />
     </>

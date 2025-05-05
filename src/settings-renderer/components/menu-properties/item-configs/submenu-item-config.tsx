@@ -28,10 +28,6 @@ export default () => {
         i18next.t('menu-items.submenu.tip-5'),
         i18next.t('menu-items.submenu.tip-6'),
         i18next.t('menu-items.submenu.tip-7'),
-        i18next.t('menu-items.submenu.tip-8'),
-        i18next.t('menu-items.submenu.tip-9'),
-        i18next.t('menu-items.submenu.tip-10'),
-        i18next.t('menu-items.submenu.tip-11'),
       ]}
     />
   );
