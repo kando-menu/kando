@@ -9,6 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import Markdown from 'react-markdown';
+import rehypeExternalLinks from 'rehype-external-links';
 
 import Note from './Note';
 
@@ -37,7 +39,9 @@ export default (props: IProps) => {
       marginRight={'10%'}
       marginBottom={props.marginBottom}
       marginTop={props.marginTop}>
-      {props.tips[Math.floor(Math.random() * props.tips.length)]}
+      <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+        {props.tips[Math.floor(Math.random() * props.tips.length)]}
+      </Markdown>
     </Note>
   );
 };
