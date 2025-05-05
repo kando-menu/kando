@@ -41,7 +41,7 @@ for more information.
    */
   public getBackendInfo() {
     return {
-      name: 'Hyprland Backend',
+      name: 'Hyprland',
       menuWindowType: 'splash',
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.hyprland.shortcut-hint'),
