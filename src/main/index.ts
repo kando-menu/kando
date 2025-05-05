@@ -149,7 +149,10 @@ const handleArguments = (
     };
 
     if (!handleCommandLine(options)) {
-      Notification.showError('Invalid link', 'The deep link could not be parsed.');
+      Notification.showError(
+        i18next.t('main.invalid-link-header'),
+        i18next.t('main.invalid-link-message')
+      );
     }
 
     return;

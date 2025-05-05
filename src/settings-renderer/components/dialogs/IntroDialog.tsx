@@ -40,11 +40,11 @@ export default () => {
   }, []);
 
   const slides = [
-    i18next.t('sidebar.introduction-tab-slide-1-caption'),
-    i18next.t('sidebar.introduction-tab-slide-2-caption'),
-    i18next.t('sidebar.introduction-tab-slide-3-caption'),
-    i18next.t('sidebar.introduction-tab-slide-4-caption'),
-    i18next.t('sidebar.introduction-tab-slide-5-caption'),
+    i18next.t('settings.introduction-dialog.slide-1-caption'),
+    i18next.t('settings.introduction-dialog.slide-2-caption'),
+    i18next.t('settings.introduction-dialog.slide-3-caption'),
+    i18next.t('settings.introduction-dialog.slide-4-caption'),
+    i18next.t('settings.introduction-dialog.slide-5-caption'),
   ];
 
   return (

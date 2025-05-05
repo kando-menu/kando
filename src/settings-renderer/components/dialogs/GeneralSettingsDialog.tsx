@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 
 import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
 
@@ -284,6 +285,9 @@ export default () => {
           <div style={{ display: 'flex' }}>
             <Button
               label="Reload menu theme"
+              tooltip={i18next.t(
+                'settings.general-settings-dialog.reload-menu-theme-tooltip'
+              )}
               icon={<TbReload />}
               grouped
               grow

@@ -76,13 +76,13 @@ export default (props: IProps) => {
       onChange={(e) => onChange(e.target.value)}
       spellCheck="false"
       placeholder={[
-        i18next.t('properties.icon-picker.base64-example'),
+        i18next.t('settings.icon-picker-dialog.base64-example'),
         'data:image/svg;base64,...',
         '',
-        i18next.t('properties.icon-picker.file-example'),
+        i18next.t('settings.icon-picker-dialog.file-example'),
         'file:///path/to/icon.png',
         '',
-        i18next.t('properties.icon-picker.url-example'),
+        i18next.t('settings.icon-picker-dialog.url-example'),
         'https://cdn.simpleicons.org/simpleicons/white',
       ].join('\n')}
     />

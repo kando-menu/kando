@@ -675,7 +675,7 @@ export class KandoApp {
       const trigger =
         (this.backend.getBackendInfo().supportsShortcuts
           ? menu.shortcut
-          : menu.shortcutID) || i18next.t('properties.common.not-bound');
+          : menu.shortcutID) || i18next.t('settings.not-bound');
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {
