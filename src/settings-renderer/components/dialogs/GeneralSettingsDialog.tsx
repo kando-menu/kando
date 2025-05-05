@@ -178,6 +178,16 @@ export default () => {
             info="If checked, you can use a connected gamepad to control the menu."
             settingsKey="enableGamepad"
           />
+          <SettingsDropdown
+            label="Press-shortcut-again behavior"
+            info="This determines what happens when the shortcut is pressed again while a menu is shown. If multiple menus are assigned to the same shortcut, you can use this to cycle through all matching menus. Make sure to only hold down a modifier key if you want to use Turbo Mode together with an option other than 'Nothing'."
+            settingsKey="sameShortcutBehavior"
+            options={[
+              { value: 'nothing', label: 'Nothing' },
+              { value: 'cycle', label: 'Cycle through menus' },
+              { value: 'close', label: 'Close menu' },
+            ]}
+          />
 
           <h1>Menu Sounds</h1>
           <Note marginTop={-5}>
