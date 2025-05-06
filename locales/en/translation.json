@@ -159,12 +159,15 @@
   },
   "settings": {
     "about-dialog": {
+      "title": "About Kando",
       "backend": "Kando Backend",
       "chrome-version": "Chrome Version",
       "electron-version": "Electron Version",
       "kando-version": "Kando Version",
       "node-version": "Node Version"
     },
+    "undo": "Undo",
+    "redo": "Redo",
     "anchored-mode-hint": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode.",
     "anchored-mode": "Anchored Mode",
     "app-condition-hint": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
@@ -182,6 +185,7 @@
     "centered-mode": "Centered Mode",
     "create-menu-button": "Create a menu!",
     "general-settings-dialog": {
+      "title": "General Settings",
       "reload-menu-theme-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu."
     },
     "hover-mode-hint": "For power users only! Select items by hovering over them.",
@@ -193,6 +197,7 @@
       "url-example": "URL example:"
     },
     "introduction-dialog": {
+      "title": "Welcome to Kando!",
       "slide-1-caption": "Click Anywhere: You do not have to exactly click on an item, you just have to click somewhere into its wedge!",
       "slide-2-caption": "Go Back: Quickly navigate one level up by clicking the center item.",
       "slide-3-caption": "Marking Mode: Drag over an item to enter marking mode. If you pause the pointer movement or make a turn, the currently dragged submenu will be opened.",
@@ -206,6 +211,7 @@
     "menu-conditions-subheading": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
     "menu-conditions": "Menu Conditions",
     "menu-themes-dialog": {
+      "title": "Menu Themes",
       "author": "by {{author}}",
       "close-color-picker": "Close the color editor",
       "dark-mode": "Use Separate Themes and Colors for Light and Dark Mode",
