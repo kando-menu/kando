@@ -310,22 +310,20 @@ export class KandoApp {
     });
   }
 
-  /** This is called when the --reload-menu-theme command line option is passed. */
+  /**
+   * This is called when the --reload-menu-theme command line option is passed or when the
+   * respective button in the settings is pressed.
+   */
   public reloadMenuTheme() {
-    this.menuWindow?.webContents.send(
-      `general-settings-changed-menuTheme`,
-      this.generalSettings.get('menuTheme'),
-      this.generalSettings.get('menuTheme')
-    );
+    this.menuWindow?.webContents.send('menu-window.reload-menu-theme');
   }
 
-  /** This is called when the --reload-sound-theme command line option is passed. */
+  /**
+   * This is called when the --reload-sound-theme command line option is passed or when
+   * the respective button in the settings is pressed.
+   */
   public reloadSoundTheme() {
-    this.menuWindow?.webContents.send(
-      `general-settings-changed-soundTheme`,
-      this.generalSettings.get('soundTheme'),
-      this.generalSettings.get('soundTheme')
-    );
+    this.menuWindow?.webContents.send('menu-window.reload-sound-theme');
   }
 
   /**
