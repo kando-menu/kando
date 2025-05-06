@@ -177,6 +177,12 @@ export class KandoApp {
     // available in both the menu window and the settings window.
     this.initCommonRendererAPI();
 
+    // Create and load the main window if it does not exist yet.
+    if (!this.generalSettings.get('lazyInitialization')) {
+      this.menuWindow = new MenuWindow(this);
+      await this.menuWindow.load();
+    }
+
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
 
@@ -205,12 +211,6 @@ export class KandoApp {
         }
       );
     });
-
-    // Create and load the main window if it does not exist yet.
-    if (!this.generalSettings.get('lazyInitialization')) {
-      this.menuWindow = new MenuWindow(this);
-      await this.menuWindow.load();
-    }
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */
