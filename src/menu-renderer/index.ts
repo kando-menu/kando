@@ -52,12 +52,21 @@ Promise.all([
   };
 
   window.commonAPI.darkModeChanged(reloadMenuTheme);
+  window.menuAPI.onReloadMenuTheme(reloadMenuTheme);
 
   // We also create a new sound theme and load the description we got from the main
   // process.
   const soundTheme = new SoundTheme();
   soundTheme.loadDescription(soundThemeDescription);
   soundTheme.setVolume(settings.soundVolume);
+
+  // This will be called below whenever the sound theme should be reloaded.
+  const reloadSoundTheme = async () => {
+    const description = await window.commonAPI.getSoundTheme();
+    soundTheme.loadDescription(description);
+  };
+
+  window.menuAPI.onReloadSoundTheme(reloadSoundTheme);
 
   // Create the settings button. This is the button that is shown in one corner of the
   // screen. It is used to open the settings dialog.
@@ -90,7 +99,7 @@ Promise.all([
   );
 
   // Show the menu when the main process requests it.
-  window.menuAPI.showMenu((root, menuOptions) => {
+  window.menuAPI.onShowMenu((root, menuOptions) => {
     menu.show(root, menuOptions);
     settingsButton.show();
   });

@@ -52,6 +52,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 
+#### :bug: Fixed
+
+- Gamepad input on Linux when using [input-gamepad](https://github.com/sezanzeb/input-remapper).
+
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 
 **Release Date:** 2025-03-27
