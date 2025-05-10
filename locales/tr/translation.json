@@ -69,7 +69,7 @@
   "main": {
     "failed-to-start-header": "Kando başlatılamadı",
     "inhibit-shortcuts": "Kısayolları Geçici Olarak Devre Dışı Bırak",
-    "new-version-message": "Kando'nun yeni bir sürümü mevcut!",
+    "new-version-notification-header": "Kando'nun yeni bir sürümü mevcut!",
     "quit": "Çıkış",
     "show-settings": "Ayarları Göster",
     "un-inhibit-shortcuts": "Kısayolları Yeniden Etkinleştir"
@@ -86,9 +86,6 @@
       "tip-4": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
       "tip-5": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın."
     },
-    "common": {
-      "not-configured": "Yapılandırılmamış"
-    },
     "file": {
       "description": "Bir dosya veya klasör açar.",
       "file": "Dosya Yolu",
@@ -99,7 +96,7 @@
       "description": "Bir kısayol tuşuna basar.",
       "hotkey": "Kısayol Tuşu",
       "name": "Kısayol Tuşu Simüle Et",
-      "recording-placeholder": "Bir kısayol tuşuna basın...",
+      "recording-placeholder": "Bir kısayol tuşuna basın…",
       "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
       "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin."
     },
@@ -107,7 +104,7 @@
       "description": "Bir klavye makrosu yazar.",
       "name": "Makro Simüle Et",
       "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
-      "recording-placeholder": "Tuşlara basın...",
+      "recording-placeholder": "Tuşlara basın…",
       "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz."
     },
     "redirect": {
@@ -127,7 +124,7 @@
     "text": {
       "description": "Belirtilen metni ekler.",
       "name": "Metin Yapıştır",
-      "placeholder": "Herhangi bir metin ekleyin...",
+      "placeholder": "Herhangi bir metin ekleyin…",
       "tip-1": "Bu eylem, metni yapıştırmak için panonuzu kullanır. Eylemi kullandıktan sonra, pano metni içerecektir."
     },
     "uri": {
@@ -144,23 +141,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Kando Arka Ucu",
       "chrome-version": "Chrome Sürümü",
       "electron-version": "Electron Sürümü",
+      "kando-backend": "Kando Arka Ucu",
       "kando-version": "Kando Sürümü"
     },
     "anchored-mode": "Sabitlenmiş Mod",
     "app-condition": "Belirli Uygulamalarla Sınırla",
     "area-condition": "Belirli Ekran Alanıyla Sınırla",
     "area-condition-bottom-placeholder": "Alt",
-    "area-condition-hint": "Menüyü yalnızca işaretçi ekranda belirli bir alandaysa göster.",
     "area-condition-left-placeholder": "Sol",
     "area-condition-right-placeholder": "Sağ",
     "area-condition-top-placeholder": "Üst",
     "cancel": "İptal",
     "centered-mode": "Ortalanmış Mod",
     "centered-mode-hint": "Menüyü imleç yerine ekranın ortasında açın.",
-    "create-menu-button": "Bir menü oluşturun!",
     "general-settings-dialog": {
       "reload-menu-theme": "Mevcut Menü Temasını Yeniden Yükle",
       "reload-menu-theme-tooltip": "CSS değişiklikleri anında uygulanacaktır, theme.json dosyasında yapılan değişiklikler için menüyü yeniden açmanız gerekir.",
@@ -169,7 +164,7 @@
     "hover-mode": "Üzerine Gelme Modu",
     "hover-mode-hint": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
     "icon-picker-dialog": {
-      "search-placeholder": "Simgeleri Ara..."
+      "search-placeholder": "Simgeleri Ara…"
     },
     "introduction-dialog": {
       "slide-1-caption": "Herhangi Bir Yere Tıklayın: Tam olarak bir öğeye tıklamanız gerekmez, sadece diliminin herhangi bir yerine tıklamanız yeterlidir!",
@@ -181,24 +176,17 @@
     },
     "menu-behavior": "Menü Davranışı",
     "menu-conditions": "Menü Koşulları",
-    "menu-conditions-subheading": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
+    "menu-conditions-hint": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
     "menu-themes-dialog": {
-      "author": "{{author}} tarafından",
-      "close-color-picker": "Renk düzenleyicisini kapat",
-      "dark-mode": "Açık ve Koyu Mod için Ayrı Temalar ve Renkler Kullan",
-      "edit-colors": "Renkleri Düzenle",
-      "hint": "Temaları <a {{repositoryLink}}>tema deposundan</a> indirebilirsiniz. Ayrıca <a {{tutorialLink}}>kendi temalarınızı nasıl oluşturacağınızı öğrenebilir</a> ve bunları <a {{discordLink}}>Kando'nun Discord Sunucusunda</a> paylaşabilirsiniz!",
+      "author": "%s tarafından",
+      "light-dark-mode-hint": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
       "reset-color-picker": "Tüm renkleri varsayılanlarına sıfırla",
-      "system-mode-subheading": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
-      "system-mode-subheading-dark": "Sisteminiz şu anda koyu modda. Yukarıdaki ayarlar yalnızca koyu modda kullanılacaktır.",
-      "system-mode-subheading-light": "Sisteminiz şu anda açık modda. Yukarıdaki ayarlar yalnızca açık modda kullanılacaktır.",
       "title": "Menü Temaları"
     },
     "not-bound": "Bağlı Değil",
-    "shortcut-hint": "Bu menüyü açacaktır.",
     "shortcut-id-label": "Genel Kısayol Kimliği",
     "shortcut-label": "Kısayol",
-    "shortcut-recording": "Bir kısayola basın...",
+    "shortcut-recording": "Bir kısayola basın…",
     "window-condition": "Belirli Pencere Başlıklarıyla Sınırla"
   }
 }

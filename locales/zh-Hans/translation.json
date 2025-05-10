@@ -74,7 +74,7 @@
     "inhibit-shortcuts": "暂时禁用快捷键",
     "is-running-header": "Kando 已在运行",
     "is-running-message": "点击托盘图标以查看选项！",
-    "new-version-message": "Kando 发布新版本啦！",
+    "new-version-notification-header": "Kando 发布新版本啦！",
     "quit": "退出",
     "show-settings": "显示设置窗口",
     "un-inhibit-shortcuts": "重新启用快捷键"
@@ -90,9 +90,6 @@
       "tip-3": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
       "tip-4": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
       "tip-5": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。"
-    },
-    "common": {
-      "not-configured": "未设定"
     },
     "file": {
       "description": "打开一个文件或文件夹。",
@@ -154,23 +151,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Kando 后端",
       "chrome-version": "Chrome 版本",
       "electron-version": "Electron 版本",
+      "kando-backend": "Kando 后端",
       "kando-version": "Kando 版本"
     },
     "anchored-mode": "锚定模式",
     "app-condition": "限定应用",
     "area-condition": "限定屏幕区域",
     "area-condition-bottom-placeholder": "下",
-    "area-condition-hint": "只在光标位于指定屏幕区域时打开该菜单。",
     "area-condition-left-placeholder": "左",
     "area-condition-right-placeholder": "右",
     "area-condition-top-placeholder": "上",
     "cancel": "取消",
     "centered-mode": "居中模式",
     "centered-mode-hint": "在屏幕中心而非光标位置打开菜单。",
-    "create-menu-button": "创建新菜单！",
     "general-settings-dialog": {
       "reload-menu-theme": "重载当前菜单主题",
       "reload-menu-theme-tooltip": "对 CSS 的更改将会立即生效，对 theme.json 文件的更改则需要重新打开菜单。",
@@ -194,22 +189,15 @@
     },
     "menu-behavior": "菜单行为",
     "menu-conditions": "菜单条件",
-    "menu-conditions-subheading": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
+    "menu-conditions-hint": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
     "menu-themes-dialog": {
-      "author": "作者 {{author}}",
+      "author": "作者 %s",
       "caption": "在未来，我们会有一个在线的菜单主题仓库。现在，您可以 <a {{tutorialLink}}>了解如何创建主题</a>，并在 <a {{discordLink}}>Kando 的 Discord 群</a> 里和我们分享！",
-      "close-color-picker": "关闭颜色编辑器",
-      "dark-mode": "在系统浅色和深色模式下使用不同的主题和颜色",
-      "edit-colors": "编辑颜色",
-      "hint": "您可以在<a {{repositoryLink}}>主题仓库</a>下载主题，也可以<a {{tutorialLink}}>了解如何创建主题</a>，并在<a{{discordLink}}>Kando的Discord群</a>里和我们分享！",
+      "light-dark-mode-hint": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
       "reset-color-picker": "重置所有颜色至默认值",
-      "system-mode-subheading": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
-      "system-mode-subheading-dark": "您的系统当前处于深色模式，上述设置仅在深色模式下生效。",
-      "system-mode-subheading-light": "您的系统当前处于浅色模式，上述设置仅在浅色模式下生效。",
       "title": "菜单主题"
     },
     "not-bound": "未绑定快捷键",
-    "shortcut-hint": "按下快捷键打开菜单。",
     "shortcut-id-label": "全局快捷键 ID",
     "shortcut-label": "快捷键",
     "shortcut-recording": "请按下按键…",

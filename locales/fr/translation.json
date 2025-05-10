@@ -71,7 +71,7 @@
     "inhibit-shortcuts": "Désactiver temporairement les Raccourcis",
     "is-running-header": "Kando est déjà en cours d'exécution",
     "is-running-message": "Utilisez l'icône de la barre des tâches pour plus d'options !",
-    "new-version-message": "Une nouvelle version de Kando est disponible !",
+    "new-version-notification-header": "Une nouvelle version de Kando est disponible !",
     "quit": "Quitter",
     "show-settings": "Afficher les Configurations",
     "un-inhibit-shortcuts": "Réactiver les Raccourcis"
@@ -87,9 +87,6 @@
       "tip-3": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
       "tip-4": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
       "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert."
-    },
-    "common": {
-      "not-configured": "Non configuré"
     },
     "file": {
       "description": "Ouvre un fichier ou dossier.",
@@ -152,23 +149,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Interface système",
       "chrome-version": "Version de Chrome",
       "electron-version": "Version d'Electron",
+      "kando-backend": "Interface système",
       "kando-version": "Version de Kando"
     },
     "anchored-mode": "Mode Ancré",
     "app-condition": "Limiter à des Applications Spécifiques",
     "area-condition": "Limiter à une Zone Spécifique de l'Écran",
     "area-condition-bottom-placeholder": "Bas",
-    "area-condition-hint": "Afficher le menu uniquement si le curseur se trouve dans une zone donnée de l'écran.",
     "area-condition-left-placeholder": "Gauche",
     "area-condition-right-placeholder": "Droite",
     "area-condition-top-placeholder": "Haut",
     "cancel": "Annuler",
     "centered-mode": "Mode Centré",
     "centered-mode-hint": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
-    "create-menu-button": "Créer un menu !",
     "general-settings-dialog": {
       "reload-menu-theme": "Recharger le Thème de Menu Actuel",
       "reload-menu-theme-tooltip": "Les changements CSS seront appliqués immédiatement, pour les changements effectués au fichier theme.json, vous devez rouvrir le menu.",
@@ -191,22 +186,15 @@
     },
     "menu-behavior": "Comportement du Menu",
     "menu-conditions": "Conditions du Menu",
-    "menu-conditions-subheading": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
+    "menu-conditions-hint": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
     "menu-themes-dialog": {
-      "author": "par {{author}}",
+      "author": "par %s",
       "caption": "À l'avenir, nous disposerons d'un répertoire en ligne pour les thèmes de menu. Pour l'instant, vous pouvez <a {{tutorialLink}}>apprendre à créer vos propres thèmes</a> et les partager dans le <a {{discordLink}}>Serveur Discord de Kando</a> !",
-      "close-color-picker": "Fermer l'éditeur de couleurs",
-      "dark-mode": "Utiliser des Thèmes et des Couleurs Différents pour le Mode Clair et le Mode Sombre",
-      "edit-colors": "Modifier les couleurs",
-      "hint": "Il est possible de télécharger des thèmes à partir du <a {{repositoryLink}}>répertoire de thèmes</a>. Vous pouvez également <a {{tutorialLink}}>apprendre à créer les vôtres</a> et les partager sur le <a {{discordLink}}>serveur Discord de Kando </a> !",
+      "light-dark-mode-hint": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
       "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
-      "system-mode-subheading": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
-      "system-mode-subheading-dark": "Votre système est actuellement en mode sombre. Les paramètres ci-dessus ne seront utilisés qu'en mode sombre.",
-      "system-mode-subheading-light": "Votre système est actuellement en mode clair. Les paramètres ci-dessus ne seront utilisés qu'en mode clair.",
       "title": "Thèmes de menu"
     },
     "not-bound": "Non-Attribué",
-    "shortcut-hint": "Ceci ouvrira les menu.",
     "shortcut-id-label": "ID de raccourci global",
     "shortcut-label": "Raccourci",
     "shortcut-recording": "Appuyez sur un raccourci…",

@@ -36,6 +36,7 @@ export default () => {
   return (
     <>
       <MacroPicker
+        placeholder={i18next.t('menu-items.macro.placeholder')}
         recordingPlaceholder={i18next.t('menu-items.macro.recording-placeholder')}
         initialValue={data.macro}
         onChange={(value) => {

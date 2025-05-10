@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React, { ReactNode } from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import {
   TbExternalLink,
@@ -140,7 +141,7 @@ export default () => {
           <Button
             icon={<RiDeleteBack2Fill />}
             size="small"
-            tooltip="Reset colors to theme defaults."
+            tooltip={i18next.t('settings.menu-themes-dialog.reset-color-picker')}
             onClick={() => {
               if (darkMode && useDarkMode) {
                 delete darkColors[currentTheme.id];
@@ -167,7 +168,7 @@ export default () => {
 
   return (
     <Modal
-      title="Menu Themes"
+      title={i18next.t('settings.menu-themes-dialog.title')}
       icon={<TbPaletteFilled />}
       visible={themesDialogVisible}
       onClose={() => setThemesDialogVisible(false)}
@@ -207,7 +208,7 @@ export default () => {
           />
           <SettingsCheckbox
             label={'Dark and light mode'}
-            info="If enabled, you can choose a different theme and a different set of accent colors if your system is currently in dark or light mode."
+            info={i18next.t('settings.menu-themes-dialog.light-dark-mode-hint')}
             settingsKey="enableDarkModeForMenuThemes"
           />
 
@@ -266,7 +267,11 @@ export default () => {
                     </div>
                   )}
                   <div className={classes.themeName}>{theme.name}</div>
-                  <div className={classes.themeAuthor}>by {theme.author}</div>
+                  <div className={classes.themeAuthor}>
+                    {i18next
+                      .t('settings.menu-themes-dialog.author')
+                      .replace('%s', theme.author)}
+                  </div>
                 </div>
               );
             })}

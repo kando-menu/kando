@@ -70,7 +70,7 @@
     "failed-to-start-header": "Kando non è riuscito ad avviarsi",
     "is-running-header": "Kando è già in esecuzione",
     "is-running-message": "Controlla nell’icona nel system tray per alcune opzioni!",
-    "new-version-message": "E’ disponibile una nuova versione di Kando!"
+    "new-version-notification-header": "E’ disponibile una nuova versione di Kando!"
   },
   "menu-items": {
     "command": {
@@ -83,9 +83,6 @@
       "tip-3": "Usa {{app_name}} per inserire il nome dell'applicazione che aveva il focus quando hai aperto il menu.",
       "tip-4": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu.",
       "tip-5": "Usa {{pointer_x}} e {{pointer_y}} per inserire la posizione del puntatore dove il menu è stato aperto."
-    },
-    "common": {
-      "not-configured": "Non configurato"
     },
     "hotkey": {
       "description": "Premi una scorciatoia da tastiera.",
@@ -133,23 +130,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Interfaccia di sistema",
       "chrome-version": "Versione di Chrome",
       "electron-version": "Versione di Electron",
+      "kando-backend": "Interfaccia di sistema",
       "kando-version": "Versione di Kando"
     },
     "anchored-mode": "Modalità Ancorata",
     "app-condition": "Limitare ad Applicazioni Specifiche",
     "area-condition": "Limita a Aree Specifiche dello Schermo",
     "area-condition-bottom-placeholder": "In Basso",
-    "area-condition-hint": "Mostra il menù solo se il puntatore è in una data area dello schermo.",
     "area-condition-left-placeholder": "Sinistra",
     "area-condition-right-placeholder": "Destra",
     "area-condition-top-placeholder": "In Alto",
     "cancel": "Annulla",
     "centered-mode": "Modalità Centrata",
     "centered-mode-hint": "Apri il menù al centro dello schermo invece che nella posizione del puntatore.",
-    "create-menu-button": "Crea un menù!",
     "general-settings-dialog": {
       "reload-menu-theme": "Ricarica l’Attuale Tema di Menù",
       "reload-menu-theme-tooltip": "Le modifiche del CSS verranno applicate immediatamente, per vedere l’effetto delle modifiche del file theme.json, dovrai riaprire il menù."
@@ -167,22 +162,15 @@
     },
     "menu-behavior": "Comportamento del Menù",
     "menu-conditions": "Condizione per il Menu",
-    "menu-conditions-subheading": "Puoi associare differenti menù alla stessa scorciatoia di tastiera e poi scegliere in quali condizioni si deve mostrare ciascun menù.",
+    "menu-conditions-hint": "Puoi associare differenti menù alla stessa scorciatoia di tastiera e poi scegliere in quali condizioni si deve mostrare ciascun menù.",
     "menu-themes-dialog": {
-      "author": "di {{author}}",
+      "author": "di %s",
       "caption": "In futuro, avremo un archivio online per i temi dei menù. Per ora, puoi <a {{tutorialLink}}>imparare come creare i tuoi temi</a> e condividerli sul <a {{discordLink}}>Server Discord di Kando</a>!",
-      "close-color-picker": "Chiudi l’editor dei colori",
-      "dark-mode": "Usa Temi e Colori differenti per le Modalità Chiara e Scura",
-      "edit-colors": "Modifica i Colori",
-      "hint": "Puoi scaricare nuovi temi dall'<a{{repositoryLink}}>archivio dei temi</a>. Puoi anche <{{tutorialLink}}> imparare come creare i tuoi temi</a> e condividerli sul <a{{discordLink}}>Server Discord di Kando</a>!",
+      "light-dark-mode-hint": "Se abilitato, puoi scegliere un differente tema e set di colori a seconda che il tuo sistema sia in modalità chiara o scura.",
       "reset-color-picker": "Ripristina tutti i colori ai valori di default",
-      "system-mode-subheading": "Se abilitato, puoi scegliere un differente tema e set di colori a seconda che il tuo sistema sia in modalità chiara o scura.",
-      "system-mode-subheading-dark": "Il tuo sistema è attualmente in modalità scura. Le impostazioni di sopra verranno usate solo in modalità scura.",
-      "system-mode-subheading-light": "Il tuo sistema è attualmente in modalità chiara. Le impostazioni di sopra verranno usate solo in modalità chiara.",
       "title": "Temi di Menù"
     },
     "not-bound": "Non Assegnato",
-    "shortcut-hint": "Questo aprirà il menù.",
     "shortcut-id-label": "Identificatore Globale di Scorciatoia",
     "shortcut-label": "Scorciatoia di tastiera",
     "shortcut-recording": "Premi una scorciatoia…",

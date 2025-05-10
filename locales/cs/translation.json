@@ -69,7 +69,7 @@
   "main": {
     "failed-to-start-header": "Kando se nepodařilo spustit",
     "inhibit-shortcuts": "Dočasně zakázat klávesové zkratky",
-    "new-version-message": "Je dostupná nová verze Kando!",
+    "new-version-notification-header": "Je dostupná nová verze Kando!",
     "quit": "Ukončit",
     "show-settings": "Zobrazit nastavení",
     "un-inhibit-shortcuts": "Znovu povolit klávesové zkratky"
@@ -85,9 +85,6 @@
       "tip-3": "Použijte {{app_name}} pro vložení názvu aplikace, která byla aktivní při otevření menu.",
       "tip-4": "Použijte {{window_name}} pro vložení názvu okna, které bylo aktivní při otevření menu.",
       "tip-5": "Použijte {{pointer_x}} a {{pointer_y}} pro vložení polohy kurzoru při otevření menu."
-    },
-    "common": {
-      "not-configured": "Není nakonfigurováno"
     },
     "file": {
       "description": "Otevře soubor nebo složku.",
@@ -150,23 +147,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Backend Kando",
       "chrome-version": "Verze Chromu",
       "electron-version": "Verze Electronu",
+      "kando-backend": "Backend Kando",
       "kando-version": "Verze Kando"
     },
     "anchored-mode": "Kotvený režim",
     "app-condition": "Omezit na konkrétní aplikace",
     "area-condition": "Omezit na konkrétní oblast obrazovky",
     "area-condition-bottom-placeholder": "Dole",
-    "area-condition-hint": "Zobrazí menu pouze pokud je kurzor v dané oblasti obrazovky.",
     "area-condition-left-placeholder": "Vlevo",
     "area-condition-right-placeholder": "Vpravo",
     "area-condition-top-placeholder": "Nahoře",
     "cancel": "Zrušit",
     "centered-mode": "Centrovaný režim",
     "centered-mode-hint": "Otevře menu uprostřed obrazovky místo u kurzoru.",
-    "create-menu-button": "Vytvořit menu!",
     "general-settings-dialog": {
       "reload-menu-theme": "Znovu načíst aktuální téma menu",
       "reload-menu-theme-tooltip": "Změny v CSS se použijí okamžitě, ale pro změny v souboru theme.json je nutné menu znovu otevřít.",
@@ -189,21 +184,14 @@
     },
     "menu-behavior": "Chování menu",
     "menu-conditions": "Podmínky menu",
-    "menu-conditions-subheading": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
+    "menu-conditions-hint": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
     "menu-themes-dialog": {
-      "author": "od {{author}}",
-      "close-color-picker": "Zavřít editor barev",
-      "dark-mode": "Použít odlišná témata a barvy pro světlý a tmavý režim",
-      "edit-colors": "Upravit barvy",
-      "hint": "Můžete si stáhnout motivy z <a {{repositoryLink}}>repozitáře motivů. Také se můžete <a {{tutorialLink}}>naučit, jak vytvořit vlastní motivy a sdílet je na <a {{discordLink}}>Discord serveru Kando!",
+      "author": "od %s",
+      "light-dark-mode-hint": "Pokud je povoleno, můžete zvolit jiné téma a barevné schéma pro světlý a tmavý režim systému.",
       "reset-color-picker": "Obnovit všechny barvy na výchozí hodnoty",
-      "system-mode-subheading": "Pokud je povoleno, můžete zvolit jiné téma a barevné schéma pro světlý a tmavý režim systému.",
-      "system-mode-subheading-dark": "Váš systém je aktuálně v tmavém režimu. Nastavení výše budou použita pouze v tmavém režimu.",
-      "system-mode-subheading-light": "Váš systém je aktuálně ve světlém režimu. Nastavení výše budou použita pouze ve světlém režimu.",
       "title": "Témata menu"
     },
     "not-bound": "Nepřiřazeno",
-    "shortcut-hint": "Tímto se otevře menu.",
     "shortcut-id-label": "ID globální zkratky",
     "shortcut-label": "Zkratka",
     "shortcut-recording": "Stiskněte zkratku…",

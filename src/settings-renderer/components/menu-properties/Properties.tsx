@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
 import * as classes from './Properties.module.scss';
 import { TbCopy, TbTrash } from 'react-icons/tb';
@@ -84,9 +85,9 @@ export default () => {
     if (backend.supportsShortcuts) {
       return (
         <ShortcutPicker
-          label="Shortcut"
-          info="This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!"
-          recordingPlaceholder="Type a shortcut..."
+          label={i18next.t('settings.shortcut-label')}
+          info={i18next.t('settings.shortcut-hint')}
+          recordingPlaceholder={i18next.t('settings.shortcut-recording')}
           mode="key-names"
           initialValue={menus[selectedMenu].shortcut}
           onChange={(shortcut) => {
@@ -101,8 +102,8 @@ export default () => {
     return (
       <TextInput
         initialValue={menus[selectedMenu].shortcutID}
-        label="Shortcut ID"
-        placeholder="Not bound"
+        label={i18next.t('settings.shortcut-id-label')}
+        placeholder={i18next.t('settings.not-bound')}
         info={backend.shortcutHint}
         onChange={(shortcutID) => {
           editMenu(selectedMenu, (menu) => {

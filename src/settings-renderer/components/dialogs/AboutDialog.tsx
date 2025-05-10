@@ -12,6 +12,9 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
+import Markdown from 'react-markdown';
+import rehypeExternalLinks from 'rehype-external-links';
 import { TbExternalLink, TbHeartFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
@@ -34,7 +37,7 @@ export default () => {
 
   return (
     <Modal
-      title="About Kando"
+      title={i18next.t('settings.about-dialog.title')}
       icon={<TbHeartFilled />}
       visible={aboutDialogVisible}
       onClose={() => setAboutDialogVisible(false)}
@@ -42,26 +45,22 @@ export default () => {
       <div className={classes.container}>
         <img src={logo} width={128} />
         <div className={classes.hero}>
-          <p>
-            I am creating Kando out of sheer passion. If you enjoy using it as much as I
-            love creating it, you can{' '}
-            <a target="_blank" href="https://ko-fi.com/schneegans">
-              buy me a coffee
-            </a>
-            !
-          </p>
-          <p>💖 Simon</p>
+          <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+            {i18next
+              .t('settings.about-dialog.message')
+              .replace('%s', 'https://ko-fi.com/schneegans')}
+          </Markdown>
         </div>
         <Swirl variant="3" marginTop={30} marginBottom={20} width={350} />
         <div className={classes.footer}>
           <div className={classes.versionInfo}>
-            Kando Version:
+            {`${i18next.t('settings.about-dialog.kando-version')}:`}
             <br />
-            Kando Backend:
+            {`${i18next.t('settings.about-dialog.kando-backend')}:`}
             <br />
-            Electron Version:
+            {`${i18next.t('settings.about-dialog.electron-version')}:`}
             <br />
-            Chromium Version:
+            {`${i18next.t('settings.about-dialog.chrome-version')}:`}
             <br />
           </div>
           <div className={classes.versionInfo}>
@@ -75,7 +74,7 @@ export default () => {
           </div>
           <div className={classes.buttons}>
             <Button
-              label="Check latest release"
+              label={i18next.t('settings.about-dialog.check-latest-release')}
               icon={<TbExternalLink />}
               tooltip="https://github.com/kando-menu/kando/releases"
               onClick={() =>
@@ -84,7 +83,7 @@ export default () => {
               block
             />
             <Button
-              label="Read release notes"
+              label={i18next.t('settings.about-dialog.read-release-notes')}
               icon={<TbExternalLink />}
               tooltip="https://github.com/kando-menu/kando/blob/main/docs/changelog.md"
               block

@@ -49,7 +49,7 @@ export default () => {
 
   return (
     <Modal
-      title="General Settings"
+      title={i18next.t('settings.general-settings-dialog.title')}
       icon={<TbSettingsFilled />}
       visible={settingsDialogVisible}
       onClose={() => setSettingsDialogVisible(false)}
@@ -282,29 +282,27 @@ export default () => {
           />
 
           <h1>Developer Options</h1>
-          <div style={{ display: 'flex' }}>
-            <Button
-              label="Reload menu theme"
-              tooltip={i18next.t(
-                'settings.general-settings-dialog.reload-menu-theme-tooltip'
-              )}
-              icon={<TbReload />}
-              grouped
-              grow
-              onClick={() => {
-                window.settingsAPI.reloadMenuTheme();
-              }}
-            />
-            <Button
-              label="Reload sound theme"
-              icon={<TbReload />}
-              grouped
-              grow
-              onClick={() => {
-                window.settingsAPI.reloadSoundTheme();
-              }}
-            />
-          </div>
+          <Button
+            label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
+            tooltip={i18next.t(
+              'settings.general-settings-dialog.reload-menu-theme-tooltip'
+            )}
+            icon={<TbReload />}
+            grouped
+            grow
+            onClick={() => {
+              window.settingsAPI.reloadMenuTheme();
+            }}
+          />
+          <Button
+            label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
+            icon={<TbReload />}
+            grouped
+            grow
+            onClick={() => {
+              window.settingsAPI.reloadSoundTheme();
+            }}
+          />
           <Button
             label="Menu window development tools"
             icon={<TbCode />}

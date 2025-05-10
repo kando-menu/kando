@@ -71,7 +71,7 @@
     "inhibit-shortcuts": "Deaktivierte Shortcuts",
     "is-running-header": "Kando läuft bereits",
     "is-running-message": "Überprüfen Sie das Taskleistensymbol für einige Optionen!",
-    "new-version-message": "Eine neue Version von Kando ist verfügbar!",
+    "new-version-notification-header": "Eine neue Version von Kando ist verfügbar!",
     "quit": "Beenden",
     "show-settings": "Einstellungen Öffnen",
     "un-inhibit-shortcuts": "Shortcuts wieder aktivieren"
@@ -87,9 +87,6 @@
       "tip-3": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
       "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
       "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde."
-    },
-    "common": {
-      "not-configured": "Nicht konfiguriert"
     },
     "file": {
       "description": "Öffnet eine Datei oder einen Ordner.",
@@ -146,23 +143,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Kando Backend",
       "chrome-version": "Chrome Version",
       "electron-version": "Electron Version",
+      "kando-backend": "Kando Backend",
       "kando-version": "Kando Version"
     },
     "anchored-mode": "Verankerter Modus",
     "app-condition": "Auf bestimmte Apps beschränken",
     "area-condition": "Auf bestimmten Bildschirmbereich beschränken",
     "area-condition-bottom-placeholder": "Unten",
-    "area-condition-hint": "Zeigen Sie das Menü nur an, wenn sich der Zeiger in einem bestimmten Bereich auf dem Bildschirm befindet.",
     "area-condition-left-placeholder": "Links",
     "area-condition-right-placeholder": "Rechts",
     "area-condition-top-placeholder": "Oben",
     "cancel": "Abbrechen",
     "centered-mode": "Zentrierter Modus",
     "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor.",
-    "create-menu-button": "Erstellen Sie ein Menü!",
     "general-settings-dialog": {
       "reload-menu-theme": "Aktuelles Menü-Design Neuladen",
       "reload-menu-theme-tooltip": "CSS-Änderungen werden sofort angewendet. Für Änderungen an der Datei theme.json müssen Sie das Menü erneut öffnen.",
@@ -183,22 +178,15 @@
     },
     "menu-behavior": "Menü-Eigenschaften",
     "menu-conditions": "Menübedingungen",
-    "menu-conditions-subheading": "Sie können mehrere Menüs an denselben Hotkey binden und dann auswählen, unter welchen Bedingungen jedes Menü angezeigt werden soll.",
+    "menu-conditions-hint": "Sie können mehrere Menüs an denselben Hotkey binden und dann auswählen, unter welchen Bedingungen jedes Menü angezeigt werden soll.",
     "menu-themes-dialog": {
-      "author": "von {{author}}",
+      "author": "von %s",
       "caption": "In Zukunft werden wir ein Online-Repository für Menü-Designs haben. Im Moment können Sie <a {{tutorialLink}}>lernen, wie Sie Ihre eigenen Designs erstellen</a> und diese auf <a {{discordLink}}>Kandos Discord-Server</a> teilen!",
-      "close-color-picker": "Schließen Sie den Farbeditor",
-      "dark-mode": "Verwenden Sie separate Designs und Farben für den hellen und dunklen Modus",
-      "edit-colors": "Farben ändern",
-      "hint": "Sie können Designs vom <a {{repositoryLink}}> Theme-Repository</a> herunterladen. Sie können auch <a {{tutorialLink}}>lernen, eigene Designs zu erstellen</a> und sie dann in <a {{discordLink}}> Kando's Discord Server</a> zeigen!",
+      "light-dark-mode-hint": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
       "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen",
-      "system-mode-subheading": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
-      "system-mode-subheading-dark": "Ihr System befindet sich derzeit im dunklen Modus. Die obigen Einstellungen werden nur im dunklen Modus verwendet.",
-      "system-mode-subheading-light": "Ihr System befindet sich derzeit im hellen Modus. Die obigen Einstellungen werden nur im hellen Modus verwendet.",
       "title": "Menü-Designs"
     },
     "not-bound": "Nicht verknüpft",
-    "shortcut-hint": "Dadurch wird das Menü geöffnet.",
     "shortcut-id-label": "Globale Shortcut-ID",
     "shortcut-label": "Tastenkombination",
     "shortcut-recording": "Drücken Sie eine Tastenkombination…",

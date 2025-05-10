@@ -70,7 +70,7 @@
     "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
     "is-running-header": "Kando on jo käynnissä",
     "is-running-message": "Katso valinnat ilmoitusalueen kuvakkeesta!",
-    "new-version-message": "Uusi Kando-versio on saatavilla!",
+    "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
     "quit": "Lopeta",
     "show-settings": "Näytä asetukset"
   },
@@ -80,9 +80,6 @@
       "command-hint": "Tämä suoritetaan.",
       "description": "Suorittaa komentorivikomennon.",
       "name": "Suorita komento"
-    },
-    "common": {
-      "not-configured": "Ei määritetty"
     },
     "file": {
       "description": "Avaa tiedoston tai kansion.",
@@ -117,9 +114,9 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Kando-taustaosa",
       "chrome-version": "Chrome-versio",
       "electron-version": "Electron-versio",
+      "kando-backend": "Kando-taustaosa",
       "kando-version": "Kando-versio"
     },
     "anchored-mode": "Ankkuroitu tila",
@@ -132,7 +129,6 @@
     "cancel": "Peru",
     "centered-mode": "Keskitetty tila",
     "centered-mode-hint": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
-    "create-menu-button": "Luo valikko!",
     "general-settings-dialog": {
       "reload-menu-theme": "Lataa nykyinen valikkoteema uudelleen",
       "reload-menu-theme-tooltip": "CSS-muutokset tulevat voimaan välittömästi, mutta theme.json-tiedostoon tehtyjen muutosten osalta valikko tulee avata uudelleen.",
@@ -152,16 +148,10 @@
     "menu-behavior": "Valikon toiminta",
     "menu-conditions": "Valikon ehdollisuudet",
     "menu-themes-dialog": {
-      "author": "tekijä {{author}}",
-      "close-color-picker": "Sulje värimuokkain",
-      "dark-mode": "Käytä eri teemoja ja värejä vaalealle sekä tummalle teemalle",
-      "edit-colors": "Muokkaa värejä",
+      "author": "tekijä %s",
       "reset-color-picker": "Palauta kaikkien värien oletusarvot",
-      "system-mode-subheading-dark": "Järjestelmässäsi on käytössä tumma teema. Yllä olevat asetukset ovat käytössä vain tumman teeman tilassa.",
-      "system-mode-subheading-light": "Järjestelmässäsi on käytössä vaalea teema. Yllä olevat asetukset ovat käytössä vain vaalean teeman tilassa.",
       "title": "Valikkoteemat"
     },
-    "shortcut-hint": "Tämä avaa valikon.",
     "shortcut-label": "Pikanäppäin",
     "shortcut-recording": "Paina pikanäppäintä…",
     "window-condition": "Rajaa tiettyihin ikkunaotsikkoihin"

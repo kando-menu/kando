@@ -71,7 +71,7 @@
     "inhibit-shortcuts": "Desabilite os atalhos temporariamente",
     "is-running-header": "Kando já está em execução",
     "is-running-message": "Verifique o ícone da bandeja do sistema para algumas opções!",
-    "new-version-message": "Uma nova versão do Kando está disponível!",
+    "new-version-notification-header": "Uma nova versão do Kando está disponível!",
     "quit": "Sair",
     "show-settings": "Mostrar Configurações",
     "un-inhibit-shortcuts": "Reativar Atalhos"
@@ -87,9 +87,6 @@
       "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
       "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
       "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto."
-    },
-    "common": {
-      "not-configured": "Não configurado"
     },
     "file": {
       "description": "Abre um arquivo ou pasta.",
@@ -151,23 +148,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Ao longo do back -end",
       "chrome-version": "Versão Chrome",
       "electron-version": "Versão eletrônica",
+      "kando-backend": "Ao longo do back -end",
       "kando-version": "Ao longo da versão"
     },
     "anchored-mode": "Modo Ancorado",
     "app-condition": "Limite a Aplicativos Específicos",
     "area-condition": "Limite à Área Específica da Tela",
     "area-condition-bottom-placeholder": "Baixo",
-    "area-condition-hint": "Mostrar o menu apenas se o ponteiro estiver em uma determinada área na tela.",
     "area-condition-left-placeholder": "Esquerda",
     "area-condition-right-placeholder": "Direita",
     "area-condition-top-placeholder": "Topo",
     "cancel": "Cancelar",
     "centered-mode": "Modo Centralizado",
     "centered-mode-hint": "Abra o menu no centro da tela em vez de onde o cursor está.",
-    "create-menu-button": "Criar um menu!",
     "general-settings-dialog": {
       "reload-menu-theme": "Recarregar Tema Atual do Menu",
       "reload-menu-theme-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu.",
@@ -189,22 +184,15 @@
     },
     "menu-behavior": "Comportamento de menu",
     "menu-conditions": "Condições do menu",
-    "menu-conditions-subheading": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
+    "menu-conditions-hint": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
     "menu-themes-dialog": {
-      "author": "por {{author}}",
+      "author": "por %s",
       "caption": "No futuro, teremos um repositório online para temas de menu. Por agora, você pode <a {{tutorialLink}}>aprender como criar seus próprios temas</a> e compartilhá-los no <a {{discordLink}}> Servidor do Discord do Kando</a>!",
-      "close-color-picker": "Feche o editor de cores",
-      "dark-mode": "Use Temas e Cores Separados para o Modo Claro e Escuro",
-      "edit-colors": "Editar Cores",
-      "hint": "Você pode baixar temas do <a {{repositoryLink}}>repositório de temas</a>. Você também pode <a {{tutorialLink}}>aprender a criar seus próprios temas</a> e compartilhá-los no <a {{discordLink}}>Servidor Discord do Kando</a>!",
+      "light-dark-mode-hint": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
       "reset-color-picker": "Resetar todas as cores aos seus padrões",
-      "system-mode-subheading": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
-      "system-mode-subheading-dark": "Seu sistema está atualmente em modo escuro. As configurações acima só serão usadas no modo escuro.",
-      "system-mode-subheading-light": "Seu sistema está atualmente em modo claro. As configurações acima só serão usadas no modo claro.",
       "title": "Temas de Menu"
     },
     "not-bound": "Não Atribuído",
-    "shortcut-hint": "Isso vai abrir o menu.",
     "shortcut-id-label": "ID de Atalho de Teclado Global",
     "shortcut-label": "Atalho de Teclado",
     "shortcut-recording": "Pressione um atalho de teclado…",

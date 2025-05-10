@@ -49,7 +49,7 @@ export default () => {
 
   return (
     <Modal
-      title="Welcome to Kando!"
+      title={i18next.t('settings.introduction-dialog.title')}
       icon={<IoSchool />}
       visible={introDialogVisible}
       onClose={() => setIntroDialogVisible(false)}

@@ -71,7 +71,7 @@
     "inhibit-shortcuts": "일시적으로 단축키 비활성화",
     "is-running-header": "Kando가 이미 실행 중이예요",
     "is-running-message": "시스템 트레이 아이콘으로 설정을 확인해 보세요!",
-    "new-version-message": "Kando의 새 버전이 이용 가능해요!",
+    "new-version-notification-header": "Kando의 새 버전이 이용 가능해요!",
     "quit": "종료",
     "show-settings": "설정 열기",
     "un-inhibit-shortcuts": "단축키 재활성화"
@@ -87,9 +87,6 @@
       "tip-3": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
       "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
       "tip-5": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요."
-    },
-    "common": {
-      "not-configured": "설정되어 있지 않아요"
     },
     "file": {
       "description": "파일 또는 폴더를 열어요.",
@@ -151,23 +148,21 @@
   },
   "settings": {
     "about-dialog": {
-      "backend": "Kando 백엔드",
       "chrome-version": "Chrome 버전",
       "electron-version": "Electron 버전",
+      "kando-backend": "Kando 백엔드",
       "kando-version": "Kando 버전"
     },
     "anchored-mode": "고정 모드",
     "app-condition": "특정 앱으로 제한",
     "area-condition": "지정된 스크린 구역으로 제한",
     "area-condition-bottom-placeholder": "아래",
-    "area-condition-hint": "커서가 지정된 스크린 구역에 있을 때만 메뉴를 열어요.",
     "area-condition-left-placeholder": "왼쪽",
     "area-condition-right-placeholder": "오른쪽",
     "area-condition-top-placeholder": "위",
     "cancel": "취소",
     "centered-mode": "중앙 정렬 모드",
     "centered-mode-hint": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
-    "create-menu-button": "메뉴 생성하기!",
     "general-settings-dialog": {
       "reload-menu-theme": "현재 메뉴 테마 새로고침하기",
       "reload-menu-theme-tooltip": "CSS 변경은 즉시 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
@@ -191,22 +186,15 @@
     },
     "menu-behavior": "메뉴 특성",
     "menu-conditions": "메뉴 조건",
-    "menu-conditions-subheading": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
+    "menu-conditions-hint": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
     "menu-themes-dialog": {
-      "author": "{{author}} 제작",
+      "author": "%s 제작",
       "caption": "미래에는 메뉴 테마를 저장하는 온라인 저장소를 만들 예정이에요. 현재로서는 <a {{tutorialLink}}>직접 테마를 만드는 법을 배우고</a>, <a {{discordLink}}>Kando의 Discord 서버</a>에 공유할 수 있어요!",
-      "close-color-picker": "색상 편집기 닫기",
-      "dark-mode": "라이트와 다크 모드 각각 다른 테마와 색상 사용하기",
-      "edit-colors": "색상 편집",
-      "hint": "<a {{repositoryLink}}>테마 저장소</a>에서 테마들을 찾을 수 있어요. <a {{tutorialLink}}>직접 테마를 제작</a>하고 <a {{discordLink}}>Kando의 Discord 서버</a>에 공유해도 좋아요!",
+      "light-dark-mode-hint": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
       "reset-color-picker": "색상 모두 기본값으로 초기화하기",
-      "system-mode-subheading": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
-      "system-mode-subheading-dark": "현재 다크 모드로 설정되어 있어요. 위의 설정은 다크 모드에서만 사용돼요.",
-      "system-mode-subheading-light": "현재 시스템은 라이트 모드로 설정되어 있어요. 위의 설정은 라이트 모드에서만 사용돼요.",
       "title": "메뉴 테마"
     },
     "not-bound": "설정되지 않음",
-    "shortcut-hint": "메뉴를 열 거에요.",
     "shortcut-id-label": "전역 단축키 ID",
     "shortcut-label": "단축키",
     "shortcut-recording": "단축키를 눌러주세요…",

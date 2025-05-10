@@ -53,9 +53,6 @@
       "description": "Paleidžia bet kokią apvalkalo komandą.",
       "name": "Paleisti komandą"
     },
-    "common": {
-      "not-configured": "Nesukonfigūruota"
-    },
     "macro": {
       "recording-placeholder": "Paspauskite klavišus…"
     },
@@ -82,7 +79,6 @@
   },
   "settings": {
     "area-condition-bottom-placeholder": "Apačia",
-    "area-condition-hint": "Rodyti meniu tik tuo atveju, jei pelės rodyklė yra nurodytoje ekrano srityje.",
     "area-condition-left-placeholder": "Kairė",
     "area-condition-right-placeholder": "Dešinė",
     "area-condition-top-placeholder": "Viršus",
@@ -93,7 +89,6 @@
       "search-placeholder": "Ieškoti piktogramų…"
     },
     "menu-behavior": "Meniu elgsena",
-    "menu-conditions": "Meniu sąlygos",
-    "shortcut-hint": "Tai atvers meniu."
+    "menu-conditions": "Meniu sąlygos"
   }
 }

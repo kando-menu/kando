@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbBackspaceFilled } from 'react-icons/tb';
 
 import Popover from './Popover';
@@ -107,7 +108,9 @@ export default (props: IProps) => {
               <div className={classes.searchInput}>
                 <input
                   type="text"
-                  placeholder="Search icons..."
+                  placeholder={i18next.t(
+                    'settings.icon-picker-dialog.search-placeholder'
+                  )}
                   value={filterTerm}
                   onChange={(event) => {
                     setFilterTerm(event.target.value);

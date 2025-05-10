@@ -9,6 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import Markdown from 'react-markdown';
+import rehypeExternalLinks from 'rehype-external-links';
 import classNames from 'classnames/bind';
 
 import * as classes from './Note.module.scss';
@@ -16,7 +18,7 @@ const cx = classNames.bind(classes);
 
 interface IProps {
   /** Content to display inside the note. */
-  children: React.ReactNode;
+  children: React.ReactNode | string;
 
   /** Whether the text should be centered. Defaults to false. */
   center?: boolean;
@@ -32,6 +34,9 @@ interface IProps {
 
   /** Margin to apply to the right of the note. Defaults to 0. */
   marginRight?: number | string;
+
+  /** Whether to use markdown formatting. Defaults to false. */
+  markdown?: boolean;
 }
 
 /**
@@ -53,7 +58,13 @@ export default (props: IProps) => {
         marginLeft: props.marginLeft || 0,
         marginRight: props.marginRight || 0,
       }}>
-      {props.children}
+      {props.markdown ? (
+        <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+          {props.children as string}
+        </Markdown>
+      ) : (
+        <>{props.children}</>
+      )}
     </div>
   );
 };

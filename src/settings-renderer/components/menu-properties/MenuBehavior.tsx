@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
 import { useAppState, useMenuSettings } from '../../state';
 import { Checkbox, Note } from '../common';
@@ -21,18 +22,15 @@ export default () => {
 
   return (
     <>
-      <h1>Menu Behavior</h1>
-      <Note marginTop={-5} marginBottom={5}>
-        Before you enable these options, we recommend learning why we like Kando's default
-        behavior{' '}
-        <a href="https://www.youtube.com/watch?v=elHUCarOiXQ" target="_blank">
-          here
-        </a>
-        !
+      <h1>{i18next.t('settings.menu-behavior')}</h1>
+      <Note marginTop={-5} marginBottom={5} markdown>
+        {i18next
+          .t('settings.menu-behavior-hint')
+          .replace('%s', 'https://www.youtube.com/watch?v=elHUCarOiXQ')}
       </Note>
       <Checkbox
-        label="Centered Mode"
-        info="Open the menu in the screen's center instead of at the cursor."
+        label={i18next.t('settings.centered-mode')}
+        info={i18next.t('settings.centered-mode-hint')}
         initialValue={menus[selectedMenu].centered}
         onChange={(centered) => {
           editMenu(selectedMenu, (menu) => {
@@ -42,8 +40,8 @@ export default () => {
         }}
       />
       <Checkbox
-        label="Anchored Mode"
-        info="Open submenus at the same position as the parent menu."
+        label={i18next.t('settings.anchored-mode')}
+        info={i18next.t('settings.anchored-mode-hint')}
         initialValue={menus[selectedMenu].anchored}
         onChange={(anchored) => {
           editMenu(selectedMenu, (menu) => {
@@ -53,8 +51,8 @@ export default () => {
         }}
       />
       <Checkbox
-        label="Hover Mode"
-        info="For power users only! Select items by hovering over them."
+        label={i18next.t('settings.hover-mode')}
+        info={i18next.t('settings.hover-mode-hint')}
         initialValue={menus[selectedMenu].hoverMode}
         onChange={(hoverMode) => {
           editMenu(selectedMenu, (menu) => {

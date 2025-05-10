@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
@@ -120,7 +121,9 @@ export default (props: IProps) => {
           spellCheck="false"
           className={cx({ recording, invalid: !isValid(shortcut) })}
           value={shortcut}
-          placeholder={recording ? props.recordingPlaceholder : 'Not bound'}
+          placeholder={
+            recording ? props.recordingPlaceholder : i18next.t('settings.not-bound')
+          }
           onChange={(event) => {
             if (!recording) {
               const start = event.target.selectionStart;

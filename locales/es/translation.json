@@ -70,7 +70,7 @@
     "failed-to-start-header": "Kando no se ha iniciado",
     "is-running-header": "Kando se esta ejecutándo",
     "is-running-message": "¡Consulta el icono de la bandeja del sistema para ver algunas opciones!",
-    "new-version-message": "Una nueva versión de Kando está disponible!"
+    "new-version-notification-header": "Una nueva versión de Kando está disponible!"
   },
   "menu-items": {
     "command": {
@@ -83,9 +83,6 @@
       "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
       "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrió el menú.",
       "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú."
-    },
-    "common": {
-      "not-configured": "No configurado"
     },
     "hotkey": {
       "description": "Presiona una tecla de acceso rápido.",
@@ -136,14 +133,12 @@
     "app-condition": "Limitar a aplicaciones específicas",
     "area-condition": "Limitar a área de ventana específica",
     "area-condition-bottom-placeholder": "Abajo",
-    "area-condition-hint": "Mostrar el menú solo si el puntero está en una zona determinada de la pantalla.",
     "area-condition-left-placeholder": "Izquierda",
     "area-condition-right-placeholder": "Derecha",
     "area-condition-top-placeholder": "Arriba",
     "cancel": "Cancelar",
     "centered-mode": "Modo centrado",
     "centered-mode-hint": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
-    "create-menu-button": "Crear un menú!",
     "general-settings-dialog": {
       "reload-menu-theme": "Recargar el tema de Menú actual",
       "reload-menu-theme-tooltip": "Los cambios de CSS se aplican inmediatamente. Para realizar cambios en el archivo theme.json, deberá volver a abrir el menú."
@@ -161,21 +156,15 @@
     },
     "menu-behavior": "Comportamiento del menú",
     "menu-conditions": "Condiciones de menú",
-    "menu-conditions-subheading": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
+    "menu-conditions-hint": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
     "menu-themes-dialog": {
-      "author": "Por {{author}}",
+      "author": "Por %s",
       "caption": "En el futuro, tendremos un repositorio en línea para temas de menú.¡ Por ahora, puedes <a {{tutorialLink}}>aprender a crear tus propios temas</a> y compartirlos en <un {{discordLink}}>Servidor de Discord de Kando</a>!",
-      "close-color-picker": "Cerrar el editor de color",
-      "dark-mode": "Usa temas y colores separados para el modo claro y oscuro",
-      "edit-colors": "Editar Colores",
+      "light-dark-mode-hint": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
       "reset-color-picker": "Reiniciar colores por defecto",
-      "system-mode-subheading": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
-      "system-mode-subheading-dark": "Actualmente, su sistema está en modo oscuro. Las configuraciones anteriores solo se utilizarán en modo oscuro.",
-      "system-mode-subheading-light": "Su sistema está actualmente en modo claro. Las configuraciones anteriores solo se usarán en modo claro.",
       "title": "Temas del menú"
     },
     "not-bound": "No asignado",
-    "shortcut-hint": "Esto abrirá el menú.",
     "shortcut-id-label": "ID de acceso directo global",
     "shortcut-label": "Tecla de acceso directo",
     "shortcut-recording": "Presiona un atajo…",

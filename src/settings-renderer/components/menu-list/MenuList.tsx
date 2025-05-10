@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbPlus } from 'react-icons/tb';
@@ -293,7 +294,7 @@ export default () => {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbPlus />}
-            label="New Menu"
+            label={i18next.t('settings.create-menu-button')}
             variant="floating"
             size="medium"
             onClick={() => {
