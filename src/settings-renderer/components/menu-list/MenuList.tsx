@@ -79,7 +79,8 @@ export default () => {
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {
     const shortcut =
-      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || 'Not bound.';
+      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) ||
+      i18next.t('settings.not-bound');
     const renderedMenu: IRenderedMenu = {
       key: menu.root.name + menu.root.icon + menu.root.iconTheme + shortcut,
       index,

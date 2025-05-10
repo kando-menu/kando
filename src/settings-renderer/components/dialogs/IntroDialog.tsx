@@ -56,17 +56,10 @@ export default () => {
       maxWidth={550}>
       <div className={classes.container}>
         <div className={classes.hero}>
-          Kando offers a unique and powerful way to interact with your computer. Have a
-          look at the videos below to get a glimpse of what Kando can do for you! If you
-          need help at any point, feel free to join our{' '}
-          <a href="https://discord.gg/hZwbVSDkhy" target="_blank">
-            Discord Server <TbExternalLink />
-          </a>{' '}
-          or check out the{' '}
-          <a href="https://kando.menu" target="_blank">
-            documentation <TbExternalLink />
-          </a>
-          .
+          {i18next
+            .t('settings.introduction-dialog.message')
+            .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
+            .replace('%s2', 'https://kando.menu')}
         </div>
         <Swiper
           effect={'cards'}
@@ -87,7 +80,7 @@ export default () => {
 
         <Note>
           <SettingsCheckbox
-            label="Show this dialog again"
+            label={i18next.t('settings.introduction-dialog.show-again')}
             settingsKey="showIntroductionDialog"
           />
         </Note>

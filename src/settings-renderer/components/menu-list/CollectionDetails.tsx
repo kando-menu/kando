@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
@@ -79,7 +80,7 @@ export default (props: IProps) => {
       setFilterTags(menuCollections[selectedCollection].tags);
       setCollectionName(menuCollections[selectedCollection].name);
     } else {
-      setCollectionName('All Menus');
+      setCollectionName(i18next.t('settings.all-menus'));
     }
   }, [selectedCollection, menuCollections]);
 
@@ -184,7 +185,7 @@ export default (props: IProps) => {
             <input
               ref={searchbarRef}
               type="text"
-              placeholder="Search menus..."
+              placeholder={i18next.t('settings.search-menus-placeholder')}
               value={filterTerm}
               onChange={(event) => {
                 setFilterTerm(event.target.value);

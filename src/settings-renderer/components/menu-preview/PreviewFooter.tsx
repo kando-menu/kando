@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 
 import * as classes from './PreviewFooter.module.scss';
@@ -31,7 +32,7 @@ export default () => {
     <div className={classes.itemArea}>
       <div className={classes.header}>
         <div className={classes.leftLine}></div>
-        <div className={classes.title}>Add Menu Items</div>
+        <div className={classes.title}>{i18next.t('settings.add-menu-items')}</div>
         <div className={classes.rightLine}></div>
       </div>
       <div className={classes.shadow}></div>
@@ -43,7 +44,7 @@ export default () => {
               newItem: true,
               dragging: dragIndex === index,
             })}
-            data-tooltip-id="click-to-show-tooltip"
+            data-tooltip-id="main-tooltip"
             data-tooltip-html={
               '<strong>' + type.defaultName + '</strong><br>' + type.genericDescription
             }

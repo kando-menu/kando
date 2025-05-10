@@ -101,13 +101,6 @@ export default () => {
           focus: true,
         }}
       />
-      <Tooltip
-        id="click-to-show-tooltip"
-        delayShow={0}
-        openEvents={{ click: true }}
-        closeEvents={{ click: true }}
-        globalCloseEvents={{ escape: true, clickOutsideAnchor: true }}
-      />
     </>
   );
 };
