@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: {{- link}}"
+      "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: %s"
     },
     "hyprland": {
       "shortcut-hint": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."

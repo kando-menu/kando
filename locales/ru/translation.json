@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Не удалось подключиться к Kando Integration GNOME Shell extension. Вы можете получить его здесь: {{- link}}"
+      "error": "Не удалось подключиться к Kando Integration GNOME Shell extension. Вы можете получить его здесь: %s"
     },
     "hyprland": {
       "shortcut-hint": "Используйте свой hyprland.conf чтобы назначить это."

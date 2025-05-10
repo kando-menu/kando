@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: {{- link}}"
+      "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: %s"
     },
     "hyprland": {
       "shortcut-hint": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."

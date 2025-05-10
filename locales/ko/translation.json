@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: {{- link}}"
+      "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: %s"
     },
     "hyprland": {
       "shortcut-hint": "hyprland.conf에서 바인딩하세요."

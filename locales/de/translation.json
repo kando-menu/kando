@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: {{- link}}"
+      "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: %s"
     },
     "hyprland": {
       "shortcut-hint": "Verwenden Sie Ihre hyprland.conf, um dies zu binden."

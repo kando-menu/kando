@@ -1,138 +1,55 @@
 {
-  "backends": {
-    "gnome": {
-      "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: {{- link}}"
-    },
-    "hyprland": {
-      "shortcut-hint": "Use your hyprland.conf to bind this."
-    },
-    "kde-wayland": {
-      "shortcut-hint": "Use KDE's system settings to bind this."
-    }
-  },
-  "example-menu": {
-    "apps": {
-      "apple-music": "Music",
-      "email": "E-Mail",
-      "file-browser": "File Browser",
-      "finder": "Finder",
-      "gimp": "GIMP",
-      "paint": "Paint",
-      "safari": "Safari",
-      "submenu": "Apps",
-      "terminal": "Terminal",
-      "web-browser": "Web Browser"
-    },
-    "audio": {
-      "mute": "Mute",
-      "next-track": "Next Track",
-      "play-pause": "Play / Pause",
-      "previous-track": "Previous Track",
-      "submenu": "Audio"
-    },
-    "bookmarks": {
-      "desktop": "Desktop",
-      "documents": "Documents",
-      "downloads": "Downloads",
-      "home": "Home",
-      "music": "Music",
-      "pictures": "Pictures",
-      "submenu": "Bookmarks",
-      "videos": "Videos"
-    },
-    "clipboard": {
-      "copy": "Copy",
-      "cut": "Cut",
-      "paste": "Paste",
-      "submenu": "Clipboard"
-    },
-    "name": "Example Menu",
-    "next-workspace": "Next Workspace",
-    "previous-workspace": "Previous Workspace",
-    "web-links": {
-      "google": "Google",
-      "kando-on-discord": "Kando on Discord",
-      "kando-on-github": "Kando on GitHub",
-      "kando-on-kofi": "Kando on Ko-fi",
-      "kando-on-youtube": "Kando on YouTube",
-      "submenu": "Web Links"
-    },
-    "windows": {
-      "close-window": "Close Window",
-      "mission-control": "Mission Control",
-      "submenu": "Windows",
-      "tile-left": "Tile Left",
-      "tile-right": "Tile Right",
-      "toggle-maximize": "Toggle Maximize"
-    }
-  },
-  "main": {
-    "failed-to-start-header": "Kando failed to start",
-    "inhibit-shortcuts": "Temporarily Disable Shortcuts",
-    "invalid-link-header": "Invalid link",
-    "invalid-link-message": "The deep link could not be parsed.",
-    "new-version-notification-body": "Get it from %s.",
-    "new-version-notification-header": "A new version of Kando is available!",
-    "quit": "Quit",
-    "show-settings": "Show Settings",
-    "un-inhibit-shortcuts": "Re-enable Shortcuts"
-  },
   "menu-items": {
     "command": {
+      "name": "Run Command",
+      "description": "Runs any shell command.",
       "command": "Command",
       "command-hint": "This will be executed.",
-      "description": "Runs any shell command.",
-      "name": "Run Command",
       "tip-1": "You can use the Command item type to launch applications or scripts.",
       "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
       "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
       "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
       "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
     },
-    "common": {
-      "delayed-option": "Execute After Closing the Menu",
-      "delayed-option-hint": "Useful if the action targets a window that needs to be focused.",
-      "not-configured": "Not configured"
-    },
     "file": {
+      "name": "Open File",
       "description": "Opens a file or folder.",
       "file": "File Path",
       "file-hint": "This will be opened.",
-      "name": "Open File",
       "tip-1": "You can use this item type to open files or folders."
     },
     "hotkey": {
+      "name": "Simulate Hotkey",
       "description": "Presses a hotkey.",
       "hotkey": "Hotkey",
       "hotkey-hint": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
-      "name": "Simulate Hotkey",
       "recording-placeholder": "Type a hotkey…",
       "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
       "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
       "tip-3": "Click [this link](%s) to see all valid key names."
     },
     "macro": {
-      "description": "Types a keyboard macro.",
       "name": "Simulate Macro",
+      "description": "Types a keyboard macro.",
       "placeholder": "Hit the record button to start recording!",
       "recording-placeholder": "Press any keys…",
       "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
       "tip-2": "You can edit the macro also by hand. This is useful if you want to adjust the timing of the keys."
     },
     "redirect": {
-      "description": "Opens another menu.",
       "name": "Redirect",
+      "description": "Opens another menu.",
       "redirect": "Referenced menu",
       "redirect-hint": "This menu will be opened when you activate this item."
     },
     "settings": {
-      "description": "Opens the Kando settings window.",
       "name": "Open Settings",
+      "description": "Opens the Kando settings window.",
       "tip-1": "This action opens the Kando settings window."
     },
     "submenu": {
-      "description": "Contains other menu items.",
       "name": "Submenu",
+      "description": "Contains other menu items.",
       "tip-1": "Submenus can be used to group items.",
       "tip-2": "You can also nest submenus inside of submenus.",
       "tip-3": "Submenus can be used to create complex menu structures.",
@@ -142,65 +59,62 @@
       "tip-7": "You can delete a menu or a menu item with the trash icon below."
     },
     "text": {
-      "description": "Inserts the given text.",
       "name": "Paste Text",
+      "description": "Inserts the given text.",
       "placeholder": "Insert any text…",
       "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text."
     },
     "uri": {
-      "description": "Opens websites and more.",
       "name": "Open URI",
+      "description": "Opens websites and more.",
+      "uri": "URI",
+      "uri-hint": "This will be opened with your default application for this URI type.",
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
       "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
       "tip-3": "You can use the URI item type to open a mailto: link.",
       "tip-4": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
       "tip-5": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
-      "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
-      "uri": "URI",
-      "uri-hint": "This will be opened with your default application for this URI type."
+      "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
+    },
+    "common": {
+      "delayed-option": "Execute After Closing the Menu",
+      "delayed-option-hint": "Useful if the action targets a window that needs to be focused."
     }
   },
+  "main": {
+    "new-version-notification-header": "A new version of Kando is available!",
+    "new-version-notification-body": "Get it from %s.",
+    "show-settings": "Show Settings",
+    "un-inhibit-shortcuts": "Re-enable Shortcuts",
+    "inhibit-shortcuts": "Temporarily Disable Shortcuts",
+    "quit": "Quit",
+    "invalid-link-header": "Invalid link",
+    "invalid-link-message": "The deep link could not be parsed.",
+    "failed-to-start-header": "Kando failed to start"
+  },
   "settings": {
-    "about-dialog": {
-      "check-latest-release": "Check latest release",
-      "chrome-version": "Chrome Version",
-      "electron-version": "Electron Version",
-      "kando-backend": "Kando Backend",
-      "kando-version": "Kando Version",
-      "message": "I am creating Kando out of sheer passion. If you enjoy using it as much as I love creating it, you can [buy me a coffee](%s)!\n\n💖 Simon",
-      "read-release-notes": "Read release notes",
-      "title": "About Kando"
-    },
-    "anchored-mode": "Anchored Mode",
-    "anchored-mode-hint": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode.",
-    "app-condition": "Limit to Specific Apps",
-    "app-condition-hint": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
-    "app-condition-placeholder": "App name",
-    "app-condition-tooltip": "Select an app",
-    "area-condition": "Limit to Specific Screen Area",
-    "area-condition-bottom-placeholder": "Bottom",
-    "area-condition-hint": "Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction.",
-    "area-condition-left-placeholder": "Left",
-    "area-condition-right-placeholder": "Right",
-    "area-condition-tooltip": "Select a screen area",
-    "area-condition-top-placeholder": "Top",
-    "cancel": "Cancel",
-    "centered-mode": "Centered Mode",
-    "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
-    "create-menu-button": "New menu",
-    "general-settings-dialog": {
-      "reload-menu-theme": "Reload Current Menu Theme",
-      "reload-menu-theme-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu.",
-      "reload-sound-theme": "Reload Current Sound Theme",
-      "title": "General Settings"
-    },
-    "hover-mode": "Hover Mode",
-    "hover-mode-hint": "For power users only! Select items by hovering over them.",
+    "not-bound": "Not Bound",
     "icon-picker-dialog": {
       "base64-example": "Base64 example:",
       "file-example": "file: URI example:",
-      "search-placeholder": "Search Icons…",
-      "url-example": "URL example:"
+      "url-example": "URL example:",
+      "search-placeholder": "Search Icons…"
+    },
+    "about-dialog": {
+      "title": "About Kando",
+      "message": "I am creating Kando out of sheer passion. If you enjoy using it as much as I love creating it, you can [buy me a coffee](%s)!\n\n💖 Simon",
+      "kando-version": "Kando Version",
+      "kando-backend": "Kando Backend",
+      "electron-version": "Electron Version",
+      "chrome-version": "Chrome Version",
+      "check-latest-release": "Check latest release",
+      "read-release-notes": "Read release notes"
+    },
+    "general-settings-dialog": {
+      "title": "General Settings",
+      "reload-menu-theme": "Reload Current Menu Theme",
+      "reload-menu-theme-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu.",
+      "reload-sound-theme": "Reload Current Sound Theme"
     },
     "introduction-dialog": {
       "slide-1-caption": "Click Anywhere: You do not have to exactly click on an item, you just have to click somewhere into its wedge!",
@@ -210,26 +124,111 @@
       "slide-5-caption": "No accidental selections: Actions are only executed as soon as you release your mouse button in \"Marking Mode\" or a keyboard key in \"Turbo Mode\". Use this to explore the menu!",
       "title": "Welcome to Kando!"
     },
+    "menu-themes-dialog": {
+      "reset-color-picker": "Reset all colors to their defaults",
+      "title": "Menu Themes",
+      "light-dark-mode-hint": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
+      "author": "by %s"
+    },
+    "create-menu-button": "New menu",
+    "undo": "Undo",
+    "redo": "Redo",
     "menu-behavior": "Menu Behavior",
     "menu-behavior-hint": "Before you enable these options, we recommend learning why we like Kando's default behavior [here](%s)!",
+    "centered-mode": "Centered Mode",
+    "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
+    "anchored-mode": "Anchored Mode",
+    "anchored-mode-hint": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode.",
+    "hover-mode": "Hover Mode",
+    "hover-mode-hint": "For power users only! Select items by hovering over them.",
     "menu-conditions": "Menu Conditions",
     "menu-conditions-hint": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
-    "menu-themes-dialog": {
-      "author": "by %s",
-      "light-dark-mode-hint": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
-      "reset-color-picker": "Reset all colors to their defaults",
-      "title": "Menu Themes"
-    },
-    "not-bound": "Not Bound",
-    "redo": "Redo",
-    "shortcut-hint": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
-    "shortcut-id-label": "Global Shortcut ID",
-    "shortcut-label": "Shortcut",
-    "shortcut-recording": "Press a shortcut…",
-    "undo": "Undo",
+    "app-condition": "Limit to Specific Apps",
+    "app-condition-hint": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
+    "app-condition-placeholder": "App name",
+    "app-condition-tooltip": "Select an app",
     "window-condition": "Limit to Specific Window Titles",
     "window-condition-hint": "Show the menu only if the focused window's title contains a given text. This supports regular expressions like /youtube|vimeo/i.",
     "window-condition-placeholder": "Window title",
-    "window-condition-tooltip": "Select a window"
+    "window-condition-tooltip": "Select a window",
+    "area-condition": "Limit to Specific Screen Area",
+    "area-condition-hint": "Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction.",
+    "area-condition-top-placeholder": "Top",
+    "area-condition-left-placeholder": "Left",
+    "area-condition-bottom-placeholder": "Bottom",
+    "area-condition-right-placeholder": "Right",
+    "area-condition-tooltip": "Select a screen area",
+    "shortcut-label": "Shortcut",
+    "shortcut-hint": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
+    "shortcut-recording": "Press a shortcut…",
+    "shortcut-id-label": "Global Shortcut ID",
+    "cancel": "Cancel"
+  },
+  "example-menu": {
+    "name": "Example Menu",
+    "apps": {
+      "submenu": "Apps",
+      "safari": "Safari",
+      "web-browser": "Web Browser",
+      "email": "E-Mail",
+      "apple-music": "Music",
+      "gimp": "GIMP",
+      "paint": "Paint",
+      "finder": "Finder",
+      "file-browser": "File Browser",
+      "terminal": "Terminal"
+    },
+    "web-links": {
+      "submenu": "Web Links",
+      "google": "Google",
+      "kando-on-github": "Kando on GitHub",
+      "kando-on-kofi": "Kando on Ko-fi",
+      "kando-on-youtube": "Kando on YouTube",
+      "kando-on-discord": "Kando on Discord"
+    },
+    "next-workspace": "Next Workspace",
+    "clipboard": {
+      "submenu": "Clipboard",
+      "paste": "Paste",
+      "copy": "Copy",
+      "cut": "Cut"
+    },
+    "audio": {
+      "submenu": "Audio",
+      "next-track": "Next Track",
+      "play-pause": "Play / Pause",
+      "mute": "Mute",
+      "previous-track": "Previous Track"
+    },
+    "windows": {
+      "submenu": "Windows",
+      "mission-control": "Mission Control",
+      "toggle-maximize": "Toggle Maximize",
+      "tile-right": "Tile Right",
+      "close-window": "Close Window",
+      "tile-left": "Tile Left"
+    },
+    "previous-workspace": "Previous Workspace",
+    "bookmarks": {
+      "submenu": "Bookmarks",
+      "downloads": "Downloads",
+      "videos": "Videos",
+      "pictures": "Pictures",
+      "documents": "Documents",
+      "desktop": "Desktop",
+      "home": "Home",
+      "music": "Music"
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: %s"
+    },
+    "hyprland": {
+      "shortcut-hint": "Use your hyprland.conf to bind this."
+    },
+    "kde-wayland": {
+      "shortcut-hint": "Use KDE's system settings to bind this."
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Connessione all’estensione della -Shell GNOME di Kando- fallita. Puoi ottenerla da qui: {{- link}}"
+      "error": "Connessione all’estensione della -Shell GNOME di Kando- fallita. Puoi ottenerla da qui: %s"
     },
     "hyprland": {
       "shortcut-hint": "Usa il tuo hyprland.conf per associare questo."

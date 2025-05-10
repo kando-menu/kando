@@ -4,7 +4,7 @@
   "Kando is already running": "Kando 已经在运行了",
   "backends": {
     "gnome": {
-      "error": "无法连接到 \"Kando 集成\" GNOME Shell 插件。您可以从这里获取：{{- link}}"
+      "error": "无法连接到 \"Kando 集成\" GNOME Shell 插件。您可以从这里获取：%s"
     },
     "hyprland": {
       "shortcut-hint": "使用您的 hyperland.conf 文件来绑定该快捷键。"

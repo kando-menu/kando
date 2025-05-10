@@ -1,7 +1,7 @@
 {
   "backends": {
     "gnome": {
-      "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: {{- link}}"
+      "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: %s"
     },
     "hyprland": {
       "shortcut-hint": "Použijte svůj hyprland.conf k přiřazení této zkratky."
