@@ -59,11 +59,7 @@ export default () => {
             <br />
             Kando Backend:
             <br />
-            License:
-            <br />
             Electron Version:
-            <br />
-            Node Version:
             <br />
             Chromium Version:
             <br />
@@ -73,11 +69,7 @@ export default () => {
             <br />
             {backend.name}
             <br />
-            MIT
-            <br />
             {version.electronVersion}
-            <br />
-            {version.nodeVersion}
             <br />
             {version.chromeVersion}
           </div>
@@ -102,13 +94,6 @@ export default () => {
                   '_blank'
                 )
               }
-            />
-            <Button
-              label="Source code"
-              icon={<TbExternalLink />}
-              tooltip="https://github.com/kando-menu/kando"
-              onClick={() => window.open('https://github.com/kando-menu/kando', '_blank')}
-              block
             />
           </div>
         </div>
