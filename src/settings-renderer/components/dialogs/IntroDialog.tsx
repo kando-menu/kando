@@ -10,8 +10,9 @@
 
 import React from 'react';
 import i18next from 'i18next';
+import Markdown from 'react-markdown';
+import rehypeExternalLinks from 'rehype-external-links';
 import { IoSchool } from 'react-icons/io5';
-import { TbExternalLink } from 'react-icons/tb';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards } from 'swiper/modules';
 import 'swiper/css';
@@ -56,10 +57,12 @@ export default () => {
       maxWidth={550}>
       <div className={classes.container}>
         <div className={classes.hero}>
-          {i18next
-            .t('settings.introduction-dialog.message')
-            .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
-            .replace('%s2', 'https://kando.menu')}
+          <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+            {i18next
+              .t('settings.introduction-dialog.message')
+              .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
+              .replace('%s2', 'https://kando.menu')}
+          </Markdown>
         </div>
         <Swiper
           effect={'cards'}
