@@ -68,20 +68,20 @@
   },
   "main": {
     "failed-to-start-header": "Kando failed to start",
-    "inhibit-shortcuts": "Temporarily Disable Shortcuts",
+    "inhibit-shortcuts": "Temporarily disable all shortcuts",
     "invalid-link-header": "Invalid link",
     "invalid-link-message": "The deep link could not be parsed.",
     "new-version-notification-body": "Get it from %s.",
     "new-version-notification-header": "A new version of Kando is available!",
     "quit": "Quit",
-    "show-settings": "Show Settings",
-    "un-inhibit-shortcuts": "Re-enable Shortcuts"
+    "show-settings": "Show settings",
+    "un-inhibit-shortcuts": "Re-enable shortcuts"
   },
   "menu-items": {
     "command": {
-      "command-hint": "This will be executed.",
+      "command-hint": "This command will be executed when the item is activated.",
       "command": "Command",
-      "description": "Runs any shell command.",
+      "description": "Runs any command.",
       "name": "Run Command",
       "tip-1": "You can use the Command item type to launch applications or scripts.",
       "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
@@ -95,7 +95,7 @@
     },
     "file": {
       "description": "Opens a file or folder.",
-      "file-hint": "This will be opened.",
+      "file-hint": "The file or folder will be opened with the corresponding default application.",
       "file": "File Path",
       "name": "Open File",
       "tip-1": "You can use this item type to open files or folders."
@@ -112,7 +112,7 @@
     },
     "macro": {
       "description": "Types a keyboard macro.",
-      "name": "Simulate Macro",
+      "name": "Execute Macro",
       "placeholder": "Hit the record button to start recording!",
       "recording-placeholder": "Press any keys…",
       "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
@@ -121,13 +121,13 @@
     "redirect": {
       "description": "Opens another menu.",
       "name": "Redirect",
-      "redirect-hint": "This menu will be opened when you activate this item.",
-      "redirect": "Referenced menu"
+      "redirect-hint": "The menu will be opened when you activate this item.",
+      "redirect": "Linked menu"
     },
     "settings": {
       "description": "Opens the Kando settings window.",
       "name": "Open Settings",
-      "tip-1": "This action opens the Kando settings window."
+      "tip-1": "This item type opens the Kando settings window."
     },
     "submenu": {
       "description": "Contains other menu items.",
@@ -170,7 +170,7 @@
       "read-release-notes": "Read release notes",
       "title": "About Kando"
     },
-    "add-collection-tooltip": "Create a new collection. Use collections to group your menus by tags!",
+    "add-collection-tooltip": "Create a new menu collection. Use collections to group your menus by tags!",
     "add-menu-items": "Add Menu Items",
     "add-tags-placeholder": "Add tags…",
     "all-menus": "All Menus",
@@ -206,7 +206,7 @@
       "url-example": "URL example:"
     },
     "introduction-dialog": {
-      "message": "Kando offers a unique and powerful way to interact with your computer. Have a look at the videos below to get a glimpse of what Kando can do for you! If you need help at any point, feel free to join our [Discord Server](%s1) or check out the [documentation](%s2).",
+      "message": "Kando offers a unique and efficient way to interact with your computer. Have a look at the videos below to get a glimpse of what Kando can do for you! If you need help at any point, feel free to join our [Discord Server](%s1) or check out the [documentation](%s2).",
       "show-again": "Show this dialog again",
       "slide-1-caption": "Click Anywhere: You do not have to exactly click on an item, you just have to click somewhere into its wedge!",
       "slide-2-caption": "Go Back: Quickly navigate one level up by clicking the center item.",
@@ -229,7 +229,7 @@
     "redo": "Redo",
     "search-menus-placeholder": "Search menus…",
     "shortcut-hint": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
-    "shortcut-id-label": "Global Shortcut ID",
+    "shortcut-id-label": "Shortcut ID",
     "shortcut-label": "Shortcut",
     "shortcut-recording": "Press a shortcut…",
     "undo": "Undo",

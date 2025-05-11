@@ -68,20 +68,20 @@
   },
   "main": {
     "failed-to-start-header": "Kando konnte nicht gestartet werden",
-    "inhibit-shortcuts": "Deaktivierte Shortcuts",
+    "inhibit-shortcuts": "Deaktiviere vorübergehend alle Tastenkombos",
     "invalid-link-header": "Ungültiger Link",
     "invalid-link-message": "Der Deep-Link konnte nicht verarbeitet werden.",
     "new-version-notification-body": "Laden Sie sie hier herunter: %s.",
     "new-version-notification-header": "Eine neue Version von Kando ist verfügbar!",
     "quit": "Beenden",
-    "show-settings": "Einstellungen Öffnen",
-    "un-inhibit-shortcuts": "Shortcuts wieder aktivieren"
+    "show-settings": "Einstellungen öffnen",
+    "un-inhibit-shortcuts": "Tastenkombos wieder aktivieren"
   },
   "menu-items": {
     "command": {
-      "command-hint": "Das wird ausgeführt.",
+      "command-hint": "Dieser Befehl wird ausgeführt wenn das Element aktiviert wird.",
       "command": "Befehl",
-      "description": "Führt einen beliebigen Shell-Befehl aus.",
+      "description": "Führt einen beliebigen Befehl aus.",
       "name": "Befehl Ausführen",
       "tip-1": "Mit dem Elementtyp „Befehl Ausführen“ können Sie Anwendungen oder Skripte starten.",
       "tip-2": "Wenn der Pfad zu einer ausführbaren Datei Leerzeichen enthält, sollten Sie ihn „in Anführungszeichen setzen“.",
@@ -95,7 +95,7 @@
     },
     "file": {
       "description": "Öffnet eine Datei oder einen Ordner.",
-      "file-hint": "Dies wird geöffnet.",
+      "file-hint": "Die Datei oder der Ordner wird mit der entsprechenden Standardanwendung geöffnet.",
       "file": "Dateipfad",
       "name": "Datei Öffnen",
       "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen."
@@ -111,8 +111,8 @@
       "tip-3": "Klicken Sie [auf diesen Link](%s), um alle gültigen Tastenbezeichnungen zu sehen."
     },
     "macro": {
-      "description": "Gibt ein Tastaturmakro ein.",
-      "name": "Makro Simulieren",
+      "description": "Führt ein Tastaturmakro aus.",
+      "name": "Makro Ausführen",
       "placeholder": "Drücken Sie die Aufnahmetaste, um die Aufnahme zu starten!",
       "recording-placeholder": "Drücken Sie die Tasten…",
       "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern.",
@@ -121,13 +121,13 @@
     "redirect": {
       "description": "Öffnet ein anderes Menü",
       "name": "Verknüpfung",
-      "redirect-hint": "Dieses Menü wird geöffnet, wenn Sie dieses Element aktivieren.",
+      "redirect-hint": "Das Menü wird geöffnet, wenn Sie dieses Element aktivieren.",
       "redirect": "Verknüpftes Menü"
     },
     "settings": {
       "description": "Öffnet das Kando-Einstellungsfenster.",
       "name": "Einstellungen Öffnen",
-      "tip-1": "Diese Aktion öffnet das Kando-Einstellungsfenster."
+      "tip-1": "Dieser Elementtyp öffnet das Kando-Einstellungsfenster."
     },
     "submenu": {
       "description": "Enthält andere Menüelemente.",
@@ -143,7 +143,7 @@
     "text": {
       "description": "Fügt den gegebenen Text ein.",
       "name": "Text Einfügen",
-      "placeholder": "Fügen Sie einen Text ein…",
+      "placeholder": "Geben Sie den Text ein…",
       "tip-1": "Diese Aktion verwendet die Zwischenablage, um den Text einzufügen. Nach der Aktion wird die Zwischenablage den Text enthalten."
     },
     "uri": {
@@ -155,7 +155,7 @@
       "tip-4": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
       "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
       "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
-      "uri-hint": "Dies wird mit Ihrer Standardanwendung für diesen URI-Typ geöffnet.",
+      "uri-hint": "Ihrer Standardanwendung für diesen URI-Typ wird genutzt werden.",
       "uri": "URI"
     }
   },
@@ -166,29 +166,29 @@
       "electron-version": "Electron Version",
       "kando-backend": "Kando Backend",
       "kando-version": "Kando Version",
-      "message": "Ich erstelle Kando aus purer Leidenschaft. Wenn Sie es genauso genießen, wie ich es liebe, es zu erstellen, können Sie mir [einen Kaffee kaufen](%s)!",
+      "message": "Ich erstelle Kando aus purer Leidenschaft. Wenn Ihnen die Nutzung von Kando genausoviel Spaß bereitet wie mir die Entwicklung, können Sie mir gerne [einen Kaffee kaufen](%s)!\n\n💖 Simon",
       "read-release-notes": "Versionshinweise lesen",
       "title": "Über Kando"
     },
-    "add-collection-tooltip": "Erstellen Sie eine neue Sammlung. Verwenden Sie Sammlungen, um Ihre Menüs nach Tags zu gruppieren!",
+    "add-collection-tooltip": "Erstellen Sie eine neue Menüsammlung. Verwenden Sie Sammlungen, um Ihre Menüs nach Tags zu gruppieren!",
     "add-menu-items": "Menüelemente hinzufügen",
     "add-tags-placeholder": "Tags hinzufügen…",
     "all-menus": "Alle Menüs",
     "anchored-mode-hint": "Öffne Untermenüs an derselben Position wie das Elternmenü. Diese Option deaktiviert den Markierungsmodus.",
     "anchored-mode": "Verankerter Modus",
     "app-condition-hint": "Zeigen Sie das Menü nur an, wenn eine bestimmte Anwendung fokussiert ist. Dies unterstützt reguläre Ausdrücke wie /firefox|chrome/i.",
-    "app-condition-placeholder": "App-Name",
-    "app-condition-tooltip": "Wählen Sie eine App aus",
-    "app-condition": "Auf bestimmte Apps beschränken",
+    "app-condition-placeholder": "Anwendungsname",
+    "app-condition-tooltip": "Wählen Sie eine Anwendung aus",
+    "app-condition": "Auf Anwendung beschränken",
     "area-condition-bottom-placeholder": "Unten",
     "area-condition-hint": "Zeigen Sie das Menü nur an, wenn sich der Zeiger in einem bestimmten Bereich auf dem Bildschirm befindet. Der Bereich wird in Pixeln relativ zur oberen linken Ecke Ihres Hauptbildschirms angegeben. Wenn Sie ein Feld leer lassen, ist der Bereich in dieser Richtung unbegrenzt.",
     "area-condition-left-placeholder": "Links",
     "area-condition-right-placeholder": "Rechts",
     "area-condition-top-placeholder": "Oben",
     "area-condition-tooltip": "Wählen Sie einen Bildschirmbereich aus",
-    "area-condition": "Auf bestimmten Bildschirmbereich beschränken",
+    "area-condition": "Auf Bildschirmzone beschränken",
     "cancel": "Abbrechen",
-    "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor.",
+    "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Mauszeiger.",
     "centered-mode": "Zentrierter Modus",
     "create-menu-button": "Neues Menü",
     "general-settings-dialog": {
@@ -206,7 +206,7 @@
       "url-example": "URL-Beispiel:"
     },
     "introduction-dialog": {
-      "message": "Kando bietet eine einzigartige und leistungsstarke Möglichkeit, mit Ihrem Computer zu interagieren. Schauen Sie sich die unten stehenden Videos an, um einen Eindruck davon zu bekommen, was Kando für Sie tun kann! Wenn Sie Hilfe benötigen, können Sie jederzeit unserem [Discord-Server](%s1) beitreten oder die [Dokumentation](%s2) lesen.",
+      "message": "Kando bietet eine einzigartige und effiziente Möglichkeit, mit Ihrem Computer zu interagieren. Schauen Sie sich die Videos unten an, um einen Eindruck davon zu bekommen, was Kando für Sie tun kann! Wenn Sie Hilfe benötigen, können Sie jederzeit unserem [Discord-Server](%s1) beitreten oder die [Dokumentation](%s2) lesen.",
       "show-again": "Diesen Dialog erneut anzeigen",
       "slide-1-caption": "Irgendwo Klicken: Sie müssen nicht genau auf ein Element klicken, Sie müssen nur irgendwo in dessen Bereich klicken!",
       "slide-2-caption": "Zurück: Navigieren Sie schnell eine Ebene nach oben, indem Sie auf das mittlere Element klicken.",
@@ -215,9 +215,9 @@
       "slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
       "title": "Willkommen bei Kando!"
     },
-    "menu-behavior-hint": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando gefällt!",
+    "menu-behavior-hint": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando so gefällt!",
     "menu-behavior": "Menüverhalten",
-    "menu-conditions-hint": "Sie können mehrere Menüs an denselben Hotkey binden und dann auswählen, unter welchen Bedingungen jedes Menü angezeigt werden soll.",
+    "menu-conditions-hint": "Sie können mehrere Menüs an dieselbe Tastenkombo binden und dann auswählen, unter welchen Bedingungen sie angezeigt werden sollen.",
     "menu-conditions": "Menübedingungen",
     "menu-themes-dialog": {
       "author": "von %s",
@@ -225,17 +225,17 @@
       "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen",
       "title": "Menü-Designs"
     },
-    "not-bound": "Nicht verknüpft",
+    "not-bound": "Nicht gebunden",
     "redo": "Wiederholen",
     "search-menus-placeholder": "Menüs durchsuchen…",
     "shortcut-hint": "Diese Verknüpfung öffnet das Menü. Sie muss eine normale Taste und beliebig viele Modifikatoren wie Strg, Alt oder Umschalt enthalten. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn eine Verknüpfung bereits einem anderen Menü zugewiesen ist!",
-    "shortcut-id-label": "Globale Verknüpfungs-ID",
-    "shortcut-label": "Verknüpfung",
-    "shortcut-recording": "Drücken Sie eine Verknüpfung…",
+    "shortcut-id-label": "Shortcut-ID",
+    "shortcut-label": "Tastenkombo",
+    "shortcut-recording": "Drücken Sie eine Kombo…",
     "undo": "Rückgängig",
     "window-condition-hint": "Zeigen Sie das Menü nur an, wenn der Titel des fokussierten Fensters einen bestimmten Text enthält. Dies unterstützt reguläre Ausdrücke wie /youtube|vimeo/i.",
     "window-condition-placeholder": "Fenstertitel",
     "window-condition-tooltip": "Wählen Sie ein Fenster aus",
-    "window-condition": "Auf bestimmte Fenstertitel beschränken"
+    "window-condition": "Auf Fenstertitel beschränken"
   }
 }
