@@ -69,8 +69,9 @@
   "main": {
     "failed-to-start-header": "Kando konnte nicht gestartet werden",
     "inhibit-shortcuts": "Deaktivierte Shortcuts",
-    "is-running-header": "Kando läuft bereits",
-    "is-running-message": "Überprüfen Sie das Taskleistensymbol für einige Optionen!",
+    "invalid-link-header": "Ungültiger Link",
+    "invalid-link-message": "Der Deep-Link konnte nicht verarbeitet werden.",
+    "new-version-notification-body": "Laden Sie sie hier herunter: %s.",
     "new-version-notification-header": "Eine neue Version von Kando ist verfügbar!",
     "quit": "Beenden",
     "show-settings": "Einstellungen Öffnen",
@@ -78,8 +79,8 @@
   },
   "menu-items": {
     "command": {
-      "command": "Befehl",
       "command-hint": "Das wird ausgeführt.",
+      "command": "Befehl",
       "description": "Führt einen beliebigen Shell-Befehl aus.",
       "name": "Befehl Ausführen",
       "tip-1": "Mit dem Elementtyp „Befehl Ausführen“ können Sie Anwendungen oder Skripte starten.",
@@ -88,30 +89,45 @@
       "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
       "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde."
     },
+    "common": {
+      "delayed-option-hint": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
+      "delayed-option": "Nach dem Schließen des Menüs ausführen"
+    },
     "file": {
       "description": "Öffnet eine Datei oder einen Ordner.",
+      "file-hint": "Dies wird geöffnet.",
       "file": "Dateipfad",
       "name": "Datei Öffnen",
       "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen."
     },
     "hotkey": {
       "description": "Drückt einen Hotkey.",
+      "hotkey-hint": "Dieser Hotkey wird ausgelöst, wenn das Element ausgewählt wird. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn ein Hotkey bereits einer globalen Aktion zugewiesen ist!",
       "hotkey": "Hotkey",
       "name": "Hotkey Simulieren",
       "recording-placeholder": "Drücken Sie einen Hotkey…",
       "tip-1": "Beim Aufzeichnen eines Hotkeys müssen Sie nicht alle Tasten gleichzeitig drücken. Sie können sie auch nacheinander drücken.",
-      "tip-2": "Wenn Sie eine Taste nicht aufnehmen können, weil sie vom System verwendet wird, versuchen Sie, ihren Namen direkt einzugeben."
+      "tip-2": "Wenn Sie eine Taste nicht aufnehmen können, weil sie vom System verwendet wird, versuchen Sie, ihren Namen direkt einzugeben.",
+      "tip-3": "Klicken Sie [auf diesen Link](%s), um alle gültigen Tastenbezeichnungen zu sehen."
     },
     "macro": {
       "description": "Gibt ein Tastaturmakro ein.",
       "name": "Makro Simulieren",
       "placeholder": "Drücken Sie die Aufnahmetaste, um die Aufnahme zu starten!",
       "recording-placeholder": "Drücken Sie die Tasten…",
-      "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern."
+      "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern.",
+      "tip-2": "Sie können das Makro auch manuell bearbeiten. Dies ist nützlich, wenn Sie das Timing der Tasten anpassen möchten."
     },
     "redirect": {
       "description": "Öffnet ein anderes Menü",
-      "name": "Verknüpfung"
+      "name": "Verknüpfung",
+      "redirect-hint": "Dieses Menü wird geöffnet, wenn Sie dieses Element aktivieren.",
+      "redirect": "Verknüpftes Menü"
+    },
+    "settings": {
+      "description": "Öffnet das Kando-Einstellungsfenster.",
+      "name": "Einstellungen Öffnen",
+      "tip-1": "Diese Aktion öffnet das Kando-Einstellungsfenster."
     },
     "submenu": {
       "description": "Enthält andere Menüelemente.",
@@ -121,7 +137,8 @@
       "tip-3": "Durch Untermenüs lassen sich komplexe Menüstrukturen erstellen.",
       "tip-4": "Sie sollten nicht mehr als zwölf Elemente zu einem Untermenü hinzufügen. Acht ist eine gute Zahl.",
       "tip-5": "Mithilfe der kleinen Schlosssymbole in der Vorschau können Sie die Position eines Elements im Menü fixieren.",
-      "tip-6": "Sie können Elemente neu anordnen, indem Sie sie in der Vorschau verschieben."
+      "tip-6": "Sie können Elemente neu anordnen, indem Sie sie in der Vorschau verschieben.",
+      "tip-7": "Sie können ein Menü oder ein Menüelement mit dem Papierkorbsymbol unten löschen."
     },
     "text": {
       "description": "Fügt den gegebenen Text ein.",
@@ -138,37 +155,59 @@
       "tip-4": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
       "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
       "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
+      "uri-hint": "Dies wird mit Ihrer Standardanwendung für diesen URI-Typ geöffnet.",
       "uri": "URI"
     }
   },
   "settings": {
     "about-dialog": {
+      "check-latest-release": "Neueste Version prüfen",
       "chrome-version": "Chrome Version",
       "electron-version": "Electron Version",
       "kando-backend": "Kando Backend",
-      "kando-version": "Kando Version"
+      "kando-version": "Kando Version",
+      "message": "Ich erstelle Kando aus purer Leidenschaft. Wenn Sie es genauso genießen, wie ich es liebe, es zu erstellen, können Sie mir [einen Kaffee kaufen](%s)!",
+      "read-release-notes": "Versionshinweise lesen",
+      "title": "Über Kando"
     },
+    "add-collection-tooltip": "Erstellen Sie eine neue Sammlung. Verwenden Sie Sammlungen, um Ihre Menüs nach Tags zu gruppieren!",
+    "add-menu-items": "Menüelemente hinzufügen",
+    "add-tags-placeholder": "Tags hinzufügen…",
+    "all-menus": "Alle Menüs",
+    "anchored-mode-hint": "Öffne Untermenüs an derselben Position wie das Elternmenü. Diese Option deaktiviert den Markierungsmodus.",
     "anchored-mode": "Verankerter Modus",
+    "app-condition-hint": "Zeigen Sie das Menü nur an, wenn eine bestimmte Anwendung fokussiert ist. Dies unterstützt reguläre Ausdrücke wie /firefox|chrome/i.",
+    "app-condition-placeholder": "App-Name",
+    "app-condition-tooltip": "Wählen Sie eine App aus",
     "app-condition": "Auf bestimmte Apps beschränken",
-    "area-condition": "Auf bestimmten Bildschirmbereich beschränken",
     "area-condition-bottom-placeholder": "Unten",
+    "area-condition-hint": "Zeigen Sie das Menü nur an, wenn sich der Zeiger in einem bestimmten Bereich auf dem Bildschirm befindet. Der Bereich wird in Pixeln relativ zur oberen linken Ecke Ihres Hauptbildschirms angegeben. Wenn Sie ein Feld leer lassen, ist der Bereich in dieser Richtung unbegrenzt.",
     "area-condition-left-placeholder": "Links",
     "area-condition-right-placeholder": "Rechts",
     "area-condition-top-placeholder": "Oben",
+    "area-condition-tooltip": "Wählen Sie einen Bildschirmbereich aus",
+    "area-condition": "Auf bestimmten Bildschirmbereich beschränken",
     "cancel": "Abbrechen",
-    "centered-mode": "Zentrierter Modus",
     "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Cursor.",
+    "centered-mode": "Zentrierter Modus",
+    "create-menu-button": "Neues Menü",
     "general-settings-dialog": {
-      "reload-menu-theme": "Aktuelles Menü-Design Neuladen",
       "reload-menu-theme-tooltip": "CSS-Änderungen werden sofort angewendet. Für Änderungen an der Datei theme.json müssen Sie das Menü erneut öffnen.",
-      "reload-sound-theme": "Aktuelles Sound-Thema Neuladen"
+      "reload-menu-theme": "Aktuelles Menü-Design Neuladen",
+      "reload-sound-theme": "Aktuelles Sound-Thema Neuladen",
+      "title": "Allgemeine Einstellungen"
     },
-    "hover-mode": "Hover-Modus",
     "hover-mode-hint": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
+    "hover-mode": "Hover-Modus",
     "icon-picker-dialog": {
-      "search-placeholder": "Symbole suchen…"
+      "base64-example": "Base64-Beispiel:",
+      "file-example": "file: URI-Beispiel:",
+      "search-placeholder": "Symbole suchen…",
+      "url-example": "URL-Beispiel:"
     },
     "introduction-dialog": {
+      "message": "Kando bietet eine einzigartige und leistungsstarke Möglichkeit, mit Ihrem Computer zu interagieren. Schauen Sie sich die unten stehenden Videos an, um einen Eindruck davon zu bekommen, was Kando für Sie tun kann! Wenn Sie Hilfe benötigen, können Sie jederzeit unserem [Discord-Server](%s1) beitreten oder die [Dokumentation](%s2) lesen.",
+      "show-again": "Diesen Dialog erneut anzeigen",
       "slide-1-caption": "Irgendwo Klicken: Sie müssen nicht genau auf ein Element klicken, Sie müssen nur irgendwo in dessen Bereich klicken!",
       "slide-2-caption": "Zurück: Navigieren Sie schnell eine Ebene nach oben, indem Sie auf das mittlere Element klicken.",
       "slide-3-caption": "Markierungsmodus: Ziehen Sie über ein Element, um in den Markierungsmodus zu wechseln. Wenn Sie die Zeigerbewegung pausieren oder eine Kurve zeichnen, wird das aktuell gezogene Untermenü geöffnet.",
@@ -176,20 +215,27 @@
       "slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
       "title": "Willkommen bei Kando!"
     },
-    "menu-behavior": "Menü-Eigenschaften",
-    "menu-conditions": "Menübedingungen",
+    "menu-behavior-hint": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando gefällt!",
+    "menu-behavior": "Menüverhalten",
     "menu-conditions-hint": "Sie können mehrere Menüs an denselben Hotkey binden und dann auswählen, unter welchen Bedingungen jedes Menü angezeigt werden soll.",
+    "menu-conditions": "Menübedingungen",
     "menu-themes-dialog": {
       "author": "von %s",
-      "caption": "In Zukunft werden wir ein Online-Repository für Menü-Designs haben. Im Moment können Sie <a {{tutorialLink}}>lernen, wie Sie Ihre eigenen Designs erstellen</a> und diese auf <a {{discordLink}}>Kandos Discord-Server</a> teilen!",
       "light-dark-mode-hint": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
       "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen",
       "title": "Menü-Designs"
     },
     "not-bound": "Nicht verknüpft",
-    "shortcut-id-label": "Globale Shortcut-ID",
-    "shortcut-label": "Tastenkombination",
-    "shortcut-recording": "Drücken Sie eine Tastenkombination…",
+    "redo": "Wiederholen",
+    "search-menus-placeholder": "Menüs durchsuchen…",
+    "shortcut-hint": "Diese Verknüpfung öffnet das Menü. Sie muss eine normale Taste und beliebig viele Modifikatoren wie Strg, Alt oder Umschalt enthalten. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn eine Verknüpfung bereits einem anderen Menü zugewiesen ist!",
+    "shortcut-id-label": "Globale Verknüpfungs-ID",
+    "shortcut-label": "Verknüpfung",
+    "shortcut-recording": "Drücken Sie eine Verknüpfung…",
+    "undo": "Rückgängig",
+    "window-condition-hint": "Zeigen Sie das Menü nur an, wenn der Titel des fokussierten Fensters einen bestimmten Text enthält. Dies unterstützt reguläre Ausdrücke wie /youtube|vimeo/i.",
+    "window-condition-placeholder": "Fenstertitel",
+    "window-condition-tooltip": "Wählen Sie ein Fenster aus",
     "window-condition": "Auf bestimmte Fenstertitel beschränken"
   }
 }
