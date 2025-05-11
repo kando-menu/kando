@@ -68,8 +68,6 @@
   },
   "main": {
     "failed-to-start-header": "Kando no se ha iniciado",
-    "is-running-header": "Kando se esta ejecutándo",
-    "is-running-message": "¡Consulta el icono de la bandeja del sistema para ver algunas opciones!",
     "new-version-notification-header": "Una nueva versión de Kando está disponible!"
   },
   "menu-items": {
@@ -159,7 +157,6 @@
     "menu-conditions-hint": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
     "menu-themes-dialog": {
       "author": "Por %s",
-      "caption": "En el futuro, tendremos un repositorio en línea para temas de menú.¡ Por ahora, puedes <a {{tutorialLink}}>aprender a crear tus propios temas</a> y compartirlos en <un {{discordLink}}>Servidor de Discord de Kando</a>!",
       "light-dark-mode-hint": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
       "reset-color-picker": "Reiniciar colores por defecto",
       "title": "Temas del menú"

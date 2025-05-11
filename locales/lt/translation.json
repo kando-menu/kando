@@ -44,8 +44,7 @@
     }
   },
   "main": {
-    "failed-to-start-header": "Nepavyko paleisti Kando",
-    "is-running-header": "Kando jau veikia"
+    "failed-to-start-header": "Nepavyko paleisti Kando"
   },
   "menu-items": {
     "command": {

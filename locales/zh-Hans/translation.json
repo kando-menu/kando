@@ -72,8 +72,6 @@
   "main": {
     "failed-to-start-header": "Kando 启动失败",
     "inhibit-shortcuts": "暂时禁用快捷键",
-    "is-running-header": "Kando 已在运行",
-    "is-running-message": "点击托盘图标以查看选项！",
     "new-version-notification-header": "Kando 发布新版本啦！",
     "quit": "退出",
     "show-settings": "显示设置窗口",
@@ -192,7 +190,6 @@
     "menu-conditions-hint": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
     "menu-themes-dialog": {
       "author": "作者 %s",
-      "caption": "在未来，我们会有一个在线的菜单主题仓库。现在，您可以 <a {{tutorialLink}}>了解如何创建主题</a>，并在 <a {{discordLink}}>Kando 的 Discord 群</a> 里和我们分享！",
       "light-dark-mode-hint": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
       "reset-color-picker": "重置所有颜色至默认值",
       "title": "菜单主题"

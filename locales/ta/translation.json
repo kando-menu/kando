@@ -68,8 +68,6 @@
   },
   "main": {
     "failed-to-start-header": "காண்டோ தொடங்கத் தவறிவிட்டார்",
-    "is-running-header": "காண்டோ ஏற்கனவே இயங்குகிறது",
-    "is-running-message": "சில விருப்பங்களுக்கு கணினி தட்டு ஐகானை சரிபார்க்கவும்!",
     "new-version-notification-header": "காண்டோவின் புதிய பதிப்பு கிடைக்கிறது!"
   },
   "menu-items": {

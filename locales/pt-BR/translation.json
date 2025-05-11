@@ -69,8 +69,6 @@
   "main": {
     "failed-to-start-header": "Kando não conseguiu se iniciar",
     "inhibit-shortcuts": "Desabilite os atalhos temporariamente",
-    "is-running-header": "Kando já está em execução",
-    "is-running-message": "Verifique o ícone da bandeja do sistema para algumas opções!",
     "new-version-notification-header": "Uma nova versão do Kando está disponível!",
     "quit": "Sair",
     "show-settings": "Mostrar Configurações",
@@ -187,7 +185,6 @@
     "menu-conditions-hint": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
     "menu-themes-dialog": {
       "author": "por %s",
-      "caption": "No futuro, teremos um repositório online para temas de menu. Por agora, você pode <a {{tutorialLink}}>aprender como criar seus próprios temas</a> e compartilhá-los no <a {{discordLink}}> Servidor do Discord do Kando</a>!",
       "light-dark-mode-hint": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
       "reset-color-picker": "Resetar todas as cores aos seus padrões",
       "title": "Temas de Menu"

@@ -68,8 +68,6 @@
   },
   "main": {
     "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
-    "is-running-header": "Kando on jo käynnissä",
-    "is-running-message": "Katso valinnat ilmoitusalueen kuvakkeesta!",
     "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
     "quit": "Lopeta",
     "show-settings": "Näytä asetukset"

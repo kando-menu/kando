@@ -69,8 +69,6 @@
   "main": {
     "failed-to-start-header": "Kando를 실행하지 못했어요",
     "inhibit-shortcuts": "일시적으로 단축키 비활성화",
-    "is-running-header": "Kando가 이미 실행 중이예요",
-    "is-running-message": "시스템 트레이 아이콘으로 설정을 확인해 보세요!",
     "new-version-notification-header": "Kando의 새 버전이 이용 가능해요!",
     "quit": "종료",
     "show-settings": "설정 열기",
@@ -189,7 +187,6 @@
     "menu-conditions-hint": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
     "menu-themes-dialog": {
       "author": "%s 제작",
-      "caption": "미래에는 메뉴 테마를 저장하는 온라인 저장소를 만들 예정이에요. 현재로서는 <a {{tutorialLink}}>직접 테마를 만드는 법을 배우고</a>, <a {{discordLink}}>Kando의 Discord 서버</a>에 공유할 수 있어요!",
       "light-dark-mode-hint": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
       "reset-color-picker": "색상 모두 기본값으로 초기화하기",
       "title": "메뉴 테마"

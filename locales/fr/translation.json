@@ -69,8 +69,6 @@
   "main": {
     "failed-to-start-header": "Le lancement de Kando a échoué",
     "inhibit-shortcuts": "Désactiver temporairement les Raccourcis",
-    "is-running-header": "Kando est déjà en cours d'exécution",
-    "is-running-message": "Utilisez l'icône de la barre des tâches pour plus d'options !",
     "new-version-notification-header": "Une nouvelle version de Kando est disponible !",
     "quit": "Quitter",
     "show-settings": "Afficher les Configurations",
@@ -189,7 +187,6 @@
     "menu-conditions-hint": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
     "menu-themes-dialog": {
       "author": "par %s",
-      "caption": "À l'avenir, nous disposerons d'un répertoire en ligne pour les thèmes de menu. Pour l'instant, vous pouvez <a {{tutorialLink}}>apprendre à créer vos propres thèmes</a> et les partager dans le <a {{discordLink}}>Serveur Discord de Kando</a> !",
       "light-dark-mode-hint": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
       "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
       "title": "Thèmes de menu"
