@@ -48,6 +48,12 @@ Promise.all([
     ]).then(([themeDescription, colors]) => {
       menuTheme.loadDescription(themeDescription);
       menuTheme.setColors(colors);
+
+      // Reload the menu if it is currently shown.
+      const [root, menuOptions] = menu.getCurrentRequest();
+      if (root) {
+        menu.show(root, menuOptions);
+      }
     });
   };
 

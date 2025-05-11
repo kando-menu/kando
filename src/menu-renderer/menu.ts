@@ -205,10 +205,21 @@ export class Menu extends EventEmitter {
     this.container.className = 'hidden';
     this.container.innerHTML = '';
     this.root = null;
+    this.showMenuOptions = null;
     this.centerText = null;
     this.hoveredItem = null;
     this.draggedItem = null;
     this.selectionChain = [];
+  }
+
+  /**
+   * Returns the currently shown menu. If no menu is shown, two times null is returned.
+   *
+   * @returns The currently shown menu and the menu options. If no menu is shown, two
+   *   times null is returned.
+   */
+  public getCurrentRequest(): [IRenderedMenuItem, IShowMenuOptions] {
+    return [this.root, this.showMenuOptions];
   }
 
   /**
