@@ -462,8 +462,15 @@ export class KandoApp {
     // We also allow getting the entire general settings object.
     ipcMain.handle('common.general-settings-get', () => this.generalSettings.get());
 
+    // When there comes a general-settings-set event from the renderer, we do not want to
+    // trigger the general-settings-changed event in the settings window again. This is
+    // because the renderer already knows about the change. We have to send the change to
+    // the menu window, though.
+    let ignoreNextGeneralSettingsChange = false;
+
     // Allow the renderer to alter the settings.
     ipcMain.on('common.general-settings-set', (event, settings) => {
+      ignoreNextGeneralSettingsChange = true;
       this.generalSettings.set(settings);
     });
 
@@ -474,6 +481,12 @@ export class KandoApp {
         newSettings,
         oldSettings
       );
+
+      if (ignoreNextGeneralSettingsChange) {
+        ignoreNextGeneralSettingsChange = false;
+        return;
+      }
+
       this.settingsWindow?.webContents.send(
         'common.general-settings-changed',
         newSettings,
