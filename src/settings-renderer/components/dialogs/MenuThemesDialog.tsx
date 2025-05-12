@@ -98,9 +98,15 @@ export default () => {
       <>
         <div style={{ marginTop: 15, marginBottom: 10 }}>
           <h1>
-            Accent Colors
-            {useDarkMode ? (darkMode ? ' (Dark)' : ' (Light)') : ''}
-            <InfoItem info="The set of available accent colors depends on the selected theme." />
+            {i18next.t('settings.menu-themes-dialog.accent-colors')}
+            {useDarkMode
+              ? darkMode
+                ? ` (${i18next.t('settings.menu-themes-dialog.dark')})`
+                : ` (${i18next.t('settings.menu-themes-dialog.light')})`
+              : ''}
+            <InfoItem
+              info={i18next.t('settings.menu-themes-dialog.accent-colors-info')}
+            />
           </h1>
         </div>
         <div
@@ -158,8 +164,10 @@ export default () => {
   } else {
     accentColorsNode = (
       <>
-        <h1>Theme Colors</h1>
-        <Note marginTop={-10}>The selected theme does not expose any accent colors.</Note>
+        <h1>{i18next.t('settings.menu-themes-dialog.theme-colors')}</h1>
+        <Note marginTop={-10}>
+          {i18next.t('settings.menu-themes-dialog.no-accent-colors')}
+        </Note>
       </>
     );
   }
@@ -180,8 +188,8 @@ export default () => {
       <div className={classes.container}>
         <div className={classes.sidebar}>
           <SettingsSpinbutton
-            label="Fade-in time"
-            info="The time in milliseconds for the fade-in animation of the menu. Set to zero to disable the animation. Default is 150ms."
+            label={i18next.t('settings.menu-themes-dialog.fade-in-time')}
+            info={i18next.t('settings.menu-themes-dialog.fade-in-time-info')}
             settingsKey="fadeInDuration"
             width={spinbuttonWidth}
             min={0}
@@ -189,8 +197,8 @@ export default () => {
             step={10}
           />
           <SettingsSpinbutton
-            label="Fade-out time"
-            info="The time in milliseconds for the fade-out animation of the menu. Some actions are only executed after this animation is finished, so setting this to zero makes them execute faster. Default is 200ms."
+            label={i18next.t('settings.menu-themes-dialog.fade-out-time')}
+            info={i18next.t('settings.menu-themes-dialog.fade-out-time-info')}
             settingsKey="fadeOutDuration"
             width={spinbuttonWidth}
             min={0}
@@ -198,8 +206,8 @@ export default () => {
             step={10}
           />
           <SettingsSpinbutton
-            label="Menu scale"
-            info="A global scale factor for all menus. Default is 1."
+            label={i18next.t('settings.menu-themes-dialog.menu-scale')}
+            info={i18next.t('settings.menu-themes-dialog.menu-scale-info')}
             settingsKey="zoomFactor"
             width={spinbuttonWidth}
             min={0.5}
@@ -207,7 +215,7 @@ export default () => {
             step={0.1}
           />
           <SettingsCheckbox
-            label={'Dark and light mode'}
+            label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
             info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
             settingsKey="enableDarkModeForMenuThemes"
           />
@@ -217,7 +225,7 @@ export default () => {
 
           <Swirl variant="1" width={250} marginTop={10} marginBottom={20} />
           <Button
-            label="Get themes online"
+            label={i18next.t('settings.menu-themes-dialog.get-themes-online')}
             icon={<TbExternalLink />}
             tooltip="https://github.com/kando-menu/menu-themes"
             onClick={() =>
@@ -226,7 +234,7 @@ export default () => {
             block
           />
           <Button
-            label="Create your own themes"
+            label={i18next.t('settings.menu-themes-dialog.create-your-own-themes')}
             icon={<TbExternalLink />}
             tooltip="https://kando.menu/create-menu-themes/"
             onClick={() =>
@@ -235,7 +243,7 @@ export default () => {
             block
           />
           <Button
-            label="Open theme directory"
+            label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
             icon={<TbFolderOpen />}
             onClick={openThemeDirectory}
             block

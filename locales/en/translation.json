@@ -202,10 +202,26 @@
       "show-again": "Show this dialog again"
     },
     "menu-themes-dialog": {
-      "reset-color-picker": "Reset all colors to their defaults",
+      "reset-color-picker": "Reset to defaults",
       "title": "Menu Themes",
       "light-dark-mode-info": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
-      "author": "by %s"
+      "author": "by %s",
+      "fade-in-time": "Fade-in time",
+      "fade-in-time-info": "The time it takes for the menu to fade in. Default is 150ms.",
+      "fade-out-time": "Fade-out time",
+      "fade-out-time-info": "The time it takes for the menu to fade out. Default is 200ms.",
+      "menu-scale": "Menu scale",
+      "menu-scale-info": "A global scale factor for the menu. You can also adjust this with Ctrl+Plus, Ctrl+Minus, and Ctrl+0 when a menu is open.",
+      "light-dark-mode": "Enable light/dark mode",
+      "accent-colors": "Accent colors",
+      "accent-colors-info": "Each theme can have a different set of accent colors.",
+      "dark": "Dark Mode",
+      "light": "Light Mode",
+      "theme-colors": "Theme colors",
+      "no-accent-colors": "This theme does not support accent colors.",
+      "get-themes-online": "Get themes online",
+      "create-your-own-themes": "Create your own themes",
+      "open-theme-directory": "Open theme directory"
     },
     "all-menus": "All Menus",
     "search-menus-placeholder": "Search menus…",
