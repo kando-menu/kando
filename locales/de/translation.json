@@ -192,6 +192,7 @@
     "centered-mode": "Zentrierter Modus",
     "create-menu-button": "Neues Menü",
     "general-settings-dialog": {
+      "none": "Nichts",
       "reload-menu-theme-tooltip": "CSS-Änderungen werden sofort angewendet. Für Änderungen an der Datei theme.json müssen Sie das Menü erneut öffnen.",
       "reload-menu-theme": "Aktuelles Menü-Design Neuladen",
       "reload-sound-theme": "Aktuelles Sound-Thema Neuladen",
