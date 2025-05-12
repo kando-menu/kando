@@ -41,7 +41,7 @@ export default () => {
   }));
   soundThemeOptions.unshift({
     value: 'none',
-    label: 'None',
+    label: i18next.t('settings.general-settings-dialog.none'),
   });
 
   // We make sure that some widgets have a consistent width.
@@ -53,7 +53,7 @@ export default () => {
       icon={<TbSettingsFilled />}
       visible={settingsDialogVisible}
       onClose={() => setSettingsDialogVisible(false)}
-      maxWidth={500}
+      maxWidth={600}
       paddingTop={0}
       paddingBottom={5}
       paddingLeft={5}
@@ -67,136 +67,220 @@ export default () => {
             justifyContent: 'center',
             gap: 5,
           }}>
-          <Note center>
-            All settings of Kando are stored in a JSON file which you can also edit,
-            share, or backup. Click{' '}
-            <a
-              onClick={() =>
-                window.settingsAPI.getConfigDirectory().then((dir) => {
-                  window.open('file://' + dir, '_blank');
-                })
-              }
-              style={{ cursor: 'pointer' }}>
-              here
-            </a>{' '}
-            to open the directory where the config.json file is stored.
+          <Note
+            center
+            markdown
+            onLinkClick={() => {
+              window.settingsAPI.getConfigDirectory().then((dir) => {
+                window.open('file://' + dir, '_blank');
+              });
+            }}>
+            {i18next.t('settings.general-settings-dialog.message').replace('%s', '')}
           </Note>
 
           <Swirl variant="3" marginTop={10} width={350} marginBottom={20} />
 
-          <h1>App Behavior</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox
-            label="Check for new versions"
-            info="If enabled, Kando will show a notification when a new version is available."
+            label={i18next.t('settings.general-settings-dialog.check-for-new-versions')}
+            info={i18next.t(
+              'settings.general-settings-dialog.check-for-new-versions-info'
+            )}
             settingsKey="enableVersionCheck"
           />
           <SettingsCheckbox
-            label="Invisible settings button"
-            info="You can still use the button, it will appear when you move the mouse over it."
+            label={i18next.t(
+              'settings.general-settings-dialog.invisible-settings-button'
+            )}
+            info={i18next.t(
+              'settings.general-settings-dialog.invisible-settings-button-info'
+            )}
             settingsKey="hideSettingsButton"
           />
           <SettingsDropdown
-            label="Settings button position"
-            info="Choose the screen corner where the settings button will be shown."
+            label={i18next.t('settings.general-settings-dialog.settings-button-position')}
+            info={i18next.t(
+              'settings.general-settings-dialog.settings-button-position-info'
+            )}
             settingsKey="settingsButtonPosition"
             options={[
-              { value: 'top-left', label: 'Top Left' },
-              { value: 'top-right', label: 'Top Right' },
-              { value: 'bottom-left', label: 'Bottom Left' },
-              { value: 'bottom-right', label: 'Bottom Right' },
+              {
+                value: 'top-left',
+                label: i18next.t('settings.general-settings-dialog.top-left'),
+              },
+              {
+                value: 'top-right',
+                label: i18next.t('settings.general-settings-dialog.top-right'),
+              },
+              {
+                value: 'bottom-left',
+                label: i18next.t('settings.general-settings-dialog.bottom-left'),
+              },
+              {
+                value: 'bottom-right',
+                label: i18next.t('settings.general-settings-dialog.bottom-right'),
+              },
             ]}
           />
           <SettingsDropdown
-            label="Settings window color scheme"
-            info="If you choose 'system', the settings window will use the same color scheme as your operating system."
+            label={i18next.t(
+              'settings.general-settings-dialog.settings-window-color-scheme'
+            )}
+            info={i18next.t(
+              'settings.general-settings-dialog.settings-window-color-scheme-info'
+            )}
             settingsKey="settingsWindowColorScheme"
             options={[
-              { value: 'system', label: 'System' },
-              { value: 'light', label: 'Light' },
-              { value: 'dark', label: 'Dark' },
+              {
+                value: 'system',
+                label: i18next.t('settings.general-settings-dialog.system'),
+              },
+              {
+                value: 'light',
+                label: i18next.t('settings.general-settings-dialog.light'),
+              },
+              {
+                value: 'dark',
+                label: i18next.t('settings.general-settings-dialog.dark'),
+              },
             ]}
           />
           <SettingsDropdown
-            label="Settings window flavor"
-            info="If you choose a transparent flavor, you will have to restart the settings window to apply the effect."
+            label={i18next.t('settings.general-settings-dialog.settings-window-flavor')}
+            info={i18next.t(
+              'settings.general-settings-dialog.settings-window-flavor-info'
+            )}
             settingsKey="settingsWindowFlavor"
             options={[
-              { value: 'transparent-light', label: 'Transparent Light' },
-              { value: 'transparent-dark', label: 'Transparent Dark' },
-              { value: 'transparent-system', label: 'Transparent System' },
-              { value: 'sakura-light', label: 'Sakura Light' },
-              { value: 'sakura-dark', label: 'Sakura Dark' },
-              { value: 'sakura-system', label: 'Sakura System' },
+              {
+                value: 'transparent-light',
+                label: i18next.t('settings.general-settings-dialog.transparent-light'),
+              },
+              {
+                value: 'transparent-dark',
+                label: i18next.t('settings.general-settings-dialog.transparent-dark'),
+              },
+              {
+                value: 'transparent-system',
+                label: i18next.t('settings.general-settings-dialog.transparent-system'),
+              },
+              {
+                value: 'sakura-light',
+                label: i18next.t('settings.general-settings-dialog.sakura-light'),
+              },
+              {
+                value: 'sakura-dark',
+                label: i18next.t('settings.general-settings-dialog.sakura-dark'),
+              },
+              {
+                value: 'sakura-system',
+                label: i18next.t('settings.general-settings-dialog.sakura-system'),
+              },
             ]}
           />
           <SettingsDropdown
-            label="Tray icon flavor"
-            info="You can also choose to hide the tray icon completely."
+            label={i18next.t('settings.general-settings-dialog.tray-icon-flavor')}
+            info={i18next.t('settings.general-settings-dialog.tray-icon-flavor-info')}
             settingsKey="trayIconFlavor"
             options={[
-              { value: 'none', label: 'Hidden' },
-              { value: 'color', label: 'Color' },
-              { value: 'white', label: 'White' },
-              { value: 'light', label: 'Light' },
-              { value: 'dark', label: 'Dark' },
-              { value: 'black', label: 'Black' },
+              {
+                value: 'none',
+                label: i18next.t('settings.general-settings-dialog.hidden'),
+              },
+              {
+                value: 'color',
+                label: i18next.t('settings.general-settings-dialog.color'),
+              },
+              {
+                value: 'white',
+                label: i18next.t('settings.general-settings-dialog.white'),
+              },
+              {
+                value: 'light',
+                label: i18next.t('settings.general-settings-dialog.light'),
+              },
+              {
+                value: 'dark',
+                label: i18next.t('settings.general-settings-dialog.dark'),
+              },
+              {
+                value: 'black',
+                label: i18next.t('settings.general-settings-dialog.black'),
+              },
             ]}
           />
           <SettingsCheckbox
-            label="Lazy initialization"
-            info="If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled."
+            label={i18next.t('settings.general-settings-dialog.lazy-initialization')}
+            info={i18next.t('settings.general-settings-dialog.lazy-initialization-info')}
             settingsKey="lazyInitialization"
           />
 
-          <h1>Menu Behavior</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
           <SettingsCheckbox
-            label="Enable Marking Mode"
-            info="With Marking Mode enabled, you can select items by dragging the mouse over them."
+            label={i18next.t('settings.general-settings-dialog.enable-marking-mode')}
+            info={i18next.t('settings.general-settings-dialog.enable-marking-mode-info')}
             settingsKey="enableMarkingMode"
           />
           <SettingsCheckbox
-            label="Enable Turbo Mode"
-            info="With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl."
+            label={i18next.t('settings.general-settings-dialog.enable-turbo-mode')}
+            info={i18next.t('settings.general-settings-dialog.enable-turbo-mode-info')}
             settingsKey="enableTurboMode"
           />
           <SettingsCheckbox
-            label="Move pointer to the menu center"
-            info="If checked, the mouse pointer will be moved to the center of a menu or submenu when necessary. This could be the case if a menu is opened too close to the edge of the screen or if a menu is opened in Centered Mode."
+            label={i18next.t(
+              'settings.general-settings-dialog.move-pointer-to-menu-center'
+            )}
+            info={i18next.t(
+              'settings.general-settings-dialog.move-pointer-to-menu-center-info'
+            )}
             settingsKey="warpMouse"
           />
           <SettingsCheckbox
-            label="Require click for Hover Mode selections"
-            info="If unchecked, items will be selected immediately when the mouse is moved over them for menus using Hover Mode."
+            label={i18next.t(
+              'settings.general-settings-dialog.require-click-for-hover-mode'
+            )}
+            info={i18next.t(
+              'settings.general-settings-dialog.require-click-for-hover-mode-info'
+            )}
             settingsKey="hoverModeNeedsConfirmation"
           />
           <SettingsCheckbox
-            label="Right mouse button selects parent"
-            info="If unchecked, the right mouse button will close the menu instead."
+            label={i18next.t(
+              'settings.general-settings-dialog.right-mouse-button-selects-parent'
+            )}
+            info={i18next.t(
+              'settings.general-settings-dialog.right-mouse-button-selects-parent-info'
+            )}
             settingsKey="rmbSelectsParent"
           />
           <SettingsCheckbox
-            label="Enable gamepad support"
-            info="If checked, you can use a connected gamepad to control the menu."
+            label={i18next.t('settings.general-settings-dialog.enable-gamepad-support')}
+            info={i18next.t(
+              'settings.general-settings-dialog.enable-gamepad-support-info'
+            )}
             settingsKey="enableGamepad"
           />
 
-          <h1>Menu Sounds</h1>
-          <Note marginTop={-5}>
-            Learn how to add new sound themes to Kando{' '}
-            <a href="https://kando.menu/sound-themes/" target="_blank">
-              here
-            </a>
-            !
+          <h1>{i18next.t('settings.general-settings-dialog.menu-sounds')}</h1>
+          <Note
+            marginTop={-5}
+            markdown
+            onLinkClick={() => {
+              window.open('https://kando.menu/sound-themes/', '_blank');
+            }}>
+            {i18next
+              .t('settings.general-settings-dialog.learn-how-to-add-sound-themes')
+              .replace('%s', '')}
           </Note>
           <SettingsDropdown
-            label="Sound theme"
-            info="A sound theme is a collection of sounds that are played when you interact with the menu."
+            label={i18next.t('settings.general-settings-dialog.sound-theme')}
+            info={i18next.t('settings.general-settings-dialog.sound-theme-info')}
             settingsKey="soundTheme"
             options={soundThemeOptions}
           />
           <SettingsSpinbutton
-            label="Volume"
-            info="The overall volume of the sound theme. Default is 0.5."
+            label={i18next.t('settings.general-settings-dialog.volume')}
+            info={i18next.t('settings.general-settings-dialog.volume-info')}
             settingsKey="soundVolume"
             width={spinbuttonWidth}
             min={0}
@@ -204,13 +288,15 @@ export default () => {
             step={0.01}
           />
 
-          <h1>Advanced Menu Options</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.advanced-menu-options')}</h1>
           <Note marginTop={-5}>
-            Usually, you can leave these settings at their default values.
+            {i18next.t('settings.general-settings-dialog.advanced-menu-options-note')}
           </Note>
           <SettingsSpinbutton
-            label="Center click zone radius"
-            info="The size of the area in the middle of the menu which will either close or navigate a level up when clicked. Default is 50px."
+            label={i18next.t('settings.general-settings-dialog.center-click-zone-radius')}
+            info={i18next.t(
+              'settings.general-settings-dialog.center-click-zone-radius-info'
+            )}
             settingsKey="centerDeadZone"
             width={spinbuttonWidth}
             min={0}
@@ -218,8 +304,10 @@ export default () => {
             step={50}
           />
           <SettingsSpinbutton
-            label="Minimum submenu distance"
-            info="If a submenu is opened close to the parent menu, the parent will be moved away to this distance. Default is 150px."
+            label={i18next.t('settings.general-settings-dialog.minimum-submenu-distance')}
+            info={i18next.t(
+              'settings.general-settings-dialog.minimum-submenu-distance-info'
+            )}
             settingsKey="minParentDistance"
             width={spinbuttonWidth}
             min={0}
@@ -227,8 +315,8 @@ export default () => {
             step={50}
           />
           <SettingsSpinbutton
-            label="Movement threshold"
-            info="Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15px."
+            label={i18next.t('settings.general-settings-dialog.movement-threshold')}
+            info={i18next.t('settings.general-settings-dialog.movement-threshold-info')}
             settingsKey="dragThreshold"
             width={spinbuttonWidth}
             min={0}
@@ -236,8 +324,10 @@ export default () => {
             step={10}
           />
           <SettingsSpinbutton
-            label="Minimum Gesture Length"
-            info="Straight movements must be at least this long to trigger a selection. Default is 150px."
+            label={i18next.t('settings.general-settings-dialog.minimum-gesture-length')}
+            info={i18next.t(
+              'settings.general-settings-dialog.minimum-gesture-length-info'
+            )}
             settingsKey="gestureMinStrokeLength"
             width={spinbuttonWidth}
             min={0}
@@ -245,8 +335,10 @@ export default () => {
             step={50}
           />
           <SettingsSpinbutton
-            label="Minimum Gesture Angle"
-            info="Smaller deviations from straight movements will not trigger selections. Default is 20°."
+            label={i18next.t('settings.general-settings-dialog.minimum-gesture-angle')}
+            info={i18next.t(
+              'settings.general-settings-dialog.minimum-gesture-angle-info'
+            )}
             settingsKey="gestureMinStrokeAngle"
             width={spinbuttonWidth}
             min={0}
@@ -254,8 +346,10 @@ export default () => {
             step={1}
           />
           <SettingsSpinbutton
-            label="Minimum Gesture Angle"
-            info="Smaller movements will not be considered in the gesture detection. Default is 10px."
+            label={i18next.t('settings.general-settings-dialog.gesture-jitter-threshold')}
+            info={i18next.t(
+              'settings.general-settings-dialog.gesture-jitter-threshold-info'
+            )}
             settingsKey="gestureJitterThreshold"
             width={spinbuttonWidth}
             min={0}
@@ -263,8 +357,10 @@ export default () => {
             step={1}
           />
           <SettingsSpinbutton
-            label="Gesture Pause Timeout"
-            info="Stop your gesture for this long to trigger a selection. Default is 100ms."
+            label={i18next.t('settings.general-settings-dialog.gesture-pause-timeout')}
+            info={i18next.t(
+              'settings.general-settings-dialog.gesture-pause-timeout-info'
+            )}
             settingsKey="gesturePauseTimeout"
             width={spinbuttonWidth}
             min={0}
@@ -272,8 +368,8 @@ export default () => {
             step={50}
           />
           <SettingsSpinbutton
-            label="Fixed Stroke Length"
-            info="Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px."
+            label={i18next.t('settings.general-settings-dialog.fixed-stroke-length')}
+            info={i18next.t('settings.general-settings-dialog.fixed-stroke-length-info')}
             settingsKey="fixedStrokeLength"
             width={spinbuttonWidth}
             min={0}
@@ -281,7 +377,7 @@ export default () => {
             step={10}
           />
 
-          <h1>Developer Options</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
           <Button
             label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
             tooltip={i18next.t(
@@ -304,7 +400,7 @@ export default () => {
             }}
           />
           <Button
-            label="Menu window development tools"
+            label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
             icon={<TbCode />}
             grow
             onClick={() => {
@@ -312,7 +408,9 @@ export default () => {
             }}
           />
           <Button
-            label="Settings window development tools"
+            label={i18next.t(
+              'settings.general-settings-dialog.settings-window-dev-tools'
+            )}
             icon={<TbCode />}
             grow
             onClick={() => {
