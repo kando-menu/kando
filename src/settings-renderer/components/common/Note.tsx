@@ -10,7 +10,6 @@
 
 import React from 'react';
 import Markdown from 'react-markdown';
-import rehypeExternalLinks from 'rehype-external-links';
 import classNames from 'classnames/bind';
 
 import * as classes from './Note.module.scss';
@@ -37,6 +36,12 @@ interface IProps {
 
   /** Whether to use markdown formatting. Defaults to false. */
   markdown?: boolean;
+
+  /**
+   * Callback function to execute when a link is clicked. IF not given, the link will be
+   * opened in the browser.
+   */
+  onLinkClick?: (href: string) => void;
 }
 
 /**
@@ -46,6 +51,14 @@ interface IProps {
  * @returns A note element.
  */
 export default (props: IProps) => {
+  const handleLinkClick = (href: string) => {
+    if (props.onLinkClick) {
+      props.onLinkClick(href); // Execute the callback with the link's href
+    } else {
+      window.open(href, '_blank'); // Default behavior: open in a new tab
+    }
+  };
+
   return (
     <div
       className={cx({
@@ -59,7 +72,19 @@ export default (props: IProps) => {
         marginRight: props.marginRight || 0,
       }}>
       {props.markdown ? (
-        <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+        <Markdown
+          components={{
+            a: ({ href, children }) => (
+              <a
+                href={href}
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent default link behavior
+                  handleLinkClick(href);
+                }}>
+                {children}
+              </a>
+            ),
+          }}>
           {props.children as string}
         </Markdown>
       ) : (
