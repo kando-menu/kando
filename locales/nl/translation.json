@@ -2,7 +2,7 @@
   "menu-items": {
     "command": {
       "command": "Commando",
-      "command-hint": "Dit zal worden uitgevoerd.",
+      "command-info": "Dit zal worden uitgevoerd.",
       "name": "Commando uitvoeren",
       "tip-1": "Het commando-itemtype kan worden gebruikt om programma's of scripts te starten.",
       "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet.",

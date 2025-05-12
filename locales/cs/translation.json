@@ -4,10 +4,10 @@
       "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Použijte svůj hyprland.conf k přiřazení této zkratky."
+      "shortcut-info": "Použijte svůj hyprland.conf k přiřazení této zkratky."
     },
     "kde-wayland": {
-      "shortcut-hint": "Použijte systémová nastavení KDE k přiřazení této zkratky."
+      "shortcut-info": "Použijte systémová nastavení KDE k přiřazení této zkratky."
     }
   },
   "example-menu": {
@@ -77,7 +77,7 @@
   "menu-items": {
     "command": {
       "command": "Příkaz",
-      "command-hint": "Tento příkaz bude vykonán.",
+      "command-info": "Tento příkaz bude vykonán.",
       "description": "Spustí libovolný shellový příkaz.",
       "name": "Spustit příkaz",
       "tip-1": "Příkazy můžete použít ke spouštění aplikací nebo skriptů.",
@@ -161,14 +161,14 @@
     "area-condition-top-placeholder": "Nahoře",
     "cancel": "Zrušit",
     "centered-mode": "Centrovaný režim",
-    "centered-mode-hint": "Otevře menu uprostřed obrazovky místo u kurzoru.",
+    "centered-mode-info": "Otevře menu uprostřed obrazovky místo u kurzoru.",
     "general-settings-dialog": {
       "reload-menu-theme": "Znovu načíst aktuální téma menu",
       "reload-menu-theme-tooltip": "Změny v CSS se použijí okamžitě, ale pro změny v souboru theme.json je nutné menu znovu otevřít.",
       "reload-sound-theme": "Znovu načíst aktuální zvukové téma"
     },
     "hover-mode": "Režim najetí",
-    "hover-mode-hint": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
+    "hover-mode-info": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
     "icon-picker-dialog": {
       "base64-example": "Base64 příklad:",
       "search-placeholder": "Hledat ikony…",
@@ -184,10 +184,10 @@
     },
     "menu-behavior": "Chování menu",
     "menu-conditions": "Podmínky menu",
-    "menu-conditions-hint": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
+    "menu-conditions-info": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
     "menu-themes-dialog": {
       "author": "od %s",
-      "light-dark-mode-hint": "Pokud je povoleno, můžete zvolit jiné téma a barevné schéma pro světlý a tmavý režim systému.",
+      "light-dark-mode-info": "Pokud je povoleno, můžete zvolit jiné téma a barevné schéma pro světlý a tmavý režim systému.",
       "reset-color-picker": "Obnovit všechny barvy na výchozí hodnoty",
       "title": "Témata menu"
     },

@@ -4,10 +4,10 @@
       "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: %s"
     },
     "hyprland": {
-      "shortcut-hint": "hyprland.conf에서 바인딩하세요."
+      "shortcut-info": "hyprland.conf에서 바인딩하세요."
     },
     "kde-wayland": {
-      "shortcut-hint": "KDE의 시스템 설정에서 바인딩하세요."
+      "shortcut-info": "KDE의 시스템 설정에서 바인딩하세요."
     }
   },
   "example-menu": {
@@ -77,7 +77,7 @@
   "menu-items": {
     "command": {
       "command": "명령어",
-      "command-hint": "이 명령어가 실행될 거예요.",
+      "command-info": "이 명령어가 실행될 거예요.",
       "description": "쉘 명령어를 실행해요.",
       "name": "명령어 실행",
       "tip-1": "앱이나 스크립트를 실행하기 위해 '명령어' 타입을 사용할 수 있어요.",
@@ -160,14 +160,14 @@
     "area-condition-top-placeholder": "위",
     "cancel": "취소",
     "centered-mode": "중앙 정렬 모드",
-    "centered-mode-hint": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
+    "centered-mode-info": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
     "general-settings-dialog": {
       "reload-menu-theme": "현재 메뉴 테마 새로고침하기",
       "reload-menu-theme-tooltip": "CSS 변경은 즉시 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
       "reload-sound-theme": "현재 소리 테마 새로고침하기"
     },
     "hover-mode": "호버 모드",
-    "hover-mode-hint": "숙련된 사용자 전용! 항목 위로 호버링해서 선택해요.",
+    "hover-mode-info": "숙련된 사용자 전용! 항목 위로 호버링해서 선택해요.",
     "icon-picker-dialog": {
       "base64-example": "Base64 예시:",
       "file-example": "file: URI 예시:",
@@ -184,10 +184,10 @@
     },
     "menu-behavior": "메뉴 특성",
     "menu-conditions": "메뉴 조건",
-    "menu-conditions-hint": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
+    "menu-conditions-info": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
     "menu-themes-dialog": {
       "author": "%s 제작",
-      "light-dark-mode-hint": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
+      "light-dark-mode-info": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
       "reset-color-picker": "색상 모두 기본값으로 초기화하기",
       "title": "메뉴 테마"
     },

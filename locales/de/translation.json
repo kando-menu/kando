@@ -4,10 +4,10 @@
       "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Verwenden Sie Ihre hyprland.conf, um dies zu binden."
+      "shortcut-info": "Verwenden Sie Ihre hyprland.conf, um dies zu binden."
     },
     "kde-wayland": {
-      "shortcut-hint": "Verwenden Sie zum Festlegen der Tastenkombination die Systemeinstellungen von KDE."
+      "shortcut-info": "Verwenden Sie zum Festlegen der Tastenkombination die Systemeinstellungen von KDE."
     }
   },
   "example-menu": {
@@ -79,7 +79,7 @@
   },
   "menu-items": {
     "command": {
-      "command-hint": "Dieser Befehl wird ausgeführt wenn das Element aktiviert wird.",
+      "command-info": "Dieser Befehl wird ausgeführt wenn das Element aktiviert wird.",
       "command": "Befehl",
       "description": "Führt einen beliebigen Befehl aus.",
       "name": "Befehl Ausführen",
@@ -90,19 +90,19 @@
       "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde."
     },
     "common": {
-      "delayed-option-hint": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
+      "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
       "delayed-option": "Nach dem Schließen des Menüs ausführen"
     },
     "file": {
       "description": "Öffnet eine Datei oder einen Ordner.",
-      "file-hint": "Die Datei oder der Ordner wird mit der entsprechenden Standardanwendung geöffnet.",
+      "file-info": "Die Datei oder der Ordner wird mit der entsprechenden Standardanwendung geöffnet.",
       "file": "Dateipfad",
       "name": "Datei Öffnen",
       "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen."
     },
     "hotkey": {
       "description": "Drückt einen Hotkey.",
-      "hotkey-hint": "Dieser Hotkey wird ausgelöst, wenn das Element ausgewählt wird. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn ein Hotkey bereits einer globalen Aktion zugewiesen ist!",
+      "hotkey-info": "Dieser Hotkey wird ausgelöst, wenn das Element ausgewählt wird. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn ein Hotkey bereits einer globalen Aktion zugewiesen ist!",
       "hotkey": "Hotkey",
       "name": "Hotkey Simulieren",
       "recording-placeholder": "Drücken Sie einen Hotkey…",
@@ -119,9 +119,9 @@
       "tip-2": "Sie können das Makro auch manuell bearbeiten. Dies ist nützlich, wenn Sie das Timing der Tasten anpassen möchten."
     },
     "redirect": {
-      "description": "Öffnet ein anderes Menü",
+      "description": "Öffnet ein anderes Menü.",
       "name": "Verknüpfung",
-      "redirect-hint": "Das Menü wird geöffnet, wenn Sie dieses Element aktivieren.",
+      "redirect-info": "Das Menü wird geöffnet, wenn Sie dieses Element aktivieren.",
       "redirect": "Verknüpftes Menü"
     },
     "settings": {
@@ -155,7 +155,7 @@
       "tip-4": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
       "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
       "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
-      "uri-hint": "Ihrer Standardanwendung für diesen URI-Typ wird genutzt werden.",
+      "uri-info": "Ihrer Standardanwendung für diesen URI-Typ wird genutzt werden.",
       "uri": "URI"
     }
   },
@@ -174,21 +174,21 @@
     "add-menu-items": "Menüelemente hinzufügen",
     "add-tags-placeholder": "Tags hinzufügen…",
     "all-menus": "Alle Menüs",
-    "anchored-mode-hint": "Öffne Untermenüs an derselben Position wie das Elternmenü. Diese Option deaktiviert den Markierungsmodus.",
+    "anchored-mode-info": "Öffne Untermenüs an derselben Position wie das Elternmenü. Diese Option deaktiviert den Markierungsmodus.",
     "anchored-mode": "Verankerter Modus",
-    "app-condition-hint": "Zeigen Sie das Menü nur an, wenn eine bestimmte Anwendung fokussiert ist. Dies unterstützt reguläre Ausdrücke wie /firefox|chrome/i.",
+    "app-condition-info": "Zeigen Sie das Menü nur an, wenn eine bestimmte Anwendung fokussiert ist. Dies unterstützt reguläre Ausdrücke wie /firefox|chrome/i.",
     "app-condition-placeholder": "Anwendungsname",
     "app-condition-tooltip": "Wählen Sie eine Anwendung aus",
     "app-condition": "Auf Anwendung beschränken",
     "area-condition-bottom-placeholder": "Unten",
-    "area-condition-hint": "Zeigen Sie das Menü nur an, wenn sich der Zeiger in einem bestimmten Bereich auf dem Bildschirm befindet. Der Bereich wird in Pixeln relativ zur oberen linken Ecke Ihres Hauptbildschirms angegeben. Wenn Sie ein Feld leer lassen, ist der Bereich in dieser Richtung unbegrenzt.",
+    "area-condition-info": "Zeigen Sie das Menü nur an, wenn sich der Zeiger in einem bestimmten Bereich auf dem Bildschirm befindet. Der Bereich wird in Pixeln relativ zur oberen linken Ecke Ihres Hauptbildschirms angegeben. Wenn Sie ein Feld leer lassen, ist der Bereich in dieser Richtung unbegrenzt.",
     "area-condition-left-placeholder": "Links",
     "area-condition-right-placeholder": "Rechts",
     "area-condition-top-placeholder": "Oben",
     "area-condition-tooltip": "Wählen Sie einen Bildschirmbereich aus",
     "area-condition": "Auf Bildschirmzone beschränken",
     "cancel": "Abbrechen",
-    "centered-mode-hint": "Öffnen Sie das Menü in der Bildschirmmitte statt am Mauszeiger.",
+    "centered-mode-info": "Öffnen Sie das Menü in der Bildschirmmitte statt am Mauszeiger.",
     "centered-mode": "Zentrierter Modus",
     "create-menu-button": "Neues Menü",
     "general-settings-dialog": {
@@ -271,7 +271,7 @@
       "menu-window-dev-tools": "Entwicklungstools für Menüfenster",
       "settings-window-dev-tools": "Entwicklungstools für Einstellungsfenster"
     },
-    "hover-mode-hint": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
+    "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
     "hover-mode": "Hover-Modus",
     "icon-picker-dialog": {
       "base64-example": "Base64-Beispiel:",
@@ -289,25 +289,25 @@
       "slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
       "title": "Willkommen bei Kando!"
     },
-    "menu-behavior-hint": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando so gefällt!",
+    "menu-behavior-info": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando so gefällt!",
     "menu-behavior": "Menüverhalten",
-    "menu-conditions-hint": "Sie können mehrere Menüs an dieselbe Tastenkombo binden und dann auswählen, unter welchen Bedingungen sie angezeigt werden sollen.",
+    "menu-conditions-info": "Sie können mehrere Menüs an dieselbe Tastenkombo binden und dann auswählen, unter welchen Bedingungen sie angezeigt werden sollen.",
     "menu-conditions": "Menübedingungen",
     "menu-themes-dialog": {
       "author": "von %s",
-      "light-dark-mode-hint": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
+      "light-dark-mode-info": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
       "reset-color-picker": "Alle Farben auf die Standardeinstellungen zurücksetzen",
       "title": "Menü-Designs"
     },
     "not-bound": "Nicht gebunden",
     "redo": "Wiederholen",
     "search-menus-placeholder": "Menüs durchsuchen…",
-    "shortcut-hint": "Diese Verknüpfung öffnet das Menü. Sie muss eine normale Taste und beliebig viele Modifikatoren wie Strg, Alt oder Umschalt enthalten. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn eine Verknüpfung bereits einem anderen Menü zugewiesen ist!",
+    "shortcut-info": "Diese Verknüpfung öffnet das Menü. Sie muss eine normale Taste und beliebig viele Modifikatoren wie Strg, Alt oder Umschalt enthalten. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn eine Verknüpfung bereits einem anderen Menü zugewiesen ist!",
     "shortcut-id-label": "Shortcut-ID",
     "shortcut-label": "Tastenkombo",
     "shortcut-recording": "Drücken Sie eine Kombo…",
     "undo": "Rückgängig",
-    "window-condition-hint": "Zeigen Sie das Menü nur an, wenn der Titel des fokussierten Fensters einen bestimmten Text enthält. Dies unterstützt reguläre Ausdrücke wie /youtube|vimeo/i.",
+    "window-condition-info": "Zeigen Sie das Menü nur an, wenn der Titel des fokussierten Fensters einen bestimmten Text enthält. Dies unterstützt reguläre Ausdrücke wie /youtube|vimeo/i.",
     "window-condition-placeholder": "Fenstertitel",
     "window-condition-tooltip": "Wählen Sie ein Fenster aus",
     "window-condition": "Auf Fenstertitel beschränken"

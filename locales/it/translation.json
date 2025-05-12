@@ -4,10 +4,10 @@
       "error": "Connessione all’estensione della -Shell GNOME di Kando- fallita. Puoi ottenerla da qui: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Usa il tuo hyprland.conf per associare questo."
+      "shortcut-info": "Usa il tuo hyprland.conf per associare questo."
     },
     "kde-wayland": {
-      "shortcut-hint": "Usa le impostazioni di sistema di KDE per associare questo."
+      "shortcut-info": "Usa le impostazioni di sistema di KDE per associare questo."
     }
   },
   "example-menu": {
@@ -73,7 +73,7 @@
   "menu-items": {
     "command": {
       "command": "Comando",
-      "command-hint": "Questo comando verrà eseguito.",
+      "command-info": "Questo comando verrà eseguito.",
       "description": "Esegue qualunque comando di shell.",
       "name": "Esegui Comando",
       "tip-1": "Puoi usare l'oggetto di tipo Comando per lanciare applicazioni oppure eseguire script.",
@@ -142,7 +142,7 @@
     "area-condition-top-placeholder": "In Alto",
     "cancel": "Annulla",
     "centered-mode": "Modalità Centrata",
-    "centered-mode-hint": "Apri il menù al centro dello schermo invece che nella posizione del puntatore.",
+    "centered-mode-info": "Apri il menù al centro dello schermo invece che nella posizione del puntatore.",
     "general-settings-dialog": {
       "reload-menu-theme": "Ricarica l’Attuale Tema di Menù",
       "reload-menu-theme-tooltip": "Le modifiche del CSS verranno applicate immediatamente, per vedere l’effetto delle modifiche del file theme.json, dovrai riaprire il menù."
@@ -160,10 +160,10 @@
     },
     "menu-behavior": "Comportamento del Menù",
     "menu-conditions": "Condizione per il Menu",
-    "menu-conditions-hint": "Puoi associare differenti menù alla stessa scorciatoia di tastiera e poi scegliere in quali condizioni si deve mostrare ciascun menù.",
+    "menu-conditions-info": "Puoi associare differenti menù alla stessa scorciatoia di tastiera e poi scegliere in quali condizioni si deve mostrare ciascun menù.",
     "menu-themes-dialog": {
       "author": "di %s",
-      "light-dark-mode-hint": "Se abilitato, puoi scegliere un differente tema e set di colori a seconda che il tuo sistema sia in modalità chiara o scura.",
+      "light-dark-mode-info": "Se abilitato, puoi scegliere un differente tema e set di colori a seconda che il tuo sistema sia in modalità chiara o scura.",
       "reset-color-picker": "Ripristina tutti i colori ai valori di default",
       "title": "Temi di Menù"
     },

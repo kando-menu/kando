@@ -208,7 +208,7 @@ export default () => {
           />
           <SettingsCheckbox
             label={'Dark and light mode'}
-            info={i18next.t('settings.menu-themes-dialog.light-dark-mode-hint')}
+            info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
             settingsKey="enableDarkModeForMenuThemes"
           />
 

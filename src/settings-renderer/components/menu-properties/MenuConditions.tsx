@@ -72,11 +72,11 @@ export default () => {
     <>
       <h1>{i18next.t('settings.menu-conditions')}</h1>
       <Note marginTop={-5} marginBottom={5}>
-        {i18next.t('settings.menu-conditions-hint')}
+        {i18next.t('settings.menu-conditions-info')}
       </Note>
       <Checkbox
         label={i18next.t('settings.app-condition')}
-        info={i18next.t('settings.app-condition-hint')}
+        info={i18next.t('settings.app-condition-info')}
         initialValue={appConditionVisible}
         onChange={(value) => {
           setAppConditionVisible(value);
@@ -126,7 +126,7 @@ export default () => {
       </div>
       <Checkbox
         label={i18next.t('settings.window-condition')}
-        info={i18next.t('settings.window-condition-hint')}
+        info={i18next.t('settings.window-condition-info')}
         initialValue={windowConditionVisible}
         onChange={(value) => {
           setWindowConditionVisible(value);
@@ -176,7 +176,7 @@ export default () => {
       </div>
       <Checkbox
         label={i18next.t('settings.area-condition')}
-        info={i18next.t('settings.area-condition-hint')}
+        info={i18next.t('settings.area-condition-info')}
         initialValue={screenConditionVisible}
         onChange={(value) => {
           setScreenConditionVisible(value);

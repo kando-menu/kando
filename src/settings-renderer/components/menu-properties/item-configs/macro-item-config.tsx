@@ -48,7 +48,7 @@ export default () => {
       />
       <Checkbox
         label={i18next.t('menu-items.common.delayed-option')}
-        info={i18next.t('menu-items.common.delayed-option-hint')}
+        info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {

@@ -4,10 +4,10 @@
       "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Utilice hyprland.conf para vincular esto."
+      "shortcut-info": "Utilice hyprland.conf para vincular esto."
     },
     "kde-wayland": {
-      "shortcut-hint": "Utilice la configuración del sistema de KDE para enlazar esto."
+      "shortcut-info": "Utilice la configuración del sistema de KDE para enlazar esto."
     }
   },
   "example-menu": {
@@ -73,7 +73,7 @@
   "menu-items": {
     "command": {
       "command": "Comando",
-      "command-hint": "Esto se ejecutará.",
+      "command-info": "Esto se ejecutará.",
       "description": "Ejecuta cualquier comando del shell.",
       "name": "Ejecutar comando",
       "tip-1": "Puedes usar el tipo de elemento de Comando para lanzar aplicaciones o scripts.",
@@ -136,7 +136,7 @@
     "area-condition-top-placeholder": "Arriba",
     "cancel": "Cancelar",
     "centered-mode": "Modo centrado",
-    "centered-mode-hint": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
+    "centered-mode-info": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
     "general-settings-dialog": {
       "reload-menu-theme": "Recargar el tema de Menú actual",
       "reload-menu-theme-tooltip": "Los cambios de CSS se aplican inmediatamente. Para realizar cambios en el archivo theme.json, deberá volver a abrir el menú."
@@ -154,10 +154,10 @@
     },
     "menu-behavior": "Comportamiento del menú",
     "menu-conditions": "Condiciones de menú",
-    "menu-conditions-hint": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
+    "menu-conditions-info": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
     "menu-themes-dialog": {
       "author": "Por %s",
-      "light-dark-mode-hint": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
+      "light-dark-mode-info": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
       "reset-color-picker": "Reiniciar colores por defecto",
       "title": "Temas del menú"
     },

@@ -37,7 +37,7 @@ export default () => {
     <>
       <TextInput
         label={i18next.t('menu-items.command.command')}
-        info={i18next.t('menu-items.command.command-hint')}
+        info={i18next.t('menu-items.command.command-info')}
         initialValue={data.command}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -48,7 +48,7 @@ export default () => {
       />
       <Checkbox
         label={i18next.t('menu-items.common.delayed-option')}
-        info={i18next.t('menu-items.common.delayed-option-hint')}
+        info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {

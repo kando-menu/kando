@@ -37,7 +37,7 @@ export default () => {
     <>
       <FilePicker
         label={i18next.t('menu-items.file.file')}
-        info={i18next.t('menu-items.file.file-hint')}
+        info={i18next.t('menu-items.file.file-info')}
         initialValue={data.path}
         onChange={(path) => {
           const parts = path.split(/[/\\]/);

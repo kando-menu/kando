@@ -86,7 +86,7 @@ export default () => {
       return (
         <ShortcutPicker
           label={i18next.t('settings.shortcut-label')}
-          info={i18next.t('settings.shortcut-hint')}
+          info={i18next.t('settings.shortcut-info')}
           recordingPlaceholder={i18next.t('settings.shortcut-recording')}
           mode="key-names"
           initialValue={menus[selectedMenu].shortcut}

@@ -4,10 +4,10 @@
       "error": "Não foi possível se conectar a extensão do GNOME Shell \"Kando Integration\". Você pode obtê-la a partir daqui: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Use o arquivo hyprland.conf para vincular isso."
+      "shortcut-info": "Use o arquivo hyprland.conf para vincular isso."
     },
     "kde-wayland": {
-      "shortcut-hint": "Use as configurações do sistema do KDE para ligar isso."
+      "shortcut-info": "Use as configurações do sistema do KDE para ligar isso."
     }
   },
   "example-menu": {
@@ -77,7 +77,7 @@
   "menu-items": {
     "command": {
       "command": "Comando",
-      "command-hint": "Isso será executado.",
+      "command-info": "Isso será executado.",
       "description": "Executa qualquer comando do shell.",
       "name": "Executar Comando",
       "tip-1": "Você pode usar o item do tipo Comando para iniciar aplicativos ou scripts.",
@@ -160,13 +160,13 @@
     "area-condition-top-placeholder": "Topo",
     "cancel": "Cancelar",
     "centered-mode": "Modo Centralizado",
-    "centered-mode-hint": "Abra o menu no centro da tela em vez de onde o cursor está.",
+    "centered-mode-info": "Abra o menu no centro da tela em vez de onde o cursor está.",
     "general-settings-dialog": {
       "reload-menu-theme": "Recarregar Tema Atual do Menu",
       "reload-menu-theme-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu.",
       "reload-sound-theme": "Recarregue o tema do som atual"
     },
-    "hover-mode-hint": "Para power users somente! Selecione items flutuando sobre eles.",
+    "hover-mode-info": "Para power users somente! Selecione items flutuando sobre eles.",
     "icon-picker-dialog": {
       "base64-example": "Exemplo em Base64:",
       "search-placeholder": "Pesquisa ícones…",
@@ -182,10 +182,10 @@
     },
     "menu-behavior": "Comportamento de menu",
     "menu-conditions": "Condições do menu",
-    "menu-conditions-hint": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
+    "menu-conditions-info": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
     "menu-themes-dialog": {
       "author": "por %s",
-      "light-dark-mode-hint": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
+      "light-dark-mode-info": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
       "reset-color-picker": "Resetar todas as cores aos seus padrões",
       "title": "Temas de Menu"
     },

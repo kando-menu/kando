@@ -4,10 +4,10 @@
       "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."
+      "shortcut-info": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."
     },
     "kde-wayland": {
-      "shortcut-hint": "Käytä KDE:n järjestelmäasetuksia sitoaksesi tämän."
+      "shortcut-info": "Käytä KDE:n järjestelmäasetuksia sitoaksesi tämän."
     }
   },
   "example-menu": {
@@ -75,7 +75,7 @@
   "menu-items": {
     "command": {
       "command": "Komento",
-      "command-hint": "Tämä suoritetaan.",
+      "command-info": "Tämä suoritetaan.",
       "description": "Suorittaa komentorivikomennon.",
       "name": "Suorita komento"
     },
@@ -126,14 +126,14 @@
     "area-condition-top-placeholder": "Yläosa",
     "cancel": "Peru",
     "centered-mode": "Keskitetty tila",
-    "centered-mode-hint": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
+    "centered-mode-info": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
     "general-settings-dialog": {
       "reload-menu-theme": "Lataa nykyinen valikkoteema uudelleen",
       "reload-menu-theme-tooltip": "CSS-muutokset tulevat voimaan välittömästi, mutta theme.json-tiedostoon tehtyjen muutosten osalta valikko tulee avata uudelleen.",
       "reload-sound-theme": "Lataa nykyinen ääniteema uudelleen"
     },
     "hover-mode": "Kohdistustila",
-    "hover-mode-hint": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
+    "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
     "icon-picker-dialog": {
       "base64-example": "Base64-esimerkki:",
       "search-placeholder": "Etsi kuvakkeita…"

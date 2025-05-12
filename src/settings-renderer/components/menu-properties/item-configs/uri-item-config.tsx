@@ -34,7 +34,7 @@ export default () => {
     <>
       <TextInput
         label={i18next.t('menu-items.uri.uri')}
-        info={i18next.t('menu-items.uri.uri-hint')}
+        info={i18next.t('menu-items.uri.uri-info')}
         initialValue={data.uri}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {

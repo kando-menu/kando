@@ -4,10 +4,10 @@
       "error": "Impossible de se connecter à l'extension Kando Integration GNOME Shell. Vous pouvez l'obtenir ici : %s"
     },
     "hyprland": {
-      "shortcut-hint": "Utilisez votre hyprland.conf pour lier ceci."
+      "shortcut-info": "Utilisez votre hyprland.conf pour lier ceci."
     },
     "kde-wayland": {
-      "shortcut-hint": "Utilisez les paramètres système de KDE pour lier ceci."
+      "shortcut-info": "Utilisez les paramètres système de KDE pour lier ceci."
     }
   },
   "example-menu": {
@@ -77,7 +77,7 @@
   "menu-items": {
     "command": {
       "command": "Commande",
-      "command-hint": "Cette commande sera exécutée.",
+      "command-info": "Cette commande sera exécutée.",
       "description": "Exécuter n'importe quelle commande shell.",
       "name": "Exécuter une Commande",
       "tip-1": "Il est possible d'utiliser l'élément de type Commande pour lancer des applications ou des scripts.",
@@ -161,14 +161,14 @@
     "area-condition-top-placeholder": "Haut",
     "cancel": "Annuler",
     "centered-mode": "Mode Centré",
-    "centered-mode-hint": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
+    "centered-mode-info": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
     "general-settings-dialog": {
       "reload-menu-theme": "Recharger le Thème de Menu Actuel",
       "reload-menu-theme-tooltip": "Les changements CSS seront appliqués immédiatement, pour les changements effectués au fichier theme.json, vous devez rouvrir le menu.",
       "reload-sound-theme": "Recharger le Thème Sonore Actuel"
     },
     "hover-mode": "Mode Survol",
-    "hover-mode-hint": "Pour utilisateurs expérimentés seulement ! Selectionne les éléments en les survolant.",
+    "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Selectionne les éléments en les survolant.",
     "icon-picker-dialog": {
       "base64-example": "Exemple Base64 :",
       "search-placeholder": "Rechercher des Icônes…",
@@ -184,10 +184,10 @@
     },
     "menu-behavior": "Comportement du Menu",
     "menu-conditions": "Conditions du Menu",
-    "menu-conditions-hint": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
+    "menu-conditions-info": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
     "menu-themes-dialog": {
       "author": "par %s",
-      "light-dark-mode-hint": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
+      "light-dark-mode-info": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
       "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
       "title": "Thèmes de menu"
     },

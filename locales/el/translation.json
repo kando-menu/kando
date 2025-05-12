@@ -2,7 +2,7 @@
   "menu-items": {
     "command": {
       "command": "Εντολή",
-      "command-hint": "Αυτό θα εκτελεστεί.",
+      "command-info": "Αυτό θα εκτελεστεί.",
       "description": "Εκτελεί οποιαδήποτε shell εντολή.",
       "name": "Εκτέλεση εντολής",
       "tip-1": "Μπορείτε να χρησιμοποιήσετε το command item για να εκκινήσετε εφαρμογές ή scripts.",

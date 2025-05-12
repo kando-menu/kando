@@ -4,7 +4,7 @@
       "name": "Run Command",
       "description": "Runs any command.",
       "command": "Command",
-      "command-hint": "This command will be executed when the item is activated.",
+      "command-info": "This command will be executed when the item is activated.",
       "tip-1": "You can use the Command item type to launch applications or scripts.",
       "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
       "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
@@ -15,14 +15,14 @@
       "name": "Open File",
       "description": "Opens a file or folder.",
       "file": "File Path",
-      "file-hint": "The file or folder will be opened with the corresponding default application.",
+      "file-info": "The file or folder will be opened with the corresponding default application.",
       "tip-1": "You can use this item type to open files or folders."
     },
     "hotkey": {
       "name": "Simulate Hotkey",
       "description": "Presses a hotkey.",
       "hotkey": "Hotkey",
-      "hotkey-hint": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
+      "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
       "recording-placeholder": "Type a hotkey…",
       "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
       "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
@@ -40,7 +40,7 @@
       "name": "Redirect",
       "description": "Opens another menu.",
       "redirect": "Linked menu",
-      "redirect-hint": "The menu will be opened when you activate this item."
+      "redirect-info": "The menu will be opened when you activate this item."
     },
     "settings": {
       "name": "Open Settings",
@@ -68,7 +68,7 @@
       "name": "Open URI",
       "description": "Opens websites and more.",
       "uri": "URI",
-      "uri-hint": "This will be opened with your default application for this URI type.",
+      "uri-info": "This will be opened with your default application for this URI type.",
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
       "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
       "tip-3": "You can use the URI item type to open a mailto: link.",
@@ -78,7 +78,7 @@
     },
     "common": {
       "delayed-option": "Execute After Closing the Menu",
-      "delayed-option-hint": "Useful if the action targets a window that needs to be focused."
+      "delayed-option-info": "Useful if the action targets a window that needs to be focused."
     }
   },
   "main": {
@@ -204,7 +204,7 @@
     "menu-themes-dialog": {
       "reset-color-picker": "Reset all colors to their defaults",
       "title": "Menu Themes",
-      "light-dark-mode-hint": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
+      "light-dark-mode-info": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
       "author": "by %s"
     },
     "all-menus": "All Menus",
@@ -215,32 +215,32 @@
     "undo": "Undo",
     "redo": "Redo",
     "menu-behavior": "Menu Behavior",
-    "menu-behavior-hint": "Before you enable these options, we recommend learning why we like Kando's default behavior [here](%s)!",
+    "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here](%s)!",
     "centered-mode": "Centered Mode",
-    "centered-mode-hint": "Open the menu in the screen's center instead of at the cursor.",
+    "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
     "anchored-mode": "Anchored Mode",
-    "anchored-mode-hint": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode.",
+    "anchored-mode-info": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode.",
     "hover-mode": "Hover Mode",
-    "hover-mode-hint": "For power users only! Select items by hovering over them.",
+    "hover-mode-info": "For power users only! Select items by hovering over them.",
     "menu-conditions": "Menu Conditions",
-    "menu-conditions-hint": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
+    "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
     "app-condition": "Limit to Specific Apps",
-    "app-condition-hint": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
+    "app-condition-info": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
     "app-condition-placeholder": "App name",
     "app-condition-tooltip": "Select an app",
     "window-condition": "Limit to Specific Window Titles",
-    "window-condition-hint": "Show the menu only if the focused window's title contains a given text. This supports regular expressions like /youtube|vimeo/i.",
+    "window-condition-info": "Show the menu only if the focused window's title contains a given text. This supports regular expressions like /youtube|vimeo/i.",
     "window-condition-placeholder": "Window title",
     "window-condition-tooltip": "Select a window",
     "area-condition": "Limit to Specific Screen Area",
-    "area-condition-hint": "Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction.",
+    "area-condition-info": "Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction.",
     "area-condition-top-placeholder": "Top",
     "area-condition-left-placeholder": "Left",
     "area-condition-bottom-placeholder": "Bottom",
     "area-condition-right-placeholder": "Right",
     "area-condition-tooltip": "Select a screen area",
     "shortcut-label": "Shortcut",
-    "shortcut-hint": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
+    "shortcut-info": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
     "shortcut-recording": "Press a shortcut…",
     "shortcut-id-label": "Shortcut ID",
     "cancel": "Cancel"
@@ -306,10 +306,10 @@
       "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Use your hyprland.conf to bind this."
+      "shortcut-info": "Use your hyprland.conf to bind this."
     },
     "kde-wayland": {
-      "shortcut-hint": "Use KDE's system settings to bind this."
+      "shortcut-info": "Use KDE's system settings to bind this."
     }
   }
 }

@@ -4,10 +4,10 @@
       "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: %s"
     },
     "hyprland": {
-      "shortcut-hint": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
+      "shortcut-info": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
     },
     "kde-wayland": {
-      "shortcut-hint": "Bunu bağlamak için KDE sistem ayarlarını kullanın."
+      "shortcut-info": "Bunu bağlamak için KDE sistem ayarlarını kullanın."
     }
   },
   "example-menu": {
@@ -77,7 +77,7 @@
   "menu-items": {
     "command": {
       "command": "Komut",
-      "command-hint": "Bu yürütülecektir.",
+      "command-info": "Bu yürütülecektir.",
       "description": "Herhangi bir kabuk komutunu çalıştırır.",
       "name": "Komut Çalıştır",
       "tip-1": "Uygulama veya komut dosyalarını başlatmak için Komut öğe tipini kullanabilirsiniz.",
@@ -155,14 +155,14 @@
     "area-condition-top-placeholder": "Üst",
     "cancel": "İptal",
     "centered-mode": "Ortalanmış Mod",
-    "centered-mode-hint": "Menüyü imleç yerine ekranın ortasında açın.",
+    "centered-mode-info": "Menüyü imleç yerine ekranın ortasında açın.",
     "general-settings-dialog": {
       "reload-menu-theme": "Mevcut Menü Temasını Yeniden Yükle",
       "reload-menu-theme-tooltip": "CSS değişiklikleri anında uygulanacaktır, theme.json dosyasında yapılan değişiklikler için menüyü yeniden açmanız gerekir.",
       "reload-sound-theme": "Mevcut Ses Temasını Yeniden Yükle"
     },
     "hover-mode": "Üzerine Gelme Modu",
-    "hover-mode-hint": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
+    "hover-mode-info": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
     "icon-picker-dialog": {
       "search-placeholder": "Simgeleri Ara…"
     },
@@ -176,10 +176,10 @@
     },
     "menu-behavior": "Menü Davranışı",
     "menu-conditions": "Menü Koşulları",
-    "menu-conditions-hint": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
+    "menu-conditions-info": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
     "menu-themes-dialog": {
       "author": "%s tarafından",
-      "light-dark-mode-hint": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
+      "light-dark-mode-info": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
       "reset-color-picker": "Tüm renkleri varsayılanlarına sıfırla",
       "title": "Menü Temaları"
     },

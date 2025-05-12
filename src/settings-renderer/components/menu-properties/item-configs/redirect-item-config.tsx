@@ -43,7 +43,7 @@ export default () => {
     <>
       <Dropdown
         label={i18next.t('menu-items.redirect.redirect')}
-        info={i18next.t('menu-items.redirect.redirect-hint')}
+        info={i18next.t('menu-items.redirect.redirect-info')}
         options={options}
         initialValue={data.menu}
         onChange={(menuName) => {

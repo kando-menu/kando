@@ -7,10 +7,10 @@
       "error": "无法连接到 \"Kando 集成\" GNOME Shell 插件。您可以从这里获取：%s"
     },
     "hyprland": {
-      "shortcut-hint": "使用您的 hyperland.conf 文件来绑定该快捷键。"
+      "shortcut-info": "使用您的 hyperland.conf 文件来绑定该快捷键。"
     },
     "kde-wayland": {
-      "shortcut-hint": "使用 KDE 系统设置来绑定该快捷键。"
+      "shortcut-info": "使用 KDE 系统设置来绑定该快捷键。"
     }
   },
   "example-menu": {
@@ -80,7 +80,7 @@
   "menu-items": {
     "command": {
       "command": "命令",
-      "command-hint": "该命令将被运行。",
+      "command-info": "该命令将被运行。",
       "description": "运行任意命令。",
       "name": "运行命令",
       "tip-1": "您可以用命令来启动一个应用或脚本。",
@@ -163,14 +163,14 @@
     "area-condition-top-placeholder": "上",
     "cancel": "取消",
     "centered-mode": "居中模式",
-    "centered-mode-hint": "在屏幕中心而非光标位置打开菜单。",
+    "centered-mode-info": "在屏幕中心而非光标位置打开菜单。",
     "general-settings-dialog": {
       "reload-menu-theme": "重载当前菜单主题",
       "reload-menu-theme-tooltip": "对 CSS 的更改将会立即生效，对 theme.json 文件的更改则需要重新打开菜单。",
       "reload-sound-theme": "重载当前声音主题"
     },
     "hover-mode": "悬停模式",
-    "hover-mode-hint": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
+    "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
     "icon-picker-dialog": {
       "base64-example": "Base64 示例：",
       "file-example": "file: URI 示例：",
@@ -187,10 +187,10 @@
     },
     "menu-behavior": "菜单行为",
     "menu-conditions": "菜单条件",
-    "menu-conditions-hint": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
+    "menu-conditions-info": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
     "menu-themes-dialog": {
       "author": "作者 %s",
-      "light-dark-mode-hint": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
+      "light-dark-mode-info": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
       "reset-color-picker": "重置所有颜色至默认值",
       "title": "菜单主题"
     },
