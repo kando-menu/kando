@@ -36,8 +36,8 @@ export default () => {
   return (
     <>
       <TextInput
-        label={i18next.t('items.command.command')}
-        info={i18next.t('items.command.command-hint')}
+        label={i18next.t('menu-items.command.command')}
+        info={i18next.t('menu-items.command.command-info')}
         initialValue={data.command}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -47,8 +47,8 @@ export default () => {
         }}
       />
       <Checkbox
-        label={i18next.t('items.common.delayed-option')}
-        info={i18next.t('items.common.delayed-option-hint')}
+        label={i18next.t('menu-items.common.delayed-option')}
+        info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -60,11 +60,11 @@ export default () => {
       <RandomTip
         marginTop={50}
         tips={[
-          i18next.t('items.command.tip-1'),
-          i18next.t('items.command.tip-2'),
-          i18next.t('items.command.tip-3'),
-          i18next.t('items.command.tip-4'),
-          i18next.t('items.command.tip-5'),
+          i18next.t('menu-items.command.tip-1'),
+          i18next.t('menu-items.command.tip-2'),
+          i18next.t('menu-items.command.tip-3'),
+          i18next.t('menu-items.command.tip-4'),
+          i18next.t('menu-items.command.tip-5'),
         ]}
       />
     </>

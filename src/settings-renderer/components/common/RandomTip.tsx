@@ -36,7 +36,8 @@ export default (props: IProps) => {
       marginLeft={'10%'}
       marginRight={'10%'}
       marginBottom={props.marginBottom}
-      marginTop={props.marginTop}>
+      marginTop={props.marginTop}
+      markdown>
       {props.tips[Math.floor(Math.random() * props.tips.length)]}
     </Note>
   );

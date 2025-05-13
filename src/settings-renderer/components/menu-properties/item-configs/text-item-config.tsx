@@ -33,7 +33,7 @@ export default () => {
   return (
     <>
       <TextInput
-        placeholder={i18next.t('items.text.placeholder')}
+        placeholder={i18next.t('menu-items.text.placeholder')}
         multiline
         initialValue={data.text}
         onChange={(value) => {
@@ -43,7 +43,7 @@ export default () => {
           });
         }}
       />
-      <RandomTip marginTop={50} tips={[i18next.t('items.text.tip-1')]} />
+      <RandomTip marginTop={50} tips={[i18next.t('menu-items.text.tip-1')]} />
     </>
   );
 };

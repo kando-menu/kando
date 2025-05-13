@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbTrash } from 'react-icons/tb';
@@ -92,7 +93,9 @@ export default () => {
             className={cx({ collection: true, selected: selectedCollection === -1 })}
             onClick={() => selectCollection(-1)}
             data-tooltip-id="main-tooltip"
-            data-tooltip-content={selectedCollection === -1 ? '' : 'All Menus'}>
+            data-tooltip-content={
+              selectedCollection === -1 ? '' : i18next.t('settings.all-menus')
+            }>
             <ThemedIcon name="all-menus.svg" theme="kando" />
           </button>
           {renderedCollections.map((collection) => (
@@ -215,7 +218,7 @@ export default () => {
           <button
             className={classes.collection + ' ' + classes.transparent}
             data-tooltip-id="main-tooltip"
-            data-tooltip-content="Create a new collection. Use collections to group your menus by tags!"
+            data-tooltip-content={i18next.t('settings.add-collection-tooltip')}
             onClick={() => {
               addCollection();
               selectCollection(collections.length);

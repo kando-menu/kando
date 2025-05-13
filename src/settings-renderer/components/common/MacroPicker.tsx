@@ -30,6 +30,9 @@ interface IProps {
   /** Initial value of the macro picker. */
   initialValue: IMacroEvent[];
 
+  /** Placeholder text to display when the macro picker is not recording. */
+  placeholder?: string;
+
   /** Placeholder text to display when the macro picker is recording. */
   recordingPlaceholder?: string;
 }
@@ -59,7 +62,7 @@ export default (props: IProps) => {
         spellCheck="false"
         className={cx({ recording, invalid: !convertToMacro(textValue) })}
         value={textValue}
-        placeholder={recording ? props.recordingPlaceholder : 'Not bound'}
+        placeholder={recording ? props.recordingPlaceholder : props.placeholder}
         onChange={(event) => {
           if (!recording) {
             const start = event.target.selectionStart;

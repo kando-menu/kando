@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import Markdown from 'react-markdown';
 import classNames from 'classnames/bind';
 
 import * as classes from './Note.module.scss';
@@ -16,7 +17,7 @@ const cx = classNames.bind(classes);
 
 interface IProps {
   /** Content to display inside the note. */
-  children: React.ReactNode;
+  children: React.ReactNode | string;
 
   /** Whether the text should be centered. Defaults to false. */
   center?: boolean;
@@ -32,6 +33,15 @@ interface IProps {
 
   /** Margin to apply to the right of the note. Defaults to 0. */
   marginRight?: number | string;
+
+  /** Whether to use markdown formatting. Defaults to false. */
+  markdown?: boolean;
+
+  /**
+   * Callback function to execute when a link is clicked. IF not given, the link will be
+   * opened in the browser.
+   */
+  onLinkClick?: (href: string) => void;
 }
 
 /**
@@ -41,6 +51,14 @@ interface IProps {
  * @returns A note element.
  */
 export default (props: IProps) => {
+  const handleLinkClick = (href: string) => {
+    if (props.onLinkClick) {
+      props.onLinkClick(href); // Execute the callback with the link's href
+    } else {
+      window.open(href, '_blank'); // Default behavior: open in a new tab
+    }
+  };
+
   return (
     <div
       className={cx({
@@ -53,7 +71,25 @@ export default (props: IProps) => {
         marginLeft: props.marginLeft || 0,
         marginRight: props.marginRight || 0,
       }}>
-      {props.children}
+      {props.markdown ? (
+        <Markdown
+          components={{
+            a: ({ href, children }) => (
+              <a
+                href={href}
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent default link behavior
+                  handleLinkClick(href);
+                }}>
+                {children}
+              </a>
+            ),
+          }}>
+          {props.children as string}
+        </Markdown>
+      ) : (
+        <>{props.children}</>
+      )}
     </div>
   );
 };

@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbSettingsFilled, TbHeartFilled, TbPaletteFilled } from 'react-icons/tb';
 import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 
@@ -37,14 +38,14 @@ export default () => {
     <>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip="Introduction"
+          tooltip={i18next.t('settings.introduction-dialog.title')}
           icon={<IoSchool />}
           onClick={() => setIntroDialogVisible(true)}
           variant="tool"
           grouped
         />
         <Button
-          tooltip="About Kando"
+          tooltip={i18next.t('settings.about-dialog.title')}
           icon={<TbHeartFilled />}
           onClick={() => setAboutDialogVisible(true)}
           variant="tool"
@@ -53,14 +54,14 @@ export default () => {
       </span>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip="Menu Themes"
+          tooltip={i18next.t('settings.menu-themes-dialog.title')}
           icon={<TbPaletteFilled />}
           onClick={() => setThemesDialogVisible(true)}
           variant="tool"
           grouped
         />
         <Button
-          tooltip="General Settings"
+          tooltip={i18next.t('settings.general-settings-dialog.title')}
           icon={<TbSettingsFilled />}
           onClick={() => setSettingsDialogVisible(true)}
           variant="tool"
@@ -69,7 +70,7 @@ export default () => {
       </span>
       <span>
         <Button
-          tooltip="Undo"
+          tooltip={i18next.t('settings.undo')}
           icon={<IoArrowUndo />}
           disabled={pastStates.length === 0}
           onClick={() => useMenuSettings.temporal.getState().undo()}
@@ -77,7 +78,7 @@ export default () => {
           grouped
         />
         <Button
-          tooltip="Redo"
+          tooltip={i18next.t('settings.redo')}
           icon={<IoArrowRedo />}
           disabled={futureStates.length === 0}
           onClick={() => useMenuSettings.temporal.getState().redo()}

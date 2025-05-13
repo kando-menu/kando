@@ -1,289 +1,192 @@
 {
-  "items": {
+  "backends": {
+    "gnome": {
+      "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: %s"
+    },
+    "hyprland": {
+      "shortcut-info": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
+    },
+    "kde-wayland": {
+      "shortcut-info": "Bunu bağlamak için KDE sistem ayarlarını kullanın."
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "Müzik",
+      "email": "E-Posta",
+      "file-browser": "Dosya Tarayıcısı",
+      "finder": "Finder",
+      "gimp": "GIMP",
+      "paint": "Paint",
+      "safari": "Safari",
+      "submenu": "Uygulamalar",
+      "terminal": "Terminal",
+      "web-browser": "Web Tarayıcısı"
+    },
+    "audio": {
+      "mute": "Sessiz",
+      "next-track": "Sonraki Parça",
+      "play-pause": "Oynat / Duraklat",
+      "previous-track": "Önceki Parça",
+      "submenu": "Ses"
+    },
+    "bookmarks": {
+      "desktop": "Masaüstü",
+      "documents": "Belgeler",
+      "downloads": "İndirilenler",
+      "home": "Ana Sayfa",
+      "music": "Müzik",
+      "pictures": "Resimler",
+      "submenu": "Yer İmleri",
+      "videos": "Videolar"
+    },
+    "clipboard": {
+      "copy": "Kopyala",
+      "cut": "Kes",
+      "paste": "Yapıştır",
+      "submenu": "Pano"
+    },
+    "name": "Örnek Menü",
+    "next-workspace": "Sonraki Çalışma Alanı",
+    "previous-workspace": "Önceki Çalışma Alanı",
+    "web-links": {
+      "google": "Google",
+      "kando-on-discord": "Discord'da Kando",
+      "kando-on-github": "GitHub'da Kando",
+      "kando-on-kofi": "Ko-fi'de Kando",
+      "kando-on-youtube": "YouTube'da Kando",
+      "submenu": "Web Bağlantıları"
+    },
+    "windows": {
+      "close-window": "Pencereyi Kapat",
+      "mission-control": "Görev Kontrolü",
+      "submenu": "Pencereler",
+      "tile-left": "Sola Döşe",
+      "tile-right": "Sağa Döşe",
+      "toggle-maximize": "Büyütmeyi Aç/Kapat"
+    }
+  },
+  "main": {
+    "failed-to-start-header": "Kando başlatılamadı",
+    "inhibit-shortcuts": "Kısayolları Geçici Olarak Devre Dışı Bırak",
+    "new-version-notification-header": "Kando'nun yeni bir sürümü mevcut!",
+    "quit": "Çıkış",
+    "show-settings": "Ayarları Göster",
+    "un-inhibit-shortcuts": "Kısayolları Yeniden Etkinleştir"
+  },
+  "menu-items": {
     "command": {
+      "command": "Komut",
+      "command-info": "Bu yürütülecektir.",
+      "description": "Herhangi bir kabuk komutunu çalıştırır.",
+      "name": "Komut Çalıştır",
       "tip-1": "Uygulama veya komut dosyalarını başlatmak için Komut öğe tipini kullanabilirsiniz.",
       "tip-2": "Bir yürütülebilir dosyanın yolu boşluk içeriyorsa, \"tırnak içine almalısınız\".",
       "tip-3": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
       "tip-4": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
-      "tip-5": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın.",
-      "command": "Komut",
-      "command-hint": "Bu yürütülecektir.",
-      "name": "Komut Çalıştır",
-      "description": "Herhangi bir kabuk komutunu çalıştırır."
-    },
-    "common": {
-      "delayed-option": "Menüyü Kapattıktan Sonra Çalıştır",
-      "delayed-option-hint": "Eylemin odaklanması gereken bir pencereyi hedeflediği durumlarda faydalıdır.",
-      "not-configured": "Yapılandırılmamış"
+      "tip-5": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın."
     },
     "file": {
-      "tip-1": "Dosya veya klasörleri açmak için bu öğe tipini kullanabilirsiniz.",
+      "description": "Bir dosya veya klasör açar.",
       "file": "Dosya Yolu",
-      "file-hint": "Bu açılacaktır.",
       "name": "Dosya Aç",
-      "description": "Bir dosya veya klasör açar."
+      "tip-1": "Dosya veya klasörleri açmak için bu öğe tipini kullanabilirsiniz."
     },
     "hotkey": {
-      "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
-      "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin.",
-      "tip-3": "Tüm geçerli tuş adlarını görmek için bu bağlantıya tıklayın.",
+      "description": "Bir kısayol tuşuna basar.",
+      "hotkey": "Kısayol Tuşu",
       "name": "Kısayol Tuşu Simüle Et",
-      "description": "Bir kısayol tuşuna basar."
+      "recording-placeholder": "Bir kısayol tuşuna basın…",
+      "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
+      "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin."
     },
     "macro": {
-      "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz.",
-      "tip-2": "Tüm geçerli tuş adlarını görmek için bu bağlantıya tıklayın.",
+      "description": "Bir klavye makrosu yazar.",
       "name": "Makro Simüle Et",
-      "description": "Bir klavye makrosu yazar."
+      "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
+      "recording-placeholder": "Tuşlara basın…",
+      "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz."
     },
     "redirect": {
-      "tip-1": "Menü adları için tutarlı büyük/küçük harf kullanın.",
-      "tip-2": "Boş veya tanımlanmamış menü adlarından kaçının.",
-      "tip-3": "Özyinelemeli yönlendirmelerden kaçının.",
-      "redirect": "Yönlendirme",
-      "redirect-hint": "Bu menü açılacak",
-      "name": "Yönlendirme",
-      "description": "Başka bir menüyü açar"
+      "description": "Başka bir menüyü açar",
+      "name": "Yönlendirme"
     },
     "submenu": {
+      "description": "Diğer menü öğelerini içerir.",
+      "name": "Alt Menü",
       "tip-1": "Alt menüler öğeleri gruplandırmak için kullanılabilir.",
       "tip-2": "Alt menülerin içine de alt menüler ekleyebilirsiniz.",
       "tip-3": "Alt menüler karmaşık menü yapıları oluşturmak için kullanılabilir.",
       "tip-4": "Bir alt menüye on ikiden fazla öğe eklemeyin. Sekiz iyi bir sayıdır.",
       "tip-5": "Önizlemedeki küçük kilit simgelerini kullanarak bir öğenin menüdeki konumunu sabitleyebilirsiniz.",
-      "tip-6": "Önizlemede sürükleyerek öğeleri yeniden sıralayabilirsiniz.",
-      "tip-7": "Menüler sekmesinden çöp sekmesine sürükleyerek bir menüyü silebilirsiniz.",
-      "tip-8": "Araç çubuğundaki çöp sekmesine sürükleyerek öğeleri kaldırabilirsiniz.",
-      "tip-9": "Bir kısayol kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
-      "tip-10": "Ctrl tuşunu basılı tutarak sürükleyerek menüleri ve öğeleri kopyalayabilirsiniz.",
-      "tip-11": "Menüleri --menu bayrağı ile komut satırından açabilirsiniz.",
-      "name": "Alt Menü",
-      "description": "Diğer menü öğelerini içerir.",
-      "detailed-description_one": "Bir menü öğesi içerir.",
-      "detailed-description_other": "{{count}} menü öğesi içerir."
+      "tip-6": "Önizlemede sürükleyerek öğeleri yeniden sıralayabilirsiniz."
     },
     "text": {
-      "tip-1": "Bu eylem, metni yapıştırmak için panonuzu kullanır. Eylemi kullandıktan sonra, pano metni içerecektir.",
-      "placeholder": "Herhangi bir metin ekleyin...",
+      "description": "Belirtilen metni ekler.",
       "name": "Metin Yapıştır",
-      "description": "Belirtilen metni ekler."
+      "placeholder": "Herhangi bir metin ekleyin…",
+      "tip-1": "Bu eylem, metni yapıştırmak için panonuzu kullanır. Eylemi kullandıktan sonra, pano metni içerecektir."
     },
     "uri": {
+      "description": "Web siteleri ve daha fazlasını açar.",
+      "name": "URI Aç",
       "tip-1": "HTTP:// protokolünü kullanarak bir web sitesini açmak için URI öğe tipini kullanabilirsiniz.",
       "tip-2": "Bunu slack:// veya zoommtg:// gibi özel URI şemalarını çağırmak için kullanabilirsiniz.",
       "tip-3": "Bir mailto: bağlantısını açmak için URI öğe tipini kullanabilirsiniz.",
       "tip-4": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
       "tip-5": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
       "tip-6": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın.",
-      "uri": "URI",
-      "uri-hint": "Bu açılacaktır.",
-      "name": "URI Aç",
-      "description": "Web siteleri ve daha fazlasını açar."
+      "uri": "URI"
     }
   },
-  "main": {
-    "failed-to-start-header": "Kando başlatılamadı",
-    "show-settings": "Ayarları Göster",
-    "un-inhibit-shortcuts": "Kısayolları Yeniden Etkinleştir",
-    "inhibit-shortcuts": "Kısayolları Geçici Olarak Devre Dışı Bırak",
-    "quit": "Çıkış"
-  },
-  "properties": {
-    "common": {
-      "not-bound": "Bağlı Değil",
-      "done": "Tamam",
-      "cancel": "İptal",
-      "menu-conditions": "Menü Koşulları",
-      "menu-conditions-hint": "Menünün ne zaman gösterileceğini seçin.",
-      "menu-behavior": "Menü Davranışı",
-      "menu-behavior-hint": "Menü için gelişmiş seçenekleri ayarlayın."
+  "settings": {
+    "about-dialog": {
+      "chrome-version": "Chrome Sürümü",
+      "electron-version": "Electron Sürümü",
+      "kando-backend": "Kando Arka Ucu",
+      "kando-version": "Kando Sürümü"
     },
-    "advanced-options": {
-      "heading": "Menü Davranışını Ayarlayın",
-      "subheading": "Bu seçenekleri etkinleştirmeden önce, Kando'nun varsayılan davranışını öğrenmenizi öneririz. Neden beğendiğimizi <a {{- link}}>buradan</a> okuyabilirsiniz.",
-      "hover-mode": "Üzerine Gelme Modu",
-      "hover-mode-hint": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
-      "centered-mode": "Ortalanmış Mod",
-      "centered-mode-hint": "Menüyü imleç yerine ekranın ortasında açın.",
-      "warp-mouse": "Ortalanmış Modda Fareyi Taşı",
-      "warp-mouse-hint": "Menü açıldığında işaretçiyi menünün ortasına taşıyın.",
-      "anchored-mode": "Sabitlenmiş Mod",
-      "anchored-mode-hint": "Alt menüleri üst menü ile aynı konumda açın.",
-      "anchored-mode-checked-hint": "Bunu işaretlerseniz, İşaretleme Modu devre dışı bırakılacaktır."
+    "anchored-mode": "Sabitlenmiş Mod",
+    "app-condition": "Belirli Uygulamalarla Sınırla",
+    "area-condition": "Belirli Ekran Alanıyla Sınırla",
+    "area-condition-bottom-placeholder": "Alt",
+    "area-condition-left-placeholder": "Sol",
+    "area-condition-right-placeholder": "Sağ",
+    "area-condition-top-placeholder": "Üst",
+    "cancel": "İptal",
+    "centered-mode": "Ortalanmış Mod",
+    "centered-mode-info": "Menüyü imleç yerine ekranın ortasında açın.",
+    "general-settings-dialog": {
+      "reload-menu-theme": "Mevcut Menü Temasını Yeniden Yükle",
+      "reload-menu-theme-tooltip": "CSS değişiklikleri anında uygulanacaktır, theme.json dosyasında yapılan değişiklikler için menüyü yeniden açmanız gerekir.",
+      "reload-sound-theme": "Mevcut Ses Temasını Yeniden Yükle"
     },
-    "condition-picker": {
-      "heading": "Menü Koşullarını Seçin",
-      "subheading": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
-      "app": "Belirli Uygulamalarla Sınırla",
-      "app-hint": "Menüyü yalnızca belirli bir uygulama odaktaysa göster.",
-      "app-checked-hint": "Bu, /firefox|chrome/i gibi düzenli ifadeleri destekler.",
-      "app-placeholder": "Uygulama Adı",
-      "app-tooltip": "Kando açıldığında odaklanmış olan uygulamayı kullanın.",
-      "window": "Belirli Pencere Başlıklarıyla Sınırla",
-      "window-hint": "Menüyü yalnızca odaklanmış pencerenin başlığı belirli bir metni içeriyorsa göster.",
-      "window-checked-hint": "Bu, /youtube|vimeo/i gibi düzenli ifadeleri destekler.",
-      "window-placeholder": "Pencere Başlığı",
-      "window-tooltip": "Kando açıldığında odaklanmış olan pencereyi kullanın.",
-      "screen": "Belirli Ekran Alanıyla Sınırla",
-      "screen-hint": "Menüyü yalnızca işaretçi ekranda belirli bir alandaysa göster.",
-      "screen-checked-hint": "Piksel cinsinden, ana ekranınızın sol üst köşesine göre.",
-      "left-placeholder": "Sol",
-      "right-placeholder": "Sağ",
-      "top-placeholder": "Üst",
-      "bottom-placeholder": "Alt",
-      "pointer-position-hint": "Fareniz şu anda {{x}} x {{y}} konumunda."
+    "hover-mode": "Üzerine Gelme Modu",
+    "hover-mode-info": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
+    "icon-picker-dialog": {
+      "search-placeholder": "Simgeleri Ara…"
     },
-    "hotkey-picker": {
-      "label": "Kısayol Tuşu",
-      "hint": "Bu simüle edilecektir.",
-      "recording": "Bir kısayol tuşuna basın..."
+    "introduction-dialog": {
+      "slide-1-caption": "Herhangi Bir Yere Tıklayın: Tam olarak bir öğeye tıklamanız gerekmez, sadece diliminin herhangi bir yerine tıklamanız yeterlidir!",
+      "slide-2-caption": "Geri Git: Merkez öğeye tıklayarak hızlıca bir seviye yukarı gidin.",
+      "slide-3-caption": "İşaretleme Modu: İşaretleme moduna girmek için bir öğenin üzerinde sürükleyin. İşaretçi hareketini duraklatırsanız veya dönüş yaparsanız, o anda sürüklenen alt menü açılacaktır.",
+      "slide-4-caption": "Turbo Modu: Menüyü açtıktan sonra bir tuşu basılı tutarsanız, sadece işaretçiyi hareket ettirerek seçimler yapabilirsiniz. Bu, öğeleri seçmenin en hızlı yoludur!",
+      "slide-5-caption": "Yanlışlıkla seçim yok: Eylemler sadece \"İşaretleme Modunda\" fare düğmesini veya \"Turbo Modunda\" bir klavye tuşunu bıraktığınızda yürütülür. Menüyü keşfetmek için bunu kullanın!",
+      "title": "Kando'ya Hoş Geldiniz!"
     },
-    "icon-picker": {
-      "heading": "Bir Simge Seçin",
-      "subheading": "{{path}} içine resimler içeren bir klasör koyarak kendi simge koleksiyonlarınızı ekleyin. Kando'yu yeniden başlatmanız gerekecektir. <a {{- link}}>Buradan</a> daha fazla bilgi edinin.",
-      "placeholder": "Simgeleri Ara..."
-    },
-    "macro-picker": {
-      "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
-      "recording": "Tuşlara basın..."
-    },
-    "shortcut-id-picker": {
-      "label": "Genel Kısayol Kimliği"
-    },
-    "shortcut-picker": {
-      "label": "Kısayol",
-      "hint": "Bu menüyü açacaktır.",
-      "recording": "Bir kısayola basın..."
-    }
-  },
-  "example-menu": {
-    "name": "Örnek Menü",
-    "apps": {
-      "submenu": "Uygulamalar",
-      "safari": "Safari",
-      "web-browser": "Web Tarayıcısı",
-      "email": "E-Posta",
-      "apple-music": "Müzik",
-      "gimp": "GIMP",
-      "paint": "Paint",
-      "finder": "Finder",
-      "file-browser": "Dosya Tarayıcısı",
-      "terminal": "Terminal"
-    },
-    "web-links": {
-      "submenu": "Web Bağlantıları",
-      "google": "Google",
-      "kando-on-github": "GitHub'da Kando",
-      "kando-on-kofi": "Ko-fi'de Kando",
-      "kando-on-youtube": "YouTube'da Kando",
-      "kando-on-discord": "Discord'da Kando"
-    },
-    "next-workspace": "Sonraki Çalışma Alanı",
-    "clipboard": {
-      "submenu": "Pano",
-      "paste": "Yapıştır",
-      "copy": "Kopyala",
-      "cut": "Kes"
-    },
-    "audio": {
-      "submenu": "Ses",
-      "next-track": "Sonraki Parça",
-      "play-pause": "Oynat / Duraklat",
-      "mute": "Sessiz",
-      "previous-track": "Önceki Parça"
-    },
-    "windows": {
-      "submenu": "Pencereler",
-      "mission-control": "Görev Kontrolü",
-      "toggle-maximize": "Büyütmeyi Aç/Kapat",
-      "tile-right": "Sağa Döşe",
-      "close-window": "Pencereyi Kapat",
-      "tile-left": "Sola Döşe"
-    },
-    "previous-workspace": "Önceki Çalışma Alanı",
-    "bookmarks": {
-      "submenu": "Yer İmleri",
-      "downloads": "İndirilenler",
-      "videos": "Videolar",
-      "pictures": "Resimler",
-      "documents": "Belgeler",
-      "desktop": "Masaüstü",
-      "home": "Ana Sayfa",
-      "music": "Müzik"
-    }
-  },
-  "backends": {
-    "gnome": {
-      "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: {{- link}}"
-    },
-    "hyprland": {
-      "shortcut-hint": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
-    },
-    "kde-wayland": {
-      "shortcut-hint": "Bunu bağlamak için KDE sistem ayarlarını kullanın."
-    }
-  },
-  "sidebar": {
-    "welcome": "Kando'ya Hoş Geldiniz!",
-    "intro-text": "Kando, temel bir örnek menü ile gelir. Bununla oynayabilirsiniz, ancak yakında kendi menülerinizi oluşturmalısınız! Ekranın sağ alt köşesindeki dişli simgesine tıklayarak menü düzenleyiciyi açabilirsiniz.",
-    "watch-intro-button": "Kando'yu nasıl kullanacağınızı öğrenin",
-    "documentation-button": "Dokümantasyon",
-    "discord-button": "Discord'da Sohbet Edin",
-    "buy-me-a-coffee-button": "Ko-fi'de Kando",
-    "sponsors-button": "Sponsorların Listesi",
-    "new-version-button": "Kando'nun yeni bir sürümü mevcut!",
-    "introduction-tab-header": "Giriş",
-    "introduction-tab-slide-1-caption": "Herhangi Bir Yere Tıklayın: Tam olarak bir öğeye tıklamanız gerekmez, sadece diliminin herhangi bir yerine tıklamanız yeterlidir!",
-    "introduction-tab-slide-2-caption": "Geri Git: Merkez öğeye tıklayarak hızlıca bir seviye yukarı gidin.",
-    "introduction-tab-slide-3-caption": "İşaretleme Modu: İşaretleme moduna girmek için bir öğenin üzerinde sürükleyin. İşaretçi hareketini duraklatırsanız veya dönüş yaparsanız, o anda sürüklenen alt menü açılacaktır.",
-    "introduction-tab-slide-4-caption": "Turbo Modu: Menüyü açtıktan sonra bir tuşu basılı tutarsanız, sadece işaretçiyi hareket ettirerek seçimler yapabilirsiniz. Bu, öğeleri seçmenin en hızlı yoludur!",
-    "introduction-tab-slide-5-caption": "Yanlışlıkla seçim yok: Eylemler sadece \"İşaretleme Modunda\" fare düğmesini veya \"Turbo Modunda\" bir klavye tuşunu bıraktığınızda yürütülür. Menüyü keşfetmek için bunu kullanın!",
-    "development-tab-header": "Geliştirme",
-    "dev-tools-button": "Geliştirici Araçlarını Göster",
-    "dev-tools-button-tooltip": "Arayüzü incelemek için web geliştirici araçlarını açın.",
-    "reload-menu-theme-button": "Mevcut Menü Temasını Yeniden Yükle",
-    "reload-menu-theme-button-tooltip": "CSS değişiklikleri anında uygulanacaktır, theme.json dosyasında yapılan değişiklikler için menüyü yeniden açmanız gerekir.",
-    "reload-sound-theme-button": "Mevcut Ses Temasını Yeniden Yükle",
-    "backend": "Kando Arka Ucu",
-    "kando-version": "Kando Sürümü",
-    "electron-version": "Electron Sürümü",
-    "chrome-version": "Chrome Sürümü",
-    "node-version": "Node Sürümü"
-  },
-  "toolbar": {
-    "menu-themes-tab": {
-      "author": "{{author}} tarafından",
-      "system-mode-subheading": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
-      "system-mode-subheading-dark": "Sisteminiz şu anda koyu modda. Yukarıdaki ayarlar yalnızca koyu modda kullanılacaktır.",
-      "system-mode-subheading-light": "Sisteminiz şu anda açık modda. Yukarıdaki ayarlar yalnızca açık modda kullanılacaktır.",
-      "hint": "Temaları <a {{repositoryLink}}>tema deposundan</a> indirebilirsiniz. Ayrıca <a {{tutorialLink}}>kendi temalarınızı nasıl oluşturacağınızı öğrenebilir</a> ve bunları <a {{discordLink}}>Kando'nun Discord Sunucusunda</a> paylaşabilirsiniz!",
-      "edit-colors": "Renkleri Düzenle",
-      "dark-mode": "Açık ve Koyu Mod için Ayrı Temalar ve Renkler Kullan",
-      "close-color-picker": "Renk düzenleyicisini kapat",
+    "menu-behavior": "Menü Davranışı",
+    "menu-conditions": "Menü Koşulları",
+    "menu-conditions-info": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
+    "menu-themes-dialog": {
+      "author": "%s tarafından",
+      "light-dark-mode-info": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
       "reset-color-picker": "Tüm renkleri varsayılanlarına sıfırla",
-      "label": "Menü Temaları"
+      "title": "Menü Temaları"
     },
-    "menus-tab": {
-      "create-menu-button": "Bir menü oluşturun!",
-      "label": "Menüler"
-    },
-    "templates-tab": {
-      "heading": "Menüleri ve menü öğelerini buraya bırakın ve şablon olarak kullanın!",
-      "subheading": "Saklanan öğelerin kopyalarını menüler sekmesine veya yukarıdaki önizlemeye taşıyarak oluşturun.",
-      "label": "Şablonlar"
-    },
-    "add-items-tab": {
-      "label": "Menü Öğeleri"
-    },
-    "trash-tab": {
-      "label": "Çöp",
-      "heading": "Menüleri ve menü öğelerini buraya bırakarak silebilirsiniz!",
-      "subheading": "Kando'yu yeniden başlattığınızda, bunlar kaybolacaktır."
-    },
-    "editor-themes-tab": {
-      "label": "Düzenleyici Temaları",
-      "heading": "Burada mevcut düzenleyici temalarının bir listesi olacak!",
-      "subheading": "Gelecekte, tüm menü düzenleyicisini temalamanın mümkün olacaktır."
-    }
+    "not-bound": "Bağlı Değil",
+    "shortcut-id-label": "Genel Kısayol Kimliği",
+    "shortcut-label": "Kısayol",
+    "shortcut-recording": "Bir kısayola basın…",
+    "window-condition": "Belirli Pencere Başlıklarıyla Sınırla"
   }
 }

@@ -18,5 +18,5 @@ import { RandomTip } from '../../common';
  * tip of the day.
  */
 export default () => {
-  return <RandomTip tips={[i18next.t('items.settings.tip-1')]} />;
+  return <RandomTip tips={[i18next.t('menu-items.settings.tip-1')]} />;
 };

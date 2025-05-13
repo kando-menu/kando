@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
-import { RandomTip, Dropdown } from '../../common';
+import { Dropdown } from '../../common';
 import { IItemData } from '../../../../common/item-types/redirect-item-type';
 
 /**
@@ -42,8 +42,8 @@ export default () => {
   return (
     <>
       <Dropdown
-        label={i18next.t('items.redirect.redirect')}
-        info={i18next.t('items.redirect.redirect-hint')}
+        label={i18next.t('menu-items.redirect.redirect')}
+        info={i18next.t('menu-items.redirect.redirect-info')}
         options={options}
         initialValue={data.menu}
         onChange={(menuName) => {
@@ -56,14 +56,6 @@ export default () => {
             return item;
           });
         }}
-      />
-      <RandomTip
-        marginTop={50}
-        tips={[
-          i18next.t('items.redirect.tip-1'),
-          i18next.t('items.redirect.tip-2'),
-          i18next.t('items.redirect.tip-3'),
-        ]}
       />
     </>
   );

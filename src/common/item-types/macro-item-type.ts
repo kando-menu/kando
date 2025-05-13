@@ -35,7 +35,7 @@ export class MacroItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.macro.name');
+    return i18next.t('menu-items.macro.name');
   }
 
   get defaultIcon(): string {
@@ -54,6 +54,6 @@ export class MacroItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.macro.description');
+    return i18next.t('menu-items.macro.description');
   }
 }

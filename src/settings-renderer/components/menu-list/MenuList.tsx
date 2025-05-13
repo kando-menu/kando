@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbPlus } from 'react-icons/tb';
@@ -78,7 +79,8 @@ export default () => {
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {
     const shortcut =
-      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || 'Not bound.';
+      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) ||
+      i18next.t('settings.not-bound');
     const renderedMenu: IRenderedMenu = {
       key: menu.root.name + menu.root.icon + menu.root.iconTheme + shortcut,
       index,
@@ -293,7 +295,7 @@ export default () => {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbPlus />}
-            label="New Menu"
+            label={i18next.t('settings.create-menu-button')}
             variant="floating"
             size="medium"
             onClick={() => {

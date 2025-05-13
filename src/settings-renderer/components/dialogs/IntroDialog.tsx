@@ -10,8 +10,9 @@
 
 import React from 'react';
 import i18next from 'i18next';
+import Markdown from 'react-markdown';
+import rehypeExternalLinks from 'rehype-external-links';
 import { IoSchool } from 'react-icons/io5';
-import { TbExternalLink } from 'react-icons/tb';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards } from 'swiper/modules';
 import 'swiper/css';
@@ -40,33 +41,28 @@ export default () => {
   }, []);
 
   const slides = [
-    i18next.t('sidebar.introduction-tab-slide-1-caption'),
-    i18next.t('sidebar.introduction-tab-slide-2-caption'),
-    i18next.t('sidebar.introduction-tab-slide-3-caption'),
-    i18next.t('sidebar.introduction-tab-slide-4-caption'),
-    i18next.t('sidebar.introduction-tab-slide-5-caption'),
+    i18next.t('settings.introduction-dialog.slide-1-caption'),
+    i18next.t('settings.introduction-dialog.slide-2-caption'),
+    i18next.t('settings.introduction-dialog.slide-3-caption'),
+    i18next.t('settings.introduction-dialog.slide-4-caption'),
+    i18next.t('settings.introduction-dialog.slide-5-caption'),
   ];
 
   return (
     <Modal
-      title="Welcome to Kando!"
+      title={i18next.t('settings.introduction-dialog.title')}
       icon={<IoSchool />}
       visible={introDialogVisible}
       onClose={() => setIntroDialogVisible(false)}
       maxWidth={550}>
       <div className={classes.container}>
         <div className={classes.hero}>
-          Kando offers a unique and powerful way to interact with your computer. Have a
-          look at the videos below to get a glimpse of what Kando can do for you! If you
-          need help at any point, feel free to join our{' '}
-          <a href="https://discord.gg/hZwbVSDkhy" target="_blank">
-            Discord Server <TbExternalLink />
-          </a>{' '}
-          or check out the{' '}
-          <a href="https://kando.menu" target="_blank">
-            documentation <TbExternalLink />
-          </a>
-          .
+          <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+            {i18next
+              .t('settings.introduction-dialog.message')
+              .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
+              .replace('%s2', 'https://kando.menu')}
+          </Markdown>
         </div>
         <Swiper
           effect={'cards'}
@@ -87,7 +83,7 @@ export default () => {
 
         <Note>
           <SettingsCheckbox
-            label="Show this dialog again"
+            label={i18next.t('settings.introduction-dialog.show-again')}
             settingsKey="showIntroductionDialog"
           />
         </Note>

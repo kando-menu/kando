@@ -19,7 +19,7 @@ export class SettingsItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.settings.name');
+    return i18next.t('menu-items.settings.name');
   }
 
   get defaultIcon(): string {
@@ -35,6 +35,6 @@ export class SettingsItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.settings.description');
+    return i18next.t('menu-items.settings.description');
   }
 }

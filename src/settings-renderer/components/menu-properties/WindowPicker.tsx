@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbCheck, TbX, TbStopwatch } from 'react-icons/tb';
 import { BiTargetLock } from 'react-icons/bi';
 
@@ -118,7 +119,7 @@ export default (props: IProps) => {
         </div>
         <div className={classes.buttons}>
           <Button
-            label="Cancel"
+            label={i18next.t('settings.cancel')}
             icon={<TbX />}
             block
             onClick={() => {

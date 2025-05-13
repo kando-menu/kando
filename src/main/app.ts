@@ -198,8 +198,10 @@ export class KandoApp {
 
       // Show a notification if possible.
       Notification.show(
-        'A new version of Kando is available!',
-        'Get it from https://github.com/kando-menu/kando/releases.',
+        i18next.t('main.new-version-notification-header'),
+        i18next
+          .t('main.new-version-notification-body')
+          .replace('%s', 'https://github.com/kando-menu/kando/releases'),
         () => {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
         }
@@ -675,7 +677,7 @@ export class KandoApp {
       const trigger =
         (this.backend.getBackendInfo().supportsShortcuts
           ? menu.shortcut
-          : menu.shortcutID) || i18next.t('properties.common.not-bound');
+          : menu.shortcutID) || i18next.t('settings.not-bound');
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {

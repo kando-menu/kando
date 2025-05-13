@@ -27,7 +27,7 @@ export class FileItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.file.name');
+    return i18next.t('menu-items.file.name');
   }
 
   get defaultIcon(): string {
@@ -45,6 +45,6 @@ export class FileItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.file.description');
+    return i18next.t('menu-items.file.description');
   }
 }
