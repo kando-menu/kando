@@ -36,8 +36,8 @@ export default () => {
   return (
     <>
       <TextInput
-        label={i18next.t('menu-items.command.command')}
-        info={i18next.t('menu-items.command.command-info')}
+        placeholder={i18next.t('menu-items.command.placeholder')}
+        multiline
         initialValue={data.command}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -65,6 +65,9 @@ export default () => {
           i18next.t('menu-items.command.tip-3'),
           i18next.t('menu-items.command.tip-4'),
           i18next.t('menu-items.command.tip-5'),
+          i18next
+            .t('menu-items.command.tip-6')
+            .replace('%s', 'https://kando.menu/item-run-command/'),
         ]}
       />
     </>

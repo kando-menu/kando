@@ -201,13 +201,13 @@
     "command": {
       "name": "Run Command",
       "description": "Runs any command.",
-      "command": "Command",
-      "command-info": "This command will be executed when the item is activated.",
+      "placeholder": "Insert any command…",
       "tip-1": "You can use the Command item type to launch applications or scripts.",
       "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
       "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
       "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
-      "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
+      "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
+      "tip-6": "Click [here](%s) you can learn how to to find the commands for launching some of your apps."
     },
     "file": {
       "name": "Open File",
