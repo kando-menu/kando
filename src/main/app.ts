@@ -300,7 +300,11 @@ export class KandoApp {
   public showSettings() {
     // Focus the settings window if it is already open.
     if (this.settingsWindow) {
-      this.settingsWindow.focus();
+      if (this.settingsWindow.isMinimized()) {
+        this.settingsWindow.restore();
+      } else {
+        this.settingsWindow.focus();
+      }
       return;
     }
 
