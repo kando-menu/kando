@@ -1,198 +1,200 @@
 {
-  "backends": {
-    "gnome": {
-      "error": "Não foi possível se conectar a extensão do GNOME Shell \"Kando Integration\". Você pode obtê-la a partir daqui: %s"
+    "backends": {
+        "gnome": {
+            "error": "Não foi possível se conectar a extensão do GNOME Shell \"Kando Integration\". Você pode obtê-la a partir daqui: %s"
+        },
+        "hyprland": {
+            "shortcut-info": "Use o arquivo hyprland.conf para vincular isso."
+        },
+        "kde-wayland": {
+            "shortcut-info": "Use as configurações do sistema do KDE para ligar isso."
+        }
     },
-    "hyprland": {
-      "shortcut-info": "Use o arquivo hyprland.conf para vincular isso."
+    "example-menu": {
+        "apps": {
+            "apple-music": "Música",
+            "email": "E-Mail",
+            "file-browser": "Navegador de Arquivos",
+            "finder": "Finder",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "safari": "Safari",
+            "submenu": "Aplicativos",
+            "terminal": "Terminal",
+            "web-browser": "Navegador de Web"
+        },
+        "audio": {
+            "mute": "Mutar",
+            "next-track": "Próxima Faixa",
+            "play-pause": "Tocar / Pausar",
+            "previous-track": "Trilha Anterior",
+            "submenu": "Áudio"
+        },
+        "bookmarks": {
+            "desktop": "Área de trabalho",
+            "documents": "Documentos",
+            "downloads": "Downloads",
+            "home": "Home",
+            "music": "Música",
+            "pictures": "Imagens",
+            "submenu": "Favoritos",
+            "videos": "Vídeos"
+        },
+        "clipboard": {
+            "copy": "Copiar",
+            "cut": "Recortar",
+            "paste": "Colar",
+            "submenu": "Área de Transferência"
+        },
+        "name": "Exemplo de Menu",
+        "next-workspace": "Próximo Espaço de Trabalho",
+        "previous-workspace": "Espaço de Trabalho Anterior",
+        "web-links": {
+            "google": "Google",
+            "kando-on-discord": "Kando em Discord",
+            "kando-on-github": "Kando em GitHub",
+            "kando-on-kofi": "Kando em Ko-fi",
+            "kando-on-youtube": "Kando no YouTube",
+            "submenu": "Links da Web"
+        },
+        "windows": {
+            "close-window": "Fechar Janela",
+            "mission-control": "Mission Control",
+            "submenu": "Janelas",
+            "tile-left": "Ajustar para Esquerda",
+            "tile-right": "Ajustar para Direita",
+            "toggle-maximize": "Alternar Maximizado"
+        }
     },
-    "kde-wayland": {
-      "shortcut-info": "Use as configurações do sistema do KDE para ligar isso."
-    }
-  },
-  "example-menu": {
-    "apps": {
-      "apple-music": "Música",
-      "email": "E-Mail",
-      "file-browser": "Navegador de Arquivos",
-      "finder": "Finder",
-      "gimp": "GIMP",
-      "paint": "Paint",
-      "safari": "Safari",
-      "submenu": "Aplicativos",
-      "terminal": "Terminal",
-      "web-browser": "Navegador de Web"
+    "main": {
+        "failed-to-start-header": "Kando não conseguiu se iniciar",
+        "inhibit-shortcuts": "Desabilite os atalhos temporariamente",
+        "new-version-notification-header": "Uma nova versão do Kando está disponível!",
+        "quit": "Sair",
+        "show-settings": "Mostrar Configurações",
+        "un-inhibit-shortcuts": "Reativar Atalhos"
     },
-    "audio": {
-      "mute": "Mutar",
-      "next-track": "Próxima Faixa",
-      "play-pause": "Tocar / Pausar",
-      "previous-track": "Trilha Anterior",
-      "submenu": "Áudio"
-    },
-    "bookmarks": {
-      "desktop": "Área de trabalho",
-      "documents": "Documentos",
-      "downloads": "Downloads",
-      "home": "Home",
-      "music": "Música",
-      "pictures": "Imagens",
-      "submenu": "Favoritos",
-      "videos": "Vídeos"
-    },
-    "clipboard": {
-      "copy": "Copiar",
-      "cut": "Recortar",
-      "paste": "Colar",
-      "submenu": "Área de Transferência"
-    },
-    "name": "Exemplo de Menu",
-    "next-workspace": "Próximo Espaço de Trabalho",
-    "previous-workspace": "Espaço de Trabalho Anterior",
-    "web-links": {
-      "google": "Google",
-      "kando-on-discord": "Kando em Discord",
-      "kando-on-github": "Kando em GitHub",
-      "kando-on-kofi": "Kando em Ko-fi",
-      "kando-on-youtube": "Kando no YouTube",
-      "submenu": "Links da Web"
-    },
-    "windows": {
-      "close-window": "Fechar Janela",
-      "mission-control": "Mission Control",
-      "submenu": "Janelas",
-      "tile-left": "Ajustar para Esquerda",
-      "tile-right": "Ajustar para Direita",
-      "toggle-maximize": "Alternar Maximizado"
-    }
-  },
-  "main": {
-    "failed-to-start-header": "Kando não conseguiu se iniciar",
-    "inhibit-shortcuts": "Desabilite os atalhos temporariamente",
-    "new-version-notification-header": "Uma nova versão do Kando está disponível!",
-    "quit": "Sair",
-    "show-settings": "Mostrar Configurações",
-    "un-inhibit-shortcuts": "Reativar Atalhos"
-  },
-  "menu-items": {
-    "command": {
-      "command": "Comando",
-      "command-info": "Isso será executado.",
-      "description": "Executa qualquer comando do shell.",
-      "name": "Executar Comando",
-      "tip-1": "Você pode usar o item do tipo Comando para iniciar aplicativos ou scripts.",
-      "tip-2": "Se o caminho para um executável contem espaços, você deve \"colocar entre aspas\".",
-      "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
-      "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
-      "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto."
-    },
-    "file": {
-      "description": "Abre um arquivo ou pasta.",
-      "file": "Caminho do Arquivo",
-      "name": "Abrir Arquivo",
-      "tip-1": "Você pode usar esse tipo de item para abrir arquivos ou pastas."
-    },
-    "hotkey": {
-      "description": "Pressione um atalho de teclado.",
-      "hotkey": "Tecla de Atalho",
-      "name": "Simular atalho de teclado",
-      "recording-placeholder": "Pressione uma tecla de atalho…",
-      "tip-1": "Ao gravar uma tecla de atalho, você não precisa pressionar todas as teclas ao mesmo tempo. Você pode pressionar uma após a outra.",
-      "tip-2": "Se você não consegue gravar uma tecla porque ela é usada pelo sistema, tente digitar o nome da tecla diretamente."
-    },
-    "macro": {
-      "description": "Digita um macro de teclado.",
-      "name": "Simular Macro",
-      "placeholder": "Aperte o botão de gravação para começar a gravar!",
-      "recording-placeholder": "Pressione as teclas…",
-      "tip-1": "Por padrão, Kando adiciona 10ms de delay antes de cada evento de tecla. Você pode mudar isso com a propriedade \"delay\"."
-    },
-    "redirect": {
-      "description": "Abre outro menu",
-      "name": "Redirecionar"
+    "menu-items": {
+        "command": {
+            "command": "Comando",
+            "command-info": "Isso será executado.",
+            "description": "Executa qualquer comando do shell.",
+            "name": "Executar Comando",
+            "tip-1": "Você pode usar o item do tipo Comando para iniciar aplicativos ou scripts.",
+            "tip-2": "Se o caminho para um executável contem espaços, você deve \"colocar entre aspas\".",
+            "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
+            "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
+            "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto."
+        },
+        "file": {
+            "description": "Abre um arquivo ou pasta.",
+            "file": "Caminho do Arquivo",
+            "name": "Abrir Arquivo",
+            "tip-1": "Você pode usar esse tipo de item para abrir arquivos ou pastas."
+        },
+        "hotkey": {
+            "description": "Pressione um atalho de teclado.",
+            "hotkey": "Tecla de Atalho",
+            "name": "Simular atalho de teclado",
+            "recording-placeholder": "Pressione uma tecla de atalho…",
+            "tip-1": "Ao gravar uma tecla de atalho, você não precisa pressionar todas as teclas ao mesmo tempo. Você pode pressionar uma após a outra.",
+            "tip-2": "Se você não consegue gravar uma tecla porque ela é usada pelo sistema, tente digitar o nome da tecla diretamente."
+        },
+        "macro": {
+            "description": "Digita um macro de teclado.",
+            "name": "Simular Macro",
+            "placeholder": "Aperte o botão de gravação para começar a gravar!",
+            "recording-placeholder": "Pressione as teclas…",
+            "tip-1": "Por padrão, Kando adiciona 10ms de delay antes de cada evento de tecla. Você pode mudar isso com a propriedade \"delay\"."
+        },
+        "redirect": {
+            "description": "Abre outro menu",
+            "name": "Redirecionar"
+        },
+        "settings": {
+            "name": "Abrir Ajustes",
+            "tip-1": "Está ação abrirá a janela de configurações Kando."
+        },
+        "submenu": {
+            "description": "Contém outros itens de menu.",
+            "detailed-description_one": "",
+            "detailed-description_many": "Contém {{count}} itens de menu.",
+            "detailed-description_other": "",
+            "name": "Submenu",
+            "tip-1": "Submenus podem ser usados para agrupar itens.",
+            "tip-2": "Você também pode aninhar submenus dentro de submenus.",
+            "tip-3": "Submenus podem ser usados para criar estruturas de menu complexas.",
+            "tip-4": "Você deve evitar usar mais que doze itens em um submenu. Oito é um bom número.",
+            "tip-5": "Você pode usar os pequenos ícones de cadeado na pré-visualização para fixar a posição de um item no menu.",
+            "tip-6": "Você pode reordenar os items arrastando-os na pré-visualização."
+        },
+        "text": {
+            "description": "Insere o texto fornecido.",
+            "name": "Pasta texto",
+            "placeholder": "Insira qualquer texto…",
+            "tip-1": "Esta ação usa sua área de transferência para colar o texto. Depois de usar a ação, a área de transferência conterá o texto."
+        },
+        "uri": {
+            "description": "Abre sites e mais.",
+            "name": "Abrir URI",
+            "tip-1": "Você pode usar o item URI para abrir um site usando o protocolo http://.",
+            "tip-2": "Você pode usar o item URI para abrir um arquivo ou pasta usando o protocolo file://.",
+            "tip-3": "Você pode usar o item URI para abrir um link do tipo mailto: .",
+            "tip-4": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
+            "tip-5": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
+            "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
+            "uri": "URI"
+        }
     },
     "settings": {
-      "name": "Abrir Ajustes",
-      "tip-1": "Está ação abrirá a janela de configurações Kando."
-    },
-    "submenu": {
-      "description": "Contém outros itens de menu.",
-      "detailed-description_many": "Contém {{count}} itens de menu.",
-      "name": "Submenu",
-      "tip-1": "Submenus podem ser usados para agrupar itens.",
-      "tip-2": "Você também pode aninhar submenus dentro de submenus.",
-      "tip-3": "Submenus podem ser usados para criar estruturas de menu complexas.",
-      "tip-4": "Você deve evitar usar mais que doze itens em um submenu. Oito é um bom número.",
-      "tip-5": "Você pode usar os pequenos ícones de cadeado na pré-visualização para fixar a posição de um item no menu.",
-      "tip-6": "Você pode reordenar os items arrastando-os na pré-visualização."
-    },
-    "text": {
-      "description": "Insere o texto fornecido.",
-      "name": "Pasta texto",
-      "placeholder": "Insira qualquer texto…",
-      "tip-1": "Esta ação usa sua área de transferência para colar o texto. Depois de usar a ação, a área de transferência conterá o texto."
-    },
-    "uri": {
-      "description": "Abre sites e mais.",
-      "name": "Abrir URI",
-      "tip-1": "Você pode usar o item URI para abrir um site usando o protocolo http://.",
-      "tip-2": "Você pode usar o item URI para abrir um arquivo ou pasta usando o protocolo file://.",
-      "tip-3": "Você pode usar o item URI para abrir um link do tipo mailto: .",
-      "tip-4": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
-      "tip-5": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
-      "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
-      "uri": "URI"
+        "about-dialog": {
+            "chrome-version": "Versão Chrome",
+            "electron-version": "Versão eletrônica",
+            "kando-backend": "Ao longo do back -end",
+            "kando-version": "Ao longo da versão"
+        },
+        "anchored-mode": "Modo Ancorado",
+        "app-condition": "Limite a Aplicativos Específicos",
+        "area-condition": "Limite à Área Específica da Tela",
+        "area-condition-bottom-placeholder": "Baixo",
+        "area-condition-left-placeholder": "Esquerda",
+        "area-condition-right-placeholder": "Direita",
+        "area-condition-top-placeholder": "Topo",
+        "cancel": "Cancelar",
+        "centered-mode": "Modo Centralizado",
+        "centered-mode-info": "Abra o menu no centro da tela em vez de onde o cursor está.",
+        "general-settings-dialog": {
+            "reload-menu-theme": "Recarregar Tema Atual do Menu",
+            "reload-menu-theme-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu.",
+            "reload-sound-theme": "Recarregue o tema do som atual"
+        },
+        "hover-mode-info": "Para power users somente! Selecione items flutuando sobre eles.",
+        "icon-picker-dialog": {
+            "base64-example": "Exemplo em Base64:",
+            "search-placeholder": "Pesquisa ícones…",
+            "url-example": "URL de exemplo:"
+        },
+        "introduction-dialog": {
+            "slide-1-caption": "Clique em Qualquer lugar: Você não tem que clicar exatamente em um item, você só tem que clicar em algum lugar próximo a ele!",
+            "slide-2-caption": "Voltar: Navegue rapidamente um nível acima clicando no item central.",
+            "slide-3-caption": "Modo de marcação: Arraste sobre um item para entrar no modo de marcação. Se você pausar o movimento do ponteiro ou fazer uma curva, o submenu arrastado no momento será aberto.",
+            "slide-4-caption": "Modo Turbo: Se você manter uma tecla pressionada após abrir o menu, você pode executar seleções apenas movendo o ponteiro. Esta é a maneira mais rápida de selecionar itens!",
+            "slide-5-caption": "Sem seleções acidentais: As ações só são executadas assim que você solta o botão do mouse em \"Modo de Marcação\" ou uma tecla de teclado no \"Modo Turbo\". Use isso para explorar o menu!",
+            "title": "Bem-vindo ao Kando!"
+        },
+        "menu-behavior": "Comportamento de menu",
+        "menu-conditions": "Condições do menu",
+        "menu-conditions-info": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
+        "menu-themes-dialog": {
+            "author": "por %s",
+            "light-dark-mode-info": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
+            "reset-color-picker": "Resetar todas as cores aos seus padrões",
+            "title": "Temas de Menu"
+        },
+        "not-bound": "Não Atribuído",
+        "shortcut-id-label": "ID de Atalho de Teclado Global",
+        "shortcut-label": "Atalho de Teclado",
+        "shortcut-recording": "Pressione um atalho de teclado…",
+        "window-condition": "Limite para Títulos de Janelas Especificas"
     }
-  },
-  "settings": {
-    "about-dialog": {
-      "chrome-version": "Versão Chrome",
-      "electron-version": "Versão eletrônica",
-      "kando-backend": "Ao longo do back -end",
-      "kando-version": "Ao longo da versão"
-    },
-    "anchored-mode": "Modo Ancorado",
-    "app-condition": "Limite a Aplicativos Específicos",
-    "area-condition": "Limite à Área Específica da Tela",
-    "area-condition-bottom-placeholder": "Baixo",
-    "area-condition-left-placeholder": "Esquerda",
-    "area-condition-right-placeholder": "Direita",
-    "area-condition-top-placeholder": "Topo",
-    "cancel": "Cancelar",
-    "centered-mode": "Modo Centralizado",
-    "centered-mode-info": "Abra o menu no centro da tela em vez de onde o cursor está.",
-    "general-settings-dialog": {
-      "reload-menu-theme": "Recarregar Tema Atual do Menu",
-      "reload-menu-theme-tooltip": "As alterações CSS serão aplicadas imediatamente. Para alterações feitas no arquivo theme.json, você precisa reabrir o menu.",
-      "reload-sound-theme": "Recarregue o tema do som atual"
-    },
-    "hover-mode-info": "Para power users somente! Selecione items flutuando sobre eles.",
-    "icon-picker-dialog": {
-      "base64-example": "Exemplo em Base64:",
-      "search-placeholder": "Pesquisa ícones…",
-      "url-example": "URL de exemplo:"
-    },
-    "introduction-dialog": {
-      "slide-1-caption": "Clique em Qualquer lugar: Você não tem que clicar exatamente em um item, você só tem que clicar em algum lugar próximo a ele!",
-      "slide-2-caption": "Voltar: Navegue rapidamente um nível acima clicando no item central.",
-      "slide-3-caption": "Modo de marcação: Arraste sobre um item para entrar no modo de marcação. Se você pausar o movimento do ponteiro ou fazer uma curva, o submenu arrastado no momento será aberto.",
-      "slide-4-caption": "Modo Turbo: Se você manter uma tecla pressionada após abrir o menu, você pode executar seleções apenas movendo o ponteiro. Esta é a maneira mais rápida de selecionar itens!",
-      "slide-5-caption": "Sem seleções acidentais: As ações só são executadas assim que você solta o botão do mouse em \"Modo de Marcação\" ou uma tecla de teclado no \"Modo Turbo\". Use isso para explorar o menu!",
-      "title": "Bem-vindo ao Kando!"
-    },
-    "menu-behavior": "Comportamento de menu",
-    "menu-conditions": "Condições do menu",
-    "menu-conditions-info": "Você pode ligar vários menus para o mesmo atalho de teclado, em seguida, escolher em que condições cada menu deve ser mostrado.",
-    "menu-themes-dialog": {
-      "author": "por %s",
-      "light-dark-mode-info": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
-      "reset-color-picker": "Resetar todas as cores aos seus padrões",
-      "title": "Temas de Menu"
-    },
-    "not-bound": "Não Atribuído",
-    "shortcut-id-label": "ID de Atalho de Teclado Global",
-    "shortcut-label": "Atalho de Teclado",
-    "shortcut-recording": "Pressione um atalho de teclado…",
-    "window-condition": "Limite para Títulos de Janelas Especificas"
-  }
 }
