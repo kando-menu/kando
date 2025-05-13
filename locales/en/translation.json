@@ -1,105 +1,15 @@
 {
-  "menu-items": {
-    "command": {
-      "name": "Run Command",
-      "description": "Runs any command.",
-      "command": "Command",
-      "command-info": "This command will be executed when the item is activated.",
-      "tip-1": "You can use the Command item type to launch applications or scripts.",
-      "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
-      "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
-      "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
-      "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
-    },
-    "file": {
-      "name": "Open File",
-      "description": "Opens a file or folder.",
-      "file": "File Path",
-      "file-info": "The file or folder will be opened with the corresponding default application.",
-      "tip-1": "You can use this item type to open files or folders."
-    },
-    "hotkey": {
-      "name": "Simulate Hotkey",
-      "description": "Presses a hotkey.",
-      "hotkey": "Hotkey",
-      "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
-      "recording-placeholder": "Type a hotkey…",
-      "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
-      "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
-      "tip-3": "Click [this link](%s) to see all valid key names."
-    },
-    "macro": {
-      "name": "Execute Macro",
-      "description": "Types a keyboard macro.",
-      "placeholder": "Hit the record button to start recording!",
-      "recording-placeholder": "Press any keys…",
-      "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
-      "tip-2": "You can edit the macro also by hand. This is useful if you want to adjust the timing of the keys."
-    },
-    "redirect": {
-      "name": "Redirect",
-      "description": "Opens another menu.",
-      "redirect": "Linked menu",
-      "redirect-info": "The menu will be opened when you activate this item."
-    },
-    "settings": {
-      "name": "Open Settings",
-      "description": "Opens the Kando settings window.",
-      "tip-1": "This item type opens the Kando settings window."
-    },
-    "submenu": {
-      "name": "Submenu",
-      "description": "Contains other menu items.",
-      "tip-1": "Submenus can be used to group items.",
-      "tip-2": "You can also nest submenus inside of submenus.",
-      "tip-3": "Submenus can be used to create complex menu structures.",
-      "tip-4": "You should avoid adding more than twelve items to a submenu. Eight is a good number.",
-      "tip-5": "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
-      "tip-6": "You can reorder items by dragging them in the preview.",
-      "tip-7": "You can delete a menu or a menu item with the trash icon below."
-    },
-    "text": {
-      "name": "Paste Text",
-      "description": "Inserts the given text.",
-      "placeholder": "Insert any text…",
-      "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text."
-    },
-    "uri": {
-      "name": "Open URI",
-      "description": "Opens websites and more.",
-      "uri": "URI",
-      "uri-info": "This will be opened with your default application for this URI type.",
-      "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
-      "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
-      "tip-3": "You can use the URI item type to open a mailto: link.",
-      "tip-4": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
-      "tip-5": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
-      "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
-    },
-    "common": {
-      "delayed-option": "Execute After Closing the Menu",
-      "delayed-option-info": "Useful if the action targets a window that needs to be focused."
-    }
-  },
-  "main": {
-    "new-version-notification-header": "A new version of Kando is available!",
-    "new-version-notification-body": "Get it from %s.",
-    "show-settings": "Show settings",
-    "un-inhibit-shortcuts": "Re-enable shortcuts",
-    "inhibit-shortcuts": "Temporarily disable all shortcuts",
-    "quit": "Quit",
-    "invalid-link-header": "Invalid link",
-    "invalid-link-message": "The deep link could not be parsed.",
-    "failed-to-start-header": "Kando failed to start"
-  },
   "settings": {
-    "not-bound": "Not Bound",
     "icon-picker-dialog": {
+      "base64-hint": "Base64 encoded icons provide an easy way to include any kind of icon into your menus. You can use a service like [www.base64-image.de](%s) to convert any image into a base64 encoded string. This even works for animated gifs!",
       "base64-example": "Base64 example:",
       "file-example": "file: URI example:",
       "url-example": "URL example:",
-      "search-placeholder": "Search Icons…"
+      "search-placeholder": "Search Icons…",
+      "hint": "Learn [here](%s) how to add or create your own icon themes."
     },
+    "not-bound": "Not Bound",
+    "invalid-dropdown-selection": "Select an option…",
     "add-tags-placeholder": "Add tags…",
     "about-dialog": {
       "title": "About Kando",
@@ -259,7 +169,126 @@
     "shortcut-info": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
     "shortcut-recording": "Press a shortcut…",
     "shortcut-id-label": "Shortcut ID",
-    "cancel": "Cancel"
+    "tags": "Tags",
+    "tags-info": "Tags can be used to group menus in menu collections.",
+    "duplicate-menu": "Duplicate menu",
+    "duplicate-menu-item": "Duplicate menu item",
+    "delete-menu": "Delete menu",
+    "delete-menu-item": "Delete menu item",
+    "screen-area-picker": {
+      "top-left-value": "Left: %x, Top: %y",
+      "top-left": "Drag this to the top left corner of your area.",
+      "bottom-right-value": "Right: %x, Bottom: %y",
+      "bottom-right": "Drag this to the bottom right corner of your area.",
+      "title": "Pick a Screen Area",
+      "valid": "Great! You have selected a valid area.",
+      "invalid": "Make sure the top left corner is above and to the left of the bottom right corner.",
+      "confirm": "Use this area"
+    },
+    "cancel": "Cancel",
+    "window-picker-dialog": {
+      "result": "You selected \"%s\".",
+      "instructions": "Hit the button below and focus the target window within the next five seconds.",
+      "restart-countdown": "Start countdown again",
+      "start-countdown": "Start countdown",
+      "countdown": "Selecting in %i seconds…",
+      "pick-app-name-title": "Select an Application Name",
+      "pick-window-title-title": "Select a Window Title",
+      "confirm": "Use this value"
+    }
+  },
+  "menu-items": {
+    "command": {
+      "name": "Run Command",
+      "description": "Runs any command.",
+      "command": "Command",
+      "command-info": "This command will be executed when the item is activated.",
+      "tip-1": "You can use the Command item type to launch applications or scripts.",
+      "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
+      "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
+      "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
+      "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
+    },
+    "file": {
+      "name": "Open File",
+      "description": "Opens a file or folder.",
+      "file": "File Path",
+      "file-info": "The file or folder will be opened with the corresponding default application.",
+      "tip-1": "You can use this item type to open files or folders."
+    },
+    "hotkey": {
+      "name": "Simulate Hotkey",
+      "description": "Presses a hotkey.",
+      "hotkey": "Hotkey",
+      "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
+      "recording-placeholder": "Type a hotkey…",
+      "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
+      "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
+      "tip-3": "Click [this link](%s) to see all valid key names."
+    },
+    "macro": {
+      "name": "Execute Macro",
+      "description": "Types a keyboard macro.",
+      "placeholder": "Hit the record button to start recording!",
+      "recording-placeholder": "Press any keys…",
+      "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
+      "tip-2": "You can edit the macro also by hand. This is useful if you want to adjust the timing of the keys."
+    },
+    "redirect": {
+      "name": "Redirect",
+      "description": "Opens another menu.",
+      "redirect": "Linked menu",
+      "redirect-info": "The menu will be opened when you activate this item."
+    },
+    "settings": {
+      "name": "Open Settings",
+      "description": "Opens the Kando settings window.",
+      "tip-1": "This item type opens the Kando settings window."
+    },
+    "submenu": {
+      "name": "Submenu",
+      "description": "Contains other menu items.",
+      "tip-1": "Submenus can be used to group items.",
+      "tip-2": "You can also nest submenus inside of submenus.",
+      "tip-3": "Submenus can be used to create complex menu structures.",
+      "tip-4": "You should avoid adding more than twelve items to a submenu. Eight is a good number.",
+      "tip-5": "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
+      "tip-6": "You can reorder items by dragging them in the preview.",
+      "tip-7": "You can delete a menu or a menu item with the trash icon below."
+    },
+    "text": {
+      "name": "Paste Text",
+      "description": "Inserts the given text.",
+      "placeholder": "Insert any text…",
+      "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text."
+    },
+    "uri": {
+      "name": "Open URI",
+      "description": "Opens websites and more.",
+      "uri": "URI",
+      "uri-info": "This will be opened with your default application for this URI type.",
+      "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
+      "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
+      "tip-3": "You can use the URI item type to open a mailto: link.",
+      "tip-4": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
+      "tip-5": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
+      "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
+    },
+    "common": {
+      "delayed-option": "Execute After Closing the Menu",
+      "delayed-option-info": "Useful if the action targets a window that needs to be focused."
+    }
+  },
+  "main": {
+    "new-version-notification-header": "A new version of Kando is available!",
+    "new-version-notification-body": "Get it from %s.",
+    "show-settings": "Show settings",
+    "un-inhibit-shortcuts": "Re-enable shortcuts",
+    "inhibit-shortcuts": "Temporarily disable all shortcuts",
+    "quit": "Quit",
+    "invalid-link-header": "Invalid link",
+    "invalid-link-message": "The deep link could not be parsed.",
+    "failed-to-start-header": "Kando failed to start"
   },
   "example-menu": {
     "name": "Example Menu",

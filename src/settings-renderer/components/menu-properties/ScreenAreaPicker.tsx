@@ -46,17 +46,23 @@ export default (props: IProps) => {
 
   const getTopLeftValue = () => {
     if (leftTop) {
-      return `Left: ${leftTop.x}, Top: ${leftTop.y}`;
+      return i18next
+        .t('settings.screen-area-picker.top-left-value')
+        .replace('%x', leftTop.x.toString())
+        .replace('%y', leftTop.y.toString());
     } else {
-      return 'Drag this to the top left corner of your area.';
+      return i18next.t('settings.screen-area-picker.top-left');
     }
   };
 
   const getBottomRightValue = () => {
     if (rightBottom) {
-      return `Right: ${rightBottom.x}, Bottom: ${rightBottom.y}`;
+      return i18next
+        .t('settings.screen-area-picker.bottom-right-value')
+        .replace('%x', rightBottom.x.toString())
+        .replace('%y', rightBottom.y.toString());
     } else {
-      return 'Drag this to the bottom right corner of your area.';
+      return i18next.t('settings.screen-area-picker.bottom-right');
     }
   };
 
@@ -85,7 +91,7 @@ export default (props: IProps) => {
 
   return (
     <Modal
-      title="Pick a Screen Area"
+      title={i18next.t('settings.screen-area-picker.title')}
       icon={<PiSelection />}
       visible={props.visible}
       onClose={props.onClose}
@@ -93,9 +99,8 @@ export default (props: IProps) => {
       <div className={classes.container}>
         <div className={classes.leftTopValue}>{getTopLeftValue()}</div>
         <div className={classes.area}>
-          {isValid() && 'Great! You have selected a valid area.'}
-          {isInvalid() &&
-            'Make sure the top left corner is above and to the left of the bottom right corner.'}
+          {isValid() && i18next.t('settings.screen-area-picker.valid')}
+          {isInvalid() && i18next.t('settings.screen-area-picker.invalid')}
           <div className={classes.leftTopPicker}>
             <div
               className={classes.crosshair}
@@ -136,7 +141,7 @@ export default (props: IProps) => {
             }}
           />
           <Button
-            label="Use this area"
+            label={i18next.t('settings.screen-area-picker.confirm')}
             variant="primary"
             disabled={!isValid()}
             icon={<TbCheck />}

@@ -158,8 +158,8 @@ export default () => {
               // If the selected item is the root of the menu, we show the tag editor.
               isRoot && (
                 <TagInput
-                  label="Tags"
-                  info="Tags can be used to group menus in menu collections."
+                  label={i18next.t('settings.tags')}
+                  info={i18next.t('settings.tags-info')}
                   tags={menuTags}
                   onChange={(newTags) => {
                     editMenu(selectedMenu, (menu) => {
@@ -187,7 +187,11 @@ export default () => {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbCopy />}
-            tooltip={isRoot ? 'Duplicate menu' : 'Duplicate menu item'}
+            tooltip={
+              isRoot
+                ? i18next.t('settings.duplicate-menu')
+                : i18next.t('settings.duplicate-menu-item')
+            }
             variant="floating"
             size="large"
             grouped
@@ -201,7 +205,11 @@ export default () => {
           />
           <Button
             icon={<TbTrash />}
-            tooltip={isRoot ? 'Delete menu' : 'Delete menu item'}
+            tooltip={
+              isRoot
+                ? i18next.t('settings.delete-menu')
+                : i18next.t('settings.delete-menu-item')
+            }
             variant="floating"
             size="large"
             grouped

@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import i18next from 'i18next';
 import { IIconTheme } from './icon-theme-registry';
 
 /**
@@ -43,7 +44,9 @@ export class Base64Theme implements IIconTheme {
   get iconPickerInfo() {
     return {
       type: 'base64' as const,
-      hint: "Base64 encoded icons provide an easy way to include any kind of icon into your menus. You can use a service like <a href='https://www.base64-image.de/' target='_blank'>www.base64-image.de</a> to convert any image into a base64 encoded string. This even works for animated gifs!",
+      hint: i18next
+        .t('settings.icon-picker-dialog.base64-hint')
+        .replace('%s', 'https://www.base64-image.de/'),
     };
   }
 }

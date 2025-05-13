@@ -91,7 +91,7 @@
     },
     "common": {
       "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
-      "delayed-option": "Nach dem Schließen des Menüs ausführen"
+      "delayed-option": "Auf Schließen des Menüs warten"
     },
     "file": {
       "description": "Öffnet eine Datei oder einen Ordner.",
@@ -188,6 +188,26 @@
     "area-condition-tooltip": "Wählen Sie einen Bildschirmbereich aus",
     "area-condition": "Auf Bildschirmzone beschränken",
     "cancel": "Abbrechen",
+    "window-picker-dialog": {
+      "result": "Sie haben \"%s\" ausgewählt.",
+      "instructions": "Klicken Sie auf die Schaltfläche unten und fokussieren Sie das Ziel-Fenster innerhalb der nächsten fünf Sekunden.",
+      "restart-countdown": "Countdown erneut starten",
+      "start-countdown": "Countdown starten",
+      "countdown": "Auswahl in %i Sekunden…",
+      "pick-app-name-header": "Anwendungsnamen auswählen",
+      "pick-window-title-header": "Fenstertitel auswählen",
+      "confirm": "Diesen Wert verwenden"
+    },
+    "screen-area-picker": {
+      "top-left-value": "Links: %x, Oben: %y",
+      "top-left": "Ziehen Sie dies in die obere linke Ecke Ihres Bereichs.",
+      "bottom-right-value": "Rechts: %x, Unten: %y",
+      "bottom-right": "Ziehen Sie dies in die untere rechte Ecke Ihres Bereichs.",
+      "title": "Bildschirmbereich auswählen",
+      "valid": "Super! Sie haben einen gültigen Bereich ausgewählt.",
+      "invalid": "Stellen Sie sicher, dass die obere linke Ecke über und links von der unteren rechten Ecke liegt.",
+      "confirm": "Diesen Bereich verwenden"
+    },
     "centered-mode-info": "Öffnen Sie das Menü in der Bildschirmmitte statt am Mauszeiger.",
     "centered-mode": "Zentrierter Modus",
     "create-menu-button": "Neues Menü",
@@ -264,7 +284,7 @@
       "gesture-jitter-threshold": "Schwellenwert für Gesten-Zittern",
       "gesture-jitter-threshold-info": "Kleinere Bewegungen werden bei der Gestenerkennung nicht berücksichtigt. Standard ist 10px.",
       "gesture-pause-timeout": "Gesten-Pause-Timeout",
-      "gesture-pause-timeout-info": "Halten Sie Ihre Geste so lange an, um eine Auswahl auszulösen. Standard ist 100ms.",
+      "gesture-pause-timeout-info": "Unterbrechen Sie Ihre Geste so lange an, um eine Auswahl auszulösen. Standard ist 100ms.",
       "fixed-stroke-length": "Feste Strichlänge",
       "fixed-stroke-length-info": "Normalerweise werden Elemente ausgewählt, wenn Sie die Bewegung stoppen oder eine Kurve zeichnen. Wenn Sie dies auf einen Wert größer als 0 setzen, ändert sich dieses Verhalten: Jetzt werden Elemente nur ausgewählt, wenn Sie ein Element so weit vom Zentrum weggezogen haben. Standard ist 0px.",
       "developer-options": "Entwickleroptionen",
@@ -274,10 +294,12 @@
     "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
     "hover-mode": "Hover-Modus",
     "icon-picker-dialog": {
+      "base64-hint": "Base64-codierte Symbole bieten eine einfache Möglichkeit, beliebige Symbole in Ihre Menüs einzufügen. Sie können einen Dienst wie [www.base64-image.de](%s) verwenden, um ein beliebiges Bild in einen Base64-codierten String zu konvertieren. Dies funktioniert sogar für animierte GIFs!",
       "base64-example": "Base64-Beispiel:",
       "file-example": "file: URI-Beispiel:",
       "search-placeholder": "Symbole suchen…",
-      "url-example": "URL-Beispiel:"
+      "url-example": "URL-Beispiel:",
+      "hint": "Erfahren Sie [hier](%s), wie Sie eigene Symbolthemen hinzufügen oder erstellen können."
     },
     "introduction-dialog": {
       "message": "Kando bietet eine einzigartige und effiziente Möglichkeit, mit Ihrem Computer zu interagieren. Schauen Sie sich die Videos unten an, um einen Eindruck davon zu bekommen, was Kando für Sie tun kann! Wenn Sie Hilfe benötigen, können Sie jederzeit unserem [Discord-Server](%s1) beitreten oder die [Dokumentation](%s2) lesen.",
@@ -289,6 +311,7 @@
       "slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
       "title": "Willkommen bei Kando!"
     },
+    "invalid-dropdown-selection": "Wählen Sie…",
     "menu-behavior-info": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando so gefällt!",
     "menu-behavior": "Menüverhalten",
     "menu-conditions-info": "Sie können mehrere Menüs an dieselbe Tastenkombo binden und dann auswählen, unter welchen Bedingungen sie angezeigt werden sollen.",
@@ -320,6 +343,12 @@
     "search-menus-placeholder": "Menüs durchsuchen…",
     "shortcut-info": "Diese Verknüpfung öffnet das Menü. Sie muss eine normale Taste und beliebig viele Modifikatoren wie Strg, Alt oder Umschalt enthalten. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn eine Verknüpfung bereits einem anderen Menü zugewiesen ist!",
     "shortcut-id-label": "Shortcut-ID",
+    "tags": "Tags",
+    "tags-info": "Tags können verwendet werden, um Menüs in Menüsammlungen zu gruppieren.",
+    "duplicate-menu": "Menü duplizieren",
+    "duplicate-menu-item": "Menüelement duplizieren",
+    "delete-menu": "Menü löschen",
+    "delete-menu-item": "Menüelement löschen",
     "shortcut-label": "Tastenkombo",
     "shortcut-recording": "Drücken Sie eine Kombo…",
     "undo": "Rückgängig",

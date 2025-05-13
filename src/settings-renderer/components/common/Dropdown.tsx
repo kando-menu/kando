@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
 import SettingsRow from './SettingsRow';
 
@@ -62,7 +63,7 @@ export default <T extends string>(props: IProps<T>) => {
           // If the initial value is invalid, we add a placeholder option.
           invalidSelection && (
             <option hidden disabled value="__invalid__">
-              Select an option…
+              {i18next.t('settings.invalid-dropdown-selection')}
             </option>
           )
         }
