@@ -11,11 +11,20 @@
 @use '../../variables.scss' as *;
 
 .note {
-  font-size: 0.8em;
-  line-height: 1.5em;
-  color: $text-muted;
-
   &.center {
     text-align: center;
+  }
+
+  &.big {
+    font-size: 1.2em;
+    line-height: 1.5em;
+    font-weight: 300;
+    color: $text-normal;
+  }
+
+  &.small {
+    font-size: 0.8em;
+    line-height: 1.5em;
+    color: $text-muted;
   }
 }
