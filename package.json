@@ -92,7 +92,6 @@
     "react-transition-group": "^4.4.5",
     "react-virtualized-auto-sizer": "^1.0.25",
     "react-window": "^1.8.11",
-    "rehype-external-links": "^3.0.0",
     "sass": "^1.87.0",
     "sass-loader": "^16.0.5",
     "simple-icons-font": "^14.12.3",

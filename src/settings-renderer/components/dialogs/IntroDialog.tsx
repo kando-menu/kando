@@ -10,13 +10,14 @@
 
 import React from 'react';
 import i18next from 'i18next';
-import Markdown from 'react-markdown';
-import rehypeExternalLinks from 'rehype-external-links';
 import { IoSchool } from 'react-icons/io5';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCards } from 'swiper/modules';
+import { EffectCards, Pagination } from 'swiper/modules';
+import type { Swiper as SwiperClass } from 'swiper';
+
 import 'swiper/css';
 import 'swiper/css/effect-cards';
+import 'swiper/css/pagination';
 
 import { useAppState, useGeneralSetting } from '../../state';
 import { SettingsCheckbox, Modal, Note } from '../common';
@@ -39,13 +40,51 @@ export default () => {
       setIntroDialogVisible(true);
     }
   }, []);
+  // Add state and ref for controlling Swiper
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const swiperRef = React.useRef<{ swiper: SwiperClass | null }>(null);
+
+  const makeVideoSlide = (num: number) => {
+    return (
+      <>
+        <video
+          src={require(`../../../../assets/videos/introduction-${num}.mp4`)}
+          autoPlay
+          loop
+        />
+        <div className={classes.caption}>
+          {i18next.t(`settings.introduction-dialog.slide-${num}-caption`)}
+        </div>
+      </>
+    );
+  };
 
   const slides = [
-    i18next.t('settings.introduction-dialog.slide-1-caption'),
-    i18next.t('settings.introduction-dialog.slide-2-caption'),
-    i18next.t('settings.introduction-dialog.slide-3-caption'),
-    i18next.t('settings.introduction-dialog.slide-4-caption'),
-    i18next.t('settings.introduction-dialog.slide-5-caption'),
+    <Note
+      style="big"
+      markdown
+      center
+      marginTop={10}
+      marginLeft={'10%'}
+      marginRight={'10%'}>
+      {i18next
+        .t('settings.introduction-dialog.message')
+        .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
+        .replace('%s2', 'https://kando.menu')}
+    </Note>,
+    makeVideoSlide(1),
+    makeVideoSlide(2),
+    makeVideoSlide(3),
+    makeVideoSlide(4),
+    makeVideoSlide(5),
+  ];
+
+  // Define chapter names and their corresponding slide indices
+  const chapters = [
+    { label: 'Getting Started', index: 0 },
+    { label: 'Marking Mode', index: 1 },
+    { label: 'Turbo Mode', index: 2 },
+    { label: 'Next Steps', index: 5 },
   ];
 
   return (
@@ -54,39 +93,48 @@ export default () => {
       icon={<IoSchool />}
       visible={introDialogVisible}
       onClose={() => setIntroDialogVisible(false)}
-      maxWidth={550}>
+      maxWidth={950}>
       <div className={classes.container}>
-        <div className={classes.hero}>
-          <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
-            {i18next
-              .t('settings.introduction-dialog.message')
-              .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
-              .replace('%s2', 'https://kando.menu')}
-          </Markdown>
+        <div className={classes.sidebar}>
+          {chapters.map((chapter) => (
+            <div
+              key={chapter.label}
+              className={
+                classes.chapter +
+                (activeIndex === chapter.index ? ' ' + classes.activeChapter : '')
+              }
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setActiveIndex(chapter.index);
+                if (swiperRef.current && swiperRef.current.swiper) {
+                  swiperRef.current.swiper.slideTo(chapter.index);
+                }
+              }}>
+              {chapter.label}
+            </div>
+          ))}
+          <div style={{ marginTop: 'auto' }}>
+            <SettingsCheckbox
+              label={i18next.t('settings.introduction-dialog.show-again')}
+              settingsKey="showIntroductionDialog"
+            />
+          </div>
         </div>
         <Swiper
           effect={'cards'}
           grabCursor={true}
-          modules={[EffectCards]}
-          className={classes.swiper}>
+          pagination
+          modules={[EffectCards, Pagination]}
+          className={classes.swiper}
+          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+          initialSlide={activeIndex}
+          ref={swiperRef}>
           {slides.map((slide, i) => (
             <SwiperSlide key={i} className={classes.slide}>
-              <video
-                src={require(`../../../../assets/videos/introduction-${i + 1}.mp4`)}
-                autoPlay
-                loop
-              />
-              <div className={classes.caption}>{slide}</div>
+              {slide}
             </SwiperSlide>
           ))}
         </Swiper>
-
-        <Note>
-          <SettingsCheckbox
-            label={i18next.t('settings.introduction-dialog.show-again')}
-            settingsKey="showIntroductionDialog"
-          />
-        </Note>
       </div>
     </Modal>
   );
