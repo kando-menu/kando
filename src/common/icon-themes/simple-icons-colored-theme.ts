@@ -43,7 +43,16 @@ export class SimpleIconsColoredTheme extends SimpleIconsTheme {
       type: 'list' as const,
       usesTextColor: false,
       listIcons: (searchTerm: string) => {
-        return matchSorter(this.iconNames, searchTerm);
+        return matchSorter(
+          this.iconNames,
+
+          // Replace special characters in the search term with their replacements.
+          // This is necessary because the icon names from the CSS file are always slugs.
+          searchTerm.replace(
+            this.titleToSlugCharsRegex,
+            (char) => this.titleToSlugReplacements[char]
+          )
+        );
       },
     };
   }
