@@ -20,7 +20,7 @@ interface IProps {
   children: React.ReactNode | string;
 
   /** How the note should be styled. Default is 'small'. */
-  style?: 'big' | 'normal' | 'small';
+  style?: 'hero' | 'big' | 'normal' | 'small';
 
   /** Whether the text should be centered. Defaults to false. */
   center?: boolean;
@@ -66,6 +66,7 @@ export default (props: IProps) => {
     <div
       className={cx({
         note: true,
+        hero: props.style === 'hero',
         big: props.style === 'big',
         normal: props.style === 'normal',
         small: !props.style || props.style === 'small',

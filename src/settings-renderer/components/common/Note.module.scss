@@ -11,20 +11,24 @@
 @use '../../variables.scss' as *;
 
 .note {
+  color: $text-normal;
+  line-height: 1.5em;
+
   &.center {
     text-align: center;
   }
 
+  &.hero {
+    font-size: 1.8em;
+    font-weight: 300;
+  }
+
   &.big {
     font-size: 1.2em;
-    line-height: 1.5em;
-    font-weight: 300;
-    color: $text-normal;
   }
 
   &.small {
     font-size: 0.8em;
-    line-height: 1.5em;
     color: $text-muted;
   }
 }
