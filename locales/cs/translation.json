@@ -175,11 +175,6 @@
       "url-example": "URL příklad:"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Klikněte kamkoliv: Nemusíte přesně kliknout na položku, stačí kliknout někam do jejího klínu!",
-      "slide-2-caption": "Vrátit se zpět: Rychle se vraťte o úroveň výš kliknutím na střední položku.",
-      "slide-3-caption": "Režim označování: Přetáhněte kurzor přes položku pro vstup do režimu označování. Pokud kurzor na chvíli zastavíte nebo změníte směr, aktuálně vybrané podmenu se otevře.",
-      "slide-4-caption": "Turbo režim: Pokud po otevření menu podržíte klávesu, můžete vybírat položky pouze pohybem kurzoru. Toto je nejrychlejší způsob výběru položek!",
-      "slide-5-caption": "Žádné náhodné výběry: Akce se vykonají až po uvolnění tlačítka myši v \"Režimu označování\" nebo klávesy v \"Turbo režimu\". Použijte tuto funkci k prozkoumání menu!",
       "title": "Vítejte v Kando!"
     },
     "menu-behavior": "Chování menu",

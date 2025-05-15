@@ -173,11 +173,6 @@
       "url-example": "URL de exemplo:"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Clique em Qualquer lugar: Você não tem que clicar exatamente em um item, você só tem que clicar em algum lugar próximo a ele!",
-      "slide-2-caption": "Voltar: Navegue rapidamente um nível acima clicando no item central.",
-      "slide-3-caption": "Modo de marcação: Arraste sobre um item para entrar no modo de marcação. Se você pausar o movimento do ponteiro ou fazer uma curva, o submenu arrastado no momento será aberto.",
-      "slide-4-caption": "Modo Turbo: Se você manter uma tecla pressionada após abrir o menu, você pode executar seleções apenas movendo o ponteiro. Esta é a maneira mais rápida de selecionar itens!",
-      "slide-5-caption": "Sem seleções acidentais: As ações só são executadas assim que você solta o botão do mouse em \"Modo de Marcação\" ou uma tecla de teclado no \"Modo Turbo\". Use isso para explorar o menu!",
       "title": "Bem-vindo ao Kando!"
     },
     "menu-behavior": "Comportamento de menu",

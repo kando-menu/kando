@@ -78,7 +78,7 @@ export default () => {
             {i18next.t('settings.general-settings-dialog.message').replace('%s', '')}
           </Note>
 
-          <Swirl variant="3" marginTop={10} width={350} marginBottom={20} />
+          <Swirl variant="2" marginTop={10} width={350} marginBottom={20} />
 
           <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox

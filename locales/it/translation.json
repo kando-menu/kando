@@ -151,11 +151,6 @@
       "search-placeholder": "Cerca Icone…"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Clicca Ovunque: Non devi cliccare neccessariamente su un elemento, basta che clicchi all’interno della sua ‘fetta’ (come per una torta)!",
-      "slide-2-caption": "Torna Indietro: Naviga rapidamente in sù di un livello cliccando sull’elemento centrale.",
-      "slide-3-caption": "Modalità Tracciamento: Trascina su un elemento per entrare in modalità tracciamento. Se ti soffermi con il puntatore o cambi direzione, si aprirà il sottomenù attualmente puntato.",
-      "slide-4-caption": "Modalità Turbo: Se mantieni un tasto premuto dopo aver aperto il menù, puoi effettuare selezioni semplicemente muovendo il puntatore. Questo è il modo più rapido per selezionare gli elementi!",
-      "slide-5-caption": "Nessuna selezione accidentale: Le azioni vengono eseguite solo quando lasci il bottone del mouse in “Modalità Tracciamento” o un tasto della tastiera in “Modalità Turbo”. Usa questo per esplorare il menù!",
       "title": "Benvenuto/a in Kando!"
     },
     "menu-behavior": "Comportamento del Menù",

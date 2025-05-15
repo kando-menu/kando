@@ -19,6 +19,10 @@ $text-normal: light-dark(#333, #eee);
 $text-inverted: light-dark(#eee, #fff);
 $text-muted: light-dark(#777, #aaa);
 $text-link: light-dark($key-dark, $key-light);
+$text-link-hover: light-dark(
+  color.adjust($key-dark, $lightness: 10%),
+  color.adjust($key-light, $lightness: 10%)
+);
 
 $toolbar-background: light-dark(
   color.adjust($base-light, $lightness: -10%),

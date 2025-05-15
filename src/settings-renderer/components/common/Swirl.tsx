@@ -13,18 +13,28 @@ import React from 'react';
 const swirl1 = require('../../../../assets/images/swirl1.svg');
 const swirl2 = require('../../../../assets/images/swirl2.svg');
 const swirl3 = require('../../../../assets/images/swirl3.svg');
+const swirl4 = require('../../../../assets/images/swirl4.svg');
 
 interface IProps {
-  variant: '1' | '2' | '3';
+  variant: '1' | '2' | '3' | '4';
   marginTop?: number;
   marginBottom?: number;
   width?: number | string;
 }
 
 export default (props: IProps) => {
+  const swirls = {
+    swirl1,
+    swirl2,
+    swirl3,
+    swirl4,
+  };
+
+  const swirlKey = `swirl${props.variant}` as keyof typeof swirls;
+
   return (
     <img
-      src={props.variant === '1' ? swirl1 : props.variant === '2' ? swirl2 : swirl3}
+      src={swirls[swirlKey]}
       style={{
         opacity: 0.5,
         marginTop: props.marginTop || 0,

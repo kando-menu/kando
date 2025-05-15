@@ -139,8 +139,6 @@
       "search-placeholder": "Etsi kuvakkeita…"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Napsauta missä tahansa: sinun ei välttämättä tarvitse napsauttaa täsmällisesti yksittäistä kohdetta, riittää että napsautat sen aktivointialuetta!",
-      "slide-2-caption": "Siirry takaisin: palaa yksi taso ylöspäin napsauttamalla keskimmäistä kohdetta.",
       "title": "Tervetuloa, tämä on Kando!"
     },
     "menu-behavior": "Valikon toiminta",

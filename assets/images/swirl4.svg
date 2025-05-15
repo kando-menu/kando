@@ -8,7 +8,7 @@
    version="1.1"
    id="svg3456"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   sodipodi:docname="swirl2.svg"
+   sodipodi:docname="swirl4.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,11 +24,11 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="9.5144352"
-     inkscape:cx="107.57338"
-     inkscape:cy="13.348139"
-     inkscape:window-width="3840"
-     inkscape:window-height="2091"
+     inkscape:zoom="4.7572176"
+     inkscape:cx="112.98621"
+     inkscape:cy="19.759449"
+     inkscape:window-width="1920"
+     inkscape:window-height="1131"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -43,7 +43,7 @@
     <g
        id="g1"
        style="opacity:0.75;stroke-width:0.974951"
-       transform="matrix(1.0256925,0,0,1.0256925,1.4185322,-4.3975528)">
+       transform="matrix(1.0256925,0,0,-1.0256925,1.4185322,325.59301)">
       <g
          id="g268"
          transform="matrix(0.35683258,0,0,0.35683258,-297.22751,152.52186)"

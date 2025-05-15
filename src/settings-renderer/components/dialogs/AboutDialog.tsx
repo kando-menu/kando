@@ -13,12 +13,10 @@ declare const window: WindowWithAPIs;
 
 import React from 'react';
 import i18next from 'i18next';
-import Markdown from 'react-markdown';
-import rehypeExternalLinks from 'rehype-external-links';
 import { TbExternalLink, TbHeartFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
-import { Swirl, Modal, Button } from '../common';
+import { Swirl, Modal, Button, Note } from '../common';
 
 import * as classes from './AboutDialog.module.scss';
 
@@ -44,14 +42,18 @@ export default () => {
       maxWidth={500}>
       <div className={classes.container}>
         <img src={logo} width={128} />
-        <div className={classes.hero}>
-          <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
-            {i18next
-              .t('settings.about-dialog.message')
-              .replace('%s', 'https://ko-fi.com/schneegans')}
-          </Markdown>
-        </div>
-        <Swirl variant="3" marginTop={30} marginBottom={20} width={350} />
+        <Note
+          style="big"
+          markdown
+          center
+          marginTop={10}
+          marginLeft={'10%'}
+          marginRight={'10%'}>
+          {i18next
+            .t('settings.about-dialog.message')
+            .replace('%s', 'https://ko-fi.com/schneegans')}
+        </Note>
+        <Swirl variant="2" marginTop={30} marginBottom={20} width={350} />
         <div className={classes.footer}>
           <div className={classes.versionInfo}>
             {`${i18next.t('settings.about-dialog.kando-version')}:`}

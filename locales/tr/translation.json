@@ -167,11 +167,6 @@
       "search-placeholder": "Simgeleri Ara…"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Herhangi Bir Yere Tıklayın: Tam olarak bir öğeye tıklamanız gerekmez, sadece diliminin herhangi bir yerine tıklamanız yeterlidir!",
-      "slide-2-caption": "Geri Git: Merkez öğeye tıklayarak hızlıca bir seviye yukarı gidin.",
-      "slide-3-caption": "İşaretleme Modu: İşaretleme moduna girmek için bir öğenin üzerinde sürükleyin. İşaretçi hareketini duraklatırsanız veya dönüş yaparsanız, o anda sürüklenen alt menü açılacaktır.",
-      "slide-4-caption": "Turbo Modu: Menüyü açtıktan sonra bir tuşu basılı tutarsanız, sadece işaretçiyi hareket ettirerek seçimler yapabilirsiniz. Bu, öğeleri seçmenin en hızlı yoludur!",
-      "slide-5-caption": "Yanlışlıkla seçim yok: Eylemler sadece \"İşaretleme Modunda\" fare düğmesini veya \"Turbo Modunda\" bir klavye tuşunu bıraktığınızda yürütülür. Menüyü keşfetmek için bunu kullanın!",
       "title": "Kando'ya Hoş Geldiniz!"
     },
     "menu-behavior": "Menü Davranışı",
