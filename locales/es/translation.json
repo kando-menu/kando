@@ -145,11 +145,6 @@
       "search-placeholder": "Buscando iconos…"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Haz clic en cualquier lugar: No tienes que hacer clic exactamente en el elemento, ¡sólo tienes que hacer clic en algún lugar de su área!",
-      "slide-2-caption": "Regresar: Puedes subir un nivel haciendo clic en el elemento central.",
-      "slide-3-caption": "Modo de marcado: Arrastre sobre un elemento para entrar en el modo de marcado. Si pausa el movimiento del puntero o hace un giro, se abrirá el submenú arrastrado actualmente.",
-      "slide-4-caption": "Modo Turbo: Si mantiene pulsada una tecla después de abrir el menú, puede realizar selecciones moviendo simplemente el puntero. ¡Esta es la forma más rápida de seleccionar elementos!",
-      "slide-5-caption": "Sin selecciones accidentales: las acciones solo se llevan a cabo tan pronto como se suelta el botón del mouse en \"modo de marcado\" o una tecla del teclado en \"modo turbo\". ¡Usa esto para explorar el menú!",
       "title": "Bienvenid@ a Kando!"
     },
     "menu-behavior": "Comportamiento del menú",

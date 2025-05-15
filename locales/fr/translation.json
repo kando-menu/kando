@@ -175,11 +175,6 @@
       "url-example": "Exemple d'URL :"
     },
     "introduction-dialog": {
-      "slide-1-caption": "Cliquez N'importe où : Il n'est pas nécessaire de cliquer exactement sur un élément, il suffit de cliquer quelque part dans sa zone !",
-      "slide-2-caption": "Retourner en Arrière : Remonter rapidement d'un niveau en cliquant sur l'élément central.",
-      "slide-3-caption": "Mode Marquage : Faites glisser le curseur sur un élément pour passer en mode marquage. Si le mouvement du curseur est interrompu ou si vous faites un virage, le sous-menu sur lequel vous avez glissé sera ouvert.",
-      "slide-4-caption": "Mode Turbo : Si vous maintenez une touche enfoncée après avoir ouvert le menu, vous pouvez effectuer des sélections en déplaçant simplement le curseur. C'est le moyen le plus rapide de sélectionner des éléments !",
-      "slide-5-caption": "Pas de sélections accidentelles : Les actions ne sont exécutées que lorsque vous relâchez le bouton de la souris en \"Mode Marquage\" ou une touche du clavier en \"Mode Turbo\". Profitez-en pour explorer le menu !",
       "title": "Bienvenue sur Kando !"
     },
     "menu-behavior": "Comportement du Menu",

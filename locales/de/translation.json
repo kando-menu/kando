@@ -304,11 +304,6 @@
     "introduction-dialog": {
       "message": "Kando bietet eine einzigartige und effiziente Möglichkeit, mit Ihrem Computer zu interagieren. Schauen Sie sich die Videos unten an, um einen Eindruck davon zu bekommen, was Kando für Sie tun kann! Wenn Sie Hilfe benötigen, können Sie jederzeit unserem [Discord-Server](%s1) beitreten oder die [Dokumentation](%s2) lesen.",
       "show-again": "Diesen Dialog erneut anzeigen",
-      "slide-1-caption": "Irgendwo Klicken: Sie müssen nicht genau auf ein Element klicken, Sie müssen nur irgendwo in dessen Bereich klicken!",
-      "slide-2-caption": "Zurück: Navigieren Sie schnell eine Ebene nach oben, indem Sie auf das mittlere Element klicken.",
-      "slide-3-caption": "Markierungsmodus: Ziehen Sie über ein Element, um in den Markierungsmodus zu wechseln. Wenn Sie die Zeigerbewegung pausieren oder eine Kurve zeichnen, wird das aktuell gezogene Untermenü geöffnet.",
-      "slide-4-caption": "Turbo-Modus: Wenn Sie nach dem Öffnen des Menüs eine Taste gedrückt halten, können Sie durch einfaches Bewegen des Zeigers eine Auswahl treffen. Dies ist der schnellste Weg, Einträge auszuwählen!",
-      "slide-5-caption": "Keine versehentlichen Auswahlen: Aktionen werden erst ausgeführt, sobald Sie im „Markierungsmodus“ die Maustaste oder im „Turbomodus“ eine Taste auf der Tastatur loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
       "title": "Willkommen bei Kando!"
     },
     "invalid-dropdown-selection": "Wählen Sie…",
