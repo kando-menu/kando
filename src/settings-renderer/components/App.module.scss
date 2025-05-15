@@ -36,7 +36,6 @@
   &.sakuraSystemFlavor,
   &.transparentSystemFlavor {
     color-scheme: light dark;
-    background-color: light-dark(rgba($base-light, 0.5), rgba($base-dark, 0.5));
   }
 
   &.sakuraDarkFlavor,
