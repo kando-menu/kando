@@ -236,6 +236,11 @@ $backlink-offset: 30cqmin;
           light-dark(rgba($base-dark, 0), rgba($base-light, 0)) 100%
         );
       }
+
+      // To keep arrow icon in the backlink button visually centered.
+      :global(i.material-symbols-rounded) {
+        transform: translateX(5cqi);
+      }
     }
   }
 }
