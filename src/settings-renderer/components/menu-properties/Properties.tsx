@@ -147,7 +147,7 @@ export default () => {
             }}
           />
         </div>
-        <Swirl variant="3" width="min(250px, 80%)" marginBottom={10} marginTop={10} />
+        <Swirl variant="2" width="min(250px, 80%)" marginBottom={10} marginTop={10} />
         <Scrollbox>
           <div className={classes.properties}>
             {

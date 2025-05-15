@@ -142,7 +142,7 @@ export default () => {
                   You currently have no menus. Click the button below to create a first
                   menu!
                 </Note>
-                <Swirl variant="3" marginTop={10} />
+                <Swirl variant="2" marginTop={10} />
               </div>
             )}
             {menus.length > 0 &&
@@ -151,7 +151,7 @@ export default () => {
                 <div key="-1" className={classes.message}>
                   <h1>No Matching Menus</h1>
                   <Note>Maybe try a different search term?</Note>
-                  <Swirl variant="3" marginTop={10} />
+                  <Swirl variant="2" marginTop={10} />
                 </div>
               )}
             {menus.length > 0 &&
@@ -163,7 +163,7 @@ export default () => {
                     Edit the tags above or add a completely new menu to this collection
                     with the button below.
                   </Note>
-                  <Swirl variant="3" marginTop={10} />
+                  <Swirl variant="2" marginTop={10} />
                 </div>
               )}
 

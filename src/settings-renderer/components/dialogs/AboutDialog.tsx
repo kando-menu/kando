@@ -53,7 +53,7 @@ export default () => {
             .t('settings.about-dialog.message')
             .replace('%s', 'https://ko-fi.com/schneegans')}
         </Note>
-        <Swirl variant="3" marginTop={30} marginBottom={20} width={350} />
+        <Swirl variant="2" marginTop={30} marginBottom={20} width={350} />
         <div className={classes.footer}>
           <div className={classes.versionInfo}>
             {`${i18next.t('settings.about-dialog.kando-version')}:`}
