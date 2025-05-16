@@ -30,6 +30,9 @@ interface IProps {
 
   /** Optional information to display next to the label. */
   info?: string;
+
+  /** Optional placeholder text to display in the input field. */
+  placeholder?: string;
 }
 
 /**
@@ -51,6 +54,7 @@ export default (props: IProps) => {
         <input
           type="text"
           spellCheck="false"
+          placeholder={props.placeholder}
           value={path}
           onChange={(event) => {
             setPath(event.target.value);

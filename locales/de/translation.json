@@ -81,7 +81,7 @@
     "command": {
       "command-info": "Dieser Befehl wird ausgeführt wenn das Element aktiviert wird.",
       "command": "Befehl",
-      "description": "Führt einen beliebigen Befehl aus.",
+      "description": "Startet Anwendungen oder Skripte.",
       "name": "Befehl Ausführen",
       "tip-1": "Mit dem Elementtyp „Befehl Ausführen“ können Sie Anwendungen oder Skripte starten.",
       "tip-2": "Wenn der Pfad zu einer ausführbaren Datei Leerzeichen enthält, sollten Sie ihn „in Anführungszeichen setzen“.",
@@ -101,7 +101,7 @@
       "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen."
     },
     "hotkey": {
-      "description": "Drückt einen Hotkey.",
+      "description": "Drückt eine Tastenkombination.",
       "hotkey-info": "Dieser Hotkey wird ausgelöst, wenn das Element ausgewählt wird. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn ein Hotkey bereits einer globalen Aktion zugewiesen ist!",
       "hotkey": "Hotkey",
       "name": "Hotkey Simulieren",
