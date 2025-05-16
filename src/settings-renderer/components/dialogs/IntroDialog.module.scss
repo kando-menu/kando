@@ -66,20 +66,12 @@
       height: 100%;
     }
 
-    @media (prefers-color-scheme: dark) {
-      &:not(:has(video)) {
-        background-image: url('../../../../assets/images/settings-sakura-dark.webp');
-      }
-    }
-
-    @media (prefers-color-scheme: light) {
-      &:not(:has(video)) {
-        background-image: url('../../../../assets/images/settings-sakura-light.webp');
-      }
-    }
-
     background-size: cover;
     background-position: center;
+
+    &:has(video) {
+      background: none;
+    }
 
     // Add some gloss.
     &::before {
@@ -158,4 +150,24 @@
       }
     }
   }
+}
+
+@media (prefers-color-scheme: dark) {
+  body:global(.systemColors) .slide {
+    background-image: url('../../../../assets/images/settings-sakura-dark.webp');
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body:global(.systemColors) .slide {
+    background-image: url('../../../../assets/images/settings-sakura-light.webp');
+  }
+}
+
+body:global(.lightColors) .slide {
+  background-image: url('../../../../assets/images/settings-sakura-light.webp');
+}
+
+body:global(.darkColors) .slide {
+  background-image: url('../../../../assets/images/settings-sakura-dark.webp');
 }
