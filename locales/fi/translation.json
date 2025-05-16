@@ -1,155 +1,155 @@
 {
-  "backends": {
-    "gnome": {
-      "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: %s"
+    "backends": {
+        "gnome": {
+            "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: %s"
+        },
+        "hyprland": {
+            "shortcut-info": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."
+        },
+        "kde-wayland": {
+            "shortcut-info": "Käytä KDE:n järjestelmäasetuksia sitoaksesi tämän."
+        }
     },
-    "hyprland": {
-      "shortcut-info": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."
+    "example-menu": {
+        "apps": {
+            "apple-music": "Musiikki",
+            "email": "Sähköposti",
+            "file-browser": "Tiedostonhallinta",
+            "finder": "Finder",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "safari": "Safari",
+            "submenu": "Sovellukset",
+            "terminal": "Pääte",
+            "web-browser": "Verkkoselain"
+        },
+        "audio": {
+            "mute": "Mykistä",
+            "next-track": "Seuraava kappale",
+            "play-pause": "Toista/keskeytä",
+            "previous-track": "Edellinen kappale",
+            "submenu": "Ääni"
+        },
+        "bookmarks": {
+            "desktop": "Työpöytä",
+            "documents": "Asiakirjat",
+            "downloads": "Lataukset",
+            "home": "Koti",
+            "music": "Musiikki",
+            "pictures": "Kuvat",
+            "submenu": "Kirjanmerkit",
+            "videos": "Videot"
+        },
+        "clipboard": {
+            "copy": "Kopioi",
+            "cut": "Leikkaa",
+            "paste": "Liitä",
+            "submenu": "Leikepöytä"
+        },
+        "name": "Valikon esimerkki",
+        "next-workspace": "Seuraava työtila",
+        "previous-workspace": "Edellinen työtila",
+        "web-links": {
+            "google": "Google",
+            "kando-on-discord": "Kando Discordissa",
+            "kando-on-github": "Kando GitHubissa",
+            "kando-on-kofi": "Kando Ko-fi:ssa",
+            "kando-on-youtube": "Kando YouTubessa",
+            "submenu": "Verkkolinkit"
+        },
+        "windows": {
+            "close-window": "Sulje ikkuna",
+            "mission-control": "Mission Control",
+            "submenu": "Ikkunat",
+            "tile-left": "Laatoita vasemmalle",
+            "tile-right": "Laatoita oikealle",
+            "toggle-maximize": "Suurenna päällä/pois"
+        }
     },
-    "kde-wayland": {
-      "shortcut-info": "Käytä KDE:n järjestelmäasetuksia sitoaksesi tämän."
-    }
-  },
-  "example-menu": {
-    "apps": {
-      "apple-music": "Musiikki",
-      "email": "Sähköposti",
-      "file-browser": "Tiedostonhallinta",
-      "finder": "Finder",
-      "gimp": "GIMP",
-      "paint": "Paint",
-      "safari": "Safari",
-      "submenu": "Sovellukset",
-      "terminal": "Pääte",
-      "web-browser": "Verkkoselain"
+    "main": {
+        "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
+        "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
+        "quit": "Lopeta",
+        "show-settings": "Näytä asetukset"
     },
-    "audio": {
-      "mute": "Mykistä",
-      "next-track": "Seuraava kappale",
-      "play-pause": "Toista/keskeytä",
-      "previous-track": "Edellinen kappale",
-      "submenu": "Ääni"
-    },
-    "bookmarks": {
-      "desktop": "Työpöytä",
-      "documents": "Asiakirjat",
-      "downloads": "Lataukset",
-      "home": "Koti",
-      "music": "Musiikki",
-      "pictures": "Kuvat",
-      "submenu": "Kirjanmerkit",
-      "videos": "Videot"
-    },
-    "clipboard": {
-      "copy": "Kopioi",
-      "cut": "Leikkaa",
-      "paste": "Liitä",
-      "submenu": "Leikepöytä"
-    },
-    "name": "Valikon esimerkki",
-    "next-workspace": "Seuraava työtila",
-    "previous-workspace": "Edellinen työtila",
-    "web-links": {
-      "google": "Google",
-      "kando-on-discord": "Kando Discordissa",
-      "kando-on-github": "Kando GitHubissa",
-      "kando-on-kofi": "Kando Ko-fi:ssa",
-      "kando-on-youtube": "Kando YouTubessa",
-      "submenu": "Verkkolinkit"
-    },
-    "windows": {
-      "close-window": "Sulje ikkuna",
-      "mission-control": "Mission Control",
-      "submenu": "Ikkunat",
-      "tile-left": "Laatoita vasemmalle",
-      "tile-right": "Laatoita oikealle",
-      "toggle-maximize": "Suurenna päällä/pois"
-    }
-  },
-  "main": {
-    "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
-    "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
-    "quit": "Lopeta",
-    "show-settings": "Näytä asetukset"
-  },
-  "menu-items": {
-    "command": {
-      "command": "Komento",
-      "command-info": "Tämä suoritetaan.",
-      "description": "Suorittaa komentorivikomennon.",
-      "name": "Suorita komento"
-    },
-    "file": {
-      "description": "Avaa tiedoston tai kansion.",
-      "file": "Tiedostopolku",
-      "name": "Avaa tiedosto"
-    },
-    "macro": {
-      "name": "Simuloi makro",
-      "recording-placeholder": "Paina näppäimiä…"
-    },
-    "redirect": {
-      "description": "Avaa toisen valikon",
-      "name": "Uudelleenohjaus"
+    "menu-items": {
+        "command": {
+            "command": "Komento",
+            "command-info": "Tämä suoritetaan.",
+            "description": "Suorittaa komentorivikomennon.",
+            "name": "Suorita komento"
+        },
+        "file": {
+            "description": "Avaa tiedoston tai kansion.",
+            "file": "Tiedostopolku",
+            "name": "Avaa tiedosto"
+        },
+        "macro": {
+            "name": "Simuloi makro",
+            "recording-placeholder": "Paina näppäimiä…"
+        },
+        "redirect": {
+            "description": "Avaa toisen valikon",
+            "name": "Uudelleenohjaus"
+        },
+        "settings": {
+            "description": "Avaa Kandon asetusikkunan.",
+            "name": "Avaa asetukset",
+            "tip-1": "Tämä toiminto avaa Kandon asetusikkunan."
+        },
+        "submenu": {
+            "description": "Sisältää muita valikkotietueita.",
+            "name": "Alivalikko"
+        },
+        "text": {
+            "name": "Liitä teksti",
+            "placeholder": "Syötä mitä tahansa tekstiä…"
+        },
+        "uri": {
+            "description": "Avaa tiedostoja tai verkkosivuja.",
+            "name": "Avaa URI"
+        }
     },
     "settings": {
-      "description": "Avaa Kandon asetusikkunan.",
-      "name": "Avaa asetukset",
-      "tip-1": "Tämä toiminto avaa Kandon asetusikkunan."
-    },
-    "submenu": {
-      "description": "Sisältää muita valikkotietueita.",
-      "name": "Alivalikko"
-    },
-    "text": {
-      "name": "Liitä teksti",
-      "placeholder": "Syötä mitä tahansa tekstiä…"
-    },
-    "uri": {
-      "description": "Avaa tiedostoja tai verkkosivuja.",
-      "name": "Avaa URI"
+        "about-dialog": {
+            "chrome-version": "Chrome-versio",
+            "electron-version": "Electron-versio",
+            "kando-backend": "Kando-taustaosa",
+            "kando-version": "Kando-versio"
+        },
+        "anchored-mode": "Ankkuroitu tila",
+        "app-condition": "Rajaa tiettyihin sovelluksiin",
+        "area-condition": "Rajaa tiettyyn näytön alueeseen",
+        "area-condition-bottom-placeholder": "Alaosa",
+        "area-condition-left-placeholder": "Vasen",
+        "area-condition-right-placeholder": "Oikea",
+        "area-condition-top-placeholder": "Yläosa",
+        "cancel": "Peru",
+        "centered-mode": "Keskitetty tila",
+        "centered-mode-info": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
+        "general-settings-dialog": {
+            "reload-menu-theme": "Lataa nykyinen valikkoteema uudelleen",
+            "reload-menu-theme-tooltip": "CSS-muutokset tulevat voimaan välittömästi, mutta theme.json-tiedostoon tehtyjen muutosten osalta valikko tulee avata uudelleen.",
+            "reload-sound-theme": "Lataa nykyinen ääniteema uudelleen"
+        },
+        "hover-mode": "Kohdistustila",
+        "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
+        "icon-picker-dialog": {
+            "base64-example": "Base64-esimerkki:",
+            "search-placeholder": "Etsi kuvakkeita…"
+        },
+        "introduction-dialog": {
+            "title": "Tervetuloa, tämä on Kando!"
+        },
+        "menu-behavior": "Valikon toiminta",
+        "menu-conditions": "Valikon ehdollisuudet",
+        "menu-themes-dialog": {
+            "author": "tekijä %s",
+            "reset-color-picker": "Palauta kaikkien värien oletusarvot",
+            "title": "Valikkoteemat"
+        },
+        "shortcut-label": "Pikanäppäin",
+        "shortcut-recording": "Paina pikanäppäintä…",
+        "window-condition": "Rajaa tiettyihin ikkunaotsikkoihin"
     }
-  },
-  "settings": {
-    "about-dialog": {
-      "chrome-version": "Chrome-versio",
-      "electron-version": "Electron-versio",
-      "kando-backend": "Kando-taustaosa",
-      "kando-version": "Kando-versio"
-    },
-    "anchored-mode": "Ankkuroitu tila",
-    "app-condition": "Rajaa tiettyihin sovelluksiin",
-    "area-condition": "Rajaa tiettyyn näytön alueeseen",
-    "area-condition-bottom-placeholder": "Alaosa",
-    "area-condition-left-placeholder": "Vasen",
-    "area-condition-right-placeholder": "Oikea",
-    "area-condition-top-placeholder": "Yläosa",
-    "cancel": "Peru",
-    "centered-mode": "Keskitetty tila",
-    "centered-mode-info": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
-    "general-settings-dialog": {
-      "reload-menu-theme": "Lataa nykyinen valikkoteema uudelleen",
-      "reload-menu-theme-tooltip": "CSS-muutokset tulevat voimaan välittömästi, mutta theme.json-tiedostoon tehtyjen muutosten osalta valikko tulee avata uudelleen.",
-      "reload-sound-theme": "Lataa nykyinen ääniteema uudelleen"
-    },
-    "hover-mode": "Kohdistustila",
-    "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
-    "icon-picker-dialog": {
-      "base64-example": "Base64-esimerkki:",
-      "search-placeholder": "Etsi kuvakkeita…"
-    },
-    "introduction-dialog": {
-      "title": "Tervetuloa, tämä on Kando!"
-    },
-    "menu-behavior": "Valikon toiminta",
-    "menu-conditions": "Valikon ehdollisuudet",
-    "menu-themes-dialog": {
-      "author": "tekijä %s",
-      "reset-color-picker": "Palauta kaikkien värien oletusarvot",
-      "title": "Valikkoteemat"
-    },
-    "shortcut-label": "Pikanäppäin",
-    "shortcut-recording": "Paina pikanäppäintä…",
-    "window-condition": "Rajaa tiettyihin ikkunaotsikkoihin"
-  }
 }
