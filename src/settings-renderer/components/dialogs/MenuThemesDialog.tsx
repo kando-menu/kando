@@ -128,16 +128,19 @@ export default () => {
                   name={key}
                   color={currentColors[key]}
                   onChange={(color) => {
-                    if (!currentColorOverrides[currentTheme.id]) {
-                      currentColorOverrides[currentTheme.id] = {};
+                    // Create a new object to avoid mutating the state directly.
+                    const overrides = lodash.cloneDeep(currentColorOverrides);
+
+                    if (!overrides[currentTheme.id]) {
+                      overrides[currentTheme.id] = {};
                     }
 
-                    currentColorOverrides[currentTheme.id][key] = color;
+                    overrides[currentTheme.id][key] = color;
 
                     if (darkMode && useDarkMode) {
-                      setDarkColors(currentColorOverrides);
+                      setDarkColors(overrides);
                     } else {
-                      setColors(currentColorOverrides);
+                      setColors(overrides);
                     }
                   }}
                 />
@@ -150,11 +153,13 @@ export default () => {
             tooltip={i18next.t('settings.menu-themes-dialog.reset-color-picker')}
             onClick={() => {
               if (darkMode && useDarkMode) {
-                delete darkColors[currentTheme.id];
-                setDarkColors(darkColors);
+                const updatedDarkColors = { ...darkColors };
+                delete updatedDarkColors[currentTheme.id];
+                setDarkColors(updatedDarkColors);
               } else {
-                delete colors[currentTheme.id];
-                setColors(colors);
+                const updatedColors = { ...colors };
+                delete updatedColors[currentTheme.id];
+                setColors(updatedColors);
               }
             }}
           />

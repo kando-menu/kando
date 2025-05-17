@@ -177,6 +177,12 @@ export class KandoApp {
     // available in both the menu window and the settings window.
     this.initCommonRendererAPI();
 
+    // Create and load the main window if it does not exist yet.
+    if (!this.generalSettings.get('lazyInitialization')) {
+      this.menuWindow = new MenuWindow(this);
+      await this.menuWindow.load();
+    }
+
     // Bind the shortcuts for all menus.
     await this.bindShortcuts();
 
@@ -207,12 +213,6 @@ export class KandoApp {
         }
       );
     });
-
-    // Create and load the main window if it does not exist yet.
-    if (!this.generalSettings.get('lazyInitialization')) {
-      this.menuWindow = new MenuWindow(this);
-      await this.menuWindow.load();
-    }
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */
@@ -316,22 +316,20 @@ export class KandoApp {
     });
   }
 
-  /** This is called when the --reload-menu-theme command line option is passed. */
+  /**
+   * This is called when the --reload-menu-theme command line option is passed or when the
+   * respective button in the settings is pressed.
+   */
   public reloadMenuTheme() {
-    this.menuWindow?.webContents.send(
-      `general-settings-changed-menuTheme`,
-      this.generalSettings.get('menuTheme'),
-      this.generalSettings.get('menuTheme')
-    );
+    this.menuWindow?.webContents.send('menu-window.reload-menu-theme');
   }
 
-  /** This is called when the --reload-sound-theme command line option is passed. */
+  /**
+   * This is called when the --reload-sound-theme command line option is passed or when
+   * the respective button in the settings is pressed.
+   */
   public reloadSoundTheme() {
-    this.menuWindow?.webContents.send(
-      `general-settings-changed-soundTheme`,
-      this.generalSettings.get('soundTheme'),
-      this.generalSettings.get('soundTheme')
-    );
+    this.menuWindow?.webContents.send('menu-window.reload-sound-theme');
   }
 
   /**
@@ -470,8 +468,15 @@ export class KandoApp {
     // We also allow getting the entire general settings object.
     ipcMain.handle('common.general-settings-get', () => this.generalSettings.get());
 
+    // When there comes a general-settings-set event from the renderer, we do not want to
+    // trigger the general-settings-changed event in the settings window again. This is
+    // because the renderer already knows about the change. We have to send the change to
+    // the menu window, though.
+    let ignoreNextGeneralSettingsChange = false;
+
     // Allow the renderer to alter the settings.
     ipcMain.on('common.general-settings-set', (event, settings) => {
+      ignoreNextGeneralSettingsChange = true;
       this.generalSettings.set(settings);
     });
 
@@ -482,6 +487,12 @@ export class KandoApp {
         newSettings,
         oldSettings
       );
+
+      if (ignoreNextGeneralSettingsChange) {
+        ignoreNextGeneralSettingsChange = false;
+        return;
+      }
+
       this.settingsWindow?.webContents.send(
         'common.general-settings-changed',
         newSettings,

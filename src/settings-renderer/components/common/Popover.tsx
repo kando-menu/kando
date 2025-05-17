@@ -12,6 +12,8 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 
+import { FocusTrapManager } from '../../utils';
+
 import * as classes from './Popover.module.scss';
 
 interface IProps {
@@ -52,7 +54,7 @@ export default (props: IProps) => {
 
   // Show the popover if props.visible is true.
   React.useEffect(() => {
-    if (!props.visible) {
+    if (!props.visible || !popoverContent.current) {
       return;
     }
 
@@ -125,6 +127,7 @@ export default (props: IProps) => {
     const handleFocusIn = (event: FocusEvent) => {
       if (
         popoverContent.current &&
+        FocusTrapManager.isTopMost(popoverContent.current) &&
         !popoverContent.current.contains(event.target as Node)
       ) {
         firstFocusableElement?.focus();
@@ -135,12 +138,14 @@ export default (props: IProps) => {
     document.addEventListener('pointerup', handleClick);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('focusin', handleFocusIn);
+    FocusTrapManager.add(popoverContent.current);
 
     return () => {
       document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('pointerup', handleClick);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focusin', handleFocusIn);
+      FocusTrapManager.remove(popoverContent.current);
     };
   }, [props.onClose, props.visible]);
 
