@@ -33,8 +33,8 @@ export default () => {
   return (
     <>
       <TextInput
-        label={i18next.t('menu-items.uri.uri')}
-        info={i18next.t('menu-items.uri.uri-info')}
+        placeholder={i18next.t('menu-items.uri.placeholder')}
+        multiline
         initialValue={data.uri}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {

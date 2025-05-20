@@ -256,9 +256,7 @@
     },
     "redirect": {
       "name": "Redirect",
-      "description": "Opens another menu.",
-      "redirect": "Linked menu",
-      "redirect-info": "The menu will be opened when you activate this item."
+      "description": "Opens another menu."
     },
     "settings": {
       "name": "Open Settings",
@@ -285,8 +283,7 @@
     "uri": {
       "name": "Open URI",
       "description": "Opens websites and more.",
-      "uri": "URI",
-      "uri-info": "This will be opened with your default application for this URI type.",
+      "placeholder": "Insert any URI…",
       "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
       "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
       "tip-3": "You can use the URI item type to open a mailto: link.",

@@ -9,7 +9,6 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { Dropdown } from '../../common';
@@ -42,8 +41,6 @@ export default () => {
   return (
     <>
       <Dropdown
-        label={i18next.t('menu-items.redirect.redirect')}
-        info={i18next.t('menu-items.redirect.redirect-info')}
         options={options}
         initialValue={data.menu}
         onChange={(menuName) => {
