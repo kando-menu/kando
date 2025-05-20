@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbFolderOpen, TbFile } from 'react-icons/tb';
 
 import { Button, SettingsRow } from '.';
@@ -71,7 +72,7 @@ export default (props: IProps) => {
         <Button
           variant="secondary"
           grouped
-          tooltip="Select a file"
+          tooltip={i18next.t('settings.file-picker.select-file')}
           icon={<TbFile />}
           onClick={() => {
             window.settingsAPI
@@ -87,7 +88,7 @@ export default (props: IProps) => {
         <Button
           variant="secondary"
           grouped
-          tooltip="Select a directory"
+          tooltip={`${i18next.t('settings.file-picker.select-directory')}`}
           icon={<TbFolderOpen />}
           onClick={() => {
             window.settingsAPI

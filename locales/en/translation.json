@@ -10,6 +10,10 @@
     },
     "not-bound": "Not Bound",
     "invalid-dropdown-selection": "Select an option…",
+    "file-picker": {
+      "select-file": "Select a file",
+      "select-directory": "Select a directory"
+    },
     "add-tags-placeholder": "Add tags…",
     "about-dialog": {
       "title": "About Kando",
