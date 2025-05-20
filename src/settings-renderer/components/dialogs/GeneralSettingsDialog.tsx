@@ -383,45 +383,52 @@ export default () => {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
-          <Button
-            label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
-            tooltip={i18next.t(
-              'settings.general-settings-dialog.reload-menu-theme-tooltip'
-            )}
-            icon={<TbReload />}
-            grouped
-            grow
-            onClick={() => {
-              window.settingsAPI.reloadMenuTheme();
-            }}
-          />
-          <Button
-            label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
-            icon={<TbReload />}
-            grouped
-            grow
-            onClick={() => {
-              window.settingsAPI.reloadSoundTheme();
-            }}
-          />
-          <Button
-            label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
-            icon={<TbCode />}
-            grow
-            onClick={() => {
-              window.settingsAPI.showDevTools('menu-window');
-            }}
-          />
-          <Button
-            label={i18next.t(
-              'settings.general-settings-dialog.settings-window-dev-tools'
-            )}
-            icon={<TbCode />}
-            grow
-            onClick={() => {
-              window.settingsAPI.showDevTools('settings-window');
-            }}
-          />
+          <Note marginTop={-5}>
+            {i18next.t('settings.general-settings-dialog.developer-options-note')}
+          </Note>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <Button
+              label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
+              icon={<TbReload />}
+              grow
+              onClick={() => {
+                window.settingsAPI.reloadMenuTheme();
+              }}
+            />
+            <Button
+              label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
+              icon={<TbReload />}
+              grow
+              onClick={() => {
+                window.settingsAPI.reloadSoundTheme();
+              }}
+            />
+          </div>
+
+          <h1>{i18next.t('settings.general-settings-dialog.dev-tools')}</h1>
+          <Note marginTop={-5}>
+            {i18next.t('settings.general-settings-dialog.dev-tools-note')}
+          </Note>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <Button
+              label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
+              icon={<TbCode />}
+              grow
+              onClick={() => {
+                window.settingsAPI.showDevTools('menu-window');
+              }}
+            />
+            <Button
+              label={i18next.t(
+                'settings.general-settings-dialog.settings-window-dev-tools'
+              )}
+              icon={<TbCode />}
+              grow
+              onClick={() => {
+                window.settingsAPI.showDevTools('settings-window');
+              }}
+            />
+          </div>
         </div>
       </Scrollbox>
     </Modal>

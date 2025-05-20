@@ -99,11 +99,13 @@
       "fixed-stroke-length": "Fixed Stroke Length",
       "fixed-stroke-length-info": "Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px.",
       "developer-options": "Developer Options",
-      "reload-menu-theme": "Reload Current Menu Theme",
-      "reload-menu-theme-tooltip": "CSS changes will be applied immediately, for changes made to the theme.json file, you need to re-open the menu.",
-      "reload-sound-theme": "Reload Current Sound Theme",
-      "menu-window-dev-tools": "Menu window development tools",
-      "settings-window-dev-tools": "Settings window development tools"
+      "reload-menu-theme": "Reload menu theme",
+      "developer-options-note": "When you reload the menu theme, CSS changes will be applied immediately. For changes made to the theme.json file, you need to re-open the menu.",
+      "reload-sound-theme": "Reload sound theme",
+      "dev-tools": "Open Development Tools",
+      "dev-tools-note": "Kando uses two windows: One for the menu and one for the settings. You can open the development tools for both windows separately.",
+      "menu-window-dev-tools": "Menu window",
+      "settings-window-dev-tools": "Settings window"
     },
     "introduction-dialog": {
       "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",
