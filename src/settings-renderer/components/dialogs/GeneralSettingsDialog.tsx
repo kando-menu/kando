@@ -98,6 +98,7 @@ export default () => {
             settingsKey="hideSettingsButton"
           />
           <SettingsDropdown
+            maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.settings-button-position')}
             info={i18next.t(
               'settings.general-settings-dialog.settings-button-position-info'
@@ -123,6 +124,7 @@ export default () => {
             ]}
           />
           <SettingsDropdown
+            maxWidth={200}
             label={i18next.t(
               'settings.general-settings-dialog.settings-window-color-scheme'
             )}
@@ -146,6 +148,7 @@ export default () => {
             ]}
           />
           <SettingsDropdown
+            maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.settings-window-flavor')}
             info={i18next.t(
               'settings.general-settings-dialog.settings-window-flavor-info'
@@ -179,6 +182,7 @@ export default () => {
             ]}
           />
           <SettingsDropdown
+            maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.tray-icon-flavor')}
             info={i18next.t('settings.general-settings-dialog.tray-icon-flavor-info')}
             settingsKey="trayIconFlavor"
@@ -273,6 +277,7 @@ export default () => {
               .replace('%s', '')}
           </Note>
           <SettingsDropdown
+            maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.sound-theme')}
             info={i18next.t('settings.general-settings-dialog.sound-theme-info')}
             settingsKey="soundTheme"

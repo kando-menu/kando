@@ -39,6 +39,9 @@ interface IProps<T extends string> {
 
   /** Optional minimum width of the dropdown. */
   minWidth?: number;
+
+  /** Optional maximum width of the dropdown. */
+  maxWidth?: number;
 }
 
 /**
@@ -52,7 +55,7 @@ export default <T extends string>(props: IProps<T>) => {
     props.options.find((option) => option.value === props.initialValue) === undefined;
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow maxWidth={200}>
+    <SettingsRow label={props.label} info={props.info} grow maxWidth={props.maxWidth}>
       <select
         className={classes.select}
         disabled={props.disabled}
