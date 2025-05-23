@@ -98,7 +98,7 @@ export class KandoApp {
     await fs.promises.mkdir(path.join(app.getPath('userData'), 'icon-themes'), {
       recursive: true,
     });
-    
+
     // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
