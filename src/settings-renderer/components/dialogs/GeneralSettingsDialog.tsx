@@ -14,7 +14,7 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import i18next from 'i18next';
 
-import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
+import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
 
@@ -383,51 +383,65 @@ export default () => {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
-          <Note marginTop={-5}>
-            {i18next.t('settings.general-settings-dialog.developer-options-note')}
-          </Note>
-          <div style={{ display: 'flex', gap: 5 }}>
-            <Button
-              label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
-              icon={<TbReload />}
-              grow
-              onClick={() => {
-                window.settingsAPI.reloadMenuTheme();
-              }}
-            />
-            <Button
-              label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
-              icon={<TbReload />}
-              grow
-              onClick={() => {
-                window.settingsAPI.reloadSoundTheme();
-              }}
-            />
+          <div
+            style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 10 }}>
+            <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                minWidth: '40%',
+              }}>
+              <Button
+                label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
+                icon={<TbReload />}
+                block
+                onClick={() => {
+                  window.settingsAPI.reloadMenuTheme();
+                }}
+              />
+              <Button
+                label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
+                icon={<TbReload />}
+                block
+                onClick={() => {
+                  window.settingsAPI.reloadSoundTheme();
+                }}
+              />
+            </div>
           </div>
 
-          <h1>{i18next.t('settings.general-settings-dialog.dev-tools')}</h1>
-          <Note marginTop={-5}>
-            {i18next.t('settings.general-settings-dialog.dev-tools-note')}
-          </Note>
-          <div style={{ display: 'flex', gap: 5 }}>
-            <Button
-              label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
-              icon={<TbCode />}
-              grow
-              onClick={() => {
-                window.settingsAPI.showDevTools('menu-window');
-              }}
-            />
-            <Button
-              label={i18next.t(
-                'settings.general-settings-dialog.settings-window-dev-tools'
-              )}
-              icon={<TbCode />}
-              grow
-              onClick={() => {
-                window.settingsAPI.showDevTools('settings-window');
-              }}
-            />
+          <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
+            <Note>{i18next.t('settings.general-settings-dialog.dev-tools-note')}</Note>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                minWidth: '40%',
+              }}>
+              <Button
+                label={i18next.t(
+                  'settings.general-settings-dialog.menu-window-dev-tools'
+                )}
+                icon={<TbPointer />}
+                grow
+                onClick={() => {
+                  window.settingsAPI.showDevTools('menu-window');
+                }}
+              />
+              <Button
+                label={i18next.t(
+                  'settings.general-settings-dialog.settings-window-dev-tools'
+                )}
+                icon={<TbPointerCog />}
+                grow
+                onClick={() => {
+                  window.settingsAPI.showDevTools('settings-window');
+                }}
+              />
+            </div>
           </div>
         </div>
       </Scrollbox>
