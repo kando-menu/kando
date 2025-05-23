@@ -89,6 +89,10 @@ export class KandoApp {
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
+    await fs.promises.mkdir(path.join(app.getPath('userData'), 'menu-themes'), { recursive: true });
+    await fs.promises.mkdir(path.join(app.getPath('userData'), 'sound-themes'), { recursive: true });
+    await fs.promises.mkdir(path.join(app.getPath('userData'), 'icon-themes'), { recursive: true });
+    
     // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
