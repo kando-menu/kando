@@ -57,8 +57,9 @@ export default (props: IProps) => {
         clickable: props.labelClickable,
       })}>
       {(props.label || props.info) && (
-        <div className={classes.label}>
-          {props.label}&nbsp;{props.info && <InfoItem info={props.info} />}
+        <div className={classes.labelContainer}>
+          <span className={classes.label}>{props.label}</span>&nbsp;
+          {props.info && <InfoItem info={props.info} />}
         </div>
       )}
       <div
