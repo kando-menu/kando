@@ -4,10 +4,10 @@
             "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: %s"
         },
         "hyprland": {
-            "shortcut-info": "Verwenden Sie Ihre hyprland.conf, um dies zu binden."
+            "shortcut-info": "Kando kann nicht direkt globale Shortcuts in Hyprland binden. Stattdessen geben Sie hier eine Shortcut-ID an und binden sie in Ihrer hyprland.conf mit etwas wie \"bind = CTRL, Space, global, kando:example-menu\". Ersetzen Sie example-menu mit der hier gewählten ID."
         },
         "kde-wayland": {
-            "shortcut-info": "Verwenden Sie zum Festlegen der Tastenkombination die Systemeinstellungen von KDE."
+            "shortcut-info": "Kando kann nicht direkt globale Shortcuts in KDE/Wayland binden. Stattdessen geben Sie hier eine Shortcut-ID an und suchen Sie danach im KWin-Bereich der globalen Shortcuts in den Systemeinstellungen von KDE. Dort können Sie die Tastenkombination wählen, die dieses Menü öffnet."
         }
     },
     "example-menu": {
@@ -88,7 +88,8 @@
             "tip-3": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
             "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
             "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde.",
-            "placeholder": "Kommando einfügen…"
+            "placeholder": "Kommando einfügen…",
+            "tip-6": "Klicken Sie [hier](%s), um zu erfahren, wie Sie die Befehle für das Starten Ihrer Apps finden."
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
@@ -99,7 +100,8 @@
             "file-info": "Die Datei oder der Ordner wird mit der entsprechenden Standardanwendung geöffnet.",
             "file": "Dateipfad",
             "name": "Datei Öffnen",
-            "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen."
+            "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen.",
+            "placeholder": "Wählen Sie eine Datei oder ein Verzeichnis…"
         },
         "hotkey": {
             "description": "Drückt eine Tastenkombination.",
@@ -157,7 +159,8 @@
             "tip-5": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
             "tip-6": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Zeigerposition einzufügen, an der das Menü geöffnet wurde.",
             "uri-info": "Ihrer Standardanwendung für diesen URI-Typ wird genutzt werden.",
-            "uri": "URI"
+            "uri": "URI",
+            "placeholder": "URI einfügen…"
         }
     },
     "settings": {
@@ -217,8 +220,8 @@
         "general-settings-dialog": {
             "none": "Nichts",
             "reload-menu-theme-tooltip": "CSS-Änderungen werden sofort angewendet. Für Änderungen an der Datei theme.json müssen Sie das Menü erneut öffnen.",
-            "reload-menu-theme": "Aktuelles Menü-Design Neuladen",
-            "reload-sound-theme": "Aktuelles Sound-Thema Neuladen",
+            "reload-menu-theme": "Menü-Design neuladen",
+            "reload-sound-theme": "Sound-Thema neuladen",
             "title": "Allgemeine Einstellungen",
             "check-for-new-versions": "Auf neue Versionen prüfen",
             "check-for-new-versions-info": "Wenn aktiviert, zeigt Kando eine Benachrichtigung an, wenn eine neue Version verfügbar ist.",
@@ -291,8 +294,8 @@
             "fixed-stroke-length": "Feste Strichlänge",
             "fixed-stroke-length-info": "Normalerweise werden Elemente ausgewählt, wenn Sie die Bewegung stoppen oder eine Kurve zeichnen. Wenn Sie dies auf einen Wert größer als 0 setzen, ändert sich dieses Verhalten: Jetzt werden Elemente nur ausgewählt, wenn Sie ein Element so weit vom Zentrum weggezogen haben. Standard ist 0px.",
             "developer-options": "Entwickleroptionen",
-            "menu-window-dev-tools": "Entwicklungstools für Menüfenster",
-            "settings-window-dev-tools": "Entwicklungstools für Einstellungsfenster",
+            "menu-window-dev-tools": "Menü inspizieren",
+            "settings-window-dev-tools": "Einstellungen inspizieren",
             "reload-note": "Wenn Sie das Design neu laden, werden CSS-Änderungen angewendet, auch wenn ein Menü aktuell angezeigt wird. Für Änderungen an der theme.json-Datei, müssen Sie das Menü neu öffnen.",
             "dev-tools-note": "Kando verwendet zwei Fenster: Eins für das Menü und ein anderes für die Einstellungen. Sie können die Entwicklungswerkzeuge öffnen, um beide Fenster zu inspizieren."
         },
@@ -323,7 +326,7 @@
             "slide7-text": "Klicken und ziehen Sie über ein Element, um den Markierungsmodus zu aktivieren. **Wenn Sie die Zeigerbewegung pausieren oder eine Kurve machen, öffnet sich das aktuell gezogene Untermenü!** Merken Sie sich den Pfad zu einem Element und zeichnen Sie ihn mit ausdrucksstarken Zickzack-Bewegungen.",
             "slide8-text": "**Das Menü reagiert auf Ihre Mausbewegungen!** Ein Untermenü öffnet sich, wenn Sie es möchten. Mit etwas Übung können Sie Elemente auswählen, ohne das Menü überhaupt anzusehen.",
             "slide9-title": "Seien Sie blitzschnell: Turbo-Modus",
-            "slide9-text": "Wenn Sie **eine Taste gedrückt halten** (wie _Strg_, _Umschalt_ oder _Alt_) nachdem Sie das Menü geöffnet haben, können Sie Auswahlen nur durch Bewegen des Zeigers treffen. Kein Klicken mehr nötig!",
+            "slide9-text": "Wenn Sie **eine Taste gedrückt halten** (wie _Strg_, _Umschalt_ oder _Alt_) nachdem Sie das Menü geöffnet haben, können Sie Auswahlen nur durch Bewegen des Zeigers treffen. Kein Klicken mehr nötig.",
             "slide10-text": "**Warten Sie nicht auf die Animationen!** Zickzacken Sie einfach durch das Menü. Das ist der schnellste Weg, Elemente auszuwählen!",
             "slide11-text": "**Haben Sie keine Angst vor versehentlichen Auswahlen!** Aktionen werden erst ausgeführt, wenn Sie im Markierungsmodus die Maustaste oder im Turbo-Modus eine Taste loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
             "slide12-title": "Es gibt noch mehr!",
@@ -368,7 +371,7 @@
         "redo": "Wiederholen",
         "search-menus-placeholder": "Menüs durchsuchen…",
         "shortcut-info": "Diese Verknüpfung öffnet das Menü. Sie muss eine normale Taste und beliebig viele Modifikatoren wie Strg, Alt oder Umschalt enthalten. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn eine Verknüpfung bereits einem anderen Menü zugewiesen ist!",
-        "shortcut-id-label": "Shortcut-ID",
+        "shortcut-id-label": "Shortcut ID",
         "tags": "Tags",
         "tags-info": "Tags können verwendet werden, um Menüs in Menüsammlungen zu gruppieren.",
         "duplicate-menu": "Menü duplizieren",
