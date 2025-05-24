@@ -87,7 +87,8 @@
             "tip-2": "Wenn der Pfad zu einer ausführbaren Datei Leerzeichen enthält, sollten Sie ihn „in Anführungszeichen setzen“.",
             "tip-3": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
             "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
-            "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde."
+            "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde.",
+            "placeholder": "Kommando einfügen…"
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
@@ -196,7 +197,9 @@
             "countdown": "Auswahl in %i Sekunden…",
             "pick-app-name-header": "Anwendungsnamen auswählen",
             "pick-window-title-header": "Fenstertitel auswählen",
-            "confirm": "Diesen Wert verwenden"
+            "confirm": "Diesen Wert verwenden",
+            "pick-window-title-title": "Fenstertitel wählen",
+            "pick-app-name-title": "Anwendungsnamen wählen"
         },
         "screen-area-picker": {
             "top-left-value": "Links: %x, Oben: %y",
@@ -289,7 +292,9 @@
             "fixed-stroke-length-info": "Normalerweise werden Elemente ausgewählt, wenn Sie die Bewegung stoppen oder eine Kurve zeichnen. Wenn Sie dies auf einen Wert größer als 0 setzen, ändert sich dieses Verhalten: Jetzt werden Elemente nur ausgewählt, wenn Sie ein Element so weit vom Zentrum weggezogen haben. Standard ist 0px.",
             "developer-options": "Entwickleroptionen",
             "menu-window-dev-tools": "Entwicklungstools für Menüfenster",
-            "settings-window-dev-tools": "Entwicklungstools für Einstellungsfenster"
+            "settings-window-dev-tools": "Entwicklungstools für Einstellungsfenster",
+            "reload-note": "Wenn Sie das Design neu laden, werden CSS-Änderungen angewendet, auch wenn ein Menü aktuell angezeigt wird. Für Änderungen an der theme.json-Datei, müssen Sie das Menü neu öffnen.",
+            "dev-tools-note": "Kando verwendet zwei Fenster: Eins für das Menü und ein anderes für die Einstellungen. Sie können die Entwicklungswerkzeuge öffnen, um beide Fenster zu inspizieren."
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
@@ -376,6 +381,10 @@
         "window-condition-info": "Zeigen Sie das Menü nur an, wenn der Titel des fokussierten Fensters einen bestimmten Text enthält. Dies unterstützt reguläre Ausdrücke wie /youtube|vimeo/i.",
         "window-condition-placeholder": "Fenstertitel",
         "window-condition-tooltip": "Wählen Sie ein Fenster aus",
-        "window-condition": "Auf Fenstertitel beschränken"
+        "window-condition": "Auf Fenstertitel beschränken",
+        "file-picker": {
+            "select-file": "Wählen Sie eine Datei",
+            "select-directory": "Wählen Sie ein Verzeichnis"
+        }
     }
 }
