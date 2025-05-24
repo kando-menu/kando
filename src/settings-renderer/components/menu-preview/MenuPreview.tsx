@@ -84,7 +84,7 @@ export default () => {
   //    property indicates whether the item should be dropped into the submenu at the
   //    given index. Both tempItem and dragAngle are null in this case.
   // 2. The user drags something from outside the menu preview into the menu preview. In
-  //    this case, the drag index is null. The drop index the dropInto property behave
+  //    this case, the drag index is null. The drop index and the dropInto property behave
   //    exactly like in the first case. The tempItem is set to the item which is about to
   //    be dropped. The dragAngle is null.
   // 3. The user drags an item with a fixed angle inside the menu preview. In this case,
@@ -96,7 +96,8 @@ export default () => {
   const [tempItem, setTempItem] = React.useState<IRenderedMenuItem | null>(null);
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
 
-  // Some booleans which make the code below more readable.
+  // Some booleans matching to the three cases explained above to make the code below more
+  // readable.
   const internalDragOngoing = dragIndex !== null && dropIndex !== null;
   const externalDragOngoing = dragIndex === null && dropIndex !== null;
   const angleDragOngoing = dragIndex !== null && dropIndex === null && dragAngle !== null;
@@ -107,7 +108,7 @@ export default () => {
     return null;
   }
 
-  // First, we traverses the children of the current menu according to the selection path
+  // First, we traverse the children of the current menu according to the selection path
   // and store the final (sub)menu aka the centerItem. We also store some other
   // information about the center item. The center item could either be the last item in
   // selectedChildPath (if a submenu is selected) or the last-but-one item (if a menu item
