@@ -233,7 +233,7 @@
       "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
       "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
       "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
-      "tip-6": "Click [here](%s) you can learn how to to find the commands for launching some of your apps."
+      "tip-6": "Click [here](%s) to learn how to to find the commands for launching your apps."
     },
     "file": {
       "name": "Open File",
