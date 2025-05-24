@@ -51,7 +51,7 @@
     "chroma-js": "^3.1.2",
     "classnames": "^2.5.1",
     "cmake-js": "^7.3.1",
-    "commander": "^13.0.0",
+    "commander": "^14.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.1",
     "dbus-final": "github:Jelmerro/dbus-final",
