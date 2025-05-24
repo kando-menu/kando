@@ -58,7 +58,7 @@ export default () => {
       paddingBottom={5}
       paddingLeft={5}
       paddingRight={5}>
-      <Scrollbox maxHeight={'min(80vh, 600px)'}>
+      <Scrollbox maxHeight={'min(80vh, 800px)'}>
         <div
           style={{
             display: 'flex',
@@ -69,6 +69,9 @@ export default () => {
           }}>
           <Note
             center
+            marginLeft="10%"
+            marginRight="10%"
+            marginTop={10}
             markdown
             onLinkClick={() => {
               window.settingsAPI.getConfigDirectory().then((dir) => {
@@ -78,7 +81,7 @@ export default () => {
             {i18next.t('settings.general-settings-dialog.message').replace('%s', '')}
           </Note>
 
-          <Swirl variant="2" marginTop={10} width={350} marginBottom={20} />
+          <Swirl variant="2" width={350} marginBottom={10} />
 
           <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox
