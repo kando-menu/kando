@@ -373,10 +373,10 @@
       "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: %s"
     },
     "hyprland": {
-      "shortcut-info": "Use your hyprland.conf to bind this."
+      "shortcut-info": "Kando cannot directly bind global shortcuts on Hyprland. Instead, specify a shortcut ID here and bind a shortcut in your hyprland.conf with something like \"bind = CTRL, Space, global, kando:example-menu\". Replace example-menu with the ID chosen here."
     },
     "kde-wayland": {
-      "shortcut-info": "Use KDE's system settings to bind this."
+      "shortcut-info": "Kando cannot directly bind global shortcuts on KDE/Wayland. Instead, specify a shortcut ID here and then search for it in the KWin section of the global shortcuts in your KDE's system settings. There you can assign the shortcut which will open this menu."
     }
   }
 }
