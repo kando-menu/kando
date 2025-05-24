@@ -297,7 +297,7 @@
       "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
     },
     "common": {
-      "delayed-option": "Execute After Closing the Menu",
+      "delayed-option": "Execute after closing the menu",
       "delayed-option-info": "Useful if the action targets a window that needs to be focused."
     }
   },
