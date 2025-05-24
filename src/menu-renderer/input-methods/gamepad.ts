@@ -13,11 +13,12 @@ import { IVec2 } from '../../common';
 
 /**
  * This interface describes the state of a gamepad. It contains the current values of all
- * axes and buttons.
+ * axes and buttons as well as the last computed stick position.
  */
 export interface IGamepadState {
   axes: number[];
   buttons: GamepadButton[];
+  lastStickPosition: IVec2;
 }
 
 /**
@@ -43,9 +44,6 @@ export class Gamepad extends EventEmitter {
 
   /** This flag is set to true when the poll method should stop polling. */
   private stopPolling = true;
-
-  /** This property contains the last stick position as normalized 2D coordinates. */
-  private lastStickPosition: IVec2 = { x: 0, y: 0 };
 
   /** Creates a new GamepadInput instance and starts polling the gamepad API. */
   constructor() {
@@ -77,6 +75,7 @@ export class Gamepad extends EventEmitter {
               touched: false,
               value: 0,
             })),
+            lastStickPosition: { x: 0, y: 0 },
           };
         }
 
@@ -146,10 +145,10 @@ export class Gamepad extends EventEmitter {
     };
 
     if (
-      stickPosition.x !== this.lastStickPosition.x ||
-      stickPosition.y !== this.lastStickPosition.y
+      stickPosition.x !== gamepadState.lastStickPosition.x ||
+      stickPosition.y !== gamepadState.lastStickPosition.y
     ) {
-      this.lastStickPosition = stickPosition;
+      gamepadState.lastStickPosition = stickPosition;
 
       this.emit('stickmotion', stickPosition, this.isAnyButtonPressed(gamepadIndex));
     }
