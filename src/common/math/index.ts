@@ -206,7 +206,7 @@ export function computeItemAngles(
   const fixedAngles: { angle: number; index: number }[] = [];
   items.forEach((item, index) => {
     if ('angle' in item && item.angle >= 0) {
-      fixedAngles.push({ angle: item.angle, index: index });
+      fixedAngles.push({ angle: item.angle % 360, index: index });
     }
   });
 
