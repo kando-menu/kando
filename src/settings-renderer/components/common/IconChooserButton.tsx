@@ -129,9 +129,9 @@ export default (props: IProps) => {
           {getPicker()}
           <Note marginTop={10} markdown>
             {pickerInfo.hint ||
-              i18next
-                .t('settings.icon-picker-dialog.hint')
-                .replace('%s', 'https://kando.menu/icon-themes/')}
+              i18next.t('settings.icon-picker-dialog.hint', {
+                link: 'https://kando.menu/icon-themes/',
+              })}
           </Note>
         </div>
       }>

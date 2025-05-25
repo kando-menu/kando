@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Impossible de se connecter à l'extension Kando Integration GNOME Shell. Vous pouvez l'obtenir ici : %s"
+            "error": "Impossible de se connecter à l'extension Kando Integration GNOME Shell. Vous pouvez l'obtenir ici : {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Utilisez votre hyprland.conf pour lier ceci."
@@ -183,7 +183,7 @@
         "menu-conditions": "Conditions du Menu",
         "menu-conditions-info": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
         "menu-themes-dialog": {
-            "author": "par %s",
+            "author": "par {{author}}",
             "light-dark-mode-info": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
             "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
             "title": "Thèmes de menu"

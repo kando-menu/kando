@@ -78,7 +78,7 @@ export default () => {
                 window.open('file://' + dir, '_blank');
               });
             }}>
-            {i18next.t('settings.general-settings-dialog.message').replace('%s', '')}
+            {i18next.t('settings.general-settings-dialog.message', { link: '' })}
           </Note>
 
           <Swirl variant="2" width={350} marginBottom={10} />
@@ -269,15 +269,10 @@ export default () => {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-sounds')}</h1>
-          <Note
-            marginTop={-5}
-            markdown
-            onLinkClick={() => {
-              window.open('https://kando.menu/sound-themes/', '_blank');
-            }}>
-            {i18next
-              .t('settings.general-settings-dialog.learn-how-to-add-sound-themes')
-              .replace('%s', '')}
+          <Note marginTop={-5} markdown>
+            {i18next.t('settings.general-settings-dialog.learn-how-to-add-sound-themes', {
+              link: 'https://kando.menu/sound-themes/',
+            })}
           </Note>
           <SettingsDropdown
             maxWidth={200}

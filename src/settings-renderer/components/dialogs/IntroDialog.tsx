@@ -102,12 +102,9 @@ export default () => {
       <Note style="normal" center markdown marginLeft={'10%'} marginRight={'10%'}>
         {backend.supportsShortcuts
           ? i18next.t('settings.introduction-dialog.slide2-text-standard')
-          : i18next
-              .t('settings.introduction-dialog.slide2-text-no-shortcuts')
-              .replace(
-                '%s',
-                'https://kando.menu/installation-on-linux/#desktop-specifics'
-              )}
+          : i18next.t('settings.introduction-dialog.slide2-text-no-shortcuts', {
+              link: 'https://kando.menu/installation-on-linux/#desktop-specifics',
+            })}
       </Note>
     </>,
     <>
@@ -170,11 +167,11 @@ export default () => {
       </Note>
       <Swirl variant="2" marginTop={10} marginBottom={20} width={350} />
       <Note style="normal" markdown center marginLeft={'10%'} marginRight={'10%'}>
-        {i18next
-          .t('settings.introduction-dialog.slide12-text')
-          .replace('%s1', 'https://kando.menu/menu-themes')
-          .replace('%s2', 'https://kando.menu/icon-themes')
-          .replace('%s3', 'https://kando.menu/sound-themes')}
+        {i18next.t('settings.introduction-dialog.slide12-text', {
+          link1: 'https://kando.menu/menu-themes',
+          link2: 'https://kando.menu/icon-themes',
+          link3: 'https://kando.menu/sound-themes',
+        })}
       </Note>
     </>,
     <>
@@ -186,10 +183,10 @@ export default () => {
         marginTop={10}
         marginLeft={'10%'}
         marginRight={'10%'}>
-        {i18next
-          .t('settings.introduction-dialog.slide13-text')
-          .replace('%s1', 'https://discord.gg/hZwbVSDkhy')
-          .replace('%s2', 'https://kando.menu')}
+        {i18next.t('settings.introduction-dialog.slide13-text', {
+          link1: 'https://discord.gg/hZwbVSDkhy',
+          link2: 'https://kando.menu',
+        })}
       </Note>
       <Swirl variant="3" marginTop={10} width={250} />
     </>,

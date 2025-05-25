@@ -276,9 +276,9 @@ export default () => {
                   )}
                   <div className={classes.themeName}>{theme.name}</div>
                   <div className={classes.themeAuthor}>
-                    {i18next
-                      .t('settings.menu-themes-dialog.author')
-                      .replace('%s', theme.author)}
+                    {i18next.t('settings.menu-themes-dialog.author', {
+                      author: theme.author,
+                    })}
                   </div>
                 </div>
               );

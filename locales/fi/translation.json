@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: %s"
+            "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Käytä hyprland.conf-tiedostoa sitoaksesi tämän."
@@ -144,7 +144,7 @@
         "menu-behavior": "Valikon toiminta",
         "menu-conditions": "Valikon ehdollisuudet",
         "menu-themes-dialog": {
-            "author": "tekijä %s",
+            "author": "tekijä {{author}}",
             "reset-color-picker": "Palauta kaikkien värien oletusarvot",
             "title": "Valikkoteemat"
         },

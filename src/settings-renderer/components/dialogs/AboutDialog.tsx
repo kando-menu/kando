@@ -49,9 +49,9 @@ export default () => {
           marginTop={10}
           marginLeft={'10%'}
           marginRight={'10%'}>
-          {i18next
-            .t('settings.about-dialog.message')
-            .replace('%s', 'https://ko-fi.com/schneegans')}
+          {i18next.t('settings.about-dialog.message', {
+            link: 'https://ko-fi.com/schneegans',
+          })}
         </Note>
         <Swirl variant="2" marginTop={30} marginBottom={20} width={350} />
         <div className={classes.footer}>

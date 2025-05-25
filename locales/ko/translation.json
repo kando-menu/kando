@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: %s"
+            "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "hyprland.conf에서 바인딩하세요."
@@ -181,7 +181,7 @@
         "menu-conditions": "메뉴 조건",
         "menu-conditions-info": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
         "menu-themes-dialog": {
-            "author": "%s 제작",
+            "author": "{{author}} 제작",
             "light-dark-mode-info": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
             "reset-color-picker": "색상 모두 기본값으로 초기화하기",
             "title": "메뉴 테마"

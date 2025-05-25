@@ -74,7 +74,7 @@ export default (props: IProps) => {
   const getCaption = () => {
     if (timer > timeout) {
       if (value) {
-        return i18next.t('settings.window-picker-dialog.result').replace('%s', value);
+        return i18next.t('settings.window-picker-dialog.result', { name: value });
       }
 
       return i18next.t('settings.window-picker-dialog.instructions');

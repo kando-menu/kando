@@ -1,12 +1,12 @@
 {
   "settings": {
     "icon-picker-dialog": {
-      "base64-hint": "Base64 encoded icons provide an easy way to include any kind of icon into your menus. You can use a service like [www.base64-image.de](%s) to convert any image into a base64 encoded string. This even works for animated gifs!",
+      "base64-hint": "Base64 encoded icons provide an easy way to include any kind of icon into your menus. You can use a service like [www.base64-image.de]({{link}}) to convert any image into a base64 encoded string. This even works for animated gifs!",
       "base64-example": "Base64 example:",
       "file-example": "file: URI example:",
       "url-example": "URL example:",
       "search-placeholder": "Search Icons…",
-      "hint": "Learn [here](%s) how to add or create your own icon themes."
+      "hint": "Learn [here]({{link}}) how to add or create your own icon themes."
     },
     "not-bound": "Not Bound",
     "invalid-dropdown-selection": "Select an option…",
@@ -17,7 +17,7 @@
     "add-tags-placeholder": "Add tags…",
     "about-dialog": {
       "title": "About Kando",
-      "message": "I am creating Kando out of sheer passion. If you enjoy using it as much as I love creating it, you can [buy me a coffee](%s)!\n\n💖 Simon",
+      "message": "I am creating Kando out of sheer passion. If you enjoy using it as much as I love creating it, you can [buy me a coffee]({{link}})!\n\n💖 Simon",
       "kando-version": "Kando Version",
       "kando-backend": "Kando Backend",
       "electron-version": "Electron Version",
@@ -28,7 +28,7 @@
     "general-settings-dialog": {
       "none": "None",
       "title": "General Settings",
-      "message": "All settings of Kando are stored in a JSON file which you can also edit, share, or backup. Click [here](%s) to open the directory where the config.json file is stored.",
+      "message": "All settings of Kando are stored in a JSON file which you can also edit, share, or backup. Click [here]({{link}}) to open the directory where the config.json file is stored.",
       "app-behavior": "App Behavior",
       "check-for-new-versions": "Check for new versions",
       "check-for-new-versions-info": "If enabled, Kando will show a notification when a new version is available.",
@@ -75,7 +75,7 @@
       "enable-gamepad-support": "Enable gamepad support",
       "enable-gamepad-support-info": "If checked, you can use a connected gamepad to control the menu.",
       "menu-sounds": "Menu Sounds",
-      "learn-how-to-add-sound-themes": "Learn how to add new sound themes to Kando [here](%s)!",
+      "learn-how-to-add-sound-themes": "Learn how to add new sound themes to Kando [here]({{link}})!",
       "sound-theme": "Sound theme",
       "sound-theme-info": "A sound theme is a collection of sounds that are played when you interact with the menu.",
       "volume": "Volume",
@@ -111,7 +111,7 @@
       "slide1-text": "Swipe through these slides to learn what Kando can do for you! You can use the chapter marks on the left to quickly jump to a specific part of the introduction.",
       "slide2-title": "Open the menu!",
       "slide2-text-standard": "If you launched Kando for the first time, you can open the example menu with Ctrl+Space. Close it again with the Escape key or with your right mouse button anywhere on the screen.",
-      "slide2-text-no-shortcuts": "If you launched Kando for the first time, you [may need to perform some additional steps on Linux to get the global hotkeys working](%s). Once this is working, you can close a menu with the Escape key or with your right mouse button.",
+      "slide2-text-no-shortcuts": "If you launched Kando for the first time, you [may need to perform some additional steps on Linux to get the global hotkeys working]({{link}}). Once this is working, you can close a menu with the Escape key or with your right mouse button.",
       "slide3-hint1": "You can also click here to close the menu.",
       "slide3-hint2": "Click anywhere here to select the item.",
       "slide3-text": "In Kando, **your entire screen is a click-target**! You do not have to aim for the icons, you can click anywhere in an item's wedge. This makes it much more efficient to select items.",
@@ -127,8 +127,8 @@
       "slide10-text": "**Do not wait for the animations to finish!** Just zigzag your way through the menu. This is the fastest way to select items!",
       "slide11-text": "**Don't be afraid of accidental selections!** Actions are only executed as soon as you release your mouse button in Marking Mode or a keyboard key in Turbo Mode. Use this to explore the menu!",
       "slide12-title": "There is more!",
-      "slide12-text": "Kando is highly customizable. You can use it to open applications, files, execute keyboard macros, and many other things. You can [change the menu style](%s1), [add icon themes](%s2) and even [use sounds](%s3) in your menus!",
-      "slide13-text": "If you need help at any point, feel free to join our [Discord Server](%s1) or check out the [documentation](%s2)!",
+      "slide12-text": "Kando is highly customizable. You can use it to open applications, files, execute keyboard macros, and many other things. You can [change the menu style]({{link1}}), [add icon themes]({{link2}}) and even [use sounds]({{link3}}) in your menus!",
+      "slide13-text": "If you need help at any point, feel free to join our [Discord Server]({{link1}}) or check out the [documentation]({{link2}})!",
       "chapter1": "Getting Started",
       "chapter2": "Marking Mode",
       "chapter3": "Turbo Mode",
@@ -157,7 +157,7 @@
       "get-themes-online": "Get themes online",
       "create-your-own-themes": "Create your own themes",
       "open-theme-directory": "Open theme directory",
-      "author": "by %s"
+      "author": "by {{author}}"
     },
     "all-menus": "All Menus",
     "search-menus-placeholder": "Search menus…",
@@ -167,7 +167,7 @@
     "undo": "Undo",
     "redo": "Redo",
     "menu-behavior": "Menu Behavior",
-    "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here](%s)!",
+    "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
     "centered-mode": "Centered Mode",
     "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
     "anchored-mode": "Anchored Mode",
@@ -202,9 +202,9 @@
     "delete-menu": "Delete menu",
     "delete-menu-item": "Delete menu item",
     "screen-area-picker": {
-      "top-left-value": "Left: %x, Top: %y",
+      "top-left-value": "Left: {{x}}, Top: {{y}}",
       "top-left": "Drag this to the top left corner of your area.",
-      "bottom-right-value": "Right: %x, Bottom: %y",
+      "bottom-right-value": "Right: {{x}}, Bottom: {{y}}",
       "bottom-right": "Drag this to the bottom right corner of your area.",
       "title": "Pick a Screen Area",
       "valid": "Great! You have selected a valid area.",
@@ -213,7 +213,7 @@
     },
     "cancel": "Cancel",
     "window-picker-dialog": {
-      "result": "You selected \"%s\".",
+      "result": "You selected \"{{name}}\".",
       "instructions": "Hit the button below and focus the target window within the next five seconds.",
       "restart-countdown": "Start countdown again",
       "start-countdown": "Start countdown",
@@ -234,7 +234,7 @@
       "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
       "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
       "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
-      "tip-6": "Click [here](%s) to learn how to to find the commands for launching your apps."
+      "tip-6": "Click [here]({{link}}) to learn how to to find the commands for launching your apps."
     },
     "file": {
       "name": "Open File",
@@ -250,7 +250,7 @@
       "recording-placeholder": "Type a hotkey…",
       "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
       "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
-      "tip-3": "Click [this link](%s) to see all valid key names."
+      "tip-3": "Click [this link]({{link}}) to see all valid key names."
     },
     "macro": {
       "name": "Execute Macro",
@@ -304,7 +304,7 @@
   },
   "main": {
     "new-version-notification-header": "A new version of Kando is available!",
-    "new-version-notification-body": "Get it from %s.",
+    "new-version-notification-body": "Get it from {{link}}.",
     "show-settings": "Show settings",
     "un-inhibit-shortcuts": "Re-enable shortcuts",
     "inhibit-shortcuts": "Temporarily disable all shortcuts",
@@ -371,7 +371,7 @@
   },
   "backends": {
     "gnome": {
-      "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: %s"
+      "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: {{link}}"
     },
     "hyprland": {
       "shortcut-info": "Kando cannot directly bind global shortcuts on Hyprland. Instead, specify a shortcut ID here and bind a shortcut in your hyprland.conf with something like \"bind = CTRL, Space, global, kando:example-menu\". Replace example-menu with the ID chosen here."

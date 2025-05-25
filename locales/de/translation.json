@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: %s"
+            "error": "Verbindung zur GNOME Shell-Erweiterung für Kando konnte nicht hergestellt werden. Sie können sie hier herunterladen: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Kando kann nicht direkt globale Shortcuts in Hyprland binden. Stattdessen geben Sie hier eine Shortcut-ID an und binden sie in Ihrer hyprland.conf mit etwas wie \"bind = CTRL, Space, global, kando:example-menu\". Ersetzen Sie example-menu mit der hier gewählten ID."
@@ -71,7 +71,7 @@
         "inhibit-shortcuts": "Deaktiviere vorübergehend alle Tastenkombos",
         "invalid-link-header": "Ungültiger Link",
         "invalid-link-message": "Der Deep-Link konnte nicht verarbeitet werden.",
-        "new-version-notification-body": "Laden Sie sie hier herunter: %s.",
+        "new-version-notification-body": "Laden Sie sie hier herunter: {{link}}.",
         "new-version-notification-header": "Eine neue Version von Kando ist verfügbar!",
         "quit": "Beenden",
         "show-settings": "Einstellungen öffnen",
@@ -89,7 +89,7 @@
             "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
             "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde.",
             "placeholder": "Kommando einfügen…",
-            "tip-6": "Klicken Sie [hier](%s), um zu erfahren, wie Sie die Befehle für das Starten Ihrer Apps finden."
+            "tip-6": "Klicken Sie [hier]({{link}}), um zu erfahren, wie Sie die Befehle für das Starten Ihrer Apps finden."
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
@@ -111,7 +111,7 @@
             "recording-placeholder": "Drücken Sie einen Hotkey…",
             "tip-1": "Beim Aufzeichnen eines Hotkeys müssen Sie nicht alle Tasten gleichzeitig drücken. Sie können sie auch nacheinander drücken.",
             "tip-2": "Wenn Sie eine Taste nicht aufnehmen können, weil sie vom System verwendet wird, versuchen Sie, ihren Namen direkt einzugeben.",
-            "tip-3": "Klicken Sie [auf diesen Link](%s), um alle gültigen Tastenbezeichnungen zu sehen."
+            "tip-3": "Klicken Sie [auf diesen Link]({{link}}), um alle gültigen Tastenbezeichnungen zu sehen."
         },
         "macro": {
             "description": "Führt ein Tastaturmakro aus.",
@@ -170,7 +170,7 @@
             "electron-version": "Electron Version",
             "kando-backend": "Kando Backend",
             "kando-version": "Kando Version",
-            "message": "Ich erstelle Kando aus purer Leidenschaft. Wenn Ihnen die Nutzung von Kando genausoviel Spaß bereitet wie mir die Entwicklung, können Sie mir gerne [einen Kaffee kaufen](%s)!\n\n💖 Simon",
+            "message": "Ich erstelle Kando aus purer Leidenschaft. Wenn Ihnen die Nutzung von Kando genausoviel Spaß bereitet wie mir die Entwicklung, können Sie mir gerne [einen Kaffee kaufen]({{link}})!\n\n💖 Simon",
             "read-release-notes": "Versionshinweise lesen",
             "title": "Über Kando"
         },
@@ -193,7 +193,7 @@
         "area-condition": "Auf Bildschirmzone beschränken",
         "cancel": "Abbrechen",
         "window-picker-dialog": {
-            "result": "Sie haben \"%s\" ausgewählt.",
+            "result": "Sie haben \"{{name}}\" ausgewählt.",
             "instructions": "Klicken Sie auf die Schaltfläche unten und fokussieren Sie das Ziel-Fenster innerhalb der nächsten fünf Sekunden.",
             "restart-countdown": "Countdown erneut starten",
             "start-countdown": "Countdown starten",
@@ -206,9 +206,9 @@
             "pick-app-name-title": "Anwendungsnamen wählen"
         },
         "screen-area-picker": {
-            "top-left-value": "Links: %x, Oben: %y",
+            "top-left-value": "Links: {{x}}, Oben: {{y}}",
             "top-left": "Ziehen Sie dies in die obere linke Ecke Ihres Bereichs.",
-            "bottom-right-value": "Rechts: %x, Unten: %y",
+            "bottom-right-value": "Rechts: {{x}}, Unten: {{y}}",
             "bottom-right": "Ziehen Sie dies in die untere rechte Ecke Ihres Bereichs.",
             "title": "Bildschirmbereich auswählen",
             "valid": "Super! Sie haben einen gültigen Bereich ausgewählt.",
@@ -234,7 +234,7 @@
             "top-right": "Oben rechts",
             "bottom-left": "Unten links",
             "bottom-right": "Unten rechts",
-            "message": "Alle Einstellungen von Kando werden in einer JSON-Datei gespeichert, die Sie auch bearbeiten, teilen oder sichern können. Klicken Sie [hier](%s), um das Verzeichnis zu öffnen, in dem die config.json gespeichert ist.",
+            "message": "Alle Einstellungen von Kando werden in einer JSON-Datei gespeichert, die Sie auch bearbeiten, teilen oder sichern können. Klicken Sie [hier]({{link}}), um das Verzeichnis zu öffnen, in dem die config.json gespeichert ist.",
             "app-behavior": "App-Verhalten",
             "settings-window-color-scheme": "Farbschema des Einstellungsfensters",
             "settings-window-color-scheme-info": "Wenn Sie 'System' wählen, verwendet das Einstellungsfenster dasselbe Farbschema wie Ihr Betriebssystem.",
@@ -271,7 +271,7 @@
             "enable-gamepad-support": "Gamepad-Unterstützung aktivieren",
             "enable-gamepad-support-info": "Wenn aktiviert, können Sie ein verbundenes Gamepad verwenden, um das Menü zu steuern.",
             "menu-sounds": "Menü-Sounds",
-            "learn-how-to-add-sound-themes": "Erfahren Sie [hier](%s), wie Sie neue Sound-Themen zu Kando hinzufügen können!",
+            "learn-how-to-add-sound-themes": "Erfahren Sie [hier]({{link}}), wie Sie neue Sound-Themen zu Kando hinzufügen können!",
             "sound-theme": "Sound-Thema",
             "sound-theme-info": "Ein Sound-Thema ist eine Sammlung von Sounds, die abgespielt werden, wenn Sie mit dem Menü interagieren.",
             "volume": "Lautstärke",
@@ -303,19 +303,19 @@
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
         "icon-picker-dialog": {
-            "base64-hint": "Base64-codierte Symbole bieten eine einfache Möglichkeit, beliebige Symbole in Ihre Menüs einzufügen. Sie können einen Dienst wie [www.base64-image.de](%s) verwenden, um ein beliebiges Bild in einen Base64-codierten String zu konvertieren. Dies funktioniert sogar für animierte GIFs!",
+            "base64-hint": "Base64-codierte Symbole bieten eine einfache Möglichkeit, beliebige Symbole in Ihre Menüs einzufügen. Sie können einen Dienst wie [www.base64-image.de]({{link}}) verwenden, um ein beliebiges Bild in einen Base64-codierten String zu konvertieren. Dies funktioniert sogar für animierte GIFs!",
             "base64-example": "Base64-Beispiel:",
             "file-example": "file: URI-Beispiel:",
             "search-placeholder": "Symbole suchen…",
             "url-example": "URL-Beispiel:",
-            "hint": "Erfahren Sie [hier](%s), wie Sie eigene Symbolthemen hinzufügen oder erstellen können."
+            "hint": "Erfahren Sie [hier]({{link}}), wie Sie eigene Symbolthemen hinzufügen oder erstellen können."
         },
         "introduction-dialog": {
             "slide1-title": "Kando bietet eine einzigartige und effiziente Möglichkeit, mit Ihrem Computer zu interagieren.",
             "slide1-text": "Blättern Sie durch diese Folien, um zu erfahren, was Kando für Sie tun kann! Sie können die Kapitelmarken links verwenden, um schnell zu einem bestimmten Teil der Einführung zu springen.",
             "slide2-title": "Öffnen Sie das Menü!",
             "slide2-text-standard": "Wenn Sie Kando zum ersten Mal gestartet haben, können Sie das Beispielmenü mit Strg+Leertaste öffnen. Schließen Sie es wieder mit der Escape-Taste oder mit der rechten Maustaste irgendwo auf dem Bildschirm.",
-            "slide2-text-no-shortcuts": "Wenn Sie Kando zum ersten Mal gestartet haben, [müssen Sie unter Linux eventuell noch einige zusätzliche Schritte durchführen, damit die globalen Hotkeys funktionieren](%s). Sobald dies funktioniert, können Sie ein Menü mit der Escape-Taste oder mit der rechten Maustaste schließen.",
+            "slide2-text-no-shortcuts": "Wenn Sie Kando zum ersten Mal gestartet haben, [müssen Sie unter Linux eventuell noch einige zusätzliche Schritte durchführen, damit die globalen Hotkeys funktionieren]({{link}}). Sobald dies funktioniert, können Sie ein Menü mit der Escape-Taste oder mit der rechten Maustaste schließen.",
             "slide3-hint1": "Sie können auch hier klicken, um das Menü zu schließen.",
             "slide3-hint2": "Klicken Sie irgendwo hier, um das Element auszuwählen.",
             "slide3-text": "In Kando ist **Ihr gesamter Bildschirm eine Klickfläche**! Sie müssen nicht auf die Symbole zielen, Sie können überall im Segment eines Elements klicken. Das macht die Auswahl viel effizienter.",
@@ -331,8 +331,8 @@
             "slide10-text": "**Warten Sie nicht auf die Animationen!** Zickzacken Sie einfach durch das Menü. Das ist der schnellste Weg, Elemente auszuwählen!",
             "slide11-text": "**Haben Sie keine Angst vor versehentlichen Auswahlen!** Aktionen werden erst ausgeführt, wenn Sie im Markierungsmodus die Maustaste oder im Turbo-Modus eine Taste loslassen. Nutzen Sie dies, um das Menü zu erkunden!",
             "slide12-title": "Es gibt noch mehr!",
-            "slide12-text": "Kando ist hochgradig anpassbar. Sie können damit Anwendungen, Dateien, Tastaturmakros und vieles mehr öffnen. Sie können [den Menüstil ändern](%s1), [Symbolthemen hinzufügen](%s2) und sogar [Sounds](%s3) in Ihren Menüs verwenden!",
-            "slide13-text": "Wenn Sie Hilfe benötigen, treten Sie gerne unserem [Discord-Server](%s1) bei oder schauen Sie in die [Dokumentation](%s2)!",
+            "slide12-text": "Kando ist hochgradig anpassbar. Sie können damit Anwendungen, Dateien, Tastaturmakros und vieles mehr öffnen. Sie können [den Menüstil ändern]({{link1}}), [Symbolthemen hinzufügen]({{link2}}) und sogar [Sounds]({{link3}}) in Ihren Menüs verwenden!",
+            "slide13-text": "Wenn Sie Hilfe benötigen, treten Sie gerne unserem [Discord-Server]({{link1}}) bei oder schauen Sie in die [Dokumentation]({{link2}})!",
             "chapter1": "Erste Schritte",
             "chapter2": "Markierungsmodus",
             "chapter3": "Turbo-Modus",
@@ -342,12 +342,12 @@
             "show-again": "Diesen Dialog erneut anzeigen"
         },
         "invalid-dropdown-selection": "Wählen Sie…",
-        "menu-behavior-info": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier](%s) zu erfahren, warum uns das Standardverhalten von Kando so gefällt!",
+        "menu-behavior-info": "Bevor Sie diese Optionen aktivieren, empfehlen wir Ihnen, [hier]({{link}}) zu erfahren, warum uns das Standardverhalten von Kando so gefällt!",
         "menu-behavior": "Menüverhalten",
         "menu-conditions-info": "Sie können mehrere Menüs an dieselbe Tastenkombo binden und dann auswählen, unter welchen Bedingungen sie angezeigt werden sollen.",
         "menu-conditions": "Menübedingungen",
         "menu-themes-dialog": {
-            "author": "von %s",
+            "author": "von {{author}}",
             "light-dark-mode-info": "Wenn aktiviert, können Sie ein anderes Design und Farbschema auswählen, wenn sich Ihr System im hellen oder dunklen Farbmodus befindet.",
             "reset-color-picker": "Auf Standardeinstellungen zurücksetzen",
             "title": "Menü-Designs",

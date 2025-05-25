@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: %s"
+            "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Utilice hyprland.conf para vincular esto."
@@ -153,7 +153,7 @@
         "menu-conditions": "Condiciones de menú",
         "menu-conditions-info": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
         "menu-themes-dialog": {
-            "author": "Por %s",
+            "author": "Por {{author}}",
             "light-dark-mode-info": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
             "reset-color-picker": "Reiniciar colores por defecto",
             "title": "Temas del menú"

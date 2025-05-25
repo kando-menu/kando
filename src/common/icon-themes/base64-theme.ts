@@ -44,9 +44,9 @@ export class Base64Theme implements IIconTheme {
   get iconPickerInfo() {
     return {
       type: 'base64' as const,
-      hint: i18next
-        .t('settings.icon-picker-dialog.base64-hint')
-        .replace('%s', 'https://www.base64-image.de/'),
+      hint: i18next.t('settings.icon-picker-dialog.base64-hint', {
+        link: 'https://www.base64-image.de/',
+      }),
     };
   }
 }

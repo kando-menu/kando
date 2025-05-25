@@ -24,9 +24,9 @@ export default () => {
     <>
       <h1>{i18next.t('settings.menu-behavior')}</h1>
       <Note marginTop={-5} marginBottom={5} markdown>
-        {i18next
-          .t('settings.menu-behavior-info')
-          .replace('%s', 'https://www.youtube.com/watch?v=elHUCarOiXQ')}
+        {i18next.t('settings.menu-behavior-info', {
+          link: 'https://www.youtube.com/watch?v=elHUCarOiXQ',
+        })}
       </Note>
       <Checkbox
         label={i18next.t('settings.centered-mode')}

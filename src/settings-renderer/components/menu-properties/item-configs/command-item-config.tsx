@@ -65,9 +65,9 @@ export default () => {
           i18next.t('menu-items.command.tip-3'),
           i18next.t('menu-items.command.tip-4'),
           i18next.t('menu-items.command.tip-5'),
-          i18next
-            .t('menu-items.command.tip-6')
-            .replace('%s', 'https://kando.menu/item-run-command/'),
+          i18next.t('menu-items.command.tip-6', {
+            link: 'https://kando.menu/item-run-command/',
+          }),
         ]}
       />
     </>

@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: %s"
+            "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Použijte svůj hyprland.conf k přiřazení této zkratky."
@@ -183,7 +183,7 @@
         "menu-conditions": "Podmínky menu",
         "menu-conditions-info": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
         "menu-themes-dialog": {
-            "author": "od %s",
+            "author": "od {{author}}",
             "light-dark-mode-info": "Pokud je povoleno, můžete zvolit jiné téma a barevné schéma pro světlý a tmavý režim systému.",
             "reset-color-picker": "Obnovit všechny barvy na výchozí hodnoty",
             "title": "Témata menu"

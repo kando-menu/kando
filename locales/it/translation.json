@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Connessione all’estensione della -Shell GNOME di Kando- fallita. Puoi ottenerla da qui: %s"
+            "error": "Connessione all’estensione della -Shell GNOME di Kando- fallita. Puoi ottenerla da qui: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Usa il tuo hyprland.conf per associare questo."
@@ -159,7 +159,7 @@
         "menu-conditions": "Condizione per il Menu",
         "menu-conditions-info": "Puoi associare differenti menù alla stessa scorciatoia di tastiera e poi scegliere in quali condizioni si deve mostrare ciascun menù.",
         "menu-themes-dialog": {
-            "author": "di %s",
+            "author": "di {{author}}",
             "light-dark-mode-info": "Se abilitato, puoi scegliere un differente tema e set di colori a seconda che il tuo sistema sia in modalità chiara o scura.",
             "reset-color-picker": "Ripristina tutti i colori ai valori di default",
             "title": "Temi di Menù"

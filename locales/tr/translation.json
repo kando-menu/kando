@@ -1,7 +1,7 @@
 {
     "backends": {
         "gnome": {
-            "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: %s"
+            "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
@@ -173,7 +173,7 @@
         "menu-conditions": "Menü Koşulları",
         "menu-conditions-info": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
         "menu-themes-dialog": {
-            "author": "%s tarafından",
+            "author": "{{author}} tarafından",
             "light-dark-mode-info": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
             "reset-color-picker": "Tüm renkleri varsayılanlarına sıfırla",
             "title": "Menü Temaları"
