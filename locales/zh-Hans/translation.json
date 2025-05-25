@@ -1,198 +1,390 @@
 {
-  "Check the system tray icon for some options!": "点击托盘图标以查看选项！",
-  "Kando failed to start": "Kando 启动失败",
-  "Kando is already running": "Kando 已经在运行了",
-  "backends": {
-    "gnome": {
-      "error": "无法连接到 \"Kando 集成\" GNOME Shell 插件。您可以从这里获取：%s"
+    "Check the system tray icon for some options!": "点击托盘图标以查看选项！",
+    "Kando failed to start": "Kando 启动失败",
+    "Kando is already running": "Kando 已经在运行了",
+    "backends": {
+        "gnome": {
+            "error": "无法连接到 \"Kando 集成\" GNOME Shell 插件。您可以从这里获取：%s"
+        },
+        "hyprland": {
+            "shortcut-info": "Kando 无法直接在 Hyprland 中绑定全局快捷键。相反，请您在这里指定一个快捷键 ID，并在您的 hyprland.conf 中绑定一个快捷键，例如 \"bind = CTRL, Space, global, kando:example-menu\"。将 example-menu 替换为在这里选择的 ID。"
+        },
+        "kde-wayland": {
+            "shortcut-info": "Kando 无法直接在 KDE/Wayland 上绑定全局快捷键。相反，请您在这里指定一个快捷键 ID，然后在 KDE 系统设置的全局快捷键的 KWin 部分中搜索它。您可以在那里分配将打开此菜单的快捷键。"
+        }
     },
-    "hyprland": {
-      "shortcut-info": "使用您的 hyperland.conf 文件来绑定该快捷键。"
+    "example-menu": {
+        "apps": {
+            "apple-music": "音乐",
+            "email": "邮件",
+            "file-browser": "文件管理器",
+            "finder": "访达",
+            "gimp": "GIMP",
+            "paint": "画图",
+            "safari": "Safari",
+            "submenu": "应用",
+            "terminal": "终端",
+            "web-browser": "浏览器"
+        },
+        "audio": {
+            "mute": "静音",
+            "next-track": "下一首",
+            "play-pause": "暂停 / 播放",
+            "previous-track": "上一首",
+            "submenu": "媒体"
+        },
+        "bookmarks": {
+            "desktop": "桌面",
+            "documents": "文档",
+            "downloads": "下载",
+            "home": "个人文件夹",
+            "music": "音乐",
+            "pictures": "图片",
+            "submenu": "收藏夹",
+            "videos": "视频"
+        },
+        "clipboard": {
+            "copy": "复制",
+            "cut": "剪切",
+            "paste": "粘贴",
+            "submenu": "剪贴板"
+        },
+        "name": "示例菜单",
+        "next-workspace": "后一个桌面",
+        "previous-workspace": "前一个桌面",
+        "web-links": {
+            "google": "Google",
+            "kando-on-discord": "Kando 的 Discord",
+            "kando-on-github": "Kando 的 GitHub",
+            "kando-on-kofi": "Kando 的 Ko-fi",
+            "kando-on-youtube": "Kando 的 YouTube",
+            "submenu": "网页链接"
+        },
+        "windows": {
+            "close-window": "关闭窗口",
+            "mission-control": "调度中心",
+            "submenu": "窗口管理",
+            "tile-left": "向左贴靠",
+            "tile-right": "向右贴靠",
+            "toggle-maximize": "最大化 / 还原"
+        }
     },
-    "kde-wayland": {
-      "shortcut-info": "使用 KDE 系统设置来绑定该快捷键。"
-    }
-  },
-  "example-menu": {
-    "apps": {
-      "apple-music": "音乐",
-      "email": "邮件",
-      "file-browser": "文件管理器",
-      "finder": "访达",
-      "gimp": "GIMP",
-      "paint": "画图",
-      "safari": "Safari",
-      "submenu": "应用",
-      "terminal": "终端",
-      "web-browser": "浏览器"
+    "main": {
+        "failed-to-start-header": "Kando 启动失败",
+        "inhibit-shortcuts": "暂时禁用所有快捷键",
+        "new-version-notification-header": "Kando 发布新版本啦！",
+        "quit": "退出",
+        "show-settings": "显示设置窗口",
+        "un-inhibit-shortcuts": "重新启用快捷键",
+        "new-version-notification-body": "前往 %s 获取吧。",
+        "invalid-link-header": "链接无效",
+        "invalid-link-message": "此深链接无法被解析。"
     },
-    "audio": {
-      "mute": "静音",
-      "next-track": "下一首",
-      "play-pause": "暂停 / 播放",
-      "previous-track": "上一首",
-      "submenu": "媒体"
-    },
-    "bookmarks": {
-      "desktop": "桌面",
-      "documents": "文档",
-      "downloads": "下载",
-      "home": "个人文件夹",
-      "music": "音乐",
-      "pictures": "图片",
-      "submenu": "收藏夹",
-      "videos": "视频"
-    },
-    "clipboard": {
-      "copy": "复制",
-      "cut": "剪切",
-      "paste": "粘贴",
-      "submenu": "剪贴板"
-    },
-    "name": "示例菜单",
-    "next-workspace": "后一个桌面",
-    "previous-workspace": "前一个桌面",
-    "web-links": {
-      "google": "Google",
-      "kando-on-discord": "Kando 的 Discord",
-      "kando-on-github": "Kando 的 GitHub",
-      "kando-on-kofi": "Kando 的 Ko-fi",
-      "kando-on-youtube": "Kando 的 YouTube",
-      "submenu": "网页链接"
-    },
-    "windows": {
-      "close-window": "关闭窗口",
-      "mission-control": "调度中心",
-      "submenu": "窗口管理",
-      "tile-left": "向左贴靠",
-      "tile-right": "向右贴靠",
-      "toggle-maximize": "最大化 / 还原"
-    }
-  },
-  "main": {
-    "failed-to-start-header": "Kando 启动失败",
-    "inhibit-shortcuts": "暂时禁用快捷键",
-    "new-version-notification-header": "Kando 发布新版本啦！",
-    "quit": "退出",
-    "show-settings": "显示设置窗口",
-    "un-inhibit-shortcuts": "重新启用快捷键"
-  },
-  "menu-items": {
-    "command": {
-      "command": "命令",
-      "command-info": "该命令将被运行。",
-      "description": "运行任意命令。",
-      "name": "运行命令",
-      "tip-1": "您可以用命令来启动一个应用或脚本。",
-      "tip-2": "如果程序路径包含空格，您需要 \"用英文引号括住整个路径\"。",
-      "tip-3": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
-      "tip-4": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
-      "tip-5": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。"
-    },
-    "file": {
-      "description": "打开一个文件或文件夹。",
-      "file": "文件路径",
-      "name": "打开文件",
-      "tip-1": "您可以使用此菜单项打开文件或文件夹。"
-    },
-    "hotkey": {
-      "description": "模拟按下一个快捷键。",
-      "hotkey": "按键",
-      "name": "模拟按键",
-      "recording-placeholder": "请按下按键…",
-      "tip-1": "录制快捷键时，您不必一次性按下所有按键，可以一个接一个地按。",
-      "tip-2": "如果某个按键被系统占用导致无法录制，试试直接输入按键名称。"
-    },
-    "macro": {
-      "description": "执行一系列按键。",
-      "name": "模拟宏",
-      "placeholder": "点击录制按钮开始录制！",
-      "recording-placeholder": "请按下按键…",
-      "tip-1": "每个按键事件前默认延迟 10ms，可以修改 \"delay\" 属性来设定延迟时长。"
-    },
-    "redirect": {
-      "description": "打开另一个菜单",
-      "name": "重定向"
+    "menu-items": {
+        "command": {
+            "command": "命令",
+            "command-info": "该命令将被运行。",
+            "description": "运行应用或脚本。",
+            "name": "运行命令",
+            "tip-1": "您可以用命令来启动一个应用或脚本。",
+            "tip-2": "如果程序路径包含空格，您需要 \"用英文引号括住整个路径\"。",
+            "tip-3": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
+            "tip-4": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
+            "tip-5": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
+            "tip-6": "点击[这里](%s)以了解如何查找启动应用程序的命令。",
+            "placeholder": "插入任何命令…"
+        },
+        "file": {
+            "description": "打开一个文件或文件夹。",
+            "file": "文件路径",
+            "name": "打开文件",
+            "tip-1": "您可以使用此菜单项打开文件或文件夹。",
+            "placeholder": "选择一个文件或文件夹…"
+        },
+        "hotkey": {
+            "description": "按下一套组合键。",
+            "hotkey": "按键",
+            "name": "模拟按键",
+            "recording-placeholder": "请按下按键…",
+            "tip-1": "录制快捷键时，您不必一次性按下所有按键，可以一个接一个地按。",
+            "tip-2": "如果某个按键被系统占用导致无法录制，试试直接输入按键名称。",
+            "tip-3": "点击 [这个链接](%s) 以查看所有有效键名。",
+            "hotkey-info": "选择该菜单项时，将触发此快捷键。在录制快捷键时，您不必一次按下所有按键，也可以一个接一个地按。这在热键已绑定到某个全局操作时非常有用！"
+        },
+        "macro": {
+            "description": "执行一系列按键。",
+            "name": "模拟宏",
+            "placeholder": "点击录制按钮开始录制！",
+            "recording-placeholder": "请按下按键…",
+            "tip-1": "每个按键事件前默认延迟 10ms，可以修改 \"delay\" 属性来设定延迟时长。",
+            "tip-2": "您也可以手动编辑模拟宏。如果您想调整按键的触发时间，这将非常有用。"
+        },
+        "redirect": {
+            "description": "打开另一个菜单。",
+            "name": "重定向"
+        },
+        "settings": {
+            "description": "打开Kando的设置窗口。",
+            "name": "打开设置",
+            "tip-1": "此操作将打开Kando的设置窗口。"
+        },
+        "submenu": {
+            "description": "用来包含其它菜单项。",
+            "name": "子菜单",
+            "tip-1": "子菜单可以用来分组。",
+            "tip-2": "子菜单里还可以嵌套子菜单。",
+            "tip-3": "子菜单可以用来创建复杂的菜单结构。",
+            "tip-4": "最好不要在一个菜单里添加十二个以上的菜单项，八个就很棒。",
+            "tip-5": "在预览区中，点击某一项的小锁图标可以固定这一项的角度位置。",
+            "tip-6": "在预览区中，拖动菜单项可以排序。",
+            "tip-7": "您可以用下面的垃圾桶图标删除菜单或菜单项。"
+        },
+        "text": {
+            "description": "插入给定文本。",
+            "name": "粘贴文本",
+            "placeholder": "插入任意文本…",
+            "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。"
+        },
+        "uri": {
+            "description": "打开网页或调用其它URI方案。",
+            "name": "打开 URI",
+            "tip-1": "使用 http:// 协议来打开网站。",
+            "tip-2": "您可以使用它来调用自定义URI方案，如 slack:// 或 zoommtg:// 。",
+            "tip-3": "使用 mailto: 协议来打开邮箱。",
+            "tip-4": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
+            "tip-5": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
+            "tip-6": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
+            "uri": "URI",
+            "placeholder": "键入任何 URI…"
+        },
+        "common": {
+            "delayed-option": "菜单关闭后运行",
+            "delayed-option-info": "如果此操作仅针对需要聚焦的窗口，勾选此项将很有用。"
+        }
     },
     "settings": {
-      "description": "打开Kando的设置窗口。",
-      "name": "打开设置",
-      "tip-1": "此操作将打开Kando的设置窗口。"
-    },
-    "submenu": {
-      "description": "用来包含其它菜单项。",
-      "name": "子菜单",
-      "tip-1": "子菜单可以用来分组。",
-      "tip-2": "子菜单里还可以嵌套子菜单。",
-      "tip-3": "子菜单可以用来创建复杂的菜单结构。",
-      "tip-4": "最好不要在一个菜单里添加十二个以上的菜单项，八个就很棒。",
-      "tip-5": "在预览区中，点击某一项的小锁图标可以固定这一项的角度位置。",
-      "tip-6": "在预览区中，拖动菜单项可以排序。"
-    },
-    "text": {
-      "description": "插入给定文本。",
-      "name": "粘贴文本",
-      "placeholder": "插入任意文本…",
-      "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。"
-    },
-    "uri": {
-      "description": "打开网页或调用其它URI方案。",
-      "name": "打开 URI",
-      "tip-1": "使用 http:// 协议来打开网站。",
-      "tip-2": "您可以使用它来调用自定义URI方案，如 slack:// 或 zoommtg:// 。",
-      "tip-3": "使用 mailto: 协议来打开邮箱。",
-      "tip-4": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
-      "tip-5": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
-      "tip-6": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
-      "uri": "URI"
+        "about-dialog": {
+            "chrome-version": "Chrome 版本",
+            "electron-version": "Electron 版本",
+            "kando-backend": "Kando 后端",
+            "kando-version": "Kando 版本",
+            "message": "我出于热情创造了Kando。如果您像我热爱创造它一样享受使用它，您可以[请我喝杯咖啡](%s)！\n\n💖 Simon",
+            "title": "关于 Kando",
+            "check-latest-release": "检查最新版本",
+            "read-release-notes": "阅读发布说明"
+        },
+        "anchored-mode": "锚定模式",
+        "app-condition": "限定应用",
+        "area-condition": "限定屏幕区域",
+        "area-condition-bottom-placeholder": "下",
+        "area-condition-left-placeholder": "左",
+        "area-condition-right-placeholder": "右",
+        "area-condition-top-placeholder": "上",
+        "cancel": "取消",
+        "centered-mode": "居中模式",
+        "centered-mode-info": "在屏幕中心而非光标位置打开菜单。",
+        "general-settings-dialog": {
+            "reload-menu-theme": "重载菜单主题",
+            "reload-menu-theme-tooltip": "对 CSS 的更改将会立即生效，对 theme.json 文件的更改则需要重新打开菜单。",
+            "reload-sound-theme": "重载声音主题",
+            "tray-icon-flavor": "托盘图标风格",
+            "black": "黑色",
+            "color": "彩色",
+            "white": "白色",
+            "reload-note": "当您重新加载菜单主题时，即使当前显示了菜单，也会应用 CSS 更改。而对于 theme.json 文件所做的更改，则需要重新打开菜单才会生效。",
+            "lazy-initialization-info": "如果启用，菜单窗口将在第一次打开菜单时创建。这将使首次打开菜单的速度稍微变慢，但可以防止在登录期间太早启动 Kando 时出现问题。默认情况下此选项已禁用。",
+            "invisible-settings-button-info": "您依然可以使用此按钮，它会在您将鼠标移到它上面时出现。",
+            "settings-button-position": "设置按钮的位置",
+            "top-left": "左上角",
+            "system": "系统",
+            "light": "亮",
+            "dark": "暗",
+            "settings-window-flavor": "设置窗口风格",
+            "transparent-light": "透明（亮）",
+            "transparent-dark": "透明（暗）",
+            "transparent-system": "透明（系统）",
+            "sakura-light": "樱花（亮）",
+            "sakura-dark": "樱花（暗）",
+            "tray-icon-flavor-info": "您也可以选择完全隐藏托盘图标。",
+            "hidden": "隐藏",
+            "menu-behavior": "菜单行为",
+            "require-click-for-hover-mode": "悬停模式下需要点击以选择",
+            "move-pointer-to-menu-center-info": "如果勾选，鼠标指针将在需要时移动到菜单或子菜单的中心。这可以用在菜单打开得太靠近屏幕边缘或在居中模式下打开菜单时。",
+            "right-mouse-button-selects-parent-info": "如果不勾选，右键将关闭菜单。",
+            "enable-gamepad-support": "启用游戏手柄支持",
+            "volume-info": "声音主题的整体音量。默认值为 0.5。",
+            "minimum-gesture-angle": "最小手势角度",
+            "minimum-gesture-length-info": "鼠标指针的直线移动距离必须至少达到该值才能触发选择。默认值为 150 像素。",
+            "minimum-gesture-angle-info": "鼠标指针较小的偏离直线运动将不会触发选择。默认值为 20° 。",
+            "gesture-pause-timeout": "手势暂停超时",
+            "fixed-stroke-length": "绘制距离修正",
+            "gesture-jitter-threshold-info": "较小的移动将被手势检测忽略。默认值为 10 像素。",
+            "gesture-pause-timeout-info": "停止手势时长达到此值时将触发选择。默认值为 100 毫秒。",
+            "developer-options": "开发者选项",
+            "settings-window-dev-tools": "检查设置",
+            "fixed-stroke-length-info": "通常，当您停止移动指针或将其转向时，菜单项会被选择。如果将此设置为大于 0 的值，则此行为将发生变化：现在，只有当您将菜单项拖动到离中心的距离达到此值时，菜单项才会被选择。默认值为 0 像素。",
+            "menu-window-dev-tools": "检查菜单",
+            "none": "无",
+            "title": "通用设置",
+            "message": "Kando 的所有设置都存储在一个 JSON 文件中，您可以编辑、分享或备份该文件。点击[这里](%s)以打开存储 config.json 文件的目录。",
+            "app-behavior": "应用行为",
+            "check-for-new-versions": "检查新版本",
+            "check-for-new-versions-info": "如果启用，Kando 将会在新版本可用时向您显示一条通知。",
+            "invisible-settings-button": "隐藏设置按钮",
+            "settings-button-position-info": "选择将显示设置按钮的屏幕角落。",
+            "top-right": "右上角",
+            "bottom-left": "左下角",
+            "bottom-right": "右下角",
+            "settings-window-color-scheme": "设置窗口颜色方案",
+            "settings-window-color-scheme-info": "如果您选择“系统”，设置窗口将使用与您的操作系统相同的颜色方案。",
+            "settings-window-flavor-info": "如果您选择透明样式，您将需要重新启动设置窗口以应用效果。",
+            "sakura-system": "樱花（系统）",
+            "lazy-initialization": "惰性初始化",
+            "enable-marking-mode": "启用画笔模式",
+            "enable-marking-mode-info": "启用画笔模式后，您可以通过拖动鼠标来选择项目。",
+            "enable-turbo-mode": "启用极速模式",
+            "enable-turbo-mode-info": "启用极速模式后，只要按住 Shift 或 Ctrl 等修饰键，就可以触发轮盘切换手势。",
+            "move-pointer-to-menu-center": "将鼠标光标移动至菜单中央",
+            "right-mouse-button-selects-parent": "右键选择父级菜单",
+            "require-click-for-hover-mode-info": "如果不勾选，当鼠标移动到菜单项上时，菜单项将立即被选中，这适用于开启悬停模式的菜单。",
+            "enable-gamepad-support-info": "如果勾选，您就可以使用已连接的游戏手柄控制菜单。",
+            "menu-sounds": "菜单声音",
+            "learn-how-to-add-sound-themes": "在[这里](%s)了解如何将新的声音主题添加到 Kando！",
+            "sound-theme": "声音主题",
+            "sound-theme-info": "声音主题是一组在您与菜单交互时会播放的声音。",
+            "volume": "音量",
+            "advanced-menu-options": "高级菜单选项",
+            "advanced-menu-options-note": "通常，您可以将这些设置保持在默认值。",
+            "center-click-zone-radius": "中心点击区域半径",
+            "center-click-zone-radius-info": "菜单中间区域的大小，点击该区域后将关闭菜单或将菜单回到上一级。默认值为 50 像素。",
+            "minimum-submenu-distance": "最小子菜单距离",
+            "minimum-submenu-distance-info": "如果子菜单在父菜单附近打开，父菜单将推移至此距离。默认值为 150 像素。",
+            "movement-threshold": "运动阈值",
+            "movement-threshold-info": "在画笔或极速模式下，较小的鼠标移动将被忽略。默认值为 15 像素。",
+            "minimum-gesture-length": "最小手势长度",
+            "gesture-jitter-threshold": "手势抖动阈值",
+            "dev-tools-note": "Kando使用两个窗口：一个用于菜单，一个用于设置。您可以打开开发工具单独检查这两个窗口。"
+        },
+        "hover-mode": "悬停模式",
+        "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
+        "icon-picker-dialog": {
+            "base64-example": "Base64 示例：",
+            "file-example": "file: URI 示例：",
+            "search-placeholder": "搜索图标…",
+            "url-example": "URL 示例：",
+            "base64-hint": "Base64 编码的图标提供了一种简单的方法将任何类型的图标包含到您的菜单中。您可以使用类似于 [www.base64-image.de](%s) 的服务将任何图像转换为 Base64 编码字符串。这甚至适用于动画 GIF！",
+            "hint": "在 [这里](%s) 了解如何添加或创建您自己的图标主题。"
+        },
+        "introduction-dialog": {
+            "title": "欢迎使用 Kando！",
+            "slide8-text": "**菜单会根据您的鼠标移动做出反应！** 当您想要打开子菜单时，它就会被打开。想必经过一些练习，您就能够在不看菜单的情况下选择项目。",
+            "slide9-title": "快如闪电：极速模式",
+            "slide12-title": "不仅如此！",
+            "chapter3": "极速模式",
+            "chapter4": "更进一步",
+            "slide7-text": "点击并拖动项目即可进入画笔模式。**如果你暂停指针的移动或转弯，当前拖动的子菜单就会被打开！** 请记住菜单项的路径，并用富有表现力的锯齿形动作画向它。",
+            "slide11-text": "**不用担心意外选择！** 在画笔模式或极速模式下按住键盘的键时，只有在释放鼠标按钮后动作才会被执行。请利用这一点来探索菜单吧！",
+            "show-again": "再次显示此对话框",
+            "slide2-title": "打开菜单！",
+            "slide1-title": "Kando 提供了一种独特且高效的与您的设备互动的方式.",
+            "slide1-text": "左右滑动这些幻灯片以了解 Kando 能为您做些什么！您可以使用左侧的章节标记快速跳转到介绍的特定部分。",
+            "slide2-text-standard": "如果您是第一次启动 Kando 的话，您可以用 Ctrl+空格 快捷键打开示例菜单。而在屏幕任意位置点击鼠标右键或按下Esc键则可以关闭它。",
+            "slide2-text-no-shortcuts": "如果您是第一次启动 Kando 的话，则您还[可能需要在 Linux 上执行一些额外步骤以使全局热键工作](%s)。处理好这项工作后，您就可以通过 Esc 键或右键单击关闭菜单了。",
+            "slide3-text": "在 Kando，**您的整个屏幕都是一个可点击的目标**！您不需要瞄准图标，而是可以在菜单项对应的楔形区域内的任何地方点击。这将使选择项目变得更高效。",
+            "slide10-text": "**不用等到动画完成！** 您大可直接在菜单中以锯齿形快速行进。这是选择项目的最快方法！",
+            "slide9-text": "如果您在打开菜单后 **按住一个键**（例如 _Ctrl_、_Shift_ 或 _Alt_），您就可以仅通过移动指针来进行选择而无需额外的点击或拖动。",
+            "slide12-text": "Kando 是高度可定制的。您可以用它打开应用程序、文件、执行键盘宏和其他许多事情。您还可以[更改菜单样式](%s1)、[添加图标主题](%s2)，甚至在您的菜单中[使用音效](%s3)！",
+            "slide13-text": "如果您在任何时候需要帮助，都可以随时加入我们的 [Discord服务器](%s1) 聊聊或看看我们的 [在线文档](%s2) !",
+            "chapter1": "快速入门",
+            "chapter2": "画笔模式",
+            "slide3-hint1": "您也可以点击这里关闭菜单。",
+            "slide3-hint2": "在这里的任何地方点击都可以选择菜单项。",
+            "slide4-text": "子菜单将**始终**在您的鼠标指针位置打开。您也**不需要等待动画完成**。只需要相信您的肌肉记忆，继续选择即可！",
+            "slide5-hint": "点击这里的任何地方以回退至上级。",
+            "slide6-text": "像这样，您就可以快速浏览菜单结构。",
+            "slide5-text": "要**返回上级**，请单击父菜单的楔形部分或菜单中心。",
+            "slide7-title": "变得更快：画笔模式",
+            "chapter5": "获取帮助"
+        },
+        "menu-behavior": "菜单行为",
+        "menu-conditions": "菜单条件",
+        "menu-conditions-info": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
+        "menu-themes-dialog": {
+            "author": "作者 %s",
+            "light-dark-mode-info": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
+            "reset-color-picker": "重置所有颜色至默认值",
+            "title": "菜单主题",
+            "no-accent-colors": "这个主题不支持强调色。",
+            "accent-colors": "强调色",
+            "dark": "暗色模式",
+            "light": "亮色模式",
+            "accent-colors-info": "每个主题都可以有一组不同的强调色。",
+            "theme-colors": "主题色",
+            "fade-in-time-info": "菜单淡入所需的时间。默认值为 150 毫秒。",
+            "fade-out-time": "渐出时间",
+            "fade-out-time-info": "菜单淡出所需的时间。默认值为 200 毫秒。",
+            "light-dark-mode": "启用 亮/暗模式",
+            "fade-in-time": "渐入时间",
+            "menu-scale": "菜单尺寸",
+            "menu-scale-info": "菜单的全局缩放系数。您也可以在菜单打开时使用 Ctrl+加号、Ctrl+减号 和 Ctrl+0 调整此设置。",
+            "get-themes-online": "获取在线主题",
+            "create-your-own-themes": "创造您自己的主题",
+            "open-theme-directory": "打开主题目录"
+        },
+        "not-bound": "未绑定快捷键",
+        "shortcut-id-label": "快捷键 ID",
+        "shortcut-label": "快捷键",
+        "shortcut-recording": "请按下按键…",
+        "window-condition": "限定窗口标题",
+        "create-menu-button": "新建菜单",
+        "window-picker-dialog": {
+            "instructions": "请点击下面的按钮，并在接下来的五秒内聚焦目标窗口.",
+            "pick-window-title-title": "选择窗口标题",
+            "result": "您选择了 “%s”。",
+            "restart-countdown": "再次启动倒计时",
+            "start-countdown": "启动倒计时",
+            "countdown_other": "将在 %i 秒后选择…",
+            "pick-app-name-title": "选择应用程序名称",
+            "confirm": "使用此值"
+        },
+        "invalid-dropdown-selection": "选择一个选项…",
+        "anchored-mode-info": "在与父菜单相同的位置打开子菜单。勾选此项将禁用画笔模式。",
+        "window-condition-placeholder": "窗口标题",
+        "window-condition-tooltip": "选取窗口",
+        "screen-area-picker": {
+            "bottom-right-value": "右： %x，下： %y",
+            "title": "选择屏幕区域",
+            "valid": "很好！您选择了有效区域。",
+            "invalid": "请确保左上角图标在右下角图标的左上方。",
+            "confirm": "使用此区域",
+            "top-left-value": "左： %x，上： %y",
+            "top-left": "将此图标拖到您想指定区域的左上角。",
+            "bottom-right": "将此图标拖到您想指定区域的右下角。"
+        },
+        "add-menu-items": "添加菜单项",
+        "undo": "撤销",
+        "redo": "重做",
+        "area-condition-info": "仅在指针位于屏幕上的指定区域时显示菜单。该区域以像素为单位，且相对于主显示器的左上角。如果您留空某个字段，则该方向的对应区域是无限制的。",
+        "area-condition-tooltip": "选取屏幕区域",
+        "shortcut-info": "此快捷键将打开菜单。它必须包含一个普通按键和任意数量的修饰键，如 Ctrl、Alt 或 Shift。在录制时，您不必一次按下所有按键，也可以一个接一个地按。如果一个快捷方式已经绑定到另一个菜单，这会很有用！",
+        "duplicate-menu-item": "复制菜单项",
+        "delete-menu": "删除菜单",
+        "delete-menu-item": "删除菜单项",
+        "add-tags-placeholder": "添加标签…",
+        "file-picker": {
+            "select-file": "选择一个文件",
+            "select-directory": "选择一个目录"
+        },
+        "all-menus": "所有菜单",
+        "search-menus-placeholder": "搜索菜单…",
+        "add-collection-tooltip": "创建一个新的菜单合集。使用集合以按标签将您的菜单分组！",
+        "menu-behavior-info": "在您启用这些选项之前，我们建议您了解我们喜欢Kando默认行为的 [原因](%s)!",
+        "app-condition-info": "仅在特定应用程序被聚焦时显示菜单。支持正则表达式，这支持类似于 /firefox|chrome/i 的正则表达式。",
+        "app-condition-placeholder": "应用名称",
+        "app-condition-tooltip": "选取应用",
+        "window-condition-info": "仅当聚焦窗口的标题包含给定文本时显示菜单。这支持类似于/youtube|vimeo/i的正则表达式。",
+        "tags": "标签",
+        "duplicate-menu": "复制菜单",
+        "tags-info": "标签可以用于在菜单合集中对菜单进行分组。"
     }
-  },
-  "settings": {
-    "about-dialog": {
-      "chrome-version": "Chrome 版本",
-      "electron-version": "Electron 版本",
-      "kando-backend": "Kando 后端",
-      "kando-version": "Kando 版本"
-    },
-    "anchored-mode": "锚定模式",
-    "app-condition": "限定应用",
-    "area-condition": "限定屏幕区域",
-    "area-condition-bottom-placeholder": "下",
-    "area-condition-left-placeholder": "左",
-    "area-condition-right-placeholder": "右",
-    "area-condition-top-placeholder": "上",
-    "cancel": "取消",
-    "centered-mode": "居中模式",
-    "centered-mode-info": "在屏幕中心而非光标位置打开菜单。",
-    "general-settings-dialog": {
-      "reload-menu-theme": "重载当前菜单主题",
-      "reload-menu-theme-tooltip": "对 CSS 的更改将会立即生效，对 theme.json 文件的更改则需要重新打开菜单。",
-      "reload-sound-theme": "重载当前声音主题"
-    },
-    "hover-mode": "悬停模式",
-    "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
-    "icon-picker-dialog": {
-      "base64-example": "Base64 示例：",
-      "file-example": "file: URI 示例：",
-      "search-placeholder": "搜索图标…",
-      "url-example": "URL 示例："
-    },
-    "introduction-dialog": {
-      "title": "欢迎使用 Kando！"
-    },
-    "menu-behavior": "菜单行为",
-    "menu-conditions": "菜单条件",
-    "menu-conditions-info": "您可以将多个菜单绑定到同一个快捷键，然后设定不同条件来打开不同的菜单。",
-    "menu-themes-dialog": {
-      "author": "作者 %s",
-      "light-dark-mode-info": "启用后，可以在系统处于浅色或深色模式时分别选择不同的主题和颜色。",
-      "reset-color-picker": "重置所有颜色至默认值",
-      "title": "菜单主题"
-    },
-    "not-bound": "未绑定快捷键",
-    "shortcut-id-label": "全局快捷键 ID",
-    "shortcut-label": "快捷键",
-    "shortcut-recording": "请按下按键…",
-    "window-condition": "限定窗口标题"
-  }
 }
