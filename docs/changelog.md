@@ -56,7 +56,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :bug: Fixed
 
-- Fixed an issue where some icons could not be searched.
+- An issue where some icons could not be searched for.
+- Sound support in the Flatpak version of Kando.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 
