@@ -217,7 +217,8 @@
       "instructions": "Hit the button below and focus the target window within the next five seconds.",
       "restart-countdown": "Start countdown again",
       "start-countdown": "Start countdown",
-      "countdown": "Selecting in %i seconds…",
+      "countdown_one": "Selecting in {{count}} second…",
+      "countdown_other": "Selecting in {{count}} seconds…",
       "pick-app-name-title": "Select an Application Name",
       "pick-window-title-title": "Select a Window Title",
       "confirm": "Use this value"
