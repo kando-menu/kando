@@ -343,7 +343,7 @@
             "result": "您选择了 “%s”。",
             "restart-countdown": "再次启动倒计时",
             "start-countdown": "启动倒计时",
-            "countdown": "将在 %i 秒后选择…",
+            "countdown_other": "将在 %i 秒后选择…",
             "pick-app-name-title": "选择应用程序名称",
             "confirm": "使用此值"
         },
