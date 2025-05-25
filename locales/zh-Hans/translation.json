@@ -78,7 +78,7 @@
         "un-inhibit-shortcuts": "重新启用快捷键",
         "new-version-notification-body": "前往 {{link}} 获取吧。",
         "invalid-link-header": "链接无效",
-        "invalid-link-message": "此深链接无法被解析。"
+        "invalid-link-message": "此深度链接无法被解析。"
     },
     "menu-items": {
         "command": {
@@ -99,7 +99,7 @@
             "file": "文件路径",
             "name": "打开文件",
             "tip-1": "您可以使用此菜单项打开文件或文件夹。",
-            "placeholder": "选择一个文件或文件夹…"
+            "placeholder": "请选择一个文件或文件夹…"
         },
         "hotkey": {
             "description": "按下一套组合键。",
@@ -116,7 +116,7 @@
             "name": "模拟宏",
             "placeholder": "点击录制按钮开始录制！",
             "recording-placeholder": "请按下按键…",
-            "tip-1": "每个按键事件前默认延迟 10ms，可以修改 \"delay\" 属性来设定延迟时长。",
+            "tip-1": "每个按键事件前默认延迟 10 毫秒，可以修改 \"delay\" 属性来设定延迟时长。",
             "tip-2": "您也可以手动编辑模拟宏。如果您想调整按键的触发时间，这将非常有用。"
         },
         "redirect": {
@@ -142,7 +142,7 @@
         "text": {
             "description": "插入给定文本。",
             "name": "粘贴文本",
-            "placeholder": "插入任意文本…",
+            "placeholder": "请输入任意文本…",
             "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。"
         },
         "uri": {
@@ -155,7 +155,7 @@
             "tip-5": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
             "tip-6": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
             "uri": "URI",
-            "placeholder": "键入任何 URI…"
+            "placeholder": "请键入任何 URI…"
         },
         "common": {
             "delayed-option": "菜单关闭后运行",
@@ -288,7 +288,7 @@
             "slide2-title": "打开菜单！",
             "slide1-title": "Kando 提供了一种独特且高效的与您的设备互动的方式.",
             "slide1-text": "左右滑动这些幻灯片以了解 Kando 能为您做些什么！您可以使用左侧的章节标记快速跳转到介绍的特定部分。",
-            "slide2-text-standard": "如果您是第一次启动 Kando 的话，您可以用 Ctrl+空格 快捷键打开示例菜单。而在屏幕任意位置点击鼠标右键或按下Esc键则可以关闭它。",
+            "slide2-text-standard": "如果您是第一次启动 Kando 的话，您可以用 Ctrl+空格 快捷键打开示例菜单。而在屏幕任意位置点击鼠标右键或按下 Esc 键则可以关闭它。",
             "slide2-text-no-shortcuts": "如果您是第一次启动 Kando 的话，则您还[可能需要在 Linux 上执行一些额外步骤以使全局热键工作]({{link}})。处理好这项工作后，您就可以通过 Esc 键或右键单击关闭菜单了。",
             "slide3-text": "在 Kando，**您的整个屏幕都是一个可点击的目标**！您不需要瞄准图标，而是可以在菜单项对应的楔形区域内的任何地方点击。这将使选择项目变得更高效。",
             "slide10-text": "**不用等到动画完成！** 您大可直接在菜单中以锯齿形快速行进。这是选择项目的最快方法！",
@@ -343,7 +343,7 @@
             "result": "您选择了 “{{name}}”。",
             "restart-countdown": "再次启动倒计时",
             "start-countdown": "启动倒计时",
-            "countdown_other": "将在 %i 秒后选择…",
+            "countdown_other": "将在 {{count}} 秒后选择…",
             "pick-app-name-title": "选择应用程序名称",
             "confirm": "使用此值"
         },
@@ -377,12 +377,12 @@
         },
         "all-menus": "所有菜单",
         "search-menus-placeholder": "搜索菜单…",
-        "add-collection-tooltip": "创建一个新的菜单合集。使用集合以按标签将您的菜单分组！",
+        "add-collection-tooltip": "创建一个新的菜单合集。使用合集以按标签将您的菜单分组！",
         "menu-behavior-info": "在您启用这些选项之前，我们建议您了解我们喜欢Kando默认行为的 [原因]({{link}})!",
-        "app-condition-info": "仅在特定应用程序被聚焦时显示菜单。支持正则表达式，这支持类似于 /firefox|chrome/i 的正则表达式。",
+        "app-condition-info": "仅在特定应用程序被聚焦时显示菜单。支持类似于 /firefox|chrome/i 的正则表达式。",
         "app-condition-placeholder": "应用名称",
         "app-condition-tooltip": "选取应用",
-        "window-condition-info": "仅当聚焦窗口的标题包含给定文本时显示菜单。这支持类似于/youtube|vimeo/i的正则表达式。",
+        "window-condition-info": "仅当聚焦窗口的标题包含给定文本时显示菜单。支持类似于 /youtube|vimeo/i 的正则表达式。",
         "tags": "标签",
         "duplicate-menu": "复制菜单",
         "tags-info": "标签可以用于在菜单合集中对菜单进行分组。"
