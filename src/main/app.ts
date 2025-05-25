@@ -89,16 +89,6 @@ export class KandoApp {
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
-    await fs.promises.mkdir(path.join(app.getPath('userData'), 'menu-themes'), {
-      recursive: true,
-    });
-    await fs.promises.mkdir(path.join(app.getPath('userData'), 'sound-themes'), {
-      recursive: true,
-    });
-    await fs.promises.mkdir(path.join(app.getPath('userData'), 'icon-themes'), {
-      recursive: true,
-    });
-
     // Bail out if the backend is not available.
     if (this.backend === null) {
       throw new Error('No backend found.');
@@ -122,6 +112,28 @@ export class KandoApp {
       },
     });
 
+    if (!this.generalSettings.get('ignoreWriteProtectedConfigFiles')) {
+      try {
+        await fs.promises.mkdir(path.join(app.getPath('userData'), 'menu-themes'), {
+          recursive: true,
+        });
+        await fs.promises.mkdir(path.join(app.getPath('userData'), 'sound-themes'), {
+          recursive: true,
+        });
+        await fs.promises.mkdir(path.join(app.getPath('userData'), 'icon-themes'), {
+          recursive: true,
+        });
+      } catch (error) {
+        if (error.code === 'EACCES' || error.code === 'EPERM') {
+          console.log("Failed to create the 'themes' folder due to write-protected files.");
+        } else {
+          console.error("An unexpected error occurred while creating theme folders:", error);
+        }
+      }
+    } else {
+      console.log("Skipping creation of theme folders due to ignoreWriteProtectedConfigFiles flag.");
+    }
+    
     // We load the settings from the user's home directory. If the settings file does
     // not exist, it will be created with the default values.
     this.menuSettings = new Settings<IMenuSettings>({
