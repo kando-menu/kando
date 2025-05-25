@@ -370,7 +370,9 @@
         "window-picker-dialog": {
             "result": "Ви вибрали \"%s\".",
             "start-countdown": "Почати зворотний відлік",
-            "countdown": "Вибір через %i секунд…",
+            "countdown_one": "Вибір через %i секунд…",
+            "countdown_few": "",
+            "countdown_many": "",
             "restart-countdown": "Знову розпочати зворотний відлік",
             "pick-app-name-title": "Виберіть назву програми",
             "pick-window-title-title": "Вибрати заголовок вікна",
