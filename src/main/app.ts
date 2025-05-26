@@ -221,16 +221,11 @@ export class KandoApp {
     });
 
     this.updateChecker.on('update-available', () => {
-      console.log(
-        'A new version of Kando is available! Get it from https://github.com/kando-menu/kando/releases.'
-      );
-
-      // Show a notification if possible.
       Notification.show(
         i18next.t('main.new-version-notification-header'),
-        i18next
-          .t('main.new-version-notification-body')
-          .replace('%s', 'https://github.com/kando-menu/kando/releases'),
+        i18next.t('main.new-version-notification-body', {
+          link: 'https://github.com/kando-menu/kando/releases',
+        }),
         () => {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
         }

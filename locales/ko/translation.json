@@ -1,195 +1,195 @@
 {
-  "backends": {
-    "gnome": {
-      "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: %s"
+    "backends": {
+        "gnome": {
+            "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: {{link}}"
+        },
+        "hyprland": {
+            "shortcut-info": "hyprland.conf에서 바인딩하세요."
+        },
+        "kde-wayland": {
+            "shortcut-info": "KDE의 시스템 설정에서 바인딩하세요."
+        }
     },
-    "hyprland": {
-      "shortcut-info": "hyprland.conf에서 바인딩하세요."
+    "example-menu": {
+        "apps": {
+            "apple-music": "음악",
+            "email": "이메일",
+            "file-browser": "파일 브라우저",
+            "finder": "Finder",
+            "gimp": "GIMP",
+            "paint": "그림판",
+            "safari": "사파리",
+            "submenu": "앱",
+            "terminal": "터미널",
+            "web-browser": "웹 브라우저"
+        },
+        "audio": {
+            "mute": "음소거",
+            "next-track": "다음 트랙",
+            "play-pause": "재생 / 일시정지",
+            "previous-track": "이전 트랙",
+            "submenu": "오디오"
+        },
+        "bookmarks": {
+            "desktop": "데스크탑",
+            "documents": "문서",
+            "downloads": "다운로드",
+            "home": "홈",
+            "music": "음악",
+            "pictures": "사진",
+            "submenu": "즐겨찾기",
+            "videos": "영상"
+        },
+        "clipboard": {
+            "copy": "복사",
+            "cut": "자르기",
+            "paste": "붙여넣기",
+            "submenu": "클립보드"
+        },
+        "name": "예시 메뉴",
+        "next-workspace": "다음 워크스페이스",
+        "previous-workspace": "이전 타일",
+        "web-links": {
+            "google": "구글",
+            "kando-on-discord": "Kando의 Discord",
+            "kando-on-github": "Kando의 GitHub 페이지",
+            "kando-on-kofi": "Kando의 Ko-fi",
+            "kando-on-youtube": "Kando의 유튜브",
+            "submenu": "웹 링크"
+        },
+        "windows": {
+            "close-window": "창 닫기",
+            "mission-control": "Mission Control",
+            "submenu": "윈도우",
+            "tile-left": "왼쪽 타일",
+            "tile-right": "오른쪽 타일",
+            "toggle-maximize": "최대화 토글"
+        }
     },
-    "kde-wayland": {
-      "shortcut-info": "KDE의 시스템 설정에서 바인딩하세요."
-    }
-  },
-  "example-menu": {
-    "apps": {
-      "apple-music": "음악",
-      "email": "이메일",
-      "file-browser": "파일 브라우저",
-      "finder": "Finder",
-      "gimp": "GIMP",
-      "paint": "그림판",
-      "safari": "사파리",
-      "submenu": "앱",
-      "terminal": "터미널",
-      "web-browser": "웹 브라우저"
+    "main": {
+        "failed-to-start-header": "Kando를 실행하지 못했어요",
+        "inhibit-shortcuts": "일시적으로 단축키 비활성화",
+        "new-version-notification-header": "Kando의 새 버전이 이용 가능해요!",
+        "quit": "종료",
+        "show-settings": "설정 열기",
+        "un-inhibit-shortcuts": "단축키 재활성화"
     },
-    "audio": {
-      "mute": "음소거",
-      "next-track": "다음 트랙",
-      "play-pause": "재생 / 일시정지",
-      "previous-track": "이전 트랙",
-      "submenu": "오디오"
-    },
-    "bookmarks": {
-      "desktop": "데스크탑",
-      "documents": "문서",
-      "downloads": "다운로드",
-      "home": "홈",
-      "music": "음악",
-      "pictures": "사진",
-      "submenu": "즐겨찾기",
-      "videos": "영상"
-    },
-    "clipboard": {
-      "copy": "복사",
-      "cut": "자르기",
-      "paste": "붙여넣기",
-      "submenu": "클립보드"
-    },
-    "name": "예시 메뉴",
-    "next-workspace": "다음 워크스페이스",
-    "previous-workspace": "이전 타일",
-    "web-links": {
-      "google": "구글",
-      "kando-on-discord": "Kando의 Discord",
-      "kando-on-github": "Kando의 GitHub 페이지",
-      "kando-on-kofi": "Kando의 Ko-fi",
-      "kando-on-youtube": "Kando의 유튜브",
-      "submenu": "웹 링크"
-    },
-    "windows": {
-      "close-window": "창 닫기",
-      "mission-control": "Mission Control",
-      "submenu": "윈도우",
-      "tile-left": "왼쪽 타일",
-      "tile-right": "오른쪽 타일",
-      "toggle-maximize": "최대화 토글"
-    }
-  },
-  "main": {
-    "failed-to-start-header": "Kando를 실행하지 못했어요",
-    "inhibit-shortcuts": "일시적으로 단축키 비활성화",
-    "new-version-notification-header": "Kando의 새 버전이 이용 가능해요!",
-    "quit": "종료",
-    "show-settings": "설정 열기",
-    "un-inhibit-shortcuts": "단축키 재활성화"
-  },
-  "menu-items": {
-    "command": {
-      "command": "명령어",
-      "command-info": "이 명령어가 실행될 거예요.",
-      "description": "쉘 명령어를 실행해요.",
-      "name": "명령어 실행",
-      "tip-1": "앱이나 스크립트를 실행하기 위해 '명령어' 타입을 사용할 수 있어요.",
-      "tip-2": "실행파일의 경로에 공백문자가 포함된다면, 경로를 \"쌍따옴표 안에 넣어야 해요\".",
-      "tip-3": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
-      "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
-      "tip-5": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요."
-    },
-    "file": {
-      "description": "파일 또는 폴더를 열어요.",
-      "file": "파일 경로",
-      "name": "파일 열기",
-      "tip-1": "이 아이템 타입으로 파일 또는 폴더를 열 수 있어요."
-    },
-    "hotkey": {
-      "description": "단축키를 눌러요.",
-      "hotkey": "단축키",
-      "name": "단축키",
-      "recording-placeholder": "단축키를 눌러주세요…",
-      "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없어요. 하나씩 눌러도 돼요.",
-      "tip-2": "시스템이 사용하는 키가 녹화가 안된다면, 그 키의 이름을 적어보세요."
-    },
-    "macro": {
-      "description": "키보드 매크로를 실행해요.",
-      "name": "매크로",
-      "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
-      "recording-placeholder": "키를 눌러주세요…",
-      "tip-1": "기본적으로, Kando는 키 이벤트 사이에 10밀리초 딜레이을 추가해요. \"딜레이\" 설정으로 변경할 수 있어요."
-    },
-    "redirect": {
-      "description": "다른 메뉴를 열어요",
-      "name": "리디렉트"
+    "menu-items": {
+        "command": {
+            "command": "명령어",
+            "command-info": "이 명령어가 실행될 거예요.",
+            "description": "쉘 명령어를 실행해요.",
+            "name": "명령어 실행",
+            "tip-1": "앱이나 스크립트를 실행하기 위해 '명령어' 타입을 사용할 수 있어요.",
+            "tip-2": "실행파일의 경로에 공백문자가 포함된다면, 경로를 \"쌍따옴표 안에 넣어야 해요\".",
+            "tip-3": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
+            "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
+            "tip-5": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요."
+        },
+        "file": {
+            "description": "파일 또는 폴더를 열어요.",
+            "file": "파일 경로",
+            "name": "파일 열기",
+            "tip-1": "이 아이템 타입으로 파일 또는 폴더를 열 수 있어요."
+        },
+        "hotkey": {
+            "description": "단축키를 눌러요.",
+            "hotkey": "단축키",
+            "name": "단축키",
+            "recording-placeholder": "단축키를 눌러주세요…",
+            "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없어요. 하나씩 눌러도 돼요.",
+            "tip-2": "시스템이 사용하는 키가 녹화가 안된다면, 그 키의 이름을 적어보세요."
+        },
+        "macro": {
+            "description": "키보드 매크로를 실행해요.",
+            "name": "매크로",
+            "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
+            "recording-placeholder": "키를 눌러주세요…",
+            "tip-1": "기본적으로, Kando는 키 이벤트 사이에 10밀리초 딜레이을 추가해요. \"딜레이\" 설정으로 변경할 수 있어요."
+        },
+        "redirect": {
+            "description": "다른 메뉴를 열어요",
+            "name": "리디렉트"
+        },
+        "settings": {
+            "description": "Kando의 설정 메뉴가 열려요.",
+            "name": "설정 열기",
+            "tip-1": "이 동작은 Kando 설정 메뉴를 열어요."
+        },
+        "submenu": {
+            "description": "다른 메뉴 항목을 넣을 수 있어요.",
+            "name": "서브메뉴",
+            "tip-1": "서브메뉴로 여러 항목들을 모을 수 있어요.",
+            "tip-2": "서브메뉴 안에 서브메뉴도 넣을 수 있어요.",
+            "tip-3": "더 복잡한 메뉴 구조를 만들기 위해 서브메뉴를 사용할 수 있어요.",
+            "tip-4": "서브메뉴에 항목이 12개를 넘지 않게 하는 것이 좋아요. 서브메뉴당 8개를 추천해요.",
+            "tip-5": "미리보기에서 작은 자물쇠 아이콘으로 항목의 위치를 고정시킬 수 있어요.",
+            "tip-6": "미리보기에서 항목을 드래그하여 항목의 순서를 바꿀 수 있어요."
+        },
+        "text": {
+            "description": "지정된 텍스트를 삽입해요.",
+            "name": "텍스트 붙여넣기",
+            "placeholder": "아무 텍스트나 넣어보세요…",
+            "tip-1": "이 동작은 시스템의 클립보드를 사용하여 텍스트를 붙여넣어요. 동작이 실행된 이후에도 클립보드에 텍스트가 남아있을 거예요."
+        },
+        "uri": {
+            "description": "웹사이트 등을 열어요.",
+            "name": "URI 열기",
+            "tip-1": "URI 타입으로 http:// 프로토콜을 사용하여 웹사이트를 열 수 있어요.",
+            "tip-2": "slack:// 또는 zoommtg://와 같은 URI를 사용할 수 있어요.",
+            "tip-3": "URI 타입으로 mailto: 링크를 열 수 있어요.",
+            "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
+            "tip-5": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
+            "tip-6": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요.",
+            "uri": "URI"
+        }
     },
     "settings": {
-      "description": "Kando의 설정 메뉴가 열려요.",
-      "name": "설정 열기",
-      "tip-1": "이 동작은 Kando 설정 메뉴를 열어요."
-    },
-    "submenu": {
-      "description": "다른 메뉴 항목을 넣을 수 있어요.",
-      "name": "서브메뉴",
-      "tip-1": "서브메뉴로 여러 항목들을 모을 수 있어요.",
-      "tip-2": "서브메뉴 안에 서브메뉴도 넣을 수 있어요.",
-      "tip-3": "더 복잡한 메뉴 구조를 만들기 위해 서브메뉴를 사용할 수 있어요.",
-      "tip-4": "서브메뉴에 항목이 12개를 넘지 않게 하는 것이 좋아요. 서브메뉴당 8개를 추천해요.",
-      "tip-5": "미리보기에서 작은 자물쇠 아이콘으로 항목의 위치를 고정시킬 수 있어요.",
-      "tip-6": "미리보기에서 항목을 드래그하여 항목의 순서를 바꿀 수 있어요."
-    },
-    "text": {
-      "description": "지정된 텍스트를 삽입해요.",
-      "name": "텍스트 붙여넣기",
-      "placeholder": "아무 텍스트나 넣어보세요…",
-      "tip-1": "이 동작은 시스템의 클립보드를 사용하여 텍스트를 붙여넣어요. 동작이 실행된 이후에도 클립보드에 텍스트가 남아있을 거예요."
-    },
-    "uri": {
-      "description": "웹사이트 등을 열어요.",
-      "name": "URI 열기",
-      "tip-1": "URI 타입으로 http:// 프로토콜을 사용하여 웹사이트를 열 수 있어요.",
-      "tip-2": "slack:// 또는 zoommtg://와 같은 URI를 사용할 수 있어요.",
-      "tip-3": "URI 타입으로 mailto: 링크를 열 수 있어요.",
-      "tip-4": "현재 메뉴를 열었을 때 활성화되어 있던 앱의 이름으로 {{app_name}}을 사용하세요.",
-      "tip-5": "현재 메뉴를 열었을 때 활성화되어 있던 창의 이름으로 {{window_name}}을 사용하세요.",
-      "tip-6": "현재 메뉴가 열렸을 때의 커서 지점으로 {{pointer_x}}, {{pointer_y}}를 사용하세요.",
-      "uri": "URI"
+        "about-dialog": {
+            "chrome-version": "Chrome 버전",
+            "electron-version": "Electron 버전",
+            "kando-backend": "Kando 백엔드",
+            "kando-version": "Kando 버전"
+        },
+        "anchored-mode": "고정 모드",
+        "app-condition": "특정 앱으로 제한",
+        "area-condition": "지정된 스크린 구역으로 제한",
+        "area-condition-bottom-placeholder": "아래",
+        "area-condition-left-placeholder": "왼쪽",
+        "area-condition-right-placeholder": "오른쪽",
+        "area-condition-top-placeholder": "위",
+        "cancel": "취소",
+        "centered-mode": "중앙 정렬 모드",
+        "centered-mode-info": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
+        "general-settings-dialog": {
+            "reload-menu-theme": "현재 메뉴 테마 새로고침하기",
+            "reload-menu-theme-tooltip": "CSS 변경은 즉시 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
+            "reload-sound-theme": "현재 소리 테마 새로고침하기"
+        },
+        "hover-mode": "호버 모드",
+        "hover-mode-info": "숙련된 사용자 전용! 항목 위로 호버링해서 선택해요.",
+        "icon-picker-dialog": {
+            "base64-example": "Base64 예시:",
+            "file-example": "file: URI 예시:",
+            "search-placeholder": "아이콘 검색…",
+            "url-example": "URL 예시:"
+        },
+        "introduction-dialog": {
+            "title": "Kando에 오신 것을 환영해요!"
+        },
+        "menu-behavior": "메뉴 특성",
+        "menu-conditions": "메뉴 조건",
+        "menu-conditions-info": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
+        "menu-themes-dialog": {
+            "author": "{{author}} 제작",
+            "light-dark-mode-info": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
+            "reset-color-picker": "색상 모두 기본값으로 초기화하기",
+            "title": "메뉴 테마"
+        },
+        "not-bound": "설정되지 않음",
+        "shortcut-id-label": "전역 단축키 ID",
+        "shortcut-label": "단축키",
+        "shortcut-recording": "단축키를 눌러주세요…",
+        "window-condition": "특정 창 이름으로 제한"
     }
-  },
-  "settings": {
-    "about-dialog": {
-      "chrome-version": "Chrome 버전",
-      "electron-version": "Electron 버전",
-      "kando-backend": "Kando 백엔드",
-      "kando-version": "Kando 버전"
-    },
-    "anchored-mode": "고정 모드",
-    "app-condition": "특정 앱으로 제한",
-    "area-condition": "지정된 스크린 구역으로 제한",
-    "area-condition-bottom-placeholder": "아래",
-    "area-condition-left-placeholder": "왼쪽",
-    "area-condition-right-placeholder": "오른쪽",
-    "area-condition-top-placeholder": "위",
-    "cancel": "취소",
-    "centered-mode": "중앙 정렬 모드",
-    "centered-mode-info": "커서 위치 대신 스크린 중앙에 메뉴를 띄워요.",
-    "general-settings-dialog": {
-      "reload-menu-theme": "현재 메뉴 테마 새로고침하기",
-      "reload-menu-theme-tooltip": "CSS 변경은 즉시 적용돼요. theme.json 파일을 변경했다면, 메뉴를 다시 열어야 해요.",
-      "reload-sound-theme": "현재 소리 테마 새로고침하기"
-    },
-    "hover-mode": "호버 모드",
-    "hover-mode-info": "숙련된 사용자 전용! 항목 위로 호버링해서 선택해요.",
-    "icon-picker-dialog": {
-      "base64-example": "Base64 예시:",
-      "file-example": "file: URI 예시:",
-      "search-placeholder": "아이콘 검색…",
-      "url-example": "URL 예시:"
-    },
-    "introduction-dialog": {
-      "title": "Kando에 오신 것을 환영해요!"
-    },
-    "menu-behavior": "메뉴 특성",
-    "menu-conditions": "메뉴 조건",
-    "menu-conditions-info": "같은 단축키에 여러 개의 메뉴를 바인딩하고 조건에 따라 어떤 메뉴가 열리게 할지 선택할 수 있어요.",
-    "menu-themes-dialog": {
-      "author": "%s 제작",
-      "light-dark-mode-info": "활성화했을 때, 시스템이 라이트 또는 다크 모드로 설정되어 있을 때 각각 다른 테마와 색상을 선택할 수 있어요.",
-      "reset-color-picker": "색상 모두 기본값으로 초기화하기",
-      "title": "메뉴 테마"
-    },
-    "not-bound": "설정되지 않음",
-    "shortcut-id-label": "전역 단축키 ID",
-    "shortcut-label": "단축키",
-    "shortcut-recording": "단축키를 눌러주세요…",
-    "window-condition": "특정 창 이름으로 제한"
-  }
 }

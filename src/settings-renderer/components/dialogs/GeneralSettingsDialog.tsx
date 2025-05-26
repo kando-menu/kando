@@ -14,7 +14,7 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import i18next from 'i18next';
 
-import { TbReload, TbCode, TbSettingsFilled } from 'react-icons/tb';
+import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
 
 import { useAppState } from '../../state';
 
@@ -58,7 +58,7 @@ export default () => {
       paddingBottom={5}
       paddingLeft={5}
       paddingRight={5}>
-      <Scrollbox maxHeight={'min(80vh, 600px)'}>
+      <Scrollbox maxHeight={'min(80vh, 800px)'}>
         <div
           style={{
             display: 'flex',
@@ -69,16 +69,19 @@ export default () => {
           }}>
           <Note
             center
+            marginLeft="10%"
+            marginRight="10%"
+            marginTop={10}
             markdown
             onLinkClick={() => {
               window.settingsAPI.getConfigDirectory().then((dir) => {
                 window.open('file://' + dir, '_blank');
               });
             }}>
-            {i18next.t('settings.general-settings-dialog.message').replace('%s', '')}
+            {i18next.t('settings.general-settings-dialog.message', { link: '' })}
           </Note>
 
-          <Swirl variant="2" marginTop={10} width={350} marginBottom={20} />
+          <Swirl variant="2" width={350} marginBottom={10} />
 
           <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox
@@ -266,15 +269,10 @@ export default () => {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-sounds')}</h1>
-          <Note
-            marginTop={-5}
-            markdown
-            onLinkClick={() => {
-              window.open('https://kando.menu/sound-themes/', '_blank');
-            }}>
-            {i18next
-              .t('settings.general-settings-dialog.learn-how-to-add-sound-themes')
-              .replace('%s', '')}
+          <Note marginTop={-5} markdown>
+            {i18next.t('settings.general-settings-dialog.learn-how-to-add-sound-themes', {
+              link: 'https://kando.menu/sound-themes/',
+            })}
           </Note>
           <SettingsDropdown
             maxWidth={200}
@@ -383,51 +381,65 @@ export default () => {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
-          <Note marginTop={-5}>
-            {i18next.t('settings.general-settings-dialog.developer-options-note')}
-          </Note>
-          <div style={{ display: 'flex', gap: 5 }}>
-            <Button
-              label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
-              icon={<TbReload />}
-              grow
-              onClick={() => {
-                window.settingsAPI.reloadMenuTheme();
-              }}
-            />
-            <Button
-              label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
-              icon={<TbReload />}
-              grow
-              onClick={() => {
-                window.settingsAPI.reloadSoundTheme();
-              }}
-            />
+          <div
+            style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 10 }}>
+            <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                minWidth: '40%',
+              }}>
+              <Button
+                label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
+                icon={<TbReload />}
+                block
+                onClick={() => {
+                  window.settingsAPI.reloadMenuTheme();
+                }}
+              />
+              <Button
+                label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
+                icon={<TbReload />}
+                block
+                onClick={() => {
+                  window.settingsAPI.reloadSoundTheme();
+                }}
+              />
+            </div>
           </div>
 
-          <h1>{i18next.t('settings.general-settings-dialog.dev-tools')}</h1>
-          <Note marginTop={-5}>
-            {i18next.t('settings.general-settings-dialog.dev-tools-note')}
-          </Note>
-          <div style={{ display: 'flex', gap: 5 }}>
-            <Button
-              label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
-              icon={<TbCode />}
-              grow
-              onClick={() => {
-                window.settingsAPI.showDevTools('menu-window');
-              }}
-            />
-            <Button
-              label={i18next.t(
-                'settings.general-settings-dialog.settings-window-dev-tools'
-              )}
-              icon={<TbCode />}
-              grow
-              onClick={() => {
-                window.settingsAPI.showDevTools('settings-window');
-              }}
-            />
+          <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
+            <Note>{i18next.t('settings.general-settings-dialog.dev-tools-note')}</Note>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                minWidth: '40%',
+              }}>
+              <Button
+                label={i18next.t(
+                  'settings.general-settings-dialog.menu-window-dev-tools'
+                )}
+                icon={<TbPointer />}
+                grow
+                onClick={() => {
+                  window.settingsAPI.showDevTools('menu-window');
+                }}
+              />
+              <Button
+                label={i18next.t(
+                  'settings.general-settings-dialog.settings-window-dev-tools'
+                )}
+                icon={<TbPointerCog />}
+                grow
+                onClick={() => {
+                  window.settingsAPI.showDevTools('settings-window');
+                }}
+              />
+            </div>
           </div>
         </div>
       </Scrollbox>

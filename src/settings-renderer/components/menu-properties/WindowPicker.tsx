@@ -74,7 +74,7 @@ export default (props: IProps) => {
   const getCaption = () => {
     if (timer > timeout) {
       if (value) {
-        return i18next.t('settings.window-picker-dialog.result').replace('%s', value);
+        return i18next.t('settings.window-picker-dialog.result', { name: value });
       }
 
       return i18next.t('settings.window-picker-dialog.instructions');
@@ -90,9 +90,7 @@ export default (props: IProps) => {
     if (timer > timeout) {
       return i18next.t('settings.window-picker-dialog.start-countdown');
     }
-    return i18next
-      .t('settings.window-picker-dialog.countdown')
-      .replace('%i', timer.toString());
+    return i18next.t('settings.window-picker-dialog.countdown', { count: timer });
   };
 
   return (

@@ -1,93 +1,95 @@
 {
-  "example-menu": {
-    "apps": {
-      "apple-music": "Muzika",
-      "email": "El. paštas",
-      "file-browser": "Failų naršyklė",
-      "gimp": "GIMP",
-      "safari": "Safari",
-      "submenu": "Programos",
-      "terminal": "Terminalas",
-      "web-browser": "Saityno naršyklė"
+    "example-menu": {
+        "apps": {
+            "apple-music": "Muzika",
+            "email": "El. paštas",
+            "file-browser": "Failų naršyklė",
+            "gimp": "GIMP",
+            "safari": "Safari",
+            "submenu": "Programos",
+            "terminal": "Terminalas",
+            "web-browser": "Saityno naršyklė"
+        },
+        "audio": {
+            "mute": "Nutildyti",
+            "next-track": "Kitas takelis",
+            "play-pause": "Atkurti / Pristabdyti",
+            "previous-track": "Ankstesnis takelis"
+        },
+        "bookmarks": {
+            "desktop": "Darbalaukis",
+            "documents": "Dokumentai",
+            "downloads": "Atsiuntimai",
+            "music": "Muzika",
+            "videos": "Vaizdo įrašai"
+        },
+        "clipboard": {
+            "copy": "Kopijuoti",
+            "cut": "Iškirpti",
+            "paste": "Įdėti",
+            "submenu": "Iškarpinė"
+        },
+        "name": "Pavyzdinis meniu",
+        "next-workspace": "Kita darbo sritis",
+        "previous-workspace": "Ankstesnė darbo sritis",
+        "web-links": {
+            "google": "Google",
+            "submenu": "Saityno nuorodos"
+        },
+        "windows": {
+            "close-window": "Užverti langą",
+            "mission-control": "Mission Control",
+            "submenu": "Langai",
+            "toggle-maximize": "Perjungti išskleidimą"
+        }
     },
-    "audio": {
-      "mute": "Nutildyti",
-      "next-track": "Kitas takelis",
-      "play-pause": "Atkurti / Pristabdyti",
-      "previous-track": "Ankstesnis takelis"
+    "main": {
+        "failed-to-start-header": "Nepavyko paleisti Kando"
     },
-    "bookmarks": {
-      "desktop": "Darbalaukis",
-      "documents": "Dokumentai",
-      "downloads": "Atsiuntimai",
-      "music": "Muzika",
-      "videos": "Vaizdo įrašai"
+    "menu-items": {
+        "command": {
+            "command": "Komanda",
+            "description": "Paleidžia bet kokią apvalkalo komandą.",
+            "name": "Paleisti komandą"
+        },
+        "macro": {
+            "recording-placeholder": "Paspauskite klavišus…"
+        },
+        "submenu": {
+            "description": "Talpina savyje kitus meniu elementus.",
+            "detailed-description_one": "",
+            "detailed-description_few": "Talpina {{count}} meniu elementus.",
+            "detailed-description_other": "",
+            "name": "Submeniu",
+            "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
+            "tip-2": "Be to, galite įterpti vienus submeniu į kitus.",
+            "tip-3": "Submeniu gali būti naudojami sudėtingų meniu struktūrų kūrimui.",
+            "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
+            "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje."
+        },
+        "text": {
+            "description": "Įdeda nurodytą tekstą.",
+            "name": "Įdėti tekstą",
+            "placeholder": "Įterpkite bet kokį tekstą…"
+        },
+        "uri": {
+            "description": "Atveria failus ar internetines svetaines.",
+            "name": "Atverti URI",
+            "uri": "URI"
+        }
     },
-    "clipboard": {
-      "copy": "Kopijuoti",
-      "cut": "Iškirpti",
-      "paste": "Įdėti",
-      "submenu": "Iškarpinė"
-    },
-    "name": "Pavyzdinis meniu",
-    "next-workspace": "Kita darbo sritis",
-    "previous-workspace": "Ankstesnė darbo sritis",
-    "web-links": {
-      "google": "Google",
-      "submenu": "Saityno nuorodos"
-    },
-    "windows": {
-      "close-window": "Užverti langą",
-      "mission-control": "Mission Control",
-      "submenu": "Langai",
-      "toggle-maximize": "Perjungti išskleidimą"
+    "settings": {
+        "area-condition-bottom-placeholder": "Apačia",
+        "area-condition-left-placeholder": "Kairė",
+        "area-condition-right-placeholder": "Dešinė",
+        "area-condition-top-placeholder": "Viršus",
+        "cancel": "Atsisakyti",
+        "centered-mode": "Centruota veiksena",
+        "centered-mode-info": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
+        "icon-picker-dialog": {
+            "search-placeholder": "Ieškoti piktogramų…"
+        },
+        "menu-behavior": "Meniu elgsena",
+        "menu-conditions": "Meniu sąlygos"
     }
-  },
-  "main": {
-    "failed-to-start-header": "Nepavyko paleisti Kando"
-  },
-  "menu-items": {
-    "command": {
-      "command": "Komanda",
-      "description": "Paleidžia bet kokią apvalkalo komandą.",
-      "name": "Paleisti komandą"
-    },
-    "macro": {
-      "recording-placeholder": "Paspauskite klavišus…"
-    },
-    "submenu": {
-      "description": "Talpina savyje kitus meniu elementus.",
-      "detailed-description_few": "Talpina {{count}} meniu elementus.",
-      "name": "Submeniu",
-      "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
-      "tip-2": "Be to, galite įterpti vienus submeniu į kitus.",
-      "tip-3": "Submeniu gali būti naudojami sudėtingų meniu struktūrų kūrimui.",
-      "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
-      "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje."
-    },
-    "text": {
-      "description": "Įdeda nurodytą tekstą.",
-      "name": "Įdėti tekstą",
-      "placeholder": "Įterpkite bet kokį tekstą…"
-    },
-    "uri": {
-      "description": "Atveria failus ar internetines svetaines.",
-      "name": "Atverti URI",
-      "uri": "URI"
-    }
-  },
-  "settings": {
-    "area-condition-bottom-placeholder": "Apačia",
-    "area-condition-left-placeholder": "Kairė",
-    "area-condition-right-placeholder": "Dešinė",
-    "area-condition-top-placeholder": "Viršus",
-    "cancel": "Atsisakyti",
-    "centered-mode": "Centruota veiksena",
-    "centered-mode-info": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
-    "icon-picker-dialog": {
-      "search-placeholder": "Ieškoti piktogramų…"
-    },
-    "menu-behavior": "Meniu elgsena",
-    "menu-conditions": "Meniu sąlygos"
-  }
 }

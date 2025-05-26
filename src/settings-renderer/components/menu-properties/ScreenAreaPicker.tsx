@@ -46,10 +46,10 @@ export default (props: IProps) => {
 
   const getTopLeftValue = () => {
     if (leftTop) {
-      return i18next
-        .t('settings.screen-area-picker.top-left-value')
-        .replace('%x', leftTop.x.toString())
-        .replace('%y', leftTop.y.toString());
+      return i18next.t('settings.screen-area-picker.top-left-value', {
+        x: leftTop.x,
+        y: leftTop.y,
+      });
     } else {
       return i18next.t('settings.screen-area-picker.top-left');
     }
@@ -57,10 +57,10 @@ export default (props: IProps) => {
 
   const getBottomRightValue = () => {
     if (rightBottom) {
-      return i18next
-        .t('settings.screen-area-picker.bottom-right-value')
-        .replace('%x', rightBottom.x.toString())
-        .replace('%y', rightBottom.y.toString());
+      return i18next.t('settings.screen-area-picker.bottom-right-value', {
+        x: rightBottom.x,
+        y: rightBottom.y,
+      });
     } else {
       return i18next.t('settings.screen-area-picker.bottom-right');
     }

@@ -1,195 +1,197 @@
 {
-  "backends": {
-    "gnome": {
-      "error": "Impossible de se connecter à l'extension Kando Integration GNOME Shell. Vous pouvez l'obtenir ici : %s"
+    "backends": {
+        "gnome": {
+            "error": "Impossible de se connecter à l'extension Kando Integration GNOME Shell. Vous pouvez l'obtenir ici : {{link}}"
+        },
+        "hyprland": {
+            "shortcut-info": "Utilisez votre hyprland.conf pour lier ceci."
+        },
+        "kde-wayland": {
+            "shortcut-info": "Utilisez les paramètres système de KDE pour lier ceci."
+        }
     },
-    "hyprland": {
-      "shortcut-info": "Utilisez votre hyprland.conf pour lier ceci."
+    "example-menu": {
+        "apps": {
+            "apple-music": "Musique",
+            "email": "E-Mail",
+            "file-browser": "Explorateur de Fichiers",
+            "finder": "Finder",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "safari": "Safari",
+            "submenu": "Applications",
+            "terminal": "Invite de Commande",
+            "web-browser": "Navigateur Internet"
+        },
+        "audio": {
+            "mute": "Sourdine",
+            "next-track": "Prochaine Piste",
+            "play-pause": "Lecture / Pause",
+            "previous-track": "Piste Précédente",
+            "submenu": "Audio"
+        },
+        "bookmarks": {
+            "desktop": "Bureau",
+            "documents": "Documents",
+            "downloads": "Téléchargements",
+            "home": "Accueil",
+            "music": "Musique",
+            "pictures": "Images",
+            "submenu": "Signets",
+            "videos": "Vidéos"
+        },
+        "clipboard": {
+            "copy": "Copier",
+            "cut": "Couper",
+            "paste": "Coller",
+            "submenu": "Presse-Papiers"
+        },
+        "name": "Exemple de Menu",
+        "next-workspace": "Espace de Travail Suivant",
+        "previous-workspace": "Espace de Travail Précédent",
+        "web-links": {
+            "google": "Google",
+            "kando-on-discord": "Kando sur Discord",
+            "kando-on-github": "Kando sur GitHub",
+            "kando-on-kofi": "Kando sur Ko-fi",
+            "kando-on-youtube": "Kando sur YouTube",
+            "submenu": "Lien Internet"
+        },
+        "windows": {
+            "close-window": "Fermer la Fenêtre",
+            "mission-control": "Mission Control",
+            "submenu": "Fenêtres",
+            "tile-left": "Tuile à Gauche",
+            "tile-right": "Tuile à Droite",
+            "toggle-maximize": "Agrandir la fenêtre"
+        }
     },
-    "kde-wayland": {
-      "shortcut-info": "Utilisez les paramètres système de KDE pour lier ceci."
-    }
-  },
-  "example-menu": {
-    "apps": {
-      "apple-music": "Musique",
-      "email": "E-Mail",
-      "file-browser": "Explorateur de Fichiers",
-      "finder": "Finder",
-      "gimp": "GIMP",
-      "paint": "Paint",
-      "safari": "Safari",
-      "submenu": "Applications",
-      "terminal": "Invite de Commande",
-      "web-browser": "Navigateur Internet"
+    "main": {
+        "failed-to-start-header": "Le lancement de Kando a échoué",
+        "inhibit-shortcuts": "Désactiver temporairement les Raccourcis",
+        "new-version-notification-header": "Une nouvelle version de Kando est disponible !",
+        "quit": "Quitter",
+        "show-settings": "Afficher les Configurations",
+        "un-inhibit-shortcuts": "Réactiver les Raccourcis"
     },
-    "audio": {
-      "mute": "Sourdine",
-      "next-track": "Prochaine Piste",
-      "play-pause": "Lecture / Pause",
-      "previous-track": "Piste Précédente",
-      "submenu": "Audio"
-    },
-    "bookmarks": {
-      "desktop": "Bureau",
-      "documents": "Documents",
-      "downloads": "Téléchargements",
-      "home": "Accueil",
-      "music": "Musique",
-      "pictures": "Images",
-      "submenu": "Signets",
-      "videos": "Vidéos"
-    },
-    "clipboard": {
-      "copy": "Copier",
-      "cut": "Couper",
-      "paste": "Coller",
-      "submenu": "Presse-Papiers"
-    },
-    "name": "Exemple de Menu",
-    "next-workspace": "Espace de Travail Suivant",
-    "previous-workspace": "Espace de Travail Précédent",
-    "web-links": {
-      "google": "Google",
-      "kando-on-discord": "Kando sur Discord",
-      "kando-on-github": "Kando sur GitHub",
-      "kando-on-kofi": "Kando sur Ko-fi",
-      "kando-on-youtube": "Kando sur YouTube",
-      "submenu": "Lien Internet"
-    },
-    "windows": {
-      "close-window": "Fermer la Fenêtre",
-      "mission-control": "Mission Control",
-      "submenu": "Fenêtres",
-      "tile-left": "Tuile à Gauche",
-      "tile-right": "Tuile à Droite",
-      "toggle-maximize": "Agrandir la fenêtre"
-    }
-  },
-  "main": {
-    "failed-to-start-header": "Le lancement de Kando a échoué",
-    "inhibit-shortcuts": "Désactiver temporairement les Raccourcis",
-    "new-version-notification-header": "Une nouvelle version de Kando est disponible !",
-    "quit": "Quitter",
-    "show-settings": "Afficher les Configurations",
-    "un-inhibit-shortcuts": "Réactiver les Raccourcis"
-  },
-  "menu-items": {
-    "command": {
-      "command": "Commande",
-      "command-info": "Cette commande sera exécutée.",
-      "description": "Exécuter n'importe quelle commande shell.",
-      "name": "Exécuter une Commande",
-      "tip-1": "Il est possible d'utiliser l'élément de type Commande pour lancer des applications ou des scripts.",
-      "tip-2": "Si le chemin d'un exécutable contient des espaces, il faut le \"mettre entre guillemets\".",
-      "tip-3": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
-      "tip-4": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
-      "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert."
-    },
-    "file": {
-      "description": "Ouvre un fichier ou dossier.",
-      "file": "Chemin d'accès au fichier",
-      "name": "Ouvrir un fichier",
-      "tip-1": "Tu peux utiliser ce type d'élément pour ouvrir des fichiers ou dossiers."
-    },
-    "hotkey": {
-      "description": "Appuie sur une touche de raccourci.",
-      "hotkey": "Touche de Raccourci",
-      "name": "Simuler une touche de raccourci",
-      "recording-placeholder": "Appuyez sur une touche de raccourci…",
-      "tip-1": "Pour enregistrer un touche de raccourci, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
-      "tip-2": "Si une touche ne peut pas être enregistrée car elle est utilisée par le système, essayez de taper son nom directement."
-    },
-    "macro": {
-      "description": "Exécute une macro clavier.",
-      "name": "Simuler une Macro",
-      "placeholder": "Cliquez sur le bouton pour commencer l'enregistrement !",
-      "recording-placeholder": "Appuyez sur les touches…",
-      "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touche. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\"."
-    },
-    "redirect": {
-      "description": "Ouvre un autre menu",
-      "name": "Renvoie"
+    "menu-items": {
+        "command": {
+            "command": "Commande",
+            "command-info": "Cette commande sera exécutée.",
+            "description": "Exécuter n'importe quelle commande shell.",
+            "name": "Exécuter une Commande",
+            "tip-1": "Il est possible d'utiliser l'élément de type Commande pour lancer des applications ou des scripts.",
+            "tip-2": "Si le chemin d'un exécutable contient des espaces, il faut le \"mettre entre guillemets\".",
+            "tip-3": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
+            "tip-4": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
+            "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert."
+        },
+        "file": {
+            "description": "Ouvre un fichier ou dossier.",
+            "file": "Chemin d'accès au fichier",
+            "name": "Ouvrir un fichier",
+            "tip-1": "Tu peux utiliser ce type d'élément pour ouvrir des fichiers ou dossiers."
+        },
+        "hotkey": {
+            "description": "Appuie sur une touche de raccourci.",
+            "hotkey": "Touche de Raccourci",
+            "name": "Simuler une touche de raccourci",
+            "recording-placeholder": "Appuyez sur une touche de raccourci…",
+            "tip-1": "Pour enregistrer un touche de raccourci, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
+            "tip-2": "Si une touche ne peut pas être enregistrée car elle est utilisée par le système, essayez de taper son nom directement."
+        },
+        "macro": {
+            "description": "Exécute une macro clavier.",
+            "name": "Simuler une Macro",
+            "placeholder": "Cliquez sur le bouton pour commencer l'enregistrement !",
+            "recording-placeholder": "Appuyez sur les touches…",
+            "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touche. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\"."
+        },
+        "redirect": {
+            "description": "Ouvre un autre menu",
+            "name": "Renvoie"
+        },
+        "settings": {
+            "description": "Ouvre la fenêtre de configuration de Kando.",
+            "name": "Ouvrir les Configurations",
+            "tip-1": "Cette action ouvre la fenêtre de configuration de Kando."
+        },
+        "submenu": {
+            "description": "Contient d'autres éléments.",
+            "detailed-description_one": "",
+            "detailed-description_many": "Contient {{count}} éléments.",
+            "detailed-description_other": "",
+            "name": "Sous-Menu",
+            "tip-1": "Les sous-menus peuvent être utilisés pour regrouper des éléments.",
+            "tip-2": "Il est possible de placer des sous-menus à l'intérieur de sous-menus.",
+            "tip-3": "Les sous-menus peuvent être utilisés pour créer des structures de menu complexes.",
+            "tip-4": "Il est préférable d'éviter plus de douze éléments par sous-menu. Huit est un bon compromis.",
+            "tip-5": "Il est possible d'utiliser le petit cadenas dans l'aperçu pour fixer la position d'un élément dans le menu.",
+            "tip-6": "Il est possible de réorganiser les éléments en les déplaçant dans l'aperçu."
+        },
+        "text": {
+            "description": "Insère le texte en question.",
+            "name": "Coller le texte",
+            "placeholder": "Insérez du texte…",
+            "tip-1": "Cette action utilise votre presse-papiers pour coller le texte. Après avoir utilisé l'action, le presse-papiers contiendra toujours le texte."
+        },
+        "uri": {
+            "description": "Ouvre des sites web et plus encore.",
+            "name": "Ouvrir un URI",
+            "tip-1": "Il est possible d'utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole \"http://\".",
+            "tip-2": "Vous pouvez utliser ceci pour ouvrir des schémas d'URI tel que slack:// ou zoommtg://.",
+            "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien \"mailto:\".",
+            "tip-4": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
+            "tip-5": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
+            "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
+            "uri": "URI"
+        }
     },
     "settings": {
-      "description": "Ouvre la fenêtre de configuration de Kando.",
-      "name": "Ouvrir les Configurations",
-      "tip-1": "Cette action ouvre la fenêtre de configuration de Kando."
-    },
-    "submenu": {
-      "description": "Contient d'autres éléments.",
-      "detailed-description_many": "Contient {{count}} éléments.",
-      "name": "Sous-Menu",
-      "tip-1": "Les sous-menus peuvent être utilisés pour regrouper des éléments.",
-      "tip-2": "Il est possible de placer des sous-menus à l'intérieur de sous-menus.",
-      "tip-3": "Les sous-menus peuvent être utilisés pour créer des structures de menu complexes.",
-      "tip-4": "Il est préférable d'éviter plus de douze éléments par sous-menu. Huit est un bon compromis.",
-      "tip-5": "Il est possible d'utiliser le petit cadenas dans l'aperçu pour fixer la position d'un élément dans le menu.",
-      "tip-6": "Il est possible de réorganiser les éléments en les déplaçant dans l'aperçu."
-    },
-    "text": {
-      "description": "Insère le texte en question.",
-      "name": "Coller le texte",
-      "placeholder": "Insérez du texte…",
-      "tip-1": "Cette action utilise votre presse-papiers pour coller le texte. Après avoir utilisé l'action, le presse-papiers contiendra toujours le texte."
-    },
-    "uri": {
-      "description": "Ouvre des sites web et plus encore.",
-      "name": "Ouvrir un URI",
-      "tip-1": "Il est possible d'utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole \"http://\".",
-      "tip-2": "Vous pouvez utliser ceci pour ouvrir des schémas d'URI tel que slack:// ou zoommtg://.",
-      "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien \"mailto:\".",
-      "tip-4": "Utilisez {{app_name}} pour insérer le nom de l'application qui était au premier plan lorsque vous avez ouvert le menu.",
-      "tip-5": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était au premier plan lorsque vous avez ouvert le menu.",
-      "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
-      "uri": "URI"
+        "about-dialog": {
+            "chrome-version": "Version de Chrome",
+            "electron-version": "Version d'Electron",
+            "kando-backend": "Interface système",
+            "kando-version": "Version de Kando"
+        },
+        "anchored-mode": "Mode Ancré",
+        "app-condition": "Limiter à des Applications Spécifiques",
+        "area-condition": "Limiter à une Zone Spécifique de l'Écran",
+        "area-condition-bottom-placeholder": "Bas",
+        "area-condition-left-placeholder": "Gauche",
+        "area-condition-right-placeholder": "Droite",
+        "area-condition-top-placeholder": "Haut",
+        "cancel": "Annuler",
+        "centered-mode": "Mode Centré",
+        "centered-mode-info": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
+        "general-settings-dialog": {
+            "reload-menu-theme": "Recharger le Thème de Menu Actuel",
+            "reload-menu-theme-tooltip": "Les changements CSS seront appliqués immédiatement, pour les changements effectués au fichier theme.json, vous devez rouvrir le menu.",
+            "reload-sound-theme": "Recharger le Thème Sonore Actuel"
+        },
+        "hover-mode": "Mode Survol",
+        "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Selectionne les éléments en les survolant.",
+        "icon-picker-dialog": {
+            "base64-example": "Exemple Base64 :",
+            "search-placeholder": "Rechercher des Icônes…",
+            "url-example": "Exemple d'URL :"
+        },
+        "introduction-dialog": {
+            "title": "Bienvenue sur Kando !"
+        },
+        "menu-behavior": "Comportement du Menu",
+        "menu-conditions": "Conditions du Menu",
+        "menu-conditions-info": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
+        "menu-themes-dialog": {
+            "author": "par {{author}}",
+            "light-dark-mode-info": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
+            "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
+            "title": "Thèmes de menu"
+        },
+        "not-bound": "Non-Attribué",
+        "shortcut-id-label": "ID de raccourci global",
+        "shortcut-label": "Raccourci",
+        "shortcut-recording": "Appuyez sur un raccourci…",
+        "window-condition": "Limiter à des titres de fenêtres spécifiques"
     }
-  },
-  "settings": {
-    "about-dialog": {
-      "chrome-version": "Version de Chrome",
-      "electron-version": "Version d'Electron",
-      "kando-backend": "Interface système",
-      "kando-version": "Version de Kando"
-    },
-    "anchored-mode": "Mode Ancré",
-    "app-condition": "Limiter à des Applications Spécifiques",
-    "area-condition": "Limiter à une Zone Spécifique de l'Écran",
-    "area-condition-bottom-placeholder": "Bas",
-    "area-condition-left-placeholder": "Gauche",
-    "area-condition-right-placeholder": "Droite",
-    "area-condition-top-placeholder": "Haut",
-    "cancel": "Annuler",
-    "centered-mode": "Mode Centré",
-    "centered-mode-info": "Ouvrir le menu au centre de l'écran au lieu du curseur.",
-    "general-settings-dialog": {
-      "reload-menu-theme": "Recharger le Thème de Menu Actuel",
-      "reload-menu-theme-tooltip": "Les changements CSS seront appliqués immédiatement, pour les changements effectués au fichier theme.json, vous devez rouvrir le menu.",
-      "reload-sound-theme": "Recharger le Thème Sonore Actuel"
-    },
-    "hover-mode": "Mode Survol",
-    "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Selectionne les éléments en les survolant.",
-    "icon-picker-dialog": {
-      "base64-example": "Exemple Base64 :",
-      "search-placeholder": "Rechercher des Icônes…",
-      "url-example": "Exemple d'URL :"
-    },
-    "introduction-dialog": {
-      "title": "Bienvenue sur Kando !"
-    },
-    "menu-behavior": "Comportement du Menu",
-    "menu-conditions": "Conditions du Menu",
-    "menu-conditions-info": "Il est possible de lier plusieurs menus au même raccourci et choisir dans quelles conditions chaque menu doit s'afficher.",
-    "menu-themes-dialog": {
-      "author": "par %s",
-      "light-dark-mode-info": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
-      "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
-      "title": "Thèmes de menu"
-    },
-    "not-bound": "Non-Attribué",
-    "shortcut-id-label": "ID de raccourci global",
-    "shortcut-label": "Raccourci",
-    "shortcut-recording": "Appuyez sur un raccourci…",
-    "window-condition": "Limiter à des titres de fenêtres spécifiques"
-  }
 }
