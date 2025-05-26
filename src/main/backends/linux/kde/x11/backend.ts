@@ -18,7 +18,7 @@ export class KDEX11Backend extends X11Backend {
    */
   public getBackendInfo() {
     const info = super.getBackendInfo();
-    info.name = 'KDE X11 Backend';
+    info.name = 'KDE X11';
     info.menuWindowType = 'toolbar';
     return info;
   }

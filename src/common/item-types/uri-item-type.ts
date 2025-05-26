@@ -27,7 +27,7 @@ export class URIItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.uri.name');
+    return i18next.t('menu-items.uri.name');
   }
 
   get defaultIcon(): string {
@@ -45,6 +45,6 @@ export class URIItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.uri.description');
+    return i18next.t('menu-items.uri.description');
   }
 }

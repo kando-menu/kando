@@ -16,9 +16,14 @@
 
   color: $text-normal;
 
-  .label {
+  .labelContainer {
     flex: 1;
     align-self: stretch;
+    white-space: nowrap;
+
+    .label {
+      white-space: normal;
+    }
   }
 
   &.clickable:active {

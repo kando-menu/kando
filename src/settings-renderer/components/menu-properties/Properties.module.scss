@@ -30,10 +30,9 @@
 .icon {
   -webkit-app-region: no-drag;
 
-  // Why have width and height have to be set to different values?
-  // Otherwise the icon is not circular...
   width: 6em;
-  height: 7.2em;
+  height: 6em;
+  flex-shrink: 0;
   margin: -30px auto 0 auto;
   background-color: $window-background;
   border-radius: 50%;

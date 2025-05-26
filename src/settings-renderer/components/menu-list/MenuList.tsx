@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbPlus } from 'react-icons/tb';
@@ -78,7 +79,8 @@ export default () => {
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {
     const shortcut =
-      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) || 'Not bound.';
+      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) ||
+      i18next.t('settings.not-bound');
     const renderedMenu: IRenderedMenu = {
       key: menu.root.name + menu.root.icon + menu.root.iconTheme + shortcut,
       index,
@@ -140,7 +142,7 @@ export default () => {
                   You currently have no menus. Click the button below to create a first
                   menu!
                 </Note>
-                <Swirl variant="3" marginTop={10} />
+                <Swirl variant="2" marginTop={10} />
               </div>
             )}
             {menus.length > 0 &&
@@ -149,7 +151,7 @@ export default () => {
                 <div key="-1" className={classes.message}>
                   <h1>No Matching Menus</h1>
                   <Note>Maybe try a different search term?</Note>
-                  <Swirl variant="3" marginTop={10} />
+                  <Swirl variant="2" marginTop={10} />
                 </div>
               )}
             {menus.length > 0 &&
@@ -161,7 +163,7 @@ export default () => {
                     Edit the tags above or add a completely new menu to this collection
                     with the button below.
                   </Note>
-                  <Swirl variant="3" marginTop={10} />
+                  <Swirl variant="2" marginTop={10} />
                 </div>
               )}
 
@@ -293,7 +295,7 @@ export default () => {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbPlus />}
-            label="New Menu"
+            label={i18next.t('settings.create-menu-button')}
             variant="floating"
             size="medium"
             onClick={() => {

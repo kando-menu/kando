@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbX, TbPlus } from 'react-icons/tb';
 
@@ -91,7 +92,9 @@ export default (props: IProps) => {
           ))}
           <input
             ref={inputRef}
-            placeholder={props.tags.length === 0 ? 'Add tags...' : ''}
+            placeholder={
+              props.tags.length === 0 ? i18next.t('settings.add-tags-placeholder') : ''
+            }
             onKeyDown={(event) => {
               // Add tag on return if the input field is not empty.
               if (event.key === 'Enter' && event.currentTarget.value !== '') {

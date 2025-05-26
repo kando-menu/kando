@@ -39,6 +39,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **A hotkey for opening the settings dialog** when a menu is open. On macOS, this is <kbd>Command</kbd>+<kbd>,</kbd>. On Windows and Linux, it is <kbd>Ctrl</kbd>+<kbd>,</kbd>. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - **A default sound theme!** You can enable it in the general settings.
 - **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons.
+- **Support for multiple pointing devices on GNOME Wayland!** Thanks to a change in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), Kando now supports multiple pointing devices on GNOME Wayland. This means that the menu will now open at the position of the last used pointing device. This is useful if you are using a stylus in addition to a mouse or touchpad. Thanks to [@hhhhhhh2019](https://github.com/hhhhhhh2019) for the contribution!
 - A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
 
@@ -52,6 +53,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **[BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
+- When the settings dialog should be shown but is minimized, Kando will now restore the settings dialog so that it is visible again.
+
+#### :bug: Fixed
+
+- An issue where some icons could not be searched for.
+- Sound support in the Flatpak version of Kando.
 
 #### :bug: Fixed
 
@@ -190,7 +197,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Support for base64 icons:** This allows you to directly embed base64 encoded images. This will be especially helpful for menus which are dynamically generated via some sort of API in the future. Use `"base64"` as the icon theme and provide the base64 encoded image as the `"icon"`. This will be a string starting with something like `"data:image/svg+xml;base64, ..."`. This even supports animated gifs!
 - **Version information in the sidebar:** The sidebar now shows some version information in the development tab. This includes the version of Kando, the version of Electron, and the currently used backend.
 - An option to the menu editor which **allows warping the mouse pointer to the center of the menu** when the menu is opened in centered mode. This allows to directly engage in turbo mode even if the menu is shown at the center of the screen.
-- **An experimental Fixed-Stroke-Length Mode:** If you set `"menuOptions": {"fixedStrokeLength": <number of pixels>}` to a value greater than 0, Marking Mode and Turbo will be disabled. Instead, submenus will be opened when the mouse is moved the given distance from the center of the menu. 
+- **An experimental Fixed-Stroke-Length Mode:** If you set `"menuOptions": {"fixedStrokeLength": <number of pixels>}` to a value greater than 0, Marking Mode and Turbo will be disabled. Instead, submenus will be opened when the mouse is moved the given distance from the center of the menu.
 - **Adjustable fade-in and fade-out duration of the menu:** For now, it is only possible to change this via the `"menuOptions": {"fadeInDuration": 150}` and `"menuOptions": {"fadeOutDuration": 250}` properties in the `config.json` file. In the future, this will be exposed in the settings UI.
 - **Possibility to hide sidebar and editor buttons:** You can now add
   ```json
@@ -239,7 +246,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - Korean
   - Portuguese
   - Ukrainian
-  
+
   Some other languages are already in progress. Feel free to contribute!
 - It is now possible to use `{{app_name}}`, `{{window_name}}`, `{{pointer_x}}`, and `{{pointer_y}}` as part of the URI in the URI action. These placeholders will be replaced with the name of the focused application, focused window, and the pointer position when the menu was opened. Thanks to [@AliElamir](https://github.com/AliElamir) for the contribution!
 
@@ -415,14 +422,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - For the hotkey action, there is a hotkey-picker which allows recording a key combination.
   - For the command action, there is now a text field which allows to enter the command directly.
   - For the URI action, there is also a text field which allows to enter the URI directly.
-- Tips for the menu editor. When you select a menu item, a more or less related **tip will be shown** in the properties area on the right-hand side. 
+- Tips for the menu editor. When you select a menu item, a more or less related **tip will be shown** in the properties area on the right-hand side.
 
 #### :wrench: Changed
 
 - If binding a global shortcut fails, Kando will now show a desktop notification with an error message. Before, Kando would refuse to start.
 - It is now allowed to have **multiple menus with the same shortcut**. In this case, Kando will simply show the first menu with the given shortcut. In the future, there will be the possibility to select the menu based on the currently focused window.
 - The `"shortcut"` property in the menu configuration is now optional. If no shortcut is given, the menu will not be accessible via a global shortcut. This is useful if you want to have a menu which is only accessible via the tray icon or via the command line.
-- **[BREAKING]** The Simulate-Hotkey action now strictly uses DOM key codes. Before, it was possible to use key names like `"Control"`, `"Shift"`, or `"Alt"`. Now, you have to use the key codes like `"ControlLeft"`, `"ShiftLeft"`, or `"AltLeft"`. You can find a list of all valid codes [here](https://github.com/kando-menu/kando/blob/main/src/common/key-codes.ts#L70). 
+- **[BREAKING]** The Simulate-Hotkey action now strictly uses DOM key codes. Before, it was possible to use key names like `"Control"`, `"Shift"`, or `"Alt"`. Now, you have to use the key codes like `"ControlLeft"`, `"ShiftLeft"`, or `"AltLeft"`. You can find a list of all valid codes [here](https://github.com/kando-menu/kando/blob/main/src/common/key-codes.ts#L70).
 - Improved the code for creating the menu DOM tree. This improves the performance of opening menus with many items significantly (🚀 **about 5x faster**).
 - Handlebars templates are now precompiled. This significantly improves the loading time of the menu editor (🚀 **about 2x faster**).
 - Refactored some more editor-opening code to remove a forced reflow. This makes the editor open even faster (🚀 **another 1.5x**).
@@ -511,7 +518,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :bug: Fixed
 
 - Loosing menu items when pressing the <kbd>Escape</kbd> key in the menu editor during a drag operation. Now, the drag operation will be properly cancelled, and the menu editor will not be closed.
-- A weird issue on Windows where closing the menu left a small unclickable area in the bottom left of the screen. See [#375](https://github.com/kando-menu/kando/issues/375) for details. 
+- A weird issue on Windows where closing the menu left a small unclickable area in the bottom left of the screen. See [#375](https://github.com/kando-menu/kando/issues/375) for details.
 
 ## [Kando 0.6.0](https://github.com/kando-menu/kando/releases/tag/v0.6.0)
 
@@ -631,7 +638,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - `"type": "command"`: This will execute a shell command. The command is specified in the `"data"` object. For instance, you can use `"data": { "command": "firefox" }` to open Firefox on Linux.
   - `"type": "uri"`: This will open a URI. The URI is specified in the `"data"` object. For instance, you can use `"data": { "uri": "https://github.com/kando-menu/kando" }` to open the Kando website.
   - `"type": "hotkey"`: This will simulate the given keyboard shortcut. The keys are given in the `"data"` object. For instance, you can use `"data": { "hotkey": "Control+V", "delayed": true }` to paste your clipboard content. If you set `"delayed"` to `true`, Kando will wait until its own window is closed before simulating the hotkey.
-- Support for **multiple menus**. You can now add multiple menu configurations to the `menus.json` file with different shortcuts each. Each menu has to have a unique name. 
+- Support for **multiple menus**. You can now add multiple menu configurations to the `menus.json` file with different shortcuts each. Each menu has to have a unique name.
 - Support for the `centered` property in the menu configuration. If this is set to `true`, **the menu will be opened in the center of the screen** instead of at the mouse pointer.
 - A **new icon theme**: [Simple Icons](https://simpleicons.org/). This is a huge collection of icons for many different applications. You can use them in your menu configuration like this: `"icon": "firefox", "iconTheme": "simple-icons"`.
 - The possibility to **open a specific menu from the command line**. You can use `kando --menu <name>` to open a specific menu. This also works when Kando is already running. In this case, a message will be sent to the running instance of Kando which will then open the requested menu.
@@ -667,7 +674,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :wrench: Changed
 
-- Large parts of the code have been refactored. For instance, by using the template engine [Handlebars](https://handlebarsjs.com/), the code is now much more readable and maintainable. 
+- Large parts of the code have been refactored. For instance, by using the template engine [Handlebars](https://handlebarsjs.com/), the code is now much more readable and maintainable.
 
 ## [Kando 0.1.0](https://github.com/kando-menu/kando/releases/tag/v0.1.0)
 

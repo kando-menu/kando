@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { BiTargetLock } from 'react-icons/bi';
 import { PiSelection } from 'react-icons/pi';
@@ -45,17 +46,23 @@ export default (props: IProps) => {
 
   const getTopLeftValue = () => {
     if (leftTop) {
-      return `Left: ${leftTop.x}, Top: ${leftTop.y}`;
+      return i18next.t('settings.screen-area-picker.top-left-value', {
+        x: leftTop.x,
+        y: leftTop.y,
+      });
     } else {
-      return 'Drag this to the top left corner of your area.';
+      return i18next.t('settings.screen-area-picker.top-left');
     }
   };
 
   const getBottomRightValue = () => {
     if (rightBottom) {
-      return `Right: ${rightBottom.x}, Bottom: ${rightBottom.y}`;
+      return i18next.t('settings.screen-area-picker.bottom-right-value', {
+        x: rightBottom.x,
+        y: rightBottom.y,
+      });
     } else {
-      return 'Drag this to the bottom right corner of your area.';
+      return i18next.t('settings.screen-area-picker.bottom-right');
     }
   };
 
@@ -84,7 +91,7 @@ export default (props: IProps) => {
 
   return (
     <Modal
-      title="Pick a Screen Area"
+      title={i18next.t('settings.screen-area-picker.title')}
       icon={<PiSelection />}
       visible={props.visible}
       onClose={props.onClose}
@@ -92,9 +99,8 @@ export default (props: IProps) => {
       <div className={classes.container}>
         <div className={classes.leftTopValue}>{getTopLeftValue()}</div>
         <div className={classes.area}>
-          {isValid() && 'Great! You have selected a valid area.'}
-          {isInvalid() &&
-            'Make sure the top left corner is above and to the left of the bottom right corner.'}
+          {isValid() && i18next.t('settings.screen-area-picker.valid')}
+          {isInvalid() && i18next.t('settings.screen-area-picker.invalid')}
           <div className={classes.leftTopPicker}>
             <div
               className={classes.crosshair}
@@ -127,7 +133,7 @@ export default (props: IProps) => {
         <div className={classes.rightBottomValue}>{getBottomRightValue()}</div>
         <div className={classes.buttons}>
           <Button
-            label="Cancel"
+            label={i18next.t('settings.cancel')}
             icon={<TbX />}
             block
             onClick={() => {
@@ -135,7 +141,7 @@ export default (props: IProps) => {
             }}
           />
           <Button
-            label="Use this area"
+            label={i18next.t('settings.screen-area-picker.confirm')}
             variant="primary"
             disabled={!isValid()}
             icon={<TbCheck />}

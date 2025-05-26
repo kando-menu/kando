@@ -36,7 +36,8 @@ export default () => {
   return (
     <>
       <MacroPicker
-        recordingPlaceholder="Press any keys…"
+        placeholder={i18next.t('menu-items.macro.placeholder')}
+        recordingPlaceholder={i18next.t('menu-items.macro.recording-placeholder')}
         initialValue={data.macro}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -46,8 +47,8 @@ export default () => {
         }}
       />
       <Checkbox
-        label={i18next.t('items.common.delayed-option')}
-        info={i18next.t('items.common.delayed-option-hint')}
+        label={i18next.t('menu-items.common.delayed-option')}
+        info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -58,7 +59,13 @@ export default () => {
       />
       <RandomTip
         marginTop={50}
-        tips={[i18next.t('items.macro.tip-1'), i18next.t('items.macro.tip-2')]}
+        tips={[
+          i18next.t('menu-items.macro.tip-1'),
+          i18next.t('menu-items.macro.tip-2'),
+          i18next.t('menu-items.hotkey.tip-3', {
+            link: 'https://kando.menu/valid-keynames/',
+          }),
+        ]}
       />
     </>
   );

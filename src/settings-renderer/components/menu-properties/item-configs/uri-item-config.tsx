@@ -33,8 +33,8 @@ export default () => {
   return (
     <>
       <TextInput
-        label={i18next.t('items.uri.uri')}
-        info={i18next.t('items.uri.uri-hint')}
+        placeholder={i18next.t('menu-items.uri.placeholder')}
+        multiline
         initialValue={data.uri}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -46,12 +46,12 @@ export default () => {
       <RandomTip
         marginTop={50}
         tips={[
-          i18next.t('items.uri.tip-1'),
-          i18next.t('items.uri.tip-2'),
-          i18next.t('items.uri.tip-3'),
-          i18next.t('items.uri.tip-4'),
-          i18next.t('items.uri.tip-5'),
-          i18next.t('items.uri.tip-6'),
+          i18next.t('menu-items.uri.tip-1'),
+          i18next.t('menu-items.uri.tip-2'),
+          i18next.t('menu-items.uri.tip-3'),
+          i18next.t('menu-items.uri.tip-4'),
+          i18next.t('menu-items.uri.tip-5'),
+          i18next.t('menu-items.uri.tip-6'),
         ]}
       />
     </>

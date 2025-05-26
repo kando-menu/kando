@@ -42,9 +42,17 @@ export class SimpleIconsColoredTheme extends SimpleIconsTheme {
     return {
       type: 'list' as const,
       usesTextColor: false,
-      hint: "This is a built-in icon theme. Learn how to add your own icon themes <a href='https://kando.menu/icon-themes/' target='_blank'>here</a>.",
       listIcons: (searchTerm: string) => {
-        return matchSorter(this.iconNames, searchTerm);
+        return matchSorter(
+          this.iconNames,
+
+          // Replace special characters in the search term with their replacements.
+          // This is necessary because the icon names from the CSS file are always slugs.
+          searchTerm.replace(
+            this.titleToSlugCharsRegex,
+            (char) => this.titleToSlugReplacements[char]
+          )
+        );
       },
     };
   }

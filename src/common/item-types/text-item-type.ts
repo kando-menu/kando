@@ -30,7 +30,7 @@ export class TextItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.text.name');
+    return i18next.t('menu-items.text.name');
   }
 
   get defaultIcon(): string {
@@ -48,6 +48,6 @@ export class TextItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.text.description');
+    return i18next.t('menu-items.text.description');
   }
 }

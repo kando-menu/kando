@@ -34,7 +34,7 @@ export class WindowsBackend implements Backend {
     const transparencySupported = major === 10 && minor === 0 && build >= 22621;
 
     return {
-      name: 'Windows Backend',
+      name: 'Windows',
       menuWindowType: 'toolbar',
       supportsShortcuts: true,
       shouldUseTransparentSettingsWindow: transparencySupported,

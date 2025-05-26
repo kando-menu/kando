@@ -29,7 +29,7 @@ export class CommandItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.command.name');
+    return i18next.t('menu-items.command.name');
   }
 
   get defaultIcon(): string {
@@ -48,6 +48,6 @@ export class CommandItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.command.description');
+    return i18next.t('menu-items.command.description');
   }
 }

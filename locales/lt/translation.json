@@ -1,122 +1,95 @@
 {
-    "items": {
+    "example-menu": {
+        "apps": {
+            "apple-music": "Muzika",
+            "email": "El. paštas",
+            "file-browser": "Failų naršyklė",
+            "gimp": "GIMP",
+            "safari": "Safari",
+            "submenu": "Programos",
+            "terminal": "Terminalas",
+            "web-browser": "Saityno naršyklė"
+        },
+        "audio": {
+            "mute": "Nutildyti",
+            "next-track": "Kitas takelis",
+            "play-pause": "Atkurti / Pristabdyti",
+            "previous-track": "Ankstesnis takelis"
+        },
+        "bookmarks": {
+            "desktop": "Darbalaukis",
+            "documents": "Dokumentai",
+            "downloads": "Atsiuntimai",
+            "music": "Muzika",
+            "videos": "Vaizdo įrašai"
+        },
+        "clipboard": {
+            "copy": "Kopijuoti",
+            "cut": "Iškirpti",
+            "paste": "Įdėti",
+            "submenu": "Iškarpinė"
+        },
+        "name": "Pavyzdinis meniu",
+        "next-workspace": "Kita darbo sritis",
+        "previous-workspace": "Ankstesnė darbo sritis",
+        "web-links": {
+            "google": "Google",
+            "submenu": "Saityno nuorodos"
+        },
+        "windows": {
+            "close-window": "Užverti langą",
+            "mission-control": "Mission Control",
+            "submenu": "Langai",
+            "toggle-maximize": "Perjungti išskleidimą"
+        }
+    },
+    "main": {
+        "failed-to-start-header": "Nepavyko paleisti Kando"
+    },
+    "menu-items": {
         "command": {
             "command": "Komanda",
             "description": "Paleidžia bet kokią apvalkalo komandą.",
             "name": "Paleisti komandą"
         },
-        "uri": {
-            "uri": "URI",
-            "uri-hint": "Tai bus atverta.",
-            "name": "Atverti URI",
-            "description": "Atveria failus ar internetines svetaines."
-        },
-        "text": {
-            "placeholder": "Įterpkite bet kokį tekstą…",
-            "name": "Įdėti tekstą",
-            "description": "Įdeda nurodytą tekstą."
+        "macro": {
+            "recording-placeholder": "Paspauskite klavišus…"
         },
         "submenu": {
-            "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
-            "detailed-description_one": "Talpina {{count}} meniu elementą.",
+            "description": "Talpina savyje kitus meniu elementus.",
+            "detailed-description_one": "",
             "detailed-description_few": "Talpina {{count}} meniu elementus.",
-            "detailed-description_other": "Talpina {{count}} meniu elementų.",
-            "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
+            "detailed-description_other": "",
+            "name": "Submeniu",
+            "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
             "tip-2": "Be to, galite įterpti vienus submeniu į kitus.",
             "tip-3": "Submeniu gali būti naudojami sudėtingų meniu struktūrų kūrimui.",
-            "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje.",
-            "name": "Submeniu",
-            "description": "Talpina savyje kitus meniu elementus."
+            "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
+            "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje."
         },
-        "common": {
-            "delayed-option": "Įvykdyti užvėrus meniu",
-            "not-configured": "Nesukonfigūruota"
+        "text": {
+            "description": "Įdeda nurodytą tekstą.",
+            "name": "Įdėti tekstą",
+            "placeholder": "Įterpkite bet kokį tekstą…"
+        },
+        "uri": {
+            "description": "Atveria failus ar internetines svetaines.",
+            "name": "Atverti URI",
+            "uri": "URI"
         }
     },
-    "example-menu": {
-        "apps": {
-            "gimp": "GIMP",
-            "web-browser": "Saityno naršyklė",
-            "safari": "Safari",
-            "apple-music": "Muzika",
-            "submenu": "Programos",
-            "email": "El. paštas",
-            "file-browser": "Failų naršyklė",
-            "terminal": "Terminalas"
+    "settings": {
+        "area-condition-bottom-placeholder": "Apačia",
+        "area-condition-left-placeholder": "Kairė",
+        "area-condition-right-placeholder": "Dešinė",
+        "area-condition-top-placeholder": "Viršus",
+        "cancel": "Atsisakyti",
+        "centered-mode": "Centruota veiksena",
+        "centered-mode-info": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
+        "icon-picker-dialog": {
+            "search-placeholder": "Ieškoti piktogramų…"
         },
-        "clipboard": {
-            "submenu": "Iškarpinė",
-            "cut": "Iškirpti",
-            "paste": "Įdėti",
-            "copy": "Kopijuoti"
-        },
-        "web-links": {
-            "google": "Google",
-            "submenu": "Saityno nuorodos"
-        },
-        "audio": {
-            "play-pause": "Atkurti / Pristabdyti",
-            "next-track": "Kitas takelis",
-            "mute": "Nutildyti",
-            "previous-track": "Ankstesnis takelis"
-        },
-        "name": "Pavyzdinis meniu",
-        "next-workspace": "Kita darbo sritis",
-        "windows": {
-            "submenu": "Langai",
-            "mission-control": "Mission Control",
-            "toggle-maximize": "Perjungti išskleidimą",
-            "close-window": "Užverti langą"
-        },
-        "previous-workspace": "Ankstesnė darbo sritis",
-        "bookmarks": {
-            "downloads": "Atsiuntimai",
-            "videos": "Vaizdo įrašai",
-            "documents": "Dokumentai",
-            "desktop": "Darbalaukis",
-            "music": "Muzika"
-        }
-    },
-    "properties": {
-        "condition-picker": {
-            "app-placeholder": "Programos pavadinimas",
-            "left-placeholder": "Kairė",
-            "right-placeholder": "Dešinė",
-            "top-placeholder": "Viršus",
-            "bottom-placeholder": "Apačia",
-            "pointer-position-hint": "Šiuo metu jūsų pelė yra ties {{x}} x {{y}}.",
-            "window-hint": "Rodyti meniu tik tuo atveju, jei fokusuoto lango antraštėje yra nurodytas tekstas.",
-            "screen-hint": "Rodyti meniu tik tuo atveju, jei pelės rodyklė yra nurodytoje ekrano srityje.",
-            "window-checked-hint": "Tai palaiko reguliariuosius reiškinius, tokius kaip /youtube|vimeo/i.",
-            "window-placeholder": "Lango antraštė"
-        },
-        "icon-picker": {
-            "placeholder": "Ieškoti piktogramų…",
-            "heading": "Pasirinkti piktogramą"
-        },
-        "macro-picker": {
-            "recording": "Paspauskite klavišus…"
-        },
-        "shortcut-picker": {
-            "hint": "Tai atvers meniu."
-        },
-        "common": {
-            "done": "Atlikta",
-            "cancel": "Atsisakyti",
-            "menu-behavior": "Meniu elgsena",
-            "menu-conditions": "Meniu sąlygos",
-            "menu-conditions-hint": "Pasirinkite kada meniu turėtų būti rodomas.",
-            "menu-behavior-hint": "Derinti išplėstines meniu parinktis."
-        },
-        "advanced-options": {
-            "centered-mode": "Centruota veiksena",
-            "heading": "Derinti meniu elgseną",
-            "centered-mode-hint": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
-            "anchored-mode-hint": "Atverti submeniu toje pačioje vietoje kaip ir viršesnį meniu."
-        }
-    },
-    "main": {
-        "is-running-header": "Kando jau veikia",
-        "failed-to-start-header": "Nepavyko paleisti Kando"
+        "menu-behavior": "Meniu elgsena",
+        "menu-conditions": "Meniu sąlygos"
     }
 }

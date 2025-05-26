@@ -58,11 +58,10 @@ body {
 
 a {
   color: $text-link;
-  text-decoration: none;
   position: relative;
 
   &:hover {
-    text-decoration: underline;
+    color: $text-link-hover;
   }
 
   &:active {

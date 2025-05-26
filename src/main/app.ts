@@ -198,14 +198,11 @@ export class KandoApp {
     });
 
     this.updateChecker.on('update-available', () => {
-      console.log(
-        'A new version of Kando is available! Get it from https://github.com/kando-menu/kando/releases.'
-      );
-
-      // Show a notification if possible.
       Notification.show(
-        'A new version of Kando is available!',
-        'Get it from https://github.com/kando-menu/kando/releases.',
+        i18next.t('main.new-version-notification-header'),
+        i18next.t('main.new-version-notification-body', {
+          link: 'https://github.com/kando-menu/kando/releases',
+        }),
         () => {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
         }
@@ -298,7 +295,11 @@ export class KandoApp {
   public showSettings() {
     // Focus the settings window if it is already open.
     if (this.settingsWindow) {
-      this.settingsWindow.focus();
+      if (this.settingsWindow.isMinimized()) {
+        this.settingsWindow.restore();
+      } else {
+        this.settingsWindow.focus();
+      }
       return;
     }
 
@@ -686,7 +687,7 @@ export class KandoApp {
       const trigger =
         (this.backend.getBackendInfo().supportsShortcuts
           ? menu.shortcut
-          : menu.shortcutID) || i18next.t('properties.common.not-bound');
+          : menu.shortcutID) || i18next.t('settings.not-bound');
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {

@@ -12,6 +12,7 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 import { TbCheck, TbX, TbStopwatch } from 'react-icons/tb';
 import { BiTargetLock } from 'react-icons/bi';
 
@@ -73,10 +74,10 @@ export default (props: IProps) => {
   const getCaption = () => {
     if (timer > timeout) {
       if (value) {
-        return `You selected "${value}"`;
+        return i18next.t('settings.window-picker-dialog.result', { name: value });
       }
 
-      return 'Hit the button below and focus the target window within the next five seconds.';
+      return i18next.t('settings.window-picker-dialog.instructions');
     }
 
     return '';
@@ -84,19 +85,20 @@ export default (props: IProps) => {
 
   const getButtonLabel = () => {
     if (value && timer > timeout) {
-      return 'Start Countdown Again';
-    } else if (timer > timeout) {
-      return 'Start Countdown';
+      return i18next.t('settings.window-picker-dialog.restart-countdown');
     }
-    return `Selecting in ${timer} seconds...`;
+    if (timer > timeout) {
+      return i18next.t('settings.window-picker-dialog.start-countdown');
+    }
+    return i18next.t('settings.window-picker-dialog.countdown', { count: timer });
   };
 
   return (
     <Modal
       title={
         props.mode === 'application'
-          ? 'Select an Application Name'
-          : 'Select a Window Title'
+          ? i18next.t('settings.window-picker-dialog.pick-app-name-title')
+          : i18next.t('settings.window-picker-dialog.pick-window-title-title')
       }
       icon={<BiTargetLock />}
       visible={props.visible}
@@ -118,7 +120,7 @@ export default (props: IProps) => {
         </div>
         <div className={classes.buttons}>
           <Button
-            label="Cancel"
+            label={i18next.t('settings.cancel')}
             icon={<TbX />}
             block
             onClick={() => {
@@ -126,7 +128,7 @@ export default (props: IProps) => {
             }}
           />
           <Button
-            label={props.mode === 'application' ? 'Select Application' : 'Select Title'}
+            label={i18next.t('settings.window-picker-dialog.confirm')}
             variant="primary"
             disabled={!value || value === ''}
             icon={<TbCheck />}

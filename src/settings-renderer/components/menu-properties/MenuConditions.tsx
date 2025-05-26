@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { BiTargetLock } from 'react-icons/bi';
@@ -69,14 +70,13 @@ export default () => {
 
   return (
     <>
-      <h1>Menu Conditions</h1>
+      <h1>{i18next.t('settings.menu-conditions')}</h1>
       <Note marginTop={-5} marginBottom={5}>
-        You can bind multiple menus to the same shortcut and then choose when to show each
-        menu.
+        {i18next.t('settings.menu-conditions-info')}
       </Note>
       <Checkbox
-        label="Limit to specific apps"
-        info="Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i."
+        label={i18next.t('settings.app-condition')}
+        info={i18next.t('settings.app-condition-info')}
         initialValue={appConditionVisible}
         onChange={(value) => {
           setAppConditionVisible(value);
@@ -96,7 +96,7 @@ export default () => {
           <>
             <input
               type="text"
-              placeholder="e.g. /firefox|chrome/i"
+              placeholder={i18next.t('settings.app-condition-placeholder')}
               value={appCondition}
               onChange={(event) => setAppCondition(event.target.value)}
               onBlur={() => {
@@ -115,7 +115,7 @@ export default () => {
             <Button
               variant="secondary"
               grouped
-              tooltip="Select a window"
+              tooltip={i18next.t('settings.app-condition-tooltip')}
               icon={<BiTargetLock />}
               onClick={() => {
                 setAppPickerVisible(true);
@@ -125,8 +125,8 @@ export default () => {
         )}
       </div>
       <Checkbox
-        label="Limit to specific windows"
-        info="Show the menu only if the focused window's title contains a given text. This supports regular expressions like /youtube|vimeo/i."
+        label={i18next.t('settings.window-condition')}
+        info={i18next.t('settings.window-condition-info')}
         initialValue={windowConditionVisible}
         onChange={(value) => {
           setWindowConditionVisible(value);
@@ -146,7 +146,7 @@ export default () => {
           <>
             <input
               type="text"
-              placeholder="e.g. /youtube|vimeo/i"
+              placeholder={i18next.t('settings.window-condition-placeholder')}
               value={windowCondition}
               onChange={(event) => setWindowCondition(event.target.value)}
               onBlur={() => {
@@ -165,7 +165,7 @@ export default () => {
             <Button
               variant="secondary"
               grouped
-              tooltip="Select a window"
+              tooltip={i18next.t('settings.window-condition-tooltip')}
               icon={<BiTargetLock />}
               onClick={() => {
                 setWindowPickerVisible(true);
@@ -175,8 +175,8 @@ export default () => {
         )}
       </div>
       <Checkbox
-        label="Limit to a screen area"
-        info="Show the menu only if the pointer is in a given area on the screen. The area is given in pixels relative to the top left corner of your main display. If you leave a field empty, the area is unbounded in that direction."
+        label={i18next.t('settings.area-condition')}
+        info={i18next.t('settings.area-condition-info')}
         initialValue={screenConditionVisible}
         onChange={(value) => {
           setScreenConditionVisible(value);
@@ -201,10 +201,26 @@ export default () => {
         {screenConditionVisible && (
           <>
             {[
-              { value: screenMinY, setValue: setScreenMinY, label: 'Top' },
-              { value: screenMinX, setValue: setScreenMinX, label: 'Left' },
-              { value: screenMaxY, setValue: setScreenMaxY, label: 'Bottom' },
-              { value: screenMaxX, setValue: setScreenMaxX, label: 'Right' },
+              {
+                value: screenMinY,
+                setValue: setScreenMinY,
+                label: i18next.t('settings.area-condition-top-placeholder'),
+              },
+              {
+                value: screenMinX,
+                setValue: setScreenMinX,
+                label: i18next.t('settings.area-condition-left-placeholder'),
+              },
+              {
+                value: screenMaxY,
+                setValue: setScreenMaxY,
+                label: i18next.t('settings.area-condition-bottom-placeholder'),
+              },
+              {
+                value: screenMaxX,
+                setValue: setScreenMaxX,
+                label: i18next.t('settings.area-condition-right-placeholder'),
+              },
             ].map(({ value, setValue, label }, index) => (
               <input
                 key={index}
@@ -239,7 +255,7 @@ export default () => {
             <Button
               variant="secondary"
               grouped
-              tooltip="Select a screen area"
+              tooltip={i18next.t('settings.area-condition-tooltip')}
               icon={<BiTargetLock />}
               onClick={() => {
                 setScreenAreaPickerVisible(true);

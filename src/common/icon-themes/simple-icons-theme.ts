@@ -17,6 +17,12 @@ export class SimpleIconsTheme implements IIconTheme {
   /** This array contains all available icon names. It is initialized in the constructor. */
   protected iconNames: Array<string> = [];
 
+  /** The replacement map for special characters in the title. */
+  protected titleToSlugReplacements: Record<string, string>;
+
+  /** The regex used to match special characters in the title. */
+  protected titleToSlugCharsRegex: RegExp;
+
   constructor() {
     // Load simple-icons.css as text file.
     const string =
@@ -31,6 +37,31 @@ export class SimpleIconsTheme implements IIconTheme {
     while ((match = regex.exec(string)) !== null) {
       this.iconNames.push(match[1]);
     }
+
+    // The replacement map is copied from the Simple Icons project.
+    // Source: https://github.com/simple-icons/simple-icons/blob/develop/sdk.mjs
+    this.titleToSlugReplacements = {
+      /* eslint-disable @typescript-eslint/naming-convention */
+      '+': 'plus',
+      '.': 'dot',
+      '&': 'and',
+      /* eslint-enable @typescript-eslint/naming-convention */
+      đ: 'd',
+      ħ: 'h',
+      ı: 'i',
+      ĸ: 'k',
+      ŀ: 'l',
+      ł: 'l',
+      ß: 'ss',
+      ŧ: 't',
+      ø: 'o',
+    };
+
+    // Create a regex that matches all characters in the replacement map.
+    this.titleToSlugCharsRegex = new RegExp(
+      `[${Object.keys(this.titleToSlugReplacements).join('')}]`,
+      'g'
+    );
   }
 
   /** Returns a human-readable name of the icon theme. */
@@ -62,9 +93,17 @@ export class SimpleIconsTheme implements IIconTheme {
     return {
       type: 'list' as const,
       usesTextColor: true,
-      hint: "This is a built-in icon theme. Learn how to add your own icon themes <a href='https://kando.menu/icon-themes/' target='_blank'>here</a>.",
       listIcons: (searchTerm: string) => {
-        return matchSorter(this.iconNames, searchTerm);
+        return matchSorter(
+          this.iconNames,
+
+          // Replace special characters in the search term with their replacements.
+          // This is necessary because the icon names from the CSS file are always slugs.
+          searchTerm.replace(
+            this.titleToSlugCharsRegex,
+            (char) => this.titleToSlugReplacements[char]
+          )
+        );
       },
     };
   }

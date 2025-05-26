@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
 import SettingsRow from './SettingsRow';
 
@@ -38,6 +39,9 @@ interface IProps<T extends string> {
 
   /** Optional minimum width of the dropdown. */
   minWidth?: number;
+
+  /** Optional maximum width of the dropdown. */
+  maxWidth?: number;
 }
 
 /**
@@ -51,7 +55,7 @@ export default <T extends string>(props: IProps<T>) => {
     props.options.find((option) => option.value === props.initialValue) === undefined;
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow maxWidth={200}>
+    <SettingsRow label={props.label} info={props.info} grow maxWidth={props.maxWidth}>
       <select
         className={classes.select}
         disabled={props.disabled}
@@ -62,7 +66,7 @@ export default <T extends string>(props: IProps<T>) => {
           // If the initial value is invalid, we add a placeholder option.
           invalidSelection && (
             <option hidden disabled value="__invalid__">
-              Select an option…
+              {i18next.t('settings.invalid-dropdown-selection')}
             </option>
           )
         }

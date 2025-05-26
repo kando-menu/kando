@@ -27,7 +27,7 @@ export class RedirectItemType implements IItemType {
   }
 
   get defaultName(): string {
-    return i18next.t('items.redirect.name');
+    return i18next.t('menu-items.redirect.name');
   }
 
   get defaultIcon(): string {
@@ -45,6 +45,6 @@ export class RedirectItemType implements IItemType {
   }
 
   get genericDescription(): string {
-    return i18next.t('items.redirect.description');
+    return i18next.t('menu-items.redirect.description');
   }
 }

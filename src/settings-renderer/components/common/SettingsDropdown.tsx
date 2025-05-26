@@ -32,6 +32,9 @@ interface IProps<K extends keyof IGeneralSettings> {
 
   /** Optional minimum width of the dropdown. */
   minWidth?: number;
+
+  /** Optional maximum width of the dropdown. */
+  maxWidth?: number;
 }
 
 /**
@@ -62,6 +65,7 @@ export default <K extends EnumKeys<IGeneralSettings>>(props: IProps<K>) => {
       onChange={setState}
       disabled={props.disabled}
       minWidth={props.minWidth}
+      maxWidth={props.maxWidth}
     />
   );
 };
