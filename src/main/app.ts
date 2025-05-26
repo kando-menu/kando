@@ -124,9 +124,7 @@ export class KandoApp {
       });
     } catch (error) {
       if (error.code === 'EACCES' || error.code === 'EPERM') {
-        console.log(
-          "Failed to create the 'themes' folder due to write-protected files."
-        );
+        console.log("Failed to create the 'themes' folder due to write-protected files.");
       } else {
         console.error(
           'An unexpected error occurred while creating theme folders:',
