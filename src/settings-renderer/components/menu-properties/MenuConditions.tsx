@@ -23,7 +23,7 @@ import ScreenAreaPicker from './ScreenAreaPicker';
 import WindowPicker from './WindowPicker';
 
 /** This component shows the conditions for displaying the currently selected menu. */
-export default () => {
+export default function MenuConditions() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const editMenu = useMenuSettings((state) => state.editMenu);
@@ -312,4 +312,4 @@ export default () => {
       />
     </>
   );
-};
+}

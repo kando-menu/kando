@@ -43,7 +43,9 @@ type BooleanKeys<T> = {
  * @param props - The properties for the managed checkbox component.
  * @returns A managed checkbox element.
  */
-export default <K extends BooleanKeys<IGeneralSettings>>(props: IProps<K>) => {
+export default function SettingsCheckbox<K extends BooleanKeys<IGeneralSettings>>(
+  props: IProps<K>
+) {
   const [state, setState] = useGeneralSetting(props.settingsKey);
 
   return (
@@ -55,4 +57,4 @@ export default <K extends BooleanKeys<IGeneralSettings>>(props: IProps<K>) => {
       disabled={props.disabled}
     />
   );
-};
+}

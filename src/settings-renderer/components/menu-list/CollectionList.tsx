@@ -37,7 +37,7 @@ interface IRenderedCollection {
  * In addition, there is show-all-menus button at the top, and an add-new-collection
  * button at the bottom. They are always there, even if no collection is configured.
  */
-export default () => {
+export default function CollectionList() {
   const menus = useMenuSettings((state) => state.menus);
   const editMenu = useMenuSettings((state) => state.editMenu);
   const collections = useMenuSettings((state) => state.collections);
@@ -230,4 +230,4 @@ export default () => {
       </Scrollbox>
     </div>
   );
-};
+}

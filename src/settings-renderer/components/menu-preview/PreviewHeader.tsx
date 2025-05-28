@@ -20,7 +20,7 @@ import { Headerbar, Button } from '../common';
  * This is the toolbar at the top of the menu-preview area. It contains some buttons for
  * undo/redo, and for opening the settings dialogs.
  */
-export default () => {
+export default function PreviewHeader() {
   // This will force a re-render whenever the menu settings change. For now, this is
   // necessary to update the undo/redo buttons. In the future, we might want to make
   // this more fine-grained, maybe by directly subscribing to the past and future states
@@ -89,4 +89,4 @@ export default () => {
     </>
   );
   return <Headerbar center={headerButtons} />;
-};
+}

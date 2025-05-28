@@ -46,7 +46,7 @@ interface IProps {
  * @param props - The properties for the modal component.
  * @returns A popover element.
  */
-export default (props: IProps) => {
+export default function Popover(props: IProps) {
   const popoverContent = React.useRef(null);
   const popoverTriangle = React.useRef(null);
   const popoverTarget = React.useRef(null);
@@ -173,4 +173,4 @@ export default (props: IProps) => {
       )}
     </>
   );
-};
+}

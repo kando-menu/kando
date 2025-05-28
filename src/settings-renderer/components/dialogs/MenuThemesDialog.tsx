@@ -53,7 +53,7 @@ const openThemeDirectory = () => {
  * it. In addition, the user can configure some properties like the theme's accent
  * colors.
  */
-export default () => {
+export default function MenuThemesDialog() {
   const themesDialogVisible = useAppState((state) => state.themesDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
 
@@ -293,4 +293,4 @@ export default () => {
       </div>
     </Modal>
   );
-};
+}

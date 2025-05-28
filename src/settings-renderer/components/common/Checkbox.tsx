@@ -37,7 +37,7 @@ interface IProps {
  * @param props - The properties for the checkbox component.
  * @returns A checkbox element.
  */
-export default (props: IProps) => {
+export default function Checkbox(props: IProps) {
   return (
     <SettingsRow label={props.label} info={props.info} labelClickable>
       <input
@@ -49,4 +49,4 @@ export default (props: IProps) => {
       />
     </SettingsRow>
   );
-};
+}

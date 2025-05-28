@@ -30,7 +30,7 @@ const cx = classNames.bind(classes);
  * demonstrate the interaction with Kando. The dialog is shown when the user first starts
  * Kando, unless the user has disabled it in the settings.
  */
-export default () => {
+export default function IntroDialog() {
   const introDialogVisible = useAppState((state) => state.introDialogVisible);
   const setIntroDialogVisible = useAppState((state) => state.setIntroDialogVisible);
   const [showIntroductionDialog] = useGeneralSetting('showIntroductionDialog');
@@ -255,4 +255,4 @@ export default () => {
       </div>
     </Modal>
   );
-};
+}

@@ -31,7 +31,13 @@ import { Sidebar } from './common';
 import * as classes from './App.module.scss';
 const cx = classNames.bind(classes);
 
-export default () => {
+/**
+ * This is the main component of the settings dialog. It manages the layout of the
+ * different components: the menu list on the left, the menu preview in the center, and
+ * the properties on the right. It also handles global shortcuts for undo and redo, and
+ * sets the color scheme of the body element based on the user's settings.
+ */
+export default function App() {
   const [settingsWindowColorScheme] = useGeneralSetting('settingsWindowColorScheme');
   const [settingsWindowFlavor] = useGeneralSetting('settingsWindowFlavor');
 
@@ -111,4 +117,4 @@ export default () => {
       />
     </>
   );
-};
+}

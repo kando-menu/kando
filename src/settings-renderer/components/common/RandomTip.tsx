@@ -29,7 +29,7 @@ interface IProps {
  * @param props - The properties for the tip component.
  * @returns A note element.
  */
-export default (props: IProps) => {
+export default function RandomTip(props: IProps) {
   return (
     <Note
       center
@@ -41,4 +41,4 @@ export default (props: IProps) => {
       {props.tips[Math.floor(Math.random() * props.tips.length)]}
     </Note>
   );
-};
+}

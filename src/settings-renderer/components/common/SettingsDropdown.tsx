@@ -53,7 +53,9 @@ type EnumKeys<T> = {
  * @param props - The properties for the managed dropdown component.
  * @returns A managed dropdown element.
  */
-export default <K extends EnumKeys<IGeneralSettings>>(props: IProps<K>) => {
+export default function SettingsDropdown<K extends EnumKeys<IGeneralSettings>>(
+  props: IProps<K>
+) {
   const [state, setState] = useGeneralSetting(props.settingsKey);
 
   return (
@@ -68,4 +70,4 @@ export default <K extends EnumKeys<IGeneralSettings>>(props: IProps<K>) => {
       maxWidth={props.maxWidth}
     />
   );
-};
+}

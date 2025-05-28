@@ -22,7 +22,13 @@ interface IProps {
   width?: number | string;
 }
 
-export default (props: IProps) => {
+/**
+ * Swirl component displays a decorative swirl image based on the variant specified.
+ *
+ * @param props The properties for the swirl component.
+ * @returns An image element displaying the selected swirl variant.
+ */
+export default function Swirl(props: IProps) {
   const swirls = {
     swirl1,
     swirl2,
@@ -45,4 +51,4 @@ export default (props: IProps) => {
       }}
     />
   );
-};
+}

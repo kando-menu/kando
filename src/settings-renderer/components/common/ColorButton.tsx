@@ -33,7 +33,7 @@ interface IProps {
  * @param props - The properties for the color button component.
  * @returns A color button element.
  */
-export default (props: IProps) => {
+export default function ColorButton(props: IProps) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [cssColor, setCSSColor] = React.useState(chroma(props.color).css());
   const [inputColor, setInputColor] = React.useState(chroma(props.color).css());
@@ -87,4 +87,4 @@ export default (props: IProps) => {
       </div>
     </Popover>
   );
-};
+}

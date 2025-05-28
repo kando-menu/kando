@@ -53,7 +53,7 @@ interface IProps {
  * @param props - The properties for the note component.
  * @returns A note element.
  */
-export default (props: IProps) => {
+export default function Note(props: IProps) {
   const handleLinkClick = (href: string) => {
     if (props.onLinkClick) {
       props.onLinkClick(href); // Execute the callback with the link's href
@@ -99,4 +99,4 @@ export default (props: IProps) => {
       )}
     </div>
   );
-};
+}

@@ -34,7 +34,7 @@ interface IProps {
  * collection is selected, the details will show the collection name and a set of widgets
  * for editing the collection's name, icon, and tags.
  */
-export default (props: IProps) => {
+export default function CollectionDetails(props: IProps) {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
@@ -220,4 +220,4 @@ export default (props: IProps) => {
       )}
     </div>
   );
-};
+}

@@ -46,7 +46,7 @@ interface IProps {
  * @param props - The properties for the tag input component.
  * @returns A tag edit field.
  */
-export default (props: IProps) => {
+export default function TagInput(props: IProps) {
   const [suggestionsVisible, setSuggestionsVisible] = React.useState(false);
   const inputRef = React.useRef(null);
 
@@ -138,4 +138,4 @@ export default (props: IProps) => {
       </div>
     </SettingsRow>
   );
-};
+}

@@ -52,7 +52,7 @@ interface IProps {
  * @param props - The properties for the color button component.
  * @returns A color button element.
  */
-export default (props: IProps) => {
+export default function IconChooserButton(props: IProps) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [filterTerm, setFilterTerm] = React.useState('');
   const [theme, setTheme] = React.useState(props.theme);
@@ -144,4 +144,4 @@ export default (props: IProps) => {
       />
     </Popover>
   );
-};
+}

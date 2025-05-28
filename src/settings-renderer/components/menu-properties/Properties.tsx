@@ -33,7 +33,7 @@ import MenuBehavior from './MenuBehavior';
  * This component shows the properties of the currently selected menu or menu item on the
  * right side of the settings dialog.
  */
-export default () => {
+export default function Properties() {
   const backend = useAppState((state) => state.backendInfo);
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
@@ -226,4 +226,4 @@ export default () => {
       </div>
     </>
   );
-};
+}

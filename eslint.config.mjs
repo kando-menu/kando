@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: CC0-1.0
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'eslint/config';
+import {includeIgnoreFile} from '@eslint/compat';
 import js from '@eslint/js';
-import ts from 'typescript-eslint';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
-import { includeIgnoreFile } from '@eslint/compat';
+import {defineConfig} from 'eslint/config';
 import globals from 'globals';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import ts from 'typescript-eslint';
 
-const filename = fileURLToPath(import.meta.url);
-const dirname = path.dirname(filename);
+const filename      = fileURLToPath(import.meta.url);
+const dirname       = path.dirname(filename);
 const gitignorePath = path.resolve(dirname, '.gitignore');
 
 export default defineConfig([
@@ -33,7 +33,13 @@ export default defineConfig([
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-var-requires': 'off',
-      '@typescript-eslint/naming-convention': 'error',
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'function',
+          format: ['PascalCase', 'camelCase'],
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

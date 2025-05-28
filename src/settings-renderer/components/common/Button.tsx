@@ -62,7 +62,7 @@ interface IProps {
  * @param props - The properties for the button component.
  * @returns A button element.
  */
-export default (props: IProps) => {
+export default function Button(props: IProps) {
   const className = cx({
     button: true,
     [props.variant || 'secondary']: true,
@@ -84,4 +84,4 @@ export default (props: IProps) => {
       {props.label}
     </button>
   );
-};
+}

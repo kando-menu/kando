@@ -31,7 +31,7 @@ interface IProps {
  * @param props - The properties for the sidebar component.
  * @returns A sidebar element.
  */
-export default (props: IProps) => {
+export default function Sidebar(props: IProps) {
   const resizer = React.useRef<HTMLDivElement>(null);
   const sidebar = React.useRef<HTMLDivElement>(null);
 
@@ -79,4 +79,4 @@ export default (props: IProps) => {
       {props.position === 'left' && <div ref={resizer} className={resizerClass} />}
     </>
   );
-};
+}

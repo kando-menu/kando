@@ -26,7 +26,7 @@ const logo = require('../../../../assets/icons/square-icon.svg');
  * This dialog shows information about Kando, including the version number and links to
  * the release notes and the GitHub repository. It also includes a donation button.
  */
-export default () => {
+export default function AboutDialog() {
   const aboutDialogVisible = useAppState((state) => state.aboutDialogVisible);
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
 
@@ -101,4 +101,4 @@ export default () => {
       </div>
     </Modal>
   );
-};
+}

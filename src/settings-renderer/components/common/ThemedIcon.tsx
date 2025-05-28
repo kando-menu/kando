@@ -30,7 +30,7 @@ interface IProps {
  * @param props - The properties for the icon.
  * @returns An icon component.
  */
-export default (props: IProps) => {
+export default function ThemedIcon(props: IProps) {
   const iconRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -50,4 +50,4 @@ export default (props: IProps) => {
       className={classes.icon}
       ref={iconRef}></div>
   );
-};
+}

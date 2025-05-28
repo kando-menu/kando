@@ -23,7 +23,7 @@ import { ThemedIcon } from '../common';
  * This component encapsules the list of item types which can be dragged to the menu
  * preview.
  */
-export default () => {
+export default function PreviewFooter() {
   const [dragIndex, setDragIndex] = React.useState<number | null>(null);
 
   const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
@@ -64,4 +64,4 @@ export default () => {
       </div>
     </div>
   );
-};
+}

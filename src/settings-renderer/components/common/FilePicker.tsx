@@ -42,7 +42,7 @@ interface IProps {
  * @param props - The properties for the component.
  * @returns A React component that allows the user to enter a shortcut.
  */
-export default (props: IProps) => {
+export default function FilePicker(props: IProps) {
   const [path, setPath] = React.useState(props.initialValue);
 
   // Update the value when the initialValue prop changes. This is necessary because the
@@ -104,4 +104,4 @@ export default (props: IProps) => {
       </div>
     </SettingsRow>
   );
-};
+}

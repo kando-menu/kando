@@ -55,7 +55,9 @@ type NumberKeys<T> = {
  * @param props - The properties for the managed spinbutton component.
  * @returns A managed spinbutton element.
  */
-export default <K extends NumberKeys<IGeneralSettings>>(props: IProps<K>) => {
+export default function SettingsSpinbutton<K extends NumberKeys<IGeneralSettings>>(
+  props: IProps<K>
+) {
   const [state, setState] = useGeneralSetting(props.settingsKey);
 
   return (
@@ -71,4 +73,4 @@ export default <K extends NumberKeys<IGeneralSettings>>(props: IProps<K>) => {
       step={props.step}
     />
   );
-};
+}

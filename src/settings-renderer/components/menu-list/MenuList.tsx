@@ -52,7 +52,7 @@ interface IRenderedMenu {
  *
  * In addition, there is a floating button at the bottom which allows to add a new menu.
  */
-export default () => {
+export default function MenuList() {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const backend = useAppState((state) => state.backendInfo);
@@ -307,4 +307,4 @@ export default () => {
       </div>
     </div>
   );
-};
+}

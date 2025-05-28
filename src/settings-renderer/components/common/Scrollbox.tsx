@@ -19,7 +19,14 @@ interface IProps {
   hideScrollbar?: boolean;
 }
 
-export default (props: IProps) => {
+/**
+ * Wraps its children in a scrollable box. The scrollbox has a maximum height and a fixed
+ * width. If the content exceeds the maximum height, a scrollbar will appear.
+ *
+ * @param props - The properties for the scrollbox component.
+ * @returns A scrollbox element.
+ */
+export default function Scrollbox(props: IProps) {
   return (
     <div
       className={
@@ -29,4 +36,4 @@ export default (props: IProps) => {
       <div className={classes.content}>{props.children}</div>
     </div>
   );
-};
+}

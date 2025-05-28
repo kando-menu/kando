@@ -52,7 +52,7 @@ interface IRenderedMenuItem {
  * preview of the currently selected menu where the user can reorder and select menu
  * items.
  */
-export default () => {
+export default function MenuPreview() {
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
   const selectChildPath = useAppState((state) => state.selectChildPath);
@@ -764,4 +764,4 @@ export default () => {
       </div>
     </div>
   );
-};
+}

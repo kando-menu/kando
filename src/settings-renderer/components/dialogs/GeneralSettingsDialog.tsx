@@ -30,7 +30,7 @@ import {
 } from '../common';
 
 /** This dialog allows the user to configure some general settings of Kando. */
-export default () => {
+export default function GeneralSettingsDialog() {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
   const soundThemes = useAppState((state) => state.soundThemes);
@@ -445,4 +445,4 @@ export default () => {
       </Scrollbox>
     </Modal>
   );
-};
+}
