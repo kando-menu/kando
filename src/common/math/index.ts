@@ -175,15 +175,88 @@ export function getDirection(angle: number, length: number): IVec2 {
 }
 
 /**
+ * Each menu item can have (but not must must have) a fixed angle. If it does not have a
+ * fixed angle, it will be automatically computed at run time using the computeItemAngles
+ * method below.
+ *
+ * However, there are some rules for fixed angles in menus. Among sibling items, the angle
+ * properties must be monotonically increasing, i.e. the first given angle must be smaller
+ * than the second, which must be smaller than the third, and so on. The first given angle
+ * must be greater or equal to 0° and all other angles must be smaller than the first
+ * given angle plus 360°.
+ *
+ * This method ensures that these conditions are met. It will increase or decrease all
+ * angles by multiples of 360° to ensure that the first angle is between 0° and 360° and
+ * all other angles are monotonically increasing. If there are two items with the same
+ * angle, the angle of the second one will be removed. Also, any angle which is larger
+ * than the first angle plus 360° will be removed.
+ *
+ * @param items An array of items representing the menu items. Each item can have an
+ *   `angle` property which is a number representing the angle in degrees. The array will
+ *   be modified in-place.
+ */
+export function fixFixedAngles(items: { angle?: number }[]) {
+  // Shouldn't happen, but who knows...
+  if (!items) {
+    return;
+  }
+
+  // First, we ensure that the first angle is between 0° <= angle < 360° and all other
+  // angles are increasing. After that, there still can be adjacent items with the same
+  // angle - we will remove those later.
+  let firstAngle: number | undefined;
+  let lastAngle: number | undefined;
+  items.forEach((item) => {
+    if ('angle' in item && item.angle != undefined) {
+      if (lastAngle == undefined) {
+        item.angle = getEquivalentAngleLargerThan(item.angle, 0);
+        firstAngle = item.angle;
+        lastAngle = item.angle;
+      } else {
+        item.angle = getEquivalentAngleLargerThan(item.angle, lastAngle);
+        lastAngle = item.angle;
+      }
+    }
+  });
+
+  // If there is no fixed angle, we are done.
+  if (firstAngle == undefined) {
+    return;
+  }
+
+  // Now we remove all items with the same angle as the previous one.
+  let lastIndex = -1;
+  items.forEach((item, index) => {
+    if ('angle' in item && item.angle != undefined) {
+      if (lastIndex >= 0 && item.angle === items[lastIndex].angle) {
+        delete item.angle;
+      } else {
+        lastIndex = index;
+      }
+    }
+  });
+
+  // Finally, we remove all items with an angle larger than the first angle plus 360°.
+  const maxAngle = firstAngle + 360;
+  items.forEach((item) => {
+    if ('angle' in item && item.angle != undefined) {
+      if (item.angle >= maxAngle) {
+        delete item.angle;
+      }
+    }
+  });
+}
+
+/**
  * This method receives an array of objects, each representing an item in a menu level.
  * For each item it computes an angle defining the direction in which the item should be
- * rendered. The angles are returned in an array (of the same length as the input array).
- * If an item in the input array already has an 'angle' property, this is considered a
- * fixed angle and all others are distributed more ore less evenly around. This method
- * also reserves the required angular space for the back navigation link to the parent
- * item (if given). Angles in items are always in degrees, 0° is on the top, 90° on the
- * right, 180° on the bottom and so on. Fixed input angles must be monotonically
- * increasing. If this is not the case, the smaller angle is ignored.
+ * rendered. The angles are returned in an array of the same length as the input array. If
+ * an item in the input array already has an 'angle' property, this is considered a fixed
+ * angle and all others are distributed more ore less evenly around. This method also
+ * reserves the required angular space for the back navigation link to the parent item (if
+ * given). Angles in items are always in degrees, 0° is on the top, 90° on the right, 180°
+ * on the bottom and so on. Fixed input angles must be monotonically increasing. If this
+ * is not the case, the smaller angle is ignored.
  *
  * @param items The Items for which the angles should be computed. They may already have
  *   an angle property. If so, this is considered a fixed angle.
@@ -206,7 +279,7 @@ export function computeItemAngles(
   const fixedAngles: { angle: number; index: number }[] = [];
   items.forEach((item, index) => {
     if ('angle' in item && item.angle >= 0) {
-      fixedAngles.push({ angle: item.angle % 360, index: index });
+      fixedAngles.push({ angle: item.angle, index: index });
     }
   });
 
@@ -378,18 +451,6 @@ export function computeItemWedges(
   }
 
   return wedges;
-}
-
-export function ensureMonotonicIncreasing(items: { angle?: number }[]) {
-  let lastAngle = -1;
-  items.forEach((item) => {
-    if (item.angle !== undefined) {
-      if (item.angle < lastAngle) {
-        item.angle += 360;
-      }
-      lastAngle = item.angle;
-    }
-  });
 }
 
 /**

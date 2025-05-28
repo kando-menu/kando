@@ -17,6 +17,7 @@ import {
   getClosestEquivalentAngle,
   getEquivalentAngleSmallerThan,
   getEquivalentAngleLargerThan,
+  fixFixedAngles,
 } from '../src/common/math';
 import { expect } from 'chai';
 
@@ -305,5 +306,55 @@ describe('isAngleBetween', () => {
     expect(isAngleBetween(45, 90 - 360, 180 - 360)).to.be.false;
     expect(isAngleBetween(45 + 360, 90, 180)).to.be.false;
     expect(isAngleBetween(45 - 360, 90, 180)).to.be.false;
+  });
+});
+
+describe('fixFixedAngles', () => {
+  const test = (items: { angle?: number }[], fixedItems: { angle?: number }[]) => {
+    fixFixedAngles(items);
+    expect(items).to.deep.equal(fixedItems);
+  };
+
+  it('should not change items without fixed angles', () => {
+    test([{}, {}, {}], [{}, {}, {}]);
+  });
+
+  it('should return the same angles if they are all valid', () => {
+    test(
+      [{}, {}, { angle: 90 }, {}, { angle: 270 }],
+      [{}, {}, { angle: 90 }, {}, { angle: 270 }]
+    );
+  });
+
+  it('should remove items with the same angle', () => {
+    test(
+      [{ angle: 90 }, { angle: 90 }, { angle: 270 }],
+      [{ angle: 90 }, {}, { angle: 270 }]
+    );
+    test([{ angle: 90 }, { angle: 90 }, { angle: 90 }], [{ angle: 90 }, {}, {}]);
+  });
+
+  it('should ensure that the first angle is between 0° and 360°', () => {
+    test([{ angle: -90 }, {}, { angle: 90 }], [{ angle: 270 }, {}, { angle: 450 }]);
+    test([{ angle: 450 }, {}, { angle: 270 }], [{ angle: 90 }, {}, { angle: 270 }]);
+    test([{ angle: -450 }, {}, { angle: 90 }], [{ angle: 270 }, {}, { angle: 450 }]);
+  });
+
+  it('should ensure that all angles are monotonically increasing', () => {
+    test(
+      [{ angle: 270 }, { angle: 90 }, { angle: 95 }],
+      [{ angle: 270 }, { angle: 450 }, { angle: 455 }]
+    );
+  });
+
+  it('should remove angles larger than the first angle plus 360°', () => {
+    test(
+      [{ angle: 90 }, { angle: 380 }, { angle: 500 }],
+      [{ angle: 90 }, { angle: 380 }, {}]
+    );
+    test(
+      [{ angle: 0 }, { angle: 350 }, { angle: 30 }, { angle: 40 }],
+      [{ angle: 0 }, { angle: 350 }, {}, {}]
+    );
   });
 });
