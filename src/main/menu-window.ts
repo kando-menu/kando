@@ -88,12 +88,7 @@ export class MenuWindow extends BrowserWindow {
       );
     });
 
-    // Remove the default menu. This disables all default shortcuts like CMD+W which are
-    // not needed in Kando.
-    this.setMenu(null);
-
-    // However, we still want to allow the user to zoom the menu using Ctrl+, Ctrl-, and
-    // Ctrl+0. We have to handle these shortcuts manually.
+    // We want to allow the user to zoom the menu using Ctrl+, Ctrl-, and Ctrl+0.
     this.webContents.on('before-input-event', (event, input) => {
       if (input.control && (input.key === '+' || input.key === '-')) {
         let zoomFactor = this.webContents.getZoomFactor();
