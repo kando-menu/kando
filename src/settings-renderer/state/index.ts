@@ -18,5 +18,5 @@
 // of these objects.
 
 export { useGeneralSettings, useGeneralSetting } from './general-settings';
-export { useMenuSettings } from './menu-settings';
+export { useMenuSettings, useMappedMenuProperties } from './menu-settings';
 export { useAppState, getSelectedChild } from './app-state';

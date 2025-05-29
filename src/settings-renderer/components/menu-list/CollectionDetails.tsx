@@ -19,7 +19,7 @@ import { RiPencilFill } from 'react-icons/ri';
 import * as classes from './CollectionDetails.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState, useMenuSettings } from '../../state';
+import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../state';
 import { Button, IconChooserButton, TagInput } from '../common';
 
 interface IProps {
@@ -47,7 +47,7 @@ export default function CollectionDetails(props: IProps) {
   const menuSearchBarVisible = useAppState((state) => state.menuSearchBarVisible);
   const setMenuSearchBarVisible = useAppState((state) => state.setMenuSearchBarVisible);
 
-  const menus = useMenuSettings((state) => state.menus);
+  const menus = useMappedMenuProperties((menu) => ({ tags: menu.tags }));
   const editCollection = useMenuSettings((state) => state.editCollection);
 
   const [filterTerm, setFilterTerm] = React.useState('');
