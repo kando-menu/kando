@@ -15,7 +15,7 @@ import { useAppState, useMenuSettings } from '../../state';
 import { Checkbox, Note } from '../common';
 
 /** This component shows the behavior options for the currently selected menu. */
-export default () => {
+export default function MenuBehavior() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const editMenu = useMenuSettings((state) => state.editMenu);
@@ -63,4 +63,4 @@ export default () => {
       />
     </>
   );
-};
+}

@@ -36,7 +36,7 @@ interface IProps {
  * @param props - The properties for the header bar component.
  * @returns A header bar element.
  */
-export default (props: IProps) => {
+export default function Headerbar(props: IProps) {
   return (
     <div className={classes.headerbar}>
       <div
@@ -54,4 +54,4 @@ export default (props: IProps) => {
       </div>
     </div>
   );
-};
+}

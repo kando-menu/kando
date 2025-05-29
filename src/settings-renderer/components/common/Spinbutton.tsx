@@ -55,7 +55,7 @@ interface IProps {
  * @param props - The properties for the spinbutton component.
  * @returns A spinbutton element.
  */
-export default (props: IProps) => {
+export default function Spinbutton(props: IProps) {
   // We store the value of the spin button internally as a string. This way we can properly
   // handle empty strings when the user deletes the value.
   const [value, setValue] = React.useState(props.initialValue.toString());
@@ -138,4 +138,4 @@ export default (props: IProps) => {
       </div>
     </SettingsRow>
   );
-};
+}

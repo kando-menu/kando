@@ -34,7 +34,7 @@ interface IProps {
  * collection is selected, the details will show the collection name and a set of widgets
  * for editing the collection's name, icon, and tags.
  */
-export default (props: IProps) => {
+export default function CollectionDetails(props: IProps) {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);
@@ -46,8 +46,6 @@ export default (props: IProps) => {
 
   const menuSearchBarVisible = useAppState((state) => state.menuSearchBarVisible);
   const setMenuSearchBarVisible = useAppState((state) => state.setMenuSearchBarVisible);
-
-  const menus = useMenuSettings((state) => state.menus);
   const editCollection = useMenuSettings((state) => state.editCollection);
 
   const [filterTerm, setFilterTerm] = React.useState('');
@@ -87,16 +85,6 @@ export default (props: IProps) => {
   // This is used to animate the height of the collection details when the user shows or
   // hides the search bar or the collection details.
   const [animatedRef] = useAutoAnimate({ duration: 250 });
-
-  // Accumulate a list of all tags which are currently used in our collections and menus.
-  let allAvailableTags = menuCollections
-    .map((collection) => collection.tags)
-    .concat(menus.map((menu) => menu.tags))
-    .filter((tag) => tag)
-    .reduce((acc, tags) => acc.concat(tags), []);
-
-  // Remove duplicates.
-  allAvailableTags = Array.from(new Set(allAvailableTags));
 
   const showingCollection = selectedCollection !== -1;
   const editingCollection = showingCollection && collectionDetailsVisible;
@@ -214,10 +202,9 @@ export default (props: IProps) => {
               });
               setFilterTags(newTags);
             }}
-            suggestions={allAvailableTags}
           />
         </div>
       )}
     </div>
   );
-};
+}

@@ -167,7 +167,11 @@ const handleArguments = (
 
 app
   .whenReady()
-  .then(() => installExtension(REACT_DEVELOPER_TOOLS))
+  .then(() => {
+    if (process.env.NODE_ENV === 'development') {
+      return installExtension(REACT_DEVELOPER_TOOLS);
+    }
+  })
   .then(() => {
     return i18next.use(i18Backend).init({
       lng: app.getLocale(),

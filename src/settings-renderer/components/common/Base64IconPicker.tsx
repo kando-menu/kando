@@ -30,7 +30,7 @@ interface IProps {
  * @param props - The properties for the icon picker component.
  * @returns A textarea element that allows the user to enter a base64 encoded image.
  */
-export default (props: IProps) => {
+export default function Base64IconPicker(props: IProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = React.useState('');
 
@@ -87,4 +87,4 @@ export default (props: IProps) => {
       ].join('\n')}
     />
   );
-};
+}

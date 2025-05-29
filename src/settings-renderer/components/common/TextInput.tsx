@@ -54,7 +54,7 @@ interface IProps {
  * @param props - The properties for the text-input component.
  * @returns A text-input element.
  */
-export default (props: IProps) => {
+export default function TextInput(props: IProps) {
   const [value, setValue] = React.useState(props.initialValue);
 
   // Update the value when the initialValue prop changes. This is necessary because the
@@ -101,4 +101,4 @@ export default (props: IProps) => {
       )}
     </>
   );
-};
+}

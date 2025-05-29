@@ -34,7 +34,13 @@ interface IProps {
   visible: boolean;
 }
 
-export default (props: IProps) => {
+/**
+ * This component allows the user to select an application name or a window title by
+ * clicking on a button. The user has to wait for a few seconds during which the
+ * application or window should be focused. After that, the application name or window
+ * title is read and returned to the parent component.
+ */
+export default function WindowPicker(props: IProps) {
   const timeout = 5;
   const [value, setValue] = React.useState(null);
   const [timer, setTimer] = React.useState(timeout + 1);
@@ -142,4 +148,4 @@ export default (props: IProps) => {
       </div>
     </Modal>
   );
-};
+}

@@ -65,7 +65,7 @@ interface IProps {
  * @param props - The properties for the modal component.
  * @returns A modal element.
  */
-export default (props: IProps) => {
+export default function Modal(props: IProps) {
   const modalContent = React.useRef(null);
   const pointerDownOnBackground = React.useRef(false);
 
@@ -177,4 +177,4 @@ export default (props: IProps) => {
     </CSSTransition>,
     document.body
   );
-};
+}

@@ -43,7 +43,7 @@ interface IProps {
  * @param props - The properties for the macro-picker component.
  * @returns A macro-picker element.
  */
-export default (props: IProps) => {
+export default function MacroPicker(props: IProps) {
   const [textValue, setTextValue] = React.useState(convertToString(props.initialValue));
   const [recording, setRecording] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -127,7 +127,7 @@ export default (props: IProps) => {
       />
     </div>
   );
-};
+}
 
 /**
  * This method normalizes the given macro. It properly formats the JSON input and turns

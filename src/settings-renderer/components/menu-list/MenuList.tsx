@@ -17,7 +17,8 @@ import { TbPlus } from 'react-icons/tb';
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState, useMenuSettings } from '../../state';
+import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../state';
+
 import { Scrollbox, ThemedIcon, Swirl, Note, Button } from '../common';
 import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
@@ -52,12 +53,18 @@ interface IRenderedMenu {
  *
  * In addition, there is a floating button at the bottom which allows to add a new menu.
  */
-export default () => {
+export default function MenuList() {
+  const menus = useMappedMenuProperties((menu) => ({
+    name: menu.root.name,
+    icon: menu.root.icon,
+    iconTheme: menu.root.iconTheme,
+    shortcut: menu.shortcut,
+    shortcutID: menu.shortcutID,
+    tags: menu.tags,
+  }));
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const backend = useAppState((state) => state.backendInfo);
-
-  const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
@@ -82,12 +89,12 @@ export default () => {
       (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) ||
       i18next.t('settings.not-bound');
     const renderedMenu: IRenderedMenu = {
-      key: menu.root.name + menu.root.icon + menu.root.iconTheme + shortcut,
+      key: menu.name + menu.icon + menu.iconTheme + shortcut,
       index,
-      name: menu.root.name,
+      name: menu.name,
       shortcut,
-      icon: menu.root.icon,
-      iconTheme: menu.root.iconTheme,
+      icon: menu.icon,
+      iconTheme: menu.iconTheme,
     };
 
     return renderedMenu;
@@ -134,7 +141,7 @@ export default () => {
       <CollectionDetails onSearch={setFilterTerm} />
       <div className={classes.menuListContent}>
         <Scrollbox>
-          <div ref={animatedList}>
+          <div ref={animatedList} style={{ padding: 10 }}>
             {menus.length === 0 && (
               <div key="-1" className={classes.message}>
                 <h1>You have no menus!</h1>
@@ -307,4 +314,4 @@ export default () => {
       </div>
     </div>
   );
-};
+}

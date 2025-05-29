@@ -29,11 +29,11 @@ interface IProps {
  * @param props - The properties for the tag component.
  * @returns A tag element.
  */
-export default (props: IProps) => {
+export default function Tag(props: IProps) {
   return (
     <button onClick={props.onClick} className={classes.tag}>
       {props.icon}
       {props.name}
     </button>
   );
-};
+}

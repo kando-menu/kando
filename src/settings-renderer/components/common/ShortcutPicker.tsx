@@ -64,7 +64,7 @@ interface IProps {
  * @param props - The properties for the component.
  * @returns A React component that allows the user to enter a shortcut.
  */
-export default (props: IProps) => {
+export default function ShortcutPicker(props: IProps) {
   const [shortcut, setShortcut] = React.useState(props.initialValue);
   const [recording, setRecording] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -199,7 +199,7 @@ export default (props: IProps) => {
       </div>
     </SettingsRow>
   );
-};
+}
 
 /**
  * This class is used to record and validate shortcuts using key names. It uses the

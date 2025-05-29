@@ -46,7 +46,7 @@ interface IProps {
  * @param props - The properties for the settings-row component.
  * @returns A settings-row element.
  */
-export default (props: IProps) => {
+export default function SettingsRow(props: IProps) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Element = props.labelClickable ? 'label' : 'div';
 
@@ -74,4 +74,4 @@ export default (props: IProps) => {
       </div>
     </Element>
   );
-};
+}

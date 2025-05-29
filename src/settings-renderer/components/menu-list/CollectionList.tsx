@@ -17,7 +17,7 @@ import { TbTrash } from 'react-icons/tb';
 import * as classes from './CollectionList.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState, useMenuSettings } from '../../state';
+import { useAppState, useMenuSettings, useMappedCollectionProperties } from '../../state';
 import { Scrollbox, ThemedIcon } from '../common';
 import { ensureUniqueKeys } from '../../utils';
 
@@ -37,10 +37,17 @@ interface IRenderedCollection {
  * In addition, there is show-all-menus button at the top, and an add-new-collection
  * button at the bottom. They are always there, even if no collection is configured.
  */
-export default () => {
-  const menus = useMenuSettings((state) => state.menus);
+export default function CollectionList() {
+  // We are not interested in all properties of the collections, but only in the name,
+  // icon, and icon theme. So we use a custom hook to map the collection objects to a
+  // simpler object which contains only these properties. This avoids unnecessary
+  // re-renders of this component when other properties of the collections change.
+  const collections = useMappedCollectionProperties((collection) => ({
+    name: collection.name,
+    icon: collection.icon,
+    iconTheme: collection.iconTheme,
+  }));
   const editMenu = useMenuSettings((state) => state.editMenu);
-  const collections = useMenuSettings((state) => state.collections);
   const deleteCollection = useMenuSettings((state) => state.deleteCollection);
   const addCollection = useMenuSettings((state) => state.addCollection);
   const setCollectionDetailsVisible = useAppState(
@@ -151,10 +158,11 @@ export default () => {
                   const menuIndex = parseInt(
                     event.dataTransfer.getData('kando/menu-index')
                   );
+                  const menus = useMenuSettings.getState().menus;
                   const currentTags = menus[menuIndex]?.tags || [];
-                  const newTags = [
-                    ...new Set([...currentTags, ...collections[collection.index].tags]),
-                  ];
+                  const collectionTags =
+                    useMenuSettings.getState().collections[collection.index].tags || [];
+                  const newTags = [...new Set([...currentTags, ...collectionTags])];
                   editMenu(menuIndex, (menu) => {
                     menu.tags = newTags;
                     return menu;
@@ -230,4 +238,4 @@ export default () => {
       </Scrollbox>
     </div>
   );
-};
+}

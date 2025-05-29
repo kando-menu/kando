@@ -50,7 +50,7 @@ interface IProps<T extends string> {
  * @param props - The properties for the dropdown component.
  * @returns A dropdown element.
  */
-export default <T extends string>(props: IProps<T>) => {
+export default function Dropdown<T extends string>(props: IProps<T>) {
   const invalidSelection =
     props.options.find((option) => option.value === props.initialValue) === undefined;
 
@@ -78,4 +78,4 @@ export default <T extends string>(props: IProps<T>) => {
       </select>
     </SettingsRow>
   );
-};
+}

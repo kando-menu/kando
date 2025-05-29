@@ -8,6 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { useRef } from 'react';
 import { create } from 'zustand';
 import { produce } from 'immer';
 import { temporal } from 'zundo';
@@ -160,7 +161,12 @@ type MenuStateActions = {
   ) => void;
 };
 
-/** Use this hook to access a slice from the settings object. */
+/**
+ * Use this hook to access one of the actions above or a slice which will be triggered
+ * whenever something changes in the collections or menus. If you are only interested in a
+ * subset of the properties of all menus, use the useMappedMenuProperties hook defined
+ * below instead.
+ */
 export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
   temporal(
     (set) => ({
@@ -378,6 +384,64 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
     }
   )
 );
+
+/**
+ * Helper hook that can reduce unnecessary re-renders when you are only interested in a
+ * subset of the properties of the menus. For instance, if you only want to display the
+ * names of the menus, you can use this hook to map the menus to their names and only
+ * re-render when the names change.
+ *
+ * @param mapFn - Mapping function to extract relevant properties from each menu.
+ */
+export function useMappedMenuProperties<U>(mapFn: (menu: IMenu) => U): U[] {
+  const lastMenus = useRef<IMenu[]>([]);
+  const lastMapped = useRef<U[]>([]);
+  return useMenuSettings((state) => {
+    const changed =
+      state.menus.length !== lastMenus.current.length ||
+      state.menus.some((item, i) => !lodash.isEqual(mapFn(item), lastMapped.current[i]));
+
+    if (!changed) {
+      return lastMapped.current;
+    }
+
+    lastMenus.current = state.menus;
+    lastMapped.current = state.menus.map(mapFn);
+
+    return lastMapped.current;
+  });
+}
+
+/**
+ * Helper hook that can reduce unnecessary re-renders when you are only interested in a
+ * subset of the properties of the collections. For instance, if you only want to display
+ * the names of the collections, you can use this hook to map the collections to their
+ * names and only re-render when the names change.
+ *
+ * @param mapFn - Mapping function to extract relevant properties from each menu.
+ */
+export function useMappedCollectionProperties<U>(
+  mapFn: (menu: IMenuCollection) => U
+): U[] {
+  const lastCollections = useRef<IMenuCollection[]>([]);
+  const lastMapped = useRef<U[]>([]);
+  return useMenuSettings((state) => {
+    const changed =
+      state.collections.length !== lastCollections.current.length ||
+      state.collections.some(
+        (item, i) => !lodash.isEqual(mapFn(item), lastMapped.current[i])
+      );
+
+    if (!changed) {
+      return lastMapped.current;
+    }
+
+    lastCollections.current = state.collections;
+    lastMapped.current = state.collections.map(mapFn);
+
+    return lastMapped.current;
+  });
+}
 
 // Some internal helpers -----------------------------------------------------------------
 

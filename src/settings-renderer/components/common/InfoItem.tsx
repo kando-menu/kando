@@ -24,7 +24,7 @@ interface IProps {
  * @param props - The properties for the info item component.
  * @returns An info item element.
  */
-export default (props: IProps) => {
+export default function InfoItem(props: IProps) {
   return (
     <span
       className={classes.info}
@@ -33,4 +33,4 @@ export default (props: IProps) => {
       <TbInfoSquareRoundedFilled />
     </span>
   );
-};
+}

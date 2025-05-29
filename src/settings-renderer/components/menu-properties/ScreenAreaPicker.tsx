@@ -32,7 +32,11 @@ interface IProps {
   visible: boolean;
 }
 
-export default (props: IProps) => {
+/**
+ * This component allows the user to select a screen area by dragging two points on the
+ * screen.
+ */
+export default function ScreenAreaPicker(props: IProps) {
   const [leftTop, setLeftTop] = React.useState(null);
   const [rightBottom, setRightBottom] = React.useState(null);
 
@@ -155,4 +159,4 @@ export default (props: IProps) => {
       </div>
     </Modal>
   );
-};
+}

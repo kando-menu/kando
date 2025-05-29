@@ -33,7 +33,7 @@ import MenuBehavior from './MenuBehavior';
  * This component shows the properties of the currently selected menu or menu item on the
  * right side of the settings dialog.
  */
-export default () => {
+export default function Properties() {
   const backend = useAppState((state) => state.backendInfo);
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
@@ -45,7 +45,6 @@ export default () => {
   const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
-  const menuCollections = useMenuSettings((state) => state.collections);
   const [menuTags, setMenuTags] = React.useState([]);
 
   // Update the tag editor whenever the selected menu changes.
@@ -61,16 +60,6 @@ export default () => {
       </>
     );
   }
-
-  // Accumulate a list of all tags which are currently used in our collections and menus.
-  let allAvailableTags = menuCollections
-    .map((collection) => collection.tags)
-    .concat(menus.map((menu) => menu.tags))
-    .filter((tag) => tag)
-    .reduce((acc, tags) => acc.concat(tags), []);
-
-  // Remove duplicates.
-  allAvailableTags = Array.from(new Set(allAvailableTags));
 
   // Get the currently selected menu item and whether it is the root item or not.
   const { selectedItem, isRoot } = getSelectedChild(
@@ -168,7 +157,6 @@ export default () => {
                     });
                     setMenuTags(newTags);
                   }}
-                  suggestions={allAvailableTags}
                 />
               )
             }
@@ -226,4 +214,4 @@ export default () => {
       </div>
     </>
   );
-};
+}

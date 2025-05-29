@@ -52,10 +52,15 @@ interface IProps {
  * @param props - The properties for the icon picker component.
  * @returns A grid icon picker element.
  */
-export default (props: IProps) => {
+export default function GridIconPicker(props: IProps) {
   const [gridInstance, setGridInstance] = React.useState<Grid | null>(null);
-  const theme = IconThemeRegistry.getInstance().getTheme(props.theme);
-  const fetchedIcons = theme.iconPickerInfo.listIcons(props.filterTerm);
+
+  // Listing the icons is expensive, so we only do it when the theme or filter term
+  // changes.
+  const fetchedIcons = React.useMemo(() => {
+    const theme = IconThemeRegistry.getInstance().getTheme(props.theme);
+    return theme.iconPickerInfo.listIcons(props.filterTerm);
+  }, [props.theme, props.filterTerm]);
 
   const columns = 8;
   const rows = Math.ceil(fetchedIcons.length / columns);
@@ -121,4 +126,4 @@ export default (props: IProps) => {
       </AutoSizer>
     </div>
   );
-};
+}
