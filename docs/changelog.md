@@ -49,6 +49,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :wrench: Changed
 
+- **[BREAKING]** The window which contains the menu is now called "Kando Menu" instead of "Kando". The settings window is called "Kando Settings". So if you used any scripts to identify the windows, you will have to update them.
 - **[BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
@@ -58,6 +59,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - An issue where some icons could not be searched for.
 - Sound support in the Flatpak version of Kando.
+
+#### :bug: Fixed
+
+- Gamepad input on Linux when using [input-gamepad](https://github.com/sezanzeb/input-remapper).
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 

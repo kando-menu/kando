@@ -10,13 +10,13 @@
 
 import './index.scss';
 
+import { WindowWithAPIs } from './settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import i18next from 'i18next';
 import { enableDragDropTouch } from 'drag-drop-touch';
-
-import { WindowWithAPIs } from './settings-window-api';
-declare const window: WindowWithAPIs;
 
 import App from './components/App';
 import { useAppState, useGeneralSettings, useMenuSettings } from './state';
@@ -171,12 +171,5 @@ Promise.all([
         <App />
       </React.StrictMode>
     );
-
-    // This is helpful during development as it shows us when the renderer process has
-    // finished reloading.
-    window.commonAPI.log("Successfully loaded Kando's Settings process.");
-
-    // Notify the main process that we are ready.
-    window.settingsAPI.settingsWindowReady();
   }
 );

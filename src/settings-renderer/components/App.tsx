@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 import MouseTrap from 'mousetrap';
@@ -62,6 +65,11 @@ export default () => {
       body.classList.remove('darkColors');
     };
   }, [settingsWindowColorScheme]);
+
+  // Notify the main process that our app is ready to be displayed.
+  React.useEffect(() => {
+    window.settingsAPI.settingsWindowReady();
+  }, []);
 
   return (
     <>

@@ -41,7 +41,7 @@ export const MENU_WINDOW_API = {
    *
    * @param callback This callback will be called when a new menu should be shown.
    */
-  showMenu: (func: (root: IMenuItem, menuOptions: IShowMenuOptions) => void) => {
+  onShowMenu: (func: (root: IMenuItem, menuOptions: IShowMenuOptions) => void) => {
     ipcRenderer.on('menu-window.show-menu', (event, root, menuOptions) =>
       func(root, menuOptions)
     );
@@ -85,6 +85,24 @@ export const MENU_WINDOW_API = {
   /** This will be called by the render process to show the settings window. */
   showSettings: () => {
     ipcRenderer.send('menu-window.show-settings');
+  },
+
+  /**
+   * This will be called by the host process when the menu theme should be reloaded.
+   *
+   * @param callback This callback will be called when the menu theme should be reloaded.
+   */
+  onReloadMenuTheme: (func: () => void) => {
+    ipcRenderer.on('menu-window.reload-menu-theme', func);
+  },
+
+  /**
+   * This will be called by the host process when the sound theme should be reloaded.
+   *
+   * @param callback This callback will be called when the sound theme should be reloaded.
+   */
+  onReloadSoundTheme: (func: () => void) => {
+    ipcRenderer.on('menu-window.reload-sound-theme', func);
   },
 };
 

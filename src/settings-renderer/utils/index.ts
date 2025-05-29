@@ -29,3 +29,5 @@ export function ensureUniqueKeys<T extends { key: string }>(array: T[]) {
     item.key = key;
   });
 }
+
+export { default as FocusTrapManager } from './FocusTrapManager';

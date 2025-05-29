@@ -15,6 +15,7 @@ import { RiCloseLargeFill } from 'react-icons/ri';
 
 import Headerbar from './Headerbar';
 import Button from './Button';
+import { FocusTrapManager } from '../../utils';
 
 import * as classes from './Modal.module.scss';
 
@@ -69,6 +70,11 @@ export default (props: IProps) => {
   const pointerDownOnBackground = React.useRef(false);
 
   React.useEffect(() => {
+    // If the modal is not visible, we don't need to do anything.
+    if (!props.visible || !modalContent.current) {
+      return;
+    }
+
     // Hide on escape.
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -86,17 +92,23 @@ export default (props: IProps) => {
 
     // Trap focus within the modal.
     const handleFocusIn = (event: FocusEvent) => {
-      if (modalContent.current && !modalContent.current.contains(event.target as Node)) {
+      if (
+        modalContent.current &&
+        FocusTrapManager.isTopMost(modalContent.current) &&
+        !modalContent.current.contains(event.target as Node)
+      ) {
         firstFocusableElement?.focus();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('focusin', handleFocusIn);
+    FocusTrapManager.add(modalContent.current);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focusin', handleFocusIn);
+      FocusTrapManager.remove(modalContent.current);
     };
   }, [props.visible]);
 

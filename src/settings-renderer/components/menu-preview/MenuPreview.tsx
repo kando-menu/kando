@@ -84,7 +84,7 @@ export default () => {
   //    property indicates whether the item should be dropped into the submenu at the
   //    given index. Both tempItem and dragAngle are null in this case.
   // 2. The user drags something from outside the menu preview into the menu preview. In
-  //    this case, the drag index is null. The drop index the dropInto property behave
+  //    this case, the drag index is null. The drop index and the dropInto property behave
   //    exactly like in the first case. The tempItem is set to the item which is about to
   //    be dropped. The dragAngle is null.
   // 3. The user drags an item with a fixed angle inside the menu preview. In this case,
@@ -96,7 +96,8 @@ export default () => {
   const [tempItem, setTempItem] = React.useState<IRenderedMenuItem | null>(null);
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
 
-  // Some booleans which make the code below more readable.
+  // Some booleans matching to the three cases explained above to make the code below more
+  // readable.
   const internalDragOngoing = dragIndex !== null && dropIndex !== null;
   const externalDragOngoing = dragIndex === null && dropIndex !== null;
   const angleDragOngoing = dragIndex !== null && dropIndex === null && dragAngle !== null;
@@ -107,7 +108,7 @@ export default () => {
     return null;
   }
 
-  // First, we traverses the children of the current menu according to the selection path
+  // First, we traverse the children of the current menu according to the selection path
   // and store the final (sub)menu aka the centerItem. We also store some other
   // information about the center item. The center item could either be the last item in
   // selectedChildPath (if a submenu is selected) or the last-but-one item (if a menu item
@@ -229,11 +230,10 @@ export default () => {
   }
 
   // If it is a fixed-angle drag, we need to update the angle of the dragged item to the
-  // current drag angle. This is surprisingly complex - if you come up with a better
-  // implementation, please let me know. The main problem is that you can drag items over
-  // the 0°/360° boundary on top, so if there are other fixed angles limiting the movement
-  // of the dragged item, they can be on both sides of that boundary making the
-  // computation a bit tricky.
+  // current drag angle. This is surprisingly complex. The main problem is that you can
+  // drag items over the 0°/360° boundary on top, so if there are other fixed angles
+  // limiting the movement of the dragged item, they can be on both sides of that boundary
+  // making the computation a bit tricky.
   if (angleDragOngoing) {
     const item = renderedChildren[dragIndex];
 
@@ -258,29 +258,46 @@ export default () => {
 
     let angle = dragAngle;
 
-    // Make sure that prevAngle < angle < nextAngle.
+    // If there is at least one other item with a fixed angle, prevAngle and nextAngle
+    // will be set to the angles of the previous and next item with a fixed angle. Both
+    // angles could be the same if there is only one other item with a fixed angle. In any
+    // case, we need to ensure that the angle of the dragged item is between these two
+    // angles.
     if (prevAngle !== null && nextAngle !== null) {
-      prevAngle = math.getEquivalentAngleSmallerThan(
-        prevAngle,
-        math.getClosestEquivalentAngle(item.angle, dragAngle)
-      );
-      nextAngle = math.getEquivalentAngleLargerThan(
-        nextAngle,
-        math.getClosestEquivalentAngle(item.angle, dragAngle)
-      );
+      // Make sure that prevAngle < angle < nextAngle. This is especially important if the
+      // angles wrap around the 0°/360° boundary or if there is only one other item with a
+      // fixed angle. In this case, nextAngle will be equal to prevAngle + 360° after this
+      // operation.
+      prevAngle = math.getEquivalentAngleSmallerThan(prevAngle, item.angle);
+      nextAngle = math.getEquivalentAngleLargerThan(nextAngle, item.angle);
+      angle = math.getEquivalentAngleLargerThan(angle, prevAngle);
 
       const margin = 15;
+      const validStart = prevAngle + margin;
+      const validEnd = nextAngle - margin;
+      const middleOfValid = (validStart + validEnd) / 2;
+      const middleOfInvalid = middleOfValid + 180;
+
+      // If the previous and next angle are too close to each other, we force the dragged
+      // item to be in the middle of the two angles. Else, we check whether the dragged
+      // angle is currently outside the valid angular range. We also check in which half
+      // of the invalid circle segment the angle is and clamp the dragged item to the
+      // corresponding end of the valid range.
       if (nextAngle - prevAngle < 2 * margin) {
-        angle = (prevAngle + nextAngle) / 2;
+        item.angle = (prevAngle + nextAngle) / 2;
+      } else if (math.isAngleBetween(angle, validEnd, middleOfInvalid)) {
+        item.angle = validEnd;
+      } else if (math.isAngleBetween(angle, middleOfInvalid, validStart + 360)) {
+        item.angle = validStart;
       } else {
-        angle = Math.max(prevAngle + margin, Math.min(nextAngle - margin, angle));
+        item.angle = angle;
       }
+    } else {
+      item.angle = angle;
     }
 
-    item.angle = angle;
-
     // Ensure that the angles are monotonically increasing.
-    math.ensureMonotonicIncreasing(renderedChildren);
+    math.fixFixedAngles(renderedChildren);
     renderedChildAngles = math.computeItemAngles(renderedChildren, parentAngle);
   }
 
@@ -436,10 +453,10 @@ export default () => {
               y: event.clientY,
             });
 
-            // Only consider an initial angular differences of at least 15 degrees.
+            // Only consider an initial angular differences of at least 1 degree.
             if (!angleDragOngoing) {
               const angleDiff = math.getAngularDifference(dragAngle, angle);
-              if (Math.abs(angleDiff) < 15) {
+              if (Math.abs(angleDiff) < 1) {
                 return;
               }
 
@@ -447,9 +464,13 @@ export default () => {
               (event.target as HTMLElement).setPointerCapture(event.pointerId);
             }
 
-            // Update the angle of the dragged item in 15 degree steps.
-            const steppedAngle = 15 * Math.round(angle / 15);
-            setDragAngle(steppedAngle);
+            // Update the angle of the dragged item in 15 degree steps. If shift is
+            // pressed, the angle is snapped to the nearest 3 degree.
+            if (event.shiftKey) {
+              setDragAngle((3 * Math.round(angle / 3)) % 360);
+            } else {
+              setDragAngle((15 * Math.round(angle / 15)) % 360);
+            }
           }
         }}
         style={utils.makeCSSProperties('dir', childDirections[index])}>
