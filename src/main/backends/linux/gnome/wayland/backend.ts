@@ -68,6 +68,7 @@ export class GnomeBackend implements Backend {
       throw new Error(
         i18next.t('backends.gnome.error', {
           link: 'https://extensions.gnome.org/extension/7068/kando-integration/',
+          interpolation: { escapeValue: false },
         })
       );
     }

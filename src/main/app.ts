@@ -202,6 +202,7 @@ export class KandoApp {
         i18next.t('main.new-version-notification-header'),
         i18next.t('main.new-version-notification-body', {
           link: 'https://github.com/kando-menu/kando/releases',
+          interpolation: { escapeValue: false },
         }),
         () => {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
