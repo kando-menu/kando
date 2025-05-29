@@ -266,7 +266,7 @@
             "fixed-stroke-length": "Longueur de mouvement fixe"
         },
         "hover-mode": "Mode Survol",
-        "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Selectionne les éléments en les survolant.",
+        "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
         "icon-picker-dialog": {
             "base64-example": "Exemple Base64 :",
             "search-placeholder": "Rechercher des Icônes…",
@@ -339,7 +339,7 @@
         "redo": "Répéter",
         "window-condition-placeholder": "Titre de la fenêtre",
         "window-condition-tooltip": "Selectionner un fenêtre",
-        "shortcut-info": "Ce raccourci ouvre le menu. Il doit contenir une touche normale et un nombre quelconque de modificateurs tels que Ctrl, Alt ou Shift. Lors de l'enregistrement, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps, vous pouvez aussi les appuyer l'une après l'autre. C'est utile si un raccourci est déjà lié à un autre menu !",
+        "shortcut-info": "Ce raccourci ouvre le menu. Il doit contenir une touche normale et un nombre quelconque de modifiantes tels que Ctrl, Alt ou Shift. Lors de l'enregistrement, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps, vous pouvez aussi les enfoncer l'une après l'autre. C'est utile si un raccourci est déjà lié à un autre menu !",
         "tags-info": "Les Balises peuvent être utilisées pour grouper les menus dans des collections de menus.",
         "screen-area-picker": {
             "top-left-value": "Gauche : {{x}}, Haut : {{y}}",
