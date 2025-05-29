@@ -13,6 +13,8 @@ import i18next from 'i18next';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbX, TbPlus } from 'react-icons/tb';
 
+import { useMappedMenuProperties, useMappedCollectionProperties } from '../../state';
+
 import Tag from './Tag';
 import SettingsRow from './SettingsRow';
 
@@ -21,12 +23,6 @@ import * as classes from './TagInput.module.scss';
 interface IProps {
   /** The initial tags to display. */
   tags: string[];
-
-  /**
-   * A list of possible tags. They will be shown below the input field and can e clicked
-   * to add them to the list of tags.
-   */
-  suggestions: string[];
 
   /** Optional label text to display next to the component. */
   label?: string;
@@ -43,18 +39,33 @@ interface IProps {
  * tags. Tags can be removed by clicking on them, new tags can be added by pressing Enter
  * after typing some text.
  *
+ * All tags which are currently used in the collections and menus are displayed as
+ * suggestions. Clicking on a suggestion adds it to the tag input field.
+ *
  * @param props - The properties for the tag input component.
  * @returns A tag edit field.
  */
 export default function TagInput(props: IProps) {
+  const menus = useMappedMenuProperties((menu) => ({ tags: menu.tags }));
+  const collections = useMappedCollectionProperties((collection) => ({
+    tags: collection.tags,
+  }));
   const [suggestionsVisible, setSuggestionsVisible] = React.useState(false);
   const inputRef = React.useRef(null);
 
   const [containerRef] = useAutoAnimate({ duration: 250 });
 
-  const suggestions = props.suggestions
-    .filter((suggestion) => !props.tags.includes(suggestion))
-    .sort();
+  // Accumulate a list of all tags which are currently used in our collections and menus.
+  let allAvailableTags = collections
+    .map((collection) => collection.tags)
+    .concat(menus.map((menu) => menu.tags))
+    .filter((tag) => tag)
+    .reduce((acc, tags) => acc.concat(tags), []);
+
+  // Remove duplicates.
+  allAvailableTags = Array.from(new Set(allAvailableTags));
+
+  const suggestions = allAvailableTags.filter((tag) => !props.tags.includes(tag)).sort();
 
   const focusInput = () => {
     if (inputRef.current) {

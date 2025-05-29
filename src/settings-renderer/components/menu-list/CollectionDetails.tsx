@@ -19,7 +19,7 @@ import { RiPencilFill } from 'react-icons/ri';
 import * as classes from './CollectionDetails.module.scss';
 const cx = classNames.bind(classes);
 
-import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../state';
+import { useAppState, useMenuSettings } from '../../state';
 import { Button, IconChooserButton, TagInput } from '../common';
 
 interface IProps {
@@ -46,8 +46,6 @@ export default function CollectionDetails(props: IProps) {
 
   const menuSearchBarVisible = useAppState((state) => state.menuSearchBarVisible);
   const setMenuSearchBarVisible = useAppState((state) => state.setMenuSearchBarVisible);
-
-  const menus = useMappedMenuProperties((menu) => ({ tags: menu.tags }));
   const editCollection = useMenuSettings((state) => state.editCollection);
 
   const [filterTerm, setFilterTerm] = React.useState('');
@@ -87,16 +85,6 @@ export default function CollectionDetails(props: IProps) {
   // This is used to animate the height of the collection details when the user shows or
   // hides the search bar or the collection details.
   const [animatedRef] = useAutoAnimate({ duration: 250 });
-
-  // Accumulate a list of all tags which are currently used in our collections and menus.
-  let allAvailableTags = menuCollections
-    .map((collection) => collection.tags)
-    .concat(menus.map((menu) => menu.tags))
-    .filter((tag) => tag)
-    .reduce((acc, tags) => acc.concat(tags), []);
-
-  // Remove duplicates.
-  allAvailableTags = Array.from(new Set(allAvailableTags));
 
   const showingCollection = selectedCollection !== -1;
   const editingCollection = showingCollection && collectionDetailsVisible;
@@ -214,7 +202,6 @@ export default function CollectionDetails(props: IProps) {
               });
               setFilterTags(newTags);
             }}
-            suggestions={allAvailableTags}
           />
         </div>
       )}
