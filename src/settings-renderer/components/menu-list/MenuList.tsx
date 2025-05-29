@@ -141,7 +141,7 @@ export default function MenuList() {
       <CollectionDetails onSearch={setFilterTerm} />
       <div className={classes.menuListContent}>
         <Scrollbox>
-          <div ref={animatedList}>
+          <div ref={animatedList} style={{ padding: 10 }}>
             {menus.length === 0 && (
               <div key="-1" className={classes.message}>
                 <h1>You have no menus!</h1>
