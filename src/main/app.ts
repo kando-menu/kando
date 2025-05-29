@@ -112,19 +112,20 @@ export class KandoApp {
       },
     });
 
+    // We ensure that the themes directories exist. If they do not exist, we create them.
     try {
-      await fs.promises.mkdir(path.join(app.getPath('userData'), 'menu-themes'), {
-        recursive: true,
-      });
-      await fs.promises.mkdir(path.join(app.getPath('userData'), 'sound-themes'), {
-        recursive: true,
-      });
-      await fs.promises.mkdir(path.join(app.getPath('userData'), 'icon-themes'), {
-        recursive: true,
-      });
+      const themeDirs = ['menu-themes', 'sound-themes', 'icon-themes'];
+      await Promise.all(
+        themeDirs.map((dir) =>
+          fs.promises.mkdir(path.join(app.getPath('userData'), dir), { recursive: true })
+        )
+      );
     } catch (error) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
-        console.log("Failed to create the 'themes' folder due to write-protected files.");
+      if (
+        (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM') &&
+        !this.generalSettings.get('ignoreWriteProtectedConfigFiles')
+      ) {
+        console.log('Failed to create the themes folders due to write-protected files.');
       } else {
         console.error(
           'An unexpected error occurred while creating theme folders:',
