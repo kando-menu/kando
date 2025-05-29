@@ -38,9 +38,8 @@ interface IRenderedCollection {
  * button at the bottom. They are always there, even if no collection is configured.
  */
 export default function CollectionList() {
-  const menus = useMenuSettings((state) => state.menus);
-  const editMenu = useMenuSettings((state) => state.editMenu);
   const collections = useMenuSettings((state) => state.collections);
+  const editMenu = useMenuSettings((state) => state.editMenu);
   const deleteCollection = useMenuSettings((state) => state.deleteCollection);
   const addCollection = useMenuSettings((state) => state.addCollection);
   const setCollectionDetailsVisible = useAppState(
@@ -151,6 +150,7 @@ export default function CollectionList() {
                   const menuIndex = parseInt(
                     event.dataTransfer.getData('kando/menu-index')
                   );
+                  const menus = useMenuSettings.getState().menus;
                   const currentTags = menus[menuIndex]?.tags || [];
                   const newTags = [
                     ...new Set([...currentTags, ...collections[collection.index].tags]),
