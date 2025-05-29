@@ -313,7 +313,7 @@
             "author": "par {{author}}",
             "light-dark-mode-info": "Si cette option est activée, vous pouvez choisir un thème et un jeu de couleurs différents en fonction de si votre système est mode clair ou sombre.",
             "reset-color-picker": "Réinitialiser toutes les couleurs à leurs valeurs par défaut",
-            "title": "Thèmes de menu",
+            "title": "Thèmes de Menu",
             "light-dark-mode": "Activer le mode clair/sombre",
             "create-your-own-themes": "Créez vos propres thèmes",
             "open-theme-directory": "Ouvrir le répertoire des thèmes",
