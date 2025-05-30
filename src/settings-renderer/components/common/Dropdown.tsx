@@ -54,9 +54,46 @@ export default function Dropdown<T extends string>(props: IProps<T>) {
   const invalidSelection =
     props.options.find((option) => option.value === props.initialValue) === undefined;
 
+  const selectRef = React.useRef<HTMLSelectElement>(null);
+
+  // Handler to change dropdown value with scroll wheel.
+  const handleWheel = (event: WheelEvent) => {
+    if (props.disabled) {
+      return;
+    }
+
+    const currentIdx = props.options.findIndex(
+      (option) => option.value === props.initialValue
+    );
+
+    const newIdx = Math.min(
+      Math.max(currentIdx + (event.deltaY > 0 ? 1 : -1), 0),
+      props.options.length - 1
+    );
+
+    if (newIdx !== currentIdx && props.onChange) {
+      props.onChange(props.options[newIdx].value);
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  // We cannot use react's onWheel event here, because it does not allow us to prevent the
+  // default behavior of the wheel event. This is necessary to prevent the page from
+  // scrolling when the user scrolls over the dropdown.
+  React.useEffect(() => {
+    const el = selectRef.current;
+    if (el) {
+      el.addEventListener('wheel', handleWheel, { passive: false });
+    }
+    return () => el.removeEventListener('wheel', handleWheel);
+  });
+
   return (
     <SettingsRow label={props.label} info={props.info} grow maxWidth={props.maxWidth}>
       <select
+        ref={selectRef}
         className={classes.select}
         disabled={props.disabled}
         style={{ minWidth: props.minWidth }}
