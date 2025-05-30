@@ -22,25 +22,12 @@
   flex-direction: row;
   gap: 10px;
 
-  select {
+  > * {
     flex-grow: 1;
-    background-color: $widget-normal;
-
-    color: $text-normal;
-    border: none;
-    border-radius: 5px;
-    font-size: inherit;
-
-    padding: 5px 7px;
-
-    &:hover {
-      background-color: $widget-normal-hover;
-    }
   }
 
   .searchInput {
     display: flex;
-    flex-grow: 1;
 
     input {
       background-color: $widget-normal;

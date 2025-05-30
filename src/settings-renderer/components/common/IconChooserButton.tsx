@@ -12,12 +12,15 @@ import React from 'react';
 import i18next from 'i18next';
 import { TbBackspaceFilled } from 'react-icons/tb';
 
-import Popover from './Popover';
-import ThemedIcon from './ThemedIcon';
-import Button from './Button';
-import Note from './Note';
-import Base64IconPicker from './Base64IconPicker';
-import GridIconPicker from './GridIconPicker';
+import {
+  Popover,
+  ThemedIcon,
+  Button,
+  Note,
+  Base64IconPicker,
+  GridIconPicker,
+  Dropdown,
+} from '.';
 
 import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
 
@@ -97,13 +100,14 @@ export default function IconChooserButton(props: IProps) {
       content={
         <div className={classes.container}>
           <div className={classes.row}>
-            <select value={theme} onChange={(event) => setTheme(event.target.value)}>
-              {allThemes.map(([key, name]) => (
-                <option key={key} value={key}>
-                  {name.name}
-                </option>
-              ))}
-            </select>
+            <Dropdown
+              options={allThemes.map(([key, name]) => ({
+                value: key,
+                label: name.name,
+              }))}
+              initialValue={theme}
+              onChange={setTheme}
+            />
             {pickerInfo.type === 'list' && (
               <div className={classes.searchInput}>
                 <input
