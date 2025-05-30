@@ -1201,12 +1201,12 @@ export class KandoApp {
 
       try {
         // Get current menus configuration
-        const menus = this.menuSettings;
+        const menus = this.menuSettings.get('menus');
 
         // Create zip file with menus.json content
         const JSZip = require('jszip');
         const zip = new JSZip();
-        zip.file('menus.json', JSON.stringify(menus, null, 2));
+        zip.file('menus.json', JSON.stringify({ menus }, null, 2));
 
         // Generate zip file
         const content = await zip.generateAsync({ type: 'nodebuffer' });
@@ -1247,8 +1247,12 @@ export class KandoApp {
         const menusJson = await menusFile.async('string');
         const menus = JSON.parse(menusJson);
 
+        if (!Array.isArray(menus.menus)) {
+          throw new Error('Invalid menus.json format: expected { menus: [...] }');
+        }
+
         // Update menus settings
-        this.menuSettings.set({ menus });
+        this.menuSettings.set({ menus: menus.menus });
       } catch (error) {
         console.error('Failed to import menus:', error);
         throw error;
