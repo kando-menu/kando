@@ -59,6 +59,8 @@ export default function MenuPreview() {
   const menus = useMenuSettings((state) => state.menus);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
+  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
+  const deleteMenu = useMenuSettings((state) => state.deleteMenu);
 
   // When the user selects a submenu or navigates back to the parent menu, a short
   // transition animation is shown. The new menu fades in from the direction of the
@@ -397,6 +399,7 @@ export default function MenuPreview() {
           dragging: isDraggedChild(child),
           dropping: dropInto && dropIndex === child.index,
         })}
+        tabIndex={0}
         draggable={child.angle === undefined}
         onDragStart={(event) => {
           event.dataTransfer.effectAllowed = 'copyMove';
@@ -471,6 +474,19 @@ export default function MenuPreview() {
             } else {
               setDragAngle((15 * Math.round(angle / 15)) % 360);
             }
+          }
+        }}
+        onKeyDown={(event) => {
+          // Select the child if the user presses enter or space. This is required for
+          // keyboard navigation in the menu preview.
+          if (event.key === 'Enter' || event.key === ' ') {
+            selectChild(index, true);
+          }
+
+          // Delete the item if the user presses the delete key.
+          if (event.key === 'Delete' || event.key === 'Backspace') {
+            deleteMenuItem(selectedMenu, centerItemPath.concat(index));
+            selectCenter();
           }
         }}
         style={utils.makeCSSProperties('dir', childDirections[index])}>
@@ -734,6 +750,26 @@ export default function MenuPreview() {
                   center: true,
                   selected: selectedChild === -1,
                 })}
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  // Select the center item if the user presses enter or space. This is
+                  // required for keyboard navigation in the menu preview.
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    selectCenter();
+                  }
+
+                  // Delete the menu if the user presses the delete key and the center
+                  // item is the root menu. If it is a submenu, we delete the submenu
+                  // instead.
+                  if (event.key === 'Delete' || event.key === 'Backspace') {
+                    if (showingRootMenu) {
+                      deleteMenu(selectedMenu);
+                    } else {
+                      deleteMenuItem(selectedMenu, centerItemPath);
+                      selectParent();
+                    }
+                  }
+                }}
                 onClick={() => selectCenter()}>
                 <ThemedIcon
                   size={'100%'}
