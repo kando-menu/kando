@@ -178,7 +178,7 @@
         "add-menu-items": "Menüelemente hinzufügen",
         "add-tags-placeholder": "Tags hinzufügen…",
         "all-menus": "Alle Menüs",
-        "anchored-mode-info": "Öffne Untermenüs an derselben Position wie das Elternmenü. Diese Option deaktiviert den Markierungsmodus.",
+        "anchored-mode-info": "Öffne Untermenüs an derselben Position wie das Elternmenü. Diese Option deaktiviert den Markierungsmodus und den Turbomodus.",
         "anchored-mode": "Verankerter Modus",
         "app-condition-info": "Zeigen Sie das Menü nur an, wenn eine bestimmte Anwendung fokussiert ist. Dies unterstützt reguläre Ausdrücke wie /firefox|chrome/i.",
         "app-condition-placeholder": "Anwendungsname",
@@ -389,6 +389,12 @@
         "file-picker": {
             "select-file": "Wählen Sie eine Datei",
             "select-directory": "Wählen Sie ein Verzeichnis"
-        }
+        },
+        "no-menus": "Sie haben keine Menüs.",
+        "no-menus-note": "Wenn Sie das letzte versehentlich gelöscht haben, können Sie es mit dem Undo-Button wiederherstellen.",
+        "no-matching-menus": "Keine Menüs gefunden.",
+        "empty-collection": "Diese Sammlung ist leer.",
+        "empty-collection-note": "Bearbeiten Sie die Tags oben oder erstellen Sie ein neues Menü für diese Sammlung mit der Schaltfläche unten.",
+        "no-matching-menus-note": "Vielleicht versuchen Sie einen anderen Suchbegriff?"
     }
 }
