@@ -97,6 +97,16 @@ export const SETTINGS_WINDOW_API = {
   openFilePicker: (config: OpenDialogOptions): Promise<string> => {
     return ipcRenderer.invoke('settings-window.open-file-picker', config);
   },
+  
+  /** This will export menus.json to a zip archive. */
+  exportMenusToZip: (): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.export-menus-to-zip');
+  },
+
+  /** This will import menus from a zip archive. */
+  importMenusFromZip: (): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.import-menus-from-zip');
+  },
 };
 
 /**

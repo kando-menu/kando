@@ -1184,7 +1184,76 @@ export class KandoApp {
         settings.gamepadBackButton = settings.menuOptions.gamepadBackButton;
         settings.gamepadCloseButton = settings.menuOptions.gamepadCloseButton;
         delete settings.menuOptions;
+    }
+
+    // Export menus to a zip file
+    ipcMain.handle('settings-window.export-menus-to-zip', async () => {
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: 'kando-menus.zip',
+        filters: [{ name: 'ZIP Archive', extensions: ['zip'] }],
+      });
+
+      console.log('Canceled:', canceled, 'FilePath:', filePath);
+
+      if (canceled || !filePath) {
+        return;
       }
+
+      try {
+        // Get current menus configuration
+        const menus = this.menuSettings;
+
+        // Create zip file with menus.json content
+        const JSZip = require('jszip');
+        const zip = new JSZip();
+        zip.file('menus.json', JSON.stringify(menus, null, 2));
+
+        // Generate zip file
+        const content = await zip.generateAsync({ type: 'nodebuffer' });
+
+        // Write to file
+        await fs.promises.writeFile(filePath, content);
+        console.log("Successfully exported menus to", filePath)
+      } catch (error) {
+        console.error('Failed to export menus:', error);
+        throw error;
+      }
+    });
+
+    // Import menus from a zip file
+    ipcMain.handle('settings-window.import-menus-from-zip', async () => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        properties: ['openFile'],
+        filters: [{ name: 'ZIP Archive', extensions: ['zip'] }],
+      });
+
+      if (result.canceled || !result.filePaths[0]) {
+        return;
+      }
+
+      try {
+        // Read zip file
+        const JSZip = require('jszip');
+        const content = await fs.promises.readFile(result.filePaths[0]);
+        const zip = await JSZip.loadAsync(content);
+
+        // Get menus.json from zip
+        const menusFile = zip.file('menus.json');
+        if (!menusFile) {
+          throw new Error('No menus.json found in zip file');
+        }
+
+        // Parse menus json
+        const menusJson = await menusFile.async('string');
+        const menus = JSON.parse(menusJson);
+
+        // Update menus settings
+        this.menuSettings.set({ menus });
+      } catch (error) {
+        console.error('Failed to import menus:', error);
+        throw error;
+      }
+    });
     }
   }
 }
