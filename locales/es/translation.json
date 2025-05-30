@@ -241,6 +241,7 @@
         "file-picker": {
             "select-file": "Seleccione un archivo",
             "select-directory": "Seleccione un directorio"
-        }
+        },
+        "search-menus-placeholder": "Buscar en los menús…"
     }
 }
