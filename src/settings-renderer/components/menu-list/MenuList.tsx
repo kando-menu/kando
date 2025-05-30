@@ -68,6 +68,7 @@ export default function MenuList() {
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
+  const deleteMenu = useMenuSettings((state) => state.deleteMenu);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
 
@@ -276,6 +277,11 @@ export default function MenuList() {
                       menu.index !== selectedMenu
                     ) {
                       (event.target as HTMLElement).classList.remove(classes.dropping);
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Delete' || event.key === 'Backspace') {
+                      deleteMenu(menu.index);
                     }
                   }}>
                   <div style={{ display: 'flex' }}>
