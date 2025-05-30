@@ -9,6 +9,9 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Tests

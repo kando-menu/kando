@@ -8,6 +8,9 @@ on:
     tags:
       - '**'
 
+permissions:
+  contents: write
+
 jobs:
   linux:
     name: Linux
