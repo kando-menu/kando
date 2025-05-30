@@ -169,7 +169,7 @@ export default function MenuThemesDialog() {
   } else {
     accentColorsNode = (
       <>
-        <h1>{i18next.t('settings.menu-themes-dialog.theme-colors')}</h1>
+        <h1>{i18next.t('settings.menu-themes-dialog.accent-colors')}</h1>
         <Note marginTop={-10}>
           {i18next.t('settings.menu-themes-dialog.no-accent-colors')}
         </Note>

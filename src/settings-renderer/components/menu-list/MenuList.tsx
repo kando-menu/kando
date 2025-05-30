@@ -144,11 +144,8 @@ export default function MenuList() {
           <div ref={animatedList} style={{ padding: 8 }}>
             {menus.length === 0 && (
               <div key="-1" className={classes.message}>
-                <h1>You have no menus!</h1>
-                <Note>
-                  You currently have no menus. Click the button below to create a first
-                  menu!
-                </Note>
+                <h1>{i18next.t('settings.no-menus')}</h1>
+                <Note>{i18next.t('settings.no-menus-note')}</Note>
                 <Swirl variant="2" marginTop={10} />
               </div>
             )}
@@ -156,8 +153,8 @@ export default function MenuList() {
               renderedMenus.length === 0 &&
               selectedCollection === -1 && (
                 <div key="-1" className={classes.message}>
-                  <h1>No Matching Menus</h1>
-                  <Note>Maybe try a different search term?</Note>
+                  <h1>{i18next.t('settings.no-matching-menus')}</h1>
+                  <Note>{i18next.t('settings.no-matching-menus-search-note')}</Note>
                   <Swirl variant="2" marginTop={10} />
                 </div>
               )}
@@ -165,11 +162,8 @@ export default function MenuList() {
               renderedMenus.length === 0 &&
               selectedCollection !== -1 && (
                 <div key="-1" className={classes.message}>
-                  <h1>No Matching Menus</h1>
-                  <Note>
-                    Edit the tags above or add a completely new menu to this collection
-                    with the button below.
-                  </Note>
+                  <h1>{i18next.t('settings.no-matching-menus')}</h1>
+                  <Note>{i18next.t('settings.no-matching-menus-collection-note')}</Note>
                   <Swirl variant="2" marginTop={10} />
                 </div>
               )}
