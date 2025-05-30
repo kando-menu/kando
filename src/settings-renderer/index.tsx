@@ -100,12 +100,14 @@ Promise.all([
       }
 
       // Make sure that the selected child path is valid.
-      let selectedItem = menus[selectedMenu].root;
-      for (let i = 0; i < selectedChildPath.length; i++) {
-        selectedItem = selectedItem.children[selectedChildPath[i]];
-        if (selectedItem === undefined) {
-          selectParent();
-          return;
+      if (selectedMenu >= 0) {
+        let selectedItem = menus[selectedMenu].root;
+        for (let i = 0; i < selectedChildPath.length; i++) {
+          selectedItem = selectedItem.children[selectedChildPath[i]];
+          if (selectedItem === undefined) {
+            selectParent();
+            return;
+          }
         }
       }
     };
