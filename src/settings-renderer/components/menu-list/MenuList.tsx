@@ -154,7 +154,7 @@ export default function MenuList() {
               selectedCollection === -1 && (
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.no-matching-menus')}</h1>
-                  <Note>{i18next.t('settings.no-matching-menus-search-note')}</Note>
+                  <Note>{i18next.t('settings.no-matching-menus-note')}</Note>
                   <Swirl variant="2" marginTop={10} />
                 </div>
               )}
@@ -162,8 +162,8 @@ export default function MenuList() {
               renderedMenus.length === 0 &&
               selectedCollection !== -1 && (
                 <div key="-1" className={classes.message}>
-                  <h1>{i18next.t('settings.no-matching-menus')}</h1>
-                  <Note>{i18next.t('settings.no-matching-menus-collection-note')}</Note>
+                  <h1>{i18next.t('settings.empty-collection')}</h1>
+                  <Note>{i18next.t('settings.empty-collection-note')}</Note>
                   <Swirl variant="2" marginTop={10} />
                 </div>
               )}
