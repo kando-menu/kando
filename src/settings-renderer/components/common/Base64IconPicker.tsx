@@ -77,7 +77,7 @@ export default function Base64IconPicker(props: IProps) {
       spellCheck="false"
       placeholder={[
         i18next.t('settings.icon-picker-dialog.base64-example'),
-        'data:image/svg;base64,...',
+        'data:image/svg+xml;base64,...',
         '',
         i18next.t('settings.icon-picker-dialog.file-example'),
         'file:///path/to/icon.png',
