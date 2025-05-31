@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus } from 'react-icons/tb';
+import { TbPlus, TbCopy, TbTrash } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -69,6 +69,7 @@ export default function MenuList() {
   const selectMenu = useAppState((state) => state.selectMenu);
   const addMenu = useMenuSettings((state) => state.addMenu);
   const deleteMenu = useMenuSettings((state) => state.deleteMenu);
+  const duplicateMenu = useMenuSettings((state) => state.duplicateMenu);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
 
@@ -302,12 +303,33 @@ export default function MenuList() {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbPlus />}
-            label={i18next.t('settings.create-menu-button')}
+            tooltip={i18next.t('settings.create-menu-button')}
             variant="floating"
-            size="medium"
+            size="large"
+            grouped
             onClick={() => {
               addMenu(menuCollections[selectedCollection]?.tags || []);
               selectMenu(menus.length);
+            }}
+          />
+          <Button
+            icon={<TbCopy />}
+            tooltip={i18next.t('settings.duplicate-menu')}
+            variant="floating"
+            size="large"
+            grouped
+            onClick={() => {
+              duplicateMenu(selectedMenu);
+            }}
+          />
+          <Button
+            icon={<TbTrash />}
+            tooltip={i18next.t('settings.delete-menu')}
+            variant="floating"
+            size="large"
+            grouped
+            onClick={() => {
+              deleteMenu(selectedMenu);
             }}
           />
         </div>
