@@ -356,7 +356,7 @@
             "fade-out-time": "Ausblendzeit",
             "fade-out-time-info": "Die Zeit, die das Menü zum Ausblenden benötigt. Standard ist 200ms.",
             "menu-scale": "Menügröße",
-            "menu-scale-info": "Ein globaler Skalierungsfaktor für das Menü. Sie können dies auch mit Strg+Plus, Strg+Minus und Strg+0 anpassen, wenn ein Menü geöffnet ist.",
+            "menu-scale-info": "Verwenden Sie dies, um Ihre Menüs zu vergrößern oder zu verkleinern. Standard ist 1.0.",
             "light-dark-mode": "Hell-/Dunkelmodus aktivieren",
             "accent-colors": "Akzentfarben",
             "accent-colors-info": "Jedes Design kann eine andere Liste von Akzentfarben mitbringen.",
