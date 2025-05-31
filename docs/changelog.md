@@ -47,6 +47,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 #### :fire: Removed
 
 - **[BREAKING]** As part of the settings redesign, the stash got removed. All stashed menus will be converted to normal menus with a `template` tag applied. **All stashed menu items will be lost!**
+- The possibility to change the menu scale using the <kbd>Ctrl</kbd>-<kbd>Plus</kbd> and <kbd>Ctrl</kbd>-<kbd>Minus</kbd> shortcuts. Instead, you can now change the menu scale in the settings dialog. This was done as a workaround for [#858](https://github.com/kando-menu/kando/issues/858).
 
 #### :wrench: Changed
 
