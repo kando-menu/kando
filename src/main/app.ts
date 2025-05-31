@@ -107,8 +107,8 @@ export class KandoApp {
         ...getDefaultGeneralSettings(),
         settingsWindowFlavor: this.backend.getBackendInfo()
           .shouldUseTransparentSettingsWindow
-          ? 'transparent-light'
-          : 'sakura-light',
+          ? 'transparent-system'
+          : 'sakura-system',
       },
     });
 
