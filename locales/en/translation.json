@@ -104,7 +104,10 @@
       "reload-sound-theme": "Reload sound theme",
       "dev-tools-note": "Kando uses two windows: One for the menu and one for the settings. You can open the development tools to inspect both windows separately.",
       "menu-window-dev-tools": "Inspect menu",
-      "settings-window-dev-tools": "Inspect settings"
+      "settings-window-dev-tools": "Inspect settings",
+      "export-import-note": "You can export or import menus to share with community",
+      "export-menus": "Export menus",
+      "import-menus": "Import menus"
     },
     "introduction-dialog": {
       "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",
