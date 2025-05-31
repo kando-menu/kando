@@ -94,7 +94,7 @@
     "react-window": "^1.8.11",
     "sass": "^1.89.0",
     "sass-loader": "^16.0.5",
-    "simple-icons-font": "^14.14.0",
+    "simple-icons-font": "^15.0.0",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^4.0.0",
     "swiper": "^11.2.8",
