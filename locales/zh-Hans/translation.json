@@ -348,7 +348,7 @@
             "confirm": "使用此值"
         },
         "invalid-dropdown-selection": "选择一个选项…",
-        "anchored-mode-info": "在与父菜单相同的位置打开子菜单。勾选此项将禁用标记模式和极速模式。",
+        "anchored-mode-info": "在与父菜单相同的位置打开子菜单。勾选此项将禁用画笔模式和极速模式。",
         "window-condition-placeholder": "窗口标题",
         "window-condition-tooltip": "选取窗口",
         "screen-area-picker": {
