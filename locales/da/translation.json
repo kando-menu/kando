@@ -1,1 +1,50 @@
-{}
+{
+    "settings": {
+        "about-dialog": {
+            "chrome-version": "Chrome-Version",
+            "check-latest-release": "Tjek den seneste udgivelse",
+            "kando-version": "Kando Version",
+            "kando-backend": "Kando Backend",
+            "electron-version": "Electron-Version",
+            "message": "Jeg skaber Kando af ren og skær passion. Hvis du nyder at bruge det lige så meget, som jeg elsker at lave det, kan du [købe mig en kaffe]({{link}})!\n\n💖 Simon",
+            "read-release-notes": "Læs noter til udgivelsen",
+            "title": "Om Kando"
+        },
+        "icon-picker-dialog": {
+            "base64-example": "Base64 eksempel:",
+            "file-example": "fil: URI eksempel:",
+            "url-example": "URL eksempel:",
+            "search-placeholder": "Søg efter ikoner…",
+            "base64-hint": "Base64-kodede ikoner giver en nem måde at inkludere enhver form for ikon i dine menuer. Du kan bruge en tjeneste som [www.base64-image.de]({{link}}) til at konvertere et hvilket som helst billede til en base64-kodet streng. Det fungerer endda med animerede gifs!",
+            "hint": "Lær [her]({{link}}), hvordan du tilføjer eller laver dine egne ikontemaer."
+        },
+        "not-bound": "Ikke Bundet",
+        "invalid-dropdown-selection": "Vælg en valgmulighed…",
+        "general-settings-dialog": {
+            "title": "Generelle Indstillinger",
+            "app-behavior": "App-Adfærd",
+            "settings-window-color-scheme": "Indstillingsvinduets farve tema",
+            "check-for-new-versions": "Søg efter nye versioner",
+            "dark": "Mørk",
+            "bottom-right": "Nederst til højre",
+            "check-for-new-versions-info": "Hvis aktiveret, vil Kando vise en meddelelse, når en ny version er tilgængelig.",
+            "invisible-settings-button": "Usynlig knap til indstillinger",
+            "settings-button-position": "Indstillingsknappens position",
+            "settings-button-position-info": "Vælg det hjørne af skærmen, hvor indstillingsknappen skal vises.",
+            "bottom-left": "Nederst til venstre",
+            "top-left": "Øverst til venstre",
+            "light": "Lys",
+            "top-right": "Øverst til højre",
+            "settings-window-color-scheme-info": "Hvis du vælger 'system', vil indstillingsvinduet bruge samme farve tema som dit operativsystem.",
+            "system": "System",
+            "invisible-settings-button-info": "Du kan stadig bruge knappen, den kommer frem, når du fører musen hen over den.",
+            "none": "Ingenting",
+            "message": "Alle indstillinger i Kando gemmes i en JSON-fil, som du også kan redigere, dele eller tage backup af. Klik på [her]({{link}}) for at åbne den mappe, hvor config.json-filen er gemt."
+        },
+        "file-picker": {
+            "select-directory": "Vælg en mappe",
+            "select-file": "Vælg en fil"
+        },
+        "add-tags-placeholder": "Tilføj tags…"
+    }
+}
