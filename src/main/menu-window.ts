@@ -77,32 +77,8 @@ export class MenuWindow extends BrowserWindow {
       this.webContents.setZoomFactor(newValue);
     });
 
-    // Save some settings when the app is closed.
-    app.on('before-quit', () => {
-      // Save the current zoom factor to the settings.
-      this.kando.getGeneralSettings().set(
-        {
-          zoomFactor: this.webContents.getZoomFactor(),
-        },
-        false
-      );
-    });
-
-    // We want to allow the user to zoom the menu using Ctrl+, Ctrl-, and Ctrl+0.
+    // We prevent CMD+W to close the window on macOS.
     this.webContents.on('before-input-event', (event, input) => {
-      if (input.control && (input.key === '+' || input.key === '-')) {
-        let zoomFactor = this.webContents.getZoomFactor();
-        zoomFactor = input.key === '+' ? zoomFactor + 0.1 : zoomFactor - 0.1;
-        this.kando.getGeneralSettings().set({ zoomFactor });
-        event.preventDefault();
-      }
-
-      if (input.control && input.key === '0') {
-        this.kando.getGeneralSettings().set({ zoomFactor: 1 });
-        event.preventDefault();
-      }
-
-      // We prevent CMD+W to close the window.
       if (input.meta && input.key === 'w') {
         event.preventDefault();
       }

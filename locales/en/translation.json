@@ -155,7 +155,7 @@
       "fade-out-time": "Fade-out time",
       "fade-out-time-info": "The time it takes for the menu to fade out. Default is 200ms.",
       "menu-scale": "Menu scale",
-      "menu-scale-info": "A global scale factor for the menu. You can also adjust this with Ctrl+Plus, Ctrl+Minus, and Ctrl+0 when a menu is open.",
+      "menu-scale-info": "Use this to increase or decrease the size of your menus. Default is 1.0.",
       "light-dark-mode": "Enable light/dark mode",
       "light-dark-mode-info": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
       "get-themes-online": "Get themes online",
