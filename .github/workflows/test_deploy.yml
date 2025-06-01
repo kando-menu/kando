@@ -40,7 +40,7 @@ jobs:
           tools/make-app-image.sh
       - name: Create Flatpak bundle
         run: |
-          flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
           tools/make-flatpak-bundle.sh
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
