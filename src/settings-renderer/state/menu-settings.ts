@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { WindowWithAPIs } from '../../settings-window-api';
-declare const window: WindowWithAPIs;
+// import { WindowWithAPIs } from '../../settings-window-api';
+// declare const window: WindowWithAPIs;
 
 import { useRef } from 'react';
 import { create } from 'zustand';
@@ -23,7 +23,6 @@ import {
   IMenuCollection,
   IMenu,
   IMenuItem,
-  deepCopyMenu,
   IMenu,
   IMenuItem,
 } from '../../common';

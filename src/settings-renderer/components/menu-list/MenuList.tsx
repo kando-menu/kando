@@ -313,7 +313,6 @@ export default function MenuList() {
             }}
           />
 
-
           <Button
             icon={<TbPlus />}
             tooltip={i18next.t('settings.create-menu-button')}

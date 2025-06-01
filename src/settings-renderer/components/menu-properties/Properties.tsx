@@ -175,11 +175,7 @@ export default function Properties() {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbFileImport />}
-            tooltip={
-              isRoot
-                ? i18next.t('settings.export-menu')
-                : ''
-            }
+            tooltip={isRoot ? i18next.t('settings.export-menu') : ''}
             variant="floating"
             size="large"
             grouped
