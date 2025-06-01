@@ -25,7 +25,7 @@ jobs:
           node-version-file: .node-version
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev flatpak-builder
           npm install
       - name: Fix Permissions
         # Workaround for https://github.com/electron/electron/issues/17972
