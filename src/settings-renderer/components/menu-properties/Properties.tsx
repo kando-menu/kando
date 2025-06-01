@@ -39,7 +39,9 @@ export default function Properties() {
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
   const selectParent = useAppState((state) => state.selectParent);
+  const duplicateMenu = useMenuSettings((state) => state.duplicateMenu);
   const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
+  const deleteMenu = useMenuSettings((state) => state.deleteMenu);
   const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
@@ -170,55 +172,61 @@ export default function Properties() {
             {!isRoot && selectedItem && getConfigComponent(selectedItem.type)}
           </div>
         </Scrollbox>
-      <div className={classes.floatingButton}>
-        {isRoot ? (
-          <>
-            <Button
-              icon={<TbFileImport />}
-              tooltip={i18next.t('settings.export-menu-button')}
-              variant="floating"
-              size="large"
-              grouped
-              onClick={() => {
-                window.settingsAPI.exportMenuToJson(selectedMenu);
-              }}
-            />
-            <Button
-              icon={<TbCopy />}
-              tooltip={i18next.t('settings.duplicate-menu')}
-              variant="floating"
-              size="large"
-              grouped
-              onClick={() => {
+        <div className={classes.floatingButton}>
+          <Button
+            icon={<TbFileImport />}
+            tooltip={
+              isRoot
+                ? i18next.t('settings.export-menu')
+                : ''
+            }
+            variant="floating"
+            size="large"
+            grouped
+            onClick={() => {
+              if (isRoot) {
+                window.settingsAPI.exportMenu(selectedMenu);
+              }
+            }}
+          />
+          <Button
+            icon={<TbCopy />}
+            tooltip={
+              isRoot
+                ? i18next.t('settings.duplicate-menu')
+                : i18next.t('settings.duplicate-menu-item')
+            }
+            variant="floating"
+            size="large"
+            grouped
+            onClick={() => {
+              if (isRoot) {
                 duplicateMenu(selectedMenu);
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <Button
-              icon={<TbCopy />}
-              tooltip={i18next.t('settings.duplicate-menu-item')}
-              variant="floating"
-              size="large"
-              grouped
-              onClick={() => {
+              } else {
                 duplicateMenuItem(selectedMenu, selectedChildPath);
-              }}
-            />
-            <Button
-              icon={<TbTrash />}
-              tooltip={i18next.t('settings.delete-menu-item')}
-              variant="floating"
-              size="large"
-              grouped
-              onClick={() => {
+              }
+            }}
+          />
+          <Button
+            icon={<TbTrash />}
+            tooltip={
+              isRoot
+                ? i18next.t('settings.delete-menu')
+                : i18next.t('settings.delete-menu-item')
+            }
+            variant="floating"
+            size="large"
+            grouped
+            onClick={() => {
+              if (isRoot) {
+                deleteMenu(selectedMenu);
+              } else {
                 deleteMenuItem(selectedMenu, selectedChildPath);
                 selectParent();
-              }}
-            />
-          </>
-        )}
+              }
+            }}
+          />
+        </div>
       </div>
     </>
   );
