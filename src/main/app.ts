@@ -1186,11 +1186,24 @@ export class KandoApp {
         delete settings.menuOptions;
     }
 
-    // Export menus to a zip file
-    ipcMain.handle('settings-window.export-menus-to-zip', async () => {
+    const channels = [
+      'settings-window.export-menus-to-json',
+      'settings-window.import-menus-from-json',
+      'settings-window.export-menu',
+      'settings-window.import-menu-from-json',
+    ];
+
+    for (const channel of channels) {
+      if (ipcMain.listenerCount(channel) > 0) {
+        ipcMain.removeHandler(channel);
+      }
+    }
+
+    // Export menus to a JSON file
+    ipcMain.handle('settings-window.export-menus-to-json', async () => {
       const { canceled, filePath } = await dialog.showSaveDialog({
-        defaultPath: 'kando-menus.zip',
-        filters: [{ name: 'ZIP Archive', extensions: ['zip'] }],
+        defaultPath: 'kando-menus.json',
+        filters: [{ name: 'JSON file', extensions: ['json'] }],
       });
 
       console.log('Canceled:', canceled, 'FilePath:', filePath);
@@ -1238,6 +1251,75 @@ export class KandoApp {
         console.log('Successfully imported menus from', filePath);
       } catch (error) {
         console.error('Failed to import menus:', error);
+        throw error;
+      }
+    });
+
+    // Export specific menu to JSON file
+    ipcMain.handle('settings-window.export-menu-to-json', async (event, menuIndex) => {
+      const menu_name = this.menuSettings.get('menus')[menuIndex]['root']['name']
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: `${menu_name}.json`,
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (canceled || !filePath) {
+        return;
+      }
+
+      try {
+        const menu = this.menuSettings.get('menus')[menuIndex];
+        if (!menu) {
+          throw new Error('Menu not found');
+        }
+
+        const jsonContent = JSON.stringify({ menus: [menu] }, null, 2);
+        await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
+
+        console.log('Successfully exported menu to', filePath);
+      } catch (error) {
+        console.error('Failed to export menu:', error);
+        throw error;
+      }
+    });
+
+    ipcMain.handle('settings-window.import-menu-from-json', async () => {
+      const { canceled, filePaths } = await dialog.showOpenDialog(this.settingsWindow, {
+        properties: ['openFile'],
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (canceled || filePaths.length === 0) {
+        console.error('No file path provided');
+        return;
+      }
+
+      const filePath = filePaths[0];
+      
+      try {
+        const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
+        const parsed = JSON.parse(jsonContent);
+
+        if (
+          !parsed ||
+          typeof parsed !== 'object' ||
+          !Array.isArray(parsed.menus) ||
+          parsed.menus.length !== 1
+        ) {
+          console.error('Invalid JSON format: expected { menus: [menu] }');
+          return;
+        }
+        const newMenu = parsed.menus[0];
+
+        const currentMenus = structuredClone(this.menuSettings.get('menus') || []) as IMenu[];
+
+        currentMenus.push(newMenu);
+
+        this.menuSettings.set({ menus: currentMenus });
+
+        console.log('Successfully imported a menu from', filePath);
+      } catch (error) {
+        console.error('Failed to import menu:', error);
         throw error;
       }
     });

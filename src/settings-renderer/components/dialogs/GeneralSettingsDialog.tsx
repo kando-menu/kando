@@ -456,7 +456,7 @@ export default function GeneralSettingsDialog() {
                  icon={<TbFileExport />}
                  grow
                  onClick={() => {
-                   window.settingsAPI.exportMenusToZip();
+                   window.settingsAPI.exportMenusToJson();
                  }}
                />
                <Button
@@ -464,7 +464,7 @@ export default function GeneralSettingsDialog() {
                  icon={<TbFileImport />}
                  grow
                  onClick={() => {
-                   window.settingsAPI.importMenusFromZip();
+                   window.settingsAPI.importMenusFromJson();
                  }}
                />
              </div>

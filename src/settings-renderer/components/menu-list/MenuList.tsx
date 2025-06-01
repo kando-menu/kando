@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus } from 'react-icons/tb';
+import { TbFileImport, TbPlus } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -300,6 +300,19 @@ export default function MenuList() {
         </Scrollbox>
 
         <div className={classes.floatingButton}>
+          <Button
+            icon={<TbFileImport />}
+            label={i18next.t('settings.import-menu-button')}
+            variant="floating"
+            size="medium"
+            onClick={() => {
+              window.settingsAPI.importMenuFromJson().then(() => {
+                // Refresh will happen automatically via settings change event
+              });
+            }}
+          />
+
+
           <Button
             icon={<TbPlus />}
             label={i18next.t('settings.create-menu-button')}

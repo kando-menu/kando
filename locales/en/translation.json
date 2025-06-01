@@ -14,6 +14,8 @@
       "select-file": "Select a file",
       "select-directory": "Select a directory"
     },
+    "import-menu-button": "Import menu",
+    "export-menu-button": "Export menu",
     "add-tags-placeholder": "Add tags…",
     "about-dialog": {
       "title": "About Kando",

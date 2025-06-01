@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './Properties.module.scss';
-import { TbCopy, TbTrash } from 'react-icons/tb';
+import { TbCopy, TbFileImport, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
@@ -173,6 +173,22 @@ export default function Properties() {
           </div>
         </Scrollbox>
         <div className={classes.floatingButton}>
+          <Button
+            icon={<TbFileImport />}
+            tooltip={
+              isRoot
+                ? i18next.t('settings.export-menu-button')
+                : ''
+            }
+            variant="floating"
+            size="large"
+            grouped
+            onClick={() => {
+              if (isRoot) {
+                window.settingsAPI.exportMenuToJson(selectedMenu);
+              }
+            }}
+          />
           <Button
             icon={<TbCopy />}
             tooltip={
