@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { spawn, StdioOptions } from 'child_process';
+import { exec, spawn, StdioOptions } from 'child_process';
 import * as os from 'os';
 
 import { IMenuItem } from '../../common/index';
@@ -60,6 +60,24 @@ export class CommandItemAction implements IItemAction {
       // Instead we need to use flatpak-spawn.
       if (env.container && env.container === 'flatpak') {
         command = 'flatpak-spawn --host ' + command;
+      }
+
+      // Explicitly check for false to allow undefined to mean true.
+      if ((item.data as IItemData).detached === false) {
+        const options = {
+          env,
+          cwd: os.homedir(),
+        };
+
+        exec(command, options, (error) => {
+          if (error) {
+            reject(error.message);
+          } else {
+            resolve();
+          }
+        });
+
+        return;
       }
 
       // We are only interested in a potential error output.

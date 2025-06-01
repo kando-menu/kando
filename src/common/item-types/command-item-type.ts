@@ -19,6 +19,7 @@ import { IItemType } from './item-type-registry';
  */
 export interface IItemData {
   command: string;
+  detached: boolean;
   delayed: boolean;
 }
 
@@ -43,6 +44,7 @@ export class CommandItemType implements IItemType {
   get defaultData(): IItemData {
     return {
       command: '',
+      detached: true,
       delayed: false,
     };
   }

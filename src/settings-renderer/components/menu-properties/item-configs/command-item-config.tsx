@@ -47,6 +47,17 @@ export default () => {
         }}
       />
       <Checkbox
+        label="Run detached"
+        info="This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly."
+        initialValue={data.detached !== false} // explicitly check because undefined should mean true
+        onChange={(value) => {
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            (item.data as IItemData).detached = value;
+            return item;
+          });
+        }}
+      />
+      <Checkbox
         label={i18next.t('menu-items.common.delayed-option')}
         info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
