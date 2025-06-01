@@ -86,7 +86,7 @@
             "tip-1": "Příkazy můžete použít ke spouštění aplikací nebo skriptů.",
             "tip-2": "Pokud cesta k programu obsahuje mezery, měli byste ji \"vložit do uvozovek\".",
             "tip-3": "Použijte {{app_name}} pro vložení názvu aplikace, která byla aktivní při otevření menu.",
-            "tip-4": "Použijte {{window_name}} pro vložení názvu okna, které bylo aktivní při otevření menu.",
+            "tip-4": "Pomocí {{window_name}} vložte název aplikace, která byla zaměřena když jste menu otevírali.",
             "tip-5": "Použijte {{pointer_x}} a {{pointer_y}} pro vložení polohy kurzoru při otevření menu.",
             "placeholder": "Vložte libovolný příkaz…",
             "tip-6": "Kliknutím [zde]({{link}}) se dozvíte, jak najít příkazy pro spuštění vašich aplikací."
