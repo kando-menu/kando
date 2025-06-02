@@ -12,7 +12,6 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './Properties.module.scss';
-import { TbCopy, TbFileImport, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
@@ -38,11 +37,6 @@ export default function Properties() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
-  const selectParent = useAppState((state) => state.selectParent);
-  const duplicateMenu = useMenuSettings((state) => state.duplicateMenu);
-  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
-  const deleteMenu = useMenuSettings((state) => state.deleteMenu);
-  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const [menuTags, setMenuTags] = React.useState([]);
