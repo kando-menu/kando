@@ -39,7 +39,21 @@
             "system": "System",
             "invisible-settings-button-info": "Du kan stadig bruge knappen, den kommer frem, når du fører musen hen over den.",
             "none": "Ingenting",
-            "message": "Alle indstillinger i Kando gemmes i en JSON-fil, som du også kan redigere, dele eller tage backup af. Klik på [her]({{link}}) for at åbne den mappe, hvor config.json-filen er gemt."
+            "message": "Alle indstillinger i Kando gemmes i en JSON-fil, som du også kan redigere, dele eller tage backup af. Klik på [her]({{link}}) for at åbne den mappe, hvor config.json-filen er gemt.",
+            "tray-icon-flavor-info": "Du kan også vælge at skjule bakkeikonet helt.",
+            "hidden": "Gemt",
+            "color": "Farve",
+            "white": "Hvid",
+            "black": "Sort",
+            "lazy-initialization-info": "Hvis aktiveret, oprettes menuvinduet kun, når menuen åbnes for første gang. Det vil gøre den første åbning af menuen lidt langsommere, men det kan forhindre problemer, når Kando startes for tidligt under login. Standard er deaktiveret.",
+            "menu-behavior": "Menuadfærd",
+            "enable-marking-mode-info": "Når Marking Mode er aktiveret, kan du vælge elementer ved at trække musen hen over dem.",
+            "enable-turbo-mode-info": "Når Turbo Mode er aktiveret, kan du udføre bevægelser, så længe du holder en modifikationstast som Shift eller Ctrl nede.",
+            "move-pointer-to-menu-center": "Flyt markøren til midten af menuen",
+            "move-pointer-to-menu-center-info": "Hvis aktiviteret, vil musemarkøren blive flyttet til midten af en menu eller undermenu, når det er nødvendigt. Det kan være tilfældet, hvis en menu er åbnet for tæt på skærmens kant, eller hvis en menu er åbnet i Centered Mode.",
+            "require-click-for-hover-mode": "Kræver klik for valg af Hover Mode",
+            "enable-turbo-mode": "Aktiver Turbo Mode",
+            "enable-marking-mode": "Aktiver Marking Mode"
         },
         "file-picker": {
             "select-directory": "Vælg en mappe",
