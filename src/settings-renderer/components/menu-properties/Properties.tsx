@@ -16,7 +16,6 @@ import * as classes from './Properties.module.scss';
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
   Headerbar,
-  Button,
   IconChooserButton,
   TagInput,
   ShortcutPicker,
