@@ -172,57 +172,6 @@ export default function Properties() {
             {!isRoot && selectedItem && getConfigComponent(selectedItem.type)}
           </div>
         </Scrollbox>
-        <div className={classes.floatingButton}>
-          <Button
-            icon={<TbFileImport />}
-            tooltip={isRoot ? i18next.t('settings.export-menu') : ''}
-            variant="floating"
-            size="large"
-            grouped
-            onClick={() => {
-              if (isRoot) {
-                window.settingsAPI.exportMenu(selectedMenu);
-              }
-            }}
-          />
-          <Button
-            icon={<TbCopy />}
-            tooltip={
-              isRoot
-                ? i18next.t('settings.duplicate-menu')
-                : i18next.t('settings.duplicate-menu-item')
-            }
-            variant="floating"
-            size="large"
-            grouped
-            onClick={() => {
-              if (isRoot) {
-                duplicateMenu(selectedMenu);
-              } else {
-                duplicateMenuItem(selectedMenu, selectedChildPath);
-              }
-            }}
-          />
-          <Button
-            icon={<TbTrash />}
-            tooltip={
-              isRoot
-                ? i18next.t('settings.delete-menu')
-                : i18next.t('settings.delete-menu-item')
-            }
-            variant="floating"
-            size="large"
-            grouped
-            onClick={() => {
-              if (isRoot) {
-                deleteMenu(selectedMenu);
-              } else {
-                deleteMenuItem(selectedMenu, selectedChildPath);
-                selectParent();
-              }
-            }}
-          />
-        </div>
       </div>
     </>
   );

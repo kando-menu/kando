@@ -303,9 +303,10 @@ export default function MenuList() {
         <div className={classes.floatingButton}>
           <Button
             icon={<TbFileImport />}
-            label={i18next.t('settings.import-menu-button')}
+            tooltip={i18next.t('settings.import-menu-button')}
             variant="floating"
-            size="medium"
+            size="large"
+            grouped
             onClick={() => {
               window.settingsAPI.importMenuFromJson().then(() => {
                 // Refresh will happen automatically via settings change event
