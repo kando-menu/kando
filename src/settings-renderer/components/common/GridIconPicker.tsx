@@ -14,6 +14,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';
 
 import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
+import { SimpleIconsTheme } from '../../../common/icon-themes/simple-icons-theme';
 import ThemedIcon from './ThemedIcon';
 
 import * as classes from './GridIconPicker.module.scss';
@@ -59,12 +60,14 @@ export default function GridIconPicker(props: IProps) {
   // changes.
   const fetchedIcons = React.useMemo(() => {
     const theme = IconThemeRegistry.getInstance().getTheme(props.theme);
-    return theme.iconPickerInfo.listIcons(props.filterTerm);
+    return { theme, icons: theme.iconPickerInfo.listIcons(props.filterTerm) };
   }, [props.theme, props.filterTerm]);
 
   const columns = 8;
-  const rows = Math.ceil(fetchedIcons.length / columns);
-  const selectedIndex = fetchedIcons.findIndex((icon) => icon === props.selectedIcon);
+  const rows = Math.ceil(fetchedIcons.icons.length / columns);
+  const selectedIndex = fetchedIcons.icons.findIndex(
+    (icon) => icon === props.selectedIcon
+  );
 
   interface ICellProps {
     style: React.CSSProperties;
@@ -75,11 +78,11 @@ export default function GridIconPicker(props: IProps) {
   const cell: React.FC<ICellProps> = ({ style, columnIndex, rowIndex }) => {
     const index = rowIndex * columns + columnIndex;
 
-    if (index >= fetchedIcons.length) {
+    if (index >= fetchedIcons.icons.length) {
       return null;
     }
 
-    const icon = fetchedIcons[index];
+    const icon = fetchedIcons.icons[index];
 
     return (
       <button
@@ -89,7 +92,14 @@ export default function GridIconPicker(props: IProps) {
         })}
         style={style}
         data-tooltip-id="main-tooltip"
-        data-tooltip-content={icon}
+        data-tooltip-content={
+          // If the theme is a SimpleIconsTheme, we can use its getTitle method to
+          // get a more descriptive title for the icon. Otherwise, we just use the
+          // icon name.
+          fetchedIcons.theme instanceof SimpleIconsTheme
+            ? fetchedIcons.theme.getTitle(icon)
+            : icon
+        }
         onClick={() => props.onChange(icon)}
         onDoubleClick={props.onClose}>
         <ThemedIcon name={icon} theme={props.theme} size={'80%'} />
