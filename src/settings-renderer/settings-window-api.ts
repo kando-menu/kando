@@ -17,6 +17,7 @@ import {
   ISoundThemeDescription,
   IVersionInfo,
   IWMInfo,
+  ISystemInfo,
 } from '../common';
 
 /**
@@ -46,6 +47,11 @@ export const SETTINGS_WINDOW_API = {
   /** Returns some information about the currently used window manager. */
   getWMInfo: (): Promise<IWMInfo> => {
     return ipcRenderer.invoke('settings-window.get-wm-info');
+  },
+
+  /** Returns some information about the current system. */
+  getSystemInfo: (): Promise<ISystemInfo> => {
+    return ipcRenderer.invoke('settings-window.get-system-info');
   },
 
   /** Returns the position of the top left corner of the settings window. */

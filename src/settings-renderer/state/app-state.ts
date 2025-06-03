@@ -13,6 +13,7 @@ import { create } from 'zustand';
 import {
   IBackendInfo,
   IVersionInfo,
+  ISystemInfo,
   IMenuThemeDescription,
   ISoundThemeDescription,
   IMenu,
@@ -69,6 +70,9 @@ type AppState = {
 
   /** Information about the current version of Kando and some libraries. */
   versionInfo: IVersionInfo | null;
+
+  /** Information about the system. */
+  systemInfo: ISystemInfo | null;
 
   /** Descriptions of all available menu themes. */
   menuThemes: Array<IMenuThemeDescription>;
@@ -168,6 +172,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   darkMode: false,
   backendInfo: null,
   versionInfo: null,
+  systemInfo: null,
   menuThemes: [],
   soundThemes: [],
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),

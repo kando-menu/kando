@@ -23,6 +23,9 @@ export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const supportsIsolatedProcesses = useAppState(
+    (state) => state.systemInfo.supportsIsolatedProcesses
+  );
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
 
@@ -46,6 +49,19 @@ export default () => {
           });
         }}
       />
+      {supportsIsolatedProcesses && (
+        <Checkbox
+          label="Run isolated"
+          info="This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly."
+          initialValue={data.isolated}
+          onChange={(value) => {
+            editMenuItem(selectedMenu, selectedChildPath, (item) => {
+              (item.data as IItemData).isolated = value;
+              return item;
+            });
+          }}
+        />
+      )}
       <Checkbox
         label="Run detached"
         info="This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly."

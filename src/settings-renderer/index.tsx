@@ -38,6 +38,7 @@ Promise.all([
   window.commonAPI.getIsDarkMode(),
   window.settingsAPI.getBackendInfo(),
   window.settingsAPI.getVersionInfo(),
+  window.settingsAPI.getSystemInfo(),
   window.settingsAPI.getAllMenuThemes(),
   window.settingsAPI.getAllSoundThemes(),
   window.settingsAPI.getCurrentMenu(),
@@ -49,6 +50,7 @@ Promise.all([
     darkMode,
     backendInfo,
     versionInfo,
+    systemInfo,
     menuThemes,
     soundThemes,
     selectedMenu,
@@ -127,6 +129,7 @@ Promise.all([
     useAppState.setState({
       backendInfo,
       versionInfo,
+      systemInfo,
       darkMode,
       menuThemes,
       soundThemes,

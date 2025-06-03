@@ -78,6 +78,16 @@ export interface IWMInfo {
 }
 
 /**
+ * This interface is used to transfer information about the system to the renderer
+ * process. It will determine the visibility of some UI elements and the availability of
+ * some features.
+ */
+export interface ISystemInfo {
+  /** Whether the system supports launching isolated processes. */
+  supportsIsolatedProcesses: boolean;
+}
+
+/**
  * The description of a menu theme. These are the properties which can be defined in the
  * JSON file of a menu theme.
  */
