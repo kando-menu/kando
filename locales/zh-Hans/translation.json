@@ -92,7 +92,11 @@
             "tip-4": "使用 {{window_name}} 变量代表打开菜单时正在使用的窗口标题。",
             "tip-5": "使用 {{pointer_x}} 和 {{pointer_y}} 变量代表打开菜单时的光标位置。",
             "tip-6": "点击[这里]({{link}})以了解如何查找启动应用程序的命令。",
-            "placeholder": "插入任何命令…"
+            "placeholder": "插入任何命令…",
+            "isolated": "隔离运行",
+            "detached": "分离运行",
+            "isolated-info": "将在一个干净的环境中运行命令，这意味着它不会从 Kando 继承任何环境变量。这可以帮助无法正常启动的命令。",
+            "detached-info": "这将使命令与 Kando 断开连接，因此即使 Kando 关闭，它也将继续运行。禁用这个可能会解决未能正常启动命令的问题。"
         },
         "file": {
             "description": "打开一个文件或文件夹。",
