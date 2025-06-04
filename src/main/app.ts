@@ -198,7 +198,6 @@ export class KandoApp {
     // Initialize the common IPC communication to the renderer process. This will be
     // available in both the menu window and the settings window.
     this.initCommonRendererAPI();
-
     // Create and load the main window if it does not exist yet.
     if (!this.generalSettings.get('lazyInitialization')) {
       this.menuWindow = new MenuWindow(this);
