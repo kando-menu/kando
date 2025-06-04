@@ -38,7 +38,7 @@
     "@types/chroma-js": "^3.1.1",
     "@types/howler": "^2.2.12",
     "@types/lodash.isequal": "^4.5.8",
-    "@types/mime-types": "^2.1.4",
+    "@types/mime-types": "^3.0.0",
     "@types/mocha": "^10.0.10",
     "@types/mousetrap": "^1.6.15",
     "@types/react": "^19.1.6",
