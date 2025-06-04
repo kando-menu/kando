@@ -51,8 +51,8 @@ export default () => {
       />
       {supportsIsolatedProcesses && (
         <Checkbox
-          label="Run isolated"
-          info="This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly."
+          label={i18next.t('menu-items.command.isolated')}
+          info={i18next.t('menu-items.command.isolated-info')}
           initialValue={data.isolated}
           onChange={(value) => {
             editMenuItem(selectedMenu, selectedChildPath, (item) => {
@@ -63,8 +63,8 @@ export default () => {
         />
       )}
       <Checkbox
-        label="Run detached"
-        info="This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly."
+        label={i18next.t('menu-items.command.detached')}
+        info={i18next.t('menu-items.command.detached-info')}
         initialValue={data.detached !== false} // explicitly check because undefined should mean true
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
