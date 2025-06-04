@@ -23,6 +23,9 @@ export default () => {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const supportsIsolatedProcesses = useAppState(
+    (state) => state.systemInfo.supportsIsolatedProcesses
+  );
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
 
@@ -42,6 +45,30 @@ export default () => {
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as IItemData).command = value;
+            return item;
+          });
+        }}
+      />
+      {supportsIsolatedProcesses && (
+        <Checkbox
+          label={i18next.t('menu-items.command.isolated')}
+          info={i18next.t('menu-items.command.isolated-info')}
+          initialValue={data.isolated}
+          onChange={(value) => {
+            editMenuItem(selectedMenu, selectedChildPath, (item) => {
+              (item.data as IItemData).isolated = value;
+              return item;
+            });
+          }}
+        />
+      )}
+      <Checkbox
+        label={i18next.t('menu-items.command.detached')}
+        info={i18next.t('menu-items.command.detached-info')}
+        initialValue={data.detached !== false} // explicitly check because undefined should mean true
+        onChange={(value) => {
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            (item.data as IItemData).detached = value;
             return item;
           });
         }}

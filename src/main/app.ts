@@ -35,6 +35,7 @@ import {
 import { Settings, DeepReadonly } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
+import { supportsIsolatedProcesses } from './utils/shell';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -373,6 +374,13 @@ export class KandoApp {
     // Allow the renderer to retrieve information about the current window manager state.
     ipcMain.handle('settings-window.get-wm-info', () => {
       return this.backend.getWMInfo();
+    });
+
+    // Allow the renderer to retrieve information about the current system.
+    ipcMain.handle('settings-window.get-system-info', () => {
+      return {
+        supportsIsolatedProcesses: supportsIsolatedProcesses(),
+      };
     });
 
     // Allow the renderer to retrieve the position of the settings window.

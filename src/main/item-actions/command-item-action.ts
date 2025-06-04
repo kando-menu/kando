@@ -8,14 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { spawn, StdioOptions } from 'child_process';
-import * as os from 'os';
-
 import { IMenuItem } from '../../common/index';
 import { IItemAction } from './item-action-registry';
 import { DeepReadonly } from '../utils/settings';
 import { IItemData } from '../../common/item-types/command-item-type';
 import { KandoApp } from '../app';
+import { exec } from '../utils/shell';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
 export class CommandItemAction implements IItemAction {
@@ -41,71 +39,18 @@ export class CommandItemAction implements IItemAction {
    * @returns A promise which resolves when the command has been successfully started.
    */
   async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
-    return new Promise<void>((resolve, reject) => {
-      let command = (item.data as IItemData).command;
+    let command = (item.data as IItemData).command;
 
-      // Replace placeholders in the command string.
-      command = command
-        .replace(/\{{app_name}}/g, app.getLastWMInfo().appName)
-        .replace(/\{{window_name}}/g, app.getLastWMInfo().windowName)
-        .replace(/\{{pointer_x}}/g, app.getLastWMInfo().pointerX.toString())
-        .replace(/\{{pointer_y}}/g, app.getLastWMInfo().pointerY.toString());
+    // Replace placeholders in the command string.
+    command = command
+      .replace(/\{{app_name}}/g, app.getLastWMInfo().appName)
+      .replace(/\{{window_name}}/g, app.getLastWMInfo().windowName)
+      .replace(/\{{pointer_x}}/g, app.getLastWMInfo().pointerX.toString())
+      .replace(/\{{pointer_y}}/g, app.getLastWMInfo().pointerY.toString());
 
-      // Remove the CHROME_DESKTOP environment variable if it is set.
-      // See https://github.com/kando-menu/kando/issues/552
-      const env = { ...process.env };
-      delete env.CHROME_DESKTOP;
-
-      // If we are inside a flatpak container, we cannot execute commands directly on the host.
-      // Instead we need to use flatpak-spawn.
-      if (env.container && env.container === 'flatpak') {
-        command = 'flatpak-spawn --host ' + command;
-      }
-
-      // We are only interested in a potential error output.
-      const stdio: StdioOptions = ['ignore', 'ignore', 'pipe'];
-
-      const options = {
-        env,
-        cwd: os.homedir(),
-        shell: true,
-        detached: true,
-        stdio,
-      };
-
-      const child = spawn(command, [], options);
-
-      let resolved = false;
-      let errorOutput = '';
-
-      // We set a timeout of one second. If the process does not exit within this time,
-      // we assume that it was started successfully and resolve the promise.
-      const timeout = setTimeout(() => {
-        if (!resolved) {
-          resolved = true;
-          child.unref();
-          resolve();
-        }
-      }, 1000);
-
-      // We collect the error output of the process.
-      child.stderr.on('data', (data) => {
-        errorOutput += data.toString();
-      });
-
-      // If the process exits within the timeout, we either resolve or reject the promise
-      // based on the exit code.
-      child.on('exit', (code) => {
-        if (!resolved) {
-          clearTimeout(timeout);
-          resolved = true;
-          if (code !== 0) {
-            reject(errorOutput);
-          } else {
-            resolve();
-          }
-        }
-      });
+    return exec(command, {
+      detach: (item.data as IItemData).detached,
+      isolate: (item.data as IItemData).isolated,
     });
   }
 }

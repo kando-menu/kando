@@ -40,19 +40,21 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **A default sound theme!** You can enable it in the general settings.
 - **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons.
 - **Support for multiple pointing devices on GNOME Wayland!** Thanks to a change in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), Kando now supports multiple pointing devices on GNOME Wayland. This means that the menu will now open at the position of the last used pointing device. This is useful if you are using a stylus in addition to a mouse or touchpad. Thanks to [@hhhhhhh2019](https://github.com/hhhhhhh2019) for the contribution!
+- **The possibility to run commands in a clean environment on Linux** systems which have `systemd-run` installed. On these systems, you will see a new checkbox in the command item type configuration. Checking this box may fix some issues with applications which do not work properly when launched from Kando.
+- **The possibility to disable launching a command in detached mode.** Detached mode had been introduced in 1.6.0 but there seem to be some applications which do not work properly when launched in detached mode. You can disable this with a checkbox in the configuration of the run-command item type.
 - A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
 - The directories `menu-themes`, `icon-themes`, and `sound-themes` are now created on startup if they do not exist yet. This will make it easier to understand where to put your custom themes. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
 
 #### :fire: Removed
 
-- **[BREAKING]** As part of the settings redesign, the stash got removed. All stashed menus will be converted to normal menus with a `template` tag applied. **All stashed menu items will be lost!**
+- **[:collision: BREAKING]** As part of the settings redesign, the stash got removed. All stashed menus will be converted to normal menus with a `template` tag applied. **All stashed menu items will be lost!**
 - The possibility to change the menu scale using the <kbd>Ctrl</kbd>-<kbd>Plus</kbd> and <kbd>Ctrl</kbd>-<kbd>Minus</kbd> shortcuts. Instead, you can now change the menu scale in the settings dialog. This was done as a workaround for [#858](https://github.com/kando-menu/kando/issues/858).
 
 #### :wrench: Changed
 
-- **[BREAKING]** The window which contains the menu is now called "Kando Menu" instead of "Kando". The settings window is called "Kando Settings". So if you used any scripts to identify the windows, you will have to update them.
-- **[BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
+- **[:collision: BREAKING]** The window which contains the menu is now called "Kando Menu" instead of "Kando". The settings window is called "Kando Settings". So if you used any scripts to identify the windows, you will have to update them.
+- **[:collision: BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 - When the settings dialog should be shown but is minimized, Kando will now restore the settings dialog so that it is visible again.
