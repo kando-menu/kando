@@ -37,6 +37,7 @@ import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { supportsIsolatedProcesses } from './utils/shell';
+import { todo } from 'node:test';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -147,15 +148,92 @@ export class KandoApp {
         return errorMessage;
       }
 
-      if (typeof menu.root.shortcut !== 'string' || !menu.root.shortcut) {
-        const errorMessage = `Menu at index ${index} is invalid: The root shortcut must be a non-empty string.`;
+      if (typeof menu.shortcut !== 'string' || !menu.shortcut) {
+        const errorMessage = `Menu at index ${index} is invalid: The shortcut must be a non-empty string.`;
         console.error(errorMessage);
         return errorMessage;
+      }
+
+      if (typeof menu.shortcutID !== 'string') {
+        const errorMessage = `Menu at index ${index} is invalid: The shortcutID must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.centered !== 'boolean' || !menu.centered) {
+        const errorMessage = `Menu at index ${index} is invalid: The centered option must be a non-empty boolean.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.anchored !== 'boolean' || !menu.anchored) {
+        const errorMessage = `Menu at index ${index} is invalid: The anchored option must be a non-empty boolean.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.hoverMode !== 'boolean' || !menu.hoverMode) {
+        const errorMessage = `Menu at index ${index} is invalid: The hoverMode option must be a non-empty boolean.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+      
+      if (!Array.isArray(menu.tags)) {
+        const errorMessage = `Menu at index ${index} is invalid: The tags must be a list.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (menu.conditions && typeof menu.conditions === 'object' && Object.keys(menu.conditions).length > 0) {
+        const screenArea = menu.conditions.screenArea;
+        if (screenArea) {
+          if (typeof screenArea.xMin !== 'number') {
+            const errorMessage = `Menu at index ${index} is invalid: The xMin in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (typeof screenArea.yMin !== 'number') {
+            const errorMessage = `Menu at index ${index} is invalid: The yMin in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (typeof screenArea.xMax !== 'number') {
+            const errorMessage = `Menu at index ${index} is invalid: The xMax in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (typeof screenArea.yMax !== 'number') {
+            const errorMessage = `Menu at index ${index} is invalid: The yMax in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (!menu.conditions.windowName || typeof menu.conditions.windowName !== 'string') {
+            const errorMessage = `Menu at index ${index} is invalid: The windowName in conditions must be a string.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (!menu.conditions.appName || typeof menu.conditions.appName !== 'string') {
+            const errorMessage = `Menu at index ${index} is invalid: The appName in conditions must be a string.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+        }
       }
 
       const validationResult = this.validateMenuItems(menu.root.children);
       if (validationResult !== true) {
         return validationResult;
+      }
+
+      if (menu.version !== app.getVersion()) {
+        const warnMessage = `Version mismatch detected. Menu version: ${menu.version}, Application version: ${app.getVersion()}.`;
+        console.warn(warnMessage);
+        return warnMessage;
       }
     }
 
@@ -166,7 +244,6 @@ export class KandoApp {
     for (let index = 0; index < items.length; index++) {
       const item = items[index];
 
-      // Check if the item has a valid type
       if (!item.type) {
         const errorMessage = `Item at index ${index} is invalid: Missing type. Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
         console.error(errorMessage);
@@ -179,28 +256,30 @@ export class KandoApp {
         return errorMessage;
       }
 
-      // Check if the item has a valid name
       if (!item.name || typeof item.name !== 'string') {
         const errorMessage = `Item at index ${index} is invalid: Missing name or name must be a string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
-      // Check if the item has a valid icon
       if (!item.icon || typeof item.icon !== 'string') {
         const errorMessage = `Item at index ${index} is invalid: Missing icon or icon must be a string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
-      // Check if the item has a valid iconTheme
       if (!item.iconTheme || typeof item.iconTheme !== 'string') {
         const errorMessage = `Item at index ${index} is invalid: Missing iconTheme or iconTheme must be a string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
-      // Check if the item has valid data based on its type
+      if (!IconThemeRegistry.getInstance().getThemes().has(item.iconTheme)) {
+        const errorMessage = `Item at index ${index} is invalid: The required icon theme "${item.iconTheme}" was not found.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
       if (item.type === 'submenu') {
         if (!item.children || !Array.isArray(item.children)) {
           const errorMessage = `Item at index ${index} is invalid: Submenu must have children as an array.`;
@@ -474,13 +553,26 @@ export class KandoApp {
         const filePath = result.filePaths[0];
         const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
         const parsed = JSON.parse(jsonContent);
-        const errors = this.validateStructure(parsed)
+
+        // Inject a version field into each menu
+        const modifiedMenus = parsed.menus.map(menu => ({
+          ...menu,
+          root: {
+            ...menu.root,
+          },
+          version: app.getVersion() // Injecting a version field
+        }));
+
+        const errors = this.validateStructure({ ...parsed, menus: modifiedMenus });
 
         if (errors === true) {
-          this.menuSettings.set({ menus: parsed.menus });
+          this.menuSettings.set({ menus: modifiedMenus });
           console.log('Successfully imported menus from', filePath);
+        } else if (errors.startsWith("Version mismatch detected")) {
+          console.error(errors); // todo: add warning window (if users proccede, add menus to list)
+          return;
         } else {
-          console.error('Detected errors in menu structure'); // TODO: add error window
+          console.error('Detected errors in menu structure:', errors); // todo: add error window
           return;
         }
       } catch (error) {
@@ -507,7 +599,16 @@ export class KandoApp {
           throw new Error('Menu not found');
         }
 
-        const jsonContent = JSON.stringify({ menus: [menu] }, null, 2);
+        // Inject a version field into the menu
+        const modifiedMenu = {
+          ...menu,
+          root: {
+            ...menu.root, 
+          },
+          version: app.getVersion() // Injecting a version field
+        };
+
+        const jsonContent = JSON.stringify({ menus: [modifiedMenu] }, null, 2);
         await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
 
         console.log('Successfully exported menu to', filePath);
@@ -547,6 +648,9 @@ export class KandoApp {
           this.menuSettings.set({ menus: currentMenus });
 
           console.log('Successfully imported a menu from', filePath);
+        } else if (errors.startsWith("Version mismatch detected")) {
+          console.error(errors); // todo: add warning window (if users proccede, add menu to list)
+          return;
         } else {
           console.error('Detected errors in menu structure'); // TODO: add error window
           return;
