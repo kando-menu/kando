@@ -35,6 +35,7 @@ import {
 import { Settings, DeepReadonly } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
+import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -86,6 +87,192 @@ export class KandoApp {
 
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
+
+  private validateStructure(parsed: any): string | true {
+    if (!Array.isArray(parsed.menus)) {
+      const errorMessage = 'Invalid JSON format: The parsed object must contain an array called "menus".';
+      console.error(errorMessage);
+      return errorMessage;
+    }
+
+    for (let index = 0; index < parsed.menus.length; index++) {
+      const menu = parsed.menus[index];
+
+      if (!menu.root) {
+        const errorMessage = `Menu at index ${index} is invalid: The menu must have a root object.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.root !== 'object') {
+        const errorMessage = `Menu at index ${index} is invalid: The root must be an object.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (menu.root.type !== 'submenu') {
+        const errorMessage = `Menu at index ${index} is invalid: The root type must be "submenu". Found: ${menu.root.type}`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.name || typeof menu.root.name !== 'string') {
+        const errorMessage = `Menu at index ${index} is invalid: The root must have a name of type string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.icon || typeof menu.root.icon !== 'string') {
+        const errorMessage = `Menu at index ${index} is invalid: The root must have an icon of type string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.iconTheme || typeof menu.root.iconTheme !== 'string') {
+        const errorMessage = `Menu at index ${index} is invalid: The root must have an iconTheme of type string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!IconThemeRegistry.getInstance().getThemes().has(menu.root.iconTheme)) {
+        const errorMessage = `Menu at index ${index} is invalid: The required icon theme "${menu.root.iconTheme}" was not found.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.children || !Array.isArray(menu.root.children)) {
+        const errorMessage = `Menu at index ${index} is invalid: The root must have children as an array.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.root.shortcut !== 'string' || !menu.root.shortcut) {
+        const errorMessage = `Menu at index ${index} is invalid: The root shortcut must be a non-empty string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      const validationResult = this.validateMenuItems(menu.root.children);
+      if (validationResult !== true) {
+        return validationResult;
+      }
+    }
+
+    return true;
+  }
+
+  private validateMenuItems(items: any[]): string | true {
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
+
+      // Check if the item has a valid type
+      if (!item.type) {
+        const errorMessage = `Item at index ${index} is invalid: Missing type. Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!['submenu', 'command', 'file', 'hotkey', 'macro', 'text', 'uri', 'redirect', 'settings'].includes(item.type)) {
+        const errorMessage = `Item at index ${index} is invalid: Invalid type "${item.type}". Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      // Check if the item has a valid name
+      if (!item.name || typeof item.name !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Missing name or name must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      // Check if the item has a valid icon
+      if (!item.icon || typeof item.icon !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Missing icon or icon must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      // Check if the item has a valid iconTheme
+      if (!item.iconTheme || typeof item.iconTheme !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Missing iconTheme or iconTheme must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      // Check if the item has valid data based on its type
+      if (item.type === 'submenu') {
+        if (!item.children || !Array.isArray(item.children)) {
+          const errorMessage = `Item at index ${index} is invalid: Submenu must have children as an array.`;
+          console.error(errorMessage);
+          return errorMessage;
+        }
+
+        const validationResult = this.validateMenuItems(item.children);
+        if (validationResult !== true) {
+          return validationResult;
+        }
+      }
+
+      if (['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(item.type)) {
+        if (!item.data || typeof item.data !== 'object') {
+          const errorMessage = `Item at index ${index} is invalid: Missing data object or data must be an object.`;
+          console.error(errorMessage);
+          return errorMessage;
+        }
+      }
+
+      if (item.type === 'hotkey' && typeof item.data.hotkey !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Hotkey must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'command' && typeof item.data.command !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Command must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'uri' && (!item.data.uri || typeof item.data.uri !== 'string')) {
+        const errorMessage = `Item at index ${index} is invalid: URI must be a non-empty string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'file' && (!item.data.path || typeof item.data.path !== 'string')) {
+        const errorMessage = `Item at index ${index} is invalid: Path must be a non-empty string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'macro' && !Array.isArray(item.data.macro)) {
+        const errorMessage = `Item at index ${index} is invalid: Macro must be an array.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'text' && typeof item.data.text !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Text must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'redirect' && typeof item.data.menu !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Menu must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'settings' && item.data !== null && typeof item.data !== 'object') {
+        const errorMessage = `Item at index ${index} is invalid: Data must be an object or null.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+    }
+
+    return true;
+  }
+
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -286,14 +473,15 @@ export class KandoApp {
         const filePath = result.filePaths[0];
         const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
         const parsed = JSON.parse(jsonContent);
+        const errors = this.validateStructure(parsed)
 
-        if (!Array.isArray(parsed.menus)) {
-          throw new Error('Invalid JSON format: expected { menus: [...] }');
+        if (errors === true) {
+          this.menuSettings.set({ menus: parsed.menus });
+          console.log('Successfully imported menus from', filePath);
+        } else {
+          console.error('Detected errors in menu structure'); // TODO: add error window
+          return;
         }
-
-        this.menuSettings.set({ menus: parsed.menus });
-
-        console.log('Successfully imported menus from', filePath);
       } catch (error) {
         console.error('Failed to import menus:', error);
         throw error;
@@ -344,27 +532,24 @@ export class KandoApp {
       try {
         const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
         const parsed = JSON.parse(jsonContent);
+        const errors = this.validateStructure(parsed)
 
-        if (
-          !parsed ||
-          typeof parsed !== 'object' ||
-          !Array.isArray(parsed.menus) ||
-          parsed.menus.length !== 1
-        ) {
-          console.error('Invalid JSON format: expected { menus: [menu] }');
+        if (errors === true) {
+          const newMenu = parsed.menus[0];
+
+          const currentMenus = structuredClone(
+            this.menuSettings.get('menus') || []
+          ) as IMenu[];
+
+          currentMenus.push(newMenu);
+
+          this.menuSettings.set({ menus: currentMenus });
+
+          console.log('Successfully imported a menu from', filePath);
+        } else {
+          console.error('Detected errors in menu structure'); // TODO: add error window
           return;
         }
-        const newMenu = parsed.menus[0];
-
-        const currentMenus = structuredClone(
-          this.menuSettings.get('menus') || []
-        ) as IMenu[];
-
-        currentMenus.push(newMenu);
-
-        this.menuSettings.set({ menus: currentMenus });
-
-        console.log('Successfully imported a menu from', filePath);
       } catch (error) {
         console.error('Failed to import menu:', error);
         throw error;

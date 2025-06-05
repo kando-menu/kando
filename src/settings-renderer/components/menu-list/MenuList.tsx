@@ -311,7 +311,6 @@ export default function MenuList() {
               window.settingsAPI.importMenuFromJson().then(() => {
               });
             }}
-            
           />
 
           <Button
@@ -321,7 +320,7 @@ export default function MenuList() {
             size="large"
             grouped
             onClick={() => {
-              window.settingsAPI.exportMenuToJson(selectMenu).then(() => {
+              window.settingsAPI.exportMenuToJson(selectedMenu).then(() => {
               });
             }}
           />
@@ -348,7 +347,7 @@ export default function MenuList() {
               duplicateMenu(selectedMenu);
             }}
           />
-          
+
           <Button
             icon={<TbTrash />}
             tooltip={i18next.t('settings.delete-menu')}

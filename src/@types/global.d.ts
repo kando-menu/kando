@@ -13,3 +13,13 @@
 declare const cIsMac: boolean;
 declare const cIsWindows: boolean;
 declare const cIsLinux: boolean;
+
+import { typeof COMMON_WINDOW_API } from '../settings-renderer/settings-window-api';
+import { typeof SETTINGS_WINDOW_API } from '../settings-renderer/settings-window-api';
+
+declare global {
+  interface Window {
+    commonAPI: typeof COMMON_WINDOW_API;
+    settingsAPI: typeof SETTINGS_WINDOW_API;
+  }
+}
