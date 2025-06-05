@@ -90,7 +90,7 @@ export class KandoApp {
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
 
-  private validateStructure(parsed: any): string | true {
+  private validateStructure(parsed: any): string | false {
     if (!Array.isArray(parsed.menus)) {
       const errorMessage = 'Invalid JSON format: The parsed object must contain an array called "menus".';
       console.error(errorMessage);
@@ -226,21 +226,15 @@ export class KandoApp {
       }
 
       const validationResult = this.validateMenuItems(menu.root.children);
-      if (validationResult !== true) {
+      if (validationResult !== false) {
         return validationResult;
-      }
-
-      if (menu.version !== app.getVersion()) {
-        const warnMessage = `Version mismatch detected. Menu version: ${menu.version}, Application version: ${app.getVersion()}.`;
-        console.warn(warnMessage);
-        return warnMessage;
       }
     }
 
-    return true;
+    return false;
   }
 
-  private validateMenuItems(items: any[]): string | true {
+  private validateMenuItems(items: any[]): string | false {
     for (let index = 0; index < items.length; index++) {
       const item = items[index];
 
@@ -288,7 +282,7 @@ export class KandoApp {
         }
 
         const validationResult = this.validateMenuItems(item.children);
-        if (validationResult !== true) {
+        if (validationResult !== false) {
           return validationResult;
         }
       }
@@ -350,7 +344,7 @@ export class KandoApp {
       }
     }
 
-    return true;
+    return false;
   }
 
 
@@ -528,7 +522,11 @@ export class KandoApp {
         // Get current menus configuration
         const menus = this.menuSettings.get('menus');
 
-        const jsonContent = JSON.stringify({ menus }, null, 2);
+        const jsonContent = JSON.stringify({
+          version: app.getVersion(),
+          menus
+        }, null, 2);
+
         await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
 
         console.log('Successfully exported menus to', filePath);
@@ -554,23 +552,17 @@ export class KandoApp {
         const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
         const parsed = JSON.parse(jsonContent);
 
-        // Inject a version field into each menu
-        const modifiedMenus = parsed.menus.map(menu => ({
-          ...menu,
-          root: {
-            ...menu.root,
-          },
-          version: app.getVersion() // Injecting a version field
-        }));
+        if (parsed.version !== app.getVersion()) {
+          const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
+          console.warn(warnMessage);
+          return; // todo: add warning window (if users proccede, add menus to list)
+        }
 
-        const errors = this.validateStructure({ ...parsed, menus: modifiedMenus });
+        const errors = this.validateStructure(parsed);
 
-        if (errors === true) {
-          this.menuSettings.set({ menus: modifiedMenus });
+        if (errors === false) {
+          this.menuSettings.set({ menus: parsed });
           console.log('Successfully imported menus from', filePath);
-        } else if (errors.startsWith("Version mismatch detected")) {
-          console.error(errors); // todo: add warning window (if users proccede, add menus to list)
-          return;
         } else {
           console.error('Detected errors in menu structure:', errors); // todo: add error window
           return;
@@ -596,19 +588,15 @@ export class KandoApp {
       try {
         const menu = this.menuSettings.get('menus')[menuIndex];
         if (!menu) {
-          throw new Error('Menu not found');
+          console.error('Menu not found');
+          return;
         }
 
-        // Inject a version field into the menu
-        const modifiedMenu = {
-          ...menu,
-          root: {
-            ...menu.root, 
-          },
-          version: app.getVersion() // Injecting a version field
-        };
+        const jsonContent = JSON.stringify({
+          version: app.getVersion(),
+          menus: [menu]
+        }, null, 2);
 
-        const jsonContent = JSON.stringify({ menus: [modifiedMenu] }, null, 2);
         await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
 
         console.log('Successfully exported menu to', filePath);
@@ -634,9 +622,16 @@ export class KandoApp {
       try {
         const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
         const parsed = JSON.parse(jsonContent);
+
+        if (parsed.version !== app.getVersion()) {
+          const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
+          console.warn(warnMessage);
+          return; // todo: add warning window (if users proccede, add menu to list)
+        }
+
         const errors = this.validateStructure(parsed)
 
-        if (errors === true) {
+        if (errors === false) {
           const newMenu = parsed.menus[0];
 
           const currentMenus = structuredClone(
@@ -648,9 +643,6 @@ export class KandoApp {
           this.menuSettings.set({ menus: currentMenus });
 
           console.log('Successfully imported a menu from', filePath);
-        } else if (errors.startsWith("Version mismatch detected")) {
-          console.error(errors); // todo: add warning window (if users proccede, add menu to list)
-          return;
         } else {
           console.error('Detected errors in menu structure'); // TODO: add error window
           return;
