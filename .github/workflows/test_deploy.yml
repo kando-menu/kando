@@ -16,7 +16,7 @@ jobs:
     name: Linux
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-22.04-arm]
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +25,8 @@ jobs:
           node-version-file: .node-version
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          sudo apt update
+          sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev flatpak-builder
           npm install
       - name: Fix Permissions
         # Workaround for https://github.com/electron/electron/issues/17972
@@ -38,6 +39,10 @@ jobs:
       - name: Create AppImage
         run: |
           tools/make-app-image.sh
+      - name: Create Flatpak bundle
+        run: |
+          sudo flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo tools/make-flatpak-bundle.sh
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:

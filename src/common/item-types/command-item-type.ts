@@ -14,11 +14,26 @@ import { IItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a command that will be executed
- * when the item is clicked. If the `delayed` flag is set, the command will be executed
- * after the Kando window has been closed.
+ * when the item is clicked.
  */
 export interface IItemData {
   command: string;
+
+  /**
+   * If set, the command will be executed in a detached process. This means that the
+   * process will not be connected to Kando, and will continue to run even if Kando is
+   * closed.
+   */
+  detached: boolean;
+
+  /**
+   * If set, the command will be executed in a clean environment, meaning that it will not
+   * inherit any environment variables from Kando. This is not yet supported on all
+   * platforms.
+   */
+  isolated: boolean;
+
+  /** If set, the command will be executed after the Kando window has been closed. */
   delayed: boolean;
 }
 
@@ -43,6 +58,8 @@ export class CommandItemType implements IItemType {
   get defaultData(): IItemData {
     return {
       command: '',
+      detached: true,
+      isolated: false,
       delayed: false,
     };
   }

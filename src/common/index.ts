@@ -78,6 +78,16 @@ export interface IWMInfo {
 }
 
 /**
+ * This interface is used to transfer information about the system to the renderer
+ * process. It will determine the visibility of some UI elements and the availability of
+ * some features.
+ */
+export interface ISystemInfo {
+  /** Whether the system supports launching isolated processes. */
+  supportsIsolatedProcesses: boolean;
+}
+
+/**
  * The description of a menu theme. These are the properties which can be defined in the
  * JSON file of a menu theme.
  */
@@ -333,26 +343,6 @@ export interface IMenuItem {
 }
 
 /**
- * This function creates a deep copy of an IMenuItem. It can also be used to strip all
- * properties from an menu item object which are not present in an IMenuItem. This is for
- * instance used before saving the settings.
- *
- * @param item The menu item to copy.
- * @returns The copied menu item.
- */
-export function deepCopyMenuItem(item: IMenuItem): IMenuItem {
-  return {
-    type: item.type,
-    data: structuredClone(item.data),
-    name: item.name,
-    icon: item.icon,
-    iconTheme: item.iconTheme,
-    children: item.children?.map(deepCopyMenuItem),
-    angle: item.angle,
-  };
-}
-
-/**
  * This interface describes a menu. It contains the root item of the menu, the shortcut to
  * open the menu and a flag indicating whether the menu should be opened in the center of
  * the screen or at the mouse pointer.
@@ -406,25 +396,6 @@ export interface IMenu {
 }
 
 /**
- * This function creates a deep copy of an IMenu.
- *
- * @param menu The menu to copy.
- * @returns The copied menu.
- */
-export function deepCopyMenu(menu: IMenu): IMenu {
-  return {
-    root: deepCopyMenuItem(menu.root),
-    shortcut: menu.shortcut,
-    shortcutID: menu.shortcutID,
-    centered: menu.centered,
-    anchored: menu.anchored,
-    hoverMode: menu.hoverMode,
-    conditions: structuredClone(menu.conditions),
-    tags: structuredClone(menu.tags),
-  };
-}
-
-/**
  * This interface is used to describe the additional information that is passed to the
  * Menu's `show()` method from the main to the renderer process.
  */
@@ -465,30 +436,6 @@ export interface IShowMenuOptions {
    * be selected by only hovering over them.
    */
   hoverMode: boolean;
-}
-
-/**
- * This interface is used to describe the additional information that is passed to the
- * Settings's `show()` method from the main to the renderer process.
- */
-export interface IShowSettingsOptions {
-  /**
-   * The name of the application that is currently focused. This will be used as a
-   * condition example in the condition picker of the settings.
-   */
-  appName: string;
-
-  /**
-   * The name of the window that is currently focused. This will also be used as a
-   * condition example in the condition picker of the settings.
-   */
-  windowName: string;
-
-  /**
-   * To compute the current mouse position in the condition picker, we need to know the
-   * position of the window.
-   */
-  windowPosition: IVec2;
 }
 
 /** The user can create menu collections to group menus according to their tags. */
