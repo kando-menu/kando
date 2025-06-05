@@ -100,86 +100,86 @@ export class KandoApp {
     for (let index = 0; index < parsed.menus.length; index++) {
       const menu = parsed.menus[index];
 
-      if (!menu.root) {
-        const errorMessage = `Menu at index ${index} is invalid: The menu must have a root object.`;
-        console.error(errorMessage);
-        return errorMessage;
-      }
-
-      if (typeof menu.root !== 'object') {
-        const errorMessage = `Menu at index ${index} is invalid: The root must be an object.`;
-        console.error(errorMessage);
-        return errorMessage;
-      }
-
-      if (menu.root.type !== 'submenu') {
-        const errorMessage = `Menu at index ${index} is invalid: The root type must be "submenu". Found: ${menu.root.type}`;
-        console.error(errorMessage);
-        return errorMessage;
-      }
-
       if (!menu.root.name || typeof menu.root.name !== 'string') {
         const errorMessage = `Menu at index ${index} is invalid: The root must have a name of type string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
+      if (!menu.root) {
+        const errorMessage = `Menu ${menu.name} is invalid: The menu must have a root object.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.root !== 'object') {
+        const errorMessage = `Menu ${menu.name} is invalid: The root must be an object.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (menu.root.type !== 'submenu') {
+        const errorMessage = `Menu ${menu.name} is invalid: The root type must be "submenu". Found: ${menu.root.type}`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
       if (!menu.root.icon || typeof menu.root.icon !== 'string') {
-        const errorMessage = `Menu at index ${index} is invalid: The root must have an icon of type string.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The root must have an icon of type string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (!menu.root.iconTheme || typeof menu.root.iconTheme !== 'string') {
-        const errorMessage = `Menu at index ${index} is invalid: The root must have an iconTheme of type string.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The root must have an iconTheme of type string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (!IconThemeRegistry.getInstance().getThemes().has(menu.root.iconTheme)) {
-        const errorMessage = `Menu at index ${index} is invalid: The required icon theme "${menu.root.iconTheme}" was not found.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The required icon theme "${menu.root.iconTheme}" was not found.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (!menu.root.children || !Array.isArray(menu.root.children)) {
-        const errorMessage = `Menu at index ${index} is invalid: The root must have children as an array.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The root must have children as an array.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (typeof menu.shortcut !== 'string' || !menu.shortcut) {
-        const errorMessage = `Menu at index ${index} is invalid: The shortcut must be a non-empty string.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The shortcut must be a non-empty string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (typeof menu.shortcutID !== 'string') {
-        const errorMessage = `Menu at index ${index} is invalid: The shortcutID must be a string.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The shortcutID must be a string.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (typeof menu.centered !== 'boolean' || !menu.centered) {
-        const errorMessage = `Menu at index ${index} is invalid: The centered option must be a non-empty boolean.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The centered option must be a non-empty boolean.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (typeof menu.anchored !== 'boolean' || !menu.anchored) {
-        const errorMessage = `Menu at index ${index} is invalid: The anchored option must be a non-empty boolean.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The anchored option must be a non-empty boolean.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
       if (typeof menu.hoverMode !== 'boolean' || !menu.hoverMode) {
-        const errorMessage = `Menu at index ${index} is invalid: The hoverMode option must be a non-empty boolean.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The hoverMode option must be a non-empty boolean.`;
         console.error(errorMessage);
         return errorMessage;
       }
       
       if (!Array.isArray(menu.tags)) {
-        const errorMessage = `Menu at index ${index} is invalid: The tags must be a list.`;
+        const errorMessage = `Menu ${menu.name} is invalid: The tags must be a list.`;
         console.error(errorMessage);
         return errorMessage;
       }
@@ -188,37 +188,37 @@ export class KandoApp {
         const screenArea = menu.conditions.screenArea;
         if (screenArea) {
           if (typeof screenArea.xMin !== 'number') {
-            const errorMessage = `Menu at index ${index} is invalid: The xMin in conditions.screenArea must be a number.`;
+            const errorMessage = `Menu ${menu.name} is invalid: The xMin in conditions.screenArea must be a number.`;
             console.error(errorMessage);
             return errorMessage;
           }
 
           if (typeof screenArea.yMin !== 'number') {
-            const errorMessage = `Menu at index ${index} is invalid: The yMin in conditions.screenArea must be a number.`;
+            const errorMessage = `Menu ${menu.name} is invalid: The yMin in conditions.screenArea must be a number.`;
             console.error(errorMessage);
             return errorMessage;
           }
 
           if (typeof screenArea.xMax !== 'number') {
-            const errorMessage = `Menu at index ${index} is invalid: The xMax in conditions.screenArea must be a number.`;
+            const errorMessage = `Menu ${menu.name} is invalid: The xMax in conditions.screenArea must be a number.`;
             console.error(errorMessage);
             return errorMessage;
           }
 
           if (typeof screenArea.yMax !== 'number') {
-            const errorMessage = `Menu at index ${index} is invalid: The yMax in conditions.screenArea must be a number.`;
+            const errorMessage = `Menu ${menu.name} is invalid: The yMax in conditions.screenArea must be a number.`;
             console.error(errorMessage);
             return errorMessage;
           }
 
           if (!menu.conditions.windowName || typeof menu.conditions.windowName !== 'string') {
-            const errorMessage = `Menu at index ${index} is invalid: The windowName in conditions must be a string.`;
+            const errorMessage = `Menu ${menu.name} is invalid: The windowName in conditions must be a string.`;
             console.error(errorMessage);
             return errorMessage;
           }
 
           if (!menu.conditions.appName || typeof menu.conditions.appName !== 'string') {
-            const errorMessage = `Menu at index ${index} is invalid: The appName in conditions must be a string.`;
+            const errorMessage = `Menu ${menu.name} is invalid: The appName in conditions must be a string.`;
             console.error(errorMessage);
             return errorMessage;
           }
