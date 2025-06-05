@@ -308,8 +308,7 @@ export default function MenuList() {
             size="large"
             grouped
             onClick={() => {
-              window.settingsAPI.importMenuFromJson().then(() => {
-              });
+              window.settingsAPI.importMenuFromJson().then(() => {});
             }}
           />
 
@@ -320,8 +319,7 @@ export default function MenuList() {
             size="large"
             grouped
             onClick={() => {
-              window.settingsAPI.exportMenuToJson(selectedMenu).then(() => {
-              });
+              window.settingsAPI.exportMenuToJson(selectedMenu).then(() => {});
             }}
           />
 

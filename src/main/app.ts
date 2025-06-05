@@ -37,7 +37,6 @@ import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { supportsIsolatedProcesses } from './utils/shell';
-import { todo } from 'node:test';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -90,13 +89,14 @@ export class KandoApp {
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   private validateStructure(parsed: any): string | false {
     if (!Array.isArray(parsed.menus)) {
-      const errorMessage = 'Invalid JSON format: The parsed object must contain an array called "menus".';
+      const errorMessage =
+        'Invalid JSON format: The parsed object must contain an array called "menus".';
       console.error(errorMessage);
       return errorMessage;
     }
-
     for (let index = 0; index < parsed.menus.length; index++) {
       const menu = parsed.menus[index];
 
@@ -177,14 +177,18 @@ export class KandoApp {
         console.error(errorMessage);
         return errorMessage;
       }
-      
+
       if (!Array.isArray(menu.tags)) {
         const errorMessage = `Menu ${menu.name} is invalid: The tags must be a list.`;
         console.error(errorMessage);
         return errorMessage;
       }
 
-      if (menu.conditions && typeof menu.conditions === 'object' && Object.keys(menu.conditions).length > 0) {
+      if (
+        menu.conditions &&
+        typeof menu.conditions === 'object' &&
+        Object.keys(menu.conditions).length > 0
+      ) {
         const screenArea = menu.conditions.screenArea;
         if (screenArea) {
           if (typeof screenArea.xMin !== 'number') {
@@ -211,7 +215,10 @@ export class KandoApp {
             return errorMessage;
           }
 
-          if (!menu.conditions.windowName || typeof menu.conditions.windowName !== 'string') {
+          if (
+            !menu.conditions.windowName ||
+            typeof menu.conditions.windowName !== 'string'
+          ) {
             const errorMessage = `Menu ${menu.name} is invalid: The windowName in conditions must be a string.`;
             console.error(errorMessage);
             return errorMessage;
@@ -244,7 +251,19 @@ export class KandoApp {
         return errorMessage;
       }
 
-      if (!['submenu', 'command', 'file', 'hotkey', 'macro', 'text', 'uri', 'redirect', 'settings'].includes(item.type)) {
+      if (
+        ![
+          'submenu',
+          'command',
+          'file',
+          'hotkey',
+          'macro',
+          'text',
+          'uri',
+          'redirect',
+          'settings',
+        ].includes(item.type)
+      ) {
         const errorMessage = `Item at index ${index} is invalid: Invalid type "${item.type}". Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
         console.error(errorMessage);
         return errorMessage;
@@ -287,7 +306,11 @@ export class KandoApp {
         }
       }
 
-      if (['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(item.type)) {
+      if (
+        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(
+          item.type
+        )
+      ) {
         if (!item.data || typeof item.data !== 'object') {
           const errorMessage = `Item at index ${index} is invalid: Missing data object or data must be an object.`;
           console.error(errorMessage);
@@ -313,7 +336,10 @@ export class KandoApp {
         return errorMessage;
       }
 
-      if (item.type === 'file' && (!item.data.path || typeof item.data.path !== 'string')) {
+      if (
+        item.type === 'file' &&
+        (!item.data.path || typeof item.data.path !== 'string')
+      ) {
         const errorMessage = `Item at index ${index} is invalid: Path must be a non-empty string.`;
         console.error(errorMessage);
         return errorMessage;
@@ -337,7 +363,11 @@ export class KandoApp {
         return errorMessage;
       }
 
-      if (item.type === 'settings' && item.data !== null && typeof item.data !== 'object') {
+      if (
+        item.type === 'settings' &&
+        item.data !== null &&
+        typeof item.data !== 'object'
+      ) {
         const errorMessage = `Item at index ${index} is invalid: Data must be an object or null.`;
         console.error(errorMessage);
         return errorMessage;
@@ -346,7 +376,7 @@ export class KandoApp {
 
     return false;
   }
-
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -522,10 +552,14 @@ export class KandoApp {
         // Get current menus configuration
         const menus = this.menuSettings.get('menus');
 
-        const jsonContent = JSON.stringify({
-          version: app.getVersion(),
-          menus
-        }, null, 2);
+        const jsonContent = JSON.stringify(
+          {
+            version: app.getVersion(),
+            menus,
+          },
+          null,
+          2
+        );
 
         await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
 
@@ -592,10 +626,14 @@ export class KandoApp {
           return;
         }
 
-        const jsonContent = JSON.stringify({
-          version: app.getVersion(),
-          menus: [menu]
-        }, null, 2);
+        const jsonContent = JSON.stringify(
+          {
+            version: app.getVersion(),
+            menus: [menu],
+          },
+          null,
+          2
+        );
 
         await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
 
@@ -629,7 +667,7 @@ export class KandoApp {
           return; // todo: add warning window (if users proccede, add menu to list)
         }
 
-        const errors = this.validateStructure(parsed)
+        const errors = this.validateStructure(parsed);
 
         if (errors === false) {
           const newMenu = parsed.menus[0];

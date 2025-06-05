@@ -14,12 +14,15 @@ declare const cIsMac: boolean;
 declare const cIsWindows: boolean;
 declare const cIsLinux: boolean;
 
-import { typeof COMMON_WINDOW_API } from '../settings-renderer/settings-window-api';
-import { typeof SETTINGS_WINDOW_API } from '../settings-renderer/settings-window-api';
+/* eslint-disable */
+type CommonWindowApiType = typeof COMMON_WINDOW_API;
+type SettingsWindowApiType = typeof SETTINGS_WINDOW_API;
+
+declare const cIsLinux: boolean;
 
 declare global {
   interface Window {
-    commonAPI: typeof COMMON_WINDOW_API;
-    settingsAPI: typeof SETTINGS_WINDOW_API;
+    COMMON_WINDOW_API: CommonWindowApiType;
+    SETTINGS_WINDOW_API: SettingsWindowApiType;
   }
 }
