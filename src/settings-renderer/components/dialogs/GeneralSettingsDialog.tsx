@@ -267,6 +267,16 @@ export default function GeneralSettingsDialog() {
             )}
             settingsKey="enableGamepad"
           />
+          <SettingsDropdown
+            label="Press-shortcut-again behavior"
+            info="This determines what happens when the shortcut is pressed again while a menu is shown. If multiple menus are assigned to the same shortcut, you can use this to cycle through all matching menus. Make sure to only hold down a modifier key if you want to use Turbo Mode together with an option other than 'Nothing'."
+            settingsKey="sameShortcutBehavior"
+            options={[
+              { value: 'nothing', label: 'Nothing' },
+              { value: 'cycle', label: 'Cycle through menus' },
+              { value: 'close', label: 'Close menu' },
+            ]}
+          />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-sounds')}</h1>
           <Note marginTop={-5} markdown>
