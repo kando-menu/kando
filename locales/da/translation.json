@@ -53,12 +53,162 @@
             "move-pointer-to-menu-center-info": "Hvis aktiviteret, vil musemarkøren blive flyttet til midten af en menu eller undermenu, når det er nødvendigt. Det kan være tilfældet, hvis en menu er åbnet for tæt på skærmens kant, eller hvis en menu er åbnet i Centered Mode.",
             "require-click-for-hover-mode": "Kræver klik for valg af Hover Mode",
             "enable-turbo-mode": "Aktiver Turbo Mode",
-            "enable-marking-mode": "Aktiver Marking Mode"
+            "enable-marking-mode": "Aktiver Marking Mode",
+            "menu-sounds": "Menu-lyde",
+            "learn-how-to-add-sound-themes": "Lær, hvordan du tilføjer nye lydtemaer til Kando [her]({{link}})!",
+            "sound-theme": "Lydtema",
+            "volume": "Lydstyrke",
+            "volume-info": "Den samlede lydstyrke for lydtemaet. Standard er 0,5.",
+            "advanced-menu-options": "Avancerede menuindstillinger",
+            "advanced-menu-options-note": "Normalt kan du lade disse indstillinger være på deres standardværdier.",
+            "reload-menu-theme": "Genindlæs menutema",
+            "reload-sound-theme": "Genindlæs lydtema",
+            "menu-window-dev-tools": "Inspicer menuen",
+            "settings-window-dev-tools": "Inspicer indstillinger",
+            "reload-note": "Når du genindlæser menutemaet, vil CSS-ændringer blive anvendt, selv om der vises en menu i øjeblikket. Hvis der foretages ændringer i filen theme.json, skal du åbne menuen igen.",
+            "dev-tools-note": "Kando bruger to vinduer: Et til menuen og et til indstillingerne. Du kan åbne udviklingsværktøjerne for at inspicere begge vinduer separat.",
+            "developer-options": "Indstillinger for udviklere",
+            "enable-gamepad-support": "Aktiver understøttelse af gamepad",
+            "sound-theme-info": "Et lydtema er en samling af lyde, der afspilles, når du interagerer med menuen."
         },
         "file-picker": {
             "select-directory": "Vælg en mappe",
             "select-file": "Vælg en fil"
         },
-        "add-tags-placeholder": "Tilføj tags…"
+        "add-tags-placeholder": "Tilføj tags…",
+        "introduction-dialog": {
+            "slide1-text": "Swipe gennem disse slides for at lære, hvad Kando kan gøre for dig! Du kan bruge kapitelmærkerne til venstre til hurtigt at springe til en bestemt del af introduktionen.",
+            "slide2-title": "Åbn menuen!",
+            "slide2-text-no-shortcuts": "Hvis du starter Kando for første gang, skal du [muligvis udføre nogle ekstra trin på Linux for at få de globale genvejstaster til at fungere]({{link}}). Når det virker, kan du lukke en menu med Escape-tasten eller med højre museknap.",
+            "slide3-hint1": "Du kan også klikke her for at lukke menuen.",
+            "slide7-title": "Bliv hurtigere: Marking Mode",
+            "slide9-title": "Bliv lynhurtig: Turbo Mode",
+            "slide12-title": "Der er mere!",
+            "slide12-text": "Kando kan i høj grad tilpasses. Du kan bruge den til at åbne programmer, filer, udføre tastaturmakroer og mange andre ting. Du kan [ændre menustilen]({{link1}}), [tilføje ikontemaer]({{link2}}) og endda [bruge lyde]({{link3}}) i dine menuer!",
+            "slide13-text": "Hvis du har brug for hjælp på noget tidspunkt, er du velkommen til at deltage i vores [Discord Server]({{link1}}) eller tjekke [dokumentationen]({{link2}})!",
+            "chapter1": "Kom i gang",
+            "chapter4": "Næste Skridt",
+            "chapter5": "Få Hjælp",
+            "show-again": "Vis denne dialog igen",
+            "slide2-text-standard": "Hvis du har startet Kando for første gang, kan du åbne eksempelmenuen med Ctrl+Space. Luk den igen med Escape-tasten eller med højre museknap et vilkårligt sted på skærmen.",
+            "chapter3": "Turbo Mode",
+            "title": "Velkommen til Kando!",
+            "slide1-title": "Kando tilbyder en unik og effektiv måde at interagere med din computer på.",
+            "chapter2": "Marking Mode"
+        },
+        "menu-themes-dialog": {
+            "get-themes-online": "Få temaer online",
+            "create-your-own-themes": "Lav dine egne temaer",
+            "author": "af {{author}}",
+            "title": "Menu-temaer"
+        },
+        "search-menus-placeholder": "Søg i menuerne…",
+        "no-menus": "Du har ingen menuer.",
+        "no-menus-note": "Hvis du har slettet den sidste ved et uheld, kan du gendanne den ved hjælp af fortryd-knappen.",
+        "no-matching-menus": "Ingen menuer fundet.",
+        "no-matching-menus-note": "Måske skal du prøve et andet søgeord?",
+        "create-menu-button": "Ny menu",
+        "centered-mode-info": "Åbn menuen i midten af skærmen i stedet for ved markøren.",
+        "hover-mode": "Hover Mode",
+        "duplicate-menu": "Dupliker menuen",
+        "delete-menu": "Slet menuen",
+        "menu-behavior": "Menuadfærd",
+        "centered-mode": "Centered Mode",
+        "anchored-mode": "Anchored Mode",
+        "anchored-mode-info": "Åbn undermenuer på samme position som den overordnede menu. Hvis du markerer dette, deaktiveres Marking Mode og Turbo Mode.",
+        "hover-mode-info": "Kun for power-brugere! Vælg elementer ved at holde musen over dem.",
+        "menu-conditions": "Menu-betingelser",
+        "app-condition": "Begræns til specifikke apps",
+        "app-condition-placeholder": "App navn",
+        "app-condition-tooltip": "Vælg en app",
+        "window-condition": "Begræns til specifikke vinduestitler",
+        "window-condition-placeholder": "Titel på vindue",
+        "window-condition-tooltip": "Vælg et vindue",
+        "area-condition-info": "Vis kun menuen, hvis markøren befinder sig i et givet område på skærmen. Området angives i pixels i forhold til øverste venstre hjørne af din hovedskærm. Hvis du lader et felt være tomt, er området ubegrænset i den retning.",
+        "menu-behavior-info": "Før du aktiverer disse muligheder, anbefaler vi, at du lærer, hvorfor vi kan lide Kandos standardadfærd [her]({{link}})!",
+        "menu-conditions-info": "Du kan binde flere menuer til den samme genvej og derefter vælge, under hvilke betingelser hver menu skal vises.",
+        "area-condition": "Begræns til specifikt skærmområde",
+        "add-collection-tooltip": "Opret en ny menusamling. Brug samlinger til at gruppere dine menuer efter tags!",
+        "empty-collection": "Denne samling er tom.",
+        "empty-collection-note": "Rediger tagsene ovenfor, eller tilføj en helt ny menu til denne samling med knappen nedenfor.",
+        "all-menus": "Alle Menuer",
+        "undo": "Fortryd"
+    },
+    "menu-items": {
+        "text": {
+            "name": "Indsæt tekst",
+            "description": "Indsætter den givne tekst.",
+            "placeholder": "Indsæt en hvilken som helst tekst…",
+            "tip-1": "Denne handling bruger din udklipsholder til at indsætte teksten. Når du har brugt handlingen, vil udklipsholderen indeholde teksten."
+        },
+        "uri": {
+            "tip-5": "Brug {{window_name}} til at indsætte navnet på det vindue, der var i fokus, da du åbnede menuen.",
+            "name": "Åben URI",
+            "description": "Åbner hjemmesider og meget mere.",
+            "placeholder": "Indsæt en hvilken som helst URI…",
+            "tip-4": "Brug {{app_name}} til at indsætte navnet på den applikation, der var i fokus, da du åbnede menuen.",
+            "tip-6": "Brug {{pointer_x}} og {{pointer_y}} til at indsætte den markørposition, hvor menuen blev åbnet.",
+            "tip-1": "Du kan bruge URI-elementtypen til at åbne en hjemmeside ved hjælp af http://-protokollen."
+        }
+    },
+    "main": {
+        "new-version-notification-header": "En ny version af Kando er tilgængelig!",
+        "invalid-link-header": "Ugyldigt link",
+        "new-version-notification-body": "Hent den fra {{link}}.",
+        "show-settings": "Vis indstillinger",
+        "un-inhibit-shortcuts": "Genaktiver genveje",
+        "inhibit-shortcuts": "Deaktiver midlertidigt alle genveje",
+        "quit": "Stop",
+        "failed-to-start-header": "Kando kunne ikke starte"
+    },
+    "example-menu": {
+        "apps": {
+            "safari": "Safari",
+            "web-browser": "Webbrowser",
+            "submenu": "Apps",
+            "email": "E-mail",
+            "apple-music": "Musik",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "finder": "Finder",
+            "terminal": "Terminal"
+        },
+        "web-links": {
+            "kando-on-github": "Kando på GitHub",
+            "submenu": "Weblinks",
+            "kando-on-kofi": "Kando på Ko-fi",
+            "kando-on-youtube": "Kando på YouTube",
+            "kando-on-discord": "Kando på Discord",
+            "google": "Google"
+        },
+        "bookmarks": {
+            "desktop": "Skrivebord",
+            "documents": "Dokumenter",
+            "home": "Hjem",
+            "submenu": "Bogmærker",
+            "downloads": "Overførsler",
+            "videos": "Videoer",
+            "pictures": "Billeder",
+            "music": "Musik"
+        },
+        "name": "Eksempel Menu",
+        "clipboard": {
+            "submenu": "Udklipsholder",
+            "paste": "Indsæt",
+            "copy": "Kopier",
+            "cut": "Klip"
+        },
+        "audio": {
+            "submenu": "Lyd",
+            "play-pause": "Afspil / Pause"
+        },
+        "windows": {
+            "submenu": "Vinduer"
+        }
+    },
+    "backends": {
+        "gnome": {
+            "error": "Kunne ikke oprette forbindelse til Kando Integration GNOME Shell-udvidelsen. Du kan hente den herfra: {{link}}"
+        }
     }
 }
