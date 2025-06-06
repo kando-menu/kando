@@ -1,14 +1,99 @@
 {
-  "menu-items": {
-    "command": {
-      "command": "Commando",
-      "command-info": "Dit zal worden uitgevoerd.",
-      "name": "Commando uitvoeren",
-      "tip-1": "Het commando-itemtype kan worden gebruikt om programma's of scripts te starten.",
-      "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet.",
-      "tip-3": "Gebruik {{app_name}} om de naam in te voegen van de app die gefocust was toen je het menu opende.",
-      "tip-4": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
-      "tip-5": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend."
+    "menu-items": {
+        "command": {
+            "command": "Commando",
+            "command-info": "Dit zal worden uitgevoerd.",
+            "name": "Commando uitvoeren",
+            "tip-1": "Het commando-itemtype kan worden gebruikt om programma's of scripts te starten.",
+            "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet.",
+            "tip-3": "Gebruik {{app_name}} om de naam in te voegen van de app die gefocust was toen je het menu opende.",
+            "tip-4": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
+            "tip-5": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend."
+        }
+    },
+    "settings": {
+        "icon-picker-dialog": {
+            "base64-example": "Base64 voorbeeld:",
+            "file-example": "bestand: URI voorbeeld:",
+            "url-example": "URL voorbeeld:",
+            "hint": "Leer [hier] ({{Link}}) hoe u uw eigen pictogramthema's kunt toevoegen of maken.",
+            "base64-hint": "Base64 gecodeerde pictogrammen bieden een gemakkelijke manier om elk soort pictogram in uw menu's op te nemen. U kunt een service gebruiken zoals [www.base64-image.de] ({{Link}}) om elke afbeelding om te zetten in een Base64-gecodeerde tekenreeks. Dit werkt zelfs voor geanimeerde GIF's!",
+            "search-placeholder": "Zoekpictogrammen…"
+        },
+        "about-dialog": {
+            "kando-version": "Kando Versie",
+            "title": "Over Kando",
+            "electron-version": "Electron Versie",
+            "kando-backend": "Kando Backend",
+            "check-latest-release": "Laatste release checken",
+            "read-release-notes": "Lees release -opmerkingen",
+            "message": "Ik maak Kando uit pure passie. Als je het net zo leuk vindt als ik het graag maak, kun je [een koffie kopen] ({{link}})!\n\n💖 Simon",
+            "chrome-version": "Chrome Versie"
+        },
+        "invalid-dropdown-selection": "Selecteer een optie…",
+        "add-tags-placeholder": "Tags toevoegen…",
+        "general-settings-dialog": {
+            "none": "Geen",
+            "app-behavior": "App -gedrag",
+            "settings-window-color-scheme": "Instellingen Venster Kleurschema",
+            "hidden": "Verborgen",
+            "color": "Kleur",
+            "tray-icon-flavor-info": "U kunt er ook voor kiezen om de Ladepictogram volledig te verbergen.",
+            "white": "Wit",
+            "lazy-initialization": "Lazy initialisatie",
+            "menu-behavior": "Menugedrag",
+            "enable-marking-mode": "Schakel markeringsmodus in",
+            "enable-marking-mode-info": "Met de markeringsmodus ingeschakeld, kunt u items selecteren door de muis eroverheen te slepen.",
+            "enable-turbo-mode-info": "Met Turbo -modus ingeschakeld, kunt u gebaren uitvoeren, zolang u een modificatietoets zoals Shift of CTRL ingedrukt houdt.",
+            "move-pointer-to-menu-center": "Verplaats de aanwijzer naar het menucentrum",
+            "enable-gamepad-support": "Schakel Gamepad -ondersteuning in",
+            "right-mouse-button-selects-parent": "Rechter muisknop selecteert parent",
+            "enable-gamepad-support-info": "Indien aangevinkt, kunt u een verbonden gamepad gebruiken om het menu te besturen.",
+            "volume": "Volume",
+            "volume-info": "Het totale volume van het geluidsthema. Standaard is 0,5.",
+            "advanced-menu-options": "Geavanceerde menu -opties",
+            "title": "Algemene Instellingen",
+            "check-for-new-versions-info": "Indien ingeschakeld, toont Kando een melding wanneer een nieuwe versie beschikbaar is.",
+            "invisible-settings-button": "Onzichtbare instellingenknop",
+            "invisible-settings-button-info": "U kunt de knop nog steeds gebruiken, deze verschijnt wanneer u de muis erover verplaatst.",
+            "settings-button-position": "Instellingen Knop Positie",
+            "top-left": "Linksboven",
+            "bottom-right": "Rechtsonder",
+            "system": "Systeem",
+            "light": "Licht",
+            "transparent-dark": "Transparant Donker",
+            "transparent-system": "Transparant Systeem",
+            "sakura-light": "Sakura Licht",
+            "sakura-dark": "Sakura Donker",
+            "sakura-system": "Sakura Systeem",
+            "black": "Zwart",
+            "require-click-for-hover-mode": "Vereist klik voor de selecties van de hovermodus",
+            "menu-sounds": "Menugeluiden",
+            "sound-theme": "geluidsthema",
+            "check-for-new-versions": "Check op nieuwe versies",
+            "settings-window-color-scheme-info": "Als u 'Systeem' kiest, gebruikt het venster Instellingen hetzelfde kleurenschema als uw besturingssysteem.",
+            "message": "Alle instellingen van Kando worden opgeslagen in een JSON -bestand dat u ook kunt bewerken, delen of back -up kunnen maken. Klik op [hier] ({{link}}) om de map te openen waar het config.json -bestand wordt opgeslagen.",
+            "settings-window-flavor": "Instellingen venster smaak",
+            "tray-icon-flavor": "Ladepictogramsmaak",
+            "enable-turbo-mode": "Schakel Turbo -modus in",
+            "dark": "Donker",
+            "lazy-initialization-info": "Indien ingeschakeld, wordt het menu -venster alleen gemaakt wanneer het menu voor het eerst wordt geopend. Hierdoor wordt de eerste opening van het menu iets langzamer, maar het kan problemen voorkomen wanneer Kando te vroeg wordt gestart tijdens het login. Standaard is uitgeschakeld.",
+            "settings-button-position-info": "Kies de schermhoek waar de knop Instellingen wordt getoond.",
+            "top-right": "Rechtsboven",
+            "bottom-left": "Linksonder",
+            "transparent-light": "Transparant licht",
+            "settings-window-flavor-info": "Als u een transparante smaak kiest, moet u het instellingenvenster opnieuw opstarten om het effect toe te passen.",
+            "move-pointer-to-menu-center-info": "Indien aangevinkt, wordt de muisaanwijzer indien nodig naar het midden van een menu of submenu verplaatst. Dit kan het geval zijn als een menu te dicht bij de rand van het scherm wordt geopend of als een menu wordt geopend in gecentreerde modus.",
+            "sound-theme-info": "Een geluidsthema is een verzameling geluiden die worden gespeeld wanneer je met het menu communiceert.",
+            "require-click-for-hover-mode-info": "Indien ongecontroleerd, worden items onmiddellijk geselecteerd wanneer de muis over hen wordt verplaatst voor menu's met behulp van de hovermodus.",
+            "learn-how-to-add-sound-themes": "Leer hoe u nieuwe geluidsthema's toevoegt aan Kando [hier] ({{Link}})!",
+            "right-mouse-button-selects-parent-info": "Indien ongecontroleerd, sluit de juiste muisknop het menu in plaats daarvan.",
+            "advanced-menu-options-note": "Meestal kunt u deze instellingen op hun standaardwaarden achterlaten."
+        },
+        "not-bound": "Niet Gebonden",
+        "file-picker": {
+            "select-directory": "Selecteer een map",
+            "select-file": "Selecteer een bestand"
+        }
     }
-  }
 }
