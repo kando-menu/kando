@@ -8,7 +8,79 @@
             "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet.",
             "tip-3": "Gebruik {{app_name}} om de naam in te voegen van de app die gefocust was toen je het menu opende.",
             "tip-4": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
-            "tip-5": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend."
+            "tip-5": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend.",
+            "description": "Lanceer apps of scripts.",
+            "placeholder": "Voeg een commando in…",
+            "tip-6": "Klik [hier]({{Link}}) om te leren hoe u de commando's kunt vinden voor het starten van uw apps.",
+            "isolated": "Geïsoleerd runnen",
+            "detached": "Ontkoppeld runnen",
+            "detached-info": "Dit zal het commando van Kando ontbinden, dus het zal blijven vluchten zelfs als Kando gesloten is. Dit ontbinden kan problemen oplossen met commando's die niet goed beginnen.",
+            "isolated-info": "Dit zal het commando runnen in een schone omgeving, wat betekent dat het geen variabelen van Kando zal erven. Dit kan helpen met bevelen die niet goed starten."
+        },
+        "uri": {
+            "placeholder": "Voeg een URI in…",
+            "name": "URI openen",
+            "description": "Opent websites en meer.",
+            "tip-3": "U kunt dit URI-itemtype gebruiken om een mailto: link te openen.",
+            "tip-1": "U kunt het URI -itemtype gebruiken om een website te openen met behulp van het http:// protocol.",
+            "tip-2": "U kunt dit gebruiken om aangepaste URI -schema's zoals Slack:// of zoommtg:// aan te roepen.",
+            "tip-4": "Gebruik {{app_Name}} om de naam van de applicatie in te voegen die was gefocust toen u het menu opende.",
+            "tip-5": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
+            "tip-6": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend."
+        },
+        "file": {
+            "name": "Bestand openen",
+            "tip-1": "U kunt dit item-type gebruiken om bestanden of folders te openen.",
+            "description": "Opent een bestand of folder.",
+            "placeholder": "Selecteer een bestand of folder…"
+        },
+        "hotkey": {
+            "description": "Klikt op een knopcombinatie.",
+            "tip-2": "Als u een sneltoets niet kunt opnemen omdat deze door het systeem gebruikt wordt, probeem de naam direct te typen.",
+            "recording-placeholder": "Type een sneltoets…",
+            "tip-3": "Klik op [deze link]({{link}}) om alle geldige toetsnamen te zien.",
+            "tip-1": "Bij het openen van een sneltoets hoef je niet op alle toetsen tegelijk te drukken. U kunt deze achter elkaar indrukken.",
+            "name": "Hotkey simuleren",
+            "hotkey": "Sneltoets",
+            "hotkey-info": "Deze sneltoets wordt geactiveerd wanneer het item is geselecteerd. Bij het opnemen hoeft u niet op alle toetsen tegelijk te drukken, u kunt ze ook na de ander drukken. Dit is handig als een sneltoets al gebonden is aan een globale actie!"
+        },
+        "macro": {
+            "name": "Macro uitvoeren",
+            "tip-2": "Je kunt de macro ook handmatig bewerken. Dit is nuttig als je de timing van de toets wilt aanpassen.",
+            "description": "Typt een toetsenbord macro.",
+            "placeholder": "Druk op de opneemknop en te beginnen met opnemen!",
+            "recording-placeholder": "Druk op een toets…",
+            "tip-1": "Per standaard voegt Kando een vertraging van 10 ms toe vóór elke toetsgebeurtenis. U kunt dit wijzigen met de eigenschap \"Vertraging\"."
+        },
+        "submenu": {
+            "name": "Submenu",
+            "tip-3": "Submenu's kunnen worden gebruikt om complexe menustructuren te maken.",
+            "description": "Bevat andere menu-items.",
+            "tip-1": "Submenu's kunnen gebruikt worden om items te groeperen.",
+            "tip-2": "Je kunt ook submenu's nesten binnen de submenu's.",
+            "tip-5": "U kunt de kleine slotpictogrammen in de preview gebruiken om de positie van een item in het menu te repareren.",
+            "tip-6": "U kunt items opnieuw ordenen door ze in de preview te slepen.",
+            "tip-7": "U kunt een menu of menu-item verwijderen met het afvalpictogram onderaan.",
+            "tip-4": "Vermijdt het toevoegen van meer dan twaalf items aan een submenu. Acht is een goed nummer."
+        },
+        "text": {
+            "name": "Tekst plakken",
+            "description": "Voegt de gegeven tekst in.",
+            "placeholder": "Voeg een tekst in…",
+            "tip-1": "Deze actie gebruikt uw klembord om de tekst te plakken. Na het gebruik van de actie bevat het klembord de tekst."
+        },
+        "settings": {
+            "name": "Instellingen openen",
+            "tip-1": "Dit item-type opent het Kando-instellingen venster.",
+            "description": "Opent het Kando-instellingen venster."
+        },
+        "common": {
+            "delayed-option": "Wacht op vervagende animatie",
+            "delayed-option-info": "Handig als de actie zich richt op een venster dat moet worden gefocust."
+        },
+        "redirect": {
+            "name": "Omleiden",
+            "description": "Opent een ander menu."
         }
     },
     "settings": {
@@ -17,7 +89,7 @@
             "file-example": "bestand: URI voorbeeld:",
             "url-example": "URL voorbeeld:",
             "hint": "Leer [hier] ({{Link}}) hoe u uw eigen pictogramthema's kunt toevoegen of maken.",
-            "base64-hint": "Base64 gecodeerde pictogrammen bieden een gemakkelijke manier om elk soort pictogram in uw menu's op te nemen. U kunt een service gebruiken zoals [www.base64-image.de] ({{Link}}) om elke afbeelding om te zetten in een Base64-gecodeerde tekenreeks. Dit werkt zelfs voor geanimeerde GIF's!",
+            "base64-hint": "vBase64 gecodeerde pictogrammen bieden een gemakkelijke manier om elk soort pictogram in uw menu's op te nemen. U kunt een service gebruiken zoals [www.base64-image.de] ({{link}}) om elke afbeelding om te zetten in een Base64-gecodeerde tekenreeks. Dit werkt zelfs voor geanimeerde GIF's!",
             "search-placeholder": "Zoekpictogrammen…"
         },
         "about-dialog": {
@@ -88,12 +160,235 @@
             "require-click-for-hover-mode-info": "Indien ongecontroleerd, worden items onmiddellijk geselecteerd wanneer de muis over hen wordt verplaatst voor menu's met behulp van de hovermodus.",
             "learn-how-to-add-sound-themes": "Leer hoe u nieuwe geluidsthema's toevoegt aan Kando [hier] ({{Link}})!",
             "right-mouse-button-selects-parent-info": "Indien ongecontroleerd, sluit de juiste muisknop het menu in plaats daarvan.",
-            "advanced-menu-options-note": "Meestal kunt u deze instellingen op hun standaardwaarden achterlaten."
+            "advanced-menu-options-note": "Meestal kunt u deze instellingen op hun standaardwaarden achterlaten.",
+            "reload-note": "Als je het menuthema herlaadt, zal CSS veranderingen worden aangevraagd zelfs als er momenteel een menu wordt getoond. Voor veranderingen aan het thema. Json dossier, je moet het menu heropenen.",
+            "menu-window-dev-tools": "Inspect menu",
+            "settings-window-dev-tools": "Inspect instellingen",
+            "center-click-zone-radius": "Middenklik op Zone Radius",
+            "minimum-submenu-distance": "Minimale submenu -afstand",
+            "minimum-gesture-length-info": "Rechte bewegingen moeten op zijn minst zo lang zijn om een selectie te activeren. Standaard is 150 px.",
+            "movement-threshold": "Bewegingsdrempel",
+            "movement-threshold-info": "Kleinere muisbewegingen worden niet overwogen in de markerings- of turbododus. Standaard is 15px.",
+            "minimum-gesture-angle-info": "Kleinere afwijkingen van rechte bewegingen zullen geen selecties activeren. Standaard is 20 °.",
+            "gesture-jitter-threshold": "Gebaar Jitter Threshold",
+            "gesture-pause-timeout": "Gebaar Pause Timeout",
+            "developer-options": "Developer Opties",
+            "fixed-stroke-length": "Vaste slaglengte",
+            "center-click-zone-radius-info": "De grootte van het gebied in het midden van het menu die ofwel sluit of een niveau navigeert wanneer geklikt. Standaard is 50 px.",
+            "minimum-submenu-distance-info": "Als een submenu dicht bij het bovenliggende menu wordt geopend, wordt de ouder naar deze afstand verplaatst. Standaard is 150 px.",
+            "minimum-gesture-angle": "Minimale gebaarhoek",
+            "reload-menu-theme": "Herlaad het menu -thema",
+            "reload-sound-theme": "Herlaad het geluidsthema",
+            "fixed-stroke-length-info": "Meestal worden dingen geselecteerd als je de beweging stopt of een beurt maakt. Als je dit op een waarde groter dan 0 zet, zal dit gedrag veranderen: Nu worden er alleen dingen geselecteerd als je een item zo ver van het centrum sleept. Default is 0px.",
+            "gesture-jitter-threshold-info": "Kleinere bewegingen zullen niet worden beschouwd in het gebaar. Default is 10px.",
+            "minimum-gesture-length": "Minimale gebaarlengte",
+            "gesture-pause-timeout-info": "Stop je gebaar voor zolang om een selectie te veroorzaken. Default is 100m.",
+            "dev-tools-note": "Kando gebruikt twee vensters: Een voor het menu en een voor de instellingen. Je kunt de ontwikkelingsmiddelen openen om beide ramen apart te inspecteren."
         },
         "not-bound": "Niet Gebonden",
         "file-picker": {
             "select-directory": "Selecteer een map",
             "select-file": "Selecteer een bestand"
+        },
+        "introduction-dialog": {
+            "slide1-text": "Veeg door deze dia's om te leren wat Kando voor u kan doen! U kunt de hoofdstuktekens aan de linkerkant gebruiken om snel naar een specifiek deel van de inleiding te springen.",
+            "slide10-text": "** Wacht niet tot de animaties zijn voltooid! ** Zigzag je een weg door het menu. Dit is de snelste manier om items te selecteren!",
+            "slide1-title": "Kando biedt een unieke en efficiënte manier om met uw computer te communiceren.",
+            "slide2-title": "Open het menu!",
+            "slide2-text-no-shortcuts": "Als u Kando voor het eerst hebt gelanceerd, moet u [mogelijk enkele extra stappen op Linux uitvoeren om de Global Hotkeys te laten werken] ({{Link}}). Zodra dit werkt, kunt u een menu sluiten met de Escape -toets of met uw rechtermuisknop.",
+            "slide2-text-standard": "Als je Kando voor het eerst hebt gelanceerd, kun je het voorbeeld menu openen met Ctrl +Space. Sluit het opnieuw met de Escape knop of met je rechter muisknop overal op het scherm.",
+            "slide6-text": "Zo kun je snel de menustructuur verkennen.",
+            "slide5-hint": "Klikken overal om een niveau te bereiken.",
+            "slide5-text": "Om ** terug te navigeren **, klik je in de wig van de ouder of in het midden van het menu.",
+            "slide9-text": "Als u ** een toets houdt op ** (zoals _CTRL_, _SHIFT_ of _ALT_) na het openen van het menu, kunt u selecties uitvoeren door de aanwijzer te verplaatsen. Het is niet nodig om te klikken of te slepen.",
+            "slide11-text": "** Wees niet bang voor accidentele selecties! ** Acties worden pas uitgevoerd zodra u uw muisknop in de markeringsmodus of een toetsenbordtoets in de turbododus loslaat. Gebruik dit om het menu te verkennen!",
+            "slide12-title": "Er is meer!",
+            "chapter1": "Aan de slag",
+            "slide13-text": "Als u op enig moment hulp nodig hebt, kunt u zich aansluiten bij onze [Discord Server] ({{Link1}}) of bekijk de [documentatie] ({{Link2}})!",
+            "chapter4": "Volgende stap",
+            "chapter2": "Marking Modus",
+            "chapter3": "Turbo Modus",
+            "chapter5": "Hulp Krijgen",
+            "slide3-hint2": "Klik overal om het item te kiezen.",
+            "slide4-text": "Een submenu zal ** altijd ** openen bij uw muisaanwijzer. U ** hoeft niet te wachten tot de animatie is voltooid **. Vertrouw op uw spiergeheugen en ga verder met uw selectie!",
+            "slide7-title": "Sneller worden: markeersmodus",
+            "slide7-text": "Klik en sleep een item om de markeermodus in te voeren. ** Als u de aanwijzerbeweging pauzeert of een beurt maakt, wordt het momenteel geslepen submenu geopend! ** Onthoud het pad naar een item en teken het met expressieve zigzagbewegingen.",
+            "slide3-hint1": "Je kunt hier ook klikken om het menu te sluiten.",
+            "slide9-title": "Wees bliksemsnel: Turbo -modus",
+            "title": "Welkom in Kando!",
+            "show-again": "Toon deze dialog nog eens",
+            "slide3-text": "In Kando is ** je hele scherm een klik-target **! U hoeft niet te streven naar de pictogrammen, u kunt ergens in de wig van een item klikken. Dit maakt het veel efficiënter om items te selecteren.",
+            "slide8-text": "** Het menu reageert op uw muisbewegingen! ** Een submenu opent wanneer u wilt dat het opent. Met wat oefening kunt u items selecteren zonder zelfs maar naar het menu te kijken.",
+            "slide12-text": "Kando is zeer aanpasbaar. U kunt het gebruiken om applicaties, bestanden te openen, toetsenbordmacro's en vele andere dingen uit te voeren. U kunt [de menustijl wijzigen] ({{Link1}}), [icon thema's toevoegen] ({{Link2}}) en zelfs [gebruik geluiden] ({{link3}}) in uw menu's!"
+        },
+        "menu-themes-dialog": {
+            "accent-colors-info": "Elk thema kan een andere set accent kleuren hebben.",
+            "no-accent-colors": "Dit thema ondersteunt geen accent kleuren.",
+            "fade-in-time": "Fade-in tijd",
+            "fade-in-time-info": "De tijd die nodig is voor het menu om binnen te vallen. Standaard is 150m.",
+            "light-dark-mode-info": "Indien ingeschakeld, kunt u een ander thema en kleurenset kiezen als uw systeem zich in een lichte of donkere kleurmodus bevindt.",
+            "get-themes-online": "Krijg thema's online",
+            "create-your-own-themes": "Creëer je eigen thema",
+            "open-theme-directory": "Open thema folder",
+            "author": "door {{author}}",
+            "fade-out-time-info": "De tijd die nodig is voor het menu om te verdwijnen. Standaard is 200ms.",
+            "fade-out-time": "Fade-out tijd",
+            "accent-colors": "Accent kleuren",
+            "dark": "Donkere modus",
+            "light": "Licht modus",
+            "title": "Menu -thema's",
+            "reset-color-picker": "Reset naar standaardwaarden",
+            "menu-scale-info": "Gebruik dit om de grootte van je menu's te verhogen. Standaard is 1.0.",
+            "light-dark-mode": "Schakel licht/donkere modus in",
+            "menu-scale": "Menu schaal"
+        },
+        "add-collection-tooltip": "Maak een nieuwe menu -collectie. Gebruik collecties om uw menu's te groeperen door tags!",
+        "create-menu-button": "Nieuw menu",
+        "undo": "Ongedaan maken",
+        "all-menus": "Alle Menu's",
+        "redo": "Opnieuw doen",
+        "search-menus-placeholder": "Zoek menu's…",
+        "add-menu-items": "Menu-items toevoegen",
+        "menu-behavior": "Menugedrag",
+        "centered-mode": "Gecentreerde modus",
+        "menu-conditions": "Menu -omstandigheden",
+        "menu-behavior-info": "Voordat u deze opties inschakelt, raden we aan te leren waarom we het standaardgedrag van Kando leuk vinden [hier] ({{Link}})!",
+        "menu-conditions-info": "Je kunt meerdere menu's verbinden aan dezelfde shortcut en dan kiezen onder welke voorwaarden elk menu moet laten zien.",
+        "app-condition": "Beperking tot specifieke apps",
+        "app-condition-info": "Toon het menu alleen als een specifieke applicatie is gericht. Dit ondersteunt reguliere uitdrukkingen zoals /firefox | chrome/i.",
+        "app-condition-placeholder": "App naam",
+        "screen-area-picker": {
+            "title": "Kies een Schermgebied",
+            "valid": "Geweldig! Je hebt een geldig gebied gekozen.",
+            "invalid": "Zorg ervoor dat de linkerbovenhoek boven en links in de rechteronderhoek.",
+            "bottom-right": "Sleep dit naar de hoek rechtsonder van uw gebied.",
+            "confirm": "Gebruik dit gebied",
+            "top-left": "Sleep dit naar de hoek linksboven van uw gebied.",
+            "top-left-value": "Links: {{x}}, Bovenkant: {{y}}",
+            "bottom-right-value": "Rechts: {{x}}, Onderkant: {{y}}"
+        },
+        "area-condition-bottom-placeholder": "Onderkant",
+        "area-condition-tooltip": "Selecteer een schermgebied",
+        "window-picker-dialog": {
+            "countdown_one": "Selecteren in {{count}} seconde…",
+            "countdown_other": "Selecteren in {{count}} seconden…",
+            "pick-window-title-title": "Selecteer een venstertitel",
+            "confirm": "Gebruik deze waarde",
+            "result": "U heeft \"{{name}}\" geselecteerd.",
+            "instructions": "Druk op de onderstaande knop en concentreer het doelvenster binnen de komende vijf seconden.",
+            "restart-countdown": "Begin opnieuw met aftellen",
+            "pick-app-name-title": "Selecteer een toepassingsnaam",
+            "start-countdown": "Begin met aftellen"
+        },
+        "no-menus": "Je hebt geen menu's.",
+        "window-condition-info": "Toon het menu alleen als de titel van het gefocuste venster een bepaalde tekst bevat. Dit ondersteunt reguliere uitdrukkingen zoals /YouTube | Vimeo /I.",
+        "window-condition-tooltip": "Selecteer een venster",
+        "empty-collection-note": "Bewerk de bovenstaande tags of voeg een volledig nieuw menu toe aan deze verzameling met de onderstaande knop.",
+        "area-condition": "Beperk tot een specifiek schermgebied",
+        "area-condition-left-placeholder": "Links",
+        "window-condition": "Beperking tot specifieke venstertitels",
+        "app-condition-tooltip": "Selecteer een app",
+        "window-condition-placeholder": "Venstertitel",
+        "area-condition-right-placeholder": "Rechts",
+        "duplicate-menu": "Dupliceer menu",
+        "shortcut-recording": "Klik op een snelkoppeling…",
+        "delete-menu": "Verwijder menu",
+        "tags": "Tags",
+        "tags-info": "Tags kunnen gebruikt worden om menu's in verzamelingen te groeperen.",
+        "duplicate-menu-item": "Dupliceer menu item",
+        "shortcut-id-label": "Snelkoppeling-ID",
+        "shortcut-label": "Snelkoppeling",
+        "delete-menu-item": "Verwijder menu item",
+        "anchored-mode": "Verankerde modus",
+        "hover-mode": "Hover -modus",
+        "hover-mode-info": "Alleen voor power users! Selecteer items door eroverheen te zweven.",
+        "area-condition-top-placeholder": "Bovenkant",
+        "shortcut-info": "Deze snelkoppeling opent het menu. Het moet één normale sleutel bevatten en een willekeurig aantal modificatoren zoals CTRL, ALT of Shift. Bij het opnemen hoeft u niet op alle toetsen tegelijk te drukken, u kunt ze ook na de ander drukken. Dit is handig als een snelkoppeling al gebonden is aan een ander menu!",
+        "centered-mode-info": "Open het menu in het scherm in plaats van bij de aanwijzer.",
+        "area-condition-info": "Toon het menu alleen als de aanwijzer zich in een bepaald gebied op het scherm bevindt. Het gebied wordt gegeven in pixels ten opzichte van de linkerbovenhoek van uw hoofddisplay. Als u een veld leeg laat, is het gebied niet in die richting.",
+        "empty-collection": "Deze collectie is leeg.",
+        "no-matching-menus": "Geen menu's gevonden.",
+        "no-menus-note": "Als u de laatste per ongeluk hebt verwijderd, kunt u deze herstellen met de knop UNDO.",
+        "anchored-mode-info": "Open submenus op dezelfde positie als het bovenliggende menu. Als u dit controleert, wordt de markeringsmodus en turbododus uitgeschakeld.",
+        "no-matching-menus-note": "Misschien een andere zoekterm proberen?",
+        "cancel": "Afbreken"
+    },
+    "main": {
+        "failed-to-start-header": "Kando kon niet worden gestart",
+        "show-settings": "Laat instellingen zien",
+        "un-inhibit-shortcuts": "Snelkoppelingen opnieuw inschakelen",
+        "invalid-link-header": "Ongeldige link",
+        "new-version-notification-header": "Een nieuwe versie van Kando is beschikbaar!",
+        "new-version-notification-body": "Verkrijg het van {{link}}.",
+        "inhibit-shortcuts": "Tijdelijk alle snelkoppelingen uitschakelen",
+        "quit": "Afsluiten",
+        "invalid-link-message": "De diepe schakel kon niet worden ontleed."
+    },
+    "example-menu": {
+        "name": "Voorbeeld menu",
+        "bookmarks": {
+            "home": "Thuis",
+            "submenu": "Bladwijzers",
+            "downloads": "Download",
+            "videos": "Videos",
+            "pictures": "Foto's",
+            "music": "Muziek",
+            "documents": "Documenten",
+            "desktop": "Desktop"
+        },
+        "apps": {
+            "terminal": "Terminal",
+            "file-browser": "Verkenner",
+            "finder": "Finder",
+            "paint": "Paint",
+            "email": "E-Mail",
+            "submenu": "Apps",
+            "safari": "Safari",
+            "web-browser": "Webbrowser",
+            "apple-music": "Muziek",
+            "gimp": "GIMP"
+        },
+        "next-workspace": "Volgende werkruimte",
+        "clipboard": {
+            "submenu": "Klembord",
+            "copy": "Kopiëren",
+            "cut": "Knippen",
+            "paste": "Plakken"
+        },
+        "web-links": {
+            "submenu": "Weblinks",
+            "kando-on-kofi": "Kando op Ko-fi",
+            "google": "Google",
+            "kando-on-github": "Kando op GitHub",
+            "kando-on-youtube": "Kando op YouTube",
+            "kando-on-discord": "Kando op Discord"
+        },
+        "audio": {
+            "submenu": "Geluid",
+            "play-pause": "Speel / Pause",
+            "mute": "Dempen",
+            "previous-track": "Vorige nummer",
+            "next-track": "Volgende nummer"
+        },
+        "previous-workspace": "Vorige werkruimte",
+        "windows": {
+            "submenu": "Windows",
+            "tile-right": "Tegel Rechts",
+            "close-window": "Venster sluiten",
+            "mission-control": "Missie Controle",
+            "tile-left": "Tegel Links",
+            "toggle-maximize": "Schakel maximaliseren"
+        }
+    },
+    "backends": {
+        "kde-wayland": {
+            "shortcut-info": "Kando kan geen rechtstreeks binden van globale snelkoppelingen op KDE/Wayland. Geef in plaats daarvan hier een snelkoppel -ID op en zoek deze vervolgens in het KWIN -gedeelte van de globale snelkoppelingen in de systeeminstellingen van uw KDE. Daar kunt u de snelkoppeling toewijzen die dit menu opent."
+        },
+        "hyprland": {
+            "shortcut-info": "Kando kan geen rechtstreeks binden van globale snelkoppelingen op Hyprland. Geef in plaats daarvan een snelkoppelings-ID hier op en bind een snelkoppeling in uw hyprland.conf met zoiets als \"bind = ctrl, ruimte, globaal, kando: voorbeeld-menu\". Vervang Voorbeeld-mannen door de hier gekozen ID."
+        },
+        "gnome": {
+            "error": "Kon geen verbinding maken met Kando Integration GNOME Shell Extension. U kunt het hier krijgen: {{link}}"
         }
     }
 }
