@@ -68,7 +68,7 @@
     },
     "main": {
         "failed-to-start-header": "Kando não conseguiu se iniciar",
-        "inhibit-shortcuts": "Desabilite os atalhos temporariamente",
+        "inhibit-shortcuts": "Desabilitar os atalhos temporariamente",
         "new-version-notification-header": "Uma nova versão do Kando está disponível!",
         "quit": "Sair",
         "show-settings": "Mostrar configurações",
