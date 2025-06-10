@@ -71,7 +71,7 @@
         "inhibit-shortcuts": "Désactiver temporairement tous les raccourcis clavier",
         "new-version-notification-header": "Une nouvelle version de Kando est disponible !",
         "quit": "Quitter",
-        "show-settings": "Afficher les configurations",
+        "show-settings": "Afficher les paramètres",
         "un-inhibit-shortcuts": "Réactiver les raccourcis clavier",
         "invalid-link-message": "Le lien profond n'a pas pu être analysé.",
         "new-version-notification-body": "Obtenez-la depuis {{link}}.",
@@ -89,13 +89,17 @@
             "tip-4": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était active lorsque vous avez ouvert le menu.",
             "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
             "placeholder": "Insérer une commande…",
-            "tip-6": "Cliquez [ici]({{link}}) pour savoir comment trouver les commandes pour lancer vos applications."
+            "tip-6": "Cliquez [ici]({{link}}) pour savoir comment trouver les commandes pour lancer vos applications.",
+            "isolated": "Exécution isolée",
+            "isolated-info": "La commande sera exécutée dans un environnement vierge, c'est-à-dire qu'elle n'héritera d'aucune variable d'environnement de Kando. Cela peut aider les commandes qui ne démarrent pas correctement.",
+            "detached": "Exécution détachée",
+            "detached-info": "Cela déconnectera la commande de Kando, elle continuera donc à s'exécuter même si Kando est fermé. Ceci peut résoudre des problèmes avec des commandes qui ne démarrent pas correctement."
         },
         "file": {
             "description": "Ouvre un fichier ou dossier.",
             "file": "Chemin d'accès au fichier",
             "name": "Ouvrir un fichier",
-            "tip-1": "Tu peux utiliser ce type d'élément pour ouvrir des fichiers ou dossiers.",
+            "tip-1": "Utilisez ce type d'élément pour ouvrir des fichiers ou dossiers.",
             "placeholder": "Choisir un fichier ou un dossier…"
         },
         "hotkey": {
@@ -111,18 +115,18 @@
         "macro": {
             "description": "Exécute une macro clavier.",
             "name": "Simuler une Macro",
-            "placeholder": "Cliquez sur le bouton \"enregistrer\" pour commencer à enregistrer !",
-            "recording-placeholder": "Appuyez sur les touches…",
+            "placeholder": "Cliquez sur le rond pour commencer à enregistrer !",
+            "recording-placeholder": "Appuyez sur un touche…",
             "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touche. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\".",
             "tip-2": "Vous pouvez également modifier la macro à la main. C'est utile si vous souhaitez ajuster le timing des touches."
         },
         "redirect": {
             "description": "Ouvre un autre menu.",
-            "name": "Renvoie"
+            "name": "Rediriger"
         },
         "settings": {
             "description": "Ouvre la fenêtre de configuration de Kando.",
-            "name": "Ouvrir la Configuration",
+            "name": "Ouvrir les paramètres",
             "tip-1": "Ce type d'élément ouvre la fenêtre de configuration de Kando."
         },
         "submenu": {
@@ -134,8 +138,8 @@
             "tip-1": "Les sous-menus peuvent être utilisés pour regrouper des éléments.",
             "tip-2": "Vous pouvez aussi placer des sous-menus à l'intérieur de sous-menus.",
             "tip-3": "Les sous-menus peuvent être utilisés pour créer des structures de menu complexes.",
-            "tip-4": "Il est préférable d'éviter plus de douze éléments par sous-menu. Huit est un bon compromis.",
-            "tip-5": "Il est possible d'utiliser le petit cadenas dans l'aperçu pour fixer la position d'un élément dans le menu.",
+            "tip-4": "Utiliser plus de douze éléments par sous-menu est déconseillé. Huit est un bon compromis.",
+            "tip-5": "Utilisez le petit cadenas dans l'aperçu pour fixer la position d'un élément dans le menu.",
             "tip-6": "Vous pouvez réorganiser les éléments en les déplaçant dans l'aperçu.",
             "tip-7": "Vous pouvez supprimer un menu ou un élément de menu à l'aide de l'icône corbeille située en dessous."
         },
@@ -158,7 +162,7 @@
             "placeholder": "Insérez un URI…"
         },
         "common": {
-            "delayed-option": "S'exécute après la fermeture du menu",
+            "delayed-option": "S'exécute après l'animation de sortie",
             "delayed-option-info": "Utile si l'action cible une fenêtre qui doit être active."
         }
     },
@@ -327,7 +331,7 @@
             "no-accent-colors": "Ce thème ne prend pas en charge les couleurs d'accentuation.",
             "menu-scale": "Mise à l'échelle",
             "fade-out-time-info": "Temps nécessaire pour que le menu s'affiche en fondu sortant. La valeur par défaut est de 200 ms.",
-            "menu-scale-info": "Facteur d'échelle global pour le menu. Vous pouvez également l'ajuster avec Ctrl+Plus, Ctrl+Moins et Ctrl+0 lorsqu'un menu est ouvert.",
+            "menu-scale-info": "Utilisez ceci pour augmenter ou diminuer la taille de tes menus. La valeur par défaut est 1.0.",
             "get-themes-online": "Obtenir des thèmes en ligne",
             "fade-in-time-info": "Temps nécessaire pour que le menu s'affiche en fondu entrant. La valeur par défaut est de 150 ms."
         },
@@ -365,7 +369,7 @@
         },
         "invalid-dropdown-selection": "Sélectionner une option…",
         "add-tags-placeholder": "Ajouter des balises…",
-        "anchored-mode-info": "Ouvrir les sous-menus à la même position que le menu parent. Le fait de cocher cette case désactive le Mode Marquage.",
+        "anchored-mode-info": "Ouvrir les sous-menus à la même position que le menu parent. Le fait de cocher cette case désactive le Mode Marquage et Turbo.",
         "app-condition-info": "Afficher le menu uniquement si une application spécifique est sélectionnée. Cela permet d'utiliser des expressions régulières telles que /firefox|chrome/i.",
         "app-condition-placeholder": "Nom de l'application",
         "app-condition-tooltip": "Sélectionner un application",
@@ -387,6 +391,12 @@
         "file-picker": {
             "select-directory": "Sélectionner un répertoire",
             "select-file": "Sélectionner un fichier"
-        }
+        },
+        "no-menus-note": "Si vous avez supprimé le dernier par accident, restaurez-le avec le raccourci d'annulation.",
+        "no-matching-menus": "Aucun menu trouvé.",
+        "empty-collection": "Cette collection est vide.",
+        "no-menus": "Vous n'avez aucun menu.",
+        "empty-collection-note": "Changez les balises ou ajoutez un nouveau menu à cette collection en cliquant sur le bouton ci-dessous.",
+        "no-matching-menus-note": "Essayez peut-être un autre mot de clé ?"
     }
 }
