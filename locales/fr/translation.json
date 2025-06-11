@@ -254,7 +254,7 @@
             "volume": "Volume",
             "volume-info": "Volume général du thème sonore. La valeur par défaut est 0,5.",
             "advanced-menu-options-note": "En général, vous pouvez laisser ces réglages à leur valeur par défaut.",
-            "advanced-menu-options": "Menu des Options Avancées",
+            "advanced-menu-options": "Options Avancées",
             "center-click-zone-radius-info": "La taille de la zone au milieu du menu qui le ferme ou avance d'un niveau lorsqu'on clique dessus. La valeur par défaut est de 50px.",
             "minimum-submenu-distance-info": "Si un sous-menu est ouvert à proximité du menu parent, ce dernier sera éloigné de cette distance. La valeur par défaut est de 150px.",
             "minimum-submenu-distance": "Distance minimum du sous-menu",
