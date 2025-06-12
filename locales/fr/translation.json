@@ -367,7 +367,7 @@
             "start-countdown": "Démarrer le compte à rebours",
             "confirm": "Utiliser cette valeur"
         },
-        "invalid-dropdown-selection": "Sélectionner une option…",
+        "invalid-dropdown-selection": "sélectionnez une option…",
         "add-tags-placeholder": "Ajouter des balises…",
         "anchored-mode-info": "Ouvrir les sous-menus à la même position que le menu parent. Le fait de cocher cette case désactive le Mode Marquage et Turbo.",
         "app-condition-info": "Afficher le menu uniquement si une application spécifique est sélectionnée. Cela permet d'utiliser des expressions régulières telles que /firefox|chrome/i.",
@@ -392,10 +392,10 @@
             "select-directory": "Sélectionner un répertoire",
             "select-file": "Sélectionner un fichier"
         },
-        "no-menus-note": "Si vous avez supprimé le dernier par accident, restaurez-le avec le raccourci d'annulation.",
+        "no-menus-note": "Si le dernier menu est supprimé par accident, il peut être restoré avec le bouton \"undo\".",
         "no-matching-menus": "Aucun menu trouvé.",
         "empty-collection": "Cette collection est vide.",
-        "no-menus": "Vous n'avez aucun menu.",
+        "no-menus": "Il n'y a aucun menu.",
         "empty-collection-note": "Changez les balises ou ajoutez un nouveau menu à cette collection en cliquant sur le bouton ci-dessous.",
         "no-matching-menus-note": "Essayez peut-être un autre mot de clé ?"
     }
