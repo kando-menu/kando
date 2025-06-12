@@ -9,8 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import { native } from './native';
-import { Backend, Shortcut, IWMInfo } from '../../backend';
-import { IBackendInfo, IKeySequence } from '../../../../common';
+import { Backend } from '../../backend';
+import { IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 
 /**
@@ -21,7 +21,7 @@ import { mapKeys } from '../../../../common/key-codes';
  * - Moving the mouse pointer using the wlr-virtual-pointer-unstable-v1 protocol.
  * - Sending key input using the virtual-keyboard-unstable-v1 protocol.
  */
-export abstract class WLRBackend implements Backend {
+export abstract class WLRBackend extends Backend {
   /**
    * Moves the pointer by the given amount using the native module which uses the
    * wlr-virtual-pointer-unstable-v1 Wayland protocol.
@@ -61,13 +61,4 @@ export abstract class WLRBackend implements Backend {
       native.simulateKey(keyCodes[i], keys[i].down);
     }
   }
-
-  // These methods are abstract and need to be implemented by subclasses. See the docs
-  // of the methods in the Backend interface for more information.
-  abstract init(): Promise<void>;
-  abstract getBackendInfo(): IBackendInfo;
-  abstract getWMInfo(): Promise<IWMInfo>;
-  abstract bindShortcut(shortcut: Shortcut): Promise<void>;
-  abstract unbindShortcut(trigger: string): Promise<void>;
-  abstract unbindAllShortcuts(): Promise<void>;
 }

@@ -99,6 +99,14 @@ export class KandoApp {
 
     await this.backend.init();
 
+    this.backend.on('shortcutPressed', (trigger) => {
+      this.showMenu({ trigger });
+
+      // We use the opportunity to check for updates. If an update is available, we show
+      // a notification to the user. This notification is only shown once per session.
+      this.updateChecker.checkForUpdates();
+    });
+
     // We load the settings from the user's home directory. If the settings file does not
     // exist, it will be created with the default values. The only special setting is the
     // settingsWindowFlavor setting which is set to transparent only if the backend
@@ -239,7 +247,7 @@ export class KandoApp {
   /** This is called when the app is closed. It will unbind all shortcuts. */
   public async quit() {
     if (this.backend != null) {
-      await this.backend.unbindAllShortcuts();
+      await this.backend.bindShortcuts([]);
     }
 
     this.generalSettings.close();
@@ -285,6 +293,11 @@ export class KandoApp {
   /** @returns True if the settings dialog is currently visible. */
   public isSettingsDialogVisible() {
     return this.settingsWindow?.isVisible();
+  }
+
+  /** @returns True if the shortcuts are currently inhibited. */
+  public areShortcutsInhibited() {
+    return this.inhibitShortcuts;
   }
 
   /**
@@ -747,7 +760,7 @@ export class KandoApp {
         label: i18next.t('main.un-inhibit-shortcuts'),
         click: () => {
           this.inhibitShortcuts = false;
-          this.bindShortcuts();
+          this.backend.inhibitShortcuts([]);
           this.updateTrayMenu();
         },
       });
@@ -756,7 +769,7 @@ export class KandoApp {
         label: i18next.t('main.inhibit-shortcuts'),
         click: () => {
           this.inhibitShortcuts = true;
-          this.backend.unbindAllShortcuts();
+          this.backend.inhibitAllShortcuts();
           this.updateTrayMenu();
         },
       });
@@ -786,44 +799,23 @@ export class KandoApp {
 
     this.bindingShortcuts = true;
 
-    // First, we unbind all shortcuts.
-    await this.backend.unbindAllShortcuts();
-
-    // Then, we collect all unique shortcuts and the corresponding menus.
-    const triggers = new Map<string, DeepReadonly<IMenu>[]>();
-    for (const menu of this.menuSettings.get('menus')) {
-      const trigger = this.backend.getBackendInfo().supportsShortcuts
+    // First, we collect all shortcuts / shortcut IDs of all menus.
+    let shortcuts = this.menuSettings.get('menus').map((menu) => {
+      const shortcut = this.backend.getBackendInfo().supportsShortcuts
         ? menu.shortcut
         : menu.shortcutID;
 
-      if (trigger) {
-        if (!triggers.has(trigger)) {
-          triggers.set(trigger, []);
-        }
-        triggers.get(trigger).push(menu);
-      }
-    }
+      return shortcut;
+    });
 
-    // Finally, we bind the shortcuts. If there are multiple menus with the same
-    // shortcut, the shortcut will open the first menu for now.
-    for (const [trigger] of triggers) {
-      try {
-        await this.backend.bindShortcut({
-          trigger,
-          action: () => {
-            this.showMenu({ trigger: trigger });
+    // Make them unique.
+    shortcuts = Array.from(new Set(shortcuts)).filter((trigger) => trigger !== '');
 
-            // We use the opportunity to check for updates. If an update is available, we show
-            // a notification to the user. This notification is only shown once per app start.
-            this.updateChecker.checkForUpdates();
-          },
-        });
-      } catch (error) {
-        Notification.showError(
-          'Failed to bind shortcut ' + trigger,
-          error.message || error
-        );
-      }
+    // Finally, we bind the shortcuts.
+    try {
+      await this.backend.bindShortcuts(shortcuts);
+    } catch (error) {
+      Notification.showError('Failed to bind shortcut', error.message || error);
     }
 
     this.bindingShortcuts = false;

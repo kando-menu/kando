@@ -73,11 +73,8 @@ export class GlobalShortcuts extends DesktopPortal {
     return this.version;
   }
 
-  /**
-   * This method should list all registered shortcuts. On GNOME 48, it does not seem to
-   * work, though.
-   */
-  public async listShortcuts() {
+  /** This method lists all registered shortcuts. */
+  public async listShortcuts(): Promise<string[]> {
     await this.connect();
 
     if (this.interface) {
@@ -90,9 +87,11 @@ export class GlobalShortcuts extends DesktopPortal {
 
       if (result.body?.length > 0) {
         const response = result.body[1];
-        console.log('Shortcuts:', JSON.stringify(response));
+        return response.shortcuts.value.map((item: [string, unknown]) => item[0]);
       }
     }
+
+    return [];
   }
 
   /**

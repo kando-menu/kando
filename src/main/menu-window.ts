@@ -120,30 +120,19 @@ export class MenuWindow extends BrowserWindow {
 
     // We unbind the shortcut of the menu (if any) so that key-repeat events can be
     // received by the renderer. These are necessary for the turbo-mode to work for
-    // single-key shortcuts. The shortcuts are rebound when the window is hidden.
+    // single-key shortcuts. The shortcut is restored when the window is hidden.
     // It is possible to open a menu while another one is already shown. If this
     // happens, we will replace it without closing and opening the window. As the
-    // shortcut for the previous menu had been unbound when showing it, we have to
-    // rebind it here (if it was a different one).
-    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-    const newTrigger = useID ? menu.shortcutID : menu.shortcut;
-    const oldTrigger = useID ? this.lastMenu?.shortcutID : this.lastMenu?.shortcut;
-
-    // First, unbind the trigger for the new menu.
-    if (newTrigger) {
-      this.kando.getBackend().unbindShortcut(newTrigger);
+    // shortcut for the previous menu had been inhibited when showing it, we have to
+    // restore it here.
+    if (!this.kando.areShortcutsInhibited() && this.isVisible()) {
+      this.kando.getBackend().inhibitShortcuts([]);
     }
 
-    // If old and new trigger are the same, we don't need to rebind it. If the
-    // hideTimeout is set, the window is about to be hidden and the shortcuts have
-    // been rebound already.
-    if (oldTrigger && oldTrigger != newTrigger && this.isVisible() && !this.hideTimeout) {
-      this.kando.getBackend().bindShortcut({
-        trigger: oldTrigger,
-        action: () => {
-          this.kando.showMenu({ trigger: oldTrigger });
-        },
-      });
+    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+    const trigger = useID ? menu.shortcutID : menu.shortcut;
+    if (!this.kando.areShortcutsInhibited() && trigger) {
+      this.kando.getBackend().inhibitShortcuts([trigger]);
     }
 
     // Store the last menu to be able to execute the selected action later. The IWMInfo
@@ -268,10 +257,9 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
-   * This hides the window. As shortcuts are unbound when the window is shown, we have to
-   * rebind them when the window is hidden. This method also accepts a delay parameter
-   * which can be used to delay the hiding of the window. This is useful when we want to
-   * show a fade-out animation.
+   * This hides the window. This method also accepts a delay parameter which can be used
+   * to delay the hiding of the window. This is useful when we want to show a fade-out
+   * animation.
    *
    * When Electron windows are hidden, input focus is not necessarily returned to the
    * topmost window below the hidden window. This is a problem if we want to simulate key
@@ -294,16 +282,11 @@ export class MenuWindow extends BrowserWindow {
         clearTimeout(this.hideTimeout);
       }
 
-      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-      const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
-
-      if (lastTrigger) {
-        this.kando.getBackend().bindShortcut({
-          trigger: lastTrigger,
-          action: () => {
-            this.kando.showMenu({ trigger: lastTrigger });
-          },
-        });
+      // Restore any shortcuts which were inhibited when the menu was shown. If the
+      // shortcuts are inhibited globally (via the tray icon for instance), we do not
+      // restore them here.
+      if (!this.kando.areShortcutsInhibited()) {
+        this.kando.getBackend().inhibitShortcuts([]);
       }
 
       this.hideTimeout = setTimeout(() => {

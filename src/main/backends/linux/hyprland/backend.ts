@@ -12,7 +12,6 @@ import i18next from 'i18next';
 import { exec } from 'child_process';
 import { WLRBackend } from '../wlroots/backend';
 import { native } from './native';
-import { Shortcut } from '../../backend';
 
 /**
  * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
@@ -73,27 +72,41 @@ for more information.
   }
 
   /**
-   * This binds a shortcut. The action callback of the shortcut is called when the
-   * shortcut is pressed.
+   * On GNOME Wayland, the globalShortcuts module from Electron does not work. Instead, we
+   * use the DBus interface of the Kando GNOME Shell integration extension to bind and
+   * unbind shortcuts.
    *
-   * @param shortcut The shortcut to bind.
+   * @param shortcuts The shortcuts that should be bound now.
+   * @param previouslyBound The shortcuts that were bound before this call.
+   * @returns A promise which resolves when the shortcuts have been bound.
    */
-  public async bindShortcut(shortcut: Shortcut) {
-    native.bindShortcut(shortcut);
-  }
+  protected override async bindShortcutsImpl(
+    shortcuts: string[],
+    previouslyBound: string[]
+  ) {
+    // Use a shortcut if we unbind all shortcuts :)
+    if (shortcuts.length === 0) {
+      native.unbindAllShortcuts();
+      return;
+    }
 
-  /**
-   * This unbinds a previously bound shortcut.
-   *
-   * @param trigger The trigger of a previously bound.
-   */
-  public async unbindShortcut(trigger: string) {
-    native.unbindShortcut(trigger);
-  }
+    const shortcutsToUnbind = previouslyBound.filter((s) => !shortcuts.includes(s));
+    const shortcutsToBind = shortcuts.filter((s) => !previouslyBound.includes(s));
 
-  /** This unbinds all previously bound shortcuts. */
-  public async unbindAllShortcuts() {
-    native.unbindAllShortcuts();
+    // Unbind the obsolete shortcuts.
+    for (const shortcut of shortcutsToUnbind) {
+      native.unbindShortcut(shortcut);
+    }
+
+    // Bind the new shortcuts.
+    for (const shortcut of shortcutsToBind) {
+      native.bindShortcut({
+        trigger: shortcut,
+        action: () => {
+          this.onShortcutPressed(shortcut);
+        },
+      });
+    }
   }
 
   /**
