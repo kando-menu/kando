@@ -118,21 +118,17 @@ export class MenuWindow extends BrowserWindow {
       return;
     }
 
-    // We unbind the shortcut of the menu (if any) so that key-repeat events can be
+    // We inhibit the shortcut of the menu (if any) so that key-repeat events can be
     // received by the renderer. These are necessary for the turbo-mode to work for
     // single-key shortcuts. The shortcut is restored when the window is hidden.
     // It is possible to open a menu while another one is already shown. If this
     // happens, we will replace it without closing and opening the window. As the
     // shortcut for the previous menu had been inhibited when showing it, we have to
     // restore it here.
-    if (!this.kando.areShortcutsInhibited() && this.isVisible()) {
-      this.kando.getBackend().inhibitShortcuts([]);
-    }
-
-    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-    const trigger = useID ? menu.shortcutID : menu.shortcut;
-    if (!this.kando.areShortcutsInhibited() && trigger) {
-      this.kando.getBackend().inhibitShortcuts([trigger]);
+    if (!this.kando.allShortcutsInhibited()) {
+      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+      const shortcut = useID ? menu.shortcutID : menu.shortcut;
+      this.kando.getBackend().inhibitShortcuts([shortcut]);
     }
 
     // Store the last menu to be able to execute the selected action later. The IWMInfo
@@ -285,7 +281,7 @@ export class MenuWindow extends BrowserWindow {
       // Restore any shortcuts which were inhibited when the menu was shown. If the
       // shortcuts are inhibited globally (via the tray icon for instance), we do not
       // restore them here.
-      if (!this.kando.areShortcutsInhibited()) {
+      if (!this.kando.allShortcutsInhibited()) {
         this.kando.getBackend().inhibitShortcuts([]);
       }
 

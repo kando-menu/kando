@@ -22,7 +22,12 @@ import { mapKeys } from '../../../../../common/key-codes';
  * preferred on X11 as it does not require any extensions.
  */
 export class GnomeBackend extends Backend {
-  /** This maps GDK shortcut strings to the registered shortcuts. */
+  /**
+   * This maps GDK shortcut strings to the registered shortcuts. This is required because
+   * we want to emit the 'shortcutPressed' event with the original shortcut string, but
+   * the DBus interface of the Kando GNOME Shell integration extension only accepts GDK
+   * shortcuts.
+   */
   private shortcutMap: { [gdkShortcut: string]: string } = {};
 
   /** This is the DBus interface of the Kando GNOME Shell integration extension. */
@@ -174,11 +179,6 @@ export class GnomeBackend extends Backend {
    * @todo: Add information about the string format of the shortcut.
    */
   private toGdkShortcut(shortcut: string) {
-    const cachedShortcut = this.shortcutMap[shortcut];
-    if (cachedShortcut) {
-      return cachedShortcut;
-    }
-
     if (shortcut.includes('Option')) {
       throw new Error('Shortcuts including Option are not yet supported on GNOME.');
     }
@@ -265,7 +265,7 @@ export class GnomeBackend extends Backend {
     ]);
 
     const gdkShortcut = parts.map((part) => replacements.get(part) || part).join('');
-    this.shortcutMap[shortcut] = gdkShortcut;
+    this.shortcutMap[gdkShortcut] = shortcut;
     return gdkShortcut;
   }
 }

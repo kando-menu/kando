@@ -64,7 +64,7 @@ export class KandoApp {
   private settingsWindow?: SettingsWindow;
 
   /** True if shortcuts are currently inhibited. */
-  private inhibitShortcuts = false;
+  private inhibitAllShortcuts = false;
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
@@ -296,8 +296,8 @@ export class KandoApp {
   }
 
   /** @returns True if the shortcuts are currently inhibited. */
-  public areShortcutsInhibited() {
-    return this.inhibitShortcuts;
+  public allShortcutsInhibited() {
+    return this.inhibitAllShortcuts;
   }
 
   /**
@@ -755,11 +755,11 @@ export class KandoApp {
     });
 
     // Add an entry to pause or unpause the shortcuts.
-    if (this.inhibitShortcuts) {
+    if (this.inhibitAllShortcuts) {
       template.push({
         label: i18next.t('main.un-inhibit-shortcuts'),
         click: () => {
-          this.inhibitShortcuts = false;
+          this.inhibitAllShortcuts = false;
           this.backend.inhibitShortcuts([]);
           this.updateTrayMenu();
         },
@@ -768,7 +768,7 @@ export class KandoApp {
       template.push({
         label: i18next.t('main.inhibit-shortcuts'),
         click: () => {
-          this.inhibitShortcuts = true;
+          this.inhibitAllShortcuts = true;
           this.backend.inhibitAllShortcuts();
           this.updateTrayMenu();
         },
