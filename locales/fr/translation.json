@@ -344,7 +344,7 @@
         "window-condition-placeholder": "Titre de la fenêtre",
         "window-condition-tooltip": "Selectionner un fenêtre",
         "shortcut-info": "Ce raccourci ouvre le menu. Il doit contenir une touche normale et un nombre quelconque de modifiantes tels que Ctrl, Alt ou Maj. Lors de l'enregistrement, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps, vous pouvez aussi les enfoncer l'une après l'autre. C'est utile si un raccourci est déjà lié à un autre menu !",
-        "tags-info": "Les Balises peuvent être utilisées pour grouper les menus dans des collections de menus.",
+        "tags-info": "Les étiquettes peuvent être utilisées pour grouper les menus dans des collections de menus.",
         "screen-area-picker": {
             "top-left-value": "Gauche : {{x}}, Haut : {{y}}",
             "bottom-right": "Glissez ceci au coin inférieur droit de votre zone.",
@@ -383,7 +383,7 @@
         "add-menu-items": "Ajouter des éléments au menu",
         "undo": "Annuler l'action",
         "menu-behavior-info": "Avant d'activer ces options, nous vous recommandons d'apprendre pourquoi nous aimons le comportement par défaut de Kando [ici]({{link}}) !",
-        "tags": "Balises",
+        "tags": "Étiquettes",
         "duplicate-menu": "Dupliquer un menu",
         "duplicate-menu-item": "Dupliquer un élément du menu",
         "delete-menu": "Supprimer un menu",
@@ -396,7 +396,7 @@
         "no-matching-menus": "Aucun menu trouvé.",
         "empty-collection": "Cette collection est vide.",
         "no-menus": "Il n'y a aucun menu.",
-        "empty-collection-note": "Changez les balises ou ajoutez un nouveau menu à cette collection en cliquant sur le bouton ci-dessous.",
+        "empty-collection-note": "Changez les étiquettes ou ajoutez un nouveau menu à cette collection en cliquant sur le bouton ci-dessous.",
         "no-matching-menus-note": "Essayez peut-être un autre mot de clé ?"
     }
 }
