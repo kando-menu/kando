@@ -31,8 +31,10 @@ import {
   getDefaultGeneralSettings,
   getDefaultMenuSettings,
   IWMInfo,
+  SoundType,
+  ISoundEffect,
 } from '../common';
-import { Settings, DeepReadonly } from './utils/settings';
+import { Settings } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -1011,7 +1013,7 @@ export class KandoApp {
         themeVersion: '',
         author: '',
         license: '',
-        sounds: {},
+        sounds: {} as Record<SoundType, ISoundEffect>,
       };
 
       return description;
