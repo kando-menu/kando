@@ -248,13 +248,22 @@ export class KDEWaylandBackend extends Backend {
 
   /**
    * This method binds the shortcuts via the global shortcuts portal. It first checks
-   * which shortcuts are already bound and only triggers the portal if the set changed.
+   * which shortcuts are already bound and only triggers the portal if a new shortcut has
+   * been added.
    *
    * @param shortcuts The shortcuts that should be bound now.
    * @returns A promise which resolves when the shortcuts have been bound.
    */
   private async bindShortcutsViaPortal(shortcuts: string[]) {
-    if (shortcuts.length > 0) {
+    if (shortcuts.length === 0) {
+      return;
+    }
+
+    // Check if any of the shortcuts are new. If they are, we bind them via the portal.
+    const oldShortcuts = await this.globalShortcuts.listShortcuts();
+    const hasNewShortcut = shortcuts.some((shortcut) => !oldShortcuts.includes(shortcut));
+
+    if (hasNewShortcut) {
       this.globalShortcuts.bindShortcuts(
         shortcuts.map((shortcut) => {
           return { id: shortcut, description: shortcut };
