@@ -96,8 +96,12 @@
 .floatingButton {
   position: absolute;
   bottom: 20px;
-  width: 100%;
-  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .message {

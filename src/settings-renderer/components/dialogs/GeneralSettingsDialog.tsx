@@ -14,7 +14,14 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import i18next from 'i18next';
 
-import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
+import {
+  TbReload,
+  TbPointer,
+  TbPointerCog,
+  TbSettingsFilled,
+  TbFileExport,
+  TbFileImport,
+} from 'react-icons/tb';
 
 import { useAppState } from '../../state';
 
@@ -437,6 +444,36 @@ export default function GeneralSettingsDialog() {
                 grow
                 onClick={() => {
                   window.settingsAPI.showDevTools('settings-window');
+                }}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
+            <Note>
+              {i18next.t('settings.general-settings-dialog.export-import-note')}
+            </Note>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                minWidth: '40%',
+              }}>
+              <Button
+                label={i18next.t('settings.general-settings-dialog.export-menus')}
+                icon={<TbFileExport />}
+                grow
+                onClick={() => {
+                  window.settingsAPI.exportMenusToJson();
+                }}
+              />
+              <Button
+                label={i18next.t('settings.general-settings-dialog.import-menus')}
+                icon={<TbFileImport />}
+                grow
+                onClick={() => {
+                  window.settingsAPI.importMenusFromJson();
                 }}
               />
             </div>
