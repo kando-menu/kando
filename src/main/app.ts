@@ -314,15 +314,22 @@ export class KandoApp {
       await this.menuWindow.load();
     }
 
-    this.backend
-      .getWMInfo()
-      .then((info) => {
-        this.lastWMInfo = info;
-        this.menuWindow.showMenu(request, info);
-      })
-      .catch((error) =>
-        Notification.showError('Failed to show menu', error.message || error)
-      );
+    const wmInfo = await this.backend.getWMInfo();
+
+    // If a menu is already shown, we do not need the window information from the backend
+    // as now Kando will be in focus. We use the old information instead.
+    if (this.lastWMInfo && this.menuWindow.isVisible()) {
+      wmInfo.appName = this.lastWMInfo.appName;
+      wmInfo.windowName = this.lastWMInfo.windowName;
+    }
+
+    this.lastWMInfo = wmInfo;
+
+    try {
+      this.menuWindow.showMenu(request, this.lastWMInfo);
+    } catch (error) {
+      Notification.showError('Failed to show menu', error.message || error);
+    }
   }
 
   /**

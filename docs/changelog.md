@@ -21,6 +21,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ***Release Date:** TBD
 
+Beware that this major release adds some **[BREAKING]** changes.
+They are marked with a **:collision:** emoji below.
+
 ### :tada: Added
 
 - **A completely rewritten settings dialog!** The settings dialog is now a separate window and has a new design. This significantly improves the user experience and adds several new possibilities:
@@ -68,6 +71,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 #### :bug: Fixed
 
+- An issue where menu conditions would not work properly if a menu was already open when another menu was opened.
 - An issue where some icons could not be searched for.
 - Sound support in the Flatpak version of Kando.
 - Gamepad input on Linux when using [input-gamepad](https://github.com/sezanzeb/input-remapper).
