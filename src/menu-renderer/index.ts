@@ -114,6 +114,13 @@ Promise.all([
     settingsButton.show();
   });
 
+  // Hide the menu when the main process requests it.
+  window.menuAPI.onHideMenu(() => {
+    menu.hide();
+    settingsButton.hide();
+    window.menuAPI.cancelSelection();
+  });
+
   // Tell the menu about settings changes. This could check more detailed which setting
   // has changed and only update the necessary parts. But for now, we just reload the
   // whole menu theme.
