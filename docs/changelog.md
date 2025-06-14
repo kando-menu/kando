@@ -64,6 +64,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - An issue where some icons could not be searched for.
 - Sound support in the Flatpak version of Kando.
 - Gamepad input on Linux when using [input-gamepad](https://github.com/sezanzeb/input-remapper).
+- A bug which made it possible to sometimes open the settings dialog by pressing <kbd>Space</kbd> while the menu was open.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 
