@@ -64,33 +64,8 @@
     text-align: center;
     padding: 10px;
 
-    .newItem {
+    & > * {
       display: inline-block;
-      cursor: grab;
-      border-radius: 50%;
-      padding: 1%;
-      width: min(calc(20px + 2vw), 50px);
-      margin: 5px min(calc(4px + 0.4vw), 10px);
-      aspect-ratio: 1;
-      background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.3));
-
-      &:active {
-        transform: translateY(1px);
-      }
-
-      &:hover {
-        background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.3));
-      }
-
-      &.dragging {
-        opacity: 0.3;
-        filter: blur(2px);
-      }
-
-      :global(.icon-container) {
-        border-radius: 50%;
-        overflow: hidden;
-      }
     }
   }
 }

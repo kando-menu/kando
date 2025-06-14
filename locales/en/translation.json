@@ -170,6 +170,7 @@
     "create-menu-button": "New menu",
     "duplicate-menu": "Duplicate menu",
     "delete-menu": "Delete menu",
+    "add-menu-item-hint": "Drag this item to add it to the menu above!",
     "add-menu-items": "Add Menu Items",
     "undo": "Undo",
     "redo": "Redo",

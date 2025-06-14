@@ -1,0 +1,44 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.menuItem {
+  cursor: grab;
+  border-radius: 50%;
+  padding: min(calc(2px + 0.2vw), 5px);
+  width: min(calc(20px + 2vw), 50px);
+  margin: 5px min(calc(4px + 0.4vw), 10px);
+  aspect-ratio: 1;
+  background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.3));
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:hover {
+    background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.3));
+  }
+
+  &.dragging {
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+
+  :global(.icon-container) {
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+
+.popoverContent {
+  color: $text-normal;
+  max-width: 300px;
+}
