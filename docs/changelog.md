@@ -33,6 +33,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
   - **New default icons for the menu-item types:** All menu-item types now have some custom-made icons.
   - **A file picker for the open-file item type:** This allows you to select files and directories using a file picker instead of typing the path manually.
   - **Support for dark and light mode in the settings dialog:** The settings dialog now adapts to your system's color mode.
+- **An option to choose what happens if the same shortcut is pressed while a menu is open!** You can now choose...
+  - ...to do nothing. This is the default behavior.
+  - ...to close the menu again. This has been requested many times!
+  - ...to cycle through the menus which are assigned to the shortcut and would be matching to the current context. This is useful if you have multiple menus assigned to the same shortcut and want to switch between them quickly! Kando will remember the last menu which was opened and show this again when the shortcut is pressed later.
+  
+  Thanks to [@jonthemonke](https://github.com/jonthemonke) for contributing to this feature!
 - **Support for deep links!** You can now use the `kando://` protocol to open Kando menus from other applications. This supports all command line parameters. For instance, `kando://menu?name=<menu-name>` will open the menu with the given name. Or `kando://settings` will open the settings dialog. On Linux, this only works if Kando has been properly installed with a `.desktop` file. Thanks to [@LitoMore](https://github.com/LitoMore) for this contribution!
 - **Experimental support arm64 on Windows!** There is now an experimental arm64 build for Windows. Please test it and report any issues you encounter!
 - **A new menu item type: Open Settings!** This allows you to open the Kando settings directly from a menu item. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
