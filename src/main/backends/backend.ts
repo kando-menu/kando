@@ -8,34 +8,38 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { EventEmitter } from 'events';
+import { globalShortcut } from 'electron';
+import lodash from 'lodash';
+
 import { IBackendInfo, IKeySequence, IWMInfo } from '../../common';
 
 /**
- * This interface is used to pass information about a keyboard shortcut to the backend. If
- * the backend supports custom shortcuts, the trigger property contains the key sequence
- * given by the user. Else, it will be the unique ID given by the user. The backend should
- * use this ID to generate a global shortcut in the operating system.
- */
-export interface Shortcut {
-  trigger: string;
-  action: () => void;
-}
-
-/**
- * This interface must be implemented by all backends. A backend is responsible for
- * communicating with the operating system. It provides methods to move the mouse pointer,
- * simulate keyboard shortcuts and get information about the currently focused window.
+ * This abstract class must be extended by all backends. A backend is responsible for
+ * communicating with the operating system in ways impossible with the standard electron
+ * APIs. It provides methods to bind global shortcuts (which is not possible on all
+ * platforms using electron only), move the mouse pointer, simulate keyboard shortcuts and
+ * get information about the currently focused window.
+ *
+ * If a global shortcut is activated, it will emit the 'shortcutPressed' event with the
+ * activated shortcut as the first argument.
  *
  * See index.ts for information about how the backend is selected.
  */
-export interface Backend {
+export abstract class Backend extends EventEmitter {
+  /** A list of all shortcuts which are currently bound. */
+  private shortcuts: string[] = [];
+
+  /** A list of all shortcuts which are currently inhibited. */
+  private inhibitedShortcuts: string[] = [];
+
   /**
    * This method will be called once when the backend is created. It can be used to
-   * connect to some kind of IPC mechanism.
+   * connect to some kind of IPC mechanisms.
    *
    * @returns A promise which resolves when the backend is ready to be used.
    */
-  init: () => Promise<void>;
+  public abstract init(): Promise<void>;
 
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
@@ -43,7 +47,7 @@ export interface Backend {
    *
    * @returns Some information about the backend.
    */
-  getBackendInfo: () => IBackendInfo;
+  public abstract getBackendInfo(): IBackendInfo;
 
   /**
    * Each backend must provide a way to get the name and app of the currently focused
@@ -52,7 +56,7 @@ export interface Backend {
    * @returns A promise which resolves to the name and app of the currently focused window
    *   as well as to the current pointer position.
    */
-  getWMInfo: () => Promise<IWMInfo>;
+  public abstract getWMInfo(): Promise<IWMInfo>;
 
   /**
    * Each backend must provide a way to move the pointer.
@@ -61,37 +65,184 @@ export interface Backend {
    * @param dy The amount of vertical movement.
    * @returns A promise which resolves when the pointer has been moved.
    */
-  movePointer: (dx: number, dy: number) => Promise<void>;
+  public abstract movePointer(dx: number, dy: number): Promise<void>;
 
   /**
    * Each backend must provide a way to simulate a key sequence. This is used to execute
-   * the actions of the pie menu.
+   * keyboard macros.
    *
    * @param keys The keys to simulate.
    * @returns A promise which resolves when the key sequence has been simulated.
    */
-  simulateKeys: (keys: IKeySequence) => Promise<void>;
+  public abstract simulateKeys(keys: IKeySequence): Promise<void>;
 
   /**
-   * Each backend must provide a way to bind an action to a keyboard shortcut.
+   * This binds the given shortcuts globally. What the shortcut strings look like depends
+   * on the backend:
    *
-   * @param shortcut The shortcut to bind.
-   * @returns A promise which resolves when the shortcut has been bound.
+   * - For backends which support binding global shortcuts directly (this means if the
+   *   IBackendInfo returned by getBackendInfo() contains 'supportsShortcuts: true'), the
+   *   string is a key combination as defined by the electron globalShortcut module. See
+   *   here: https://www.electronjs.org/docs/latest/api/accelerator
+   * - For backends which can not support binding global shortcuts directly
+   *   ('supportsShortcuts: false'), the string is some unique ID for the shortcut. This
+   *   can be used in some manner to identify the shortcut in the OS's shortcut manager.
+   *
+   * Calling this method will override all previously bound shortcuts. So calling this
+   * method with an empty array will unbind all previously bound shortcuts.
+   *
+   * If any shortcuts are currently inhibited, they will be restored if they are again in
+   * the new sets of to-be-bound shortcuts.
+   *
+   * @param shortcuts The shortcuts to bind (IDs or key combinations as described above).
+   * @returns A promise which resolves when the shortcuts have been bound.
    */
-  bindShortcut: (shortcut: Shortcut) => Promise<void>;
+  public async bindShortcuts(shortcuts: string[]): Promise<void> {
+    await this.inhibitShortcuts([]);
+
+    if (!lodash.isEqual(shortcuts, this.shortcuts)) {
+      await this.bindShortcutsImpl(shortcuts, this.shortcuts);
+      this.shortcuts = shortcuts;
+    }
+  }
 
   /**
-   * Each backend must provide a way to unbind a previously bound keyboard shortcut.
+   * Temporarily disables some keyboard shortcuts. What this does exactly, depends on the
+   * backend: Ideally, it should unbind all given shortcuts so that other applications can
+   * use them. If this is not possible, backends may choose to just not emit the
+   * 'shortcutPressed' signal of the inhibited shortcuts.
    *
-   * @param trigger The trigger of a previously bound.
-   * @returns A promise which resolves when the shortcut has been unbound.
+   * Calling this method multiple times will override the previously inhibited shortcuts.
+   * So calling this method with an empty array restores all previously inhibited
+   * shortcuts.
+   *
+   * @param shortcuts An array of strings containing the unique IDs or key combinations of
+   *   the shortcuts to inhibit. These are the same as the ones used in the bindShortcuts
+   *   method.
+   * @returns A promise which resolves when the shortcuts have been inhibited.
    */
-  unbindShortcut: (trigger: string) => Promise<void>;
+  public async inhibitShortcuts(shortcuts: string[]): Promise<void> {
+    if (!lodash.isEqual(shortcuts, this.inhibitedShortcuts)) {
+      await this.inhibitShortcutsImpl(shortcuts, this.inhibitedShortcuts);
+      this.inhibitedShortcuts = shortcuts;
+    }
+  }
 
   /**
-   * Each backend must provide a way to unbind all previously bound keyboard shortcuts.
+   * A convenience method to inhibit all currently bound shortcuts.
    *
-   * @returns A promise which resolves when all shortcuts have been unbound.
+   * @returns A promise which resolves when all shortcuts have been inhibited.
    */
-  unbindAllShortcuts: () => Promise<void>;
+  public async inhibitAllShortcuts(): Promise<void> {
+    if (!lodash.isEqual(this.shortcuts, this.inhibitedShortcuts)) {
+      await this.inhibitShortcutsImpl(this.shortcuts, this.inhibitedShortcuts);
+      this.inhibitedShortcuts = [...this.shortcuts];
+    }
+  }
+
+  /**
+   * This returns the currently bound shortcuts. These are the same strings as used in the
+   * bindShortcuts method.
+   *
+   * @returns An array of strings containing the unique IDs or key combinations of the
+   *   currently bound shortcuts.
+   */
+  public getBoundShortcuts(): string[] {
+    return this.shortcuts;
+  }
+
+  /**
+   * This returns the currently inhibited shortcuts. These are the same strings as used in
+   * the inhibitShortcuts method.
+   *
+   * @returns An array of strings containing the unique IDs or key combinations of the
+   *   currently inhibited shortcuts.
+   */
+  public getInhibitedShortcuts(): string[] {
+    return this.inhibitedShortcuts;
+  }
+
+  /**
+   * Derived backends should call this method when a global shortcut is pressed.
+   *
+   * @param shortcut The shortcut that was pressed. This should be the same string as used
+   *   in the bindShortcuts method.
+   */
+  protected onShortcutPressed(shortcut: string): void {
+    this.emit('shortcutPressed', shortcut);
+  }
+
+  /**
+   * This method is called by the bindShortcuts method to actually bind the shortcuts. The
+   * implementation in this class uses Electron's globalShortcut module, however, this
+   * does not work on all platforms. Therefore, derived backends can override this method
+   * to provide their own binding logic.
+   *
+   * This method will never be called with the same shortcuts for both arguments.
+   *
+   * @param shortcuts The shortcuts that should be bound now.
+   * @param previouslyBound The shortcuts that were bound before this call.
+   * @returns A promise which resolves when the shortcuts have been bound.
+   */
+  protected async bindShortcutsImpl(
+    shortcuts: string[],
+    previouslyBound: string[]
+  ): Promise<void> {
+    // Use a shortcut if we unbind all shortcuts :)
+    if (shortcuts.length === 0) {
+      globalShortcut.unregisterAll();
+      return;
+    }
+
+    const shortcutsToUnbind = previouslyBound.filter((s) => !shortcuts.includes(s));
+    const shortcutsToBind = shortcuts.filter((s) => !previouslyBound.includes(s));
+
+    // Unbind the obsolete shortcuts.
+    for (const shortcut of shortcutsToUnbind) {
+      globalShortcut.unregister(shortcut);
+    }
+
+    // Bind the new shortcuts.
+    for (const shortcut of shortcutsToBind) {
+      globalShortcut.register(shortcut, () => {
+        this.onShortcutPressed(shortcut);
+      });
+    }
+  }
+
+  /**
+   * This method is called by the inhibitShortcuts method to actually inhibit the
+   * shortcuts. This implementation uses the bindShortcutsImpl method to simply unbind
+   * shortcuts which are supposed to be inhibited. However, this does not work on all
+   * platforms. Some platforms, like KDE Wayland cannot silently change the set of global
+   * shortcuts. Such platforms can override this method and choose to not unbind the
+   * shortcuts, but rather just not emit the 'shortcutPressed' event for the inhibited
+   * shortcuts.
+   *
+   * This method will never be called with the same shortcuts for both arguments.
+   *
+   * @param shortcuts The shortcuts that should be inhibited now.
+   * @param previouslyInhibited The shortcuts that were inhibited before this call.
+   * @returns A promise which resolves when the shortcuts have been inhibited.
+   */
+  protected async inhibitShortcutsImpl(
+    shortcuts: string[],
+    previouslyInhibited: string[]
+  ): Promise<void> {
+    // Assemble a list of shortcuts that were actually bound before this call. This is the
+    // bound shortcuts minus the ones that are currently inhibited.
+    const boundShortcuts = this.getBoundShortcuts().filter(
+      (s) => !previouslyInhibited.includes(s)
+    );
+
+    // Assemble a list of shortcuts that should be bound after this call. This is the
+    // bound shortcuts minus the ones that are supposed to be inhibited.
+    const shortcutsToBind = this.getBoundShortcuts().filter(
+      (s) => !shortcuts.includes(s)
+    );
+
+    // Now use the bindShortcutsImpl method to unbind the inhibited shortcuts and
+    // rebind the ones which are not inhibited anymore.
+    await this.bindShortcutsImpl(shortcutsToBind, boundShortcuts);
+  }
 }

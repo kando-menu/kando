@@ -8,9 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { globalShortcut } from 'electron';
 import { native } from './native';
-import { Backend, Shortcut } from '../../backend';
+import { Backend } from '../../backend';
 import { IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 
@@ -22,7 +21,7 @@ import { mapKeys } from '../../../../common/key-codes';
  * environments, but you could also create derived backends for your specific desktop
  * environments if needed.
  */
-export class X11Backend implements Backend {
+export class X11Backend extends Backend {
   /**
    * Override this if another type is more suitable for your desktop environment.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
@@ -98,32 +97,5 @@ export class X11Backend implements Backend {
 
       native.simulateKey(keyCodes[i], keys[i].down);
     }
-  }
-
-  /**
-   * This binds a shortcut. The action callback of the shortcut is called when the
-   * shortcut is pressed. On X11, this uses Electron's globalShortcut module.
-   *
-   * @param shortcut The shortcut to bind.
-   * @returns A promise which resolves when the shortcut has been bound.
-   */
-  public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
-      throw new Error('Invalid shortcut or it is already in use.');
-    }
-  }
-
-  /**
-   * This unbinds a previously bound shortcut.
-   *
-   * @param trigger The trigger of a previously bound.
-   */
-  public async unbindShortcut(trigger: string) {
-    globalShortcut.unregister(trigger);
-  }
-
-  /** This unbinds all previously bound shortcuts. */
-  public async unbindAllShortcuts() {
-    globalShortcut.unregisterAll();
   }
 }
