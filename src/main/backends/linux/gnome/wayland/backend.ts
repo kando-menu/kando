@@ -68,6 +68,10 @@ export class GnomeBackend extends Backend {
       this.interface.on('ShortcutPressed', (gdkShortcut: string) => {
         this.onShortcutPressed(this.shortcutMap[gdkShortcut]);
       });
+
+      // There shouldn't be any shortcuts bound yet, but the GNOME Shell extension will
+      // remember the shortcuts that were. If Kando crashed, some might still be bound.
+      await this.interface.UnbindAllShortcuts();
     } catch (e) {
       throw new Error(
         i18next.t('backends.gnome.error', {
