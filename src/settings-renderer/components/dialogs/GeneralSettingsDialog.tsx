@@ -273,9 +273,18 @@ export default function GeneralSettingsDialog() {
             info={i18next.t('settings.general-settings-dialog.press-again-behavior-info')}
             settingsKey="sameShortcutBehavior"
             options={[
-              { value: 'nothing', label: 'Nothing' },
-              { value: 'cycle', label: 'Cycle through menus' },
-              { value: 'close', label: 'Close menu' },
+              {
+                value: 'nothing',
+                label: i18next.t('settings.general-settings-dialog.do-nothing'),
+              },
+              {
+                value: 'cycle',
+                label: i18next.t('settings.general-settings-dialog.cycle-menus'),
+              },
+              {
+                value: 'close',
+                label: i18next.t('settings.general-settings-dialog.close-menu'),
+              },
             ]}
           />
 
