@@ -32,10 +32,11 @@ export class MenuWindow extends BrowserWindow {
   public lastMenu?: DeepReadonly<IMenu>;
 
   /**
-   * This contains the request for the current menu. It is used to save the current menu
-   * request when the 'cycle' sameShortcutBehavior is enabled.
+   * This index is used to select the next menu from the list of menus which would match
+   * the current request. If the sameShortcutBehavior is set to 'cycle', this index is
+   * incremented each time the user presses the same shortcut again.
    */
-  private lastRequest?: IShowMenuRequest;
+  private menuIndex = 0;
 
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
@@ -46,10 +47,10 @@ export class MenuWindow extends BrowserWindow {
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
-  sameShortcutBehavior: string;
 
   constructor(private kando: KandoApp) {
     const display = screen.getPrimaryDisplay();
+
     super({
       webPreferences: {
         contextIsolation: true,
@@ -95,6 +96,12 @@ export class MenuWindow extends BrowserWindow {
     this.setAlwaysOnTop(true, 'screen-saver');
   }
 
+  /**
+   * This loads the menu window. It will load the menu renderer and set up the IPC
+   * communication with it.
+   *
+   * @returns A promise which resolves once the window has fully loaded.
+   */
   async load() {
     this.initMenuRendererAPI();
 
@@ -107,31 +114,6 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
-   * Gets the next menu from an array of menus using the current menu.
-   *
-   * @param menus A list of menus.
-   * @param menu The current menu.
-   * @returns A menu or undefined.
-   */
-  async getNextMenu(
-    menus: readonly DeepReadonly<IMenu>[],
-    menu: DeepReadonly<IMenu>
-  ): Promise<DeepReadonly<IMenu> | undefined> {
-    if (!menus || menus.length === 0) {
-      return undefined;
-    }
-
-    const currentIndex = menus.indexOf(menu);
-
-    if (currentIndex === -1) {
-      return undefined;
-    }
-
-    const nextIndex = (currentIndex + 1) % menus.length;
-    return menus[nextIndex];
-  }
-
-  /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
    * the current window and pointer position and send them to the renderer process.
@@ -139,7 +121,35 @@ export class MenuWindow extends BrowserWindow {
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
    */
-  public async showMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
+  public showMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
+    const sameShortcutBehavior = this.kando
+      .getGeneralSettings()
+      .get('sameShortcutBehavior');
+    const isMenuVisible = this.isVisible() && this.hideTimeout === null;
+
+    // If a menu is currently shown and the user presses the same shortcut again we will
+    // either close the menu or show the next one with the same shortcut. There is also
+    // the option to do nothing in this case, but in this case the menu's shortcut will be
+    // inhibited and thus this method will not be called in the first place.
+    if (isMenuVisible) {
+      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+      const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
+
+      if (lastTrigger && request.trigger === lastTrigger) {
+        // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
+        if (sameShortcutBehavior === 'close') {
+          this.webContents.send('menu-window.hide-menu');
+          return;
+        }
+
+        // If the 'sameShortcutBehavior' is set to 'cycle', we will show the next menu which
+        // matches the current request.
+        if (sameShortcutBehavior === 'cycle') {
+          this.menuIndex += 1;
+        }
+      }
+    }
+
     // Select correct menu before showing it to user.
     const menu = this.chooseMenu(request, info);
 
@@ -149,87 +159,16 @@ export class MenuWindow extends BrowserWindow {
       return;
     }
 
-    // We unbind the shortcut of the menu (if any) so that key-repeat events can be
+    // We inhibit the shortcut of the menu (if any) so that key-repeat events can be
     // received by the renderer. These are necessary for the turbo-mode to work for
-    // single-key shortcuts. The shortcuts are rebound when the window is hidden.
-    // It is possible to open a menu while another one is already shown. If this
-    // happens, we will replace it without closing and opening the window. As the
-    // shortcut for the previous menu had been unbound when showing it, we have to
-    // rebind it here (if it was a different one).
-    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-    const newTrigger = useID ? menu.shortcutID : menu.shortcut;
-    const oldTrigger = useID ? this.lastMenu?.shortcutID : this.lastMenu?.shortcut;
-
-    // First, unbind the trigger for the new menu.
-    if (newTrigger) {
-      this.kando.getBackend().unbindShortcut(newTrigger);
-    }
-
-    this.sameShortcutBehavior = this.kando
-      .getGeneralSettings()
-      .get('sameShortcutBehavior');
-
-    if (this.sameShortcutBehavior == 'cycle') {
-      this.lastRequest = { trigger: newTrigger, name: menu.root.name };
-
-      const menus = this.kando
-        .getMenuSettings()
-        .get('menus')
-        .filter((menu) => {
-          return menu.shortcut == newTrigger || menu.shortcutID == newTrigger;
-        });
-
-      const nextMenu = await this.getNextMenu(menus, menu);
-
-      if (nextMenu) {
-        const newRequest = { trigger: newTrigger, name: nextMenu.root.name };
-
-        try {
-          await this.kando.getBackend().bindShortcut({
-            trigger: newTrigger,
-            action: () => {
-              this.kando.showMenu(newRequest);
-            },
-          });
-        } catch (error) {
-          Notification.showError(
-            'Failed to bind shortcut ' + newTrigger,
-            error.message || error
-          );
-        }
-      }
-    } else if (this.sameShortcutBehavior == 'close') {
-      try {
-        await this.kando.getBackend().bindShortcut({
-          trigger: newTrigger,
-          action: async () => {
-            await this.hide();
-          },
-        });
-      } catch (error) {
-        Notification.showError(
-          'Failed to bind shortcut ' + newTrigger,
-          error.message || error
-        );
-      }
-    }
-    // If old and new trigger are the same, we don't need to rebind it. If the
-    // hideTimeout is set, the window is about to be hidden and the shortcuts have
-    // been rebound already.
-    else if (this.sameShortcutBehavior == 'nothing') {
-      if (
-        oldTrigger &&
-        oldTrigger != newTrigger &&
-        this.isVisible() &&
-        !this.hideTimeout
-      ) {
-        this.kando.getBackend().bindShortcut({
-          trigger: oldTrigger,
-          action: () => {
-            this.kando.showMenu({ trigger: oldTrigger });
-          },
-        });
-      }
+    // single-key shortcuts. The shortcut is restored when the window is hidden.
+    //
+    // If 'sameShortcutBehavior' is set to anything but 'nothing', we have to keep the
+    // shortcut active so that we know when the user presses the shortcut again.
+    if (!this.kando.allShortcutsInhibited() && sameShortcutBehavior === 'nothing') {
+      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+      const shortcut = useID ? menu.shortcutID : menu.shortcut;
+      this.kando.getBackend().inhibitShortcuts([shortcut]);
     }
 
     // Store the last menu to be able to execute the selected action later. The IWMInfo
@@ -354,10 +293,9 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
-   * This hides the window. As shortcuts are unbound when the window is shown, we have to
-   * rebind them when the window is hidden. This method also accepts a delay parameter
-   * which can be used to delay the hiding of the window. This is useful when we want to
-   * show a fade-out animation.
+   * This hides the window. This method also accepts a delay parameter which can be used
+   * to delay the hiding of the window. This is useful when we want to show a fade-out
+   * animation.
    *
    * When Electron windows are hidden, input focus is not necessarily returned to the
    * topmost window below the hidden window. This is a problem if we want to simulate key
@@ -380,6 +318,13 @@ export class MenuWindow extends BrowserWindow {
         clearTimeout(this.hideTimeout);
       }
 
+      // Restore any shortcuts which were inhibited when the menu was shown. If the
+      // shortcuts are inhibited globally (via the tray icon for instance), we do not
+      // restore them here.
+      if (!this.kando.allShortcutsInhibited()) {
+        this.kando.getBackend().inhibitShortcuts([]);
+      }
+
       this.hideTimeout = setTimeout(() => {
         if (process.platform === 'win32') {
           this.setIgnoreMouseEvents(true);
@@ -395,22 +340,6 @@ export class MenuWindow extends BrowserWindow {
 
         this.hideTimeout = null;
 
-        // Need to set the next shortcut after the menu is hidden to ensure it doesn't re-open
-        // if the sameShortcutBehavior is set to 'close'.
-        const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-        const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
-
-        this.kando.getBackend().unbindShortcut(lastTrigger);
-
-        if (lastTrigger) {
-          this.kando.getBackend().bindShortcut({
-            trigger: lastTrigger,
-            action: () => {
-              this.kando.showMenu(this.lastRequest ?? { trigger: lastTrigger });
-            },
-          });
-        }
-
         resolve();
       }, this.kando.getGeneralSettings().get().fadeOutDuration);
     });
@@ -420,7 +349,8 @@ export class MenuWindow extends BrowserWindow {
    * This chooses the correct menu depending on the environment.
    *
    * If the request contains a menu name, this menu is chosen. If no menu with the given
-   * name is found, an exception is thrown. No other conditions are checked in this case.
+   * name is found, an exception is thrown. If there are multiple menus with the same
+   * name, the first one is chosen. No other conditions are checked in this case.
    *
    * If the request contains a trigger (shortcut or shortcutID), a list of menus bound to
    * this trigger is assembled and the menu with the best matching conditions is chosen.
@@ -452,28 +382,25 @@ export class MenuWindow extends BrowserWindow {
       return null;
     }
 
-    // Score of currently selected menu.
-    let currentScore = 0;
+    // Store scores for all menus which match the trigger.
+    const scores: number[] = [];
 
-    // Currently best matching menu.
-    let selectedMenu: DeepReadonly<IMenu>;
+    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
 
-    for (const menu of menus) {
-      let menuScore = 0;
+    menus.forEach((menu, index) => {
+      scores[index] = 0;
 
-      // Then we check if menu trigger matches our request, if not we skip this menu.
-      if (request.trigger != menu.shortcut && request.trigger != menu.shortcutID) {
-        continue;
+      // If the trigger matches, we set the score to 1. Else we skip this menu.
+      const trigger = useID ? menu.shortcutID : menu.shortcut;
+      if (request.trigger === trigger) {
+        scores[index] += 1;
+      } else {
+        return;
       }
 
-      // If no other menu matches, we will choose the first one with no conditions set.
-      if (!menu.conditions || Object.keys(menu.conditions).length === 0) {
-        if (!selectedMenu) {
-          selectedMenu = menu;
-        }
-
-        // As we don't have any conditions to check we continue with next menu.
-        continue;
+      // If no conditions are given, we can stop here. The menu is a solid candidate.
+      if (!menu.conditions) {
+        return;
       }
 
       // If the conditions starts with / we treat it as regex, otherwise we treat it as
@@ -494,18 +421,20 @@ export class MenuWindow extends BrowserWindow {
       // If appName condition does not exists we skip it.
       if (menu.conditions.appName) {
         if (testStringCondition(menu.conditions.appName, info.appName)) {
-          menuScore += 1;
+          scores[index] += 1;
         } else {
-          continue;
+          scores[index] = 0;
+          return;
         }
       }
 
       // We do the same for windowName condition.
       if (menu.conditions.windowName) {
         if (testStringCondition(menu.conditions.windowName, info.windowName)) {
-          menuScore += 1;
+          scores[index] += 1;
         } else {
-          continue;
+          scores[index] = 0;
+          return;
         }
       }
 
@@ -525,22 +454,43 @@ export class MenuWindow extends BrowserWindow {
           (condition.yMin == null || info.pointerY >= condition.yMin) &&
           (condition.yMax == null || info.pointerY <= condition.yMax)
         ) {
-          menuScore += 1;
+          scores[index] += 1;
         } else {
-          continue;
+          scores[index] = 0;
+          return;
         }
       }
+    });
 
-      // If our menuScore is higher than currentScore we need to select this menu
-      // as it matches more conditions than the previous selection.
-      if (menuScore > currentScore) {
-        selectedMenu = menu;
-        currentScore = menuScore;
+    // Find the highest score.
+    let maxScore = 0;
+    for (const score of scores) {
+      if (score > maxScore) {
+        maxScore = score;
       }
     }
 
-    // We finally return our last selected menu as chosen.
-    return selectedMenu;
+    // If no menu has a score greater than 0, we return null.
+    if (maxScore === 0) {
+      return null;
+    }
+
+    // Assemble a list of all menus which have the highest score.
+    const bestMenus: DeepReadonly<IMenu>[] = [];
+    for (let i = 0; i < scores.length; i++) {
+      if (scores[i] === maxScore) {
+        bestMenus.push(menus[i]);
+      }
+    }
+
+    // If the sameShortcutBehavior is set to 'cycle', we select the menu at the current
+    // index. If the index is out of bounds, we wrap around to the first menu.
+    if (this.kando.getGeneralSettings().get('sameShortcutBehavior') === 'cycle') {
+      return bestMenus[this.menuIndex % bestMenus.length];
+    }
+
+    // Else, we select the first menu from the list of best menus.
+    return bestMenus[0];
   }
 
   /**

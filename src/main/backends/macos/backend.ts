@@ -9,12 +9,12 @@
 // SPDX-License-Identifier: MIT
 
 import { native } from './native';
-import { screen, globalShortcut, app } from 'electron';
-import { Backend, Shortcut } from '../backend';
+import { screen, app } from 'electron';
+import { Backend } from '../backend';
 import { IKeySequence } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 
-export class MacosBackend implements Backend {
+export class MacosBackend extends Backend {
   /**
    * On macOS, the window type is set to 'panel'. This makes sure that the window is
    * always on top of other windows and that it is shown on all workspaces.
@@ -89,32 +89,5 @@ export class MacosBackend implements Backend {
 
       native.simulateKey(keyCodes[i], keys[i].down);
     }
-  }
-
-  /**
-   * This binds a shortcut. The action callback of the shortcut is called when the
-   * shortcut is pressed. On macOS, this uses Electron's globalShortcut module.
-   *
-   * @param shortcut The shortcut to bind.
-   * @returns A promise which resolves when the shortcut has been bound.
-   */
-  public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
-      throw new Error('Invalid shortcut or it is already in use.');
-    }
-  }
-
-  /**
-   * This unbinds a previously bound shortcut.
-   *
-   * @param trigger The trigger of a previously bound.
-   */
-  public async unbindShortcut(trigger: string) {
-    globalShortcut.unregister(trigger);
-  }
-
-  /** This unbinds all previously bound shortcuts. */
-  public async unbindAllShortcuts() {
-    globalShortcut.unregisterAll();
   }
 }

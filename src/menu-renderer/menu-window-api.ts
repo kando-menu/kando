@@ -48,6 +48,17 @@ export const MENU_WINDOW_API = {
   },
 
   /**
+   * This will be called by the host process when the menu should be closed. Usually, the
+   * renderer will call selectItem or cancelSelection to close the menu, but sometimes the
+   * host process needs to close the menu without a selection.
+   *
+   * @param callback This callback will be called when the menu should be closed.
+   */
+  onHideMenu: (func: () => void) => {
+    ipcRenderer.on('menu-window.hide-menu', func);
+  },
+
+  /**
    * This will be called by the render process when the user selects a menu item.
    *
    * @param path The path of the selected menu item.

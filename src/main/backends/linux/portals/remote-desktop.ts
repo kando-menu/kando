@@ -20,7 +20,7 @@ import { DesktopPortal } from './desktop-portal';
  * Kando's backends. The connection to the portal is established lazily, i.e. when the
  * first method is called. This may lead to a dialog asking for permission.
  *
- * @see https://flatpak.github.io/xdg-desktop-portal/docs/#gdbus-org.freedesktop.portal.RemoteDesktop
+ * @see https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.RemoteDesktop.html
  */
 export class RemoteDesktop extends DesktopPortal {
   /** This is the proxy object for the org.freedesktop.portal.RemoteDesktop interface. */
