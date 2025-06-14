@@ -77,10 +77,20 @@ export class IconThemeRegistry {
   private _userIconThemeDirectory = '';
 
   /**
-   * This is a singleton class. The constructor is private. Use `getInstance` to get the
-   * instance of this class.
+   * Use this method to get the singleton instance of this class.
+   *
+   * @returns The singleton instance of this class.
    */
-  private constructor() {
+  public static getInstance(): IconThemeRegistry {
+    return IconThemeRegistry.instance;
+  }
+
+  /**
+   * Initializes the icon theme registry. This method should be called once at the
+   * beginning of the application to register all built-in icon themes and the user icon
+   * themes.
+   */
+  public async init() {
     this.iconThemes.set('simple-icons', new SimpleIconsTheme());
     this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
@@ -88,21 +98,11 @@ export class IconThemeRegistry {
     this.iconThemes.set('base64', new Base64Theme());
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
-    window.commonAPI.getIconThemes().then((info) => {
-      this._userIconThemeDirectory = info.userIconDirectory;
-      for (const theme of info.fileIconThemes) {
-        this.iconThemes.set(theme.name, new FileIconTheme(theme));
-      }
-    });
-  }
-
-  /**
-   * Use this method to get the singleton instance of this class.
-   *
-   * @returns The singleton instance of this class.
-   */
-  public static getInstance(): IconThemeRegistry {
-    return IconThemeRegistry.instance;
+    const info = await window.commonAPI.getIconThemes();
+    this._userIconThemeDirectory = info.userIconDirectory;
+    for (const theme of info.fileIconThemes) {
+      this.iconThemes.set(theme.name, new FileIconTheme(theme));
+    }
   }
 
   /**

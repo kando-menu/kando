@@ -20,6 +20,7 @@ import { enableDragDropTouch } from 'drag-drop-touch';
 
 import App from './components/App';
 import { useAppState, useGeneralSettings, useMenuSettings } from './state';
+import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is
@@ -70,6 +71,9 @@ Promise.all([
         true
       );
     });
+
+    // Initialize the icon theme registry.
+    await IconThemeRegistry.getInstance().init();
 
     // Validate State --------------------------------------------------------------------
 
