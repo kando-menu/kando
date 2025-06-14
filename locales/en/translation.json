@@ -74,6 +74,8 @@
       "right-mouse-button-selects-parent-info": "If unchecked, the right mouse button will close the menu instead.",
       "enable-gamepad-support": "Enable gamepad support",
       "enable-gamepad-support-info": "If checked, you can use a connected gamepad to control the menu.",
+      "press-again-behavior": "Press-shortcut-again behavior",
+      "press-again-behavior-info": "This determines what happens when the shortcut is pressed again while a menu is shown. If multiple menus are assigned to the same shortcut, you can use this to cycle through all matching menus. Make sure to only hold down a modifier key if you want to use Turbo Mode together with an option other than 'Nothing'.",
       "menu-sounds": "Menu Sounds",
       "learn-how-to-add-sound-themes": "Learn how to add new sound themes to Kando [here]({{link}})!",
       "sound-theme": "Sound theme",
