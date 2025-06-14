@@ -292,7 +292,8 @@
           {
             "type": "command",
             "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyVideos'))\""
+              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyVideos'))\"",
+              "detached": false
             },
             "name": "example-menu.bookmarks.videos",
             "icon": "video_camera_front",
@@ -301,7 +302,8 @@
           {
             "type": "command",
             "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyPictures'))\""
+              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyPictures'))\"",
+              "detached": false
             },
             "name": "example-menu.bookmarks.pictures",
             "icon": "imagesmode",
@@ -310,7 +312,8 @@
           {
             "type": "command",
             "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyDocuments'))\""
+              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyDocuments'))\"",
+              "detached": false
             },
             "name": "example-menu.bookmarks.documents",
             "icon": "text_ad",
@@ -319,7 +322,8 @@
           {
             "type": "command",
             "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('Desktop'))\""
+              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('Desktop'))\"",
+              "detached": false
             },
             "name": "example-menu.bookmarks.desktop",
             "icon": "desktop_windows",
@@ -337,7 +341,8 @@
           {
             "type": "command",
             "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyMusic'))\""
+              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyMusic'))\"",
+              "detached": false
             },
             "name": "example-menu.bookmarks.music",
             "icon": "music_note",
