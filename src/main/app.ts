@@ -247,7 +247,7 @@ export class KandoApp {
   /** This is called when the app is closed. It will unbind all shortcuts. */
   public async quit() {
     if (this.backend != null) {
-      await this.backend.bindShortcuts([]);
+      await this.backend.deinit();
     }
 
     this.generalSettings.close();

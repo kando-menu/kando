@@ -35,6 +35,11 @@ export class MacosBackend extends Backend {
     app.dock.hide();
   }
 
+  /** We only need to unbind all shortcuts when the backend is destroyed. */
+  public async deinit(): Promise<void> {
+    await this.bindShortcuts([]);
+  }
+
   /**
    * @returns The name and class of the currently focused window as well as the current
    *   pointer position.

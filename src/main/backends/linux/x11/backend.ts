@@ -38,6 +38,11 @@ export class X11Backend extends Backend {
   /** This is called when the backend is created. Currently, this this does nothing on X11. */
   public async init() {}
 
+  /** We only need to unbind all shortcuts when the backend is destroyed. */
+  public async deinit(): Promise<void> {
+    await this.bindShortcuts([]);
+  }
+
   /**
    * This uses the X11 library to get the name and app of the currently focused window. In
    * addition, it returns the current pointer position.

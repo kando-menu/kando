@@ -82,6 +82,11 @@ export class GnomeBackend extends Backend {
     }
   }
 
+  /** We only need to unbind all shortcuts when the backend is destroyed. */
+  public async deinit(): Promise<void> {
+    await this.bindShortcuts([]);
+  }
+
   /**
    * This uses the DBus interface of the Kando GNOME Shell integration extension to get
    * the name and app of the currently focused window as well as the current pointer

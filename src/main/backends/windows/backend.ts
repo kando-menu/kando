@@ -47,6 +47,11 @@ export class WindowsBackend extends Backend {
    */
   public async init() {}
 
+  /** We only need to unbind all shortcuts when the backend is destroyed. */
+  public async deinit(): Promise<void> {
+    await this.bindShortcuts([]);
+  }
+
   /**
    * This uses the Win23 API to get the name and app of the currently focused window. In
    * addition, it uses Electron's screen module to get the current pointer position.

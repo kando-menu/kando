@@ -34,6 +34,11 @@ for more information.
     );
   }
 
+  /** We only need to unbind all shortcuts when the backend is destroyed. */
+  public async deinit(): Promise<void> {
+    await this.bindShortcuts([]);
+  }
+
   /**
    * 'splash' seems to be a good choice for Hyprland. See:
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions

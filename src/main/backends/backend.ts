@@ -42,6 +42,15 @@ export abstract class Backend extends EventEmitter {
   public abstract init(): Promise<void>;
 
   /**
+   * This method will be called when Kando is about to exit. It can be used to disconnect
+   * from IPC mechanisms or to clean up resources. Also, global shortcuts should be
+   * unbound here.
+   *
+   * @returns A promise which resolves when the backend has been cleaned up.
+   */
+  public abstract deinit(): Promise<void>;
+
+  /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
    * for more information.
    *

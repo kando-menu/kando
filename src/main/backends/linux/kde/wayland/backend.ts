@@ -145,6 +145,17 @@ export class KDEWaylandBackend extends Backend {
   }
 
   /**
+   * We only unbind all shortcuts if we are using the KWin scripting interface for binding
+   * shortcuts. Global shortcuts bound via the global shortcuts portal should stay bound
+   * even if Kando is closed.
+   */
+  public async deinit(): Promise<void> {
+    if (!this.globalShortcutsAvailable) {
+      await this.bindShortcuts([]);
+    }
+  }
+
+  /**
    * This uses a KWin script to get the name and app of the currently focused window as
    * well as the current pointer position.
    *
