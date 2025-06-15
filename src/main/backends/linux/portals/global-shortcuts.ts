@@ -87,7 +87,10 @@ export class GlobalShortcuts extends DesktopPortal {
 
       if (result.body?.length > 0) {
         const response = result.body[1];
-        return response.shortcuts.value.map((item: [string, unknown]) => item[0]);
+
+        if (response.shortcuts?.value.length > 0) {
+          return response.shortcuts.value.map((item: [string, unknown]) => item[0]);
+        }
       }
     }
 
