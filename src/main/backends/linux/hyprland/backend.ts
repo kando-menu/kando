@@ -38,14 +38,14 @@ for more information.
     );
 
     this.globalShortcuts.on('ShortcutActivated', (shortcutID: string) => {
-      this.onShortcutPressed(shortcutID);
+      if (!this.getInhibitedShortcuts().includes(shortcutID)) {
+        this.onShortcutPressed(shortcutID);
+      }
     });
   }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
-  public async deinit(): Promise<void> {
-    await this.bindShortcuts([]);
-  }
+  public async deinit(): Promise<void> {}
 
   /**
    * 'splash' seems to be a good choice for Hyprland. See:
@@ -107,6 +107,10 @@ for more information.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previouslyBound: string[]
   ) {
+    if (shortcuts.length === 0) {
+      return;
+    }
+
     this.globalShortcuts.bindShortcuts(
       shortcuts.map((shortcut) => {
         return {
@@ -116,6 +120,23 @@ for more information.
       })
     );
   }
+
+  /**
+   * On KDE Wayland, we cannot unbind shortcuts to inhibit them. If we did, the global
+   * shortcuts portal would pop up all the time. So instead, we just check whether a
+   * shortcut is in the inhibitedShortcuts array and do not emit the 'shortcutPressed' if
+   * it is pressed. So we do not need to do anything here.
+   *
+   * @param shortcuts The shortcuts that should be inhibited now.
+   * @param previouslyInhibited The shortcuts that were inhibited before this call.
+   * @returns A promise which resolves when the shortcuts have been inhibited.
+   */
+  protected async inhibitShortcutsImpl(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    shortcuts: string[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    previouslyInhibited: string[]
+  ) {}
 
   /**
    * This uses the hyprctl command line tool to execute a command and parse its JSON
