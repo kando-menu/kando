@@ -37,6 +37,7 @@ for more information.
 `
     );
 
+    // Emit the 'shortcutPressed' event when a shortcut is activated.
     this.globalShortcuts.on('ShortcutActivated', (shortcutID: string) => {
       if (!this.getInhibitedShortcuts().includes(shortcutID)) {
         this.onShortcutPressed(shortcutID);
@@ -44,8 +45,8 @@ for more information.
     });
   }
 
-  /** We only need to unbind all shortcuts when the backend is destroyed. */
-  public async deinit(): Promise<void> {}
+  /** Nothing to be done here. */
+  public async deinit() {}
 
   /**
    * 'splash' seems to be a good choice for Hyprland. See:
@@ -107,6 +108,7 @@ for more information.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previouslyBound: string[]
   ) {
+    // Nothing to do if no shortcuts are given.
     if (shortcuts.length === 0) {
       return;
     }
@@ -115,17 +117,16 @@ for more information.
       shortcuts.map((shortcut) => {
         return {
           id: shortcut,
-          description: 'Open Kando menu with ID "' + shortcut + '"',
+          description: 'Open the Kando menu with ID "' + shortcut + '"',
         };
       })
     );
   }
 
   /**
-   * On KDE Wayland, we cannot unbind shortcuts to inhibit them. If we did, the global
-   * shortcuts portal would pop up all the time. So instead, we just check whether a
-   * shortcut is in the inhibitedShortcuts array and do not emit the 'shortcutPressed' if
-   * it is pressed. So we do not need to do anything here.
+   * On with the desktop portal, we cannot unbind shortcuts to inhibit them. So instead,
+   * we just check whether a shortcut is in the inhibitedShortcuts array and do not emit
+   * the 'shortcutPressed' if it is pressed. So we do not need to do anything here.
    *
    * @param shortcuts The shortcuts that should be inhibited now.
    * @param previouslyInhibited The shortcuts that were inhibited before this call.
