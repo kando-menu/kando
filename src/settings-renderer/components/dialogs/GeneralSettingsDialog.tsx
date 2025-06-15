@@ -85,9 +85,7 @@ export default function GeneralSettingsDialog() {
           <SettingsDropdown
             maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.localization-label')}
-            info={i18next.t(
-              'settings.general-settings-dialog.localization-info'
-            )}
+            info={i18next.t('settings.general-settings-dialog.localization-info')}
             settingsKey="locale"
             options={[
               {
