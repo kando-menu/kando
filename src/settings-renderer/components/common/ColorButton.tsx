@@ -59,8 +59,9 @@ export default function ColorButton(props: IProps) {
           <RgbaStringColorPicker
             color={cssColor}
             onChange={(newColor) => {
-              setCSSColor(newColor);
-              setInputColor(newColor);
+              const cssColor = chroma(newColor).css();
+              setCSSColor(cssColor);
+              setInputColor(cssColor);
             }}
           />
           <input
