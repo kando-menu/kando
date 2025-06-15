@@ -28,7 +28,7 @@
     "general-settings-dialog": {
       "localization-properties": "Language properties",
       "localization-label": "Language",
-      "localization-info": "You can change the interface language using this drop-down list.",
+      "localization-info": "You can change the interface language using this drop-down list. For the changes to take effect, reopen the settings.",
       "none": "None",
       "title": "General Settings",
       "message": "All settings of Kando are stored in a JSON file which you can also edit, share, or backup. Click [here]({{link}}) to open the directory where the config.json file is stored.",
