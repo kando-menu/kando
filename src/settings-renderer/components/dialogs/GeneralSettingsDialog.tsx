@@ -11,7 +11,7 @@
 import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import i18next from 'i18next';
 
 import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
