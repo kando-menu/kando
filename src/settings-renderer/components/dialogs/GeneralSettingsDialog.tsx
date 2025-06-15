@@ -11,11 +11,10 @@
 import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import i18next from 'i18next';
 
 import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
-
 import { useAppState } from '../../state';
 
 import {
@@ -82,7 +81,105 @@ export default function GeneralSettingsDialog() {
           </Note>
 
           <Swirl variant="2" width={350} marginBottom={10} />
-
+          <h1>{i18next.t('settings.general-settings-dialog.localization-properties')}</h1>
+          <SettingsDropdown
+            maxWidth={200}
+            label={i18next.t('settings.general-settings-dialog.localization-label')}
+            info={i18next.t(
+              'settings.general-settings-dialog.localization-info'
+            )}
+            settingsKey="locale"
+            options={[
+              {
+                value: 'en',
+                label: 'English',
+              },
+              {
+                value: 'uk',
+                label: 'Українська',
+              },
+              {
+                value: 'de',
+                label: 'Deutsch',
+              },
+              {
+                value: 'zh-Hans',
+                label: '简体中文', // Simplified Chinese
+              },
+              {
+                value: 'zh-Hant',
+                label: '繁體中文', // Traditional Chinese
+              },
+              {
+                value: 'cs',
+                label: 'Čeština',
+              },
+              {
+                value: 'da',
+                label: 'Dansk',
+              },
+              {
+                value: 'nl',
+                label: 'Nederlands',
+              },
+              {
+                value: 'fi',
+                label: 'Suomi',
+              },
+              {
+                value: 'fr',
+                label: 'Français',
+              },
+              {
+                value: 'el',
+                label: 'Ελληνικά',
+              },
+              {
+                value: 'ia',
+                label: 'Interlingua',
+              },
+              {
+                value: 'it',
+                label: 'Italiano',
+              },
+              {
+                value: 'ko',
+                label: '한국어',
+              },
+              {
+                value: 'lt',
+                label: 'Lietuvių',
+              },
+              {
+                value: 'nb_NO',
+                label: 'Norsk Bokmål',
+              },
+              {
+                value: 'fa',
+                label: 'فارسی',
+              },
+              {
+                value: 'pt_BR',
+                label: 'Português (Brasil)',
+              },
+              {
+                value: 'ru',
+                label: 'Русский',
+              },
+              {
+                value: 'es',
+                label: 'Español',
+              },
+              {
+                value: 'ta',
+                label: 'தமிழ்',
+              },
+              {
+                value: 'tr',
+                label: 'Türkçe',
+              },
+            ]}
+          />
           <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.check-for-new-versions')}

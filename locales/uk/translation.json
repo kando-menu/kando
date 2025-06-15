@@ -188,6 +188,9 @@
         "centered-mode": "Відцентрований Режим",
         "centered-mode-info": "Відкривайте меню в центрі екрана, а не за курсором.",
         "general-settings-dialog": {
+            "localization-properties": "Налаштування мови",
+            "localization-label": "Мова",
+            "localization-info": "Ти можеш змінювати мову інтрефейсу за допомогою цього випадаючого списку",
             "reload-menu-theme": "Перезавантажити тему меню",
             "reload-menu-theme-tooltip": "Зміни CSS будуть застосовані негайно, для внесення змін у файл theme.json потрібно перевідкрити меню.",
             "reload-sound-theme": "Перезавантажити звукову тему",
