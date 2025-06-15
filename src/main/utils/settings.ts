@@ -15,6 +15,7 @@ import lodash from 'lodash';
 
 import os from 'os';
 import { Notification } from 'electron';
+import i18next from 'i18next';
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -380,12 +381,15 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         Object.prototype.hasOwnProperty.call(newSettings, key) &&
         !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
-        this.emit(key, this.settings[key], oldSettings[key]);
+        this.emit(key, newSettings[key], oldSettings[key]);
         anyChanged = true;
       }
     }
 
     if (anyChanged) {
+      if (!lodash.isEqual(oldSettings['locale'], newSettings['locale'])) {
+        i18next.changeLanguage(newSettings['locale']);
+      }
       this.anyChangeListeners.forEach((listener) => listener(newSettings, oldSettings));
     }
   }
