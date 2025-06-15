@@ -71,17 +71,27 @@ for more information.
    */
   public async getWMInfo() {
     // We need to call hyprctl multiple times to get all the information we need.
-    const [activewindow, cursorpos] = await Promise.all([
-      this.hyprctl('activewindow'),
-      this.hyprctl('cursorpos'),
-    ]);
+    try {
+      const [activewindow, cursorpos] = await Promise.all([
+        this.hyprctl('activewindow'),
+        this.hyprctl('cursorpos'),
+      ]);
 
-    return {
-      windowName: activewindow['initialTitle'] || '',
-      appName: activewindow['initialClass'] || '',
-      pointerX: cursorpos['x'],
-      pointerY: cursorpos['y'],
-    };
+      return {
+        windowName: activewindow['initialTitle'] || '',
+        appName: activewindow['initialClass'] || '',
+        pointerX: cursorpos['x'],
+        pointerY: cursorpos['y'],
+      };
+    } catch (error) {
+      console.error('Failed to get WM info from hyprctl:', error);
+      return {
+        windowName: '',
+        appName: '',
+        pointerX: 0,
+        pointerY: 0,
+      };
+    }
   }
 
   /**
