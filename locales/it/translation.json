@@ -266,7 +266,12 @@
             "enable-turbo-mode-info": "Con Modalità Turbo abilitata, puoi eseguire gesti fintanto che tieni premuto un tasto modificatore come Shift o Ctrl.",
             "check-for-new-versions-info": "Se abilitato, Kando mostrerà una notifica quando è disponibile una nuova versione.",
             "require-click-for-hover-mode-info": "Se deselezionato, gli elementi saranno selezionati immediatamente quando il mouse è mosso sopra di loro nei menu che utilizzano la Modalità Al Passaggio del Mouse.",
-            "require-click-for-hover-mode": "Richiedi un clic per le selezioni in Modalità Al Passaggio del Mouse"
+            "require-click-for-hover-mode": "Richiedi un clic per le selezioni in Modalità Al Passaggio del Mouse",
+            "do-nothing": "Non fare nulla",
+            "cycle-menus": "Passa attraverso i menu corrispondenti",
+            "press-again-behavior": "Comportamento premi-di-nuovo-la-scorciatoia",
+            "press-again-behavior-info": "Questo determina cosa accade quando la scorciatoia è premuta di nuovo mentre è mostrato un menu. Se più o meno sono assegnati alla stessa scorciatoia, poi utilizzare questo per passare attraverso tutti i menu corrispondenti. Assicurati sulla mente di tenere premuto un tasto modificatore se vuoi usare la modalità turbo insieme a un'opzione diversa da 'Non fare nulla'.",
+            "close-menu": "Chiudi menu"
         },
         "icon-picker-dialog": {
             "search-placeholder": "Cerca Icone…",
@@ -351,7 +356,7 @@
             "top-left": "Trascina questo nell'angolo in alto a sinistra della tua area.",
             "bottom-right-value": "Destra: {{x}}, Basso: {{y}}",
             "bottom-right": "Trascina questo nell'angolo in basso a destra della tua area.",
-            "title": "Seleziona un'area dello schermo",
+            "title": "Indica un'area dello schermo",
             "invalid": "Assicurati che l'angolo in alto a sinistra sia al di sopra e alla sinistra dell'angolo in basso a destra.",
             "confirm": "Utilizza questa area"
         },
@@ -359,7 +364,7 @@
             "start-countdown": "Inizia il conto alla rovescia",
             "countdown_one": "Seleziona in {{count}} secondo…",
             "countdown_many": "Seleziona in {{count}} secondi…",
-            "countdown_other": "",
+            "countdown_other": "Seleziona in {{count}} secondi…",
             "pick-window-title-title": "Seleziona il titolo di una finestra",
             "confirm": "Usa questo valore",
             "result": "Hai selezionato \"{{name}}\".",
@@ -395,6 +400,7 @@
         "area-condition-tooltip": "Seleziona un'area dello schermo",
         "no-menus-note": "Se hai cancellato l'ultimo per errore, puoi recuperarlo usando il bottone Annulla.",
         "search-menus-placeholder": "Cerca menu…",
-        "all-menus": "Tutti i Menu"
+        "all-menus": "Tutti i Menu",
+        "add-menu-item-hint": "Trascina questo elemento per aggiungerlo al menu di sopra!"
     }
 }
