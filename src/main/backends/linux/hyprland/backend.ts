@@ -10,15 +10,19 @@
 
 import i18next from 'i18next';
 import { exec } from 'child_process';
+
 import { WLRBackend } from '../wlroots/backend';
-import { native } from './native';
+import { GlobalShortcuts } from '../portals/global-shortcuts';
 
 /**
  * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
- * missing functionality using the hyprctl command line utility and the
- * hyprland-global-shortcuts-v1 Wayland protocol.
+ * missing functionality using the hyprctl command line utility and the global-shortcuts
+ * desktop protocol.
  */
 export class HyprBackend extends WLRBackend {
+  /** The global-shortcuts portal is used to bind os-level shortcuts. */
+  private globalShortcuts = new GlobalShortcuts();
+
   /**
    * This is called when the backend is created. We use it to print a warning, as the user
    * still needs to set up some window rules and bind the shortcuts.
@@ -32,6 +36,10 @@ See https://kando.menu/installation-on-linux/#-hyprland
 for more information.
 `
     );
+
+    this.globalShortcuts.on('ShortcutActivated', (shortcutID: string) => {
+      this.onShortcutPressed(shortcutID);
+    });
   }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
@@ -77,9 +85,8 @@ for more information.
   }
 
   /**
-   * On GNOME Wayland, the globalShortcuts module from Electron does not work. Instead, we
-   * use the DBus interface of the Kando GNOME Shell integration extension to bind and
-   * unbind shortcuts.
+   * This method binds the given global shortcuts. It uses the global-shortcuts desktop
+   * portal.
    *
    * @param shortcuts The shortcuts that should be bound now.
    * @param previouslyBound The shortcuts that were bound before this call.
@@ -87,31 +94,17 @@ for more information.
    */
   protected override async bindShortcutsImpl(
     shortcuts: string[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previouslyBound: string[]
   ) {
-    // Use a shortcut if we unbind all shortcuts :)
-    if (shortcuts.length === 0) {
-      native.unbindAllShortcuts();
-      return;
-    }
-
-    const shortcutsToUnbind = previouslyBound.filter((s) => !shortcuts.includes(s));
-    const shortcutsToBind = shortcuts.filter((s) => !previouslyBound.includes(s));
-
-    // Unbind the obsolete shortcuts.
-    for (const shortcut of shortcutsToUnbind) {
-      native.unbindShortcut(shortcut);
-    }
-
-    // Bind the new shortcuts.
-    for (const shortcut of shortcutsToBind) {
-      native.bindShortcut({
-        trigger: shortcut,
-        action: () => {
-          this.onShortcutPressed(shortcut);
-        },
-      });
-    }
+    this.globalShortcuts.bindShortcuts(
+      shortcuts.map((shortcut) => {
+        return {
+          id: shortcut,
+          description: 'Open Kando menu with ID "' + shortcut + '"',
+        };
+      })
+    );
   }
 
   /**
