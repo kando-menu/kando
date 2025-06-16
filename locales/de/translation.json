@@ -93,7 +93,7 @@
             "detached": "Entkoppelt starten",
             "isolated": "Isoliert ausführen",
             "detached-info": "Dies wird den Prozess von Kando trennen, sodass er weiterläuft, wenn Kando geschlossen ist. Deaktivieren dieser Option kann Probleme mit Befehlen lösen, die nicht richtig starten.",
-            "isolated-info": "Dies wird den Befehl in einer sauberen Umgebung ausführen, was bedeutet, dass es keine Umgebungsvariablen von Kando erben wird. Dies kann bei Befehlen helfen, die nicht richtig starten."
+            "isolated-info": "Dies wird den Befehl in einer sauberen Umgebung ausführen, was bedeutet, dass er keine Umgebungsvariablen von Kando erben wird. Dies kann bei Befehlen helfen, die nicht richtig starten."
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
@@ -307,7 +307,11 @@
             "press-again-behavior-info": "Dies bestimmt, was passiert, wenn die Tastenkombination erneut gedrückt wird, während ein Menü noch angezeigt wird. Wenn mehrere Menüs der gleichen Kombination zugeordnet sind, können Sie das nutzen, um durch alle passenden Menüs durchzuschalten. Beachten Sie, dass wenn Sie eine andere Option als 'Nichts tun' auswählen, im Turbo-Modus nur eine Zusatztaste wie Strg gedrückt halten dürfen.",
             "cycle-menus": "Durch passende Menüs durchschalten",
             "close-menu": "Menü schließen",
-            "do-nothing": "Nichts tun"
+            "do-nothing": "Nichts tun",
+            "localization-label": "Sprache",
+            "app-settings": "Anwendungseinstellungen",
+            "localization-info": "Starten Sie Kando neu, um die Sprachänderung anzuwenden.",
+            "auto-language": "Systemsprache verwenden"
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
