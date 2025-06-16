@@ -50,7 +50,7 @@ export default function GeneralSettingsDialog() {
     const display = new Intl.DisplayNames([code], { type: 'language' });
     return {
       value: code,
-      label: display.of(code)
+      label: display.of(code),
     };
   });
 
