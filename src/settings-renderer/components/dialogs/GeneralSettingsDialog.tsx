@@ -46,6 +46,14 @@ export default function GeneralSettingsDialog() {
   // We make sure that some widgets have a consistent width.
   const spinbuttonWidth = 60;
 
+  const localeOptions = cLocales.map((code) => {
+    const display = new Intl.DisplayNames([code], { type: 'language' });
+    return {
+      value: code,
+      label: display.of(code)
+    };
+  });
+
   return (
     <Modal
       title={i18next.t('settings.general-settings-dialog.title')}
@@ -87,96 +95,7 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.localization-label')}
             info={i18next.t('settings.general-settings-dialog.localization-info')}
             settingsKey="locale"
-            options={[
-              {
-                value: 'en',
-                label: 'English',
-              },
-              {
-                value: 'uk',
-                label: 'Українська',
-              },
-              {
-                value: 'de',
-                label: 'Deutsch',
-              },
-              {
-                value: 'zh-Hans',
-                label: '简体中文', // Simplified Chinese
-              },
-              {
-                value: 'zh-Hant',
-                label: '繁體中文', // Traditional Chinese
-              },
-              {
-                value: 'cs',
-                label: 'Čeština',
-              },
-              {
-                value: 'da',
-                label: 'Dansk',
-              },
-              {
-                value: 'nl',
-                label: 'Nederlands',
-              },
-              {
-                value: 'fi',
-                label: 'Suomi',
-              },
-              {
-                value: 'fr',
-                label: 'Français',
-              },
-              {
-                value: 'el',
-                label: 'Ελληνικά',
-              },
-              {
-                value: 'ia',
-                label: 'Interlingua',
-              },
-              {
-                value: 'it',
-                label: 'Italiano',
-              },
-              {
-                value: 'ko',
-                label: '한국어',
-              },
-              {
-                value: 'lt',
-                label: 'Lietuvių',
-              },
-              {
-                value: 'nb_NO',
-                label: 'Norsk Bokmål',
-              },
-              {
-                value: 'fa',
-                label: 'فارسی',
-              },
-              {
-                value: 'pt_BR',
-                label: 'Português (Brasil)',
-              },
-              {
-                value: 'ru',
-                label: 'Русский',
-              },
-              {
-                value: 'es',
-                label: 'Español',
-              },
-              {
-                value: 'ta',
-                label: 'தமிழ்',
-              },
-              {
-                value: 'tr',
-                label: 'Türkçe',
-              },
-            ]}
+            options={localeOptions}
           />
           <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox
