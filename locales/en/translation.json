@@ -31,7 +31,7 @@
       "message": "All settings of Kando are stored in a JSON file which you can also edit, share, or backup. Click [here]({{link}}) to open the directory where the config.json file is stored.",
       "app-settings": "Application Settings",
       "localization-label": "Language",
-      "localization-info": "You can change the interface language using this drop-down list. For the changes to take effect, reopen the application.",
+      "localization-info": "Restart Kando to apply the new language.",
       "auto-language": "Use system language",
       "check-for-new-versions": "Check for new versions",
       "check-for-new-versions-info": "If enabled, Kando will show a notification when a new version is available.",
