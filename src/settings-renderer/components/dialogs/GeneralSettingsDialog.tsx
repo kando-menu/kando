@@ -56,7 +56,7 @@ export default function GeneralSettingsDialog() {
 
   localeOptions.unshift({
     value: 'auto',
-    label: 'Auto',
+    label: i18next.t('settings.general-settings-dialog.auto-language'),
   });
 
   return (
