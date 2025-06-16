@@ -387,9 +387,6 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     }
 
     if (anyChanged) {
-      if (!lodash.isEqual(oldSettings['locale'], newSettings['locale'])) {
-        i18next.changeLanguage(newSettings['locale']);
-      }
       this.anyChangeListeners.forEach((listener) => listener(newSettings, oldSettings));
     }
   }
