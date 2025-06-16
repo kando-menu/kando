@@ -54,6 +54,11 @@ export default function GeneralSettingsDialog() {
     };
   });
 
+  localeOptions.unshift({
+    value: 'auto',
+    label: 'Auto',
+  });
+
   return (
     <Modal
       title={i18next.t('settings.general-settings-dialog.title')}
@@ -89,7 +94,7 @@ export default function GeneralSettingsDialog() {
           </Note>
 
           <Swirl variant="2" width={350} marginBottom={10} />
-          <h1>{i18next.t('settings.general-settings-dialog.localization-properties')}</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.app-settings')}</h1>
           <SettingsDropdown
             maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.localization-label')}
@@ -97,7 +102,6 @@ export default function GeneralSettingsDialog() {
             settingsKey="locale"
             options={localeOptions}
           />
-          <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
           <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.check-for-new-versions')}
             info={i18next.t(
