@@ -13,3 +13,4 @@
 declare const cIsMac: boolean;
 declare const cIsWindows: boolean;
 declare const cIsLinux: boolean;
+declare const cLocales: string[];

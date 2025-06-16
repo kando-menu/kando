@@ -15,7 +15,6 @@ import React from 'react';
 import i18next from 'i18next';
 
 import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
-
 import { useAppState } from '../../state';
 
 import {
@@ -46,6 +45,19 @@ export default function GeneralSettingsDialog() {
 
   // We make sure that some widgets have a consistent width.
   const spinbuttonWidth = 60;
+
+  const localeOptions = cLocales.map((code) => {
+    const display = new Intl.DisplayNames([code], { type: 'language' });
+    return {
+      value: code,
+      label: display.of(code),
+    };
+  });
+
+  localeOptions.unshift({
+    value: 'auto',
+    label: i18next.t('settings.general-settings-dialog.auto-language'),
+  });
 
   return (
     <Modal
@@ -82,8 +94,14 @@ export default function GeneralSettingsDialog() {
           </Note>
 
           <Swirl variant="2" width={350} marginBottom={10} />
-
-          <h1>{i18next.t('settings.general-settings-dialog.app-behavior')}</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.app-settings')}</h1>
+          <SettingsDropdown
+            maxWidth={200}
+            label={i18next.t('settings.general-settings-dialog.localization-label')}
+            info={i18next.t('settings.general-settings-dialog.localization-info')}
+            settingsKey="locale"
+            options={localeOptions}
+          />
           <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.check-for-new-versions')}
             info={i18next.t(
