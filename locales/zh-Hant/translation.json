@@ -108,7 +108,11 @@
             "cycle-menus": "循環切換符合的選單",
             "close-menu": "關閉選單",
             "do-nothing": "無動作",
-            "press-again-behavior-info": "此選項決定當選單已顯示時，再次按下快捷鍵會執行的行為。如果有多個選單綁定至同一個快捷鍵，您可以用此功能來循環切換所有符合條件的選單。若要將極速模式與「無動作」以外的選項搭配使用，請務必只按住修飾鍵。"
+            "press-again-behavior-info": "此選項決定當選單已顯示時，再次按下快捷鍵會執行的行為。如果有多個選單綁定至同一個快捷鍵，您可以用此功能來循環切換所有符合條件的選單。若要將極速模式與「無動作」以外的選項搭配使用，請務必只按住修飾鍵。",
+            "localization-label": "語言",
+            "auto-language": "使用系統語言",
+            "localization-info": "需重新啟動 Kando，語言設定才會生效。",
+            "app-settings": "應用程式設定"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
