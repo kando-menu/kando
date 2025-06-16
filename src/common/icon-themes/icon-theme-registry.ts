@@ -78,10 +78,20 @@ export class IconThemeRegistry {
   private _userIconThemeDirectory = '';
 
   /**
-   * This is a singleton class. The constructor is private. Use `getInstance` to get the
-   * instance of this class.
+   * Use this method to get the singleton instance of this class.
+   *
+   * @returns The singleton instance of this class.
    */
-  private constructor() {
+  public static getInstance(): IconThemeRegistry {
+    return IconThemeRegistry.instance;
+  }
+
+  /**
+   * Initializes the icon theme registry. This method should be called once at the
+   * beginning of the application to register all built-in icon themes and the user icon
+   * themes.
+   */
+  public async init() {
     this.iconThemes.set('simple-icons', new SimpleIconsTheme());
     this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());

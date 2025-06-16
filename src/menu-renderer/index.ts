@@ -17,6 +17,7 @@ import { Menu } from './menu';
 import { SettingsButton } from './settings-button';
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
+import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 
 /**
  * This file is the main entry point for Kando's menu renderer process. It is responsible
@@ -74,6 +75,9 @@ Promise.all([
 
   window.menuAPI.onReloadSoundTheme(reloadSoundTheme);
 
+  // Initialize the icon theme registry.
+  await IconThemeRegistry.getInstance().init();
+
   // Create the settings button. This is the button that is shown in one corner of the
   // screen. It is used to open the settings dialog.
   const settingsButton = new SettingsButton(
@@ -108,6 +112,13 @@ Promise.all([
   window.menuAPI.onShowMenu((root, menuOptions) => {
     menu.show(root, menuOptions);
     settingsButton.show();
+  });
+
+  // Hide the menu when the main process requests it.
+  window.menuAPI.onHideMenu(() => {
+    menu.hide();
+    settingsButton.hide();
+    window.menuAPI.cancelSelection();
   });
 
   // Tell the menu about settings changes. This could check more detailed which setting

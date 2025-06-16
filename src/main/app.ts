@@ -31,8 +31,10 @@ import {
   getDefaultGeneralSettings,
   getDefaultMenuSettings,
   IWMInfo,
+  SoundType,
+  ISoundEffect,
 } from '../common';
-import { Settings, DeepReadonly } from './utils/settings';
+import { Settings } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
@@ -63,7 +65,7 @@ export class KandoApp {
   private settingsWindow?: SettingsWindow;
 
   /** True if shortcuts are currently inhibited. */
-  private inhibitShortcuts = false;
+  private inhibitAllShortcuts = false;
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
@@ -387,6 +389,14 @@ export class KandoApp {
 
     await this.backend.init();
 
+    this.backend.on('shortcutPressed', (trigger) => {
+      this.showMenu({ trigger });
+
+      // We use the opportunity to check for updates. If an update is available, we show
+      // a notification to the user. This notification is only shown once per session.
+      this.updateChecker.checkForUpdates();
+    });
+
     // We load the settings from the user's home directory. If the settings file does not
     // exist, it will be created with the default values. The only special setting is the
     // settingsWindowFlavor setting which is set to transparent only if the backend
@@ -695,7 +705,7 @@ export class KandoApp {
   /** This is called when the app is closed. It will unbind all shortcuts. */
   public async quit() {
     if (this.backend != null) {
-      await this.backend.unbindAllShortcuts();
+      await this.backend.deinit();
     }
 
     this.generalSettings.close();
@@ -743,6 +753,11 @@ export class KandoApp {
     return this.settingsWindow?.isVisible();
   }
 
+  /** @returns True if the shortcuts are currently inhibited. */
+  public allShortcutsInhibited() {
+    return this.inhibitAllShortcuts;
+  }
+
   /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
@@ -757,15 +772,22 @@ export class KandoApp {
       await this.menuWindow.load();
     }
 
-    this.backend
-      .getWMInfo()
-      .then((info) => {
-        this.lastWMInfo = info;
-        this.menuWindow.showMenu(request, info);
-      })
-      .catch((error) =>
-        Notification.showError('Failed to show menu', error.message || error)
-      );
+    const wmInfo = await this.backend.getWMInfo();
+
+    // If a menu is already shown, we do not need the window information from the backend
+    // as now Kando will be in focus. We use the old information instead.
+    if (this.lastWMInfo && this.menuWindow.isVisible()) {
+      wmInfo.appName = this.lastWMInfo.appName;
+      wmInfo.windowName = this.lastWMInfo.windowName;
+    }
+
+    this.lastWMInfo = wmInfo;
+
+    try {
+      this.menuWindow.showMenu(request, this.lastWMInfo);
+    } catch (error) {
+      Notification.showError('Failed to show menu', error.message || error);
+    }
   }
 
   /**
@@ -1198,12 +1220,12 @@ export class KandoApp {
     });
 
     // Add an entry to pause or unpause the shortcuts.
-    if (this.inhibitShortcuts) {
+    if (this.inhibitAllShortcuts) {
       template.push({
         label: i18next.t('main.un-inhibit-shortcuts'),
         click: () => {
-          this.inhibitShortcuts = false;
-          this.bindShortcuts();
+          this.inhibitAllShortcuts = false;
+          this.backend.inhibitShortcuts([]);
           this.updateTrayMenu();
         },
       });
@@ -1211,8 +1233,8 @@ export class KandoApp {
       template.push({
         label: i18next.t('main.inhibit-shortcuts'),
         click: () => {
-          this.inhibitShortcuts = true;
-          this.backend.unbindAllShortcuts();
+          this.inhibitAllShortcuts = true;
+          this.backend.inhibitAllShortcuts();
           this.updateTrayMenu();
         },
       });
@@ -1242,44 +1264,23 @@ export class KandoApp {
 
     this.bindingShortcuts = true;
 
-    // First, we unbind all shortcuts.
-    await this.backend.unbindAllShortcuts();
-
-    // Then, we collect all unique shortcuts and the corresponding menus.
-    const triggers = new Map<string, DeepReadonly<IMenu>[]>();
-    for (const menu of this.menuSettings.get('menus')) {
-      const trigger = this.backend.getBackendInfo().supportsShortcuts
+    // First, we collect all shortcuts / shortcut IDs of all menus.
+    let shortcuts = this.menuSettings.get('menus').map((menu) => {
+      const shortcut = this.backend.getBackendInfo().supportsShortcuts
         ? menu.shortcut
         : menu.shortcutID;
 
-      if (trigger) {
-        if (!triggers.has(trigger)) {
-          triggers.set(trigger, []);
-        }
-        triggers.get(trigger).push(menu);
-      }
-    }
+      return shortcut;
+    });
 
-    // Finally, we bind the shortcuts. If there are multiple menus with the same
-    // shortcut, the shortcut will open the first menu for now.
-    for (const [trigger] of triggers) {
-      try {
-        await this.backend.bindShortcut({
-          trigger,
-          action: () => {
-            this.showMenu({ trigger: trigger });
+    // Make them unique.
+    shortcuts = Array.from(new Set(shortcuts)).filter((trigger) => trigger !== '');
 
-            // We use the opportunity to check for updates. If an update is available, we show
-            // a notification to the user. This notification is only shown once per app start.
-            this.updateChecker.checkForUpdates();
-          },
-        });
-      } catch (error) {
-        Notification.showError(
-          'Failed to bind shortcut ' + trigger,
-          error.message || error
-        );
-      }
+    // Finally, we bind the shortcuts.
+    try {
+      await this.backend.bindShortcuts(shortcuts);
+    } catch (error) {
+      Notification.showError('Failed to bind shortcut', error.message || error);
     }
 
     this.bindingShortcuts = false;
@@ -1469,7 +1470,7 @@ export class KandoApp {
         themeVersion: '',
         author: '',
         license: '',
-        sounds: {},
+        sounds: {} as Record<SoundType, ISoundEffect>,
       };
 
       return description;

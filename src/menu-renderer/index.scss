@@ -191,4 +191,8 @@ body {
     right: 10px;
     border-top-left-radius: 40%;
   }
+
+  &:active {
+    transform: translateY(1px);
+  }
 }

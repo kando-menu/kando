@@ -9,9 +9,9 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
-import { screen, globalShortcut } from 'electron';
+import { screen } from 'electron';
 import { native } from './native';
-import { Backend, Shortcut } from '../backend';
+import { Backend } from '../backend';
 import { IKeySequence } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 
@@ -19,7 +19,7 @@ import { mapKeys } from '../../../common/key-codes';
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
  * and mouse movements. It also uses the Win32 API to get the currently focused window.
  */
-export class WindowsBackend implements Backend {
+export class WindowsBackend extends Backend {
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
@@ -46,6 +46,11 @@ export class WindowsBackend implements Backend {
    * Windows.
    */
   public async init() {}
+
+  /** We only need to unbind all shortcuts when the backend is destroyed. */
+  public async deinit(): Promise<void> {
+    await this.bindShortcuts([]);
+  }
 
   /**
    * This uses the Win23 API to get the name and app of the currently focused window. In
@@ -101,33 +106,6 @@ export class WindowsBackend implements Backend {
 
       native.simulateKey(keyCodes[i], keys[i].down);
     }
-  }
-
-  /**
-   * This binds a shortcut. The action callback of the shortcut is called when the
-   * shortcut is pressed. On Windows, this uses Electron's globalShortcut module.
-   *
-   * @param shortcut The shortcut to bind.
-   * @returns A promise which resolves when the shortcut has been bound.
-   */
-  public async bindShortcut(shortcut: Shortcut) {
-    if (!globalShortcut.register(shortcut.trigger, shortcut.action)) {
-      throw new Error('Invalid shortcut or it is already in use.');
-    }
-  }
-
-  /**
-   * This unbinds a previously bound shortcut.
-   *
-   * @param trigger The trigger of a previously bound.
-   */
-  public async unbindShortcut(trigger: string) {
-    globalShortcut.unregister(trigger);
-  }
-
-  /** This unbinds all previously bound shortcuts. */
-  public async unbindAllShortcuts() {
-    globalShortcut.unregisterAll();
   }
 
   /**

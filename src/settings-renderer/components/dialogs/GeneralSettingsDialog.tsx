@@ -274,6 +274,26 @@ export default function GeneralSettingsDialog() {
             )}
             settingsKey="enableGamepad"
           />
+          <SettingsDropdown
+            maxWidth={300}
+            label={i18next.t('settings.general-settings-dialog.press-again-behavior')}
+            info={i18next.t('settings.general-settings-dialog.press-again-behavior-info')}
+            settingsKey="sameShortcutBehavior"
+            options={[
+              {
+                value: 'nothing',
+                label: i18next.t('settings.general-settings-dialog.do-nothing'),
+              },
+              {
+                value: 'cycle',
+                label: i18next.t('settings.general-settings-dialog.cycle-menus'),
+              },
+              {
+                value: 'close',
+                label: i18next.t('settings.general-settings-dialog.close-menu'),
+              },
+            ]}
+          />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-sounds')}</h1>
           <Note marginTop={-5} markdown>
