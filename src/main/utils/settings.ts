@@ -15,7 +15,6 @@ import lodash from 'lodash';
 
 import os from 'os';
 import { Notification } from 'electron';
-import i18next from 'i18next';
 
 /**
  * This type is used to define all possible events which can be emitted by the
