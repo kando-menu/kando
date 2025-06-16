@@ -286,7 +286,7 @@ export default function GeneralSettingsDialog() {
             settingsKey="enableGamepad"
           />
           <SettingsDropdown
-            maxWidth={300}
+            maxWidth={200}
             label={i18next.t('settings.general-settings-dialog.press-again-behavior')}
             info={i18next.t('settings.general-settings-dialog.press-again-behavior-info')}
             settingsKey="sameShortcutBehavior"
