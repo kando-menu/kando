@@ -89,7 +89,11 @@
             "tip-4": "Verwenden Sie {{window_name}}, um den Namen des Fensters einzufügen, das beim Öffnen des Menüs fokussiert war.",
             "tip-5": "Verwenden Sie {{pointer_x}} und {{pointer_y}}, um die Mausposition einzufügen, an der das Menü geöffnet wurde.",
             "placeholder": "Kommando einfügen…",
-            "tip-6": "Klicken Sie [hier]({{link}}), um zu erfahren, wie Sie die Befehle für das Starten Ihrer Apps finden."
+            "tip-6": "Klicken Sie [hier]({{link}}), um zu erfahren, wie Sie die Befehle für das Starten Ihrer Apps finden.",
+            "detached": "Entkoppelt starten",
+            "isolated": "Isoliert ausführen",
+            "detached-info": "Dies wird den Prozess von Kando trennen, sodass er weiterläuft, wenn Kando geschlossen ist. Deaktivieren dieser Option kann Probleme mit Befehlen lösen, die nicht richtig starten.",
+            "isolated-info": "Dies wird den Befehl in einer sauberen Umgebung ausführen, was bedeutet, dass er keine Umgebungsvariablen von Kando erben wird. Dies kann bei Befehlen helfen, die nicht richtig starten."
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
@@ -298,7 +302,16 @@
             "menu-window-dev-tools": "Menü inspizieren",
             "settings-window-dev-tools": "Einstellungen inspizieren",
             "reload-note": "Wenn Sie das Design neu laden, werden CSS-Änderungen angewendet, auch wenn ein Menü aktuell angezeigt wird. Für Änderungen an der theme.json-Datei, müssen Sie das Menü neu öffnen.",
-            "dev-tools-note": "Kando verwendet zwei Fenster: Eins für das Menü und ein anderes für die Einstellungen. Sie können die Entwicklungswerkzeuge öffnen, um beide Fenster zu inspizieren."
+            "dev-tools-note": "Kando verwendet zwei Fenster: Eins für das Menü und ein anderes für die Einstellungen. Sie können die Entwicklungswerkzeuge öffnen, um beide Fenster zu inspizieren.",
+            "press-again-behavior": "Verhalten bei erneutem Tastendruck",
+            "press-again-behavior-info": "Dies bestimmt, was passiert, wenn die Tastenkombination erneut gedrückt wird, während ein Menü noch angezeigt wird. Wenn mehrere Menüs der gleichen Kombination zugeordnet sind, können Sie das nutzen, um durch alle passenden Menüs durchzuschalten. Beachten Sie, dass wenn Sie eine andere Option als 'Nichts tun' auswählen, im Turbo-Modus nur eine Zusatztaste wie Strg gedrückt halten dürfen.",
+            "cycle-menus": "Durch passende Menüs durchschalten",
+            "close-menu": "Menü schließen",
+            "do-nothing": "Nichts tun",
+            "localization-label": "Sprache",
+            "app-settings": "Anwendungseinstellungen",
+            "localization-info": "Starten Sie Kando neu, um die Sprachänderung anzuwenden.",
+            "auto-language": "Systemsprache verwenden"
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
@@ -395,6 +408,7 @@
         "no-matching-menus": "Keine Menüs gefunden.",
         "empty-collection": "Diese Sammlung ist leer.",
         "empty-collection-note": "Bearbeiten Sie die Tags oben oder erstellen Sie ein neues Menü für diese Sammlung mit der Schaltfläche unten.",
-        "no-matching-menus-note": "Vielleicht versuchen Sie einen anderen Suchbegriff?"
+        "no-matching-menus-note": "Vielleicht versuchen Sie einen anderen Suchbegriff?",
+        "add-menu-item-hint": "Ziehen Sie dieses Menüelement, um es oben einzufügen!"
     }
 }
