@@ -272,7 +272,11 @@
             "do-nothing": "无动作",
             "press-again-behavior-info": "此选项决定当菜单已显示时，再次按下快捷键会执行的行为。如果有多个菜单绑定到同一个快捷键，您可以用此功能来循环切换所有符合条件的菜单。若要将极速模式与 “无动作” 以外的选项搭配使用，请务必只按住修饰键。",
             "cycle-menus": "循环切换符合条件的菜单",
-            "close-menu": "关闭菜单"
+            "close-menu": "关闭菜单",
+            "localization-label": "语言",
+            "auto-language": "使用系统语言",
+            "app-settings": "应用程序设置",
+            "localization-info": "需要重新启动 Kando 使语言设置生效。"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
