@@ -13,6 +13,7 @@
 declare const cIsMac: boolean;
 declare const cIsWindows: boolean;
 declare const cIsLinux: boolean;
+declare const cLocales: string[];
 
 /* eslint-disable */
 type CommonWindowApiType = typeof COMMON_WINDOW_API;
@@ -26,3 +27,4 @@ declare global {
     SETTINGS_WINDOW_API: SettingsWindowApiType;
   }
 }
+

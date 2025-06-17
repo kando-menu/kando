@@ -380,7 +380,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         Object.prototype.hasOwnProperty.call(newSettings, key) &&
         !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
-        this.emit(key, this.settings[key], oldSettings[key]);
+        this.emit(key, newSettings[key], oldSettings[key]);
         anyChanged = true;
       }
     }
