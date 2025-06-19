@@ -116,9 +116,7 @@ Promise.all([
 
   // Hide the menu when the main process requests it.
   window.menuAPI.onHideMenu(() => {
-    menu.hide();
-    settingsButton.hide();
-    window.menuAPI.cancelSelection();
+    menu.cancel();
   });
 
   // Tell the menu about settings changes. This could check more detailed which setting

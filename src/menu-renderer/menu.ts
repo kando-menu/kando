@@ -262,6 +262,15 @@ export class Menu extends EventEmitter {
     this.gamepadInput.closeButton = this.settings.gamepadCloseButton;
   }
 
+  /**
+   * This method closes the menu in case the selection should be canceled. This should be
+   * called if nothing is selected but the menu should be closed.
+   */
+  public cancel() {
+    this.soundTheme.playSound(SoundType.eCloseMenu);
+    this.emit('cancel');
+  }
+
   // --------------------------------------------------------------------- private methods
 
   /**
@@ -273,7 +282,7 @@ export class Menu extends EventEmitter {
       if (this.settings.rmbSelectsParent) {
         this.selectParent();
       } else {
-        this.cancelHide();
+        this.cancel();
       }
     };
 
@@ -315,7 +324,7 @@ export class Menu extends EventEmitter {
       // menu will be closed.
       if (type === SelectionType.eActiveItem && item) {
         if (this.selectionChain.length === 1 && item === this.root) {
-          this.cancelHide();
+          this.cancel();
         } else {
           this.selectItem(item, coords);
         }
@@ -478,15 +487,6 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * This method closes the menu in case the selection should be canceled. This should be
-   * called if nothing is selected but the menu should be closed.
-   */
-  private cancelHide() {
-    this.soundTheme.playSound(SoundType.eCloseMenu);
-    this.emit('cancel');
-  }
-
-  /**
    * Selects the given menu item. This will either push the item to the list of selected
    * items or pop the last item from the list of selected items if the newly selected item
    * is the parent of the previously selected item.
@@ -634,7 +634,7 @@ export class Menu extends EventEmitter {
       this.soundTheme.playSound(SoundType.eSelectParent);
       this.selectItem(this.selectionChain[this.selectionChain.length - 2], coords);
     } else {
-      this.cancelHide();
+      this.cancel();
     }
   }
 
