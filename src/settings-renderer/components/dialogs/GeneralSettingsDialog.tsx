@@ -419,65 +419,48 @@ export default function GeneralSettingsDialog() {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
-          <div
-            style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 10 }}>
-            <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 8,
-                minWidth: '40%',
-              }}>
-              <Button
-                label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
-                icon={<TbReload />}
-                block
-                onClick={() => {
-                  window.settingsAPI.reloadMenuTheme();
-                }}
-              />
-              <Button
-                label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
-                icon={<TbReload />}
-                block
-                onClick={() => {
-                  window.settingsAPI.reloadSoundTheme();
-                }}
-              />
-            </div>
+          <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
+              icon={<TbReload />}
+              block
+              onClick={() => {
+                window.settingsAPI.reloadMenuTheme();
+              }}
+            />
+            <Button
+              label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
+              icon={<TbReload />}
+              block
+              onClick={() => {
+                window.settingsAPI.reloadSoundTheme();
+              }}
+            />
           </div>
 
-          <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
-            <Note>{i18next.t('settings.general-settings-dialog.dev-tools-note')}</Note>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 8,
-                minWidth: '40%',
-              }}>
-              <Button
-                label={i18next.t(
-                  'settings.general-settings-dialog.menu-window-dev-tools'
-                )}
-                icon={<TbPointer />}
-                grow
-                onClick={() => {
-                  window.settingsAPI.showDevTools('menu-window');
-                }}
-              />
-              <Button
-                label={i18next.t(
-                  'settings.general-settings-dialog.settings-window-dev-tools'
-                )}
-                icon={<TbPointerCog />}
-                grow
-                onClick={() => {
-                  window.settingsAPI.showDevTools('settings-window');
-                }}
-              />
-            </div>
+          <Note marginTop={8}>
+            {i18next.t('settings.general-settings-dialog.dev-tools-note')}
+          </Note>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
+              icon={<TbPointer />}
+              block
+              onClick={() => {
+                window.settingsAPI.showDevTools('menu-window');
+              }}
+            />
+            <Button
+              label={i18next.t(
+                'settings.general-settings-dialog.settings-window-dev-tools'
+              )}
+              icon={<TbPointerCog />}
+              block
+              onClick={() => {
+                window.settingsAPI.showDevTools('settings-window');
+              }}
+            />
           </div>
         </div>
       </Scrollbox>
