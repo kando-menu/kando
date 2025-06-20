@@ -586,6 +586,12 @@ export interface IGeneralSettings {
   /** The time in milliseconds it takes to fade out the menu. */
   fadeOutDuration: number;
 
+  /**
+   * If enabled, the menu will take the input focus when opened. This is required for
+   * turbo mode to work.
+   */
+  takeInputFocus: boolean;
+
   /** If enabled, items can be selected by dragging the mouse over them. */
   enableMarkingMode: boolean;
 
@@ -687,6 +693,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     dragThreshold: 15,
     fadeInDuration: 150,
     fadeOutDuration: 200,
+    takeInputFocus: true,
     enableMarkingMode: true,
     enableTurboMode: true,
     warpMouse: true,

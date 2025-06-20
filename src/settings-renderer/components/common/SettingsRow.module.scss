@@ -30,6 +30,11 @@
     transform: translateY(1px);
   }
 
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   .widget {
     min-width: 0px;
     align-self: center;

@@ -39,7 +39,11 @@ interface IProps {
  */
 export default function Checkbox(props: IProps) {
   return (
-    <SettingsRow label={props.label} info={props.info} labelClickable>
+    <SettingsRow
+      label={props.label}
+      info={props.info}
+      labelClickable
+      disabled={props.disabled}>
       <input
         type="checkbox"
         className={classes.checkbox}
