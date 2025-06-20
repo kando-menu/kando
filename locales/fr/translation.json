@@ -272,7 +272,11 @@
             "do-nothing": "Ne rien faire",
             "cycle-menus": "Alterner entre les menus correspondants",
             "close-menu": "Fermer le menu",
-            "press-again-behavior-info": "Cette fonction détermine ce qui se passe lorsque l'on appuie à nouveau sur le raccourci alors qu'un menu est affiché. Si plusieurs menus sont attribués au même raccourci, vous pouvez utiliser cette touche pour alterner entre tous les menus correspondants. Veillez à ne maintenir enfoncée que les touches modifiantes tels que Ctrl, Alt ou Maj si vous souhaitez utiliser le mode Turbo avec une option autre que \"Ne rien faire\"."
+            "press-again-behavior-info": "Cette fonction détermine ce qui se passe lorsque l'on appuie à nouveau sur le raccourci alors qu'un menu est affiché. Si plusieurs menus sont attribués au même raccourci, vous pouvez utiliser cette touche pour alterner entre tous les menus correspondants. Veillez à ne maintenir enfoncée que les touches modifiantes tels que Ctrl, Alt ou Maj si vous souhaitez utiliser le mode Turbo avec une option autre que \"Ne rien faire\".",
+            "localization-label": "Langue",
+            "localization-info": "Redémarrez Kando pour appliquer la modification.",
+            "auto-language": "Utiliser la langue du système",
+            "app-settings": "Paramètres de l'application"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
