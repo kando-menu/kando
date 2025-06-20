@@ -267,8 +267,10 @@ export class Menu extends EventEmitter {
    * called if nothing is selected but the menu should be closed.
    */
   public cancel() {
-    this.soundTheme.playSound(SoundType.eCloseMenu);
-    this.emit('cancel');
+    if (!this.hideTimeout) {
+      this.soundTheme.playSound(SoundType.eCloseMenu);
+      this.emit('cancel');
+    }
   }
 
   // --------------------------------------------------------------------- private methods
