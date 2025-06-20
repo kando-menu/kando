@@ -276,7 +276,9 @@
             "localization-label": "语言",
             "auto-language": "使用系统语言",
             "app-settings": "应用程序设置",
-            "localization-info": "需要重新启动 Kando 使语言设置生效。"
+            "localization-info": "需要重新启动 Kando 使语言设置生效。",
+            "cycle-from-first": "显示下一个菜单（从第一个开始）",
+            "cycle-from-recent": "显示下一个菜单（从上一菜单接续）"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
