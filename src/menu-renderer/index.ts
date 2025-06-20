@@ -88,9 +88,7 @@ Promise.all([
   // Helper function to group and re-use function calls
   // associated with showing the settings window.
   const showSettings = () => {
-    menu.hide();
-    settingsButton.hide();
-    window.menuAPI.cancelSelection();
+    menu.cancel();
     window.menuAPI.showSettings();
   };
 
