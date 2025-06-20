@@ -649,7 +649,7 @@ export interface IGeneralSettings {
   gamepadCloseButton: number;
 
   /** Determines the behavior of pressing the trigger shortcut once the menu is open. */
-  sameShortcutBehavior: 'cycle' | 'close' | 'nothing';
+  sameShortcutBehavior: 'cycle-from-first' | 'cycle-from-recent' | 'close' | 'nothing';
 
   /**
    * If enabled, pressing 'cmd + ,' on macOS or 'ctrl + ,' on Linux or Windows will open

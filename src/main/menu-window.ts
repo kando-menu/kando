@@ -144,10 +144,17 @@ export class MenuWindow extends BrowserWindow {
 
         // If the 'sameShortcutBehavior' is set to 'cycle', we will show the next menu which
         // matches the current request.
-        if (sameShortcutBehavior === 'cycle') {
+        if (
+          sameShortcutBehavior === 'cycle-from-first' ||
+          sameShortcutBehavior === 'cycle-from-recent'
+        ) {
           this.menuIndex += 1;
         }
       }
+    } else if (sameShortcutBehavior === 'cycle-from-first') {
+      // If the menu is not visible and the 'sameShortcutBehavior' is set to 'cycle-from-first',
+      // we reset the menu index to 0. This way, the first menu will be shown again.
+      this.menuIndex = 0;
     }
 
     // Select correct menu before showing it to user.
@@ -485,7 +492,8 @@ export class MenuWindow extends BrowserWindow {
 
     // If the sameShortcutBehavior is set to 'cycle', we select the menu at the current
     // index. If the index is out of bounds, we wrap around to the first menu.
-    if (this.kando.getGeneralSettings().get('sameShortcutBehavior') === 'cycle') {
+    const behavior = this.kando.getGeneralSettings().get('sameShortcutBehavior');
+    if (behavior === 'cycle-from-first' || behavior === 'cycle-from-recent') {
       return bestMenus[this.menuIndex % bestMenus.length];
     }
 
