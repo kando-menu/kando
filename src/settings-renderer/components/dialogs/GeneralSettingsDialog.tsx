@@ -296,8 +296,12 @@ export default function GeneralSettingsDialog() {
                 label: i18next.t('settings.general-settings-dialog.do-nothing'),
               },
               {
-                value: 'cycle',
-                label: i18next.t('settings.general-settings-dialog.cycle-menus'),
+                value: 'cycle-from-first',
+                label: i18next.t('settings.general-settings-dialog.cycle-from-first'),
+              },
+              {
+                value: 'cycle-from-recent',
+                label: i18next.t('settings.general-settings-dialog.cycle-from-recent'),
               },
               {
                 value: 'close',
