@@ -23,7 +23,7 @@ import {
   TbFileImport,
 } from 'react-icons/tb';
 
-import { useAppState } from '../../state';
+import { useAppState, useGeneralSetting } from '../../state';
 
 import {
   Button,
@@ -41,6 +41,7 @@ export default function GeneralSettingsDialog() {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
   const soundThemes = useAppState((state) => state.soundThemes);
+  const [keepInputFocus] = useGeneralSetting('keepInputFocus');
 
   const soundThemeOptions = soundThemes.map((theme) => ({
     value: theme.id,
@@ -250,6 +251,11 @@ export default function GeneralSettingsDialog() {
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
           <SettingsCheckbox
+            label={i18next.t('settings.general-settings-dialog.keep-input-focus')}
+            info={i18next.t('settings.general-settings-dialog.keep-input-focus-info')}
+            settingsKey="keepInputFocus"
+          />
+          <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.enable-marking-mode')}
             info={i18next.t('settings.general-settings-dialog.enable-marking-mode-info')}
             settingsKey="enableMarkingMode"
@@ -258,6 +264,7 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.enable-turbo-mode')}
             info={i18next.t('settings.general-settings-dialog.enable-turbo-mode-info')}
             settingsKey="enableTurboMode"
+            disabled={keepInputFocus}
           />
           <SettingsCheckbox
             label={i18next.t(
@@ -304,8 +311,12 @@ export default function GeneralSettingsDialog() {
                 label: i18next.t('settings.general-settings-dialog.do-nothing'),
               },
               {
-                value: 'cycle',
-                label: i18next.t('settings.general-settings-dialog.cycle-menus'),
+                value: 'cycle-from-first',
+                label: i18next.t('settings.general-settings-dialog.cycle-from-first'),
+              },
+              {
+                value: 'cycle-from-recent',
+                label: i18next.t('settings.general-settings-dialog.cycle-from-recent'),
               },
               {
                 value: 'close',
@@ -427,65 +438,48 @@ export default function GeneralSettingsDialog() {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
-          <div
-            style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 10 }}>
-            <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 8,
-                minWidth: '40%',
-              }}>
-              <Button
-                label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
-                icon={<TbReload />}
-                block
-                onClick={() => {
-                  window.settingsAPI.reloadMenuTheme();
-                }}
-              />
-              <Button
-                label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
-                icon={<TbReload />}
-                block
-                onClick={() => {
-                  window.settingsAPI.reloadSoundTheme();
-                }}
-              />
-            </div>
+          <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
+              icon={<TbReload />}
+              block
+              onClick={() => {
+                window.settingsAPI.reloadMenuTheme();
+              }}
+            />
+            <Button
+              label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
+              icon={<TbReload />}
+              block
+              onClick={() => {
+                window.settingsAPI.reloadSoundTheme();
+              }}
+            />
           </div>
 
-          <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
-            <Note>{i18next.t('settings.general-settings-dialog.dev-tools-note')}</Note>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 8,
-                minWidth: '40%',
-              }}>
-              <Button
-                label={i18next.t(
-                  'settings.general-settings-dialog.menu-window-dev-tools'
-                )}
-                icon={<TbPointer />}
-                grow
-                onClick={() => {
-                  window.settingsAPI.showDevTools('menu-window');
-                }}
-              />
-              <Button
-                label={i18next.t(
-                  'settings.general-settings-dialog.settings-window-dev-tools'
-                )}
-                icon={<TbPointerCog />}
-                grow
-                onClick={() => {
-                  window.settingsAPI.showDevTools('settings-window');
-                }}
-              />
-            </div>
+          <Note marginTop={8}>
+            {i18next.t('settings.general-settings-dialog.dev-tools-note')}
+          </Note>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
+              icon={<TbPointer />}
+              block
+              onClick={() => {
+                window.settingsAPI.showDevTools('menu-window');
+              }}
+            />
+            <Button
+              label={i18next.t(
+                'settings.general-settings-dialog.settings-window-dev-tools'
+              )}
+              icon={<TbPointerCog />}
+              block
+              onClick={() => {
+                window.settingsAPI.showDevTools('settings-window');
+              }}
+            />
           </div>
 
           <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>

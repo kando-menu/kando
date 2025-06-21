@@ -586,6 +586,12 @@ export interface IGeneralSettings {
   /** The time in milliseconds it takes to fade out the menu. */
   fadeOutDuration: number;
 
+  /**
+   * If enabled, the menu will not take the input focus when opened. This will disable
+   * turbo mode.
+   */
+  keepInputFocus: boolean;
+
   /** If enabled, items can be selected by dragging the mouse over them. */
   enableMarkingMode: boolean;
 
@@ -649,7 +655,7 @@ export interface IGeneralSettings {
   gamepadCloseButton: number;
 
   /** Determines the behavior of pressing the trigger shortcut once the menu is open. */
-  sameShortcutBehavior: 'cycle' | 'close' | 'nothing';
+  sameShortcutBehavior: 'cycle-from-first' | 'cycle-from-recent' | 'close' | 'nothing';
 
   /**
    * If enabled, pressing 'cmd + ,' on macOS or 'ctrl + ,' on Linux or Windows will open
@@ -687,6 +693,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     dragThreshold: 15,
     fadeInDuration: 150,
     fadeOutDuration: 200,
+    keepInputFocus: false,
     enableMarkingMode: true,
     enableTurboMode: true,
     warpMouse: true,
