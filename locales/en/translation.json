@@ -65,7 +65,7 @@
       "lazy-initialization": "Lazy initialization",
       "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
       "menu-behavior": "Menu Behavior",
-      "keep-input-focus": "Ignore keyboard events",
+      "keep-input-focus": "Keep active application focused",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
       "enable-marking-mode": "Enable Marking Mode",
       "enable-marking-mode-info": "With Marking Mode enabled, you can select items by dragging the mouse over them.",
