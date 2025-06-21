@@ -278,7 +278,9 @@
             "app-settings": "应用程序设置",
             "localization-info": "需要重新启动 Kando 使语言设置生效。",
             "cycle-from-first": "显示下一个菜单（从第一个开始）",
-            "cycle-from-recent": "显示下一个菜单（从上一菜单接续）"
+            "cycle-from-recent": "显示下一个菜单（从上一菜单接续）",
+            "keep-input-focus": "保持活动应用聚焦",
+            "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这会禁用极速模式，但如果您希望其他应用程序在菜单打开时保持聚焦，这可能会很有用。"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
