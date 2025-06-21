@@ -84,6 +84,18 @@ export class MenuWindow extends BrowserWindow {
       this.webContents.setZoomFactor(newValue);
     });
 
+    // We set the focusable property of the window depending on the 'keepInputFocus'
+    // setting. If this setting is true, the window will not take input focus when it is
+    // shown. This will disable Turbo Mode but make interaction with other applications
+    // easier.
+    if (kando.getGeneralSettings().get('keepInputFocus')) {
+      this.setFocusable(false);
+    }
+
+    this.kando.getGeneralSettings().onChange('keepInputFocus', (newValue) => {
+      this.setFocusable(!newValue);
+    });
+
     // We prevent CMD+W to close the window on macOS.
     this.webContents.on('before-input-event', (event, input) => {
       if (input.meta && input.key === 'w') {

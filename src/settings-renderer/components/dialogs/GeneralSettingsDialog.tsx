@@ -15,7 +15,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
-import { useAppState } from '../../state';
+import { useAppState, useGeneralSetting } from '../../state';
 
 import {
   Button,
@@ -33,6 +33,7 @@ export default function GeneralSettingsDialog() {
   const settingsDialogVisible = useAppState((state) => state.settingsDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
   const soundThemes = useAppState((state) => state.soundThemes);
+  const [keepInputFocus] = useGeneralSetting('keepInputFocus');
 
   const soundThemeOptions = soundThemes.map((theme) => ({
     value: theme.id,
@@ -242,6 +243,11 @@ export default function GeneralSettingsDialog() {
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
           <SettingsCheckbox
+            label={i18next.t('settings.general-settings-dialog.keep-input-focus')}
+            info={i18next.t('settings.general-settings-dialog.keep-input-focus-info')}
+            settingsKey="keepInputFocus"
+          />
+          <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.enable-marking-mode')}
             info={i18next.t('settings.general-settings-dialog.enable-marking-mode-info')}
             settingsKey="enableMarkingMode"
@@ -250,6 +256,7 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.enable-turbo-mode')}
             info={i18next.t('settings.general-settings-dialog.enable-turbo-mode-info')}
             settingsKey="enableTurboMode"
+            disabled={keepInputFocus}
           />
           <SettingsCheckbox
             label={i18next.t(
