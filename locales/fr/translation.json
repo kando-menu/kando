@@ -276,7 +276,9 @@
             "localization-label": "Langue",
             "localization-info": "Redémarrez Kando pour appliquer la modification.",
             "auto-language": "Utiliser la langue du système",
-            "app-settings": "Paramètres de l'application"
+            "app-settings": "Paramètres de l'application",
+            "cycle-from-first": "Afficher le menu suivant",
+            "cycle-from-recent": "Afficher le menu suivant (se souvenir de l'ordre)"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
