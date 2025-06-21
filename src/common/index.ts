@@ -587,10 +587,10 @@ export interface IGeneralSettings {
   fadeOutDuration: number;
 
   /**
-   * If enabled, the menu will take the input focus when opened. This is required for
-   * turbo mode to work.
+   * If enabled, the menu will not take the input focus when opened. This will disable
+   * turbo mode.
    */
-  takeInputFocus: boolean;
+  keepInputFocus: boolean;
 
   /** If enabled, items can be selected by dragging the mouse over them. */
   enableMarkingMode: boolean;
@@ -693,7 +693,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     dragThreshold: 15,
     fadeInDuration: 150,
     fadeOutDuration: 200,
-    takeInputFocus: true,
+    keepInputFocus: false,
     enableMarkingMode: true,
     enableTurboMode: true,
     warpMouse: true,
