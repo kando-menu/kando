@@ -108,7 +108,7 @@
             "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz."
         },
         "redirect": {
-            "description": "Başka bir menüyü açar",
+            "description": "Başka bir menüyü açar.",
             "name": "Yönlendirme"
         },
         "submenu": {
