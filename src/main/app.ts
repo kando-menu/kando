@@ -37,6 +37,7 @@ import {
 import { Settings } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
+import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { supportsIsolatedProcesses } from './utils/shell';
 
 /**
@@ -89,6 +90,295 @@ export class KandoApp {
 
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  private validateStructure(parsed: any): string | false {
+    if (!Array.isArray(parsed.menus)) {
+      const errorMessage =
+        'Invalid JSON format: The parsed object must contain an array called "menus".';
+      console.error(errorMessage);
+      return errorMessage;
+    }
+    for (let index = 0; index < parsed.menus.length; index++) {
+      const menu = parsed.menus[index];
+
+      if (!menu.root.name || typeof menu.root.name !== 'string') {
+        const errorMessage = `Menu at index ${index} is invalid: The root must have a name of type string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root) {
+        const errorMessage = `Menu ${menu.name} is invalid: The menu must have a root object.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.root !== 'object') {
+        const errorMessage = `Menu ${menu.name} is invalid: The root must be an object.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (menu.root.type !== 'submenu') {
+        const errorMessage = `Menu ${menu.name} is invalid: The root type must be "submenu". Found: ${menu.root.type}`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.icon || typeof menu.root.icon !== 'string') {
+        const errorMessage = `Menu ${menu.name} is invalid: The root must have an icon of type string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.iconTheme || typeof menu.root.iconTheme !== 'string') {
+        const errorMessage = `Menu ${menu.name} is invalid: The root must have an iconTheme of type string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!IconThemeRegistry.getInstance().getThemes().has(menu.root.iconTheme)) {
+        const errorMessage = `Menu ${menu.name} is invalid: The required icon theme "${menu.root.iconTheme}" was not found.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!menu.root.children || !Array.isArray(menu.root.children)) {
+        const errorMessage = `Menu ${menu.name} is invalid: The root must have children as an array.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.shortcut !== 'string' || !menu.shortcut) {
+        const errorMessage = `Menu ${menu.name} is invalid: The shortcut must be a non-empty string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.shortcutID !== 'string') {
+        const errorMessage = `Menu ${menu.name} is invalid: The shortcutID must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.centered !== 'boolean' || !menu.centered) {
+        const errorMessage = `Menu ${menu.name} is invalid: The centered option must be a non-empty boolean.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.anchored !== 'boolean' || !menu.anchored) {
+        const errorMessage = `Menu ${menu.name} is invalid: The anchored option must be a non-empty boolean.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (typeof menu.hoverMode !== 'boolean' || !menu.hoverMode) {
+        const errorMessage = `Menu ${menu.name} is invalid: The hoverMode option must be a non-empty boolean.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!Array.isArray(menu.tags)) {
+        const errorMessage = `Menu ${menu.name} is invalid: The tags must be a list.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (
+        menu.conditions &&
+        typeof menu.conditions === 'object' &&
+        Object.keys(menu.conditions).length > 0
+      ) {
+        const screenArea = menu.conditions.screenArea;
+        if (screenArea) {
+          if (typeof screenArea.xMin !== 'number') {
+            const errorMessage = `Menu ${menu.name} is invalid: The xMin in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (typeof screenArea.yMin !== 'number') {
+            const errorMessage = `Menu ${menu.name} is invalid: The yMin in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (typeof screenArea.xMax !== 'number') {
+            const errorMessage = `Menu ${menu.name} is invalid: The xMax in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (typeof screenArea.yMax !== 'number') {
+            const errorMessage = `Menu ${menu.name} is invalid: The yMax in conditions.screenArea must be a number.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (
+            !menu.conditions.windowName ||
+            typeof menu.conditions.windowName !== 'string'
+          ) {
+            const errorMessage = `Menu ${menu.name} is invalid: The windowName in conditions must be a string.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+
+          if (!menu.conditions.appName || typeof menu.conditions.appName !== 'string') {
+            const errorMessage = `Menu ${menu.name} is invalid: The appName in conditions must be a string.`;
+            console.error(errorMessage);
+            return errorMessage;
+          }
+        }
+      }
+
+      const validationResult = this.validateMenuItems(menu.root.children);
+      if (validationResult !== false) {
+        return validationResult;
+      }
+    }
+
+    return false;
+  }
+
+  private validateMenuItems(items: any[]): string | false {
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
+
+      if (!item.type) {
+        const errorMessage = `Item at index ${index} is invalid: Missing type. Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (
+        ![
+          'submenu',
+          'command',
+          'file',
+          'hotkey',
+          'macro',
+          'text',
+          'uri',
+          'redirect',
+          'settings',
+        ].includes(item.type)
+      ) {
+        const errorMessage = `Item at index ${index} is invalid: Invalid type "${item.type}". Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!item.name || typeof item.name !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Missing name or name must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!item.icon || typeof item.icon !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Missing icon or icon must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!item.iconTheme || typeof item.iconTheme !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Missing iconTheme or iconTheme must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (!IconThemeRegistry.getInstance().getThemes().has(item.iconTheme)) {
+        const errorMessage = `Item at index ${index} is invalid: The required icon theme "${item.iconTheme}" was not found.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'submenu') {
+        if (!item.children || !Array.isArray(item.children)) {
+          const errorMessage = `Item at index ${index} is invalid: Submenu must have children as an array.`;
+          console.error(errorMessage);
+          return errorMessage;
+        }
+
+        const validationResult = this.validateMenuItems(item.children);
+        if (validationResult !== false) {
+          return validationResult;
+        }
+      }
+
+      if (
+        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(
+          item.type
+        )
+      ) {
+        if (!item.data || typeof item.data !== 'object') {
+          const errorMessage = `Item at index ${index} is invalid: Missing data object or data must be an object.`;
+          console.error(errorMessage);
+          return errorMessage;
+        }
+      }
+
+      if (item.type === 'hotkey' && typeof item.data.hotkey !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Hotkey must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'command' && typeof item.data.command !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Command must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'uri' && (!item.data.uri || typeof item.data.uri !== 'string')) {
+        const errorMessage = `Item at index ${index} is invalid: URI must be a non-empty string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (
+        item.type === 'file' &&
+        (!item.data.path || typeof item.data.path !== 'string')
+      ) {
+        const errorMessage = `Item at index ${index} is invalid: Path must be a non-empty string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'macro' && !Array.isArray(item.data.macro)) {
+        const errorMessage = `Item at index ${index} is invalid: Macro must be an array.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'text' && typeof item.data.text !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Text must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (item.type === 'redirect' && typeof item.data.menu !== 'string') {
+        const errorMessage = `Item at index ${index} is invalid: Menu must be a string.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+
+      if (
+        item.type === 'settings' &&
+        item.data !== null &&
+        typeof item.data !== 'object'
+      ) {
+        const errorMessage = `Item at index ${index} is invalid: Data must be an object or null.`;
+        console.error(errorMessage);
+        return errorMessage;
+      }
+    }
+
+    return false;
+  }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
@@ -209,7 +499,6 @@ export class KandoApp {
     // Initialize the common IPC communication to the renderer process. This will be
     // available in both the menu window and the settings window.
     this.initCommonRendererAPI();
-
     // Create and load the main window if it does not exist yet.
     if (!this.generalSettings.get('lazyInitialization')) {
       this.menuWindow = new MenuWindow(this);
@@ -241,6 +530,175 @@ export class KandoApp {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
         }
       );
+    });
+
+    const channels = [
+      'settings-window.export-menus-to-json',
+      'settings-window.import-menus-from-json',
+      'settings-window.export-menu',
+      'settings-window.import-menu-from-json',
+    ];
+
+    for (const channel of channels) {
+      if (ipcMain.listenerCount(channel) > 0) {
+        ipcMain.removeHandler(channel);
+      }
+    }
+
+    // Export menus to a JSON file
+    ipcMain.handle('settings-window.export-menus-to-json', async () => {
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: 'kando-menus.json',
+        filters: [{ name: 'JSON file', extensions: ['json'] }],
+      });
+
+      console.log('Canceled:', canceled, 'FilePath:', filePath);
+
+      if (canceled || !filePath) {
+        return;
+      }
+
+      try {
+        // Get current menus configuration
+        const menus = this.menuSettings.get('menus');
+
+        const jsonContent = JSON.stringify(
+          {
+            version: app.getVersion(),
+            menus,
+          },
+          null,
+          2
+        );
+
+        await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
+
+        console.log('Successfully exported menus to', filePath);
+      } catch (error) {
+        console.error('Failed to export menus:', error);
+        throw error;
+      }
+    });
+
+    // Import menus from a zip file
+    ipcMain.handle('settings-window.import-menus-from-json', async () => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        properties: ['openFile'],
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (result.canceled || !result.filePaths[0]) {
+        return;
+      }
+
+      try {
+        const filePath = result.filePaths[0];
+        const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
+        const parsed = JSON.parse(jsonContent);
+
+        if (parsed.version !== app.getVersion()) {
+          const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
+          console.warn(warnMessage);
+          return; // todo: add warning window (if users proccede, add menus to list)
+        }
+
+        const errors = this.validateStructure(parsed);
+
+        if (errors === false) {
+          this.menuSettings.set({ menus: parsed });
+          console.log('Successfully imported menus from', filePath);
+        } else {
+          console.error('Detected errors in menu structure:', errors); // todo: add error window
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to import menus:', error);
+        throw error;
+      }
+    });
+
+    // Export specific menu to JSON file
+    ipcMain.handle('settings-window.export-menu-to-json', async (event, menuIndex) => {
+      const menuName = this.menuSettings.get('menus')[menuIndex]['root']['name'];
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: `${menuName}.json`,
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (canceled || !filePath) {
+        return;
+      }
+
+      try {
+        const menu = this.menuSettings.get('menus')[menuIndex];
+        if (!menu) {
+          console.error('Menu not found');
+          return;
+        }
+
+        const jsonContent = JSON.stringify(
+          {
+            version: app.getVersion(),
+            menus: [menu],
+          },
+          null,
+          2
+        );
+
+        await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
+
+        console.log('Successfully exported menu to', filePath);
+      } catch (error) {
+        console.error('Failed to export menu:', error);
+        throw error;
+      }
+    });
+
+    ipcMain.handle('settings-window.import-menu-from-json', async () => {
+      const { canceled, filePaths } = await dialog.showOpenDialog(this.settingsWindow, {
+        properties: ['openFile'],
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (canceled || filePaths.length === 0) {
+        console.error('No file path provided');
+        return;
+      }
+
+      const filePath = filePaths[0];
+
+      try {
+        const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
+        const parsed = JSON.parse(jsonContent);
+
+        if (parsed.version !== app.getVersion()) {
+          const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
+          console.warn(warnMessage);
+          return; // todo: add warning window (if users proccede, add menu to list)
+        }
+
+        const errors = this.validateStructure(parsed);
+
+        if (errors === false) {
+          const newMenu = parsed.menus[0];
+
+          const currentMenus = structuredClone(
+            this.menuSettings.get('menus') || []
+          ) as IMenu[];
+
+          currentMenus.push(newMenu);
+
+          this.menuSettings.set({ menus: currentMenus });
+
+          console.log('Successfully imported a menu from', filePath);
+        } else {
+          console.error('Detected errors in menu structure'); // TODO: add error window
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to import menu:', error);
+        throw error;
+      }
     });
   }
 
