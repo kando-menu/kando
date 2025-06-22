@@ -112,7 +112,11 @@
             "localization-label": "語言",
             "auto-language": "使用系統語言",
             "localization-info": "需重新啟動 Kando，語言設定才會生效。",
-            "app-settings": "應用程式設定"
+            "app-settings": "應用程式設定",
+            "cycle-from-recent": "顯示下一個選單（記住最後）",
+            "cycle-from-first": "顯示下一個選單（從頭開始）",
+            "keep-input-focus": "保持作用中應用程式的焦點",
+            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需要在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",

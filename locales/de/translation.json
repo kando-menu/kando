@@ -311,7 +311,11 @@
             "localization-label": "Sprache",
             "app-settings": "Anwendungseinstellungen",
             "localization-info": "Starten Sie Kando neu, um die Sprachänderung anzuwenden.",
-            "auto-language": "Systemsprache verwenden"
+            "auto-language": "Systemsprache verwenden",
+            "keep-input-focus": "Aktive Anwendung fokussiert lassen",
+            "cycle-from-recent": "Nächstes Menü anzeigen (weiter nach Vorherigem)",
+            "cycle-from-first": "Nächstes Menü anzeigen (am Anfang starten)",
+            "keep-input-focus-info": "Wenn aktiviert, erhält das Menü beim Öffnen keinen Tastatureingabefokus. Das deaktiviert den Turbo-Modus, kann aber nützlich sein, wenn andere Anwendungen fokussiert bleiben sollen, während das Menü geöffnet ist."
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
