@@ -683,7 +683,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     soundVolume: 0.5,
     ignoreWriteProtectedConfigFiles: false,
     settingsWindowColorScheme: 'system',
-    settingsWindowFlavor: 'sakura-light',
+    settingsWindowFlavor: 'sakura-system',
     trayIconFlavor: 'color',
     lazyInitialization: false,
     enableVersionCheck: true,
