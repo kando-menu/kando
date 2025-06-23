@@ -18,6 +18,9 @@
   display: flex;
   flex-direction: column;
   min-height: 0px; // This is important to make the scrollboxes work.
+
+  border-top: $area-border;
+  box-shadow: $area-shadow;
 }
 
 .properties {
@@ -35,6 +38,7 @@
   flex-shrink: 0;
   margin: -30px auto 0 auto;
   background-color: $window-background;
+  border-top: $area-border;
   border-radius: 50%;
   overflow: hidden;
 

@@ -25,6 +25,8 @@
   flex-grow: 1;
   width: 0;
   min-width: 400px;
+  z-index: 1;
+  box-shadow: $area-shadow;
 
   display: flex;
   flex-direction: column;

@@ -23,6 +23,9 @@
   background-color: $window-background;
   border-top-left-radius: 10px;
   flex-grow: 1;
+  border-top: $area-border;
+  border-left: $area-border;
+  box-shadow: $area-shadow;
 }
 
 .menu {

@@ -91,3 +91,6 @@ $border-focused: 1px solid
     color.mix($key-dark, color.adjust($base-light, $lightness: -10%), 50%),
     color.mix($key-light, color.adjust($base-dark, $lightness: 10%), 50%)
   );
+
+$area-border: 1px solid rgba(0, 0, 0, 0.15);
+$area-shadow: 0 0 5px rgba(0, 0, 0, 0.075);
