@@ -14,6 +14,7 @@ import DBus from 'dbus-final';
 import { Backend } from '../../../backend';
 import { IKeySequence } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
+import { screen } from 'electron';
 
 /**
  * This backend uses the DBus interface of the Kando GNOME Shell integration extension to
@@ -102,6 +103,10 @@ export class GnomeBackend extends Backend {
       appName: info[1],
       pointerX: info[2],
       pointerY: info[3],
+      workarea: screen.getDisplayNearestPoint({
+        x: info[2],
+        y: info[3],
+      }).workArea,
     };
   }
 

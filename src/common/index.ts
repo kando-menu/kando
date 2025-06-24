@@ -75,6 +75,7 @@ export interface IWMInfo {
   appName: string;
   pointerX: number;
   pointerY: number;
+  workarea: Electron.Rectangle;
 }
 
 /**

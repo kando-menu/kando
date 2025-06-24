@@ -399,6 +399,9 @@
     },
     "kde-wayland": {
       "shortcut-info": "Kando cannot directly bind global shortcuts on KDE/Wayland. Instead, specify a shortcut ID here and then search for it in the KWin section of the global shortcuts in your KDE's system settings. There you can assign the shortcut which will open this menu."
+    },
+    "niri": {
+      "shortcut-info": "Kando can directly bind global shortcuts on Niri. However, Niri doesn't implement triggering them. It might in the future."
     }
   }
 }

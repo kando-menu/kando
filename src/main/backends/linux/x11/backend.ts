@@ -12,6 +12,7 @@ import { native } from './native';
 import { Backend } from '../../backend';
 import { IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
+import { screen } from 'electron';
 
 /**
  * This backend uses the XTest extension via native C++ code to simulate key presses and
@@ -66,6 +67,10 @@ export class X11Backend extends Backend {
       appName: info.app || '',
       pointerX: info.pointerX || 0,
       pointerY: info.pointerY || 0,
+      workarea: screen.getDisplayNearestPoint({
+        x: info.pointerX || 0,
+        y: info.pointerY || 0,
+      }).workArea,
     };
   }
 

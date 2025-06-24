@@ -196,10 +196,7 @@ export class MenuWindow extends BrowserWindow {
 
     // Get the work area of the screen where the pointer is located. We will move the
     // window to this screen and show the menu at the pointer position.
-    const workarea = screen.getDisplayNearestPoint({
-      x: info.pointerX,
-      y: info.pointerY,
-    }).workArea;
+    const workarea = info.workarea;
 
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
