@@ -46,7 +46,7 @@ export class MenuWindow extends BrowserWindow {
   });
 
   /** This timeout is used to hide the window after the fade-out animation. */
-  private hideTimeout: NodeJS.Timeout;
+  private hideTimeout: NodeJS.Timeout = null;
 
   constructor(private kando: KandoApp) {
     const display = screen.getPrimaryDisplay();
