@@ -14,7 +14,6 @@ import { exec } from 'child_process';
 import { WLRBackend } from '../wlroots/backend';
 import { GlobalShortcuts } from '../portals/global-shortcuts';
 import { screen } from 'electron';
-import { native } from './native';
 
 /**
  * This backend is used on Niri. It uses the generic wlroots backend and adds the missing
@@ -76,7 +75,7 @@ for more information.
   public async getWMInfo() {
     try {
       const activewindow = await this.nirimsg('focused-window');
-      const { x, y, workareaW, workareaH } = native.getPointerPositionAndWorkAreaSize();
+      const { x, y, workareaW, workareaH } = this.getPointerPositionAndWorkAreaSize();
       const workarea = screen.getDisplayNearestPoint({
         x: x,
         y: y,

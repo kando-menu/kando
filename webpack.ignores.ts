@@ -17,5 +17,4 @@ if (os.platform() !== 'linux') {
   ignores.push(/NativeX11\.node$/);
   ignores.push(/NativeWLR\.node$/);
   ignores.push(/NativeHypr\.node$/);
-  ignores.push(/NativeNiri\.node$/);
 }
