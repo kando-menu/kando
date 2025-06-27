@@ -130,8 +130,10 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
             getStringProperty(display, window, "_NET_WM_NAME"));
       }
 
-      obj.Set("app", wm_class);
-      obj.Set("window", wm_name);
+      if (wm_class && wm_name) {
+        obj.Set("app", wm_class);
+        obj.Set("window", wm_name);
+      }
     }
   }
 
