@@ -79,6 +79,7 @@ They are marked with a **:collision:** emoji below.
 - Sound support in the Flatpak version of Kando.
 - Gamepad input on Linux when using [input-gamepad](https://github.com/sezanzeb/input-remapper).
 - A bug which made it possible to sometimes open the settings dialog by pressing <kbd>Space</kbd> while the menu was open.
+- A crash if no focused window existed when opening a menu on qTile.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 
