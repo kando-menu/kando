@@ -148,7 +148,7 @@
         },
         "anchored-mode": "Sabitlenmiş Mod",
         "app-condition": "Belirli Uygulamalarla Sınırla",
-        "area-condition": "Belirli Ekran Alanıyla Sınırla",
+        "area-condition": "Belirli Ekran Alanlarına Sınırla",
         "area-condition-bottom-placeholder": "Alt",
         "area-condition-left-placeholder": "Sol",
         "area-condition-right-placeholder": "Sağ",
@@ -182,6 +182,6 @@
         "shortcut-id-label": "Genel Kısayol Kimliği",
         "shortcut-label": "Kısayol",
         "shortcut-recording": "Bir kısayola basın…",
-        "window-condition": "Belirli Pencere Başlıklarıyla Sınırla"
+        "window-condition": "Belirli Pencere Başlıklarına Sınırla"
     }
 }
