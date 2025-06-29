@@ -27,12 +27,19 @@ export class SoundTheme {
   private volume: number = 0.5;
 
   /**
+   * This is increased each time the sound theme is reloaded. It is used to ensure that
+   * the sound files are reloaded from disk instead of being cached by the browser.
+   */
+  private reloadCounter: number = 0;
+
+  /**
    * Loads the given theme description.
    *
    * @param description The description of the sound theme to load.
    */
   public loadDescription(description: ISoundThemeDescription) {
     this.description = description;
+    this.reloadCounter++;
   }
 
   /**
@@ -59,7 +66,10 @@ export class SoundTheme {
         '/' +
         this.description.id +
         '/' +
-        sound.file;
+        sound.file +
+        '?v=' +
+        this.reloadCounter; // Append reload counter to force reloading the sound file.
+
       const minRate = sound.minPitch || 1;
       const maxRate = sound.maxPitch || 1;
       const rate = Math.random() * (maxRate - minRate) + minRate;
