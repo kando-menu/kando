@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from './menu-window-api';
+declare const window: WindowWithAPIs;
+
 import { Howl } from 'howler';
 
 import { ISoundThemeDescription, SoundType } from '../common';
