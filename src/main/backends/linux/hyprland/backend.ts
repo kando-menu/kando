@@ -84,7 +84,7 @@ for more information.
         appName: activewindow['initialClass'] || '',
         pointerX: cursorpos['x'],
         pointerY: cursorpos['y'],
-        workearea: screen.getDisplayNearestPoint({
+        workarea: screen.getDisplayNearestPoint({
           x: cursorpos['x'],
           y: cursorpos['y'],
         }).workArea,

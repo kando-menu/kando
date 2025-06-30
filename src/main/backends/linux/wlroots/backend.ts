@@ -61,7 +61,7 @@ export abstract class WLRBackend extends Backend {
       native.simulateKey(keyCodes[i], keys[i].down);
     }
   }
-  
+
   /**
    * This gets the pointer's position and work area size without relying on IPCs by
    * spawning an wlr_layer_shell overlay surface

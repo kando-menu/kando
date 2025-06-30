@@ -168,6 +168,7 @@ export class KDEWaylandBackend extends Backend {
     appName: string;
     pointerX: number;
     pointerY: number;
+    workarea: Electron.Rectangle;
   }> {
     return new Promise((resolve, reject) => {
       this.kandoInterface.wmInfoCallback = resolve;
