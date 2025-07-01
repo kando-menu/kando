@@ -67,17 +67,12 @@ class Native : public Napi::Addon<Native> {
     wl_surface*            mSurface      = nullptr;
     wl_shm*                mShm          = nullptr;
 
-    wl_buffer* buffer = nullptr; // Color buffer for debugging
-
-    // Pointer position communication
-    double mPointerX = 0;
-    double mPointerY = 0;
-
-    // work area size communication
+    double mPointerX       = 0;
+    double mPointerY       = 0;
     double mWorkAreaWidth  = 0;
     double mWorkAreaHeight = 0;
 
-    // Track whether a pointer event has been received (used for blocking wait)
+    // Track whether a pointer event has been received (used for blocking wait).
     bool mPointerEventReceived = false;
   };
 

@@ -85,26 +85,6 @@ static void handle_layer_surface_configure(void* data, zwlr_layer_surface_v1* su
 
   d->mWorkAreaWidth  = width;
   d->mWorkAreaHeight = height;
-
-  // Create or update the buffer with requested size
-  if (d->buffer) {
-    wl_buffer_destroy(d->buffer);
-    d->buffer = nullptr;
-  }
-
-  // ARGB Color Buffer (useful for debugging, I'll set to transparent but it doesn't hurt
-  // to keep it here just in case for now)
-  constexpr uint32_t fillColor = 0x00000000;
-
-  d->buffer = create_buffer(d->mShm, width, height, fillColor);
-
-  if (d->buffer) {
-    wl_surface_attach(d->mSurface, d->buffer, 0, 0);
-    wl_surface_damage(d->mSurface, 0, 0, width, height);
-    wl_surface_commit(d->mSurface);
-  } else {
-    std::cerr << "Failed to create buffer\n";
-  }
 }
 
 static void handle_layer_surface_closed(void* data, zwlr_layer_surface_v1* surface) {
@@ -162,15 +142,14 @@ Native::~Native() {
     xkb_state_unref(mData.mXkbState);
   }
 
-  if (mData.buffer) {
-    wl_buffer_destroy(mData.buffer);
-  }
   if (mData.mPointerPPWA) {
     wl_pointer_destroy(mData.mPointerPPWA);
   }
+
   if (mData.mLayerSurface) {
     zwlr_layer_surface_v1_destroy(mData.mLayerSurface);
   }
+
   if (mData.mSurface) {
     wl_surface_destroy(mData.mSurface);
   }
@@ -404,25 +383,25 @@ void Native::createSurfaceAndPointer() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
 void Native::destroySurfaceAndPointer() {
-  if (mData.buffer) {
-    wl_buffer_destroy(mData.buffer);
-    mData.buffer = nullptr;
-  }
   if (mData.mPointerPPWA) {
     wl_pointer_destroy(mData.mPointerPPWA);
     mData.mPointerPPWA = nullptr;
   }
+
   if (mData.mLayerSurface) {
     zwlr_layer_surface_v1_destroy(mData.mLayerSurface);
     mData.mLayerSurface = nullptr;
   }
+
   if (mData.mSurface) {
     wl_surface_commit(mData.mSurface);
     wl_display_flush(mData.mDisplay);
     wl_surface_destroy(mData.mSurface);
     mData.mSurface = nullptr;
   }
+
   mData.mPointerEventReceived = false;
 }
 
