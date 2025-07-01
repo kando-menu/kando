@@ -46,7 +46,7 @@ for more information.
     });
   }
 
-  /** Close the transparent window now */
+  /** Nothing to be done here. */
   public async deinit() {}
 
   /**
@@ -64,28 +64,28 @@ for more information.
   }
 
   /**
-   * This uses a native addon to get the current pointer position relative to the
-   * currently focused monitor (without relying on Niri's IPC that doesn't implement such
-   * a feature) as well as the work area size and the niri msg command for getting the
-   * name and app of the currently focused window.
+   * The pointer position as well as the work-area size are retrieved via a native addon
+   * which spawns a temporary wlr_layer_shell overlay surface. The niri msg command-line
+   * tool is used for getting the name and app of the currently focused window.
    *
    * @returns The name and app of the currently focused window as well as the current
-   *   pointer position.
+   *   pointer position and work area.
    */
   public async getWMInfo() {
     try {
       const activewindow = await this.nirimsg('focused-window');
-      const { x, y, workAreaW, workAreaH } = this.getPointerPositionAndWorkAreaSize();
+      const { pointerX, pointerY, workAreaWidth, workAreaHeight } =
+        this.getPointerPositionAndWorkAreaSize();
       const workArea = screen.getDisplayNearestPoint({
-        x: x,
-        y: y,
+        x: pointerX,
+        y: pointerY,
       }).workArea;
-      workArea.width = workAreaW;
-      workArea.height = workAreaH;
+      workArea.width = workAreaWidth;
+      workArea.height = workAreaHeight;
 
       return {
-        pointerX: x,
-        pointerY: y,
+        pointerX,
+        pointerY,
         windowName: activewindow['title'] || '',
         appName: activewindow['app_id'] || '',
         workArea,

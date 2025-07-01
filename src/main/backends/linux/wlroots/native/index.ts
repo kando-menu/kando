@@ -26,14 +26,14 @@ export interface Native {
   simulateKey(keycode: number, down: boolean): void;
 
   /**
-   * This gets the pointer's position and work area size without relying on IPCs by
-   * spawning an wlr_layer_shell overlay surface
+   * This gets the pointer's position and work area size by spawning a temporary
+   * wlr_layer_shell overlay surface.
    */
   getPointerPositionAndWorkAreaSize(): {
-    x: number;
-    y: number;
-    workAreaW: number;
-    workAreaH: number;
+    pointerX: number;
+    pointerY: number;
+    workAreaWidth: number;
+    workAreaHeight: number;
   };
 }
 

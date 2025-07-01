@@ -20,10 +20,10 @@
 #include <xkbcommon/xkbcommon.h>
 
 /**
- * This class allows moving the mouse pointer, simulating key presses as well as getting
- * the mouse position and work area size without relying on IPCs on Wayland. For this, it
- * uses the virtual-pointer, virtual-keyboard and wlr-layer-shell protocols. See index.ts
- * for more information regarding the exposed functions.
+ * This class allows moving the mouse pointer and simulating key presses using the
+ * virtual-pointer and virtual-keyboard Wayland protocols. It also provides a method for
+ * getting the current mouse position and work area size using the wlr-layer-shell
+ * protocol. See index.ts for more information regarding the exposed functions.
  *
  * The sending of key events is a little bit more complicated than I would like it to be.
  * As far as I understand, the virtual-keyboard protocol requires that the client (we)
@@ -32,8 +32,11 @@
  * pressed. This is done using the xkbcommon library using the keymap we can get from the
  * real keyboard.
  *
- * The getting of the pointer's position and work area size without relying on IPCs is
- * done by spawning an wlr_layer_shell overlay surface
+ * The getting of the pointer's position and work area size is only supported on Wayland
+ * compositors implementing the wlr-layer-shell protocol. Also, it requires that the
+ * compositor automatically sends a pointer-enter event when the surface is created.
+ * It seems that for instance Niri does this, but Hyprland does not. Hence, on Hyprland,
+ * the method will block until the user moves the pointer.
  */
 class Native : public Napi::Addon<Native> {
  public:
@@ -67,15 +70,15 @@ class Native : public Napi::Addon<Native> {
     wl_buffer* buffer = nullptr; // Color buffer for debugging
 
     // Pointer position communication
-    double pointerX = 0;
-    double pointerY = 0;
+    double mPointerX = 0;
+    double mPointerY = 0;
 
     // work area size communication
-    double workAreaW = 0;
-    double workAreaH = 0;
+    double mWorkAreaWidth  = 0;
+    double mWorkAreaHeight = 0;
 
     // Track whether a pointer event has been received (used for blocking wait)
-    bool pointerEventReceived = false;
+    bool mPointerEventReceived = false;
   };
 
  protected:

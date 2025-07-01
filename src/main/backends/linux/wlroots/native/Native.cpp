@@ -83,8 +83,8 @@ static void handle_layer_surface_configure(void* data, zwlr_layer_surface_v1* su
   // Ack configure so compositor knows we handled it
   zwlr_layer_surface_v1_ack_configure(surface, serial);
 
-  d->workAreaW = width;
-  d->workAreaH = height;
+  d->mWorkAreaWidth  = width;
+  d->mWorkAreaHeight = height;
 
   // Create or update the buffer with requested size
   if (d->buffer) {
@@ -377,18 +377,18 @@ void Native::createSurfaceAndPointer() {
   static const wl_pointer_listener pointerListener = {
       .enter =
           [](void* data, wl_pointer*, uint32_t, wl_surface*, wl_fixed_t x, wl_fixed_t y) {
-            auto* d                 = static_cast<Native::WaylandData*>(data);
-            d->pointerX             = wl_fixed_to_double(x);
-            d->pointerY             = wl_fixed_to_double(y);
-            d->pointerEventReceived = true;
+            auto* d                  = static_cast<Native::WaylandData*>(data);
+            d->mPointerX             = wl_fixed_to_double(x);
+            d->mPointerY             = wl_fixed_to_double(y);
+            d->mPointerEventReceived = true;
           },
       .leave = [](void*, wl_pointer*, uint32_t, wl_surface*) {},
       .motion =
           [](void* data, wl_pointer*, uint32_t, wl_fixed_t x, wl_fixed_t y) {
-            auto* d                 = static_cast<Native::WaylandData*>(data);
-            d->pointerX             = wl_fixed_to_double(x);
-            d->pointerY             = wl_fixed_to_double(y);
-            d->pointerEventReceived = true;
+            auto* d                  = static_cast<Native::WaylandData*>(data);
+            d->mPointerX             = wl_fixed_to_double(x);
+            d->mPointerY             = wl_fixed_to_double(y);
+            d->mPointerEventReceived = true;
           },
       .button        = nullptr,
       .axis          = nullptr,
@@ -400,7 +400,7 @@ void Native::createSurfaceAndPointer() {
   };
 
   wl_pointer_add_listener(mData.mPointerPPWA, &pointerListener, &mData);
-  mData.pointerEventReceived = false;
+  mData.mPointerEventReceived = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -423,7 +423,7 @@ void Native::destroySurfaceAndPointer() {
     wl_surface_destroy(mData.mSurface);
     mData.mSurface = nullptr;
   }
-  mData.pointerEventReceived = false;
+  mData.mPointerEventReceived = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -444,10 +444,10 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
     return env.Null();
   }
 
-  int fd                     = wl_display_get_fd(mData.mDisplay);
-  mData.pointerEventReceived = false;
+  int fd                      = wl_display_get_fd(mData.mDisplay);
+  mData.mPointerEventReceived = false;
 
-  while (!mData.pointerEventReceived) {
+  while (!mData.mPointerEventReceived) {
     // Process any pending events first
     wl_display_dispatch_pending(mData.mDisplay);
 
@@ -478,10 +478,10 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
 
   // Return the pointer coordinates and work area geometry
   Napi::Object result = Napi::Object::New(env);
-  result.Set("x", Napi::Number::New(env, mData.pointerX));
-  result.Set("y", Napi::Number::New(env, mData.pointerY));
-  result.Set("workAreaW", Napi::Number::New(env, mData.workAreaW));
-  result.Set("workAreaH", Napi::Number::New(env, mData.workAreaH));
+  result.Set("pointerX", Napi::Number::New(env, mData.mPointerX));
+  result.Set("pointerY", Napi::Number::New(env, mData.mPointerY));
+  result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
+  result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
 
   // Clean up Wayland resources
   destroySurfaceAndPointer();

@@ -63,8 +63,14 @@ export abstract class WLRBackend extends Backend {
   }
 
   /**
-   * This gets the pointer's position and work area size without relying on IPCs by
-   * spawning an wlr_layer_shell overlay surface
+   * This gets the pointer's position and work area size. Derived backends may use this in
+   * their getWMInfo() implementations.
+   *
+   * This is only supported on Wayland compositors implementing the wlr-layer-shell
+   * protocol. Also, it requires that the compositor automatically sends a pointer-enter
+   * event when the surface is created. It seems that for instance Niri does this, but
+   * Hyprland does not. Hence, on Hyprland, the method would block until the user moves
+   * the pointer.
    */
   protected getPointerPositionAndWorkAreaSize() {
     return native.getPointerPositionAndWorkAreaSize();
