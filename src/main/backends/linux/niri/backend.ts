@@ -75,20 +75,20 @@ for more information.
   public async getWMInfo() {
     try {
       const activewindow = await this.nirimsg('focused-window');
-      const { x, y, workareaW, workareaH } = this.getPointerPositionAndWorkAreaSize();
-      const workarea = screen.getDisplayNearestPoint({
+      const { x, y, workAreaW, workAreaH } = this.getPointerPositionAndWorkAreaSize();
+      const workArea = screen.getDisplayNearestPoint({
         x: x,
         y: y,
       }).workArea;
-      workarea.width = workareaW;
-      workarea.height = workareaH;
+      workArea.width = workAreaW;
+      workArea.height = workAreaH;
 
       return {
         pointerX: x,
         pointerY: y,
         windowName: activewindow['title'] || '',
         appName: activewindow['app_id'] || '',
-        workarea: workarea,
+        workArea,
       };
     } catch (error) {
       console.error('Failed to get WM info:', error);
@@ -97,7 +97,7 @@ for more information.
         pointerY: 0,
         windowName: '',
         appName: '',
-        workarea: screen.getDisplayNearestPoint({
+        workArea: screen.getDisplayNearestPoint({
           x: 0,
           y: 0,
         }).workArea, // fallback to Electron's default method

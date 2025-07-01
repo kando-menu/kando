@@ -71,7 +71,7 @@ export class WindowsBackend extends Backend {
       appName: window.app,
       pointerX: pointer.x,
       pointerY: pointer.y,
-      workarea: screen.getDisplayNearestPoint({
+      workArea: screen.getDisplayNearestPoint({
         x: pointer.x,
         y: pointer.y,
       }).workArea,

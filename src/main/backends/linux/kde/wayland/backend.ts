@@ -168,7 +168,7 @@ export class KDEWaylandBackend extends Backend {
     appName: string;
     pointerX: number;
     pointerY: number;
-    workarea: Electron.Rectangle;
+    workArea: Electron.Rectangle;
   }> {
     return new Promise((resolve, reject) => {
       this.kandoInterface.wmInfoCallback = resolve;
@@ -448,7 +448,7 @@ class CustomInterface extends DBus.interface.Interface {
         appName,
         pointerX,
         pointerY,
-        workarea: screen.getDisplayNearestPoint({
+        workArea: screen.getDisplayNearestPoint({
           x: pointerX,
           y: pointerY,
         }).workArea,

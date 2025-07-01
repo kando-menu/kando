@@ -21,7 +21,7 @@
 
 /**
  * This class allows moving the mouse pointer, simulating key presses as well as getting
- * the mouse position and workarea size without relying on IPCs on Wayland. For this, it
+ * the mouse position and work area size without relying on IPCs on Wayland. For this, it
  * uses the virtual-pointer, virtual-keyboard and wlr-layer-shell protocols. See index.ts
  * for more information regarding the exposed functions.
  *

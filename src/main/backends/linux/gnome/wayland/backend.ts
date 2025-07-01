@@ -103,7 +103,7 @@ export class GnomeBackend extends Backend {
       appName: info[1],
       pointerX: info[2],
       pointerY: info[3],
-      workarea: screen.getDisplayNearestPoint({
+      workArea: screen.getDisplayNearestPoint({
         x: info[2],
         y: info[3],
       }).workArea,

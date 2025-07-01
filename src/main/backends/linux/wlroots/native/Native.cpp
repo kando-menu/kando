@@ -480,8 +480,8 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   Napi::Object result = Napi::Object::New(env);
   result.Set("x", Napi::Number::New(env, mData.pointerX));
   result.Set("y", Napi::Number::New(env, mData.pointerY));
-  result.Set("workareaW", Napi::Number::New(env, mData.workAreaW));
-  result.Set("workareaH", Napi::Number::New(env, mData.workAreaH));
+  result.Set("workAreaW", Napi::Number::New(env, mData.workAreaW));
+  result.Set("workAreaH", Napi::Number::New(env, mData.workAreaH));
 
   // Clean up Wayland resources
   destroySurfaceAndPointer();

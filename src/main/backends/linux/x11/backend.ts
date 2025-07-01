@@ -67,7 +67,7 @@ export class X11Backend extends Backend {
       appName: info.app || '',
       pointerX: info.pointerX || 0,
       pointerY: info.pointerY || 0,
-      workarea: screen.getDisplayNearestPoint({
+      workArea: screen.getDisplayNearestPoint({
         x: info.pointerX || 0,
         y: info.pointerY || 0,
       }).workArea,

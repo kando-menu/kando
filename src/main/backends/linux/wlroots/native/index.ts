@@ -32,8 +32,8 @@ export interface Native {
   getPointerPositionAndWorkAreaSize(): {
     x: number;
     y: number;
-    workareaW: number;
-    workareaH: number;
+    workAreaW: number;
+    workAreaH: number;
   };
 }
 
