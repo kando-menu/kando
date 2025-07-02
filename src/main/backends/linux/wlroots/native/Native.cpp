@@ -19,9 +19,10 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// Create an anonymous shared memory file descriptor for the debug color buffer (this can
-// be removed for production)
-static int create_shm_file() {
+namespace {
+
+// Create an anonymous shared memory file descriptor for the debug color buffer.
+int createSharedMemoryFile() {
   const char* name = "/kando-shm-buffer";
   int         fd   = shm_open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
   if (fd >= 0) {
@@ -34,12 +35,12 @@ static int create_shm_file() {
   return fd;
 }
 
-// Create wl_shm pool and buffer with given size, filled with solid color
-static wl_buffer* create_buffer(wl_shm* shm, int width, int height, uint32_t color) {
+// Create wl_shm pool and buffer with given size, filled with solid color.
+wl_buffer* createPixelBuffer(wl_shm* shm, int width, int height, uint32_t color) {
   const int stride = width * 4;
   const int size   = stride * height;
 
-  int fd = create_shm_file();
+  int fd = createSharedMemoryFile();
   if (fd < 0) {
     std::cerr << "Failed to create shm fd\n";
     return nullptr;
@@ -73,48 +74,7 @@ static wl_buffer* create_buffer(wl_shm* shm, int width, int height, uint32_t col
 
   return buffer;
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-static void handle_layer_surface_configure(void* data, zwlr_layer_surface_v1* surface,
-    uint32_t serial, uint32_t width, uint32_t height) {
-  auto* d = static_cast<Native::WaylandData*>(data);
-
-  // Ack configure so compositor knows we handled it
-  zwlr_layer_surface_v1_ack_configure(surface, serial);
-
-  d->mWorkAreaWidth  = width;
-  d->mWorkAreaHeight = height;
-
-  // Create or update the buffer with requested size
-  if (d->mPixelBuffer) {
-    wl_buffer_destroy(d->mPixelBuffer);
-    d->mPixelBuffer = nullptr;
-  }
-
-  // ARGB Color Buffer (useful for debugging, I'll set to transparent but it doesn't hurt
-  // to keep it here just in case for now)
-  constexpr uint32_t fillColor = 0x00000000;
-
-  d->mPixelBuffer = create_buffer(d->mShm, width, height, fillColor);
-
-  if (d->mPixelBuffer) {
-    wl_surface_attach(d->mSurface, d->mPixelBuffer, 0, 0);
-    wl_surface_damage(d->mSurface, 0, 0, width, height);
-    wl_surface_commit(d->mSurface);
-  } else {
-    std::cerr << "Failed to create buffer\n";
-  }
-}
-
-static void handle_layer_surface_closed(void* data, zwlr_layer_surface_v1* surface) {
-  std::cerr << "Layer surface closed by compositor\n";
-}
-
-static const zwlr_layer_surface_v1_listener layer_surface_listener = {
-    .configure = handle_layer_surface_configure,
-    .closed    = handle_layer_surface_closed,
-};
+} // namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -130,12 +90,12 @@ Native::Native(Napi::Env env, Napi::Object exports) {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 Native::~Native() {
-  if (mData.mPointer) {
-    zwlr_virtual_pointer_v1_destroy(mData.mPointer);
+  if (mData.mVirtualPointer) {
+    zwlr_virtual_pointer_v1_destroy(mData.mVirtualPointer);
   }
 
-  if (mData.mKeyboard) {
-    zwp_virtual_keyboard_v1_destroy(mData.mKeyboard);
+  if (mData.mVirtualKeyboard) {
+    zwp_virtual_keyboard_v1_destroy(mData.mVirtualKeyboard);
   }
 
   if (mData.mSeat) {
@@ -166,8 +126,8 @@ Native::~Native() {
     wl_buffer_destroy(mData.mPixelBuffer);
   }
 
-  if (mData.mPointerPPWA) {
-    wl_pointer_destroy(mData.mPointerPPWA);
+  if (mData.mPointer) {
+    wl_pointer_destroy(mData.mPointer);
   }
 
   if (mData.mLayerSurface) {
@@ -225,8 +185,8 @@ void Native::init(Napi::Env const& env) {
 
     // If the virtual pointer manager and the seat are available, create a virtual pointer
     // device.
-    if (!data->mPointer && data->mPointerManager && data->mSeat) {
-      data->mPointer = zwlr_virtual_pointer_manager_v1_create_virtual_pointer(
+    if (!data->mVirtualPointer && data->mPointerManager && data->mSeat) {
+      data->mVirtualPointer = zwlr_virtual_pointer_manager_v1_create_virtual_pointer(
           data->mPointerManager, data->mSeat);
     }
 
@@ -239,8 +199,8 @@ void Native::init(Napi::Env const& env) {
 
     // If the virtual keyboard manager and the seat are available, create a virtual
     // keyboard device.
-    if (!data->mKeyboard && data->mKeyboardManager && data->mSeat) {
-      data->mKeyboard = zwp_virtual_keyboard_manager_v1_create_virtual_keyboard(
+    if (!data->mVirtualKeyboard && data->mKeyboardManager && data->mSeat) {
+      data->mVirtualKeyboard = zwp_virtual_keyboard_manager_v1_create_virtual_keyboard(
           data->mKeyboardManager, data->mSeat);
 
       // AFICS, we have to keep track of the current pressed modifier keys ourselves. We
@@ -279,7 +239,7 @@ void Native::init(Napi::Env const& env) {
                 munmap(mappedKeymap, size);
 
                 // Forward the keymap to the virtual keyboard.
-                zwp_virtual_keyboard_v1_keymap(data->mKeyboard, format, fd, size);
+                zwp_virtual_keyboard_v1_keymap(data->mVirtualKeyboard, format, fd, size);
               },
           // The other callbacks are not needed.
           .enter     = [](void*, wl_keyboard*, uint32_t, wl_surface*, wl_array*) {},
@@ -318,12 +278,12 @@ void Native::init(Napi::Env const& env) {
     return;
   }
 
-  if (!mData.mPointer) {
+  if (!mData.mVirtualPointer) {
     Napi::Error::New(env, "No virtual pointer protocol!").ThrowAsJavaScriptException();
     return;
   }
 
-  if (!mData.mKeyboard) {
+  if (!mData.mVirtualKeyboard) {
     Napi::Error::New(env, "No virtual keyboard protocol!").ThrowAsJavaScriptException();
     return;
   }
@@ -363,11 +323,48 @@ void Native::createSurfaceAndPointer() {
     return;
   }
 
+  static const zwlr_layer_surface_v1_listener surfaceListener = {
+      .configure =
+          [](void* data, zwlr_layer_surface_v1* surface, uint32_t serial, uint32_t width,
+              uint32_t height) {
+            auto* d = static_cast<Native::WaylandData*>(data);
+
+            // Ack configure so compositor knows we handled it
+            zwlr_layer_surface_v1_ack_configure(surface, serial);
+
+            d->mWorkAreaWidth  = width;
+            d->mWorkAreaHeight = height;
+
+            // Create or update the buffer with requested size
+            if (d->mPixelBuffer) {
+              wl_buffer_destroy(d->mPixelBuffer);
+              d->mPixelBuffer = nullptr;
+            }
+
+            // ARGB Color Buffer (useful for debugging, I'll set to transparent but it
+            // doesn't hurt to keep it here just in case for now)
+            constexpr uint32_t fillColor = 0x00000000;
+
+            d->mPixelBuffer = createPixelBuffer(d->mShm, width, height, fillColor);
+
+            if (d->mPixelBuffer) {
+              wl_surface_attach(d->mSurface, d->mPixelBuffer, 0, 0);
+              wl_surface_damage(d->mSurface, 0, 0, width, height);
+              wl_surface_commit(d->mSurface);
+            } else {
+              std::cerr << "Failed to create buffer\n";
+            }
+          },
+      .closed =
+          [](void* data, zwlr_layer_surface_v1* surface) {
+            std::cerr << "Layer surface closed by compositor\n";
+          },
+  };
+
   mData.mLayerSurface =
       zwlr_layer_shell_v1_get_layer_surface(mData.mLayerShell, mData.mSurface, nullptr,
           ZWLR_LAYER_SHELL_V1_LAYER_OVERLAY, "kando-pointer-surface");
-  zwlr_layer_surface_v1_add_listener(
-      mData.mLayerSurface, &layer_surface_listener, &mData);
+  zwlr_layer_surface_v1_add_listener(mData.mLayerSurface, &surfaceListener, &mData);
   zwlr_layer_surface_v1_set_size(mData.mLayerSurface, 0, 0);
   zwlr_layer_surface_v1_set_anchor(mData.mLayerSurface,
       ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP | ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM |
@@ -375,7 +372,7 @@ void Native::createSurfaceAndPointer() {
 
   wl_surface_commit(mData.mSurface);
   wl_display_roundtrip(mData.mDisplay);
-  mData.mPointerPPWA = wl_seat_get_pointer(mData.mSeat);
+  mData.mPointer = wl_seat_get_pointer(mData.mSeat);
 
   static const wl_pointer_listener pointerListener = {
       .enter =
@@ -402,7 +399,7 @@ void Native::createSurfaceAndPointer() {
       .axis_value120 = nullptr,
   };
 
-  wl_pointer_add_listener(mData.mPointerPPWA, &pointerListener, &mData);
+  wl_pointer_add_listener(mData.mPointer, &pointerListener, &mData);
   mData.mPointerEventReceived = false;
 }
 
@@ -414,9 +411,9 @@ void Native::destroySurfaceAndPointer() {
     mData.mPixelBuffer = nullptr;
   }
 
-  if (mData.mPointerPPWA) {
-    wl_pointer_destroy(mData.mPointerPPWA);
-    mData.mPointerPPWA = nullptr;
+  if (mData.mPointer) {
+    wl_pointer_destroy(mData.mPointer);
+    mData.mPointer = nullptr;
   }
 
   if (mData.mLayerSurface) {
@@ -447,7 +444,7 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
 
   // Create surface and pointer listener
   createSurfaceAndPointer();
-  if (!mData.mSurface || !mData.mPointerPPWA) {
+  if (!mData.mSurface || !mData.mPointer) {
     destroySurfaceAndPointer();
     return env.Null();
   }
@@ -517,8 +514,8 @@ void Native::movePointer(const Napi::CallbackInfo& info) {
 
   // Send the relative pointer motion event.
   zwlr_virtual_pointer_v1_motion(
-      mData.mPointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
-  zwlr_virtual_pointer_v1_frame(mData.mPointer);
+      mData.mVirtualPointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
+  zwlr_virtual_pointer_v1_frame(mData.mVirtualPointer);
   wl_display_roundtrip(mData.mDisplay);
 }
 
@@ -545,7 +542,7 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
   // If the modifier state changed, we send a modifier event.
   if (changedMods) {
-    zwp_virtual_keyboard_v1_modifiers(mData.mKeyboard,
+    zwp_virtual_keyboard_v1_modifiers(mData.mVirtualKeyboard,
         xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_DEPRESSED),
         xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LATCHED),
         xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LOCKED),
@@ -553,7 +550,7 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   }
 
   // Finally send the key event itself.
-  zwp_virtual_keyboard_v1_key(mData.mKeyboard, 0, keycode - 8,
+  zwp_virtual_keyboard_v1_key(mData.mVirtualKeyboard, 0, keycode - 8,
       press ? WL_KEYBOARD_KEY_STATE_PRESSED : WL_KEYBOARD_KEY_STATE_RELEASED);
 
   // Make sure that the event is sent.
