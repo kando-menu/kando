@@ -458,21 +458,23 @@ void Native::createSurfaceAndPointer() {
             // Ack configure so compositor knows we handled it
             zwlr_layer_surface_v1_ack_configure(surface, serial);
 
-            d->mWorkAreaWidth  = width;
-            d->mWorkAreaHeight = height;
+            // Only recreate the buffer if the work area therefore the needed size changes
+            if (d->mWorkAreaWidth != width || d->mWorkAreaHeight != height) {
+              d->mWorkAreaWidth  = width;
+              d->mWorkAreaHeight = height;
 
-            // Create or update the buffer with requested size
-            if (d->mPixelBuffer) {
-              wl_buffer_destroy(d->mPixelBuffer);
-              d->mPixelBuffer = nullptr;
+              // Create or update the buffer with requested size
+              if (d->mPixelBuffer) {
+                wl_buffer_destroy(d->mPixelBuffer);
+                d->mPixelBuffer = nullptr;
+              }
+
+              // ARGB Color Buffer (useful for debugging, I'll set to transparent but it
+              // doesn't hurt to keep it here just in case for now)
+              constexpr uint32_t fillColor = 0x00000000;
+
+              d->mPixelBuffer = createPixelBuffer(d->mShm, width, height, fillColor);
             }
-
-            // ARGB Color Buffer (useful for debugging, I'll set to transparent but it
-            // doesn't hurt to keep it here just in case for now)
-            constexpr uint32_t fillColor = 0x00000000;
-
-            d->mPixelBuffer = createPixelBuffer(d->mShm, width, height, fillColor);
-
             if (d->mPixelBuffer) {
               wl_surface_attach(d->mSurface, d->mPixelBuffer, 0, 0);
               wl_surface_damage(d->mSurface, 0, 0, width, height);
@@ -532,11 +534,6 @@ void Native::createSurfaceAndPointer() {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void Native::destroySurfaceAndPointer() {
-  if (mData.mPixelBuffer) {
-    wl_buffer_destroy(mData.mPixelBuffer);
-    mData.mPixelBuffer = nullptr;
-  }
-
   if (mData.mPointer) {
     wl_pointer_destroy(mData.mPointer);
     mData.mPointer = nullptr;
