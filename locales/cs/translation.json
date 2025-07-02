@@ -249,7 +249,7 @@
             "settings-window-color-scheme": "Nastavit barevné schéma okna",
             "volume": "Hlasitost",
             "volume-info": "Celková hlasitost zvukového tématu. Výchozí je 0.5.",
-            "lazy-initialization-info": "Když povoleno, okno menu se vytvoří jen, pokud je nabídka otevřena poprvé. To bude dělat první otevření nabídky trochu pomalejší, ale může zabránit problémům, kdy Kando začne příliš brzy po přihlášení. Výchozí je zakázáno.",
+            "lazy-initialization-info": "Když povoleno, okno menu se vytvoří jen, pokud je nabídka otevřena poprvé. To bude dělat první otevření menu trochu pomalejší, ale může zabránit problémům, kdy Kando začne příliš brzy po přihlášení. Výchozí je zakázáno.",
             "minimum-gesture-length": "Minimální délka gest",
             "minimum-gesture-angle": "Minimální Úhel Gest",
             "minimum-gesture-angle-info": "Menší odchylka od rovných pohybů nespustí výběr. Výchozí je 20°.",
@@ -287,7 +287,7 @@
             "base64-example": "Base64 příklad:",
             "search-placeholder": "Hledat ikony…",
             "url-example": "URL příklad:",
-            "base64-hint": "Base64 kódované ikony poskytují snadný způsob, jak zahrnout libovolný typ ikon do vašich nabídek. Můžete použít službu, jako je [www.base64-image.de]({{link}}) pro konverzi jakéhokoli obrazu do base64 kódovaného řetězce. To funguje dokonce pro animované gify!",
+            "base64-hint": "Base64 kódované ikony poskytují snadný způsob, jak zahrnout libovolný typ ikon do vašich menu. Můžete použít službu, jako je [www.base64-image.de]({{link}}) pro konverzi jakéhokoli obrazu do base64 kódovaného řetězce. To funguje dokonce pro animované gify!",
             "file-example": "soubor: URI příklad:",
             "hint": "Naučte se [zde]({{link}}) jak přidat, nebo vytvořit vlastní motivy ikon."
         },
