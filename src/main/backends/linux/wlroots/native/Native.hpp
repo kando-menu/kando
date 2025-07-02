@@ -66,6 +66,7 @@ class Native : public Napi::Addon<Native> {
     zwlr_layer_surface_v1* mLayerSurface = nullptr;
     wl_surface*            mSurface      = nullptr;
     wl_shm*                mShm          = nullptr;
+    wl_buffer*             mPixelBuffer  = nullptr;
 
     double mPointerX       = 0;
     double mPointerY       = 0;

@@ -85,6 +85,26 @@ static void handle_layer_surface_configure(void* data, zwlr_layer_surface_v1* su
 
   d->mWorkAreaWidth  = width;
   d->mWorkAreaHeight = height;
+
+  // Create or update the buffer with requested size
+  if (d->mPixelBuffer) {
+    wl_buffer_destroy(d->mPixelBuffer);
+    d->mPixelBuffer = nullptr;
+  }
+
+  // ARGB Color Buffer (useful for debugging, I'll set to transparent but it doesn't hurt
+  // to keep it here just in case for now)
+  constexpr uint32_t fillColor = 0x00000000;
+
+  d->mPixelBuffer = create_buffer(d->mShm, width, height, fillColor);
+
+  if (d->mPixelBuffer) {
+    wl_surface_attach(d->mSurface, d->mPixelBuffer, 0, 0);
+    wl_surface_damage(d->mSurface, 0, 0, width, height);
+    wl_surface_commit(d->mSurface);
+  } else {
+    std::cerr << "Failed to create buffer\n";
+  }
 }
 
 static void handle_layer_surface_closed(void* data, zwlr_layer_surface_v1* surface) {
@@ -140,6 +160,10 @@ Native::~Native() {
 
   if (mData.mXkbState) {
     xkb_state_unref(mData.mXkbState);
+  }
+
+  if (mData.mPixelBuffer) {
+    wl_buffer_destroy(mData.mPixelBuffer);
   }
 
   if (mData.mPointerPPWA) {
@@ -385,6 +409,11 @@ void Native::createSurfaceAndPointer() {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void Native::destroySurfaceAndPointer() {
+  if (mData.mPixelBuffer) {
+    wl_buffer_destroy(mData.mPixelBuffer);
+    mData.mPixelBuffer = nullptr;
+  }
+
   if (mData.mPointerPPWA) {
     wl_pointer_destroy(mData.mPointerPPWA);
     mData.mPointerPPWA = nullptr;
