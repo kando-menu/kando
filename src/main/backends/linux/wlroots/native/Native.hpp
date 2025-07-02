@@ -51,12 +51,6 @@ class Native : public Napi::Addon<Native> {
    */
   virtual void init(Napi::Env const& env);
 
-  /**
-   * This function gets the pointer's location and work area size by spawning a wlr layer
-   * shell surface, waiting for the event, then cleaning up.
-   */
-  Napi::Value getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info);
-
  private:
   /**
    * This function is called when the movePointer function is called from JavaScript. It
@@ -78,6 +72,17 @@ class Native : public Napi::Addon<Native> {
    *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
+
+  /**
+   * This function gets the pointer's location and work area size by spawning a wlr layer
+   * shell surface, waiting for the event, then cleaning up.
+   *
+   * @param info The arguments passed to the getPointerPositionAndWorkAreaSize function.
+   *             It does not expect any arguments.
+   * @return A JavaScript object containing the pointer's x and y coordinates and the
+   *         work area width and height.
+   */
+  Napi::Value getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info);
 
   /**
    * Creates the Wayland surface and initializes pointer tracking.

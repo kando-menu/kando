@@ -312,6 +312,132 @@ void Native::init(Napi::Env const& env) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+void Native::movePointer(const Napi::CallbackInfo& info) {
+
+  // We need to check the number of arguments and their types. If something is wrong, we
+  // throw a JavaScript exception.
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
+    Napi::Error::New(env, "Two Numbers expected!").ThrowAsJavaScriptException();
+    return;
+  }
+
+  int32_t dx = info[0].As<Napi::Number>().Int32Value();
+  int32_t dy = info[1].As<Napi::Number>().Int32Value();
+
+  // Make sure that we are connected to the Wayland display.
+  init(env);
+
+  // Send the relative pointer motion event.
+  zwlr_virtual_pointer_v1_motion(
+      mData.mVirtualPointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
+  zwlr_virtual_pointer_v1_frame(mData.mVirtualPointer);
+  wl_display_roundtrip(mData.mDisplay);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::simulateKey(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  // We need to check the number of arguments and their types. If something is wrong, we
+  // throw a JavaScript exception.
+  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsBoolean()) {
+    Napi::TypeError::New(env, "Number and Boolean expected").ThrowAsJavaScriptException();
+  }
+
+  int32_t keycode = info[0].As<Napi::Number>().Int32Value();
+  bool    press   = info[1].As<Napi::Boolean>().Value();
+
+  // Make sure that we are connected to the Wayland display.
+  init(env);
+
+  // Update the modifier state.
+  xkb_state_component changedMods =
+      xkb_state_update_key(mData.mXkbState, keycode, press ? XKB_KEY_DOWN : XKB_KEY_UP);
+
+  // If the modifier state changed, we send a modifier event.
+  if (changedMods) {
+    zwp_virtual_keyboard_v1_modifiers(mData.mVirtualKeyboard,
+        xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_DEPRESSED),
+        xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LATCHED),
+        xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LOCKED),
+        xkb_state_serialize_layout(mData.mXkbState, XKB_STATE_LAYOUT_EFFECTIVE));
+  }
+
+  // Finally send the key event itself.
+  zwp_virtual_keyboard_v1_key(mData.mVirtualKeyboard, 0, keycode - 8,
+      press ? WL_KEYBOARD_KEY_STATE_PRESSED : WL_KEYBOARD_KEY_STATE_RELEASED);
+
+  // Make sure that the event is sent.
+  wl_display_roundtrip(mData.mDisplay);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  // Ensure Wayland is initialized
+  if (!mData.mDisplay) {
+    init(env);
+    if (!mData.mDisplay)
+      return env.Null();
+  }
+
+  // Create surface and pointer listener
+  createSurfaceAndPointer();
+  if (!mData.mSurface || !mData.mPointer) {
+    destroySurfaceAndPointer();
+    return env.Null();
+  }
+
+  int fd                      = wl_display_get_fd(mData.mDisplay);
+  mData.mPointerEventReceived = false;
+
+  while (!mData.mPointerEventReceived) {
+    // Process any pending events first
+    wl_display_dispatch_pending(mData.mDisplay);
+
+    // Prepare to read new events
+    if (wl_display_prepare_read(mData.mDisplay) != 0) {
+      // In case of error, flush and continue
+      wl_display_flush(mData.mDisplay);
+      continue;
+    }
+
+    // Flush requests to compositor
+    wl_display_flush(mData.mDisplay);
+
+    // Wait for events on the Wayland display fd
+    pollfd pfd = {.fd = fd, .events = POLLIN};
+    int    ret = poll(&pfd, 1, -1); // block indefinitely until event
+
+    if (ret > 0) {
+      // Read and dispatch events
+      wl_display_read_events(mData.mDisplay);
+      wl_display_dispatch_pending(mData.mDisplay);
+    } else if (ret == -1) {
+      // Poll error, break or handle as needed
+      std::cerr << "Poll error in getPointer\n";
+      break;
+    }
+  }
+
+  // Return the pointer coordinates and work area geometry
+  Napi::Object result = Napi::Object::New(env);
+  result.Set("pointerX", Napi::Number::New(env, mData.mPointerX));
+  result.Set("pointerY", Napi::Number::New(env, mData.mPointerY));
+  result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
+  result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
+
+  // Clean up Wayland resources
+  destroySurfaceAndPointer();
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
 void Native::createSurfaceAndPointer() {
   if (mData.mSurface) {
     return; // already created
@@ -429,132 +555,6 @@ void Native::destroySurfaceAndPointer() {
   }
 
   mData.mPointerEventReceived = false;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  // Ensure Wayland is initialized
-  if (!mData.mDisplay) {
-    init(env);
-    if (!mData.mDisplay)
-      return env.Null();
-  }
-
-  // Create surface and pointer listener
-  createSurfaceAndPointer();
-  if (!mData.mSurface || !mData.mPointer) {
-    destroySurfaceAndPointer();
-    return env.Null();
-  }
-
-  int fd                      = wl_display_get_fd(mData.mDisplay);
-  mData.mPointerEventReceived = false;
-
-  while (!mData.mPointerEventReceived) {
-    // Process any pending events first
-    wl_display_dispatch_pending(mData.mDisplay);
-
-    // Prepare to read new events
-    if (wl_display_prepare_read(mData.mDisplay) != 0) {
-      // In case of error, flush and continue
-      wl_display_flush(mData.mDisplay);
-      continue;
-    }
-
-    // Flush requests to compositor
-    wl_display_flush(mData.mDisplay);
-
-    // Wait for events on the Wayland display fd
-    pollfd pfd = {.fd = fd, .events = POLLIN};
-    int    ret = poll(&pfd, 1, -1); // block indefinitely until event
-
-    if (ret > 0) {
-      // Read and dispatch events
-      wl_display_read_events(mData.mDisplay);
-      wl_display_dispatch_pending(mData.mDisplay);
-    } else if (ret == -1) {
-      // Poll error, break or handle as needed
-      std::cerr << "Poll error in getPointer\n";
-      break;
-    }
-  }
-
-  // Return the pointer coordinates and work area geometry
-  Napi::Object result = Napi::Object::New(env);
-  result.Set("pointerX", Napi::Number::New(env, mData.mPointerX));
-  result.Set("pointerY", Napi::Number::New(env, mData.mPointerY));
-  result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
-  result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
-
-  // Clean up Wayland resources
-  destroySurfaceAndPointer();
-  return result;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-void Native::movePointer(const Napi::CallbackInfo& info) {
-
-  // We need to check the number of arguments and their types. If something is wrong, we
-  // throw a JavaScript exception.
-  Napi::Env env = info.Env();
-
-  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
-    Napi::Error::New(env, "Two Numbers expected!").ThrowAsJavaScriptException();
-    return;
-  }
-
-  int32_t dx = info[0].As<Napi::Number>().Int32Value();
-  int32_t dy = info[1].As<Napi::Number>().Int32Value();
-
-  // Make sure that we are connected to the Wayland display.
-  init(env);
-
-  // Send the relative pointer motion event.
-  zwlr_virtual_pointer_v1_motion(
-      mData.mVirtualPointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
-  zwlr_virtual_pointer_v1_frame(mData.mVirtualPointer);
-  wl_display_roundtrip(mData.mDisplay);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-void Native::simulateKey(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-
-  // We need to check the number of arguments and their types. If something is wrong, we
-  // throw a JavaScript exception.
-  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsBoolean()) {
-    Napi::TypeError::New(env, "Number and Boolean expected").ThrowAsJavaScriptException();
-  }
-
-  int32_t keycode = info[0].As<Napi::Number>().Int32Value();
-  bool    press   = info[1].As<Napi::Boolean>().Value();
-
-  // Make sure that we are connected to the Wayland display.
-  init(env);
-
-  // Update the modifier state.
-  xkb_state_component changedMods =
-      xkb_state_update_key(mData.mXkbState, keycode, press ? XKB_KEY_DOWN : XKB_KEY_UP);
-
-  // If the modifier state changed, we send a modifier event.
-  if (changedMods) {
-    zwp_virtual_keyboard_v1_modifiers(mData.mVirtualKeyboard,
-        xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_DEPRESSED),
-        xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LATCHED),
-        xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LOCKED),
-        xkb_state_serialize_layout(mData.mXkbState, XKB_STATE_LAYOUT_EFFECTIVE));
-  }
-
-  // Finally send the key event itself.
-  zwp_virtual_keyboard_v1_key(mData.mVirtualKeyboard, 0, keycode - 8,
-      press ? WL_KEYBOARD_KEY_STATE_PRESSED : WL_KEYBOARD_KEY_STATE_RELEASED);
-
-  // Make sure that the event is sent.
-  wl_display_roundtrip(mData.mDisplay);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
