@@ -249,7 +249,7 @@
             "settings-window-color-scheme": "Nastavit barevné schéma okna",
             "volume": "Hlasitost",
             "volume-info": "Celková hlasitost zvukového tématu. Výchozí je 0.5.",
-            "lazy-initialization-info": "Pokud je zapnuto, vytvoří se okno nabídky pouze, pokud je nabídka otevřena poprvé. To bude dělat první otevření nabídky trochu pomalejší, ale může zabránit problémům, kdy Kando začne příliš brzy po přihlášení. Výchozí je zakázáno.",
+            "lazy-initialization-info": "Když povoleno, okno menu se vytvoří jen, pokud je nabídka otevřena poprvé. To bude dělat první otevření nabídky trochu pomalejší, ale může zabránit problémům, kdy Kando začne příliš brzy po přihlášení. Výchozí je zakázáno.",
             "minimum-gesture-length": "Minimální délka gest",
             "minimum-gesture-angle": "Minimální Úhel Gest",
             "minimum-gesture-angle-info": "Menší odchylka od rovných pohybů nespustí výběr. Výchozí je 20°.",
@@ -267,7 +267,19 @@
             "movement-threshold": "Práh pohybu",
             "movement-threshold-info": "Menší pohyby myši nebudou brány v úvahu ve Markovací nebo Turbo Módu. Výchozí je 15px.",
             "fixed-stroke-length-info": "Obvykle jsou položky vybrány, když zastavíte nebo provedete obrat. Pokud nastavíte hodnotu vyšší než 0, toto chování se změní: Nyní budou položky vybrány pouze v případě, že je přetáhnete pryč tak daleko z centra. Výchozí je 0px.",
-            "fixed-stroke-length": "Upravená Délka Potahu"
+            "fixed-stroke-length": "Upravená Délka Potahu",
+            "auto-language": "Použít jazyk systému",
+            "app-settings": "Nastavení Aplikace",
+            "localization-label": "Jazyk",
+            "keep-input-focus": "Udržet zaměření aktivní aplikace",
+            "keep-input-focus-info": "Pokud povoleno, menu nepřevezme zaměření klávesnice při otevření. To deaktivuje Turbo mód, ale může být užitečné, pokud potřebujete, aby ostatní aplikace zůstaly zaměřeny, zatímco nabídka je otevřena.",
+            "press-again-behavior": "Chování Opětovného-stisknutí-zkratky",
+            "press-again-behavior-info": "Určuje, co se stane, pokud je zkratka stisknuta znovu, když je zobrazeno menu. Pokud je přiřazeno více menu na stejné zkratce, můžete použít tento cyklus všemi odpovídajícími menu. Ujistěte se, že držíte modifikační klávesu jen, pokud chcete použít Turbo Mód společně s jinou možností než \"Nedělat nic\".",
+            "do-nothing": "Nedělat nic",
+            "cycle-from-first": "Zobrazit další menu (začít s prvním)",
+            "cycle-from-recent": "Zobrazit další menu (pokračovat od posledního)",
+            "close-menu": "Zavřít menu",
+            "localization-info": "Restartujte Kando pro použití nového jazyka."
         },
         "hover-mode": "Hover Mód",
         "hover-mode-info": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
@@ -397,6 +409,7 @@
         "no-matching-menus": "Žádné menu nenalezeno.",
         "no-matching-menus-note": "Možná zkuste vyhledat něco jiného?",
         "empty-collection-note": "Upravte štítky výše, nebo přidejte zcela nové menu do této kolekce pomocí tlačítka níže.",
-        "empty-collection": "Tato kolekce je prázdná."
+        "empty-collection": "Tato kolekce je prázdná.",
+        "add-menu-item-hint": "Přetáhněte tuto položku pro přidání do menu výše!"
     }
 }
