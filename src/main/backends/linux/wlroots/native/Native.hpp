@@ -43,40 +43,6 @@ class Native : public Napi::Addon<Native> {
   Native(Napi::Env env, Napi::Object exports);
   virtual ~Native();
 
-  struct WaylandData {
-    wl_display*    mDisplay    = nullptr;
-    wl_registry*   mRegistry   = nullptr;
-    wl_compositor* mCompositor = nullptr;
-    wl_seat*       mSeat       = nullptr;
-
-    wl_registry_listener mRegistryListener{};
-
-    zwlr_virtual_pointer_manager_v1* mPointerManager = nullptr;
-    zwlr_virtual_pointer_v1*         mVirtualPointer = nullptr;
-
-    zwp_virtual_keyboard_manager_v1* mKeyboardManager = nullptr;
-    zwp_virtual_keyboard_v1*         mVirtualKeyboard = nullptr;
-
-    xkb_context* mXkbContext = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
-    xkb_keymap*  mXkbKeymap  = nullptr;
-    xkb_state*   mXkbState   = nullptr;
-
-    wl_pointer*            mPointer      = nullptr;
-    zwlr_layer_shell_v1*   mLayerShell   = nullptr;
-    zwlr_layer_surface_v1* mLayerSurface = nullptr;
-    wl_surface*            mSurface      = nullptr;
-    wl_shm*                mShm          = nullptr;
-    wl_buffer*             mPixelBuffer  = nullptr;
-
-    double mPointerX       = 0;
-    double mPointerY       = 0;
-    double mWorkAreaWidth  = 0;
-    double mWorkAreaHeight = 0;
-
-    // Track whether a pointer event has been received (used for blocking wait).
-    bool mPointerEventReceived = false;
-  };
-
  protected:
   /**
    * This establishes a connection to the Wayland display and initializes all the members
@@ -128,6 +94,40 @@ class Native : public Napi::Addon<Native> {
    * associated Wayland resources used for pointer handling.
    */
   void destroySurfaceAndPointer();
+
+  struct WaylandData {
+    wl_display*    mDisplay    = nullptr;
+    wl_registry*   mRegistry   = nullptr;
+    wl_compositor* mCompositor = nullptr;
+    wl_seat*       mSeat       = nullptr;
+
+    wl_registry_listener mRegistryListener{};
+
+    zwlr_virtual_pointer_manager_v1* mPointerManager = nullptr;
+    zwlr_virtual_pointer_v1*         mVirtualPointer = nullptr;
+
+    zwp_virtual_keyboard_manager_v1* mKeyboardManager = nullptr;
+    zwp_virtual_keyboard_v1*         mVirtualKeyboard = nullptr;
+
+    xkb_context* mXkbContext = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+    xkb_keymap*  mXkbKeymap  = nullptr;
+    xkb_state*   mXkbState   = nullptr;
+
+    wl_pointer*            mPointer      = nullptr;
+    zwlr_layer_shell_v1*   mLayerShell   = nullptr;
+    zwlr_layer_surface_v1* mLayerSurface = nullptr;
+    wl_surface*            mSurface      = nullptr;
+    wl_shm*                mShm          = nullptr;
+    wl_buffer*             mPixelBuffer  = nullptr;
+
+    double mPointerX       = 0;
+    double mPointerY       = 0;
+    double mWorkAreaWidth  = 0;
+    double mWorkAreaHeight = 0;
+
+    // Track whether a pointer event has been received (used for blocking wait).
+    bool mPointerEventReceived = false;
+  };
 
   WaylandData mData{};
 };
