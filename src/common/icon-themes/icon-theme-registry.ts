@@ -9,7 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import { WindowWithAPIs } from '../common-window-api';
-declare const window: WindowWithAPIs;
+// Conditionally declare window type when in renderer context
+declare const window: WindowWithAPIs | undefined;
 
 import { SimpleIconsTheme } from './simple-icons-theme';
 import { SimpleIconsColoredTheme } from './simple-icons-colored-theme';
@@ -98,11 +99,24 @@ export class IconThemeRegistry {
     this.iconThemes.set('base64', new Base64Theme());
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
-    const info = await window.commonAPI.getIconThemes();
-    this._userIconThemeDirectory = info.userIconDirectory;
-    for (const theme of info.fileIconThemes) {
-      this.iconThemes.set(theme.name, new FileIconTheme(theme));
+    // Only execute this in renderer process where window.commonAPI is available
+    if (typeof window !== 'undefined' && window.commonAPI) {
+      window.commonAPI.getIconThemes().then((info) => {
+        this._userIconThemeDirectory = info.userIconDirectory;
+        for (const theme of info.fileIconThemes) {
+          this.iconThemes.set(theme.name, new FileIconTheme(theme));
+        }
+      });
     }
+  }
+
+  /**
+   * Use this method to get the singleton instance of this class.
+   *
+   * @returns The singleton instance of this class.
+   */
+  public static getInstance(): IconThemeRegistry {
+    return IconThemeRegistry.instance;
   }
 
   /**
