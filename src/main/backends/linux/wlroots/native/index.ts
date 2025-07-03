@@ -24,6 +24,17 @@ export interface Native {
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
+
+  /**
+   * This gets the pointer's position and work area size by spawning a temporary
+   * wlr_layer_shell overlay surface.
+   */
+  getPointerPositionAndWorkAreaSize(): {
+    pointerX: number;
+    pointerY: number;
+    workAreaWidth: number;
+    workAreaHeight: number;
+  };
 }
 
 const native: Native = require('./../../../../../../build/Release/NativeWLR.node');

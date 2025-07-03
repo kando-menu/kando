@@ -194,13 +194,6 @@ export class MenuWindow extends BrowserWindow {
     // will be passed to the action as well.
     this.lastMenu = menu;
 
-    // Get the work area of the screen where the pointer is located. We will move the
-    // window to this screen and show the menu at the pointer position.
-    const workarea = screen.getDisplayNearestPoint({
-      x: info.pointerX,
-      y: info.pointerY,
-    }).workArea;
-
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
     if (process.platform === 'win32') {
@@ -214,20 +207,15 @@ export class MenuWindow extends BrowserWindow {
       // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
       // scale the window to the correct size.
       this.setBounds({
-        x: workarea.x,
-        y: workarea.y,
+        x: info.workArea.x,
+        y: info.workArea.y,
         width: 1,
         height: 1,
       });
     }
 
     // Move and resize the window to the work area of the screen where the pointer is.
-    this.setBounds({
-      x: workarea.x,
-      y: workarea.y,
-      width: workarea.width,
-      height: workarea.height,
-    });
+    this.setBounds(info.workArea);
 
     // On all platforms except Windows, we show the window after we moved it.
     if (process.platform !== 'win32') {
@@ -237,8 +225,8 @@ export class MenuWindow extends BrowserWindow {
     // Usually, the menu is shown at the pointer position. However, if the menu is
     // centered, we show it in the center of the screen.
     const mousePosition = {
-      x: (info.pointerX - workarea.x) / this.webContents.getZoomFactor(),
-      y: (info.pointerY - workarea.y) / this.webContents.getZoomFactor(),
+      x: (info.pointerX - info.workArea.x) / this.webContents.getZoomFactor(),
+      y: (info.pointerY - info.workArea.y) / this.webContents.getZoomFactor(),
     };
 
     // We have to pass the size of the window to the renderer because window.innerWidth
@@ -246,8 +234,8 @@ export class MenuWindow extends BrowserWindow {
     // Also, we incorporate the zoom factor of the window so that the clamping to the
     // work area is done correctly.
     const windowSize = {
-      x: workarea.width / this.webContents.getZoomFactor(),
-      y: workarea.height / this.webContents.getZoomFactor(),
+      x: info.workArea.width / this.webContents.getZoomFactor(),
+      y: info.workArea.height / this.webContents.getZoomFactor(),
     };
 
     // Send the menu to the renderer process. If the menu is centered, we delay the
@@ -271,8 +259,8 @@ export class MenuWindow extends BrowserWindow {
         appName: info.appName,
         windowName: info.windowName,
         windowPosition: {
-          x: workarea.x,
-          y: workarea.y,
+          x: info.workArea.x,
+          y: info.workArea.y,
         },
       }
     );

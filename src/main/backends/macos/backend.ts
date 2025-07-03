@@ -56,6 +56,10 @@ export class MacosBackend extends Backend {
       appName: app,
       pointerX: pointer.x,
       pointerY: pointer.y,
+      workArea: screen.getDisplayNearestPoint({
+        x: pointer.x,
+        y: pointer.y,
+      }).workArea,
     };
   }
 
