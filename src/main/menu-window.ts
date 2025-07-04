@@ -122,6 +122,17 @@ export class MenuWindow extends BrowserWindow {
     // Apply the stored zoom factor to the window.
     this.webContents.setZoomFactor(this.kando.getGeneralSettings().get('zoomFactor'));
 
+    // Intercept Alt+F4.
+    this.webContents.on('before-input-event', (event, input) => {
+      if (input.key === 'F4' && input.alt) {
+        const isMenuVisible = this.isVisible() && this.hideTimeout === null;
+        if (isMenuVisible) {
+          this.webContents.send('menu-window.hide-menu');
+        }
+        event.preventDefault();
+      }
+    });
+
     return this.windowLoaded;
   }
 
