@@ -27,6 +27,7 @@ They are marked with a **:collision:** emoji below.
 ### :tada: Added
 
 - **A completely rewritten settings dialog!** The settings dialog is now a separate window and has a new design. This significantly improves the user experience and adds several new possibilities:
+  - **A new introduction dialog:** This is shown the first time you open the settings dialog. It provides a quick overview of how to use Kando.
   - **A general-settings dialog:** This exposes all the settings which were previously only available in the `config.json` file.
   - **Support for undo/redo:** You can now undo and redo changes in the menu editor. This is done using the <kbd>Ctrl</kbd>+<kbd>Z</kbd> and <kbd>Ctrl</kbd>+<kbd>Y</kbd> shortcuts or with the corresponding buttons in the toolbar.
   - **Menu Collections:** You can now assign tags to your menus and group them by tags. This allows you to organize your menus in a structured way.
