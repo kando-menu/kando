@@ -125,8 +125,7 @@ export class MenuWindow extends BrowserWindow {
     // Intercept Alt+F4.
     this.webContents.on('before-input-event', (event, input) => {
       if (input.key === 'F4' && input.alt) {
-        const isMenuVisible = this.isVisible() && this.hideTimeout === null;
-        if (isMenuVisible) {
+        if (this.isVisible()) {
           this.webContents.send('menu-window.hide-menu');
         }
         event.preventDefault();
@@ -148,13 +147,12 @@ export class MenuWindow extends BrowserWindow {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
-    const isMenuVisible = this.isVisible() && this.hideTimeout === null;
 
     // If a menu is currently shown and the user presses the same shortcut again we will
     // either close the menu or show the next one with the same shortcut. There is also
     // the option to do nothing in this case, but in this case the menu's shortcut will be
     // inhibited and thus this method will not be called in the first place.
-    if (isMenuVisible) {
+    if (this.isVisible()) {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
 
@@ -308,6 +306,17 @@ export class MenuWindow extends BrowserWindow {
     setTimeout(() => {
       this.focus();
     }, 100);
+  }
+
+  /**
+   * This checks if the window is visible. A window is considered visible if it is shown,
+   * not minimized, and not about to be hidden (i.e. the fade-out animation is not
+   * running).
+   *
+   * @returns Returns true if the window is visible and not minimized.
+   */
+  public isVisible() {
+    return super.isVisible() && this.hideTimeout === null && !this.isMinimized();
   }
 
   /**
