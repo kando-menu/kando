@@ -400,6 +400,9 @@
         },
         "gnome": {
             "error": "無法連線至 GNOME Shell 擴充功能 Kando Integration。您可以從此處取得：{{link}}"
+        },
+        "niri": {
+            "shortcut-info": "Niri 尚不支援全域快捷鍵。但您可透過命令列執行 'kando --menu \"選單名稱\"'，或在您的 Niri 設定檔中設定，來開啟此選單。"
         }
     }
 }
