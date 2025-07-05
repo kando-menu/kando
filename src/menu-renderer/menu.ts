@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 import * as math from '../common/math';
 import { IGeneralSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
+import { SelectionWedges } from './selection-wedges';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
@@ -80,6 +81,9 @@ export class Menu extends EventEmitter {
    * the currently selected item.
    */
   private selectionChain: Array<IRenderedMenuItem> = [];
+
+  /** This is used to visualize the selection wedges. */
+  private selectionWedges: SelectionWedges = null;
 
   /** This shows the name of the currently hovered child on the center item. */
   private centerText: CenterText = null;
@@ -208,6 +212,7 @@ export class Menu extends EventEmitter {
     this.container.innerHTML = '';
     this.root = null;
     this.showMenuOptions = null;
+    this.selectionWedges = null;
     this.centerText = null;
     this.hoveredItem = null;
     this.draggedItem = null;
@@ -483,11 +488,10 @@ export class Menu extends EventEmitter {
           });
         }
       }
-
-      if (item === this.root) {
-        this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
-      }
     }
+
+    this.selectionWedges = new SelectionWedges(rootContainer);
+    this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
   }
 
   /**
@@ -599,6 +603,17 @@ export class Menu extends EventEmitter {
       // Update the mouse info based on the newly selected item's position.
       this.pointerInput.setCurrentCenter(clampedPosition, this.settings.centerDeadZone);
       this.gamepadInput.setCurrentCenter(clampedPosition);
+
+      // Assemble a list of angles for the selection wedges.
+      const wedges = item.children.map((child) => {
+        return (child as IRenderedMenuItem).wedge;
+      });
+
+      if (item.parentWedge) {
+        wedges.push(item.parentWedge);
+      }
+
+      this.selectionWedges.show(wedges, clampedPosition);
     }
 
     // Choose a sound effect to play. We do not play a sound effect for the initial
@@ -668,6 +683,16 @@ export class Menu extends EventEmitter {
       }
 
       this.soundTheme.playSound(soundType);
+    }
+
+    // Tell the selection wedges about the new hovered item.
+    if (item && this.hoveredItem !== null) {
+      if (this.isParentOfCenterItem(item)) {
+        this.selectionWedges.hoverParentWedge();
+      } else {
+        const center = this.selectionChain[this.selectionChain.length - 1];
+        this.selectionWedges.hoverChildWedge(center.children.indexOf(item));
+      }
     }
 
     if (this.hoveredItem) {
@@ -830,7 +855,7 @@ export class Menu extends EventEmitter {
     if (currentItem.children) {
       for (const child of currentItem.children as IRenderedMenuItem[]) {
         if (
-          math.isAngleBetween(this.latestInput.angle, child.startAngle, child.endAngle)
+          math.isAngleBetween(this.latestInput.angle, child.wedge.start, child.wedge.end)
         ) {
           return child;
         }
@@ -1036,13 +1061,13 @@ export class Menu extends EventEmitter {
     const parentAngle = item.angle == undefined ? undefined : (item.angle + 180) % 360;
     const angles = math.computeItemAngles(item.children, parentAngle);
     const wedges = math.computeItemWedges(angles, parentAngle);
+    item.parentWedge = wedges.parentWedge;
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < item.children.length; ++i) {
       const child = item.children[i] as IRenderedMenuItem;
       child.angle = angles[i];
-      child.startAngle = wedges[i].start;
-      child.endAngle = wedges[i].end;
+      child.wedge = wedges.itemWedges[i];
 
       // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);

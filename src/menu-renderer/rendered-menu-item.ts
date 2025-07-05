@@ -25,16 +25,22 @@ export interface IRenderedMenuItem extends IMenuItem {
   path?: string;
 
   /**
-   * The beginning of the menu item's angular wedge in degrees. This will be computed and
-   * set once the menu is opened.
+   * The beginning and end of the menu item's angular wedge in degrees. This will be
+   * computed and set once the menu is opened.
    */
-  startAngle?: number;
+  wedge?: {
+    start: number;
+    end: number;
+  };
 
   /**
-   * The end of the menu item's angular wedge in degrees. This will be computed and set
-   * once the menu is opened.
+   * If the menu item is a submenu and is not the root item (i.e. it has a parent), this
+   * property will contain the wedge towards the parent item in degrees.
    */
-  endAngle?: number;
+  parentWedge?: {
+    start: number;
+    end: number;
+  };
 
   /**
    * Once a menu item is selected, it will be drawn at a specific distance from the parent

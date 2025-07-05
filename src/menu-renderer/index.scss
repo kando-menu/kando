@@ -127,6 +127,47 @@ body {
       opacity: 0;
     }
   }
+
+  // Wedges ------------------------------------------------------------------------------
+  .wedges-container {
+    position: absolute;
+    z-index: -1;
+
+    .separator {
+      position: absolute;
+      width: 100vmax;
+      height: 1px;
+      background: linear-gradient(to right, hsla(0, 0%, 100%, 0.1), transparent 50%);
+      transform-origin: 0% 0;
+    }
+
+    .wedge {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+
+      mask: radial-gradient(
+        circle at var(--center-x) var(--center-y),
+        transparent 0%,
+        transparent 100px,
+        black 150px,
+        transparent 50%
+      );
+
+      background: conic-gradient(
+        from calc(var(--start-angle)) at var(--center-x) var(--center-y),
+        hsl(0, 0%, 50%) calc(var(--end-angle) - var(--start-angle)),
+        transparent calc(var(--end-angle) - var(--start-angle))
+      );
+      opacity: 0;
+
+      &.hovered {
+        opacity: 0.1;
+      }
+    }
+  }
 }
 
 // Settings Button -----------------------------------------------------------------------
