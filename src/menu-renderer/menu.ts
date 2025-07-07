@@ -604,16 +604,16 @@ export class Menu extends EventEmitter {
       this.pointerInput.setCurrentCenter(clampedPosition, this.settings.centerDeadZone);
       this.gamepadInput.setCurrentCenter(clampedPosition);
 
-      // Assemble a list of angles for the selection wedges.
-      const wedges = item.children.map((child) => {
-        return (child as IRenderedMenuItem).wedge;
+      // Assemble a list of angles for the selection-wedge separators.
+      const separators = item.children.map((child) => {
+        return (child as IRenderedMenuItem).wedge.start;
       });
 
       if (item.parentWedge) {
-        wedges.push(item.parentWedge);
+        separators.push(item.parentWedge.start);
       }
 
-      this.selectionWedges.show(wedges, clampedPosition);
+      this.selectionWedges.setSeparators(separators, clampedPosition);
     }
 
     // Choose a sound effect to play. We do not play a sound effect for the initial
@@ -670,7 +670,7 @@ export class Menu extends EventEmitter {
 
     // Choose the sound effect to play. We only play a sound if a new item is hovered and
     // if there was a previously hovered item. This ensures that no hover effect is played
-    // when we enter a submenu - i this case the previously hovered item is null.
+    // when we enter a submenu - in this case the previously hovered item is null.
     if (item && this.hoveredItem !== null) {
       let soundType = SoundType.eHoverItem;
 
@@ -685,14 +685,21 @@ export class Menu extends EventEmitter {
       this.soundTheme.playSound(soundType);
     }
 
-    // Tell the selection wedges about the new hovered item.
-    if (item && this.hoveredItem !== null) {
-      if (this.isParentOfCenterItem(item)) {
-        this.selectionWedges.hoverParentWedge();
+    // Tell the selection wedges about the hovered wedge.
+    if (this.isParentOfCenterItem(item)) {
+      const center = this.selectionChain[this.selectionChain.length - 1];
+      // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
+      // case if we did not just entered a submenu. It looks better this way. Else the
+      // parent wedge would be highlighted already when entering a submenu.
+      if (center.parentWedge && this.hoveredItem !== null) {
+        this.selectionWedges.hover(center.parentWedge);
       } else {
-        const center = this.selectionChain[this.selectionChain.length - 1];
-        this.selectionWedges.hoverChildWedge(center.children.indexOf(item));
+        this.selectionWedges.unhover();
       }
+    } else if (item?.wedge) {
+      this.selectionWedges.hover(item.wedge);
+    } else {
+      this.selectionWedges.unhover();
     }
 
     if (this.hoveredItem) {
