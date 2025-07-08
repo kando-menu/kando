@@ -190,7 +190,10 @@ export class KandoApp {
         }
       }
 
-      const validationResult = this.validateMenuItems(menu.root.children, `menus[${index}].root.children`);
+      const validationResult = this.validateMenuItems(
+        menu.root.children,
+        `menus[${index}].root.children`
+      );
       if (validationResult !== false) {
         return validationResult;
       }
@@ -209,7 +212,15 @@ export class KandoApp {
       }
 
       const validTypes = [
-        'submenu', 'command', 'file', 'hotkey', 'macro', 'text', 'uri', 'redirect', 'settings',
+        'submenu',
+        'command',
+        'file',
+        'hotkey',
+        'macro',
+        'text',
+        'uri',
+        'redirect',
+        'settings',
       ];
 
       if (!validTypes.includes(item.type)) {
@@ -233,14 +244,19 @@ export class KandoApp {
           return `${itemPath} is invalid: "children" must be an array for submenu type. Got: ${typeof item.children}`;
         }
 
-        const validationResult = this.validateMenuItems(item.children, `${itemPath}.children`);
+        const validationResult = this.validateMenuItems(
+          item.children,
+          `${itemPath}.children`
+        );
         if (validationResult !== false) {
           return validationResult;
         }
       }
 
       if (
-        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(item.type)
+        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(
+          item.type
+        )
       ) {
         if (!item.data || typeof item.data !== 'object') {
           return `${itemPath} is invalid: "data" must be a non-null object. Got: ${typeof item.data}`;
@@ -275,7 +291,11 @@ export class KandoApp {
         return `${itemPath} is invalid: "data.menu" must be a string. Got: ${typeof item.data?.menu}`;
       }
 
-      if (item.type === 'settings' && item.data !== null && typeof item.data !== 'object') {
+      if (
+        item.type === 'settings' &&
+        item.data !== null &&
+        typeof item.data !== 'object'
+      ) {
         return `${itemPath} is invalid: "data" must be an object or null. Got: ${typeof item.data}`;
       }
     }
