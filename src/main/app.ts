@@ -542,8 +542,8 @@ export class KandoApp {
           console.log('Successfully imported menus from', filePath);
         } else {
           console.error('Detected error in menus structure:'); // TODO: add error window to the settings window UI
-          dialog.showErrorBox('Invalid structure', errors);
           console.error(errors);
+          dialog.showErrorBox('Invalid structure', errors);
           return;
         }
       } catch (error) {
@@ -659,8 +659,8 @@ export class KandoApp {
           console.log('Successfully imported a menu from', filePath);
         } else {
           console.error('Detected error in menu structure:'); // TODO: add error window to the settings window UI
-          dialog.showErrorBox('Invalid structure', errors);
           console.error(errors);
+          dialog.showErrorBox('Invalid structure', errors);
           return;
         }
       } catch (error) {
