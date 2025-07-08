@@ -12,10 +12,12 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './Properties.module.scss';
+import { TbCopy, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
   Headerbar,
+  Button,
   IconChooserButton,
   TagInput,
   ShortcutPicker,
@@ -36,6 +38,9 @@ export default function Properties() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
+  const selectParent = useAppState((state) => state.selectParent);
+  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
+  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const [menuTags, setMenuTags] = React.useState([]);
@@ -165,6 +170,31 @@ export default function Properties() {
             {!isRoot && selectedItem && getConfigComponent(selectedItem.type)}
           </div>
         </Scrollbox>
+        {!isRoot && (
+          <div className={classes.floatingButton}>
+            <Button
+              icon={<TbCopy />}
+              tooltip={i18next.t('settings.duplicate-menu-item')}
+              variant="floating"
+              size="large"
+              grouped
+              onClick={() => {
+                duplicateMenuItem(selectedMenu, selectedChildPath);
+              }}
+            />
+            <Button
+              icon={<TbTrash />}
+              tooltip={i18next.t('settings.delete-menu-item')}
+              variant="floating"
+              size="large"
+              grouped
+              onClick={() => {
+                deleteMenuItem(selectedMenu, selectedChildPath);
+                selectParent();
+              }}
+            />
+          </div>
+        )}
       </div>
     </>
   );
