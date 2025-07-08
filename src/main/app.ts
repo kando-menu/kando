@@ -153,7 +153,7 @@ export class KandoApp {
         const errorMessage = `Menu ${parsedMenuName} is invalid: The shortcutID must be a string.`;
         return errorMessage;
       }
-      
+
       if (typeof menu.centered !== 'boolean') {
         const errorMessage = `Menu ${parsedMenuName} is invalid: The centered option must be a non-empty boolean.`;
         return errorMessage;
@@ -565,7 +565,10 @@ export class KandoApp {
           parsed = JSON.parse(jsonContent);
         } catch (err) {
           console.error('Invalid JSON file:', err.message);
-          dialog.showErrorBox('Invalid JSON', 'The selected file is not a valid JSON file.');
+          dialog.showErrorBox(
+            'Invalid JSON',
+            'The selected file is not a valid JSON file.'
+          );
           return;
         }
 
@@ -575,7 +578,7 @@ export class KandoApp {
             type: 'warning',
             buttons: ['Cancel', 'OK'],
             defaultId: 1, // default selected: OK
-            cancelId: 0,  // if user presses Esc or closes dialog
+            cancelId: 0, // if user presses Esc or closes dialog
             title: 'Warning',
             message: 'The imported menus may not be compatible. Do you want to proceed?',
             detail: `Config version: ${parsed.version}\nApp version: ${app.getVersion()}`,
@@ -668,19 +671,22 @@ export class KandoApp {
           parsed = JSON.parse(jsonContent);
         } catch (err) {
           console.error('Invalid JSON file:', err.message);
-          dialog.showErrorBox('Invalid JSON', 'The selected file is not a valid JSON file.');
+          dialog.showErrorBox(
+            'Invalid JSON',
+            'The selected file is not a valid JSON file.'
+          );
           return;
         }
 
         if (parsed.version !== app.getVersion()) {
           const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
           console.warn(warnMessage);
-          
+
           const result = await dialog.showMessageBox({
             type: 'warning',
             buttons: ['Cancel', 'OK'],
             defaultId: 1, // default selected: OK
-            cancelId: 0,  // if user presses Esc or closes dialog
+            cancelId: 0, // if user presses Esc or closes dialog
             title: 'Warning',
             message: 'The imported menu may not be compatible. Do you want to proceed?',
             detail: `Config version: ${parsed.version}\nApp version: ${app.getVersion()}`,

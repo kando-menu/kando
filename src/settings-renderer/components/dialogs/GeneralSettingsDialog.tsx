@@ -482,10 +482,8 @@ export default function GeneralSettingsDialog() {
             />
           </div>
 
-          <Note>
-            {i18next.t('settings.general-settings-dialog.export-import-note')}
-          </Note>
-          <div style={{display: 'flex', gap: 8,}}>
+          <Note>{i18next.t('settings.general-settings-dialog.export-import-note')}</Note>
+          <div style={{ display: 'flex', gap: 8 }}>
             <Button
               label={i18next.t('settings.general-settings-dialog.export-menus')}
               icon={<TbFileExport />}
