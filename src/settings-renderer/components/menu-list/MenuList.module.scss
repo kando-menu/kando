@@ -23,11 +23,12 @@
   background-color: $window-background;
   border-top-left-radius: 10px;
   flex-grow: 1;
+  border-top: $area-border;
+  border-left: $area-border;
 }
 
 .menu {
   display: block;
-  border: none;
   background-color: $widget-normal;
   color: $text-normal;
   border: 1px solid transparent;

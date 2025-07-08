@@ -5,7 +5,7 @@
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: Louis Dalibard <ontake@ontake.dev>
 // SPDX-License-Identifier: MIT
 
 import i18next from 'i18next';
@@ -16,11 +16,11 @@ import { GlobalShortcuts } from '../portals/global-shortcuts';
 import { screen } from 'electron';
 
 /**
- * This backend is used on Hyprland. It uses the generic wlroots backend and adds the
- * missing functionality using the hyprctl command line utility and the global-shortcuts
- * desktop protocol.
+ * This backend is used on Niri. It uses the generic wlroots backend and adds the missing
+ * functionality using the niri msg command line utility and the global-shortcuts desktop
+ * protocol.
  */
-export class HyprBackend extends WLRBackend {
+export class NiriBackend extends WLRBackend {
   /** The global-shortcuts portal is used to bind os-level shortcuts. */
   private globalShortcuts = new GlobalShortcuts();
 
@@ -31,9 +31,9 @@ export class HyprBackend extends WLRBackend {
   public async init() {
     console.log(
       `
-The Hyprland backend is still a bit experimental!
+The Niri backend is still a bit experimental!
 You have to perform some manual steps to make Kando work properly.
-See https://kando.menu/installation-on-linux/#-hyprland
+See https://kando.menu/installation-on-linux/#-niri
 for more information.
 `
     );
@@ -50,56 +50,57 @@ for more information.
   public async deinit() {}
 
   /**
-   * 'splash' seems to be a good choice for Hyprland. See:
+   * 'splash' seems to be a good choice for Niri (same as Hyprland). See:
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
    */
   public getBackendInfo() {
     return {
-      name: 'Hyprland',
+      name: 'Niri',
       menuWindowType: 'splash',
       supportsShortcuts: false,
-      shortcutHint: i18next.t('backends.hyprland.shortcut-info'),
+      shortcutHint: i18next.t('backends.niri.shortcut-info'),
       shouldUseTransparentSettingsWindow: true,
     };
   }
 
   /**
-   * This uses the hyprctl commandline tool to get the current pointer position relative
-   * to the currently focused monitor as well as name and app of the currently focused
-   * window.
+   * The pointer position as well as the work-area size are retrieved via a native addon
+   * which spawns a temporary wlr_layer_shell overlay surface. The niri msg command-line
+   * tool is used for getting the name and app of the currently focused window.
    *
    * @returns The name and app of the currently focused window as well as the current
-   *   pointer position.
+   *   pointer position and work area.
    */
   public async getWMInfo() {
-    // We need to call hyprctl multiple times to get all the information we need.
     try {
-      const [activewindow, cursorpos] = await Promise.all([
-        this.hyprctl('activewindow'),
-        this.hyprctl('cursorpos'),
-      ]);
+      const activewindow = await this.nirimsg('focused-window');
+      const { pointerX, pointerY, workAreaWidth, workAreaHeight } =
+        this.getPointerPositionAndWorkAreaSize();
+      const workArea = screen.getDisplayNearestPoint({
+        x: pointerX,
+        y: pointerY,
+      }).workArea;
+      workArea.width = workAreaWidth;
+      workArea.height = workAreaHeight;
 
       return {
-        windowName: activewindow['initialTitle'] || '',
-        appName: activewindow['initialClass'] || '',
-        pointerX: cursorpos['x'],
-        pointerY: cursorpos['y'],
-        workArea: screen.getDisplayNearestPoint({
-          x: cursorpos['x'],
-          y: cursorpos['y'],
-        }).workArea,
+        pointerX,
+        pointerY,
+        windowName: activewindow['title'] || '',
+        appName: activewindow['app_id'] || '',
+        workArea,
       };
     } catch (error) {
-      console.error('Failed to get WM info from hyprctl:', error);
+      console.error('Failed to get WM info:', error);
       return {
-        windowName: '',
-        appName: '',
         pointerX: 0,
         pointerY: 0,
+        windowName: '',
+        appName: '',
         workArea: screen.getDisplayNearestPoint({
           x: 0,
           y: 0,
-        }).workArea,
+        }).workArea, // fallback to Electron's default method
       };
     }
   }
@@ -149,15 +150,15 @@ for more information.
   ) {}
 
   /**
-   * This uses the hyprctl command line tool to execute a command and parse its JSON
+   * This uses the niri msg command line tool to execute a command and parse its JSON
    * output.
    *
-   * @param subcommand One of the hyprctl subcommands.
-   * @returns A promise which resolves to the parsed JSON output of hyprctl.
+   * @param subcommand One of the nirimsg subcommands.
+   * @returns A promise which resolves to the parsed JSON output of nirimsg.
    */
-  private async hyprctl(subcommand: string): Promise<never> {
+  private async nirimsg(subcommand: string): Promise<never> {
     return new Promise((resolve, reject) => {
-      let command = `hyprctl -j ${subcommand}`;
+      let command = `niri msg -j ${subcommand}`;
 
       // If we are inside a flatpak container, we cannot execute commands directly on the host.
       // Instead we need to use flatpak-spawn.

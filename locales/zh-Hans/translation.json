@@ -267,7 +267,20 @@
             "movement-threshold-info": "在画笔或极速模式下，较小的鼠标移动将被忽略。默认值为 15 像素。",
             "minimum-gesture-length": "最小手势长度",
             "gesture-jitter-threshold": "手势抖动阈值",
-            "dev-tools-note": "Kando使用两个窗口：一个用于菜单，一个用于设置。您可以打开开发工具单独检查这两个窗口。"
+            "dev-tools-note": "Kando使用两个窗口：一个用于菜单，一个用于设置。您可以打开开发工具单独检查这两个窗口。",
+            "press-again-behavior": "再次按下快捷键的行为",
+            "do-nothing": "无动作",
+            "press-again-behavior-info": "此选项决定当菜单已显示时，再次按下快捷键会执行的行为。如果有多个菜单绑定到同一个快捷键，您可以用此功能来循环切换所有符合条件的菜单。若要将极速模式与 “无动作” 以外的选项搭配使用，请务必只按住修饰键。",
+            "cycle-menus": "循环切换符合条件的菜单",
+            "close-menu": "关闭菜单",
+            "localization-label": "语言",
+            "auto-language": "使用系统语言",
+            "app-settings": "应用程序设置",
+            "localization-info": "需要重新启动 Kando 使语言设置生效。",
+            "cycle-from-first": "显示下一个菜单（从第一个开始）",
+            "cycle-from-recent": "显示下一个菜单（从上一菜单接续）",
+            "keep-input-focus": "保持活动应用聚焦",
+            "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这会禁用极速模式，但如果您希望其他应用程序在菜单打开时保持聚焦，这可能会很有用。"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -395,6 +408,7 @@
         "no-matching-menus": "暂无菜单",
         "empty-collection": "这是个空的菜单合集",
         "no-matching-menus-note": "试试搜点别的？",
-        "empty-collection-note": "编辑上面的标签或使用下面的按钮向此集合添加一个全新的菜单"
+        "empty-collection-note": "编辑上面的标签或使用下面的按钮向此集合添加一个全新的菜单",
+        "add-menu-item-hint": "将此项目拖拽到上方的菜单即可新增！"
     }
 }

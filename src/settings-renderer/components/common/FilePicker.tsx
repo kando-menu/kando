@@ -66,7 +66,9 @@ export default function FilePicker(props: IProps) {
             }
           }}
           onBlur={(event) => {
-            props.onChange?.(event.target.value);
+            if (event.target.value !== path) {
+              props.onChange?.(event.target.value);
+            }
           }}
         />
         <Button

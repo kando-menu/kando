@@ -24,7 +24,7 @@
             "tip-3": "U kunt dit URI-itemtype gebruiken om een mailto: link te openen.",
             "tip-1": "U kunt het URI -itemtype gebruiken om een website te openen met behulp van het http:// protocol.",
             "tip-2": "U kunt dit gebruiken om aangepaste URI -schema's zoals Slack:// of zoommtg:// aan te roepen.",
-            "tip-4": "Gebruik {{app_Name}} om de naam van de applicatie in te voegen die was gefocust toen u het menu opende.",
+            "tip-4": "Gebruik {{app_name}} om de naam van de applicatie in te voegen die was gefocust toen u het menu opende.",
             "tip-5": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
             "tip-6": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend."
         },

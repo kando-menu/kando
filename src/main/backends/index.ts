@@ -61,6 +61,12 @@ export function getBackend(): Backend | null {
       return new HyprBackend();
     }
 
+    if (desktop === 'niri') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { NiriBackend } = require('./linux/niri/backend');
+      return new NiriBackend();
+    }
+
     if (desktop === 'x-cinnamon' && session === 'x11') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { CinnamonBackend } = require('./linux/cinnamon/x11/backend');

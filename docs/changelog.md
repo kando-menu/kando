@@ -27,6 +27,7 @@ They are marked with a **:collision:** emoji below.
 ### :tada: Added
 
 - **A completely rewritten settings dialog!** The settings dialog is now a separate window and has a new design. This significantly improves the user experience and adds several new possibilities:
+  - **A new introduction dialog:** This is shown the first time you open the settings dialog. It provides a quick overview of how to use Kando.
   - **A general-settings dialog:** This exposes all the settings which were previously only available in the `config.json` file.
   - **Support for undo/redo:** You can now undo and redo changes in the menu editor. This is done using the <kbd>Ctrl</kbd>+<kbd>Z</kbd> and <kbd>Ctrl</kbd>+<kbd>Y</kbd> shortcuts or with the corresponding buttons in the toolbar.
   - **Menu Collections:** You can now assign tags to your menus and group them by tags. This allows you to organize your menus in a structured way.
@@ -39,10 +40,11 @@ They are marked with a **:collision:** emoji below.
 - **An option to choose what happens if the same shortcut is pressed while a menu is open!** You can now choose...
   - ...to do nothing. This is the default behavior.
   - ...to close the menu again. This has been requested many times!
-  - ...to cycle through the menus which are assigned to the shortcut and would be matching to the current context. This is useful if you have multiple menus assigned to the same shortcut and want to switch between them quickly! Kando will remember the last menu which was opened and show this again when the shortcut is pressed later.
+  - ...to cycle through the menus which are assigned to the shortcut and would be matching to the current context. This is useful if you have multiple menus assigned to the same shortcut and want to switch between them quickly! There are two variants here: In one variant, Kando will remember the last menu which was opened and show this again when the shortcut is pressed later. In the other variant, Kando will always show the first menu which matches the shortcut.
   
   Thanks to [@jonthemonke](https://github.com/jonthemonke) for contributing to this feature!
 - **Support for deep links!** You can now use the `kando://` protocol to open Kando menus from other applications. This supports all command line parameters. For instance, `kando://menu?name=<menu-name>` will open the menu with the given name. Or `kando://settings` will open the settings dialog. On Linux, this only works if Kando has been properly installed with a `.desktop` file. Thanks to [@LitoMore](https://github.com/LitoMore) for this contribution!
+- **An option to keep the active application focused!** If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open. This is somewhat experimental - please report any issues you encounter! You can enable this in the settings dialog under "Menu Behavior".
 - **Experimental support arm64 on Windows!** There is now an experimental arm64 build for Windows. Please test it and report any issues you encounter!
 - **A new menu item type: Open Settings!** This allows you to open the Kando settings directly from a menu item. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - **A hotkey for opening the settings dialog** when a menu is open. On macOS, this is <kbd>Command</kbd>+<kbd>,</kbd>. On Windows and Linux, it is <kbd>Ctrl</kbd>+<kbd>,</kbd>. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
@@ -52,6 +54,7 @@ They are marked with a **:collision:** emoji below.
 - **Support for multiple pointing devices on GNOME Wayland!** Thanks to a change in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), Kando now supports multiple pointing devices on GNOME Wayland. This means that the menu will now open at the position of the last used pointing device. This is useful if you are using a stylus in addition to a mouse or touchpad. Thanks to [@hhhhhhh2019](https://github.com/hhhhhhh2019) for the contribution!
 - **The possibility to run commands in a clean environment on Linux** systems which have `systemd-run` installed. On these systems, you will see a new checkbox in the command item type configuration. Checking this box may fix some issues with applications which do not work properly when launched from Kando.
 - **The possibility to disable launching a command in detached mode.** Detached mode had been introduced in 1.6.0 but there seem to be some applications which do not work properly when launched in detached mode. You can disable this with a checkbox in the configuration of the run-command item type.
+- **A new backend for Niri on Linux!** With this, Kando now also works on [Niri](https://github.com/YaLTeR/niri), a Wayland compositor which is based on wlroots. Thanks to [@make-42](https://github.com/make-42) for contributing this backend!
 - A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
 - The directories `menu-themes`, `icon-themes`, and `sound-themes` are now created on startup if they do not exist yet. This will make it easier to understand where to put your custom themes. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
@@ -65,6 +68,7 @@ They are marked with a **:collision:** emoji below.
 
 - **:collision: [BREAKING]** The window which contains the menu is now called "Kando Menu" instead of "Kando". The settings window is called "Kando Settings". So if you used any scripts to identify the windows, you will have to update them.
 - **:collision: [BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
+- **:collision: [BREAKING]** On Hyprland, Kando now uses the global-shortcuts desktop portal instead of Hyprland's custom Wayland protocol. It should work basically the same, but your keybinds will look different. How exactly they look depends on the way you installed Kando. Use `hyprctl globalshortcuts` to list the currently registered keybinds when Kando is running.
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 - When the settings dialog should be shown but is minimized, Kando will now restore the settings dialog so that it is visible again.
@@ -73,9 +77,13 @@ They are marked with a **:collision:** emoji below.
 
 - An issue where menu conditions would not work properly if a menu was already open when another menu was opened.
 - An issue where some icons could not be searched for.
+- An issue which caused the tray icon to be invisible on some Linux desktop environments when using the Flatpak version of Kando.
 - Sound support in the Flatpak version of Kando.
 - Gamepad input on Linux when using [input-gamepad](https://github.com/sezanzeb/input-remapper).
 - A bug which made it possible to sometimes open the settings dialog by pressing <kbd>Space</kbd> while the menu was open.
+- A crash if no focused window existed when opening a menu on qTile.
+- Reloading sound theme files which were changed on disk. Before, only changes to the `theme.json` file were reloaded when the sound theme was reloaded. Now, all sound files are reloaded as well.
+- A bug which caused a crash when closing the menu with <kbd>Alt</kbd>+<kbd>F4</kbd> on Windows.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 

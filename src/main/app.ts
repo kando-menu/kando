@@ -477,10 +477,16 @@ export class KandoApp {
       'settings-window.show-dev-tools',
       (e, forWindow: 'menu-window' | 'settings-window') => {
         if (forWindow === 'menu-window') {
-          this.menuWindow?.webContents.openDevTools();
+          this.menuWindow?.webContents.openDevTools({
+            mode: 'right',
+            title: 'Menu-Window Inspector',
+          });
         }
         if (forWindow === 'settings-window') {
-          this.settingsWindow.webContents.openDevTools();
+          this.settingsWindow.webContents.openDevTools({
+            mode: 'detach',
+            title: 'Settings-Window Inspector',
+          });
         }
       }
     );

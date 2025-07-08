@@ -37,6 +37,9 @@ interface IProps {
 
   /** The maximum width the widget can grow to. */
   maxWidth?: number;
+
+  /** Whether the widget is disabled. Defaults to false. */
+  disabled?: boolean;
 }
 
 /**
@@ -55,6 +58,7 @@ export default function SettingsRow(props: IProps) {
       className={cx({
         row: true,
         clickable: props.labelClickable,
+        disabled: props.disabled,
       })}>
       {(props.label || props.info) && (
         <div className={classes.labelContainer}>

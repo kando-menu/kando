@@ -131,6 +131,11 @@ const handleCommandLine = (options: CLIOptions) => {
     return true;
   }
 
+  if (options.reloadSoundTheme) {
+    kando.reloadSoundTheme();
+    return true;
+  }
+
   return false;
 };
 

@@ -16,10 +16,6 @@
   width: 350px;
   min-width: 250px;
   display: flex;
-
-  // Make sure that the sidebar is drawn above the preview. During menu transitions,
-  // the preview items may overlap the sidebar.
-  z-index: 1;
 }
 
 .row {

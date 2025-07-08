@@ -4,6 +4,15 @@
 import os from 'os';
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
+import fs from 'fs';
+import path from 'path';
+
+// List all directory names in locales/ directory.
+const localesDir = path.resolve(__dirname, 'locales');
+const cLocales = fs
+  .readdirSync(localesDir, { withFileTypes: true })
+  .filter((dirent) => dirent.isDirectory())
+  .map((dirent) => dirent.name);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const plugins: any[] = [
@@ -21,6 +30,7 @@ export const plugins: any[] = [
     cIsMac: process.platform === 'darwin',
     cIsWindows: process.platform === 'win32',
     cIsLinux: process.platform === 'linux',
+    cLocales: JSON.stringify(cLocales),
   }),
 ];
 

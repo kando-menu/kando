@@ -19,41 +19,34 @@
 
   display: flex;
   color: $text-normal;
-}
-
-.centerArea {
-  flex-grow: 1;
-  width: 0;
-  min-width: 400px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
   background-size: cover;
   background-position: center;
   background-blend-mode: overlay;
 
-  &.sakuraSystemFlavor,
-  &.transparentSystemFlavor {
+  &.sakuraSystemFlavor .centerArea,
+  &.transparentSystemFlavor .centerArea {
     color-scheme: light dark;
   }
 
-  &.sakuraDarkFlavor,
-  &.transparentDarkFlavor {
+  &.sakuraDarkFlavor .centerArea,
+  &.transparentDarkFlavor .centerArea {
     color-scheme: only dark;
-    background-color: rgba($base-dark, 0.5);
   }
 
-  &.sakuraLightFlavor,
-  &.transparentLightFlavor {
+  &.sakuraLightFlavor .centerArea,
+  &.transparentLightFlavor .centerArea {
     color-scheme: only light;
-    background-color: rgba($base-light, 0.5);
   }
 
   @media (prefers-color-scheme: dark) {
     &.sakuraSystemFlavor {
       background-image: url('../../../assets/images/settings-sakura-dark.webp');
+    }
+
+    &.sakuraSystemFlavor .centerArea,
+    &.transparentSystemFlavor .centerArea {
+      background-color: rgba($base-dark, 0.5);
     }
   }
 
@@ -61,15 +54,41 @@
     &.sakuraSystemFlavor {
       background-image: url('../../../assets/images/settings-sakura-light.webp');
     }
+
+    &.sakuraSystemFlavor .centerArea,
+    &.transparentSystemFlavor .centerArea {
+      background-color: rgba($base-light, 0.5);
+    }
   }
 
   &.sakuraLightFlavor {
     background-image: url('../../../assets/images/settings-sakura-light.webp');
   }
 
+  &.sakuraLightFlavor .centerArea,
+  &.transparentLightFlavor .centerArea {
+    background-color: rgba($base-light, 0.5);
+  }
+
   &.sakuraDarkFlavor {
     background-image: url('../../../assets/images/settings-sakura-dark.webp');
   }
+
+  &.sakuraDarkFlavor .centerArea,
+  &.transparentDarkFlavor .centerArea {
+    background-color: rgba($base-dark, 0.5);
+  }
+}
+
+.centerArea {
+  flex-grow: 1;
+  width: 0;
+  min-width: 400px;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 :global(.react-tooltip) {
