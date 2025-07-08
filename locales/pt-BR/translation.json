@@ -121,7 +121,7 @@
             "tip-2": "Você pode editar esse macro manualmente. Isso é útil se você quer ajustar o tempo das teclas."
         },
         "redirect": {
-            "description": "Abre outro menu",
+            "description": "Abre outro menu.",
             "name": "Redirecionar"
         },
         "settings": {

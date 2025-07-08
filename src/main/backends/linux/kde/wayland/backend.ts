@@ -19,6 +19,7 @@ import { RemoteDesktop } from '../../portals/remote-desktop';
 import { GlobalShortcuts } from '../../portals/global-shortcuts';
 import { IKeySequence, IWMInfo } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
+import { screen } from 'electron';
 
 /**
  * This backend is used on KDE with Wayland. It uses the GlobalShortcuts desktop portal to
@@ -98,7 +99,7 @@ export class KDEWaylandBackend extends Backend {
     const property = this.kwinVersion[0] >= 6 ? 'activeWindow' : 'activeClient';
     this.wmInfoScriptPath = this.storeScript(
       'get-info.js',
-      `callDBus('menu.kando.Kando', '/menu/kando/Kando', 
+      `callDBus('menu.kando.Kando', '/menu/kando/Kando',
                'menu.kando.Kando', 'sendWMInfo',
                workspace.${property} ? workspace.${property}.caption : "",
                workspace.${property} ? workspace.${property}.resourceClass : "",
@@ -167,6 +168,7 @@ export class KDEWaylandBackend extends Backend {
     appName: string;
     pointerX: number;
     pointerY: number;
+    workArea: Electron.Rectangle;
   }> {
     return new Promise((resolve, reject) => {
       this.kandoInterface.wmInfoCallback = resolve;
@@ -441,7 +443,16 @@ class CustomInterface extends DBus.interface.Interface {
     pointerY: number
   ) {
     if (this.wmInfoCallback) {
-      this.wmInfoCallback({ windowName, appName, pointerX, pointerY });
+      this.wmInfoCallback({
+        windowName,
+        appName,
+        pointerX,
+        pointerY,
+        workArea: screen.getDisplayNearestPoint({
+          x: pointerX,
+          y: pointerY,
+        }).workArea,
+      });
     }
   }
 

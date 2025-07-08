@@ -75,13 +75,11 @@
 }
 
 .floating {
-  background-color: $toolbar-background;
+  background-color: $widget-normal;
   border-radius: 50px;
 
-  opacity: 0.8;
-
   &:hover {
-    opacity: 1;
+    background-color: $widget-normal-hover;
   }
 }
 

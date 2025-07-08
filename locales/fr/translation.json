@@ -276,7 +276,11 @@
             "localization-label": "Langue",
             "localization-info": "Redémarrez Kando pour appliquer la modification.",
             "auto-language": "Utiliser la langue du système",
-            "app-settings": "Paramètres de l'application"
+            "app-settings": "Paramètres de l'application",
+            "cycle-from-first": "Afficher le menu suivant",
+            "cycle-from-recent": "Afficher le menu suivant (se souvenir de l'ordre)",
+            "keep-input-focus-info": "Si cette option est activée, le menu ne recevra pas le focus de la saisie clavier lorsqu'il sera ouvert. Cette option désactive le mode Turbo, mais peut s'avérer utile si vous souhaitez que d'autres applications restent focalisées lorsque le menu est ouvert.",
+            "keep-input-focus": "Maintenir le focus sur l'application active"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",

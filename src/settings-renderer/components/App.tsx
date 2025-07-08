@@ -79,7 +79,16 @@ export default function App() {
 
   return (
     <>
-      <div className={classes.container}>
+      <div
+        className={cx({
+          container: true,
+          transparentLightFlavor: settingsWindowFlavor === 'transparent-light',
+          transparentDarkFlavor: settingsWindowFlavor === 'transparent-dark',
+          transparentSystemFlavor: settingsWindowFlavor === 'transparent-system',
+          sakuraLightFlavor: settingsWindowFlavor === 'sakura-light',
+          sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
+          sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
+        })}>
         <Sidebar position="left" mainDirection="row">
           <CollectionList />
           <MenuList />
@@ -87,12 +96,6 @@ export default function App() {
         <div
           className={cx({
             centerArea: true,
-            transparentLightFlavor: settingsWindowFlavor === 'transparent-light',
-            transparentDarkFlavor: settingsWindowFlavor === 'transparent-dark',
-            transparentSystemFlavor: settingsWindowFlavor === 'transparent-system',
-            sakuraLightFlavor: settingsWindowFlavor === 'sakura-light',
-            sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
-            sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
           })}>
           <PreviewHeader />
           <MenuPreview />

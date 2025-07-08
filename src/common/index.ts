@@ -67,14 +67,16 @@ export interface IVersionInfo {
 
 /**
  * This interface is used to transfer information required from the window manager when
- * opening the pie menu. It contains the name of the currently focused app / window as
- * well as the current pointer position.
+ * opening the pie menu. It contains the name of the currently focused app / window, the
+ * current pointer position, and the screen area where a maximized window can be placed.
+ * That is the screen resolution minus the taskbar and other panels.
  */
 export interface IWMInfo {
   windowName: string;
   appName: string;
   pointerX: number;
   pointerY: number;
+  workArea: Electron.Rectangle;
 }
 
 /**
@@ -683,7 +685,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     soundVolume: 0.5,
     ignoreWriteProtectedConfigFiles: false,
     settingsWindowColorScheme: 'system',
-    settingsWindowFlavor: 'sakura-light',
+    settingsWindowFlavor: 'sakura-system',
     trayIconFlavor: 'color',
     lazyInitialization: false,
     enableVersionCheck: true,

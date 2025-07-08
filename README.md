@@ -7,8 +7,8 @@ SPDX-License-Identifier: CC-BY-4.0
   <a href="https://www.youtube.com/watch?v=cE8FOOfI7II"><img src="docs/img/video.jpg" /></a>
 </p>
 
-[![checks](https://github.com/kando-menu/kando/workflows/Checks/badge.svg?branch=main)](https://github.com/kando-menu/kando/actions)
-[![codeql](https://github.com/kando-menu/kando/workflows/CodeQL/badge.svg)](https://github.com/kando-menu/kando/actions)
+[![checks](https://img.shields.io/github/actions/workflow/status/kando-menu/kando/checks.yml?branch=main&logo=github&label=Checks)](https://github.com/kando-menu/kando/actions)
+[![codeql](https://img.shields.io/github/actions/workflow/status/kando-menu/kando/github-code-scanning/codeql?branch=main&logo=github&label=CodeQL)](https://github.com/kando-menu/kando/actions)
 [![reuse](https://api.reuse.software/badge/github.com/kando-menu/kando)](https://api.reuse.software/info/github.com/kando-menu/kando)
 [![translate](https://hosted.weblate.org/widget/kando/svg-badge.svg)](https://hosted.weblate.org/engage/kando/)
 [![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
@@ -20,7 +20,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # What is Kando?
 
-**🌸 Kando is a cross-platform pie menu for your desktop.** It offers an unconventional, fast, highly efficient, and fun way of interacting with your computer! You can use Kando to launch applications, simulate keyboard shortcuts, open files, and much more. 
+**🌸 Kando is a cross-platform pie menu for your desktop.** It offers an unconventional, fast, highly efficient, and fun way of interacting with your computer! You can use Kando to launch applications, simulate keyboard shortcuts, open files, and much more.
 
 Kando is designed to be used with 🖱️ mouse, 🖊️ stylus, 👆 touch, or 🎮 controller input. If you have both hands at your keyboard most of the time, Kando is maybe not the right tool for you.
 

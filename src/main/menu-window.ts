@@ -46,7 +46,7 @@ export class MenuWindow extends BrowserWindow {
   });
 
   /** This timeout is used to hide the window after the fade-out animation. */
-  private hideTimeout: NodeJS.Timeout;
+  private hideTimeout: NodeJS.Timeout = null;
 
   constructor(private kando: KandoApp) {
     const display = screen.getPrimaryDisplay();
@@ -122,6 +122,16 @@ export class MenuWindow extends BrowserWindow {
     // Apply the stored zoom factor to the window.
     this.webContents.setZoomFactor(this.kando.getGeneralSettings().get('zoomFactor'));
 
+    // Intercept Alt+F4.
+    this.webContents.on('before-input-event', (event, input) => {
+      if (input.key === 'F4' && input.alt) {
+        if (this.isVisible()) {
+          this.webContents.send('menu-window.hide-menu');
+        }
+        event.preventDefault();
+      }
+    });
+
     return this.windowLoaded;
   }
 
@@ -137,13 +147,12 @@ export class MenuWindow extends BrowserWindow {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
-    const isMenuVisible = this.isVisible() && this.hideTimeout === null;
 
     // If a menu is currently shown and the user presses the same shortcut again we will
     // either close the menu or show the next one with the same shortcut. There is also
     // the option to do nothing in this case, but in this case the menu's shortcut will be
     // inhibited and thus this method will not be called in the first place.
-    if (isMenuVisible) {
+    if (this.isVisible()) {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
 
@@ -194,13 +203,6 @@ export class MenuWindow extends BrowserWindow {
     // will be passed to the action as well.
     this.lastMenu = menu;
 
-    // Get the work area of the screen where the pointer is located. We will move the
-    // window to this screen and show the menu at the pointer position.
-    const workarea = screen.getDisplayNearestPoint({
-      x: info.pointerX,
-      y: info.pointerY,
-    }).workArea;
-
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
     if (process.platform === 'win32') {
@@ -214,20 +216,15 @@ export class MenuWindow extends BrowserWindow {
       // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
       // scale the window to the correct size.
       this.setBounds({
-        x: workarea.x,
-        y: workarea.y,
+        x: info.workArea.x,
+        y: info.workArea.y,
         width: 1,
         height: 1,
       });
     }
 
     // Move and resize the window to the work area of the screen where the pointer is.
-    this.setBounds({
-      x: workarea.x,
-      y: workarea.y,
-      width: workarea.width,
-      height: workarea.height,
-    });
+    this.setBounds(info.workArea);
 
     // On all platforms except Windows, we show the window after we moved it.
     if (process.platform !== 'win32') {
@@ -237,8 +234,8 @@ export class MenuWindow extends BrowserWindow {
     // Usually, the menu is shown at the pointer position. However, if the menu is
     // centered, we show it in the center of the screen.
     const mousePosition = {
-      x: (info.pointerX - workarea.x) / this.webContents.getZoomFactor(),
-      y: (info.pointerY - workarea.y) / this.webContents.getZoomFactor(),
+      x: (info.pointerX - info.workArea.x) / this.webContents.getZoomFactor(),
+      y: (info.pointerY - info.workArea.y) / this.webContents.getZoomFactor(),
     };
 
     // We have to pass the size of the window to the renderer because window.innerWidth
@@ -246,8 +243,8 @@ export class MenuWindow extends BrowserWindow {
     // Also, we incorporate the zoom factor of the window so that the clamping to the
     // work area is done correctly.
     const windowSize = {
-      x: workarea.width / this.webContents.getZoomFactor(),
-      y: workarea.height / this.webContents.getZoomFactor(),
+      x: info.workArea.width / this.webContents.getZoomFactor(),
+      y: info.workArea.height / this.webContents.getZoomFactor(),
     };
 
     // Send the menu to the renderer process. If the menu is centered, we delay the
@@ -271,8 +268,8 @@ export class MenuWindow extends BrowserWindow {
         appName: info.appName,
         windowName: info.windowName,
         windowPosition: {
-          x: workarea.x,
-          y: workarea.y,
+          x: info.workArea.x,
+          y: info.workArea.y,
         },
       }
     );
@@ -309,6 +306,17 @@ export class MenuWindow extends BrowserWindow {
     setTimeout(() => {
       this.focus();
     }, 100);
+  }
+
+  /**
+   * This checks if the window is visible. A window is considered visible if it is shown,
+   * not minimized, and not about to be hidden (i.e. the fade-out animation is not
+   * running).
+   *
+   * @returns Returns true if the window is visible and not minimized.
+   */
+  public isVisible() {
+    return super.isVisible() && this.hideTimeout === null && !this.isMinimized();
   }
 
   /**
