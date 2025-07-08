@@ -27,4 +27,3 @@ declare global {
     SETTINGS_WINDOW_API: SettingsWindowApiType;
   }
 }
-
