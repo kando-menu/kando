@@ -95,83 +95,66 @@ export class KandoApp {
   private validateStructure(parsed: any): string | false {
     if (!Array.isArray(parsed.menus)) {
       const errorMessage =
-        'Invalid JSON format: The parsed object must contain an array called "menus".';
+        'Invalid JSON format: "menus" must be an array. Got: ' + typeof parsed.menus;
       console.error(errorMessage);
       return errorMessage;
     }
+
     for (let index = 0; index < parsed.menus.length; index++) {
       const menu = parsed.menus[index];
-      const parsedMenuName = parsed.menus[index].root.name;
-
-      if (!menu.root.name || typeof menu.root.name !== 'string') {
-        const errorMessage = `Menu at index ${index} is invalid: The root must have a name of type string.`;
-        return errorMessage;
-      }
 
       if (!menu.root) {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The menu must have a root object.`;
-
-        return errorMessage;
+        return `Menu at index ${index} is invalid: Missing "root" object. Got: ${JSON.stringify(menu)}`;
       }
 
       if (typeof menu.root !== 'object') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The root must be an object.`;
-        return errorMessage;
+        return `Menu at index ${index} is invalid: "root" must be an object. Got: ${typeof menu.root}`;
+      }
+
+      const parsedMenuName = menu.root.name ?? `<unknown name at index ${index}>`;
+
+      if (typeof menu.root.name !== 'string') {
+        return `Menu at index ${index} is invalid: "root.name" must be a string. Got: ${JSON.stringify(menu.root.name)}`;
       }
 
       if (menu.root.type !== 'submenu') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The root type must be "submenu". Found: ${menu.root.type}`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "root.type" must be "submenu". Got: ${JSON.stringify(menu.root.type)}`;
       }
 
-      if (!menu.root.icon || typeof menu.root.icon !== 'string') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The root must have an icon of type string.`;
-        return errorMessage;
+      if (typeof menu.root.icon !== 'string') {
+        return `Menu "${parsedMenuName}" is invalid: "root.icon" must be a string. Got: ${JSON.stringify(menu.root.icon)}`;
       }
 
-      if (!menu.root.iconTheme || typeof menu.root.iconTheme !== 'string') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The root must have an iconTheme of type string.`;
-        return errorMessage;
+      if (typeof menu.root.iconTheme !== 'string') {
+        return `Menu "${parsedMenuName}" is invalid: "root.iconTheme" must be a string. Got: ${JSON.stringify(menu.root.iconTheme)}`;
       }
 
-      // if (!IconThemeRegistry.getInstance().getThemes().has(menu.root.iconTheme)) {
-      //   const errorMessage = `Menu ${parsedMenuName} is invalid: The required icon theme "${menu.root.iconTheme}" was not found.`;
-      //   return errorMessage;
-      // }
-
-      if (!menu.root.children || !Array.isArray(menu.root.children)) {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The root must have children as an array.`;
-        return errorMessage;
+      if (!Array.isArray(menu.root.children)) {
+        return `Menu "${parsedMenuName}" is invalid: "root.children" must be an array. Got: ${typeof menu.root.children}`;
       }
 
       if (typeof menu.shortcut !== 'string' || !menu.shortcut) {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The shortcut must be a non-empty string.`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "shortcut" must be a non-empty string. Got: ${JSON.stringify(menu.shortcut)}`;
       }
 
       if (typeof menu.shortcutID !== 'string') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The shortcutID must be a string.`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "shortcutID" must be a string. Got: ${typeof menu.shortcutID}`;
       }
 
       if (typeof menu.centered !== 'boolean') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The centered option must be a non-empty boolean.`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "centered" must be a boolean. Got: ${typeof menu.centered}`;
       }
 
       if (typeof menu.anchored !== 'boolean') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The anchored option must be a non-empty boolean.`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "anchored" must be a boolean. Got: ${typeof menu.anchored}`;
       }
 
       if (typeof menu.hoverMode !== 'boolean') {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The hoverMode option must be a non-empty boolean.`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "hoverMode" must be a boolean. Got: ${typeof menu.hoverMode}`;
       }
 
       if (!Array.isArray(menu.tags)) {
-        const errorMessage = `Menu ${parsedMenuName} is invalid: The tags must be a list.`;
-        return errorMessage;
+        return `Menu "${parsedMenuName}" is invalid: "tags" must be an array. Got: ${typeof menu.tags}`;
       }
 
       if (
@@ -182,41 +165,32 @@ export class KandoApp {
         const screenArea = menu.conditions.screenArea;
         if (screenArea) {
           if (typeof screenArea.xMin !== 'number') {
-            const errorMessage = `Menu ${parsedMenuName} is invalid: The xMin in conditions.screenArea must be a number.`;
-            return errorMessage;
+            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.xMin" must be a number. Got: ${typeof screenArea.xMin}`;
           }
-
           if (typeof screenArea.yMin !== 'number') {
-            const errorMessage = `Menu ${parsedMenuName} is invalid: The yMin in conditions.screenArea must be a number.`;
-            return errorMessage;
+            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.yMin" must be a number. Got: ${typeof screenArea.yMin}`;
           }
-
           if (typeof screenArea.xMax !== 'number') {
-            const errorMessage = `Menu ${parsedMenuName} is invalid: The xMax in conditions.screenArea must be a number.`;
-            return errorMessage;
+            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.xMax" must be a number. Got: ${typeof screenArea.xMax}`;
           }
-
           if (typeof screenArea.yMax !== 'number') {
-            const errorMessage = `Menu ${parsedMenuName} is invalid: The yMax in conditions.screenArea must be a number.`;
-            return errorMessage;
+            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.yMax" must be a number. Got: ${typeof screenArea.yMax}`;
           }
+        }
 
-          if (
-            !menu.conditions.windowName ||
-            typeof menu.conditions.windowName !== 'string'
-          ) {
-            const errorMessage = `Menu ${parsedMenuName} is invalid: The windowName in conditions must be a string.`;
-            return errorMessage;
-          }
+        if (
+          !menu.conditions.windowName ||
+          typeof menu.conditions.windowName !== 'string'
+        ) {
+          return `Menu "${parsedMenuName}" is invalid: "conditions.windowName" must be a string. Got: ${typeof menu.conditions.windowName}`;
+        }
 
-          if (!menu.conditions.appName || typeof menu.conditions.appName !== 'string') {
-            const errorMessage = `Menu ${parsedMenuName} is invalid: The appName in conditions must be a string.`;
-            return errorMessage;
-          }
+        if (!menu.conditions.appName || typeof menu.conditions.appName !== 'string') {
+          return `Menu "${parsedMenuName}" is invalid: "conditions.appName" must be a string. Got: ${typeof menu.conditions.appName}`;
         }
       }
 
-      const validationResult = this.validateMenuItems(menu.root.children);
+      const validationResult = this.validateMenuItems(menu.root.children, `menus[${index}].root.children`);
       if (validationResult !== false) {
         return validationResult;
       }
@@ -225,120 +199,84 @@ export class KandoApp {
     return false;
   }
 
-  private validateMenuItems(items: any[]): string | false {
+  private validateMenuItems(items: any[], path = 'children'): string | false {
     for (let index = 0; index < items.length; index++) {
       const item = items[index];
+      const itemPath = `${path}[${index}]`;
 
       if (!item.type) {
-        const errorMessage = `Item at index ${index} is invalid: Missing type. Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
-        return errorMessage;
+        return `${itemPath} is invalid: Missing "type". Expected one of: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
       }
 
-      if (
-        ![
-          'submenu',
-          'command',
-          'file',
-          'hotkey',
-          'macro',
-          'text',
-          'uri',
-          'redirect',
-          'settings',
-        ].includes(item.type)
-      ) {
-        const errorMessage = `Item at index ${index} is invalid: Invalid type "${item.type}". Valid types are: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
-        return errorMessage;
+      const validTypes = [
+        'submenu', 'command', 'file', 'hotkey', 'macro', 'text', 'uri', 'redirect', 'settings',
+      ];
+
+      if (!validTypes.includes(item.type)) {
+        return `${itemPath} is invalid: Unknown type "${item.type}". Expected one of: ${validTypes.join(', ')}`;
       }
 
       if (!item.name || typeof item.name !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Missing name or name must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "name" must be a string. Got: ${JSON.stringify(item.name)}`;
       }
 
       if (!item.icon || typeof item.icon !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Missing icon or icon must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "icon" must be a string. Got: ${JSON.stringify(item.icon)}`;
       }
 
       if (!item.iconTheme || typeof item.iconTheme !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Missing iconTheme or iconTheme must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "iconTheme" must be a string. Got: ${JSON.stringify(item.iconTheme)}`;
       }
 
-      // if (!IconThemeRegistry.getInstance().getThemes().has(item.iconTheme)) {
-      //   const errorMessage = `Item at index ${index} is invalid: The required icon theme "${item.iconTheme}" was not found.`;
-      //   return errorMessage;
-      // }
-
       if (item.type === 'submenu') {
-        if (!item.children || !Array.isArray(item.children)) {
-          const errorMessage = `Item at index ${index} is invalid: Submenu must have children as an array.`;
-          return errorMessage;
+        if (!Array.isArray(item.children)) {
+          return `${itemPath} is invalid: "children" must be an array for submenu type. Got: ${typeof item.children}`;
         }
 
-        const validationResult = this.validateMenuItems(item.children);
+        const validationResult = this.validateMenuItems(item.children, `${itemPath}.children`);
         if (validationResult !== false) {
           return validationResult;
         }
       }
 
       if (
-        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(
-          item.type
-        )
+        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(item.type)
       ) {
         if (!item.data || typeof item.data !== 'object') {
-          const errorMessage = `Item at index ${index} is invalid: Missing data object or data must be an object.`;
-          return errorMessage;
+          return `${itemPath} is invalid: "data" must be a non-null object. Got: ${typeof item.data}`;
         }
       }
 
       if (item.type === 'hotkey' && typeof item.data.hotkey !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Hotkey must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "data.hotkey" must be a string. Got: ${typeof item.data?.hotkey}`;
       }
 
       if (item.type === 'command' && typeof item.data.command !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Command must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "data.command" must be a string. Got: ${typeof item.data?.command}`;
       }
 
-      if (item.type === 'uri' && (!item.data.uri || typeof item.data.uri !== 'string')) {
-        const errorMessage = `Item at index ${index} is invalid: URI must be a non-empty string.`;
-        return errorMessage;
+      if (item.type === 'uri' && typeof item.data.uri !== 'string') {
+        return `${itemPath} is invalid: "data.uri" must be a string. Got: ${typeof item.data?.uri}`;
       }
 
-      if (
-        item.type === 'file' &&
-        (!item.data.path || typeof item.data.path !== 'string')
-      ) {
-        const errorMessage = `Item at index ${index} is invalid: Path must be a non-empty string.`;
-        return errorMessage;
+      if (item.type === 'file' && typeof item.data.path !== 'string') {
+        return `${itemPath} is invalid: "data.path" must be a string. Got: ${typeof item.data?.path}`;
       }
 
       if (item.type === 'macro' && !Array.isArray(item.data.macro)) {
-        const errorMessage = `Item at index ${index} is invalid: Macro must be an array.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "data.macro" must be an array. Got: ${typeof item.data?.macro}`;
       }
 
       if (item.type === 'text' && typeof item.data.text !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Text must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "data.text" must be a string. Got: ${typeof item.data?.text}`;
       }
 
       if (item.type === 'redirect' && typeof item.data.menu !== 'string') {
-        const errorMessage = `Item at index ${index} is invalid: Menu must be a string.`;
-        return errorMessage;
+        return `${itemPath} is invalid: "data.menu" must be a string. Got: ${typeof item.data?.menu}`;
       }
 
-      if (
-        item.type === 'settings' &&
-        item.data !== null &&
-        typeof item.data !== 'object'
-      ) {
-        const errorMessage = `Item at index ${index} is invalid: Data must be an object or null.`;
-        return errorMessage;
+      if (item.type === 'settings' && item.data !== null && typeof item.data !== 'object') {
+        return `${itemPath} is invalid: "data" must be an object or null. Got: ${typeof item.data}`;
       }
     }
 
