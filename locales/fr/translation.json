@@ -8,6 +8,9 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando ne peut pas lier directement les raccourcis globaux sur KDE/Wayland. A la place, spécifiez un ID de raccourci ici et recherchez-le dans la section KWin des raccourcis globaux dans les paramètres de votre système KDE. Là, vous pouvez assigner le raccourci qui ouvrira ce menu."
+        },
+        "niri": {
+            "shortcut-info": "Niri ne supporte pas encore les raccourcis globaux. Mais vous pouvez ouvrir ce menu en utilisant 'kando --menu \"Nom du menu\"' à partir de la ligne de commande ou de votre configuration niri."
         }
     },
     "example-menu": {
