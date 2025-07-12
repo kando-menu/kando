@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
-import { BrowserWindow, shell, ipcMain, Menu } from 'electron';
+import { BrowserWindow, shell, ipcMain } from 'electron';
 
 import { IGeneralSettings } from '../common';
 import { Settings } from './utils/settings';
@@ -68,37 +68,6 @@ export class SettingsWindow extends BrowserWindow {
       show: false,
       autoHideMenuBar: true,
     });
-
-    // On macOS, we loose the copy and paste functionality when using no menu bar. So we
-    // add a hidden menu bar with the default macOS menu.
-    if (os.platform() === 'darwin') {
-      const template = [
-        {
-          label: 'Edit',
-          submenu: [
-            {
-              role: 'undo',
-            },
-            {
-              role: 'redo',
-            },
-            {
-              role: 'cut',
-            },
-            {
-              role: 'copy',
-            },
-            {
-              role: 'paste',
-            },
-          ],
-        },
-      ];
-      const menu = Menu.buildFromTemplate(
-        template as Electron.MenuItemConstructorOptions[]
-      );
-      Menu.setApplicationMenu(menu);
-    }
 
     // Due to an Electron issue, the acrylic effect on Windows is broken after maximizing
     // the window (https://github.com/electron/electron/issues/42393). We can fix this by
