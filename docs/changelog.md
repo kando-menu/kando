@@ -84,6 +84,7 @@ They are marked with a **:collision:** emoji below.
 - A crash if no focused window existed when opening a menu on qTile.
 - Reloading sound theme files which were changed on disk. Before, only changes to the `theme.json` file were reloaded when the sound theme was reloaded. Now, all sound files are reloaded as well.
 - A bug which caused a crash when closing the menu with <kbd>Alt</kbd>+<kbd>F4</kbd> on Windows.
+- An issue which would trigger Turbo Mode after pressing <kbd>Alt</kbd>+<kbd>F4</kbd> or <kbd>Command</kbd>+<kbd>W</kbd> to close the menu.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 

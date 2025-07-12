@@ -122,7 +122,6 @@ export class KandoApp {
             label: 'Close',
             accelerator: process.platform === 'darwin' ? 'Cmd+W' : 'Alt+F4',
             click: () => {
-              console.log('Close menu window');
               if (this.settingsWindow?.isFocused()) {
                 this.settingsWindow.close();
               } else if (this.menuWindow?.isVisible()) {
