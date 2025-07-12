@@ -75,6 +75,7 @@ They are marked with a **:collision:** emoji below.
 
 #### :bug: Fixed
 
+- The glow effect of the Neon Lights theme for custom icons. Custom icons loaded from files are now handled the same as the built-in font icons.
 - An issue where menu conditions would not work properly if a menu was already open when another menu was opened.
 - An issue where some icons could not be searched for.
 - An issue which caused the tray icon to be invisible on some Linux desktop environments when using the Flatpak version of Kando.
