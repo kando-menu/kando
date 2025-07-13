@@ -75,6 +75,7 @@ They are marked with a **:collision:** emoji below.
 
 #### :bug: Fixed
 
+- The glow effect of the Neon Lights theme for custom icons. Custom icons loaded from files are now handled the same as the built-in font icons.
 - An issue where menu conditions would not work properly if a menu was already open when another menu was opened.
 - An issue where some icons could not be searched for.
 - An issue which caused the tray icon to be invisible on some Linux desktop environments when using the Flatpak version of Kando.
@@ -84,6 +85,7 @@ They are marked with a **:collision:** emoji below.
 - A crash if no focused window existed when opening a menu on qTile.
 - Reloading sound theme files which were changed on disk. Before, only changes to the `theme.json` file were reloaded when the sound theme was reloaded. Now, all sound files are reloaded as well.
 - A bug which caused a crash when closing the menu with <kbd>Alt</kbd>+<kbd>F4</kbd> on Windows.
+- An issue which would trigger Turbo Mode after pressing <kbd>Alt</kbd>+<kbd>F4</kbd> or <kbd>Command</kbd>+<kbd>W</kbd> to close the menu.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 

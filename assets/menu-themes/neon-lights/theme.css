@@ -67,7 +67,7 @@
     opacity: 0;
     color: white;
     transition: var(--opacity-transition);
-    text-shadow: 0 0 10px var(--glow-color);
+    filter: drop-shadow(0 0 10px var(--glow-color));
   }
 
   .arrow-layer,
@@ -102,11 +102,11 @@
   }
 
   .icon-glow-layer {
-    filter: blur(15px);
+    filter: blur(3px);
 
     &::before {
       content: '';
-      background-image: radial-gradient(circle, black, transparent 60%);
+      background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1), transparent 75%);
       position: absolute;
       top: 0;
       left: 0;

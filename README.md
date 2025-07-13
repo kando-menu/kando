@@ -31,18 +31,19 @@ You are welcome to join the 💬 [Discord server](https://discord.gg/hZwbVSDkhy)
 </p>
 
 
-## Platform Support
-
 Kando runs on Windows, macOS, and Linux.
 On Linux, most desktop environments are supported, however some require additional configuration.
 Have a look at the [installation guide](https://kando.menu/installation-on-linux/) for more information.
 
-# :package: Installation
+# :package: Where do I get Kando?
 
-You can either download a prebuilt binary or compile Kando yourself.
-For both approaches there are instructions available in the [:memo: Documentation](https://kando.menu/intro/).
+There are several ways to install Kando, depending on your operating system and preferences.
+If you want to install the latest release, you can read the respective instructions for [Windows](https://kando.menu/installation-on-windows/), [macOS](https://kando.menu/installation-on-macos/), or [Linux](https://kando.menu/installation-on-linux/).
 
-# :rocket: Getting Started
+You can also [build Kando from source](https://kando.menu/compile-from-source/).
+This is only required if you want to contribute to the project or if you want to use the latest features that are not yet released.
+
+# :rocket: How do I use Kando?
 
 Kando comes with an example menu which you can open by pressing <kbd>Ctrl</kbd>+<kbd>Space</kbd> on most platforms.
 This is great to get a first impression!
