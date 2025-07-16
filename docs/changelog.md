@@ -21,6 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ***Release Date:** 2025-07-16
 
+<a href="https://www.youtube.com/watch?v=ESf0D3hQE9g">
+<img align="right" width="400px" src="img/player20.jpg"></img>
+</a>
+
 Beware that this major release adds some **[BREAKING]** changes.
 They are marked with a **:collision:** emoji below.
 
