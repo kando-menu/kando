@@ -17,9 +17,13 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [unreleased]
+## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
-***Release Date:** TBD
+***Release Date:** 2025-07-16
+
+<a href="https://www.youtube.com/watch?v=ESf0D3hQE9g">
+<img align="right" width="400px" src="img/player20.jpg"></img>
+</a>
 
 Beware that this major release adds some **[BREAKING]** changes.
 They are marked with a **:collision:** emoji below.
@@ -27,6 +31,7 @@ They are marked with a **:collision:** emoji below.
 ### :tada: Added
 
 - **A completely rewritten settings dialog!** The settings dialog is now a separate window and has a new design. This significantly improves the user experience and adds several new possibilities:
+  - **A new introduction dialog:** This is shown the first time you open the settings dialog. It provides a quick overview of how to use Kando.
   - **A general-settings dialog:** This exposes all the settings which were previously only available in the `config.json` file.
   - **Support for undo/redo:** You can now undo and redo changes in the menu editor. This is done using the <kbd>Ctrl</kbd>+<kbd>Z</kbd> and <kbd>Ctrl</kbd>+<kbd>Y</kbd> shortcuts or with the corresponding buttons in the toolbar.
   - **Menu Collections:** You can now assign tags to your menus and group them by tags. This allows you to organize your menus in a structured way.
@@ -48,7 +53,7 @@ They are marked with a **:collision:** emoji below.
 - **A new menu item type: Open Settings!** This allows you to open the Kando settings directly from a menu item. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - **A hotkey for opening the settings dialog** when a menu is open. On macOS, this is <kbd>Command</kbd>+<kbd>,</kbd>. On Windows and Linux, it is <kbd>Ctrl</kbd>+<kbd>,</kbd>. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - **A default sound theme!** You can enable it in the general settings.
-- **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons.
+- **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons. Read more in the [documentation](https://kando.menu/icon-themes/#make-icon-colors-adaptive).
 - **Support for the global-shortcuts portal on KDE Wayland!** This means that when you edit the shortcut ID of one of your menus, a dialog will pop up asking you to select a shortcut. This will make it easier to set up shortcuts for your menus on KDE Wayland.
 - **Support for multiple pointing devices on GNOME Wayland!** Thanks to a change in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), Kando now supports multiple pointing devices on GNOME Wayland. This means that the menu will now open at the position of the last used pointing device. This is useful if you are using a stylus in addition to a mouse or touchpad. Thanks to [@hhhhhhh2019](https://github.com/hhhhhhh2019) for the contribution!
 - **The possibility to run commands in a clean environment on Linux** systems which have `systemd-run` installed. On these systems, you will see a new checkbox in the command item type configuration. Checking this box may fix some issues with applications which do not work properly when launched from Kando.
@@ -60,7 +65,7 @@ They are marked with a **:collision:** emoji below.
 
 #### :fire: Removed
 
-- **:collision: [BREAKING]** As part of the settings redesign, the stash got removed. All stashed menus will be converted to normal menus with a `template` tag applied. **All stashed menu items will be lost!**
+- **:collision: [BREAKING]** As part of the settings redesign, the menu templates got removed. All template _menus_ will be converted to normal menus with a `template` tag applied. **All template _menu items_ will be lost!**
 - The possibility to change the menu scale using the <kbd>Ctrl</kbd>-<kbd>Plus</kbd> and <kbd>Ctrl</kbd>-<kbd>Minus</kbd> shortcuts. Instead, you can now change the menu scale in the settings dialog. This was done as a workaround for [#858](https://github.com/kando-menu/kando/issues/858).
 
 #### :wrench: Changed
@@ -68,12 +73,14 @@ They are marked with a **:collision:** emoji below.
 - **:collision: [BREAKING]** The window which contains the menu is now called "Kando Menu" instead of "Kando". The settings window is called "Kando Settings". So if you used any scripts to identify the windows, you will have to update them.
 - **:collision: [BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
 - **:collision: [BREAKING]** On Hyprland, Kando now uses the global-shortcuts desktop portal instead of Hyprland's custom Wayland protocol. It should work basically the same, but your keybinds will look different. How exactly they look depends on the way you installed Kando. Use `hyprctl globalshortcuts` to list the currently registered keybinds when Kando is running.
+- The Linux builds on GitHub Actions now use Ubuntu 24.04 instead of 22.04.
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 - When the settings dialog should be shown but is minimized, Kando will now restore the settings dialog so that it is visible again.
 
 #### :bug: Fixed
 
+- The glow effect of the Neon Lights theme for custom icons. Custom icons loaded from files are now handled the same as the built-in font icons.
 - An issue where menu conditions would not work properly if a menu was already open when another menu was opened.
 - An issue where some icons could not be searched for.
 - An issue which caused the tray icon to be invisible on some Linux desktop environments when using the Flatpak version of Kando.
@@ -83,6 +90,7 @@ They are marked with a **:collision:** emoji below.
 - A crash if no focused window existed when opening a menu on qTile.
 - Reloading sound theme files which were changed on disk. Before, only changes to the `theme.json` file were reloaded when the sound theme was reloaded. Now, all sound files are reloaded as well.
 - A bug which caused a crash when closing the menu with <kbd>Alt</kbd>+<kbd>F4</kbd> on Windows.
+- An issue which would trigger Turbo Mode after pressing <kbd>Alt</kbd>+<kbd>F4</kbd> or <kbd>Command</kbd>+<kbd>W</kbd> to close the menu.
 
 ## [Kando 1.8.0](https://github.com/kando-menu/kando/releases/tag/v1.8.0)
 

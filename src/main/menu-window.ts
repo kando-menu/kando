@@ -96,13 +96,6 @@ export class MenuWindow extends BrowserWindow {
       this.setFocusable(!newValue);
     });
 
-    // We prevent CMD+W to close the window on macOS.
-    this.webContents.on('before-input-event', (event, input) => {
-      if (input.meta && input.key === 'w') {
-        event.preventDefault();
-      }
-    });
-
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.setAlwaysOnTop(true, 'screen-saver');
@@ -122,17 +115,6 @@ export class MenuWindow extends BrowserWindow {
     // Apply the stored zoom factor to the window.
     this.webContents.setZoomFactor(this.kando.getGeneralSettings().get('zoomFactor'));
 
-    // Intercept Alt+F4.
-    this.webContents.on('before-input-event', (event, input) => {
-      if (input.key === 'F4' && input.alt) {
-        const isMenuVisible = this.isVisible() && this.hideTimeout === null;
-        if (isMenuVisible) {
-          this.webContents.send('menu-window.hide-menu');
-        }
-        event.preventDefault();
-      }
-    });
-
     return this.windowLoaded;
   }
 
@@ -148,13 +130,12 @@ export class MenuWindow extends BrowserWindow {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
-    const isMenuVisible = this.isVisible() && this.hideTimeout === null;
 
     // If a menu is currently shown and the user presses the same shortcut again we will
     // either close the menu or show the next one with the same shortcut. There is also
     // the option to do nothing in this case, but in this case the menu's shortcut will be
     // inhibited and thus this method will not be called in the first place.
-    if (isMenuVisible) {
+    if (this.isVisible()) {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
 
@@ -311,6 +292,27 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * This hides the window. It will wait for the fade-out animation to finish before
+   * actually hiding the window.
+   */
+  public override hide() {
+    if (this.isVisible()) {
+      this.webContents.send('menu-window.hide-menu');
+    }
+  }
+
+  /**
+   * This checks if the window is visible. A window is considered visible if it is shown,
+   * not minimized, and not about to be hidden (i.e. the fade-out animation is not
+   * running).
+   *
+   * @returns Returns true if the window is visible and not minimized.
+   */
+  public isVisible() {
+    return super.isVisible() && this.hideTimeout === null && !this.isMinimized();
+  }
+
+  /**
    * This hides the window. This method also accepts a delay parameter which can be used
    * to delay the hiding of the window. This is useful when we want to show a fade-out
    * animation.
@@ -330,7 +332,7 @@ export class MenuWindow extends BrowserWindow {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  public async hide() {
+  private async hideWindow() {
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
@@ -599,7 +601,7 @@ export class MenuWindow extends BrowserWindow {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hide().then(() => {
+      this.hideWindow().then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
@@ -620,7 +622,7 @@ export class MenuWindow extends BrowserWindow {
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('menu-window.cancel-selection', () => {
-      this.hide();
+      this.hideWindow();
     });
 
     // Show the settings window when the user clicks on the settings button in the menu.
