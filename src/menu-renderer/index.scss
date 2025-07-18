@@ -127,6 +127,26 @@ body {
       opacity: 0;
     }
   }
+
+  // Selection Wedges --------------------------------------------------------------------
+
+  .selection-wedges,
+  .wedge-separators {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .wedge-separators {
+    .separator {
+      position: absolute;
+      width: 100vmax;
+      height: 1px;
+      transform-origin: 0% 0;
+    }
+  }
 }
 
 // Settings Button -----------------------------------------------------------------------

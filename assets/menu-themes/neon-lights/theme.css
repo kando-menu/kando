@@ -254,3 +254,25 @@
   line-height: 22px;
   overflow: visible;
 }
+
+/* Selection Wedges ------------------------------------------------------------------- */
+
+.selection-wedges {
+  mask: radial-gradient(circle at var(--center-x) var(--center-y),
+      transparent 0%,
+      transparent 100px,
+      black 150px,
+      transparent 500px);
+
+  &.hovered {
+    background: conic-gradient(from calc(var(--start-angle)) at var(--center-x) var(--center-y),
+        var(--wedge-color) calc(var(--end-angle) - var(--start-angle)),
+        transparent calc(var(--end-angle) - var(--start-angle)));
+  }
+}
+
+.wedge-separators {
+  .separator {
+    background: linear-gradient(to right, transparent 50px, var(--separator-color) 100px, transparent 300px);
+  }
+}

@@ -225,63 +225,80 @@ describe('computeItemWedges', () => {
   it('should return the correct wedges for a list of item angles', () => {
     const itemAngles = [0, 90, 180, 270];
     const wedges = computeItemWedges(itemAngles);
-    expect(wedges).to.deep.equal([
-      { start: -45, end: 45 },
-      { start: 45, end: 135 },
-      { start: 135, end: 225 },
-      { start: 225, end: 315 },
-    ]);
+    expect(wedges).to.deep.equal({
+      itemWedges: [
+        { start: -45, end: 45 },
+        { start: 45, end: 135 },
+        { start: 135, end: 225 },
+        { start: 225, end: 315 },
+      ],
+    });
   });
 
   it('should return a full circle for a single item with no parent', () => {
     const itemAngles = [123];
     const wedges = computeItemWedges(itemAngles);
-    expect(wedges).to.deep.equal([{ start: 0, end: 360 }]);
+    expect(wedges).to.deep.equal({ itemWedges: [{ start: 0, end: 360 }] });
   });
 
   it('should return an empty array for an empty list of item angles', () => {
     const itemAngles: number[] = [];
     const wedges = computeItemWedges(itemAngles);
-    expect(wedges).to.deep.equal([]);
+    expect(wedges).to.deep.equal({ itemWedges: [] });
   });
 
   it('should handle a single item with a parent correctly', () => {
     let itemAngles = [0];
     let parentAngle = 180;
     let wedges = computeItemWedges(itemAngles, parentAngle);
-    expect(wedges).to.deep.equal([{ start: -90, end: 90 }]);
+    expect(wedges).to.deep.equal({
+      itemWedges: [{ start: -90, end: 90 }],
+      parentWedge: { start: 90, end: 270 },
+    });
 
     itemAngles = [125];
     parentAngle = 305;
     wedges = computeItemWedges(itemAngles, parentAngle);
-    expect(wedges).to.deep.equal([{ start: 35, end: 215 }]);
+    expect(wedges).to.deep.equal({
+      itemWedges: [{ start: 35, end: 215 }],
+      parentWedge: { start: 215, end: 35 + 360 },
+    });
 
     itemAngles = [180];
     parentAngle = 200;
     wedges = computeItemWedges(itemAngles, parentAngle);
-    expect(wedges).to.deep.equal([{ start: 10, end: 190 }]);
+    expect(wedges).to.deep.equal({
+      itemWedges: [{ start: 10, end: 190 }],
+      parentWedge: { start: 190, end: 10 + 360 },
+    });
   });
 
   it('should handle multiple items with a parent correctly', () => {
     const itemAngles = [0, 90, 270];
     const parentAngle = 180;
     const wedges = computeItemWedges(itemAngles, parentAngle);
-    expect(wedges).to.deep.equal([
-      { start: -45, end: 45 },
-      { start: 45, end: 135 },
-      { start: 225, end: 315 },
-    ]);
+    expect(wedges).to.deep.equal({
+      itemWedges: [
+        { start: -45, end: 45 },
+        { start: 45, end: 135 },
+        { start: 225, end: 315 },
+      ],
+      parentWedge: { start: 135, end: 225 },
+    });
   });
 
   it('should handle multiple items with a parent at the top correctly', () => {
     const itemAngles = [90, 180, 270];
     const parentAngle = 0;
     const wedges = computeItemWedges(itemAngles, parentAngle);
-    expect(wedges).to.deep.equal([
-      { start: 45, end: 135 },
-      { start: 135, end: 225 },
-      { start: 225, end: 315 },
-    ]);
+    expect(wedges).to.deep.equal({
+      itemWedges: [
+        { start: 45, end: 135 },
+        { start: 135, end: 225 },
+        { start: 225, end: 315 },
+      ],
+      parentWedge: { start: -45, end: 45 },
+    });
   });
 });
 

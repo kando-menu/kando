@@ -138,6 +138,21 @@ export interface IMenuThemeDescription {
   drawChildrenBelow: boolean;
 
   /**
+   * If this is set to true, a full-screen div will be drawn below the menu with the CSS
+   * class "selection-wedges". If any menu item is hovered, it will also receive the class
+   * "hovered" and the "--start-angle" and "--end-angle" CSS properties will indicate
+   * where the selected child is.
+   */
+  drawSelectionWedges: boolean;
+
+  /**
+   * If this is set to true, a full-screen div will be drawn below the menu with the CSS
+   * class "wedge-separators". It will contain a div for each separator line between
+   * adjacent wedges. They will have the "separator" class.
+   */
+  drawWedgeSeparators: boolean;
+
+  /**
    * These colors will be available as var(--name) in the CSS file and can be adjusted by
    * the user in the settings. The map assigns a default CSS color to each name.
    */
