@@ -17,9 +17,17 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+### :tada: Added
+
+- **Visualization of the selection wedges!** Menu themes can now draw the circle segments belonging to the menu items as well as separator lines between them. The Neon Lights theme and the Default theme have been updated to use this feature.
+
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
-***Release Date:** 2025-07-16
+**Release Date:** 2025-07-16
 
 <a href="https://www.youtube.com/watch?v=ESf0D3hQE9g">
 <img align="right" width="400px" src="img/player20.jpg"></img>

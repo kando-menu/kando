@@ -28,6 +28,9 @@
   // This theme draws child items below their parent items.
   drawChildrenBelow: true,
 
+  // Draw the thin lines between adjacent menu items.
+  drawSelectionWedges: true,
+
   // These colors can be configured by the user and are vailable in the CSS file as CSS
   // variables. The default values are used if the user does not provide any values.
   colors: {
@@ -35,6 +38,8 @@
     'text-color': 'rgb(60, 60, 60)',
     'border-color': 'rgb(109, 109, 109)',
     'hover-color': 'rgb(255, 200, 200)',
+    'wedge-highlight-color': 'rgba(150, 120, 120, 0.3)',
+    'wedge-color': 'rgba(150, 120, 120, 0.2)',
   },
 
   // This theme is very simple and only uses one layer for the menu items.

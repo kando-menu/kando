@@ -12,17 +12,11 @@ import { IVec2 } from '../common';
 
 /**
  * The SelectionWedges class is responsible for rendering the background sections of the
- * pie menu. It highlights the section that is currently hovered over and shows separators
- * between the wedges.
- *
- * The separators are thin and long divs that are rotated to point towards the center of
- * the pie menu. The highlighted wedge is drawn using a conic gradient in CSS.
+ * pie menu. The wedges are styled by the menu theme, but usually they will use conic
+ * gradients to do this.
  */
 export class SelectionWedges {
-  /**
-   * The div that contains the separators and which also contains the conic gradient. It
-   * covers the entire screen.
-   */
+  /** The div that contains the conic gradients. It covers the entire screen. */
   private div: HTMLDivElement;
 
   /**
@@ -33,38 +27,23 @@ export class SelectionWedges {
    */
   constructor(container: HTMLElement) {
     this.div = document.createElement('div');
-    this.div.classList.add('wedges');
+    this.div.classList.add('selection-wedges');
     container.appendChild(this.div);
   }
 
   /**
-   * Sets a new set of angles for the separators.
+   * This should be called when a (sub)menu is opened..
    *
-   * @param angles An array of angles in degrees where the separators should be placed.
-   * @param position The position of the center of the pie menu in pixels.
+   * @param center The position of the center of the pie menu in pixels.
    */
-  public setSeparators(angles: number[], position: IVec2) {
-    const fragment = document.createDocumentFragment();
-
-    // We do not want a separator if there is only one wedge.
-    if (angles.length > 1) {
-      angles.forEach((angle) => {
-        const div = document.createElement('div');
-        div.className = 'separator';
-        div.style.transform = `translate(${position.x}px, ${position.y}px) rotate(${angle - 90}deg)`;
-        fragment.appendChild(div);
-      });
-    }
-
-    this.div.innerHTML = '';
-    this.div.style.setProperty('--center-x', `${position.x}px`);
-    this.div.style.setProperty('--center-y', `${position.y}px`);
-    this.div.appendChild(fragment);
+  public setCenter(center: IVec2) {
+    this.div.style.setProperty('--center-x', `${center.x}px`);
+    this.div.style.setProperty('--center-y', `${center.y}px`);
   }
 
   /**
-   * Highlights a wedge by applying a conic gradient to the wedges container. The wedge is
-   * defined by its start and end angle in degrees.
+   * Highlights a wedge. Menu themes will use the CSS properties to apply a conic gradient
+   * to the wedges container. The wedge is defined by its start and end angle in degrees.
    *
    * @param wedge An object containing the start and end angle of the wedge in degrees.
    */

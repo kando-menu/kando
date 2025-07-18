@@ -128,36 +128,22 @@ body {
     }
   }
 
-  // Wedges ------------------------------------------------------------------------------
-  .wedges {
+  // Selection Wedges --------------------------------------------------------------------
+
+  .selection-wedges,
+  .wedge-separators {
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
+  }
 
-    mask: radial-gradient(
-      circle at var(--center-x) var(--center-y),
-      transparent 0%,
-      transparent 100px,
-      black 150px,
-      transparent 50%
-    );
-
-    &.hovered {
-      background: conic-gradient(
-        from calc(var(--start-angle)) at var(--center-x) var(--center-y),
-        hsla(306, 100%, 77%, 0.1) calc(var(--end-angle) - var(--start-angle)),
-        transparent calc(var(--end-angle) - var(--start-angle))
-      );
-    }
-
+  .wedge-separators {
     .separator {
       position: absolute;
       width: 100vmax;
       height: 1px;
-      background: linear-gradient(to right, hsla(0, 0%, 100%, 0.1), transparent 50%);
       transform-origin: 0% 0;
     }
   }

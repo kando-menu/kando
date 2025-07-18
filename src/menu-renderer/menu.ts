@@ -14,6 +14,7 @@ import * as math from '../common/math';
 import { IGeneralSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
 import { SelectionWedges } from './selection-wedges';
+import { WedgeSeparators } from './wedge-separators';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
@@ -84,6 +85,9 @@ export class Menu extends EventEmitter {
 
   /** This is used to visualize the selection wedges. */
   private selectionWedges: SelectionWedges = null;
+
+  /** This is used to visualize the separator lines between adjacent wedges. */
+  private wedgeSeparators: WedgeSeparators = null;
 
   /** This shows the name of the currently hovered child on the center item. */
   private centerText: CenterText = null;
@@ -213,6 +217,7 @@ export class Menu extends EventEmitter {
     this.root = null;
     this.showMenuOptions = null;
     this.selectionWedges = null;
+    this.wedgeSeparators = null;
     this.centerText = null;
     this.hoveredItem = null;
     this.draggedItem = null;
@@ -425,6 +430,14 @@ export class Menu extends EventEmitter {
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(rootItem: IRenderedMenuItem, rootContainer: HTMLElement) {
+    if (this.theme.drawSelectionWedges) {
+      this.selectionWedges = new SelectionWedges(rootContainer);
+    }
+
+    if (this.theme.drawWedgeSeparators) {
+      this.wedgeSeparators = new WedgeSeparators(rootContainer);
+    }
+
     const queue = [];
 
     queue.push({ item: rootItem, parent: null, container: rootContainer, level: 0 });
@@ -433,7 +446,7 @@ export class Menu extends EventEmitter {
       const { item, parent, container, level } = queue.shift();
 
       const nodeDiv = this.theme.createItem(item);
-      if (this.theme.drawChildrenBelow) {
+      if (this.theme.drawChildrenBelow && level > 0) {
         container.insertBefore(nodeDiv, container.firstChild);
       } else {
         container.appendChild(nodeDiv);
@@ -490,7 +503,6 @@ export class Menu extends EventEmitter {
       }
     }
 
-    this.selectionWedges = new SelectionWedges(rootContainer);
     this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
   }
 
@@ -613,7 +625,8 @@ export class Menu extends EventEmitter {
         separators.push(item.parentWedge.start);
       }
 
-      this.selectionWedges.setSeparators(separators, clampedPosition);
+      this.selectionWedges?.setCenter(clampedPosition);
+      this.wedgeSeparators?.setSeparators(separators, clampedPosition);
     }
 
     // Choose a sound effect to play. We do not play a sound effect for the initial
@@ -686,20 +699,22 @@ export class Menu extends EventEmitter {
     }
 
     // Tell the selection wedges about the hovered wedge.
-    if (this.isParentOfCenterItem(item)) {
-      const center = this.selectionChain[this.selectionChain.length - 1];
-      // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
-      // case if we did not just entered a submenu. It looks better this way. Else the
-      // parent wedge would be highlighted already when entering a submenu.
-      if (center.parentWedge && this.hoveredItem !== null) {
-        this.selectionWedges.hover(center.parentWedge);
+    if (this.selectionWedges) {
+      if (this.isParentOfCenterItem(item)) {
+        const center = this.selectionChain[this.selectionChain.length - 1];
+        // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
+        // case if we did not just entered a submenu. It looks better this way. Else the
+        // parent wedge would be highlighted already when entering a submenu.
+        if (center.parentWedge && this.hoveredItem !== null) {
+          this.selectionWedges.hover(center.parentWedge);
+        } else {
+          this.selectionWedges.unhover();
+        }
+      } else if (item?.wedge) {
+        this.selectionWedges.hover(item.wedge);
       } else {
         this.selectionWedges.unhover();
       }
-    } else if (item?.wedge) {
-      this.selectionWedges.hover(item.wedge);
-    } else {
-      this.selectionWedges.unhover();
     }
 
     if (this.hoveredItem) {
