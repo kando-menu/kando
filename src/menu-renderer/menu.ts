@@ -503,7 +503,9 @@ export class Menu extends EventEmitter {
       }
     }
 
-    this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
+    if (this.theme.drawCenterText) {
+      this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
+    }
   }
 
   /**
@@ -793,18 +795,20 @@ export class Menu extends EventEmitter {
       // mouse is over the parent of the current menu, hide the center text. Else, we
       // display the name of the hovered item and make sure it is positioned at the
       // center of the menu.
-      if (
-        !newHoveredItem ||
-        this.isParentOfCenterItem(newHoveredItem) ||
-        newHoveredItem === this.root
-      ) {
-        this.centerText.hide();
-      } else {
-        this.centerText.setText(newHoveredItem.name);
-        this.centerText.show();
+      if (this.centerText) {
+        if (
+          !newHoveredItem ||
+          this.isParentOfCenterItem(newHoveredItem) ||
+          newHoveredItem === this.root
+        ) {
+          this.centerText.hide();
+        } else {
+          this.centerText.setText(newHoveredItem.name);
+          this.centerText.show();
 
-        const position = this.getCenterItemPosition();
-        this.centerText.setPosition(position);
+          const position = this.getCenterItemPosition();
+          this.centerText.setPosition(position);
+        }
       }
     }
 
