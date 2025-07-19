@@ -67,14 +67,16 @@ export interface IVersionInfo {
 
 /**
  * This interface is used to transfer information required from the window manager when
- * opening the pie menu. It contains the name of the currently focused app / window as
- * well as the current pointer position.
+ * opening the pie menu. It contains the name of the currently focused app / window, the
+ * current pointer position, and the screen area where a maximized window can be placed.
+ * That is the screen resolution minus the taskbar and other panels.
  */
 export interface IWMInfo {
   windowName: string;
   appName: string;
   pointerX: number;
   pointerY: number;
+  workArea: Electron.Rectangle;
 }
 
 /**
@@ -134,6 +136,21 @@ export interface IMenuThemeDescription {
    * they will be drawn above.
    */
   drawChildrenBelow: boolean;
+
+  /**
+   * If this is set to true, a full-screen div will be drawn below the menu with the CSS
+   * class "selection-wedges". If any menu item is hovered, it will also receive the class
+   * "hovered" and the "--start-angle" and "--end-angle" CSS properties will indicate
+   * where the selected child is.
+   */
+  drawSelectionWedges: boolean;
+
+  /**
+   * If this is set to true, a full-screen div will be drawn below the menu with the CSS
+   * class "wedge-separators". It will contain a div for each separator line between
+   * adjacent wedges. They will have the "separator" class.
+   */
+  drawWedgeSeparators: boolean;
 
   /**
    * These colors will be available as var(--name) in the CSS file and can be adjusted by

@@ -107,6 +107,19 @@ export class MenuTheme {
     return this.description.drawChildrenBelow;
   }
 
+  /** Returns true if the selection wedges should be visualized for this theme. */
+  public get drawSelectionWedges() {
+    return this.description.drawSelectionWedges;
+  }
+
+  /**
+   * Returns true if the separator lines between selection wedges should be visualized for
+   * this theme.
+   */
+  public get drawWedgeSeparators() {
+    return this.description.drawWedgeSeparators;
+  }
+
   /**
    * Loads the given theme description and applies it to the document. This will remove
    * any old theme first and then add the new theme to the document. It will also register

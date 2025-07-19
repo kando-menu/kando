@@ -10,9 +10,71 @@
 
 #include "Native.hpp"
 
+#include <cstring>
+#include <fcntl.h>
 #include <iostream>
+#include <poll.h>
 #include <sys/mman.h>
 #include <unistd.h>
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+namespace {
+
+// Create an anonymous shared memory file descriptor for the debug color buffer.
+int createSharedMemoryFile() {
+  const char* name = "/kando-shm-buffer";
+  int         fd   = shm_open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
+  if (fd >= 0) {
+    shm_unlink(name);
+    return fd;
+  }
+
+  // Fallback: create a tmpfile
+  fd = memfd_create("kando-shm-buffer", 0);
+  return fd;
+}
+
+// Create wl_shm pool and buffer with given size, filled with solid color.
+wl_buffer* createPixelBuffer(wl_shm* shm, int width, int height, uint32_t color) {
+  const int stride = width * 4;
+  const int size   = stride * height;
+
+  int fd = createSharedMemoryFile();
+  if (fd < 0) {
+    std::cerr << "Failed to create shm fd\n";
+    return nullptr;
+  }
+
+  if (ftruncate(fd, size) < 0) {
+    std::cerr << "Failed to set shm size\n";
+    close(fd);
+    return nullptr;
+  }
+
+  void* data = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  if (data == MAP_FAILED) {
+    std::cerr << "Failed to mmap shm\n";
+    close(fd);
+    return nullptr;
+  }
+
+  // Fill buffer with the given color (ARGB in 32-bit little endian)
+  uint32_t* pixels = (uint32_t*)data;
+  for (int i = 0; i < width * height; ++i) {
+    pixels[i] = color;
+  }
+
+  wl_shm_pool* pool = wl_shm_create_pool(shm, fd, size);
+  wl_buffer*   buffer =
+      wl_shm_pool_create_buffer(pool, 0, width, height, stride, WL_SHM_FORMAT_ARGB8888);
+  wl_shm_pool_destroy(pool);
+  munmap(data, size);
+  close(fd);
+
+  return buffer;
+}
+} // namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,18 +82,20 @@ Native::Native(Napi::Env env, Napi::Object exports) {
   DefineAddon(exports, {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
+                           InstanceMethod("getPointerPositionAndWorkAreaSize",
+                               &Native::getPointerPositionAndWorkAreaSize),
                        });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 Native::~Native() {
-  if (mData.mPointer) {
-    zwlr_virtual_pointer_v1_destroy(mData.mPointer);
+  if (mData.mVirtualPointer) {
+    zwlr_virtual_pointer_v1_destroy(mData.mVirtualPointer);
   }
 
-  if (mData.mKeyboard) {
-    zwp_virtual_keyboard_v1_destroy(mData.mKeyboard);
+  if (mData.mVirtualKeyboard) {
+    zwp_virtual_keyboard_v1_destroy(mData.mVirtualKeyboard);
   }
 
   if (mData.mSeat) {
@@ -57,6 +121,22 @@ Native::~Native() {
   if (mData.mXkbState) {
     xkb_state_unref(mData.mXkbState);
   }
+
+  if (mData.mPixelBuffer) {
+    wl_buffer_destroy(mData.mPixelBuffer);
+  }
+
+  if (mData.mPointer) {
+    wl_pointer_destroy(mData.mPointer);
+  }
+
+  if (mData.mLayerSurface) {
+    zwlr_layer_surface_v1_destroy(mData.mLayerSurface);
+  }
+
+  if (mData.mSurface) {
+    wl_surface_destroy(mData.mSurface);
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -79,10 +159,21 @@ void Native::init(Napi::Env const& env) {
                           const char* interface, uint32_t version) {
     WaylandData* data = static_cast<WaylandData*>(userData);
 
-    // Store a reference to the seat.
-    if (!std::strcmp(interface, wl_seat_interface.name)) {
-      data->mSeat = static_cast<wl_seat*>(wl_registry_bind(
-          registry, name, &wl_seat_interface, version <= 7 ? version : 7));
+    if (strcmp(interface, wl_compositor_interface.name) == 0) {
+      data->mCompositor = static_cast<wl_compositor*>(
+          wl_registry_bind(registry, name, &wl_compositor_interface,
+              4)); // this has to be v4 (this is the version Niri uses)
+    } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+      data->mSeat =
+          static_cast<wl_seat*>(wl_registry_bind(registry, name, &wl_seat_interface,
+              4)); // this has to be v4 (this is the version Niri uses)
+    } else if (strcmp(interface, zwlr_layer_shell_v1_interface.name) == 0) {
+      data->mLayerShell = static_cast<zwlr_layer_shell_v1*>(
+          wl_registry_bind(registry, name, &zwlr_layer_shell_v1_interface,
+              4)); // this has to be v4 (this is the version Niri uses)
+    } else if (strcmp(interface, wl_shm_interface.name) == 0) {
+      data->mShm =
+          static_cast<wl_shm*>(wl_registry_bind(registry, name, &wl_shm_interface, 1));
     }
 
     // Store a reference to the virtual pointer manager.
@@ -94,8 +185,8 @@ void Native::init(Napi::Env const& env) {
 
     // If the virtual pointer manager and the seat are available, create a virtual pointer
     // device.
-    if (!data->mPointer && data->mPointerManager && data->mSeat) {
-      data->mPointer = zwlr_virtual_pointer_manager_v1_create_virtual_pointer(
+    if (!data->mVirtualPointer && data->mPointerManager && data->mSeat) {
+      data->mVirtualPointer = zwlr_virtual_pointer_manager_v1_create_virtual_pointer(
           data->mPointerManager, data->mSeat);
     }
 
@@ -108,8 +199,8 @@ void Native::init(Napi::Env const& env) {
 
     // If the virtual keyboard manager and the seat are available, create a virtual
     // keyboard device.
-    if (!data->mKeyboard && data->mKeyboardManager && data->mSeat) {
-      data->mKeyboard = zwp_virtual_keyboard_manager_v1_create_virtual_keyboard(
+    if (!data->mVirtualKeyboard && data->mKeyboardManager && data->mSeat) {
+      data->mVirtualKeyboard = zwp_virtual_keyboard_manager_v1_create_virtual_keyboard(
           data->mKeyboardManager, data->mSeat);
 
       // AFICS, we have to keep track of the current pressed modifier keys ourselves. We
@@ -148,7 +239,7 @@ void Native::init(Napi::Env const& env) {
                 munmap(mappedKeymap, size);
 
                 // Forward the keymap to the virtual keyboard.
-                zwp_virtual_keyboard_v1_keymap(data->mKeyboard, format, fd, size);
+                zwp_virtual_keyboard_v1_keymap(data->mVirtualKeyboard, format, fd, size);
               },
           // The other callbacks are not needed.
           .enter     = [](void*, wl_keyboard*, uint32_t, wl_surface*, wl_array*) {},
@@ -187,13 +278,34 @@ void Native::init(Napi::Env const& env) {
     return;
   }
 
-  if (!mData.mPointer) {
+  if (!mData.mVirtualPointer) {
     Napi::Error::New(env, "No virtual pointer protocol!").ThrowAsJavaScriptException();
     return;
   }
 
-  if (!mData.mKeyboard) {
+  if (!mData.mVirtualKeyboard) {
     Napi::Error::New(env, "No virtual keyboard protocol!").ThrowAsJavaScriptException();
+    return;
+  }
+
+  if (!mData.mCompositor) {
+    Napi::Error::New(env, "Failed to bind wl_compositor interface.")
+        .ThrowAsJavaScriptException();
+    return;
+  }
+  if (!mData.mLayerShell) {
+    Napi::Error::New(env, "Failed to bind zwlr_layer_shell_v1 interface.")
+        .ThrowAsJavaScriptException();
+    return;
+  }
+  if (!mData.mSeat) {
+    Napi::Error::New(env, "Failed to bind wl_seat interface.")
+        .ThrowAsJavaScriptException();
+    return;
+  }
+  if (!mData.mShm) {
+    Napi::Error::New(env, "Failed to bind wl_shm interface.")
+        .ThrowAsJavaScriptException();
     return;
   }
 }
@@ -219,8 +331,8 @@ void Native::movePointer(const Napi::CallbackInfo& info) {
 
   // Send the relative pointer motion event.
   zwlr_virtual_pointer_v1_motion(
-      mData.mPointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
-  zwlr_virtual_pointer_v1_frame(mData.mPointer);
+      mData.mVirtualPointer, 0, wl_fixed_from_int(dx), wl_fixed_from_int(dy));
+  zwlr_virtual_pointer_v1_frame(mData.mVirtualPointer);
   wl_display_roundtrip(mData.mDisplay);
 }
 
@@ -247,7 +359,7 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
   // If the modifier state changed, we send a modifier event.
   if (changedMods) {
-    zwp_virtual_keyboard_v1_modifiers(mData.mKeyboard,
+    zwp_virtual_keyboard_v1_modifiers(mData.mVirtualKeyboard,
         xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_DEPRESSED),
         xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LATCHED),
         xkb_state_serialize_mods(mData.mXkbState, XKB_STATE_MODS_LOCKED),
@@ -255,11 +367,191 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   }
 
   // Finally send the key event itself.
-  zwp_virtual_keyboard_v1_key(mData.mKeyboard, 0, keycode - 8,
+  zwp_virtual_keyboard_v1_key(mData.mVirtualKeyboard, 0, keycode - 8,
       press ? WL_KEYBOARD_KEY_STATE_PRESSED : WL_KEYBOARD_KEY_STATE_RELEASED);
 
   // Make sure that the event is sent.
   wl_display_roundtrip(mData.mDisplay);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  // Ensure Wayland is initialized
+  if (!mData.mDisplay) {
+    init(env);
+    if (!mData.mDisplay)
+      return env.Null();
+  }
+
+  // Create surface and pointer listener
+  createSurfaceAndPointer();
+  if (!mData.mSurface || !mData.mPointer) {
+    destroySurfaceAndPointer();
+    return env.Null();
+  }
+
+  int fd                      = wl_display_get_fd(mData.mDisplay);
+  mData.mPointerEventReceived = false;
+
+  while (!mData.mPointerEventReceived) {
+    // Process any pending events first
+    wl_display_dispatch_pending(mData.mDisplay);
+
+    // Prepare to read new events
+    if (wl_display_prepare_read(mData.mDisplay) != 0) {
+      // In case of error, flush and continue
+      wl_display_flush(mData.mDisplay);
+      continue;
+    }
+
+    // Flush requests to compositor
+    wl_display_flush(mData.mDisplay);
+
+    // Wait for events on the Wayland display fd
+    pollfd pfd = {.fd = fd, .events = POLLIN};
+    int    ret = poll(&pfd, 1, -1); // block indefinitely until event
+
+    if (ret > 0) {
+      // Read and dispatch events
+      wl_display_read_events(mData.mDisplay);
+      wl_display_dispatch_pending(mData.mDisplay);
+    } else if (ret == -1) {
+      // Poll error, break or handle as needed
+      std::cerr << "Poll error in getPointer\n";
+      break;
+    }
+  }
+
+  // Return the pointer coordinates and work area geometry
+  Napi::Object result = Napi::Object::New(env);
+  result.Set("pointerX", Napi::Number::New(env, mData.mPointerX));
+  result.Set("pointerY", Napi::Number::New(env, mData.mPointerY));
+  result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
+  result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
+
+  // Clean up Wayland resources
+  destroySurfaceAndPointer();
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::createSurfaceAndPointer() {
+  if (mData.mSurface) {
+    return; // already created
+  }
+
+  mData.mSurface = wl_compositor_create_surface(mData.mCompositor);
+  if (!mData.mSurface) {
+    std::cerr << "Failed to create Wayland surface!\n";
+    return;
+  }
+
+  static const zwlr_layer_surface_v1_listener surfaceListener = {
+      .configure =
+          [](void* data, zwlr_layer_surface_v1* surface, uint32_t serial, uint32_t width,
+              uint32_t height) {
+            auto* d = static_cast<Native::WaylandData*>(data);
+
+            // Ack configure so compositor knows we handled it
+            zwlr_layer_surface_v1_ack_configure(surface, serial);
+
+            // Only recreate the buffer if the work area therefore the needed size changes
+            if (d->mWorkAreaWidth != width || d->mWorkAreaHeight != height) {
+              d->mWorkAreaWidth  = width;
+              d->mWorkAreaHeight = height;
+
+              // Create or update the buffer with requested size
+              if (d->mPixelBuffer) {
+                wl_buffer_destroy(d->mPixelBuffer);
+                d->mPixelBuffer = nullptr;
+              }
+
+              // ARGB Color Buffer (useful for debugging, I'll set to transparent but it
+              // doesn't hurt to keep it here just in case for now)
+              constexpr uint32_t fillColor = 0x00000000;
+
+              d->mPixelBuffer = createPixelBuffer(d->mShm, width, height, fillColor);
+            }
+            if (d->mPixelBuffer) {
+              wl_surface_attach(d->mSurface, d->mPixelBuffer, 0, 0);
+              wl_surface_damage(d->mSurface, 0, 0, width, height);
+              wl_surface_commit(d->mSurface);
+            } else {
+              std::cerr << "Failed to create buffer\n";
+            }
+          },
+      .closed =
+          [](void* data, zwlr_layer_surface_v1* surface) {
+            std::cerr << "Layer surface closed by compositor\n";
+          },
+  };
+
+  mData.mLayerSurface =
+      zwlr_layer_shell_v1_get_layer_surface(mData.mLayerShell, mData.mSurface, nullptr,
+          ZWLR_LAYER_SHELL_V1_LAYER_OVERLAY, "kando-pointer-surface");
+  zwlr_layer_surface_v1_add_listener(mData.mLayerSurface, &surfaceListener, &mData);
+  zwlr_layer_surface_v1_set_size(mData.mLayerSurface, 0, 0);
+  zwlr_layer_surface_v1_set_anchor(mData.mLayerSurface,
+      ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP | ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM |
+          ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT | ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT);
+
+  wl_surface_commit(mData.mSurface);
+  wl_display_roundtrip(mData.mDisplay);
+  mData.mPointer = wl_seat_get_pointer(mData.mSeat);
+
+  static const wl_pointer_listener pointerListener = {
+      .enter =
+          [](void* data, wl_pointer*, uint32_t, wl_surface*, wl_fixed_t x, wl_fixed_t y) {
+            auto* d                  = static_cast<Native::WaylandData*>(data);
+            d->mPointerX             = wl_fixed_to_double(x);
+            d->mPointerY             = wl_fixed_to_double(y);
+            d->mPointerEventReceived = true;
+          },
+      .leave = [](void*, wl_pointer*, uint32_t, wl_surface*) {},
+      .motion =
+          [](void* data, wl_pointer*, uint32_t, wl_fixed_t x, wl_fixed_t y) {
+            auto* d                  = static_cast<Native::WaylandData*>(data);
+            d->mPointerX             = wl_fixed_to_double(x);
+            d->mPointerY             = wl_fixed_to_double(y);
+            d->mPointerEventReceived = true;
+          },
+      .button        = nullptr,
+      .axis          = nullptr,
+      .frame         = nullptr,
+      .axis_source   = nullptr,
+      .axis_stop     = nullptr,
+      .axis_discrete = nullptr,
+      .axis_value120 = nullptr,
+  };
+
+  wl_pointer_add_listener(mData.mPointer, &pointerListener, &mData);
+  mData.mPointerEventReceived = false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::destroySurfaceAndPointer() {
+  if (mData.mPointer) {
+    wl_pointer_destroy(mData.mPointer);
+    mData.mPointer = nullptr;
+  }
+
+  if (mData.mLayerSurface) {
+    zwlr_layer_surface_v1_destroy(mData.mLayerSurface);
+    mData.mLayerSurface = nullptr;
+  }
+
+  if (mData.mSurface) {
+    wl_surface_commit(mData.mSurface);
+    wl_display_flush(mData.mDisplay);
+    wl_surface_destroy(mData.mSurface);
+    mData.mSurface = nullptr;
+  }
+
+  mData.mPointerEventReceived = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

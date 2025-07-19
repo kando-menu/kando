@@ -96,13 +96,6 @@ export class MenuWindow extends BrowserWindow {
       this.setFocusable(!newValue);
     });
 
-    // We prevent CMD+W to close the window on macOS.
-    this.webContents.on('before-input-event', (event, input) => {
-      if (input.meta && input.key === 'w') {
-        event.preventDefault();
-      }
-    });
-
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.setAlwaysOnTop(true, 'screen-saver');
@@ -137,13 +130,12 @@ export class MenuWindow extends BrowserWindow {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
-    const isMenuVisible = this.isVisible() && this.hideTimeout === null;
 
     // If a menu is currently shown and the user presses the same shortcut again we will
     // either close the menu or show the next one with the same shortcut. There is also
     // the option to do nothing in this case, but in this case the menu's shortcut will be
     // inhibited and thus this method will not be called in the first place.
-    if (isMenuVisible) {
+    if (this.isVisible()) {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
 
@@ -194,13 +186,6 @@ export class MenuWindow extends BrowserWindow {
     // will be passed to the action as well.
     this.lastMenu = menu;
 
-    // Get the work area of the screen where the pointer is located. We will move the
-    // window to this screen and show the menu at the pointer position.
-    const workarea = screen.getDisplayNearestPoint({
-      x: info.pointerX,
-      y: info.pointerY,
-    }).workArea;
-
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
     if (process.platform === 'win32') {
@@ -214,20 +199,15 @@ export class MenuWindow extends BrowserWindow {
       // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
       // scale the window to the correct size.
       this.setBounds({
-        x: workarea.x,
-        y: workarea.y,
+        x: info.workArea.x,
+        y: info.workArea.y,
         width: 1,
         height: 1,
       });
     }
 
     // Move and resize the window to the work area of the screen where the pointer is.
-    this.setBounds({
-      x: workarea.x,
-      y: workarea.y,
-      width: workarea.width,
-      height: workarea.height,
-    });
+    this.setBounds(info.workArea);
 
     // On all platforms except Windows, we show the window after we moved it.
     if (process.platform !== 'win32') {
@@ -237,8 +217,8 @@ export class MenuWindow extends BrowserWindow {
     // Usually, the menu is shown at the pointer position. However, if the menu is
     // centered, we show it in the center of the screen.
     const mousePosition = {
-      x: (info.pointerX - workarea.x) / this.webContents.getZoomFactor(),
-      y: (info.pointerY - workarea.y) / this.webContents.getZoomFactor(),
+      x: (info.pointerX - info.workArea.x) / this.webContents.getZoomFactor(),
+      y: (info.pointerY - info.workArea.y) / this.webContents.getZoomFactor(),
     };
 
     // We have to pass the size of the window to the renderer because window.innerWidth
@@ -246,8 +226,8 @@ export class MenuWindow extends BrowserWindow {
     // Also, we incorporate the zoom factor of the window so that the clamping to the
     // work area is done correctly.
     const windowSize = {
-      x: workarea.width / this.webContents.getZoomFactor(),
-      y: workarea.height / this.webContents.getZoomFactor(),
+      x: info.workArea.width / this.webContents.getZoomFactor(),
+      y: info.workArea.height / this.webContents.getZoomFactor(),
     };
 
     // Send the menu to the renderer process. If the menu is centered, we delay the
@@ -271,8 +251,8 @@ export class MenuWindow extends BrowserWindow {
         appName: info.appName,
         windowName: info.windowName,
         windowPosition: {
-          x: workarea.x,
-          y: workarea.y,
+          x: info.workArea.x,
+          y: info.workArea.y,
         },
       }
     );
@@ -312,6 +292,27 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * This hides the window. It will wait for the fade-out animation to finish before
+   * actually hiding the window.
+   */
+  public override hide() {
+    if (this.isVisible()) {
+      this.webContents.send('menu-window.hide-menu');
+    }
+  }
+
+  /**
+   * This checks if the window is visible. A window is considered visible if it is shown,
+   * not minimized, and not about to be hidden (i.e. the fade-out animation is not
+   * running).
+   *
+   * @returns Returns true if the window is visible and not minimized.
+   */
+  public isVisible() {
+    return super.isVisible() && this.hideTimeout === null && !this.isMinimized();
+  }
+
+  /**
    * This hides the window. This method also accepts a delay parameter which can be used
    * to delay the hiding of the window. This is useful when we want to show a fade-out
    * animation.
@@ -331,7 +332,7 @@ export class MenuWindow extends BrowserWindow {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  public async hide() {
+  private async hideWindow() {
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
@@ -600,7 +601,7 @@ export class MenuWindow extends BrowserWindow {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hide().then(() => {
+      this.hideWindow().then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
@@ -621,7 +622,7 @@ export class MenuWindow extends BrowserWindow {
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('menu-window.cancel-selection', () => {
-      this.hide();
+      this.hideWindow();
     });
 
     // Show the settings window when the user clicks on the settings button in the menu.

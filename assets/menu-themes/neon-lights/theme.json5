@@ -28,17 +28,24 @@
   // This theme draws child items below their parent items.
   drawChildrenBelow: true,
 
+  // Draw the circle segment of the hovered menu item.
+  drawWedgeSeparators: true,
+
+  // Draw the thin lines between adjacent menu items.
+  drawSelectionWedges: true,
+
   // These colors can be configured by the user and are vailable in the CSS file as CSS
   // variables. The default values are used if the user does not provide any values.
   colors: {
-    'glow-color': 'rgb(255, 140, 210)',
+    'glow-color': 'rgba(255, 140, 210, 0.75)',
     'connector-color': 'rgba(255, 200, 255, 0.75)',
+    'separator-color': 'rgba(255, 255, 255, 0.2)',
+    'wedge-color': 'rgba(255, 140, 210, 0.1)',
   },
 
   // This is a very complex theme with multiple layers.
   layers: [
     { class: 'icon-layer', content: 'icon' },
-    { class: 'icon-glow-layer', content: 'icon' },
     { class: 'ring-fast-layer', content: 'none' },
     { class: 'ring-slow-layer', content: 'none' },
     { class: 'arrow-layer', content: 'none' },

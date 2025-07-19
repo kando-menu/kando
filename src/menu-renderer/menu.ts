@@ -13,6 +13,8 @@ import { EventEmitter } from 'events';
 import * as math from '../common/math';
 import { IGeneralSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
 import { IRenderedMenuItem } from './rendered-menu-item';
+import { SelectionWedges } from './selection-wedges';
+import { WedgeSeparators } from './wedge-separators';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
@@ -80,6 +82,12 @@ export class Menu extends EventEmitter {
    * the currently selected item.
    */
   private selectionChain: Array<IRenderedMenuItem> = [];
+
+  /** This is used to visualize the selection wedges. */
+  private selectionWedges: SelectionWedges = null;
+
+  /** This is used to visualize the separator lines between adjacent wedges. */
+  private wedgeSeparators: WedgeSeparators = null;
 
   /** This shows the name of the currently hovered child on the center item. */
   private centerText: CenterText = null;
@@ -208,6 +216,8 @@ export class Menu extends EventEmitter {
     this.container.innerHTML = '';
     this.root = null;
     this.showMenuOptions = null;
+    this.selectionWedges = null;
+    this.wedgeSeparators = null;
     this.centerText = null;
     this.hoveredItem = null;
     this.draggedItem = null;
@@ -420,6 +430,14 @@ export class Menu extends EventEmitter {
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(rootItem: IRenderedMenuItem, rootContainer: HTMLElement) {
+    if (this.theme.drawSelectionWedges) {
+      this.selectionWedges = new SelectionWedges(rootContainer);
+    }
+
+    if (this.theme.drawWedgeSeparators) {
+      this.wedgeSeparators = new WedgeSeparators(rootContainer);
+    }
+
     const queue = [];
 
     queue.push({ item: rootItem, parent: null, container: rootContainer, level: 0 });
@@ -428,7 +446,7 @@ export class Menu extends EventEmitter {
       const { item, parent, container, level } = queue.shift();
 
       const nodeDiv = this.theme.createItem(item);
-      if (this.theme.drawChildrenBelow) {
+      if (this.theme.drawChildrenBelow && level > 0) {
         container.insertBefore(nodeDiv, container.firstChild);
       } else {
         container.appendChild(nodeDiv);
@@ -483,11 +501,9 @@ export class Menu extends EventEmitter {
           });
         }
       }
-
-      if (item === this.root) {
-        this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
-      }
     }
+
+    this.centerText = new CenterText(rootContainer, this.theme.centerTextWrapWidth);
   }
 
   /**
@@ -599,6 +615,18 @@ export class Menu extends EventEmitter {
       // Update the mouse info based on the newly selected item's position.
       this.pointerInput.setCurrentCenter(clampedPosition, this.settings.centerDeadZone);
       this.gamepadInput.setCurrentCenter(clampedPosition);
+
+      // Assemble a list of angles for the selection-wedge separators.
+      const separators = item.children.map((child) => {
+        return (child as IRenderedMenuItem).wedge.start;
+      });
+
+      if (item.parentWedge) {
+        separators.push(item.parentWedge.start);
+      }
+
+      this.selectionWedges?.setCenter(clampedPosition);
+      this.wedgeSeparators?.setSeparators(separators, clampedPosition);
     }
 
     // Choose a sound effect to play. We do not play a sound effect for the initial
@@ -655,7 +683,7 @@ export class Menu extends EventEmitter {
 
     // Choose the sound effect to play. We only play a sound if a new item is hovered and
     // if there was a previously hovered item. This ensures that no hover effect is played
-    // when we enter a submenu - i this case the previously hovered item is null.
+    // when we enter a submenu - in this case the previously hovered item is null.
     if (item && this.hoveredItem !== null) {
       let soundType = SoundType.eHoverItem;
 
@@ -668,6 +696,25 @@ export class Menu extends EventEmitter {
       }
 
       this.soundTheme.playSound(soundType);
+    }
+
+    // Tell the selection wedges about the hovered wedge.
+    if (this.selectionWedges) {
+      if (this.isParentOfCenterItem(item)) {
+        const center = this.selectionChain[this.selectionChain.length - 1];
+        // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
+        // case if we did not just entered a submenu. It looks better this way. Else the
+        // parent wedge would be highlighted already when entering a submenu.
+        if (center.parentWedge && this.hoveredItem !== null) {
+          this.selectionWedges.hover(center.parentWedge);
+        } else {
+          this.selectionWedges.unhover();
+        }
+      } else if (item?.wedge) {
+        this.selectionWedges.hover(item.wedge);
+      } else {
+        this.selectionWedges.unhover();
+      }
     }
 
     if (this.hoveredItem) {
@@ -830,7 +877,7 @@ export class Menu extends EventEmitter {
     if (currentItem.children) {
       for (const child of currentItem.children as IRenderedMenuItem[]) {
         if (
-          math.isAngleBetween(this.latestInput.angle, child.startAngle, child.endAngle)
+          math.isAngleBetween(this.latestInput.angle, child.wedge.start, child.wedge.end)
         ) {
           return child;
         }
@@ -1036,13 +1083,13 @@ export class Menu extends EventEmitter {
     const parentAngle = item.angle == undefined ? undefined : (item.angle + 180) % 360;
     const angles = math.computeItemAngles(item.children, parentAngle);
     const wedges = math.computeItemWedges(angles, parentAngle);
+    item.parentWedge = wedges.parentWedge;
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < item.children.length; ++i) {
       const child = item.children[i] as IRenderedMenuItem;
       child.angle = angles[i];
-      child.startAngle = wedges[i].start;
-      child.endAngle = wedges[i].end;
+      child.wedge = wedges.itemWedges[i];
 
       // Finally, we recursively setup the angles for the children of the child.
       this.setupAngles(child);
