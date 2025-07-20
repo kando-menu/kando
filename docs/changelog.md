@@ -29,6 +29,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Updated Electron to version 34.
 
+### :bug: Fixed
+
+- Rendering of SVG icons which contain CSS styles. If multiple SVG icons with the same CSS classes were used in the same menu, the styles clashed resulting in wrong colors.
+
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
 **Release Date:** 2025-07-16

@@ -79,28 +79,37 @@ export class FileIconTheme implements IIconTheme {
   }
 
   /**
-   * As SVG icons are injected directly into the DOM, we need to make sure that all IDs
-   * are unique. This is done by adding a unique suffix to all IDs in the SVG content.
+   * As SVG icons are injected directly into the DOM, we need to make sure that nothing
+   * clashes between different SVGs. This methods isolated a given SVG content by doing
+   * the following:
    *
-   * @param svgContent The SVG content to namespace.
-   * @param uniqueSuffix The unique suffix to add to all IDs in the SVG content.
+   * 1. It adds a unique suffix to all IDs in the SVG content.
+   * 2. It assigns a unique ID to the <svg> element and uses this ID to scope all CSS styles
+   *    in the SVG.
+   * 3. It normalizes the viewBox of the SVG content to ensure it scales correctly when
+   *    injected into the DOM.
+   *
+   * @param svgContent The SVG content to normalize.
+   * @param uniqueString The unique string used to namespace the SVG content.
    * @returns The namespaced SVG content.
    */
-  private normalizeIDs(svgContent: string, uniqueSuffix: string) {
+  private isolateSVG(svgContent: string, uniqueString: string) {
+    // First step: Add a unique ID to all IDs in the SVG content. ----------------------------------
+
     const idRegex = /id="([^"]+)"/g;
     const urlRefRegex = /url\(#([^)]+)\)/g;
     const hrefRegex = /xlink:href="#([^"]+)"/g;
 
     const idMap = new Map();
 
-    // Step 1: Find all IDs and map them to new ones
+    // Find all IDs and map them to new ones.
     svgContent = svgContent.replace(idRegex, (match, id) => {
-      const newId = `${id}__${uniqueSuffix}`;
+      const newId = `${id}__${uniqueString}`;
       idMap.set(id, newId);
       return `id="${newId}"`;
     });
 
-    // Step 2: Replace all references (url(#...), xlink:href="#...")
+    // Replace all references (url(#...), xlink:href="#...").
     svgContent = svgContent.replace(urlRefRegex, (match, id) => {
       const newId = idMap.get(id);
       return newId ? `url(#${newId})` : match;
@@ -111,22 +120,31 @@ export class FileIconTheme implements IIconTheme {
       return newId ? `xlink:href="#${newId}"` : match;
     });
 
-    return svgContent;
-  }
+    // Second step: Normalize CSS styles in the SVG content. ---------------------------------------
 
-  /**
-   * Normalizes the viewBox of the SVG content. If the SVG already has a viewBox, we
-   * remove the width and height attributes. If it doesn't have a viewBox, we create one
-   * based on the width and height attributes. This is done to ensure that the SVG scales
-   * correctly when injected into the DOM.
-   *
-   * @param svgContent The SVG content to normalize.
-   * @returns The normalized SVG content.
-   */
-  private normalizeSVGViewBox(svgContent: string) {
+    // We need to ensure that all styles in the SVG are scoped to the unique ID of the SVG
+    // element. This is done by wrapping the styles in a selector that uses the unique ID.
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(svgContent, 'image/svg+xml');
     const svgEl = doc.documentElement;
+
+    // Add the unique ID to the <svg> element
+    const uniqueID = `svg-${uniqueString}`;
+    svgEl.setAttribute('id', uniqueID);
+
+    // Find all <style> elements
+    const styleElements = svgEl.querySelectorAll('style');
+
+    styleElements.forEach((styleEl) => {
+      styleEl.textContent = `#${uniqueID} { ${styleEl.textContent} }`;
+    });
+
+    // Third step: Normalize the viewBox of the SVG content. ---------------------------------------
+
+    // If the SVG already has a viewBox, we remove the width and height attributes. If it doesn't
+    // have a viewBox, we create one based on the width and height attributes. This is done to
+    // ensure that the SVG scales correctly when injected into the DOM.
 
     if (svgEl.hasAttribute('viewBox')) {
       // Case 1: Already has viewBox — remove width/height
@@ -172,8 +190,7 @@ export class FileIconTheme implements IIconTheme {
       const response = await fetch(iconPath);
       if (response.ok) {
         let svgContent = await response.text();
-        svgContent = this.normalizeIDs(svgContent, crypto.randomUUID().slice(-6));
-        svgContent = this.normalizeSVGViewBox(svgContent);
+        svgContent = this.isolateSVG(svgContent, crypto.randomUUID().slice(-6));
         this.svgIconCache.set(iconPath, svgContent);
         containerElement.innerHTML = svgContent;
       }
