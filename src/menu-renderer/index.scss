@@ -118,13 +118,31 @@ body {
   // The text in the center of the menu is wrapped in a square div with a 10% padding.
   .center-text {
     position: absolute;
-    text-align: center;
-
     overflow: hidden;
-    word-break: break-word;
 
-    &.hidden {
-      opacity: 0;
+    .half-circle-wrap-left {
+      height: 100%;
+      width: 50%;
+      float: left;
+      shape-outside: radial-gradient(farthest-side at 100%, transparent 95%, #000);
+    }
+
+    .half-circle-wrap-right {
+      height: 100%;
+      width: 50%;
+      float: right;
+      shape-outside: radial-gradient(farthest-side at 5%, transparent 95%, #000);
+    }
+
+    .text {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.2em;
     }
   }
 
