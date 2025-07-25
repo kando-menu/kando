@@ -38,14 +38,21 @@ export class CenterText {
   private div: HTMLDivElement;
 
   /**
-   * Since updating the text element is a rather expensive operation, we use an invisible
-   * staging div to compute the layout of the text element. Once the layout is computed,
-   * we replace the previous text element with the staging div.
+   * We count the number of times the async `show` method is called to know whether it got
+   * called while a previous call was still in progress. If this is the case, we will not
+   * use the text element that was created for the previous call, but instead create a new
+   * one.
    */
-  private stagingDiv: HTMLDivElement;
+  private callCount: number = 0;
 
   /** We query this once to compute the amount of lines which fit into the circle. */
   private maxFontSize: number = -1;
+
+  /**
+   * This is used to cache the text elements so that we do not need to create new elements
+   * every time the text changes.
+   */
+  private cache: { [key: string]: HTMLDivElement } = {};
 
   /**
    * @param container The parent element of the text element.
@@ -71,11 +78,16 @@ export class CenterText {
    *   current position of the pie menu on the screen.
    */
   public async show(text: string, position: IVec2) {
-    // If there is a staging div, a layout is already in progress. We remove it from the
-    // DOM so that it will not be used anymore.
-    if (this.stagingDiv) {
-      this.stagingDiv.remove();
-      this.stagingDiv = null;
+    const currentCallCount = ++this.callCount;
+
+    // If the text is already cached, we can use it directly.
+    if (this.cache[text]) {
+      this.hide();
+      this.div = this.cache[text];
+      this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      this.div.style.visibility = 'initial';
+      this.container.appendChild(this.div);
+      return;
     }
 
     // Computing the layout of the text is a rather expensive and slow operation. To avoid
@@ -83,22 +95,20 @@ export class CenterText {
     // computed. After the layout is computed, we remove the previous text element and
     // make the staging div visible.
     const stagingDiv = this.appendWithClass(this.container, 'center-text');
-    stagingDiv.style.transform = `translate(${position.x}px, ${position.y}px)`;
     stagingDiv.style.visibility = 'hidden';
     stagingDiv.style.width = stagingDiv.style.height = `${this.diameter}px`;
     stagingDiv.style.left = stagingDiv.style.top = `-${this.diameter / 2}px`;
-
-    // We keep a reference to the staging div so that we know that a layout is currently
-    // in progress if this method is called again before we are done.
-    this.stagingDiv = stagingDiv;
 
     // Add the divs for wrapping the text inside a circle.
     this.appendWithClass(stagingDiv, 'half-circle-wrap-left');
     this.appendWithClass(stagingDiv, 'half-circle-wrap-right');
     const textDiv = this.appendWithClass(stagingDiv, 'text');
 
+    // We want to allow breaking the text at some special characters like / and \ to
+    // avoid long words, especially in the case of URLs. For this, we add invisible
+    // spaces after these characters.
     const p = document.createElement('p');
-    p.textContent = text;
+    p.textContent = text.replace(/([/\\.])/g, '$1\u200B');
     textDiv.appendChild(p);
 
     // We query the initial font size only once for performance reasons.
@@ -107,7 +117,7 @@ export class CenterText {
     }
 
     // First, reduce the font size until everything fits.
-    const minFontSize = 8;
+    const minFontSize = 11;
     let fontSize = this.maxFontSize;
 
     let textHeight = await this.getDivHeight(p);
@@ -125,17 +135,24 @@ export class CenterText {
       // text may fit on fewer lines. Hence check if the text height changed after
       // adjusting the margin top.
       let oldHeight = textHeight;
-      let oldMarginTop = 0;
 
       for (let i = 0; i < 10; i++) {
-        const marginTop = (this.diameter - textHeight) / 2;
         p.style.marginTop = `${(this.diameter - textHeight) / 2}px`;
         textHeight = await this.getDivHeight(p);
 
-        // If the text height increased, we most likely moved the text too far. Let's
-        // take the previous margin value.
+        // If the text height increased, we got into a tricky situation where the text
+        // is hard to center. With the previous padding, fewer lines where used, so the text
+        // was not centered, but if we move it down a bit, it requires more lines and is
+        // not centered either anymore. This can happen if the last word is very long and
+        // does not fit on the last line in the lower half of the circle. The only solution
+        // here is to decrease the font size again.
         if (textHeight > oldHeight) {
-          p.style.marginTop = `${oldMarginTop}px`;
+          while (fontSize > minFontSize && textHeight > oldHeight) {
+            fontSize = fontSize - 1;
+            p.style.fontSize = `${fontSize}px`;
+            textHeight = await this.getDivHeight(p);
+          }
+
           break;
         }
 
@@ -145,18 +162,22 @@ export class CenterText {
         }
 
         oldHeight = textHeight;
-        oldMarginTop = marginTop;
       }
     }
 
-    // If a new layout computation was started while the current one was still in
-    // progress, the staging was removed from the DOM. In this case, we do not need to
-    // continue.
-    if (stagingDiv.parentElement) {
+    // Cache the text element for future use.
+    this.cache[text] = stagingDiv;
+
+    // If no new layout computation was started while the current one was still in
+    // progress, we can use the staging div as the new text element. Otherwise, we
+    // remove the staging div from the DOM, as it is no longer needed.
+    if (currentCallCount === this.callCount) {
       this.hide();
       this.div = stagingDiv;
+      this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
       this.div.style.visibility = 'initial';
-      this.stagingDiv = null;
+    } else {
+      stagingDiv.remove();
     }
   }
 
