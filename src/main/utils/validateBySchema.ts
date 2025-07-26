@@ -71,7 +71,7 @@ export const rootSchema: Schema = {
 };
 
 export function validateBySchema(
-  data: any,
+  data: Record<string, unknown>,
   schema: Schema,
   path = 'root'
 ): string | null {
@@ -84,7 +84,9 @@ export function validateBySchema(
       return `Missing required field: "${fullPath}"`;
     }
 
-    if (value === undefined) continue;
+    if (value === undefined) {
+      continue;
+    }
 
     if (field.type === 'enum') {
       if (typeof value !== 'string') {
@@ -104,13 +106,17 @@ export function validateBySchema(
 
     if (field.type === 'object' && field.schema) {
       const err = validateBySchema(value, field.schema, fullPath);
-      if (err) return err;
+      if (err) {
+        return err;
+      }
     }
 
     if (field.type === 'array' && field.elementSchema) {
       for (let i = 0; i < value.length; i++) {
         const err = validateBySchema(value[i], field.elementSchema, `${fullPath}[${i}]`);
-        if (err) return err;
+        if (err) {
+          return err;
+        }
       }
     }
   }
