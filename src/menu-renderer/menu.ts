@@ -803,11 +803,8 @@ export class Menu extends EventEmitter {
         ) {
           this.centerText.hide();
         } else {
-          this.centerText.setText(newHoveredItem.name);
-          this.centerText.show();
-
           const position = this.getCenterItemPosition();
-          this.centerText.setPosition(position);
+          this.centerText.show(newHoveredItem.name, position);
         }
       }
     }
