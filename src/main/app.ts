@@ -37,8 +37,8 @@ import {
 import { Settings } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
-// import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { supportsIsolatedProcesses } from './utils/shell';
+import { validateBySchema, rootSchema } from './utils/validateBySchema';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -90,219 +90,6 @@ export class KandoApp {
 
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
-
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  private validateStructure(parsed: any): string | false {
-    if (!Array.isArray(parsed.menus)) {
-      const errorMessage =
-        'Invalid JSON format: "menus" must be an array. Got: ' + typeof parsed.menus;
-      console.error(errorMessage);
-      return errorMessage;
-    }
-
-    for (let index = 0; index < parsed.menus.length; index++) {
-      const menu = parsed.menus[index];
-
-      if (!menu.root) {
-        return `Menu at index ${index} is invalid: Missing "root" object. Got: ${JSON.stringify(menu)}`;
-      }
-
-      if (typeof menu.root !== 'object') {
-        return `Menu at index ${index} is invalid: "root" must be an object. Got: ${typeof menu.root}`;
-      }
-
-      const parsedMenuName = menu.root.name ?? `<unknown name at index ${index}>`;
-
-      if (typeof menu.root.name !== 'string') {
-        return `Menu at index ${index} is invalid: "root.name" must be a string. Got: ${JSON.stringify(menu.root.name)}`;
-      }
-
-      if (menu.root.type !== 'submenu') {
-        return `Menu "${parsedMenuName}" is invalid: "root.type" must be "submenu". Got: ${JSON.stringify(menu.root.type)}`;
-      }
-
-      if (typeof menu.root.icon !== 'string') {
-        return `Menu "${parsedMenuName}" is invalid: "root.icon" must be a string. Got: ${JSON.stringify(menu.root.icon)}`;
-      }
-
-      if (typeof menu.root.iconTheme !== 'string') {
-        return `Menu "${parsedMenuName}" is invalid: "root.iconTheme" must be a string. Got: ${JSON.stringify(menu.root.iconTheme)}`;
-      }
-
-      if (!Array.isArray(menu.root.children)) {
-        return `Menu "${parsedMenuName}" is invalid: "root.children" must be an array. Got: ${typeof menu.root.children}`;
-      }
-
-      if (typeof menu.shortcut !== 'string' || !menu.shortcut) {
-        return `Menu "${parsedMenuName}" is invalid: "shortcut" must be a non-empty string. Got: ${JSON.stringify(menu.shortcut)}`;
-      }
-
-      if (typeof menu.shortcutID !== 'string') {
-        return `Menu "${parsedMenuName}" is invalid: "shortcutID" must be a string. Got: ${typeof menu.shortcutID}`;
-      }
-
-      if (typeof menu.centered !== 'boolean') {
-        return `Menu "${parsedMenuName}" is invalid: "centered" must be a boolean. Got: ${typeof menu.centered}`;
-      }
-
-      if (typeof menu.anchored !== 'boolean') {
-        return `Menu "${parsedMenuName}" is invalid: "anchored" must be a boolean. Got: ${typeof menu.anchored}`;
-      }
-
-      if (typeof menu.hoverMode !== 'boolean') {
-        return `Menu "${parsedMenuName}" is invalid: "hoverMode" must be a boolean. Got: ${typeof menu.hoverMode}`;
-      }
-
-      if (!Array.isArray(menu.tags)) {
-        return `Menu "${parsedMenuName}" is invalid: "tags" must be an array. Got: ${typeof menu.tags}`;
-      }
-
-      if (
-        menu.conditions &&
-        typeof menu.conditions === 'object' &&
-        Object.keys(menu.conditions).length > 0
-      ) {
-        const screenArea = menu.conditions.screenArea;
-        if (screenArea) {
-          if (typeof screenArea.xMin !== 'number') {
-            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.xMin" must be a number. Got: ${typeof screenArea.xMin}`;
-          }
-          if (typeof screenArea.yMin !== 'number') {
-            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.yMin" must be a number. Got: ${typeof screenArea.yMin}`;
-          }
-          if (typeof screenArea.xMax !== 'number') {
-            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.xMax" must be a number. Got: ${typeof screenArea.xMax}`;
-          }
-          if (typeof screenArea.yMax !== 'number') {
-            return `Menu "${parsedMenuName}" is invalid: "conditions.screenArea.yMax" must be a number. Got: ${typeof screenArea.yMax}`;
-          }
-        }
-
-        if (
-          !menu.conditions.windowName ||
-          typeof menu.conditions.windowName !== 'string'
-        ) {
-          return `Menu "${parsedMenuName}" is invalid: "conditions.windowName" must be a string. Got: ${typeof menu.conditions.windowName}`;
-        }
-
-        if (!menu.conditions.appName || typeof menu.conditions.appName !== 'string') {
-          return `Menu "${parsedMenuName}" is invalid: "conditions.appName" must be a string. Got: ${typeof menu.conditions.appName}`;
-        }
-      }
-
-      const validationResult = this.validateMenuItems(
-        menu.root.children,
-        `menus[${index}].root.children`
-      );
-      if (validationResult !== false) {
-        return validationResult;
-      }
-    }
-
-    return false;
-  }
-
-  private validateMenuItems(items: any[], path = 'children'): string | false {
-    for (let index = 0; index < items.length; index++) {
-      const item = items[index];
-      const itemPath = `${path}[${index}]`;
-
-      if (!item.type) {
-        return `${itemPath} is invalid: Missing "type". Expected one of: submenu, command, file, hotkey, macro, text, uri, redirect, settings.`;
-      }
-
-      const validTypes = [
-        'submenu',
-        'command',
-        'file',
-        'hotkey',
-        'macro',
-        'text',
-        'uri',
-        'redirect',
-        'settings',
-      ];
-
-      if (!validTypes.includes(item.type)) {
-        return `${itemPath} is invalid: Unknown type "${item.type}". Expected one of: ${validTypes.join(', ')}`;
-      }
-
-      if (!item.name || typeof item.name !== 'string') {
-        return `${itemPath} is invalid: "name" must be a string. Got: ${JSON.stringify(item.name)}`;
-      }
-
-      if (!item.icon || typeof item.icon !== 'string') {
-        return `${itemPath} is invalid: "icon" must be a string. Got: ${JSON.stringify(item.icon)}`;
-      }
-
-      if (!item.iconTheme || typeof item.iconTheme !== 'string') {
-        return `${itemPath} is invalid: "iconTheme" must be a string. Got: ${JSON.stringify(item.iconTheme)}`;
-      }
-
-      if (item.type === 'submenu') {
-        if (!Array.isArray(item.children)) {
-          return `${itemPath} is invalid: "children" must be an array for submenu type. Got: ${typeof item.children}`;
-        }
-
-        const validationResult = this.validateMenuItems(
-          item.children,
-          `${itemPath}.children`
-        );
-        if (validationResult !== false) {
-          return validationResult;
-        }
-      }
-
-      if (
-        ['hotkey', 'command', 'uri', 'file', 'macro', 'text', 'redirect'].includes(
-          item.type
-        )
-      ) {
-        if (!item.data || typeof item.data !== 'object') {
-          return `${itemPath} is invalid: "data" must be a non-null object. Got: ${typeof item.data}`;
-        }
-      }
-
-      if (item.type === 'hotkey' && typeof item.data.hotkey !== 'string') {
-        return `${itemPath} is invalid: "data.hotkey" must be a string. Got: ${typeof item.data?.hotkey}`;
-      }
-
-      if (item.type === 'command' && typeof item.data.command !== 'string') {
-        return `${itemPath} is invalid: "data.command" must be a string. Got: ${typeof item.data?.command}`;
-      }
-
-      if (item.type === 'uri' && typeof item.data.uri !== 'string') {
-        return `${itemPath} is invalid: "data.uri" must be a string. Got: ${typeof item.data?.uri}`;
-      }
-
-      if (item.type === 'file' && typeof item.data.path !== 'string') {
-        return `${itemPath} is invalid: "data.path" must be a string. Got: ${typeof item.data?.path}`;
-      }
-
-      if (item.type === 'macro' && !Array.isArray(item.data.macro)) {
-        return `${itemPath} is invalid: "data.macro" must be an array. Got: ${typeof item.data?.macro}`;
-      }
-
-      if (item.type === 'text' && typeof item.data.text !== 'string') {
-        return `${itemPath} is invalid: "data.text" must be a string. Got: ${typeof item.data?.text}`;
-      }
-
-      if (item.type === 'redirect' && typeof item.data.menu !== 'string') {
-        return `${itemPath} is invalid: "data.menu" must be a string. Got: ${typeof item.data?.menu}`;
-      }
-
-      if (
-        item.type === 'settings' &&
-        item.data !== null &&
-        typeof item.data !== 'object'
-      ) {
-        return `${itemPath} is invalid: "data" must be an object or null. Got: ${typeof item.data}`;
-      }
-    }
-
-    return false;
-  }
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   /**
    * Most of the initialization is done in the init() method. This constructor is only
@@ -517,7 +304,6 @@ export class KandoApp {
       }
     }
 
-    // Export menus to a JSON file
     ipcMain.handle('settings-window.export-menus-to-json', async () => {
       const { canceled, filePath } = await dialog.showSaveDialog({
         defaultPath: 'kando-menus.json',
@@ -552,7 +338,6 @@ export class KandoApp {
       }
     });
 
-    // Import menus from a zip file
     ipcMain.handle('settings-window.import-menus-from-json', async () => {
       const result = await dialog.showOpenDialog(this.settingsWindow, {
         properties: ['openFile'],
@@ -571,54 +356,52 @@ export class KandoApp {
           parsed = JSON.parse(jsonContent);
         } catch (err) {
           console.error('Invalid JSON file:', err.message);
-          dialog.showErrorBox(
-            'Invalid JSON',
-            'The selected file is not a valid JSON file.'
-          );
+          dialog.showErrorBox('Invalid JSON', 'The selected file is not a valid JSON file.');
           return;
         }
 
         if (parsed.version !== app.getVersion()) {
           const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
-          const result = await dialog.showMessageBox({
+          const userChoice = await dialog.showMessageBox({
             type: 'warning',
             buttons: ['Cancel', 'OK'],
-            defaultId: 1, // default selected: OK
-            cancelId: 0, // if user presses Esc or closes dialog
+            defaultId: 1,
+            cancelId: 0,
             title: 'Warning',
             message: 'The imported menus may not be compatible. Do you want to proceed?',
             detail: `Config version: ${parsed.version}\nApp version: ${app.getVersion()}`,
           });
 
-          if (result.response === 1) {
-            // OK pressed
-            console.log('User confirmed import.');
-            // proceed with importing
-          } else {
-            // Cancel pressed or dialog closed
+          if (userChoice.response !== 1) {
             console.log('User cancelled import.');
             return;
           }
           console.warn(warnMessage);
-          // TODO: add warning window to the settings window UI (if users proccede, add menus to list)
         }
 
-        const errors = this.validateStructure(parsed);
-
-        if (errors === false) {
-          this.menuSettings.set({ menus: parsed });
-          console.log('Successfully imported menus from', filePath);
-        } else {
-          console.error('Detected error in menus structure:'); // TODO: add error window to the settings window UI
-          console.error(errors);
-          dialog.showErrorBox('Invalid structure', errors);
+        // Validate the 'menus' property inside parsed object
+        if (!parsed.menus || !Array.isArray(parsed.menus)) {
+          dialog.showErrorBox('Invalid structure', 'Imported JSON does not contain a valid "menus" array.');
           return;
         }
+
+        // Validate each menu in the menus array
+        for (const [index, menu] of parsed.menus.entries()) {
+          const validationError = validateBySchema(menu.root, rootSchema, `menus[${index}].root`)
+          if (validationError !== null) {
+            dialog.showErrorBox('Invalid structure', validationError);
+            return;
+          }
+        }
+
+        this.menuSettings.set({ menus: parsed.menus });
+        console.log('Successfully imported menus from', filePath);
       } catch (error) {
         console.error('Failed to import menus:', error);
         throw error;
       }
     });
+
 
     // Export specific menu to JSON file
     ipcMain.handle('settings-window.export-menu-to-json', async (event, menuIndex) => {
@@ -677,10 +460,7 @@ export class KandoApp {
           parsed = JSON.parse(jsonContent);
         } catch (err) {
           console.error('Invalid JSON file:', err.message);
-          dialog.showErrorBox(
-            'Invalid JSON',
-            'The selected file is not a valid JSON file.'
-          );
+          dialog.showErrorBox('Invalid JSON', 'The selected file is not a valid JSON file.');
           return;
         }
 
@@ -688,49 +468,40 @@ export class KandoApp {
           const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
           console.warn(warnMessage);
 
-          const result = await dialog.showMessageBox({
+          const userChoice = await dialog.showMessageBox({
             type: 'warning',
             buttons: ['Cancel', 'OK'],
-            defaultId: 1, // default selected: OK
-            cancelId: 0, // if user presses Esc or closes dialog
+            defaultId: 1,
+            cancelId: 0,
             title: 'Warning',
             message: 'The imported menu may not be compatible. Do you want to proceed?',
             detail: `Config version: ${parsed.version}\nApp version: ${app.getVersion()}`,
           });
 
-          if (result.response === 1) {
-            // OK pressed
-            console.log('User confirmed import.');
-            // proceed with importing
-          } else {
-            // Cancel pressed or dialog closed
+          if (userChoice.response !== 1) {
             console.log('User cancelled import.');
             return;
           }
-
-          // TODO: add warning window to the settings window UI (if users proccede, add menu to list)
         }
 
-        const errors = this.validateStructure(parsed);
-
-        if (errors === false) {
-          const newMenu = parsed.menus[0];
-
-          const currentMenus = structuredClone(
-            this.menuSettings.get('menus') || []
-          ) as IMenu[];
-
-          currentMenus.push(newMenu);
-
-          this.menuSettings.set({ menus: currentMenus });
-
-          console.log('Successfully imported a menu from', filePath);
-        } else {
-          console.error('Detected error in menu structure:'); // TODO: add error window to the settings window UI
-          console.error(errors);
-          dialog.showErrorBox('Invalid structure', errors);
+        if (!parsed.menus || !Array.isArray(parsed.menus) || parsed.menus.length === 0) {
+          dialog.showErrorBox('Invalid structure', 'Imported JSON must contain a "menus" array with at least one menu.');
           return;
         }
+
+        // Validate the single menu at index 0
+        const validationError = validateBySchema(parsed.menus[0].root, rootSchema, 'menus[0].root');
+        if (validationError !== null) {
+          dialog.showErrorBox('Invalid structure', validationError);
+          return;
+        }
+
+        const newMenu = parsed.menus[0];
+        const currentMenus = structuredClone(this.menuSettings.get('menus') || []);
+        currentMenus.push(newMenu);
+        this.menuSettings.set({ menus: currentMenus });
+
+        console.log('Successfully imported a menu from', filePath);
       } catch (error) {
         console.error('Failed to import menu:', error);
         throw error;

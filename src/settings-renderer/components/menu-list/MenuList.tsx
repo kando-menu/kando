@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus, TbCopy, TbTrash, TbArrowUp, TbArrowDown } from 'react-icons/tb';
+import { TbPlus, TbCopy, TbTrash, TbFileExport, TbFileImport  } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -299,10 +299,9 @@ export default function MenuList() {
             })}
           </div>
         </Scrollbox>
-
         <div className={classes.floatingButton}>
           <Button
-            icon={<TbArrowDown />}
+            icon={<TbFileImport />}
             tooltip={i18next.t('settings.import-menu-button')}
             variant="floating"
             size="large"
@@ -311,9 +310,8 @@ export default function MenuList() {
               window.settingsAPI.importMenuFromJson().then(() => {});
             }}
           />
-
           <Button
-            icon={<TbArrowUp />}
+            icon={<TbFileExport />}
             tooltip={i18next.t('settings.export-menu-button')}
             variant="floating"
             size="large"
@@ -322,7 +320,6 @@ export default function MenuList() {
               window.settingsAPI.exportMenuToJson(selectedMenu).then(() => {});
             }}
           />
-
           <Button
             icon={<TbPlus />}
             tooltip={i18next.t('settings.create-menu-button')}
@@ -334,7 +331,6 @@ export default function MenuList() {
               selectMenu(menus.length);
             }}
           />
-
           <Button
             icon={<TbCopy />}
             tooltip={i18next.t('settings.duplicate-menu')}
@@ -345,7 +341,6 @@ export default function MenuList() {
               duplicateMenu(selectedMenu);
             }}
           />
-
           <Button
             icon={<TbTrash />}
             tooltip={i18next.t('settings.delete-menu')}
