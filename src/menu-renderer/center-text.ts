@@ -132,17 +132,23 @@ export class CenterText {
       textHeight = await this.getDivHeight(p);
     }
 
+    // If the text height is still larger than the diameter, reducing the font size did
+    // not help. As a last resort, we can try to enable text wrapping inside the words.
+    if (textHeight > this.diameter) {
+      p.style.wordBreak = 'break-all';
+      textHeight = await this.getDivHeight(p);
+    }
+
     // Now adjust the top margin of the text so that it is vertically centered in the
-    // circle. If the text height is still larger than the diameter, reducing the font
-    // size did not help. As a last resort, we can try to enable text wrapping inside the
-    // words.
+    // circle.
     if (textHeight < this.diameter) {
       // Moving the text down so that the current height is centered in the circle may
       // also provide more space for the text to grow left and right, so the text may fit
-      // on fewer lines. Hence check if the text height changed after adjusting the margin
-      // top.
+      // on fewer lines. Hence check if the text height changed after adjusting the top
+      // margin top.
       let oldHeight = textHeight;
 
+      // Ten iterations should be enough to find a good position for the text.
       for (let i = 0; i < 10; i++) {
         p.style.marginTop = `${(this.diameter - textHeight) / 2}px`;
         textHeight = await this.getDivHeight(p);
@@ -170,8 +176,6 @@ export class CenterText {
 
         oldHeight = textHeight;
       }
-    } else {
-      p.style.wordBreak = 'break-all';
     }
 
     // Cache the text element for future use.
