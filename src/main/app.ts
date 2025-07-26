@@ -356,7 +356,10 @@ export class KandoApp {
           parsed = JSON.parse(jsonContent);
         } catch (err) {
           console.error('Invalid JSON file:', err.message);
-          dialog.showErrorBox('Invalid JSON', 'The selected file is not a valid JSON file.');
+          dialog.showErrorBox(
+            'Invalid JSON',
+            'The selected file is not a valid JSON file.'
+          );
           return;
         }
 
@@ -381,13 +384,20 @@ export class KandoApp {
 
         // Validate the 'menus' property inside parsed object
         if (!parsed.menus || !Array.isArray(parsed.menus)) {
-          dialog.showErrorBox('Invalid structure', 'Imported JSON does not contain a valid "menus" array.');
+          dialog.showErrorBox(
+            'Invalid structure',
+            'Imported JSON does not contain a valid "menus" array.'
+          );
           return;
         }
 
         // Validate each menu in the menus array
         for (const [index, menu] of parsed.menus.entries()) {
-          const validationError = validateBySchema(menu.root, rootSchema, `menus[${index}].root`)
+          const validationError = validateBySchema(
+            menu.root,
+            rootSchema,
+            `menus[${index}].root`
+          );
           if (validationError !== null) {
             dialog.showErrorBox('Invalid structure', validationError);
             return;
@@ -401,7 +411,6 @@ export class KandoApp {
         throw error;
       }
     });
-
 
     // Export specific menu to JSON file
     ipcMain.handle('settings-window.export-menu-to-json', async (event, menuIndex) => {
@@ -460,7 +469,10 @@ export class KandoApp {
           parsed = JSON.parse(jsonContent);
         } catch (err) {
           console.error('Invalid JSON file:', err.message);
-          dialog.showErrorBox('Invalid JSON', 'The selected file is not a valid JSON file.');
+          dialog.showErrorBox(
+            'Invalid JSON',
+            'The selected file is not a valid JSON file.'
+          );
           return;
         }
 
@@ -485,12 +497,19 @@ export class KandoApp {
         }
 
         if (!parsed.menus || !Array.isArray(parsed.menus) || parsed.menus.length === 0) {
-          dialog.showErrorBox('Invalid structure', 'Imported JSON must contain a "menus" array with at least one menu.');
+          dialog.showErrorBox(
+            'Invalid structure',
+            'Imported JSON must contain a "menus" array with at least one menu.'
+          );
           return;
         }
 
         // Validate the single menu at index 0
-        const validationError = validateBySchema(parsed.menus[0].root, rootSchema, 'menus[0].root');
+        const validationError = validateBySchema(
+          parsed.menus[0].root,
+          rootSchema,
+          'menus[0].root'
+        );
         if (validationError !== null) {
           dialog.showErrorBox('Invalid structure', validationError);
           return;

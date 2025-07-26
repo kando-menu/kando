@@ -18,7 +18,17 @@ const menuItemSchema: Schema = {
   type: {
     type: 'enum',
     required: true,
-    values: ['submenu', 'command', 'file', 'hotkey', 'macro', 'text', 'uri', 'redirect', 'settings'],
+    values: [
+      'submenu',
+      'command',
+      'file',
+      'hotkey',
+      'macro',
+      'text',
+      'uri',
+      'redirect',
+      'settings',
+    ],
   },
   icon: { type: 'string', required: true },
   iconTheme: { type: 'string', required: true },
@@ -33,14 +43,28 @@ export const rootSchema: Schema = {
   type: {
     type: 'enum',
     required: true,
-    values: ['submenu', 'command', 'file', 'hotkey', 'macro', 'text', 'uri', 'redirect', 'settings'],
+    values: [
+      'submenu',
+      'command',
+      'file',
+      'hotkey',
+      'macro',
+      'text',
+      'uri',
+      'redirect',
+      'settings',
+    ],
   },
   icon: { type: 'string', required: true },
   iconTheme: { type: 'string', required: true },
   children: { type: 'array', required: true, elementSchema: menuItemSchema },
 };
 
-export function validateBySchema(data: any, schema: Schema, path = 'root'): string | null {
+export function validateBySchema(
+  data: any,
+  schema: Schema,
+  path = 'root'
+): string | null {
   for (const key in schema) {
     const field = schema[key];
     const fullPath = `${path}.${key}`;
