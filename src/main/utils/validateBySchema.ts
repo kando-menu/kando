@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: yr2000T <https://github.com/yar2000T>
+// SPDX-License-Identifier: MIT
+
 type SchemaType = 'string' | 'number' | 'boolean' | 'enum' | 'array' | 'object';
 
 interface SchemaField {
