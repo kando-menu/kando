@@ -116,10 +116,14 @@ export class CenterText {
       this.maxFontSize = parseInt(window.getComputedStyle(p).fontSize, 10);
     }
 
-    // First, reduce the font size until everything fits.
-    const minFontSize = 11;
+    // First, we reduce the font size until everything fits. We set a minimum font
+    // size to avoid the text becoming too small.
+    const minFontSize = 0.7 * this.maxFontSize;
     let fontSize = this.maxFontSize;
 
+    // We start with a small top margin to avoid the text being too close to the top of
+    // the circle. Else, only one letter would fit into the first line.
+    p.style.marginTop = `${fontSize * 0.5}px`;
     let textHeight = await this.getDivHeight(p);
 
     while (textHeight > this.diameter && fontSize > minFontSize) {
@@ -128,24 +132,27 @@ export class CenterText {
       textHeight = await this.getDivHeight(p);
     }
 
-    // Now adjust the top margin of the text so that it is vertically centered in the circle.
+    // Now adjust the top margin of the text so that it is vertically centered in the
+    // circle. If the text height is still larger than the diameter, reducing the font
+    // size did not help. As a last resort, we can try to enable text wrapping inside the
+    // words.
     if (textHeight < this.diameter) {
-      // Moving the text down so that the current height is centered in the circle
-      // may also provide more space for the text to grow left and right, so the
-      // text may fit on fewer lines. Hence check if the text height changed after
-      // adjusting the margin top.
+      // Moving the text down so that the current height is centered in the circle may
+      // also provide more space for the text to grow left and right, so the text may fit
+      // on fewer lines. Hence check if the text height changed after adjusting the margin
+      // top.
       let oldHeight = textHeight;
 
       for (let i = 0; i < 10; i++) {
         p.style.marginTop = `${(this.diameter - textHeight) / 2}px`;
         textHeight = await this.getDivHeight(p);
 
-        // If the text height increased, we got into a tricky situation where the text
-        // is hard to center. With the previous padding, fewer lines where used, so the text
+        // If the text height increased, we got into a tricky situation where the text is
+        // hard to center. With the previous padding, fewer lines where used, so the text
         // was not centered, but if we move it down a bit, it requires more lines and is
         // not centered either anymore. This can happen if the last word is very long and
-        // does not fit on the last line in the lower half of the circle. The only solution
-        // here is to decrease the font size again.
+        // does not fit on the last line in the lower half of the circle. The only
+        // solution here is to decrease the font size again.
         if (textHeight > oldHeight) {
           while (fontSize > minFontSize && textHeight > oldHeight) {
             fontSize = fontSize - 1;
@@ -163,6 +170,8 @@ export class CenterText {
 
         oldHeight = textHeight;
       }
+    } else {
+      p.style.wordBreak = 'break-all';
     }
 
     // Cache the text element for future use.
