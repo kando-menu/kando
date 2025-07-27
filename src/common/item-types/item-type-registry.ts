@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../common-window-api';
+declare const window: WindowWithAPIs;
+
 import { IMenuItem } from '..';
 
 import { CommandItemType } from './command-item-type';
@@ -122,14 +125,15 @@ export class ItemTypeRegistry {
    *   such type is found, an empty string is returned.
    */
   public getPreferredDataType(types: readonly string[]): string {
-    const prefferedTypes = [
+    const preferredTypes = [
       'kando/item-type', // This is used for new items dragged from the item type list.
       'kando/menu', // This is used for menus dragged from the menu list.
+      'Files',
       'text/uri-list',
       'text/plain',
     ];
 
-    for (const preferredType of prefferedTypes) {
+    for (const preferredType of preferredTypes) {
       if (types.includes(preferredType)) {
         return preferredType;
       }
@@ -141,19 +145,23 @@ export class ItemTypeRegistry {
 
   /**
    * Given a data type and the data itself, this method returns a new menu item fitting to
-   * the data type.
+   * the data type. The data type is a mime type such as 'text/plain' or a Kando-specific
+   * type such as 'kando/item-type'. The data itself is a string that contains the data in
+   * the corresponding format.
    *
-   * @param type The data type.
-   * @param data The data itself.
+   * @param data The transferred data.
    * @returns A new menu item fitting to the data type. If no item could be created, null
    *   is returned.
    */
-  public createItem(type: string, data: string): IMenuItem {
-    if (type === 'kando/item-type') {
-      const itemType = this.types.get(data);
+  public createItem(data: DataTransfer): IMenuItem | null {
+    const preferredType = this.getPreferredDataType(data.types);
+
+    if (preferredType === 'kando/item-type') {
+      const typeName = data.getData(preferredType);
+      const itemType = this.types.get(typeName);
       if (itemType) {
         return {
-          type: data,
+          type: typeName,
           name: itemType.defaultName,
           icon: itemType.defaultIcon,
           iconTheme: itemType.defaultIconTheme,
@@ -161,10 +169,10 @@ export class ItemTypeRegistry {
           children: itemType.hasChildren ? [] : undefined,
         };
       }
-    } else if (type === 'kando/menu') {
+    } else if (preferredType === 'kando/menu') {
       // This will be a IRenderedMenu as defined in
       // settings-renderer/components/menu-list/MenuList.tsx
-      const menu = JSON.parse(data);
+      const menu = JSON.parse(data.getData(preferredType));
       return {
         type: 'redirect',
         name: menu.name,
@@ -174,7 +182,12 @@ export class ItemTypeRegistry {
           menu: menu.name,
         },
       };
-    } else if (type === 'text/uri-list') {
+    } else if (preferredType === 'Files') {
+      const file = data.files[0];
+      const path = window.commonAPI.getFilePath(file);
+      const type = file.type;
+      console.log(`Creating item for file: ${file.name} (${path}) with type ${type}`);
+    } else if (preferredType === 'text/uri-list') {
       const itemType = this.types.get('uri');
       return {
         type: 'uri',
@@ -185,7 +198,7 @@ export class ItemTypeRegistry {
           uri: data,
         },
       };
-    } else if (type === 'text/plain') {
+    } else if (preferredType === 'text/plain') {
       const itemType = this.types.get('text');
       return {
         type: 'text',

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, webUtils } from 'electron';
 
 import {
   IGeneralSettings,
@@ -146,6 +146,11 @@ export const COMMON_WINDOW_API = {
   /** This will return the descriptions of the currently used sound theme. */
   getSoundTheme: (): Promise<ISoundThemeDescription> => {
     return ipcRenderer.invoke('common.get-sound-theme');
+  },
+
+  /** This returns the absolute path for a given file. */
+  getFilePath(file: File): string {
+    return webUtils.getPathForFile(file);
   },
 };
 

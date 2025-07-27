@@ -676,40 +676,32 @@ export default function MenuPreview() {
                     }
                   }
                 } else {
-                  const preferredType =
-                    ItemTypeRegistry.getInstance().getPreferredDataType(
-                      event.dataTransfer.types
-                    );
+                  const item = ItemTypeRegistry.getInstance().createItem(
+                    event.dataTransfer
+                  );
 
-                  if (preferredType) {
-                    const item = ItemTypeRegistry.getInstance().createItem(
-                      preferredType,
-                      event.dataTransfer.getData(preferredType)
-                    );
-
-                    if (item) {
-                      if (dropIndex === -1 && dropInto) {
-                        // Create new item in parent.
-                        const parentPath = centerItemPath.slice(0, -1);
-                        editMenuItem(selectedMenu, parentPath, (parent) => {
-                          parent.children.push(item);
-                          return parent;
-                        });
-                      } else if (dropIndex >= 0 && dropInto) {
-                        // Create new item in submenu.
-                        const submenuPath = centerItemPath.concat(dropIndex);
-                        editMenuItem(selectedMenu, submenuPath, (submenu) => {
-                          submenu.children.push(item);
-                          return submenu;
-                        });
-                      } else if (dropIndex >= 0) {
-                        // Create new item among siblings and select it.
-                        editMenuItem(selectedMenu, centerItemPath, (center) => {
-                          center.children.splice(dropIndex, 0, item);
-                          return center;
-                        });
-                        selectChildPath(centerItemPath.concat(dropIndex));
-                      }
+                  if (item) {
+                    if (dropIndex === -1 && dropInto) {
+                      // Create new item in parent.
+                      const parentPath = centerItemPath.slice(0, -1);
+                      editMenuItem(selectedMenu, parentPath, (parent) => {
+                        parent.children.push(item);
+                        return parent;
+                      });
+                    } else if (dropIndex >= 0 && dropInto) {
+                      // Create new item in submenu.
+                      const submenuPath = centerItemPath.concat(dropIndex);
+                      editMenuItem(selectedMenu, submenuPath, (submenu) => {
+                        submenu.children.push(item);
+                        return submenu;
+                      });
+                    } else if (dropIndex >= 0) {
+                      // Create new item among siblings and select it.
+                      editMenuItem(selectedMenu, centerItemPath, (center) => {
+                        center.children.splice(dropIndex, 0, item);
+                        return center;
+                      });
+                      selectChildPath(centerItemPath.concat(dropIndex));
                     }
                   }
                 }
