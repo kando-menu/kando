@@ -10,6 +10,7 @@
 
 import i18next from 'i18next';
 import { exec } from 'child_process';
+import { app } from 'electron';
 
 import { WLRBackend } from '../wlroots/backend';
 import { GlobalShortcuts } from '../portals/global-shortcuts';
@@ -23,6 +24,14 @@ import { screen } from 'electron';
 export class HyprBackend extends WLRBackend {
   /** The global-shortcuts portal is used to bind os-level shortcuts. */
   private globalShortcuts = new GlobalShortcuts();
+
+  /** On Hyprland, we use the Wayland backend of Electron. */
+  constructor() {
+    super();
+
+    app.commandLine.appendSwitch('enable-features', 'UseOzonePlatform');
+    app.commandLine.appendSwitch('ozone-platform', 'wayland');
+  }
 
   /**
    * This is called when the backend is created. We use it to print a warning, as the user
