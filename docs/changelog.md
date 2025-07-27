@@ -30,6 +30,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 ### :wrench: Changed
 
 - Updated Electron to version 34.
+- On Hyprland, Kando now uses the Wayland backend of Electron per default. This should fix some issues with the menu not being displayed correctly or some dropdown menus not working.
 
 ### :bug: Fixed
 
