@@ -14,7 +14,7 @@ import fs from 'fs';
 import DBus from 'dbus-final';
 import { exec } from 'child_process';
 
-import { Backend } from '../../../backend';
+import { LinuxBackend } from '../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { GlobalShortcuts } from '../../portals/global-shortcuts';
 import { IKeySequence, IWMInfo } from '../../../../../common';
@@ -33,7 +33,7 @@ import { screen } from 'electron';
  * request for a corresponding desktop portal:
  * https://github.com/flatpak/xdg-desktop-portal/issues/304
  */
-export class KDEWaylandBackend extends Backend {
+export class KDEWaylandBackend extends LinuxBackend {
   /** Here we store the current KWin version as [major, minor, patch]. */
   private kwinVersion: number[];
 

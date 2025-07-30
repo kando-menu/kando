@@ -722,6 +722,11 @@ export class KandoApp {
     ipcMain.handle('common.get-sound-theme', async () => {
       return this.loadSoundThemeDescription(this.generalSettings.get('soundTheme'));
     });
+
+    // Allow the renderer to retrieve all system icons.
+    ipcMain.handle('common.get-system-icons', async () => {
+      return this.backend.getSystemIcons();
+    });
   }
 
   /**

@@ -104,7 +104,7 @@ export const COMMON_WINDOW_API = {
     },
   },
 
-  /** This will return a IIconThemesInfo describing all available icon themes. */
+  /** This will return a IIconThemesInfo describing all available user icon themes. */
   getIconThemes: (): Promise<IIconThemesInfo> => {
     return ipcRenderer.invoke('common.get-icon-themes');
   },
@@ -146,6 +146,11 @@ export const COMMON_WINDOW_API = {
   /** This will return the descriptions of the currently used sound theme. */
   getSoundTheme: (): Promise<ISoundThemeDescription> => {
     return ipcRenderer.invoke('common.get-sound-theme');
+  },
+
+  /** This lists all currently available system icons. */
+  getSystemIcons: (): Promise<Array<string>> => {
+    return ipcRenderer.invoke('common.get-system-icons');
   },
 };
 

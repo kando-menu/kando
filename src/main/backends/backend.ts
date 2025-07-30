@@ -68,6 +68,20 @@ export abstract class Backend extends EventEmitter {
   public abstract getWMInfo(): Promise<IWMInfo>;
 
   /**
+   * Each backend can provide a way to list available system icons. The method should
+   * return an array of absolute file paths to the icons. This is used to create the
+   * system icon theme.
+   *
+   * @returns A promise which resolves to an array of absolute file paths to the system
+   *   icons. If system icons are not available, it should resolve to an empty array.
+   */
+  public async getSystemIcons(): Promise<Array<string>> {
+    // This method is not implemented by the base class, but can be implemented by
+    // derived backends if they support listing system icons.
+    return [];
+  }
+
+  /**
    * Each backend must provide a way to move the pointer.
    *
    * @param dx The amount of horizontal movement.

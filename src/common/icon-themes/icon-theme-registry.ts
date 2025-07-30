@@ -18,6 +18,7 @@ import { EmojiTheme } from './emoji-theme';
 import { FileIconTheme } from './file-icon-theme';
 import { FallbackTheme } from './fallback-theme';
 import { Base64Theme } from './base64-theme';
+import { SystemTheme } from './system-theme';
 
 /**
  * This interface describes an icon theme. An icon theme is a collection of icons that can
@@ -96,6 +97,12 @@ export class IconThemeRegistry {
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
     this.iconThemes.set('emoji', new EmojiTheme());
     this.iconThemes.set('base64', new Base64Theme());
+
+    // Add the system icon theme if available.
+    const systemIcons = await window.commonAPI.getSystemIcons();
+    if (systemIcons.length > 0) {
+      this.iconThemes.set('system', new SystemTheme(systemIcons));
+    }
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
     const info = await window.commonAPI.getIconThemes();
