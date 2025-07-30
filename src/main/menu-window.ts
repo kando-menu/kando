@@ -125,8 +125,14 @@ export class MenuWindow extends BrowserWindow {
    *
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
+   * @param systemIconsChanged True if the system icon theme has changed since the last
+   *   time the menu was shown.
    */
-  public showMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
+  public showMenu(
+    request: Partial<IShowMenuRequest>,
+    info: IWMInfo,
+    systemIconsChanged: boolean
+  ) {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
@@ -246,6 +252,7 @@ export class MenuWindow extends BrowserWindow {
         centeredMode: this.lastMenu.centered,
         anchoredMode: this.lastMenu.anchored,
         hoverMode: this.lastMenu.hoverMode,
+        systemIconsChanged,
       },
       {
         appName: info.appName,

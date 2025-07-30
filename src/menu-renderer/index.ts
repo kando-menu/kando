@@ -107,7 +107,10 @@ Promise.all([
   );
 
   // Show the menu when the main process requests it.
-  window.menuAPI.onShowMenu((root, menuOptions) => {
+  window.menuAPI.onShowMenu(async (root, menuOptions) => {
+    if (menuOptions.systemIconsChanged) {
+      await IconThemeRegistry.getInstance().reloadSystemIcons();
+    }
     menu.show(root, menuOptions);
     settingsButton.show();
   });

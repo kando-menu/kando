@@ -94,7 +94,7 @@ export class FileIconTheme implements IIconTheme {
    * @returns The namespaced SVG content.
    */
   private isolateSVG(svgContent: string, uniqueString: string) {
-    // First step: Add a unique ID to all IDs in the SVG content. ----------------------------------
+    // First step: Add a unique ID to all IDs in the SVG content. ------------------------
 
     const idRegex = /id="([^"]+)"/g;
     const urlRefRegex = /url\(#([^)]+)\)/g;
@@ -120,7 +120,7 @@ export class FileIconTheme implements IIconTheme {
       return newId ? `xlink:href="#${newId}"` : match;
     });
 
-    // Second step: Normalize CSS styles in the SVG content. ---------------------------------------
+    // Second step: Normalize CSS styles in the SVG content. -----------------------------
 
     // We need to ensure that all styles in the SVG are scoped to the unique ID of the SVG
     // element. This is done by wrapping the styles in a selector that uses the unique ID.
@@ -140,11 +140,11 @@ export class FileIconTheme implements IIconTheme {
       styleEl.textContent = `#${uniqueID} { ${styleEl.textContent} }`;
     });
 
-    // Third step: Normalize the viewBox of the SVG content. ---------------------------------------
+    // Third step: Normalize the viewBox of the SVG content. -----------------------------
 
-    // If the SVG already has a viewBox, we remove the width and height attributes. If it doesn't
-    // have a viewBox, we create one based on the width and height attributes. This is done to
-    // ensure that the SVG scales correctly when injected into the DOM.
+    // If the SVG already has a viewBox, we remove the width and height attributes. If it
+    // doesn't have a viewBox, we create one based on the width and height attributes.
+    // This is done to ensure that the SVG scales correctly when injected into the DOM.
 
     if (svgEl.hasAttribute('viewBox')) {
       // Case 1: Already has viewBox — remove width/height
