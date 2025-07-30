@@ -13,7 +13,16 @@ import fs from 'fs';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
+import {
+  ipcMain,
+  shell,
+  Tray,
+  Menu,
+  app,
+  nativeTheme,
+  nativeImage,
+  dialog,
+} from 'electron';
 import i18next from 'i18next';
 
 import { MenuWindow } from './menu-window';
@@ -729,6 +738,16 @@ export class KandoApp {
     // Allow the renderer to retrieve all system icons.
     ipcMain.handle('common.get-system-icons', async () => {
       return this.backend.getSystemIcons();
+    });
+
+    // Allow the renderer to retrieve icons for a given file.
+    ipcMain.handle('common.get-file-icon', async (event, filePath: string) => {
+      const icon = await nativeImage.createThumbnailFromPath(filePath, {
+        width: 64,
+        height: 64,
+      });
+
+      return icon.toDataURL();
     });
   }
 

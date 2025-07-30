@@ -153,7 +153,7 @@ export class ItemTypeRegistry {
    * @returns A new menu item fitting to the data type. If no item could be created, null
    *   is returned.
    */
-  public createItem(data: DataTransfer): IMenuItem | null {
+  public async createItem(data: DataTransfer): Promise<IMenuItem | null> {
     const preferredType = this.getPreferredDataType(data.types);
 
     if (preferredType === 'kando/item-type') {
@@ -184,9 +184,7 @@ export class ItemTypeRegistry {
       };
     } else if (preferredType === 'Files') {
       const file = data.files[0];
-      const path = window.commonAPI.getFilePath(file);
-      const type = file.type;
-      console.log(`Creating item for file: ${file.name} (${path}) with type ${type}`);
+      return this.createItemForFile(file);
     } else if (preferredType === 'text/uri-list') {
       const itemType = this.types.get('uri');
       return {
@@ -195,7 +193,7 @@ export class ItemTypeRegistry {
         icon: itemType.defaultIcon,
         iconTheme: itemType.defaultIconTheme,
         data: {
-          uri: data,
+          uri: data.getData(preferredType),
         },
       };
     } else if (preferredType === 'text/plain') {
@@ -206,11 +204,33 @@ export class ItemTypeRegistry {
         icon: itemType.defaultIcon,
         iconTheme: itemType.defaultIconTheme,
         data: {
-          text: data,
+          text: data.getData(preferredType),
         },
       };
     }
 
     return null;
+  }
+
+  /**
+   * This method creates a new menu item for a given file. Depending on the file type,
+   * different item types may be used. For example, if the file is a *.desktop file on
+   * Linux, it will create a run-command item. For most other files, it will create a file
+   * item.
+   *
+   * @param file The file for which a menu item should be created.
+   * @returns A new menu item for the given file.
+   */
+  private async createItemForFile(file: File): Promise<IMenuItem> {
+    const itemType = this.types.get('file');
+    const path = window.commonAPI.getFilePath(file);
+    const icon = await window.commonAPI.getFileIcon(path);
+    return {
+      type: 'file',
+      name: itemType.defaultName,
+      icon,
+      iconTheme: 'base64',
+      data: { path },
+    };
   }
 }

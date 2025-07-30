@@ -157,6 +157,11 @@ export const COMMON_WINDOW_API = {
   getFilePath(file: File): string {
     return webUtils.getPathForFile(file);
   },
+
+  /** This will return a base64 encoded string of the icon for a given file. */
+  getFileIcon(path: string): Promise<string> {
+    return ipcRenderer.invoke('common.get-file-icon', path);
+  },
 };
 
 /**

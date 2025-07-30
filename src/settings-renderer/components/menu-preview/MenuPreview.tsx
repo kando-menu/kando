@@ -640,7 +640,7 @@ export default function MenuPreview() {
 
                 event.preventDefault();
               }}
-              onDrop={(event) => {
+              onDrop={async (event) => {
                 // If the drag index is set, we are moving an item around. In this case, we need to
                 // move the item to the new position. If it is not set, something new is dragged
                 // from somewhere else. In this case, we need to create a new item at the drop
@@ -676,7 +676,7 @@ export default function MenuPreview() {
                     }
                   }
                 } else {
-                  const item = ItemTypeRegistry.getInstance().createItem(
+                  const item = await ItemTypeRegistry.getInstance().createItem(
                     event.dataTransfer
                   );
 
