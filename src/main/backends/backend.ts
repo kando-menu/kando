@@ -82,6 +82,21 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
+   * Each backend can provide a way to detect changes to the system icons. This method
+   * should return true if the system icon theme has changed since the last call to
+   * getSystemIcons().
+   *
+   * @returns A promise which resolves to true if the system icon theme has changed since
+   *   the last call to getSystemIcons(), or false if it has not changed or if this is not
+   *   implemented by the backend.
+   */
+  public async systemIconsChanged(): Promise<boolean> {
+    // This method is not implemented by the base class, but can be implemented by
+    // derived backends if they support detecting changes to system icons.
+    return false;
+  }
+
+  /**
    * Each backend must provide a way to move the pointer.
    *
    * @param dx The amount of horizontal movement.

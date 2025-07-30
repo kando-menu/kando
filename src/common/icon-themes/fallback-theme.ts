@@ -25,7 +25,8 @@ export class FallbackTheme implements IIconTheme {
    *
    * @returns A div element that contains the icon.
    */
-  createIcon() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  createIcon(name: string) {
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('icon-container');
 

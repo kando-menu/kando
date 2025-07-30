@@ -22,7 +22,15 @@ import { Backend } from '../backend';
  * Icon Theme Specification.
  */
 export abstract class LinuxBackend extends Backend {
+  /**
+   * This is the list of paths where the icons are searched for. It includes common
+   * directories like `~/.icons`, `~/.local/share/icons`, and system-wide directories like
+   * `/usr/share/icons`.
+   */
   private iconSearchPaths: string[] = [];
+
+  /** This stores the last known system icon theme. */
+  private currentTheme: string;
 
   constructor() {
     super();
@@ -65,8 +73,10 @@ export abstract class LinuxBackend extends Backend {
   public override async getSystemIcons(): Promise<Array<string>> {
     const startTime = performance.now();
 
-    const currentTheme = await this.getCurrentIconTheme();
-    const allThemeDirectories = await this.getThemeDirectoriesRecursively(currentTheme);
+    this.currentTheme = await this.getCurrentIconTheme();
+    const allThemeDirectories = await this.getThemeDirectoriesRecursively(
+      this.currentTheme
+    );
     const icons = await this.getIcons(
       allThemeDirectories,
       ['apps', 'actions', 'devices', 'mimetypes'],
@@ -78,9 +88,19 @@ export abstract class LinuxBackend extends Backend {
     const timeTaken = endTime - startTime;
 
     console.log(
-      `Found ${icons.length} ${currentTheme} icons in ${timeTaken.toFixed(2)}ms.`
+      `Found ${icons.length} ${this.currentTheme} icons in ${timeTaken.toFixed(2)}ms.`
     );
     return icons;
+  }
+
+  /**
+   * @returns True if the system icon theme has changed since the last call to
+   *   `getSystemIcons()`. This is used to determine if the icon theme needs to be
+   *   reloaded.
+   */
+  public override async systemIconsChanged(): Promise<boolean> {
+    const newTheme = await this.getCurrentIconTheme();
+    return newTheme !== this.currentTheme;
   }
 
   /**
