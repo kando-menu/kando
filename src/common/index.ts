@@ -460,6 +460,12 @@ export interface IShowMenuOptions {
    * be selected by only hovering over them.
    */
   hoverMode: boolean;
+
+  /**
+   * If this is set, the system-icon theme has changed since the last time the menu was
+   * opened. This is used to determine if the menu needs to be reloaded.
+   */
+  systemIconsChanged: boolean;
 }
 
 /** The user can create menu collections to group menus according to their tags. */

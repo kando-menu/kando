@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { native } from './native';
-import { Backend } from '../../backend';
+import { LinuxBackend } from '../backend';
 import { IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 
@@ -21,7 +21,7 @@ import { mapKeys } from '../../../../common/key-codes';
  * - Moving the mouse pointer using the wlr-virtual-pointer-unstable-v1 protocol.
  * - Sending key input using the virtual-keyboard-unstable-v1 protocol.
  */
-export abstract class WLRBackend extends Backend {
+export abstract class WLRBackend extends LinuxBackend {
   /**
    * Moves the pointer by the given amount using the native module which uses the
    * wlr-virtual-pointer-unstable-v1 Wayland protocol.
