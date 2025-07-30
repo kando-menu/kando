@@ -87,9 +87,10 @@ export abstract class LinuxBackend extends Backend {
     const endTime = performance.now();
     const timeTaken = endTime - startTime;
 
-    console.log(
-      `Found ${icons.length} ${this.currentTheme} icons in ${timeTaken.toFixed(2)}ms.`
+    console.debug(
+      `Found ${icons.length} ${this.currentTheme} icons in ${timeTaken.toFixed(0)} ms.`
     );
+
     return icons;
   }
 
