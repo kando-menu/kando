@@ -19,7 +19,30 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ## [unreleased]
 
-***Release Date:** TBD
+**Release Date:** TBD
+
+### :tada: Added
+
+- **Visualization of the selection wedges!** Menu themes can now draw the circle segments belonging to the menu items as well as separator lines between them. The Neon Lights theme and the Default theme have been updated to use this feature.
+- **Circle wrapping for the center text!** The center text is now wrapped in a circle instead of a rectangle. This makes it look better and allows longer texts to be displayed without clipping.
+- **Automatic font-size reduction for the center text!** If the center text is too long to fit into the circle, it will now be automatically reduced in size so it fits.
+- **A System-Icons Theme for Linux!** This allows you to use the system icons of your desktop environment as icons for menu items. This is still somewhat experimental, but it should work on most desktop environments. Feel free to test it and report any issues you encounter!
+
+### :wrench: Changed
+
+- Updated Electron to version 34.
+
+### :bug: Fixed
+
+- Rendering of SVG icons which contain CSS styles. If multiple SVG icons with the same CSS classes were used in the same menu, the styles clashed resulting in wrong colors.
+
+## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
+
+**Release Date:** 2025-07-16
+
+<a href="https://www.youtube.com/watch?v=ESf0D3hQE9g">
+<img align="right" width="400px" src="img/player20.jpg"></img>
+</a>
 
 Beware that this major release adds some **[BREAKING]** changes.
 They are marked with a **:collision:** emoji below.
@@ -49,19 +72,19 @@ They are marked with a **:collision:** emoji below.
 - **A new menu item type: Open Settings!** This allows you to open the Kando settings directly from a menu item. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - **A hotkey for opening the settings dialog** when a menu is open. On macOS, this is <kbd>Command</kbd>+<kbd>,</kbd>. On Windows and Linux, it is <kbd>Ctrl</kbd>+<kbd>,</kbd>. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - **A default sound theme!** You can enable it in the general settings.
-- **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons.
+- **Support for the `"currentColor"` SVG attribute!** If an SVG icon of your icon theme uses the `currentColor` attribute for an element, it will be recolored by the menu theme and use the same color as the built-in icons. Read more in the [documentation](https://kando.menu/icon-themes/#make-icon-colors-adaptive).
 - **Support for the global-shortcuts portal on KDE Wayland!** This means that when you edit the shortcut ID of one of your menus, a dialog will pop up asking you to select a shortcut. This will make it easier to set up shortcuts for your menus on KDE Wayland.
 - **Support for multiple pointing devices on GNOME Wayland!** Thanks to a change in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), Kando now supports multiple pointing devices on GNOME Wayland. This means that the menu will now open at the position of the last used pointing device. This is useful if you are using a stylus in addition to a mouse or touchpad. Thanks to [@hhhhhhh2019](https://github.com/hhhhhhh2019) for the contribution!
 - **The possibility to run commands in a clean environment on Linux** systems which have `systemd-run` installed. On these systems, you will see a new checkbox in the command item type configuration. Checking this box may fix some issues with applications which do not work properly when launched from Kando.
 - **The possibility to disable launching a command in detached mode.** Detached mode had been introduced in 1.6.0 but there seem to be some applications which do not work properly when launched in detached mode. You can disable this with a checkbox in the configuration of the run-command item type.
-- **A new backend for Niri on Linux!** With this, Kando now also works on [Niri](https://github.com/YaLTeR/niri), a Wayland compositor which is based on wlroots. Thanks to [@make-42](https://github.com/make-42) for contributing this backend!
+- **A new backend for Niri on Linux!** With this, Kando now also works on [Niri](https://github.com/YaLTeR/niri), a Wayland compositor which is based on Smithay but supports wlroots protocols such as the ones used for the backend's implementation. Thanks to [@make-42](https://github.com/make-42) for contributing this backend!
 - A setting (`enableGamepad`) to enable or disable the gamepad input. Thanks to [@jonthemonke](https://github.com/jonthemonke) for this contribution!
 - Some hints that the Base64 icon theme also supports web icons via `https://` or local icons via the `file://` protocol. You can use this icon type to embed local images or images from the internet! Thanks to [@LitoMore](https://github.com/LitoMore) for pointing this out.
 - The directories `menu-themes`, `icon-themes`, and `sound-themes` are now created on startup if they do not exist yet. This will make it easier to understand where to put your custom themes. Thanks to [@yar2000T](https://github.com/yar2000T) for contributing this feature!
 
 #### :fire: Removed
 
-- **:collision: [BREAKING]** As part of the settings redesign, the stash got removed. All stashed menus will be converted to normal menus with a `template` tag applied. **All stashed menu items will be lost!**
+- **:collision: [BREAKING]** As part of the settings redesign, the menu templates got removed. All template _menus_ will be converted to normal menus with a `template` tag applied. **All template _menu items_ will be lost!**
 - The possibility to change the menu scale using the <kbd>Ctrl</kbd>-<kbd>Plus</kbd> and <kbd>Ctrl</kbd>-<kbd>Minus</kbd> shortcuts. Instead, you can now change the menu scale in the settings dialog. This was done as a workaround for [#858](https://github.com/kando-menu/kando/issues/858).
 
 #### :wrench: Changed
@@ -69,6 +92,7 @@ They are marked with a **:collision:** emoji below.
 - **:collision: [BREAKING]** The window which contains the menu is now called "Kando Menu" instead of "Kando". The settings window is called "Kando Settings". So if you used any scripts to identify the windows, you will have to update them.
 - **:collision: [BREAKING]** The `warpMouse` property is now a global option and cannot be set per menu anymore. It also does not only affect the Centered Mode anymore, but disables any mouse warping, even close to the screen's edge. Mouse warping is enabled by default.
 - **:collision: [BREAKING]** On Hyprland, Kando now uses the global-shortcuts desktop portal instead of Hyprland's custom Wayland protocol. It should work basically the same, but your keybinds will look different. How exactly they look depends on the way you installed Kando. Use `hyprctl globalshortcuts` to list the currently registered keybinds when Kando is running.
+- The Linux builds on GitHub Actions now use Ubuntu 24.04 instead of 22.04.
 - The lazy initialization introduced in 1.8.0 has been made an option which is disabled by default. This means that the menu will be initialized when Kando is started. This should make the first menu open fast again.
 - Slightly reduced the icon size of the default, rainbow labels, and clean circle themes to reduce the amount of icon clipping.
 - When the settings dialog should be shown but is minimized, Kando will now restore the settings dialog so that it is visible again.

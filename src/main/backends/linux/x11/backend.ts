@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { native } from './native';
-import { Backend } from '../../backend';
+import { LinuxBackend } from '../backend';
 import { IKeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 import { screen } from 'electron';
@@ -22,7 +22,7 @@ import { screen } from 'electron';
  * environments, but you could also create derived backends for your specific desktop
  * environments if needed.
  */
-export class X11Backend extends Backend {
+export class X11Backend extends LinuxBackend {
   /**
    * Override this if another type is more suitable for your desktop environment.
    * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions

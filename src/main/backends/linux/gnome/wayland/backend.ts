@@ -11,7 +11,7 @@
 import i18next from 'i18next';
 import DBus from 'dbus-final';
 
-import { Backend } from '../../../backend';
+import { LinuxBackend } from '../../backend';
 import { IKeySequence } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
 import { screen } from 'electron';
@@ -22,7 +22,7 @@ import { screen } from 'electron';
  * extension installed. It would also work on X11, but the generic X11 backend is
  * preferred on X11 as it does not require any extensions.
  */
-export class GnomeBackend extends Backend {
+export class GnomeBackend extends LinuxBackend {
   /**
    * This maps GDK shortcut strings to the registered shortcuts. This is required because
    * we want to emit the 'shortcutPressed' event with the original shortcut string, but

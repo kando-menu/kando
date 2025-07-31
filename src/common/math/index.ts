@@ -131,21 +131,12 @@ export function isAngleBetween(angle: number, start: number, end: number): boole
  * @returns An array of three angles.
  */
 export function normalizeConsequtiveAngles(start: number, center: number, end: number) {
-  while (center < start) {
-    center += 360;
-  }
-
-  while (end < center) {
-    end += 360;
-  }
-
-  while (center >= 360) {
-    start -= 360;
-    center -= 360;
-    end -= 360;
-  }
-
-  return [start, center, end];
+  center = center % 360;
+  return [
+    getEquivalentAngleSmallerThan(start, center),
+    center,
+    getEquivalentAngleLargerThan(end, center),
+  ];
 }
 
 /**
@@ -399,21 +390,26 @@ export function computeItemAngles(
  * @returns A list of start and end angles for each item. Each item in the list
  *   corresponds to the item at the same index in the `itemAngles` list. The start angle
  *   will always be smaller than the end angle. Consequently, the start angle can be
- *   negative and the end angle can be larger than 360°.
+ *   negative and the end angle can be larger than 360°. If a parent angle was given,
+ *   there will be an additional `parentWedge` property in the returned object which
+ *   contains the start and end angles of the parent wedge.
  */
 export function computeItemWedges(
   itemAngles: number[],
   parentAngle?: number
-): { start: number; end: number }[] {
+): {
+  itemWedges: { start: number; end: number }[];
+  parentWedge?: { start: number; end: number };
+} {
   // This should never happen, but who knows...
   if (itemAngles.length === 0 && parentAngle === undefined) {
-    return [];
+    return { itemWedges: [] };
   }
 
   // If the item has a single child but no parent (e.g. it's the root item), we can
   // simply return a full circle.
   if (itemAngles.length === 1 && parentAngle === undefined) {
-    return [{ start: 0, end: 360 }];
+    return { itemWedges: [{ start: 0, end: 360 }] };
   }
 
   // If the item has a single child and a parent, we can set the start and end
@@ -426,12 +422,17 @@ export function computeItemWedges(
     [start, center, end] = normalizeConsequtiveAngles(start, center, end);
     [start, end] = scaleWedge(start, center, end, 0.5);
 
-    return [{ start: start, end: end }];
+    return {
+      itemWedges: [{ start: start, end: end }],
+      parentWedge: { start: end, end: start + 360 },
+    };
   }
 
   // In all other cases, we loop through the items and compute the wedges. If the parent
   // angle happens to be inside a wedge, we crop the wedge accordingly.
-  const wedges: { start: number; end: number }[] = [];
+  const itemWedges: { start: number; end: number }[] = [];
+  let parentStart: number | undefined;
+  let parentEnd: number | undefined;
 
   for (let i = 0; i < itemAngles.length; i++) {
     let start = itemAngles[(i + itemAngles.length - 1) % itemAngles.length];
@@ -441,16 +442,39 @@ export function computeItemWedges(
     [start, center, end] = normalizeConsequtiveAngles(start, center, end);
 
     if (parentAngle !== undefined) {
+      // If the parent angle is inside the wedge, we store the start and end angles of the
+      // parent wedge.
+      if (isAngleBetween(parentAngle, start, center)) {
+        parentStart = start;
+      } else if (isAngleBetween(parentAngle, center, end)) {
+        parentEnd = end;
+      }
+
       [start, end] = cropWedge(start, center, end, parentAngle);
       [start, center, end] = normalizeConsequtiveAngles(start, center, end);
     }
 
     [start, end] = scaleWedge(start, center, end, 0.5);
 
-    wedges.push({ start: start, end: end });
+    itemWedges.push({ start: start, end: end });
   }
 
-  return wedges;
+  if (parentAngle !== undefined && parentStart !== undefined && parentEnd !== undefined) {
+    [parentStart, parentAngle, parentEnd] = normalizeConsequtiveAngles(
+      parentStart,
+      parentAngle,
+      parentEnd
+    );
+
+    [parentStart, parentEnd] = scaleWedge(parentStart, parentAngle, parentEnd, 0.5);
+
+    return {
+      itemWedges,
+      parentWedge: { start: parentStart, end: parentEnd },
+    };
+  }
+
+  return { itemWedges };
 }
 
 /**

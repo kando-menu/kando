@@ -67,7 +67,7 @@
     opacity: 0;
     color: white;
     transition: var(--opacity-transition);
-    filter: drop-shadow(0 0 10px var(--glow-color));
+    filter: drop-shadow(0 0 3px white) drop-shadow(0 0 10px var(--glow-color));
   }
 
   .arrow-layer,
@@ -75,7 +75,6 @@
   .ring-slow-layer::before,
   .ring-fast-layer,
   .ring-fast-layer::before,
-  .icon-glow-layer,
   .icon-layer {
     position: absolute;
     transition: var(--menu-transition);
@@ -85,7 +84,6 @@
   &.active>.arrow-layer,
   &.active>.ring-slow-layer,
   &.active>.ring-fast-layer,
-  &.active>.icon-glow-layer,
   &.active>.icon-layer {
     top: calc(-1 * var(--center-size) / 2);
     left: calc(-1 * var(--center-size) / 2);
@@ -101,22 +99,14 @@
     height: var(--center-size);
   }
 
-  .icon-glow-layer {
-    filter: blur(3px);
-
-    &::before {
-      content: '';
-      background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1), transparent 75%);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  &.active>.icon-glow-layer {
-    opacity: 0;
+  .icon-layer::before {
+    content: '';
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.2), transparent 75%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .arrow-layer {
@@ -208,18 +198,14 @@
 
   /* Show the icons of the center, parent and child items. */
   &.parent>.icon-layer>.icon-container,
-  &.parent>.icon-glow-layer>.icon-container,
-  &.child>.icon-layer>.icon-container,
-  &.child>.icon-glow-layer>.icon-container {
+  &.child>.icon-layer>.icon-container {
     opacity: 1;
   }
 
   /* Child items are displayed around the active node. The parent node of the active
        node is displayed in a similar style. */
   &.parent>.icon-layer,
-  &.parent>.icon-glow-layer,
-  &.child>.icon-layer,
-  &.child>.icon-glow-layer {
+  &.child>.icon-layer {
     top: calc(-1 * var(--child-size) / 2);
     left: calc(-1 * var(--child-size) / 2);
     width: var(--child-size);
@@ -267,4 +253,26 @@
   font-size: 16px;
   line-height: 22px;
   overflow: visible;
+}
+
+/* Selection Wedges ------------------------------------------------------------------- */
+
+.selection-wedges {
+  mask: radial-gradient(circle at var(--center-x) var(--center-y),
+      transparent 0%,
+      transparent 100px,
+      black 150px,
+      transparent 500px);
+
+  &.hovered {
+    background: conic-gradient(from calc(var(--start-angle)) at var(--center-x) var(--center-y),
+        var(--wedge-color) calc(var(--end-angle) - var(--start-angle)),
+        transparent calc(var(--end-angle) - var(--start-angle)));
+  }
+}
+
+.wedge-separators {
+  .separator {
+    background: linear-gradient(to right, transparent 50px, var(--separator-color) 100px, transparent 300px);
+  }
 }

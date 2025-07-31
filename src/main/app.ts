@@ -598,7 +598,10 @@ export class KandoApp {
       await this.menuWindow.load();
     }
 
-    const wmInfo = await this.backend.getWMInfo();
+    const [wmInfo, systemIconsChanged] = await Promise.all([
+      this.backend.getWMInfo(),
+      this.backend.systemIconsChanged(),
+    ]);
 
     // If a menu is already shown, we do not need the window information from the backend
     // as now Kando will be in focus. We use the old information instead.
@@ -610,7 +613,7 @@ export class KandoApp {
     this.lastWMInfo = wmInfo;
 
     try {
-      this.menuWindow.showMenu(request, this.lastWMInfo);
+      this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
     } catch (error) {
       Notification.showError('Failed to show menu', error.message || error);
     }
@@ -957,6 +960,11 @@ export class KandoApp {
     // Allow the renderer to retrieve the description of the current sound theme.
     ipcMain.handle('common.get-sound-theme', async () => {
       return this.loadSoundThemeDescription(this.generalSettings.get('soundTheme'));
+    });
+
+    // Allow the renderer to retrieve all system icons.
+    ipcMain.handle('common.get-system-icons', async () => {
+      return this.backend.getSystemIcons();
     });
   }
 
