@@ -241,6 +241,12 @@ export default function GeneralSettingsDialog() {
             settingsKey="lazyInitialization"
           />
 
+          <SettingsCheckbox
+            label={i18next.t('settings.general-settings-dialog.hardware-acceleration')}
+            info={i18next.t('settings.general-settings-dialog.hardware-acceleration-info')}
+            settingsKey="hardwareAcceleration"
+          />
+
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
           <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.keep-input-focus')}

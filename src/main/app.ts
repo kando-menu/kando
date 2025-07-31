@@ -39,9 +39,6 @@ import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
 
-
-app.disableHardwareAcceleration();
-
 /**
  * This class contains the main host process logic of Kando. It is responsible for
  * creating the transparent window and for handling IPC communication with the renderer
@@ -194,6 +191,10 @@ export class KandoApp {
           error
         );
       }
+    }
+
+    if (!this.generalSettings.get('hardwareAcceleration')) {
+      app.disableHardwareAcceleration();
     }
 
     // We load the settings from the user's home directory. If the settings file does
