@@ -74,7 +74,9 @@ if (!gotTheLock) {
 
 // Start the app. We import the KandoApp class here to make the code above as fast as
 // possible.
+import fs from 'fs';
 import path from 'path';
+import json5 from 'json5';
 import i18next from 'i18next';
 import i18Backend from 'i18next-fs-backend/cjs';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
@@ -104,6 +106,20 @@ if (process.defaultApp) {
 
 if (!deepLinkSupport) {
   console.error('Failed to register kando:// protocol. Deep links will not work.');
+}
+
+let disableHW = false;
+try {
+  const raw = fs.readFileSync(path.join(app.getPath('userData'), 'config.json5'), 'utf-8');
+  const cfg = json5.parse(raw);
+  disableHW = cfg.disableHardwareAcceleration === true;
+} catch (e) {
+  // fail silently, use default
+}
+
+if (disableHW) {
+  console.log("Hardware acceleration disabled")
+  app.disableHardwareAcceleration();
 }
 
 // Create the app and initialize it as soon as electron is ready.

@@ -193,10 +193,6 @@ export class KandoApp {
       }
     }
 
-    if (!this.generalSettings.get('hardwareAcceleration')) {
-      app.disableHardwareAcceleration();
-    }
-
     // We load the settings from the user's home directory. If the settings file does
     // not exist, it will be created with the default values.
     this.menuSettings = new Settings<IMenuSettings>({
