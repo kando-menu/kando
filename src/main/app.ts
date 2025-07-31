@@ -39,6 +39,9 @@ import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
 
+
+app.disableHardwareAcceleration();
+
 /**
  * This class contains the main host process logic of Kando. It is responsible for
  * creating the transparent window and for handling IPC communication with the renderer
