@@ -585,6 +585,9 @@ export interface IGeneralSettings {
   /** Whether to initialize the menu window when it is opened for the first time. */
   lazyInitialization: boolean;
 
+  /** Enable GPU acceleration. */
+  hardwareAcceleration: boolean;
+
   /** A scale factor for the menu. */
   zoomFactor: number;
 
@@ -716,6 +719,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     settingsWindowFlavor: 'sakura-system',
     trayIconFlavor: 'color',
     lazyInitialization: false,
+    hardwareAcceleration: true,
     enableVersionCheck: true,
     zoomFactor: 1,
     centerDeadZone: 50,
