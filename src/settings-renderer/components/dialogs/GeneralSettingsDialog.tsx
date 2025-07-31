@@ -243,7 +243,9 @@ export default function GeneralSettingsDialog() {
 
           <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.hardware-acceleration')}
-            info={i18next.t('settings.general-settings-dialog.hardware-acceleration-info')}
+            info={i18next.t(
+              'settings.general-settings-dialog.hardware-acceleration-info'
+            )}
             settingsKey="hardwareAcceleration"
           />
 

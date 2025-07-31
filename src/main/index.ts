@@ -110,7 +110,10 @@ if (!deepLinkSupport) {
 
 let disableHW = false;
 try {
-  const raw = fs.readFileSync(path.join(app.getPath('userData'), 'config.json5'), 'utf-8');
+  const raw = fs.readFileSync(
+    path.join(app.getPath('userData'), 'config.json5'),
+    'utf-8'
+  );
   const cfg = json5.parse(raw);
   disableHW = cfg.disableHardwareAcceleration === true;
 } catch (e) {
@@ -118,7 +121,7 @@ try {
 }
 
 if (disableHW) {
-  console.log("Hardware acceleration disabled")
+  console.log('Hardware acceleration disabled');
   app.disableHardwareAcceleration();
 }
 
