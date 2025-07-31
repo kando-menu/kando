@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { app, Menu } from 'electron';
+import { app } from 'electron';
 import { program } from 'commander';
 
 /**
@@ -88,10 +88,6 @@ import { KandoApp } from './app';
 app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
 app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
 app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
-
-// We do not need an application menu, so we set it to null. This prevents the default
-// menu from being created by electron.
-Menu.setApplicationMenu(null);
 
 // Set deep link support for the app. This is used to send commands to the app when the
 // app is already running. For instance like this: kando://menu?name=<menuName>.

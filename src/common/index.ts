@@ -124,18 +124,40 @@ export interface IMenuThemeDescription {
 
   /**
    * The maximum radius in pixels of a menu when using this theme. This is used to move
-   * the menu away from the screen edges when it's opened too close to them.
+   * the menu away from the screen edges when it's opened too close to them. Default is
+   * 150px.
    */
   maxMenuRadius: number;
 
-  /** The width of the text wrap in the center of the menu in pixels. */
+  /** The width of the text wrap in the center of the menu in pixels. Default is 90px. */
   centerTextWrapWidth: number;
 
   /**
    * If this is true, children of a menu item will be drawn below the parent. Otherwise
-   * they will be drawn above.
+   * they will be drawn above. Default is true.
    */
   drawChildrenBelow: boolean;
+
+  /**
+   * If this is set to true, the center text of the menu will be drawn. This is the text
+   * that is displayed in the center of the menu when it is opened. Default is true.
+   */
+  drawCenterText: boolean;
+
+  /**
+   * If this is set to true, a full-screen div will be drawn below the menu with the CSS
+   * class "selection-wedges". If any menu item is hovered, it will also receive the class
+   * "hovered" and the "--start-angle" and "--end-angle" CSS properties will indicate
+   * where the selected child is. Default is false.
+   */
+  drawSelectionWedges: boolean;
+
+  /**
+   * If this is set to true, a full-screen div will be drawn below the menu with the CSS
+   * class "wedge-separators". It will contain a div for each separator line between
+   * adjacent wedges. They will have the "separator" class. Default is false.
+   */
+  drawWedgeSeparators: boolean;
 
   /**
    * These colors will be available as var(--name) in the CSS file and can be adjusted by
@@ -438,6 +460,12 @@ export interface IShowMenuOptions {
    * be selected by only hovering over them.
    */
   hoverMode: boolean;
+
+  /**
+   * If this is set, the system-icon theme has changed since the last time the menu was
+   * opened. This is used to determine if the menu needs to be reloaded.
+   */
+  systemIconsChanged: boolean;
 }
 
 /** The user can create menu collections to group menus according to their tags. */

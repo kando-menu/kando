@@ -179,3 +179,18 @@
   font-size: 16px;
   line-height: 22px;
 }
+
+/* Selection Wedges ------------------------------------------------------------------- */
+
+.selection-wedges {
+  mask: radial-gradient(circle at var(--center-x) var(--center-y), black 100px, transparent 50%);
+
+  &.hovered {
+    --width: calc(var(--end-angle) - var(--start-angle));
+    background: conic-gradient(from calc(var(--start-angle)) at var(--center-x) var(--center-y),
+        var(--wedge-highlight-color) var(--width),
+        var(--wedge-color) var(--width));
+  }
+
+  background: var(--wedge-color);
+}

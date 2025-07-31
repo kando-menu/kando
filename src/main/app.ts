@@ -90,6 +90,54 @@ export class KandoApp {
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
 
+  /**
+   * Most of the initialization is done in the init() method. This constructor is only
+   * used to set up the hidden menu bar as this has to be done before the Electron app is
+   * ready.
+   */
+  constructor() {
+    // On macOS, we loose the copy and paste functionality when using no menu bar. So we
+    // add a hidden menu bar with some default actions. We also add a custom handler for
+    // closing the window, so that we can hide the menu window instead of closing it.
+    const template = [
+      {
+        label: 'Edit',
+        submenu: [
+          {
+            role: 'undo',
+          },
+          {
+            role: 'redo',
+          },
+          {
+            role: 'cut',
+          },
+          {
+            role: 'copy',
+          },
+          {
+            role: 'paste',
+          },
+          {
+            label: 'Close',
+            accelerator: process.platform === 'darwin' ? 'Cmd+W' : 'Alt+F4',
+            click: () => {
+              if (this.settingsWindow?.isFocused()) {
+                this.settingsWindow.close();
+              } else if (this.menuWindow?.isVisible()) {
+                this.menuWindow.hide();
+              }
+            },
+          },
+        ],
+      },
+    ];
+    const menu = Menu.buildFromTemplate(
+      template as Electron.MenuItemConstructorOptions[]
+    );
+    Menu.setApplicationMenu(menu);
+  }
+
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
     // Bail out if the backend is not available.
@@ -314,7 +362,10 @@ export class KandoApp {
       await this.menuWindow.load();
     }
 
-    const wmInfo = await this.backend.getWMInfo();
+    const [wmInfo, systemIconsChanged] = await Promise.all([
+      this.backend.getWMInfo(),
+      this.backend.systemIconsChanged(),
+    ]);
 
     // If a menu is already shown, we do not need the window information from the backend
     // as now Kando will be in focus. We use the old information instead.
@@ -326,7 +377,7 @@ export class KandoApp {
     this.lastWMInfo = wmInfo;
 
     try {
-      this.menuWindow.showMenu(request, this.lastWMInfo);
+      this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
     } catch (error) {
       Notification.showError('Failed to show menu', error.message || error);
     }
@@ -673,6 +724,11 @@ export class KandoApp {
     // Allow the renderer to retrieve the description of the current sound theme.
     ipcMain.handle('common.get-sound-theme', async () => {
       return this.loadSoundThemeDescription(this.generalSettings.get('soundTheme'));
+    });
+
+    // Allow the renderer to retrieve all system icons.
+    ipcMain.handle('common.get-system-icons', async () => {
+      return this.backend.getSystemIcons();
     });
   }
 

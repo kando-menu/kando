@@ -107,6 +107,24 @@ export class MenuTheme {
     return this.description.drawChildrenBelow;
   }
 
+  /** Returns true if the center text of the menu should be drawn. */
+  public get drawCenterText() {
+    return this.description.drawCenterText;
+  }
+
+  /** Returns true if the selection wedges should be visualized for this theme. */
+  public get drawSelectionWedges() {
+    return this.description.drawSelectionWedges;
+  }
+
+  /**
+   * Returns true if the separator lines between selection wedges should be visualized for
+   * this theme.
+   */
+  public get drawWedgeSeparators() {
+    return this.description.drawWedgeSeparators;
+  }
+
   /**
    * Loads the given theme description and applies it to the document. This will remove
    * any old theme first and then add the new theme to the document. It will also register
@@ -118,6 +136,10 @@ export class MenuTheme {
     // Use defaults if some properties are not set.
     this.description.maxMenuRadius = this.description.maxMenuRadius || 150;
     this.description.centerTextWrapWidth = this.description.centerTextWrapWidth || 90;
+    this.description.drawChildrenBelow = this.description.drawChildrenBelow ?? true;
+    this.description.drawCenterText = this.description.drawCenterText ?? true;
+    this.description.drawSelectionWedges = this.description.drawSelectionWedges ?? false;
+    this.description.drawWedgeSeparators = this.description.drawWedgeSeparators ?? false;
 
     // Remove any old theme first.
     const oldTheme = document.getElementById('kando-menu-theme');

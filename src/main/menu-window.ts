@@ -96,13 +96,6 @@ export class MenuWindow extends BrowserWindow {
       this.setFocusable(!newValue);
     });
 
-    // We prevent CMD+W to close the window on macOS.
-    this.webContents.on('before-input-event', (event, input) => {
-      if (input.meta && input.key === 'w') {
-        event.preventDefault();
-      }
-    });
-
     // We set the window to be always on top. This way, Kando will be visible even on
     // fullscreen applications.
     this.setAlwaysOnTop(true, 'screen-saver');
@@ -122,16 +115,6 @@ export class MenuWindow extends BrowserWindow {
     // Apply the stored zoom factor to the window.
     this.webContents.setZoomFactor(this.kando.getGeneralSettings().get('zoomFactor'));
 
-    // Intercept Alt+F4.
-    this.webContents.on('before-input-event', (event, input) => {
-      if (input.key === 'F4' && input.alt) {
-        if (this.isVisible()) {
-          this.webContents.send('menu-window.hide-menu');
-        }
-        event.preventDefault();
-      }
-    });
-
     return this.windowLoaded;
   }
 
@@ -142,8 +125,14 @@ export class MenuWindow extends BrowserWindow {
    *
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
+   * @param systemIconsChanged True if the system icon theme has changed since the last
+   *   time the menu was shown.
    */
-  public showMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
+  public showMenu(
+    request: Partial<IShowMenuRequest>,
+    info: IWMInfo,
+    systemIconsChanged: boolean
+  ) {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
@@ -263,6 +252,7 @@ export class MenuWindow extends BrowserWindow {
         centeredMode: this.lastMenu.centered,
         anchoredMode: this.lastMenu.anchored,
         hoverMode: this.lastMenu.hoverMode,
+        systemIconsChanged,
       },
       {
         appName: info.appName,
@@ -309,6 +299,16 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * This hides the window. It will wait for the fade-out animation to finish before
+   * actually hiding the window.
+   */
+  public override hide() {
+    if (this.isVisible()) {
+      this.webContents.send('menu-window.hide-menu');
+    }
+  }
+
+  /**
    * This checks if the window is visible. A window is considered visible if it is shown,
    * not minimized, and not about to be hidden (i.e. the fade-out animation is not
    * running).
@@ -339,7 +339,7 @@ export class MenuWindow extends BrowserWindow {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  public async hide() {
+  private async hideWindow() {
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
@@ -608,7 +608,7 @@ export class MenuWindow extends BrowserWindow {
       // Also wait with the execution of the selected action until the fade-out
       // animation is finished to make sure that any resulting events (such as virtual
       // key presses) are not captured by the window.
-      this.hide().then(() => {
+      this.hideWindow().then(() => {
         // If the action is delayed, we execute it after the window is hidden.
         if (executeDelayed) {
           execute(item);
@@ -629,7 +629,7 @@ export class MenuWindow extends BrowserWindow {
     // We do not hide the window immediately when the user aborts a selection. Instead, we
     // wait for the fade-out animation to finish.
     ipcMain.on('menu-window.cancel-selection', () => {
-      this.hide();
+      this.hideWindow();
     });
 
     // Show the settings window when the user clicks on the settings button in the menu.
