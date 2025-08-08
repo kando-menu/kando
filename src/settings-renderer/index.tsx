@@ -173,6 +173,11 @@ Promise.all([
       allowDragScroll: false,
     });
 
+    // Make sure to never open files or links by accident when dragging them over the
+    // settings window.
+    window.addEventListener('dragover', (e) => e.preventDefault(), false);
+    window.addEventListener('drop', (e) => e.preventDefault(), false);
+
     // Create the settings dialog app object.
     const root = createRoot(document.body);
     root.render(
