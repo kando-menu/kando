@@ -213,6 +213,12 @@ app
       handleArguments(options, argv[argv.length - 1], true);
     });
 
+    // This is called when the app is activated, for example when the user clicks on the
+    // app in the launchpad of macOS. We show the settings.
+    app.on('activate', () => {
+      kando.showSettings();
+    });
+
     // Handle the case when the app is opened via a deep link. This is only called on
     // macOS, on Windows and Linux deep links are handled by the second-instance event.
     app.on('open-url', (e, url) => {
