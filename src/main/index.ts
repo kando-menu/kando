@@ -111,11 +111,11 @@ if (!deepLinkSupport) {
 let disableHW = false;
 try {
   const raw = fs.readFileSync(
-    path.join(app.getPath('userData'), 'config.json5'),
+    path.join(app.getPath('userData'), 'config.json'),
     'utf-8'
   );
   const cfg = json5.parse(raw);
-  disableHW = cfg.disableHardwareAcceleration === true;
+  disableHW = cfg.hardwareAcceleration === false;
 } catch (e) {
   // fail silently, use default
 }
