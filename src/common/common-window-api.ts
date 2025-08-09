@@ -11,6 +11,7 @@
 import { ipcRenderer, webUtils } from 'electron';
 
 import {
+  IMenuItem,
   IGeneralSettings,
   IMenuThemeDescription,
   ISoundThemeDescription,
@@ -153,14 +154,20 @@ export const COMMON_WINDOW_API = {
     return ipcRenderer.invoke('common.get-system-icons');
   },
 
-  /** This returns the absolute path for a given file. */
-  getFilePath(file: File): string {
-    return webUtils.getPathForFile(file);
-  },
-
-  /** This will return a base64 encoded string of the icon for a given file. */
-  getFileIcon(path: string): Promise<string> {
-    return ipcRenderer.invoke('common.get-file-icon', path);
+  /**
+   * This method creates a new menu item for a given file. Depending on the file type,
+   * different item types may be used. For example, if the file is a *.desktop file on
+   * Linux, it will create a run-command item. For most other files, it will create a file
+   * item.
+   *
+   * @param file The file for which a menu item should be created.
+   * @returns A new menu item for the given file.
+   */
+  createMenuItemForFile(file: File): Promise<IMenuItem> {
+    const name = file.name;
+    const type = file.type || '';
+    const path = webUtils.getPathForFile(file);
+    return ipcRenderer.invoke('common.create-menu-item-for-file', path, name, type);
   },
 };
 

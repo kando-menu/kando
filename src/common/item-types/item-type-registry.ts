@@ -184,7 +184,7 @@ export class ItemTypeRegistry {
       };
     } else if (preferredType === 'Files') {
       const file = data.files[0];
-      return this.createItemForFile(file);
+      return await window.commonAPI.createMenuItemForFile(file);
     } else if (preferredType === 'text/uri-list') {
       const itemType = this.types.get('uri');
       return {
@@ -210,27 +210,5 @@ export class ItemTypeRegistry {
     }
 
     return null;
-  }
-
-  /**
-   * This method creates a new menu item for a given file. Depending on the file type,
-   * different item types may be used. For example, if the file is a *.desktop file on
-   * Linux, it will create a run-command item. For most other files, it will create a file
-   * item.
-   *
-   * @param file The file for which a menu item should be created.
-   * @returns A new menu item for the given file.
-   */
-  private async createItemForFile(file: File): Promise<IMenuItem> {
-    const itemType = this.types.get('file');
-    const path = window.commonAPI.getFilePath(file);
-    const icon = await window.commonAPI.getFileIcon(path);
-    return {
-      type: 'file',
-      name: itemType.defaultName,
-      icon,
-      iconTheme: 'base64',
-      data: { path },
-    };
   }
 }

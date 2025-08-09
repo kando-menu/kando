@@ -11,6 +11,7 @@
 import { EventEmitter } from 'events';
 import { globalShortcut } from 'electron';
 import lodash from 'lodash';
+import mime from 'mime-types';
 
 import { IBackendInfo, IKeySequence, IWMInfo } from '../../common';
 
@@ -79,6 +80,40 @@ export abstract class Backend extends EventEmitter {
     // This method is not implemented by the base class, but can be implemented by
     // derived backends if they support listing system icons.
     return [];
+  }
+
+  /**
+   * Each backend can provide a way to get an icon for a given file. This is used when
+   * creating menu items for files. The icon can use all icon themes of Kando, meaning
+   * that it can be a file path, a data URL or an icon from the system icon theme on
+   * Linux. The default implementation returns one of the material symbols icons which
+   * loosely matches the file type.
+   *
+   * @param path The path to the file for which an icon should be returned.
+   * @returns A promise which resolves to an icon for the given file.
+   */
+  public async getFileIcon(path: string): Promise<{ icon: string; iconTheme: string }> {
+    const mimeType = mime.lookup(path);
+
+    // If the mime type is not known, maybe a directory was passed.
+    if (!mimeType) {
+      return { icon: 'folder', iconTheme: 'material-symbols-rounded' };
+    }
+
+    let icon = 'draft';
+    console.debug(`getFileIcon: ${path} (${mimeType})`);
+
+    if (mimeType.startsWith('image/')) {
+      icon = 'image';
+    } else if (mimeType.startsWith('video/') || mimeType.includes('mp4')) {
+      icon = 'video_file';
+    } else if (mimeType.startsWith('audio/')) {
+      icon = 'audio_file';
+    } else if (mimeType.startsWith('text/')) {
+      icon = 'text_snippet';
+    }
+
+    return { icon, iconTheme: 'material-symbols-rounded' };
   }
 
   /**
