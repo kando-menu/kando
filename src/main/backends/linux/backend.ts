@@ -13,8 +13,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { readIniFile } from 'read-ini-file';
 import { execSync } from 'child_process';
+import { isexe } from 'isexe';
+import { readIniFile } from 'read-ini-file';
 
 import { Backend } from '../backend';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
  * This generic Linux backend class provides the basic functionality for all Linux
@@ -56,6 +59,52 @@ export abstract class LinuxBackend extends Backend {
     this.iconSearchPaths = this.iconSearchPaths.filter(
       (item, index) => this.iconSearchPaths.indexOf(item) === index
     );
+  }
+
+  /** @inheritdoc */
+  public override async createItemForDroppedFile(
+    name: string,
+    path: string,
+    type: string
+  ): Promise<IMenuItem | null> {
+    const isExe = await isexe(path);
+
+    if (isExe) {
+      const itemType = ItemTypeRegistry.getInstance().getType('command');
+      return {
+        type: 'command',
+        name,
+        icon: itemType.defaultIcon,
+        iconTheme: itemType.defaultIconTheme,
+        data: {
+          command: '"' + path + '"',
+        },
+      };
+    }
+
+    if (type === 'application/x-desktop') {
+      const data = (await readIniFile(path)) as {
+        ['Desktop Entry']?: {
+          ['Name']?: string;
+          ['Icon']?: string;
+          ['Exec']?: string;
+        };
+      };
+
+      // Strip any of %u, %U, %f, %F from the Exec command.
+      let command = data['Desktop Entry']?.Exec || path;
+      command = command.replace(/%[ufUF]/g, '').trim();
+
+      return {
+        type: 'command',
+        name: data['Desktop Entry']?.Name || name,
+        icon: data['Desktop Entry']?.Icon || 'application-x-executable',
+        iconTheme: 'system',
+        data: { command },
+      };
+    }
+
+    return null;
   }
 
   /**

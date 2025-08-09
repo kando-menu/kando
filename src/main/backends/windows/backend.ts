@@ -10,10 +10,13 @@
 
 import os from 'node:os';
 import { screen } from 'electron';
+import { isexe } from 'isexe';
+
 import { native } from './native';
 import { Backend } from '../backend';
 import { IKeySequence } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -24,7 +27,7 @@ export class WindowsBackend extends Backend {
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
    */
-  public getBackendInfo() {
+  public override getBackendInfo() {
     // Vibrancy is only supported on Windows 11 22H2 (build 22621) or higher.
     const release = os.release().split('.');
     const major = parseInt(release[0]);
@@ -45,21 +48,21 @@ export class WindowsBackend extends Backend {
    * This is called when the backend is created. Currently, this this does nothing on
    * Windows.
    */
-  public async init() {}
+  public override async init() {}
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
-  public async deinit(): Promise<void> {
+  public override async deinit(): Promise<void> {
     await this.bindShortcuts([]);
   }
 
   /**
-   * This uses the Win23 API to get the name and app of the currently focused window. In
+   * This uses the Win32 API to get the name and app of the currently focused window. In
    * addition, it uses Electron's screen module to get the current pointer position.
    *
    * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
-  public async getWMInfo() {
+  public override async getWMInfo() {
     const window = native.getActiveWindow();
     const pointer = screen.getCursorScreenPoint();
 
@@ -84,7 +87,7 @@ export class WindowsBackend extends Backend {
    * @param dx The amount of horizontal movement.
    * @param dy The amount of vertical movement.
    */
-  public async movePointer(dx: number, dy: number) {
+  public override async movePointer(dx: number, dy: number) {
     native.movePointer(dx, dy);
   }
 
@@ -94,7 +97,7 @@ export class WindowsBackend extends Backend {
    *
    * @param keys The keys to simulate.
    */
-  public async simulateKeys(keys: IKeySequence) {
+  public override async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to Win32 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'windows');
@@ -110,6 +113,37 @@ export class WindowsBackend extends Backend {
 
       native.simulateKey(keyCodes[i], keys[i].down);
     }
+  }
+
+  /**
+   * On Windows, we create run-command menu items for dropped executable files. We also
+   * assume that lnk files are executable. We also support dropping UWP app links dropped
+   * from the start menu.
+   */
+  public override async createItemForDroppedFile(
+    name: string,
+    path: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    type: string
+  ): Promise<IMenuItem | null> {
+    console.log('Creating menu item for dropped file:', name, path, type);
+
+    const isExe = path.endsWith('.lnk') || (await isexe(path));
+
+    if (isExe) {
+      const itemType = ItemTypeRegistry.getInstance().getType('command');
+      return {
+        type: 'command',
+        name: name.split('.')[0] || itmType.defaultName,
+        icon: itemType.defaultIcon,
+        iconTheme: itemType.defaultIconTheme,
+        data: {
+          command: '"' + path + '"',
+        },
+      };
+    }
+
+    return null;
   }
 
   /**

@@ -117,6 +117,31 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
+   * Each backend can provide custom item-creators for dropped files. If this method
+   * returns null, a simple open-file item will be created.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped. There are some edge-cases
+   *   where the path cannot be determined (for instance, if something is dragged from the
+   *   Windows start menu). In this case, the path will be an empty string.
+   * @param type The mime type of the file that was dropped. This can be empty if the mime
+   *   type is not known.
+   */
+  public async createItemForDroppedFile(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    name: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    path: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    type: string
+  ): Promise<IMenuItem | null> {
+    // This method is not implemented by the base class, but can be implemented by
+    // derived backends if they support creating custom items for dropped files.
+    return null;
+  }
+
+  /**
    * Each backend can provide a way to detect changes to the system icons. This method
    * should return true if the system icon theme has changed since the last call to
    * getSystemIcons().

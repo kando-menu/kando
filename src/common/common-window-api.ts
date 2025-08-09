@@ -165,9 +165,9 @@ export const COMMON_WINDOW_API = {
    */
   createMenuItemForFile(file: File): Promise<IMenuItem> {
     const name = file.name;
-    const type = file.type || '';
     const path = webUtils.getPathForFile(file);
-    return ipcRenderer.invoke('common.create-menu-item-for-file', path, name, type);
+    const type = file.type || '';
+    return ipcRenderer.invoke('common.create-menu-item-for-file', name, path, type);
   },
 };
 

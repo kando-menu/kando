@@ -14,8 +14,6 @@ import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
 import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
-import { isexe } from 'isexe';
-import { readIniFile } from 'read-ini-file';
 import i18next from 'i18next';
 
 import { MenuWindow } from './menu-window';
@@ -40,7 +38,6 @@ import { Settings } from './utils/settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
-import { ItemTypeRegistry } from '../common/item-types/item-type-registry';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -734,60 +731,20 @@ export class KandoApp {
       return this.backend.getSystemIcons();
     });
 
-    // Allow the renderer to retrieve icons for a given file.
-    ipcMain.handle('common.get-file-icon', async (event, filePath: string) => {
-      // const icon = await nativeImage.createThumbnailFromPath(filePath, {
-      //   width: 64,
-      //   height: 64,
-      // });
-      // return icon.toDataURL();
-
-      return this.backend.getFileIcon(filePath);
-    });
-
-    // Allow the renderer to retrieve whether a file is executable.
+    // Allow the renderer to create a new menu item for a file that was dropped onto the
+    // menu editor.
     ipcMain.handle(
       'common.create-menu-item-for-file',
-      async (event, path: string, name: string, type: string) => {
-        const isExe = await isexe(path);
-
-        if (isExe) {
-          const itemType = ItemTypeRegistry.getInstance().getType('command');
-          return {
-            type: 'command',
-            name,
-            icon: itemType.defaultIcon,
-            iconTheme: itemType.defaultIconTheme,
-            data: {
-              command: path,
-            },
-          };
+      async (event, name: string, path: string, type: string) => {
+        // First we ask the backend to create a menu item for the dropped file. This can
+        // be used to create custom platform-specific items, e.g. for desktop files on
+        // Linux.
+        const item = await this.backend.createItemForDroppedFile(name, path, type);
+        if (item) {
+          return item;
         }
 
-        if (type === 'application/x-desktop') {
-          const data = (await readIniFile(path)) as {
-            ['Desktop Entry']?: {
-              ['Name']?: string;
-              ['Icon']?: string;
-              ['Exec']?: string;
-            };
-          };
-
-          // Strip any of %u, %U, %f, %F from the Exec command.
-          let command = data['Desktop Entry']?.Exec || path;
-          command = command.replace(/%[ufUF]/g, '').trim();
-
-          return {
-            type: 'command',
-            name: data['Desktop Entry']?.Name || name,
-            icon: data['Desktop Entry']?.Icon || 'application-x-executable',
-            iconTheme: 'system',
-            data: { command },
-          };
-        }
-
-        console.log(`Creating file item for mime type: ${type}`);
-
+        // If nothing was returned, we create a default menu item for the file.
         const { icon, iconTheme } = await this.backend.getFileIcon(path);
         return {
           type: 'file',
