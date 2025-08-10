@@ -19,6 +19,11 @@ let systemdRunAvailable: boolean | undefined = undefined;
  * support this feature on platforms without systemd.
  */
 export function supportsIsolatedProcesses(): boolean {
+  // On Windows and macOS, we do not need to check for systemd-run.
+  if (os.platform() !== 'linux') {
+    systemdRunAvailable = false;
+  }
+
   if (systemdRunAvailable === undefined) {
     // Check if systemd-run is available by trying to spawn it.
     try {
