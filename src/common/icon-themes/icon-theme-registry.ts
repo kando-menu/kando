@@ -173,7 +173,7 @@ export class IconThemeRegistry {
    */
   public async reloadSystemIcons() {
     const systemIcons = await window.commonAPI.getSystemIcons();
-    if (systemIcons.length > 0) {
+    if (systemIcons.size > 0) {
       this.iconThemes.set('system', new SystemTheme(systemIcons));
     } else {
       this.iconThemes.delete('system');

@@ -61,6 +61,14 @@ class Native : public Napi::Addon<Native> {
    *           the window handle.
    */
   void fixAcrylicEffect(const Napi::CallbackInfo& info);
+
+  /**
+   * This function returns a list of all installed applications.
+   *
+   * @param info The arguments passed to the listInstalledApplications function. It should contain
+   *             no arguments.
+   */
+  Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
 };
 
 #endif // NATIVE_HPP

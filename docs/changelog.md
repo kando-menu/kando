@@ -27,6 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Circle wrapping for the center text!** The center text is now wrapped in a circle instead of a rectangle. This makes it look better and allows longer texts to be displayed without clipping.
 - **Automatic font-size reduction for the center text!** If the center text is too long to fit into the circle, it will now be automatically reduced in size so it fits.
 - **A System-Icons Theme for Linux!** This allows you to use the system icons of your desktop environment as icons for menu items. This is still somewhat experimental, but it should work on most desktop environments. Feel free to test it and report any issues you encounter!
+- **A System-Icons Theme for Windows!** This allows you to use the icons of apps installed on your system for menu items. This is also a bit experimental, please report any issues you encounter!
 
 ### :wrench: Changed
 

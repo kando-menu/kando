@@ -150,7 +150,7 @@ export const COMMON_WINDOW_API = {
   },
 
   /** This lists all currently available system icons. */
-  getSystemIcons: (): Promise<Array<string>> => {
+  getSystemIcons: (): Promise<Map<string, string>> => {
     return ipcRenderer.invoke('common.get-system-icons');
   },
 

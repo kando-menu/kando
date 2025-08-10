@@ -14,9 +14,9 @@ import * as fs from 'fs';
 import { readIniFile } from 'read-ini-file';
 import { execSync } from 'child_process';
 import { isexe } from 'isexe';
-import { readIniFile } from 'read-ini-file';
 
 import { Backend } from '../backend';
+import { IMenuItem } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
@@ -117,11 +117,9 @@ export abstract class LinuxBackend extends Backend {
    * are excluded as well. Only icons in SVG or PNG format are returned. If an icon is
    * available in both formats, the SVG version is preferred.
    *
-   * @returns A list absolute file paths to the icons.
+   * @returns A map of icon names to their CSS image sources.
    */
-  public override async getSystemIcons(): Promise<Array<string>> {
-    const startTime = performance.now();
-
+  public override async getSystemIcons(): Promise<Map<string, string>> {
     this.currentTheme = await this.getCurrentIconTheme();
     const allThemeDirectories = await this.getThemeDirectoriesRecursively(
       this.currentTheme
@@ -131,13 +129,6 @@ export abstract class LinuxBackend extends Backend {
       ['apps', 'actions', 'devices', 'mimetypes'],
       ['scalable', '48x48', '48'],
       ['.svg', '.png']
-    );
-
-    const endTime = performance.now();
-    const timeTaken = endTime - startTime;
-
-    console.debug(
-      `Found ${icons.length} ${this.currentTheme} icons in ${timeTaken.toFixed(0)} ms.`
     );
 
     return icons;
@@ -362,7 +353,7 @@ export abstract class LinuxBackend extends Backend {
     contexts: string[],
     sizes: string[],
     fileTypes: string[]
-  ): Promise<string[]> {
+  ): Promise<Map<string, string>> {
     // Maps icon names to their absolute file paths.
     const icons = new Map<string, string>();
 
@@ -387,7 +378,7 @@ export abstract class LinuxBackend extends Backend {
               const ext = path.extname(file).toLowerCase();
               if (fileTypes.includes(ext)) {
                 const iconName = path.basename(file, ext);
-                icons.set(iconName, path.join(dir, file));
+                icons.set(iconName, 'file://' + path.join(dir, file));
               }
             }
           }
@@ -395,7 +386,6 @@ export abstract class LinuxBackend extends Backend {
       }
     }
 
-    // Convert the map to an array of absolute file paths.
-    return Array.from(icons.values());
+    return icons;
   }
 }

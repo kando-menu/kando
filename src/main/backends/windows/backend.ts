@@ -14,7 +14,7 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { IKeySequence } from '../../../common';
+import { IKeySequence, IMenuItem } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
@@ -23,6 +23,17 @@ import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry'
  * and mouse movements. It also uses the Win32 API to get the currently focused window.
  */
 export class WindowsBackend extends Backend {
+  /**
+   * This is a list of all installed applications on the system. Currently, this is
+   * populated during the backend initialization. We may want to update this list
+   * dynamically in the future.
+   */
+  private installedApps: {
+    id: string;
+    name: string;
+    base64Icon: string;
+  }[];
+
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
@@ -44,11 +55,10 @@ export class WindowsBackend extends Backend {
     };
   }
 
-  /**
-   * This is called when the backend is created. Currently, this this does nothing on
-   * Windows.
-   */
-  public override async init() {}
+  /** This is called when the backend is created. */
+  public override async init() {
+    this.installedApps = native.listInstalledApplications();
+  }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public override async deinit(): Promise<void> {
@@ -113,6 +123,29 @@ export class WindowsBackend extends Backend {
 
       native.simulateKey(keyCodes[i], keys[i].down);
     }
+  }
+
+  /**
+   * This returns the icons for installed applications.
+   *
+   * @returns A map of icon names to their CSS image sources.
+   */
+  public override async getSystemIcons(): Promise<Map<string, string>> {
+    const icons = new Map<string, string>();
+
+    for (const app of this.installedApps) {
+      icons.set(app.name, app.base64Icon);
+    }
+
+    return icons;
+  }
+
+  /**
+   * We currently do not support dynamic icon theme changes on Windows. Kando needs to be
+   * restarted for changes to take effect.
+   */
+  public override async systemIconsChanged(): Promise<boolean> {
+    return false;
   }
 
   /**

@@ -13,7 +13,7 @@ import { globalShortcut } from 'electron';
 import lodash from 'lodash';
 import mime from 'mime-types';
 
-import { IBackendInfo, IKeySequence, IWMInfo } from '../../common';
+import { IBackendInfo, IKeySequence, IWMInfo, IMenuItem } from '../../common';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
@@ -70,16 +70,18 @@ export abstract class Backend extends EventEmitter {
 
   /**
    * Each backend can provide a way to list available system icons. The method should
-   * return an array of absolute file paths to the icons. This is used to create the
+   * return a map of icon names to something which can be used as CSS image source. That
+   * is for instance file paths or base64-encoded data URLs. This is used to create the
    * system icon theme.
    *
-   * @returns A promise which resolves to an array of absolute file paths to the system
-   *   icons. If system icons are not available, it should resolve to an empty array.
+   * This method is not implemented by the base class, but can be implemented by derived
+   * backends if they support listing system icons.
+   *
+   * @returns A promise which resolves to a map of icon names to their CSS image sources.
+   *   If system icons are not available, it should resolve to an empty map.
    */
-  public async getSystemIcons(): Promise<Array<string>> {
-    // This method is not implemented by the base class, but can be implemented by
-    // derived backends if they support listing system icons.
-    return [];
+  public async getSystemIcons(): Promise<Map<string, string>> {
+    return new Map();
   }
 
   /**

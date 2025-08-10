@@ -10,13 +10,108 @@
 
 #include "Native.hpp"
 
-#include <windows.h>
-#include <winuser.h>
-#include <stringapiset.h>
-#include <dwmapi.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
-#include <codecvt>
-#include <string>
+#include <windows.h>
+#include <dwmapi.h>
+#include <shlobj.h>
+#include <shobjidl.h>
+#include <propkey.h>
+
+#include <sstream>
+#include <vector>
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+namespace {
+
+  static std::string base64Encode(const unsigned char* data, size_t len) {
+    static const char table[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    std::string encoded;
+    encoded.reserve(((len + 2) / 3) * 4);
+
+    for (size_t i = 0; i < len; i += 3) {
+        unsigned int val = (data[i] << 16) |
+                           ((i + 1 < len) ? (data[i + 1] << 8) : 0) |
+                           ((i + 2 < len) ? data[i + 2] : 0);
+        encoded.push_back(table[(val >> 18) & 0x3F]);
+        encoded.push_back(table[(val >> 12) & 0x3F]);
+        encoded.push_back((i + 1 < len) ? table[(val >> 6) & 0x3F] : '=');
+        encoded.push_back((i + 2 < len) ? table[val & 0x3F] : '=');
+    }
+
+    return encoded;
+  }
+
+  // Write PNG into std::vector<unsigned char> instead of file.
+  static void pngWriteCallback(void* context, void* data, int size) {
+    auto* buffer = reinterpret_cast<std::vector<unsigned char>*>(context);
+    const unsigned char* bytes = reinterpret_cast<unsigned char*>(data);
+    buffer->insert(buffer->end(), bytes, bytes + size);
+  }
+
+  // Converts a Windows HBITMAP to a Base64-encoded PNG.
+  std::string HBitmapToBase64PNG(HBITMAP hBitmap) {
+    if (!hBitmap) throw std::invalid_argument("Invalid HBITMAP");
+
+    BITMAP bmp;
+    if (GetObject(hBitmap, sizeof(bmp), &bmp) == 0) {
+        throw std::runtime_error("GetObject failed for HBITMAP");
+    }
+
+    BITMAPINFO bi{};
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = bmp.bmWidth;
+    bi.bmiHeader.biHeight = -bmp.bmHeight; // negative for top-down
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32; // force RGBA
+    bi.bmiHeader.biCompression = BI_RGB;
+
+    HDC hdc = GetDC(nullptr);
+    if (!hdc) throw std::runtime_error("GetDC failed");
+
+    std::vector<unsigned char> pixels(bmp.bmWidth * bmp.bmHeight * 4);
+    if (GetDIBits(hdc, hBitmap, 0, bmp.bmHeight, pixels.data(), &bi, DIB_RGB_COLORS) == 0) {
+        ReleaseDC(nullptr, hdc);
+        throw std::runtime_error("GetDIBits failed");
+    }
+    ReleaseDC(nullptr, hdc);
+
+    // Convert BGRA to RGBA.
+    for (size_t i = 0; i < pixels.size(); i += 4) {
+      std::swap(pixels[i], pixels[i + 2]);
+    }
+
+    // Encode to PNG in memory.
+    std::vector<unsigned char> pngData;
+    if (!stbi_write_png_to_func(pngWriteCallback, &pngData,
+                                bmp.bmWidth, bmp.bmHeight, 4,
+                                pixels.data(), bmp.bmWidth * 4)) {
+        throw std::runtime_error("stbi_write_png_to_func failed");
+    }
+
+    return "data:image/png;base64," + base64Encode(pngData.data(), pngData.size());
+  }
+
+  // Converts a wide string (std::wstring) to a UTF-8 encoded string (std::string)
+  std::string WStringToString(const std::wstring& wstr) {
+    if (wstr.empty()) {
+      return "";
+    }
+
+    int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    if (sizeNeeded <= 0) {
+      return "";
+    }
+
+    std::string str(sizeNeeded - 1, '\0');
+    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], sizeNeeded, nullptr, nullptr);
+
+    return str;
+  }
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +121,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
                            InstanceMethod("simulateKey", &Native::simulateKey),
                            InstanceMethod("getActiveWindow", &Native::getActiveWindow),
                            InstanceMethod("fixAcrylicEffect", &Native::fixAcrylicEffect),
+                           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
                        });
 }
 
@@ -86,7 +182,7 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
   DWORD pid;
   GetWindowThreadProcessId(foreground_window, &pid);
 
-  TCHAR process_filename[MAX_PATH];
+  CHAR process_filename[MAX_PATH];
   DWORD charsCarried = MAX_PATH;
 
   HANDLE hProc = OpenProcess(
@@ -102,11 +198,9 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
     fullpath.erase(0, last_slash_idx + 1);
   }
 
-  std::wstring                                     ws(window_title);
-  std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
-
+  std::wstring ws(window_title);
   obj.Set("app", fullpath);
-  obj.Set("name", myconv.to_bytes(ws));
+  obj.Set("name", WStringToString(ws));
 
   return obj;
 }
@@ -130,6 +224,84 @@ void Native::fixAcrylicEffect(const Napi::CallbackInfo& info) {
   // DWMWCP_ROUND = 2 and DWMWA_WINDOW_CORNER_PREFERENCE = 33 are not always defined.
   unsigned p = 2;
   DwmSetWindowAttribute(hwnd, 33, &p, sizeof(p));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::Array result = Napi::Array::New(env);
+
+  IShellItem* pAppsFolder = nullptr;
+  HRESULT hr = SHGetKnownFolderItem(FOLDERID_AppsFolder, KF_FLAG_DEFAULT, NULL, IID_PPV_ARGS(&pAppsFolder));
+  if (FAILED(hr)) {
+    return result;
+  }
+
+  IEnumShellItems* pEnum = nullptr;
+  hr = pAppsFolder->BindToHandler(nullptr, BHID_EnumItems, IID_PPV_ARGS(&pEnum));
+  if (FAILED(hr)) {
+    pAppsFolder->Release();
+    return result;
+  }
+
+  IShellItem* pItem;
+  UINT index = 0;
+  while (pEnum->Next(1, &pItem, nullptr) == S_OK) {
+    IShellItem2* pItem2;
+    if (SUCCEEDED(pItem->QueryInterface(IID_PPV_ARGS(&pItem2)))) {
+      PWSTR pszName = nullptr;
+      PWSTR pszAppId = nullptr;
+      HBITMAP hBitmap = nullptr;
+
+      if (SUCCEEDED(pItem2->GetString(PKEY_ItemNameDisplay, &pszName)) &&
+          SUCCEEDED(pItem2->GetString(PKEY_AppUserModel_ID, &pszAppId))) {
+
+        // Get the bitmap using IShellItemImageFactory
+        IShellItemImageFactory* pImageFactory = nullptr;
+        if (SUCCEEDED(pItem2->QueryInterface(IID_PPV_ARGS(&pImageFactory)))) {
+          SIZE size = { 128, 128 };
+          HRESULT hrBitmap = pImageFactory->GetImage(size, SIIGBF_ICONONLY | SIIGBF_BIGGERSIZEOK, &hBitmap);
+          pImageFactory->Release();
+        }
+
+        std::string name = WStringToString(pszName);
+        std::string appId = WStringToString(pszAppId);
+        std::string iconBase64 = "";
+
+        try {
+          iconBase64 = HBitmapToBase64PNG(hBitmap);
+        } catch (const std::exception& e) {
+          Napi::Object global = env.Global();
+          Napi::Object console = global.Get("console").As<Napi::Object>();
+          Napi::Function log = console.Get("log").As<Napi::Function>();
+          log.Call(console, {Napi::String::New(env, "Error converting icon to base64: " + std::string(e.what()))});
+        }
+
+        Napi::Object appInfo = Napi::Object::New(env);
+        appInfo.Set("id", appId);
+        appInfo.Set("name", name);
+        appInfo.Set("base64Icon", iconBase64);
+
+        result.Set(index++, appInfo);
+
+        CoTaskMemFree(pszName);
+        CoTaskMemFree(pszAppId);
+        if (hBitmap) {
+          DeleteObject(hBitmap);
+        }
+      }
+
+      pItem2->Release();
+    }
+
+    pItem->Release();
+  }
+
+  pEnum->Release();
+  pAppsFolder->Release();
+
+  return result;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
