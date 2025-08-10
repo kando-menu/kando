@@ -735,24 +735,8 @@ export class KandoApp {
     // menu editor.
     ipcMain.handle(
       'common.create-menu-item-for-file',
-      async (event, name: string, path: string, type: string) => {
-        // First we ask the backend to create a menu item for the dropped file. This can
-        // be used to create custom platform-specific items, e.g. for desktop files on
-        // Linux.
-        const item = await this.backend.createItemForDroppedFile(name, path, type);
-        if (item) {
-          return item;
-        }
-
-        // If nothing was returned, we create a default menu item for the file.
-        const { icon, iconTheme } = await this.backend.getFileIcon(path);
-        return {
-          type: 'file',
-          name,
-          icon,
-          iconTheme,
-          data: { path },
-        };
+      async (event, name: string, path: string) => {
+        return this.backend.createItemForDroppedFile(name, path);
       }
     );
   }

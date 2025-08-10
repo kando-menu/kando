@@ -11,6 +11,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
+import mime from 'mime-types';
 import { readIniFile } from 'read-ini-file';
 import { execSync } from 'child_process';
 import { isexe } from 'isexe';
@@ -64,8 +65,7 @@ export abstract class LinuxBackend extends Backend {
   /** @inheritdoc */
   public override async createItemForDroppedFile(
     name: string,
-    path: string,
-    type: string
+    path: string
   ): Promise<IMenuItem | null> {
     const isExe = await isexe(path);
 
@@ -82,7 +82,9 @@ export abstract class LinuxBackend extends Backend {
       };
     }
 
-    if (type === 'application/x-desktop') {
+    const mimeType = mime.lookup(path);
+
+    if (mimeType === 'application/x-desktop') {
       const data = (await readIniFile(path)) as {
         ['Desktop Entry']?: {
           ['Name']?: string;

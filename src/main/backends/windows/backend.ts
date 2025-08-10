@@ -152,31 +152,60 @@ export class WindowsBackend extends Backend {
    * On Windows, we create run-command menu items for dropped executable files. We also
    * assume that lnk files are executable. We also support dropping UWP app links dropped
    * from the start menu.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped. There are some edge-cases
+   *   where the path cannot be determined (for instance, if something is dragged from the
+   *   Windows start menu). In this case, the path will be an empty string.
    */
   public override async createItemForDroppedFile(
     name: string,
-    path: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    type: string
+    path: string
   ): Promise<IMenuItem | null> {
-    console.log('Creating menu item for dropped file:', name, path, type);
+    const commandItemType = ItemTypeRegistry.getInstance().getType('command');
 
-    const isExe = path.endsWith('.lnk') || (await isexe(path));
+    // If an executable file was dropped, create a menu item for it. We will attempt to
+    // find a matching application in the list of installed apps. If we find one, we can
+    // use the icon and the name of the application. We simply assume that lnk files are
+    // executable.
+    if (path.endsWith('.lnk') || (await isexe(path, { ignoreErrors: true }))) {
+      const appName = name.slice(0, name.lastIndexOf('.'));
+      const app = this.installedApps.find((app) => app.name === appName);
 
-    if (isExe) {
-      const itemType = ItemTypeRegistry.getInstance().getType('command');
       return {
         type: 'command',
-        name: name.split('.')[0] || itmType.defaultName,
-        icon: itemType.defaultIcon,
-        iconTheme: itemType.defaultIconTheme,
+        name: app ? app.name : commandItemType.defaultName,
+        icon: app ? app.name : commandItemType.defaultIcon,
+        iconTheme: app ? 'system' : commandItemType.defaultIconTheme,
         data: {
           command: '"' + path + '"',
         },
       };
     }
 
-    return null;
+    // If the path does not refer to an executable file, it can still be an UWP app link.
+    // These can for instance be dragged from the start menu. We check the name and the
+    // path.
+    const app = this.installedApps.find(
+      (app) =>
+        app.name === name || app.id === name || app.name === path || app.id === path
+    );
+
+    if (app) {
+      return {
+        type: 'command',
+        name: app.name,
+        icon: app.name,
+        iconTheme: 'system',
+        data: {
+          command: 'start shell:AppsFolder\\' + app.id,
+        },
+      };
+    }
+
+    // For all other (non-executable) files, we create a simple file-item.
+    return super.createItemForDroppedFile(name, path);
   }
 
   /**
