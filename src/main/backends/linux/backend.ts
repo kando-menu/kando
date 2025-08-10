@@ -23,7 +23,7 @@ import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry'
 /**
  * This generic Linux backend class provides the basic functionality for all Linux
  * backends. For now, this is just getting the system icons according to the Freedesktop
- * Icon Theme Specification.
+ * Icon Theme Specification and providing access to all installed applications.
  */
 export abstract class LinuxBackend extends Backend {
   /**
@@ -62,7 +62,51 @@ export abstract class LinuxBackend extends Backend {
     );
   }
 
-  /** @inheritdoc */
+  /**
+   * This returns the icons that are available in the current icon theme according to the
+   * Freedesktop Icon Theme Specification. More information can be found here:
+   * https://specifications.freedesktop.org/icon-theme-spec/latest/).
+   *
+   * It excludes some categories like "animations", or "emblems" that are usually not so
+   * useful in a pie menu. Also, if some icons are only available below 48px size, they
+   * are excluded as well. Only icons in SVG or PNG format are returned. If an icon is
+   * available in both formats, the SVG version is preferred.
+   *
+   * @returns A map of icon names to their CSS image sources.
+   */
+  public override async getSystemIcons(): Promise<Map<string, string>> {
+    this.currentTheme = await this.getCurrentIconTheme();
+    const allThemeDirectories = await this.getThemeDirectoriesRecursively(
+      this.currentTheme
+    );
+    const icons = await this.getIcons(
+      allThemeDirectories,
+      ['apps', 'actions', 'devices', 'mimetypes'],
+      ['scalable', '48x48', '48'],
+      ['.svg', '.png']
+    );
+
+    return icons;
+  }
+
+  /**
+   * @returns True if the system icon theme has changed since the last call to
+   *   `getSystemIcons()`. This is used to determine if the icon theme needs to be
+   *   reloaded.
+   */
+  public override async systemIconsChanged(): Promise<boolean> {
+    const newTheme = await this.getCurrentIconTheme();
+    return newTheme !== this.currentTheme;
+  }
+
+  /**
+   * On Linux, we create run-command menu items for dropped executable files. If a desktop
+   * file is dropped, we extract the relevant information from it.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped.
+   */
   public override async createItemForDroppedFile(
     name: string,
     path: string
@@ -107,43 +151,6 @@ export abstract class LinuxBackend extends Backend {
     }
 
     return null;
-  }
-
-  /**
-   * This returns the icons that are available in the current icon theme according to the
-   * Freedesktop Icon Theme Specification. More information can be found here:
-   * https://specifications.freedesktop.org/icon-theme-spec/latest/).
-   *
-   * It excludes some categories like "animations", or "emblems" that are usually not so
-   * useful in a pie menu. Also, if some icons are only available below 48px size, they
-   * are excluded as well. Only icons in SVG or PNG format are returned. If an icon is
-   * available in both formats, the SVG version is preferred.
-   *
-   * @returns A map of icon names to their CSS image sources.
-   */
-  public override async getSystemIcons(): Promise<Map<string, string>> {
-    this.currentTheme = await this.getCurrentIconTheme();
-    const allThemeDirectories = await this.getThemeDirectoriesRecursively(
-      this.currentTheme
-    );
-    const icons = await this.getIcons(
-      allThemeDirectories,
-      ['apps', 'actions', 'devices', 'mimetypes'],
-      ['scalable', '48x48', '48'],
-      ['.svg', '.png']
-    );
-
-    return icons;
-  }
-
-  /**
-   * @returns True if the system icon theme has changed since the last call to
-   *   `getSystemIcons()`. This is used to determine if the icon theme needs to be
-   *   reloaded.
-   */
-  public override async systemIconsChanged(): Promise<boolean> {
-    const newTheme = await this.getCurrentIconTheme();
-    return newTheme !== this.currentTheme;
   }
 
   /**

@@ -19,8 +19,8 @@ import { IBackendInfo, IKeySequence, IWMInfo, IMenuItem } from '../../common';
  * This abstract class must be extended by all backends. A backend is responsible for
  * communicating with the operating system in ways impossible with the standard electron
  * APIs. It provides methods to bind global shortcuts (which is not possible on all
- * platforms using electron only), move the mouse pointer, simulate keyboard shortcuts and
- * get information about the currently focused window.
+ * platforms using electron only), move the mouse pointer, simulate keyboard shortcuts, or
+ * to get information about the currently focused window.
  *
  * If a global shortcut is activated, it will emit the 'shortcutPressed' event with the
  * activated shortcut as the first argument.
@@ -85,54 +85,6 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
-   * Each backend can provide a way to get an icon for a given file. This is used when
-   * creating menu items for files. The icon can use all icon themes of Kando, meaning
-   * that it can be a file path, a data URL or an icon from the system icon theme on
-   * Linux. The default implementation returns one of the material symbols icons which
-   * loosely matches the file type.
-   *
-   * @param path The path to the file for which an icon should be returned.
-   * @returns A promise which resolves to an icon for the given file.
-   */
-  public async getFileIcon(path: string): Promise<{ icon: string; iconTheme: string }> {
-    const mimeType = mime.lookup(path);
-
-    // If the mime type is not known, maybe a directory was passed.
-    if (!mimeType) {
-      return { icon: 'folder', iconTheme: 'material-symbols-rounded' };
-    }
-
-    let icon = 'draft';
-
-    if (mimeType.startsWith('image/')) {
-      icon = 'image';
-    } else if (mimeType.startsWith('video/') || mimeType.includes('mp4')) {
-      icon = 'video_file';
-    } else if (mimeType.startsWith('audio/')) {
-      icon = 'audio_file';
-    } else if (mimeType.startsWith('text/')) {
-      icon = 'text_snippet';
-    }
-
-    return { icon, iconTheme: 'material-symbols-rounded' };
-  }
-
-  /**
-   * Each backend can provide custom item-creators for dropped files. The implementation
-   * in this base class creates a default menu item for the file.
-   *
-   * @param name The name of the file that was dropped. This is usually the file name
-   *   without the path.
-   * @param path The full path to the file that was dropped. There are some edge-cases
-   *   where the path cannot be determined (for instance, if something is dragged from the
-   *   Windows start menu). In this case, the path will be an empty string.
-   */
-  public async createItemForDroppedFile(name: string, path: string): Promise<IMenuItem> {
-    const { icon, iconTheme } = await this.getFileIcon(path);
-    return { type: 'file', name, icon, iconTheme, data: { path } };
-  }
-
-  /**
    * Each backend can provide a way to detect changes to the system icons. This method
    * should return true if the system icon theme has changed since the last call to
    * getSystemIcons().
@@ -145,6 +97,41 @@ export abstract class Backend extends EventEmitter {
     // This method is not implemented by the base class, but can be implemented by
     // derived backends if they support detecting changes to system icons.
     return false;
+  }
+
+  /**
+   * Each backend can provide custom item-creators for dropped files. The implementation
+   * in this base class creates a default menu item for the file.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped.
+   */
+  public async createItemForDroppedFile(name: string, path: string): Promise<IMenuItem> {
+    const mimeType = mime.lookup(path);
+
+    // If the mime type is not known, maybe a directory was passed.
+    let icon = mimeType ? 'draft' : 'folder';
+
+    if (mimeType) {
+      if (mimeType.startsWith('image/')) {
+        icon = 'image';
+      } else if (mimeType.startsWith('video/') || mimeType.includes('mp4')) {
+        icon = 'video_file';
+      } else if (mimeType.startsWith('audio/')) {
+        icon = 'audio_file';
+      } else if (mimeType.startsWith('text/')) {
+        icon = 'text_snippet';
+      }
+    }
+
+    return {
+      type: 'file',
+      name,
+      icon,
+      iconTheme: 'material-symbols-rounded',
+      data: { path },
+    };
   }
 
   /**

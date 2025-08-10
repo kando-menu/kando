@@ -92,40 +92,6 @@ export class WindowsBackend extends Backend {
   }
 
   /**
-   * Moves the pointer by the given amount using the Win32 API.
-   *
-   * @param dx The amount of horizontal movement.
-   * @param dy The amount of vertical movement.
-   */
-  public override async movePointer(dx: number, dy: number) {
-    native.movePointer(dx, dy);
-  }
-
-  /**
-   * This simulates a key sequence using the Windows API. If one of the given keys in the
-   * sequence is not known, an exception will be thrown.
-   *
-   * @param keys The keys to simulate.
-   */
-  public override async simulateKeys(keys: IKeySequence) {
-    // We first need to convert the given DOM key names to Win32 key codes. If a key code is
-    // not found, this throws an error.
-    const keyCodes = mapKeys(keys, 'windows');
-
-    // Now simulate the key presses. We wait a couple of milliseconds if the key has a
-    // delay specified.
-    for (let i = 0; i < keys.length; i++) {
-      if (keys[i].delay > 0) {
-        await new Promise((resolve) => {
-          setTimeout(resolve, keys[i].delay);
-        });
-      }
-
-      native.simulateKey(keyCodes[i], keys[i].down);
-    }
-  }
-
-  /**
    * This returns the icons for installed applications.
    *
    * @returns A map of icon names to their CSS image sources.
@@ -206,6 +172,40 @@ export class WindowsBackend extends Backend {
 
     // For all other (non-executable) files, we create a simple file-item.
     return super.createItemForDroppedFile(name, path);
+  }
+
+  /**
+   * Moves the pointer by the given amount using the Win32 API.
+   *
+   * @param dx The amount of horizontal movement.
+   * @param dy The amount of vertical movement.
+   */
+  public override async movePointer(dx: number, dy: number) {
+    native.movePointer(dx, dy);
+  }
+
+  /**
+   * This simulates a key sequence using the Windows API. If one of the given keys in the
+   * sequence is not known, an exception will be thrown.
+   *
+   * @param keys The keys to simulate.
+   */
+  public override async simulateKeys(keys: IKeySequence) {
+    // We first need to convert the given DOM key names to Win32 key codes. If a key code is
+    // not found, this throws an error.
+    const keyCodes = mapKeys(keys, 'windows');
+
+    // Now simulate the key presses. We wait a couple of milliseconds if the key has a
+    // delay specified.
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i].delay > 0) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, keys[i].delay);
+        });
+      }
+
+      native.simulateKey(keyCodes[i], keys[i].down);
+    }
   }
 
   /**
