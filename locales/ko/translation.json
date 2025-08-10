@@ -4,13 +4,13 @@
             "error": "Kando Integration GNOME Shell 확장에 연결할 수 없어요. 여기서 설치 가능해요: {{link}}"
         },
         "hyprland": {
-            "shortcut-info": "Kando는 Hyprland에서 전역 단축키를 직접 바인딩할 수 없습니다. 대신, 여기서 단축키 ID를 지정한 후, hyprland.conf 파일에 다음과 같이 바인딩하세요: `bind = CTRL, Space, global, kando:example-menu` 여기서 `example-menu`를 이곳에서 선택한 ID로 바꾸면 됩니다."
+            "shortcut-info": "Kando는 Hyprland에서 전역 단축키를 직접 바인딩할 수 없어요. 대신, 여기서 단축키 ID를 지정한 후, hyprland.conf 파일에 다음과 같이 바인딩하세요: `bind = CTRL, Space, global, kando:example-menu` 여기서 `example-menu`를 이곳에서 선택한 ID로 바꾸면 돼요."
         },
         "kde-wayland": {
-            "shortcut-info": "Kando는 KDE/Wayland에서 전역 단축키를 직접 바인딩할 수 없습니다. 대신, 여기서 단축키 ID를 지정한 후 KDE 시스템 설정의 KWin 전역 단축키 항목에서 해당 ID를 찾아 단축키를 할당하세요. 이렇게 하면 지정한 단축키로 이 메뉴를 열 수 있습니다."
+            "shortcut-info": "Kando는 KDE/Wayland에서 전역 단축키를 직접 바인딩할 수 없어요. 대신, 여기서 단축키 ID를 지정한 후 KDE 시스템 설정의 KWin 전역 단축키 항목에서 해당 ID를 찾아 단축키를 할당하세요. 이렇게 하면 지정한 단축키로 이 메뉴를 열 수 있어요."
         },
         "niri": {
-            "shortcut-info": "Niri는 아직 전역 단축키를 지원하지 않습니다. 하지만 명령어 창이나 Niri 설정 파일에서 `'kando --menu \"Menu Name\"'` 명령어를 사용해 이 메뉴를 열 수 있습니다."
+            "shortcut-info": "Niri는 아직 전역 단축키를 지원하지 않아요. 하지만 명령어 창이나 Niri 설정 파일에서 `'kando --menu \"Menu Name\"'` 명령어를 사용해 이 메뉴를 열 수 있어요."
         }
     },
     "example-menu": {
@@ -27,10 +27,10 @@
             "web-browser": "웹 브라우저"
         },
         "audio": {
-            "mute": "음소거",
-            "next-track": "다음 트랙",
-            "play-pause": "재생 / 일시정지",
-            "previous-track": "이전 트랙",
+            "mute": "음소거하기",
+            "next-track": "다음 트랙 재생하기",
+            "play-pause": "재생하기 / 일시정지",
+            "previous-track": "이전 트랙 재생하기",
             "submenu": "오디오"
         },
         "bookmarks": {
@@ -44,7 +44,7 @@
             "videos": "영상"
         },
         "clipboard": {
-            "copy": "복사",
+            "copy": "복사하기",
             "cut": "자르기",
             "paste": "붙여넣기",
             "submenu": "클립보드"
@@ -71,61 +71,61 @@
     },
     "main": {
         "failed-to-start-header": "Kando를 실행하지 못했어요",
-        "inhibit-shortcuts": "일시적으로 모든 단축키 비활성화",
-        "new-version-notification-header": "Kando의 새 업데이트가 사용 가능해요!",
-        "quit": "종료",
+        "inhibit-shortcuts": "일시적으로 모든 단축키 비활성화하기",
+        "new-version-notification-header": "Kando를 새 버전으로 업데이트할 수 있어요!",
+        "quit": "종료하기",
         "show-settings": "설정 열기",
-        "un-inhibit-shortcuts": "단축키 다시 활성화",
+        "un-inhibit-shortcuts": "단축키 다시 활성화하기",
         "new-version-notification-body": "[여기]{{link}}에서 다운받으세요.",
-        "invalid-link-header": "잘못된 링크입니다",
-        "invalid-link-message": "딥 링크를 해석할 수 없습니다."
+        "invalid-link-header": "잘못된 링크예요",
+        "invalid-link-message": "딥 링크를 해석할 수 없어요."
     },
     "menu-items": {
         "command": {
             "command": "명령어",
             "command-info": "이 명령어가 실행될 거예요.",
-            "description": "앱이나 스크립트를 실행합니다.",
-            "name": "명령어 실행",
-            "tip-1": "Command 항목 유형을 사용하여 애플리케이션이나 스크립트를 실행할 수 있습니다.",
-            "tip-2": "실행파일의 경로에 공백 문자가 포함된다면, 경로를 \"쌍따옴표 안에 넣어야 합니다\".",
+            "description": "앱이나 스크립트를 실행해요.",
+            "name": "명령어 실행하기",
+            "tip-1": "Command 항목 유형을 사용하여 애플리케이션이나 스크립트를 실행할 수 있어요.",
+            "tip-2": "실행파일의 경로에 공백 문자가 포함된다면, 경로를 \"쌍따옴표 안에 넣으세요\".",
             "tip-3": "메뉴를 열었을 때 포커스되어 있던 애플리케이션의 이름을 삽입하려면 {{app_name}}을 사용하세요.",
             "tip-4": "메뉴를 열었을 때 포커스되어 있던 창의 이름을 삽입하려면 {{window_name}}을 사용하세요.",
             "tip-5": "메뉴가 열렸을 때의 포인터 위치를 삽입하려면 {{pointer_x}} 및 {{pointer_y}}를 사용하세요.",
             "placeholder": "아무 명령어나 입력하세요…",
-            "isolated": "격리 실행",
+            "isolated": "격리 실행하기",
             "isolated-info": "이 옵션을 선택하면 명령어가 깨끗한 환경에서 실행돼요. 즉, Kando의 환경 변수들을 상속받지 않아요. 이는 일부 명령어가 정상적으로 시작되지 않을 때 도움이 될 수 있어요.",
-            "detached": "분리 실행",
-            "detached-info": "이 옵션을 사용하면 명령어가 Kando와 분리되어 실행되므로, Kando가 종료되더라도 명령어는 계속 실행됩니다. 이 옵션을 비활성화하면 일부 명령어가 제대로 시작되지 않는 문제를 해결할 수 있습니다.",
+            "detached": "분리 실행하기",
+            "detached-info": "이 옵션을 사용하면 명령어가 Kando와 분리되어 실행되므로, Kando가 종료되더라도 명령어는 계속 실행돼요. 이 옵션을 비활성화하면 일부 명령어가 제대로 시작되지 않는 문제를 해결할 수 있어요.",
             "tip-6": "앱을 실행하는 명령어를 찾는 방법을 알아보려면 [여기]({{link}})를 클릭하세요."
         },
         "file": {
-            "description": "파일이나 폴더를 엽니다.",
+            "description": "파일이나 폴더를 열어요.",
             "file": "파일 경로",
             "name": "파일 열기",
-            "tip-1": "이 항목 유형으로 파일 또는 폴더를 열 수 있습니다.",
+            "tip-1": "이 항목 유형으로 파일 또는 폴더를 열 수 있어요.",
             "placeholder": "파일이나 폴더를 고르세요…"
         },
         "hotkey": {
-            "description": "키 조합을 입력합니다.",
+            "description": "키 조합을 입력해요.",
             "hotkey": "단축키",
-            "name": "단축키",
+            "name": "단축키 실행하기",
             "recording-placeholder": "단축키를 눌러주세요…",
             "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없습니다. 하나씩 눌러도 돼요.",
             "tip-2": "시스템이 사용중이라 녹화할 수 없는 키가 있다면, 키의 이름을 직접 입력해 보세요.",
-            "hotkey-info": "항목이 선택되면 이 단축키가 실행됩니다. 단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없습니다. 하나씩 눌러도 돼요. 이 기능은 단축키가 이미 다른 전역 동작에 할당되어 있을 때 유용합니다!",
+            "hotkey-info": "항목이 선택되면 이 단축키가 실행돼요. 단축키를 녹화할 때, 모든 키를 한번에 누를 필요 없이 하나씩 눌러도 돼요. 이 기능은 단축키가 이미 다른 전역 동작에 할당되어 있을 때 유용하답니다!",
             "tip-3": "모든 유효한 키 이름을 보려면 [이 링크]({{link}})를 클릭하세요."
         },
         "macro": {
             "description": "키보드 매크로를 실행해요.",
-            "name": "매크로",
+            "name": "매크로 실행하기",
             "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
             "recording-placeholder": "키를 눌러주세요…",
             "tip-1": "기본적으로 Kando는 키 이벤트 사이에 10ms의 지연을 추가해요. 이 지연 시간은 \"delay\" 속성으로 변경할 수 있어요.",
-            "tip-2": "매크로는 직접 수동으로도 편집할 수 있습니다. 키 입력 간격을 조정하고 싶을 때 유용합니다."
+            "tip-2": "매크로는 직접 수동으로도 편집할 수 있어요. 키 입력 간격을 조정하고 싶을 때 유용해요."
         },
         "redirect": {
             "description": "다른 메뉴를 열어요.",
-            "name": "리디렉트"
+            "name": "리다이렉트"
         },
         "settings": {
             "description": "Kando의 설정 메뉴가 열려요.",
@@ -401,9 +401,9 @@
         "window-picker-dialog": {
             "result": "\"{{name}}\"을(를) 선택했어요.",
             "instructions": "아래의 버튼을 클릭한 후 5초 이내에 목표 창을 포커스하세요.",
-            "restart-countdown": "카운트다운 다시 시작",
-            "start-countdown": "카운트다운 시작",
-            "countdown_other": "{{count}}초 후에 선택합니다…",
+            "restart-countdown": "카운트다운 다시 시작하기",
+            "start-countdown": "카운트다운 시작하기",
+            "countdown_other": "{{count}}초 후에 선택돼요…",
             "pick-app-name-title": "애플리케이션 이름 선택하기",
             "pick-window-title-title": "창 제목 선택하기",
             "confirm": "이 값을 사용하기"
