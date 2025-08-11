@@ -25,14 +25,16 @@ import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry'
 export class WindowsBackend extends Backend {
   /**
    * This is a list of all installed applications on the system. Currently, this is
-   * populated during the backend initialization. We may want to update this list
+   * populated during the backend construction. We may want to update this list
    * dynamically in the future.
    */
-  private installedApps: {
-    id: string;
-    name: string;
-    base64Icon: string;
-  }[];
+  private installedApps: IAppDescription[] = [];
+
+  /**
+   * This is a map of system icons. The key is the name of the corresponding app and the
+   * value is the base64-encoded icon.
+   */
+  private systemIcons: Map<string, string> = new Map();
 
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
@@ -57,9 +59,19 @@ export class WindowsBackend extends Backend {
 
   /** This is called when the backend is created. */
   public override async init() {
-    this.installedApps = native
+    native
       .listInstalledApplications()
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((app) => {
+        this.installedApps.push({
+          name: app.name,
+          command: 'start shell:AppsFolder\\' + app.id,
+          icon: app.name,
+          iconTheme: 'system',
+        });
+
+        this.systemIcons.set(app.name, app.base64Icon);
+      });
   }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
@@ -98,12 +110,7 @@ export class WindowsBackend extends Backend {
    * used by the settings window to populate the list of available applications.
    */
   public override async getInstalledApps(): Promise<Array<IAppDescription>> {
-    return this.installedApps.map((app) => ({
-      name: app.name,
-      command: 'start shell:AppsFolder\\' + app.id,
-      icon: app.name,
-      iconTheme: 'system',
-    }));
+    return this.installedApps;
   }
 
   /**
@@ -112,13 +119,7 @@ export class WindowsBackend extends Backend {
    * @returns A map of icon names to their CSS image sources.
    */
   public override async getSystemIcons(): Promise<Map<string, string>> {
-    const icons = new Map<string, string>();
-
-    for (const app of this.installedApps) {
-      icons.set(app.name, app.base64Icon);
-    }
-
-    return icons;
+    return this.systemIcons;
   }
 
   /**
