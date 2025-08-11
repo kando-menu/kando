@@ -221,6 +221,7 @@ export abstract class LinuxBackend extends Backend {
         icon: data['Desktop Entry']?.Icon,
         iconTheme: 'system',
         command,
+        id: command, // Use the command as a unique ID.
       };
     } catch (error) {
       console.error(`Failed to read desktop file at ${path}:`, error);

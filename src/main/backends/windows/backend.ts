@@ -65,6 +65,7 @@ export class WindowsBackend extends Backend {
       .forEach((app) => {
         this.installedApps.push({
           name: app.name,
+          id: app.id,
           command: 'start shell:AppsFolder\\' + app.id,
           icon: app.name,
           iconTheme: 'system',
@@ -110,7 +111,7 @@ export class WindowsBackend extends Backend {
    * used by the settings window to populate the list of available applications.
    */
   public override async getInstalledApps(): Promise<Array<IAppDescription>> {
-    return this.installedApps;
+    return Array.from(this.installedApps.values());
   }
 
   /**
@@ -181,7 +182,7 @@ export class WindowsBackend extends Backend {
         icon: app.name,
         iconTheme: 'system',
         data: {
-          command: 'start shell:AppsFolder\\' + app.id,
+          command: app.command,
         },
       };
     }

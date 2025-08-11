@@ -79,10 +79,10 @@ export default function AppPicker(props: IProps) {
           <div>
             {filteredApps.map((app) => (
               <Button
-                key={app.name + app.command}
+                key={app.id}
                 label={app.name}
                 block
-                variant={app.name === value?.name ? 'secondary' : 'flat'}
+                variant={app.id === value?.id ? 'secondary' : 'flat'}
                 align="left"
                 icon={<ThemedIcon name={app.icon} theme={app.iconTheme} size={24} />}
                 onClick={() => {

@@ -78,6 +78,7 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
       if (base64Icon) {
         appInfo.Set("name", Napi::String::New(env, name.UTF8String));
         appInfo.Set("command", Napi::String::New(env, launchCmd.UTF8String));
+        appInfo.Set("id", Napi::String::New(env, launchCmd.UTF8String));
         appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
         return appInfo;
       }
@@ -87,6 +88,7 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
   NSString* base64Icon = iconPath ? base64ForFile(iconPath) : @"";
   appInfo.Set("name", Napi::String::New(env, name.UTF8String));
   appInfo.Set("command", Napi::String::New(env, launchCmd.UTF8String));
+  appInfo.Set("id", Napi::String::New(env, launchCmd.UTF8String));
   appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
   return appInfo;
 }
