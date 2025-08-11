@@ -17,7 +17,7 @@ import { execSync } from 'child_process';
 import { isexe } from 'isexe';
 
 import { Backend } from '../backend';
-import { IMenuItem } from '../../../common';
+import { IMenuItem, IAppDescription } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
@@ -60,6 +60,14 @@ export abstract class LinuxBackend extends Backend {
     this.iconSearchPaths = this.iconSearchPaths.filter(
       (item, index) => this.iconSearchPaths.indexOf(item) === index
     );
+  }
+
+  /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+    return [];
   }
 
   /**

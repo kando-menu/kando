@@ -17,6 +17,7 @@ import {
   IMenuThemeDescription,
   ISoundThemeDescription,
   IMenu,
+  IAppDescription,
 } from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
@@ -73,6 +74,9 @@ type AppState = {
 
   /** Information about the system. */
   systemInfo: ISystemInfo | null;
+
+  /** A list of all installed apps. */
+  installedApps: Array<IAppDescription>;
 
   /** Descriptions of all available menu themes. */
   menuThemes: Array<IMenuThemeDescription>;
@@ -173,6 +177,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   backendInfo: null,
   versionInfo: null,
   systemInfo: null,
+  installedApps: [],
   menuThemes: [],
   soundThemes: [],
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),

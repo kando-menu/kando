@@ -13,7 +13,13 @@ import { globalShortcut } from 'electron';
 import lodash from 'lodash';
 import mime from 'mime-types';
 
-import { IBackendInfo, IKeySequence, IWMInfo, IMenuItem } from '../../common';
+import {
+  IBackendInfo,
+  IKeySequence,
+  IWMInfo,
+  IMenuItem,
+  IAppDescription,
+} from '../../common';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
@@ -67,6 +73,12 @@ export abstract class Backend extends EventEmitter {
    *   as well as to the current pointer position.
    */
   public abstract getWMInfo(): Promise<IWMInfo>;
+
+  /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public abstract getInstalledApps(): Promise<Array<IAppDescription>>;
 
   /**
    * Each backend can provide a way to list available system icons. The method should

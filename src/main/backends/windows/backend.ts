@@ -14,7 +14,7 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { IKeySequence, IMenuItem } from '../../../common';
+import { IKeySequence, IMenuItem, IAppDescription } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
@@ -57,7 +57,9 @@ export class WindowsBackend extends Backend {
 
   /** This is called when the backend is created. */
   public override async init() {
-    this.installedApps = native.listInstalledApplications();
+    this.installedApps = native
+      .listInstalledApplications()
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
@@ -89,6 +91,19 @@ export class WindowsBackend extends Backend {
         y: pointer.y,
       }).workArea,
     };
+  }
+
+  /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+    return this.installedApps.map((app) => ({
+      name: app.name,
+      command: 'start shell:AppsFolder\\' + app.id,
+      icon: app.name,
+      iconTheme: 'system',
+    }));
   }
 
   /**

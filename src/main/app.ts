@@ -523,6 +523,11 @@ export class KandoApp {
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    // Allow the renderer to retrieve all installed applications.
+    ipcMain.handle('settings-window.get-installed-apps', () => {
+      return this.backend.getInstalledApps();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on(
       'settings-window.show-dev-tools',

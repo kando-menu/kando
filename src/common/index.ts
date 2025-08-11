@@ -286,6 +286,24 @@ export interface ISoundThemeDescription {
 }
 
 /**
+ * This interface is used to describe an installed application. When the settings window
+ * is opened, it will query the host process for a list of all installed applications.
+ */
+export interface IAppDescription {
+  /** The name of the application. */
+  name: string;
+
+  /** The command to launch the application. */
+  command: string;
+
+  /** The icon used for the application. */
+  icon: string;
+
+  /** The icon theme used for the above icon. */
+  iconTheme: string;
+}
+
+/**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
  * delay in milliseconds.

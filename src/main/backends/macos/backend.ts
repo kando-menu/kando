@@ -11,7 +11,7 @@
 import { native } from './native';
 import { screen, app } from 'electron';
 import { Backend } from '../backend';
-import { IKeySequence } from '../../../common';
+import { IKeySequence, IAppDescription } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 
 export class MacosBackend extends Backend {
@@ -61,6 +61,14 @@ export class MacosBackend extends Backend {
         y: pointer.y,
       }).workArea,
     };
+  }
+
+  /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+    return [];
   }
 
   /**
