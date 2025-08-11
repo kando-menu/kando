@@ -12,7 +12,6 @@
 
 .button {
   display: inline-flex;
-  justify-content: center;
   align-items: center;
 
   color: $text-normal;
@@ -20,6 +19,12 @@
   border-radius: 5px;
   font-size: inherit;
   white-space: nowrap;
+
+  .text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-width: 0;
+  }
 
   svg {
     position: relative;
@@ -39,6 +44,18 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+}
+
+.left {
+  justify-content: flex-start;
+}
+
+.right {
+  justify-content: flex-end;
+}
+
+.center {
+  justify-content: center;
 }
 
 .secondary {
@@ -84,7 +101,7 @@
 }
 
 .small {
-  padding: 5px 9px;
+  padding: 5px;
   font-size: 0.8em;
   gap: 4px;
 
@@ -103,7 +120,7 @@
 }
 
 .medium {
-  padding: 7px 15px;
+  padding: 7px;
   font-size: 1em;
   gap: 6px;
 
@@ -122,7 +139,7 @@
 }
 
 .large {
-  padding: 10px 18px;
+  padding: 10px;
   font-size: 1.2em;
   gap: 8px;
 

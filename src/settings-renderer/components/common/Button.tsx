@@ -37,6 +37,9 @@ interface IProps {
   /** Size of the button. Defaults to 'medium'. */
   size?: 'small' | 'medium' | 'large';
 
+  /** Alignment of icon and text. Defaults to 'center'. */
+  align?: 'left' | 'right' | 'center';
+
   /** Whether the button is disabled. Defaults to false. */
   disabled?: boolean;
 
@@ -67,6 +70,7 @@ export default function Button(props: IProps) {
     button: true,
     [props.variant || 'secondary']: true,
     [props.size || 'medium']: true,
+    [props.align || 'center']: true,
     disabled: props.disabled,
     grouped: props.grouped,
     block: props.block,
@@ -81,7 +85,7 @@ export default function Button(props: IProps) {
       data-tooltip-id="main-tooltip"
       data-tooltip-content={props.tooltip}>
       {props.icon}
-      {props.label}
+      {props.label && <span className={classes.text}>{props.label}</span>}
     </button>
   );
 }
