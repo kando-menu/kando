@@ -62,6 +62,8 @@ interface IProps {
  * faded in with a CSS transition. When it becomes false, the modal will be faded out and
  * its content will be unmounted.
  *
+ * If neither an icon nor a title is provided, the header bar will not be displayed.
+ *
  * @param props - The properties for the modal component.
  * @returns A modal element.
  */
@@ -153,15 +155,17 @@ export default function Modal(props: IProps) {
         }}
         className={classes.modalBackground}>
         <div className={classes.modal} style={{ maxWidth: props.maxWidth }}>
-          <Headerbar
-            left={cIsMac ? closeButton : title}
-            center={cIsMac ? title : null}
-            right={!cIsMac ? closeButton : null}
-            // The macOS header bar has no padding on the left side as there is the close
-            // button. On other platforms, there is some padding on the left side as there
-            // is the title.
-            paddingLeft={cIsMac ? 0 : 15}
-          />
+          {(props.title || props.icon) && (
+            <Headerbar
+              left={cIsMac ? closeButton : title}
+              center={cIsMac ? title : null}
+              right={!cIsMac ? closeButton : null}
+              // The macOS header bar has no padding on the left side as there is the close
+              // button. On other platforms, there is some padding on the left side as there
+              // is the title.
+              paddingLeft={cIsMac ? 0 : 15}
+            />
+          )}
           <div
             className={classes.content}
             style={{
