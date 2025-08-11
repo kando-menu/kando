@@ -11,8 +11,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
-import mime from 'mime-types';
-import { readIniFile } from 'read-ini-file';
+import { readIniFile, readIniFileSync } from 'read-ini-file';
 import { execSync } from 'child_process';
 import { isexe } from 'isexe';
 
@@ -36,11 +35,18 @@ export abstract class LinuxBackend extends Backend {
   /** This stores the last known system icon theme. */
   private currentTheme: string;
 
+  /**
+   * This is a list of all installed applications on the system. Currently, this is
+   * populated during the backend construction. We may want to update this list
+   * dynamically in the future.
+   */
+  private installedApps: IAppDescription[] = [];
+
   constructor() {
     super();
 
-    // List of paths to search for icons. The order is important, if a theme is found in
-    // multiple locations, the first one has priority.
+    // Assemble a list of paths to search for icons. The order is important, if a theme is
+    // found in multiple locations, the first one has priority.
     const home = os.homedir();
     this.iconSearchPaths = [
       path.join(home, '.icons/'),
@@ -60,6 +66,32 @@ export abstract class LinuxBackend extends Backend {
     this.iconSearchPaths = this.iconSearchPaths.filter(
       (item, index) => this.iconSearchPaths.indexOf(item) === index
     );
+
+    // Collect all installed applications on the system.
+    const appDirs = [
+      '/usr/share/applications',
+      '/usr/local/share/applications',
+      '/var/lib/flatpak/exports/share/applications/',
+      '/var/lib/snapd/desktop/applications/',
+      path.join(process.env.HOME, '.local/share/applications'),
+      path.join(process.env.HOME, '.local/share/flatpak/exports/share/applications'),
+    ];
+
+    appDirs.forEach((dir) => {
+      if (fs.existsSync(dir)) {
+        fs.readdirSync(dir).forEach((file) => {
+          if (file.endsWith('.desktop')) {
+            const data = this.readDesktopFile(path.join(dir, file));
+            if (data) {
+              this.installedApps.push(data);
+            }
+          }
+        });
+      }
+    });
+
+    // Sort the installed applications by name.
+    this.installedApps.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   /**
@@ -67,7 +99,7 @@ export abstract class LinuxBackend extends Backend {
    * used by the settings window to populate the list of available applications.
    */
   public override async getInstalledApps(): Promise<Array<IAppDescription>> {
-    return [];
+    return this.installedApps;
   }
 
   /**
@@ -119,8 +151,25 @@ export abstract class LinuxBackend extends Backend {
     name: string,
     path: string
   ): Promise<IMenuItem | null> {
-    const isExe = await isexe(path);
+    // First, we check if the dropped file is a desktop file. If it is, we read the
+    // relevant information from it.
+    if (path.endsWith('.desktop')) {
+      const data = this.readDesktopFile(path);
+      if (!data) {
+        return super.createItemForDroppedFile(name, path);
+      }
 
+      return {
+        type: 'command',
+        name: data.name || name,
+        icon: data.icon || 'application-x-executable',
+        iconTheme: data.iconTheme,
+        data: { command: data.command },
+      };
+    }
+
+    // For any other executable file, we create a command item.
+    const isExe = await isexe(path);
     if (isExe) {
       const itemType = ItemTypeRegistry.getInstance().getType('command');
       return {
@@ -134,28 +183,47 @@ export abstract class LinuxBackend extends Backend {
       };
     }
 
-    const mimeType = mime.lookup(path);
+    // For all other (non-executable) files, we create a simple file-item.
+    return super.createItemForDroppedFile(name, path);
+  }
 
-    if (mimeType === 'application/x-desktop') {
-      const data = (await readIniFile(path)) as {
+  /**
+   * This method reads a desktop file and extracts the relevant information from it. It
+   * returns an object containing the name, icon, icon theme, and command of the
+   * application described by the desktop file.
+   *
+   * @param path The full path to the desktop file.
+   * @returns An object containing the name, icon, icon theme, and command of the
+   *   application, or null if the desktop file could not be read.
+   */
+  private readDesktopFile(path: string): IAppDescription | null {
+    try {
+      const data = readIniFileSync(path) as {
         ['Desktop Entry']?: {
           ['Name']?: string;
           ['Icon']?: string;
           ['Exec']?: string;
+          ['NoDisplay']?: boolean;
         };
       };
+
+      // If the no-display flag is set, we ignore this desktop file.
+      if (data['Desktop Entry']?.['NoDisplay']) {
+        return null;
+      }
 
       // Strip any of %u, %U, %f, %F from the Exec command.
       let command = data['Desktop Entry']?.Exec || path;
       command = command.replace(/%[ufUF]/g, '').trim();
 
       return {
-        type: 'command',
-        name: data['Desktop Entry']?.Name || name,
-        icon: data['Desktop Entry']?.Icon || 'application-x-executable',
+        name: data['Desktop Entry']?.Name,
+        icon: data['Desktop Entry']?.Icon,
         iconTheme: 'system',
-        data: { command },
+        command,
       };
+    } catch (error) {
+      console.error(`Failed to read desktop file at ${path}:`, error);
     }
 
     return null;
