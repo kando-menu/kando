@@ -5,7 +5,7 @@
       "base64-example": "Base64 example:",
       "file-example": "file: URI example:",
       "url-example": "URL example:",
-      "search-placeholder": "Search Icons…",
+      "search-placeholder": "Search icons…",
       "hint": "Learn [here]({{link}}) how to add or create your own icon themes."
     },
     "not-bound": "Not Bound",
@@ -185,6 +185,12 @@
     "add-menu-items": "Add Menu Items",
     "undo": "Undo",
     "redo": "Redo",
+    "app-picker": {
+      "hint": "You can also drag and drop an app from your start menu to Kando's menu editor!",
+      "search-placeholder": "Search for an app…",
+      "use-selected": "Use selected"
+    },
+    "cancel": "Cancel",
     "menu-behavior": "Menu Behavior",
     "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
     "centered-mode": "Centered Mode",
@@ -223,12 +229,10 @@
       "top-left": "Drag this to the top left corner of your area.",
       "bottom-right-value": "Right: {{x}}, Bottom: {{y}}",
       "bottom-right": "Drag this to the bottom right corner of your area.",
-      "title": "Pick a Screen Area",
       "valid": "Great! You have selected a valid area.",
       "invalid": "Make sure the top left corner is above and to the left of the bottom right corner.",
       "confirm": "Use this area"
     },
-    "cancel": "Cancel",
     "window-picker-dialog": {
       "result": "You selected \"{{name}}\".",
       "instructions": "Hit the button below and focus the target window within the next five seconds.",
@@ -236,8 +240,6 @@
       "start-countdown": "Start countdown",
       "countdown_one": "Selecting in {{count}} second…",
       "countdown_other": "Selecting in {{count}} seconds…",
-      "pick-app-name-title": "Select an Application Name",
-      "pick-window-title-title": "Select a Window Title",
       "confirm": "Use this value"
     }
   },
@@ -245,6 +247,7 @@
     "command": {
       "name": "Run Command",
       "description": "Launch apps or scripts.",
+      "choose-app": "Choose an app…",
       "placeholder": "Insert any command…",
       "isolated": "Run isolated",
       "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
