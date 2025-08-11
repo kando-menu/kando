@@ -56,7 +56,7 @@ class Native : public Napi::Addon<Native> {
    * After maximizing a window, the acrylic effect is sometimes broken. This function
    * is called after window creation to fix the acrylic effect. See here:
    * https://github.com/electron/electron/issues/42393
-   * 
+   *
    * @param info The arguments passed to the fixAcrylicEffect function. It should contain
    *           the window handle.
    */
@@ -65,8 +65,8 @@ class Native : public Napi::Addon<Native> {
   /**
    * This function returns a list of all installed applications.
    *
-   * @param info The arguments passed to the listInstalledApplications function. It should contain
-   *             no arguments.
+   * @param info The arguments passed to the listInstalledApplications function. It should
+   * contain no arguments.
    */
   Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
 };
