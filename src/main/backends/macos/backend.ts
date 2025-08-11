@@ -16,6 +16,35 @@ import { mapKeys } from '../../../common/key-codes';
 
 export class MacosBackend extends Backend {
   /**
+   * This is a list of all installed applications on the system. Currently, this is
+   * populated during the backend construction. We may want to update this list
+   * dynamically in the future.
+   */
+  private installedApps: IAppDescription[] = [];
+
+  /**
+   * This is a map of system icons. The key is the name of the corresponding app and the
+   * value is the base64-encoded icon.
+   */
+  private systemIcons: Map<string, string> = new Map();
+
+  constructor() {
+    super();
+
+    // We can get a list of all installed applications on macOS.
+    native.listInstalledApplications().forEach((app) => {
+      this.installedApps.push({
+        name: app.name,
+        command: app.command,
+        icon: app.name,
+        iconTheme: 'system',
+      });
+
+      this.systemIcons.set(app.name, app.base64Icon);
+    });
+  }
+
+  /**
    * On macOS, the window type is set to 'panel'. This makes sure that the window is
    * always on top of other windows and that it is shown on all workspaces.
    */
@@ -68,7 +97,24 @@ export class MacosBackend extends Backend {
    * used by the settings window to populate the list of available applications.
    */
   public override async getInstalledApps(): Promise<Array<IAppDescription>> {
-    return [];
+    return this.installedApps;
+  }
+
+  /**
+   * This returns the icons for installed applications.
+   *
+   * @returns A map of icon names to their CSS image sources.
+   */
+  public override async getSystemIcons(): Promise<Map<string, string>> {
+    return this.systemIcons;
+  }
+
+  /**
+   * We currently do not support dynamic icon theme changes on Windows. Kando needs to be
+   * restarted for changes to take effect.
+   */
+  public override async systemIconsChanged(): Promise<boolean> {
+    return false;
   }
 
   /**
