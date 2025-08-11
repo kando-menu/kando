@@ -28,22 +28,6 @@ export class MacosBackend extends Backend {
    */
   private systemIcons: Map<string, string> = new Map();
 
-  constructor() {
-    super();
-
-    // We can get a list of all installed applications on macOS.
-    native.listInstalledApplications().forEach((app) => {
-      this.installedApps.push({
-        name: app.name,
-        command: app.command,
-        icon: app.name,
-        iconTheme: 'system',
-      });
-
-      this.systemIcons.set(app.name, app.base64Icon);
-    });
-  }
-
   /**
    * On macOS, the window type is set to 'panel'. This makes sure that the window is
    * always on top of other windows and that it is shown on all workspaces.
@@ -62,6 +46,21 @@ export class MacosBackend extends Backend {
     // Is there a way to hide the dock icon on macOS initially? If we hide it here, it
     // will be shown for a short moment when the app is started.
     app.dock.hide();
+
+    // We can get a list of all installed applications on macOS.
+    native
+      .listInstalledApplications()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((app) => {
+        this.installedApps.push({
+          name: app.name,
+          command: app.command,
+          icon: app.name,
+          iconTheme: 'system',
+        });
+
+        this.systemIcons.set(app.name, app.base64Icon);
+      });
   }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
