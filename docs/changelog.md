@@ -31,6 +31,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :wrench: Changed
 
+- The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
 - Updated Electron to version 34.
 
 ### :bug: Fixed
