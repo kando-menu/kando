@@ -12,6 +12,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import chokidar from 'chokidar';
 import lodash from 'lodash';
+import * as z from 'zod';
 
 import os from 'os';
 import { Notification } from 'electron';
@@ -110,7 +111,7 @@ class PropertyChangeEmitter<T> {
 interface Options<T> {
   file: string;
   directory: string;
-  defaults: T;
+  schema: z.ZodType<T>;
 }
 
 /**
@@ -157,11 +158,8 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   private settings: T;
 
-  /**
-   * This is the default settings object. It is used when the settings file does not exist
-   * yet or when it does not contain all properties.
-   */
-  public readonly defaults: T;
+  /** This is the schema which is used to validate the settings object. */
+  public readonly schema: z.ZodType<T>;
 
   /**
    * Creates a new settings object. If the settings file does not exist yet, the default
@@ -175,8 +173,8 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     super();
 
     this.filePath = path.join(options.directory, options.file);
-    this.defaults = options.defaults;
-    this.settings = this.loadSettings(this.defaults);
+    this.schema = options.schema;
+    this.settings = this.loadSettings();
 
     // Watch the settings file for changes.
     this.setupWatcher();
@@ -279,7 +277,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     this.watcher.on('change', () => {
       const oldSettings = { ...this.settings };
       try {
-        this.settings = this.loadSettings(this.defaults);
+        this.settings = this.loadSettings();
       } catch (error) {
         console.error('Error loading settings:', error);
         return;
@@ -295,23 +293,22 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * properties, the missing properties are added from the default settings. If the
    * settings file contains a syntax error, the default settings are returned.
    *
-   * @param defaultSettings The default settings object.
    * @returns The current settings object.
    */
-  private loadSettings(defaultSettings: T): T {
+  private loadSettings(): T {
     try {
       console.log('Loading settings from', this.filePath);
       const data = fs.readJSONSync(this.filePath);
-      return lodash.merge({}, defaultSettings, data);
+      return this.schema.parse(data);
     } catch (error) {
       if (error.code === 'ENOENT') {
         // The settings file does not exist yet. Create it.
-        this.saveSettings(defaultSettings);
+        this.saveSettings(this.schema.parse({}));
       } else {
         throw error;
       }
 
-      return defaultSettings;
+      return this.schema.parse({});
     }
   }
 

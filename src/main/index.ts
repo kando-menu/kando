@@ -11,7 +11,11 @@
 import { app } from 'electron';
 import { program } from 'commander';
 
-import { ICommandlineOptions } from '../common';
+import {
+  generalSettingsSchema,
+  ICommandlineOptions,
+  menuSettingsSchema,
+} from '../common';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -67,12 +71,7 @@ import { Notification } from './utils/notification';
 import { getBackend } from './backends';
 import { KandoApp } from './app';
 import { Settings } from './utils/settings';
-import {
-  IMenuSettings,
-  IGeneralSettings,
-  getDefaultGeneralSettings,
-  getDefaultMenuSettings,
-} from '../common';
+import { IMenuSettings, IGeneralSettings } from '../common';
 
 // It is not very nice that electron stores all its cache data in the user's config
 // directory. Until https://github.com/electron/electron/pull/34337 is merged, we
@@ -114,7 +113,7 @@ if (!backend) {
 const menuSettings = new Settings<IMenuSettings>({
   file: 'menus.json',
   directory: app.getPath('userData'),
-  defaults: getDefaultMenuSettings(),
+  schema: menuSettingsSchema,
 });
 
 // We load the settings from the user's home directory. If the settings file does not
@@ -124,13 +123,16 @@ const menuSettings = new Settings<IMenuSettings>({
 const generalSettings = new Settings<IGeneralSettings>({
   file: 'config.json',
   directory: app.getPath('userData'),
-  defaults: {
-    ...getDefaultGeneralSettings(),
+  schema: generalSettingsSchema,
+});
+
+if (generalSettings.get('settingsWindowFlavor') === 'auto') {
+  generalSettings.set({
     settingsWindowFlavor: backend.getBackendInfo().shouldUseTransparentSettingsWindow
       ? 'transparent-system'
       : 'sakura-system',
-  },
-});
+  });
+}
 
 // Disable hardware acceleration if the user has set this in the settings.
 if (generalSettings.get('hardwareAcceleration') === false) {
