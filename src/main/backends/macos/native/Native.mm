@@ -21,13 +21,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 namespace {
-NSString* base64ForFile(NSString* path) {
-  NSData* data = [NSData dataWithContentsOfFile:path];
-  if (!data) {
-    return @"";
-  }
-  return [data base64EncodedStringWithOptions:0];
-}
 
 Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
   Napi::Object appInfo = Napi::Object::New(env);
@@ -49,47 +42,40 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
                          [@"Contents/MacOS" stringByAppendingPathComponent:execName]]
                : @"";
 
-  // Launch command (safe way)
+  // Launch command to start the application.
   NSString* launchCmd = [NSString stringWithFormat:@"open -a \"%@\"", name];
 
-  // Find icon
-  NSString* iconName = [bundle objectForInfoDictionaryKey:@"CFBundleIconFile"];
-  if (!iconName) {
-    iconName = [bundle objectForInfoDictionaryKey:@"CFBundleIconName"];
-  }
+  NSImage* icon = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
 
-  if (iconName && ![iconName.pathExtension length]) {
-    iconName = [iconName stringByAppendingPathExtension:@"icns"];
-  }
+  // Create a 64x64 bitmap and draw the icon into it
+  NSImage* resizedIcon = [[NSImage alloc] initWithSize:NSMakeSize(64, 64)];
+  [resizedIcon lockFocus];
+  [icon drawInRect:NSMakeRect(0, 0, 64, 64)
+            fromRect:NSZeroRect
+           operation:NSCompositingOperationSourceOver
+            fraction:1.0
+      respectFlipped:YES
+               hints:@{
+                 NSImageHintInterpolation: @(NSImageInterpolationHigh)
+               }];
+  [resizedIcon unlockFocus];
 
-  NSString* iconPath =
-      iconName ? [[bundle resourcePath] stringByAppendingPathComponent:iconName] : nil;
+  NSData* tiffData = [resizedIcon TIFFRepresentation];
+  if (tiffData) {
+    NSBitmapImageRep* rep        = [NSBitmapImageRep imageRepWithData:tiffData];
+    NSData*           pngData    = [rep representationUsingType:NSBitmapImageFileTypePNG
+                                        properties:@{}];
+    NSString*         base64Icon = [pngData base64EncodedStringWithOptions:0];
 
-  // If .icns missing, fallback via NSWorkspace
-  if (![[NSFileManager defaultManager] fileExistsAtPath:iconPath]) {
-    NSImage* icon     = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
-    NSData*  tiffData = [icon TIFFRepresentation];
-    if (tiffData) {
-      NSBitmapImageRep* rep        = [NSBitmapImageRep imageRepWithData:tiffData];
-      NSData*           pngData    = [rep representationUsingType:NSBitmapImageFileTypePNG
-                                          properties:@{}];
-      NSString*         base64Icon = [pngData base64EncodedStringWithOptions:0];
+    if (base64Icon) {
+      // Add data: prefix to the base64 string.
+      base64Icon = [NSString stringWithFormat:@"data:image/png;base64,%@", base64Icon];
 
-      if (base64Icon) {
-        appInfo.Set("name", Napi::String::New(env, name.UTF8String));
-        appInfo.Set("command", Napi::String::New(env, launchCmd.UTF8String));
-        appInfo.Set("id", Napi::String::New(env, launchCmd.UTF8String));
-        appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
-        return appInfo;
-      }
+      appInfo.Set("name", Napi::String::New(env, name.UTF8String));
+      appInfo.Set("command", Napi::String::New(env, launchCmd.UTF8String));
+      appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
     }
   }
-
-  NSString* base64Icon = iconPath ? base64ForFile(iconPath) : @"";
-  appInfo.Set("name", Napi::String::New(env, name.UTF8String));
-  appInfo.Set("command", Napi::String::New(env, launchCmd.UTF8String));
-  appInfo.Set("id", Napi::String::New(env, launchCmd.UTF8String));
-  appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
   return appInfo;
 }
 

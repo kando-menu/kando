@@ -53,6 +53,7 @@ export class MacosBackend extends Backend {
       .sort((a, b) => a.name.localeCompare(b.name))
       .forEach((app) => {
         this.installedApps.push({
+          id: app.command, // Use the command as the ID, as it is unique.
           name: app.name,
           command: app.command,
           icon: app.name,
