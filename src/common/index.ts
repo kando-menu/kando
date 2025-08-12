@@ -8,6 +8,25 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+/** This interface is used to pass command line arguments to the app. */
+export interface ICommandlineOptions {
+  // This optional parameter is specified using the --menu option. It is used to show a
+  // menu when the app or a second instance of the app is started.
+  menu?: string;
+
+  // This optional parameter is specified using the --settings option. It is used to show
+  // the settings when the app or a second instance of the app is started.
+  settings?: boolean;
+
+  // This optional parameter is specified using the --reload-menu-theme option. It is used
+  // to reload the current menu theme from disk.
+  reloadMenuTheme?: boolean;
+
+  // This optional parameter is specified using the --reload-sound-theme option. It is
+  // used to reload the current sound theme from disk.
+  reloadSoundTheme?: boolean;
+}
+
 /**
  * A simple 2D vector.
  *
@@ -585,6 +604,9 @@ export interface IGeneralSettings {
   /** Whether to initialize the menu window when it is opened for the first time. */
   lazyInitialization: boolean;
 
+  /** Enable GPU acceleration. */
+  hardwareAcceleration: boolean;
+
   /** A scale factor for the menu. */
   zoomFactor: number;
 
@@ -716,6 +738,7 @@ export function getDefaultGeneralSettings(): IGeneralSettings {
     settingsWindowFlavor: 'sakura-system',
     trayIconFlavor: 'color',
     lazyInitialization: false,
+    hardwareAcceleration: true,
     enableVersionCheck: true,
     zoomFactor: 1,
     centerDeadZone: 50,

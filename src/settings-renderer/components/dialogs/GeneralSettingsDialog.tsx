@@ -104,6 +104,13 @@ export default function GeneralSettingsDialog() {
             options={localeOptions}
           />
           <SettingsCheckbox
+            label={i18next.t('settings.general-settings-dialog.hardware-acceleration')}
+            info={i18next.t(
+              'settings.general-settings-dialog.hardware-acceleration-info'
+            )}
+            settingsKey="hardwareAcceleration"
+          />
+          <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.check-for-new-versions')}
             info={i18next.t(
               'settings.general-settings-dialog.check-for-new-versions-info'

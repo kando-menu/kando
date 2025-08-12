@@ -11,30 +11,13 @@
 import { app } from 'electron';
 import { program } from 'commander';
 
+import { ICommandlineOptions } from '../common';
+
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
  * handling the lifecycle of the app. The drawing of the menu and the settings is done in
  * the renderer process (see renderer.ts).
  */
-
-/** This interface is used to pass command line arguments to the app. */
-interface CLIOptions {
-  // This optional parameter is specified using the --menu option. It is used to show a
-  // menu when the app or a second instance of the app is started.
-  menu?: string;
-
-  // This optional parameter is specified using the --settings option. It is used to show
-  // the settings when the app or a second instance of the app is started.
-  settings?: boolean;
-
-  // This optional parameter is specified using the --reload-menu-theme option. It is used
-  // to reload the current menu theme from disk.
-  reloadMenuTheme?: boolean;
-
-  // This optional parameter is specified using the --reload-sound-theme option. It is
-  // used to reload the current sound theme from disk.
-  reloadSoundTheme?: boolean;
-}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -55,7 +38,7 @@ program
   .allowExcessArguments(true);
 
 program.parse();
-const options = program.opts() as CLIOptions;
+const options = program.opts() as ICommandlineOptions;
 
 // Prevent multiple instances of the app. If an instance of the app is already running,
 // we just quit this one and let the other instance handle the command line arguments.
@@ -74,13 +57,22 @@ if (!gotTheLock) {
 
 // Start the app. We import the KandoApp class here to make the code above as fast as
 // possible.
+import fs from 'fs';
 import path from 'path';
 import i18next from 'i18next';
 import i18Backend from 'i18next-fs-backend/cjs';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
 import { Notification } from './utils/notification';
+import { getBackend } from './backends';
 import { KandoApp } from './app';
+import { Settings } from './utils/settings';
+import {
+  IMenuSettings,
+  IGeneralSettings,
+  getDefaultGeneralSettings,
+  getDefaultMenuSettings,
+} from '../common';
 
 // It is not very nice that electron stores all its cache data in the user's config
 // directory. Until https://github.com/electron/electron/pull/34337 is merged, we
@@ -106,41 +98,72 @@ if (!deepLinkSupport) {
   console.error('Failed to register kando:// protocol. Deep links will not work.');
 }
 
-// Create the app and initialize it as soon as electron is ready.
-const kando = new KandoApp();
+// Choose the backend to use. We quit the app if no backend is found.
+const backend = getBackend();
+if (!backend) {
+  Notification.showError(
+    i18next.t('main.failed-to-start-header'),
+    i18next.t('main.no-backend-found')
+  );
+  app.quit();
+  process.exit(1);
+}
 
-// Performs actions based on the command line arguments passed to the app. It returns true
-// a option was passed that was handled by the app.
-const handleCommandLine = (options: CLIOptions) => {
-  if (options.menu) {
-    kando.showMenu({ name: options.menu });
-    return true;
+// We load the menu settings from the user's home directory. If the settings file does
+// not exist, it will be created with the default values.
+const menuSettings = new Settings<IMenuSettings>({
+  file: 'menus.json',
+  directory: app.getPath('userData'),
+  defaults: getDefaultMenuSettings(),
+});
+
+// We load the settings from the user's home directory. If the settings file does not
+// exist, it will be created with the default values. The only special setting is the
+// settingsWindowFlavor setting which is set to transparent only if the backend
+// supports transparent windows.
+const generalSettings = new Settings<IGeneralSettings>({
+  file: 'config.json',
+  directory: app.getPath('userData'),
+  defaults: {
+    ...getDefaultGeneralSettings(),
+    settingsWindowFlavor: backend.getBackendInfo().shouldUseTransparentSettingsWindow
+      ? 'transparent-system'
+      : 'sakura-system',
+  },
+});
+
+// Disable hardware acceleration if the user has set this in the settings.
+if (generalSettings.get('hardwareAcceleration') === false) {
+  console.log('Hardware acceleration disabled');
+  app.disableHardwareAcceleration();
+}
+
+// We ensure that the themes directories exist. If they do not exist, we create them.
+try {
+  const themeDirs = ['menu-themes', 'sound-themes', 'icon-themes'];
+  themeDirs.forEach((dir) => {
+    fs.mkdirSync(path.join(app.getPath('userData'), dir), { recursive: true });
+  });
+} catch (error) {
+  if (
+    (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM') &&
+    !generalSettings.get('ignoreWriteProtectedConfigFiles')
+  ) {
+    console.log('Failed to create the themes folders due to write-protected files.');
+  } else {
+    console.error('An unexpected error occurred while creating theme folders:', error);
   }
+}
 
-  if (options.settings) {
-    kando.showSettings();
-    return true;
-  }
-
-  if (options.reloadMenuTheme) {
-    kando.reloadMenuTheme();
-    return true;
-  }
-
-  if (options.reloadSoundTheme) {
-    kando.reloadSoundTheme();
-    return true;
-  }
-
-  return false;
-};
+// Create the app. We will initialize it later when the Electron app is ready.
+const kando = new KandoApp(backend, generalSettings, menuSettings);
 
 // This function is called when the app or a second instance is started with command line
 // arguments or via a deep link. The deep link takes precedence over the command line
 // arguments if both are present. The last boolean parameter is used to determine if the
 // settings should be shown if no command line arguments were passed.
 const handleArguments = (
-  commandLine: CLIOptions | null,
+  commandLine: ICommandlineOptions | null,
   deepLink: string | null,
   showSettingsIfEmpty: boolean
 ) => {
@@ -153,7 +176,7 @@ const handleArguments = (
       reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
     };
 
-    if (!handleCommandLine(options)) {
+    if (!kando.handleCommandLine(options)) {
       Notification.showError(
         i18next.t('main.invalid-link-header'),
         i18next.t('main.invalid-link-message')
@@ -164,7 +187,7 @@ const handleArguments = (
   }
 
   if (commandLine) {
-    if (!handleCommandLine(commandLine) && showSettingsIfEmpty) {
+    if (!kando.handleCommandLine(commandLine) && showSettingsIfEmpty) {
       kando.showSettings();
     }
   }
@@ -178,8 +201,9 @@ app
     }
   })
   .then(() => {
+    const locale = generalSettings.get('locale');
     return i18next.use(i18Backend).init({
-      lng: app.getLocale(),
+      lng: locale === 'auto' ? app.getLocale() : locale,
       fallbackLng: {
         /* eslint-disable @typescript-eslint/naming-convention */
         'en-US': ['en'],
@@ -198,6 +222,7 @@ app
       },
     });
   })
+  .then(() => backend.init())
   .then(() => kando.init())
   .then(() => {
     // Show a nifty message when the app is about to quit.
@@ -209,7 +234,7 @@ app
     // Respond to commandline arguments passed to a second instance. On Windows and Linux
     // this is also called when the app is opened via a deep link. In this case, the last
     // argument is the deep link.
-    app.on('second-instance', (e, argv, pwd, options: CLIOptions) => {
+    app.on('second-instance', (e, argv, pwd, options: ICommandlineOptions) => {
       handleArguments(options, argv[argv.length - 1], true);
     });
 
