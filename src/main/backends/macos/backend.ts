@@ -8,11 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { native } from './native';
 import { screen, app } from 'electron';
+import { isexe } from 'isexe';
+
+import { native } from './native';
 import { Backend } from '../backend';
-import { IKeySequence, IAppDescription } from '../../../common';
+import { IKeySequence, IAppDescription, IMenuItem } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 export class MacosBackend extends Backend {
   /**
@@ -53,9 +56,9 @@ export class MacosBackend extends Backend {
       .sort((a, b) => a.name.localeCompare(b.name))
       .forEach((app) => {
         this.installedApps.push({
-          id: app.command, // Use the command as the ID, as it is unique.
+          id: app.id,
           name: app.name,
-          command: app.command,
+          command: 'open -a "' + app.id + '"',
           icon: app.name,
           iconTheme: 'system',
         });
@@ -115,6 +118,57 @@ export class MacosBackend extends Backend {
    */
   public override async systemIconsChanged(): Promise<boolean> {
     return false;
+  }
+
+  /**
+   * On macOS, we create run-command menu items for dropped executable files. If an app
+   * bundle is dropped, we try to find it in our list of installed apps to get an icon and
+   * the proper launch command.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped. There are some edge-cases
+   *   where the path cannot be determined (for instance, if something is dragged from the
+   *   Windows start menu). In this case, the path will be an empty string.
+   */
+  public override async createItemForDroppedFile(
+    name: string,
+    path: string
+  ): Promise<IMenuItem | null> {
+    const commandItemType = ItemTypeRegistry.getInstance().getType('command');
+    const appName = name.slice(0, name.lastIndexOf('.'));
+
+    // If an executable file was dropped, create a menu item for it.
+    if (await isexe(path, { ignoreErrors: true })) {
+      return {
+        type: 'command',
+        name: appName,
+        icon: commandItemType.defaultIcon,
+        iconTheme: commandItemType.defaultIconTheme,
+        data: {
+          command: '"' + path + '"',
+        },
+      };
+    }
+
+    // If the path does not refer to an executable file, it can still be an app bundle
+    // dragged from the Finder.ß
+    const app = this.installedApps.find((app) => app.id === appName);
+
+    if (app) {
+      return {
+        type: 'command',
+        name: app.name,
+        icon: app.name,
+        iconTheme: 'system',
+        data: {
+          command: app.command,
+        },
+      };
+    }
+
+    // For all other (non-executable) files, we create a simple file-item.
+    return super.createItemForDroppedFile(name, path);
   }
 
   /**

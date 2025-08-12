@@ -40,7 +40,7 @@ export interface Native {
    */
   listInstalledApplications(): {
     name: string;
-    command: string;
+    id: string;
     base64Icon: string;
   }[];
 }

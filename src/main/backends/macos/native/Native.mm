@@ -30,10 +30,9 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
     return appInfo;
   }
 
-  NSString* name      = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
-  NSString* execName  = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
-  NSString* launchCmd = [NSString stringWithFormat:@"open -a \"%@\"", execName];
-  NSImage*  icon      = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
+  NSString* name     = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
+  NSString* execName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
+  NSImage*  icon     = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
 
   // Create a 64x64 bitmap and draw the icon into it
   NSImage* resizedIcon = [[NSImage alloc] initWithSize:NSMakeSize(64, 64)];
@@ -60,7 +59,7 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
       base64Icon = [NSString stringWithFormat:@"data:image/png;base64,%@", base64Icon];
 
       appInfo.Set("name", Napi::String::New(env, name.UTF8String));
-      appInfo.Set("command", Napi::String::New(env, launchCmd.UTF8String));
+      appInfo.Set("id", Napi::String::New(env, execName.UTF8String));
       appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
     }
   }
