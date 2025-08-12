@@ -30,22 +30,10 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
     return appInfo;
   }
 
-  NSString* name = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
-  if (!name) {
-    name = [[appPath lastPathComponent] stringByDeletingPathExtension];
-  }
-
-  NSString* execName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
-  NSString* execPath =
-      execName ? [[bundle bundlePath]
-                     stringByAppendingPathComponent:
-                         [@"Contents/MacOS" stringByAppendingPathComponent:execName]]
-               : @"";
-
-  // Launch command to start the application.
-  NSString* launchCmd = [NSString stringWithFormat:@"open -a \"%@\"", name];
-
-  NSImage* icon = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
+  NSString* name      = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
+  NSString* execName  = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
+  NSString* launchCmd = [NSString stringWithFormat:@"open -a \"%@\"", execName];
+  NSImage*  icon      = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
 
   // Create a 64x64 bitmap and draw the icon into it
   NSImage* resizedIcon = [[NSImage alloc] initWithSize:NSMakeSize(64, 64)];
@@ -246,7 +234,8 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
   @autoreleasepool {
     NSArray<NSString*>* appDirs = @[
       @"/Applications", @"/System/Applications",
-      [NSHomeDirectory() stringByAppendingPathComponent:@"Applications"]
+      [NSHomeDirectory() stringByAppendingPathComponent:@"Applications"],
+      [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Applications"]
     ];
 
     NSFileManager* fm = [NSFileManager defaultManager];
