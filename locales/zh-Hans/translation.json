@@ -11,6 +11,9 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando 无法直接在 KDE/Wayland 上绑定全局快捷键。相反，请您在这里指定一个快捷键 ID，然后在 KDE 系统设置的全局快捷键的 KWin 部分中搜索它。您可以在那里分配将打开此菜单的快捷键。"
+        },
+        "niri": {
+            "shortcut-info": "Niri 尚不支持全局快捷键。但您可以通过命令行执行 'kando --menu \"菜单名称\"' 或在您的 Niri 配置文件中设定，以开启该菜单。"
         }
     },
     "example-menu": {

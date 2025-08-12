@@ -64,6 +64,8 @@
       "black": "Black",
       "lazy-initialization": "Lazy initialization",
       "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
+      "hardware-acceleration": "Enable hardware acceleration",
+      "hardware-acceleration-info": "This option can boost the performance of the app, but can also lead to some rendering artifacts. You have to restart Kando to apply this setting.",
       "menu-behavior": "Menu Behavior",
       "keep-input-focus": "Keep active application focused",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
@@ -333,9 +335,10 @@
     "un-inhibit-shortcuts": "Re-enable shortcuts",
     "inhibit-shortcuts": "Temporarily disable all shortcuts",
     "quit": "Quit",
+    "failed-to-start-header": "Kando failed to start",
+    "no-backend-found": "No suitable backend was found.",
     "invalid-link-header": "Invalid link",
-    "invalid-link-message": "The deep link could not be parsed.",
-    "failed-to-start-header": "Kando failed to start"
+    "invalid-link-message": "The deep link could not be parsed."
   },
   "example-menu": {
     "name": "Example Menu",

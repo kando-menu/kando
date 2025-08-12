@@ -41,6 +41,14 @@ export abstract class Backend extends EventEmitter {
   private inhibitedShortcuts: string[] = [];
 
   /**
+   * Each backend must provide some basic information about the backend. See IBackendInfo
+   * for more information. This method may be called before the backend is initialized.
+   *
+   * @returns Some information about the backend.
+   */
+  public abstract getBackendInfo(): IBackendInfo;
+
+  /**
    * This method will be called once when the backend is created. It can be used to
    * connect to some kind of IPC mechanisms.
    *
@@ -56,14 +64,6 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the backend has been cleaned up.
    */
   public abstract deinit(): Promise<void>;
-
-  /**
-   * Each backend must provide some basic information about the backend. See IBackendInfo
-   * for more information.
-   *
-   * @returns Some information about the backend.
-   */
-  public abstract getBackendInfo(): IBackendInfo;
 
   /**
    * Each backend must provide a way to get the name and app of the currently focused
