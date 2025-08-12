@@ -104,6 +104,13 @@ export default function GeneralSettingsDialog() {
             options={localeOptions}
           />
           <SettingsCheckbox
+            label={i18next.t('settings.general-settings-dialog.hardware-acceleration')}
+            info={i18next.t(
+              'settings.general-settings-dialog.hardware-acceleration-info'
+            )}
+            settingsKey="hardwareAcceleration"
+          />
+          <SettingsCheckbox
             label={i18next.t('settings.general-settings-dialog.check-for-new-versions')}
             info={i18next.t(
               'settings.general-settings-dialog.check-for-new-versions-info'
@@ -239,14 +246,6 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.lazy-initialization')}
             info={i18next.t('settings.general-settings-dialog.lazy-initialization-info')}
             settingsKey="lazyInitialization"
-          />
-
-          <SettingsCheckbox
-            label={i18next.t('settings.general-settings-dialog.hardware-acceleration')}
-            info={i18next.t(
-              'settings.general-settings-dialog.hardware-acceleration-info'
-            )}
-            settingsKey="hardwareAcceleration"
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>

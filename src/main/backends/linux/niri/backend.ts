@@ -25,6 +25,20 @@ export class NiriBackend extends WLRBackend {
   private globalShortcuts = new GlobalShortcuts();
 
   /**
+   * 'splash' seems to be a good choice for Niri (same as Hyprland). See:
+   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
+   */
+  public getBackendInfo() {
+    return {
+      name: 'Niri',
+      menuWindowType: 'splash',
+      supportsShortcuts: false,
+      shortcutHint: i18next.t('backends.niri.shortcut-info'),
+      shouldUseTransparentSettingsWindow: true,
+    };
+  }
+
+  /**
    * This is called when the backend is created. We use it to print a warning, as the user
    * still needs to set up some window rules and bind the shortcuts.
    */
@@ -48,20 +62,6 @@ for more information.
 
   /** Nothing to be done here. */
   public async deinit() {}
-
-  /**
-   * 'splash' seems to be a good choice for Niri (same as Hyprland). See:
-   * https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions
-   */
-  public getBackendInfo() {
-    return {
-      name: 'Niri',
-      menuWindowType: 'splash',
-      supportsShortcuts: false,
-      shortcutHint: i18next.t('backends.niri.shortcut-info'),
-      shouldUseTransparentSettingsWindow: true,
-    };
-  }
 
   /**
    * The pointer position as well as the work-area size are retrieved via a native addon

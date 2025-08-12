@@ -18,7 +18,7 @@ import i18next from 'i18next';
 
 import { MenuWindow } from './menu-window';
 import { SettingsWindow } from './settings-window';
-import { Backend, getBackend } from './backends';
+import { Backend } from './backends';
 import {
   IMenuItem,
   IMenu,
@@ -28,11 +28,10 @@ import {
   IIconThemesInfo,
   ISoundThemeDescription,
   IMenuThemeDescription,
-  getDefaultGeneralSettings,
-  getDefaultMenuSettings,
   IWMInfo,
   SoundType,
   ISoundEffect,
+  ICommandlineOptions,
 } from '../common';
 import { Settings } from './utils/settings';
 import { Notification } from './utils/notification';
@@ -46,12 +45,6 @@ import { supportsIsolatedProcesses } from './utils/shell';
  * interaction.
  */
 export class KandoApp {
-  /**
-   * The backend is responsible for all the system interaction. It is implemented
-   * differently for each platform.
-   */
-  private backend: Backend = getBackend();
-
   /** This is used to check for updates. */
   private updateChecker = new UpdateChecker();
 
@@ -75,18 +68,6 @@ export class KandoApp {
    */
   private tray: Tray;
 
-  /**
-   * This is the settings object which is used to store the general application settings
-   * in the user's home directory.
-   */
-  private generalSettings: Settings<IGeneralSettings>;
-
-  /**
-   * This is the settings object which is used to store the configured menus in the user's
-   * home directory.
-   */
-  private menuSettings: Settings<IMenuSettings>;
-
   /** This contains the last IWMInfo which was received. */
   private lastWMInfo?: IWMInfo;
 
@@ -94,8 +75,19 @@ export class KandoApp {
    * Most of the initialization is done in the init() method. This constructor is only
    * used to set up the hidden menu bar as this has to be done before the Electron app is
    * ready.
+   *
+   * @param backend The backend which is used to interact with the system. It will not yet
+   *   been initialized at this point, but it will be initialized in the init() method.
+   * @param generalSettings The settings object which is used to store the general
+   *   settings in the user's home directory.
+   * @param menuSettings The settings object which is used to store the configured menus
+   *   in the user's home directory.
    */
-  constructor() {
+  constructor(
+    private backend: Backend,
+    private generalSettings: Settings<IGeneralSettings>,
+    private menuSettings: Settings<IMenuSettings>
+  ) {
     // On macOS, we loose the copy and paste functionality when using no menu bar. So we
     // add a hidden menu bar with some default actions. We also add a custom handler for
     // closing the window, so that we can hide the menu window instead of closing it.
@@ -140,13 +132,6 @@ export class KandoApp {
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
-    // Bail out if the backend is not available.
-    if (this.backend === null) {
-      throw new Error('No backend found.');
-    }
-
-    await this.backend.init();
-
     this.backend.on('shortcutPressed', (trigger) => {
       this.showMenu({ trigger });
 
@@ -154,58 +139,6 @@ export class KandoApp {
       // a notification to the user. This notification is only shown once per session.
       this.updateChecker.checkForUpdates();
     });
-
-    // We load the settings from the user's home directory. If the settings file does not
-    // exist, it will be created with the default values. The only special setting is the
-    // settingsWindowFlavor setting which is set to transparent only if the backend
-    // supports transparent windows.
-    this.generalSettings = new Settings<IGeneralSettings>({
-      file: 'config.json',
-      directory: app.getPath('userData'),
-      defaults: {
-        ...getDefaultGeneralSettings(),
-        settingsWindowFlavor: this.backend.getBackendInfo()
-          .shouldUseTransparentSettingsWindow
-          ? 'transparent-system'
-          : 'sakura-system',
-      },
-    });
-
-    // We ensure that the themes directories exist. If they do not exist, we create them.
-    try {
-      const themeDirs = ['menu-themes', 'sound-themes', 'icon-themes'];
-      await Promise.all(
-        themeDirs.map((dir) =>
-          fs.promises.mkdir(path.join(app.getPath('userData'), dir), { recursive: true })
-        )
-      );
-    } catch (error) {
-      if (
-        (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM') &&
-        !this.generalSettings.get('ignoreWriteProtectedConfigFiles')
-      ) {
-        console.log('Failed to create the themes folders due to write-protected files.');
-      } else {
-        console.error(
-          'An unexpected error occurred while creating theme folders:',
-          error
-        );
-      }
-    }
-
-    // We load the settings from the user's home directory. If the settings file does
-    // not exist, it will be created with the default values.
-    this.menuSettings = new Settings<IMenuSettings>({
-      file: 'menus.json',
-      directory: app.getPath('userData'),
-      defaults: getDefaultMenuSettings(),
-    });
-
-    // Tell i18next to use a specific locale if it is set in the settings.
-    const locale = this.generalSettings.get('locale');
-    if (locale !== 'auto') {
-      i18next.changeLanguage(locale);
-    }
 
     // Try migrating settings from an old version of Kando.
     this.migrateSettings();
@@ -300,6 +233,37 @@ export class KandoApp {
 
     this.generalSettings.close();
     this.menuSettings.close();
+  }
+
+  /**
+   * Performs actions based on the given command line arguments. It returns true if a
+   * option was passed that was handled by the app.
+   *
+   * @param options The command line options passed to the app.
+   * @returns True if a command line option was handled by the app.
+   */
+  public handleCommandLine(options: ICommandlineOptions) {
+    if (options.menu) {
+      this.showMenu({ name: options.menu });
+      return true;
+    }
+
+    if (options.settings) {
+      this.showSettings();
+      return true;
+    }
+
+    if (options.reloadMenuTheme) {
+      this.reloadMenuTheme();
+      return true;
+    }
+
+    if (options.reloadSoundTheme) {
+      this.reloadSoundTheme();
+      return true;
+    }
+
+    return false;
   }
 
   /**
