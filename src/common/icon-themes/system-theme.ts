@@ -29,7 +29,8 @@ export class SystemTheme implements IIconTheme {
   /**
    * Creates a new SystemTheme.
    *
-   * @param info Information about the system icon theme.
+   * @param icons A map of icon names to their data URLs. The keys are the icon names, and
+   *   the values are the data URLs of the icons.
    */
   constructor(private icons: Map<string, string>) {
     this.iconNames = Array.from(this.icons.keys()).sort((a, b) => a.localeCompare(b));
