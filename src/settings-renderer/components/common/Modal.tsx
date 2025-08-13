@@ -163,7 +163,8 @@ export default function Modal(props: IProps) {
               // The macOS header bar has no padding on the left side as there is the close
               // button. On other platforms, there is some padding on the left side as there
               // is the title.
-              paddingLeft={cIsMac ? 0 : 15}
+              paddingLeft={cIsMac ? 5 : 15}
+              paddingRight={cIsMac ? 15 : 5}
             />
           )}
           <div
