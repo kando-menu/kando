@@ -611,11 +611,11 @@ export default function MenuPreview() {
                 // we create a temporary dragged item which will be used as a "drop
                 // indicator" item.
                 if (tempItem === null && dragIndex === null) {
-                  const dataType = ItemTypeRegistry.getInstance().getPreferredDataType(
-                    event.dataTransfer.types
+                  const supported = ItemTypeRegistry.getInstance().hasSupportedDataType(
+                    event.dataTransfer
                   );
 
-                  if (dataType) {
+                  if (supported) {
                     setTempItem({
                       key: 'dragged',
                       index: -1,

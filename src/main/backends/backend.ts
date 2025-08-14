@@ -119,7 +119,15 @@ export abstract class Backend extends EventEmitter {
    *   without the path.
    * @param path The full path to the file that was dropped.
    */
-  public async createItemForDroppedFile(name: string, path: string): Promise<IMenuItem> {
+  public async createItemForDroppedFile(
+    name: string,
+    path: string
+  ): Promise<IMenuItem | null> {
+    // If the path is empty, we can't create a menu item.
+    if (!path) {
+      return null;
+    }
+
     const mimeType = mime.lookup(path);
 
     // If the mime type is not known, maybe a directory was passed.

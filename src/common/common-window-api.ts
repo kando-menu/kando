@@ -158,12 +158,12 @@ export const COMMON_WINDOW_API = {
    * This method creates a new menu item for a given file. Depending on the file type,
    * different item types may be used. For example, if the file is a *.desktop file on
    * Linux, it will create a run-command item. For most other files, it will create a file
-   * item.
+   * item. It may happen that no item could be created.
    *
    * @param file The file for which a menu item should be created.
    * @returns A new menu item for the given file.
    */
-  createMenuItemForFile(file: File): Promise<IMenuItem> {
+  createItemForDroppedFile(file: File): Promise<IMenuItem | null> {
     const name = file.name;
     const path = webUtils.getPathForFile(file);
     return ipcRenderer.invoke('common.create-menu-item-for-file', name, path);
