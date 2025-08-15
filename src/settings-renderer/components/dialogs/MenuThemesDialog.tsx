@@ -115,6 +115,7 @@ export default function MenuThemesDialog() {
             gap: 10,
             justifyContent: 'space-between',
           }}>
+          <Scrollbox maxHeight={'min(20vh, 400px)'} width="100%">
           <div
             style={{
               display: 'flex',
@@ -147,6 +148,7 @@ export default function MenuThemesDialog() {
               );
             })}
           </div>
+          </Scrollbox>
           <Button
             icon={<RiDeleteBack2Fill />}
             tooltip={i18next.t('settings.menu-themes-dialog.reset-color-picker')}
