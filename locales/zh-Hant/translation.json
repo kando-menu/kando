@@ -116,7 +116,9 @@
             "cycle-from-recent": "顯示下一個選單（記住最後）",
             "cycle-from-first": "顯示下一個選單（從頭開始）",
             "keep-input-focus": "保持作用中應用程式的焦點",
-            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需要在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。"
+            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需要在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。",
+            "hardware-acceleration": "啟用硬體加速",
+            "hardware-acceleration-info": "此選項可以提升應用程式的效能，但也可能導致一些顯示異常。此設定需重新啟動 Kando 才會生效。"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
@@ -389,7 +391,8 @@
         "quit": "結束",
         "invalid-link-header": "無效的連結",
         "invalid-link-message": "無法解析此深層連結。",
-        "failed-to-start-header": "Kando 啟動失敗"
+        "failed-to-start-header": "Kando 啟動失敗",
+        "no-backend-found": "找不到合適的後端。"
     },
     "backends": {
         "hyprland": {
