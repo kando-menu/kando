@@ -81,7 +81,8 @@
         "un-inhibit-shortcuts": "重新启用快捷键",
         "new-version-notification-body": "前往 {{link}} 获取吧。",
         "invalid-link-header": "链接无效",
-        "invalid-link-message": "此深度链接无法被解析。"
+        "invalid-link-message": "此深度链接无法被解析。",
+        "no-backend-found": "未找到合适后端"
     },
     "menu-items": {
         "command": {
@@ -282,8 +283,10 @@
             "localization-info": "需要重新启动 Kando 使语言设置生效。",
             "cycle-from-first": "显示下一个菜单（从第一个开始）",
             "cycle-from-recent": "显示下一个菜单（从上一菜单接续）",
-            "keep-input-focus": "保持活动应用聚焦",
-            "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这会禁用极速模式，但如果您希望其他应用程序在菜单打开时保持聚焦，这可能会很有用。"
+            "keep-input-focus": "停留在活动应用窗口",
+            "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这会禁用极速模式，但如果您希望其他应用程序在菜单打开时保持聚焦，这可能会很有用。",
+            "hardware-acceleration": "启用硬件加速",
+            "hardware-acceleration-info": "此选项可提升应用程序的性能，但同时也可能导致渲染异常。您需要重新启动Kando以应用此设置。"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
