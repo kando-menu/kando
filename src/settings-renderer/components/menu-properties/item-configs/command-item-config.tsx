@@ -10,10 +10,12 @@
 
 import React from 'react';
 import i18next from 'i18next';
+import { TbApps } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
-import { RandomTip, TextInput, Checkbox } from '../../common';
+import { RandomTip, TextInput, Checkbox, Button } from '../../common';
 import { IItemData } from '../../../../common/item-types/command-item-type';
+import AppPicker from '../AppPicker';
 
 /**
  * The configuration component for command items is primarily a text input field for the
@@ -29,6 +31,8 @@ export default () => {
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
 
+  const [appPickerVisible, setAppPickerVisible] = React.useState(false);
+
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'command') {
     return <></>;
@@ -38,6 +42,14 @@ export default () => {
 
   return (
     <>
+      <Button
+        variant="secondary"
+        label={i18next.t('menu-items.command.choose-app')}
+        icon={<TbApps />}
+        onClick={() => {
+          setAppPickerVisible(true);
+        }}
+      />
       <TextInput
         placeholder={i18next.t('menu-items.command.placeholder')}
         multiline
@@ -96,6 +108,19 @@ export default () => {
             link: 'https://kando.menu/item-run-command/',
           }),
         ]}
+      />
+      <AppPicker
+        visible={appPickerVisible}
+        onSelect={(value) => {
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            item.name = value.name;
+            item.icon = value.icon;
+            item.iconTheme = value.iconTheme;
+            (item.data as IItemData).command = value.command;
+            return item;
+          });
+        }}
+        onClose={() => setAppPickerVisible(false)}
       />
     </>
   );

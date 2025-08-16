@@ -103,7 +103,7 @@ export default function CollectionList() {
             data-tooltip-content={
               selectedCollection === -1 ? '' : i18next.t('settings.all-menus')
             }>
-            <ThemedIcon name="all-menus.svg" theme="kando" />
+            <ThemedIcon name="logo-tiny.svg" theme="kando" />
           </button>
           {renderedCollections.map((collection) => (
             <button

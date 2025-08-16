@@ -149,7 +149,6 @@ export default function MenuThemesDialog() {
           </div>
           <Button
             icon={<RiDeleteBack2Fill />}
-            size="small"
             tooltip={i18next.t('settings.menu-themes-dialog.reset-color-picker')}
             onClick={() => {
               if (darkMode && useDarkMode) {

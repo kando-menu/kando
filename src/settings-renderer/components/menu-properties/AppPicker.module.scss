@@ -9,19 +9,26 @@
 // SPDX-License-Identifier: MIT
 
 @use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
 
-.headerbar {
+.container {
   color: $text-normal;
-  min-height: env(titlebar-area-height, 30);
-  -webkit-app-region: drag;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-  white-space: nowrap;
-  font-weight: bold;
+  flex-direction: column;
+  height: min(80vh, 500px);
 }
 
-.noDrag {
-  -webkit-app-region: no-drag;
+.buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.searchInput {
+  display: flex;
+
+  input {
+    @include text-input;
+    width: 100%;
+    border-radius: 5px 0 0 5px;
+  }
 }

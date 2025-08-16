@@ -305,6 +305,31 @@ export interface ISoundThemeDescription {
 }
 
 /**
+ * This interface is used to describe an installed application. When the settings window
+ * is opened, it will query the host process for a list of all installed applications.
+ */
+export interface IAppDescription {
+  /**
+   * Some unique identifier for the application. What that is depends on the backend.
+   * Could be for instance the UWP app ID. If the backend is not able to provide a unique
+   * ID, it may fall back to using the application command.
+   */
+  id: string;
+
+  /** The name of the application. */
+  name: string;
+
+  /** The command to launch the application. */
+  command: string;
+
+  /** The icon used for the application. */
+  icon: string;
+
+  /** The icon theme used for the above icon. */
+  iconTheme: string;
+}
+
+/**
  * This interface is used to describe an element of a key sequence. It contains the DOM
  * name of the key, a boolean indicating whether the key is pressed or released and a
  * delay in milliseconds.

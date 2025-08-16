@@ -11,15 +11,18 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
-import { readIniFile } from 'read-ini-file';
+import { readIniFile, readIniFileSync } from 'read-ini-file';
 import { execSync } from 'child_process';
+import { isexe } from 'isexe';
 
 import { Backend } from '../backend';
+import { IMenuItem, IAppDescription } from '../../../common';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
  * This generic Linux backend class provides the basic functionality for all Linux
  * backends. For now, this is just getting the system icons according to the Freedesktop
- * Icon Theme Specification.
+ * Icon Theme Specification and providing access to all installed applications.
  */
 export abstract class LinuxBackend extends Backend {
   /**
@@ -32,11 +35,18 @@ export abstract class LinuxBackend extends Backend {
   /** This stores the last known system icon theme. */
   private currentTheme: string;
 
+  /**
+   * This is a list of all installed applications on the system. Currently, this is
+   * populated during the backend construction. We may want to update this list
+   * dynamically in the future.
+   */
+  private installedApps: IAppDescription[] = [];
+
   constructor() {
     super();
 
-    // List of paths to search for icons. The order is important, if a theme is found in
-    // multiple locations, the first one has priority.
+    // Assemble a list of paths to search for icons. The order is important, if a theme is
+    // found in multiple locations, the first one has priority.
     const home = os.homedir();
     this.iconSearchPaths = [
       path.join(home, '.icons/'),
@@ -56,6 +66,40 @@ export abstract class LinuxBackend extends Backend {
     this.iconSearchPaths = this.iconSearchPaths.filter(
       (item, index) => this.iconSearchPaths.indexOf(item) === index
     );
+
+    // Collect all installed applications on the system.
+    const appDirs = [
+      '/usr/share/applications',
+      '/usr/local/share/applications',
+      '/var/lib/flatpak/exports/share/applications/',
+      '/var/lib/snapd/desktop/applications/',
+      path.join(process.env.HOME, '.local/share/applications'),
+      path.join(process.env.HOME, '.local/share/flatpak/exports/share/applications'),
+    ];
+
+    appDirs.forEach((dir) => {
+      if (fs.existsSync(dir)) {
+        fs.readdirSync(dir).forEach((file) => {
+          if (file.endsWith('.desktop')) {
+            const data = this.readDesktopFile(path.join(dir, file));
+            if (data) {
+              this.installedApps.push(data);
+            }
+          }
+        });
+      }
+    });
+
+    // Sort the installed applications by name.
+    this.installedApps.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+    return this.installedApps;
   }
 
   /**
@@ -68,11 +112,9 @@ export abstract class LinuxBackend extends Backend {
    * are excluded as well. Only icons in SVG or PNG format are returned. If an icon is
    * available in both formats, the SVG version is preferred.
    *
-   * @returns A list absolute file paths to the icons.
+   * @returns A map of icon names to their CSS image sources.
    */
-  public override async getSystemIcons(): Promise<Array<string>> {
-    const startTime = performance.now();
-
+  public override async getSystemIcons(): Promise<Map<string, string>> {
     this.currentTheme = await this.getCurrentIconTheme();
     const allThemeDirectories = await this.getThemeDirectoriesRecursively(
       this.currentTheme
@@ -82,13 +124,6 @@ export abstract class LinuxBackend extends Backend {
       ['apps', 'actions', 'devices', 'mimetypes'],
       ['scalable', '48x48', '48'],
       ['.svg', '.png']
-    );
-
-    const endTime = performance.now();
-    const timeTaken = endTime - startTime;
-
-    console.debug(
-      `Found ${icons.length} ${this.currentTheme} icons in ${timeTaken.toFixed(0)} ms.`
     );
 
     return icons;
@@ -102,6 +137,97 @@ export abstract class LinuxBackend extends Backend {
   public override async systemIconsChanged(): Promise<boolean> {
     const newTheme = await this.getCurrentIconTheme();
     return newTheme !== this.currentTheme;
+  }
+
+  /**
+   * On Linux, we create run-command menu items for dropped executable files. If a desktop
+   * file is dropped, we extract the relevant information from it.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped.
+   */
+  public override async createItemForDroppedFile(
+    name: string,
+    path: string
+  ): Promise<IMenuItem | null> {
+    // First, we check if the dropped file is a desktop file. If it is, we read the
+    // relevant information from it.
+    if (path.endsWith('.desktop')) {
+      const data = this.readDesktopFile(path);
+      if (!data) {
+        return super.createItemForDroppedFile(name, path);
+      }
+
+      return {
+        type: 'command',
+        name: data.name || name,
+        icon: data.icon || 'application-x-executable',
+        iconTheme: data.iconTheme,
+        data: { command: data.command },
+      };
+    }
+
+    // For any other executable file, we create a command item.
+    const isExe = await isexe(path);
+    if (isExe) {
+      const itemType = ItemTypeRegistry.getInstance().getType('command');
+      return {
+        type: 'command',
+        name,
+        icon: itemType.defaultIcon,
+        iconTheme: itemType.defaultIconTheme,
+        data: {
+          command: '"' + path + '"',
+        },
+      };
+    }
+
+    // For all other (non-executable) files, we create a simple file-item.
+    return super.createItemForDroppedFile(name, path);
+  }
+
+  /**
+   * This method reads a desktop file and extracts the relevant information from it. It
+   * returns an object containing the name, icon, icon theme, and command of the
+   * application described by the desktop file.
+   *
+   * @param path The full path to the desktop file.
+   * @returns An object containing the name, icon, icon theme, and command of the
+   *   application, or null if the desktop file could not be read.
+   */
+  private readDesktopFile(path: string): IAppDescription | null {
+    try {
+      const data = readIniFileSync(path) as {
+        ['Desktop Entry']?: {
+          ['Name']?: string;
+          ['Icon']?: string;
+          ['Exec']?: string;
+          ['NoDisplay']?: boolean;
+        };
+      };
+
+      // If the no-display flag is set, we ignore this desktop file.
+      if (data['Desktop Entry']?.['NoDisplay']) {
+        return null;
+      }
+
+      // Strip any of %u, %U, %f, %F from the Exec command.
+      let command = data['Desktop Entry']?.Exec || path;
+      command = command.replace(/%[ufUF]/g, '').trim();
+
+      return {
+        name: data['Desktop Entry']?.Name,
+        icon: data['Desktop Entry']?.Icon,
+        iconTheme: 'system',
+        command,
+        id: command, // Use the command as a unique ID.
+      };
+    } catch (error) {
+      console.error(`Failed to read desktop file at ${path}:`, error);
+    }
+
+    return null;
   }
 
   /**
@@ -313,7 +439,7 @@ export abstract class LinuxBackend extends Backend {
     contexts: string[],
     sizes: string[],
     fileTypes: string[]
-  ): Promise<string[]> {
+  ): Promise<Map<string, string>> {
     // Maps icon names to their absolute file paths.
     const icons = new Map<string, string>();
 
@@ -338,7 +464,7 @@ export abstract class LinuxBackend extends Backend {
               const ext = path.extname(file).toLowerCase();
               if (fileTypes.includes(ext)) {
                 const iconName = path.basename(file, ext);
-                icons.set(iconName, path.join(dir, file));
+                icons.set(iconName, 'file://' + path.join(dir, file));
               }
             }
           }
@@ -346,7 +472,6 @@ export abstract class LinuxBackend extends Backend {
       }
     }
 
-    // Convert the map to an array of absolute file paths.
-    return Array.from(icons.values());
+    return icons;
   }
 }

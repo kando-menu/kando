@@ -40,6 +40,7 @@ Promise.all([
   window.settingsAPI.getBackendInfo(),
   window.settingsAPI.getVersionInfo(),
   window.settingsAPI.getSystemInfo(),
+  window.settingsAPI.getInstalledApps(),
   window.settingsAPI.getAllMenuThemes(),
   window.settingsAPI.getAllSoundThemes(),
   window.settingsAPI.getCurrentMenu(),
@@ -52,6 +53,7 @@ Promise.all([
     backendInfo,
     versionInfo,
     systemInfo,
+    installedApps,
     menuThemes,
     soundThemes,
     selectedMenu,
@@ -134,6 +136,7 @@ Promise.all([
       backendInfo,
       versionInfo,
       systemInfo,
+      installedApps,
       darkMode,
       menuThemes,
       soundThemes,
@@ -172,6 +175,11 @@ Promise.all([
       forceListen: true,
       allowDragScroll: false,
     });
+
+    // Make sure to never open files or links by accident when dragging them over the
+    // settings window.
+    window.addEventListener('dragover', (e) => e.preventDefault(), false);
+    window.addEventListener('drop', (e) => e.preventDefault(), false);
 
     // Create the settings dialog app object.
     const root = createRoot(document.body);

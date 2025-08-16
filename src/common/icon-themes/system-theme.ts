@@ -19,10 +19,7 @@ import { IIconTheme } from './icon-theme-registry';
  */
 export class SystemTheme implements IIconTheme {
   /** A list of all available icon names. */
-  private icons: Array<string> = [];
-
-  /** A map of icon names to the file paths of the icons. */
-  private iconPaths: Record<string, string> = {};
+  private iconNames: Array<string> = [];
 
   /** A human-readable name of the icon theme. */
   get name() {
@@ -32,22 +29,17 @@ export class SystemTheme implements IIconTheme {
   /**
    * Creates a new SystemTheme.
    *
-   * @param paths The absolute file paths to the icons.
+   * @param icons A map of icon names to their data URLs. The keys are the icon names, and
+   *   the values are the data URLs of the icons.
    */
-  constructor(paths: string[]) {
-    paths.forEach((path) => {
-      const url = new URL(`file://${path}`);
-      let name = url.pathname.split('/').pop() || ''; // Extract the file name.
-      name = name.replace(/\.[^/.]+$/, ''); // Remove the extension.
-      this.icons.push(name);
-      this.iconPaths[name] = path;
-    });
+  constructor(private icons: Map<string, string>) {
+    this.iconNames = Array.from(this.icons.keys()).sort((a, b) => a.localeCompare(b));
   }
 
   /** Creates a div element that contains the icon with the given name. */
   createIcon(icon: string) {
-    const iconPath = this.iconPaths[icon];
-    if (!iconPath) {
+    const iconData = this.icons.get(icon);
+    if (!iconData) {
       return null;
     }
 
@@ -55,8 +47,7 @@ export class SystemTheme implements IIconTheme {
     containerDiv.classList.add('icon-container');
 
     const iconDiv = document.createElement('img');
-    iconDiv.src = `file://${iconPath}`;
-    iconDiv.draggable = false;
+    iconDiv.src = iconData;
 
     containerDiv.appendChild(iconDiv);
 
@@ -68,7 +59,7 @@ export class SystemTheme implements IIconTheme {
     return {
       type: 'list' as const,
       usesTextColor: false,
-      listIcons: (searchTerm: string) => matchSorter(this.icons, searchTerm),
+      listIcons: (searchTerm: string) => matchSorter(this.iconNames, searchTerm),
     };
   }
 }

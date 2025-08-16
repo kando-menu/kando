@@ -11,15 +11,22 @@
 import { EventEmitter } from 'events';
 import { globalShortcut } from 'electron';
 import lodash from 'lodash';
+import mime from 'mime-types';
 
-import { IBackendInfo, IKeySequence, IWMInfo } from '../../common';
+import {
+  IBackendInfo,
+  IKeySequence,
+  IWMInfo,
+  IMenuItem,
+  IAppDescription,
+} from '../../common';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
  * communicating with the operating system in ways impossible with the standard electron
  * APIs. It provides methods to bind global shortcuts (which is not possible on all
- * platforms using electron only), move the mouse pointer, simulate keyboard shortcuts and
- * get information about the currently focused window.
+ * platforms using electron only), move the mouse pointer, simulate keyboard shortcuts, or
+ * to get information about the currently focused window.
  *
  * If a global shortcut is activated, it will emit the 'shortcutPressed' event with the
  * activated shortcut as the first argument.
@@ -68,17 +75,25 @@ export abstract class Backend extends EventEmitter {
   public abstract getWMInfo(): Promise<IWMInfo>;
 
   /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public abstract getInstalledApps(): Promise<Array<IAppDescription>>;
+
+  /**
    * Each backend can provide a way to list available system icons. The method should
-   * return an array of absolute file paths to the icons. This is used to create the
+   * return a map of icon names to something which can be used as CSS image source. That
+   * is for instance file paths or base64-encoded data URLs. This is used to create the
    * system icon theme.
    *
-   * @returns A promise which resolves to an array of absolute file paths to the system
-   *   icons. If system icons are not available, it should resolve to an empty array.
+   * This method is not implemented by the base class, but can be implemented by derived
+   * backends if they support listing system icons.
+   *
+   * @returns A promise which resolves to a map of icon names to their CSS image sources.
+   *   If system icons are not available, it should resolve to an empty map.
    */
-  public async getSystemIcons(): Promise<Array<string>> {
-    // This method is not implemented by the base class, but can be implemented by
-    // derived backends if they support listing system icons.
-    return [];
+  public async getSystemIcons(): Promise<Map<string, string>> {
+    return new Map();
   }
 
   /**
@@ -94,6 +109,49 @@ export abstract class Backend extends EventEmitter {
     // This method is not implemented by the base class, but can be implemented by
     // derived backends if they support detecting changes to system icons.
     return false;
+  }
+
+  /**
+   * Each backend can provide custom item-creators for dropped files. The implementation
+   * in this base class creates a default menu item for the file.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped.
+   */
+  public async createItemForDroppedFile(
+    name: string,
+    path: string
+  ): Promise<IMenuItem | null> {
+    // If the path is empty, we can't create a menu item.
+    if (!path) {
+      return null;
+    }
+
+    const mimeType = mime.lookup(path);
+
+    // If the mime type is not known, maybe a directory was passed.
+    let icon = mimeType ? 'draft' : 'folder';
+
+    if (mimeType) {
+      if (mimeType.startsWith('image/')) {
+        icon = 'image';
+      } else if (mimeType.startsWith('video/') || mimeType.includes('mp4')) {
+        icon = 'video_file';
+      } else if (mimeType.startsWith('audio/')) {
+        icon = 'audio_file';
+      } else if (mimeType.startsWith('text/')) {
+        icon = 'text_snippet';
+      }
+    }
+
+    return {
+      type: 'file',
+      name,
+      icon,
+      iconTheme: 'material-symbols-rounded',
+      data: { path },
+    };
   }
 
   /**

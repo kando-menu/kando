@@ -487,6 +487,11 @@ export class KandoApp {
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    // Allow the renderer to retrieve all installed applications.
+    ipcMain.handle('settings-window.get-installed-apps', () => {
+      return this.backend.getInstalledApps();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on(
       'settings-window.show-dev-tools',
@@ -694,6 +699,15 @@ export class KandoApp {
     ipcMain.handle('common.get-system-icons', async () => {
       return this.backend.getSystemIcons();
     });
+
+    // Allow the renderer to create a new menu item for a file that was dropped onto the
+    // menu editor.
+    ipcMain.handle(
+      'common.create-menu-item-for-file',
+      async (event, name: string, path: string) => {
+        return this.backend.createItemForDroppedFile(name, path);
+      }
+    );
   }
 
   /**

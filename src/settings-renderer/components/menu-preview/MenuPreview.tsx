@@ -611,11 +611,11 @@ export default function MenuPreview() {
                 // we create a temporary dragged item which will be used as a "drop
                 // indicator" item.
                 if (tempItem === null && dragIndex === null) {
-                  const dataType = ItemTypeRegistry.getInstance().getPreferredDataType(
-                    event.dataTransfer.types
+                  const supported = ItemTypeRegistry.getInstance().hasSupportedDataType(
+                    event.dataTransfer
                   );
 
-                  if (dataType) {
+                  if (supported) {
                     setTempItem({
                       key: 'dragged',
                       index: -1,
@@ -640,7 +640,7 @@ export default function MenuPreview() {
 
                 event.preventDefault();
               }}
-              onDrop={(event) => {
+              onDrop={async (event) => {
                 // If the drag index is set, we are moving an item around. In this case, we need to
                 // move the item to the new position. If it is not set, something new is dragged
                 // from somewhere else. In this case, we need to create a new item at the drop
@@ -676,40 +676,32 @@ export default function MenuPreview() {
                     }
                   }
                 } else {
-                  const preferredType =
-                    ItemTypeRegistry.getInstance().getPreferredDataType(
-                      event.dataTransfer.types
-                    );
+                  const item = await ItemTypeRegistry.getInstance().createItem(
+                    event.dataTransfer
+                  );
 
-                  if (preferredType) {
-                    const item = ItemTypeRegistry.getInstance().createItem(
-                      preferredType,
-                      event.dataTransfer.getData(preferredType)
-                    );
-
-                    if (item) {
-                      if (dropIndex === -1 && dropInto) {
-                        // Create new item in parent.
-                        const parentPath = centerItemPath.slice(0, -1);
-                        editMenuItem(selectedMenu, parentPath, (parent) => {
-                          parent.children.push(item);
-                          return parent;
-                        });
-                      } else if (dropIndex >= 0 && dropInto) {
-                        // Create new item in submenu.
-                        const submenuPath = centerItemPath.concat(dropIndex);
-                        editMenuItem(selectedMenu, submenuPath, (submenu) => {
-                          submenu.children.push(item);
-                          return submenu;
-                        });
-                      } else if (dropIndex >= 0) {
-                        // Create new item among siblings and select it.
-                        editMenuItem(selectedMenu, centerItemPath, (center) => {
-                          center.children.splice(dropIndex, 0, item);
-                          return center;
-                        });
-                        selectChildPath(centerItemPath.concat(dropIndex));
-                      }
+                  if (item) {
+                    if (dropIndex === -1 && dropInto) {
+                      // Create new item in parent.
+                      const parentPath = centerItemPath.slice(0, -1);
+                      editMenuItem(selectedMenu, parentPath, (parent) => {
+                        parent.children.push(item);
+                        return parent;
+                      });
+                    } else if (dropIndex >= 0 && dropInto) {
+                      // Create new item in submenu.
+                      const submenuPath = centerItemPath.concat(dropIndex);
+                      editMenuItem(selectedMenu, submenuPath, (submenu) => {
+                        submenu.children.push(item);
+                        return submenu;
+                      });
+                    } else if (dropIndex >= 0) {
+                      // Create new item among siblings and select it.
+                      editMenuItem(selectedMenu, centerItemPath, (center) => {
+                        center.children.splice(dropIndex, 0, item);
+                        return center;
+                      });
+                      selectChildPath(centerItemPath.concat(dropIndex));
                     }
                   }
                 }

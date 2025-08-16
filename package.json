@@ -69,6 +69,7 @@
     "i18next-fs-backend": "^2.6.0",
     "i18next-parser": "^9.1.0",
     "immer": "^10.1.1",
+    "isexe": "^3.1.1",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",
