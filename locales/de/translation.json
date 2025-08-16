@@ -8,6 +8,9 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando kann nicht direkt globale Shortcuts in KDE/Wayland binden. Stattdessen geben Sie hier eine Shortcut-ID an und suchen Sie danach im KWin-Bereich der globalen Shortcuts in den Systemeinstellungen von KDE. Dort können Sie die Tastenkombination wählen, die dieses Menü öffnet."
+        },
+        "niri": {
+            "shortcut-info": "Niri unterstützt noch keine globalen Shortcuts. Aber Sie können dieses Menü mit 'kando --menu \"Menu Name\" aus der Befehlszeile oder aus Ihrer Niri-Config öffnen."
         }
     },
     "example-menu": {
@@ -75,7 +78,8 @@
         "new-version-notification-header": "Eine neue Version von Kando ist verfügbar!",
         "quit": "Beenden",
         "show-settings": "Einstellungen öffnen",
-        "un-inhibit-shortcuts": "Tastenkombos wieder aktivieren"
+        "un-inhibit-shortcuts": "Tastenkombos wieder aktivieren",
+        "no-backend-found": "Kein passendes Backend gefunden."
     },
     "menu-items": {
         "command": {
@@ -93,7 +97,8 @@
             "detached": "Entkoppelt starten",
             "isolated": "Isoliert ausführen",
             "detached-info": "Dies wird den Prozess von Kando trennen, sodass er weiterläuft, wenn Kando geschlossen ist. Deaktivieren dieser Option kann Probleme mit Befehlen lösen, die nicht richtig starten.",
-            "isolated-info": "Dies wird den Befehl in einer sauberen Umgebung ausführen, was bedeutet, dass er keine Umgebungsvariablen von Kando erben wird. Dies kann bei Befehlen helfen, die nicht richtig starten."
+            "isolated-info": "Dies wird den Befehl in einer sauberen Umgebung ausführen, was bedeutet, dass er keine Umgebungsvariablen von Kando erben wird. Dies kann bei Befehlen helfen, die nicht richtig starten.",
+            "choose-app": "Wählen Sie eine App…"
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
@@ -315,7 +320,9 @@
             "keep-input-focus": "Aktive Anwendung fokussiert lassen",
             "cycle-from-recent": "Nächstes Menü anzeigen (weiter nach Vorherigem)",
             "cycle-from-first": "Nächstes Menü anzeigen (am Anfang starten)",
-            "keep-input-focus-info": "Wenn aktiviert, erhält das Menü beim Öffnen keinen Tastatureingabefokus. Das deaktiviert den Turbo-Modus, kann aber nützlich sein, wenn andere Anwendungen fokussiert bleiben sollen, während das Menü geöffnet ist."
+            "keep-input-focus-info": "Wenn aktiviert, erhält das Menü beim Öffnen keinen Tastatureingabefokus. Das deaktiviert den Turbo-Modus, kann aber nützlich sein, wenn andere Anwendungen fokussiert bleiben sollen, während das Menü geöffnet ist.",
+            "hardware-acceleration": "Hardwarebeschleunigung aktivieren",
+            "hardware-acceleration-info": "Diese Option kann die Leistung der App erhöhen, kann aber auch zu Darstellungsfehlern führen. Sie müssen Kando neu starten, um diese Einstellung anzuwenden."
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
@@ -413,6 +420,11 @@
         "empty-collection": "Diese Sammlung ist leer.",
         "empty-collection-note": "Bearbeiten Sie die Tags oben oder erstellen Sie ein neues Menü für diese Sammlung mit der Schaltfläche unten.",
         "no-matching-menus-note": "Vielleicht versuchen Sie einen anderen Suchbegriff?",
-        "add-menu-item-hint": "Ziehen Sie dieses Menüelement, um es oben einzufügen!"
+        "add-menu-item-hint": "Ziehen Sie dieses Menüelement, um es oben einzufügen!",
+        "app-picker": {
+            "hint": "Sie können auch Anwendungen direkt aus Ihrem Startmenü in den Menü Editor ziehen!",
+            "search-placeholder": "Anwendungen durchsuchen…",
+            "use-selected": "Auswählen"
+        }
     }
 }
