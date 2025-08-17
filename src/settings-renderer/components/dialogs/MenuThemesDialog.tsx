@@ -115,38 +115,40 @@ export default function MenuThemesDialog() {
             gap: 10,
             justifyContent: 'space-between',
           }}>
-          <div
-            style={{
-              display: 'flex',
-              gap: 10,
-              flexWrap: 'wrap',
-            }}>
-            {Object.keys(currentColors).map((key, index) => {
-              return (
-                <ColorButton
-                  key={index}
-                  name={key}
-                  color={currentColors[key]}
-                  onChange={(color) => {
-                    // Create a new object to avoid mutating the state directly.
-                    const overrides = lodash.cloneDeep(currentColorOverrides);
+          <Scrollbox maxHeight={'min(20vh, 400px)'} width="100%" paddingLeft={0}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                flexWrap: 'wrap',
+              }}>
+              {Object.keys(currentColors).map((key, index) => {
+                return (
+                  <ColorButton
+                    key={index}
+                    name={key}
+                    color={currentColors[key]}
+                    onChange={(color) => {
+                      // Create a new object to avoid mutating the state directly.
+                      const overrides = lodash.cloneDeep(currentColorOverrides);
 
-                    if (!overrides[currentTheme.id]) {
-                      overrides[currentTheme.id] = {};
-                    }
+                      if (!overrides[currentTheme.id]) {
+                        overrides[currentTheme.id] = {};
+                      }
 
-                    overrides[currentTheme.id][key] = color;
+                      overrides[currentTheme.id][key] = color;
 
-                    if (darkMode && useDarkMode) {
-                      setDarkColors(overrides);
-                    } else {
-                      setColors(overrides);
-                    }
-                  }}
-                />
-              );
-            })}
-          </div>
+                      if (darkMode && useDarkMode) {
+                        setDarkColors(overrides);
+                      } else {
+                        setColors(overrides);
+                      }
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </Scrollbox>
           <Button
             icon={<RiDeleteBack2Fill />}
             tooltip={i18next.t('settings.menu-themes-dialog.reset-color-picker')}
