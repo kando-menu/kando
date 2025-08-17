@@ -47,6 +47,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Kando will not look for `systemd-run` on Windows and macOS anymore which removes a warning printed during startup.
 - A bug which prevented the settings to be shown when a second instance of Kando was started on macOS.
 - Added an option to turn off hardware acceleration to fix a bug that sometimes caused the window to lose its transparency (seen only with NVIDIA GPUs). Thanks to [@yar2000T](https://github.com/yar2000T) for this contribution!
+- The varying width of the sidebar in the theme-selection dialog. The sidebar does not change width anymore when switching between the different themes with many accent colors. Thanks to [@kmqwerty](https://github.com/kmqwerty) for this contribution!
 
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
