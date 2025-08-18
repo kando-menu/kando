@@ -8,11 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Settings } from '../src/main/utils/settings';
+import { Settings } from '../src/main/settings';
 import { expect } from 'chai';
 import os from 'os';
 import path from 'path';
 import fs from 'fs-extra';
+import { z } from 'zod';
 
 describe('settings', () => {
   // Remove any remaining test settings file before the test.
@@ -20,15 +21,23 @@ describe('settings', () => {
     fs.removeSync(path.join(os.tmpdir(), 'kando_test.json'));
   });
 
+  const SETTINGS_SCHEMA = z.object({
+    foo: z.string().default('bar'),
+    bar: z.number().default(123),
+    nested: z
+      .object({
+        answer: z.number(),
+      })
+      .default({ answer: 42 }),
+  });
+
   const settings = new Settings({
     file: 'kando_test.json',
     directory: os.tmpdir(),
-    defaults: {
-      foo: 'bar',
-      bar: 123,
-      nested: {
-        answer: 42,
-      },
+    defaults: () => SETTINGS_SCHEMA.parse({}),
+    load: (content) => {
+      const settings = SETTINGS_SCHEMA.parse(content);
+      return { settings, didMigration: false };
     },
   });
 

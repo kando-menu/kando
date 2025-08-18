@@ -12,7 +12,7 @@ import os from 'node:os';
 import { BrowserWindow, shell, ipcMain } from 'electron';
 
 import { IGeneralSettings } from '../common';
-import { Settings } from './utils/settings';
+import { Settings } from './settings';
 import { Backend } from './backends';
 import { WindowsBackend } from './backends/windows/backend';
 

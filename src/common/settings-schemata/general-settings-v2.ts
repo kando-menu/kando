@@ -9,12 +9,21 @@
 // SPDX-License-Identifier: MIT
 
 import * as z from 'zod';
+import { version } from './../../../package.json';
+
+import { IGeneralSettingsV1 } from './general-settings-v1';
 
 /**
- * This interface describes the content of the general settings file. It contains the
- * names of the themes to use for the menu and the settings.
+ * Starting with Kando 2.1.0, we use zod to define the schema of the general settings.
+ * This allows us to better validate the settings file.
  */
-export const generalSettingsSchema = z.object({
+export const GENERAL_SETTINGS_SCHEMA_V2 = z.object({
+  /**
+   * The last version of Kando. This is used to determine whether the settings file needs
+   * to be backed up and potentially migrated to a newer version.
+   */
+  appVersion: z.string().default(version),
+
   /**
    * The locale to use. If set to 'auto', the system's locale will be used. If the locale
    * is not available, english will be used.
@@ -52,7 +61,7 @@ export const generalSettingsSchema = z.object({
   soundTheme: z.string().default('none'),
 
   /** The overall volume of the sound effects. */
-  soundVolume: z.number().min(0).max(1).default(0.5),
+  soundVolume: z.number().min(0).default(0.5),
 
   /** Set this to false to disable the check for new versions. */
   enableVersionCheck: z.boolean().default(true),
@@ -202,4 +211,20 @@ export const generalSettingsSchema = z.object({
   useDefaultOsShowSettingsHotkey: z.boolean().default(true),
 });
 
-export type IGeneralSettings = z.infer<typeof generalSettingsSchema>;
+export type IGeneralSettingsV2 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V2>;
+
+/**
+ * The only real difference between the IGeneralSettingsV1 and IGeneralSettingsV2 is that
+ * the latter contains the appVersion field. This function migrates an IGeneralSettingsV1
+ * object to an IGeneralSettingsV2 object by adding the appVersion field with its default
+ * value.
+ *
+ * @param oldSettings The old settings object to migrate.
+ * @returns The migrated settings object in the IGeneralSettingsV2 format.
+ */
+export function migrateToGeneralSettingsV2(
+  oldSettings: IGeneralSettingsV1
+): IGeneralSettingsV2 {
+  console.log('Migrating IGeneralSettingsV1 to IGeneralSettingsV2 format...');
+  return GENERAL_SETTINGS_SCHEMA_V2.parse(oldSettings);
+}

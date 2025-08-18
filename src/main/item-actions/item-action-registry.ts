@@ -10,8 +10,7 @@
 
 import { IMenuItem } from '../../common';
 import { KandoApp } from '../app';
-import { DeepReadonly } from '../utils/settings';
-
+import { DeepReadonly } from '../settings';
 import { CommandItemAction } from './command-item-action';
 import { FileItemAction } from './file-item-action';
 import { HotkeyItemAction } from './hotkey-item-action';

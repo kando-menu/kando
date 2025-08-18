@@ -33,7 +33,7 @@ import {
   ISoundEffect,
   ICommandlineOptions,
 } from '../common';
-import { Settings } from './utils/settings';
+import { Settings } from './settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -162,20 +162,6 @@ export class KandoApp {
       this.updateTrayMenu();
     });
 
-    // Check if we want to silently handle read-only config files
-    this.generalSettings.ignoreWriteProtectedConfigFiles = this.generalSettings.get(
-      'ignoreWriteProtectedConfigFiles'
-    );
-    this.menuSettings.ignoreWriteProtectedConfigFiles = this.generalSettings.get(
-      'ignoreWriteProtectedConfigFiles'
-    );
-
-    // When ignoreWriteProtectedConfigFiles becomes true we want to apply this immediately.
-    this.generalSettings.onChange('ignoreWriteProtectedConfigFiles', (newValue) => {
-      this.generalSettings.ignoreWriteProtectedConfigFiles = newValue;
-      this.menuSettings.ignoreWriteProtectedConfigFiles = newValue;
-    });
-
     // Update the tray icon if the tray icon flavor changes.
     this.generalSettings.onChange('trayIconFlavor', () => {
       this.updateTrayMenu(true);
@@ -212,16 +198,16 @@ export class KandoApp {
     });
 
     this.updateChecker.on('update-available', () => {
-      Notification.show(
-        i18next.t('main.new-version-notification-header'),
-        i18next.t('main.new-version-notification-body', {
+      Notification.show({
+        title: i18next.t('main.new-version-notification-header'),
+        message: i18next.t('main.new-version-notification-body', {
           link: 'https://github.com/kando-menu/kando/releases',
           interpolation: { escapeValue: false },
         }),
-        () => {
+        onClick: () => {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
-        }
-      );
+        },
+      });
     });
   }
 
@@ -343,7 +329,11 @@ export class KandoApp {
     try {
       this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
     } catch (error) {
-      Notification.showError('Failed to show menu', error.message || error);
+      Notification.show({
+        title: 'Failed to show menu',
+        message: error.message || error,
+        type: 'error',
+      });
     }
   }
 
@@ -848,7 +838,11 @@ export class KandoApp {
     try {
       await this.backend.bindShortcuts(shortcuts);
     } catch (error) {
-      Notification.showError('Failed to bind shortcut', error.message || error);
+      Notification.show({
+        title: 'Failed to bind shortcut',
+        message: error.message || error,
+        type: 'error',
+      });
     }
 
     this.bindingShortcuts = false;

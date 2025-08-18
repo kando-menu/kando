@@ -11,11 +11,7 @@
 import { app } from 'electron';
 import { program } from 'commander';
 
-import {
-  generalSettingsSchema,
-  ICommandlineOptions,
-  menuSettingsSchema,
-} from '../common';
+import { ICommandlineOptions } from '../common';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -70,204 +66,206 @@ import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { Notification } from './utils/notification';
 import { getBackend } from './backends';
 import { KandoApp } from './app';
-import { Settings } from './utils/settings';
-import { IMenuSettings, IGeneralSettings } from '../common';
+import { getGeneralSettings, getMenuSettings } from './settings';
 
-// It is not very nice that electron stores all its cache data in the user's config
-// directory. Until https://github.com/electron/electron/pull/34337 is merged, we
-// move most of the stuff to a separate directory to make it easier to clean up.
-app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
-app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
-app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
+// Initialize the notification system. This will queue notifications until the app is
+// ready so that we can even show notifications before the app is fully initialized.
+Notification.init();
 
-// Set deep link support for the app. This is used to send commands to the app when the
-// app is already running. For instance like this: kando://menu?name=<menuName>.
-let deepLinkSupport = false;
-if (process.defaultApp) {
-  if (process.argv.length >= 2) {
-    deepLinkSupport = app.setAsDefaultProtocolClient('kando', process.execPath, [
-      path.resolve(process.argv[1]),
-    ]);
-  }
-} else {
-  deepLinkSupport = app.setAsDefaultProtocolClient('kando');
-}
-
-if (!deepLinkSupport) {
-  console.error('Failed to register kando:// protocol. Deep links will not work.');
-}
-
-// Choose the backend to use. We quit the app if no backend is found.
-const backend = getBackend();
-if (!backend) {
-  Notification.showError(
-    i18next.t('main.failed-to-start-header'),
-    i18next.t('main.no-backend-found')
-  );
+/**
+ * Shows a startup-error notification and quits the app.
+ *
+ * @param message The message shown in the notification body.
+ */
+function quitWithError(message: string) {
+  Notification.show({
+    title: 'Kando failed to start',
+    type: 'error',
+    message,
+  });
   app.quit();
-  process.exit(1);
+  process.exitCode = 1;
 }
 
-// We load the menu settings from the user's home directory. If the settings file does
-// not exist, it will be created with the default values.
-const menuSettings = new Settings<IMenuSettings>({
-  file: 'menus.json',
-  directory: app.getPath('userData'),
-  schema: menuSettingsSchema,
-});
-
-// We load the settings from the user's home directory. If the settings file does not
-// exist, it will be created with the default values. The only special setting is the
-// settingsWindowFlavor setting which is set to transparent only if the backend
-// supports transparent windows.
-const generalSettings = new Settings<IGeneralSettings>({
-  file: 'config.json',
-  directory: app.getPath('userData'),
-  schema: generalSettingsSchema,
-});
-
-if (generalSettings.get('settingsWindowFlavor') === 'auto') {
-  generalSettings.set({
-    settingsWindowFlavor: backend.getBackendInfo().shouldUseTransparentSettingsWindow
-      ? 'transparent-system'
-      : 'sakura-system',
-  });
-}
-
-// Disable hardware acceleration if the user has set this in the settings.
-if (generalSettings.get('hardwareAcceleration') === false) {
-  console.log('Hardware acceleration disabled');
-  app.disableHardwareAcceleration();
-}
-
-// We ensure that the themes directories exist. If they do not exist, we create them.
 try {
-  const themeDirs = ['menu-themes', 'sound-themes', 'icon-themes'];
-  themeDirs.forEach((dir) => {
-    fs.mkdirSync(path.join(app.getPath('userData'), dir), { recursive: true });
-  });
-} catch (error) {
-  if (
-    (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM') &&
-    !generalSettings.get('ignoreWriteProtectedConfigFiles')
-  ) {
-    console.log('Failed to create the themes folders due to write-protected files.');
+  // It is not very nice that electron stores all its cache data in the user's config
+  // directory. Until https://github.com/electron/electron/pull/34337 is merged, we
+  // move most of the stuff to a separate directory to make it easier to clean up.
+  app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
+  app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
+  app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
+
+  // Set deep link support for the app. This is used to send commands to the app when the
+  // app is already running. For instance like this: kando://menu?name=<menuName>.
+  let deepLinkSupport = false;
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      deepLinkSupport = app.setAsDefaultProtocolClient('kando', process.execPath, [
+        path.resolve(process.argv[1]),
+      ]);
+    }
   } else {
-    console.error('An unexpected error occurred while creating theme folders:', error);
+    deepLinkSupport = app.setAsDefaultProtocolClient('kando');
   }
+
+  if (!deepLinkSupport) {
+    console.error('Failed to register kando:// protocol. Deep links will not work.');
+  }
+
+  // Choose the backend to use. We quit the app if no backend is found.
+  const backend = getBackend();
+  if (!backend) {
+    throw new Error('No suitable backend was found.');
+  }
+
+  // We load the menu settings from the user's home directory.
+  const generalSettings = getGeneralSettings();
+  const menuSettings = getMenuSettings(
+    generalSettings.get('ignoreWriteProtectedConfigFiles')
+  );
+  if (!menuSettings || !generalSettings) {
+    throw new Error('See console output for details.');
+  }
+
+  if (generalSettings.get('settingsWindowFlavor') === 'auto') {
+    generalSettings.set({
+      settingsWindowFlavor: backend.getBackendInfo().shouldUseTransparentSettingsWindow
+        ? 'transparent-system'
+        : 'sakura-system',
+    });
+  }
+
+  // Disable hardware acceleration if the user has set this in the settings.
+  if (generalSettings.get('hardwareAcceleration') === false) {
+    console.log('Hardware acceleration disabled');
+    app.disableHardwareAcceleration();
+  }
+
+  // We ensure that the themes directories exist. If they do not exist, we create them.
+  try {
+    const themeDirs = ['menu-themes', 'sound-themes', 'icon-themes'];
+    themeDirs.forEach((dir) => {
+      fs.mkdirSync(path.join(app.getPath('userData'), dir), { recursive: true });
+    });
+  } catch (error) {
+    if (
+      (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM') &&
+      !generalSettings.get('ignoreWriteProtectedConfigFiles')
+    ) {
+      console.log('Failed to create the themes folders due to write-protected files.');
+    } else {
+      console.error('An unexpected error occurred while creating theme folders:', error);
+    }
+  }
+
+  // Create the app. We will initialize it later when the Electron app is ready.
+  const kando = new KandoApp(backend, generalSettings, menuSettings);
+
+  // This function is called when the app or a second instance is started with command line
+  // arguments or via a deep link. The deep link takes precedence over the command line
+  // arguments if both are present. The last boolean parameter is used to determine if the
+  // settings should be shown if no command line arguments were passed.
+  const handleArguments = (
+    commandLine: ICommandlineOptions | null,
+    deepLink: string | null,
+    showSettingsIfEmpty: boolean
+  ) => {
+    if (deepLink && deepLink.startsWith('kando://')) {
+      const parsedUrl = new URL(deepLink);
+      const options = {
+        menu: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('name'),
+        settings: parsedUrl.host === 'settings',
+        reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
+        reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
+      };
+
+      if (!kando.handleCommandLine(options)) {
+        Notification.show({
+          title: i18next.t('main.invalid-link-header'),
+          message: i18next.t('main.invalid-link-message'),
+          type: 'error',
+        });
+      }
+
+      return;
+    }
+
+    if (commandLine) {
+      if (!kando.handleCommandLine(commandLine) && showSettingsIfEmpty) {
+        kando.showSettings();
+      }
+    }
+  };
+
+  app
+    .whenReady()
+    .then(() => {
+      if (process.env.NODE_ENV === 'development') {
+        return installExtension(REACT_DEVELOPER_TOOLS);
+      }
+    })
+    .then(() => {
+      const locale = generalSettings.get('locale');
+      return i18next.use(i18Backend).init({
+        lng: locale === 'auto' ? app.getLocale() : locale,
+        fallbackLng: {
+          /* eslint-disable @typescript-eslint/naming-convention */
+          'en-US': ['en'],
+          'en-GB': ['en'],
+          'de-DE': ['de', 'en'],
+          'de-CH': ['de', 'en'],
+          'de-AT': ['de', 'en'],
+          'zh-CN': ['zh-Hans', 'en'],
+          zh: ['zh-Hans', 'en'],
+          pt: ['pt-BR', 'en'],
+          /* eslint-enable @typescript-eslint/naming-convention */
+          default: ['en'],
+        },
+        backend: {
+          loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
+        },
+      });
+    })
+    .then(() => backend.init())
+    .then(() => kando.init())
+    .then(() => {
+      // Show a nifty message when the app is about to quit.
+      app.on('will-quit', async () => {
+        await kando.quit();
+        console.log('Good-Pie :)');
+      });
+
+      // Respond to commandline arguments passed to a second instance. On Windows and Linux
+      // this is also called when the app is opened via a deep link. In this case, the last
+      // argument is the deep link.
+      app.on('second-instance', (e, argv, pwd, options: ICommandlineOptions) => {
+        handleArguments(options, argv[argv.length - 1], true);
+      });
+
+      // This is called when the app is activated, for example when the user clicks on the
+      // app in the launchpad of macOS. We show the settings.
+      app.on('activate', () => {
+        kando.showSettings();
+      });
+
+      // Handle the case when the app is opened via a deep link. This is only called on
+      // macOS, on Windows and Linux deep links are handled by the second-instance event.
+      app.on('open-url', (e, url) => {
+        handleArguments(null, url, false);
+      });
+
+      // Prevent the app from quitting when all windows are closed.
+      app.on('window-all-closed', () => {});
+
+      // Show a message that the app is ready.
+      console.log(`Kando ${app.getVersion()} is ready.`);
+
+      // Finally, handle the command line arguments (if any). If the app was started via a
+      // deep link, the last argument is a deep link. In this case, we parse it and use
+      // this instead of the command line arguments.
+      handleArguments(options, process.argv[process.argv.length - 1], false);
+    })
+    .catch((error) => quitWithError(error.message || error));
+} catch (error) {
+  app.whenReady().then(() => quitWithError(error.message || error));
 }
-
-// Create the app. We will initialize it later when the Electron app is ready.
-const kando = new KandoApp(backend, generalSettings, menuSettings);
-
-// This function is called when the app or a second instance is started with command line
-// arguments or via a deep link. The deep link takes precedence over the command line
-// arguments if both are present. The last boolean parameter is used to determine if the
-// settings should be shown if no command line arguments were passed.
-const handleArguments = (
-  commandLine: ICommandlineOptions | null,
-  deepLink: string | null,
-  showSettingsIfEmpty: boolean
-) => {
-  if (deepLink && deepLink.startsWith('kando://')) {
-    const parsedUrl = new URL(deepLink);
-    const options = {
-      menu: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('name'),
-      settings: parsedUrl.host === 'settings',
-      reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
-      reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
-    };
-
-    if (!kando.handleCommandLine(options)) {
-      Notification.showError(
-        i18next.t('main.invalid-link-header'),
-        i18next.t('main.invalid-link-message')
-      );
-    }
-
-    return;
-  }
-
-  if (commandLine) {
-    if (!kando.handleCommandLine(commandLine) && showSettingsIfEmpty) {
-      kando.showSettings();
-    }
-  }
-};
-
-app
-  .whenReady()
-  .then(() => {
-    if (process.env.NODE_ENV === 'development') {
-      return installExtension(REACT_DEVELOPER_TOOLS);
-    }
-  })
-  .then(() => {
-    const locale = generalSettings.get('locale');
-    return i18next.use(i18Backend).init({
-      lng: locale === 'auto' ? app.getLocale() : locale,
-      fallbackLng: {
-        /* eslint-disable @typescript-eslint/naming-convention */
-        'en-US': ['en'],
-        'en-GB': ['en'],
-        'de-DE': ['de', 'en'],
-        'de-CH': ['de', 'en'],
-        'de-AT': ['de', 'en'],
-        'zh-CN': ['zh-Hans', 'en'],
-        zh: ['zh-Hans', 'en'],
-        pt: ['pt-BR', 'en'],
-        /* eslint-enable @typescript-eslint/naming-convention */
-        default: ['en'],
-      },
-      backend: {
-        loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
-      },
-    });
-  })
-  .then(() => backend.init())
-  .then(() => kando.init())
-  .then(() => {
-    // Show a nifty message when the app is about to quit.
-    app.on('will-quit', async () => {
-      await kando.quit();
-      console.log('Good-Pie :)');
-    });
-
-    // Respond to commandline arguments passed to a second instance. On Windows and Linux
-    // this is also called when the app is opened via a deep link. In this case, the last
-    // argument is the deep link.
-    app.on('second-instance', (e, argv, pwd, options: ICommandlineOptions) => {
-      handleArguments(options, argv[argv.length - 1], true);
-    });
-
-    // This is called when the app is activated, for example when the user clicks on the
-    // app in the launchpad of macOS. We show the settings.
-    app.on('activate', () => {
-      kando.showSettings();
-    });
-
-    // Handle the case when the app is opened via a deep link. This is only called on
-    // macOS, on Windows and Linux deep links are handled by the second-instance event.
-    app.on('open-url', (e, url) => {
-      handleArguments(null, url, false);
-    });
-
-    // Prevent the app from quitting when all windows are closed.
-    app.on('window-all-closed', () => {});
-
-    // Show a message that the app is ready.
-    console.log(`Kando ${app.getVersion()} is ready.`);
-
-    // Finally, handle the command line arguments (if any). If the app was started via a
-    // deep link, the last argument is a deep link. In this case, we parse it and use
-    // this instead of the command line arguments.
-    handleArguments(options, process.argv[process.argv.length - 1], false);
-  })
-  .catch((error) => {
-    Notification.showError(
-      i18next.t('main.failed-to-start-header'),
-      error.message || error
-    );
-    app.quit();
-    process.exitCode = 1;
-  });

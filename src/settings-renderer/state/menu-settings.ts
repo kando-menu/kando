@@ -16,7 +16,7 @@ import lodash from 'lodash';
 
 import {
   IMenuSettings,
-  getDefaultMenuSettings,
+  MENU_SETTINGS_SCHEMA,
   IMenuCollection,
   IMenu,
   IMenuItem,
@@ -170,7 +170,7 @@ type MenuStateActions = {
 export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
   temporal(
     (set) => ({
-      ...getDefaultMenuSettings(),
+      ...MENU_SETTINGS_SCHEMA.parse({}),
 
       addMenu: (tags: string[]) =>
         set(

@@ -9,13 +9,14 @@
 // SPDX-License-Identifier: MIT
 
 import * as z from 'zod';
+import { version } from './../../../package.json';
 
 /**
  * This interface is used to describe the conditions under which a menu should be shown.
  * When a menu shall be shown, the conditions of all menus are checked. The menu with the
  * most conditions that are met is selected.
  */
-export const menuConditionsSchema = z.object({
+export const MENU_CONDITIONS_SCHEMA_V1 = z.object({
   /** Regex to match for a window name */
   windowName: z.string().nullish(),
 
@@ -37,7 +38,7 @@ export const menuConditionsSchema = z.object({
 });
 
 /** The menu consists of a tree of menu items. */
-export const menuItemSchema = z.object({
+export const MENU_ITEM_SCHEMA_V1 = z.object({
   /** The type of the menu item. See `ItemActionRegistry` and `ItemTypeRegistry`. */
   type: z.string(),
 
@@ -61,7 +62,7 @@ export const menuItemSchema = z.object({
    * submenu.
    */
   get children() {
-    return z.array(menuItemSchema).nullish();
+    return z.array(MENU_ITEM_SCHEMA_V1).nullish();
   },
 
   /**
@@ -69,7 +70,7 @@ export const menuItemSchema = z.object({
    * menu is opened. If set, it is considered to be a "fixed angle" and all siblings will
    * be distributed more or less evenly around.
    */
-  angle: z.number().min(0).max(360).nullish(),
+  angle: z.number().nullish(),
 });
 
 /**
@@ -79,9 +80,9 @@ export const menuItemSchema = z.object({
  *
  * This interface is used to describe one of the configured menus in the settings file.
  */
-export const menuSchema = z.object({
+export const MENU_SCHEMA_V1 = z.object({
   /** The root item of the menu. */
-  root: menuItemSchema,
+  root: MENU_ITEM_SCHEMA_V1,
 
   /**
    * The shortcut to open the menu. Something like 'Control+Space'.
@@ -119,14 +120,14 @@ export const menuSchema = z.object({
    * Conditions are matched before showing a menu. The one that has more conditions and
    * met them all is selected.
    */
-  conditions: menuConditionsSchema.nullish(),
+  conditions: MENU_CONDITIONS_SCHEMA_V1.nullish(),
 
   /** Tags can be used to group and filter menus. */
   tags: z.array(z.string()).default([]),
 });
 
 /** The user can create menu collections to group menus according to their tags. */
-export const menuCollectionSchema = z.object({
+export const MENU_COLLECTION_SCHEMA_V1 = z.object({
   /** The name of the collection. */
   name: z.string(),
 
@@ -144,11 +145,18 @@ export const menuCollectionSchema = z.object({
  * This interface describes the content of the settings file. It contains the configured
  * menus as well as the templates.
  */
-export const menuSettingsSchema = z.object({
-  menus: z.array(menuSchema).default([]),
+export const MENU_SETTINGS_SCHEMA_V1 = z.object({
+  /**
+   * The last version of Kando. This is used to determine whether the settings file needs
+   * to be backed up and potentially migrated to a newer version.
+   */
+  appVersion: z.string().default(version),
+
+  /** The currently configured menus. */
+  menus: z.array(MENU_SCHEMA_V1).default([]),
 
   /** The currently configured menu collections. */
-  collections: z.array(menuCollectionSchema).default([
+  collections: z.array(MENU_COLLECTION_SCHEMA_V1).default([
     {
       name: 'Favorites',
       icon: 'favorite',
@@ -158,8 +166,8 @@ export const menuSettingsSchema = z.object({
   ]),
 });
 
-export type IMenuConditions = z.infer<typeof menuConditionsSchema>;
-export type IMenuItem = z.infer<typeof menuItemSchema>;
-export type IMenu = z.infer<typeof menuSchema>;
-export type IMenuCollection = z.infer<typeof menuCollectionSchema>;
-export type IMenuSettings = z.infer<typeof menuSettingsSchema>;
+export type IMenuConditionsV1 = z.infer<typeof MENU_CONDITIONS_SCHEMA_V1>;
+export type IMenuItemV1 = z.infer<typeof MENU_ITEM_SCHEMA_V1>;
+export type IMenuV1 = z.infer<typeof MENU_SCHEMA_V1>;
+export type IMenuCollectionV1 = z.infer<typeof MENU_COLLECTION_SCHEMA_V1>;
+export type IMenuSettingsV1 = z.infer<typeof MENU_SETTINGS_SCHEMA_V1>;

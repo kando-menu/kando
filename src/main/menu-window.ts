@@ -11,7 +11,7 @@
 import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
-import { DeepReadonly } from './utils/settings';
+import { DeepReadonly } from './settings';
 import { IShowMenuRequest, IMenu, IMenuItem, IWMInfo } from '../common';
 import { ItemActionRegistry } from './item-actions/item-action-registry';
 import { Notification } from './utils/notification';
@@ -585,7 +585,11 @@ export class MenuWindow extends BrowserWindow {
         ItemActionRegistry.getInstance()
           .execute(item, this.kando)
           .catch((error) => {
-            Notification.showError('Failed to execute action', error.message || error);
+            Notification.show({
+              title: 'Failed to execute action',
+              message: error.message || error,
+              type: 'error',
+            });
           });
       };
 
@@ -602,7 +606,11 @@ export class MenuWindow extends BrowserWindow {
           execute(item);
         }
       } catch (error) {
-        Notification.showError('Failed to select item', error.message);
+        Notification.show({
+          title: 'Failed to select item',
+          message: error.message,
+          type: 'error',
+        });
       }
 
       // Also wait with the execution of the selected action until the fade-out
