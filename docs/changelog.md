@@ -34,10 +34,12 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Visualization of the selection wedges!** Menu themes can now draw the circle segments belonging to the menu items as well as separator lines between them. The Neon Lights theme and the Default theme have been updated to use this feature.
 - **Circle wrapping for the center text!** The center text is now wrapped in a circle instead of a rectangle. This makes it look better and allows longer texts to be displayed without clipping.
 - **Automatic font-size reduction for the center text!** If the center text is too long to fit into the circle, it will now be automatically reduced in size so it fits.
+- **Backup of the settings on version upgrades!** If you upgrade Kando to a new version, the old application settings and menu configurations will be automatically saved to a backup file. This allows you to restore them if something goes wrong during the upgrade. The backup files are stored in a `backup` directory next to the `config.json` and `menus.json` files.
 - A few Kando logo variants in the built-in Kando icon theme.
 
 ### :wrench: Changed
 
+- The verification of the settings files. `config.json` and `menus.json` are now properly verified against a schema. Before, no type checks where performed which could lead to issues. Now, if they are not valid, Kando will refuse to start and print an error message. This is a first step towards importing, exporting, and sharing menu files with the community. I hope that your settings files are all valid, but if you encounter any issues, please report them!
 - The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
 - Updated Electron to version 34.
 
