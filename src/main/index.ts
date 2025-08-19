@@ -16,7 +16,8 @@ import { ICommandlineOptions } from '../common';
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
  * handling the lifecycle of the app. The drawing of the menu and the settings is done in
- * the renderer process (see renderer.ts).
+ * the renderer process (see src/menu-render/index.ts and src/settings-render/index.ts
+ * respectively).
  */
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -26,7 +27,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 // Parse command line arguments.
-program
+const options = program
   .name('kando')
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
@@ -35,10 +36,9 @@ program
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .allowUnknownOption(true)
-  .allowExcessArguments(true);
-
-program.parse();
-const options = program.opts() as ICommandlineOptions;
+  .allowExcessArguments(true)
+  .parse()
+  .opts() as ICommandlineOptions;
 
 // Prevent multiple instances of the app. If an instance of the app is already running,
 // we just quit this one and let the other instance handle the command line arguments.
@@ -55,8 +55,8 @@ if (!gotTheLock) {
   process.exit(0);
 }
 
-// Start the app. We import the KandoApp class here to make the code above as fast as
-// possible.
+// Start the app. We import the KandoApp class and other modules here to make the code
+// above as fast as possible.
 import fs from 'fs';
 import path from 'path';
 import i18next from 'i18next';
@@ -69,7 +69,9 @@ import { KandoApp } from './app';
 import { getGeneralSettings, getMenuSettings } from './settings';
 
 // Initialize the notification system. This will queue notifications until the app is
-// ready so that we can even show notifications before the app is fully initialized.
+// ready so that we can even show notifications before the app is fully initialized. This
+// is necessary because for instance loading the settings can lead to errors which we want
+// to show to the user.
 Notification.init();
 
 /**
@@ -78,11 +80,7 @@ Notification.init();
  * @param message The message shown in the notification body.
  */
 function quitWithError(message: string) {
-  Notification.show({
-    title: 'Kando failed to start',
-    type: 'error',
-    message,
-  });
+  Notification.show({ title: 'Kando failed to start', type: 'error', message });
   app.quit();
   process.exitCode = 1;
 }
@@ -127,14 +125,6 @@ try {
     throw new Error('See console output for details.');
   }
 
-  if (generalSettings.get('settingsWindowFlavor') === 'auto') {
-    generalSettings.set({
-      settingsWindowFlavor: backend.getBackendInfo().shouldUseTransparentSettingsWindow
-        ? 'transparent-system'
-        : 'sakura-system',
-    });
-  }
-
   // Disable hardware acceleration if the user has set this in the settings.
   if (generalSettings.get('hardwareAcceleration') === false) {
     console.log('Hardware acceleration disabled');
@@ -154,7 +144,7 @@ try {
     ) {
       console.log('Failed to create the themes folders due to write-protected files.');
     } else {
-      console.error('An unexpected error occurred while creating theme folders:', error);
+      console.warn('An unexpected error occurred while creating theme folders:', error);
     }
   }
 
@@ -183,17 +173,14 @@ try {
         Notification.show({
           title: i18next.t('main.invalid-link-header'),
           message: i18next.t('main.invalid-link-message'),
-          type: 'error',
         });
       }
 
       return;
     }
 
-    if (commandLine) {
-      if (!kando.handleCommandLine(commandLine) && showSettingsIfEmpty) {
-        kando.showSettings();
-      }
+    if (commandLine && !kando.handleCommandLine(commandLine) && showSettingsIfEmpty) {
+      kando.showSettings();
     }
   };
 

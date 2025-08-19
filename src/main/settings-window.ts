@@ -29,6 +29,16 @@ export class SettingsWindow extends BrowserWindow {
   });
 
   constructor(backend: Backend, settings: Settings<IGeneralSettings>) {
+    // The special 'auto' flavor is only used as an initial default value. We override it
+    // with the preferred flavor of the backend.
+    if (settings.get('settingsWindowFlavor') === 'auto') {
+      settings.set({
+        settingsWindowFlavor: backend.getBackendInfo().shouldUseTransparentSettingsWindow
+          ? 'transparent-system'
+          : 'sakura-system',
+      });
+    }
+
     const settingsWindowFlavor = settings.get('settingsWindowFlavor');
     const transparent =
       settingsWindowFlavor === 'transparent-light' ||
