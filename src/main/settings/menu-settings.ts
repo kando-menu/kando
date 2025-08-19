@@ -13,6 +13,8 @@ import { app } from 'electron';
 import { MENU_SETTINGS_SCHEMA, IMenuSettings } from '../../common/settings-schemata';
 import { Settings } from './settings';
 
+import { version } from './../../../package.json';
+
 /**
  * Loads the contents of the settings file and returns an object that conforms to the
  * latest `IMenuSettings` interface. If the content does not conform to the current
@@ -36,10 +38,14 @@ function loadMenuSettings(content: object): {
     didMigration = true;
   }
 
-  return {
-    settings: MENU_SETTINGS_SCHEMA.parse(content),
-    didMigration,
-  };
+  const settings = MENU_SETTINGS_SCHEMA.parse(content);
+
+  // Always set the appVersion to the current version.
+  if (settings.appVersion !== version) {
+    settings.appVersion = version;
+  }
+
+  return { settings, didMigration };
 }
 
 /**

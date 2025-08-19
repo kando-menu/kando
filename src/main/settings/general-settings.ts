@@ -18,6 +18,8 @@ import {
 } from '../../common/settings-schemata';
 import { Settings } from './settings';
 
+import { version } from './../../../package.json';
+
 /**
  * Loads the contents of the settings file and returns an object that conforms to the
  * latest `IGeneralSettings` interface. If the content does not conform to the current
@@ -38,7 +40,13 @@ function loadGeneralSettings(content: object): {
   }
 
   // Here we could compare the appVersion to the current version and decide whether any
-  // migration is necessary. For now, we just parse the content with the current schema.
+  // migration is necessary. Yet for now, no further migrations are needed.
+
+  // Always set the appVersion to the current version.
+  if (content.appVersion !== version) {
+    content.appVersion = version;
+  }
+
   return { settings: GENERAL_SETTINGS_SCHEMA.parse(content), didMigration: false };
 }
 
