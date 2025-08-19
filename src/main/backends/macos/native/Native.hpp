@@ -56,6 +56,14 @@ class Native : public Napi::Addon<Native> {
    */
   Napi::Value getActiveWindow(const Napi::CallbackInfo& info);
 
+  /**
+   * This function returns a list of all installed applications.
+   *
+   * @param info The arguments passed to the listInstalledApplications function. It should
+   * contain no arguments.
+   */
+  Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
+
   // We have to keep track of the current modifier mask to be able to simulate key
   // presses.
   uint32_t mLeftModifierMask  = 0;

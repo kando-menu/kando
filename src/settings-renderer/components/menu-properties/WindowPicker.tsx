@@ -14,7 +14,6 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import i18next from 'i18next';
 import { TbCheck, TbX, TbStopwatch } from 'react-icons/tb';
-import { BiTargetLock } from 'react-icons/bi';
 
 import { Modal, Button } from '../common';
 
@@ -100,16 +99,7 @@ export default function WindowPicker(props: IProps) {
   };
 
   return (
-    <Modal
-      title={
-        props.mode === 'application'
-          ? i18next.t('settings.window-picker-dialog.pick-app-name-title')
-          : i18next.t('settings.window-picker-dialog.pick-window-title-title')
-      }
-      icon={<BiTargetLock />}
-      visible={props.visible}
-      onClose={props.onClose}
-      maxWidth={400}>
+    <Modal visible={props.visible} onClose={props.onClose} maxWidth={400}>
       <div className={classes.container}>
         <div className={classes.caption}>{getCaption()}</div>
         <div className={classes.recordButton}>

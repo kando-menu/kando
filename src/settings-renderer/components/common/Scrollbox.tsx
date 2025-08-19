@@ -17,6 +17,8 @@ interface IProps {
   maxHeight?: string | number;
   width?: string | number;
   hideScrollbar?: boolean;
+  paddingLeft?: string | number;
+  paddingRight?: string | number;
 }
 
 /**
@@ -33,7 +35,11 @@ export default function Scrollbox(props: IProps) {
         classes.scrollbox + (props.hideScrollbar ? ' ' + classes.hideScrollbar : '')
       }
       style={{ maxHeight: props.maxHeight, height: '100%', width: props.width }}>
-      <div className={classes.content}>{props.children}</div>
+      <div
+        className={classes.content}
+        style={{ paddingLeft: props.paddingLeft, paddingRight: props.paddingRight }}>
+        {props.children}
+      </div>
     </div>
   );
 }

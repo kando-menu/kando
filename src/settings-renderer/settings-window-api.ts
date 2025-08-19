@@ -18,6 +18,7 @@ import {
   IVersionInfo,
   IWMInfo,
   ISystemInfo,
+  IAppDescription,
 } from '../common';
 
 /**
@@ -82,6 +83,10 @@ export const SETTINGS_WINDOW_API = {
   /** This will return all available sound themes. */
   getAllSoundThemes: (): Promise<Array<ISoundThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-sound-themes');
+  },
+
+  getInstalledApps: (): Promise<Array<IAppDescription>> => {
+    return ipcRenderer.invoke('settings-window.get-installed-apps');
   },
 
   /** This will show the web developer tools. */

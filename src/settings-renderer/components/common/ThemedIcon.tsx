@@ -46,7 +46,7 @@ export default function ThemedIcon(props: IProps) {
 
   return (
     <div
-      style={{ width: props.size, height: props.size }}
+      style={{ minWidth: props.size, minHeight: props.size }}
       className={classes.icon}
       ref={iconRef}></div>
   );

@@ -23,20 +23,31 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
+- **An application picker for the run-command item type!** This allows you to select an application from apps installed on your system. It will automatically fill in the command to run the application, the name, and the icon.
+- **Drag-and-Drop item creation!** You can now drag and drop things from your desktop or file manager into the menu editor to create new menu items. This works for:
+  - Applications
+  - Executables
+  - Other files and directories
+  - URLs
+- **A System-Icons theme for Linux!** This allows you to use the system icons of your desktop environment as icons for menu items. They will change when you switch your icon theme! This is still somewhat experimental, but it should work on most desktop environments. Feel free to test it and report any issues you encounter!
+- **A System-Icons theme for Windows and macOS!** On these operating systems, the theme contains the icons of apps installed on your system. This is also a bit experimental, please report any issues you encounter!
 - **Visualization of the selection wedges!** Menu themes can now draw the circle segments belonging to the menu items as well as separator lines between them. The Neon Lights theme and the Default theme have been updated to use this feature.
 - **Circle wrapping for the center text!** The center text is now wrapped in a circle instead of a rectangle. This makes it look better and allows longer texts to be displayed without clipping.
 - **Automatic font-size reduction for the center text!** If the center text is too long to fit into the circle, it will now be automatically reduced in size so it fits.
-- **A System-Icons Theme for Linux!** This allows you to use the system icons of your desktop environment as icons for menu items. This is still somewhat experimental, but it should work on most desktop environments. Feel free to test it and report any issues you encounter!
+- A few Kando logo variants in the built-in Kando icon theme.
 
 ### :wrench: Changed
 
+- The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
 - Updated Electron to version 34.
 
 ### :bug: Fixed
 
 - Rendering of SVG icons which contain CSS styles. If multiple SVG icons with the same CSS classes were used in the same menu, the styles clashed resulting in wrong colors.
+- Kando will not look for `systemd-run` on Windows and macOS anymore which removes a warning printed during startup.
 - A bug which prevented the settings to be shown when a second instance of Kando was started on macOS.
 - Added an option to turn off hardware acceleration to fix a bug that sometimes caused the window to lose its transparency (seen only with NVIDIA GPUs). Thanks to [@yar2000T](https://github.com/yar2000T) for this contribution!
+- The varying width of the sidebar in the theme-selection dialog. The sidebar does not change width anymore when switching between the different themes with many accent colors. Thanks to [@kmqwerty](https://github.com/kmqwerty) for this contribution!
 
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 

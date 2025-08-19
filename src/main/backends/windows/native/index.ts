@@ -38,6 +38,18 @@ export interface Native {
    * @param hwnd The window handle.
    */
   fixAcrylicEffect(hwnd: number): void;
+
+  /**
+   * This lists all installed applications.
+   *
+   * @returns An array of objects containing the application's ID, name, and
+   *   base64-encoded icon.
+   */
+  listInstalledApplications(): {
+    id: string;
+    name: string;
+    base64Icon: string;
+  }[];
 }
 
 const native: Native = require('./../../../../../build/Release/NativeWin32.node');

@@ -10,10 +10,13 @@
 
 import os from 'node:os';
 import { screen } from 'electron';
+import { isexe } from 'isexe';
+
 import { native } from './native';
 import { Backend } from '../backend';
-import { IKeySequence } from '../../../common';
+import { IKeySequence, IMenuItem, IAppDescription } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
+import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -21,10 +24,23 @@ import { mapKeys } from '../../../common/key-codes';
  */
 export class WindowsBackend extends Backend {
   /**
+   * This is a list of all installed applications on the system. Currently, this is
+   * populated during the backend construction. We may want to update this list
+   * dynamically in the future.
+   */
+  private installedApps: IAppDescription[] = [];
+
+  /**
+   * This is a map of system icons. The key is the name of the corresponding app and the
+   * value is the base64-encoded icon.
+   */
+  private systemIcons: Map<string, string> = new Map();
+
+  /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
    * supported by Electron on Windows.
    */
-  public getBackendInfo() {
+  public override getBackendInfo() {
     // Vibrancy is only supported on Windows 11 22H2 (build 22621) or higher.
     const release = os.release().split('.');
     const major = parseInt(release[0]);
@@ -41,25 +57,37 @@ export class WindowsBackend extends Backend {
     };
   }
 
-  /**
-   * This is called when the backend is created. Currently, this this does nothing on
-   * Windows.
-   */
-  public async init() {}
+  /** This is called when the backend is created. */
+  public override async init() {
+    native
+      .listInstalledApplications()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((app) => {
+        this.installedApps.push({
+          name: app.name,
+          id: app.id,
+          command: 'start shell:AppsFolder\\' + app.id,
+          icon: app.name,
+          iconTheme: 'system',
+        });
+
+        this.systemIcons.set(app.name, app.base64Icon);
+      });
+  }
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
-  public async deinit(): Promise<void> {
+  public override async deinit(): Promise<void> {
     await this.bindShortcuts([]);
   }
 
   /**
-   * This uses the Win23 API to get the name and app of the currently focused window. In
+   * This uses the Win32 API to get the name and app of the currently focused window. In
    * addition, it uses Electron's screen module to get the current pointer position.
    *
    * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
-  public async getWMInfo() {
+  public override async getWMInfo() {
     const window = native.getActiveWindow();
     const pointer = screen.getCursorScreenPoint();
 
@@ -79,12 +107,97 @@ export class WindowsBackend extends Backend {
   }
 
   /**
+   * Each backend must provide a way to get a list of all installed applications. This is
+   * used by the settings window to populate the list of available applications.
+   */
+  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+    return Array.from(this.installedApps.values());
+  }
+
+  /**
+   * This returns the icons for installed applications.
+   *
+   * @returns A map of icon names to their CSS image sources.
+   */
+  public override async getSystemIcons(): Promise<Map<string, string>> {
+    return this.systemIcons;
+  }
+
+  /**
+   * We currently do not support dynamic icon theme changes on Windows. Kando needs to be
+   * restarted for changes to take effect.
+   */
+  public override async systemIconsChanged(): Promise<boolean> {
+    return false;
+  }
+
+  /**
+   * On Windows, we create run-command menu items for dropped executable files. We also
+   * assume that lnk files are executable. We also support dropping UWP app links dropped
+   * from the start menu.
+   *
+   * @param name The name of the file that was dropped. This is usually the file name
+   *   without the path.
+   * @param path The full path to the file that was dropped. There are some edge-cases
+   *   where the path cannot be determined (for instance, if something is dragged from the
+   *   Windows start menu). In this case, the path will be an empty string.
+   */
+  public override async createItemForDroppedFile(
+    name: string,
+    path: string
+  ): Promise<IMenuItem | null> {
+    const commandItemType = ItemTypeRegistry.getInstance().getType('command');
+
+    // If an executable file was dropped, create a menu item for it. We will attempt to
+    // find a matching application in the list of installed apps. If we find one, we can
+    // use the icon and the name of the application. We simply assume that lnk files are
+    // executable.
+    if (path.endsWith('.lnk') || (await isexe(path, { ignoreErrors: true }))) {
+      const appName = name.slice(0, name.lastIndexOf('.'));
+      const app = this.installedApps.find((app) => app.name === appName);
+
+      return {
+        type: 'command',
+        name: app ? app.name : commandItemType.defaultName,
+        icon: app ? app.name : commandItemType.defaultIcon,
+        iconTheme: app ? 'system' : commandItemType.defaultIconTheme,
+        data: {
+          command: '"' + path + '"',
+        },
+      };
+    }
+
+    // If the path does not refer to an executable file, it can still be an UWP app link.
+    // These can for instance be dragged from the start menu. We check the name and the
+    // path.
+    const app = this.installedApps.find(
+      (app) =>
+        app.name === name || app.id === name || app.name === path || app.id === path
+    );
+
+    if (app) {
+      return {
+        type: 'command',
+        name: app.name,
+        icon: app.name,
+        iconTheme: 'system',
+        data: {
+          command: app.command,
+        },
+      };
+    }
+
+    // For all other (non-executable) files, we create a simple file-item.
+    return super.createItemForDroppedFile(name, path);
+  }
+
+  /**
    * Moves the pointer by the given amount using the Win32 API.
    *
    * @param dx The amount of horizontal movement.
    * @param dy The amount of vertical movement.
    */
-  public async movePointer(dx: number, dy: number) {
+  public override async movePointer(dx: number, dy: number) {
     native.movePointer(dx, dy);
   }
 
@@ -94,7 +207,7 @@ export class WindowsBackend extends Backend {
    *
    * @param keys The keys to simulate.
    */
-  public async simulateKeys(keys: IKeySequence) {
+  public override async simulateKeys(keys: IKeySequence) {
     // We first need to convert the given DOM key names to Win32 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'windows');

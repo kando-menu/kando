@@ -8,9 +8,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, webUtils } from 'electron';
 
 import {
+  IMenuItem,
   IGeneralSettings,
   IMenuThemeDescription,
   ISoundThemeDescription,
@@ -149,8 +150,23 @@ export const COMMON_WINDOW_API = {
   },
 
   /** This lists all currently available system icons. */
-  getSystemIcons: (): Promise<Array<string>> => {
+  getSystemIcons: (): Promise<Map<string, string>> => {
     return ipcRenderer.invoke('common.get-system-icons');
+  },
+
+  /**
+   * This method creates a new menu item for a given file. Depending on the file type,
+   * different item types may be used. For example, if the file is a *.desktop file on
+   * Linux, it will create a run-command item. For most other files, it will create a file
+   * item. It may happen that no item could be created.
+   *
+   * @param file The file for which a menu item should be created.
+   * @returns A new menu item for the given file.
+   */
+  createItemForDroppedFile(file: File): Promise<IMenuItem | null> {
+    const name = file.name;
+    const path = webUtils.getPathForFile(file);
+    return ipcRenderer.invoke('common.create-menu-item-for-file', name, path);
   },
 };
 

@@ -15,7 +15,6 @@ import React from 'react';
 import i18next from 'i18next';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { BiTargetLock } from 'react-icons/bi';
-import { PiSelection } from 'react-icons/pi';
 
 import { Modal, Button } from '../common';
 
@@ -94,12 +93,7 @@ export default function ScreenAreaPicker(props: IProps) {
   };
 
   return (
-    <Modal
-      title={i18next.t('settings.screen-area-picker.title')}
-      icon={<PiSelection />}
-      visible={props.visible}
-      onClose={props.onClose}
-      maxWidth={500}>
+    <Modal visible={props.visible} onClose={props.onClose} maxWidth={500}>
       <div className={classes.container}>
         <div className={classes.leftTopValue}>{getTopLeftValue()}</div>
         <div className={classes.area}>
