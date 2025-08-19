@@ -121,10 +121,13 @@ interface Options<T> {
   defaults: () => T;
 
   /**
-   * This will be called to load the settings from the JSON file. If required, it will
-   * migrate the settings to the current version. If a migration is performed,
+   * This will be called to load the settings from the JSON file. If required, it should
+   * try to migrate the settings to the current version. If a migration is performed,
    * `didMigration` should be set to true. If this is the case, the migrated settings will
-   * be saved to disk again.
+   * be saved to disk again to avoid having to migrate them again in the future.
+   *
+   * If an error occurs while loading the settings, it should throw an error. It will be
+   * caught by the Settings class and an error message will be shown to the user.
    */
   load: (content: object) => {
     settings: T;
