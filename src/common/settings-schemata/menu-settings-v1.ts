@@ -150,7 +150,7 @@ export const MENU_SETTINGS_SCHEMA_V1 = z.object({
    * The last version of Kando. This is used to determine whether the settings file needs
    * to be backed up and potentially migrated to a newer version.
    */
-  appVersion: z.string().default(version),
+  version: z.string().default(version),
 
   /** The currently configured menus. */
   menus: z.array(MENU_SCHEMA_V1).default([]),

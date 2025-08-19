@@ -33,21 +33,21 @@ function loadGeneralSettings(content: object): {
   settings: IGeneralSettings;
   didMigration: boolean;
 } {
-  // If the appVersion field is not present, we assume this is an old settings file.
-  if (!('appVersion' in content)) {
+  // If the version field is not present, we assume this is an old settings file.
+  if (!('version' in content)) {
     const v1 = migrateToGeneralSettingsV1(content);
     const settings = migrateToGeneralSettingsV2(v1);
     return { settings, didMigration: true };
   }
 
-  // Here we could compare the appVersion to the current version and decide whether any
+  // Here we could compare the version to the current version and decide whether any
   // migration is necessary. For now, no further migrations are needed.
-  if (content.appVersion !== version) {
+  if (content.version !== version) {
     const settings = GENERAL_SETTINGS_SCHEMA.parse(content);
 
-    // Yet we still need to update the appVersion to the current version. We set
+    // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
-    settings.appVersion = version;
+    settings.version = version;
     return { settings, didMigration: true };
   }
 

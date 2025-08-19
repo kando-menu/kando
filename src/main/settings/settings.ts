@@ -323,13 +323,13 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
           data.ignoreWriteProtectedConfigFiles ?? false;
       }
 
-      // Try reading the appVersion field to determine whether we need to create a backup.
-      // This feature was introduced in version 2.1.0, so we assume that if the appVersion
+      // Try reading the version field to determine whether we need to create a backup.
+      // This feature was introduced in version 2.1.0, so we assume that if the version
       // field is not present, the settings file was created with an older version of
       // Kando and we need to create a backup.
-      const appVersion = data.appVersion || '2.0.0';
-      if (appVersion !== version) {
-        this.createBackup(appVersion, data);
+      const oldVersion = data.version || '2.0.0';
+      if (oldVersion !== version) {
+        this.createBackup(oldVersion, data);
       }
 
       const { settings, didMigration } = this.options.load(data);
@@ -398,14 +398,14 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * Creates a backup of the settings file in the user's config directory. The backup is
    * created with a timestamp in the filename to avoid overwriting existing backups.
    *
-   * @param oldAppVersion The version of the app when the settings file was last modified.
+   * @param oldVersion The version of the app when the settings file was last modified.
    * @param contents The contents of the settings file to back up.
    */
-  private createBackup(oldAppVersion: string, contents: object) {
+  private createBackup(oldVersion: string, contents: object) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = this.options.file.replace(
       '.json',
-      `-${oldAppVersion}-${timestamp}.json`
+      `-${oldVersion}-${timestamp}.json`
     );
 
     const backupDir = path.join(this.options.directory, 'backups');

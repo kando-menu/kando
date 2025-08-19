@@ -28,22 +28,22 @@ function loadMenuSettings(content: object): {
   settings: IMenuSettings;
   didMigration: boolean;
 } {
-  // If the appVersion field is not present, we assume this is an old settings file.
-  // There is nothing actually to migrate, but we need to store the appVersion field
+  // If the version field is not present, we assume this is an old settings file.
+  // There is nothing actually to migrate, but we need to store the version field
   // in the settings file to indicate that it has been loaded with the current version.
   // Hence, we set didMigration to true.
-  if (!('appVersion' in content)) {
+  if (!('version' in content)) {
     return { settings: MENU_SETTINGS_SCHEMA.parse(content), didMigration: true };
   }
 
-  // Here we could compare the appVersion to the current version and decide whether any
+  // Here we could compare the version to the current version and decide whether any
   // migration is necessary. For now, no further migrations are needed.
-  if (content.appVersion !== version) {
+  if (content.version !== version) {
     const settings = MENU_SETTINGS_SCHEMA.parse(content);
 
-    // Yet we still need to update the appVersion to the current version. We set
+    // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
-    settings.appVersion = version;
+    settings.version = version;
     return { settings, didMigration: true };
   }
 

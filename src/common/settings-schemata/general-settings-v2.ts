@@ -22,7 +22,7 @@ export const GENERAL_SETTINGS_SCHEMA_V2 = z.object({
    * The last version of Kando. This is used to determine whether the settings file needs
    * to be backed up and potentially migrated to a newer version.
    */
-  appVersion: z.string().default(version),
+  version: z.string().default(version),
 
   /**
    * The locale to use. If set to 'auto', the system's locale will be used. If the locale
@@ -215,8 +215,8 @@ export type IGeneralSettingsV2 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V2>;
 
 /**
  * The only real difference between the IGeneralSettingsV1 and IGeneralSettingsV2 is that
- * the latter contains the appVersion field. This function migrates an IGeneralSettingsV1
- * object to an IGeneralSettingsV2 object by adding the appVersion field with its default
+ * the latter contains the version field. This function migrates an IGeneralSettingsV1
+ * object to an IGeneralSettingsV2 object by adding the version field with its default
  * value.
  *
  * @param oldSettings The old settings object to migrate.
