@@ -118,11 +118,15 @@ try {
 
   // We load the menu settings from the user's home directory.
   const generalSettings = getGeneralSettings();
+  if (!generalSettings) {
+    throw new Error('Failed to load general settings. See console output for details.');
+  }
+
   const menuSettings = getMenuSettings(
     generalSettings.get('ignoreWriteProtectedConfigFiles')
   );
-  if (!menuSettings || !generalSettings) {
-    throw new Error('See console output for details.');
+  if (!menuSettings) {
+    throw new Error('Failed to load menu settings. See console output for details.');
   }
 
   // Disable hardware acceleration if the user has set this in the settings.

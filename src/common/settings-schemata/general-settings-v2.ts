@@ -226,5 +226,5 @@ export function migrateToGeneralSettingsV2(
   oldSettings: IGeneralSettingsV1
 ): IGeneralSettingsV2 {
   console.log('Migrating IGeneralSettingsV1 to IGeneralSettingsV2 format...');
-  return GENERAL_SETTINGS_SCHEMA_V2.parse(oldSettings);
+  return GENERAL_SETTINGS_SCHEMA_V2.parse(oldSettings, { reportInput: true });
 }

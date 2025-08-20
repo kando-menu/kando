@@ -43,7 +43,7 @@ function loadGeneralSettings(content: object): {
   // Here we could compare the version to the current version and decide whether any
   // migration is necessary. For now, no further migrations are needed.
   if (content.version !== version) {
-    const settings = GENERAL_SETTINGS_SCHEMA.parse(content);
+    const settings = GENERAL_SETTINGS_SCHEMA.parse(content, { reportInput: true });
 
     // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
@@ -51,7 +51,10 @@ function loadGeneralSettings(content: object): {
     return { settings, didMigration: true };
   }
 
-  return { settings: GENERAL_SETTINGS_SCHEMA.parse(content), didMigration: false };
+  return {
+    settings: GENERAL_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
+    didMigration: false,
+  };
 }
 
 /**

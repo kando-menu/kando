@@ -36,7 +36,7 @@ describe('settings', () => {
     directory: os.tmpdir(),
     defaults: () => SETTINGS_SCHEMA.parse({}),
     load: (content) => {
-      const settings = SETTINGS_SCHEMA.parse(content);
+      const settings = SETTINGS_SCHEMA.parse(content, { reportInput: true });
       return { settings, didMigration: false };
     },
   });

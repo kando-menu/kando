@@ -33,13 +33,16 @@ function loadMenuSettings(content: object): {
   // in the settings file to indicate that it has been loaded with the current version.
   // Hence, we set didMigration to true.
   if (!('version' in content)) {
-    return { settings: MENU_SETTINGS_SCHEMA.parse(content), didMigration: true };
+    return {
+      settings: MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
+      didMigration: true,
+    };
   }
 
   // Here we could compare the version to the current version and decide whether any
   // migration is necessary. For now, no further migrations are needed.
   if (content.version !== version) {
-    const settings = MENU_SETTINGS_SCHEMA.parse(content);
+    const settings = MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true });
 
     // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
@@ -47,7 +50,10 @@ function loadMenuSettings(content: object): {
     return { settings, didMigration: true };
   }
 
-  return { settings: MENU_SETTINGS_SCHEMA.parse(content), didMigration: false };
+  return {
+    settings: MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
+    didMigration: false,
+  };
 }
 
 /**

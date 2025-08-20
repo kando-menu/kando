@@ -12,7 +12,6 @@ import fs from 'fs-extra';
 import path from 'path';
 import chokidar, { FSWatcher } from 'chokidar';
 import lodash from 'lodash';
-import { ZodError, prettifyError } from 'zod';
 
 import os from 'os';
 import { Notification } from './../utils/notification';
@@ -347,8 +346,6 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         const defaultSettings = this.options.defaults();
         this.saveSettings(defaultSettings);
         return defaultSettings;
-      } else if (error instanceof ZodError) {
-        throw new Error(prettifyError(error));
       } else {
         throw error;
       }
