@@ -252,7 +252,9 @@ try {
       // this instead of the command line arguments.
       handleArguments(options, process.argv[process.argv.length - 1], false);
     })
-    .catch((error) => quitWithError(error.message || error));
+    .catch((error) => quitWithError(error instanceof Error ? error.message : error));
 } catch (error) {
-  app.whenReady().then(() => quitWithError(error.message || error));
+  app
+    .whenReady()
+    .then(() => quitWithError(error instanceof Error ? error.message : error));
 }

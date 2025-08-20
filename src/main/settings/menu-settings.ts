@@ -72,7 +72,10 @@ export function getMenuSettings(
       load: (content) => loadMenuSettings(content),
     });
   } catch (error) {
-    console.error('Error loading menu settings:', error.message || error);
+    console.error(
+      'Error loading menu settings:',
+      error instanceof Error ? error.message : error
+    );
     return null;
   }
 }

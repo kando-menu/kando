@@ -331,7 +331,7 @@ export class KandoApp {
     } catch (error) {
       Notification.show({
         title: 'Failed to show menu',
-        message: error.message || error,
+        message: error instanceof Error ? error.message : error,
         type: 'error',
       });
     }
@@ -854,7 +854,7 @@ export class KandoApp {
     } catch (error) {
       Notification.show({
         title: 'Failed to bind shortcut',
-        message: error.message || error,
+        message: error instanceof Error ? error.message : error,
         type: 'error',
       });
     }

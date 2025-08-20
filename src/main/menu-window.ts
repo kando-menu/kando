@@ -587,7 +587,7 @@ export class MenuWindow extends BrowserWindow {
           .catch((error) => {
             Notification.show({
               title: 'Failed to execute action',
-              message: error.message || error,
+              message: error instanceof Error ? error.message : error,
               type: 'error',
             });
           });
@@ -608,7 +608,7 @@ export class MenuWindow extends BrowserWindow {
       } catch (error) {
         Notification.show({
           title: 'Failed to select item',
-          message: error.message,
+          message: error instanceof Error ? error.message : error,
           type: 'error',
         });
       }

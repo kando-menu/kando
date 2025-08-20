@@ -290,7 +290,10 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       try {
         this.settings = this.loadSettings();
       } catch (error) {
-        console.error('Error loading settings:', error.message || error);
+        console.error(
+          'Error loading settings:',
+          error instanceof Error ? error.message : error
+        );
         return;
       }
 

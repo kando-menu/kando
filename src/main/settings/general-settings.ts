@@ -71,7 +71,10 @@ export function getGeneralSettings(): Settings<IGeneralSettings> | null {
       load: (content) => loadGeneralSettings(content),
     });
   } catch (error) {
-    console.error('Error loading general settings:', error.message || error);
+    console.error(
+      'Error loading general settings:',
+      error instanceof Error ? error.message : error
+    );
     return null;
   }
 }
