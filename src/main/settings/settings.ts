@@ -321,10 +321,8 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
 
       // If this.options.ignoreWriteProtectedConfigFiles was not set at construction time,
       // we will try to read this from the settings file.
-      if (this.options.ignoreWriteProtectedConfigFiles === undefined) {
-        this.options.ignoreWriteProtectedConfigFiles =
-          data.ignoreWriteProtectedConfigFiles ?? false;
-      }
+      this.options.ignoreWriteProtectedConfigFiles ??=
+        data.ignoreWriteProtectedConfigFiles ?? false;
 
       // Try reading the version field to determine whether we need to create a backup.
       // This feature was introduced in version 2.1.0, so we assume that if the version
