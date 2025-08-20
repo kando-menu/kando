@@ -104,10 +104,10 @@ function migrateToMenuSettingsV1(oldSettings: object): IMenuSettingsV1 {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const raw = oldSettings as any;
 
-  // Up to Kando 0.9.0, the `root` property of the menu was called `nodes`.
+  // Up to Kando 0.9.0, the `root` property of the menu was an object called `nodes`.
   if (raw.menus && Array.isArray(raw.menus)) {
     for (const menu of raw.menus) {
-      if (menu.nodes && Array.isArray(menu.nodes)) {
+      if (menu.nodes && typeof menu.nodes === 'object' && !Array.isArray(menu.nodes)) {
         menu.root = menu.nodes;
         delete menu.nodes;
       }
