@@ -140,9 +140,6 @@ export class KandoApp {
       this.updateChecker.checkForUpdates();
     });
 
-    // Try migrating settings from an old version of Kando.
-    this.migrateSettings();
-
     // We ensure that there is always a menu available. If the user deletes all menus,
     // we create a new example menu when Kando is started the next time.
     if (this.menuSettings.get('menus').length === 0) {
@@ -1139,95 +1136,5 @@ export class KandoApp {
     translate(menu.root);
 
     return menu;
-  }
-
-  /**
-   * This migrates settings from an old version of Kando to the current version. This
-   * method is called when the app is started.
-   */
-  private migrateSettings() {
-    // Up to Kando 0.9.0, the `root` property of the menu was called `nodes`.
-    {
-      const menus = this.menuSettings.getMutable('menus');
-      for (const menu of menus) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const oldMenu = menu as any;
-        if (oldMenu.nodes) {
-          menu.root = oldMenu.nodes as IMenuItem;
-          delete oldMenu.nodes;
-        }
-      }
-    }
-
-    // Up to Kando 1.8.0, there was a `templates` property in the menu settings. This was
-    // removed. We we add all template menus as ordinary menus with a template tag. All
-    // template menu-items are removed.
-    {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.menuSettings.getMutable() as any;
-      if (settings.templates) {
-        for (const itemOrMenu of settings.templates) {
-          // If there is a type property, it is a menu item.
-          // Else, it is a menu template. We add it as a menu with a template tag. Also
-          // remove any bindings, so that the menu is not opened by a shortcut.
-          if (!itemOrMenu.type) {
-            itemOrMenu.tags = ['template'];
-            itemOrMenu.shortcut = '';
-            itemOrMenu.shortcutID = '';
-            settings.menus.push(itemOrMenu);
-          }
-        }
-
-        delete settings.templates;
-      }
-    }
-
-    // Up to Kando 1.8.0, there was a settings.editorOptions.showEditorButtonVisible
-    // property. This was changed to settings.hideSettingsButton.
-    {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.generalSettings.getMutable() as any;
-      if (settings.editorOptions?.showEditorButtonVisible === false) {
-        settings.hideSettingsButton = true;
-        delete settings.editorOptions;
-      }
-    }
-
-    // Up to Kando 1.8.0, there was a settings.sidebarVisible property. This was removed.
-    {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.generalSettings.getMutable() as any;
-      if ('sidebarVisible' in settings) {
-        delete settings.sidebarVisible;
-      }
-    }
-
-    // Up to Kando 1.8.0, the following properties were stored in a settings.menuOptions
-    // object. Later they became top-level properties.
-    {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const settings = this.generalSettings.getMutable() as any;
-      if (settings.menuOptions) {
-        settings.centerDeadZone = settings.menuOptions.centerDeadZone;
-        settings.minParentDistance = settings.menuOptions.minParentDistance;
-        settings.dragThreshold = settings.menuOptions.dragThreshold;
-        settings.fadeInDuration = settings.menuOptions.fadeInDuration;
-        settings.fadeOutDuration = settings.menuOptions.fadeOutDuration;
-        settings.enableMarkingMode = settings.menuOptions.enableMarkingMode;
-        settings.enableTurboMode = settings.menuOptions.enableTurboMode;
-        settings.hoverModeNeedsConfirmation =
-          settings.menuOptions.hoverModeNeedsConfirmation;
-        settings.gestureMinStrokeLength = settings.menuOptions.gestureMinStrokeLength;
-        settings.gestureMinStrokeAngle = settings.menuOptions.gestureMinStrokeAngle;
-        settings.gestureJitterThreshold = settings.menuOptions.gestureJitterThreshold;
-        settings.gesturePauseTimeout = settings.menuOptions.gesturePauseTimeout;
-        settings.fixedStrokeLength = settings.menuOptions.fixedStrokeLength;
-        settings.rmbSelectsParent = settings.menuOptions.rmbSelectsParent;
-        settings.enableGamepad = settings.menuOptions.enableGamepad;
-        settings.gamepadBackButton = settings.menuOptions.gamepadBackButton;
-        settings.gamepadCloseButton = settings.menuOptions.gamepadCloseButton;
-        delete settings.menuOptions;
-      }
-    }
   }
 }

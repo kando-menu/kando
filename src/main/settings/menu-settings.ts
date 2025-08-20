@@ -10,51 +10,15 @@
 
 import { app } from 'electron';
 
+import {
+  MENU_SETTINGS_SCHEMA_V1,
+  IMenuSettingsV1,
+} from '../../common/settings-schemata/menu-settings-v1';
+
 import { MENU_SETTINGS_SCHEMA, IMenuSettings } from '../../common/settings-schemata';
 import { Settings } from './settings';
 
 import { version } from './../../../package.json';
-
-/**
- * Loads the contents of the settings file and returns an object that conforms to the
- * latest `IMenuSettings` interface. If the content does not conform to the current
- * schema, it will be migrated to the current schema.
- *
- * @param content The content of the settings file as an object.
- * @returns An object containing the parsed settings and a boolean indicating whether a
- *   migration was performed.
- */
-function loadMenuSettings(content: object): {
-  settings: IMenuSettings;
-  didMigration: boolean;
-} {
-  // If the version field is not present, we assume this is an old settings file.
-  // There is nothing actually to migrate, but we need to store the version field
-  // in the settings file to indicate that it has been loaded with the current version.
-  // Hence, we set didMigration to true.
-  if (!('version' in content)) {
-    return {
-      settings: MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
-      didMigration: true,
-    };
-  }
-
-  // Here we could compare the version to the current version and decide whether any
-  // migration is necessary. For now, no further migrations are needed.
-  if (content.version !== version) {
-    const settings = MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true });
-
-    // Yet we still need to update the version to the current version. We set
-    // didMigration to true to indicate that the settings file has been updated.
-    settings.version = version;
-    return { settings, didMigration: true };
-  }
-
-  return {
-    settings: MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
-    didMigration: false,
-  };
-}
 
 /**
  * Returns a Settings instance for the menu settings. This instance can be used to access
@@ -84,4 +48,98 @@ export function getMenuSettings(
     );
     return null;
   }
+}
+
+/**
+ * Loads the contents of the settings file and returns an object that conforms to the
+ * latest `IMenuSettings` interface. If the content does not conform to the current
+ * schema, it will be migrated to the current schema.
+ *
+ * @param content The content of the settings file as an object.
+ * @returns An object containing the parsed settings and a boolean indicating whether a
+ *   migration was performed.
+ */
+function loadMenuSettings(content: object): {
+  settings: IMenuSettings;
+  didMigration: boolean;
+} {
+  // If the version field is not present, we assume this is an old settings file.
+  if (!('version' in content)) {
+    const settings = migrateToMenuSettingsV1(content);
+    return { settings, didMigration: true };
+  }
+
+  // Here we could compare the version to the current version and decide whether any
+  // migration is necessary. For now, no further migrations are needed.
+  if (content.version !== version) {
+    const settings = MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true });
+
+    // Yet we still need to update the version to the current version. We set
+    // didMigration to true to indicate that the settings file has been updated.
+    settings.version = version;
+    return { settings, didMigration: true };
+  }
+
+  return {
+    settings: MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
+    didMigration: false,
+  };
+}
+
+/**
+ * The only real difference between the settings from pre-Kando 2.1.0 times and the
+ * IMenuSettingsV1 format is that the latter contains the version field. This function
+ * migrates an old settings object to an IMenuSettingsV1 object by adding the version
+ * field with its default value.
+ *
+ * The function also migrates some old properties that were present in Kando 1.8.0 and
+ * earlier. These properties were moved to different locations in the settings object.
+ *
+ * @param oldSettings The old settings object to migrate.
+ * @returns The migrated settings object in the IMenuSettingsV1 format.
+ */
+function migrateToMenuSettingsV1(oldSettings: object): IMenuSettingsV1 {
+  console.log('Migrating potentially old settings to IMenuSettingsV1 format...');
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = oldSettings as any;
+
+  // Up to Kando 0.9.0, the `root` property of the menu was called `nodes`.
+  if (raw.menus && Array.isArray(raw.menus)) {
+    for (const menu of raw.menus) {
+      if (menu.nodes && Array.isArray(menu.nodes)) {
+        menu.root = menu.nodes;
+        delete menu.nodes;
+      }
+    }
+  }
+
+  // Up to Kando 1.8.0, there was a `templates` property in the menu settings. This was
+  // removed. We we add all template menus as ordinary menus with a template tag. All
+  // template menu-items are removed.
+  if (raw.templates && Array.isArray(raw.templates)) {
+    for (const itemOrMenu of raw.templates) {
+      // If there is a type property, it is a menu item.
+      // Else, it is a menu template. We add it as a menu with a template tag. Also
+      // remove any bindings, so that the menu is not opened by a shortcut.
+      if (!itemOrMenu.type) {
+        itemOrMenu.tags = ['template'];
+        itemOrMenu.shortcut = '';
+        itemOrMenu.shortcutID = '';
+
+        // Add an empty menus array if it does not exist.
+        if (!raw.menus) {
+          raw.menus = [];
+        }
+
+        raw.menus.push(itemOrMenu);
+      }
+    }
+
+    delete raw.templates;
+  }
+
+  // Now we parse the migrated settings again to ensure that the values set above match
+  // the schema.
+  return MENU_SETTINGS_SCHEMA_V1.parse(raw, { reportInput: true });
 }
