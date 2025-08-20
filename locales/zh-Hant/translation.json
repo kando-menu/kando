@@ -116,7 +116,9 @@
             "cycle-from-recent": "顯示下一個選單（記住最後）",
             "cycle-from-first": "顯示下一個選單（從頭開始）",
             "keep-input-focus": "保持作用中應用程式的焦點",
-            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需要在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。"
+            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需要在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。",
+            "hardware-acceleration": "啟用硬體加速",
+            "hardware-acceleration-info": "此選項可以提升應用程式的效能，但也可能導致一些顯示異常。此設定需重新啟動 Kando 才會生效。"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
@@ -240,7 +242,12 @@
         },
         "shortcut-info": "開啟此選單的快捷鍵。它必須包含一個普通按鍵以及任意數量的修飾鍵，如 Ctrl、Alt 或 Shift。錄製時，您不需要一次按下所有按鍵，也可以一個接一個地按。如果某個快捷鍵已被另一個選單綁定，此功能會有所幫助！",
         "area-condition-info": "僅在指標位於螢幕上指定區域時才顯示此選單。此區域是以像素為單位，相對於主螢幕左上角的座標。若將欄位留空，該方向將不設邊界。",
-        "add-menu-item-hint": "將此項目拖曳至上方的選單即可新增！"
+        "add-menu-item-hint": "將此項目拖曳至上方的選單即可新增！",
+        "app-picker": {
+            "hint": "您也可以將應用程式從開始選單拖曳至 Kando 的選單編輯器！",
+            "search-placeholder": "搜尋應用程式…",
+            "use-selected": "使用所選項"
+        }
     },
     "menu-items": {
         "text": {
@@ -285,7 +292,8 @@
             "tip-4": "使用 {{window_name}} 來插入開啟選單時的焦點視窗標題。",
             "tip-3": "使用 {{app_name}} 來插入開啟選單時的焦點應用程式名稱。",
             "tip-5": "使用 {{pointer_x}} 與 {{pointer_y}} 來插入開啟選單時的指標位置。",
-            "tip-6": "點擊[這裡]({{link}})以了解如何找到啟動應用程式所需的命令。"
+            "tip-6": "點擊[這裡]({{link}})以了解如何找到啟動應用程式所需的命令。",
+            "choose-app": "選擇應用程式…"
         },
         "file": {
             "name": "開啟檔案",
@@ -389,7 +397,8 @@
         "quit": "結束",
         "invalid-link-header": "無效的連結",
         "invalid-link-message": "無法解析此深層連結。",
-        "failed-to-start-header": "Kando 啟動失敗"
+        "failed-to-start-header": "Kando 啟動失敗",
+        "no-backend-found": "找不到合適的後端。"
     },
     "backends": {
         "hyprland": {

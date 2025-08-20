@@ -82,7 +82,7 @@
         "new-version-notification-body": "前往 {{link}} 获取吧。",
         "invalid-link-header": "链接无效",
         "invalid-link-message": "此深度链接无法被解析。",
-        "no-backend-found": "未找到合适后端"
+        "no-backend-found": "未找到合适后端。"
     },
     "menu-items": {
         "command": {
@@ -100,7 +100,8 @@
             "isolated": "隔离运行",
             "detached": "分离运行",
             "isolated-info": "将在一个干净的环境中运行命令，这意味着它不会从 Kando 继承任何环境变量。这应可以帮助处理某些无法正常启动的命令。",
-            "detached-info": "这将使命令与 Kando 断开连接，因此即使 Kando 关闭，它也将继续运行。禁用此项可能会解决某些命令未能正常启动的问题。"
+            "detached-info": "这将使命令与 Kando 断开连接，因此即使 Kando 关闭，它也将继续运行。禁用此项可能会解决某些命令未能正常启动的问题。",
+            "choose-app": "选取应用…"
         },
         "file": {
             "description": "打开一个文件或文件夹。",
@@ -415,6 +416,11 @@
         "empty-collection": "这是个空的菜单合集",
         "no-matching-menus-note": "试试搜点别的？",
         "empty-collection-note": "编辑上面的标签或使用下面的按钮向此集合添加一个全新的菜单",
-        "add-menu-item-hint": "将此项目拖拽到上方的菜单即可新增！"
+        "add-menu-item-hint": "将此项目拖拽到上方的菜单即可新增！",
+        "app-picker": {
+            "hint": "您也可以从您的开始菜单直接拖放应用到 Kando 的菜单编辑器！",
+            "search-placeholder": "搜索应用…",
+            "use-selected": "使用此项"
+        }
     }
 }

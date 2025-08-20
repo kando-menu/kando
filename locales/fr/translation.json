@@ -78,7 +78,8 @@
         "un-inhibit-shortcuts": "Réactiver les raccourcis clavier",
         "invalid-link-message": "Le deep link n'a pas pu être analysé.",
         "new-version-notification-body": "Obtenez-la depuis {{link}}.",
-        "invalid-link-header": "Lien invalide"
+        "invalid-link-header": "Lien invalide",
+        "no-backend-found": "Aucun backend approprié n'a été trouvé."
     },
     "menu-items": {
         "command": {
@@ -96,7 +97,8 @@
             "isolated": "Exécution isolée",
             "isolated-info": "La commande sera exécutée dans un environnement vierge, c'est-à-dire qu'elle n'héritera d'aucune variable d'environnement de Kando. Cela peut aider les commandes qui ne démarrent pas correctement.",
             "detached": "Exécution détachée",
-            "detached-info": "Cela déconnectera la commande de Kando, elle continuera donc à s'exécuter même si Kando est fermé. Ceci peut résoudre des problèmes avec des commandes qui ne démarrent pas correctement."
+            "detached-info": "Cela déconnectera la commande de Kando, elle continuera donc à s'exécuter même si Kando est fermé. Ceci peut résoudre des problèmes avec des commandes qui ne démarrent pas correctement.",
+            "choose-app": "Choisir une application…"
         },
         "file": {
             "description": "Ouvre un fichier ou dossier.",
@@ -283,7 +285,9 @@
             "cycle-from-first": "Afficher le menu suivant",
             "cycle-from-recent": "Afficher le menu suivant (se souvenir de l'ordre)",
             "keep-input-focus-info": "Si cette option est activée, le menu ne recevra pas le focus de la saisie clavier lorsqu'il sera ouvert. Cette option désactive le mode Turbo, mais peut s'avérer utile si vous souhaitez que d'autres applications restent focalisées lorsque le menu est ouvert.",
-            "keep-input-focus": "Maintenir le focus sur l'application active"
+            "keep-input-focus": "Maintenir le focus sur l'application active",
+            "hardware-acceleration": "Activer l'accélération matérielle",
+            "hardware-acceleration-info": "Cette option peut améliorer les performances de l'application, mais peut également entraîner des artefacts de rendu. Vous devrez redémarrer Kando pour appliquer la modification."
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
@@ -414,6 +418,11 @@
         "no-menus": "Il n'y a aucun menu.",
         "empty-collection-note": "Changez les étiquettes ou ajoutez un nouveau menu à cette collection en cliquant sur le bouton ci-dessous.",
         "no-matching-menus-note": "Essayez peut-être un autre mot de clé ?",
-        "add-menu-item-hint": "Faites glisser cet élément pour l'ajouter au menu !"
+        "add-menu-item-hint": "Faites glisser cet élément pour l'ajouter au menu !",
+        "app-picker": {
+            "hint": "Vous pouvez également faire glisser une application de votre menu démarrage dans la fenêtre de Kando !",
+            "search-placeholder": "Rechercher une application…",
+            "use-selected": "Sélectionner"
+        }
     }
 }
