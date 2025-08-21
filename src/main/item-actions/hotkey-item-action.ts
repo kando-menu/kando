@@ -10,7 +10,7 @@
 
 import { IMenuItem, IKeySequence } from '../../common/index';
 import { IItemAction } from './item-action-registry';
-import { DeepReadonly } from '../utils/settings';
+import { DeepReadonly } from '../settings';
 import { IItemData } from '../../common/item-types/hotkey-item-type';
 import { KandoApp } from '../app';
 

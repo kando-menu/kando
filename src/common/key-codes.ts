@@ -5,10 +5,10 @@
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-import { IKeySequence } from '.';
-
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
+
+import { IKeySequence } from '.';
 
 /**
  * This function maps a sequence of key names to platform specific key codes.

@@ -10,11 +10,13 @@
 
 import fs from 'fs-extra';
 import path from 'path';
-import chokidar from 'chokidar';
+import chokidar, { FSWatcher } from 'chokidar';
 import lodash from 'lodash';
 
 import os from 'os';
-import { Notification } from 'electron';
+import { Notification } from './../utils/notification';
+
+import { version } from './../../../package.json';
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -103,14 +105,33 @@ class PropertyChangeEmitter<T> {
   }
 }
 
-/**
- * The options object which can be passed to the constructor. See documentation of the
- * Settings class below for details.
- */
+/** The options object which can be passed to the constructor. */
 interface Options<T> {
-  file: string;
+  /** The directory in which the settings file should be stored. */
   directory: string;
-  defaults: T;
+
+  /** The name of the settings file, including the '.json' extension. */
+  file: string;
+
+  /** If set to true, no notification will be shown when the JSON file cannot be written. */
+  ignoreWriteProtectedConfigFiles?: boolean;
+
+  /** This will be called to create a default settings object. */
+  defaults: () => T;
+
+  /**
+   * This will be called to load the settings from the JSON file. If required, it should
+   * try to migrate the settings to the current version. If a migration is performed,
+   * `didMigration` should be set to true. If this is the case, the migrated settings will
+   * be saved to disk again to avoid having to migrate them again in the future.
+   *
+   * If an error occurs while loading the settings, it should throw an error. It will be
+   * caught by the Settings class and an error message will be shown to the user.
+   */
+  load: (content: object) => {
+    settings: T;
+    didMigration: boolean;
+  };
 }
 
 /**
@@ -131,21 +152,13 @@ interface Options<T> {
  *   ```
  *
  * @template T The type of the settings object.
- * @param options The options object.
- * @param options.directory The directory in which the settings file should be stored.
- * @param options.file The name of the settings file.
- * @param options.defaults The default settings object. This object is used when the
- *   settings file does not exist yet.
  */
 export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   /** This is the path to the settings file. */
   private readonly filePath: string;
 
-  /** If set to true, no notification will be shown when the JSON file cannot be written. */
-  public ignoreWriteProtectedConfigFiles = false;
-
   /** This is the watcher which is used to watch the settings file for changes. */
-  private watcher: chokidar.FSWatcher | null;
+  private watcher: FSWatcher | null;
 
   /** This array contains all listeners which are called when a setting changes. */
   private anyChangeListeners: Array<(newSettings: T, oldSettings: T) => void> = [];
@@ -158,25 +171,20 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   private settings: T;
 
   /**
-   * This is the default settings object. It is used when the settings file does not exist
-   * yet or when it does not contain all properties.
-   */
-  public readonly defaults: T;
-
-  /**
    * Creates a new settings object. If the settings file does not exist yet, the default
    * settings are used. If the settings file exists but does not contain all properties,
    * the missing properties are added from the default settings. If the settings file
    * contains a syntax error, an exception is thrown.
    *
    * See documentation of the class for more details.
+   *
+   * @param options The options
    */
-  constructor(options: Options<T>) {
+  constructor(private options: Options<T>) {
     super();
 
     this.filePath = path.join(options.directory, options.file);
-    this.defaults = options.defaults;
-    this.settings = this.loadSettings(this.defaults);
+    this.settings = this.loadSettings();
 
     // Watch the settings file for changes.
     this.setupWatcher();
@@ -279,9 +287,12 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     this.watcher.on('change', () => {
       const oldSettings = { ...this.settings };
       try {
-        this.settings = this.loadSettings(this.defaults);
+        this.settings = this.loadSettings();
       } catch (error) {
-        console.error('Error loading settings:', error);
+        console.error(
+          'Error loading settings:',
+          error instanceof Error ? error.message : error
+        );
         return;
       }
 
@@ -290,28 +301,54 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   }
 
   /**
-   * Loads the settings from disk. If the settings file does not exist yet, the given
-   * default settings are used. If the settings file exists but does not contain all
-   * properties, the missing properties are added from the default settings. If the
-   * settings file contains a syntax error, the default settings are returned.
+   * Loads the settings from disk.
    *
-   * @param defaultSettings The default settings object.
+   * If the settings file does not exist yet, a new one is created with the default
+   * settings.
+   *
+   * If the settings file was created with an older version of Kando, it is migrated to
+   * the current version and a backup is created in the user's config directory.
+   *
+   * If the settings file contains a syntax error, an exception is thrown.
+   *
    * @returns The current settings object.
    */
-  private loadSettings(defaultSettings: T): T {
+  private loadSettings(): T {
     try {
       console.log('Loading settings from', this.filePath);
       const data = fs.readJSONSync(this.filePath);
-      return lodash.merge({}, defaultSettings, data);
+
+      // If this.options.ignoreWriteProtectedConfigFiles was not set at construction time,
+      // we will try to read this from the settings file.
+      this.options.ignoreWriteProtectedConfigFiles ??=
+        data.ignoreWriteProtectedConfigFiles ?? false;
+
+      // Try reading the version field to determine whether we need to create a backup.
+      // This feature was introduced in version 2.1.0, so we assume that if the version
+      // field is not present, the settings file was created with an older version of
+      // Kando and we need to create a backup.
+      const oldVersion = data.version || '2.0.0';
+      if (oldVersion !== version) {
+        this.createBackup(oldVersion, data);
+      }
+
+      const { settings, didMigration } = this.options.load(data);
+
+      // Check if the settings need to be migrated to the current version.
+      if (didMigration) {
+        this.saveSettings(settings);
+      }
+
+      return settings;
     } catch (error) {
       if (error.code === 'ENOENT') {
         // The settings file does not exist yet. Create it.
+        const defaultSettings = this.options.defaults();
         this.saveSettings(defaultSettings);
+        return defaultSettings;
       } else {
         throw error;
       }
-
-      return defaultSettings;
     }
   }
 
@@ -326,42 +363,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     try {
       fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
     } catch (error) {
-      // Handle read-only config files correctly.
-      // Generate a temporary directory to write the files to for easy reference and write to it.
-      const tmpBaseDir = path.join(os.tmpdir(), 'kando');
-      fs.mkdirSync(tmpBaseDir, { recursive: true });
-      const baseName = path.basename(this.filePath);
-      const tmpDir = path.join(tmpBaseDir, baseName);
-      fs.writeJSONSync(tmpDir, updatedSettings, { spaces: 2 });
-
-      // Check if the error is a read-only error as other errors should never be silenced.
-      const isReadOnlyError =
-        error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM';
-      const errorMessage = isReadOnlyError
-        ? 'The ' +
-          baseName +
-          ' file was read-only. It will temporarily be saved to: ' +
-          tmpDir +
-          " Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning"
-        : 'There was an error while writing to the ' +
-          baseName +
-          ' file. It will be temporarily saved to : ' +
-          tmpDir;
-
-      // If the config option ignoreWriteProtectedConfigFiles is not set or the error is not a read-only error; notify the user that their hard work has not been permanently saved.
-      if (!this.ignoreWriteProtectedConfigFiles || !isReadOnlyError) {
-        console.warn(errorMessage);
-
-        if (Notification.isSupported()) {
-          const notification = new Notification({
-            title: 'Could not save file.',
-            body: errorMessage,
-            icon: path.join(__dirname, require('../../../assets/icons/icon.png')),
-          });
-
-          notification.show();
-        }
-      }
+      this.handleWriteError(error.code, updatedSettings, this.options.file);
     }
     this.watcher?.add(this.filePath);
   }
@@ -387,6 +389,67 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
 
     if (anyChanged) {
       this.anyChangeListeners.forEach((listener) => listener(newSettings, oldSettings));
+    }
+  }
+
+  /**
+   * Creates a backup of the settings file in the user's config directory. The backup is
+   * created with a timestamp in the filename to avoid overwriting existing backups.
+   *
+   * @param oldVersion The version of the app when the settings file was last modified.
+   * @param contents The contents of the settings file to back up.
+   */
+  private createBackup(oldVersion: string, contents: object) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = this.options.file.replace(
+      '.json',
+      `-${oldVersion}-${timestamp}.json`
+    );
+
+    const backupDir = path.join(this.options.directory, 'backups');
+    const backupFile = path.join(backupDir, fileName);
+
+    console.log(`Creating backup of settings file: ${this.filePath} as ${backupFile}`);
+
+    try {
+      fs.mkdirSync(backupDir, { recursive: true });
+      fs.copyFileSync(this.filePath, backupFile);
+    } catch (error) {
+      this.handleWriteError(error.code, contents, fileName);
+    }
+  }
+
+  /**
+   * If writing to the settings file fails, we will create a copy of the settings file in
+   * a temporary directory.
+   *
+   * @param error The error which occurred while writing to the settings file.
+   * @param contents The contents of the settings file which could not be written.
+   * @param fileName The name of the file which could not be written.
+   */
+  private handleWriteError(errorCode: string, contents: object, fileName: string) {
+    const tmpBaseDir = path.join(os.tmpdir(), 'kando');
+    fs.mkdirSync(tmpBaseDir, { recursive: true });
+
+    const tmpDir = path.join(tmpBaseDir, fileName);
+    fs.writeJSONSync(tmpDir, contents, { spaces: 2 });
+
+    // Check if the error is a read-only error as other errors should never be silenced.
+    const isReadOnlyError =
+      errorCode === 'EROFS' || errorCode === 'EACCES' || errorCode === 'EPERM';
+    const errorMessage = isReadOnlyError
+      ? `The ${fileName} file was read-only. It will temporarily be saved to ${tmpDir}. Set ignoreWriteProtectedConfigFiles to 'true' to silence this warning`
+      : `There was an error while writing ${fileName}. It will be temporarily saved to ${tmpDir}`;
+
+    // If the config option ignoreWriteProtectedConfigFiles is not set or the error is not
+    // a read-only error, notify the user that their hard work has not been permanently
+    // saved.
+    if (!this.options.ignoreWriteProtectedConfigFiles || !isReadOnlyError) {
+      Notification.show({
+        title: 'Could not save settings file',
+        message: errorMessage,
+        type: 'error',
+      });
     }
   }
 }

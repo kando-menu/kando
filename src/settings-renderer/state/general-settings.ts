@@ -10,7 +10,7 @@
 
 import { create } from 'zustand';
 
-import { IGeneralSettings, getDefaultGeneralSettings } from '../../common';
+import { IGeneralSettings, GENERAL_SETTINGS_SCHEMA } from '../../common';
 
 // The general settings state object allows access to the settings stored in the user's
 // config.json. It is always synchronized with the contents of the file, so any changes
@@ -20,9 +20,9 @@ import { IGeneralSettings, getDefaultGeneralSettings } from '../../common';
  * Use this hook to access the entire general settings object. Usually you will only need
  * a single setting. In this case, use useAppSetting instead.
  */
-export const useGeneralSettings = create<IGeneralSettings>(() => ({
-  ...getDefaultGeneralSettings(),
-}));
+export const useGeneralSettings = create<IGeneralSettings>(() =>
+  GENERAL_SETTINGS_SCHEMA.parse({})
+);
 
 /**
  * Use this hook to access a single setting from the general settings. This is a
