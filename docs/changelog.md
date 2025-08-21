@@ -50,6 +50,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A bug which prevented the settings to be shown when a second instance of Kando was started on macOS.
 - Added an option to turn off hardware acceleration to fix a bug that sometimes caused the window to lose its transparency (seen only with NVIDIA GPUs). Thanks to [@yar2000T](https://github.com/yar2000T) for this contribution!
 - The varying width of the sidebar in the theme-selection dialog. The sidebar does not change width anymore when switching between the different themes with many accent colors. Thanks to [@kmqwerty](https://github.com/kmqwerty) for this contribution!
+- Unresponsive Dev-Tools on Windows. The Dev-Tools now open in a separate window instead of being initially docked. You either have to manually dock the Dev-Tools or move them to another screen. Else the menu will block the input.
 
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 

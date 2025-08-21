@@ -485,7 +485,7 @@ export class KandoApp {
       (e, forWindow: 'menu-window' | 'settings-window') => {
         if (forWindow === 'menu-window') {
           this.menuWindow?.webContents.openDevTools({
-            mode: 'right',
+            mode: 'undocked',
             title: 'Menu-Window Inspector',
           });
         }
