@@ -13,13 +13,7 @@ import { globalShortcut } from 'electron';
 import lodash from 'lodash';
 import mime from 'mime-types';
 
-import {
-  IBackendInfo,
-  IKeySequence,
-  IWMInfo,
-  IMenuItem,
-  IAppDescription,
-} from '../../common';
+import { BackendInfo, KeySequence, WMInfo, MenuItem, AppDescription } from '../../common';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
@@ -46,7 +40,7 @@ export abstract class Backend extends EventEmitter {
    *
    * @returns Some information about the backend.
    */
-  public abstract getBackendInfo(): IBackendInfo;
+  public abstract getBackendInfo(): BackendInfo;
 
   /**
    * This method will be called once when the backend is created. It can be used to
@@ -72,13 +66,13 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves to the name and app of the currently focused window
    *   as well as to the current pointer position.
    */
-  public abstract getWMInfo(): Promise<IWMInfo>;
+  public abstract getWMInfo(): Promise<WMInfo>;
 
   /**
    * Each backend must provide a way to get a list of all installed applications. This is
    * used by the settings window to populate the list of available applications.
    */
-  public abstract getInstalledApps(): Promise<Array<IAppDescription>>;
+  public abstract getInstalledApps(): Promise<Array<AppDescription>>;
 
   /**
    * Each backend can provide a way to list available system icons. The method should
@@ -122,7 +116,7 @@ export abstract class Backend extends EventEmitter {
   public async createItemForDroppedFile(
     name: string,
     path: string
-  ): Promise<IMenuItem | null> {
+  ): Promise<MenuItem | null> {
     // If the path is empty, we can't create a menu item.
     if (!path) {
       return null;
@@ -170,7 +164,7 @@ export abstract class Backend extends EventEmitter {
    * @param keys The keys to simulate.
    * @returns A promise which resolves when the key sequence has been simulated.
    */
-  public abstract simulateKeys(keys: IKeySequence): Promise<void>;
+  public abstract simulateKeys(keys: KeySequence): Promise<void>;
 
   /**
    * This binds the given shortcuts globally. What the shortcut strings look like depends

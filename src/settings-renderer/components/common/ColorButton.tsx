@@ -15,7 +15,7 @@ import chroma from 'chroma-js';
 import * as classes from './ColorButton.module.scss';
 import Popover from './Popover';
 
-type IProps = {
+type Props = {
   /** Function to call when the color is changed. */
   onChange?: (color: string) => void;
 
@@ -33,7 +33,7 @@ type IProps = {
  * @param props - The properties for the color button component.
  * @returns A color button element.
  */
-export default function ColorButton(props: IProps) {
+export default function ColorButton(props: Props) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [cssColor, setCSSColor] = React.useState(chroma(props.color).css());
   const [inputColor, setInputColor] = React.useState(chroma(props.color).css());

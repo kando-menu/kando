@@ -11,10 +11,10 @@
 import { matchSorter } from 'match-sorter';
 import iconsData from 'simple-icons-font/font/simple-icons.min.json';
 
-import { IIconTheme } from './icon-theme-registry';
+import { IconTheme } from './icon-theme-registry';
 
 /** This class implements an icon theme that uses the Simple Icons font as icons. */
-export class SimpleIconsTheme implements IIconTheme {
+export class SimpleIconsTheme implements IconTheme {
   /**
    * This array contains all available icon titles and slugs. It is initialized in the
    * constructor.

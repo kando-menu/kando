@@ -16,7 +16,7 @@ import InfoItem from './InfoItem';
 import * as classes from './SettingsRow.module.scss';
 const cx = classNames.bind(classes);
 
-type IProps = {
+type Props = {
   /** The widget on the right side. */
   children?: React.ReactNode;
 
@@ -49,7 +49,7 @@ type IProps = {
  * @param props - The properties for the settings-row component.
  * @returns A settings-row element.
  */
-export default function SettingsRow(props: IProps) {
+export default function SettingsRow(props: Props) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Element = props.labelClickable ? 'label' : 'div';
 

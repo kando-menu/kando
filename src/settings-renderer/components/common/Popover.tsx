@@ -16,7 +16,7 @@ import { FocusTrapManager } from '../../utils';
 
 import * as classes from './Popover.module.scss';
 
-type IProps = {
+type Props = {
   /** Whether the modal is visible. */
   visible: boolean;
 
@@ -46,7 +46,7 @@ type IProps = {
  * @param props - The properties for the modal component.
  * @returns A popover element.
  */
-export default function Popover(props: IProps) {
+export default function Popover(props: Props) {
   const popoverContent = React.useRef(null);
   const popoverTriangle = React.useRef(null);
   const popoverTarget = React.useRef(null);

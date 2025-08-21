@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { RandomTip, ShortcutPicker, Checkbox } from '../../common';
-import { IItemData } from '../../../../common/item-types/hotkey-item-type';
+import { ItemData } from '../../../../common/item-types/hotkey-item-type';
 
 /** The configuration component for hotkey items is a shortcut picker. */
 export default () => {
@@ -28,7 +28,7 @@ export default () => {
     return <></>;
   }
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -40,7 +40,7 @@ export default () => {
         initialValue={data.hotkey}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).hotkey = value;
+            (item.data as ItemData).hotkey = value;
             return item;
           });
         }}
@@ -51,7 +51,7 @@ export default () => {
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).delayed = value;
+            (item.data as ItemData).delayed = value;
             return item;
           });
         }}

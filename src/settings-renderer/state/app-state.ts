@@ -11,13 +11,13 @@
 import { create } from 'zustand';
 
 import {
-  IBackendInfo,
-  IVersionInfo,
-  ISystemInfo,
-  IMenuThemeDescription,
-  ISoundThemeDescription,
-  IMenu,
-  IAppDescription,
+  BackendInfo,
+  VersionInfo,
+  SystemInfo,
+  MenuThemeDescription,
+  SoundThemeDescription,
+  Menu,
+  AppDescription,
 } from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
@@ -67,22 +67,22 @@ type AppState = {
   darkMode: boolean;
 
   /** Information about the backend. */
-  backendInfo: IBackendInfo | null;
+  backendInfo: BackendInfo | null;
 
   /** Information about the current version of Kando and some libraries. */
-  versionInfo: IVersionInfo | null;
+  versionInfo: VersionInfo | null;
 
   /** Information about the system. */
-  systemInfo: ISystemInfo | null;
+  systemInfo: SystemInfo | null;
 
   /** A list of all installed apps. */
-  installedApps: Array<IAppDescription>;
+  installedApps: Array<AppDescription>;
 
   /** Descriptions of all available menu themes. */
-  menuThemes: Array<IMenuThemeDescription>;
+  menuThemes: Array<MenuThemeDescription>;
 
   /** Descriptions of all available sound themes. */
-  soundThemes: Array<ISoundThemeDescription>;
+  soundThemes: Array<SoundThemeDescription>;
 };
 
 /** These actions can be performed on the app state. */
@@ -209,7 +209,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
  * @returns The selected menu item and whether it is the root item or not.
  */
 export function getSelectedChild(
-  menus: IMenu[],
+  menus: Menu[],
   selectedMenu: number,
   selectedChildPath: number[]
 ) {

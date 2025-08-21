@@ -12,7 +12,7 @@ import React, { ReactNode } from 'react';
 
 import * as classes from './Headerbar.module.scss';
 
-type IProps = {
+type Props = {
   /** Content to display on the left side of the header bar. */
   left?: string | ReactNode;
 
@@ -36,7 +36,7 @@ type IProps = {
  * @param props - The properties for the header bar component.
  * @returns A header bar element.
  */
-export default function Headerbar(props: IProps) {
+export default function Headerbar(props: Props) {
   return (
     <div className={classes.headerbar}>
       <div

@@ -10,10 +10,10 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from './item-type-registry';
+import { ItemType } from './item-type-registry';
 
 /** This class provides meta information for the open settings menu item. */
-export class SettingsItemType implements IItemType {
+export class SettingsItemType implements ItemType {
   get hasChildren(): boolean {
     return false;
   }

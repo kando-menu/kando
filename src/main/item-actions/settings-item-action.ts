@@ -8,13 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from '../../common/index';
-import { IItemAction } from './item-action-registry';
+import { MenuItem } from '../../common/index';
+import { ItemAction } from './item-action-registry';
 import { DeepReadonly } from '../settings';
 import { KandoApp } from '../app';
 
 /** This action opens Kando settings. */
-export class SettingsItemAction implements IItemAction {
+export class SettingsItemAction implements ItemAction {
   /**
    * Opening settings is never delayed.
    *
@@ -31,7 +31,7 @@ export class SettingsItemAction implements IItemAction {
    * @param app The app which executed the action.
    * @returns Void
    */
-  async execute(_item: DeepReadonly<IMenuItem>, app: KandoApp) {
+  async execute(_item: DeepReadonly<MenuItem>, app: KandoApp) {
     app.showSettings();
   }
 }

@@ -10,13 +10,13 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IIconTheme } from './icon-theme-registry';
+import { IconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that uses the Material Symbols Rounded font as
  * icons.
  */
-export class MaterialSymbolsTheme implements IIconTheme {
+export class MaterialSymbolsTheme implements IconTheme {
   /** This array contains all available icon names. It is initialized in the constructor. */
   private iconNames: Array<string> = [];
 

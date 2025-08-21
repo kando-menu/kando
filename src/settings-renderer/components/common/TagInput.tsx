@@ -20,7 +20,7 @@ import SettingsRow from './SettingsRow';
 
 import * as classes from './TagInput.module.scss';
 
-type IProps = {
+type Props = {
   /** The initial tags to display. */
   tags: string[];
 
@@ -45,7 +45,7 @@ type IProps = {
  * @param props - The properties for the tag input component.
  * @returns A tag edit field.
  */
-export default function TagInput(props: IProps) {
+export default function TagInput(props: Props) {
   const menus = useMappedMenuProperties((menu) => ({ tags: menu.tags }));
   const collections = useMappedCollectionProperties((collection) => ({
     tags: collection.tags,

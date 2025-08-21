@@ -19,7 +19,7 @@ import { Modal, Button } from '../common';
 
 import * as classes from './WindowPicker.module.scss';
 
-type IProps = {
+type Props = {
   /** Function to call when a new window is selected. */
   onSelect: (value: string) => void;
 
@@ -39,7 +39,7 @@ type IProps = {
  * application or window should be focused. After that, the application name or window
  * title is read and returned to the parent component.
  */
-export default function WindowPicker(props: IProps) {
+export default function WindowPicker(props: Props) {
   const timeout = 5;
   const [value, setValue] = React.useState(null);
   const [timer, setTimer] = React.useState(timeout + 1);

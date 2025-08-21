@@ -13,7 +13,7 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { IKeySequence, IAppDescription, IMenuItem } from '../../../common';
+import { KeySequence, AppDescription, MenuItem } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
@@ -23,7 +23,7 @@ export class MacosBackend extends Backend {
    * populated during the backend construction. We may want to update this list
    * dynamically in the future.
    */
-  private installedApps: IAppDescription[] = [];
+  private installedApps: AppDescription[] = [];
 
   /**
    * This is a map of system icons. The key is the name of the corresponding app and the
@@ -99,7 +99,7 @@ export class MacosBackend extends Backend {
    * Each backend must provide a way to get a list of all installed applications. This is
    * used by the settings window to populate the list of available applications.
    */
-  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+  public override async getInstalledApps(): Promise<Array<AppDescription>> {
     return this.installedApps;
   }
 
@@ -134,7 +134,7 @@ export class MacosBackend extends Backend {
   public override async createItemForDroppedFile(
     name: string,
     path: string
-  ): Promise<IMenuItem | null> {
+  ): Promise<MenuItem | null> {
     const commandItemType = ItemTypeRegistry.getInstance().getType('command');
     const appName = name.slice(0, name.lastIndexOf('.'));
 
@@ -190,7 +190,7 @@ export class MacosBackend extends Backend {
    *
    * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(keys: IKeySequence) {
+  public async simulateKeys(keys: KeySequence) {
     // We first need to convert the given DOM key names to Apple key codes.  If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'macos');

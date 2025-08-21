@@ -14,7 +14,7 @@ import { app } from 'electron';
 import { Notification as ElectronNotification } from 'electron';
 
 /** Options for displaying a notification. */
-export type INotificationOptions = {
+export type NotificationOptions = {
   /** The title of the notification. */
   title: string;
 
@@ -42,7 +42,7 @@ export class Notification {
    * This is a queue of notifications that will be shown once the app is ready. It is
    * initialized with an empty array.
    */
-  private static notifications: INotificationOptions[] = [];
+  private static notifications: NotificationOptions[] = [];
 
   /**
    * This initializes the handler for the app-ready event. It will show all queued
@@ -62,7 +62,7 @@ export class Notification {
    *
    * @param options The options for the notification.
    */
-  static show(options: INotificationOptions) {
+  static show(options: NotificationOptions) {
     // If the app is not ready yet, we queue the notification.
     if (!app.isReady()) {
       Notification.notifications.push(options);

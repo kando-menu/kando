@@ -12,7 +12,7 @@ import React from 'react';
 
 import * as classes from './Scrollbox.module.scss';
 
-type IProps = {
+type Props = {
   children: React.ReactNode;
   maxHeight?: string | number;
   width?: string | number;
@@ -28,7 +28,7 @@ type IProps = {
  * @param props - The properties for the scrollbox component.
  * @returns A scrollbox element.
  */
-export default function Scrollbox(props: IProps) {
+export default function Scrollbox(props: Props) {
   return (
     <div
       className={

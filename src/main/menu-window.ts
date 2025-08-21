@@ -12,7 +12,7 @@ import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './settings';
-import { IShowMenuRequest, IMenu, IMenuItem, IWMInfo } from '../common';
+import { ShowMenuRequest, Menu, MenuItem, WMInfo } from '../common';
 import { ItemActionRegistry } from './item-actions/item-action-registry';
 import { Notification } from './utils/notification';
 import { KandoApp } from './app';
@@ -29,7 +29,7 @@ export class MenuWindow extends BrowserWindow {
    * This contains the last menu which was shown. It is used to execute the selected
    * action.
    */
-  public lastMenu?: DeepReadonly<IMenu>;
+  public lastMenu?: DeepReadonly<Menu>;
 
   /**
    * This index is used to select the next menu from the list of menus which would match
@@ -129,8 +129,8 @@ export class MenuWindow extends BrowserWindow {
    *   time the menu was shown.
    */
   public showMenu(
-    request: Partial<IShowMenuRequest>,
-    info: IWMInfo,
+    request: Partial<ShowMenuRequest>,
+    info: WMInfo,
     systemIconsChanged: boolean
   ) {
     const sameShortcutBehavior = this.kando
@@ -188,7 +188,7 @@ export class MenuWindow extends BrowserWindow {
       this.kando.getBackend().inhibitShortcuts([shortcut]);
     }
 
-    // Store the last menu to be able to execute the selected action later. The IWMInfo
+    // Store the last menu to be able to execute the selected action later. The WMInfo
     // will be passed to the action as well.
     this.lastMenu = menu;
 
@@ -389,7 +389,7 @@ export class MenuWindow extends BrowserWindow {
    * @param info Information about current desktop environment.
    * @returns The selected menu or null if no menu was found.
    */
-  public chooseMenu(request: Partial<IShowMenuRequest>, info: IWMInfo) {
+  public chooseMenu(request: Partial<ShowMenuRequest>, info: WMInfo) {
     // Get list of current menus.
     const menus = this.kando.getMenuSettings().get('menus');
 
@@ -503,7 +503,7 @@ export class MenuWindow extends BrowserWindow {
     }
 
     // Assemble a list of all menus which have the highest score.
-    const bestMenus: DeepReadonly<IMenu>[] = [];
+    const bestMenus: DeepReadonly<Menu>[] = [];
     for (let i = 0; i < scores.length; i++) {
       if (scores[i] === maxScore) {
         bestMenus.push(menus[i]);
@@ -532,7 +532,7 @@ export class MenuWindow extends BrowserWindow {
    * @returns The menu item at the given path.
    * @throws If the path is invalid.
    */
-  private getMenuItemAtPath(root: DeepReadonly<IMenuItem>, path: string) {
+  private getMenuItemAtPath(root: DeepReadonly<MenuItem>, path: string) {
     let item = root;
     const indices = path
       .substring(1)
@@ -581,7 +581,7 @@ export class MenuWindow extends BrowserWindow {
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
     ipcMain.on('menu-window.select-item', (event, path) => {
-      const execute = (item: DeepReadonly<IMenuItem>) => {
+      const execute = (item: DeepReadonly<MenuItem>) => {
         ItemActionRegistry.getInstance()
           .execute(item, this.kando)
           .catch((error) => {
@@ -593,7 +593,7 @@ export class MenuWindow extends BrowserWindow {
           });
       };
 
-      let item: DeepReadonly<IMenuItem>;
+      let item: DeepReadonly<MenuItem>;
       let executeDelayed = false;
 
       try {

@@ -14,7 +14,7 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { IKeySequence, IMenuItem, IAppDescription } from '../../../common';
+import { KeySequence, MenuItem, AppDescription } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
@@ -28,7 +28,7 @@ export class WindowsBackend extends Backend {
    * populated during the backend construction. We may want to update this list
    * dynamically in the future.
    */
-  private installedApps: IAppDescription[] = [];
+  private installedApps: AppDescription[] = [];
 
   /**
    * This is a map of system icons. The key is the name of the corresponding app and the
@@ -110,7 +110,7 @@ export class WindowsBackend extends Backend {
    * Each backend must provide a way to get a list of all installed applications. This is
    * used by the settings window to populate the list of available applications.
    */
-  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+  public override async getInstalledApps(): Promise<Array<AppDescription>> {
     return Array.from(this.installedApps.values());
   }
 
@@ -145,7 +145,7 @@ export class WindowsBackend extends Backend {
   public override async createItemForDroppedFile(
     name: string,
     path: string
-  ): Promise<IMenuItem | null> {
+  ): Promise<MenuItem | null> {
     const commandItemType = ItemTypeRegistry.getInstance().getType('command');
 
     // If an executable file was dropped, create a menu item for it. We will attempt to
@@ -207,7 +207,7 @@ export class WindowsBackend extends Backend {
    *
    * @param keys The keys to simulate.
    */
-  public override async simulateKeys(keys: IKeySequence) {
+  public override async simulateKeys(keys: KeySequence) {
     // We first need to convert the given DOM key names to Win32 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'windows');

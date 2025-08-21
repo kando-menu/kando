@@ -16,7 +16,7 @@ import SettingsRow from './SettingsRow';
 import * as classes from './TextInput.module.scss';
 const cx = classNames.bind(classes);
 
-type IProps = {
+type Props = {
   /**
    * Function to call when the value changes. This will be called when the user presses
    * Enter after typing a value, or when the user clicks outside of the text field.
@@ -54,7 +54,7 @@ type IProps = {
  * @param props - The properties for the text-input component.
  * @returns A text-input element.
  */
-export default function TextInput(props: IProps) {
+export default function TextInput(props: Props) {
   const [value, setValue] = React.useState(props.initialValue);
 
   // Update the value when the initialValue prop changes. This is necessary because the

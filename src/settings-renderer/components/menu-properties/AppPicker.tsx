@@ -13,14 +13,14 @@ import i18next from 'i18next';
 import { TbCheck, TbX, TbBackspaceFilled } from 'react-icons/tb';
 
 import { Modal, Button, Scrollbox, ThemedIcon, Note, Swirl } from '../common';
-import { IAppDescription } from '../../../common';
+import { AppDescription } from '../../../common';
 import { useAppState } from '../../state';
 
 import * as classes from './AppPicker.module.scss';
 
-type IProps = {
+type Props = {
   /** Function to call when a new window is selected. */
-  onSelect: (value: IAppDescription) => void;
+  onSelect: (value: AppDescription) => void;
 
   /** Function to call when the dialog should be closed. */
   onClose: () => void;
@@ -33,8 +33,8 @@ type IProps = {
  * This component allows the user to select an application from a list of all installed
  * applications.
  */
-export default function AppPicker(props: IProps) {
-  const [value, setValue] = React.useState<IAppDescription | null>(null);
+export default function AppPicker(props: Props) {
+  const [value, setValue] = React.useState<AppDescription | null>(null);
   const [filterTerm, setFilterTerm] = React.useState('');
   const installedApps = useAppState((state) => state.installedApps);
 

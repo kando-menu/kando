@@ -9,9 +9,9 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../common/math';
-import { IVec2 } from '../../common';
+import { Vec2 } from '../../common';
 import { Gamepad } from './gamepad';
-import { InputMethod, ButtonState, IInputState, SelectionType } from './input-method';
+import { InputMethod, ButtonState, InputState, SelectionType } from './input-method';
 
 /**
  * The GamepadInput is currently quite simple. With the analog sticks, the user can
@@ -38,7 +38,7 @@ export class GamepadInput extends InputMethod {
   private gamepad: Gamepad = new Gamepad();
 
   /** The absolute position of the currently selected item. */
-  private centerPosition: IVec2 = { x: 0, y: 0 };
+  private centerPosition: Vec2 = { x: 0, y: 0 };
 
   /** Creates a new GamepadInput instance. */
   constructor() {
@@ -62,7 +62,7 @@ export class GamepadInput extends InputMethod {
       }
     });
 
-    this.gamepad.on('stickmotion', (stickPosition: IVec2) => {
+    this.gamepad.on('stickmotion', (stickPosition: Vec2) => {
       if (this.enabled) {
         this.updateState(stickPosition);
       }
@@ -70,18 +70,18 @@ export class GamepadInput extends InputMethod {
   }
 
   /** @inheritdoc */
-  public setCurrentCenter(center: IVec2) {
+  public setCurrentCenter(center: Vec2) {
     if (this.enabled) {
       this.centerPosition = center;
     }
   }
 
   /** Computes a new IInputState and publishes it via the state callback. */
-  private updateState(stickPosition: IVec2) {
+  private updateState(stickPosition: Vec2) {
     if (this.enabled) {
       const relativePosition = math.multiply(stickPosition, this.parentDistance);
 
-      const state: IInputState = {
+      const state: InputState = {
         button: ButtonState.eReleased,
         absolutePosition: math.add(this.centerPosition, relativePosition),
         relativePosition: relativePosition,

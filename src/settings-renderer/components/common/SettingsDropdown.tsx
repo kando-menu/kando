@@ -12,14 +12,14 @@ import React from 'react';
 
 import Dropdown from './Dropdown';
 import { useGeneralSetting } from '../../state';
-import { IGeneralSettings } from '../../../common';
+import { GeneralSettings } from '../../../common';
 
-type IProps<K extends keyof IGeneralSettings> = {
+type Props<K extends keyof GeneralSettings> = {
   /** The key in the general settings to manage. */
   settingsKey: K;
 
   /** Array of options to display in the dropdown. Each option has a value and a label. */
-  options: { value: IGeneralSettings[K]; label: string }[];
+  options: { value: GeneralSettings[K]; label: string }[];
 
   /** Optional label text to display next to the dropdown. */
   label?: string;
@@ -53,8 +53,8 @@ type EnumKeys<T> = {
  * @param props - The properties for the managed dropdown component.
  * @returns A managed dropdown element.
  */
-export default function SettingsDropdown<K extends EnumKeys<IGeneralSettings>>(
-  props: IProps<K>
+export default function SettingsDropdown<K extends EnumKeys<GeneralSettings>>(
+  props: Props<K>
 ) {
   const [state, setState] = useGeneralSetting(props.settingsKey);
 

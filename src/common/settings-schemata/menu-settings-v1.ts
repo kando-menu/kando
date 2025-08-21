@@ -12,9 +12,9 @@ import * as z from 'zod';
 import { version } from './../../../package.json';
 
 /**
- * This interface is used to describe the conditions under which a menu should be shown.
- * When a menu shall be shown, the conditions of all menus are checked. The menu with the
- * most conditions that are met is selected.
+ * This type is used to describe the conditions under which a menu should be shown. When a
+ * menu shall be shown, the conditions of all menus are checked. The menu with the most
+ * conditions that are met is selected.
  */
 export const MENU_CONDITIONS_SCHEMA_V1 = z.object({
   /** Regex to match for a window name */
@@ -74,11 +74,11 @@ export const MENU_ITEM_SCHEMA_V1 = z.object({
 });
 
 /**
- * This interface describes a menu. It contains the root item of the menu, the shortcut to
- * open the menu and a flag indicating whether the menu should be opened in the center of
- * the screen or at the mouse pointer.
+ * This type describes a menu. It contains the root item of the menu, the shortcut to open
+ * the menu and a flag indicating whether the menu should be opened in the center of the
+ * screen or at the mouse pointer.
  *
- * This interface is used to describe one of the configured menus in the settings file.
+ * This type is used to describe one of the configured menus in the settings file.
  */
 export const MENU_SCHEMA_V1 = z.object({
   /** The root item of the menu. */
@@ -142,8 +142,8 @@ export const MENU_COLLECTION_SCHEMA_V1 = z.object({
 });
 
 /**
- * This interface describes the content of the settings file. It contains the configured
- * menus as well as the templates.
+ * This type describes the content of the settings file. It contains the configured menus
+ * as well as the templates.
  */
 export const MENU_SETTINGS_SCHEMA_V1 = z.object({
   /**
@@ -166,8 +166,8 @@ export const MENU_SETTINGS_SCHEMA_V1 = z.object({
   ]),
 });
 
-export type IMenuConditionsV1 = z.infer<typeof MENU_CONDITIONS_SCHEMA_V1>;
-export type IMenuItemV1 = z.infer<typeof MENU_ITEM_SCHEMA_V1>;
-export type IMenuV1 = z.infer<typeof MENU_SCHEMA_V1>;
-export type IMenuCollectionV1 = z.infer<typeof MENU_COLLECTION_SCHEMA_V1>;
-export type IMenuSettingsV1 = z.infer<typeof MENU_SETTINGS_SCHEMA_V1>;
+export type MenuConditionsV1 = z.infer<typeof MENU_CONDITIONS_SCHEMA_V1>;
+export type MenuItemV1 = z.infer<typeof MENU_ITEM_SCHEMA_V1>;
+export type MenuV1 = z.infer<typeof MENU_SCHEMA_V1>;
+export type MenuCollectionV1 = z.infer<typeof MENU_COLLECTION_SCHEMA_V1>;
+export type MenuSettingsV1 = z.infer<typeof MENU_SETTINGS_SCHEMA_V1>;

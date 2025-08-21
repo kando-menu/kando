@@ -22,7 +22,7 @@ const cx = classNames.bind(classes);
 import { useAppState, useMenuSettings } from '../../state';
 import { Button, IconChooserButton, TagInput } from '../common';
 
-type IProps = {
+type Props = {
   /** When the search term changes. */
   onSearch: (term: string) => void;
 };
@@ -34,7 +34,7 @@ type IProps = {
  * collection is selected, the details will show the collection name and a set of widgets
  * for editing the collection's name, icon, and tags.
  */
-export default function CollectionDetails(props: IProps) {
+export default function CollectionDetails(props: Props) {
   const menuCollections = useMenuSettings((state) => state.collections);
   const selectedCollection = useAppState((state) => state.selectedCollection);
   const selectCollection = useAppState((state) => state.selectCollection);

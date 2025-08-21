@@ -13,7 +13,7 @@ declare const window: WindowWithAPIs;
 
 import { Howl } from 'howler';
 
-import { ISoundThemeDescription, SoundType } from '../common';
+import { SoundThemeDescription, SoundType } from '../common';
 
 /** This class is responsible for loading a sound theme and playing sounds. */
 export class SoundTheme {
@@ -21,7 +21,7 @@ export class SoundTheme {
    * The current theme description. When the user changes the theme, this will be updated
    * via the `loadDescription` method.
    */
-  private description: ISoundThemeDescription;
+  private description: SoundThemeDescription;
 
   /** The current volume. */
   private volume: number = 0.5;
@@ -37,7 +37,7 @@ export class SoundTheme {
    *
    * @param description The description of the sound theme to load.
    */
-  public loadDescription(description: ISoundThemeDescription) {
+  public loadDescription(description: SoundThemeDescription) {
     this.description = description;
     this.reloadCounter++;
   }

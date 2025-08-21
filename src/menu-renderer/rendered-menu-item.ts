@@ -8,14 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2, IMenuItem } from '../common';
+import { Vec2, MenuItem } from '../common';
 
 /**
- * The menu consists of a tree of menu items. This interface extends the IMenuItem
- * interface with properties which are only used by the Menu class in the renderer
- * process.
+ * The menu consists of a tree of menu items. This type extends the MenuItem type with
+ * properties which are only used by the Menu class in the renderer process.
  */
-export type IRenderedMenuItem = {
+export type RenderedMenuItem = {
   /**
    * The chain of indices to get to this menu item. This will be computed and set once the
    * menu is opened. It is stored here to avoid recomputation during emission of events.
@@ -46,7 +45,7 @@ export type IRenderedMenuItem = {
    * Once a menu item is selected, it will be drawn at a specific distance from the parent
    * menu. This property stores the relative position of the menu item.
    */
-  position?: IVec2;
+  position?: Vec2;
 
   /**
    * The tree of menu items consists of these `nodeDiv`s. The child items of a menu item
@@ -79,4 +78,4 @@ export type IRenderedMenuItem = {
    * store the last angle here.
    */
   lastHoveredChildAngle?: number;
-} & IMenuItem;
+} & MenuItem;

@@ -9,8 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../common/math';
-import { IVec2 } from '../../common';
-import { InputMethod, ButtonState, IInputState, SelectionType } from './input-method';
+import { Vec2 } from '../../common';
+import { InputMethod, ButtonState, InputState, SelectionType } from './input-method';
 import { GestureDetector } from './gesture-detector';
 
 /**
@@ -55,7 +55,7 @@ export class PointerInput extends InputMethod {
   public gestureDetector: GestureDetector = new GestureDetector();
 
   /** The current pointer position. */
-  private pointerPosition: IVec2 = { x: 0, y: 0 };
+  private pointerPosition: Vec2 = { x: 0, y: 0 };
 
   /** The current input state. */
   private buttonState = ButtonState.eReleased;
@@ -67,13 +67,13 @@ export class PointerInput extends InputMethod {
   private deferredTurboMode = false;
 
   /** The position where the mouse was when the user pressed a mouse button the last time. */
-  private clickPosition: IVec2 = { x: 0, y: 0 };
+  private clickPosition: Vec2 = { x: 0, y: 0 };
 
   /** The position where the mouse was when the user pressed a keyboard key the last time. */
-  private keydownPosition: IVec2 = { x: 0, y: 0 };
+  private keydownPosition: Vec2 = { x: 0, y: 0 };
 
   /** The position of the currently selected submenu. */
-  private centerPosition: IVec2 = { x: 0, y: 0 };
+  private centerPosition: Vec2 = { x: 0, y: 0 };
 
   /** The interactive radius of the currently selected item. */
   private centerRadius = 0;
@@ -98,7 +98,7 @@ export class PointerInput extends InputMethod {
     // Forward selection events from the gesture detector. In hover mode, we select any
     // item that is hovered over. In marking and turbo mode, we only select submenus via
     // gestures, final lactions need to be selected by pointer-up events.
-    this.gestureDetector.on('selection', (position: IVec2) => {
+    this.gestureDetector.on('selection', (position: Vec2) => {
       this.selectCallback(
         position,
         this.enableHoverMode && !this.hoverModeNeedsConfirmation
@@ -109,7 +109,7 @@ export class PointerInput extends InputMethod {
   }
 
   /** @inheritdoc */
-  public setCurrentCenter(center: IVec2, radius: number) {
+  public setCurrentCenter(center: Vec2, radius: number) {
     this.update(center, center, this.buttonState);
     this.gestureDetector.reset();
     this.gestureDetector.onMotionEvent(center);
@@ -322,13 +322,13 @@ export class PointerInput extends InputMethod {
    * current button state. If either of these values changed, a new state will be
    * emitted.
    *
-   * @param pointer Either a mouse or touch event or an IVec2.
+   * @param pointer Either a mouse or touch event or an Vec2.
    * @param center The current center of the menu.
    * @param button The current button state.
    */
   private update(
-    pointer: MouseEvent | TouchEvent | IVec2,
-    center: IVec2,
+    pointer: MouseEvent | TouchEvent | Vec2,
+    center: Vec2,
     button: ButtonState
   ) {
     if (pointer instanceof MouseEvent) {
@@ -354,7 +354,7 @@ export class PointerInput extends InputMethod {
         this.buttonState = button;
         this.pointerPosition = pointer;
 
-        const state: IInputState = {
+        const state: InputState = {
           button,
           absolutePosition: pointer,
           relativePosition: math.subtract(pointer, this.centerPosition),

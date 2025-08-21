@@ -10,13 +10,13 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from './item-type-registry';
+import { ItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a command that will be executed
  * when the item is clicked.
  */
-export type IItemData = {
+export type ItemData = {
   command: string;
 
   /**
@@ -38,7 +38,7 @@ export type IItemData = {
 };
 
 /** This class provides meta information for menu items that execute a command. */
-export class CommandItemType implements IItemType {
+export class CommandItemType implements ItemType {
   get hasChildren(): boolean {
     return false;
   }
@@ -55,7 +55,7 @@ export class CommandItemType implements IItemType {
     return 'kando';
   }
 
-  get defaultData(): IItemData {
+  get defaultData(): ItemData {
     return {
       command: '',
       detached: true,

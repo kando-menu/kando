@@ -12,9 +12,9 @@ import React from 'react';
 
 import Spinbutton from './Spinbutton';
 import { useGeneralSetting } from '../../state';
-import { IGeneralSettings } from '../../../common';
+import { GeneralSettings } from '../../../common';
 
-type IProps<K extends keyof IGeneralSettings> = {
+type Props<K extends keyof GeneralSettings> = {
   /** The key in the general settings to manage. */
   settingsKey: K;
 
@@ -55,8 +55,8 @@ type NumberKeys<T> = {
  * @param props - The properties for the managed spinbutton component.
  * @returns A managed spinbutton element.
  */
-export default function SettingsSpinbutton<K extends NumberKeys<IGeneralSettings>>(
-  props: IProps<K>
+export default function SettingsSpinbutton<K extends NumberKeys<GeneralSettings>>(
+  props: Props<K>
 ) {
   const [state, setState] = useGeneralSetting(props.settingsKey);
 

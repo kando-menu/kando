@@ -12,9 +12,9 @@ import React from 'react';
 
 import Checkbox from './Checkbox';
 import { useGeneralSetting } from '../../state';
-import { IGeneralSettings } from '../../../common';
+import { GeneralSettings } from '../../../common';
 
-type IProps<K extends keyof IGeneralSettings> = {
+type Props<K extends keyof GeneralSettings> = {
   /** The key in the general settings to manage. */
   settingsKey: K;
 
@@ -43,8 +43,8 @@ type BooleanKeys<T> = {
  * @param props - The properties for the managed checkbox component.
  * @returns A managed checkbox element.
  */
-export default function SettingsCheckbox<K extends BooleanKeys<IGeneralSettings>>(
-  props: IProps<K>
+export default function SettingsCheckbox<K extends BooleanKeys<GeneralSettings>>(
+  props: Props<K>
 ) {
   const [state, setState] = useGeneralSetting(props.settingsKey);
 

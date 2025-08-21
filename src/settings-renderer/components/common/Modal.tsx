@@ -19,7 +19,7 @@ import { FocusTrapManager } from '../../utils';
 
 import * as classes from './Modal.module.scss';
 
-type IProps = {
+type Props = {
   /** Whether the modal is visible. */
   visible: boolean;
 
@@ -67,7 +67,7 @@ type IProps = {
  * @param props - The properties for the modal component.
  * @returns A modal element.
  */
-export default function Modal(props: IProps) {
+export default function Modal(props: Props) {
   const modalContent = React.useRef(null);
   const pointerDownOnBackground = React.useRef(false);
 

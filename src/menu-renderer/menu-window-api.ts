@@ -11,7 +11,7 @@
 import { ipcRenderer } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { IVec2, IMenuItem, IShowMenuOptions } from '../common';
+import { Vec2, MenuItem, ShowMenuOptions } from '../common';
 
 /**
  * These functions are available in the menu window's renderer process. They are available
@@ -32,7 +32,7 @@ export const MENU_WINDOW_API = {
    *
    * @param dist The distance to move the mouse pointer.
    */
-  movePointer: (dist: IVec2) => {
+  movePointer: (dist: Vec2) => {
     ipcRenderer.send('menu-window.move-pointer', dist);
   },
 
@@ -41,7 +41,7 @@ export const MENU_WINDOW_API = {
    *
    * @param callback This callback will be called when a new menu should be shown.
    */
-  onShowMenu: (func: (root: IMenuItem, menuOptions: IShowMenuOptions) => void) => {
+  onShowMenu: (func: (root: MenuItem, menuOptions: ShowMenuOptions) => void) => {
     ipcRenderer.on('menu-window.show-menu', (event, root, menuOptions) =>
       func(root, menuOptions)
     );
@@ -118,8 +118,8 @@ export const MENU_WINDOW_API = {
 };
 
 /**
- * This interface extends the global window object with the `api` objects. These `api`
- * objects contain all functions that can be called by the renderer process.
+ * This type extends the global window object with the `api` objects. These `api` objects
+ * contain all functions that can be called by the renderer process.
  */
 export type WindowWithAPIs = {
   commonAPI: typeof COMMON_WINDOW_API;

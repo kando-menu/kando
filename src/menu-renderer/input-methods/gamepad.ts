@@ -9,16 +9,16 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import { IVec2 } from '../../common';
+import { Vec2 } from '../../common';
 
 /**
- * This interface describes the state of a gamepad. It contains the current values of all
- * axes and buttons as well as the last computed stick position.
+ * This type describes the state of a gamepad. It contains the current values of all axes
+ * and buttons as well as the last computed stick position.
  */
-export type IGamepadState = {
+export type GamepadState = {
   axes: number[];
   buttons: GamepadButton[];
-  lastStickPosition: IVec2;
+  lastStickPosition: Vec2;
 };
 
 /**
@@ -40,7 +40,7 @@ export class Gamepad extends EventEmitter {
   public axisDeadzone = 0.3;
 
   /** This array contains the current state of all gamepads. */
-  private gamepadStates: IGamepadState[] = [];
+  private gamepadStates: GamepadState[] = [];
 
   /** This flag is set to true when the poll method should stop polling. */
   private stopPolling = true;

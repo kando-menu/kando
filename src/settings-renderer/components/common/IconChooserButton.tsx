@@ -26,7 +26,7 @@ import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-regist
 
 import * as classes from './IconChooserButton.module.scss';
 
-type IProps = {
+type Props = {
   /** Function to call when the color is changed. */
   onChange?: (icon: string, theme: string) => void;
 
@@ -55,7 +55,7 @@ type IProps = {
  * @param props - The properties for the color button component.
  * @returns A color button element.
  */
-export default function IconChooserButton(props: IProps) {
+export default function IconChooserButton(props: Props) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [filterTerm, setFilterTerm] = React.useState('');
   const [theme, setTheme] = React.useState(props.theme);

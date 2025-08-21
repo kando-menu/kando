@@ -21,11 +21,11 @@ import { Base64Theme } from './base64-theme';
 import { SystemTheme } from './system-theme';
 
 /**
- * This interface describes an icon theme. An icon theme is a collection of icons that can
- * be used in the application. The icon theme provides a method to list all icons that
- * match a given search term.
+ * This type describes an icon theme. An icon theme is a collection of icons that can be
+ * used in the application. The icon theme provides a method to list all icons that match
+ * a given search term.
  */
-export type IIconTheme = {
+export type IconTheme = {
   /** A human-readable name of the icon theme. */
   name: string;
 
@@ -69,10 +69,10 @@ export class IconThemeRegistry {
   private static instance: IconThemeRegistry = new IconThemeRegistry();
 
   /** This map contains all available icon themes. The keys are the type names. */
-  private iconThemes: Map<string, IIconTheme> = new Map();
+  private iconThemes: Map<string, IconTheme> = new Map();
 
   /** This is the fallback icon theme that is used if no valid icon theme is selected. */
-  private fallbackTheme: IIconTheme = new FallbackTheme();
+  private fallbackTheme: IconTheme = new FallbackTheme();
 
   /** The directory where the user's icon themes are stored. */
   private _userIconThemeDirectory = '';
@@ -124,7 +124,7 @@ export class IconThemeRegistry {
    * @returns A map containing all available icon themes. The keys are the unique names
    *   used in the settings.
    */
-  public getThemes(): Map<string, IIconTheme> {
+  public getThemes(): Map<string, IconTheme> {
     return this.iconThemes;
   }
 
@@ -135,7 +135,7 @@ export class IconThemeRegistry {
    * @returns The icon theme with the given key. If no icon theme with the given key
    *   exists, a fallback icon theme is returned.
    */
-  public getTheme(key: string): IIconTheme {
+  public getTheme(key: string): IconTheme {
     return this.iconThemes.get(key) || this.fallbackTheme;
   }
 

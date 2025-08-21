@@ -22,7 +22,7 @@ import { Scrollbox, ThemedIcon } from '../common';
 import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the collections, a list of these objects is created. */
-type IRenderedCollection = {
+type RenderedCollection = {
   /** A unique key for react. */
   key: string;
 
@@ -69,7 +69,7 @@ export default function CollectionList() {
   // Let's compile a list of all collections which are about to be rendered. If one
   // collection is dragged currently around, we will have to reorder the list.
   const renderedCollections = collections.map((collection, index) => {
-    const renderedCollection: IRenderedCollection = {
+    const renderedCollection: RenderedCollection = {
       key: collection.name + collection.icon + collection.iconTheme,
       index: index,
     };

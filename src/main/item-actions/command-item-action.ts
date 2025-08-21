@@ -8,15 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from '../../common/index';
-import { IItemAction } from './item-action-registry';
+import { MenuItem } from '../../common/index';
+import { ItemAction } from './item-action-registry';
 import { DeepReadonly } from '../settings';
-import { IItemData } from '../../common/item-types/command-item-type';
+import { ItemData } from '../../common/item-types/command-item-type';
 import { KandoApp } from '../app';
 import { exec } from '../utils/shell';
 
 /** This action runs commands. This can be used to start applications or run scripts. */
-export class CommandItemAction implements IItemAction {
+export class CommandItemAction implements ItemAction {
   /**
    * Commands can be executed immediately or with a delay.
    *
@@ -24,8 +24,8 @@ export class CommandItemAction implements IItemAction {
    *   immediately or with a delay.
    * @returns True if the action should be executed with a delay.
    */
-  delayedExecution(item: DeepReadonly<IMenuItem>) {
-    return (item.data as IItemData).delayed;
+  delayedExecution(item: DeepReadonly<MenuItem>) {
+    return (item.data as ItemData).delayed;
   }
 
   /**
@@ -38,8 +38,8 @@ export class CommandItemAction implements IItemAction {
    * @param app The app which executed the action.
    * @returns A promise which resolves when the command has been successfully started.
    */
-  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
-    let command = (item.data as IItemData).command;
+  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
+    let command = (item.data as ItemData).command;
 
     // Replace placeholders in the command string.
     command = command
@@ -49,8 +49,8 @@ export class CommandItemAction implements IItemAction {
       .replace(/\{{pointer_y}}/g, app.getLastWMInfo().pointerY.toString());
 
     return exec(command, {
-      detach: (item.data as IItemData).detached,
-      isolate: (item.data as IItemData).isolated,
+      detach: (item.data as ItemData).detached,
+      isolate: (item.data as ItemData).isolated,
     });
   }
 }

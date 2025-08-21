@@ -27,7 +27,7 @@ import { ensureUniqueKeys } from '../../utils';
  * For rendering the menu items around the center item, a list of these objects is
  * created.
  */
-type IRenderedMenuItem = {
+type RenderedMenuItem = {
   /** A unique key for the menu item. This is required for React to identify the item. */
   key: string;
 
@@ -95,7 +95,7 @@ export default function MenuPreview() {
   const [dragIndex, setDragIndex] = React.useState<number | null>(null);
   const [dropIndex, setDropIndex] = React.useState<number | null>(null);
   const [dropInto, setDropInto] = React.useState(false);
-  const [tempItem, setTempItem] = React.useState<IRenderedMenuItem | null>(null);
+  const [tempItem, setTempItem] = React.useState<RenderedMenuItem | null>(null);
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
 
   // Some booleans matching to the three cases explained above to make the code below more
@@ -148,7 +148,7 @@ export default function MenuPreview() {
   let renderedChildAngles = childAngles;
   const renderedChildren =
     centerItem.children?.map((child, i) => {
-      const item: IRenderedMenuItem = {
+      const item: RenderedMenuItem = {
         // We prepend the selected menu to the key so that there is no weird transition
         // animation when the selected menu changes.
         key: selectedMenu + child.name + child.icon + child.iconTheme,
@@ -351,7 +351,7 @@ export default function MenuPreview() {
   };
 
   // Assembles a list of divs for the grandchild items of the given child item.
-  const renderGrandchildren = (child: IRenderedMenuItem, angle: number) => {
+  const renderGrandchildren = (child: RenderedMenuItem, angle: number) => {
     if (!centerItem.children || !centerItem.children[child.index]?.children) {
       return null;
     }
@@ -386,7 +386,7 @@ export default function MenuPreview() {
 
   // Assembles a list of divs for the child items of the center item. Each child is
   // rendered as a div with a contained icon and potentially a list of grandchild items.
-  const renderChild = (child: IRenderedMenuItem, index: number) => {
+  const renderChild = (child: RenderedMenuItem, index: number) => {
     let angleDragMayStart = false;
     const selected = selectedChild >= 0 && selectedChild === child.index;
 
@@ -500,7 +500,7 @@ export default function MenuPreview() {
 
   // Renders the lock icon for the given child item. The lock is locked if the item has a
   // fixed angle.
-  const renderLock = (child: IRenderedMenuItem, index: number) => {
+  const renderLock = (child: RenderedMenuItem, index: number) => {
     return (
       <div
         key={child.key}
@@ -576,7 +576,7 @@ export default function MenuPreview() {
   };
 
   // Returns true if the given child is the currently dragged item.
-  const isDraggedChild = (child: IRenderedMenuItem) => {
+  const isDraggedChild = (child: RenderedMenuItem) => {
     return (
       child.key.startsWith('dragged') || // For external drag-and-drop.
       (internalDragOngoing && dragIndex === child.index) // For internal drag-and-drop.

@@ -17,7 +17,7 @@ import { exec } from 'child_process';
 import { LinuxBackend } from '../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { GlobalShortcuts } from '../../portals/global-shortcuts';
-import { IKeySequence, IWMInfo } from '../../../../../common';
+import { KeySequence, WMInfo } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
 import { screen } from 'electron';
 
@@ -201,7 +201,7 @@ export class KDEWaylandBackend extends LinuxBackend {
    *
    * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(keys: IKeySequence): Promise<void> {
+  public async simulateKeys(keys: KeySequence): Promise<void> {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'linux');
@@ -432,7 +432,7 @@ export class KDEWaylandBackend extends LinuxBackend {
 // This class is available via DBus in the KWin script.
 class CustomInterface extends DBus.interface.Interface {
   // These callbacks are set by the KDEWaylandBackend class above.
-  public wmInfoCallback: (info: IWMInfo) => void;
+  public wmInfoCallback: (info: WMInfo) => void;
   public triggerCallback: (shortcutID: string) => void;
 
   // This is called by the get-info KWin script.

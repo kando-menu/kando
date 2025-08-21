@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../common';
+import { Vec2 } from '../common';
 
 /**
  * This class is used to display the text in the center of the pie menu.
@@ -77,7 +77,7 @@ export class CenterText {
    * @param position The position of the text element relative to the container. Aka the
    *   current position of the pie menu on the screen.
    */
-  public async show(text: string, position: IVec2) {
+  public async show(text: string, position: Vec2) {
     const currentCallCount = ++this.callCount;
 
     // If the text is already cached, we can use it directly.

@@ -19,7 +19,7 @@ import { Button, SettingsRow } from '.';
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
 
-type IProps = {
+type Props = {
   /**
    * Function to call when the shortcut changes. This will be called when the user presses
    * Enter after typing a value, or when the user clicks outside of the text field. But
@@ -64,7 +64,7 @@ type IProps = {
  * @param props - The properties for the component.
  * @returns A React component that allows the user to enter a shortcut.
  */
-export default function ShortcutPicker(props: IProps) {
+export default function ShortcutPicker(props: Props) {
   const [shortcut, setShortcut] = React.useState(props.initialValue);
   const [recording, setRecording] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);

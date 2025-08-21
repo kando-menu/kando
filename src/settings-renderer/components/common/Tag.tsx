@@ -12,7 +12,7 @@ import React from 'react';
 
 import * as classes from './Tag.module.scss';
 
-type IProps = {
+type Props = {
   /** The name of the tag. */
   name: string;
 
@@ -29,7 +29,7 @@ type IProps = {
  * @param props - The properties for the tag component.
  * @returns A tag element.
  */
-export default function Tag(props: IProps) {
+export default function Tag(props: Props) {
   return (
     <button onClick={props.onClick} className={classes.tag}>
       {props.icon}

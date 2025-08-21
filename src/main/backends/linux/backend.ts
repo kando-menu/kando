@@ -16,7 +16,7 @@ import { execSync } from 'child_process';
 import { isexe } from 'isexe';
 
 import { Backend } from '../backend';
-import { IMenuItem, IAppDescription } from '../../../common';
+import { MenuItem, AppDescription } from '../../../common';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 /**
@@ -40,7 +40,7 @@ export abstract class LinuxBackend extends Backend {
    * populated during the backend construction. We may want to update this list
    * dynamically in the future.
    */
-  private installedApps: IAppDescription[] = [];
+  private installedApps: AppDescription[] = [];
 
   constructor() {
     super();
@@ -98,7 +98,7 @@ export abstract class LinuxBackend extends Backend {
    * Each backend must provide a way to get a list of all installed applications. This is
    * used by the settings window to populate the list of available applications.
    */
-  public override async getInstalledApps(): Promise<Array<IAppDescription>> {
+  public override async getInstalledApps(): Promise<Array<AppDescription>> {
     return this.installedApps;
   }
 
@@ -150,7 +150,7 @@ export abstract class LinuxBackend extends Backend {
   public override async createItemForDroppedFile(
     name: string,
     path: string
-  ): Promise<IMenuItem | null> {
+  ): Promise<MenuItem | null> {
     // First, we check if the dropped file is a desktop file. If it is, we read the
     // relevant information from it.
     if (path.endsWith('.desktop')) {
@@ -196,7 +196,7 @@ export abstract class LinuxBackend extends Backend {
    * @returns An object containing the name, icon, icon theme, and command of the
    *   application, or null if the desktop file could not be read.
    */
-  private readDesktopFile(path: string): IAppDescription | null {
+  private readDesktopFile(path: string): AppDescription | null {
     try {
       const data = readIniFileSync(path) as {
         ['Desktop Entry']?: {

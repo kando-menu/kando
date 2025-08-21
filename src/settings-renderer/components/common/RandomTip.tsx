@@ -12,7 +12,7 @@ import React from 'react';
 
 import Note from './Note';
 
-type IProps = {
+type Props = {
   /** One of these will be displayed. */
   tips: string[];
 
@@ -29,7 +29,7 @@ type IProps = {
  * @param props - The properties for the tip component.
  * @returns A note element.
  */
-export default function RandomTip(props: IProps) {
+export default function RandomTip(props: Props) {
   return (
     <Note
       center

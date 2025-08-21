@@ -15,7 +15,7 @@ import { Button, SettingsRow } from '.';
 
 import * as classes from './Spinbutton.module.scss';
 
-type IProps = {
+type Props = {
   /**
    * Function to call when the value changes. This will be called when the user uses one
    * of the plus or minus buttons, when the user presses Enter after typing a value, or
@@ -55,7 +55,7 @@ type IProps = {
  * @param props - The properties for the spinbutton component.
  * @returns A spinbutton element.
  */
-export default function Spinbutton(props: IProps) {
+export default function Spinbutton(props: Props) {
   // We store the value of the spin button internally as a string. This way we can properly
   // handle empty strings when the user deletes the value.
   const [value, setValue] = React.useState(props.initialValue.toString());

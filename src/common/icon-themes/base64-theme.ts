@@ -9,13 +9,13 @@
 // SPDX-License-Identifier: MIT
 
 import i18next from 'i18next';
-import { IIconTheme } from './icon-theme-registry';
+import { IconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that allows the user to enter base64 encoded
  * images, file: URI, or URLs directly.
  */
-export class Base64Theme implements IIconTheme {
+export class Base64Theme implements IconTheme {
   /** Returns a human-readable name of the icon theme. */
   get name() {
     return 'Base64 / URL';

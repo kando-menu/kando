@@ -12,7 +12,7 @@ import React from 'react';
 
 import * as classes from './Sidebar.module.scss';
 
-type IProps = {
+type Props = {
   /** Position of the sidebar, either 'left' or 'right'. */
   position: 'left' | 'right';
 
@@ -31,7 +31,7 @@ type IProps = {
  * @param props - The properties for the sidebar component.
  * @returns A sidebar element.
  */
-export default function Sidebar(props: IProps) {
+export default function Sidebar(props: Props) {
   const resizer = React.useRef<HTMLDivElement>(null);
   const sidebar = React.useRef<HTMLDivElement>(null);
 

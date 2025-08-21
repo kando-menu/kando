@@ -14,7 +14,7 @@ import SettingsRow from './SettingsRow';
 
 import * as classes from './Checkbox.module.scss';
 
-type IProps = {
+type Props = {
   /** Function to call when the checkbox is toggled. */
   onChange?: (value: boolean) => void;
 
@@ -37,7 +37,7 @@ type IProps = {
  * @param props - The properties for the checkbox component.
  * @returns A checkbox element.
  */
-export default function Checkbox(props: IProps) {
+export default function Checkbox(props: Props) {
   return (
     <SettingsRow
       label={props.label}

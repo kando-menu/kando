@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../../common/math';
-import { IVec2 } from '../../../common';
+import { Vec2 } from '../../../common';
 
 /**
  * This function returns the direction towards the parent of an item with the given angle.
@@ -153,7 +153,7 @@ function computeDropAngle(
  */
 export function makeCSSProperties(
   directionName: string,
-  direction: IVec2,
+  direction: Vec2,
   angleName?: string,
   angle?: number
 ): React.CSSProperties {
@@ -196,7 +196,7 @@ export function getBoundingClientRectAsync(
  * @param pointer The pointer to get the angle to.
  * @returns The angle between the pointer and the center of the element.
  */
-export function getAngleToCenter(element: HTMLElement, pointer: IVec2) {
+export function getAngleToCenter(element: HTMLElement, pointer: Vec2) {
   const rect = element.getBoundingClientRect();
   const center = {
     x: rect.x + rect.width / 2,

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../common';
+import { Vec2 } from '../common';
 
 /**
  * The SelectionWedges class is responsible for rendering the background sections of the
@@ -36,7 +36,7 @@ export class SelectionWedges {
    *
    * @param center The position of the center of the pie menu in pixels.
    */
-  public setCenter(center: IVec2) {
+  public setCenter(center: Vec2) {
     this.div.style.setProperty('--center-x', `${center.x}px`);
     this.div.style.setProperty('--center-y', `${center.y}px`);
   }

@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { RandomTip, FilePicker } from '../../common';
-import { IItemData } from '../../../../common/item-types/file-item-type';
+import { ItemData } from '../../../../common/item-types/file-item-type';
 
 /**
  * The configuration component for file items is primarily a text input field for the file
@@ -31,7 +31,7 @@ export default () => {
     return <></>;
   }
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -44,7 +44,7 @@ export default () => {
 
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             item.name = name;
-            (item.data as IItemData).path = path;
+            (item.data as ItemData).path = path;
             return item;
           });
         }}

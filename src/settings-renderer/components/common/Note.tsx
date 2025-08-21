@@ -15,7 +15,7 @@ import classNames from 'classnames/bind';
 import * as classes from './Note.module.scss';
 const cx = classNames.bind(classes);
 
-type IProps = {
+type Props = {
   /** Content to display inside the note. */
   children: React.ReactNode | string;
 
@@ -53,7 +53,7 @@ type IProps = {
  * @param props - The properties for the note component.
  * @returns A note element.
  */
-export default function Note(props: IProps) {
+export default function Note(props: Props) {
   const handleLinkClick = (href: string) => {
     if (props.onLinkClick) {
       props.onLinkClick(href); // Execute the callback with the link's href
