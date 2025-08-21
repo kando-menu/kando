@@ -16,9 +16,9 @@ import { IItemType } from './item-type-registry';
  * For this type of menu items, the user can configure a piece of text that will be pasted
  * into the active window when the item is activated.
  */
-export interface IItemData {
+export type IItemData = {
   text: string;
-}
+};
 
 /**
  * This class provides meta information for menu items that paste a piece of text into the

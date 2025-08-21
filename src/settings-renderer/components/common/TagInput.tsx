@@ -20,7 +20,7 @@ import SettingsRow from './SettingsRow';
 
 import * as classes from './TagInput.module.scss';
 
-interface IProps {
+type IProps = {
   /** The initial tags to display. */
   tags: string[];
 
@@ -32,7 +32,7 @@ interface IProps {
 
   /** Called when the tags change. */
   onChange: (tags: string[]) => void;
-}
+};
 
 /**
  * This component is a multiline text input field that allows the user to enter multiple

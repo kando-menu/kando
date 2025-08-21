@@ -14,7 +14,7 @@ import SettingsRow from './SettingsRow';
 
 import * as classes from './Checkbox.module.scss';
 
-interface IProps {
+type IProps = {
   /** Function to call when the checkbox is toggled. */
   onChange?: (value: boolean) => void;
 
@@ -29,7 +29,7 @@ interface IProps {
 
   /** Whether the checkbox is disabled. Defaults to false. */
   disabled?: boolean;
-}
+};
 
 /**
  * A customizable checkbox component.

@@ -28,7 +28,7 @@ import { SettingsItemType } from './settings-item-type';
  * should implement this interface. You can find the implementations in the `item-types`
  * directory.
  */
-export interface IItemType {
+export type IItemType = {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -49,7 +49,7 @@ export interface IItemType {
    * shown in the add-new-item tab of the toolbar.
    */
   genericDescription: string;
-}
+};
 
 /**
  * This singleton class is a registry for all available menu item types. It is used to

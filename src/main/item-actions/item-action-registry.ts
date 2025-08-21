@@ -25,7 +25,7 @@ import { SettingsItemAction } from './settings-item-action';
  * menu item is executed. Every item type which can be executed should implement this
  * interface. You can find the implementations in the `item-types` directory.
  */
-export interface IItemAction {
+export type IItemAction = {
   /**
    * This will be called when the action is about to be executed. If this method returns
    * `false`, the action will be executed right away. If it returns `true`, the action
@@ -46,7 +46,7 @@ export interface IItemAction {
    * @returns A promise which resolves when the action has been successfully executed.
    */
   execute: (item: DeepReadonly<IMenuItem>, app: KandoApp) => Promise<void>;
-}
+};
 
 /**
  * This singleton class is a registry for all available actions. It is used to execute the

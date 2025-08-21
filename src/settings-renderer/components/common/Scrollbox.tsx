@@ -12,14 +12,14 @@ import React from 'react';
 
 import * as classes from './Scrollbox.module.scss';
 
-interface IProps {
+type IProps = {
   children: React.ReactNode;
   maxHeight?: string | number;
   width?: string | number;
   hideScrollbar?: boolean;
   paddingLeft?: string | number;
   paddingRight?: string | number;
-}
+};
 
 /**
  * Wraps its children in a scrollable box. The scrollbox has a maximum height and a fixed

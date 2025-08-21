@@ -22,13 +22,13 @@ import { Scrollbox, ThemedIcon } from '../common';
 import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the collections, a list of these objects is created. */
-interface IRenderedCollection {
+type IRenderedCollection = {
   /** A unique key for react. */
   key: string;
 
   /** The original index in the list of menu. */
   index: number;
-}
+};
 
 /**
  * This is a vertical list of buttons, one for each configured menu collection. They can

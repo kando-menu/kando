@@ -12,7 +12,7 @@ import React from 'react';
 
 import * as classes from './Tag.module.scss';
 
-interface IProps {
+type IProps = {
   /** The name of the tag. */
   name: string;
 
@@ -21,7 +21,7 @@ interface IProps {
 
   /** An optional icon to show before the tag name. It will only be shown on hover. */
   icon?: React.ReactNode;
-}
+};
 
 /**
  * A simple tag which can be clicked (usually to remove it).

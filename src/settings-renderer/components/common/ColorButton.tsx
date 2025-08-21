@@ -15,7 +15,7 @@ import chroma from 'chroma-js';
 import * as classes from './ColorButton.module.scss';
 import Popover from './Popover';
 
-interface IProps {
+type IProps = {
   /** Function to call when the color is changed. */
   onChange?: (color: string) => void;
 
@@ -24,7 +24,7 @@ interface IProps {
 
   /** Initial color. */
   color: string;
-}
+};
 
 /**
  * A customizable color button component. Once clicked, a popover will open with a color

@@ -25,7 +25,7 @@ import { SystemTheme } from './system-theme';
  * be used in the application. The icon theme provides a method to list all icons that
  * match a given search term.
  */
-export interface IIconTheme {
+export type IIconTheme = {
   /** A human-readable name of the icon theme. */
   name: string;
 
@@ -58,7 +58,7 @@ export interface IIconTheme {
      */
     listIcons?: (searchTerm: string) => Array<string>;
   };
-}
+};
 
 /**
  * This class is a registry that contains all available icon themes. It is a singleton

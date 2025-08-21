@@ -14,7 +14,7 @@ import { app } from 'electron';
 import { Notification as ElectronNotification } from 'electron';
 
 /** Options for displaying a notification. */
-export interface INotificationOptions {
+export type INotificationOptions = {
   /** The title of the notification. */
   title: string;
 
@@ -26,7 +26,7 @@ export interface INotificationOptions {
 
   /** An optional function to call when the notification is clicked. */
   onClick?: () => void;
-}
+};
 
 /**
  * This class provides a static method to show notifications. It will print the message to

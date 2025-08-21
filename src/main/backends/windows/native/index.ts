@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export interface Native {
+export type Native = {
   /**
    * This uses Win32 API calls to get the name and the class of the currently focused
    * application window.
@@ -50,7 +50,7 @@ export interface Native {
     name: string;
     base64Icon: string;
   }[];
-}
+};
 
 const native: Native = require('./../../../../../build/Release/NativeWin32.node');
 

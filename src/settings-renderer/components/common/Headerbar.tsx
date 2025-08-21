@@ -12,7 +12,7 @@ import React, { ReactNode } from 'react';
 
 import * as classes from './Headerbar.module.scss';
 
-interface IProps {
+type IProps = {
   /** Content to display on the left side of the header bar. */
   left?: string | ReactNode;
 
@@ -27,7 +27,7 @@ interface IProps {
 
   /** Padding to apply to the right side of the header bar. Defaults to 0. */
   paddingRight?: number;
-}
+};
 
 /**
  * A customizable header bar component. This is used both in modal dialogs and in the main

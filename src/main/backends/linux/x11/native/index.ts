@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export interface Native {
+export type Native = {
   /**
    * This uses XLib calls to get the name and the class of the currently focused
    * application window, as well as the current pointer position.
@@ -30,7 +30,7 @@ export interface Native {
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
-}
+};
 
 const native: Native = require('./../../../../../../build/Release/NativeX11.node');
 

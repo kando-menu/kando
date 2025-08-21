@@ -16,9 +16,9 @@ import { IItemType } from './item-type-registry';
  * For this type of menu items, the user can configure a menu that will be opened when the
  * item is clicked.
  */
-export interface IItemData {
+export type IItemData = {
   menu: string;
-}
+};
 
 /** This class provides meta information for menu items that open another menu. */
 export class RedirectItemType implements IItemType {

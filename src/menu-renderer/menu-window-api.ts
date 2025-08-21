@@ -121,7 +121,7 @@ export const MENU_WINDOW_API = {
  * This interface extends the global window object with the `api` objects. These `api`
  * objects contain all functions that can be called by the renderer process.
  */
-export interface WindowWithAPIs extends Window {
+export type WindowWithAPIs = {
   commonAPI: typeof COMMON_WINDOW_API;
   menuAPI: typeof MENU_WINDOW_API;
-}
+} & Window;

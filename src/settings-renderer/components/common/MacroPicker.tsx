@@ -20,7 +20,7 @@ import { Button } from '.';
 import * as classes from './MacroPicker.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type IProps = {
   /**
    * Function to call when the value changes. This will be called when the user recorded a
    * new macro or clicked outside of the text field.
@@ -35,7 +35,7 @@ interface IProps {
 
   /** Placeholder text to display when the macro picker is recording. */
   recordingPlaceholder?: string;
-}
+};
 
 /**
  * This component is an input field that allows the user to record a keyboard macro.

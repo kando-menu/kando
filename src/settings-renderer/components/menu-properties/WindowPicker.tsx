@@ -19,7 +19,7 @@ import { Modal, Button } from '../common';
 
 import * as classes from './WindowPicker.module.scss';
 
-interface IProps {
+type IProps = {
   /** Function to call when a new window is selected. */
   onSelect: (value: string) => void;
 
@@ -31,7 +31,7 @@ interface IProps {
 
   /** Visibility of the modal. */
   visible: boolean;
-}
+};
 
 /**
  * This component allows the user to select an application name or a window title by

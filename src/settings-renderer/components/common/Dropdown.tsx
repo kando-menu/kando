@@ -15,7 +15,7 @@ import SettingsRow from './SettingsRow';
 
 import * as classes from './Dropdown.module.scss';
 
-interface IProps<T extends string> {
+type IProps<T extends string> = {
   /** Function to call when the selected option changes. */
   onChange?: (value: T) => void;
 
@@ -42,7 +42,7 @@ interface IProps<T extends string> {
 
   /** Optional maximum width of the dropdown. */
   maxWidth?: number;
-}
+};
 
 /**
  * A customizable dropdown component.

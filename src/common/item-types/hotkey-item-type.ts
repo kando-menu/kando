@@ -17,10 +17,10 @@ import { IItemType } from './item-type-registry';
  * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
  * after the Kando window has been closed.
  */
-export interface IItemData {
+export type IItemData = {
   hotkey: string;
   delayed: boolean;
-}
+};
 
 /** This class provides meta information for menu items that simulate a hotkey. */
 export class HotkeyItemType implements IItemType {

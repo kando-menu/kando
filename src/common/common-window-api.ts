@@ -176,6 +176,6 @@ export const COMMON_WINDOW_API = {
  * the settings window's renderer process are some additional functions available. See
  * `menu/menu-window-api.ts` and `settings/settings-window-api.ts` for more information.
  */
-export interface WindowWithAPIs extends Window {
+export type WindowWithAPIs = {
   commonAPI: typeof COMMON_WINDOW_API;
-}
+} & Window;

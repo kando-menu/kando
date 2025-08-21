@@ -26,7 +26,7 @@ import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-regist
 
 import * as classes from './IconChooserButton.module.scss';
 
-interface IProps {
+type IProps = {
   /** Function to call when the color is changed. */
   onChange?: (icon: string, theme: string) => void;
 
@@ -47,7 +47,7 @@ interface IProps {
 
   /** Forwards the variant to the button component. Defaults to 'secondary'. */
   variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
-}
+};
 
 /**
  * A customizable color button component.

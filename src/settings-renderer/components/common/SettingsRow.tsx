@@ -16,7 +16,7 @@ import InfoItem from './InfoItem';
 import * as classes from './SettingsRow.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type IProps = {
   /** The widget on the right side. */
   children?: React.ReactNode;
 
@@ -40,7 +40,7 @@ interface IProps {
 
   /** Whether the widget is disabled. Defaults to false. */
   disabled?: boolean;
-}
+};
 
 /**
  * This component is used quite often in the settings dialog. It shows a text label on the

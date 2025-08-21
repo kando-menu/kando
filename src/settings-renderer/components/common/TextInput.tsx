@@ -16,7 +16,7 @@ import SettingsRow from './SettingsRow';
 import * as classes from './TextInput.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type IProps = {
   /**
    * Function to call when the value changes. This will be called when the user presses
    * Enter after typing a value, or when the user clicks outside of the text field.
@@ -46,7 +46,7 @@ interface IProps {
    * displayed above the text input.
    */
   multiline?: boolean;
-}
+};
 
 /**
  * This component is an input field that allows the user to enter some text.

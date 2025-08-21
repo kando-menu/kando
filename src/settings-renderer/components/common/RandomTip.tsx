@@ -12,7 +12,7 @@ import React from 'react';
 
 import Note from './Note';
 
-interface IProps {
+type IProps = {
   /** One of these will be displayed. */
   tips: string[];
 
@@ -21,7 +21,7 @@ interface IProps {
 
   /** Margin to apply to the bottom of the note. Defaults to 0. */
   marginBottom?: number | string;
-}
+};
 
 /**
  * Shows a random tip of the day. The tip is chosen from the given list of tips.

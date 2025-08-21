@@ -15,12 +15,12 @@ const swirl2 = require('../../../../assets/images/swirl2.svg');
 const swirl3 = require('../../../../assets/images/swirl3.svg');
 const swirl4 = require('../../../../assets/images/swirl4.svg');
 
-interface IProps {
+type IProps = {
   variant: '1' | '2' | '3' | '4';
   marginTop?: number;
   marginBottom?: number;
   width?: number | string;
-}
+};
 
 /**
  * Swirl component displays a decorative swirl image based on the variant specified.

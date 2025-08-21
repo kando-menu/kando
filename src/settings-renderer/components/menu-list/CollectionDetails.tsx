@@ -22,10 +22,10 @@ const cx = classNames.bind(classes);
 import { useAppState, useMenuSettings } from '../../state';
 import { Button, IconChooserButton, TagInput } from '../common';
 
-interface IProps {
+type IProps = {
   /** When the search term changes. */
   onSearch: (term: string) => void;
-}
+};
 
 /**
  * This component encapsulates the widgets above the menu list. These widgets have several

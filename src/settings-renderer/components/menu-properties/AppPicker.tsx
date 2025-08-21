@@ -18,7 +18,7 @@ import { useAppState } from '../../state';
 
 import * as classes from './AppPicker.module.scss';
 
-interface IProps {
+type IProps = {
   /** Function to call when a new window is selected. */
   onSelect: (value: IAppDescription) => void;
 
@@ -27,7 +27,7 @@ interface IProps {
 
   /** Visibility of the modal. */
   visible: boolean;
-}
+};
 
 /**
  * This component allows the user to select an application from a list of all installed

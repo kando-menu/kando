@@ -12,7 +12,7 @@ import React from 'react';
 
 import * as classes from './Sidebar.module.scss';
 
-interface IProps {
+type IProps = {
   /** Position of the sidebar, either 'left' or 'right'. */
   position: 'left' | 'right';
 
@@ -21,7 +21,7 @@ interface IProps {
 
   /** Content to display in the main area of the sidebar. */
   children: React.ReactNode;
-}
+};
 
 /**
  * A customizable sidebar component. It features a resizer that allows the user to change

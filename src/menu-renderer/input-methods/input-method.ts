@@ -37,7 +37,7 @@ export enum SelectionType {
  * current state of the input method to the menu. The menu will then decide how to
  * interpret this state.
  */
-export interface IInputState {
+export type IInputState = {
   /**
    * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen
    * input. This enum is used for all input methods. Some devices may not have or require
@@ -65,7 +65,7 @@ export interface IInputState {
    * degrees.
    */
   angle: number;
-}
+};
 
 /** This is a base class for all input methods. */
 export abstract class InputMethod {

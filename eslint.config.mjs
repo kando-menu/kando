@@ -66,6 +66,7 @@ export default defineConfig([
           caughtErrors: 'none',
         },
       ],
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       curly: 'error',
     },
   },

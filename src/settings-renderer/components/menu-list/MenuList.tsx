@@ -24,7 +24,7 @@ import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the menus, a list of these objects is created. */
-interface IRenderedMenu {
+type IRenderedMenu = {
   /** A unique key for react. */
   key: string;
 
@@ -42,7 +42,7 @@ interface IRenderedMenu {
 
   /** The theme from which the above icon should be used. */
   iconTheme: string;
-}
+};
 
 /**
  * This is a vertical list of buttons, one for each configured menu. They can be reordered

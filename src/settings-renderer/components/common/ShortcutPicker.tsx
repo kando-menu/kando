@@ -19,7 +19,7 @@ import { Button, SettingsRow } from '.';
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type IProps = {
   /**
    * Function to call when the shortcut changes. This will be called when the user presses
    * Enter after typing a value, or when the user clicks outside of the text field. But
@@ -44,7 +44,7 @@ interface IProps {
    * component documentation below for more details.
    */
   mode: 'key-names' | 'key-codes';
-}
+};
 
 /**
  * This component is an input field that allows the user to enter a shortcut. The user can

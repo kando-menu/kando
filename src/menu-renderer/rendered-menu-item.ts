@@ -15,7 +15,7 @@ import { IVec2, IMenuItem } from '../common';
  * interface with properties which are only used by the Menu class in the renderer
  * process.
  */
-export interface IRenderedMenuItem extends IMenuItem {
+export type IRenderedMenuItem = {
   /**
    * The chain of indices to get to this menu item. This will be computed and set once the
    * menu is opened. It is stored here to avoid recomputation during emission of events.
@@ -79,4 +79,4 @@ export interface IRenderedMenuItem extends IMenuItem {
    * store the last angle here.
    */
   lastHoveredChildAngle?: number;
-}
+} & IMenuItem;

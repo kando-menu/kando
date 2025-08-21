@@ -16,7 +16,7 @@ import { IItemType } from './item-type-registry';
  * For this type of menu items, the user can configure a command that will be executed
  * when the item is clicked.
  */
-export interface IItemData {
+export type IItemData = {
   command: string;
 
   /**
@@ -35,7 +35,7 @@ export interface IItemData {
 
   /** If set, the command will be executed after the Kando window has been closed. */
   delayed: boolean;
-}
+};
 
 /** This class provides meta information for menu items that execute a command. */
 export class CommandItemType implements IItemType {

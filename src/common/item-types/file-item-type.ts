@@ -16,9 +16,9 @@ import { IItemType } from './item-type-registry';
  * For this type of menu items, the user can configure a path that will be opened when the
  * item is clicked.
  */
-export interface IItemData {
+export type IItemData = {
   path: string;
-}
+};
 
 /** This class provides meta information for menu items that open a file. */
 export class FileItemType implements IItemType {

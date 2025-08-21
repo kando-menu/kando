@@ -19,7 +19,7 @@ import { Button, SettingsRow } from '.';
 
 import * as classes from './FilePicker.module.scss';
 
-interface IProps {
+type IProps = {
   /** Function to call when the selected file changes. */
   onChange?: (path: string) => void;
 
@@ -34,7 +34,7 @@ interface IProps {
 
   /** Optional placeholder text to display in the input field. */
   placeholder?: string;
-}
+};
 
 /**
  * This component is an input field that allows the user to select a file path.

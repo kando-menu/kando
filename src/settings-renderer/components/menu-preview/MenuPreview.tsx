@@ -27,7 +27,7 @@ import { ensureUniqueKeys } from '../../utils';
  * For rendering the menu items around the center item, a list of these objects is
  * created.
  */
-interface IRenderedMenuItem {
+type IRenderedMenuItem = {
   /** A unique key for the menu item. This is required for React to identify the item. */
   key: string;
 
@@ -45,7 +45,7 @@ interface IRenderedMenuItem {
 
   /** The fixed angle of the item. This is only set if the item is locked. */
   angle?: number;
-}
+};
 
 /**
  * This component encapsules the center area of the settings dialog. It contains the

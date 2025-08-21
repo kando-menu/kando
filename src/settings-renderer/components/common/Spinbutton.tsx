@@ -15,7 +15,7 @@ import { Button, SettingsRow } from '.';
 
 import * as classes from './Spinbutton.module.scss';
 
-interface IProps {
+type IProps = {
   /**
    * Function to call when the value changes. This will be called when the user uses one
    * of the plus or minus buttons, when the user presses Enter after typing a value, or
@@ -46,7 +46,7 @@ interface IProps {
 
   /** Step size for the spinbutton. Defaults to 1. */
   step?: number;
-}
+};
 
 /**
  * This component is a spinbutton that allows the user to increase or decrease a number by

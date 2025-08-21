@@ -15,9 +15,9 @@ import { EventEmitter } from 'events';
  * The type information of DBus.MessageBus does not expose the name of the bus, even if
  * the property is actually there. This interface is used to fix this.
  */
-interface NamedMessageBus extends DBus.MessageBus {
+type NamedMessageBus = {
   name: string;
-}
+} & DBus.MessageBus;
 
 /**
  * This is the base class for all portals. It provides some common functionality like

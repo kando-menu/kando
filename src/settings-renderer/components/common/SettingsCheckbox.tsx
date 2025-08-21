@@ -14,7 +14,7 @@ import Checkbox from './Checkbox';
 import { useGeneralSetting } from '../../state';
 import { IGeneralSettings } from '../../../common';
 
-interface IProps<K extends keyof IGeneralSettings> {
+type IProps<K extends keyof IGeneralSettings> = {
   /** The key in the general settings to manage. */
   settingsKey: K;
 
@@ -26,7 +26,7 @@ interface IProps<K extends keyof IGeneralSettings> {
 
   /** Whether the checkbox is disabled. Defaults to false. */
   disabled?: boolean;
-}
+};
 
 /**
  * Used to ensure that the settings key K used for the GeneralSettingsCheckbox component

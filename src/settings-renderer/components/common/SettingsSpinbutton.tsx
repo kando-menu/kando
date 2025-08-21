@@ -14,7 +14,7 @@ import Spinbutton from './Spinbutton';
 import { useGeneralSetting } from '../../state';
 import { IGeneralSettings } from '../../../common';
 
-interface IProps<K extends keyof IGeneralSettings> {
+type IProps<K extends keyof IGeneralSettings> = {
   /** The key in the general settings to manage. */
   settingsKey: K;
 
@@ -38,7 +38,7 @@ interface IProps<K extends keyof IGeneralSettings> {
 
   /** Step size for the spinbutton. Defaults to 1. */
   step?: number;
-}
+};
 
 /**
  * Used to ensure that the settings key K used for the GeneralSettingsSpinbutton component

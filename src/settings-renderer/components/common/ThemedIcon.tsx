@@ -13,7 +13,7 @@ import React from 'react';
 import * as classes from './ThemedIcon.module.scss';
 import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
 
-interface IProps {
+type IProps = {
   /** The name of the icon. */
   name: string;
 
@@ -22,7 +22,7 @@ interface IProps {
 
   /** The size of the icon. */
   size?: number | string;
-}
+};
 
 /**
  * A component which displays an icon from a Kando icon theme.

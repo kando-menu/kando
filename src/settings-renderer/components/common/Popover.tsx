@@ -16,7 +16,7 @@ import { FocusTrapManager } from '../../utils';
 
 import * as classes from './Popover.module.scss';
 
-interface IProps {
+type IProps = {
   /** Whether the modal is visible. */
   visible: boolean;
 
@@ -34,7 +34,7 @@ interface IProps {
 
   /** The popover target. It will be used to position the popover relative to it. */
   children: React.ReactNode;
-}
+};
 
 /**
  * A simple popover component. When props.visible becomes true, the popover will be faded

@@ -55,11 +55,11 @@ export function isKnownKeyCode(code: string) {
  * This is used in the map below to map from DOM key codes (which are strings) to platform
  * specific key code numbers.
  */
-interface IKeyMapping {
+type IKeyMapping = {
   windows: number | null;
   macos: number | null;
   linux: number | null;
-}
+};
 
 /**
  * This map contains the proper key case for all key names which are used in the key codes

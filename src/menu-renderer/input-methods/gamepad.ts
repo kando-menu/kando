@@ -15,11 +15,11 @@ import { IVec2 } from '../../common';
  * This interface describes the state of a gamepad. It contains the current values of all
  * axes and buttons as well as the last computed stick position.
  */
-export interface IGamepadState {
+export type IGamepadState = {
   axes: number[];
   buttons: GamepadButton[];
   lastStickPosition: IVec2;
-}
+};
 
 /**
  * This class provides an interface to the gamepad API. It emits events when buttons are

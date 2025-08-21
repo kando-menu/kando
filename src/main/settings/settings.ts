@@ -106,7 +106,7 @@ class PropertyChangeEmitter<T> {
 }
 
 /** The options object which can be passed to the constructor. */
-interface Options<T> {
+type Options<T> = {
   /** The directory in which the settings file should be stored. */
   directory: string;
 
@@ -132,7 +132,7 @@ interface Options<T> {
     settings: T;
     didMigration: boolean;
   };
-}
+};
 
 /**
  * This class can be used to persistently store user settings. The settings are stored in

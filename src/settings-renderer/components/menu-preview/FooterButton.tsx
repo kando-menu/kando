@@ -17,7 +17,7 @@ const cx = classNames.bind(classes);
 
 import { ThemedIcon, Popover, Note } from '../common';
 
-interface IProps {
+type IProps = {
   /** A unique ID for the menu-item type. */
   id: string;
 
@@ -32,7 +32,7 @@ interface IProps {
 
   /** The theme of the icon to display for the menu-item type. */
   iconTheme: string;
-}
+};
 
 /**
  * This component encapsules a single menu-item type which can be dragged to the menu
