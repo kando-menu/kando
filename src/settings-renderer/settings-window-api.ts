@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, OpenDialogOptions } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
@@ -104,9 +104,24 @@ export const SETTINGS_WINDOW_API = {
     ipcRenderer.send('settings-window.reload-sound-theme');
   },
 
-  /** This will open a file picker and return the selected file path. */
-  openFilePicker: (config: OpenDialogOptions): Promise<string> => {
-    return ipcRenderer.invoke('settings-window.open-file-picker', config);
+  /** This will export a specific menu to a JSON file. */
+  exportMenuToJson: (menuIndex: number): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.export-menu-to-json', menuIndex);
+  },
+
+  /** This will export menus.json to a JSON file. */
+  exportMenusToJson: (): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.export-menus-to-json');
+  },
+
+  /** This will import sll menus from a JSON file. */
+  importMenusFromJson: (): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.import-menus-from-json');
+  },
+
+  /** This will import one menu from a JSON file. */
+  importMenuFromJson: (): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.import-menu-from-json');
   },
 };
 

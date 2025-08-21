@@ -37,6 +37,7 @@ import { Settings } from './settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
+import { validateBySchema, rootSchema } from './utils/validateBySchema';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -173,7 +174,6 @@ export class KandoApp {
     // Initialize the common IPC communication to the renderer process. This will be
     // available in both the menu window and the settings window.
     this.initCommonRendererAPI();
-
     // Create and load the main window if it does not exist yet.
     if (!this.generalSettings.get('lazyInitialization')) {
       this.menuWindow = new MenuWindow(this);
@@ -205,6 +205,242 @@ export class KandoApp {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
         },
       });
+    });
+
+    const channels = [
+      'settings-window.export-menus-to-json',
+      'settings-window.import-menus-from-json',
+      'settings-window.export-menu',
+      'settings-window.import-menu-from-json',
+    ];
+
+    for (const channel of channels) {
+      if (ipcMain.listenerCount(channel) > 0) {
+        ipcMain.removeHandler(channel);
+      }
+    }
+
+    ipcMain.handle('settings-window.export-menus-to-json', async () => {
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: 'kando-menus.json',
+        filters: [{ name: 'JSON file', extensions: ['json'] }],
+      });
+
+      console.log('Canceled:', canceled, 'FilePath:', filePath);
+
+      if (canceled || !filePath) {
+        return;
+      }
+
+      try {
+        // Get current menus configuration
+        const menus = this.menuSettings.get('menus');
+
+        const jsonContent = JSON.stringify(
+          {
+            version: app.getVersion(),
+            menus,
+          },
+          null,
+          2
+        );
+
+        await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
+
+        console.log('Successfully exported menus to', filePath);
+      } catch (error) {
+        console.error('Failed to export menus:', error);
+        throw error;
+      }
+    });
+
+    ipcMain.handle('settings-window.import-menus-from-json', async () => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        properties: ['openFile'],
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (result.canceled || !result.filePaths[0]) {
+        return;
+      }
+
+      try {
+        const filePath = result.filePaths[0];
+        const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
+        let parsed;
+        try {
+          parsed = JSON.parse(jsonContent);
+        } catch (err) {
+          console.error('Invalid JSON file:', err.message);
+          dialog.showErrorBox(
+            'Invalid JSON',
+            'The selected file is not a valid JSON file.'
+          );
+          return;
+        }
+
+        if (parsed.version !== app.getVersion()) {
+          const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
+          const userChoice = await dialog.showMessageBox({
+            type: 'warning',
+            buttons: ['Cancel', 'OK'],
+            defaultId: 1,
+            cancelId: 0,
+            title: 'Warning',
+            message: 'The imported menus may not be compatible. Do you want to proceed?',
+            detail: `Config version: ${parsed.version}\nApp version: ${app.getVersion()}`,
+          });
+
+          if (userChoice.response !== 1) {
+            console.log('User cancelled import.');
+            return;
+          }
+          console.warn(warnMessage);
+        }
+
+        // Validate the 'menus' property inside parsed object
+        if (!parsed.menus || !Array.isArray(parsed.menus)) {
+          dialog.showErrorBox(
+            'Invalid structure',
+            'Imported JSON does not contain a valid "menus" array.'
+          );
+          return;
+        }
+
+        // Validate each menu in the menus array
+        for (const [index, menu] of parsed.menus.entries()) {
+          const validationError = validateBySchema(
+            menu.root,
+            rootSchema,
+            `menus[${index}].root`
+          );
+          if (validationError !== null) {
+            dialog.showErrorBox('Invalid structure', validationError);
+            return;
+          }
+        }
+
+        this.menuSettings.set({ menus: parsed.menus });
+        console.log('Successfully imported menus from', filePath);
+      } catch (error) {
+        console.error('Failed to import menus:', error);
+        throw error;
+      }
+    });
+
+    // Export specific menu to JSON file
+    ipcMain.handle('settings-window.export-menu-to-json', async (event, menuIndex) => {
+      const menuName = this.menuSettings.get('menus')[menuIndex]['root']['name'];
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: `${menuName}.json`,
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (canceled || !filePath) {
+        return;
+      }
+
+      try {
+        const menu = this.menuSettings.get('menus')[menuIndex];
+        if (!menu) {
+          console.error('Menu not found');
+          return;
+        }
+
+        const jsonContent = JSON.stringify(
+          {
+            version: app.getVersion(),
+            menus: [menu],
+          },
+          null,
+          2
+        );
+
+        await fs.promises.writeFile(filePath, jsonContent, 'utf-8');
+
+        console.log('Successfully exported menu to', filePath);
+      } catch (error) {
+        console.error('Failed to export menu:', error);
+        throw error;
+      }
+    });
+
+    ipcMain.handle('settings-window.import-menu-from-json', async () => {
+      const { canceled, filePaths } = await dialog.showOpenDialog(this.settingsWindow, {
+        properties: ['openFile'],
+        filters: [{ name: 'JSON File', extensions: ['json'] }],
+      });
+
+      if (canceled || filePaths.length === 0) {
+        console.error('No file path provided');
+        return;
+      }
+
+      const filePath = filePaths[0];
+
+      try {
+        const jsonContent = await fs.promises.readFile(filePath, 'utf-8');
+        let parsed;
+        try {
+          parsed = JSON.parse(jsonContent);
+        } catch (err) {
+          console.error('Invalid JSON file:', err.message);
+          dialog.showErrorBox(
+            'Invalid JSON',
+            'The selected file is not a valid JSON file.'
+          );
+          return;
+        }
+
+        if (parsed.version !== app.getVersion()) {
+          const warnMessage = `Version mismatch detected. Config version: ${parsed.version}, Application version: ${app.getVersion()}.`;
+          console.warn(warnMessage);
+
+          const userChoice = await dialog.showMessageBox({
+            type: 'warning',
+            buttons: ['Cancel', 'OK'],
+            defaultId: 1,
+            cancelId: 0,
+            title: 'Warning',
+            message: 'The imported menu may not be compatible. Do you want to proceed?',
+            detail: `Config version: ${parsed.version}\nApp version: ${app.getVersion()}`,
+          });
+
+          if (userChoice.response !== 1) {
+            console.log('User cancelled import.');
+            return;
+          }
+        }
+
+        if (!parsed.menus || !Array.isArray(parsed.menus) || parsed.menus.length === 0) {
+          dialog.showErrorBox(
+            'Invalid structure',
+            'Imported JSON must contain a "menus" array with at least one menu.'
+          );
+          return;
+        }
+
+        // Validate the single menu at index 0
+        const validationError = validateBySchema(
+          parsed.menus[0].root,
+          rootSchema,
+          'menus[0].root'
+        );
+        if (validationError !== null) {
+          dialog.showErrorBox('Invalid structure', validationError);
+          return;
+        }
+
+        const newMenu = parsed.menus[0];
+        const currentMenus = structuredClone(this.menuSettings.get('menus') || []);
+        currentMenus.push(newMenu);
+        this.menuSettings.set({ menus: currentMenus });
+
+        console.log('Successfully imported a menu from', filePath);
+      } catch (error) {
+        console.error('Failed to import menu:', error);
+        throw error;
+      }
     });
   }
 
