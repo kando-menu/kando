@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../../common';
+import { Vec2 } from '../../common';
 
 /** This method returns the the given value clamped to the given range. */
 export function clamp(value: number, min: number, max: number): number {
@@ -26,33 +26,33 @@ export function toRadians(degrees: number): number {
 }
 
 /** This method returns the length of the given vector. */
-export function getLength(vec: IVec2): number {
+export function getLength(vec: Vec2): number {
   return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
 /** This method normalizes the given vector. */
-export function normalize(vec: IVec2): IVec2 {
+export function normalize(vec: Vec2): Vec2 {
   const length = getLength(vec);
   return { x: vec.x / length, y: vec.y / length };
 }
 
 /** This method returns the distance between the two given vectors. */
-export function getDistance(vec1: IVec2, vec2: IVec2): number {
+export function getDistance(vec1: Vec2, vec2: Vec2): number {
   return getLength({ x: vec1.x - vec2.x, y: vec1.y - vec2.y });
 }
 
-/** This adds two IVec2 together. */
-export function add(vec1: IVec2, vec2: IVec2): IVec2 {
+/** This adds two Vec2 together. */
+export function add(vec1: Vec2, vec2: Vec2): Vec2 {
   return { x: vec1.x + vec2.x, y: vec1.y + vec2.y };
 }
 
 /** This subtracts vec2 from vec1. */
-export function subtract(vec1: IVec2, vec2: IVec2): IVec2 {
+export function subtract(vec1: Vec2, vec2: Vec2): Vec2 {
   return { x: vec1.x - vec2.x, y: vec1.y - vec2.y };
 }
 
 /** This multiplies a vector with a scalar. */
-export function multiply(vec: IVec2, scalar: number): IVec2 {
+export function multiply(vec: Vec2, scalar: number): Vec2 {
   return { x: vec.x * scalar, y: vec.y * scalar };
 }
 
@@ -144,7 +144,7 @@ export function normalizeConsequtiveAngles(start: number, center: number, end: n
  * on the right, 180° is on the bottom and 270° is on the right. The vector does not need
  * to be normalized.
  */
-export function getAngle(vec: IVec2): number {
+export function getAngle(vec: Vec2): number {
   const angle = (toDegrees(Math.atan2(vec.y, vec.x)) + 90) % 360;
   if (angle < 0) {
     return 360 + angle;
@@ -157,7 +157,7 @@ export function getAngle(vec: IVec2): number {
  * This method returns the direction vector for the given angle and length. 0° is on the
  * top, 90° is on the right, 180° is on the bottom and 270° is on the right.
  */
-export function getDirection(angle: number, length: number): IVec2 {
+export function getDirection(angle: number, length: number): Vec2 {
   const radians = toRadians(angle - 90);
   return {
     x: Math.cos(radians) * length,
@@ -530,11 +530,7 @@ function scaleWedge(start: number, center: number, end: number, scale: number) {
  * @param monitorSize The size of the monitor.
  * @returns The clamped position.
  */
-export function clampToMonitor(
-  position: IVec2,
-  radius: number,
-  monitorSize: IVec2
-): IVec2 {
+export function clampToMonitor(position: Vec2, radius: number, monitorSize: Vec2): Vec2 {
   const maxX = monitorSize.x - radius;
   const maxY = monitorSize.y - radius;
 

@@ -8,14 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem, IKeySequence } from '../../common/index';
-import { IItemAction } from './item-action-registry';
+import { MenuItem, KeySequence } from '../../common/index';
+import { ItemAction } from './item-action-registry';
 import { DeepReadonly } from '../settings';
-import { IItemData } from '../../common/item-types/hotkey-item-type';
+import { ItemData } from '../../common/item-types/hotkey-item-type';
 import { KandoApp } from '../app';
 
 /** This action simulates key presses. It can be used to simulate hotkeys. */
-export class HotkeyItemAction implements IItemAction {
+export class HotkeyItemAction implements ItemAction {
   /**
    * For hotkeys, we can choose to execute them immediately or with a delay.
    *
@@ -23,8 +23,8 @@ export class HotkeyItemAction implements IItemAction {
    *   immediately or with a delay.
    * @returns True if the action should be executed with a delay.
    */
-  delayedExecution(item: DeepReadonly<IMenuItem>) {
-    return (item.data as IItemData).delayed;
+  delayedExecution(item: DeepReadonly<MenuItem>) {
+    return (item.data as ItemData).delayed;
   }
 
   /**
@@ -36,14 +36,14 @@ export class HotkeyItemAction implements IItemAction {
    * @param app The app which executed the action.
    * @returns A promise which resolves when the hotkey has been successfully simulated.
    */
-  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
+  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
     return new Promise<void>((resolve, reject) => {
-      const keyNames = (item.data as IItemData).hotkey.split('+');
+      const keyNames = (item.data as ItemData).hotkey.split('+');
 
       // We simulate the key press by first pressing all keys and then releasing
       // them again. We add a small delay between the key presses to make sure
       // that the keys are pressed in the correct order.
-      const keys: IKeySequence = [];
+      const keys: KeySequence = [];
 
       // First press all keys.
       for (const key of keyNames) {

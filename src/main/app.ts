@@ -20,18 +20,18 @@ import { MenuWindow } from './menu-window';
 import { SettingsWindow } from './settings-window';
 import { Backend } from './backends';
 import {
-  IMenuItem,
-  IMenu,
-  IMenuSettings,
-  IGeneralSettings,
-  IShowMenuRequest,
-  IIconThemesInfo,
-  ISoundThemeDescription,
-  IMenuThemeDescription,
-  IWMInfo,
+  MenuItem,
+  Menu as MenuType,
+  MenuSettings,
+  GeneralSettings,
+  ShowMenuRequest,
+  IconThemesInfo,
+  SoundThemeDescription,
+  MenuThemeDescription,
+  WMInfo,
   SoundType,
-  ISoundEffect,
-  ICommandlineOptions,
+  SoundEffect,
+  CommandlineOptions,
 } from '../common';
 import { Settings } from './settings';
 import { Notification } from './utils/notification';
@@ -68,8 +68,8 @@ export class KandoApp {
    */
   private tray: Tray;
 
-  /** This contains the last IWMInfo which was received. */
-  private lastWMInfo?: IWMInfo;
+  /** This contains the last WMInfo which was received. */
+  private lastWMInfo?: WMInfo;
 
   /**
    * Most of the initialization is done in the init() method. This constructor is only
@@ -85,8 +85,8 @@ export class KandoApp {
    */
   constructor(
     private backend: Backend,
-    private generalSettings: Settings<IGeneralSettings>,
-    private menuSettings: Settings<IMenuSettings>
+    private generalSettings: Settings<GeneralSettings>,
+    private menuSettings: Settings<MenuSettings>
   ) {
     // On macOS, we loose the copy and paste functionality when using no menu bar. So we
     // add a hidden menu bar with some default actions. We also add a custom handler for
@@ -225,7 +225,7 @@ export class KandoApp {
    * @param options The command line options passed to the app.
    * @returns True if a command line option was handled by the app.
    */
-  public handleCommandLine(options: ICommandlineOptions) {
+  public handleCommandLine(options: CommandlineOptions) {
     if (options.menu) {
       this.showMenu({ name: options.menu });
       return true;
@@ -277,9 +277,9 @@ export class KandoApp {
   }
 
   /**
-   * Allow access to the last IWMInfo object.
+   * Allow access to the last WMInfo object.
    *
-   * @returns The last IWMInfo object.
+   * @returns The last WMInfo object.
    */
   public getLastWMInfo() {
     return this.lastWMInfo;
@@ -302,7 +302,7 @@ export class KandoApp {
    *
    * @param request Required information to select correct menu.
    */
-  public async showMenu(request: Partial<IShowMenuRequest>) {
+  public async showMenu(request: Partial<ShowMenuRequest>) {
     // Create and load the main window if it does not exist yet.
     if (!this.menuWindow) {
       this.menuWindow = new MenuWindow(this);
@@ -607,7 +607,7 @@ export class KandoApp {
 
     // Allow the renderer to retrieve all icons of all file icon themes.
     ipcMain.handle('common.get-icon-themes', async () => {
-      const info: IIconThemesInfo = {
+      const info: IconThemesInfo = {
         userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
         fileIconThemes: [],
       };
@@ -1012,7 +1012,7 @@ export class KandoApp {
     }
 
     const content = await fs.promises.readFile(metaFile);
-    const description = json5.parse(content.toString()) as IMenuThemeDescription;
+    const description = json5.parse(content.toString()) as MenuThemeDescription;
     const directory = path.dirname(metaFile);
     description.id = path.basename(directory);
     description.directory = path.dirname(directory);
@@ -1035,7 +1035,7 @@ export class KandoApp {
         console.error(`Sound theme "${theme}" not found. No sounds will be played.`);
       }
 
-      const description: ISoundThemeDescription = {
+      const description: SoundThemeDescription = {
         id: 'none',
         name: 'None',
         directory: '',
@@ -1043,14 +1043,14 @@ export class KandoApp {
         themeVersion: '',
         author: '',
         license: '',
-        sounds: {} as Record<SoundType, ISoundEffect>,
+        sounds: {} as Record<SoundType, SoundEffect>,
       };
 
       return description;
     }
 
     const content = await fs.promises.readFile(metaFile);
-    const description = json5.parse(content.toString()) as ISoundThemeDescription;
+    const description = json5.parse(content.toString()) as SoundThemeDescription;
     const directory = path.dirname(metaFile);
     description.id = path.basename(directory);
     description.directory = path.dirname(directory);
@@ -1064,7 +1064,7 @@ export class KandoApp {
    *
    * All menu configurations are stored in the `example-menus` directory.
    */
-  private createExampleMenu(): IMenu {
+  private createExampleMenu(): MenuType {
     // To enable localization of the example menus, we need to lookup the strings with
     // i18next after loading the menu structure from JSON. i18next-parser cannot extract
     // the strings from JSON files, therefore we have to specify all strings from the
@@ -1114,7 +1114,7 @@ export class KandoApp {
     i18next.t('example-menu.bookmarks.music')
     */
 
-    let menu: IMenu;
+    let menu: MenuType;
 
     if (process.platform === 'win32') {
       menu = require('./example-menus/windows.json');
@@ -1124,7 +1124,7 @@ export class KandoApp {
       menu = require('./example-menus/linux.json');
     }
 
-    const translate = (item: IMenuItem) => {
+    const translate = (item: MenuItem) => {
       item.name = i18next.t(item.name);
       if (item.children) {
         for (const child of item.children) {

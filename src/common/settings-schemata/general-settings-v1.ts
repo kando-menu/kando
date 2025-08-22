@@ -209,4 +209,4 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
   useDefaultOsShowSettingsHotkey: z.boolean().default(true),
 });
 
-export type IGeneralSettingsV1 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V1>;
+export type GeneralSettingsV1 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V1>;

@@ -10,14 +10,14 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IIconTheme } from './icon-theme-registry';
-import { IFileIconThemeDescription } from '../../common';
+import { IconTheme } from './icon-theme-registry';
+import { FileIconThemeDescription } from '../../common';
 
 /**
  * This class is used for custom icon themes loaded from a icon-themes directory on the
  * user's file system.
  */
-export class FileIconTheme implements IIconTheme {
+export class FileIconTheme implements IconTheme {
   /**
    * The cache for SVG icons. This is used to avoid loading the same SVG icon multiple
    * times. SVG icons are treated differently than other icons, as they are injected
@@ -30,7 +30,7 @@ export class FileIconTheme implements IIconTheme {
    *
    * @param description The description of the icon theme.
    */
-  constructor(private description: IFileIconThemeDescription) {}
+  constructor(private description: FileIconThemeDescription) {}
 
   /**
    * The name of the icon corresponds to the name of the directory in the icon-themes

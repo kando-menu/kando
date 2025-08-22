@@ -12,13 +12,10 @@ import { app } from 'electron';
 
 import {
   GENERAL_SETTINGS_SCHEMA_V1,
-  IGeneralSettingsV1,
+  GeneralSettingsV1,
 } from '../../common/settings-schemata/general-settings-v1';
 
-import {
-  GENERAL_SETTINGS_SCHEMA,
-  IGeneralSettings,
-} from '../../common/settings-schemata';
+import { GENERAL_SETTINGS_SCHEMA, GeneralSettings } from '../../common/settings-schemata';
 
 import { Settings } from './settings';
 
@@ -32,9 +29,9 @@ import { version } from './../../../package.json';
  *
  * @returns A Settings instance for the menu settings, or null if an error occurred.
  */
-export function getGeneralSettings(): Settings<IGeneralSettings> | null {
+export function getGeneralSettings(): Settings<GeneralSettings> | null {
   try {
-    return new Settings<IGeneralSettings>({
+    return new Settings<GeneralSettings>({
       file: 'config.json',
       directory: app.getPath('userData'),
       defaults: () => GENERAL_SETTINGS_SCHEMA.parse({}),
@@ -51,15 +48,15 @@ export function getGeneralSettings(): Settings<IGeneralSettings> | null {
 
 /**
  * Loads the contents of the settings file and returns an object that conforms to the
- * latest `IGeneralSettings` interface. If the content does not conform to the current
- * schema, it will be migrated to the current schema.
+ * latest `GeneralSettings` type. If the content does not conform to the current schema,
+ * it will be migrated to the current schema.
  *
  * @param content The content of the settings file as an object.
  * @returns An object containing the parsed settings and a boolean indicating whether a
  *   migration was performed.
  */
 function loadGeneralSettings(content: object): {
-  settings: IGeneralSettings;
+  settings: GeneralSettings;
   didMigration: boolean;
 } {
   // If the version field is not present, we assume this is an old settings file.
@@ -87,18 +84,18 @@ function loadGeneralSettings(content: object): {
 
 /**
  * The only real difference between the settings from pre-Kando 2.1.0 times and the
- * IGeneralSettingsV1 format is that the latter contains the version field. This function
- * migrates an old settings object to an IGeneralSettingsV1 object by adding the version
+ * GeneralSettingsV1 format is that the latter contains the version field. This function
+ * migrates an old settings object to an GeneralSettingsV1 object by adding the version
  * field with its default value.
  *
  * The function also migrates some old properties that were present in Kando 1.8.0 and
  * earlier. These properties were moved to different locations in the settings object.
  *
  * @param oldSettings The old settings object to migrate.
- * @returns The migrated settings object in the IGeneralSettingsV1 format.
+ * @returns The migrated settings object in the GeneralSettingsV1 format.
  */
-function migrateToGeneralSettingsV1(oldSettings: object): IGeneralSettingsV1 {
-  console.log('Migrating potentially old settings to IGeneralSettingsV1 format...');
+function migrateToGeneralSettingsV1(oldSettings: object): GeneralSettingsV1 {
+  console.log('Migrating potentially old settings to GeneralSettingsV1 format...');
 
   const migrated = GENERAL_SETTINGS_SCHEMA_V1.parse(oldSettings, { reportInput: true });
 

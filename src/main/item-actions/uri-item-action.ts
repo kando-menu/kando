@@ -10,18 +10,18 @@
 
 import { shell } from 'electron';
 
-import { IMenuItem } from '../../common/index';
-import { IItemAction } from './item-action-registry';
+import { MenuItem } from '../../common/index';
+import { ItemAction } from './item-action-registry';
 import { DeepReadonly } from '../settings';
-import { IItemData } from '../../common/item-types/uri-item-type';
-import { IWMInfo } from '../../common';
+import { ItemData } from '../../common/item-types/uri-item-type';
+import { WMInfo } from '../../common';
 import { KandoApp } from '../app';
 
 /**
  * This action opens URIs with the default application. This can be used to open for
  * example websites or files.
  */
-export class URIItemAction implements IItemAction {
+export class URItemAction implements ItemAction {
   /**
    * URIs are opened immediately.
    *
@@ -39,7 +39,7 @@ export class URIItemAction implements IItemAction {
    * @param wmInfo Information about the window manager state when the menu was opened.
    * @returns The URI string with placeholders replaced.
    */
-  private replacePlaceholders(uri: string, wmInfo: IWMInfo): string {
+  private replacePlaceholders(uri: string, wmInfo: WMInfo): string {
     return uri
       .replace(/\{{app_name}}/g, wmInfo.appName)
       .replace(/\{{window_name}}/g, wmInfo.windowName)
@@ -54,8 +54,8 @@ export class URIItemAction implements IItemAction {
    * @param app The app which executed the action.
    * @returns A promise which resolves when the URI has been successfully opened.
    */
-  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
-    let uri = (item.data as IItemData).uri;
+  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
+    let uri = (item.data as ItemData).uri;
     uri = this.replacePlaceholders(uri, app.getLastWMInfo());
     return shell.openExternal(uri);
   }

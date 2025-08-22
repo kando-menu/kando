@@ -19,7 +19,7 @@ import { Button, SettingsRow } from '.';
 
 import * as classes from './FilePicker.module.scss';
 
-interface IProps {
+type Props = {
   /** Function to call when the selected file changes. */
   onChange?: (path: string) => void;
 
@@ -34,7 +34,7 @@ interface IProps {
 
   /** Optional placeholder text to display in the input field. */
   placeholder?: string;
-}
+};
 
 /**
  * This component is an input field that allows the user to select a file path.
@@ -42,7 +42,7 @@ interface IProps {
  * @param props - The properties for the component.
  * @returns A React component that allows the user to enter a shortcut.
  */
-export default function FilePicker(props: IProps) {
+export default function FilePicker(props: Props) {
   const [path, setPath] = React.useState(props.initialValue);
 
   // Update the value when the initialValue prop changes. This is necessary because the

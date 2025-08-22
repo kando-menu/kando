@@ -10,20 +10,20 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from './item-type-registry';
+import { ItemType } from './item-type-registry';
 
 /**
  * For this type of menu items, the user can configure a hotkey that will be simulated
  * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
  * after the Kando window has been closed.
  */
-export interface IItemData {
+export type ItemData = {
   hotkey: string;
   delayed: boolean;
-}
+};
 
 /** This class provides meta information for menu items that simulate a hotkey. */
-export class HotkeyItemType implements IItemType {
+export class HotkeyItemType implements ItemType {
   get hasChildren(): boolean {
     return false;
   }
@@ -40,7 +40,7 @@ export class HotkeyItemType implements IItemType {
     return 'kando';
   }
 
-  get defaultData(): IItemData {
+  get defaultData(): ItemData {
     return {
       hotkey: '',
       delayed: true,

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../../common';
+import { Vec2 } from '../../common';
 
 /**
  * The logical button state of the input device. This will be set to clicked once a button
@@ -33,11 +33,11 @@ export enum SelectionType {
 }
 
 /**
- * This interface describes the state of an input device. It is used to communicate the
- * current state of the input method to the menu. The menu will then decide how to
- * interpret this state.
+ * This type describes the state of an input device. It is used to communicate the current
+ * state of the input method to the menu. The menu will then decide how to interpret this
+ * state.
  */
-export interface IInputState {
+export type InputState = {
   /**
    * At a higher level, Kando does not differentiate between mouse, touch, gamepad, or pen
    * input. This enum is used for all input methods. Some devices may not have or require
@@ -49,10 +49,10 @@ export interface IInputState {
   button: ButtonState;
 
   /** The pointer position in absolute screen coordinates. */
-  absolutePosition: IVec2;
+  absolutePosition: Vec2;
 
   /** The pointer position relative to the center of the currently selected item. */
-  relativePosition: IVec2;
+  relativePosition: Vec2;
 
   /**
    * The distance between the pointer and the center of the currently selected item in
@@ -65,7 +65,7 @@ export interface IInputState {
    * degrees.
    */
   angle: number;
-}
+};
 
 /** This is a base class for all input methods. */
 export abstract class InputMethod {
@@ -73,14 +73,14 @@ export abstract class InputMethod {
    * This callback should be called whenever the input state changes. See the InputState
    * class for more information.
    */
-  protected stateCallback: (state: IInputState) => void = () => {};
+  protected stateCallback: (state: InputState) => void = () => {};
 
   /**
    * This callback should be called whenever an item should be selected. The position
    * should be the absolute pointer position. The type can provide a hint what should be
    * selected. See the SelectionType enum for more information.
    */
-  protected selectCallback: (position: IVec2, type: SelectionType) => void = () => {};
+  protected selectCallback: (position: Vec2, type: SelectionType) => void = () => {};
 
   /** This callback should be called whenever the menu should be closed. */
   protected closeCallback: () => void = () => {};
@@ -92,7 +92,7 @@ export abstract class InputMethod {
    * @param center - The center coordinates of the newly selected submenu.
    * @param radius - The interactive radius of the newly selected submenu.
    */
-  public abstract setCurrentCenter(center: IVec2, radius: number): void;
+  public abstract setCurrentCenter(center: Vec2, radius: number): void;
 
   /**
    * This method will be called whenever the input state changes. Derived classes should
@@ -100,7 +100,7 @@ export abstract class InputMethod {
    *
    * @param callback - This will be called whenever the input state changes.
    */
-  public onUpdateState(callback: (state: IInputState) => void) {
+  public onUpdateState(callback: (state: InputState) => void) {
     this.stateCallback = callback;
   }
 
@@ -115,7 +115,7 @@ export abstract class InputMethod {
    *
    * @param callback - This will be called whenever an item should be selected.
    */
-  public onSelection(callback: (position: IVec2, type: SelectionType) => void) {
+  public onSelection(callback: (position: Vec2, type: SelectionType) => void) {
     this.selectCallback = callback;
   }
 

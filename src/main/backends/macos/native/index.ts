@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export interface Native {
+export type Native = {
   /**
    * This simulates a mouse movement.
    *
@@ -43,7 +43,7 @@ export interface Native {
     id: string;
     base64Icon: string;
   }[];
-}
+};
 
 const native: Native = require('./../../../../../build/Release/NativeMacOS.node');
 

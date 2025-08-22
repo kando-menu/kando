@@ -15,11 +15,11 @@ import { temporal } from 'zundo';
 import lodash from 'lodash';
 
 import {
-  IMenuSettings,
+  MenuSettings,
   MENU_SETTINGS_SCHEMA,
-  IMenuCollection,
-  IMenu,
-  IMenuItem,
+  MenuCollection,
+  Menu,
+  MenuItem,
 } from '../../common';
 
 // The menu settings state object allows access, modification, and change notification of
@@ -66,7 +66,7 @@ type MenuStateActions = {
    * @param index The index of the menu to edit.
    * @param callback The callback to call with the menu object.
    */
-  editMenu: (index: number, callback: (menu: IMenu) => IMenu) => void;
+  editMenu: (index: number, callback: (menu: Menu) => Menu) => void;
 
   /**
    * Edits a specific menu item. The callback is called with the menu item object and
@@ -80,7 +80,7 @@ type MenuStateActions = {
   editMenuItem: (
     menuIndex: number,
     itemPath: number[],
-    callback: (item: IMenuItem) => IMenuItem
+    callback: (item: MenuItem) => MenuItem
   ) => void;
 
   /**
@@ -157,7 +157,7 @@ type MenuStateActions = {
    */
   editCollection: (
     index: number,
-    callback: (collection: IMenuCollection) => IMenuCollection
+    callback: (collection: MenuCollection) => MenuCollection
   ) => void;
 };
 
@@ -167,7 +167,7 @@ type MenuStateActions = {
  * subset of the properties of all menus, use the useMappedMenuProperties hook defined
  * below instead.
  */
-export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
+export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
   temporal(
     (set) => ({
       ...MENU_SETTINGS_SCHEMA.parse({}),
@@ -229,7 +229,7 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
           ],
         })),
 
-      editMenu: (index: number, callback: (menu: IMenu) => IMenu) =>
+      editMenu: (index: number, callback: (menu: Menu) => Menu) =>
         set(
           produce((state) => {
             state.menus[index] = callback(state.menus[index]);
@@ -239,7 +239,7 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
       editMenuItem: (
         menuIndex: number,
         itemPath: number[],
-        callback: (item: IMenuItem) => IMenuItem
+        callback: (item: MenuItem) => MenuItem
       ) =>
         set(
           produce((state) => {
@@ -371,7 +371,7 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
 
       editCollection: (
         index: number,
-        callback: (collection: IMenuCollection) => IMenuCollection
+        callback: (collection: MenuCollection) => MenuCollection
       ) =>
         set(
           produce((state) => {
@@ -393,8 +393,8 @@ export const useMenuSettings = create<IMenuSettings & MenuStateActions>()(
  *
  * @param mapFn - Mapping function to extract relevant properties from each menu.
  */
-export function useMappedMenuProperties<U>(mapFn: (menu: IMenu) => U): U[] {
-  const lastMenus = useRef<IMenu[]>([]);
+export function useMappedMenuProperties<U>(mapFn: (menu: Menu) => U): U[] {
+  const lastMenus = useRef<Menu[]>([]);
   const lastMapped = useRef<U[]>([]);
   return useMenuSettings((state) => {
     const changed =
@@ -421,9 +421,9 @@ export function useMappedMenuProperties<U>(mapFn: (menu: IMenu) => U): U[] {
  * @param mapFn - Mapping function to extract relevant properties from each menu.
  */
 export function useMappedCollectionProperties<U>(
-  mapFn: (menu: IMenuCollection) => U
+  mapFn: (menu: MenuCollection) => U
 ): U[] {
-  const lastCollections = useRef<IMenuCollection[]>([]);
+  const lastCollections = useRef<MenuCollection[]>([]);
   const lastMapped = useRef<U[]>([]);
   return useMenuSettings((state) => {
     const changed =
@@ -455,12 +455,12 @@ export function useMappedCollectionProperties<U>(
  *   empty, the root item is returned and both index and parent are null.
  */
 function getMenuItem(
-  root: IMenuItem,
+  root: MenuItem,
   itemPath: number[]
 ): {
-  item: IMenuItem;
+  item: MenuItem;
   index: number | null;
-  parent: IMenuItem | null;
+  parent: MenuItem | null;
 } {
   let item = root;
   let index = null;

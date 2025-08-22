@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IVec2 } from '../common';
+import { Vec2 } from '../common';
 
 /**
  * The WedgeSeparators class is responsible for rendering the separators between the
@@ -37,7 +37,7 @@ export class WedgeSeparators {
    * @param angles An array of angles in degrees where the separators should be placed.
    * @param position The position of the center of the pie menu in pixels.
    */
-  public setSeparators(angles: number[], position: IVec2) {
+  public setSeparators(angles: number[], position: Vec2) {
     const fragment = document.createDocumentFragment();
 
     // We do not want a separator if there is only one wedge.

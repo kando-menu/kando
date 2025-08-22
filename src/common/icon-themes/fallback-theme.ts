@@ -8,13 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IIconTheme } from './icon-theme-registry';
+import { IconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that is used if the user has not selected a valid
  * icon theme.
  */
-export class FallbackTheme implements IIconTheme {
+export class FallbackTheme implements IconTheme {
   /** Not required as this is not a user-selectable theme. */
   get name() {
     return '';

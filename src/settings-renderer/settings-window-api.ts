@@ -12,13 +12,13 @@ import { ipcRenderer, OpenDialogOptions } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
-  IBackendInfo,
-  IMenuThemeDescription,
-  ISoundThemeDescription,
-  IVersionInfo,
-  IWMInfo,
-  ISystemInfo,
-  IAppDescription,
+  BackendInfo,
+  MenuThemeDescription,
+  SoundThemeDescription,
+  VersionInfo,
+  WMInfo,
+  SystemInfo,
+  AppDescription,
 } from '../common';
 
 /**
@@ -36,22 +36,22 @@ export const SETTINGS_WINDOW_API = {
   },
 
   /** This will return some information about the currently used backend. */
-  getBackendInfo: (): Promise<IBackendInfo> => {
+  getBackendInfo: (): Promise<BackendInfo> => {
     return ipcRenderer.invoke('settings-window.get-backend-info');
   },
 
   /** Returns the current version string of Kando. */
-  getVersionInfo: (): Promise<IVersionInfo> => {
+  getVersionInfo: (): Promise<VersionInfo> => {
     return ipcRenderer.invoke('settings-window.get-version');
   },
 
   /** Returns some information about the currently used window manager. */
-  getWMInfo: (): Promise<IWMInfo> => {
+  getWMInfo: (): Promise<WMInfo> => {
     return ipcRenderer.invoke('settings-window.get-wm-info');
   },
 
   /** Returns some information about the current system. */
-  getSystemInfo: (): Promise<ISystemInfo> => {
+  getSystemInfo: (): Promise<SystemInfo> => {
     return ipcRenderer.invoke('settings-window.get-system-info');
   },
 
@@ -76,16 +76,16 @@ export const SETTINGS_WINDOW_API = {
   },
 
   /** This will return all available menu themes. */
-  getAllMenuThemes: (): Promise<Array<IMenuThemeDescription>> => {
+  getAllMenuThemes: (): Promise<Array<MenuThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-menu-themes');
   },
 
   /** This will return all available sound themes. */
-  getAllSoundThemes: (): Promise<Array<ISoundThemeDescription>> => {
+  getAllSoundThemes: (): Promise<Array<SoundThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-sound-themes');
   },
 
-  getInstalledApps: (): Promise<Array<IAppDescription>> => {
+  getInstalledApps: (): Promise<Array<AppDescription>> => {
     return ipcRenderer.invoke('settings-window.get-installed-apps');
   },
 
@@ -111,10 +111,10 @@ export const SETTINGS_WINDOW_API = {
 };
 
 /**
- * This interface extends the global window object with the `api` objects. These `api`
- * objects contain all functions that can be called by the renderer process.
+ * This type extends the global window object with the `api` objects. These `api` objects
+ * contain all functions that can be called by the renderer process.
  */
-export interface WindowWithAPIs extends Window {
+export type WindowWithAPIs = {
   commonAPI: typeof COMMON_WINDOW_API;
   settingsAPI: typeof SETTINGS_WINDOW_API;
-}
+} & Window;

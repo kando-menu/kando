@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IKeySequence } from '.';
+import { KeySequence } from '.';
 
 /**
  * This function maps a sequence of key names to platform specific key codes.
@@ -18,7 +18,7 @@ import { IKeySequence } from '.';
  * @returns The sequence of key codes.
  * @throws If an unknown key is encountered.
  */
-export function mapKeys(keys: IKeySequence, os: 'windows' | 'macos' | 'linux'): number[] {
+export function mapKeys(keys: KeySequence, os: 'windows' | 'macos' | 'linux'): number[] {
   return keys.map((key) => {
     const code = KEY_CODES.get(key.name.toLowerCase())?.[os];
 
@@ -55,11 +55,11 @@ export function isKnownKeyCode(code: string) {
  * This is used in the map below to map from DOM key codes (which are strings) to platform
  * specific key code numbers.
  */
-interface IKeyMapping {
+type KeyMapping = {
   windows: number | null;
   macos: number | null;
   linux: number | null;
-}
+};
 
 /**
  * This map contains the proper key case for all key names which are used in the key codes
@@ -234,7 +234,7 @@ const PROPER_KEY_CASE: Map<string, string> = new Map([
 
 // The values in this map are derived from the tables on this page:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-const KEY_CODES: Map<string, IKeyMapping> = new Map([
+const KEY_CODES: Map<string, KeyMapping> = new Map([
   [
     'again',
     {

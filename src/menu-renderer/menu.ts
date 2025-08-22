@@ -11,14 +11,14 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
-import { IGeneralSettings, IShowMenuOptions, IVec2, SoundType } from '../common';
-import { IRenderedMenuItem } from './rendered-menu-item';
+import { GeneralSettings, ShowMenuOptions, Vec2, SoundType } from '../common';
+import { RenderedMenuItem } from './rendered-menu-item';
 import { SelectionWedges } from './selection-wedges';
 import { WedgeSeparators } from './wedge-separators';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
-import { ButtonState, IInputState, SelectionType } from './input-methods/input-method';
+import { ButtonState, InputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 
@@ -51,13 +51,13 @@ export class Menu extends EventEmitter {
    * The root item is the parent of all other menu items. It will be created when the menu
    * is shown and destroyed when the menu is hidden.
    */
-  private root: IRenderedMenuItem = null;
+  private root: RenderedMenuItem = null;
 
   /**
    * This holds some information which is passed to the menu when it is shown from the
    * main process. For instance, it holds the window size and the initial mouse position.
    */
-  private showMenuOptions: IShowMenuOptions;
+  private showMenuOptions: ShowMenuOptions;
 
   /**
    * The hovered item is the menu item which is currently hovered by the mouse. It is used
@@ -65,23 +65,23 @@ export class Menu extends EventEmitter {
    * over the center of the root item. If the menu center is hovered, the hovered item
    * will be the parent of the current menu.
    */
-  private hoveredItem: IRenderedMenuItem = null;
+  private hoveredItem: RenderedMenuItem = null;
 
   /**
    * The clicked item is the item which is under the mouse cursor when the left mouse
    * button is pressed. Items with this state can be styled differently by the theme.
    */
-  private clickedItem: IRenderedMenuItem = null;
+  private clickedItem: RenderedMenuItem = null;
 
   /** The dragged item is the item which is currently dragged by the mouse. */
-  private draggedItem: IRenderedMenuItem = null;
+  private draggedItem: RenderedMenuItem = null;
 
   /**
    * The selection chain is the chain of menu items from the root item to the currently
    * selected item. The first element of the array is the root item, the last element is
    * the currently selected item.
    */
-  private selectionChain: Array<IRenderedMenuItem> = [];
+  private selectionChain: Array<RenderedMenuItem> = [];
 
   /** This is used to visualize the selection wedges. */
   private selectionWedges: SelectionWedges = null;
@@ -105,7 +105,7 @@ export class Menu extends EventEmitter {
    * This object contains information on the latest pointer state. Is it updated whenever
    * an input pointer is moved.
    */
-  private latestInput: IInputState = null;
+  private latestInput: InputState = null;
 
   /** This timeout is used to clear the menu div after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
@@ -123,7 +123,7 @@ export class Menu extends EventEmitter {
     private container: HTMLElement,
     private theme: MenuTheme,
     private soundTheme: SoundTheme,
-    private settings: IGeneralSettings
+    private settings: GeneralSettings
   ) {
     super();
 
@@ -142,7 +142,7 @@ export class Menu extends EventEmitter {
    *
    * @param showMenuOptions Some additional information on how to show the menu.
    */
-  public show(root: IRenderedMenuItem, showMenuOptions: IShowMenuOptions) {
+  public show(root: RenderedMenuItem, showMenuOptions: ShowMenuOptions) {
     // Cancel any ongoing hiding.
     if (this.hideTimeout) {
       clearTimeout(this.hideTimeout);
@@ -230,7 +230,7 @@ export class Menu extends EventEmitter {
    * @returns The currently shown menu and the menu options. If no menu is shown, two
    *   times null is returned.
    */
-  public getCurrentRequest(): [IRenderedMenuItem, IShowMenuOptions] {
+  public getCurrentRequest(): [RenderedMenuItem, ShowMenuOptions] {
     return [this.root, this.showMenuOptions];
   }
 
@@ -239,7 +239,7 @@ export class Menu extends EventEmitter {
    *
    * @param options The new options.
    */
-  public updateSettings(settings: IGeneralSettings) {
+  public updateSettings(settings: GeneralSettings) {
     this.settings = settings;
 
     this.container.style.setProperty(
@@ -300,12 +300,12 @@ export class Menu extends EventEmitter {
       }
     };
 
-    const onUpdateState = (state: IInputState) => {
+    const onUpdateState = (state: InputState) => {
       this.latestInput = state;
       this.redraw();
     };
 
-    const onSelection = (coords: IVec2, type: SelectionType) => {
+    const onSelection = (coords: Vec2, type: SelectionType) => {
       // Ignore all input if the menu is in the process of hiding.
       if (this.container.classList.contains('hidden')) {
         return;
@@ -429,7 +429,7 @@ export class Menu extends EventEmitter {
    * @param item The menu item to create the DOM tree for.
    * @param container The container to append the DOM tree to.
    */
-  private createNodeTree(rootItem: IRenderedMenuItem, rootContainer: HTMLElement) {
+  private createNodeTree(rootItem: RenderedMenuItem, rootContainer: HTMLElement) {
     if (this.theme.drawSelectionWedges) {
       this.selectionWedges = new SelectionWedges(rootContainer);
     }
@@ -494,7 +494,7 @@ export class Menu extends EventEmitter {
 
         for (const child of item.children) {
           queue.push({
-            item: child as IRenderedMenuItem,
+            item: child as RenderedMenuItem,
             parent: item,
             container: nodeDiv,
             level: level + 1,
@@ -522,7 +522,7 @@ export class Menu extends EventEmitter {
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectItem(item: IRenderedMenuItem, coords?: IVec2) {
+  private selectItem(item: RenderedMenuItem, coords?: Vec2) {
     this.clickItem(null);
     this.hoverItem(null);
     this.dragItem(null);
@@ -620,7 +620,7 @@ export class Menu extends EventEmitter {
 
       // Assemble a list of angles for the selection-wedge separators.
       const separators = item.children.map((child) => {
-        return (child as IRenderedMenuItem).wedge.start;
+        return (child as RenderedMenuItem).wedge.start;
       });
 
       if (item.parentWedge) {
@@ -663,7 +663,7 @@ export class Menu extends EventEmitter {
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectParent(coords?: IVec2) {
+  private selectParent(coords?: Vec2) {
     if (this.selectionChain.length > 1) {
       this.soundTheme.playSound(SoundType.eSelectParent);
       this.selectItem(this.selectionChain[this.selectionChain.length - 2], coords);
@@ -678,7 +678,7 @@ export class Menu extends EventEmitter {
    *
    * @param item The item to hover. If null, the currently hovered item will be unhovered.
    */
-  private hoverItem(item?: IRenderedMenuItem) {
+  private hoverItem(item?: RenderedMenuItem) {
     if (this.hoveredItem === item) {
       return;
     }
@@ -739,7 +739,7 @@ export class Menu extends EventEmitter {
    * @param item The item to click. If null, the previously clicked item will be
    *   unclicked.
    */
-  private clickItem(item?: IRenderedMenuItem) {
+  private clickItem(item?: RenderedMenuItem) {
     if (this.clickedItem === item) {
       return;
     }
@@ -762,7 +762,7 @@ export class Menu extends EventEmitter {
    * @param item The item to drag. If null, the previously dragged item will be
    *   un-dragged.
    */
-  private dragItem(item?: IRenderedMenuItem) {
+  private dragItem(item?: RenderedMenuItem) {
     this.clickItem(null);
 
     if (this.draggedItem === item) {
@@ -862,7 +862,7 @@ export class Menu extends EventEmitter {
    * @returns The menu item that is currently hovered by the mouse. Can be null if the
    *   center of the root menu is hovered.
    */
-  private computeHoveredItem(): IRenderedMenuItem {
+  private computeHoveredItem(): RenderedMenuItem {
     // If the mouse is in the center of the menu, return the parent of the currently
     // selected item.
     if (this.latestInput.distance < this.settings.centerDeadZone) {
@@ -876,7 +876,7 @@ export class Menu extends EventEmitter {
     // currently selected item.
     const currentItem = this.selectionChain[this.selectionChain.length - 1];
     if (currentItem.children) {
-      for (const child of currentItem.children as IRenderedMenuItem[]) {
+      for (const child of currentItem.children as RenderedMenuItem[]) {
         if (
           math.isAngleBetween(this.latestInput.angle, child.wedge.start, child.wedge.end)
         ) {
@@ -920,7 +920,7 @@ export class Menu extends EventEmitter {
         );
 
         for (let j = 0; j < item.children?.length; ++j) {
-          const child = item.children[j] as IRenderedMenuItem;
+          const child = item.children[j] as RenderedMenuItem;
           if (child === this.draggedItem || child === this.clickedItem) {
             child.position = this.latestInput.relativePosition;
             child.nodeDiv.style.transform = `translate(${child.position.x}px, ${child.position.y}px)`;
@@ -1009,7 +1009,7 @@ export class Menu extends EventEmitter {
    * class. As they are not visible anyway, this is not a problem.
    */
   private updateCSSClasses() {
-    const clearClasses = (item: IRenderedMenuItem) => {
+    const clearClasses = (item: RenderedMenuItem) => {
       item.nodeDiv.classList.remove('active', 'parent', 'child', 'grandchild');
     };
 
@@ -1020,12 +1020,12 @@ export class Menu extends EventEmitter {
         item.nodeDiv.classList.add('active');
 
         if (item.children) {
-          for (const child of item.children as IRenderedMenuItem[]) {
+          for (const child of item.children as RenderedMenuItem[]) {
             clearClasses(child);
             child.nodeDiv.classList.add('child');
 
             if (child.children) {
-              for (const grandchild of child.children as IRenderedMenuItem[]) {
+              for (const grandchild of child.children as RenderedMenuItem[]) {
                 clearClasses(grandchild);
                 grandchild.nodeDiv.classList.add('grandchild');
               }
@@ -1036,7 +1036,7 @@ export class Menu extends EventEmitter {
         item.nodeDiv.classList.add('parent');
 
         if (item.children) {
-          for (const child of item.children as IRenderedMenuItem[]) {
+          for (const child of item.children as RenderedMenuItem[]) {
             clearClasses(child);
             child.nodeDiv.classList.add('grandchild');
           }
@@ -1054,11 +1054,11 @@ export class Menu extends EventEmitter {
    *
    * @param item The menu item for which to setup the path recursively.
    */
-  private setupPaths(item: IRenderedMenuItem, path = '') {
+  private setupPaths(item: RenderedMenuItem, path = '') {
     item.path = path === '' ? '/' : path;
 
     for (let i = 0; i < item.children?.length; ++i) {
-      const child = item.children[i] as IRenderedMenuItem;
+      const child = item.children[i] as RenderedMenuItem;
       this.setupPaths(child, `${path}/${i}`);
     }
   }
@@ -1072,7 +1072,7 @@ export class Menu extends EventEmitter {
    *
    * @param item The menu item for which to setup the angles recursively.
    */
-  private setupAngles(item: IRenderedMenuItem) {
+  private setupAngles(item: RenderedMenuItem) {
     // If the item has no children, we can stop here.
     if (!item.children || item.children.length === 0) {
       return;
@@ -1088,7 +1088,7 @@ export class Menu extends EventEmitter {
 
     // Now we assign the corresponding angles to the children.
     for (let i = 0; i < item.children.length; ++i) {
-      const child = item.children[i] as IRenderedMenuItem;
+      const child = item.children[i] as RenderedMenuItem;
       child.angle = angles[i];
       child.wedge = wedges.itemWedges[i];
 
@@ -1104,7 +1104,7 @@ export class Menu extends EventEmitter {
    * @param item The potential parent item.
    * @returns True if the given item is the parent item of the currently selected item.
    */
-  private isParentOfCenterItem(item: IRenderedMenuItem) {
+  private isParentOfCenterItem(item: RenderedMenuItem) {
     return (
       this.selectionChain.length > 1 &&
       this.selectionChain[this.selectionChain.length - 2] === item
@@ -1119,7 +1119,7 @@ export class Menu extends EventEmitter {
    * @returns True if the given item is a child of the currently selected item.
    */
 
-  private isChildOfCenterItem(item: IRenderedMenuItem) {
+  private isChildOfCenterItem(item: RenderedMenuItem) {
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
     return centerItem.children?.includes(item);
   }

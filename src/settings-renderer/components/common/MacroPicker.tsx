@@ -13,29 +13,29 @@ import JSON5 from 'json5';
 import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
-import { IMacroEvent } from '../../../common/item-types/macro-item-type';
+import { MacroEvent } from '../../../common/item-types/macro-item-type';
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 import { Button } from '.';
 
 import * as classes from './MacroPicker.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type Props = {
   /**
    * Function to call when the value changes. This will be called when the user recorded a
    * new macro or clicked outside of the text field.
    */
-  onChange?: (events: IMacroEvent[]) => void;
+  onChange?: (events: MacroEvent[]) => void;
 
   /** Initial value of the macro picker. */
-  initialValue: IMacroEvent[];
+  initialValue: MacroEvent[];
 
   /** Placeholder text to display when the macro picker is not recording. */
   placeholder?: string;
 
   /** Placeholder text to display when the macro picker is recording. */
   recordingPlaceholder?: string;
-}
+};
 
 /**
  * This component is an input field that allows the user to record a keyboard macro.
@@ -43,7 +43,7 @@ interface IProps {
  * @param props - The properties for the macro-picker component.
  * @returns A macro-picker element.
  */
-export default function MacroPicker(props: IProps) {
+export default function MacroPicker(props: Props) {
   const [textValue, setTextValue] = React.useState(convertToString(props.initialValue));
   const [recording, setRecording] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -148,7 +148,7 @@ function normalizeInput(input: string): string {
   }
 
   // Each element must be an object with a type and a key.
-  macro.forEach((event: IMacroEvent) => {
+  macro.forEach((event: MacroEvent) => {
     if (event.key) {
       event.key = fixKeyCodeCase(event.key);
     }
@@ -195,7 +195,7 @@ function recordInput(event: React.KeyboardEvent<HTMLTextAreaElement>) {
  * @param macro The macro to convert.
  * @returns The string representation of the macro.
  */
-function convertToString(macro: IMacroEvent[]): string {
+function convertToString(macro: MacroEvent[]): string {
   return JSON5.stringify(macro, null, 1)
     .replace(/\n/g, '')
     .replace(/ /g, '')
@@ -208,14 +208,14 @@ function convertToString(macro: IMacroEvent[]): string {
 
 /**
  * This method checks if the given macro is valid. A macro is valid if it is an array of
- * IMacroEvent objects. Each IMacroEvent object must have a type and a key. The key must
- * be a valid key code. There can be an optional delay, and there must be no other
+ * MacroEvent objects. Each MacroEvent object must have a type and a key. The key must be
+ * a valid key code. There can be an optional delay, and there must be no other
  * properties. I t returns the parsed macro if it is valid, or null if it is not.
  *
  * @param input The normalized input to validate and convert.
  * @returns The parsed macro if it is valid, or null if it is not.
  */
-function convertToMacro(input: string): IMacroEvent[] | null {
+function convertToMacro(input: string): MacroEvent[] | null {
   let macro;
 
   // Try to parse the input as JSON. If this fails, return false.
@@ -226,7 +226,7 @@ function convertToMacro(input: string): IMacroEvent[] | null {
   }
 
   // Each element must be an object with a type and a key.
-  const valid = macro.every((event: IMacroEvent) => {
+  const valid = macro.every((event: MacroEvent) => {
     // There must be a key property.
     if (
       event.key === undefined ||

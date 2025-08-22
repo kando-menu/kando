@@ -14,7 +14,7 @@ import classNames from 'classnames/bind';
 import * as classes from './Button.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type Props = {
   /** Function to call when the button is clicked. */
   onClick?: () => void;
 
@@ -57,7 +57,7 @@ interface IProps {
    * the first and last button in the group round. Defaults to false.
    */
   grouped?: boolean;
-}
+};
 
 /**
  * A customizable button component.
@@ -65,7 +65,7 @@ interface IProps {
  * @param props - The properties for the button component.
  * @returns A button element.
  */
-export default function Button(props: IProps) {
+export default function Button(props: Props) {
   const className = cx({
     button: true,
     [props.variant || 'secondary']: true,

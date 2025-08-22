@@ -12,7 +12,7 @@ import React from 'react';
 
 import * as classes from './Tag.module.scss';
 
-interface IProps {
+type Props = {
   /** The name of the tag. */
   name: string;
 
@@ -21,7 +21,7 @@ interface IProps {
 
   /** An optional icon to show before the tag name. It will only be shown on hover. */
   icon?: React.ReactNode;
-}
+};
 
 /**
  * A simple tag which can be clicked (usually to remove it).
@@ -29,7 +29,7 @@ interface IProps {
  * @param props - The properties for the tag component.
  * @returns A tag element.
  */
-export default function Tag(props: IProps) {
+export default function Tag(props: Props) {
   return (
     <button onClick={props.onClick} className={classes.tag}>
       {props.icon}

@@ -13,10 +13,10 @@ import { TbInfoSquareRoundedFilled } from 'react-icons/tb';
 
 import * as classes from './InfoItem.module.scss';
 
-interface IProps {
+type Props = {
   /** Text to display in the tooltip. */
   info: string;
-}
+};
 
 /**
  * A component that displays an information icon with a tooltip.
@@ -24,7 +24,7 @@ interface IProps {
  * @param props - The properties for the info item component.
  * @returns An info item element.
  */
-export default function InfoItem(props: IProps) {
+export default function InfoItem(props: Props) {
   return (
     <span
       className={classes.info}

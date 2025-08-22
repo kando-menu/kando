@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import * as classes from './Base64IconPicker.module.scss';
 
-interface IProps {
+type Props = {
   /**
    * Function to call when the value changes. This will be called when the user entered a
    * valid base64 image string.
@@ -22,7 +22,7 @@ interface IProps {
 
   /** Initial value of the base64 picker. */
   initialValue: string;
-}
+};
 
 /**
  * This component is a textarea that allows the user to enter a base64 encoded image.
@@ -30,7 +30,7 @@ interface IProps {
  * @param props - The properties for the icon picker component.
  * @returns A textarea element that allows the user to enter a base64 encoded image.
  */
-export default function Base64IconPicker(props: IProps) {
+export default function Base64IconPicker(props: Props) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = React.useState('');
 

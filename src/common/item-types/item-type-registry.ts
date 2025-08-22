@@ -11,7 +11,7 @@
 import { WindowWithAPIs } from '../common-window-api';
 declare const window: WindowWithAPIs;
 
-import { IMenuItem } from '..';
+import { MenuItem } from '..';
 
 import { CommandItemType } from './command-item-type';
 import { FileItemType } from './file-item-type';
@@ -24,11 +24,12 @@ import { RedirectItemType } from './redirect-item-type';
 import { SettingsItemType } from './settings-item-type';
 
 /**
- * This interface describes meta information about a menu-item type. Every available type
+ * This type describes meta information about a menu-item type. Every available type
  * should implement this interface. You can find the implementations in the `item-types`
  * directory.
  */
-export interface IItemType {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export interface ItemType {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -64,7 +65,7 @@ export class ItemTypeRegistry {
    * This map contains all available menu item types. The keys are the type names and the
    * values are the corresponding type objects.
    */
-  private types: Map<string, IItemType> = new Map();
+  private types: Map<string, ItemType> = new Map();
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
@@ -100,7 +101,7 @@ export class ItemTypeRegistry {
    * @param typeName The name of the type you want to get information about.
    * @returns The information about the requested type.
    */
-  public getType(typeName: string): IItemType {
+  public getType(typeName: string): ItemType {
     return this.types.get(typeName);
   }
 
@@ -150,7 +151,7 @@ export class ItemTypeRegistry {
    * @returns A new menu item fitting to the data type. If no item could be created, null
    *   is returned.
    */
-  public async createItem(transfer: DataTransfer): Promise<IMenuItem | null> {
+  public async createItem(transfer: DataTransfer): Promise<MenuItem | null> {
     // We collect all potential data formats first. We have to do this, because some of
     // the following code is asynchronous and the DataTransfer object becomes invalid
     // after an await.

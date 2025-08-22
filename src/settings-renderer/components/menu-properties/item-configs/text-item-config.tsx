@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { RandomTip, TextInput } from '../../common';
-import { IItemData } from '../../../../common/item-types/text-item-type';
+import { ItemData } from '../../../../common/item-types/text-item-type';
 
 /** The configuration component for text items is primarily a text area. */
 export default () => {
@@ -28,7 +28,7 @@ export default () => {
     return <></>;
   }
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -38,7 +38,7 @@ export default () => {
         initialValue={data.text}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).text = value;
+            (item.data as ItemData).text = value;
             return item;
           });
         }}

@@ -11,13 +11,13 @@
 import { matchSorter } from 'match-sorter';
 import emojis from 'emojilib';
 
-import { IIconTheme } from './icon-theme-registry';
+import { IconTheme } from './icon-theme-registry';
 
 /**
  * This class implements an icon theme that uses emojis as icons. It uses the `emojilib`
  * package to get a list of emojis and their descriptions.
  */
-export class EmojiTheme implements IIconTheme {
+export class EmojiTheme implements IconTheme {
   /**
    * This array contains all emojis and their descriptions. Each inner array contains the
    * emoji itself as first element and all descriptions as following elements.

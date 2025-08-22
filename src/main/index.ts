@@ -11,7 +11,7 @@
 import { app } from 'electron';
 import { program } from 'commander';
 
-import { ICommandlineOptions } from '../common';
+import { CommandlineOptions } from '../common';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -38,7 +38,7 @@ const options = program
   .allowUnknownOption(true)
   .allowExcessArguments(true)
   .parse()
-  .opts() as ICommandlineOptions;
+  .opts() as CommandlineOptions;
 
 // Prevent multiple instances of the app. If an instance of the app is already running,
 // we just quit this one and let the other instance handle the command line arguments.
@@ -160,7 +160,7 @@ try {
   // arguments if both are present. The last boolean parameter is used to determine if the
   // settings should be shown if no command line arguments were passed.
   const handleArguments = (
-    commandLine: ICommandlineOptions | null,
+    commandLine: CommandlineOptions | null,
     deepLink: string | null,
     showSettingsIfEmpty: boolean
   ) => {
@@ -229,7 +229,7 @@ try {
       // Respond to commandline arguments passed to a second instance. On Windows and Linux
       // this is also called when the app is opened via a deep link. In this case, the last
       // argument is the deep link.
-      app.on('second-instance', (e, argv, pwd, options: ICommandlineOptions) => {
+      app.on('second-instance', (e, argv, pwd, options: CommandlineOptions) => {
         handleArguments(options, argv[argv.length - 1], true);
       });
 

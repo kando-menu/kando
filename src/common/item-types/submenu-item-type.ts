@@ -10,10 +10,10 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from './item-type-registry';
+import { ItemType } from './item-type-registry';
 
 /** This class provides meta information for submenu items. */
-export class SubmenuItemType implements IItemType {
+export class SubmenuItemType implements ItemType {
   get hasChildren(): boolean {
     return true;
   }

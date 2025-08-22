@@ -20,7 +20,7 @@ import { Modal, Button } from '../common';
 
 import * as classes from './ScreenAreaPicker.module.scss';
 
-interface IProps {
+type Props = {
   /** Function to call when a new area is selected. */
   onSelect: (top: number, left: number, bottom: number, right: number) => void;
 
@@ -29,13 +29,13 @@ interface IProps {
 
   /** Visibility of the modal. */
   visible: boolean;
-}
+};
 
 /**
  * This component allows the user to select a screen area by dragging two points on the
  * screen.
  */
-export default function ScreenAreaPicker(props: IProps) {
+export default function ScreenAreaPicker(props: Props) {
   const [leftTop, setLeftTop] = React.useState(null);
   const [rightBottom, setRightBottom] = React.useState(null);
 

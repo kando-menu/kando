@@ -10,7 +10,7 @@
 
 import { native } from './native';
 import { LinuxBackend } from '../backend';
-import { IKeySequence } from '../../../../common';
+import { KeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 import { screen } from 'electron';
 
@@ -91,7 +91,7 @@ export class X11Backend extends LinuxBackend {
    *
    * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(keys: IKeySequence) {
+  public async simulateKeys(keys: KeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'linux');

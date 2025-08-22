@@ -11,8 +11,8 @@
 export * from './settings-schemata/menu-settings-v1';
 export * from './settings-schemata';
 
-/** This interface is used to pass command line arguments to the app. */
-export interface ICommandlineOptions {
+/** This type is used to pass command line arguments to the app. */
+export type CommandlineOptions = {
   // This optional parameter is specified using the --menu option. It is used to show a
   // menu when the app or a second instance of the app is started.
   menu?: string;
@@ -28,20 +28,20 @@ export interface ICommandlineOptions {
   // This optional parameter is specified using the --reload-sound-theme option. It is
   // used to reload the current sound theme from disk.
   reloadSoundTheme?: boolean;
-}
+};
 
 /**
  * A simple 2D vector.
  *
  * You can find some vector math in the `src/renderer/math` directory.
  */
-export interface IVec2 {
+export type Vec2 = {
   x: number;
   y: number;
-}
+};
 
-/** This interface describes some information about the currently used backend. */
-export interface IBackendInfo {
+/** This type describes some information about the currently used backend. */
+export type BackendInfo = {
   /**
    * The name of the backend. This is shown in the user interface so that users can see
    * which backend is currently active.
@@ -77,42 +77,42 @@ export interface IBackendInfo {
 
   /** This determines whether the settings window should use transparency per default. */
   shouldUseTransparentSettingsWindow: boolean;
-}
+};
 
-/** This interface describes some information about the current version of Kando. */
-export interface IVersionInfo {
+/** This type describes some information about the current version of Kando. */
+export type VersionInfo = {
   kandoVersion: string;
   electronVersion: string;
   chromeVersion: string;
   nodeVersion: string;
-}
+};
 
 /**
- * This interface is used to transfer information required from the window manager when
- * opening the pie menu. It contains the name of the currently focused app / window, the
- * current pointer position, and the screen area where a maximized window can be placed.
- * That is the screen resolution minus the taskbar and other panels.
+ * This type is used to transfer information required from the window manager when opening
+ * the pie menu. It contains the name of the currently focused app / window, the current
+ * pointer position, and the screen area where a maximized window can be placed. That is
+ * the screen resolution minus the taskbar and other panels.
  */
-export interface IWMInfo {
+export type WMInfo = {
   windowName: string;
   appName: string;
   pointerX: number;
   pointerY: number;
   workArea: Electron.Rectangle;
-}
+};
 
 /**
- * This interface is used to transfer information about the system to the renderer
- * process. It will determine the visibility of some UI elements and the availability of
- * some features.
+ * This type is used to transfer information about the system to the renderer process. It
+ * will determine the visibility of some UI elements and the availability of some
+ * features.
  */
-export interface ISystemInfo {
+export type SystemInfo = {
   /** Whether the system supports launching isolated processes. */
   supportsIsolatedProcesses: boolean;
-}
+};
 
-/** This interface describes a icon theme consisting of a collection of icon files. */
-export interface IFileIconThemeDescription {
+/** This type describes a icon theme consisting of a collection of icon files. */
+export type FileIconThemeDescription = {
   /**
    * The ID of the theme. This is used to identify the theme in the settings file. It is
    * also the directory name of the icon theme.
@@ -131,65 +131,65 @@ export interface IFileIconThemeDescription {
    * actually be paths.
    */
   icons: string[];
-}
+};
 
 /**
- * This interface is used to pass information about all available icon themes to the
- * renderer process.
+ * This type is used to pass information about all available icon themes to the renderer
+ * process.
  */
-export interface IIconThemesInfo {
+export type IconThemesInfo = {
   /** The absolute path to the directory where the user may store custom icon themes. */
   userIconDirectory: string;
 
   /** All available file icon themes. */
-  fileIconThemes: IFileIconThemeDescription[];
-}
+  fileIconThemes: FileIconThemeDescription[];
+};
 
 /**
- * This interface is used to describe an element of a key sequence. It contains the DOM
- * name of the key, a boolean indicating whether the key is pressed or released and a
- * delay in milliseconds.
+ * This type is used to describe an element of a key sequence. It contains the DOM name of
+ * the key, a boolean indicating whether the key is pressed or released and a delay in
+ * milliseconds.
  */
-export interface IKeyStroke {
+export type KeyStroke = {
   name: string;
   down: boolean;
   delay: number;
-}
+};
 
 /**
  * This type is used to describe a sequence of key strokes. It is used to simulate
  * keyboard shortcuts.
  */
-export type IKeySequence = Array<IKeyStroke>;
+export type KeySequence = Array<KeyStroke>;
 
 /**
- * There are different reasons why a menu should be shown. This interface is used to
- * describe the request to show a menu. A menu can be shown because a shortcut was pressed
- * (in this case `trigger` will be the shortcut or the shortcut ID) or because a menu was
- * requested by name.
+ * There are different reasons why a menu should be shown. This type is used to describe
+ * the request to show a menu. A menu can be shown because a shortcut was pressed (in this
+ * case `trigger` will be the shortcut or the shortcut ID) or because a menu was requested
+ * by name.
  */
-export interface IShowMenuRequest {
+export type ShowMenuRequest = {
   trigger: string;
   name: string;
-}
+};
 
 /**
- * This interface is used to describe the additional information that is passed to the
- * Menu's `show()` method from the main to the renderer process.
+ * This type is used to describe the additional information that is passed to the Menu's
+ * `show()` method from the main to the renderer process.
  */
-export interface IShowMenuOptions {
+export type ShowMenuOptions = {
   /**
    * The position of the mouse cursor when the menu was opened. Relative to the top left
    * corner of the window.
    */
-  mousePosition: IVec2;
+  mousePosition: Vec2;
 
   /**
    * The size of the window. Usually, this is the same as window.innerWidth and
    * window.innerHeight. However, when the window was just resized, this can be different.
    * Therefore, we need to pass it from the main process.
    */
-  windowSize: IVec2;
+  windowSize: Vec2;
 
   /**
    * The scale factor of the menu. This is required to compute the correct position of the
@@ -220,13 +220,13 @@ export interface IShowMenuOptions {
    * opened. This is used to determine if the menu needs to be reloaded.
    */
   systemIconsChanged: boolean;
-}
+};
 
 /**
  * The description of a menu theme. These are the properties which can be defined in the
  * JSON file of a menu theme.
  */
-export interface IMenuThemeDescription {
+export type MenuThemeDescription = {
   /**
    * The ID of the theme. This is used to identify the theme in the settings file. It is
    * also the directory name of the theme and is set by Kando when loading the theme.json
@@ -308,7 +308,7 @@ export interface IMenuThemeDescription {
     class: string;
     content: 'none' | 'name' | 'icon';
   }[];
-}
+};
 
 /**
  * Sound themes can define different sounds for different actions. This enum is used to
@@ -326,10 +326,10 @@ export enum SoundType {
 }
 
 /**
- * This interface is used to describe a sound effect. It contains the path to the sound
- * file and some optional properties like the volume and pitch shift.
+ * This type is used to describe a sound effect. It contains the path to the sound file
+ * and some optional properties like the volume and pitch shift.
  */
-export interface ISoundEffect {
+export type SoundEffect = {
   /** The path to the sound file. */
   file: string;
 
@@ -341,14 +341,14 @@ export interface ISoundEffect {
 
   /** The minimum pitch shift. */
   minPitch?: number;
-}
+};
 
 /**
- * This interface is used to describe a sound theme. It contains the properties which can
- * be defined in the JSON file of a sound theme. All paths are relative to the theme
+ * This type is used to describe a sound theme. It contains the properties which can be
+ * defined in the JSON file of a sound theme. All paths are relative to the theme
  * directory.
  */
-export interface ISoundThemeDescription {
+export type SoundThemeDescription = {
   /**
    * The ID of the theme. This is used to identify the theme in the settings file. It is
    * also the directory name of the theme and is set by Kando when loading the theme.json
@@ -381,14 +381,14 @@ export interface ISoundThemeDescription {
    * All available sound effects. If a given sound is not defined here, no sound will be
    * played for the corresponding action.
    */
-  sounds: Record<SoundType, ISoundEffect>;
-}
+  sounds: Record<SoundType, SoundEffect>;
+};
 
 /**
- * This interface is used to describe an installed application. When the settings window
- * is opened, it will query the host process for a list of all installed applications.
+ * This type is used to describe an installed application. When the settings window is
+ * opened, it will query the host process for a list of all installed applications.
  */
-export interface IAppDescription {
+export type AppDescription = {
   /**
    * Some unique identifier for the application. What that is depends on the backend.
    * Could be for instance the UWP app ID. If the backend is not able to provide a unique
@@ -407,4 +407,4 @@ export interface IAppDescription {
 
   /** The icon theme used for the above icon. */
   iconTheme: string;
-}
+};

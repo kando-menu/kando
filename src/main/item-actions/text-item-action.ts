@@ -11,14 +11,14 @@
 import os from 'node:os';
 import { clipboard } from 'electron';
 
-import { IMenuItem } from '../../common/index';
-import { IItemAction } from './item-action-registry';
+import { MenuItem } from '../../common/index';
+import { ItemAction } from './item-action-registry';
 import { DeepReadonly } from '../settings';
-import { IItemData } from '../../common/item-types/text-item-type';
+import { ItemData } from '../../common/item-types/text-item-type';
 import { KandoApp } from '../app';
 
 /** This action pastes some given text into the active window. */
-export class TextItemAction implements IItemAction {
+export class TextItemAction implements ItemAction {
   /**
    * Pasting text is always delayed.
    *
@@ -36,8 +36,8 @@ export class TextItemAction implements IItemAction {
    * @param app The app which executed the action.
    * @returns A promise which resolves when the URI has been successfully opened.
    */
-  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
-    const text = (item.data as IItemData).text;
+  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
+    const text = (item.data as ItemData).text;
     if (text) {
       clipboard.writeText(text);
 

@@ -10,14 +10,14 @@
 
 import { matchSorter } from 'match-sorter';
 
-import { IIconTheme } from './icon-theme-registry';
+import { IconTheme } from './icon-theme-registry';
 
 /**
  * On some systems, the operating system provides a set of icons that can be used in
  * applications. For instance, on Linux, the Freedesktop Icon Theme Specification defines
  * a set of icons that can be used by applications.
  */
-export class SystemTheme implements IIconTheme {
+export class SystemTheme implements IconTheme {
   /** A list of all available icon names. */
   private iconNames: Array<string> = [];
 

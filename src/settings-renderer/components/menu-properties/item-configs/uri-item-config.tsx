@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { RandomTip, TextInput } from '../../common';
-import { IItemData } from '../../../../common/item-types/uri-item-type';
+import { ItemData } from '../../../../common/item-types/uri-item-type';
 
 /** The configuration component for uri items is primarily a text input field for the URI. */
 export default () => {
@@ -28,7 +28,7 @@ export default () => {
     return <></>;
   }
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -38,7 +38,7 @@ export default () => {
         initialValue={data.uri}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).uri = value;
+            (item.data as ItemData).uri = value;
             return item;
           });
         }}

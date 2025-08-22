@@ -15,7 +15,7 @@ import SettingsRow from './SettingsRow';
 
 import * as classes from './Dropdown.module.scss';
 
-interface IProps<T extends string> {
+type Props<T extends string> = {
   /** Function to call when the selected option changes. */
   onChange?: (value: T) => void;
 
@@ -42,7 +42,7 @@ interface IProps<T extends string> {
 
   /** Optional maximum width of the dropdown. */
   maxWidth?: number;
-}
+};
 
 /**
  * A customizable dropdown component.
@@ -50,7 +50,7 @@ interface IProps<T extends string> {
  * @param props - The properties for the dropdown component.
  * @returns A dropdown element.
  */
-export default function Dropdown<T extends string>(props: IProps<T>) {
+export default function Dropdown<T extends string>(props: Props<T>) {
   const invalidSelection =
     props.options.find((option) => option.value === props.initialValue) === undefined;
 

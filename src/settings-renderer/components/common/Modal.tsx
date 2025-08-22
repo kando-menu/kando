@@ -19,7 +19,7 @@ import { FocusTrapManager } from '../../utils';
 
 import * as classes from './Modal.module.scss';
 
-interface IProps {
+type Props = {
   /** Whether the modal is visible. */
   visible: boolean;
 
@@ -55,7 +55,7 @@ interface IProps {
 
   /** Padding to apply to the right side of the modal content. */
   paddingRight?: number;
-}
+};
 
 /**
  * A customizable modal component. When props.visible becomes true, the modal will be
@@ -67,7 +67,7 @@ interface IProps {
  * @param props - The properties for the modal component.
  * @returns A modal element.
  */
-export default function Modal(props: IProps) {
+export default function Modal(props: Props) {
   const modalContent = React.useRef(null);
   const pointerDownOnBackground = React.useRef(false);
 

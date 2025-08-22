@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from '../../common';
+import { MenuItem } from '../../common';
 import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
 import { CommandItemAction } from './command-item-action';
@@ -16,16 +16,17 @@ import { FileItemAction } from './file-item-action';
 import { HotkeyItemAction } from './hotkey-item-action';
 import { MacroItemAction } from './macro-item-action';
 import { TextItemAction } from './text-item-action';
-import { URIItemAction } from './uri-item-action';
+import { URItemAction } from './uri-item-action';
 import { RedirectItemAction } from './redirect-item-action';
 import { SettingsItemAction } from './settings-item-action';
 
 /**
- * This interface describes the action of a menu item. The action is what happens when the
- * menu item is executed. Every item type which can be executed should implement this
- * interface. You can find the implementations in the `item-types` directory.
+ * This type describes the action of a menu item. The action is what happens when the menu
+ * item is executed. Every item type which can be executed should implement this type. You
+ * can find the implementations in the `item-types` directory.
  */
-export interface IItemAction {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export interface ItemAction {
   /**
    * This will be called when the action is about to be executed. If this method returns
    * `false`, the action will be executed right away. If it returns `true`, the action
@@ -35,7 +36,7 @@ export interface IItemAction {
    *
    * @param item The menu item for which an action is about to be executed.
    */
-  delayedExecution: (item: DeepReadonly<IMenuItem>) => boolean;
+  delayedExecution: (item: DeepReadonly<MenuItem>) => boolean;
 
   /**
    * This will be called when the menu item is executed.
@@ -45,7 +46,7 @@ export interface IItemAction {
    *   the current state of the app, the used backend, etc.
    * @returns A promise which resolves when the action has been successfully executed.
    */
-  execute: (item: DeepReadonly<IMenuItem>, app: KandoApp) => Promise<void>;
+  execute: (item: DeepReadonly<MenuItem>, app: KandoApp) => Promise<void>;
 }
 
 /**
@@ -57,7 +58,7 @@ export class ItemActionRegistry {
   private static instance: ItemActionRegistry = null;
 
   /** This map contains all available actions. The keys are the type names. */
-  private actions: Map<string, IItemAction> = new Map();
+  private actions: Map<string, ItemAction> = new Map();
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
@@ -69,7 +70,7 @@ export class ItemActionRegistry {
     this.actions.set('hotkey', new HotkeyItemAction());
     this.actions.set('macro', new MacroItemAction());
     this.actions.set('text', new TextItemAction());
-    this.actions.set('uri', new URIItemAction());
+    this.actions.set('uri', new URItemAction());
     this.actions.set('redirect', new RedirectItemAction());
     this.actions.set('settings', new SettingsItemAction());
   }
@@ -95,7 +96,7 @@ export class ItemActionRegistry {
    *   closed.
    * @throws An error if the type of the menu item is unknown.
    */
-  public delayedExecution(item: DeepReadonly<IMenuItem>): boolean {
+  public delayedExecution(item: DeepReadonly<MenuItem>): boolean {
     return this.getAction(item.type).delayedExecution(item);
   }
 
@@ -106,7 +107,7 @@ export class ItemActionRegistry {
    * @param app The app which executed the action.
    * @returns A promise which resolves when the action has been successfully executed.
    */
-  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
+  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
     return this.getAction(item.type).execute(item, app);
   }
 
@@ -117,7 +118,7 @@ export class ItemActionRegistry {
    * @returns The action of the given type.
    * @throws An error if the type is unknown.
    */
-  private getAction(type: string): IItemAction {
+  private getAction(type: string): ItemAction {
     const action = this.actions.get(type);
 
     if (!action) {

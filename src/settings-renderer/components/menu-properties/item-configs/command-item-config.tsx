@@ -14,7 +14,7 @@ import { TbApps } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { RandomTip, TextInput, Checkbox, Button } from '../../common';
-import { IItemData } from '../../../../common/item-types/command-item-type';
+import { ItemData } from '../../../../common/item-types/command-item-type';
 import AppPicker from '../AppPicker';
 
 /**
@@ -38,7 +38,7 @@ export default () => {
     return <></>;
   }
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -56,7 +56,7 @@ export default () => {
         initialValue={data.command}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).command = value;
+            (item.data as ItemData).command = value;
             return item;
           });
         }}
@@ -68,7 +68,7 @@ export default () => {
           initialValue={data.isolated}
           onChange={(value) => {
             editMenuItem(selectedMenu, selectedChildPath, (item) => {
-              (item.data as IItemData).isolated = value;
+              (item.data as ItemData).isolated = value;
               return item;
             });
           }}
@@ -80,7 +80,7 @@ export default () => {
         initialValue={data.detached !== false} // explicitly check because undefined should mean true
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).detached = value;
+            (item.data as ItemData).detached = value;
             return item;
           });
         }}
@@ -91,7 +91,7 @@ export default () => {
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).delayed = value;
+            (item.data as ItemData).delayed = value;
             return item;
           });
         }}
@@ -116,7 +116,7 @@ export default () => {
             item.name = value.name;
             item.icon = value.icon;
             item.iconTheme = value.iconTheme;
-            (item.data as IItemData).command = value.command;
+            (item.data as ItemData).command = value.command;
             return item;
           });
         }}

@@ -10,26 +10,26 @@
 
 import i18next from 'i18next';
 
-import { IItemType } from './item-type-registry';
+import { ItemType } from './item-type-registry';
 
-export interface IMacroEvent {
+export type MacroEvent = {
   type: 'keyDown' | 'keyUp';
   delay?: number;
   key?: string;
-}
+};
 
 /**
  * For this type of menu items, the user can configure a macro that will be typed when the
  * item is clicked. If the `delayed` flag is set, the macro will be typed after the Kando
  * window has been closed.
  */
-export interface IItemData {
-  macro: IMacroEvent[];
+export type ItemData = {
+  macro: MacroEvent[];
   delayed: boolean;
-}
+};
 
 /** This class provides meta information for menu items that simulate a macro. */
-export class MacroItemType implements IItemType {
+export class MacroItemType implements ItemType {
   get hasChildren(): boolean {
     return false;
   }
@@ -46,7 +46,7 @@ export class MacroItemType implements IItemType {
     return 'kando';
   }
 
-  get defaultData(): IItemData {
+  get defaultData(): ItemData {
     return {
       macro: [],
       delayed: true,

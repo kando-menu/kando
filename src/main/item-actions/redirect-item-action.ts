@@ -8,13 +8,13 @@
 // SPDX-FileCopyrightText: yar2001T <https://github.com/yar2000T>
 // SPDX-License-Identifier: MIT
 
-import { IMenuItem } from '../../common/index';
-import { IItemAction } from './item-action-registry';
+import { MenuItem } from '../../common/index';
+import { ItemAction } from './item-action-registry';
 import { DeepReadonly } from '../settings';
-import { IItemData } from '../../common/item-types/redirect-item-type';
+import { ItemData } from '../../common/item-types/redirect-item-type';
 import { KandoApp } from '../app';
 
-export class RedirectItemAction implements IItemAction {
+export class RedirectItemAction implements ItemAction {
   /**
    * Redirects are always opened immediately.
    *
@@ -31,8 +31,8 @@ export class RedirectItemAction implements IItemAction {
    * @param app The app which executed the action.
    * @returns A promise which resolves when the macro has been successfully simulated.
    */
-  async execute(item: DeepReadonly<IMenuItem>, app: KandoApp) {
-    const menu = (item.data as IItemData).menu;
+  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
+    const menu = (item.data as ItemData).menu;
 
     if (menu === '') {
       throw new Error('Menu name should not be empty!');

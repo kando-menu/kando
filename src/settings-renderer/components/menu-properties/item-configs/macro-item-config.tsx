@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { RandomTip, MacroPicker, Checkbox } from '../../common';
-import { IItemData } from '../../../../common/item-types/macro-item-type';
+import { ItemData } from '../../../../common/item-types/macro-item-type';
 
 /**
  * The configuration component for macro items is text area with a record button next to
@@ -31,7 +31,7 @@ export default () => {
     return <></>;
   }
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -41,7 +41,7 @@ export default () => {
         initialValue={data.macro}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).macro = value;
+            (item.data as ItemData).macro = value;
             return item;
           });
         }}
@@ -52,7 +52,7 @@ export default () => {
         initialValue={data.delayed}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            (item.data as IItemData).delayed = value;
+            (item.data as ItemData).delayed = value;
             return item;
           });
         }}

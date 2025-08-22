@@ -20,7 +20,7 @@ import ThemedIcon from './ThemedIcon';
 import * as classes from './GridIconPicker.module.scss';
 const cx = classNames.bind(classes);
 
-interface IProps {
+type Props = {
   /** Function to call whenever a new icon is selected. */
   onChange?: (icon: string) => void;
 
@@ -41,7 +41,7 @@ interface IProps {
 
   /** The current filter term. Only icons matching this will be shown. */
   filterTerm: string;
-}
+};
 
 /**
  * An icon picker which shows a virtualized grid of icons. Icons are only shown when they
@@ -53,7 +53,7 @@ interface IProps {
  * @param props - The properties for the icon picker component.
  * @returns A grid icon picker element.
  */
-export default function GridIconPicker(props: IProps) {
+export default function GridIconPicker(props: Props) {
   const [gridInstance, setGridInstance] = React.useState<Grid | null>(null);
 
   // Listing the icons is expensive, so we only do it when the theme or filter term
@@ -69,13 +69,13 @@ export default function GridIconPicker(props: IProps) {
     (icon) => icon === props.selectedIcon
   );
 
-  interface ICellProps {
+  type CellProps = {
     style: React.CSSProperties;
     rowIndex: number;
     columnIndex: number;
-  }
+  };
 
-  const cell: React.FC<ICellProps> = ({ style, columnIndex, rowIndex }) => {
+  const cell: React.FC<CellProps> = ({ style, columnIndex, rowIndex }) => {
     const index = rowIndex * columns + columnIndex;
 
     if (index >= fetchedIcons.icons.length) {

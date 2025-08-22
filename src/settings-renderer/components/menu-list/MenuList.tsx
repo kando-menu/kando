@@ -24,7 +24,7 @@ import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
 
 /** For rendering the menus, a list of these objects is created. */
-interface IRenderedMenu {
+type RenderedMenu = {
   /** A unique key for react. */
   key: string;
 
@@ -42,7 +42,7 @@ interface IRenderedMenu {
 
   /** The theme from which the above icon should be used. */
   iconTheme: string;
-}
+};
 
 /**
  * This is a vertical list of buttons, one for each configured menu. They can be reordered
@@ -90,7 +90,7 @@ export default function MenuList() {
     const shortcut =
       (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) ||
       i18next.t('settings.not-bound');
-    const renderedMenu: IRenderedMenu = {
+    const renderedMenu: RenderedMenu = {
       key: menu.name + menu.icon + menu.iconTheme + shortcut,
       index,
       name: menu.name,

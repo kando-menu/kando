@@ -12,7 +12,7 @@ import React from 'react';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
 import { Dropdown } from '../../common';
-import { IItemData } from '../../../../common/item-types/redirect-item-type';
+import { ItemData } from '../../../../common/item-types/redirect-item-type';
 
 /**
  * The configuration component for redirect items is primarily a text input field for the
@@ -36,7 +36,7 @@ export default () => {
     return { value: name, label: name };
   });
 
-  const data = selectedItem.data as IItemData;
+  const data = selectedItem.data as ItemData;
 
   return (
     <>
@@ -49,7 +49,7 @@ export default () => {
             item.name = menu?.root.name || '';
             item.icon = menu?.root.icon || '';
             item.iconTheme = menu?.root.iconTheme || '';
-            (item.data as IItemData).menu = menuName;
+            (item.data as ItemData).menu = menuName;
             return item;
           });
         }}
