@@ -25,7 +25,8 @@ import { SystemTheme } from './system-theme';
  * used in the application. The icon theme provides a method to list all icons that match
  * a given search term.
  */
-export type IconTheme = {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export interface IconTheme {
   /** A human-readable name of the icon theme. */
   name: string;
 
@@ -58,7 +59,7 @@ export type IconTheme = {
      */
     listIcons?: (searchTerm: string) => Array<string>;
   };
-};
+}
 
 /**
  * This class is a registry that contains all available icon themes. It is a singleton

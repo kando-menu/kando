@@ -28,7 +28,8 @@ import { SettingsItemType } from './settings-item-type';
  * should implement this interface. You can find the implementations in the `item-types`
  * directory.
  */
-export type ItemType = {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export interface ItemType {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
 
@@ -49,7 +50,7 @@ export type ItemType = {
    * shown in the add-new-item tab of the toolbar.
    */
   genericDescription: string;
-};
+}
 
 /**
  * This singleton class is a registry for all available menu item types. It is used to
