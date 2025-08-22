@@ -41,6 +41,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - The verification of the settings files. `config.json` and `menus.json` are now properly verified against a schema. Before, no type checks where performed which could lead to issues. Now, if they are not valid, Kando will refuse to start and print an error message. This is a first step towards importing, exporting, and sharing menu files with the community. I hope that your settings files are all valid, but if you encounter any issues, please report them!
 - The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
+- Improved the readability of the source code by using `type` and `interface` in a more consistent manner. Thanks to [@LitoMore](https://github.com/LitoMore) for working on this!
 - Updated Electron to version 34.
 
 ### :bug: Fixed
