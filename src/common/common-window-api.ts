@@ -177,5 +177,5 @@ export const COMMON_WINDOW_API = {
  * `menu/menu-window-api.ts` and `settings/settings-window-api.ts` for more information.
  */
 export type WindowWithAPIs = {
-  commonAPI: typeof COMMON_WINDOW_API;
+  readonly commonAPI: typeof COMMON_WINDOW_API;
 } & Window;

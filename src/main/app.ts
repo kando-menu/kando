@@ -317,11 +317,14 @@ export class KandoApp {
     // If a menu is already shown, we do not need the window information from the backend
     // as now Kando will be in focus. We use the old information instead.
     if (this.lastWMInfo && this.menuWindow.isVisible()) {
-      wmInfo.appName = this.lastWMInfo.appName;
-      wmInfo.windowName = this.lastWMInfo.windowName;
+      this.lastWMInfo = {
+        ...this.lastWMInfo,
+        appName: this.lastWMInfo.appName,
+        windowName: this.lastWMInfo.windowName,
+      };
+    } else {
+      this.lastWMInfo = wmInfo;
     }
-
-    this.lastWMInfo = wmInfo;
 
     try {
       this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);

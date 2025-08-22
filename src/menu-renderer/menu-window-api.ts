@@ -122,6 +122,6 @@ export const MENU_WINDOW_API = {
  * contain all functions that can be called by the renderer process.
  */
 export type WindowWithAPIs = {
-  commonAPI: typeof COMMON_WINDOW_API;
-  menuAPI: typeof MENU_WINDOW_API;
+  readonly commonAPI: typeof COMMON_WINDOW_API;
+  readonly menuAPI: typeof MENU_WINDOW_API;
 } & Window;
