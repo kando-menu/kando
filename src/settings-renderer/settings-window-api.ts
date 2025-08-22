@@ -115,6 +115,6 @@ export const SETTINGS_WINDOW_API = {
  * contain all functions that can be called by the renderer process.
  */
 export type WindowWithAPIs = {
-  commonAPI: typeof COMMON_WINDOW_API;
-  settingsAPI: typeof SETTINGS_WINDOW_API;
+  readonly commonAPI: typeof COMMON_WINDOW_API;
+  readonly settingsAPI: typeof SETTINGS_WINDOW_API;
 } & Window;
