@@ -83,7 +83,7 @@ export const COMMON_WINDOW_API = {
     get: function (): Promise<MenuSettings> {
       return ipcRenderer.invoke('common.menu-settings-get');
     },
-    set: function (data: MenuSettings): void {
+    set: function (data: Partial<MenuSettings>): void {
       ipcRenderer.send('common.menu-settings-set', data);
     },
     onChange: function (
