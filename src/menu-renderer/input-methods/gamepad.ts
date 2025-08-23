@@ -163,7 +163,11 @@ export class Gamepad extends EventEmitter {
    */
   private onButtonChange(gamepadIndex: number, buttonIndex: number) {
     const pressed = this.gamepadStates[gamepadIndex].buttons[buttonIndex].pressed;
-    this.emit(pressed ? 'buttondown' : 'buttonup', buttonIndex, this.lastStickPosition);
+    this.emit(
+      pressed ? 'buttondown' : 'buttonup',
+      buttonIndex,
+      this.gamepadStates[gamepadIndex].lastStickPosition
+    );
   }
 
   /**
