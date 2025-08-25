@@ -17,31 +17,31 @@ import * as classes from './Dropdown.module.scss';
 
 type Props<T extends string> = {
   /** Function to call when the selected option changes. */
-  onChange?: (value: T) => void;
+  readonly onChange?: (value: T) => void;
 
   /**
    * Array of options to display in the dropdown. Each option has a value and a label.
    * Both the values here and the initialValue of the component must use the same type.
    */
-  options: { value: T; label: string }[];
+  readonly options: { value: T; label: string }[];
 
   /** Initial value of the dropdown. */
-  initialValue: T;
+  readonly initialValue: T;
 
   /** Optional label text to display next to the dropdown. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional additional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Whether the dropdown is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 
   /** Optional minimum width of the dropdown. */
-  minWidth?: number;
+  readonly minWidth?: number;
 
   /** Optional maximum width of the dropdown. */
-  maxWidth?: number;
+  readonly maxWidth?: number;
 };
 
 /**
@@ -58,7 +58,7 @@ export default function Dropdown<T extends string>(props: Props<T>) {
 
   // Handler to change dropdown value with scroll wheel.
   const handleWheel = (event: WheelEvent) => {
-    if (props.disabled) {
+    if (props.isDisabled) {
       return;
     }
 
@@ -91,21 +91,21 @@ export default function Dropdown<T extends string>(props: Props<T>) {
   });
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow maxWidth={props.maxWidth}>
+    <SettingsRow isGrow info={props.info} label={props.label} maxWidth={props.maxWidth}>
       <select
         ref={selectRef}
         className={classes.select}
-        disabled={props.disabled}
+        disabled={props.isDisabled}
         style={{ minWidth: props.minWidth }}
         value={invalidSelection ? '__invalid__' : props.initialValue}
         onChange={(event) => props.onChange && props.onChange(event.target.value as T)}>
         {
           // If the initial value is invalid, we add a placeholder option.
-          invalidSelection && (
-            <option hidden disabled value="__invalid__">
+          invalidSelection ? (
+            <option disabled hidden value="__invalid__">
               {i18next.t('settings.invalid-dropdown-selection')}
             </option>
-          )
+          ) : null
         }
         {props.options.map((option) => (
           <option key={option.value} value={option.value}>

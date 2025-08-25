@@ -21,16 +21,16 @@ import * as classes from './WindowPicker.module.scss';
 
 type Props = {
   /** Function to call when a new window is selected. */
-  onSelect: (value: string) => void;
+  readonly onSelect: (value: string) => void;
 
   /** Function to call when the dialog should be closed. */
-  onClose: () => void;
+  readonly onClose: () => void;
 
   /** The picking mode. */
-  mode: 'application' | 'title';
+  readonly mode: 'application' | 'title';
 
   /** Visibility of the modal. */
-  visible: boolean;
+  readonly isVisible: boolean;
 };
 
 /**
@@ -46,11 +46,11 @@ export default function WindowPicker(props: Props) {
 
   // Clear the value when the modal is shown.
   React.useEffect(() => {
-    if (props.visible) {
+    if (props.isVisible) {
       setValue(null);
       setTimer(timeout + 1);
     }
-  }, [props.visible]);
+  }, [props.isVisible]);
 
   // Reduce the timer every second.
   React.useEffect(() => {
@@ -99,16 +99,16 @@ export default function WindowPicker(props: Props) {
   };
 
   return (
-    <Modal visible={props.visible} onClose={props.onClose} maxWidth={400}>
+    <Modal isVisible={props.isVisible} maxWidth={400} onClose={props.onClose}>
       <div className={classes.container}>
         <div className={classes.caption}>{getCaption()}</div>
         <div className={classes.recordButton}>
           <Button
-            label={getButtonLabel()}
             icon={<TbStopwatch />}
-            variant="primary"
+            isDisabled={timer <= timeout}
+            label={getButtonLabel()}
             size="large"
-            disabled={timer <= timeout}
+            variant="primary"
             onClick={() => {
               setTimer(5);
             }}
@@ -116,19 +116,19 @@ export default function WindowPicker(props: Props) {
         </div>
         <div className={classes.buttons}>
           <Button
-            label={i18next.t('settings.cancel')}
+            isBlock
             icon={<TbX />}
-            block
+            label={i18next.t('settings.cancel')}
             onClick={() => {
               props.onClose();
             }}
           />
           <Button
+            isBlock
+            icon={<TbCheck />}
+            isDisabled={!value || value === ''}
             label={i18next.t('settings.window-picker-dialog.confirm')}
             variant="primary"
-            disabled={!value || value === ''}
-            icon={<TbCheck />}
-            block
             onClick={() => {
               props.onSelect(value);
               props.onClose();
