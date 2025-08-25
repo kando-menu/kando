@@ -148,7 +148,7 @@ export default function MenuList() {
               <div key="-1" className={classes.message}>
                 <h1>{i18next.t('settings.no-menus')}</h1>
                 <Note>{i18next.t('settings.no-menus-note')}</Note>
-                <Swirl variant="2" marginTop={10} />
+                <Swirl marginTop={10} variant="2" />
               </div>
             )}
             {menus.length > 0 &&
@@ -157,7 +157,7 @@ export default function MenuList() {
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.no-matching-menus')}</h1>
                   <Note>{i18next.t('settings.no-matching-menus-note')}</Note>
-                  <Swirl variant="2" marginTop={10} />
+                  <Swirl marginTop={10} variant="2" />
                 </div>
               )}
             {menus.length > 0 &&
@@ -166,7 +166,7 @@ export default function MenuList() {
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.empty-collection')}</h1>
                   <Note>{i18next.t('settings.empty-collection-note')}</Note>
-                  <Swirl variant="2" marginTop={10} />
+                  <Swirl marginTop={10} variant="2" />
                 </div>
               )}
 
@@ -174,19 +174,14 @@ export default function MenuList() {
               return (
                 <button
                   key={menu.key}
+                  draggable
                   className={cx({
                     menu: true,
                     selected: menu.index === selectedMenu,
                     dragging: dragIndex === menu.index,
                   })}
+                  type="button"
                   onClick={() => selectMenu(menu.index)}
-                  draggable
-                  onDragStart={(event) => {
-                    event.dataTransfer.setData('kando/menu-index', menu.index.toString());
-                    event.dataTransfer.setData('kando/menu', JSON.stringify(menu));
-                    setDragIndex(menu.index);
-                    setDropIndex(menu.index);
-                  }}
                   onDragEnd={() => {
                     moveMenu(dragIndex, dropIndex);
 
@@ -205,42 +200,6 @@ export default function MenuList() {
 
                     setDragIndex(null);
                     setDropIndex(null);
-                  }}
-                  onDragOver={(event) => {
-                    if (
-                      event.dataTransfer.types.includes('kando/menu-index') ||
-                      event.dataTransfer.types.includes('kando/child-path')
-                    ) {
-                      event.preventDefault();
-                    }
-                  }}
-                  onDrop={(event) => {
-                    // If a menu item is dropped on a menu, we need to remove the menu
-                    // item from its current menu and add it to the new menu.
-                    if (
-                      event.dataTransfer.types.includes('kando/child-path') &&
-                      menu.index !== selectedMenu
-                    ) {
-                      const fromPath = JSON.parse(
-                        event.dataTransfer.getData('kando/child-path')
-                      );
-
-                      const toPath = [0];
-
-                      // We have to make sure that the menu item is moved in the drag-end
-                      // event, because else the drag-end event of the dragged menu item
-                      // will not be triggered as it's removed by the moveMenuItem state
-                      // update.
-                      const handleDragEnd = () => {
-                        moveMenuItem(selectedMenu, fromPath, menu.index, toPath);
-                        window.removeEventListener('dragend', handleDragEnd);
-                      };
-
-                      // Attach a one-time event listener for the dragend event.
-                      window.addEventListener('dragend', handleDragEnd);
-
-                      (event.target as HTMLElement).classList.remove(classes.dropping);
-                    }
                   }}
                   onDragEnter={(event) => {
                     // If we are dragging a menu over another menu, we need to set the
@@ -280,6 +239,48 @@ export default function MenuList() {
                       (event.target as HTMLElement).classList.remove(classes.dropping);
                     }
                   }}
+                  onDragOver={(event) => {
+                    if (
+                      event.dataTransfer.types.includes('kando/menu-index') ||
+                      event.dataTransfer.types.includes('kando/child-path')
+                    ) {
+                      event.preventDefault();
+                    }
+                  }}
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData('kando/menu-index', menu.index.toString());
+                    event.dataTransfer.setData('kando/menu', JSON.stringify(menu));
+                    setDragIndex(menu.index);
+                    setDropIndex(menu.index);
+                  }}
+                  onDrop={(event) => {
+                    // If a menu item is dropped on a menu, we need to remove the menu
+                    // item from its current menu and add it to the new menu.
+                    if (
+                      event.dataTransfer.types.includes('kando/child-path') &&
+                      menu.index !== selectedMenu
+                    ) {
+                      const fromPath = JSON.parse(
+                        event.dataTransfer.getData('kando/child-path')
+                      );
+
+                      const toPath = [0];
+
+                      // We have to make sure that the menu item is moved in the drag-end
+                      // event, because else the drag-end event of the dragged menu item
+                      // will not be triggered as it's removed by the moveMenuItem state
+                      // update.
+                      const handleDragEnd = () => {
+                        moveMenuItem(selectedMenu, fromPath, menu.index, toPath);
+                        window.removeEventListener('dragend', handleDragEnd);
+                      };
+
+                      // Attach a one-time event listener for the dragend event.
+                      window.addEventListener('dragend', handleDragEnd);
+
+                      (event.target as HTMLElement).classList.remove(classes.dropping);
+                    }
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === 'Delete' || event.key === 'Backspace') {
                       deleteMenu(menu.index);
@@ -302,32 +303,32 @@ export default function MenuList() {
 
         <div className={classes.floatingButton}>
           <Button
+            isGrouped
             icon={<TbPlus />}
+            size="large"
             tooltip={i18next.t('settings.create-menu-button')}
             variant="floating"
-            size="large"
-            grouped
             onClick={() => {
               addMenu(menuCollections[selectedCollection]?.tags || []);
               selectMenu(menus.length);
             }}
           />
           <Button
+            isGrouped
             icon={<TbCopy />}
+            size="large"
             tooltip={i18next.t('settings.duplicate-menu')}
             variant="floating"
-            size="large"
-            grouped
             onClick={() => {
               duplicateMenu(selectedMenu);
             }}
           />
           <Button
+            isGrouped
             icon={<TbTrash />}
+            size="large"
             tooltip={i18next.t('settings.delete-menu')}
             variant="floating"
-            size="large"
-            grouped
             onClick={() => {
               deleteMenu(selectedMenu);
             }}

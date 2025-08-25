@@ -24,7 +24,7 @@ import { Button, IconChooserButton, TagInput } from '../common';
 
 type Props = {
   /** When the search term changes. */
-  onSearch: (term: string) => void;
+  readonly onSearch: (term: string) => void;
 };
 
 /**
@@ -97,11 +97,11 @@ export default function CollectionDetails(props: Props) {
         showingCollection,
       })}>
       <div className={classes.collectionHeader}>
-        {showingCollection && (
+        {showingCollection ? (
           <IconChooserButton
             grouped
-            iconSize="1.5em"
             icon={menuCollections[selectedCollection]?.icon}
+            iconSize="1.5em"
             theme={menuCollections[selectedCollection]?.iconTheme}
             onChange={(icon, theme) => {
               editCollection(selectedCollection, (collection) => {
@@ -111,20 +111,20 @@ export default function CollectionDetails(props: Props) {
               });
             }}
           />
-        )}
+        ) : null}
         <input
-          type="text"
           className={classes.collectionName}
-          value={collectionName}
           tabIndex={editingCollection ? undefined : -1}
-          onChange={(event) => {
-            setCollectionName(event.target.value);
-          }}
+          type="text"
+          value={collectionName}
           onBlur={() => {
             editCollection(selectedCollection, (collection) => {
               collection.name = collectionName;
               return collection;
             });
+          }}
+          onChange={(event) => {
+            setCollectionName(event.target.value);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
@@ -133,7 +133,7 @@ export default function CollectionDetails(props: Props) {
             }
           }}
         />
-        {!showingCollection && menuSearchBarVisible && (
+        {!showingCollection && menuSearchBarVisible ? (
           <Button
             icon={<TbSearchOff />}
             variant="tool"
@@ -143,7 +143,7 @@ export default function CollectionDetails(props: Props) {
               props.onSearch('');
             }}
           />
-        )}
+        ) : null}
         {!showingCollection && !menuSearchBarVisible && (
           <Button
             icon={<TbSearch />}
@@ -151,29 +151,29 @@ export default function CollectionDetails(props: Props) {
             onClick={() => setMenuSearchBarVisible(true)}
           />
         )}
-        {showingCollection && collectionDetailsVisible && (
+        {showingCollection && collectionDetailsVisible ? (
           <Button
+            isGrouped
             icon={<TbCheck />}
             variant="secondary"
-            grouped
             onClick={() => setCollectionDetailsVisible(false)}
           />
-        )}
-        {showingCollection && !collectionDetailsVisible && (
+        ) : null}
+        {showingCollection && !collectionDetailsVisible ? (
           <Button
             icon={<RiPencilFill />}
             variant="tool"
             onClick={() => setCollectionDetailsVisible(true)}
           />
-        )}
+        ) : null}
       </div>
-      {menuSearchBarVisible && !showingCollection && (
+      {menuSearchBarVisible && !showingCollection ? (
         <div className={classes.collectionDetails}>
           <div className={classes.searchInput}>
             <input
               ref={searchbarRef}
-              type="text"
               placeholder={i18next.t('settings.search-menus-placeholder')}
+              type="text"
               value={filterTerm}
               onChange={(event) => {
                 setFilterTerm(event.target.value);
@@ -181,7 +181,7 @@ export default function CollectionDetails(props: Props) {
               }}
             />
             <Button
-              grouped
+              isGrouped
               icon={<TbBackspaceFilled />}
               onClick={() => {
                 setFilterTerm('');
@@ -190,8 +190,8 @@ export default function CollectionDetails(props: Props) {
             />
           </div>
         </div>
-      )}
-      {editingCollection && (
+      ) : null}
+      {editingCollection ? (
         <div className={classes.collectionDetails}>
           <TagInput
             tags={filterTags}
@@ -204,7 +204,7 @@ export default function CollectionDetails(props: Props) {
             }}
           />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

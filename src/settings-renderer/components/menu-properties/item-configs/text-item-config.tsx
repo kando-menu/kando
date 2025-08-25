@@ -25,7 +25,7 @@ export default () => {
 
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'text') {
-    return <></>;
+    return null;
   }
 
   const data = selectedItem.data as ItemData;
@@ -33,9 +33,9 @@ export default () => {
   return (
     <>
       <TextInput
-        placeholder={i18next.t('menu-items.text.placeholder')}
         multiline
         initialValue={data.text}
+        placeholder={i18next.t('menu-items.text.placeholder')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).text = value;

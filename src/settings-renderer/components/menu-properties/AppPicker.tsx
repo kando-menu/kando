@@ -20,13 +20,13 @@ import * as classes from './AppPicker.module.scss';
 
 type Props = {
   /** Function to call when a new window is selected. */
-  onSelect: (value: AppDescription) => void;
+  readonly onSelect: (value: AppDescription) => void;
 
   /** Function to call when the dialog should be closed. */
-  onClose: () => void;
+  readonly onClose: () => void;
 
   /** Visibility of the modal. */
-  visible: boolean;
+  readonly isVisible: boolean;
 };
 
 /**
@@ -45,46 +45,50 @@ export default function AppPicker(props: Props) {
 
   // Clear the value when the modal is shown.
   React.useEffect(() => {
-    if (props.visible) {
+    if (props.isVisible) {
       setValue(null);
     }
-  }, [props.visible]);
+  }, [props.isVisible]);
 
   return (
-    <Modal visible={props.visible} onClose={props.onClose} maxWidth={450} paddingTop={15}>
+    <Modal
+      isVisible={props.isVisible}
+      maxWidth={450}
+      paddingTop={15}
+      onClose={props.onClose}>
       <div className={classes.container}>
-        <Note center marginLeft="10%" marginRight="10%" markdown>
+        <Note isCenter isMarkdown marginLeft="10%" marginRight="10%">
           {i18next.t('settings.app-picker.hint')}
         </Note>
 
-        <Swirl variant="2" width={350} marginBottom={10} />
+        <Swirl marginBottom={10} variant="2" width={350} />
         <div className={classes.searchInput}>
           <input
-            type="text"
             placeholder={i18next.t('settings.app-picker.search-placeholder')}
+            type="text"
             value={filterTerm}
             onChange={(event) => {
               setFilterTerm(event.target.value);
             }}
           />
           <Button
-            grouped
+            isGrouped
             icon={<TbBackspaceFilled />}
             onClick={() => {
               setFilterTerm('');
             }}
           />
         </div>
-        <Scrollbox width="100%" paddingLeft={0}>
+        <Scrollbox paddingLeft={0} width="100%">
           <div>
             {filteredApps.map((app) => (
               <Button
                 key={app.id}
-                label={app.name}
-                block
-                variant={app.id === value?.id ? 'secondary' : 'flat'}
+                isBlock
                 align="left"
-                icon={<ThemedIcon name={app.icon} theme={app.iconTheme} size={24} />}
+                icon={<ThemedIcon name={app.icon} size={24} theme={app.iconTheme} />}
+                label={app.name}
+                variant={app.id === value?.id ? 'secondary' : 'flat'}
                 onClick={() => {
                   setValue(app);
                 }}
@@ -94,19 +98,19 @@ export default function AppPicker(props: Props) {
         </Scrollbox>
         <div className={classes.buttons}>
           <Button
-            label={i18next.t('settings.cancel')}
+            isBlock
             icon={<TbX />}
-            block
+            label={i18next.t('settings.cancel')}
             onClick={() => {
               props.onClose();
             }}
           />
           <Button
+            isBlock
+            icon={<TbCheck />}
+            isDisabled={!value}
             label={i18next.t('settings.app-picker.use-selected')}
             variant="primary"
-            disabled={!value}
-            icon={<TbCheck />}
-            block
             onClick={() => {
               props.onSelect(value);
               props.onClose();

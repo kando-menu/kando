@@ -25,16 +25,16 @@ type Props = {
    * Function to call when the value changes. This will be called when the user recorded a
    * new macro or clicked outside of the text field.
    */
-  onChange?: (events: MacroEvent[]) => void;
+  readonly onChange?: (events: MacroEvent[]) => void;
 
   /** Initial value of the macro picker. */
-  initialValue: MacroEvent[];
+  readonly initialValue: MacroEvent[];
 
   /** Placeholder text to display when the macro picker is not recording. */
-  placeholder?: string;
+  readonly placeholder?: string;
 
   /** Placeholder text to display when the macro picker is recording. */
-  recordingPlaceholder?: string;
+  readonly recordingPlaceholder?: string;
 };
 
 /**
@@ -59,10 +59,27 @@ export default function MacroPicker(props: Props) {
     <div className={classes.macroPicker}>
       <textarea
         ref={inputRef}
-        spellCheck="false"
         className={cx({ recording, invalid: !convertToMacro(textValue) })}
-        value={textValue}
         placeholder={recording ? props.recordingPlaceholder : props.placeholder}
+        spellCheck="false"
+        value={textValue}
+        onBlur={(event) => {
+          // If the user clicked the record button, the next focused element is the
+          // button. In this case, we ignore this event and handle stopping the
+          // recording in the button's onClick handler.
+          if (event.relatedTarget) {
+            return;
+          }
+
+          if (recording) {
+            setRecording(false);
+          }
+
+          const macro = convertToMacro(textValue);
+          if (macro) {
+            props.onChange?.(macro);
+          }
+        }}
         onChange={(event) => {
           if (!recording) {
             const start = event.target.selectionStart;
@@ -90,28 +107,11 @@ export default function MacroPicker(props: Props) {
             event.preventDefault();
           }
         }}
-        onBlur={(event) => {
-          // If the user clicked the record button, the next focused element is the
-          // button. In this case, we ignore this event and handle stopping the
-          // recording in the button's onClick handler.
-          if (event.relatedTarget) {
-            return;
-          }
-
-          if (recording) {
-            setRecording(false);
-          }
-
-          const macro = convertToMacro(textValue);
-          if (macro) {
-            props.onChange?.(macro);
-          }
-        }}
       />
       <Button
-        variant="secondary"
         grouped
         icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
+        variant="secondary"
         onClick={() => {
           if (recording) {
             const macro = convertToMacro(textValue);

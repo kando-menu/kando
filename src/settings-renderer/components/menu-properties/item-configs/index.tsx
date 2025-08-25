@@ -39,5 +39,5 @@ export function getConfigComponent(type: string): React.ReactElement {
     settings: <SettingsItemConfig />,
   };
 
-  return components[type] || <></>;
+  return components[type] || null;
 }

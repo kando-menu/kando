@@ -49,13 +49,13 @@ export default function IntroDialog() {
     return (
       <>
         <video
-          className={classes.fullSize}
-          src={require(`../../../../assets/videos/introduction-${videoNumber}.mp4`)}
           autoPlay
           loop
+          className={classes.fullSize}
+          src={require(`../../../../assets/videos/introduction-${videoNumber}.mp4`)}
         />
         <div className={classes.caption}>
-          <Note markdown style="normal" center>
+          <Note center markdown noteStyle="normal">
             {text}
           </Note>
         </div>
@@ -68,46 +68,47 @@ export default function IntroDialog() {
       <div className={classes.pagination}>
         {Array.from({ length }, (_, i) => (
           <div
+            key={i}
+            className={cx({
+              dot: true,
+              activeDot: i === index,
+            })}
             onClick={() => {
               setActiveIndex(i);
               if (swiperRef.current && swiperRef.current.swiper) {
                 swiperRef.current.swiper.slideTo(i);
               }
             }}
-            key={i}
-            className={cx({
-              dot: true,
-              activeDot: i === index,
-            })}></div>
+          />
         ))}
       </div>
     );
   };
 
   const slides = [
-    <>
-      <Note style="hero" center marginLeft={'10%'} marginRight={'10%'}>
+    <React.Fragment key="slide1">
+      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide1-title')}
       </Note>
-      <Swirl variant="2" marginTop={10} marginBottom={20} width={350} />
-      <Note style="normal" center marginLeft={'10%'} marginRight={'10%'}>
+      <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
+      <Note center marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide1-text')}
       </Note>
-    </>,
-    <>
-      <Note style="hero" center marginLeft={'10%'} marginRight={'10%'}>
+    </React.Fragment>,
+    <React.Fragment key="slide2">
+      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide2-title')}
       </Note>
-      <Swirl variant="2" marginTop={10} marginBottom={20} width={350} />
-      <Note style="normal" center markdown marginLeft={'10%'} marginRight={'10%'}>
+      <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
+      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {backend.supportsShortcuts
           ? i18next.t('settings.introduction-dialog.slide2-text-standard')
           : i18next.t('settings.introduction-dialog.slide2-text-no-shortcuts', {
               link: 'https://kando.menu/installation-on-linux/#desktop-specifics',
             })}
       </Note>
-    </>,
-    <>
+    </React.Fragment>,
+    <React.Fragment key="slide3">
       <img
         className={classes.fullSize}
         src={require('../../../../assets/images/tutorial-1.svg')}
@@ -119,13 +120,13 @@ export default function IntroDialog() {
         {i18next.t('settings.introduction-dialog.slide3-hint2')}
       </div>
       <div className={classes.caption}>
-        <Note markdown style="normal" center>
+        <Note center markdown noteStyle="normal">
           {i18next.t('settings.introduction-dialog.slide3-text')}
         </Note>
       </div>
-    </>,
+    </React.Fragment>,
     makeVideoSlide(1, i18next.t('settings.introduction-dialog.slide4-text')),
-    <>
+    <React.Fragment key="slide5">
       <img
         className={classes.fullSize}
         src={require('../../../../assets/images/tutorial-2.svg')}
@@ -134,62 +135,62 @@ export default function IntroDialog() {
         {i18next.t('settings.introduction-dialog.slide5-hint')}
       </div>
       <div className={classes.caption}>
-        <Note markdown style="normal" center>
+        <Note center markdown noteStyle="normal">
           {i18next.t('settings.introduction-dialog.slide5-text')}
         </Note>
       </div>
-    </>,
+    </React.Fragment>,
     makeVideoSlide(2, i18next.t('settings.introduction-dialog.slide6-text')),
-    <>
-      <Note style="hero" center marginLeft={'10%'} marginRight={'10%'}>
+    <React.Fragment key="slide7">
+      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide7-title')}
       </Note>
-      <Swirl variant="2" marginTop={10} marginBottom={20} width={350} />
-      <Note style="normal" markdown center marginLeft={'10%'} marginRight={'10%'}>
+      <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
+      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide7-text')}
       </Note>
-    </>,
+    </React.Fragment>,
     makeVideoSlide(3, i18next.t('settings.introduction-dialog.slide8-text')),
-    <>
-      <Note style="hero" center marginLeft={'10%'} marginRight={'10%'}>
+    <React.Fragment key="slide9">
+      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide9-title')}
       </Note>
-      <Swirl variant="2" marginTop={10} marginBottom={20} width={350} />
-      <Note style="normal" markdown center marginLeft={'10%'} marginRight={'10%'}>
+      <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
+      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide9-text')}
       </Note>
-    </>,
+    </React.Fragment>,
     makeVideoSlide(4, i18next.t('settings.introduction-dialog.slide10-text')),
     makeVideoSlide(5, i18next.t('settings.introduction-dialog.slide11-text')),
-    <>
-      <Note style="hero" center marginLeft={'10%'} marginRight={'10%'}>
+    <React.Fragment key="slide12">
+      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide12-title')}
       </Note>
-      <Swirl variant="2" marginTop={10} marginBottom={20} width={350} />
-      <Note style="normal" markdown center marginLeft={'10%'} marginRight={'10%'}>
+      <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
+      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide12-text', {
           link1: 'https://kando.menu/menu-themes',
           link2: 'https://kando.menu/icon-themes',
           link3: 'https://kando.menu/sound-themes',
         })}
       </Note>
-    </>,
-    <>
-      <Swirl variant="4" marginBottom={10} width={250} />
+    </React.Fragment>,
+    <React.Fragment key="slide13">
+      <Swirl marginBottom={10} variant="4" width={250} />
       <Note
-        style="big"
-        markdown
         center
+        markdown
+        marginLeft="10%"
+        marginRight="10%"
         marginTop={10}
-        marginLeft={'10%'}
-        marginRight={'10%'}>
+        noteStyle="big">
         {i18next.t('settings.introduction-dialog.slide13-text', {
           link1: 'https://discord.gg/hZwbVSDkhy',
           link2: 'https://kando.menu',
         })}
       </Note>
-      <Swirl variant="3" marginTop={10} width={250} />
-    </>,
+      <Swirl marginTop={10} variant="3" width={250} />
+    </React.Fragment>,
   ];
 
   // Define chapter names and their corresponding slide indices
@@ -203,11 +204,11 @@ export default function IntroDialog() {
 
   return (
     <Modal
-      title={i18next.t('settings.introduction-dialog.title')}
       icon={<IoSchool />}
+      maxWidth={950}
+      title={i18next.t('settings.introduction-dialog.title')}
       visible={introDialogVisible}
-      onClose={() => setIntroDialogVisible(false)}
-      maxWidth={950}>
+      onClose={() => setIntroDialogVisible(false)}>
       <div className={classes.container}>
         <div className={classes.sidebar}>
           <ol>
@@ -237,18 +238,18 @@ export default function IntroDialog() {
           </div>
         </div>
         <Swiper
-          effect={'cards'}
-          grabCursor={true}
+          ref={swiperRef}
+          grabCursor
           pagination
-          modules={[EffectCards]}
           className={classes.swiper}
-          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+          effect="cards"
           initialSlide={activeIndex}
-          ref={swiperRef}>
-          {slides.map((slide, i) => (
-            <SwiperSlide key={i} className={classes.slide}>
+          modules={[EffectCards]}
+          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}>
+          {slides.map((slide, index) => (
+            <SwiperSlide key={`${String(index)}`} className={classes.slide}>
               {slide}
-              {makePagination(slides.length, i)}
+              {makePagination(slides.length, index)}
             </SwiperSlide>
           ))}
         </Swiper>

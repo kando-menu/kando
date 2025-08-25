@@ -21,31 +21,31 @@ type Props = {
    * Function to call when the value changes. This will be called when the user presses
    * Enter after typing a value, or when the user clicks outside of the text field.
    */
-  onChange?: (value: string) => void;
+  readonly onChange?: (value: string) => void;
 
   /** Initial value of the text input. */
-  initialValue: string;
+  readonly initialValue: string;
 
   /** Optional placeholder text to display when the text input is empty. */
-  placeholder?: string;
+  readonly placeholder?: string;
 
   /** Optional label text to display next to the text input. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Whether the text input is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 
   /** The flat variant has no background color and shows the text centered. */
-  variant?: 'normal' | 'flat';
+  readonly variant?: 'normal' | 'flat';
 
   /**
    * Whether the text input should support multiple lines. In this case, the label will be
    * displayed above the text input.
    */
-  multiline?: boolean;
+  readonly isMultiline?: boolean;
 };
 
 /**
@@ -63,18 +63,18 @@ export default function TextInput(props: Props) {
 
   return (
     <>
-      <SettingsRow label={props.label} info={props.info} grow>
-        {!props.multiline && (
+      <SettingsRow isGrow info={props.info} label={props.label}>
+        {!props.isMultiline && (
           <input
             className={cx({
               input: true,
               flat: props.variant === 'flat',
             })}
-            type="text"
-            spellCheck="false"
-            disabled={props.disabled}
-            value={value}
+            disabled={props.isDisabled}
             placeholder={props.placeholder}
+            spellCheck="false"
+            type="text"
+            value={value}
             onBlur={() => props.onChange?.(value)}
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={(event) => {
@@ -85,20 +85,20 @@ export default function TextInput(props: Props) {
           />
         )}
       </SettingsRow>
-      {props.multiline && (
+      {props.isMultiline ? (
         <textarea
           className={cx({
             input: true,
             flat: props.variant === 'flat',
           })}
-          spellCheck="false"
-          disabled={props.disabled}
-          value={value}
+          disabled={props.isDisabled}
           placeholder={props.placeholder}
+          spellCheck="false"
+          value={value}
           onBlur={() => props.onChange?.(value)}
           onChange={(event) => setValue(event.target.value)}
         />
-      )}
+      ) : null}
     </>
   );
 }

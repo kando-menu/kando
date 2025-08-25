@@ -27,20 +27,20 @@ export default function PreviewFooter() {
   return (
     <div className={classes.itemArea}>
       <div className={classes.header}>
-        <div className={classes.leftLine}></div>
+        <div className={classes.leftLine} />
         <div className={classes.title}>{i18next.t('settings.add-menu-items')}</div>
-        <div className={classes.rightLine}></div>
+        <div className={classes.rightLine} />
       </div>
-      <div className={classes.shadow}></div>
+      <div className={classes.shadow} />
       <div className={classes.newItems}>
         {allItemTypes.map(([name, type]) => (
           <FooterButton
             key={name}
-            id={name}
-            name={type.defaultName}
             description={type.genericDescription}
             icon={type.defaultIcon}
             iconTheme={type.defaultIconTheme}
+            id={name}
+            name={type.defaultName}
           />
         ))}
       </div>

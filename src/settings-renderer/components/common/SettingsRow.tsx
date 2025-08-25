@@ -18,28 +18,28 @@ const cx = classNames.bind(classes);
 
 type Props = {
   /** The widget on the right side. */
-  children?: React.ReactNode;
+  readonly children?: React.ReactNode;
 
   /** Optional label text to display on the left hand side. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /**
    * If set to true, the settings row will be wrapped inside a label element so that
    * clicking the label will focus the widget. Defaults to false.
    */
-  labelClickable?: boolean;
+  readonly isLabelClickable?: boolean;
 
   /** If set to true, the widget will grow if there is space available. Defaults to false. */
-  grow?: boolean;
+  readonly isGrow?: boolean;
 
   /** The maximum width the widget can grow to. */
-  maxWidth?: number;
+  readonly maxWidth?: number;
 
   /** Whether the widget is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 };
 
 /**
@@ -51,25 +51,25 @@ type Props = {
  */
 export default function SettingsRow(props: Props) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const Element = props.labelClickable ? 'label' : 'div';
+  const Element = props.isLabelClickable ? 'label' : 'div';
 
   return (
     <Element
       className={cx({
         row: true,
-        clickable: props.labelClickable,
-        disabled: props.disabled,
+        clickable: props.isLabelClickable,
+        disabled: props.isDisabled,
       })}>
-      {(props.label || props.info) && (
+      {props.label || props.info ? (
         <div className={classes.labelContainer}>
           <span className={classes.label}>{props.label}</span>&nbsp;
-          {props.info && <InfoItem info={props.info} />}
+          {props.info ? <InfoItem info={props.info} /> : null}
         </div>
-      )}
+      ) : null}
       <div
         className={cx({
           widget: true,
-          grow: props.grow,
+          grow: props.isGrow,
         })}
         style={{
           maxWidth: props.maxWidth ? `${props.maxWidth}px` : 'undefined',

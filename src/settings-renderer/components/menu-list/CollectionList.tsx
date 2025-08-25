@@ -98,31 +98,32 @@ export default function CollectionList() {
         <div ref={animatedList}>
           <button
             className={cx({ collection: true, selected: selectedCollection === -1 })}
-            onClick={() => selectCollection(-1)}
-            data-tooltip-id="main-tooltip"
             data-tooltip-content={
               selectedCollection === -1 ? '' : i18next.t('settings.all-menus')
-            }>
+            }
+            data-tooltip-id="main-tooltip"
+            type="button"
+            onClick={() => selectCollection(-1)}>
             <ThemedIcon name="logo-tiny.svg" theme="kando" />
           </button>
           {renderedCollections.map((collection) => (
             <button
               key={collection.key}
+              draggable
               className={cx({
                 collection: true,
                 selected: collection.index === selectedCollection,
                 dragging: dragIndex === collection.index,
               })}
+              data-tooltip-content={
+                collection.index === selectedCollection
+                  ? ''
+                  : collections[collection.index].name
+              }
+              data-tooltip-id="main-tooltip"
+              data-tooltip-place="right"
+              type="button"
               onClick={() => selectCollection(collection.index)}
-              draggable
-              onDragStart={(event) => {
-                event.dataTransfer.setData(
-                  'kando/collection-index',
-                  collection.index.toString()
-                );
-                setDragIndex(collection.index);
-                setDropIndex(collection.index);
-              }}
               onDragEnd={() => {
                 moveCollection(dragIndex, dropIndex);
 
@@ -144,31 +145,6 @@ export default function CollectionList() {
 
                 setDragIndex(null);
                 setDropIndex(null);
-              }}
-              onDragOver={(event) => {
-                if (
-                  event.dataTransfer.types.includes('kando/menu-index') ||
-                  event.dataTransfer.types.includes('kando/collection-index')
-                ) {
-                  event.preventDefault();
-                }
-              }}
-              onDrop={(event) => {
-                if (event.dataTransfer.types.includes('kando/menu-index')) {
-                  const menuIndex = parseInt(
-                    event.dataTransfer.getData('kando/menu-index')
-                  );
-                  const menus = useMenuSettings.getState().menus;
-                  const currentTags = menus[menuIndex]?.tags || [];
-                  const collectionTags =
-                    useMenuSettings.getState().collections[collection.index].tags || [];
-                  const newTags = [...new Set([...currentTags, ...collectionTags])];
-                  editMenu(menuIndex, (menu) => {
-                    menu.tags = newTags;
-                    return menu;
-                  });
-                  (event.target as HTMLElement).classList.remove(classes.dropping);
-                }
               }}
               onDragEnter={(event) => {
                 if (
@@ -199,21 +175,47 @@ export default function CollectionList() {
                   (event.target as HTMLElement).classList.remove(classes.dropping);
                 }
               }}
-              data-tooltip-id="main-tooltip"
-              data-tooltip-content={
-                collection.index === selectedCollection
-                  ? ''
-                  : collections[collection.index].name
-              }
-              data-tooltip-place="right">
+              onDragOver={(event) => {
+                if (
+                  event.dataTransfer.types.includes('kando/menu-index') ||
+                  event.dataTransfer.types.includes('kando/collection-index')
+                ) {
+                  event.preventDefault();
+                }
+              }}
+              onDragStart={(event) => {
+                event.dataTransfer.setData(
+                  'kando/collection-index',
+                  collection.index.toString()
+                );
+                setDragIndex(collection.index);
+                setDropIndex(collection.index);
+              }}
+              onDrop={(event) => {
+                if (event.dataTransfer.types.includes('kando/menu-index')) {
+                  const menuIndex = parseInt(
+                    event.dataTransfer.getData('kando/menu-index')
+                  );
+                  const menus = useMenuSettings.getState().menus;
+                  const currentTags = menus[menuIndex]?.tags || [];
+                  const collectionTags =
+                    useMenuSettings.getState().collections[collection.index].tags || [];
+                  const newTags = [...new Set([...currentTags, ...collectionTags])];
+                  editMenu(menuIndex, (menu) => {
+                    menu.tags = newTags;
+                    return menu;
+                  });
+                  (event.target as HTMLElement).classList.remove(classes.dropping);
+                }
+              }}>
               <ThemedIcon
                 name={collections[collection.index].icon}
                 theme={collections[collection.index].iconTheme}
               />
               <div
                 className={classes.deleteButton}
-                data-tooltip-id="main-tooltip"
                 data-tooltip-content="Delete collection"
+                data-tooltip-id="main-tooltip"
                 onClick={(event) => {
                   event.stopPropagation();
                   deleteCollection(collection.index);
@@ -225,8 +227,9 @@ export default function CollectionList() {
           ))}
           <button
             className={classes.collection + ' ' + classes.transparent}
-            data-tooltip-id="main-tooltip"
             data-tooltip-content={i18next.t('settings.add-collection-tooltip')}
+            data-tooltip-id="main-tooltip"
+            type="button"
             onClick={() => {
               addCollection();
               selectCollection(collections.length);

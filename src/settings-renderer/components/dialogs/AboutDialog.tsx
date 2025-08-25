@@ -35,25 +35,25 @@ export default function AboutDialog() {
 
   return (
     <Modal
-      title={i18next.t('settings.about-dialog.title')}
       icon={<TbHeartFilled />}
+      maxWidth={500}
+      title={i18next.t('settings.about-dialog.title')}
       visible={aboutDialogVisible}
-      onClose={() => setAboutDialogVisible(false)}
-      maxWidth={500}>
+      onClose={() => setAboutDialogVisible(false)}>
       <div className={classes.container}>
         <img src={logo} width={128} />
         <Note
-          style="big"
-          markdown
           center
+          markdown
+          marginLeft="10%"
+          marginRight="10%"
           marginTop={10}
-          marginLeft={'10%'}
-          marginRight={'10%'}>
+          noteStyle="big">
           {i18next.t('settings.about-dialog.message', {
             link: 'https://ko-fi.com/schneegans',
           })}
         </Note>
-        <Swirl variant="2" marginTop={30} marginBottom={20} width={350} />
+        <Swirl marginBottom={20} marginTop={30} variant="2" width={350} />
         <div className={classes.footer}>
           <div className={classes.versionInfo}>
             {`${i18next.t('settings.about-dialog.kando-version')}:`}
@@ -76,19 +76,19 @@ export default function AboutDialog() {
           </div>
           <div className={classes.buttons}>
             <Button
-              label={i18next.t('settings.about-dialog.check-latest-release')}
+              isBlock
               icon={<TbExternalLink />}
+              label={i18next.t('settings.about-dialog.check-latest-release')}
               tooltip="https://github.com/kando-menu/kando/releases"
               onClick={() =>
                 window.open('https://github.com/kando-menu/kando/releases', '_blank')
               }
-              block
             />
             <Button
-              label={i18next.t('settings.about-dialog.read-release-notes')}
+              isBlock
               icon={<TbExternalLink />}
+              label={i18next.t('settings.about-dialog.read-release-notes')}
               tooltip="https://github.com/kando-menu/kando/blob/main/docs/changelog.md"
-              block
               onClick={() =>
                 window.open(
                   'https://github.com/kando-menu/kando/blob/main/docs/changelog.md',

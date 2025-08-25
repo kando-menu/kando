@@ -14,19 +14,19 @@ import * as classes from './Headerbar.module.scss';
 
 type Props = {
   /** Content to display on the left side of the header bar. */
-  left?: string | ReactNode;
+  readonly left?: string | ReactNode;
 
   /** Content to display in the center of the header bar. */
-  center?: string | ReactNode;
+  readonly center?: string | ReactNode;
 
   /** Content to display on the right side of the header bar. */
-  right?: string | ReactNode;
+  readonly right?: string | ReactNode;
 
   /** Padding to apply to the left side of the header bar. Defaults to 0. */
-  paddingLeft?: number;
+  readonly paddingLeft?: number;
 
   /** Padding to apply to the right side of the header bar. Defaults to 0. */
-  paddingRight?: number;
+  readonly paddingRight?: number;
 };
 
 /**
