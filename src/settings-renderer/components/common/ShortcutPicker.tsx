@@ -25,25 +25,25 @@ type Props = {
    * Enter after typing a value, or when the user clicks outside of the text field. But
    * only if the shortcut is valid.
    */
-  onChange?: (shortcut: string) => void;
+  readonly onChange?: (shortcut: string) => void;
 
   /** Initial shortcut. */
-  initialValue: string;
+  readonly initialValue: string;
 
   /** Placeholder text to display when the shortcut picker is recording. */
-  recordingPlaceholder: string;
+  readonly recordingPlaceholder: string;
 
   /** Optional label text to display next to the shortcut picker. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /**
    * Whether to record and validate the shortcut as key names or key codes. See the
    * component documentation below for more details.
    */
-  mode: 'key-names' | 'key-codes';
+  readonly mode: 'key-names' | 'key-codes';
 };
 
 /**
@@ -113,17 +113,40 @@ export default function ShortcutPicker(props: Props) {
   };
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow>
+    <SettingsRow grow info={props.info} label={props.label}>
       <div className={classes.shortcutPicker}>
         <input
           ref={inputRef}
-          type="text"
-          spellCheck="false"
           className={cx({ recording, invalid: !isValid(shortcut) })}
-          value={shortcut}
           placeholder={
             recording ? props.recordingPlaceholder : i18next.t('settings.not-bound')
           }
+          spellCheck="false"
+          type="text"
+          value={shortcut}
+          onBlur={(event) => {
+            // If the user clicked the record button, the next focused element is the
+            // button. In this case, we ignore this event and handle stopping the
+            // recording in the button's onClick handler.
+            if (event.relatedTarget) {
+              return;
+            }
+
+            const newShortcut = event.currentTarget.value;
+
+            // If we were not recording, it is allowed that the shortcut is empty. In this
+            // case the shortcut was unbound.
+            if ((newShortcut || !recording) && isValid(newShortcut)) {
+              props.onChange?.(newShortcut);
+            } else {
+              setShortcut(props.initialValue);
+              props.onChange?.(props.initialValue);
+            }
+
+            if (recording) {
+              setRecording(false);
+            }
+          }}
           onChange={(event) => {
             if (!recording) {
               const start = event.target.selectionStart;
@@ -153,34 +176,11 @@ export default function ShortcutPicker(props: Props) {
               event.currentTarget.blur();
             }
           }}
-          onBlur={(event) => {
-            // If the user clicked the record button, the next focused element is the
-            // button. In this case, we ignore this event and handle stopping the
-            // recording in the button's onClick handler.
-            if (event.relatedTarget) {
-              return;
-            }
-
-            const newShortcut = event.currentTarget.value;
-
-            // If we were not recording, it is allowed that the shortcut is empty. In this
-            // case the shortcut was unbound.
-            if ((newShortcut || !recording) && isValid(newShortcut)) {
-              props.onChange?.(newShortcut);
-            } else {
-              setShortcut(props.initialValue);
-              props.onChange?.(props.initialValue);
-            }
-
-            if (recording) {
-              setRecording(false);
-            }
-          }}
         />
         <Button
-          variant="secondary"
           grouped
           icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
+          variant="secondary"
           onClick={() => {
             if (!recording) {
               setShortcut('');

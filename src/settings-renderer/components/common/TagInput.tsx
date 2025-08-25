@@ -22,16 +22,16 @@ import * as classes from './TagInput.module.scss';
 
 type Props = {
   /** The initial tags to display. */
-  tags: string[];
+  readonly tags: string[];
 
   /** Optional label text to display next to the component. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Called when the tags change. */
-  onChange: (tags: string[]) => void;
+  readonly onChange: (tags: string[]) => void;
 };
 
 /**
@@ -74,16 +74,16 @@ export default function TagInput(props: Props) {
   };
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow>
+    <SettingsRow isGrow info={props.info} label={props.label}>
       <div
         ref={containerRef}
-        onFocus={() => {
-          setSuggestionsVisible(true);
-        }}
         onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget)) {
             setSuggestionsVisible(false);
           }
+        }}
+        onFocus={() => {
+          setSuggestionsVisible(true);
         }}>
         <div
           className={classes.input}
@@ -91,9 +91,9 @@ export default function TagInput(props: Props) {
           onClick={focusInput}>
           {props.tags.map((tag, index) => (
             <Tag
-              key={index}
-              name={tag}
+              key={`tag-${String(index)}`}
               icon={<TbX />}
+              name={tag}
               onClick={() => {
                 const newTags = [...props.tags];
                 newTags.splice(index, 1);
@@ -126,13 +126,13 @@ export default function TagInput(props: Props) {
             }}
           />
         </div>
-        {suggestions.length > 0 && suggestionsVisible && (
+        {suggestions.length > 0 && suggestionsVisible ? (
           <div className={classes.suggestions}>
             {suggestions.map((suggestion, index) => (
               <Tag
-                key={index}
-                name={suggestion}
+                key={`suggestion-${String(index)}`}
                 icon={<TbPlus />}
+                name={suggestion}
                 onClick={() => {
                   if (props.tags.includes(suggestion)) {
                     return;
@@ -145,7 +145,7 @@ export default function TagInput(props: Props) {
               />
             ))}
           </div>
-        )}
+        ) : null}
       </div>
     </SettingsRow>
   );

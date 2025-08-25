@@ -16,19 +16,19 @@ import * as classes from './Checkbox.module.scss';
 
 type Props = {
   /** Function to call when the checkbox is toggled. */
-  onChange?: (value: boolean) => void;
+  readonly onChange?: (value: boolean) => void;
 
   /** Initial value of the checkbox. Defaults to false. */
-  initialValue?: boolean;
+  readonly isInitialValue?: boolean;
 
   /** Optional label text to display next to the checkbox. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Whether the checkbox is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 };
 
 /**
@@ -40,15 +40,15 @@ type Props = {
 export default function Checkbox(props: Props) {
   return (
     <SettingsRow
-      label={props.label}
+      isLabelClickable
       info={props.info}
-      labelClickable
-      disabled={props.disabled}>
+      isDisabled={props.isDisabled}
+      label={props.label}>
       <input
-        type="checkbox"
+        checked={props.isInitialValue || false}
         className={classes.checkbox}
-        disabled={props.disabled}
-        checked={props.initialValue || false}
+        disabled={props.isDisabled}
+        type="checkbox"
         onChange={(event) => props.onChange && props.onChange(event.target.checked)}
       />
     </SettingsRow>

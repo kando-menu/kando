@@ -36,20 +36,20 @@ export default function PreviewHeader() {
     return (
       <>
         <Button
-          tooltip={i18next.t('settings.undo')}
-          icon={<IoArrowUndo />}
-          disabled={pastStates.length === 0}
-          onClick={() => useMenuSettings.temporal.getState().undo()}
-          variant="tool"
           grouped
+          disabled={pastStates.length === 0}
+          icon={<IoArrowUndo />}
+          tooltip={i18next.t('settings.undo')}
+          variant="tool"
+          onClick={() => useMenuSettings.temporal.getState().undo()}
         />
         <Button
-          tooltip={i18next.t('settings.redo')}
-          icon={<IoArrowRedo />}
-          disabled={futureStates.length === 0}
-          onClick={() => useMenuSettings.temporal.getState().redo()}
-          variant="tool"
           grouped
+          disabled={futureStates.length === 0}
+          icon={<IoArrowRedo />}
+          tooltip={i18next.t('settings.redo')}
+          variant="tool"
+          onClick={() => useMenuSettings.temporal.getState().redo()}
         />
       </>
     );
@@ -59,34 +59,34 @@ export default function PreviewHeader() {
     <>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip={i18next.t('settings.introduction-dialog.title')}
-          icon={<IoSchool />}
-          onClick={() => setIntroDialogVisible(true)}
-          variant="tool"
           grouped
+          icon={<IoSchool />}
+          tooltip={i18next.t('settings.introduction-dialog.title')}
+          variant="tool"
+          onClick={() => setIntroDialogVisible(true)}
         />
         <Button
-          tooltip={i18next.t('settings.about-dialog.title')}
-          icon={<TbHeartFilled />}
-          onClick={() => setAboutDialogVisible(true)}
-          variant="tool"
           grouped
+          icon={<TbHeartFilled />}
+          tooltip={i18next.t('settings.about-dialog.title')}
+          variant="tool"
+          onClick={() => setAboutDialogVisible(true)}
         />
       </span>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip={i18next.t('settings.menu-themes-dialog.title')}
-          icon={<TbPaletteFilled />}
-          onClick={() => setThemesDialogVisible(true)}
-          variant="tool"
           grouped
+          icon={<TbPaletteFilled />}
+          tooltip={i18next.t('settings.menu-themes-dialog.title')}
+          variant="tool"
+          onClick={() => setThemesDialogVisible(true)}
         />
         <Button
-          tooltip={i18next.t('settings.general-settings-dialog.title')}
-          icon={<TbSettingsFilled />}
-          onClick={() => setSettingsDialogVisible(true)}
-          variant="tool"
           grouped
+          icon={<TbSettingsFilled />}
+          tooltip={i18next.t('settings.general-settings-dialog.title')}
+          variant="tool"
+          onClick={() => setSettingsDialogVisible(true)}
         />
       </span>
       <span>

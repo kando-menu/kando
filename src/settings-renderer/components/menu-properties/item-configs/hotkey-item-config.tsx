@@ -25,7 +25,7 @@ export default () => {
 
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'hotkey') {
-    return <></>;
+    return null;
   }
 
   const data = selectedItem.data as ItemData;
@@ -33,11 +33,11 @@ export default () => {
   return (
     <>
       <ShortcutPicker
-        label={i18next.t('menu-items.hotkey.hotkey')}
         info={i18next.t('menu-items.hotkey.hotkey-info')}
-        recordingPlaceholder={i18next.t('menu-items.hotkey.recording-placeholder')}
-        mode="key-codes"
         initialValue={data.hotkey}
+        label={i18next.t('menu-items.hotkey.hotkey')}
+        mode="key-codes"
+        recordingPlaceholder={i18next.t('menu-items.hotkey.recording-placeholder')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).hotkey = value;
@@ -46,9 +46,9 @@ export default () => {
         }}
       />
       <Checkbox
-        label={i18next.t('menu-items.common.delayed-option')}
         info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
+        label={i18next.t('menu-items.common.delayed-option')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).delayed = value;
