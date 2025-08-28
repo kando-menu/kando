@@ -36,6 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Automatic font-size reduction for the center text!** If the center text is too long to fit into the circle, it will now be automatically reduced in size so it fits.
 - **Backup of the settings on version upgrades!** If you upgrade Kando to a new version, the old application settings and menu configurations will be automatically saved to a backup file. This allows you to restore them if something goes wrong during the upgrade. The backup files are stored in a `backup` directory next to the `config.json` and `menus.json` files.
 - A few Kando logo variants in the built-in Kando icon theme.
+- Many translation updates: Thanks to all the contributors!
 
 ### :wrench: Changed
 
