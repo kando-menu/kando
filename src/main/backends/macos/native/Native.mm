@@ -34,18 +34,28 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
   NSString* execName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
   NSImage*  icon     = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
 
+  if (!name) {
+    name = [[appPath lastPathComponent] stringByDeletingPathExtension];
+  }
+
+  if (!execName) {
+    execName = @"";
+  }
+
   // Create a 64x64 bitmap and draw the icon into it
   NSImage* resizedIcon = [[NSImage alloc] initWithSize:NSMakeSize(64, 64)];
-  [resizedIcon lockFocus];
-  [icon drawInRect:NSMakeRect(0, 0, 64, 64)
-            fromRect:NSZeroRect
-           operation:NSCompositingOperationSourceOver
-            fraction:1.0
-      respectFlipped:YES
-               hints:@{
-                 NSImageHintInterpolation: @(NSImageInterpolationHigh)
-               }];
-  [resizedIcon unlockFocus];
+  if (icon) {
+    [resizedIcon lockFocus];
+    [icon drawInRect:NSMakeRect(0, 0, 64, 64)
+              fromRect:NSZeroRect
+             operation:NSCompositingOperationSourceOver
+              fraction:1.0
+        respectFlipped:YES
+                 hints:@{
+                   NSImageHintInterpolation: @(NSImageInterpolationHigh)
+                 }];
+    [resizedIcon unlockFocus];
+  }
 
   NSData* tiffData = [resizedIcon TIFFRepresentation];
   if (tiffData) {
