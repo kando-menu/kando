@@ -128,7 +128,7 @@ export default function IconChooserButton(props: Props) {
             )}
           </div>
           {getPicker()}
-          <Note isMarkdown marginTop={10}>
+          <Note useMarkdown marginTop={10}>
             {pickerInfo.hint ||
               i18next.t('settings.icon-picker-dialog.hint', {
                 link: 'https://kando.menu/icon-themes/',

@@ -51,8 +51,8 @@ export default function SettingsCheckbox<K extends BooleanKeys<GeneralSettings>>
   return (
     <Checkbox
       info={props.info}
+      initialValue={state}
       isDisabled={props.isDisabled}
-      isInitialValue={state}
       label={props.label}
       onChange={setState}
     />

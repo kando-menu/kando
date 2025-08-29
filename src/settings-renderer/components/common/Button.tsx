@@ -50,7 +50,7 @@ type Props = {
    * Whether the button should grow to fill available space. Uses flex-grow and defaults
    * to false.
    */
-  readonly isGrow?: boolean;
+  readonly isGrowing?: boolean;
 
   /**
    * Whether the button is part of a group of buttons. This will make the corners of only
@@ -74,7 +74,7 @@ export default function Button(props: Props) {
     disabled: props.isDisabled,
     grouped: props.isGrouped,
     block: props.isBlock,
-    grow: props.isGrow,
+    grow: props.isGrowing,
   });
 
   return (

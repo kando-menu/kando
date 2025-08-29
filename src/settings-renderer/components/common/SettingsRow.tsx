@@ -33,7 +33,7 @@ type Props = {
   readonly isLabelClickable?: boolean;
 
   /** If set to true, the widget will grow if there is space available. Defaults to false. */
-  readonly isGrow?: boolean;
+  readonly isGrowing?: boolean;
 
   /** The maximum width the widget can grow to. */
   readonly maxWidth?: number;
@@ -69,7 +69,7 @@ export default function SettingsRow(props: Props) {
       <div
         className={cx({
           widget: true,
-          grow: props.isGrow,
+          grow: props.isGrowing,
         })}
         style={{
           maxWidth: props.maxWidth ? `${props.maxWidth}px` : 'undefined',

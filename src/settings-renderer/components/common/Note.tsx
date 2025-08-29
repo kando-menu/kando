@@ -23,7 +23,7 @@ type Props = {
   readonly noteStyle?: 'hero' | 'big' | 'normal' | 'small';
 
   /** Whether the text should be centered. Defaults to false. */
-  readonly isCenter?: boolean;
+  readonly isCentered?: boolean;
 
   /** Margin to apply to the top of the note. Defaults to 0. */
   readonly marginTop?: number | string;
@@ -38,7 +38,7 @@ type Props = {
   readonly marginRight?: number | string;
 
   /** Whether to use markdown formatting. Defaults to false. */
-  readonly isMarkdown?: boolean;
+  readonly useMarkdown?: boolean;
 
   /**
    * Callback function to execute when a link is clicked. IF not given, the link will be
@@ -70,7 +70,7 @@ export default function Note(props: Props) {
         big: props.noteStyle === 'big',
         normal: props.noteStyle === 'normal',
         small: !props.noteStyle || props.noteStyle === 'small',
-        center: props.isCenter,
+        center: props.isCentered,
       })}
       style={{
         marginTop: props.marginTop || 0,
@@ -78,7 +78,7 @@ export default function Note(props: Props) {
         marginLeft: props.marginLeft || 0,
         marginRight: props.marginRight || 0,
       }}>
-      {props.isMarkdown ? (
+      {props.useMarkdown ? (
         <Markdown
           components={{
             a: ({ href, children }) => (
