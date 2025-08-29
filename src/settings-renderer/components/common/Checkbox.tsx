@@ -19,7 +19,7 @@ type Props = {
   readonly onChange?: (value: boolean) => void;
 
   /** Initial value of the checkbox. Defaults to false. */
-  readonly isInitialValue?: boolean;
+  readonly initialValue?: boolean;
 
   /** Optional label text to display next to the checkbox. */
   readonly label?: string;
@@ -45,7 +45,7 @@ export default function Checkbox(props: Props) {
       isDisabled={props.isDisabled}
       label={props.label}>
       <input
-        checked={props.isInitialValue || false}
+        checked={props.initialValue || false}
         className={classes.checkbox}
         disabled={props.isDisabled}
         type="checkbox"

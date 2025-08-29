@@ -74,7 +74,7 @@ export default function TagInput(props: Props) {
   };
 
   return (
-    <SettingsRow isGrow info={props.info} label={props.label}>
+    <SettingsRow isGrowing info={props.info} label={props.label}>
       <div
         ref={containerRef}
         onBlur={(event) => {

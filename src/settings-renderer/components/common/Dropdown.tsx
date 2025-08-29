@@ -91,7 +91,11 @@ export default function Dropdown<T extends string>(props: Props<T>) {
   });
 
   return (
-    <SettingsRow isGrow info={props.info} label={props.label} maxWidth={props.maxWidth}>
+    <SettingsRow
+      isGrowing
+      info={props.info}
+      label={props.label}
+      maxWidth={props.maxWidth}>
       <select
         ref={selectRef}
         className={classes.select}

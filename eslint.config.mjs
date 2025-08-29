@@ -32,6 +32,10 @@ export default defineConfig([
       },
     },
     rules: {
+      'react/boolean-prop-naming': [
+        'error',
+        { rule: '^(is|has|do|use|hide|initial)[A-Z]([A-Za-z0-9]?)+' },
+      ],
       'react/jsx-sort-props': [
         'error',
         {

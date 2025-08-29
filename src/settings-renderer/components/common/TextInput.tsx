@@ -63,7 +63,7 @@ export default function TextInput(props: Props) {
 
   return (
     <>
-      <SettingsRow isGrow info={props.info} label={props.label}>
+      <SettingsRow isGrowing info={props.info} label={props.label}>
         {!props.isMultiline && (
           <input
             className={cx({

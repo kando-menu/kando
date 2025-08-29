@@ -57,7 +57,7 @@ export default function AppPicker(props: Props) {
       paddingTop={15}
       onClose={props.onClose}>
       <div className={classes.container}>
-        <Note isCenter isMarkdown marginLeft="10%" marginRight="10%">
+        <Note isCentered useMarkdown marginLeft="10%" marginRight="10%">
           {i18next.t('settings.app-picker.hint')}
         </Note>
 
