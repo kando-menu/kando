@@ -89,7 +89,7 @@ export default function App() {
           sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
           sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
         })}>
-        <Sidebar position="left" mainDirection="row">
+        <Sidebar mainDirection="row" position="left">
           <CollectionList />
           <MenuList />
         </Sidebar>
@@ -101,7 +101,7 @@ export default function App() {
           <MenuPreview />
           <PreviewFooter />
         </div>
-        <Sidebar position="right" mainDirection="column">
+        <Sidebar mainDirection="column" position="right">
           <Properties />
         </Sidebar>
         <GeneralSettingsDialog />
@@ -110,8 +110,8 @@ export default function App() {
         <MenuThemesDialog />
       </div>
       <Tooltip
-        id="main-tooltip"
         delayShow={500}
+        id="main-tooltip"
         openEvents={{
           click: true,
           mouseover: true,

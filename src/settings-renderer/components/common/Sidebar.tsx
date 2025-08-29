@@ -14,13 +14,13 @@ import * as classes from './Sidebar.module.scss';
 
 type Props = {
   /** Position of the sidebar, either 'left' or 'right'. */
-  position: 'left' | 'right';
+  readonly position: 'left' | 'right';
 
   /** The direction of the main axis. */
-  mainDirection: 'row' | 'column';
+  readonly mainDirection: 'row' | 'column';
 
   /** Content to display in the main area of the sidebar. */
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 };
 
 /**

@@ -16,16 +16,16 @@ import { GeneralSettings } from '../../../common';
 
 type Props<K extends keyof GeneralSettings> = {
   /** The key in the general settings to manage. */
-  settingsKey: K;
+  readonly settingsKey: K;
 
   /** Optional label text to display next to the checkbox. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Whether the checkbox is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 };
 
 /**
@@ -50,11 +50,11 @@ export default function SettingsCheckbox<K extends BooleanKeys<GeneralSettings>>
 
   return (
     <Checkbox
-      label={props.label}
       info={props.info}
       initialValue={state}
+      isDisabled={props.isDisabled}
+      label={props.label}
       onChange={setState}
-      disabled={props.disabled}
     />
   );
 }

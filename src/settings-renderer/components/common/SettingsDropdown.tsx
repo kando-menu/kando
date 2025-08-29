@@ -16,25 +16,25 @@ import { GeneralSettings } from '../../../common';
 
 type Props<K extends keyof GeneralSettings> = {
   /** The key in the general settings to manage. */
-  settingsKey: K;
+  readonly settingsKey: K;
 
   /** Array of options to display in the dropdown. Each option has a value and a label. */
-  options: { value: GeneralSettings[K]; label: string }[];
+  readonly options: { value: GeneralSettings[K]; label: string }[];
 
   /** Optional label text to display next to the dropdown. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional additional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Whether the dropdown is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 
   /** Optional minimum width of the dropdown. */
-  minWidth?: number;
+  readonly minWidth?: number;
 
   /** Optional maximum width of the dropdown. */
-  maxWidth?: number;
+  readonly maxWidth?: number;
 };
 
 /**
@@ -60,14 +60,14 @@ export default function SettingsDropdown<K extends EnumKeys<GeneralSettings>>(
 
   return (
     <Dropdown
-      options={props.options}
-      label={props.label}
       info={props.info}
       initialValue={state}
-      onChange={setState}
-      disabled={props.disabled}
-      minWidth={props.minWidth}
+      isDisabled={props.isDisabled}
+      label={props.label}
       maxWidth={props.maxWidth}
+      minWidth={props.minWidth}
+      options={props.options}
+      onChange={setState}
     />
   );
 }
