@@ -1015,10 +1015,22 @@ export class KandoApp {
     }
 
     const content = await fs.promises.readFile(metaFile);
-    const description = json5.parse(content.toString()) as MenuThemeDescription;
+    const parsed = json5.parse(content.toString());
     const directory = path.dirname(metaFile);
-    description.id = path.basename(directory);
-    description.directory = path.dirname(directory);
+
+    // Use defaults if some properties are not set.
+    const description: MenuThemeDescription = {
+      ...parsed,
+      id: path.basename(directory),
+      directory: path.dirname(directory),
+      maxMenuRadius: parsed.maxMenuRadius ?? 150,
+      centerTextWrapWidth: parsed.centerTextWrapWidth ?? 90,
+      drawChildrenBelow: parsed.drawChildrenBelow ?? true,
+      drawCenterText: parsed.drawCenterText ?? true,
+      drawSelectionWedges: parsed.drawSelectionWedges ?? false,
+      drawWedgeSeparators: parsed.drawWedgeSeparators ?? false,
+    };
+
     return description;
   }
 

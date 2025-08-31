@@ -133,14 +133,6 @@ export class MenuTheme {
   public loadDescription(description: MenuThemeDescription) {
     this.description = description;
 
-    // Use defaults if some properties are not set.
-    this.description.maxMenuRadius = this.description.maxMenuRadius || 150;
-    this.description.centerTextWrapWidth = this.description.centerTextWrapWidth || 90;
-    this.description.drawChildrenBelow = this.description.drawChildrenBelow ?? true;
-    this.description.drawCenterText = this.description.drawCenterText ?? true;
-    this.description.drawSelectionWedges = this.description.drawSelectionWedges ?? false;
-    this.description.drawWedgeSeparators = this.description.drawWedgeSeparators ?? false;
-
     // Remove any old theme first.
     const oldTheme = document.getElementById('kando-menu-theme');
     if (oldTheme) {
