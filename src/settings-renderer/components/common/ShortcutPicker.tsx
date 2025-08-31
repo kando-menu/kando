@@ -113,7 +113,7 @@ export default function ShortcutPicker(props: Props) {
   };
 
   return (
-    <SettingsRow grow info={props.info} label={props.label}>
+    <SettingsRow isGrowing info={props.info} label={props.label}>
       <div className={classes.shortcutPicker}>
         <input
           ref={inputRef}
@@ -178,7 +178,7 @@ export default function ShortcutPicker(props: Props) {
           }}
         />
         <Button
-          grouped
+          isGrouped
           icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
           variant="secondary"
           onClick={() => {

@@ -71,8 +71,8 @@ export default function ColorButton(props: Props) {
           />
         </>
       }
+      isVisible={isPopoverOpen}
       position="top"
-      visible={isPopoverOpen}
       onClose={() => {
         if (props.onChange) {
           props.onChange(cssColor);

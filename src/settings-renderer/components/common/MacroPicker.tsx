@@ -109,7 +109,7 @@ export default function MacroPicker(props: Props) {
         }}
       />
       <Button
-        grouped
+        isGrouped
         icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
         variant="secondary"
         onClick={() => {

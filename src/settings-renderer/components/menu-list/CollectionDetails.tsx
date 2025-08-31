@@ -99,7 +99,7 @@ export default function CollectionDetails(props: Props) {
       <div className={classes.collectionHeader}>
         {showingCollection ? (
           <IconChooserButton
-            grouped
+            isGrouped
             icon={menuCollections[selectedCollection]?.icon}
             iconSize="1.5em"
             theme={menuCollections[selectedCollection]?.iconTheme}

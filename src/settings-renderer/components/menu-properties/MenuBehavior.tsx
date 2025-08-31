@@ -23,7 +23,7 @@ export default function MenuBehavior() {
   return (
     <>
       <h1>{i18next.t('settings.menu-behavior')}</h1>
-      <Note markdown marginBottom={5} marginTop={-5}>
+      <Note useMarkdown marginBottom={5} marginTop={-5}>
         {i18next.t('settings.menu-behavior-info', {
           link: 'https://www.youtube.com/watch?v=elHUCarOiXQ',
         })}

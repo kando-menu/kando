@@ -53,8 +53,8 @@ export default function FooterButton(props: Props) {
           <Note>{i18next.t('settings.add-menu-item-hint')}</Note>
         </div>
       }
+      isVisible={isPopoverOpen}
       position="top"
-      visible={isPopoverOpen}
       onClose={() => {
         setIsPopoverOpen(false);
       }}>

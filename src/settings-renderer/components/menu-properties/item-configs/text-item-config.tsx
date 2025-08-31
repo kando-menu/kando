@@ -33,7 +33,7 @@ export default () => {
   return (
     <>
       <TextInput
-        multiline
+        isMultiline
         initialValue={data.text}
         placeholder={i18next.t('menu-items.text.placeholder')}
         onChange={(value) => {

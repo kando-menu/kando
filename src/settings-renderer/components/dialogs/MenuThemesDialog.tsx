@@ -183,13 +183,13 @@ export default function MenuThemesDialog() {
   return (
     <Modal
       icon={<TbPaletteFilled />}
+      isVisible={themesDialogVisible}
       maxWidth={1200}
       paddingBottom={5}
       paddingLeft={0}
       paddingRight={5}
       paddingTop={0}
       title={i18next.t('settings.menu-themes-dialog.title')}
-      visible={themesDialogVisible}
       onClose={() => setThemesDialogVisible(false)}>
       <div className={classes.container}>
         <div className={classes.sidebar}>

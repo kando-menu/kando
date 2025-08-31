@@ -32,8 +32,8 @@ type Props = {
 export default function RandomTip(props: Props) {
   return (
     <Note
-      center
-      markdown
+      isCentered
+      useMarkdown
       marginBottom={props.marginBottom}
       marginLeft="10%"
       marginRight="10%"

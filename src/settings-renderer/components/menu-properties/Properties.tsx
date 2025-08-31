@@ -173,7 +173,7 @@ export default function Properties() {
         {!isRoot && (
           <div className={classes.floatingButton}>
             <Button
-              grouped
+              isGrouped
               icon={<TbCopy />}
               size="large"
               tooltip={i18next.t('settings.duplicate-menu-item')}
@@ -183,7 +183,7 @@ export default function Properties() {
               }}
             />
             <Button
-              grouped
+              isGrouped
               icon={<TbTrash />}
               size="large"
               tooltip={i18next.t('settings.delete-menu-item')}
