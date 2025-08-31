@@ -23,11 +23,10 @@
 namespace {
 
 Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
-  Napi::Object appInfo = Napi::Object::New(env);
 
   NSBundle* bundle = [NSBundle bundleWithPath:appPath];
   if (!bundle) {
-    return appInfo;
+    return Napi::Object();
   }
 
   NSString* name     = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
@@ -68,12 +67,15 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
       // Add data: prefix to the base64 string.
       base64Icon = [NSString stringWithFormat:@"data:image/png;base64,%@", base64Icon];
 
+      Napi::Object appInfo = Napi::Object::New(env);
       appInfo.Set("name", Napi::String::New(env, name.UTF8String));
       appInfo.Set("id", Napi::String::New(env, execName.UTF8String));
       appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
+      return appInfo;
     }
   }
-  return appInfo;
+
+  return Napi::Object();
 }
 
 } // namespace
