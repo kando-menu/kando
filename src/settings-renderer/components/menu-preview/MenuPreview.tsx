@@ -388,8 +388,8 @@ export default function MenuPreview() {
   // rendered as a div with a contained icon and potentially a list of grandchild items.
   const renderChild = (child: RenderedMenuItem, index: number) => {
     let angleDragMayStart = false;
+    let clickedDownContainer: any = null;
     const selected = selectedChild >= 0 && selectedChild === child.index;
-
     return (
       <div
         key={child.key}
@@ -420,6 +420,7 @@ export default function MenuPreview() {
           if (child.angle !== undefined) {
             angleDragMayStart = true;
           }
+          clickedDownContainer = currentContainer.current;
         }}
         onPointerUp={() => {
           if (angleDragOngoing) {
@@ -438,7 +439,7 @@ export default function MenuPreview() {
           // Only select the child if it is not currently selected. Also, during touch
           // interaction, onPointerUp is also called at the end of a drag operation. In
           // this case we do not want to select the child.
-          else if (!selected && dragIndex === null) {
+          else if (!selected && dragIndex === null && clickedDownContainer === currentContainer.current) {
             selectChild(index, true);
           }
         }}
