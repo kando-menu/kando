@@ -36,15 +36,15 @@ export default function AboutDialog() {
   return (
     <Modal
       icon={<TbHeartFilled />}
+      isVisible={aboutDialogVisible}
       maxWidth={500}
       title={i18next.t('settings.about-dialog.title')}
-      visible={aboutDialogVisible}
       onClose={() => setAboutDialogVisible(false)}>
       <div className={classes.container}>
         <img src={logo} width={128} />
         <Note
-          center
-          markdown
+          isCentered
+          useMarkdown
           marginLeft="10%"
           marginRight="10%"
           marginTop={10}

@@ -55,7 +55,7 @@ export default function IntroDialog() {
           src={require(`../../../../assets/videos/introduction-${videoNumber}.mp4`)}
         />
         <div className={classes.caption}>
-          <Note center markdown noteStyle="normal">
+          <Note isCentered useMarkdown noteStyle="normal">
             {text}
           </Note>
         </div>
@@ -87,20 +87,20 @@ export default function IntroDialog() {
 
   const slides = [
     <React.Fragment key="slide1">
-      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
+      <Note isCentered marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide1-title')}
       </Note>
       <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
-      <Note center marginLeft="10%" marginRight="10%" noteStyle="normal">
+      <Note isCentered marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide1-text')}
       </Note>
     </React.Fragment>,
     <React.Fragment key="slide2">
-      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
+      <Note isCentered marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide2-title')}
       </Note>
       <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
-      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
+      <Note isCentered useMarkdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {backend.supportsShortcuts
           ? i18next.t('settings.introduction-dialog.slide2-text-standard')
           : i18next.t('settings.introduction-dialog.slide2-text-no-shortcuts', {
@@ -120,7 +120,7 @@ export default function IntroDialog() {
         {i18next.t('settings.introduction-dialog.slide3-hint2')}
       </div>
       <div className={classes.caption}>
-        <Note center markdown noteStyle="normal">
+        <Note isCentered useMarkdown noteStyle="normal">
           {i18next.t('settings.introduction-dialog.slide3-text')}
         </Note>
       </div>
@@ -135,39 +135,39 @@ export default function IntroDialog() {
         {i18next.t('settings.introduction-dialog.slide5-hint')}
       </div>
       <div className={classes.caption}>
-        <Note center markdown noteStyle="normal">
+        <Note isCentered useMarkdown noteStyle="normal">
           {i18next.t('settings.introduction-dialog.slide5-text')}
         </Note>
       </div>
     </React.Fragment>,
     makeVideoSlide(2, i18next.t('settings.introduction-dialog.slide6-text')),
     <React.Fragment key="slide7">
-      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
+      <Note isCentered marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide7-title')}
       </Note>
       <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
-      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
+      <Note isCentered useMarkdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide7-text')}
       </Note>
     </React.Fragment>,
     makeVideoSlide(3, i18next.t('settings.introduction-dialog.slide8-text')),
     <React.Fragment key="slide9">
-      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
+      <Note isCentered marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide9-title')}
       </Note>
       <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
-      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
+      <Note isCentered useMarkdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide9-text')}
       </Note>
     </React.Fragment>,
     makeVideoSlide(4, i18next.t('settings.introduction-dialog.slide10-text')),
     makeVideoSlide(5, i18next.t('settings.introduction-dialog.slide11-text')),
     <React.Fragment key="slide12">
-      <Note center marginLeft="10%" marginRight="10%" noteStyle="hero">
+      <Note isCentered marginLeft="10%" marginRight="10%" noteStyle="hero">
         {i18next.t('settings.introduction-dialog.slide12-title')}
       </Note>
       <Swirl marginBottom={20} marginTop={10} variant="2" width={350} />
-      <Note center markdown marginLeft="10%" marginRight="10%" noteStyle="normal">
+      <Note isCentered useMarkdown marginLeft="10%" marginRight="10%" noteStyle="normal">
         {i18next.t('settings.introduction-dialog.slide12-text', {
           link1: 'https://kando.menu/menu-themes',
           link2: 'https://kando.menu/icon-themes',
@@ -178,8 +178,8 @@ export default function IntroDialog() {
     <React.Fragment key="slide13">
       <Swirl marginBottom={10} variant="4" width={250} />
       <Note
-        center
-        markdown
+        isCentered
+        useMarkdown
         marginLeft="10%"
         marginRight="10%"
         marginTop={10}
@@ -205,9 +205,9 @@ export default function IntroDialog() {
   return (
     <Modal
       icon={<IoSchool />}
+      isVisible={introDialogVisible}
       maxWidth={950}
       title={i18next.t('settings.introduction-dialog.title')}
-      visible={introDialogVisible}
       onClose={() => setIntroDialogVisible(false)}>
       <div className={classes.container}>
         <div className={classes.sidebar}>

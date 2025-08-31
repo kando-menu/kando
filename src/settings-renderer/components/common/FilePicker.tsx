@@ -50,7 +50,7 @@ export default function FilePicker(props: Props) {
   React.useEffect(() => setPath(props.initialValue), [props.initialValue]);
 
   return (
-    <SettingsRow grow info={props.info} label={props.label}>
+    <SettingsRow isGrowing info={props.info} label={props.label}>
       <div className={classes.filePicker}>
         <input
           placeholder={props.placeholder}
@@ -72,7 +72,7 @@ export default function FilePicker(props: Props) {
           }}
         />
         <Button
-          grouped
+          isGrouped
           icon={<TbFile />}
           tooltip={i18next.t('settings.file-picker.select-file')}
           variant="secondary"
@@ -88,7 +88,7 @@ export default function FilePicker(props: Props) {
           }}
         />
         <Button
-          grouped
+          isGrouped
           icon={<TbFolderOpen />}
           tooltip={`${i18next.t('settings.file-picker.select-directory')}`}
           variant="secondary"

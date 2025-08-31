@@ -51,7 +51,7 @@ export default () => {
         }}
       />
       <TextInput
-        multiline
+        isMultiline
         initialValue={data.command}
         placeholder={i18next.t('menu-items.command.placeholder')}
         onChange={(value) => {
@@ -110,7 +110,7 @@ export default () => {
         ]}
       />
       <AppPicker
-        visible={appPickerVisible}
+        isVisible={appPickerVisible}
         onClose={() => setAppPickerVisible(false)}
         onSelect={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {

@@ -63,13 +63,13 @@ export default function GeneralSettingsDialog() {
   return (
     <Modal
       icon={<TbSettingsFilled />}
+      isVisible={settingsDialogVisible}
       maxWidth={600}
       paddingBottom={5}
       paddingLeft={5}
       paddingRight={5}
       paddingTop={0}
       title={i18next.t('settings.general-settings-dialog.title')}
-      visible={settingsDialogVisible}
       onClose={() => setSettingsDialogVisible(false)}>
       <Scrollbox maxHeight="min(80vh, 800px)">
         <div
@@ -81,8 +81,8 @@ export default function GeneralSettingsDialog() {
             gap: 5,
           }}>
           <Note
-            center
-            markdown
+            isCentered
+            useMarkdown
             marginLeft="10%"
             marginRight="10%"
             marginTop={10}
@@ -260,8 +260,8 @@ export default function GeneralSettingsDialog() {
             settingsKey="enableMarkingMode"
           />
           <SettingsCheckbox
-            disabled={keepInputFocus}
             info={i18next.t('settings.general-settings-dialog.enable-turbo-mode-info')}
+            isDisabled={keepInputFocus}
             label={i18next.t('settings.general-settings-dialog.enable-turbo-mode')}
             settingsKey="enableTurboMode"
           />
@@ -325,7 +325,7 @@ export default function GeneralSettingsDialog() {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-sounds')}</h1>
-          <Note markdown marginTop={-5}>
+          <Note useMarkdown marginTop={-5}>
             {i18next.t('settings.general-settings-dialog.learn-how-to-add-sound-themes', {
               link: 'https://kando.menu/sound-themes/',
             })}
@@ -440,7 +440,7 @@ export default function GeneralSettingsDialog() {
           <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>
           <div style={{ display: 'flex', gap: 8 }}>
             <Button
-              block
+              isBlock
               icon={<TbReload />}
               label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
               onClick={() => {
@@ -448,7 +448,7 @@ export default function GeneralSettingsDialog() {
               }}
             />
             <Button
-              block
+              isBlock
               icon={<TbReload />}
               label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
               onClick={() => {
@@ -462,7 +462,7 @@ export default function GeneralSettingsDialog() {
           </Note>
           <div style={{ display: 'flex', gap: 8 }}>
             <Button
-              block
+              isBlock
               icon={<TbPointer />}
               label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
               onClick={() => {
@@ -470,7 +470,7 @@ export default function GeneralSettingsDialog() {
               }}
             />
             <Button
-              block
+              isBlock
               icon={<TbPointerCog />}
               label={i18next.t(
                 'settings.general-settings-dialog.settings-window-dev-tools'

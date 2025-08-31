@@ -113,7 +113,7 @@ export default function MenuConditions() {
               onChange={(event) => setAppCondition(event.target.value)}
             />
             <Button
-              grouped
+              isGrouped
               icon={<BiTargetLock />}
               tooltip={i18next.t('settings.app-condition-tooltip')}
               variant="secondary"
@@ -163,7 +163,7 @@ export default function MenuConditions() {
               onChange={(event) => setWindowCondition(event.target.value)}
             />
             <Button
-              grouped
+              isGrouped
               icon={<BiTargetLock />}
               tooltip={i18next.t('settings.window-condition-tooltip')}
               variant="secondary"
@@ -253,7 +253,7 @@ export default function MenuConditions() {
               />
             ))}
             <Button
-              grouped
+              isGrouped
               icon={<BiTargetLock />}
               tooltip={i18next.t('settings.area-condition-tooltip')}
               variant="secondary"
@@ -265,8 +265,8 @@ export default function MenuConditions() {
         ) : null}
       </div>
       <WindowPicker
+        isVisible={appPickerVisible}
         mode="application"
-        visible={appPickerVisible}
         onClose={() => setAppPickerVisible(false)}
         onSelect={(value) => {
           setAppCondition(value);
@@ -278,8 +278,8 @@ export default function MenuConditions() {
         }}
       />
       <WindowPicker
+        isVisible={windowPickerVisible}
         mode="title"
-        visible={windowPickerVisible}
         onClose={() => setWindowPickerVisible(false)}
         onSelect={(value) => {
           setWindowCondition(value);
@@ -291,7 +291,7 @@ export default function MenuConditions() {
         }}
       />
       <ScreenAreaPicker
-        visible={screenAreaPickerVisible}
+        isVisible={screenAreaPickerVisible}
         onClose={() => setScreenAreaPickerVisible(false)}
         onSelect={(top, left, bottom, right) => {
           setScreenMinX(left.toString());

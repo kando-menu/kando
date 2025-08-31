@@ -36,17 +36,17 @@ export default function PreviewHeader() {
     return (
       <>
         <Button
-          grouped
-          disabled={pastStates.length === 0}
+          isGrouped
           icon={<IoArrowUndo />}
+          isDisabled={pastStates.length === 0}
           tooltip={i18next.t('settings.undo')}
           variant="tool"
           onClick={() => useMenuSettings.temporal.getState().undo()}
         />
         <Button
-          grouped
-          disabled={futureStates.length === 0}
+          isGrouped
           icon={<IoArrowRedo />}
+          isDisabled={futureStates.length === 0}
           tooltip={i18next.t('settings.redo')}
           variant="tool"
           onClick={() => useMenuSettings.temporal.getState().redo()}
@@ -59,14 +59,14 @@ export default function PreviewHeader() {
     <>
       <span style={{ marginRight: '8px' }}>
         <Button
-          grouped
+          isGrouped
           icon={<IoSchool />}
           tooltip={i18next.t('settings.introduction-dialog.title')}
           variant="tool"
           onClick={() => setIntroDialogVisible(true)}
         />
         <Button
-          grouped
+          isGrouped
           icon={<TbHeartFilled />}
           tooltip={i18next.t('settings.about-dialog.title')}
           variant="tool"
@@ -75,14 +75,14 @@ export default function PreviewHeader() {
       </span>
       <span style={{ marginRight: '8px' }}>
         <Button
-          grouped
+          isGrouped
           icon={<TbPaletteFilled />}
           tooltip={i18next.t('settings.menu-themes-dialog.title')}
           variant="tool"
           onClick={() => setThemesDialogVisible(true)}
         />
         <Button
-          grouped
+          isGrouped
           icon={<TbSettingsFilled />}
           tooltip={i18next.t('settings.general-settings-dialog.title')}
           variant="tool"
