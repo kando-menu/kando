@@ -21,19 +21,19 @@ import * as classes from './FilePicker.module.scss';
 
 type Props = {
   /** Function to call when the selected file changes. */
-  onChange?: (path: string) => void;
+  readonly onChange?: (path: string) => void;
 
   /** Initial shortcut. */
-  initialValue: string;
+  readonly initialValue: string;
 
   /** Optional label text to display next to the shortcut picker. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional information to display next to the label. */
-  info?: string;
+  readonly info?: string;
 
   /** Optional placeholder text to display in the input field. */
-  placeholder?: string;
+  readonly placeholder?: string;
 };
 
 /**
@@ -50,13 +50,18 @@ export default function FilePicker(props: Props) {
   React.useEffect(() => setPath(props.initialValue), [props.initialValue]);
 
   return (
-    <SettingsRow label={props.label} info={props.info} grow>
+    <SettingsRow isGrowing info={props.info} label={props.label}>
       <div className={classes.filePicker}>
         <input
-          type="text"
-          spellCheck="false"
           placeholder={props.placeholder}
+          spellCheck="false"
+          type="text"
           value={path}
+          onBlur={(event) => {
+            if (event.target.value !== path) {
+              props.onChange?.(event.target.value);
+            }
+          }}
           onChange={(event) => {
             setPath(event.target.value);
           }}
@@ -65,17 +70,12 @@ export default function FilePicker(props: Props) {
               event.currentTarget.blur();
             }
           }}
-          onBlur={(event) => {
-            if (event.target.value !== path) {
-              props.onChange?.(event.target.value);
-            }
-          }}
         />
         <Button
-          variant="secondary"
-          grouped
-          tooltip={i18next.t('settings.file-picker.select-file')}
+          isGrouped
           icon={<TbFile />}
+          tooltip={i18next.t('settings.file-picker.select-file')}
+          variant="secondary"
           onClick={() => {
             window.settingsAPI
               .openFilePicker({ properties: ['openFile'] })
@@ -88,10 +88,10 @@ export default function FilePicker(props: Props) {
           }}
         />
         <Button
-          variant="secondary"
-          grouped
-          tooltip={`${i18next.t('settings.file-picker.select-directory')}`}
+          isGrouped
           icon={<TbFolderOpen />}
+          tooltip={`${i18next.t('settings.file-picker.select-directory')}`}
+          variant="secondary"
           onClick={() => {
             window.settingsAPI
               .openFilePicker({ properties: ['openDirectory'] })

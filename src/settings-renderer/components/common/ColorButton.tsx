@@ -17,13 +17,13 @@ import Popover from './Popover';
 
 type Props = {
   /** Function to call when the color is changed. */
-  onChange?: (color: string) => void;
+  readonly onChange?: (color: string) => void;
 
   /** Name of the color. Will be shown in the popover. */
-  name?: string;
+  readonly name?: string;
 
   /** Initial color. */
-  color: string;
+  readonly color: string;
 };
 
 /**
@@ -45,17 +45,9 @@ export default function ColorButton(props: Props) {
 
   return (
     <Popover
-      visible={isPopoverOpen}
-      onClose={() => {
-        if (props.onChange) {
-          props.onChange(cssColor);
-        }
-        setIsPopoverOpen(false);
-      }}
-      position="top"
       content={
         <>
-          {props.name && <div className={classes.popoverHeader}>{props.name}</div>}
+          {props.name ? <div className={classes.popoverHeader}>{props.name}</div> : null}
           <RgbaStringColorPicker
             color={cssColor}
             onChange={(newColor) => {
@@ -65,6 +57,7 @@ export default function ColorButton(props: Props) {
             }}
           />
           <input
+            className={classes.colorInput}
             type="text"
             value={inputColor}
             onChange={(event) => {
@@ -75,14 +68,21 @@ export default function ColorButton(props: Props) {
                 // ignore
               }
             }}
-            className={classes.colorInput}
           />
         </>
-      }>
+      }
+      isVisible={isPopoverOpen}
+      position="top"
+      onClose={() => {
+        if (props.onChange) {
+          props.onChange(cssColor);
+        }
+        setIsPopoverOpen(false);
+      }}>
       <div
         className={classes.colorButton}
-        data-tooltip-id="main-tooltip"
         data-tooltip-content={props.name}
+        data-tooltip-id="main-tooltip"
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
         <div className={classes.color} style={{ backgroundColor: cssColor }} />
       </div>

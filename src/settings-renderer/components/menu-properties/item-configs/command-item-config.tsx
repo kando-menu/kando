@@ -35,7 +35,7 @@ export default () => {
 
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'command') {
-    return <></>;
+    return null;
   }
 
   const data = selectedItem.data as ItemData;
@@ -43,17 +43,17 @@ export default () => {
   return (
     <>
       <Button
-        variant="secondary"
-        label={i18next.t('menu-items.command.choose-app')}
         icon={<TbApps />}
+        label={i18next.t('menu-items.command.choose-app')}
+        variant="secondary"
         onClick={() => {
           setAppPickerVisible(true);
         }}
       />
       <TextInput
-        placeholder={i18next.t('menu-items.command.placeholder')}
-        multiline
+        isMultiline
         initialValue={data.command}
+        placeholder={i18next.t('menu-items.command.placeholder')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).command = value;
@@ -61,11 +61,11 @@ export default () => {
           });
         }}
       />
-      {supportsIsolatedProcesses && (
+      {supportsIsolatedProcesses ? (
         <Checkbox
-          label={i18next.t('menu-items.command.isolated')}
           info={i18next.t('menu-items.command.isolated-info')}
           initialValue={data.isolated}
+          label={i18next.t('menu-items.command.isolated')}
           onChange={(value) => {
             editMenuItem(selectedMenu, selectedChildPath, (item) => {
               (item.data as ItemData).isolated = value;
@@ -73,11 +73,11 @@ export default () => {
             });
           }}
         />
-      )}
+      ) : null}
       <Checkbox
-        label={i18next.t('menu-items.command.detached')}
         info={i18next.t('menu-items.command.detached-info')}
         initialValue={data.detached !== false} // explicitly check because undefined should mean true
+        label={i18next.t('menu-items.command.detached')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).detached = value;
@@ -86,9 +86,9 @@ export default () => {
         }}
       />
       <Checkbox
-        label={i18next.t('menu-items.common.delayed-option')}
         info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
+        label={i18next.t('menu-items.common.delayed-option')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).delayed = value;
@@ -110,7 +110,8 @@ export default () => {
         ]}
       />
       <AppPicker
-        visible={appPickerVisible}
+        isVisible={appPickerVisible}
+        onClose={() => setAppPickerVisible(false)}
         onSelect={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             item.name = value.name;
@@ -120,7 +121,6 @@ export default () => {
             return item;
           });
         }}
-        onClose={() => setAppPickerVisible(false)}
       />
     </>
   );

@@ -15,7 +15,7 @@ import * as classes from './InfoItem.module.scss';
 
 type Props = {
   /** Text to display in the tooltip. */
-  info: string;
+  readonly info: string;
 };
 
 /**
@@ -28,8 +28,8 @@ export default function InfoItem(props: Props) {
   return (
     <span
       className={classes.info}
-      data-tooltip-id="main-tooltip"
-      data-tooltip-content={props.info}>
+      data-tooltip-content={props.info}
+      data-tooltip-id="main-tooltip">
       <TbInfoSquareRoundedFilled />
     </span>
   );

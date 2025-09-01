@@ -19,19 +19,19 @@ import { ThemedIcon, Popover, Note } from '../common';
 
 type Props = {
   /** A unique ID for the menu-item type. */
-  id: string;
+  readonly id: string;
 
   /** The name of the menu-item type. */
-  name: string;
+  readonly name: string;
 
   /** A short description of the menu-item type. */
-  description: string;
+  readonly description: string;
 
   /** The icon to display for the menu-item type. */
-  icon: string;
+  readonly icon: string;
 
   /** The theme of the icon to display for the menu-item type. */
-  iconTheme: string;
+  readonly iconTheme: string;
 };
 
 /**
@@ -47,35 +47,33 @@ export default function FooterButton(props: Props) {
 
   return (
     <Popover
-      visible={isPopoverOpen}
+      content={
+        <div className={classes.popoverContent}>
+          <p>{props.description}</p>
+          <Note>{i18next.t('settings.add-menu-item-hint')}</Note>
+        </div>
+      }
+      isVisible={isPopoverOpen}
+      position="top"
       onClose={() => {
         setIsPopoverOpen(false);
-      }}
-      position="top"
-      content={
-        <>
-          <div className={classes.popoverContent}>
-            <p>{props.description}</p>
-            <Note>{i18next.t('settings.add-menu-item-hint')}</Note>
-          </div>
-        </>
-      }>
+      }}>
       <div
+        draggable
         className={cx({
           menuItem: true,
           dragging,
         })}
-        data-tooltip-id="main-tooltip"
         data-tooltip-html={isPopoverOpen || dragging ? undefined : props.name}
-        draggable
+        data-tooltip-id="main-tooltip"
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+        onDragEnd={() => setDragging(false)}
         onDragStart={(event) => {
           event.dataTransfer.setData('kando/item-type', props.id);
           setDragging(true);
           setIsPopoverOpen(false);
-        }}
-        onDragEnd={() => setDragging(false)}>
-        <ThemedIcon size={'100%'} name={props.icon} theme={props.iconTheme} />
+        }}>
+        <ThemedIcon name={props.icon} size="100%" theme={props.iconTheme} />
       </div>
     </Popover>
   );

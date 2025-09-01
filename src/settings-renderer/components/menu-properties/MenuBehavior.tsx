@@ -23,15 +23,15 @@ export default function MenuBehavior() {
   return (
     <>
       <h1>{i18next.t('settings.menu-behavior')}</h1>
-      <Note marginTop={-5} marginBottom={5} markdown>
+      <Note useMarkdown marginBottom={5} marginTop={-5}>
         {i18next.t('settings.menu-behavior-info', {
           link: 'https://www.youtube.com/watch?v=elHUCarOiXQ',
         })}
       </Note>
       <Checkbox
-        label={i18next.t('settings.centered-mode')}
         info={i18next.t('settings.centered-mode-info')}
         initialValue={menus[selectedMenu].centered}
+        label={i18next.t('settings.centered-mode')}
         onChange={(centered) => {
           editMenu(selectedMenu, (menu) => {
             menu.centered = centered;
@@ -40,9 +40,9 @@ export default function MenuBehavior() {
         }}
       />
       <Checkbox
-        label={i18next.t('settings.anchored-mode')}
         info={i18next.t('settings.anchored-mode-info')}
         initialValue={menus[selectedMenu].anchored}
+        label={i18next.t('settings.anchored-mode')}
         onChange={(anchored) => {
           editMenu(selectedMenu, (menu) => {
             menu.anchored = anchored;
@@ -51,9 +51,9 @@ export default function MenuBehavior() {
         }}
       />
       <Checkbox
-        label={i18next.t('settings.hover-mode')}
         info={i18next.t('settings.hover-mode-info')}
         initialValue={menus[selectedMenu].hoverMode}
+        label={i18next.t('settings.hover-mode')}
         onChange={(hoverMode) => {
           editMenu(selectedMenu, (menu) => {
             menu.hoverMode = hoverMode;

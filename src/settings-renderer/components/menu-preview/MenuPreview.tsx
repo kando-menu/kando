@@ -368,7 +368,7 @@ export default function MenuPreview() {
     return grandchildDirections.map((direction, index) => {
       return (
         <div
-          key={index}
+          key={`direction-${String(index)}`}
           className={classes.grandChild}
           style={utils.makeCSSProperties(
             'dir',
@@ -399,8 +399,14 @@ export default function MenuPreview() {
           dragging: isDraggedChild(child),
           dropping: dropInto && dropIndex === child.index,
         })}
-        tabIndex={0}
         draggable={child.angle === undefined}
+        style={utils.makeCSSProperties('dir', childDirections[index])}
+        tabIndex={0}
+        onDragEnd={() => {
+          setDropIndex(null);
+          setDragIndex(null);
+          setDropInto(false);
+        }}
         onDragStart={(event) => {
           event.dataTransfer.effectAllowed = 'copyMove';
           event.dataTransfer.setData(
@@ -411,35 +417,22 @@ export default function MenuPreview() {
           setDropIndex(index);
           setDropInto(false);
         }}
-        onDragEnd={() => {
-          setDropIndex(null);
-          setDragIndex(null);
-          setDropInto(false);
+        onKeyDown={(event) => {
+          // Select the child if the user presses enter or space. This is required for
+          // keyboard navigation in the menu preview.
+          if (event.key === 'Enter' || event.key === ' ') {
+            selectChild(index, true);
+          }
+
+          // Delete the item if the user presses the delete key.
+          if (event.key === 'Delete' || event.key === 'Backspace') {
+            deleteMenuItem(selectedMenu, centerItemPath.concat(index));
+            selectCenter();
+          }
         }}
         onPointerDown={() => {
           if (child.angle !== undefined) {
             angleDragMayStart = true;
-          }
-        }}
-        onPointerUp={() => {
-          if (angleDragOngoing) {
-            setDragAngle(null);
-            setDragIndex(null);
-            angleDragMayStart = false;
-
-            // If the angle was changed, we need to update the item in the menu.
-            editMenuItem(selectedMenu, centerItemPath, (center) => {
-              center.children.forEach((item, i) => {
-                item.angle = renderedChildren[i].angle;
-              });
-              return center;
-            });
-          }
-          // Only select the child if it is not currently selected. Also, during touch
-          // interaction, onPointerUp is also called at the end of a drag operation. In
-          // this case we do not want to select the child.
-          else if (!selected && dragIndex === null) {
-            selectChild(index, true);
           }
         }}
         onPointerMove={(event) => {
@@ -476,23 +469,30 @@ export default function MenuPreview() {
             }
           }
         }}
-        onKeyDown={(event) => {
-          // Select the child if the user presses enter or space. This is required for
-          // keyboard navigation in the menu preview.
-          if (event.key === 'Enter' || event.key === ' ') {
+        onPointerUp={() => {
+          if (angleDragOngoing) {
+            setDragAngle(null);
+            setDragIndex(null);
+            angleDragMayStart = false;
+
+            // If the angle was changed, we need to update the item in the menu.
+            editMenuItem(selectedMenu, centerItemPath, (center) => {
+              center.children.forEach((item, i) => {
+                item.angle = renderedChildren[i].angle;
+              });
+              return center;
+            });
+          }
+          // Only select the child if it is not currently selected. Also, during touch
+          // interaction, onPointerUp is also called at the end of a drag operation. In
+          // this case we do not want to select the child.
+          else if (!selected && dragIndex === null) {
             selectChild(index, true);
           }
-
-          // Delete the item if the user presses the delete key.
-          if (event.key === 'Delete' || event.key === 'Backspace') {
-            deleteMenuItem(selectedMenu, centerItemPath.concat(index));
-            selectCenter();
-          }
-        }}
-        style={utils.makeCSSProperties('dir', childDirections[index])}>
-        {child.iconTheme && child.icon && (
-          <ThemedIcon size={'100%'} theme={child.iconTheme} name={child.icon} />
-        )}
+        }}>
+        {child.iconTheme && child.icon ? (
+          <ThemedIcon name={child.icon} size="100%" theme={child.iconTheme} />
+        ) : null}
         {renderGrandchildren(child, renderedChildAngles[index])}
       </div>
     );
@@ -524,9 +524,9 @@ export default function MenuPreview() {
           });
         }}>
         <ThemedIcon
-          size={'100%'}
-          theme={'material-symbols-rounded'}
           name={child.angle !== undefined ? 'lock' : 'lock_open'}
+          size="100%"
+          theme="material-symbols-rounded"
         />
       </div>
     );
@@ -594,14 +594,14 @@ export default function MenuPreview() {
         <TransitionGroup>
           <CSSTransition
             key={transitionPing ? 'ping' : 'pong'}
-            nodeRef={currentContainer}
-            timeout={350}
             classNames={{
               enter: classes.fadeEnter,
               enterActive: classes.fadeEnterActive,
               exit: classes.fadeExit,
               exitActive: classes.fadeExitActive,
-            }}>
+            }}
+            nodeRef={currentContainer}
+            timeout={350}>
             <div
               ref={currentContainer}
               className={classes.transitionContainer}
@@ -625,7 +625,6 @@ export default function MenuPreview() {
 
                 event.preventDefault();
               }}
-              onDragOver={onDragOver}
               onDragLeave={(event) => {
                 // If we leave the container during an external drag, we reset the drop
                 // data so that the drop indicator is hidden.
@@ -640,6 +639,7 @@ export default function MenuPreview() {
 
                 event.preventDefault();
               }}
+              onDragOver={onDragOver}
               onDrop={async (event) => {
                 // If the drag index is set, we are moving an item around. In this case, we need to
                 // move the item to the new position. If it is not set, something new is dragged
@@ -722,17 +722,17 @@ export default function MenuPreview() {
                       backLink: true,
                       dropping: dropInto && dropIndex === -1,
                     })}
-                    onClick={() => selectParent()}
                     style={utils.makeCSSProperties(
                       'dir',
                       math.getDirection(parentAngle, 1),
                       'angle',
                       parentAngle - 90
-                    )}>
+                    )}
+                    onClick={() => selectParent()}>
                     <ThemedIcon
+                      name="chevron_right"
                       size="100%"
                       theme="material-symbols-rounded"
-                      name="chevron_right"
                     />
                   </div>
                 )
@@ -743,6 +743,7 @@ export default function MenuPreview() {
                   selected: selectedChild === -1,
                 })}
                 tabIndex={0}
+                onClick={() => selectCenter()}
                 onKeyDown={(event) => {
                   // Select the center item if the user presses enter or space. This is
                   // required for keyboard navigation in the menu preview.
@@ -761,12 +762,11 @@ export default function MenuPreview() {
                       selectParent();
                     }
                   }
-                }}
-                onClick={() => selectCenter()}>
+                }}>
                 <ThemedIcon
-                  size={'100%'}
-                  theme={centerItem.iconTheme}
                   name={centerItem.icon}
+                  size="100%"
+                  theme={centerItem.iconTheme}
                 />
               </div>
               {

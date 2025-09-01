@@ -22,25 +22,25 @@ const cx = classNames.bind(classes);
 
 type Props = {
   /** Function to call whenever a new icon is selected. */
-  onChange?: (icon: string) => void;
+  readonly onChange?: (icon: string) => void;
 
   /**
    * Function to call when the picker should be closed. This is emitted if the user
    * double-clicks an icon.
    */
-  onClose?: () => void;
+  readonly onClose?: () => void;
 
   /**
    * Initially selected icon. If this is not in the given theme, nothing will be selected.
    * If it is in the theme, it will be selected and the grid will scroll to the icon.
    */
-  selectedIcon: string;
+  readonly selectedIcon: string;
 
   /** The icon theme. */
-  theme: string;
+  readonly theme: string;
 
   /** The current filter term. Only icons matching this will be shown. */
-  filterTerm: string;
+  readonly filterTerm: string;
 };
 
 /**
@@ -90,8 +90,6 @@ export default function GridIconPicker(props: Props) {
           pickerIcon: true,
           selected: index === selectedIndex,
         })}
-        style={style}
-        data-tooltip-id="main-tooltip"
         data-tooltip-content={
           // If the theme is a SimpleIconsTheme, we can use its getTitle method to
           // get a more descriptive title for the icon. Otherwise, we just use the
@@ -100,9 +98,12 @@ export default function GridIconPicker(props: Props) {
             ? fetchedIcons.theme.getTitle(icon)
             : icon
         }
+        data-tooltip-id="main-tooltip"
+        style={style}
+        type="button"
         onClick={() => props.onChange(icon)}
         onDoubleClick={props.onClose}>
-        <ThemedIcon name={icon} theme={props.theme} size={'80%'} />
+        <ThemedIcon name={icon} size="80%" theme={props.theme} />
       </button>
     );
   };
@@ -120,15 +121,16 @@ export default function GridIconPicker(props: Props) {
   return (
     <div style={{ flexGrow: 1, minHeight: 0 }}>
       <AutoSizer>
-        {({ width, height }: { width: number; height: number }) => (
+        {/* eslint-disable-next-line react/no-unused-prop-types */}
+        {({ width, height }: { readonly width: number; readonly height: number }) => (
           <Grid
             ref={setGridInstance}
             columnCount={columns}
-            rowCount={rows}
-            overscanRowCount={10}
             columnWidth={width / columns - 1}
-            rowHeight={width / columns - 1}
             height={height}
+            overscanRowCount={10}
+            rowCount={rows}
+            rowHeight={width / columns - 1}
             width={width}>
             {cell}
           </Grid>

@@ -71,13 +71,13 @@ export default function MenuConditions() {
   return (
     <>
       <h1>{i18next.t('settings.menu-conditions')}</h1>
-      <Note marginTop={-5} marginBottom={5}>
+      <Note marginBottom={5} marginTop={-5}>
         {i18next.t('settings.menu-conditions-info')}
       </Note>
       <Checkbox
-        label={i18next.t('settings.app-condition')}
         info={i18next.t('settings.app-condition-info')}
         initialValue={appConditionVisible}
+        label={i18next.t('settings.app-condition')}
         onChange={(value) => {
           setAppConditionVisible(value);
           if (!value) {
@@ -92,13 +92,12 @@ export default function MenuConditions() {
         }}
       />
       <div ref={appConditionRef} className={classes.conditionInput}>
-        {appConditionVisible && (
+        {appConditionVisible ? (
           <>
             <input
-              type="text"
               placeholder={i18next.t('settings.app-condition-placeholder')}
+              type="text"
               value={appCondition}
-              onChange={(event) => setAppCondition(event.target.value)}
               onBlur={() => {
                 editMenu(selectedMenu, (menu) => {
                   menu.conditions = menu.conditions || {};
@@ -111,23 +110,24 @@ export default function MenuConditions() {
                   return menu;
                 });
               }}
+              onChange={(event) => setAppCondition(event.target.value)}
             />
             <Button
-              variant="secondary"
-              grouped
-              tooltip={i18next.t('settings.app-condition-tooltip')}
+              isGrouped
               icon={<BiTargetLock />}
+              tooltip={i18next.t('settings.app-condition-tooltip')}
+              variant="secondary"
               onClick={() => {
                 setAppPickerVisible(true);
               }}
             />
           </>
-        )}
+        ) : null}
       </div>
       <Checkbox
-        label={i18next.t('settings.window-condition')}
         info={i18next.t('settings.window-condition-info')}
         initialValue={windowConditionVisible}
+        label={i18next.t('settings.window-condition')}
         onChange={(value) => {
           setWindowConditionVisible(value);
           if (!value) {
@@ -142,13 +142,12 @@ export default function MenuConditions() {
         }}
       />
       <div ref={windowConditionRef} className={classes.conditionInput}>
-        {windowConditionVisible && (
+        {windowConditionVisible ? (
           <>
             <input
-              type="text"
               placeholder={i18next.t('settings.window-condition-placeholder')}
+              type="text"
               value={windowCondition}
-              onChange={(event) => setWindowCondition(event.target.value)}
               onBlur={() => {
                 editMenu(selectedMenu, (menu) => {
                   menu.conditions = menu.conditions || {};
@@ -161,23 +160,24 @@ export default function MenuConditions() {
                   return menu;
                 });
               }}
+              onChange={(event) => setWindowCondition(event.target.value)}
             />
             <Button
-              variant="secondary"
-              grouped
-              tooltip={i18next.t('settings.window-condition-tooltip')}
+              isGrouped
               icon={<BiTargetLock />}
+              tooltip={i18next.t('settings.window-condition-tooltip')}
+              variant="secondary"
               onClick={() => {
                 setWindowPickerVisible(true);
               }}
             />
           </>
-        )}
+        ) : null}
       </div>
       <Checkbox
-        label={i18next.t('settings.area-condition')}
         info={i18next.t('settings.area-condition-info')}
         initialValue={screenConditionVisible}
+        label={i18next.t('settings.area-condition')}
         onChange={(value) => {
           setScreenConditionVisible(value);
           if (!value) {
@@ -198,7 +198,7 @@ export default function MenuConditions() {
       <div
         ref={screenConditionRef}
         className={cx(classes.conditionInput, classes.screenCondition)}>
-        {screenConditionVisible && (
+        {screenConditionVisible ? (
           <>
             {[
               {
@@ -223,9 +223,10 @@ export default function MenuConditions() {
               },
             ].map(({ value, setValue, label }, index) => (
               <input
-                key={index}
-                value={value}
+                key={`list-${String(index)}`}
+                placeholder={label}
                 type="number"
+                value={value}
                 onBlur={() => {
                   editMenu(selectedMenu, (menu) => {
                     menu.conditions = menu.conditions || {};
@@ -248,25 +249,25 @@ export default function MenuConditions() {
                     return menu;
                   });
                 }}
-                placeholder={label}
                 onChange={(event) => setValue(event.target.value)}
               />
             ))}
             <Button
-              variant="secondary"
-              grouped
-              tooltip={i18next.t('settings.area-condition-tooltip')}
+              isGrouped
               icon={<BiTargetLock />}
+              tooltip={i18next.t('settings.area-condition-tooltip')}
+              variant="secondary"
               onClick={() => {
                 setScreenAreaPickerVisible(true);
               }}
             />
           </>
-        )}
+        ) : null}
       </div>
       <WindowPicker
+        isVisible={appPickerVisible}
         mode="application"
-        visible={appPickerVisible}
+        onClose={() => setAppPickerVisible(false)}
         onSelect={(value) => {
           setAppCondition(value);
           editMenu(selectedMenu, (menu) => {
@@ -275,11 +276,11 @@ export default function MenuConditions() {
             return menu;
           });
         }}
-        onClose={() => setAppPickerVisible(false)}
       />
       <WindowPicker
+        isVisible={windowPickerVisible}
         mode="title"
-        visible={windowPickerVisible}
+        onClose={() => setWindowPickerVisible(false)}
         onSelect={(value) => {
           setWindowCondition(value);
           editMenu(selectedMenu, (menu) => {
@@ -288,10 +289,10 @@ export default function MenuConditions() {
             return menu;
           });
         }}
-        onClose={() => setWindowPickerVisible(false)}
       />
       <ScreenAreaPicker
-        visible={screenAreaPickerVisible}
+        isVisible={screenAreaPickerVisible}
+        onClose={() => setScreenAreaPickerVisible(false)}
         onSelect={(top, left, bottom, right) => {
           setScreenMinX(left.toString());
           setScreenMaxX(right.toString());
@@ -308,7 +309,6 @@ export default function MenuConditions() {
             return menu;
           });
         }}
-        onClose={() => setScreenAreaPickerVisible(false)}
       />
     </>
   );

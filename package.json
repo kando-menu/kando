@@ -62,6 +62,7 @@
     "emojilib": "^4.0.2",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-config-xo-react": "^0.28.0",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.3.0",
     "howler": "^2.2.4",

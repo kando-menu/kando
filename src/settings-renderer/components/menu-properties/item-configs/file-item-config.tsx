@@ -28,7 +28,7 @@ export default () => {
 
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'file') {
-    return <></>;
+    return null;
   }
 
   const data = selectedItem.data as ItemData;
@@ -36,8 +36,8 @@ export default () => {
   return (
     <>
       <FilePicker
-        placeholder={i18next.t('menu-items.file.placeholder')}
         initialValue={data.path}
+        placeholder={i18next.t('menu-items.file.placeholder')}
         onChange={(path) => {
           const parts = path.split(/[/\\]/);
           const name = parts[parts.length - 1];

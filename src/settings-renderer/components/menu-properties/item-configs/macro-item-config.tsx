@@ -28,7 +28,7 @@ export default () => {
 
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'macro') {
-    return <></>;
+    return null;
   }
 
   const data = selectedItem.data as ItemData;
@@ -36,9 +36,9 @@ export default () => {
   return (
     <>
       <MacroPicker
+        initialValue={data.macro}
         placeholder={i18next.t('menu-items.macro.placeholder')}
         recordingPlaceholder={i18next.t('menu-items.macro.recording-placeholder')}
-        initialValue={data.macro}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).macro = value;
@@ -47,9 +47,9 @@ export default () => {
         }}
       />
       <Checkbox
-        label={i18next.t('menu-items.common.delayed-option')}
         info={i18next.t('menu-items.common.delayed-option-info')}
         initialValue={data.delayed}
+        label={i18next.t('menu-items.common.delayed-option')}
         onChange={(value) => {
           editMenuItem(selectedMenu, selectedChildPath, (item) => {
             (item.data as ItemData).delayed = value;
