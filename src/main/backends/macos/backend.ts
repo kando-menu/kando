@@ -50,16 +50,6 @@ export class MacosBackend extends Backend {
     // will be shown for a short moment when the app is started.
     app.dock.hide();
 
-    const apps = native.listInstalledApplications();
-    console.log('');
-    console.log('--------------------------------------------------');
-    console.log('Installed applications:');
-    console.log('--------------------------------------------------');
-
-    console.log('');
-    console.log(JSON.stringify(apps, null, 2));
-    console.log('');
-
     // We can get a list of all installed applications on macOS.
     native
       .listInstalledApplications()
