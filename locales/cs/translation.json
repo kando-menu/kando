@@ -8,6 +8,9 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando nemůže přímo vázat zkratky v KDE/Waylandu. Místo toho zadejte ID zkratky zde a najděte zkratku v KWin sekci v KDE nastaveni systému. Tam můžete přiřadit zkratku která otevře toto menu."
+        },
+        "niri": {
+            "shortcut-info": "Niri zatím nepodporuje globální zástupce. Ale můžete otevřít toto menu pomocí 'kando --menu \"Název Menu\" z příkazového řádku nebo z vašeho niri nastavení."
         }
     },
     "example-menu": {
@@ -75,7 +78,8 @@
         "un-inhibit-shortcuts": "Znovu povolit zkratky",
         "new-version-notification-body": "Získejte z {{link}}.",
         "invalid-link-header": "Neplatný odkaz",
-        "invalid-link-message": "Hluboký odkaz nemohl být analyzován."
+        "invalid-link-message": "Hluboký odkaz nemohl být analyzován.",
+        "no-backend-found": "Nebyl nalezen žádný vhodný backend."
     },
     "menu-items": {
         "command": {
@@ -93,7 +97,8 @@
             "detached": "Spustit odpojené",
             "isolated": "Spustit izolovaně",
             "detached-info": "Odpojí příkaz z Kando, takže běh bude pokračovat i v případě, že je Kando uzavřeno. Zakázání může vyřešit problémy s příkazy, které se nespouští správně.",
-            "isolated-info": "Spustí příkaz v čistém prostředí, to znamená, že nebude dědit žádné proměnné z Kando. To může pomoci s příkazy, které se nespouští správně."
+            "isolated-info": "Spustí příkaz v čistém prostředí, to znamená, že nebude dědit žádné proměnné z Kando. To může pomoci s příkazy, které se nespouští správně.",
+            "choose-app": "Vybrat aplikaci…"
         },
         "file": {
             "description": "Otevře soubor nebo složku.",
@@ -279,7 +284,9 @@
             "cycle-from-first": "Zobrazit další menu (začít s prvním)",
             "cycle-from-recent": "Zobrazit další menu (pokračovat od posledního)",
             "close-menu": "Zavřít menu",
-            "localization-info": "Restartujte Kando pro použití nového jazyka."
+            "localization-info": "Restartujte Kando pro použití nového jazyka.",
+            "hardware-acceleration": "Povolit hardwarovou akceleraci",
+            "hardware-acceleration-info": "Tato možnost může zvýšit výkon aplikace, ale může také vést k vykreslování artefaktů. Musíte restartovat Kando pro použítí tohoto nastavení."
         },
         "hover-mode": "Hover Mód",
         "hover-mode-info": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
@@ -410,6 +417,11 @@
         "no-matching-menus-note": "Možná zkuste vyhledat něco jiného?",
         "empty-collection-note": "Upravte štítky výše, nebo přidejte zcela nové menu do této kolekce pomocí tlačítka níže.",
         "empty-collection": "Tato kolekce je prázdná.",
-        "add-menu-item-hint": "Přetáhněte tuto položku pro přidání do menu výše!"
+        "add-menu-item-hint": "Přetáhněte tuto položku pro přidání do menu výše!",
+        "app-picker": {
+            "hint": "Můžete také přetáhnout aplikaci z nabídky Start do editoru Kando menu!",
+            "search-placeholder": "Vyhledat aplikaci…",
+            "use-selected": "Použít vybrané"
+        }
     }
 }
