@@ -27,7 +27,7 @@ export default () => {
 
   // Sanity check. Should never happen, but just in case.
   if (!selectedItem || selectedItem.type !== 'redirect') {
-    return <></>;
+    return null;
   }
 
   // Assemble a list of all existing menu names.
@@ -39,21 +39,19 @@ export default () => {
   const data = selectedItem.data as ItemData;
 
   return (
-    <>
-      <Dropdown
-        options={options}
-        initialValue={data.menu}
-        onChange={(menuName) => {
-          const menu = menus.find((menu) => menu.root.name === menuName);
-          editMenuItem(selectedMenu, selectedChildPath, (item) => {
-            item.name = menu?.root.name || '';
-            item.icon = menu?.root.icon || '';
-            item.iconTheme = menu?.root.iconTheme || '';
-            (item.data as ItemData).menu = menuName;
-            return item;
-          });
-        }}
-      />
-    </>
+    <Dropdown
+      initialValue={data.menu}
+      options={options}
+      onChange={(menuName) => {
+        const menu = menus.find((menu) => menu.root.name === menuName);
+        editMenuItem(selectedMenu, selectedChildPath, (item) => {
+          item.name = menu?.root.name || '';
+          item.icon = menu?.root.icon || '';
+          item.iconTheme = menu?.root.iconTheme || '';
+          (item.data as ItemData).menu = menuName;
+          return item;
+        });
+      }}
+    />
   );
 };

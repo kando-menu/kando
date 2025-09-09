@@ -28,25 +28,25 @@ import * as classes from './IconChooserButton.module.scss';
 
 type Props = {
   /** Function to call when the color is changed. */
-  onChange?: (icon: string, theme: string) => void;
+  readonly onChange?: (icon: string, theme: string) => void;
 
   /** Name of the icon. */
-  icon: string;
+  readonly icon: string;
 
   /** Name of the icon theme. */
-  theme: string;
+  readonly theme: string;
 
   /** The size of the icon. */
-  iconSize?: number | string;
+  readonly iconSize?: number | string;
 
   /** Size of the button. Defaults to 'medium'. */
-  buttonSize?: 'small' | 'medium' | 'large';
+  readonly buttonSize?: 'small' | 'medium' | 'large';
 
   /** Forwarded to the button component. */
-  grouped?: boolean;
+  readonly isGrouped?: boolean;
 
   /** Forwards the variant to the button component. Defaults to 'secondary'. */
-  variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
+  readonly variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
 };
 
 /**
@@ -70,9 +70,9 @@ export default function IconChooserButton(props: Props) {
     if (pickerInfo.type === 'list') {
       return (
         <GridIconPicker
-          theme={theme}
-          selectedIcon={props.icon}
           filterTerm={filterTerm}
+          selectedIcon={props.icon}
+          theme={theme}
           onChange={(value) => props.onChange(value, theme)}
           onClose={() => setIsPopoverOpen(false)}
         />
@@ -85,7 +85,7 @@ export default function IconChooserButton(props: Props) {
         />
       );
     }
-    return <></>;
+    return null;
   };
 
   const allThemes = Array.from(
@@ -94,34 +94,31 @@ export default function IconChooserButton(props: Props) {
 
   return (
     <Popover
-      visible={isPopoverOpen}
-      onClose={() => setIsPopoverOpen(false)}
-      position="bottom"
       content={
         <div className={classes.container}>
           <div className={classes.row}>
             <Dropdown
+              initialValue={theme}
               options={allThemes.map(([key, name]) => ({
                 value: key,
                 label: name.name,
               }))}
-              initialValue={theme}
               onChange={setTheme}
             />
             {pickerInfo.type === 'list' && (
               <div className={classes.searchInput}>
                 <input
-                  type="text"
                   placeholder={i18next.t(
                     'settings.icon-picker-dialog.search-placeholder'
                   )}
+                  type="text"
                   value={filterTerm}
                   onChange={(event) => {
                     setFilterTerm(event.target.value);
                   }}
                 />
                 <Button
-                  grouped
+                  isGrouped
                   icon={<TbBackspaceFilled />}
                   onClick={() => {
                     setFilterTerm('');
@@ -131,20 +128,23 @@ export default function IconChooserButton(props: Props) {
             )}
           </div>
           {getPicker()}
-          <Note marginTop={10} markdown>
+          <Note useMarkdown marginTop={10}>
             {pickerInfo.hint ||
               i18next.t('settings.icon-picker-dialog.hint', {
                 link: 'https://kando.menu/icon-themes/',
               })}
           </Note>
         </div>
-      }>
+      }
+      isVisible={isPopoverOpen}
+      position="bottom"
+      onClose={() => setIsPopoverOpen(false)}>
       <Button
-        onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-        grouped={props.grouped}
-        variant={props.variant}
+        icon={<ThemedIcon name={props.icon} size={props.iconSize} theme={props.theme} />}
+        isGrouped={props.isGrouped}
         size={props.buttonSize}
-        icon={<ThemedIcon name={props.icon} theme={props.theme} size={props.iconSize} />}
+        variant={props.variant}
+        onClick={() => setIsPopoverOpen(!isPopoverOpen)}
       />
     </Popover>
   );

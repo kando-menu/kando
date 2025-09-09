@@ -14,13 +14,13 @@ import Note from './Note';
 
 type Props = {
   /** One of these will be displayed. */
-  tips: string[];
+  readonly tips: string[];
 
   /** Margin to apply to the top of the note. Defaults to 0. */
-  marginTop?: number | string;
+  readonly marginTop?: number | string;
 
   /** Margin to apply to the bottom of the note. Defaults to 0. */
-  marginBottom?: number | string;
+  readonly marginBottom?: number | string;
 };
 
 /**
@@ -32,12 +32,12 @@ type Props = {
 export default function RandomTip(props: Props) {
   return (
     <Note
-      center
-      marginLeft={'10%'}
-      marginRight={'10%'}
+      isCentered
+      useMarkdown
       marginBottom={props.marginBottom}
-      marginTop={props.marginTop}
-      markdown>
+      marginLeft="10%"
+      marginRight="10%"
+      marginTop={props.marginTop}>
       {props.tips[Math.floor(Math.random() * props.tips.length)]}
     </Note>
   );

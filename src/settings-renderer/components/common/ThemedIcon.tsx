@@ -15,13 +15,13 @@ import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-regist
 
 type Props = {
   /** The name of the icon. */
-  name: string;
+  readonly name: string;
 
   /** The name of the icon theme to take the icon from. */
-  theme: string;
+  readonly theme: string;
 
   /** The size of the icon. */
-  size?: number | string;
+  readonly size?: number | string;
 };
 
 /**
@@ -46,8 +46,9 @@ export default function ThemedIcon(props: Props) {
 
   return (
     <div
-      style={{ minWidth: props.size, minHeight: props.size }}
+      ref={iconRef}
       className={classes.icon}
-      ref={iconRef}></div>
+      style={{ minWidth: props.size, minHeight: props.size }}
+    />
   );
 }

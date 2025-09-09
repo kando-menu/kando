@@ -36,20 +36,20 @@ export default function PreviewHeader() {
     return (
       <>
         <Button
-          tooltip={i18next.t('settings.undo')}
+          isGrouped
           icon={<IoArrowUndo />}
-          disabled={pastStates.length === 0}
-          onClick={() => useMenuSettings.temporal.getState().undo()}
+          isDisabled={pastStates.length === 0}
+          tooltip={i18next.t('settings.undo')}
           variant="tool"
-          grouped
+          onClick={() => useMenuSettings.temporal.getState().undo()}
         />
         <Button
-          tooltip={i18next.t('settings.redo')}
+          isGrouped
           icon={<IoArrowRedo />}
-          disabled={futureStates.length === 0}
-          onClick={() => useMenuSettings.temporal.getState().redo()}
+          isDisabled={futureStates.length === 0}
+          tooltip={i18next.t('settings.redo')}
           variant="tool"
-          grouped
+          onClick={() => useMenuSettings.temporal.getState().redo()}
         />
       </>
     );
@@ -59,34 +59,34 @@ export default function PreviewHeader() {
     <>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip={i18next.t('settings.introduction-dialog.title')}
+          isGrouped
           icon={<IoSchool />}
-          onClick={() => setIntroDialogVisible(true)}
+          tooltip={i18next.t('settings.introduction-dialog.title')}
           variant="tool"
-          grouped
+          onClick={() => setIntroDialogVisible(true)}
         />
         <Button
-          tooltip={i18next.t('settings.about-dialog.title')}
+          isGrouped
           icon={<TbHeartFilled />}
-          onClick={() => setAboutDialogVisible(true)}
+          tooltip={i18next.t('settings.about-dialog.title')}
           variant="tool"
-          grouped
+          onClick={() => setAboutDialogVisible(true)}
         />
       </span>
       <span style={{ marginRight: '8px' }}>
         <Button
-          tooltip={i18next.t('settings.menu-themes-dialog.title')}
+          isGrouped
           icon={<TbPaletteFilled />}
-          onClick={() => setThemesDialogVisible(true)}
+          tooltip={i18next.t('settings.menu-themes-dialog.title')}
           variant="tool"
-          grouped
+          onClick={() => setThemesDialogVisible(true)}
         />
         <Button
-          tooltip={i18next.t('settings.general-settings-dialog.title')}
+          isGrouped
           icon={<TbSettingsFilled />}
-          onClick={() => setSettingsDialogVisible(true)}
+          tooltip={i18next.t('settings.general-settings-dialog.title')}
           variant="tool"
-          grouped
+          onClick={() => setSettingsDialogVisible(true)}
         />
       </span>
       <span>

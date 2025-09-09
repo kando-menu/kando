@@ -14,13 +14,13 @@ import * as classes from './Tag.module.scss';
 
 type Props = {
   /** The name of the tag. */
-  name: string;
+  readonly name: string;
 
   /** Function to call when the tag is clicked. */
-  onClick?: () => void;
+  readonly onClick?: () => void;
 
   /** An optional icon to show before the tag name. It will only be shown on hover. */
-  icon?: React.ReactNode;
+  readonly icon?: React.ReactNode;
 };
 
 /**
@@ -31,7 +31,7 @@ type Props = {
  */
 export default function Tag(props: Props) {
   return (
-    <button onClick={props.onClick} className={classes.tag}>
+    <button className={classes.tag} type="button" onClick={props.onClick}>
       {props.icon}
       {props.name}
     </button>

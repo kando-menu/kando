@@ -115,19 +115,19 @@ export default function MenuThemesDialog() {
             gap: 10,
             justifyContent: 'space-between',
           }}>
-          <Scrollbox maxHeight={'min(20vh, 400px)'} width="100%" paddingLeft={0}>
+          <Scrollbox maxHeight="min(20vh, 400px)" paddingLeft={0} width="100%">
             <div
               style={{
                 display: 'flex',
                 gap: 10,
                 flexWrap: 'wrap',
               }}>
-              {Object.keys(currentColors).map((key, index) => {
+              {Object.keys(currentColors).map((key) => {
                 return (
                   <ColorButton
-                    key={index}
-                    name={key}
+                    key={key}
                     color={currentColors[key]}
+                    name={key}
                     onChange={(color) => {
                       // Create a new object to avoid mutating the state directly.
                       const overrides = lodash.cloneDeep(currentColorOverrides);
@@ -182,80 +182,80 @@ export default function MenuThemesDialog() {
 
   return (
     <Modal
-      title={i18next.t('settings.menu-themes-dialog.title')}
       icon={<TbPaletteFilled />}
-      visible={themesDialogVisible}
-      onClose={() => setThemesDialogVisible(false)}
+      isVisible={themesDialogVisible}
       maxWidth={1200}
       paddingBottom={5}
-      paddingTop={0}
       paddingLeft={0}
-      paddingRight={5}>
+      paddingRight={5}
+      paddingTop={0}
+      title={i18next.t('settings.menu-themes-dialog.title')}
+      onClose={() => setThemesDialogVisible(false)}>
       <div className={classes.container}>
         <div className={classes.sidebar}>
           <SettingsSpinbutton
-            label={i18next.t('settings.menu-themes-dialog.fade-in-time')}
             info={i18next.t('settings.menu-themes-dialog.fade-in-time-info')}
+            label={i18next.t('settings.menu-themes-dialog.fade-in-time')}
+            max={500}
+            min={0}
             settingsKey="fadeInDuration"
-            width={spinbuttonWidth}
-            min={0}
-            max={500}
             step={10}
+            width={spinbuttonWidth}
           />
           <SettingsSpinbutton
-            label={i18next.t('settings.menu-themes-dialog.fade-out-time')}
             info={i18next.t('settings.menu-themes-dialog.fade-out-time-info')}
-            settingsKey="fadeOutDuration"
-            width={spinbuttonWidth}
-            min={0}
+            label={i18next.t('settings.menu-themes-dialog.fade-out-time')}
             max={500}
+            min={0}
+            settingsKey="fadeOutDuration"
             step={10}
+            width={spinbuttonWidth}
           />
           <SettingsSpinbutton
-            label={i18next.t('settings.menu-themes-dialog.menu-scale')}
             info={i18next.t('settings.menu-themes-dialog.menu-scale-info')}
-            settingsKey="zoomFactor"
-            width={spinbuttonWidth}
-            min={0.5}
+            label={i18next.t('settings.menu-themes-dialog.menu-scale')}
             max={5}
+            min={0.5}
+            settingsKey="zoomFactor"
             step={0.1}
+            width={spinbuttonWidth}
           />
           <SettingsCheckbox
-            label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
             info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
+            label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
             settingsKey="enableDarkModeForMenuThemes"
           />
 
           {accentColorsNode}
           <div style={{ flexGrow: 1 }} />
 
-          <Swirl variant="1" width={250} marginTop={10} marginBottom={20} />
+          <Swirl marginBottom={20} marginTop={10} variant="1" width={250} />
           <Button
-            label={i18next.t('settings.menu-themes-dialog.get-themes-online')}
+            isBlock
             icon={<TbExternalLink />}
+            label={i18next.t('settings.menu-themes-dialog.get-themes-online')}
             tooltip="https://github.com/kando-menu/menu-themes"
             onClick={() =>
               window.open('https://github.com/kando-menu/menu-themes', '_blank')
             }
-            block
           />
           <Button
-            label={i18next.t('settings.menu-themes-dialog.create-your-own-themes')}
+            isBlock
             icon={<TbExternalLink />}
+            label={i18next.t('settings.menu-themes-dialog.create-your-own-themes')}
             tooltip="https://kando.menu/create-menu-themes/"
             onClick={() =>
               window.open('https://kando.menu/create-menu-themes/', '_blank')
             }
-            block
           />
           <Button
-            label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
+            isBlock
             icon={<TbFolderOpen />}
+            label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
             onClick={openThemeDirectory}
-            block
           />
         </div>
-        <Scrollbox maxHeight={'min(80vh, 600px)'} width="100%">
+        <Scrollbox maxHeight="min(80vh, 600px)" width="100%">
           <div className={classes.themesGrid}>
             {themes.map((theme) => {
               let previewPath =

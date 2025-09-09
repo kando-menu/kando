@@ -13,12 +13,12 @@ import React from 'react';
 import * as classes from './Scrollbox.module.scss';
 
 type Props = {
-  children: React.ReactNode;
-  maxHeight?: string | number;
-  width?: string | number;
-  hideScrollbar?: boolean;
-  paddingLeft?: string | number;
-  paddingRight?: string | number;
+  readonly children: React.ReactNode;
+  readonly maxHeight?: string | number;
+  readonly width?: string | number;
+  readonly hideScrollbar?: boolean;
+  readonly paddingLeft?: string | number;
+  readonly paddingRight?: string | number;
 };
 
 /**

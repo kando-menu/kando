@@ -16,47 +16,47 @@ const cx = classNames.bind(classes);
 
 type Props = {
   /** Function to call when the button is clicked. */
-  onClick?: () => void;
+  readonly onClick?: () => void;
 
   /** Optional icon to display inside the button. */
-  icon?: React.ReactNode;
+  readonly icon?: React.ReactNode;
 
   /** Optional label text to display inside the button. */
-  label?: string;
+  readonly label?: string;
 
   /** Optional tooltip text to display when hovering over the button. */
-  tooltip?: string;
+  readonly tooltip?: string;
 
   /**
    * Variant style of the button. Primary uses a more prominent color, flat has only a
    * background when hovered, tool has no background at all. Defaults to 'secondary'.
    * Floating has a dark background and more rounded corners.
    */
-  variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
+  readonly variant?: 'primary' | 'secondary' | 'flat' | 'tool' | 'floating';
 
   /** Size of the button. Defaults to 'medium'. */
-  size?: 'small' | 'medium' | 'large';
+  readonly size?: 'small' | 'medium' | 'large';
 
   /** Alignment of icon and text. Defaults to 'center'. */
-  align?: 'left' | 'right' | 'center';
+  readonly align?: 'left' | 'right' | 'center';
 
   /** Whether the button is disabled. Defaults to false. */
-  disabled?: boolean;
+  readonly isDisabled?: boolean;
 
   /** Whether the button should take the full width of its container. Defaults to false. */
-  block?: boolean;
+  readonly isBlock?: boolean;
 
   /**
    * Whether the button should grow to fill available space. Uses flex-grow and defaults
    * to false.
    */
-  grow?: boolean;
+  readonly isGrowing?: boolean;
 
   /**
    * Whether the button is part of a group of buttons. This will make the corners of only
    * the first and last button in the group round. Defaults to false.
    */
-  grouped?: boolean;
+  readonly isGrouped?: boolean;
 };
 
 /**
@@ -71,21 +71,22 @@ export default function Button(props: Props) {
     [props.variant || 'secondary']: true,
     [props.size || 'medium']: true,
     [props.align || 'center']: true,
-    disabled: props.disabled,
-    grouped: props.grouped,
-    block: props.block,
-    grow: props.grow,
+    disabled: props.isDisabled,
+    grouped: props.isGrouped,
+    block: props.isBlock,
+    grow: props.isGrowing,
   });
 
   return (
     <button
-      onClick={props.onClick}
       className={className}
-      disabled={props.disabled}
+      data-tooltip-content={props.tooltip}
       data-tooltip-id="main-tooltip"
-      data-tooltip-content={props.tooltip}>
+      disabled={props.isDisabled}
+      type="button"
+      onClick={props.onClick}>
       {props.icon}
-      {props.label && <span className={classes.text}>{props.label}</span>}
+      {props.label ? <span className={classes.text}>{props.label}</span> : null}
     </button>
   );
 }
