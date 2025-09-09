@@ -260,22 +260,22 @@ export type MenuThemeDescription = {
    * the menu away from the screen edges when it's opened too close to them. Default is
    * 150px.
    */
-  maxMenuRadius: number;
+  readonly maxMenuRadius: number;
 
   /** The width of the text wrap in the center of the menu in pixels. Default is 90px. */
-  centerTextWrapWidth: number;
+  readonly centerTextWrapWidth: number;
 
   /**
    * If this is true, children of a menu item will be drawn below the parent. Otherwise
    * they will be drawn above. Default is true.
    */
-  drawChildrenBelow: boolean;
+  readonly drawChildrenBelow: boolean;
 
   /**
    * If this is set to true, the center text of the menu will be drawn. This is the text
    * that is displayed in the center of the menu when it is opened. Default is true.
    */
-  drawCenterText: boolean;
+  readonly drawCenterText: boolean;
 
   /**
    * If this is set to true, a full-screen div will be drawn below the menu with the CSS
@@ -283,14 +283,14 @@ export type MenuThemeDescription = {
    * "hovered" and the "--start-angle" and "--end-angle" CSS properties will indicate
    * where the selected child is. Default is false.
    */
-  drawSelectionWedges: boolean;
+  readonly drawSelectionWedges: boolean;
 
   /**
    * If this is set to true, a full-screen div will be drawn below the menu with the CSS
    * class "wedge-separators". It will contain a div for each separator line between
    * adjacent wedges. They will have the "separator" class. Default is false.
    */
-  drawWedgeSeparators: boolean;
+  readonly drawWedgeSeparators: boolean;
 
   /**
    * These colors will be available as var(--name) in the CSS file and can be adjusted by
