@@ -58,9 +58,7 @@ export default function FilePicker(props: Props) {
           type="text"
           value={path}
           onBlur={(event) => {
-            if (event.target.value !== path) {
-              props.onChange?.(event.target.value);
-            }
+            props.onChange?.(event.target.value);
           }}
           onChange={(event) => {
             setPath(event.target.value);
