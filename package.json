@@ -11,6 +11,7 @@
     "make": "tsx node_modules/@electron-forge/cli/src/electron-forge-make",
     "publish": "tsx node_modules/@electron-forge/cli/src/electron-forge-publish",
     "lint": "eslint .",
+    "tscheck": "tsc --noEmit",
     "prettier": "prettier --check src",
     "format": "prettier --write src",
     "test": "ts-mocha test/**/*.spec.ts",
