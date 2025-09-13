@@ -64,6 +64,23 @@ jobs:
       - name: Run Prettier
         run: npm run prettier
 
+  tscheck:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    # Do only run on pushes to the main repository or on pull requests from forks. This avoids running the tests twice on pull requests from the main repository.
+    if: (github.event_name == 'push' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .node-version
+      - name: Install Dependencies
+        run: |
+          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          npm ci
+      - name: Run TypeScript Check
+        run: npm run tscheck
+
   reuse:
     name: REUSE
     runs-on: ubuntu-latest
