@@ -336,6 +336,79 @@
         "un-inhibit-shortcuts": "Поново омогући пречице",
         "inhibit-shortcuts": "Привремено онемогући све пречице",
         "quit": "Затвори",
-        "failed-to-start-header": "Kando није успео да се покрене"
+        "failed-to-start-header": "Kando није успео да се покрене",
+        "no-backend-found": "Није пронађен погодан бекенд.",
+        "invalid-link-header": "Погрешан линк",
+        "invalid-link-message": "Дубоки линк није могуће разрешити."
+    },
+    "example-menu": {
+        "name": "Пример менија",
+        "apps": {
+            "submenu": "Апликације",
+            "safari": "Safari",
+            "web-browser": "Прегледач",
+            "email": "Имејл",
+            "apple-music": "Музика",
+            "gimp": "GIMP",
+            "paint": "Paint",
+            "finder": "Finder",
+            "file-browser": "Прегледач датотека",
+            "terminal": "Терминал"
+        },
+        "web-links": {
+            "submenu": "Интернет линк",
+            "google": "Google",
+            "kando-on-github": "Kando на GitHub",
+            "kando-on-kofi": "Kando на Ko-fi",
+            "kando-on-youtube": "Kando на YouTube",
+            "kando-on-discord": "Kando на Discord"
+        },
+        "next-workspace": "Следећи радиони простор",
+        "clipboard": {
+            "submenu": "Клипборд",
+            "paste": "Прилепи",
+            "copy": "Копирај",
+            "cut": "Исеци"
+        },
+        "audio": {
+            "submenu": "Аудио",
+            "next-track": "Следећа песма",
+            "play-pause": "Пусти / Пауза",
+            "mute": "Утишај",
+            "previous-track": "Претходна песма"
+        },
+        "windows": {
+            "submenu": "Прозори",
+            "mission-control": "Mission Control",
+            "toggle-maximize": "Увећај прозор",
+            "tile-right": "Плоча десно",
+            "close-window": "Затвори прозор",
+            "tile-left": "Плоча лево"
+        },
+        "previous-workspace": "Претходни радни простор",
+        "bookmarks": {
+            "submenu": "Омиљени",
+            "downloads": "Преузимања",
+            "videos": "Видеа",
+            "pictures": "Слике",
+            "documents": "Документи",
+            "desktop": "Радна површина",
+            "home": "Почетна страница",
+            "music": "Музика"
+        }
+    },
+    "backends": {
+        "gnome": {
+            "error": "Не могу да се повежем са екстензијом Kando Integration за GNOME. Можеш је преузети овде: {{link}}"
+        },
+        "hyprland": {
+            "shortcut-info": "Kando не може директно да додељује глобалне пречице у Hyprland-у. Уместо тога одреди ID пречице у датотеци hyprland.conf и додај линију попут \"bind = CTRL, Space, exec, kando:мој-мени\". Замени мој-мени са изабраним ID-јем."
+        },
+        "kde-wayland": {
+            "shortcut-info": "Kando не може директно да додељује глобалне пречице у KDE/Wayland окружењу. Уместо тога oвде одреди ID пречице, oтвори Системске поставке→ Пречице → KWin (или \"Куин\"). Додели жељену комбинацију тастера за ту акцију."
+        },
+        "niri": {
+            "shortcut-info": "Niri још увек не подржава глобалне пречице, али можеш отворити овај мени преко  'kando --menu \"ImeMenija\"' из командне линије или из Niri конфигурације."
+        }
     }
 }
