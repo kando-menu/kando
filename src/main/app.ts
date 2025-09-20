@@ -960,7 +960,7 @@ export class KandoApp {
 
         // We return the relative path of the files to the icon theme directory.
         resolve(
-          files.map((file) => path.relative(directory, path.join(file.path, file.name)))
+          files.map((file) => path.relative(directory, path.join(directory, file.name)))
         );
       });
     });
