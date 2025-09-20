@@ -91,7 +91,6 @@ export class UpdateChecker extends EventEmitter {
     }
 
     const data = await response.json();
-    console.log(`Latest version on GitHub: ${JSON.stringify(data)}`);
 
     // This function converts a component of a version string into a number. 'rc', 'beta'
     // and 'alpha' are converted to -1, -2 and -3 respectively. All other strings are
