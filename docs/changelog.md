@@ -44,7 +44,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
 - Improved the readability of the source code by using `type` and `interface` in a more consistent manner. Thanks to [@LitoMore](https://github.com/LitoMore) for working on this!
 - Improved the consistency of the source code by using more ESLint rules. Thanks to [@LitoMore](https://github.com/LitoMore) for this as well!
-- Updated Electron to version 38.
+- **:collision: [Potentially BREAKING]** Updated Electron to version 38. **This removes support for macOS 11 (Big Sur).** If you want to use Kando on this very old macOS version, you will have to stay either on Kando 2.0.0 or compile your own version of Kando.
 - Updated many other dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
