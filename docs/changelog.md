@@ -36,7 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - **Automatic font-size reduction for the center text!** If the center text is too long to fit into the circle, it will now be automatically reduced in size so it fits.
 - **Backup of the settings on version upgrades!** If you upgrade Kando to a new version, the old application settings and menu configurations will be automatically saved to a backup file. This allows you to restore them if something goes wrong during the upgrade. The backup files are stored in a `backup` directory next to the `config.json` and `menus.json` files.
 - A few Kando logo variants in the built-in Kando icon theme.
-- Many translation updates: Thanks to all the contributors!
+- Many translation updates: **Thanks to all the contributors!**
 
 ### :wrench: Changed
 
@@ -44,7 +44,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
 - Improved the readability of the source code by using `type` and `interface` in a more consistent manner. Thanks to [@LitoMore](https://github.com/LitoMore) for working on this!
 - Improved the consistency of the source code by using more ESLint rules. Thanks to [@LitoMore](https://github.com/LitoMore) for this as well!
-- Updated Electron to version 34.
+- Updated Electron to version 38.
+- Updated many other dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
 

@@ -71,6 +71,9 @@ export class KandoApp {
   /** This contains the last WMInfo which was received. */
   private lastWMInfo?: WMInfo;
 
+  /** This will cache the icon themes. */
+  private iconThemesCache?: IconThemesInfo;
+
   /**
    * Most of the initialization is done in the init() method. This constructor is only
    * used to set up the hidden menu bar as this has to be done before the Electron app is
@@ -610,7 +613,11 @@ export class KandoApp {
 
     // Allow the renderer to retrieve all icons of all file icon themes.
     ipcMain.handle('common.get-icon-themes', async () => {
-      const info: IconThemesInfo = {
+      if (this.iconThemesCache) {
+        return this.iconThemesCache;
+      }
+
+      this.iconThemesCache = {
         userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
         fileIconThemes: [],
       };
@@ -625,7 +632,7 @@ export class KandoApp {
           const directory = await this.findIconThemePath(theme);
           const icons = await this.listIconsRecursively(directory);
 
-          info.fileIconThemes.push({
+          this.iconThemesCache.fileIconThemes.push({
             name: theme,
             directory,
             icons,
@@ -633,7 +640,7 @@ export class KandoApp {
         })
       );
 
-      return info;
+      return this.iconThemesCache;
     });
 
     // Allow the renderer to retrieve the description of the current menu theme. We also
@@ -960,7 +967,9 @@ export class KandoApp {
 
         // We return the relative path of the files to the icon theme directory.
         resolve(
-          files.map((file) => path.relative(directory, path.join(file.path, file.name)))
+          files.map((file) =>
+            path.relative(directory, path.join(file.parentPath, file.name))
+          )
         );
       });
     });

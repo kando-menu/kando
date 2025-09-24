@@ -10,7 +10,6 @@
 
 import { EventEmitter } from 'events';
 import { app } from 'electron';
-import { Octokit } from 'octokit';
 
 /**
  * Checking for updates works the following way: Whenever a menu is opened, we check for a
@@ -74,16 +73,24 @@ export class UpdateChecker extends EventEmitter {
    * an exception is thrown.
    */
   private async isUpdateAvailable() {
-    const octokit = new Octokit();
+    const response = await fetch(
+      'https://api.github.com/repos/kando-menu/kando/releases',
+      {
+        headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          Accept: 'application/vnd.github+json',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'X-GitHub-Api-Version': '2022-11-28',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'User-Agent': 'Kando-Updater', // GitHub recommends setting a UA
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error('Failed to retrieve latest version information from GitHub.');
+    }
 
-    const response = await octokit.request('GET /repos/{owner}/{repo}/releases', {
-      owner: 'kando-menu',
-      repo: 'kando',
-      headers: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
+    const data = await response.json();
 
     // This function converts a component of a version string into a number. 'rc', 'beta'
     // and 'alpha' are converted to -1, -2 and -3 respectively. All other strings are
@@ -107,8 +114,8 @@ export class UpdateChecker extends EventEmitter {
       return str.split(/[.-]+/).map(toNumber);
     };
 
-    if (response?.data?.length > 0) {
-      for (const release of response.data) {
+    if (data?.length > 0) {
+      for (const release of data) {
         if (!release.prerelease) {
           const latestVersion = parseVersionString(release.tag_name.substring(1));
           const currentVersion = parseVersionString(app.getVersion());
@@ -136,6 +143,6 @@ export class UpdateChecker extends EventEmitter {
       }
     }
 
-    throw new Error('Failed to retrieve latest version information from GitHub.');
+    throw new Error('Failed to parse latest version information from GitHub.');
   }
 }
