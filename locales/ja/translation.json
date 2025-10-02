@@ -23,7 +23,7 @@
             "localization-info": "言語を適用するには Kando を再起動してください。",
             "check-for-new-versions": "新しいバージョンを確認",
             "auto-language": "システム言語を使用",
-            "invisible-settings-button": "非表示の設定ボタン",
+            "invisible-settings-button": "設定ボタンの非表示",
             "settings-button-position": "ボタンの位置設定",
             "settings-button-position-info": "設定ボタンが表示される画面端を選択します。",
             "top-left": "左上",
