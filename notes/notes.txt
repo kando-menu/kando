@@ -1,0 +1,111 @@
+Trying with latest versions of:
+
+node: 20.10.0
+npm: 10.2.3
+
+nvm install 20.10.0
+
+Kando for Snap AR Spectacles / Lens Studio!
+https://ar.snap.com/lens-studio
+
+submenus with links back to the parent menu
+kando/src/renderer/math/math.ts
+
+/**
+ * This method receives an array of objects, each representing an item in a menu level.
+ * For each item it computes an angle defining the direction in which the item should be
+ * rendered. The angles are returned in an array (of the same length as the input array).
+ * If an item in the input array already has an 'angle' property, this is considered a
+ * fixed angle and all others are distributed more ore less evenly around. This method
+ * also reserves the required angular space for the back navigation link to the parent
+ * item (if given). Angles in items are always in degrees, 0° is on the top, 90° on the
+ * right, 180° on the bottom and so on. Fixed input angles must be monotonically
+ * increasing. If this is not the case, the smaller angle is ignored.
+ *
+ * @param items The Items for which the angles should be computed. They may already have
+ *   an angle property. If so, this is considered a fixed angle.
+ * @param parentAngle The angle of the parent item. If given, there will be some reserved
+ *   space.
+ * @returns An array of angles in degrees.
+ */
+
+How about the back links only occupy the "inner radius" of the pie
+menu, so you can still put a normal item in the same direction as
+"back", but you just have to move out further to select it, because
+the "back" button has a max radius (i.e. inside the menu label radius).
+
+Or the back link could be the outer radius segment instead of the
+inner radius segment.
+
+This could be a general purpose way of "stacking" multipl pie menu
+items in the same direction, each occupying a radius interval arc. And
+outer arcs can double and further increase the number of directional
+items.
+
+Think of them like segments of orbitals for electrons.
+
+Slices / Petals? Multiple petals per slice.
+
+ChatGPT suggests:
+
+For naming the radial segments in a pie menu, especially when
+considering stacking multiple items in the same direction with
+different radii, you could use terms like "Orbital Layers" or "Radial
+Tiers." Each tier or layer can represent a different level of menu
+items, with the innermost being the back links or primary options, and
+the outer layers for additional or secondary options. The outermost
+layer that extends to the edge of the screen could be called the
+"Peripheral Tier" or "Boundary Layer." These terms can effectively
+convey the idea of multiple, concentric segments within a single
+directional slice of the pie menu.
+
+Each slice has a tierSlices property, an array of integers, defining
+the number of directional slices each layer has. The top level pie
+menu typically has a subtend of 360 degrees (although it could be cut
+in half or quarter at the screen edge or corner). The first layer is
+usually 1 (if there is only one item), 2, 4, 8, or even 12.
+
+tierSlices = [8, 1, 2, 4, 8]
+
+That is an 8 slice pie menu that can hold 8 * (1 + 2 + 4 + 8) = 120
+items.
+
+The narrowest subtend outer layers extend to the screen edge, making
+them easier to select than if their outer radius was limited.
+
+The layout algorithm could normalize the area by adjusting the inner
+and outer radius of each layer, so all but the big outer items had the
+same area.
+
+----
+
+pie menu layout and editor
+
+the layout algorithms should be in the editor, and you should be able
+to plug new ones in, and select different layout and tracking and
+rendering policies per pie, slice, and item. You can select a high
+level style in the editor, and it can apply it recursively to the
+whole menu tree, stashing default values in the objects. Then you can
+edit each pie, slice and item to override and customize those
+parameters. Each policy might have its own parameters, but there is a
+set of standard shared parameters too.
+
+Layout, tracking, and redering policies can declare their parameters
+in a way that the editor can automatically generate editing dialogs
+and direct manipulation interfaces for them.
+
+Use pie menus to edit pie menus!
+
+the MenuNode Path is like /1/2/3, which is a numeric path through the user interface.
+
+It might also be nice to support paths with identifiers instead of (or addition to) 
+paths with numbers, since the user could change the numbers by editing the menus.
+
+So each node would have its own id, which did not have to be globally
+unique, just local to the menu. (what happens when items have the same
+id? barf? stack them together? give them each a unique index?)
+
+You might also want to arrange items in their own semantic hierarchy,
+and give items an id like blender.file.open, to reflect the command
+structure instead of the user interface structure. Those names would
+be unique by definition.
