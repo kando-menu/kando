@@ -1,4 +1,4 @@
-## Svelte 5 pie menu implementation aligned with Kando (code-compatible)
+## Svelte 5 pie menu implementation aligned with Kando (data, theme, and code compatible)
 
 Goal: Build a Svelte 5/SvelteKit implementation of Kando’s pie menu that reuses (and where practical, copies verbatim) Kando’s code, APIs, schemas, algorithms, and contracts, while preserving attribution and licenses. Keep naming and structure aligned so both projects stay in sync; use Svelte 5 only as the packaging/rendering layer. No editor in Svelte initially—design menus/themes in Kando and import them into Svelte apps (e.g., Micropolis) seamlessly. Eventually add a SvelteKit editor.
 
@@ -270,33 +270,45 @@ Adopt Kando’s schemas for plug‑and‑play, but only enforce the subset that 
 
 ---
 
-## Porting Kando math to TS (sketch)
+## Code re‑use inventory (what to import vs rewrite)
 
-Implement the following in `@kando-svelte/core/math` mirroring Kando’s behavior:
+Maximize reuse by importing Kando source where it’s renderer/platform‑agnostic; rewrite only DOM/Svelte bits.
 
-```ts
-export function toDegrees(rad: number): number; export function toRadians(deg: number): number;
-export function getLength(v: Vec2): number; export function add(a: Vec2, b: Vec2): Vec2;
-export function subtract(a: Vec2, b: Vec2): Vec2; export function getAngle(v: Vec2): number; // 0° top
-export function getDirection(angle: number, len: number): Vec2; // 0° top
-export function getAngularDifference(a: number, b: number): number; // [0,180]
-export function getClosestEquivalentAngle(angle: number, to?: number): number;
-export function getEquivalentAngleSmallerThan(angle: number, than?: number): number;
-export function getEquivalentAngleLargerThan(angle: number, than?: number): number;
-export function normalizeConsequtiveAngles(a: number, b: number, c: number): [number, number, number];
-export function isAngleBetween(angle: number, start: number, end: number): boolean;
-export function clampToMonitor(center: Vec2, radius: number, size: Vec2): Vec2;
+- Directly reusable (portable TS)
+  - `src/common/math/index.ts`: vectors, angles, wedges, clamping.
+  - `src/common/index.ts` (renderer‑safe types): `Vec2`, `ShowMenuOptions`, `MenuThemeDescription`, `SoundType`, `SoundThemeDescription`, `KeyStroke/KeySequence`.
+  - `src/common/settings-schemata/*.ts`: zod schemas for menus and general settings.
+  - `src/menu-renderer/input-methods/input-method.ts`: base input contracts (callbacks only).
+  - `src/menu-renderer/input-methods/gesture-detector.ts`: geometry + timers; replace Node `EventEmitter` with a tiny dispatcher.
+  - `src/menu-renderer/input-methods/gamepad.ts`: Web Gamepad API; same emitter note.
+  - `src/menu-renderer/sound-theme.ts`: Howler wrapper (guard in client‑only lifecycle).
 
-export function fixFixedAngles(items: { angle?: number }[]): void;
-export function computeItemAngles(items: { angle?: number }[], parentAngle?: number): number[];
-export function computeItemWedges(itemAngles: number[], parentAngle?: number): {
-  itemWedges: { start: number; end: number }[];
-  parentWedge?: { start: number; end: number };
-};
-```
+- Reuse with small shims
+  - `src/menu-renderer/menu-theme.ts`:
+    - Keep: CSS property registration, `loadDescription`, `setColors`, child/center angle property setters.
+    - Adapt: layer DOM creation (`createItem`) to Svelte components/refs; set CSS vars via bindings, not `querySelector`.
+  - `src/menu-renderer/selection-wedges.ts`, `wedge-separators.ts`: re‑express as Svelte components emitting the same DOM/CSS variables.
 
-These must be behaviorally identical to Kando’s to preserve layout, hover, and connector visuals across themes.
+- Rewrite in Svelte
+  - `src/menu-renderer/menu.ts`: imperative DOM, transforms, classes, connectors. Rebuild as component state + derived props:
+    - Keep algorithms (selection chain, connectors smoothing) but compute in `$derived` and bind to style/class.
+  - Icon registry (`src/common/icon-themes/*`): implement a web resolver (Material Symbols, Simple Icons, user URLs/data URIs). System/file themes via backends are not available in browser.
+  - IPC (`menu-window-api.ts`, `common-window-api.ts`): replace with Svelte events/props.
 
+- Not applicable (skip)
+  - `src/main/**` (Electron host, backends, actions, tray, notifications, settings window).
+
+- Portability highlights
+  - Gesture recognizer: portable with an emitter shim; thresholds map 1:1 from settings.
+  - Layout algorithms: fully portable (in `common/math`).
+  - Connectors: reuse `getClosestEquivalentAngle` and accumulate last angles; bind width/rotation via style.
+  - Theme engine: reuse angle/child property logic and color application; wire to Svelte refs.
+  - Sounds: Howler works in browser/Electron; init only on client.
+
+- Optional refactor upstream (improves reuse)
+  - Extract a `kando-core` workspace package exporting: `common/math`, renderer‑safe `common` types, zod schemas, theme helpers (angle smoothing).
+  - Split `menu-theme.ts` into DOM‑free helpers and DOM‑bound layer builders.
+  - Replace `EventEmitter` in renderer utilities with a minimal event interface usable in browsers.
 ---
 
 ## Input model (pointer first)
@@ -406,3 +418,64 @@ Theme loader should parse JSON5, set `id` from parent dir, and `directory` to th
 ## License and provenance
 
 This project intentionally reuses—and where practical, copies—Kando’s source code, APIs, schemas, algorithms, and contracts to maximize compatibility and ease of synchronization. Preserve original copyright headers and SPDX identifiers, retain license notices, and attribute the Kando project and its author. Kando is licensed under MIT; theme assets and fonts carry their own licenses (e.g., CC0-1.0 for the default theme, Material Symbols, Simple Icons). Ensure all copied files keep their original licenses and attributions.
+
+---
+### Addendum: direct import strategy (preferred)
+
+Where possible, import Kando source directly instead of reimplementing:
+
+- Import as‑is
+  - `@kando/common/math/*` → `../src/common/math/*`
+  - `@kando/common/*` (renderer‑safe types only) → `../src/common/*`
+  - `@kando/schemata/*` → `../src/common/settings-schemata/*`
+  - `@kando/gesture` → `../src/menu-renderer/input-methods/gesture-detector`
+  - `@kando/gamepad` → `../src/menu-renderer/input-methods/gamepad`
+  - `@kando/sound-theme` → `../src/menu-renderer/sound-theme`
+
+- Minimal shims
+  - `events` (Node EventEmitter) used by gesture/gamepad: alias to a tiny emitter or bundle a small emitter polyfill so imports work unchanged.
+  - `menu-theme.ts`: import and use `loadDescription`, `setColors`, `setChildProperties`, `setCenterProperties`; avoid `createItem` (Svelte builds layers in markup).
+
+- Path aliases (dev in monorepo)
+  - kando-svelte/tsconfig.json:
+    ```json
+    {
+      "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+          "@kando/common/*": ["../src/common/*"],
+          "@kando/schemata/*": ["../src/common/settings-schemata/*"],
+          "@kando/gesture": ["../src/menu-renderer/input-methods/gesture-detector.ts"],
+          "@kando/gamepad": ["../src/menu-renderer/input-methods/gamepad.ts"],
+          "@kando/sound-theme": ["../src/menu-renderer/sound-theme.ts"]
+        }
+      }
+    }
+    ```
+  - kando-svelte/vite.config.ts:
+    ```ts
+    import { defineConfig } from 'vite';
+    import { fileURLToPath } from 'node:url';
+
+    const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
+
+    export default defineConfig({
+      resolve: {
+        alias: {
+          '@kando/common': r('../src/common'),
+          '@kando/schemata': r('../src/common/settings-schemata'),
+          '@kando/gesture': r('../src/menu-renderer/input-methods/gesture-detector.ts'),
+          '@kando/gamepad': r('../src/menu-renderer/input-methods/gamepad.ts'),
+          '@kando/sound-theme': r('../src/menu-renderer/sound-theme.ts'),
+          // optional: alias 'events' to a tiny emitter polyfill if needed
+        }
+      }
+    });
+    ```
+
+- Publishing strategy
+  - For npm publishing, either extract a shared `kando-core` workspace package that re‑exports these files and depend on it, or bundle the imported sources into the kando‑svelte build so consumers don’t need the monorepo.
+
+- Math: import directly (preferred)
+  - Use `import * as math from '@kando/common/math';` rather than reimplementing. The earlier “Porting Kando math” sketch is only a fallback if decoupling is required.
+---
