@@ -1,0 +1,10 @@
+{
+  "id": "none",
+  "name": "None",
+  "directory": "/kando-vendor/sound-themes",
+  "engineVersion": 1,
+  "themeVersion": "1.0.0",
+  "author": "Kando",
+  "license": "CC0-1.0",
+  "sounds": {}
+}

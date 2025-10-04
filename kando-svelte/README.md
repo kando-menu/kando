@@ -1,58 +1,78 @@
-# Svelte library
+# kando-svelte (library)
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+Svelte 5 library that renders Kando pie menus in web/SvelteKit apps.
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+Goals
+- Be compatible with Kando data, themes and algorithms.
+- Reuse Kando source directly (math, types, schemata) where practical.
+- Keep rendering and event wiring idiomatic Svelte 5.
 
-## Creating a project
+What it is
+- A Svelte 5 library exporting components and helpers:
+  - `PieMenu.svelte`: render a Kando menu tree; emits `select`, `cancel`, `hover`, `unhover` events.
+  - `PieItem.svelte`, `SelectionWedges.svelte`, `WedgeSeparators.svelte`: building blocks.
+  - `Vendor`: convenient URLs for a bundled default theme and a minimal "none" sound theme.
+  - `theme-loader`: utilities to load JSON5 theme metadata, inject theme.css, and apply color overrides.
+  - `validation`: re-exports Kando zod schemata and simple parse helpers (optional to use).
 
-If you're seeing this, you've probably already done this step. Congrats!
+What it is not
+- It does not perform file system discovery, snapshot management, or OS integrations.
+- It does not implement execution of platform-specific item actions (command/file/hotkey/macro/settings).
+- It does not bundle icon fonts/CSS; the host app should include Material Symbols / Simple Icons if used by the chosen theme.
 
-```sh
-# create a new project in the current directory
-npx sv create
+Compatibility
+- Types: re-exported from Kando (`@kando/common`, `@kando/schemata/*`).
+- Math: imported from Kando (`src/common/math`).
+- Themes: accepts a `MenuThemeDescription` object or can load from a theme directory via `themeDirUrl` + `themeId`.
 
-# create a new project in my-app
-npx sv create my-app
+Install & build (library)
+```bash
+# from the library folder
+npm install
+npm run build    # builds .svelte-kit and dist via svelte-package
 ```
 
-## Developing
+Usage (consumer app)
+```svelte
+<script lang="ts">
+  import { PieMenu } from 'kando-svelte';
+  import type { MenuItem, MenuThemeDescription } from 'kando-svelte';
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+  // Provide either a ready theme object…
+  export let theme: MenuThemeDescription;
+  export let root: MenuItem;
 
-```sh
-npm run dev
+  // …or let the component load a theme from a directory
+  // <PieMenu themeDirUrl="/kando/menu-themes" themeId="default" {root} />
+</script>
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+<PieMenu {theme} {root}
+         on:select={(e) => console.log('select', e.detail)} />
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+Theme loading
+- `PieMenu` props:
+  - `theme` (object) OR `themeDirUrl` + `themeId` (string).
+  - When loading by URL, `theme-loader` fetches `theme.json5`, injects `theme.css`, and applies colors.
+- You can also use the exported `Vendor.defaultThemeCss` and `Vendor.defaultThemeJson` URLs for a built-in default theme.
 
-## Building
+Sound themes
+- The library bundles a minimal "none" sound theme JSON (`Vendor.noneSoundThemeJson`).
+- For real sound themes, load them in your app and use Howler in client-only lifecycle hooks.
 
-To build your library:
+Icons
+- Include the icon CSS your themes expect in the app (e.g. in `app.html`):
+  - Material Symbols Rounded CSS (Google Fonts) or the `material-symbols` npm package.
+  - `simple-icons-font` if you use Simple Icons.
 
-```sh
-npm pack
-```
+Svelte 5
+- Internals use Svelte 5 runes for state/derived/effect where appropriate.
+- Public API remains plain props/events for maximum compatibility.
 
-To create a production version of your showcase app:
+Notes on path aliases
+- This repo uses `kit.alias` in `svelte.config.js` to reference Kando sources during development.
+- If you publish this library to npm, either bundle those sources or depend on a separate `kando-core` package.
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```sh
-npm publish
-```
+License & attribution
+- Kando is MIT; themes and font assets have their own licenses (e.g., CC0-1.0 for the default theme).
+- Preserve SPDX headers and attributions when copying code.

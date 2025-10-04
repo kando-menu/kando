@@ -55,5 +55,8 @@
 	},
 	"keywords": [
 		"svelte"
-	]
+	],
+	"dependencies": {
+		"json5": "^2.2.3"
+	}
 }
