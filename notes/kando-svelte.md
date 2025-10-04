@@ -479,3 +479,168 @@ Where possible, import Kando source directly instead of reimplementing:
 - Math: import directly (preferred)
   - Use `import * as math from '@kando/common/math';` rather than reimplementing. The earlier “Porting Kando math” sketch is only a fallback if decoupling is required.
 ---
+
+---
+## Configuration parity with Kando (config.json, menus.json)
+
+Kando stores settings in two JSON files: `config.json` (general) and `menus.json` (menus/collections). The Svelte integration should accept the same shapes and semantics, with web‑appropriate loading and validation.
+
+- Where to load from
+  - Web/SvelteKit: serve these files from `static/` (public) or fetch from your own backend. Keep the exact file names so exports from Kando can be dropped in.
+  - Electron (optional): you can also point at the OS config directory, but for Micropolis/SvelteKit, prefer app‑local assets.
+
+- Hot reload and validation
+  - Use the existing zod schemas from Kando (`GENERAL_SETTINGS_SCHEMA_V1`, `MENU_SETTINGS_SCHEMA_V1`) to validate on load.
+  - On save/HMR, re‑validate; if invalid, log and ignore the change (don’t update state), mirroring Kando’s behavior.
+  - Optional: show a non‑blocking banner if the last change failed validation.
+
+- General settings (config.json)
+  - Import and honor all renderer/input/theming fields (see Settings compatibility above). Defaults match Kando’s docs (e.g., `zoomFactor: 1`, `centerDeadZone: 50`, `dragThreshold: 15`, fade timings, gesture thresholds, etc.).
+  - Ignored in web (but preserved): Electron window chrome settings, tray icon flavor, OS hotkey handling.
+  - Dark mode: if `enableDarkModeForMenuThemes` is true, switch theme and color overrides when `window.matchMedia('(prefers-color-scheme: dark)')` changes.
+
+- Menus (menus.json)
+  - Accept the full structure: `{ version, menus: Menu[], collections: MenuCollection[] }`.
+  - Per‑menu properties: `root`, `shortcut`, `shortcutID`, `centered`, `anchored`, `hoverMode`, `conditions`, `tags`.
+    - `shortcut/shortcutID`: store for round‑trip, usually ignore in the web demo.
+    - `conditions`: allow app‑provided predicates (Micropolis can map in‑game state to “appName/windowName/screenArea” analogs). Otherwise ignore.
+  - Collections: accept and surface as tags/filters in the demo UI if desired.
+
+- Menu items (types and data)
+  - Supported types map as follows in Svelte:
+    - `submenu`: structure only.
+    - `uri`: open via `window.open` (respect `rel=noopener` and user gesture policies).
+    - `text`: copy/paste or in‑app paste actions (browser clipboard API).
+    - `redirect`: navigate to a different menu path.
+    - `command`/`file`/`hotkey`/`macro`/`settings`: require host integration (Electron/Kando backends) or Micropolis‑specific adapters. In the Svelte demo, stub with no‑ops or console messages; document how Micropolis implements these.
+  - `angle` field follows Kando’s monotonic fixed‑angle rules; reuse `fixFixedAngles` and `computeItemAngles`.
+  - `delayed` semantics (execute after fade‑out) remain; in the browser demo, simulate by deferring handlers until the close animation ends.
+
+---
+## Themes, sounds, and icons (concrete handling)
+
+- Menu themes
+  - Directory layout: `<theme-id>/{ theme.json[5], theme.css, preview.jpg? }`.
+  - Load `theme.json` (JSON/JSON5), set `id` from folder name and `directory` to parent path; inject `theme.css` via `<link>`.
+  - Color overrides: apply `menuThemeColors[theme.id]` from `config.json` as CSS custom properties; support dark‑mode variant when enabled.
+  - Theme selection UI in demo: list subfolders in `static/menu-themes/` (or from an index file) and allow switching at runtime.
+
+- Sound themes (Howler)
+  - Directory layout: `<sound-id>/theme.json[5] + audio files`.
+  - Use Howler to play `SoundType` → file mappings; support per‑sound `volume`, `minPitch`, `maxPitch`, and global `soundVolume`.
+  - Safari/iOS unlock: call a muted play() on first user gesture to resume the audio context.
+  - Optional preloading: warm up key sounds on app load.
+
+- Icon themes
+  - Built‑ins: Material Symbols Rounded, Simple Icons (plain/colored), Emoji, Base64/URL. Load needed CSS/fonts in `app.html`.
+  - System/file icon themes require platform backends; in web demo, provide a “user theme” bucket (URLs or project assets). Keep the same `iconTheme` names for drop‑in compatibility.
+  - Adaptive colors: use `currentColor` in SVGs to let theme CSS recolor icons, as per Kando docs.
+
+---
+## Practical defaults for the demo
+
+- Place Kando exports in:
+  - `static/menus/` (menus.json or multiple named menus)
+  - `static/menu-themes/<id>/` (theme.json5 + theme.css)
+  - `static/sound-themes/<id>/` (theme.json5 + wav/ogg)
+- Demo page shows:
+  - Active theme selector (reads folders and switches `<link>`)
+  - Active menu selector (reads menus list)
+  - Sound theme toggle + volume slider
+  - Live JSON validator result (valid/invalid)
+- Execution adapters:
+  - Implement `uri`, `text`, `redirect` in browser.
+  - Expose an interface for Micropolis to provide adapters for `command`, `file`, `hotkey`, `macro`, `settings`.
+
+---
+## Recommendations extracted from Kando docs (TL;DR)
+
+- Keep zod validation in the load path and block state updates on invalid JSON.
+- Mirror defaults exactly; users expect the same feel (dead zone 50px, thresholds, fades).
+- Treat dark‑mode as a theme switch, not a stylesheet filter; support separate color overrides.
+- Preload sounds and use small pitch randomization for UI polish (as in Kando).
+- Prefer SVG icons with `currentColor` for theme‑driven recoloring; fall back to PNG for external packs.
+- For conditions and OS integrations, make them host‑provided so the same menus can run in Micropolis or Electron without Svelte changes.
+---
+
+## Implementation plan: kando-svelte library and static kando-svelte-demo
+
+1) Monorepo and workspaces
+- Root package.json: add workspaces for "kando-svelte" and "kando-svelte-demo".
+- Use npm workspaces; keep library and demo independent (lib has no adapter, demo uses adapter-auto).
+
+2) kando-svelte (library)
+- Goal: publishable Svelte lib exposing PieMenu and helpers, reusing Kando code directly.
+- Imports (direct): add TS/Vite aliases to reference Kando’s sources:
+  - @kando/common/* -> ../src/common/* (types + math)
+  - @kando/schemata/* -> ../src/common/settings-schemata/* (zod)
+  - @kando/gesture -> ../src/menu-renderer/input-methods/gesture-detector.ts
+  - @kando/gamepad -> ../src/menu-renderer/input-methods/gamepad.ts
+  - @kando/sound-theme -> ../src/menu-renderer/sound-theme.ts
+- Minimal emitter shim: if needed, alias Node EventEmitter to a tiny emitter so gesture/gamepad can import unchanged.
+- Components:
+  - src/lib/PieMenu.svelte: orchestrates theme inject, selection chain, input, events; emits select/cancel/hover.
+  - src/lib/PieItem.svelte: renders a single node; binds CSS vars (--dir-x/--dir-y/--angle/--sibling-count/--parent-angle).
+  - src/lib/SelectionWedges.svelte & src/lib/WedgeSeparators.svelte: global visuals driven by CSS vars.
+- Theme engine:
+  - Reuse menu-theme.ts functions: loadDescription, setColors, setChildProperties, setCenterProperties; set vars via bind:this refs.
+  - Inject theme.css <link> and apply color overrides.
+- Math & geometry:
+  - Use @kando/common/math directly: computeItemAngles, computeItemWedges, clampToMonitor, etc.
+- Sounds:
+  - Wrap Howler usage from @kando/sound-theme; guard in onMount.
+- Types & settings:
+  - Export renderer-safe types mirroring Kando (Vec2, MenuItem, MenuThemeDescription, ShowMenuOptions).
+  - Accept settings subset via props; provide defaults matching Kando.
+- Packaging:
+  - Configure svelte-package output (dist), proper exports map; exclude dev-only aliases from published build or bundle imported TS.
+
+3) kando-svelte-demo (SvelteKit app)
+- Static snapshot layout under static/:
+  - static/kando-snapshot/
+    - config.json (Kando general settings)
+    - menus.json (Kando menus/collections)
+    - menu-themes/<id>/{ theme.json5, theme.css, preview.jpg? }
+    - sound-themes/<id>/{ theme.json5, *.wav/ogg }
+- Loaders/utilities:
+  - Fetch and validate config.json / menus.json using zod schemas (@kando/schemata/*).
+  - Discover themes (list subfolders) and inject selected theme.css; apply color overrides + dark-mode variants.
+  - Load sound theme (Howler) and set master volume.
+- Demo UI:
+  - Theme selector (dropdown), sound theme + volume, menu selector (from menus.json), validity indicator.
+  - Render <PieMenu root={menu.root} theme={theme} settings={configSubset} on:select={...} />
+- Execution adapters:
+  - Implement browser-safe handlers for uri/text/redirect.
+  - Surface optional hooks for Micropolis to provide command/file/hotkey/macro/settings behaviors.
+- SPA behavior:
+  - SSR guards for DOM/Howler; prerender true is fine if data is static.
+
+4) Direct-import configuration
+- kando-svelte/tsconfig.json: add paths for @kando/common, @kando/schemata, @kando/gesture, @kando/gamepad, @kando/sound-theme.
+- kando-svelte/vite.config.ts: add matching resolve.alias; optionally alias 'events' to a tiny emitter.
+- For publishing: either bundle imported Kando sources into the lib build or extract a shared workspace package (kando-core) exporting common/math/schemata.
+
+5) Selection & input details (parity)
+- Build selection chain; compute child angles/wedges; clamp center; accumulate last connector angles (closest-equivalent) to avoid 360° flips.
+- Pointer/touch: hover hit-testing vs wedges; Dragged threshold; Hover/Marking/Turbo modes and gesture detector thresholds.
+- Keyboard shortcuts (optional): numeric/alpha to select children; Backspace selects parent; Escape cancels.
+- Gamepad: stick → relative position; back/close buttons; center anchored placement.
+
+6) Validation & hot reload in demo
+- On each snapshot file change (dev), refetch and validate; if valid, update state; if invalid, show error and keep prior state.
+- Include a compact error viewer to mirror Kando’s console output.
+
+7) Testing
+- Reuse Kando’s math tests (test/math.spec.ts) to verify ported/aliased math; adapt harness to Vitest in the demo if desired.
+- Add a few component tests (rendering classes/vars) later.
+
+8) Build & run
+- Lib: npm run -w kando-svelte package (svelte-package)
+- Demo: npm run -w kando-svelte-demo dev -- --open
+- Workspaces: root npm install to link workspace deps; demo depends on "kando-svelte": "workspace:*".
+
+9) Future steps
+- Icon resolver for user-provided icon packs; optional system icon bridge in Electron.
+- Theme editor preview (read-only) and ultimately a Svelte menu editor.
+- Micropolis adapter package implementing command/file/hotkey/macro.
+---
