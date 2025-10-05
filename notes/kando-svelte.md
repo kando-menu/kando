@@ -11,6 +11,30 @@ Goal: Build a Svelte 5/SvelteKit implementation of Kando’s pie menu that reuse
 
 ---
 
+### Reuse policy (import-first) and header-note requirement
+
+- Primary rule: Prefer direct imports of Kando source whenever technically possible (renderer-safe TS, math, schemas, theme helpers). Keep names and signatures identical.
+- If direct import is not possible, first consider a minimal upstream-friendly refactor in Kando (layering/abstraction, DOM-free helper extraction, EventEmitter → tiny emitter interface, parameterizing environment).
+- Only re-implement when import/refactor is impractical for now. In that case:
+  - Add a short header comment at the top of the file titled “Reuse Note” that explains:
+    1) Which Kando file(s) this mirrors (paths/commit if relevant)
+    2) Why it cannot be imported as-is today
+    3) Suggested refactor to make it importable later (scope and feasibility)
+    4) Any deliberate deviations from Kando behavior
+  - Keep type/function names and behavior 1:1 where feasible to simplify diffing and future convergence.
+- Track identified refactor opportunities in this doc (Code re‑use inventory) so we can upstream PRs.
+
+Header comment template to use in re-implemented files:
+
+```
+/* Reuse Note
+ - Mirrors: <kando path(s)>
+ - Blocker to import-as-is: <reason>
+ - Proposed upstream refactor: <small extract/shim/layering>
+ - Behavior notes: <any deviations/compat guarantees>
+*/
+```
+
 ## Compatibility surface (what must match Kando)
 
 ### Menu JSON shape (reader contract)
@@ -88,7 +112,7 @@ Svelte must adhere to the same DOM/CSS contract to make Kando themes work withou
 
 ## Geometry, interaction, and rendering rules (compat)
 
-Re-implement Kando math in Svelte (1:1 behavior):
+Import Kando math as‑is (1:1 behavior) from `@kando/common/math`:
 
 - Angles and wedges:
   - Compute child angles with `computeItemAngles(children, parentAngle?)`, honoring fixed angles (monotonic increasing, clamp to [0, 360) for first, remove duplicates and overflow beyond first+360).
@@ -131,49 +155,20 @@ Re-implement Kando math in Svelte (1:1 behavior):
   - SvelteKit loaders/adapters for reading theme.json5 and injecting theme.css links
   - Vite plugin config for fonts/icons (Material Symbols, Simple Icons)
 
-### Types (compat subset)
+### Types and schemata (imported, single source of truth)
 
-```ts
-export type Vec2 = { x: number; y: number };
+- From `src/common/settings-schemata/` (zod):
+  - `general-settings-v1.ts`: `GENERAL_SETTINGS_SCHEMA_V1`, type `GeneralSettingsV1`
+  - `menu-settings-v1.ts`: `MENU_SETTINGS_SCHEMA_V1`, unions for `MenuItemV1`, plus `MenuV1`, `MenuSettingsV1`, and collection schemas
 
-export type ShowMenuOptions = {
-  mousePosition: Vec2;
-  windowSize: Vec2;
-  zoomFactor: number;
-  centeredMode: boolean;
-  anchoredMode: boolean;
-  hoverMode: boolean;
-  systemIconsChanged?: boolean;
-};
+- From `src/common/index.ts` (renderer-safe types):
+  - `Vec2`, `ShowMenuOptions`, `MenuThemeDescription`, `SoundType`, `SoundThemeDescription`, `KeyStroke`, `KeySequence`
 
-export type MenuItem = {
-  type: 'submenu' | 'command' | 'file' | 'hotkey' | 'macro' | 'text' | 'uri' | 'redirect' | 'settings';
-  name: string;
-  icon?: string;
-  iconTheme?: string;
-  angle?: number;
-  children?: MenuItem[];
-  data?: unknown; // preserved opaque payload
-};
-
-export type MenuThemeDescription = {
-  id: string;          // filled by loader based on directory name
-  directory: string;   // absolute dir path; used to resolve CSS
-  name: string;
-  author: string;
-  themeVersion: string;
-  engineVersion: number; // expect >= 1
-  license: string;
-  maxMenuRadius: number;
-  centerTextWrapWidth: number;
-  drawChildrenBelow: boolean;
-  drawCenterText: boolean;
-  drawSelectionWedges: boolean;
-  drawWedgeSeparators: boolean;
-  colors: Record<string, string>;
-  layers: { class: string; content: 'none' | 'name' | 'icon' }[];
-};
-```
+- How we use them
+  - Validation: parse `config.json` and `menus.json` with `GENERAL_SETTINGS_SCHEMA_V1` and `MENU_SETTINGS_SCHEMA_V1`.
+  - Types: consume `GeneralSettingsV1`, `MenuSettingsV1`, `MenuV1`, `MenuItemV1` exported by those modules (no local copies).
+  - Extensions: add optional Svelte-only configuration under a namespaced `svelte` object in app code; keep zod schemas unchanged to preserve 1:1 compatibility.
+  - Imports during dev via aliases: `@kando/schemata/general-settings-v1`, `@kando/schemata/menu-settings-v1`, and `@kando/common`.
 
 ### State and reactivity with Svelte 5 runes
 
@@ -479,6 +474,52 @@ Where possible, import Kando source directly instead of reimplementing:
 - Math: import directly (preferred)
   - Use `import * as math from '@kando/common/math';` rather than reimplementing. The earlier “Porting Kando math” sketch is only a fallback if decoupling is required.
 ---
+## Implementation TODOs (tracker)
+
+Current status: Engine scaffolding is in progress; other items pending.
+
+- [ ] Create engine scaffolding: state store, interfaces, event contracts
+- [ ] Implement wedge geometry using Kando math (angles, rings, gaps)
+- [ ] Add pointer input: track origin, angle, radius; compute hovered wedge
+- [ ] Render root ring with hover highlight and center zone
+- [ ] Dispatch select/cancel events on release; keyboard escape
+- [ ] Implement selection chain and child rings navigation
+- [ ] Map theme layers/colors to CSS variables; inject theme.css
+- [ ] Hook sounds (Howler) for open/hover/select/cancel
+- [ ] Wire demo to show interactive menu, theme switcher, logs
+
+These align 1:1 with the library/demo plan above and should remain in sync with commit messages.
+
+---
+
+## Code reuse summary and shims (concise)
+
+Import as-is (no changes required)
+- `src/common/math/index.ts`: `computeItemAngles`, `computeItemWedges`, `normalizeConsequtiveAngles`, `scaleWedge`, `isAngleBetween`, `getClosestEquivalentAngle`, `getAngle`, `getDistance`, clamps, etc.
+- `src/common/index.ts`: `Vec2`, `ShowMenuOptions`, `MenuThemeDescription`, `SoundType`, `SoundThemeDescription`, `KeyStroke`, `KeySequence`.
+- `src/common/settings-schemata/general-settings-v1.ts` and `menu-settings-v1.ts`: `GENERAL_SETTINGS_SCHEMA_V1`, `MENU_SETTINGS_SCHEMA_V1` and inferred types `GeneralSettingsV1`, `MenuSettingsV1`, `MenuV1`, `MenuItemV1` (used for validation and types; no local copies).
+
+Import with tiny shim (browser-friendly)
+- `src/menu-renderer/input-methods/gesture-detector.ts` (`GestureDetector`) and `gamepad.ts` (`Gamepad`) depend on Node `events`.
+  - Shim: provide an `events` alias to a minimal emitter (or `eventemitter3`) so imports resolve unchanged.
+  - Justification: keeps the original classes intact and importable; avoids touching upstream code; bundler-only change.
+  - Where used: `PointerInput` and `GamepadInput` directly import these; Svelte code wires DOM events to `PointerInput` and subscribes to `GestureDetector`/`Gamepad` events.
+
+Adapt/wrap in Svelte (DOM-bound in Kando)
+- `src/menu-renderer/menu.ts` (`Menu`): selection chain, DOM building, and event wiring are tightly coupled. We mirror behavior in `PieMenu.svelte` + child components, preserving semantics (push/pop chain, `selectItem` logic, hover/click/drag states).
+- `src/menu-renderer/rendered-menu-item.ts` (`RenderedMenuItem`): contains DOM fields (`nodeDiv`, `connectorDiv`). We use a DOM-free state type in Svelte and bind styles/classes via props.
+- `src/menu-renderer/menu-theme.ts`: keep semantics of `loadDescription`, `setColors`, `setChildProperties`, `setCenterProperties` but perform them through Svelte refs and our `theme-loader` instead of imperative DOM creation.
+- `src/menu-renderer/selection-wedges.ts`, `wedge-separators.ts`: implemented as `SelectionWedges.svelte` and `WedgeSeparators.svelte`.
+- `src/common/icon-themes/*`, `icon-theme-registry.ts`: relies on `window.commonAPI` and system/file icon packs. We expose a web `IconResolver` that supports Material Symbols and Simple Icons; host apps can add resolvers.
+
+Environment-specific adjustments
+- `src/menu-renderer/sound-theme.ts` (`SoundTheme`): original builds `file://` URLs and logs via `window.commonAPI`. In the browser we construct app-relative URLs and guard Howler usage to client-only lifecycle.
+- CSS property registration: we keep `CSS.registerProperty` where available and fall back to `document.documentElement.style.setProperty`.
+
+Why this approach
+- Preserves Kando as single source of truth for algorithms and schemas.
+- Minimizes drift by importing core logic and only re-expressing DOM and reactivity in Svelte 5.
+- Shims are bundler-level and upstream-friendly (no invasive edits to Kando source).
 
 ---
 ## Configuration parity with Kando (config.json, menus.json)
