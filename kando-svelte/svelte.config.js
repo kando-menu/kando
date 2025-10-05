@@ -14,10 +14,7 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'@kando/common': '../src/common',
-			'@kando/schemata': '../src/common/settings-schemata',
-			'@kando/gesture': '../src/menu-renderer/input-methods/gesture-detector.ts',
-			'@kando/gamepad': '../src/menu-renderer/input-methods/gamepad.ts',
-			'@kando/sound-theme': '../src/menu-renderer/sound-theme.ts'
+			'@kando/schemata': '../src/common/settings-schemata'
 		}
 	}
 };

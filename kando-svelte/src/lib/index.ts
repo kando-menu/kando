@@ -3,6 +3,7 @@ export { default as PieItem } from './PieItem.svelte';
 export { default as SelectionWedges } from './SelectionWedges.svelte';
 export { default as WedgeSeparators } from './WedgeSeparators.svelte';
 export * from './types';
+export * from './theme-loader';
 
 export const Vendor = {
   defaultThemeCss: new URL('./vendor/default-theme.css', import.meta.url).toString(),

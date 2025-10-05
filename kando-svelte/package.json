@@ -2,8 +2,9 @@
 	"name": "kando-svelte",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build && npm run prepack",
+    	"dev": "vite dev",
+		"build": "npm run prepack",
+		"build:demo": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"prepack": "svelte-kit sync && svelte-package && publint",
@@ -57,6 +58,7 @@
 		"svelte"
 	],
 	"dependencies": {
-		"json5": "^2.2.3"
+		"json5": "^2.2.3",
+		"zod": "^3.25.76"
 	}
 }

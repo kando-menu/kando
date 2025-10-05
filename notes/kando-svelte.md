@@ -636,13 +636,13 @@ Kando stores settings in two JSON files: `config.json` (general) and `menus.json
 - Packaging:
   - Configure svelte-package output (dist), proper exports map; exclude dev-only aliases from published build or bundle imported TS.
 
-3) kando-svelte-demo (SvelteKit app)
-- Static snapshot layout under static/:
-  - static/kando-snapshot/
-    - config.json (Kando general settings)
-    - menus.json (Kando menus/collections)
-    - menu-themes/<id>/{ theme.json5, theme.css, preview.jpg? }
-    - sound-themes/<id>/{ theme.json5, *.wav/ogg }
+3) kando-svelte demo (inside the library project)
+- Demo lives under `kando-svelte/src/routes` and `kando-svelte/static`.
+- Static snapshot layout under `kando-svelte/static/kando/`:
+  - config.json (Kando general settings)
+  - menus.json (Kando menus/collections)
+  - menu-themes/<id>/{ theme.json5, theme.css, preview.jpg? }
+  - sound-themes/<id>/{ theme.json5, *.wav/ogg }
 - Loaders/utilities:
   - Fetch and validate config.json / menus.json using zod schemas (@kando/schemata/*).
   - Discover themes (list subfolders) and inject selected theme.css; apply color overrides + dark-mode variants.
