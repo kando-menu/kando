@@ -82,26 +82,6 @@
   <p style="color: red">{error}</p>
 {/if}
 
-{#if config}
-  <h2>Config</h2>
-  <pre>{JSON.stringify(config, null, 2)}</pre>
-{/if}
-
-{#if theme}
-  <h2>Theme</h2>
-  <ul>
-    <li>id: {theme.id}</li>
-    <li>name: {theme.name}</li>
-    <li>engineVersion: {theme.engineVersion}</li>
-    <li>layers: {theme.layers.length}</li>
-  </ul>
-  {#if mathPreview.angles}
-    <h3>Math quick test</h3>
-    <p>First menu child angles: {mathPreview.angles?.map((a) => a.toFixed(1)).join(', ')}</p>
-    <p>Wedges: {mathPreview.wedges?.map((w) => `${w.start.toFixed(1)}–${w.end.toFixed(1)}`).join(' | ')}</p>
-  {/if}
-{/if}
-
 {#if theme && firstRoot}
   <h2>Interactive PieMenu preview</h2>
   <div style="width: 420px; height: 420px; border: 1px dashed var(--hr, #999); display: grid; place-items: center;">
@@ -141,6 +121,26 @@
       </li>
     {/each}
   </ul>
+  {#if config}
+  <h2>Config</h2>
+  <pre>{JSON.stringify(config, null, 2)}</pre>
+{/if}
+
+{#if theme}
+  <h2>Theme</h2>
+  <ul>
+    <li>id: {theme.id}</li>
+    <li>name: {theme.name}</li>
+    <li>engineVersion: {theme.engineVersion}</li>
+    <li>layers: {theme.layers.length}</li>
+  </ul>
+  {#if mathPreview.angles}
+    <h3>Math quick test</h3>
+    <p>First menu child angles: {mathPreview.angles?.map((a) => a.toFixed(1)).join(', ')}</p>
+    <p>Wedges: {mathPreview.wedges?.map((w) => `${w.start.toFixed(1)}–${w.end.toFixed(1)}`).join(' | ')}</p>
+  {/if}
+{/if}
+
 {:else}
   <p>Loading menus…</p>
 {/if}
