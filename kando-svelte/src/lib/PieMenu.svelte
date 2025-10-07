@@ -1,7 +1,9 @@
 <script lang="ts">
-  import type { MenuItem, MenuThemeDescription, ShowMenuOptions, Vec2 } from './types';
+  import type { MenuItem, MenuThemeDescription, ShowMenuOptions, Vec2 } from './types.js';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { fetchThemeJson, injectThemeCss, applyThemeColors } from './theme-loader';
+  import { fetchThemeJson, injectThemeCss, applyThemeColors } from './theme-loader.js';
+  // Import from monorepo alias during dev; fallback relative if alias not resolved at type time
+  // @ts-ignore
   import * as math from '@kando/common/math';
 
   export let root: MenuItem;
@@ -18,7 +20,7 @@
   }>();
 
   let linkEl: HTMLLinkElement | null = null;
-  let container: HTMLDivElement | null = null;
+  let container: HTMLElement | null = null;
 
   // Basic state for the first interactive milestone --------------------------------------
   let center: Vec2 = { x: 0, y: 0 };
@@ -38,24 +40,26 @@
   const debug = true;
   $: deadZonePx = (options as any)?.centerDeadZone ?? 50;
 
-  onMount(async () => {
-    if (!theme && themeDirUrl && themeId) {
-      try {
-        theme = await fetchThemeJson(themeDirUrl, themeId);
-      } catch (e) {
-        console.error(e);
+  onMount(() => {
+    (async () => {
+      if (!theme && themeDirUrl && themeId) {
+        try {
+          theme = await fetchThemeJson(themeDirUrl, themeId);
+        } catch (e) {
+          console.error(e);
+        }
       }
-    }
 
-    if (theme) {
-      linkEl = injectThemeCss(theme);
-      if (theme.colors) applyThemeColors(theme.colors);
-    }
+      if (theme) {
+        linkEl = injectThemeCss(theme);
+        if (theme.colors) applyThemeColors(theme.colors);
+      }
 
-    // Compute initial center and child layout for the root menu
-    computeCenter();
-    computeRadius();
-    setCenterItem(root);
+      // Compute initial center and child layout for the root menu
+      computeCenter();
+      computeRadius();
+      setCenterItem(root);
+    })();
 
     const ro = new ResizeObserver(() => {
       computeCenter();
@@ -289,14 +293,14 @@
   function parentMarkerStyle() {
     if (parentCenterAngle == null) return '';
     const d = math.getDirection(parentCenterAngle, radiusPx);
-    const x = center.x + d.x;
-    const y = center.y + d.y;
-    // place marker slightly inside the ring
-    const inset = 14;
-    const di = math.getDirection(parentCenterAngle, radiusPx - inset);
-    const xi = center.x + di.x;
-    const yi = center.y + di.y;
+    const xi = center.x + d.x;
+    const yi = center.y + d.y;
     return `left:${xi}px; top:${yi}px; transform: translate(-50%, -50%);`;
+  }
+
+  function parentTriangleStyle() {
+    if (parentCenterAngle == null) return '';
+    return `transform: rotate(${-parentCenterAngle}deg);`;
   }
 
   function logDomPositions(tag: string) {
@@ -324,7 +328,7 @@
   }
 </script>
 
-<div class="kando-pie-menu" bind:this={container} on:pointermove={onPointerMove} on:click={onClick} on:keydown={onKeydown} tabindex="0" role="application" aria-label="Pie menu preview">
+<button class="kando-pie-menu" bind:this={container} type="button" on:pointermove={onPointerMove} on:click={onClick} on:keydown={onKeydown} aria-label="Pie menu preview">
   <!-- Milestone: minimal interactive overlay (no visuals yet) -->
   <div class="placeholder">
     {#if currentItem?.children?.length}
@@ -343,8 +347,8 @@
       {/each}
     {/if}
     {#if parentCenterAngle != null}
-      <div class="parent-marker" style={parentMarkerStyle()}>
-        <div class="triangle"></div>
+      <div class={`parent-marker ${hoveredIndex===-2 ? 'hovered' : ''}`} style={parentMarkerStyle()}>
+        <div class="triangle" style={parentTriangleStyle()}></div>
         <div class="parent-label">parent</div>
       </div>
     {/if}
@@ -356,10 +360,10 @@
       </div>
     {/each}
   {/if}
-</div>
+</button>
 
 <style>
-  .kando-pie-menu { position: relative; width: 100%; height: 100%; }
+  .kando-pie-menu { position: relative; width: 100%; height: 100%; background: none; border: 0; padding: 0; cursor: default; }
   .placeholder { opacity: 0.6; font-size: 14px; padding: 8px; }
   .ring { position: absolute; width: 280px; height: 280px; margin-left:-140px; margin-top:-140px; border-radius: 50%; border: 2px dashed #aaa; pointer-events: none; }
   .center-disk { position: absolute; border-radius: 50%; background: rgba(0,0,0,0.05); pointer-events: none; }
@@ -369,6 +373,7 @@
   .node.hovered .dot { background: var(--accent-strong, #ff6); }
   .wedge-edge { position: absolute; width: 0; border-left: 2px dashed rgba(127,127,127,0.6); transform-origin: 0 0; pointer-events: none; }
   .parent-marker { position: absolute; left: 0; top: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
-  .parent-marker .triangle { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid #777; }
-  .parent-marker .parent-label { margin-top: 4px; font-size: 11px; color: #333; }
+  .parent-marker .triangle { width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid #777; }
+  .parent-marker.hovered .triangle { border-top-color: var(--accent-strong, #ff6); }
+  .parent-marker .parent-label { margin-top: 4px; font-size: 12px; color: #333; }
 </style>
