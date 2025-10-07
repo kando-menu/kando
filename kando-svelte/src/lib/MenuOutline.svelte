@@ -4,7 +4,9 @@
 </script>
 
 <li>
-  <span>{item.name} ({item.type}{item.angle != null ? ` @ ${item.angle}°` : ''})</span>
+  <span>{item.name} ({item.type}{item.angle != null ? ` @ ${item.angle}°` : ''}
+    {item.icon ? `, icon: ${item.icon}` : ''}
+    {item.iconTheme ? `, theme: ${item.iconTheme}` : ''})</span>
   {#if item.children?.length}
     <ul>
       {#each item.children as c}

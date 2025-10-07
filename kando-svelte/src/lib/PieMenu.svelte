@@ -34,6 +34,9 @@
   let nodeStyles: string[] = [];
   let separatorAngles: number[] = [];
   let parentCenterAngle: number | null = null;
+  $: centerLabel = hoveredIndex >= 0
+    ? (currentItem?.children?.[hoveredIndex] as any)?.name
+    : (hoveredIndex === -2 ? 'parent' : 'center');
   let currentItem: MenuItem | null = null;
   let chain: Array<{ item: MenuItem; angle?: number; index?: number }> = [];
   let lastHoveredPath: string | null = null;
@@ -298,9 +301,8 @@
     return `left:${xi}px; top:${yi}px; transform: translate(-50%, -50%);`;
   }
 
-  function parentTriangleStyle() {
-    if (parentCenterAngle == null) return '';
-    return `transform: rotate(${-parentCenterAngle}deg);`;
+  function parentNodeStyle() {
+    return parentMarkerStyle();
   }
 
   function logDomPositions(tag: string) {
@@ -320,6 +322,16 @@
     console.log(`[pie] dom-positions ${tag} -> ${rows.join(' | ')}`);
   }
 
+  // Best-effort icon URL guesser for non-font themes (e.g., file or system); in Electron
+  // Kando resolves via icon themes. For the demo, try a few common locations by convention.
+  function guessIconUrl(theme: string | undefined, icon: string | undefined): string {
+    if (!theme || !icon) return '';
+    // Simple heuristic: look in static assets shipped with the demo
+    // e.g., /kando/icon-themes/<theme>/<icon>.svg
+    const base = '/kando/icon-themes';
+    return `${base}/${theme}/${icon}.svg`;
+  }
+
   // Labels: upright, no rotation
 
   function onKeydown(e: KeyboardEvent) {
@@ -330,13 +342,12 @@
 
 <button class="kando-pie-menu" bind:this={container} type="button" on:pointermove={onPointerMove} on:click={onClick} on:keydown={onKeydown} aria-label="Pie menu preview">
   <!-- Milestone: minimal interactive overlay (no visuals yet) -->
-  <div class="placeholder">
-    {#if currentItem?.children?.length}
-      Hovered: {hoveredIndex >= 0 ? currentItem.children[hoveredIndex]?.name : (hoveredIndex === -2 ? 'parent' : 'center')}
-    {:else}
-      PieMenu placeholder
-    {/if}
-  </div>
+  <!-- Center label -->
+  {#if currentItem?.children?.length}
+    <div class="center-label" style={`left:${center.x}px; top:${center.y}px;`}>
+      {centerLabel}
+    </div>
+  {/if}
 
     {#if currentItem?.children?.length}
     <div class="ring" style={`left:${center.x}px; top:${center.y}px; width:${radiusPx*2}px; height:${radiusPx*2}px; margin-left:-${radiusPx}px; margin-top:-${radiusPx}px;`}></div>
@@ -347,9 +358,10 @@
       {/each}
     {/if}
     {#if parentCenterAngle != null}
-      <div class={`parent-marker ${hoveredIndex===-2 ? 'hovered' : ''}`} style={parentMarkerStyle()}>
-        <div class="triangle" style={parentTriangleStyle()}></div>
-        <div class="parent-label">parent</div>
+      <div class={`node ${hoveredIndex===-2 ? 'hovered' : ''}`} style={parentNodeStyle()}>
+        <div class="label">parent</div>
+        <div class="dot"></div>
+        <div class="deg">{Math.round(parentCenterAngle)}°</div>
       </div>
     {/if}
     {#each currentItem.children as c, i (c.name)}
@@ -365,15 +377,12 @@
 <style>
   .kando-pie-menu { position: relative; width: 100%; height: 100%; background: none; border: 0; padding: 0; cursor: default; }
   .placeholder { opacity: 0.6; font-size: 14px; padding: 8px; }
-  .ring { position: absolute; width: 280px; height: 280px; margin-left:-140px; margin-top:-140px; border-radius: 50%; border: 2px dashed #aaa; pointer-events: none; }
-  .center-disk { position: absolute; border-radius: 50%; background: rgba(0,0,0,0.05); pointer-events: none; }
-  .node { position: absolute; left: 0; top: 0; display: grid; place-items: center; text-align: center; }
-  .node .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent, #888); box-shadow: 0 0 0 3px rgba(0,0,0,0.1); z-index: 1; }
-  .node .label { margin-bottom: 4px; font-size: 12px; color: #000; white-space: nowrap; z-index: 2; }
+  .ring { position: absolute; width: 280px; height: 280px; margin-left:-140px; margin-top:-140px; border-radius: 50%; border: 2px dashed #aaa; pointer-events: none; z-index: 3; }
+  .center-disk { position: absolute; border-radius: 50%; background: rgba(0,0,0,0.05); pointer-events: none; z-index: 1; }
+  .node { position: absolute; left: 0; top: 0; display: grid; place-items: center; text-align: center; z-index: 4; }
+  .node .dot { width: 20px; height: 20px; border-radius: 50%; background: #bfbfbf; border: 2px solid #d9d9d9; z-index: 1; display: grid; place-items: center; }
+  .node .label { margin-bottom: 6px; font-size: 12px; color: #000; white-space: nowrap; z-index: 2; }
   .node.hovered .dot { background: var(--accent-strong, #ff6); }
-  .wedge-edge { position: absolute; width: 0; border-left: 2px dashed rgba(127,127,127,0.6); transform-origin: 0 0; pointer-events: none; }
-  .parent-marker { position: absolute; left: 0; top: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
-  .parent-marker .triangle { width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 14px solid #777; }
-  .parent-marker.hovered .triangle { border-top-color: var(--accent-strong, #ff6); }
-  .parent-marker .parent-label { margin-top: 4px; font-size: 12px; color: #333; }
+  .wedge-edge { position: absolute; width: 0; border-left: 2px dashed rgba(127,127,127,0.6); transform-origin: 0 0; pointer-events: none; z-index: 0; }
+  .center-label { position: absolute; transform: translate(-50%, -50%); font-size: 22px; font-weight: 700; color: #000; pointer-events: none; }
 </style>
