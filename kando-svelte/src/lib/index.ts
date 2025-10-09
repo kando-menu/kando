@@ -1,4 +1,8 @@
+export { default as PieMenuDemo } from './PieMenuDemo.svelte';
 export { default as PieMenu } from './PieMenu.svelte';
+export { default as PieTree } from './PieTree.svelte';
+export { default as CenterText } from './CenterText.svelte';
+// WedgeSeparators and SelectionWedges are internal debug tools; not exported by default
 export { default as PieItem } from './PieItem.svelte';
 export { default as SelectionWedges } from './SelectionWedges.svelte';
 export { default as WedgeSeparators } from './WedgeSeparators.svelte';

@@ -331,7 +331,457 @@
           }
         ]
       }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "compass",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Compass",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "North",
+            "icon": "north",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "North-East",
+            "icon": "north_east",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "East",
+            "icon": "east",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "South-East",
+            "icon": "south_east",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "South",
+            "icon": "south",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "South-West",
+            "icon": "south_west",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "West",
+            "icon": "west",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "North-West",
+            "icon": "north_west",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "boolean",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Boolean",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "True",
+            "icon": "north",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "False",
+            "icon": "south",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "quad",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Quad",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "octal",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Octal",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "digital",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Digital",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "8",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "9",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "clock",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Clock",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "12",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "8",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "9",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "10",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "11",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
+    },
+    {
+      "shortcut": "",
+      "shortcutID": "hex",
+      "centered": false,
+      "root": {
+        "type": "submenu",
+        "name": "Hex",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "8",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "9",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "10",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "11",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "12",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "13",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "14",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "15",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      }
     }
-  ],
-  "templates": []
+  ]
 }

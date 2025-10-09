@@ -1,388 +1,174 @@
 <script lang="ts">
-  import type { MenuItem, MenuThemeDescription, ShowMenuOptions, Vec2 } from './types.js';
-  import { createEventDispatcher, onMount } from 'svelte';
-  import { fetchThemeJson, injectThemeCss, applyThemeColors } from './theme-loader.js';
-  // Import from monorepo alias during dev; fallback relative if alias not resolved at type time
+  import type { MenuItem, Vec2 } from './types.js';
+  // Uses Kando math for angles and directions
   // @ts-ignore
   import * as math from '@kando/common/math';
+  import PieItem from './PieItem.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import CenterText from './CenterText.svelte';
 
-  export let root: MenuItem;
-  export let theme: MenuThemeDescription | null = null;
-  export let options: Partial<ShowMenuOptions> = {};
-  export let themeDirUrl: string | null = null;
-  export let themeId: string | null = null;
+  // One-level PieMenu. Draws a ring at center with children around. Can render compact
+  // (iconic) or regular (with labels). Transitions/animations to be added later.
+  export let item: MenuItem;           // center item for this level
+  export let center: Vec2 = { x: 0, y: 0 };
+  export let radiusPx = 140;           // ring radius
+  export let parentAngle: number | undefined = undefined; // gap direction
+  export let compact = false;          // iconic vs regular
+  // Controlled hover index from parent (PieTree)
+  export let hoverIndex: number = -1;
+  // Pointer state from parent (absolute and relative to this center)
+  export let pointer: { clientX: number; clientY: number; dx: number; dy: number; angle: number; distance: number } | null = null;
+  // Per-child state classes from PieTree (e.g., 'child hovered clicked dragged')
+  export let childStates: string[] = [];
+  $: pointerAngle = pointer ? pointer.angle : null;
+  $: centerLabel = hoveredIndex >= 0 ? ((item?.children?.[hoveredIndex] as any)?.name ?? '') : '';
+  // Allow parent/grandchild modes to mirror Kando selection chain across levels
+  export let centerStateClasses: string = 'active';
+  export let childClassBase: string = 'child';
+  // Theme-driven layers (Kando MenuThemeDescription.layers)
+  export let layers: Array<{ class: string; content?: 'icon'|'name' }>|null = null;
+  export let centerTextWrapWidth: number | null = null;
+  export let drawChildrenBelow: boolean = false;
 
-  const dispatch = createEventDispatcher<{
-    select: { path: string; item: MenuItem };
-    cancel: void;
-    hover: { path: string };
-    unhover: { path: string };
-  }>();
-
-  let linkEl: HTMLLinkElement | null = null;
-  let container: HTMLElement | null = null;
-
-  // Basic state for the first interactive milestone --------------------------------------
-  let center: Vec2 = { x: 0, y: 0 };
-  let radiusPx = 0;
-  let hoveredIndex: number = -1;
   let childAngles: number[] = [];
-  let childWedges: { start: number; end: number }[] = [];
-  let parentWedgeAngles: { start: number; end: number } | null = null;
   let childPositions: { x: number; y: number }[] = [];
-  let nodeEls: HTMLDivElement[] = [];
-  let nodeStyles: string[] = [];
   let separatorAngles: number[] = [];
-  let parentCenterAngle: number | null = null;
-  $: centerLabel = hoveredIndex >= 0
-    ? (currentItem?.children?.[hoveredIndex] as any)?.name
-    : (hoveredIndex === -2 ? 'parent' : 'center');
-  let currentItem: MenuItem | null = null;
-  let chain: Array<{ item: MenuItem; angle?: number; index?: number }> = [];
-  let lastHoveredPath: string | null = null;
-  const debug = true;
-  $: deadZonePx = (options as any)?.centerDeadZone ?? 50;
+  let hoveredIndex = -1;
+  let connectorStyle = '';
+  let wedgeInfo: { itemWedges: { start: number; end: number }[]; parentWedge?: { start: number; end: number } } = { itemWedges: [] };
+  const dispatch = createEventDispatcher<{ hover: { index: number }, select: { index: number, item: any } }>();
 
-  onMount(() => {
-    (async () => {
-      if (!theme && themeDirUrl && themeId) {
-        try {
-          theme = await fetchThemeJson(themeDirUrl, themeId);
-        } catch (e) {
-          console.error(e);
-        }
-      }
+  // Radii ---------------------------------------------------------------------------
+  $: innerRadius = Math.max(30, radiusPx * 0.35);
 
-      if (theme) {
-        linkEl = injectThemeCss(theme);
-        if (theme.colors) applyThemeColors(theme.colors);
-      }
+  $: childAngles = math.computeItemAngles(
+    (item?.children ?? []).map((c: any) => (c && c.angle != null ? { angle: c.angle } : {})),
+    parentAngle
+  );
 
-      // Compute initial center and child layout for the root menu
-      computeCenter();
-      computeRadius();
-      setCenterItem(root);
-    })();
+  // Compute directions once for children so we can pass normalized dir vars and also
+  // derive left/right/top/bottom classes consistently with Kando
+  $: childDirs = childAngles.map((ang) => math.getDirection(ang, 1.0));
 
-    const ro = new ResizeObserver(() => {
-      computeCenter();
-      computeRadius();
-      // Recompute layout for current item
-      computeLayout(currentItem ?? root, getParentAngleFor(currentItem));
-    });
-    if (container) ro.observe(container);
+  // Grandchildren angles and directions per child (for nubs)
+  $: grandAnglesByChild = (item?.children ?? []).map((c: any, i: number) => {
+    const kids = c?.children ?? [];
+    if (!kids.length) return [] as number[];
+    const fixed = kids.map((n: any) => (n && n.angle != null ? { angle: n.angle } : {}));
+    const pAng = (childAngles[i] + 180) % 360;
+    return math.computeItemAngles(fixed as any, pAng);
+  });
+  $: grandDirsByChild = grandAnglesByChild.map((angles: number[]) => angles.map((ang) => math.getDirection(ang, 1.0)));
 
-    return () => {
-      if (linkEl) linkEl.remove();
-      ro.disconnect();
-    };
+  $: childPositions = childAngles.map((ang) => {
+    const r = compact ? radiusPx * 0.65 : radiusPx;
+    const d = math.getDirection(ang, r);
+    return { x: center.x + d.x, y: center.y + d.y };
   });
 
-  function handleSelect(path: string, item: MenuItem) {
-    dispatch('select', { path, item });
+  $: separatorAngles = (() => {
+    // Use Kando computeItemWedges to derive wedge starts and parent wedge bounds
+    wedgeInfo = math.computeItemWedges(childAngles, parentAngle);
+    const starts = wedgeInfo.itemWedges.map((w: any) => w.start);
+    if (wedgeInfo.parentWedge) starts.push(wedgeInfo.parentWedge.start, wedgeInfo.parentWedge.end);
+    return starts;
+  })();
+
+  // No explicit nub rendering: grandchildren appear as `.menu-node.grandchild` per theme
+
+  // Controlled hover: react to prop changes
+  $: hoveredIndex = hoverIndex;
+  $: updateConnector();
+  function updateConnector() {
+    if (hoveredIndex < 0 || hoveredIndex >= childPositions.length) { connectorStyle = 'width:0px;'; return; }
+    const p = childPositions[hoveredIndex];
+    if (!p) { connectorStyle = 'width:0px;'; return; }
+    const dx = p.x - center.x; const dy = p.y - center.y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const ang = math.getAngle({ x: dx, y: dy }) - 90;
+    // Root node is translated to center; connector rotates in local space
+    connectorStyle = `width:${len}px; transform: rotate(${ang}deg);`;
   }
-
-  function computeCenter() {
-    if (!container) return;
-    const r = container.getBoundingClientRect();
-    center = { x: r.width / 2, y: r.height / 2 };
-  }
-
-  function computeRadius() {
-    if (!container) return;
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    const themeMax = theme?.maxMenuRadius ?? 150;
-    radiusPx = Math.min(themeMax, Math.min(w, h) / 2 - 20);
-  }
-
-  function computeLayout(item: MenuItem | null, parentAngle?: number) {
-    if (!item?.children?.length) {
-      childAngles = [];
-      childWedges = [];
-      return;
-    }
-    // Align with Kando: sanitize fixed angles first, then compute angles with parent gap
-    const temp = (item.children as any[]).map((c) =>
-      c && c.angle != null ? { angle: c.angle as number } : ({})
-    );
-    try {
-      const rawFixed = (item.children as any[]).map((c) => ('angle' in (c||{}) && (c as any).angle != null) ? (c as any).angle : null);
-      console.log('[pie] angles:raw', { parentAngle, rawFixed });
-    } catch {}
-    math.fixFixedAngles(temp);
-    try {
-      const fixedAfter = temp.map((t) => ('angle' in t ? (t as any).angle ?? null : null));
-      console.log('[pie] angles:fixed', { parentAngle, fixedAfter });
-    } catch {}
-    childAngles = math.computeItemAngles(temp as any, parentAngle);
-    try {
-      console.log('[pie] angles:children', { parentAngle, childAngles: [...childAngles] });
-    } catch {}
-    // Precompute absolute positions from angles; used directly for drawing
-    childPositions = childAngles.map((ang) => {
-      const d = math.getDirection(ang, radiusPx);
-      return { x: Math.round(center.x + d.x), y: Math.round(center.y + d.y) };
-    });
-
-    const wedgeInfo = math.computeItemWedges(childAngles, parentAngle);
-    childWedges = wedgeInfo.itemWedges;
-    parentWedgeAngles = wedgeInfo.parentWedge ?? null;
-    parentCenterAngle = parentWedgeAngles ? (parentWedgeAngles.start + parentWedgeAngles.end) / 2 : null;
-    // Build separator angles: one at the start of each child wedge plus parent wedge bounds
-    separatorAngles = childWedges.map((w) => w.start);
-    if (parentWedgeAngles) {
-      separatorAngles.push(parentWedgeAngles.start, parentWedgeAngles.end);
-    }
-    try {
-      const wedges = childWedges.map((w) => `${w.start.toFixed(1)}–${w.end.toFixed(1)}`);
-      const parentWedge = parentWedgeAngles ? `${parentWedgeAngles.start.toFixed(1)}–${parentWedgeAngles.end.toFixed(1)}` : null;
-      console.log('[pie] angles:wedges', { parentAngle, wedges, parentWedge });
-    } catch {}
-
-    try {
-      const names = (item.children as any[]).map((c) => (c ? c.name : ''));
-      const vectors = childAngles.map((ang) => math.getDirection(ang, radiusPx));
-      const roundTripAngles = vectors.map((d) => math.getAngle(d));
-      const posStr = childPositions
-        .map((p, i) => `#${i}:${names[i]} a=${childAngles[i].toFixed(1)}° rt=${roundTripAngles[i].toFixed(1)}° px=${p.x.toFixed(1)} py=${p.y.toFixed(1)}`)
-        .join(' | ');
-      const fixedStr = temp.map((t) => ('angle' in t ? (t as any).angle : null)).join(',');
-      console.log(
-        `[pie] layout item=${(item as any).name} parent=${parentAngle?.toFixed?.(1)} center=(${center.x.toFixed(1)},${center.y.toFixed(1)}) radius=${radiusPx.toFixed(1)} fixed=[${fixedStr}] angles=[${childAngles
-          .map((a) => a.toFixed(1))
-          .join(', ')}] -> ${posStr}`
-      );
-      if (parentWedgeAngles) {
-        console.log(
-          `[pie] parentWedge start=${parentWedgeAngles.start.toFixed(1)} end=${parentWedgeAngles.end.toFixed(1)}`
-        );
-      }
-    } catch {}
-
-    // After DOM updates, measure actual node positions and compare angles.
-    try {
-      requestAnimationFrame(() => requestAnimationFrame(() => logDomPositions('after-layout')));
-    } catch {}
-  }
-
-  function setCenterItem(item: MenuItem, via?: { angle?: number; index?: number }) {
-    currentItem = item;
-    computeLayout(currentItem, getParentAngleFor(currentItem));
-
-    try {
-      console.log('[pie] setCenterItem', {
-        name: (item as any).name,
-        chain: chain.map((c) => ({ name: (c.item as any).name, angle: c.angle, index: c.index })),
-      });
-    } catch {}
-  }
-
-  function getParentAngleFor(item: MenuItem | null): number | undefined {
-    if (!item) return undefined;
-    if (chain.length === 0) return undefined; // root
-
-    const top = chain[chain.length - 1];
-    if (top.item === item) {
-      return top.angle != null ? (top.angle + 180) % 360 : undefined;
-    }
-
-    // If item is below top, use its stored angle in the chain
-    const entry = chain.find((c) => c.item === item);
-    const val = entry?.angle != null ? (entry.angle + 180) % 360 : undefined;
-    console.log('[pie] parentAngleFor', { item: (item as any).name, val, chain: chain.map((c)=>({name:(c.item as any).name, angle:c.angle}))});
-    return val;
-  }
-
-  function onPointerMove(e: PointerEvent | MouseEvent) {
-    if (!container) return;
-    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const pos: Vec2 = { x: e.clientX - r.left, y: e.clientY - r.top };
-    const rel: Vec2 = { x: pos.x - center.x, y: pos.y - center.y };
-
-    const distance = math.getDistance({ x: 0, y: 0 }, rel);
-    const angle = math.getAngle(rel);
-
-    // Dead zone around center uses config default (50px) unless overridden
-    const dead = (options as any)?.centerDeadZone ?? 50;
-    if (distance < dead) {
-      updateHover(-1);
-      return;
-    }
-
-    // Hit test wedges
-    let idx = -1;
-    for (let i = 0; i < childWedges.length; i++) {
-      const w = childWedges[i];
-      if (math.isAngleBetween(angle, w.start, w.end)) {
-        idx = i; break;
-      }
-    }
-
-    // If no child wedge matched, check the parent wedge (back area)
-    let zone: 'child' | 'parent' | 'center' = 'child';
-    if (idx === -1) {
-      if (parentWedgeAngles && math.isAngleBetween(angle, parentWedgeAngles.start, parentWedgeAngles.end)) {
-        idx = -2; // special value for parent/back wedge
-        zone = 'parent';
-      } else {
-        zone = 'center';
-      }
-    }
-
-    {
-      const w = idx >= 0 ? childWedges[idx] : (idx === -2 ? parentWedgeAngles : null);
-      console.log('[pie] pointer', { pos, rel, angle: Math.round(angle), match: idx, zone, wedge: w });
-    }
-    updateHover(idx);
-  }
-
-  function updateHover(idx: number) {
-    if (idx === hoveredIndex) return;
-    const path = idx >= 0 ? `/${idx}` : (idx === -2 ? '/parent' : '/');
-    if (lastHoveredPath && lastHoveredPath !== path) dispatch('unhover', { path: lastHoveredPath });
-    hoveredIndex = idx;
-    lastHoveredPath = path;
-    dispatch('hover', { path });
-
-    try {
-      const angle = idx >= 0 ? childAngles[idx] : (idx === -2 ? (getParentAngleFor(currentItem) ?? null) : null);
-      const name = idx >= 0 ? (currentItem?.children?.[idx] as any)?.name : (idx === -2 ? 'parent' : 'center');
-      console.log('[pie] hover→', { idx, angle, name });
-    } catch {}
-  }
-
-  function onClick() {
-    if (hoveredIndex < 0) {
-      // Click center: go to parent if possible
-      if (chain.length > 0) {
-        chain.pop();
-        const newCenter = chain.length > 0 ? chain[chain.length - 1].item : root;
-        setCenterItem(newCenter);
-      }
-      return;
-    }
-    const item = currentItem?.children?.[hoveredIndex];
-    if (!item) return;
-
-    const angle = childAngles[hoveredIndex];
-    // If leaf → dispatch select; if submenu → push and open
-    if ((item as any).children?.length) {
-      chain.push({ item: item as MenuItem, angle, index: hoveredIndex });
-      setCenterItem(item as MenuItem);
-      updateHover(-1);
-    } else {
-      try { console.log('[pie] select', { path: `${pathOfCurrent()}/${hoveredIndex}`, name: (item as any).name, angle }); } catch {}
-      handleSelect(`${pathOfCurrent()}/${hoveredIndex}`, item as MenuItem);
-    }
-  }
-
-  function pathOfCurrent(): string {
-    if (chain.length === 0) return '';
-    return '/' + chain.map((c) => String(c.index ?? 0)).join('/');
-  }
-
-  // Reactive: rebuild inline styles whenever positions/center change
-  $: nodeStyles = childPositions.map((p, i) => {
-    const style = `left:${p.x}px; top:${p.y}px; transform: translate(-50%, -50%);`;
-    try {
-      const ang = childAngles[i] ?? NaN;
-      const rt = math.getAngle({ x: p.x - center.x, y: p.y - center.y });
-      console.log(`[pie] draw-node #${i} ${(currentItem?.children?.[i] as any)?.name} angle=${ang?.toFixed?.(1)}° rt=${rt.toFixed(1)}° px=${p.x.toFixed(1)} py=${p.y.toFixed(1)}`);
-    } catch {}
-    return style;
-  });
-
-  function parentMarkerStyle() {
-    if (parentCenterAngle == null) return '';
-    const d = math.getDirection(parentCenterAngle, radiusPx);
-    const xi = center.x + d.x;
-    const yi = center.y + d.y;
-    return `left:${xi}px; top:${yi}px; transform: translate(-50%, -50%);`;
-  }
-
-  function parentNodeStyle() {
-    return parentMarkerStyle();
-  }
-
-  function logDomPositions(tag: string) {
-    if (!container || !currentItem?.children?.length) return;
-    const rect = container.getBoundingClientRect();
-    const rows: string[] = [];
-    nodeEls.slice(0, currentItem.children.length).forEach((el, i) => {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const cx = r.left + r.width / 2 - rect.left;
-      const cy = r.top + r.height / 2 - rect.top;
-      const ang = math.getAngle({ x: cx - center.x, y: cy - center.y });
-      const expected = childAngles[i] ?? NaN;
-      const name = (currentItem?.children?.[i] as any)?.name;
-      rows.push(`#${i}:${name} exp=${expected?.toFixed?.(1)}° dom=${ang.toFixed(1)}° cx=${cx.toFixed(1)} cy=${cy.toFixed(1)}`);
-    });
-    console.log(`[pie] dom-positions ${tag} -> ${rows.join(' | ')}`);
-  }
-
-  // Best-effort icon URL guesser for non-font themes (e.g., file or system); in Electron
-  // Kando resolves via icon themes. For the demo, try a few common locations by convention.
-  function guessIconUrl(theme: string | undefined, icon: string | undefined): string {
-    if (!theme || !icon) return '';
-    // Simple heuristic: look in static assets shipped with the demo
-    // e.g., /kando/icon-themes/<theme>/<icon>.svg
-    const base = '/kando/icon-themes';
-    return `${base}/${theme}/${icon}.svg`;
-  }
-
-  // Labels: upright, no rotation
-
-  function onKeydown(e: KeyboardEvent) {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); return; }
-    if (e.key === 'Escape') { e.preventDefault(); hoveredIndex = -1; if (chain.length>0) { chain.pop(); setCenterItem(chain.length? chain[chain.length-1].item : root); } }
-  }
+  
 </script>
 
-<button class="kando-pie-menu" bind:this={container} type="button" on:pointermove={onPointerMove} on:click={onClick} on:keydown={onKeydown} aria-label="Pie menu preview">
-  <!-- Milestone: minimal interactive overlay (no visuals yet) -->
-  <!-- Center label -->
-  {#if currentItem?.children?.length}
-    <div class="center-label" style={`left:${center.x}px; top:${center.y}px;`}>
-      {centerLabel}
-    </div>
-  {/if}
-
-    {#if currentItem?.children?.length}
-    <div class="ring" style={`left:${center.x}px; top:${center.y}px; width:${radiusPx*2}px; height:${radiusPx*2}px; margin-left:-${radiusPx}px; margin-top:-${radiusPx}px;`}></div>
-    <div class="center-disk" style={`left:${center.x}px; top:${center.y}px; width:${deadZonePx*2}px; height:${deadZonePx*2}px; margin-left:-${deadZonePx}px; margin-top:-${deadZonePx}px;`}></div>
-    {#if separatorAngles.length}
-      {#each separatorAngles as a}
-        <div class="wedge-edge" style={`left:${center.x}px; top:${center.y}px; height:${radiusPx}px; transform: rotate(${a - 180}deg);`}></div>
-      {/each}
-    {/if}
-    {#if parentCenterAngle != null}
-      <div class={`node ${hoveredIndex===-2 ? 'hovered' : ''}`} style={parentNodeStyle()}>
-        <div class="label">parent</div>
-        <div class="dot"></div>
-        <div class="deg">{Math.round(parentCenterAngle)}°</div>
-      </div>
-    {/if}
-    {#each currentItem.children as c, i (c.name)}
-      <div class={`node ${i===hoveredIndex ? 'hovered' : ''}`} bind:this={nodeEls[i]} style={nodeStyles[i]}>
-        <div class="label">{c.name}</div>
-        <div class="dot"></div>
-        <div class="deg">{Math.round(childAngles[i])}°</div>
-      </div>
+<!-- Snippets to render children and center content (Svelte 5) -->
+{#snippet RenderGrandchildren({ index })}
+  {#if (item?.children?.[index] as any)?.children?.length}
+    {#each grandAnglesByChild[index] as gAng, j}
+      <PieItem item={(item as any).children[index].children[j] as any}
+               level={2}
+               dirX={grandDirsByChild[index][j].x}
+               dirY={grandDirsByChild[index][j].y}
+               angle={gAng}
+               siblingCount={(item as any).children[index].children.length}
+               parentAngle={childAngles[index]}
+               stateClasses={'grandchild'}
+               connectorStyle={''}
+               angleDiff={null}
+               dataPath={`/${index}/${j}`}
+               dataLevel={2}
+               layers={layers ?? [{ class: 'icon-layer' }]} />
     {/each}
   {/if}
-</button>
+{/snippet}
+
+{#snippet RenderChildren()}
+  {#each item?.children ?? [] as c, i}
+    <PieItem item={c as any}
+             level={1}
+             dirX={childDirs[i].x}
+             dirY={childDirs[i].y}
+             angle={childAngles[i]}
+             siblingCount={(item?.children ?? []).length}
+             parentAngle={parentAngle}
+             stateClasses={childStates[i] ?? `${childClassBase} ${i===hoveredIndex ? 'hovered' : ''}`}
+             connectorStyle={''}
+             angleDiff={pointerAngle != null ? Math.min(Math.abs((childAngles[i] - pointerAngle) % 360), 360 - Math.abs((childAngles[i] - pointerAngle) % 360)) : null}
+             dataPath={`/${i}`}
+             dataLevel={1}
+             layers={layers ?? [{ class: 'icon-layer' }]}
+             below={RenderGrandchildren}
+             belowIndex={i}
+             />
+  {/each}
+{/snippet}
+
+{#snippet CenterContent()}
+  {#if !drawChildrenBelow}
+    {@render RenderChildren()}
+  {/if}
+  <CenterText text={centerLabel} visible={!!centerLabel && hoverIndex !== -2} wrapWidth={centerTextWrapWidth ?? null} />
+{/snippet}
+
+<div class="pie-level" style={`--child-distance:${radiusPx}px;`}>
+
+  <PieItem item={item as any}
+           level={0}
+           dirX={0}
+           dirY={0}
+           angle={0}
+           siblingCount={(item?.children ?? []).length}
+           stateClasses={centerStateClasses}
+           pointerAngle={pointerAngle}
+           hoverAngle={hoveredIndex >= 0 ? childAngles[hoveredIndex] : (parentAngle != null ? (parentAngle + 180) % 360 : null)}
+           parentHovered={hoverIndex === -2}
+           transformStyle={`translate(${center.x}px, ${center.y}px)`}
+           childDistancePx={radiusPx}
+           dataPath={'/'}
+           dataLevel={0}
+           layers={layers ?? [{ class: 'icon-layer' }]}
+           connectorStyle={connectorStyle}
+           below={drawChildrenBelow ? RenderChildren : null}
+           content={CenterContent}
+           >
+    <!-- children injected via snippets defined above -->
+  </PieItem>
+
+</div>
 
 <style>
-  .kando-pie-menu { position: relative; width: 100%; height: 100%; background: none; border: 0; padding: 0; cursor: default; }
-  .placeholder { opacity: 0.6; font-size: 14px; padding: 8px; }
-  .ring { position: absolute; width: 280px; height: 280px; margin-left:-140px; margin-top:-140px; border-radius: 50%; border: 2px dashed #aaa; pointer-events: none; z-index: 3; }
-  .center-disk { position: absolute; border-radius: 50%; background: rgba(0,0,0,0.05); pointer-events: none; z-index: 1; }
-  .node { position: absolute; left: 0; top: 0; display: grid; place-items: center; text-align: center; z-index: 4; }
-  .node .dot { width: 20px; height: 20px; border-radius: 50%; background: #bfbfbf; border: 2px solid #d9d9d9; z-index: 1; display: grid; place-items: center; }
-  .node .label { margin-bottom: 6px; font-size: 12px; color: #000; white-space: nowrap; z-index: 2; }
-  .node.hovered .dot { background: var(--accent-strong, #ff6); }
-  .wedge-edge { position: absolute; width: 0; border-left: 2px dashed rgba(127,127,127,0.6); transform-origin: 0 0; pointer-events: none; z-index: 0; }
-  .center-label { position: absolute; transform: translate(-50%, -50%); font-size: 22px; font-weight: 700; color: #000; pointer-events: none; }
+  .pie-level { position: relative; width: 100%; height: 100%; }
+  .node-layer { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+  
 </style>
