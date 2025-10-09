@@ -66,7 +66,7 @@ export class WindowsBackend extends Backend {
         this.installedApps.push({
           name: app.name,
           id: app.id,
-          command: 'start shell:AppsFolder\\' + app.id,
+          command: 'start "" "shell:AppsFolder\\' + app.id + '"',
           icon: app.name,
           iconTheme: 'system',
         });
