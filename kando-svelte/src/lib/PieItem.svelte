@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { MenuItem } from './types';
+  import type { MenuItem } from './types.js';
   import type { Snippet } from 'svelte';
   // DOM/CSS alignment with Kando: no math here
   export let item: MenuItem;
@@ -29,11 +29,11 @@
   export let dataPath: string | null = null;
   export let dataLevel: number | null = null;
   // Theme layers (back-to-front iterate reversed) like Kando's MenuThemeDescription.layers
-  export let layers: Array<{ class: string; content?: 'icon' | 'name' }>|null = null;
+  export let layers: Array<{ class: string; content?: 'icon' | 'name' | 'none' }>|null = null;
   // Snippet insertion points to replace slots
-  export let below: Snippet<{ index?: number }>|null = null;
+  export let below: Snippet<[ { index: number } ]>|null = null;
   export let belowIndex: number | null = null;
-  export let content: Snippet<{ index?: number }>|null = null;
+  export let content: Snippet<[ {} ]>|null = null;
   // No explicit nubs here; grandchildren are rendered as real `.menu-node.grandchild` elements
 
 </script>
@@ -48,8 +48,8 @@
     <div class="connector" style={connectorStyle}></div>
   {/if}
   <!-- Theme layers are supplied by CSS; expose angles for center per Kando -->
-  {#if below}
-    {@render below(belowIndex != null ? { index: belowIndex } : {})}
+  {#if below && belowIndex != null}
+    {@render below({ index: belowIndex })}
   {/if}
   {#if layers && layers.length}
     {#each [...layers].reverse() as layer}

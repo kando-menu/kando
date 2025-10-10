@@ -1,17 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import JSON5 from 'json5';
-  import { applyThemeColors, injectThemeCss } from '$lib/theme-loader';
-  import * as math from '../../../src/common/math';
-  import type { MenuThemeDescription } from '$lib/types';
-  import type { MenuSettingsV1, MenuV1 } from '@kando/schemata/menu-settings-v1';
-  import { GENERAL_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/general-settings-v1';
-  import { MENU_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/menu-settings-v1';
+  import { applyThemeColors, injectThemeCss } from '../lib/theme-loader.ts';
+  import * as math from '../../../src/common/math/index.ts';
+  import type { MenuThemeDescription } from '../lib/types.ts';
+  import type { MenuSettingsV1, MenuV1 } from '../../../src/common/settings-schemata/menu-settings-v1.ts';
+  import { GENERAL_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/general-settings-v1.js';
+  import { MENU_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/menu-settings-v1.js';
   import { z } from 'zod';
-  import MenuOutline from '$lib/MenuOutline.svelte';
-  import PieMenuDemo from '$lib/PieMenuDemo.svelte';
-  import PieMenu from '$lib/PieMenu.svelte';
-  import PieTree from '$lib/PieTree.svelte';
+  import MenuOutline from '../lib/MenuOutline.svelte';
+  import PieMenuDemo from '../lib/PieMenuDemo.svelte';
+  import PieMenu from '../lib/PieMenu.svelte';
+  import PieTree from '../lib/PieTree.svelte';
+  import type { MouseTrigger } from '../lib/types.ts';
 
   let config: Record<string, unknown> | null = null;
   let menuSettings: MenuSettingsV1 | null = null;
@@ -32,6 +33,24 @@
   let chain: Array<{ item: any; index?: number; angle?: number }> = [];
   let mouseeCanvas: HTMLCanvasElement | null = null;
   let mouseeCtx: CanvasRenderingContext2D | null = null;
+
+  // Demo mouse trigger binding for opening the popup in browser
+  const demoTrigger: MouseTrigger = { kind: 'mouse', button: 'right', mods: [] };
+  function buttonMatches(e: PointerEvent, trig: MouseTrigger): boolean {
+    const buttonMap: Record<string, number> = { left: 0, middle: 1, right: 2, x1: 3, x2: 4 };
+    const expectBtn = buttonMap[trig.button];
+    const modsOk = (trig.mods ?? []).every((m: 'ctrl'|'alt'|'shift'|'meta') => {
+      if (m === 'ctrl') return e.ctrlKey;
+      if (m === 'alt') return e.altKey;
+      if (m === 'shift') return e.shiftKey;
+      if (m === 'meta') return e.metaKey;
+      return false;
+    });
+    const btnOk = e.button === expectBtn;
+    const result = btnOk && modsOk;
+    console.log('[svelte-trigger] match', { btnOk, modsOk, eButton: e.button, expectBtn, trig });
+    return result;
+  }
 
   async function getJSON<T>(path: string): Promise<T> {
     console.log('[demo] fetch JSON', path);
@@ -66,7 +85,7 @@
         console.warn('[demo] menus invalid', (parsedMenus as any).error?.issues);
         menuSettings = rawMenus as any; // fall back to raw for demo flexibility
       }
-      availableMenus = (menuSettings?.menus ?? []).map((m: any, i: number) => ({ index: i, name: m.root?.name ?? `Menu ${i+1}`, shortcutID: m.shortcutID ?? '' }));
+      availableMenus = (menuSettings?.menus ?? []).map((m: any, i: number): { index: number; name: string; shortcutID: string } => ({ index: i, name: (m as any).root?.name ?? `Menu ${i+1}`, shortcutID: (m as any).shortcutID ?? '' }));
       selectedMenuIndex = 0;
       firstRoot = menuSettings?.menus?.[selectedMenuIndex]?.root ?? null;
       currentItem = firstRoot;
@@ -78,7 +97,8 @@
 
       const themeId = selectedThemeId || 'default';
       const themeJson = await getJSON5<any>(`/kando/menu-themes/${themeId}/theme.json5`);
-      theme = { ...themeJson, id: themeId, directory: '/kando/menu-themes' };
+      // Relax typing: theme.layers accepts 'none' as content
+      theme = { ...(themeJson as any), id: themeId, directory: '/kando/menu-themes' } as any;
       console.log('[demo] theme loaded', theme?.id, theme?.name, 'layers', theme?.layers.length);
       // inject theme for demo page
       if (theme) {
@@ -87,7 +107,7 @@
       }
 
       // math quick-test: compute angles/wedges for the first menu with children
-      const firstMenu = menuSettings?.menus?.find((m) => m.root?.children?.length);
+      const firstMenu = (menuSettings?.menus as any[])?.find((m: any) => (m as any).root?.children?.length);
       const children = firstMenu?.root?.children ?? [];
       const angles = math.computeItemAngles(children as any);
       const wedges = math.computeItemWedges(angles).itemWedges;
@@ -132,6 +152,11 @@
 
   function onCanvasDown(e: PointerEvent) {
     if (!mouseeCanvas) return;
+    // Suppress native context menu for RMB so we can use it as a trigger in browser
+    if (e.button === 2) {
+      e.preventDefault();
+    }
+    if (!buttonMatches(e, demoTrigger)) return;
     const p = toCanvasPos(e);
     openPopupAt(p.x, p.y);
   }
@@ -186,7 +211,7 @@
     </label>
   </div>
   <h3>Popup target</h3>
-  <div style="position:relative; width: 100%; max-width: 100%; background: #f3f3f3;">
+  <div style="position:relative; width: 100%; max-width: 100%; background: #f3f3f3;" on:contextmenu|preventDefault role="application">
     <canvas bind:this={mouseeCanvas} class="mousee" on:pointerdown={onCanvasDown} style="display:block; width:100%; height:1000px;"></canvas>
     {#if popupOpen && firstRoot}
       <div style="position:absolute; inset:0;">

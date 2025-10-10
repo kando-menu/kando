@@ -4,13 +4,15 @@
   // @ts-ignore
   import * as math from '@kando/common/math';
   import { setContext } from 'svelte';
-  import { PIE_TREE_CTX, type PieTreeContext } from './context';
+  import { PIE_TREE_CTX, type PieTreeContext } from './context.js';
+  // Use our local shim that re-exports the Kando GestureDetector
+  import { GestureDetector } from './gesture/gesture-detector.js';
 
   export let root: MenuItem;
   export let center: Vec2 = { x: 200, y: 200 };
   export let radiusPx = 140;
   export let settings: any = null; // pass Kando general settings (centerDeadZone, etc.)
-  export let layers: Array<{ class: string; content?: 'icon' | 'name' }>|null = null;
+  export let layers: ReadonlyArray<{ class: string; content?: 'icon' | 'name' | 'none' }>|null = null;
   export let centerTextWrapWidth: number | null = null;
   export let drawChildrenBelow: boolean = false;
   export let startPressed: boolean = false; // begin in pressed-static mode
@@ -28,6 +30,7 @@
   let pointerAbs: Vec2 | null = null;
   let pointerRel = { dx: 0, dy: 0, angle: 0, distance: 0 };
   let childStates: string[] = [];
+  let detector: GestureDetector | null = null;
 
   function distance(a: Vec2, b: Vec2): number {
     const dx = a.x - b.x, dy = a.y - b.y; return Math.hypot(dx, dy);
@@ -79,9 +82,20 @@
     const pos = { x: client.x - rect.left, y: client.y - rect.top };
     const rel = { x: pos.x - center.x, y: pos.y - center.y };
     pointerRel = { dx: rel.x, dy: rel.y, angle: math.getAngle(rel), distance: Math.hypot(rel.x, rel.y) };
+
+    // Feed gesture detector when dragging; use relative coords from center
+    if (mode === 'pressed-dragging' && detector) {
+      const coords = { x: rel.x, y: rel.y } as Vec2;
+      console.log('[svelte-gesture] motion', coords);
+      detector.onMotionEvent(coords);
+    }
   }
 
   function onWindowPointerUp(e: PointerEvent) {
+    if (detector) {
+      console.log('[svelte-gesture] reset on pointerup');
+      detector.reset();
+    }
     if (mode === 'pressed-static') {
       // Decide click-up vs drag by jitter distance
       const releasePos = { x: e.clientX, y: e.clientY };
@@ -129,6 +143,22 @@
     hoverIndex = -1;
     const count = levelItem()?.children?.length ?? 0;
     childStates = Array.from({ length: count }, () => 'child');
+    // Initialize or reconfigure gesture detector
+    if (!detector) {
+      detector = new GestureDetector();
+      detector.on('selection', () => {
+        console.log('[svelte-gesture] selection event');
+        if (hoverIndex >= 0) triggerSelect(hoverIndex);
+      });
+    }
+    if (settings) {
+      detector.minStrokeLength = Number(settings.gestureMinStrokeLength ?? 150);
+      detector.minStrokeAngle = Number(settings.gestureMinStrokeAngle ?? 20);
+      detector.jitterThreshold = Number(settings.gestureJitterThreshold ?? 10);
+      detector.pauseTimeout = Number(settings.gesturePauseTimeout ?? 100);
+      detector.centerDeadZone = Number(settings.centerDeadZone ?? 50);
+      detector.fixedStrokeLength = Number(settings.fixedStrokeLength ?? 0);
+    }
   }
 
   // If the popup opens from an external pointerdown (on the canvas), start tracking
@@ -148,6 +178,21 @@
       const rel = { x: pos.x - center.x, y: pos.y - center.y };
       pointerRel = { dx: rel.x, dy: rel.y, angle: math.getAngle(rel), distance: Math.hypot(rel.x, rel.y) };
       pointerAbs = { ...initialPointer };
+      if (!detector) {
+        detector = new GestureDetector();
+        detector.on('selection', () => {
+          console.log('[svelte-gesture] selection event (startPressed)');
+          if (hoverIndex >= 0) triggerSelect(hoverIndex);
+        });
+      }
+      if (settings) {
+        detector.minStrokeLength = Number(settings.gestureMinStrokeLength ?? 150);
+        detector.minStrokeAngle = Number(settings.gestureMinStrokeAngle ?? 20);
+        detector.jitterThreshold = Number(settings.gestureJitterThreshold ?? 10);
+        detector.pauseTimeout = Number(settings.gesturePauseTimeout ?? 100);
+        detector.centerDeadZone = Number(settings.centerDeadZone ?? 50);
+        detector.fixedStrokeLength = Number(settings.fixedStrokeLength ?? 0);
+      }
     }
   }
 

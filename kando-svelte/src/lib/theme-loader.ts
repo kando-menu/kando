@@ -1,5 +1,5 @@
 import JSON5 from 'json5';
-import type { MenuThemeDescription } from './types';
+import type { MenuThemeDescription } from './types.js';
 
 export async function fetchThemeJson(themeDirUrl: string, themeId: string): Promise<MenuThemeDescription> {
   const base = themeDirUrl.replace(/\/$/, '');

@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
+		"allowImportingTsExtensions": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
@@ -10,6 +11,18 @@
 		"sourceMap": true,
 		"strict": true,
 		"module": "NodeNext",
-		"moduleResolution": "NodeNext"
+		"moduleResolution": "NodeNext",
+		"baseUrl": ".",
+		"paths": {
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"@kando/common": ["../src/common/index.ts", "../src/common"],
+			"@kando/common/*": ["../src/common/*"],
+			"@kando/schemata": ["../src/common/settings-schemata"],
+			"@kando/schemata/*": ["../src/common/settings-schemata/*"],
+			"@kando/gesture": ["../src/menu-renderer/input-methods/gesture-detector.ts"],
+			"@kando/gamepad": ["../src/menu-renderer/input-methods/gamepad.ts"],
+			"@kando/sound-theme": ["../src/menu-renderer/sound-theme.ts"]
+		}
 	}
 }

@@ -14,7 +14,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'@kando/common': '../src/common',
-			'@kando/schemata': '../src/common/settings-schemata'
+			'@kando/schemata': '../src/common/settings-schemata',
+			'$lib': './src/lib'
 		}
 	}
 };

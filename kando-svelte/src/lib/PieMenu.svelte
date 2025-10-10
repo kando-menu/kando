@@ -26,7 +26,7 @@
   export let centerStateClasses: string = 'active';
   export let childClassBase: string = 'child';
   // Theme-driven layers (Kando MenuThemeDescription.layers)
-  export let layers: Array<{ class: string; content?: 'icon'|'name' }>|null = null;
+  export let layers: { class: string; content?: 'icon'|'name'|'none' }[] | null = null;
   export let centerTextWrapWidth: number | null = null;
   export let drawChildrenBelow: boolean = false;
 
@@ -93,7 +93,7 @@
 </script>
 
 <!-- Snippets to render children and center content (Svelte 5) -->
-{#snippet RenderGrandchildren({ index })}
+{#snippet RenderGrandchildren({ index }: { index: number })}
   {#if (item?.children?.[index] as any)?.children?.length}
     {#each grandAnglesByChild[index] as gAng, j}
       <PieItem item={(item as any).children[index].children[j] as any}
@@ -108,7 +108,7 @@
                angleDiff={null}
                dataPath={`/${index}/${j}`}
                dataLevel={2}
-               layers={layers ?? [{ class: 'icon-layer' }]} />
+               layers={(layers as any) ?? [{ class: 'icon-layer' }]} />
     {/each}
   {/if}
 {/snippet}
@@ -127,7 +127,7 @@
              angleDiff={pointerAngle != null ? Math.min(Math.abs((childAngles[i] - pointerAngle) % 360), 360 - Math.abs((childAngles[i] - pointerAngle) % 360)) : null}
              dataPath={`/${i}`}
              dataLevel={1}
-             layers={layers ?? [{ class: 'icon-layer' }]}
+             layers={(layers as any) ?? [{ class: 'icon-layer' }]}
              below={RenderGrandchildren}
              belowIndex={i}
              />
@@ -157,7 +157,7 @@
            childDistancePx={radiusPx}
            dataPath={'/'}
            dataLevel={0}
-           layers={layers ?? [{ class: 'icon-layer' }]}
+           layers={(layers as any) ?? [{ class: 'icon-layer' }]}
            connectorStyle={connectorStyle}
            below={drawChildrenBelow ? RenderChildren : null}
            content={CenterContent}
