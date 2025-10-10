@@ -200,17 +200,80 @@ Two main forms of pie definitions: dictionaries or DOM elements. Several ways to
 
 ---
 
-## Callback Surface (summary)
+## Callbacks and Events (exhaustive per source)
 
-Event names typically bubbled to target (illustrative; actual names in the original code):
-- `onshowpie(event, pie)`
-- `onshowslice(event, pie, slice)`
-- `onshowitem(event, pie, slice, item)`
-- `onpieitemhover(event, pie, slice, item, trackingState)`
-- `onpieitemselect(event, pie, slice, item)`
-- `onpiecancel(event, pie)`
+Three notification mechanisms are supported simultaneously (and events bubble from Item → Slice → Pie → Target):
+- DOM attributes: `on<name>="..."` evaluated with `this = widget` and local bindings `{ event, pie, slice, item }` when available
+- jQuery events: `$(el).on('<name>', (event, targetWidget, pie, slice, item) => { ... })`
+- Dictionary handlers: `on<name>(event, pie, slice, item)` functions placed on item/slice/pie/options dictionaries
 
-The Svelte/Kando port can map these to component events and/or Svelte 5 snippets to allow parameterized layers and dynamic feedback.
+Where an event fires first (leaf) and bubbles upward is indicated below. For jQuery handlers, the extra arg order is always `(targetWidget, pie, slice, item)`.
+
+### Pie‑level lifecycle and input
+- `pieshow` – leaf: Pie → Target
+  - DOM/jQuery element: `pie.$pie`
+  - Args: `(event, pie)` (plus `slice=null,item=null` in generic plumbing)
+  - Dictionary handler keys: `onpieshow`
+- `piestart` / `piestop` – Pie shown/hidden during a tracking session
+  - Leaf: Pie → Target; Args: `(event, pie)`
+  - Keys: `onpiestart`, `onpiestop`
+- `piepin` / `pieunpin` – pin/unpin transitions (click‑up to stick; click‑down to unstick)
+  - Leaf: Pie → Target; Args: `(event, pie)`
+  - Keys: `onpiepin`, `onpieunpin`
+- `piecancel` – cancel (e.g., pinned and user clicks without selecting)
+  - Leaf: Pie → Target; Args: `(event, pie)`
+  - Key: `onpiecancel`
+- `pieupdate` – per‑motion update (after slice/item updates)
+  - Leaf: Pie → Target; Args: `(event, pie)`
+  - Key: `onpieupdate`
+- `pieselect` – a selection occurred in the current pie (may be with/without item)
+  - Leaf: Pie → Target; Args: `(event, pie)`
+  - Key: `onpieselect`
+- Low‑level input passthrough for diagnostics or tooling:
+  - `piedown` / `piemove` / `pieup` – Leaf: Pie → Target; Args: `(event, pie)`
+
+### Slice‑level lifecycle and tracking
+- `piesliceshow` – before slice is shown (within `pieshow`)
+  - Leaf: Slice → Pie → Target; Args: `(event, pie, slice)`
+  - Key: `onpiesliceshow`
+- `pieslicestart` / `pieslicestop` – enter/leave slice (null slice marks center dead‑zone)
+  - Leaf: Slice → Pie → Target; Args: `(event, pie, slice)`
+  - Keys: `onpieslicestart`, `onpieslicestop`
+- `piesliceupdate` – per‑motion while in current slice
+  - Leaf: Slice → Pie → Target; Args: `(event, pie, slice)`
+  - Key: `onpiesliceupdate`
+- `piesliceselect` – slice commit (also raised when an item within slice is selected)
+  - Leaf: Slice → Pie → Target; Args: `(event, pie, slice)`
+  - Key: `onpiesliceselect`
+
+### Item‑level lifecycle and tracking
+- `pieitemshow` – before item is shown (within `piesliceshow`)
+  - Leaf: Item → Slice → Pie → Target; Args: `(event, pie, slice, item)`
+  - Key: `onpieitemshow`
+- `pieitemstart` / `pieitemstop` – enter/leave item
+  - Leaf: Item → Slice → Pie → Target; Args: `(event, pie, slice, item)`
+  - Keys: `onpieitemstart`, `onpieitemstop`
+- `pieitemupdate` – per‑motion while over item
+  - Leaf: Item → Slice → Pie → Target; Args: `(event, pie, slice, item)`
+  - Key: `onpieitemupdate`
+- `pieitemselect` – item commit
+  - Leaf: Item → Slice → Pie → Target; Args: `(event, pie, slice, item)`
+  - Key: `onpieitemselect`
+- `pietimer` – periodic timer tick during tracking (event is `null` by design)
+  - Leaf: Item → Slice → Pie → Target; Args: `(null, pie, slice, item)`
+  - Key: `onpietimer`
+
+### Handler signatures recap
+- DOM attribute: `on<name>="..."` evaluated with `this === target widget`; locals: `event`, `pie`, `slice`, `item`
+- jQuery: `$(el).on('<name>', (event, targetWidget, pie, slice, item) => { ... })`
+- Dictionary: `dict.on<name> = function(event, pie, slice, item) { ... }`
+
+### Selection, pinning, and navigation nuances
+- Dead‑zone: `inactiveDistance` px gate; inside it, no slice selected.
+- Select item under cursor: `selectItemUnderCursor` (pie/slice/item level) uses `elementFromPoint` to promote direct‑hit items regardless of slice.
+- Slice item tracking: `sliceItemTracking` policies include `'closestItem'` (distance‑based) and `'target'` (defer to app logic; no auto item).
+- Pinning: first click pins (`piepin`); next click either cancels (`piecancel`) or selects; sticky and draggy pin behaviors via `stickyPin`/`draggyPin`/`dragThreshold`.
+- Submenus: set `nextPie` on an item; after `pieitemselect`, the widget resolves `nextPie` (string ref or DOM selector) and continues tracking with the next pie already pinned.
 
 ---
 
@@ -221,5 +284,46 @@ The Svelte/Kando port can map these to component events and/or Svelte 5 snippets
 - Provide a rich callback/event surface equivalent to the jQuery version and connect it to Svelte runes/snippets for dynamic content, previews, and instrumentation.
 - Align selection math (angle → slice by nearest direction; edges as mid‑angles) to avoid gaps/overlaps and to guarantee a unique match.
 - Encourage app‑level integration for real‑time in‑world previews during tracking.
+
+
+---
+
+## Options, Attributes, and CSS (from source)
+
+### Core options (selected)
+- `pies`: dictionary of pie definitions; values can be dictionaries or jQuery selector strings to DOM pies
+- `defaultPie`: dictionary or pieRef string; used by `findDefaultPie(event)`
+- `findPie(event, pieRef)`: optional resolver; may return dictionary or new `pieRef`
+- `root`: element/selector for overlay root (defaults to `document.body`)
+- `triggerEvents`, `triggerSelector`, `triggerData`: configure activation binding (default `'mousedown.pieTrigger'` on target)
+- Notifier switches: `notifyDOM` (default true), `notifyjQuery` (true), `notifyDictionaries` (true)
+- Timer: `timer` (bool), `timerDelay` (ms)
+
+### Per‑pie/slice/item parameters (examples)
+- Direction scaffold and placement:
+  - `initialSliceDirection` (default `'North'`), `clockwise` (bool), `turn` (deg step or auto), `pieSliced` (0..1 proportion of circle)
+- Selection & layout:
+  - `sliceItemLayout`: `'spacedDistance' | 'minDistance' | 'nonOverlapping' | 'layered'` (prototype)
+  - `sliceItemTracking`: `'closestItem' | 'target'`
+  - `selectItemUnderCursor`: bool
+  - Distance/spacing: `inactiveDistance`, `itemDistanceMin`, `itemDistanceSpacing`, `itemGap`, `itemShear`, `itemOffsetX`, `itemOffsetY`
+  - Rotation: `rotateItems` (bool), `itemRotation` (deg)
+- Navigation: `nextPie` (string ref) on slice/item
+
+All parameters may be specified at item, slice, or pie level; lower levels override higher ones. Defaults can be injected via `pieDefaults`, `sliceDefaults`, `itemDefaults`.
+
+### DOM data‑attributes
+Attributes are read from DOM declarations for pies/slices/items and coerced by type. Prefixes:
+- Pie: `data-pie-<key>`; keys include those in `pieAttributes` (string/number/boolean/eval)
+- Slice: `data-pieslice-<key>`; keys include `sliceItemLayout`, `sliceItemTracking`, `sliceDirection`, etc.
+- Item: `data-pieitem-<key>`; keys include per‑item overrides and `nextPie`
+
+### CSS class map (used by the widget)
+```
+Pie, PieBackground, PieTitle, PieOverlay,
+PieSlices, PieSlice, PieSliceHighlight, PieSliceBackground, PieSliceOverlay, PieSliceItems,
+PieItem, PieItemHighlight, PieItemLink, PieItemBackground, PieItemLabel, PieItemOverlay,
+PieCaptureOverlay
+```
 
 

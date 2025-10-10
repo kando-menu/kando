@@ -197,3 +197,190 @@ Privacy & safety:
 - Favor on‑device VLMs where possible; redact PII regions; require explicit user consent for cloud processing; log actions when dev mode is on.
 
 
+
+
+## Quick Start
+
+### Check capabilities and request permissions
+
+```ts
+// Feature-detect what the current platform supports
+const caps = await aquery.supports();
+
+// Ask only for what you need right now
+await aquery.requestPermissions({
+  a11y: caps.a11y,
+  input: caps.input,
+  screen: false
+});
+```
+
+### Focus an app window and press a button by accessible name
+
+```ts
+// Bring the target app window forward
+const active = await aquery.window.getActive();
+if (!active) {
+  const safari = (await aquery.app.listInstalled()).find(a => a.name === 'Safari');
+  if (safari) {
+    const wins = await aquery.window.list({ appId: safari.id });
+    if (wins[0]) await aquery.window.activate(wins[0].id);
+  }
+}
+
+// Press a visible OK button
+const ok = await aquery.a11y.query('window > button[name="OK"]:enabled:visible', { timeoutMs: 1000 });
+if (ok[0]) {
+  await aquery.a11y.action('window > button[name="OK"]', 'press');
+}
+```
+
+### Fallback to vision when accessibility lookup fails
+
+```ts
+const match = await aquery.a11y.query('button[name~=/Play|▶/]:enabled', { timeoutMs: 500 });
+if (!match[0] && (await aquery.supports()).screen) {
+  const win = await aquery.window.getActive();
+  if (win) {
+    const img = await aquery.screen.captureWindow(win.id, { format: 'png' });
+    const boxes = await aquery.llm.locate(img, 'play button');
+    const best = boxes.sort((a, b) => b.score - a.score)[0];
+    if (best) {
+      const cx = best.rect.x + Math.floor(best.rect.w / 2);
+      const cy = best.rect.y + Math.floor(best.rect.h / 2);
+      await aquery.input.mouse({ type: 'move', x: cx, y: cy });
+      await aquery.input.mouse({ type: 'click', button: 'left' });
+    }
+  }
+}
+```
+
+---
+
+## Selector Cookbook
+
+- **By role**: `menuitem`, `button`, `textbox`, `checkbox`
+- **By name (exact)**: `button[name="Save"]`
+- **By name (regex)**: `button[name~/^Save (As|All)/]`
+- **By state**: `:enabled`, `:focused`, `:visible`
+- **By ancestry**: `app[name="Safari"] > window > toolbar > button[name="Reload"]`
+- **Any of names**: `button[name~/^(OK|Yes|Continue)$/]`
+- **First match helper**: `a$("button[name='OK']")`
+- **All matches helper**: `a$All("menuitem:visible")`
+
+Tips:
+- Prefer stable identifiers (role + name) first; use vision as a verifier.
+- Scope queries by app/window when possible for performance.
+- Use `timeoutMs` conservatively to avoid long hangs; prefer retries with backoff.
+
+---
+
+## Capability Matrix (indicative)
+
+| Feature       | macOS (AX) | Windows (UIA) | Linux X11 (AT‑SPI) | Wayland |
+| ------------- | ---------- | ------------- | ------------------ | ------- |
+| a11y query    | Yes        | Yes           | Yes                | Varies  |
+| a11y actions  | Yes        | Yes           | Yes                | Varies  |
+| window list   | Yes        | Yes           | Yes                | Yes     |
+| window focus  | Yes        | Yes           | Yes                | Varies  |
+| input synth   | Yes        | Yes           | Yes (XTest/XI2)    | Portals |
+| screen capture| Yes        | Yes           | Yes                | Portals |
+
+Notes:
+- Wayland features depend on compositor and portals; expose via `supports()`.
+- Some features require explicit OS permissions; see next section.
+
+---
+
+## Permissions Guide
+
+### macOS
+- **Accessibility**: required for a11y queries/actions and some input simulation.
+- **Input Monitoring**: required for global input hooks.
+- **Screen Recording**: required for display/window capture.
+- Use `aquery.requestPermissions({ a11y: true, input: true })` to guide users.
+
+### Windows
+- UIA and SendInput generally work without special prompts; ensure the app has appropriate privileges when interacting with elevated windows.
+- Graphics Capture may require enabling OS features on older builds.
+
+### Linux
+- **X11**: broad access via AT‑SPI and XTest/XI2; no prompts.
+- **Wayland**: use portals for virtual keyboard/mouse and remote‑desktop capture; availability varies by desktop environment.
+
+---
+
+## Svelte / Browser Polyfill Notes
+
+In `kando-svelte`, mirror the TS surface where possible so code can feature‑detect and degrade gracefully.
+
+```ts
+// Example: simple mouse trigger polyfill in the browser
+const supports = await aquery.supports();
+if (!supports.triggers) {
+  // Fallback: listen to DOM events to open a demo menu
+  window.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    // show demo menu component at e.clientX/Y
+  });
+}
+```
+
+Prefer native bridges when running under Electron for capture and input.
+
+---
+
+## Prefab, HyperLook/HyperCard, and Design Inspiration
+
+### Prefab (Dixon & Fogarty)
+- Use pixel‑level recognition to identify widgets and verify targets.
+- Combine with a11y selectors for robust, cross‑app interactions.
+
+### HyperLook / HyperCard‑style Augmentation
+- Treat desktop UIs as canvases you can annotate, overlay, and script.
+- Compose higher‑level widgets (e.g., a generic media controller) that adapt to many apps.
+
+### Window Management
+- Expose predictable operations: focus, move/resize, enumerate, tile/snap.
+- Build user scripts that arrange workspaces and then bind them to triggers.
+
+### Pie Menus
+- Integrate with Kando’s triggers and gesture pipeline.
+- Use aQuery to query context (focused app/window/element) and tailor menu entries.
+
+### Tabbed / Panel Workflows
+- Script workflows that switch tabs, raise panels, and confirm dialogs by role/name.
+
+---
+
+## Eventing, Timeouts, and Cancellation
+
+- Long queries should accept `timeoutMs` and `AbortSignal` to stay responsive.
+- Emit progress or discovery events where supported (future roadmap) to enable live UIs.
+
+```ts
+const controller = new AbortController();
+const timer = setTimeout(() => controller.abort(), 800);
+try {
+  const nodes = await aquery.a11y.query('textbox:focused', { timeoutMs: 750 /*, signal: controller.signal */ });
+  // ...
+} finally {
+  clearTimeout(timer);
+}
+```
+
+---
+
+## Error Handling Patterns
+
+- Always check `supports()` before calling feature APIs.
+- Prefer idempotent scripts; verify window focus and bounds before input.
+- Layer fallbacks: a11y → vision verify → pure vision; fail fast with clear messages.
+
+---
+
+## Contributing Adapters
+
+- Keep platform specifics inside adapter folders; conform to the TS interface.
+- Add contract tests per method and capability matrices per OS.
+- Document any limitations behind `supports()` feature flags.
