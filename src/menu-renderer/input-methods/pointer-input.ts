@@ -288,6 +288,11 @@ export class PointerInput extends InputMethod {
    * @param event The keyboard event.
    */
   public onKeyUpEvent(event: KeyboardEvent) {
+    // Key-up events only matter if turbo mode is enabled.
+    if (!this.enableTurboMode) {
+      return;
+    }
+
     // On some (all?) Linux environments, event.metaKey is not false even if the key has
     // been released with this event. Therefore, we explicitly check if the key was
     // released: https://github.com/kando-menu/kando/issues/788

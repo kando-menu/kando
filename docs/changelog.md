@@ -58,6 +58,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Custom fonts in the settings dialog and in the menu. If you used a custom font in your system, this was not respected everywhere in Kando. Now, all widgets should use your custom font. Some menu themes may override this, but the default themes should all use the system font.
 - An issue which caused menu items in the menu editor to be selected when the user clicked somewhere and then dragged the mouse over the item.  Thanks to [@Maksym](https://github.com/AluctuatioAetern) for this contribution!
 - A bug which made it possible to change the path of an open-file item manually.
+- A bug which made it possible to select items with key-up events even if turbo-mode was disabled.
 
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
