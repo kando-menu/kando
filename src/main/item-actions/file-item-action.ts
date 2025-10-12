@@ -33,7 +33,6 @@ export class FileItemAction implements ItemAction {
    * @returns A promise which resolves when the file has been opened.
    */
   async execute(item: DeepReadonly<MenuItem>) {
-    await shell.openPath((item.data as ItemData).path);
-    return;
+    shell.openPath((item.data as ItemData).path);
   }
 }
