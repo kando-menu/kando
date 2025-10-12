@@ -59,6 +59,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - An issue which caused menu items in the menu editor to be selected when the user clicked somewhere and then dragged the mouse over the item.  Thanks to [@Maksym](https://github.com/AluctuatioAetern) for this contribution!
 - A bug which made it possible to change the path of an open-file item manually.
 - A bug which made it possible to select items with key-up events even if turbo-mode was disabled.
+- A bug which caused Kando to freeze when attempting to open a directory via a menu item on some Linux systems.
 
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
