@@ -21,7 +21,7 @@ import { KandoApp } from '../app';
  * This action opens URIs with the default application. This can be used to open for
  * example websites or files.
  */
-export class URItemAction implements ItemAction {
+export class URIItemAction implements ItemAction {
   /**
    * URIs are opened immediately.
    *
