@@ -38,6 +38,10 @@ export class FileItemAction implements ItemAction {
 
     // On some Linux desktops, Electron's shell.openPath does not work properly. See here:
     // https://github.com/kando-menu/kando/issues/1058
+    // This is a bit weird, as Electron seems to call nothing more than xdg-open itself,
+    // but for some reason this does not always work. So we call xdg-open manually here.
+    // Electron's xdg-open call is here:
+    // https://github.com/electron/electron/blob/16b5776b0170a501d8acb8105e14b15846533442/shell/common/platform_util_linux.cc#L324
     if (process.platform === 'linux') {
       return exec(`xdg-open ${path}`, {
         detach: true,
