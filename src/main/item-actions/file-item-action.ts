@@ -43,12 +43,12 @@ export class FileItemAction implements ItemAction {
     // Electron's xdg-open call is here:
     // https://github.com/electron/electron/blob/16b5776b0170a501d8acb8105e14b15846533442/shell/common/platform_util_linux.cc#L324
     if (process.platform === 'linux') {
-      return exec(`xdg-open ${path}`, {
+      exec(`xdg-open ${path}`, {
         detach: true,
         isolate: false,
       });
+    } else {
+      shell.openPath(path);
     }
-
-    await shell.openPath(path);
   }
 }
