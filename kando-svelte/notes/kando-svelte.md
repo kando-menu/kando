@@ -98,11 +98,59 @@ Theme CSS assumptions:
 
 Svelte must adhere to the same DOM/CSS contract to make Kando themes work without changes.
 
+### Differences from Kando (scope, necessary deviations, and TODOs)
+
+The prime directive is DOM/CSS compatibility. Where differences exist, they are either required by Svelte/web constraints or temporary stopgaps with explicit TODOs.
+
+- Input and interaction
+  - Same abstractions: selection chain, hover hit‑testing via wedges, center dead zone, RMB cancel/back, X1 back, angle/distance tracking.
+  - Svelte implements a small input state machine in `PieTree` (idle → pressed‑static → pressed‑dragging → hovering) and integrates Kando’s `GestureDetector`.
+  - Keyboard/gamepad: planned parity. Keyboard will be scoped to the overlay; gamepad maps to relative vectors and back/close buttons.
+  - TODOs:
+    - Marking/Turbo parity events and thresholds end‑to‑end
+    - Gamepad integration using Kando’s gamepad input with a browser emitter shim
+    - Full keyboard navigation per A11y plan (roving tabindex or aria‑activedescendant)
+
+- Rendering and DOM creation
+  - Svelte components create the same DOM tree: `.menu-node` container per item with a `.connector` child for items with children; theme layer divs exactly as in theme description.
+  - JS sets only the root/menu center translate and connector width/rotation; children use CSS `transform` via `--dir-x/--dir-y` and theme distances (same as Kando).
+  - Angle/vars contract is identical: `--dir-x`, `--dir-y`, `--angle`, `--parent-angle?`, `--sibling-count`; center layers receive `--pointer-angle`, `--hover-angle`, `--hovered-child-angle`.
+  - Icon font tags use `<i>` with Kando class names (e.g., `material-symbols-rounded`, `si si-<name>`).
+  - Labels: rendering is controlled by `labelsEnabled` (defaults false) to avoid first‑popup text flash; honoring theme layers otherwise.
+  - TODOs:
+    - Implement global `SelectionWedges` and `WedgeSeparators` helpers (CSS var‑driven) to match Kando visuals
+    - Finalize `CenterText` to match Kando’s iterative layout (deferred measurement); current version is a minimal placeholder
+
+- Environment (browser vs Electron)
+  - Kando runs in Electron with privileged APIs; Svelte runs in a normal browser.
+  - Theme CSS is injected via `<link>` (no `window.commonAPI`); colors applied via CSS variables.
+  - Icon themes: provide a browser resolver for Material Symbols and Simple Icons; system/file icon themes require host adapters.
+  - Sounds: use Howler in the browser with a thin wrapper mirroring Kando’s `SoundTheme` API.
+  - TODOs:
+    - Web `IconThemeRegistry` wrapper with parity API; host hooks for system/file packs
+    - `SoundTheme` wrapper exposing `loadDescription`, `setVolume`, `playSound`
+
+- Build/runtime differences
+  - Use TypeScript NodeNext, explicit `.ts` extensions for direct source imports; Vite aliases map `@kando/*` to monorepo sources.
+  - Guard DOM APIs (`CSS.registerProperty`, `document.head`, Howler) in browser‑only lifecycles.
+  - Provide a small EventEmitter shim if needed for gesture/gamepad imports.
+  - TODOs:
+    - Validate SSR safety across all components
+    - Document/emplace an emitter shim when importing Kando input modules directly
+
+- Accessibility and keyboard
+  - Keep roles/ARIA on container and items; screen‑reader announcements via a visually hidden `<output>`.
+  - Keyboard scope: focused overlay only; Escape cancels, Backspace/Delete selects parent; arrow/Enter navigation planned.
+  - TODOs:
+    - Implement full roving‑tabindex or aria‑activedescendant model; announce changes tersely
+
+These differences should converge toward zero over time as we upstream small refactors and extend the Svelte adapter.
+
 ### Icons and icon themes
 
 - Kando uses an `IconThemeRegistry` to materialize icons from different sources:
   - Material Symbols font (rounded), Simple Icons font, Emoji, system icon data URLs, file icon themes.
-- In Svelte, provide an injectable icon resolver that mirrors Kando semantics:
+- In Svelte, provide an injectable icon resolver that mirrors Kando semantics and DOM:
   - 'material-symbols-rounded': render `<i class="material-symbols-rounded">glyph</i>`; include package/font CSS.
   - 'simple-icons'/'simple-icons-colored': render `<i class="si si-<name>"></i>` or SVG fallback.
   - 'file-icon-theme': map to URL space; allow mounting a theme directory.
@@ -331,21 +379,23 @@ Gesture detector (optional v1) mirrors Kando’s: min stroke length, jitter thre
 
 ---
 
-## Events and host API
+## Callbacks and host API (PieTree)
 
-`<PieMenu>` emits:
+`<PieTree>` uses function callbacks instead of DOM events. All callbacks receive a single discriminated-union context as defined below:
 
-- `select(path: string, item: MenuItem)` – host executes action (open URI, run command, etc.)
-- `cancel()`
-- `hover(path: string)` / `unhover(path: string)` (optional)
-- `movePointer(dist: Vec2)` (desktop only; no-op in browsers)
+- `onOpenCtx(ctx)`
+- `onCloseCtx(ctx)`
+- `onCancelCtx(ctx)`
+- `onHoverCtx(ctx)`
+- `onPathChangeCtx(ctx)`
+- `onMarkCtx(ctx)`
+- `onSelectCtx(ctx)`
 
-Props/control:
+Props/control (subset): `root`, `center`, `radiusPx`, `settings`, `layers`, `centerTextWrapWidth`, `drawChildrenBelow`, `labelsEnabled`, `startPressed`, `initialPointer`, `initialTarget`, `resolveTarget`.
 
-- `root: MenuItem`
-- `theme: MenuThemeDescription`
-- `options?: Partial<ShowMenuOptions>` (centered/anchored/hoverMode)
-- `settings?: Partial<GeneralSettingsV1> & { svelte?: Record<string, unknown> }` (dragThreshold, fade durations, gesture thresholds, etc.)
+Notes:
+- The library closes automatically after leaf selection and after cancel; the app never calls cancel to hide the popup.
+- `labelsEnabled` defaults to false to avoid first‑popup text flash; when true, name layers render.
 
 ---
 
@@ -354,14 +404,14 @@ Props/control:
 ```svelte
 <!-- +page.svelte -->
 <script lang="ts">
-  import PieMenu from '$lib/kando-svelte/PieMenu.svelte';
+  import PieTree from '$lib/PieTree.svelte';
   import { onMount } from 'svelte';
 
-  let menu: MenuItem;         // loaded from a Kando-exported JSON
-  let theme: MenuThemeDescription; // loaded from theme.json5 and enhanced with id+directory
+  let menu: MenuItem;         // loaded from Kando export
+  let theme: MenuThemeDescription; // loaded via theme loader
 
-  function onSelect(path: string, item: MenuItem) {
-    // App decides how to act on item.type and item.data
+  function onSelectCtx(ctx) {
+    // App decides how to act on ctx.item.item.type and ctx.item.item.data
   }
 
   onMount(async () => {
@@ -371,8 +421,9 @@ Props/control:
 </script>
 
 {#if menu && theme}
-  <PieMenu {menu} root={menu.root} {theme}
-           on:select={(e) => onSelect(e.detail.path, e.detail.item)} />
+  <PieTree root={menu.root} center={{ x: 200, y: 200 }} radiusPx={140}
+           layers={theme.layers} centerTextWrapWidth={theme.centerTextWrapWidth}
+           onSelectCtx={onSelectCtx} />
 {/if}
 ```
 
@@ -409,6 +460,179 @@ Theme loader should parse JSON5, set `id` from parent dir, and `directory` to th
 - Menu editor (longer-term; keep Kando as the primary authoring tool for now)
 
 ---
+
+## PieTree callbacks and context (Svelte)
+
+This section defines the Svelte-friendly, function-based callback API for interactive pie menus. It complements Kando’s behavior while avoiding DOM event complexity.
+
+### Lifecycle and roles
+
+- PieTree: one interactive popup instance representing a menu tree. Created on demand; closes itself after select or cancel.
+- Multiple previews: use a non-interactive preview component (future) for theme/menu browsers and editors; keep PieTree for tracking.
+
+### Transport: plain function callbacks
+
+- No DOM CustomEvents; the host app passes functions as props to `PieTree`.
+- Every callback receives a single, strongly typed context object describing pointer, pie, menu, target, and (if applicable) item.
+
+### Context types (discriminated union)
+
+```ts
+type Mods = { ctrl: boolean; alt: boolean; shift: boolean; meta: boolean };
+
+type Pointer = {
+  clientX: number; clientY: number;
+  dx: number; dy: number;
+  distance: number; angle: number;
+  button: 0|1|2|3|4;
+  mods: Mods;
+  // Input origin and keyboard details (when opened via keyboard)
+  source: 'mouse' | 'touch' | 'keyboard' | 'gamepad';
+  key?: string;     // e.g., 'K', 'Enter', 'ArrowRight'
+  code?: string;    // e.g., 'KeyK', 'Enter', 'ArrowRight'
+  repeat?: boolean; // repeated keydown
+  location?: number;// KeyboardEvent.location (0: standard, 1: left, 2: right, 3: numpad)
+};
+
+type PieCtx = {
+  center: { x: number; y: number };
+  radius: number;
+  chain: number[];        // current selection chain
+  hoverIndex: number;     // -1 center, -2 parent, >=0 child index
+};
+
+type MenuCtx = {
+  item: MenuItem;         // current (owning) menu item
+  indexPath: number[];    // path to current menu
+};
+
+type ItemCtx = {
+  item: MenuItem; index: number; path: string;
+  name?: string; data?: unknown; id?: string;
+};
+
+type BaseCtx = {
+  kind:
+    | 'open' | 'close' | 'cancel'
+    | 'hover' | 'path-change'
+    | 'mark-start' | 'mark-update' | 'mark-select'
+    | 'turbo-start' | 'turbo-end'
+    | 'select';
+  time: number;
+  pointer: Pointer;
+  pie: PieCtx;
+  menu: MenuCtx;
+  target: unknown;        // current context target
+  targetRoot?: unknown;   // initial target
+  // Optional advanced:
+  targetStack?: unknown[];
+};
+
+type HoverCtx  = BaseCtx & { kind: 'hover'; item?: ItemCtx };
+type PathCtx   = BaseCtx & { kind: 'path-change'; op: 'push'|'pop'; item?: ItemCtx };
+type MarkCtx   = BaseCtx & { kind: 'mark-start'|'mark-update'|'mark-select' };
+type TurboCtx  = BaseCtx & { kind: 'turbo-start'|'turbo-end' };
+type SelectCtx = BaseCtx & { kind: 'select'; item: ItemCtx };
+type OpenClose = BaseCtx & { kind: 'open'|'close'|'cancel' };
+```
+
+### Callback contracts
+
+- onOpen(ctx: OpenClose)
+  - Fired when PieTree becomes interactive.
+- onClose(ctx: OpenClose)
+  - Fired after select/cancel; the popup is already hidden.
+- onCancel(ctx: OpenClose)
+  - RMB cancel (when not selecting parent), back/escape, or app-requested cancel.
+- onHover(ctx: HoverCtx)
+  - Fired when hovered target changes (child/back/center), not on every move.
+- onPathChange(ctx: PathCtx)
+  - Fired after selection chain changes:
+    - op='push' when entering a submenu (selected child had children)
+    - op='pop' when going back (parent)
+  - Use for submenu “select/deselect” side-effects (e.g., mutate target).
+- onMark(ctx: MarkCtx)
+  - mark-start: entering drag (or turbo drag)
+  - mark-update: throttled gesture progress
+  - mark-select: corner/pause caused submenu selection (GestureDetector)
+- onTurbo(ctx: TurboCtx)
+  - Modifier-based drag toggles
+- onSelect(ctx: SelectCtx)
+  - Leaf selected. Library will close immediately after returning from this handler.
+
+### Target inheritance/override
+
+- PieTree accepts `initialTarget?: unknown` and optional `resolveTarget?: (current: unknown, item: MenuItem) => unknown`.
+- Maintains a `targetStack` aligned to `pie.chain`:
+  - push on submenu entry: resolver can return a new target or keep existing
+  - pop on back: restore parent target
+- `ctx.target` reflects the active target for every callback.
+
+### Triggers and opening
+
+- Browser/Svelte: host app detects triggers (e.g., RMB) and mounts one PieTree at the pointer with `{ startPressed, initialPointer }`.
+- Native/Electron (later): native layer opens the overlay; the same props drive PieTree.
+
+### Design rationale
+
+- Single, typed context object keeps the API stable and expressive.
+- No DOM events/bubbling: simpler, testable, and app-controlled.
+- Symbolic actions in `item.data` drive application behavior; no functions in JSON.
+
+---
+
+## Keyboard, focus, and accessibility (plan)
+
+Goal: first‑class keyboard navigation and screen‑reader support without global key capture. Leverage ARIA and focus semantics so assistive tech can follow state changes.
+
+### Scope and event model
+
+- Scope keyboard to the PieTree overlay (focused container). Do not attach global handlers, except letting Escape bubble if desired.
+- Keep all other input on the focused menu container or items (no window‑level listeners). Pointer/gamepad continue to work in parallel.
+
+### Roles and structure
+
+- Container (interactive):
+  - role="menu" (context menu), aria‑label
+  - Focus trap on open; restore previous focus on close
+  - Focus model (choose one):
+    - Roving tabindex: tabindex=0 on the active item; −1 on others; container handles keys
+    - Or aria‑activedescendant: focus stays on container; set aria‑activedescendant to active item id
+- Items:
+  - role="menuitem" (or menuitemcheckbox/menuitemradio)
+  - Submenu parents: aria‑haspopup="menu"; aria‑expanded=true when open
+  - aria‑disabled for unavailable entries; ensure readable names
+
+### Key bindings (overlay focused)
+
+- ArrowLeft/ArrowRight: move active item clockwise/counterclockwise
+- ArrowUp/ArrowDown: optional vertical variants
+- Enter/Space: select active item
+- ArrowRight/Enter on submenu parent: open submenu (push chain)
+- ArrowLeft/Backspace/Delete: go to parent (pop chain)
+- Escape: close entire tree immediately
+- Tab: either preventDefault (arrow‑driven) or confine to container
+
+### Submenus and chain updates
+
+- Push: set aria‑expanded on parent; choose initial active in new level; optionally announce
+- Pop: clear aria‑expanded on previous parent; recompute active in restored level
+
+### Screen readers
+
+- Stable readable names; reflect current item via roving tabindex or aria‑activedescendant
+- Keep announcements terse; avoid frequent updates on pointer hover
+
+### Implementation notes
+
+- PieTree: focus container on open; trap focus; restore on close; maintain activeIndex per level; harmonize pointer and keyboard
+- PieItem: stable ids if activedescendant used; roles and aria attributes for submenu parents
+- Pointer + keyboard: pointer hover sets activeIndex; keys move it; selection logic identical
+
+### Why not global capture
+
+- Global handlers bypass AT and can collide with app shortcuts. Scoped handlers on a focused container yield predictable behavior and better a11y.
+
 
 ## License and provenance
 
@@ -685,3 +909,36 @@ Kando stores settings in two JSON files: `config.json` (general) and `menus.json
 - Theme editor preview (read-only) and ultimately a Svelte menu editor.
 - Micropolis adapter package implementing command/file/hotkey/macro.
 ---
+
+## Terminology and callback model
+
+The model is:
+
+- Components: `PieTree`, `PieMenu`, `PieItem`.
+- Callbacks: plain function props on `PieTree` only. No DOM `CustomEvent`s, no component instances passed out.
+- Context: a single "kitchen-sink" discriminated union object with shared fields and a `kind` discriminator.
+
+Shared context shapes used across all callbacks:
+
+```startLine:endLine:kando-svelte/src/lib/PieTree.svelte
+// PointerCtx, PieCtx, MenuCtx, ItemCtx, BaseCtx (see source for full types)
+```
+
+Concrete callback variants (subset): `open | close | cancel | hover | path-change | mark-start | mark-update | mark-select | turbo-start | turbo-end | select`.
+
+Example signatures implemented in `PieTree.svelte`:
+
+```startLine:endLine:kando-svelte/src/lib/PieTree.svelte
+export let onOpenCtx: ((ctx: OpenCloseCtx) => void) | null = null;
+export let onCloseCtx: ((ctx: OpenCloseCtx) => void) | null = null;
+export let onCancelCtx: ((ctx: OpenCloseCtx) => void) | null = null;
+export let onHoverCtx: ((ctx: HoverCtx) => void) | null = null;
+export let onPathChangeCtx: ((ctx: PathCtx) => void) | null = null;
+export let onMarkCtx: ((ctx: MarkCtx) => void) | null = null;
+export let onSelectCtx: ((ctx: SelectCtx) => void) | null = null;
+```
+
+Notes:
+- We never pass Svelte components or DOM nodes to clients; `ItemCtx/MenuCtx/PieCtx` expose the necessary state in a type-safe way.
+- Keyboard/gamepad integration extends `PointerCtx` with keys/locations while keeping the same callback surface.
+

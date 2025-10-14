@@ -30,6 +30,11 @@
   export let dataLevel: number | null = null;
   // Theme layers (back-to-front iterate reversed) like Kando's MenuThemeDescription.layers
   export let layers: Array<{ class: string; content?: 'icon' | 'name' | 'none' }>|null = null;
+  export let labelsEnabled: boolean = false;
+  // Accessibility
+  export let ariaRole: string = 'menuitem';
+  export let idAttr: string | null = null;
+  $: hasNameLayer = !!(layers && layers.some((l) => l.content === 'name'));
   // Snippet insertion points to replace slots
   export let below: Snippet<[ { index: number } ]>|null = null;
   export let belowIndex: number | null = null;
@@ -43,6 +48,9 @@
      data-type={item.type}
      data-path={dataPath}
      data-level={dataLevel}
+     role={ariaRole}
+     aria-label={hasNameLayer ? undefined : item.name}
+     id={idAttr ?? undefined}
      style="--dir-x: {dirX}; --dir-y: {dirY}; --angle: {angle}deg; --sibling-count: {siblingCount}; {parentAngle != null ? `--parent-angle: ${parentAngle}deg;` : ''}{angleDiff != null ? ` --angle-diff: ${angleDiff};` : ''}{childDistancePx != null ? ` --child-distance: ${childDistancePx}px;` : ''}{forceAbsolute && absLeft != null && absTop != null ? ` left: ${absLeft}px; top: ${absTop}px; transform: translate(-50%, -50%) !important;` : ''}{transformStyle ? ` transform: ${transformStyle};` : ''}">
   {#if (item as any)?.children?.length}
     <div class="connector" style={connectorStyle}></div>
@@ -54,15 +62,18 @@
   {#if layers && layers.length}
     {#each [...layers].reverse() as layer}
       <div class={layer.class}
+           data-content={layer.content}
            style="{pointerAngle != null ? `--pointer-angle: ${pointerAngle}deg;` : ''}{hoverAngle != null ? ` --hover-angle: ${hoverAngle}deg;` : ''}{hoverAngle != null && !parentHovered ? ` --hovered-child-angle: ${hoverAngle}deg;` : ''}">
         {#if layer.content === 'name'}
-          {item.name}
+          {#if labelsEnabled}
+            {item.name}
+          {/if}
         {:else if layer.content === 'icon'}
-          <div class="icon-container">
+          <div class="icon-container" aria-hidden="true">
             {#if (item as any).iconTheme === 'material-symbols-rounded'}
-              <span class="material-symbols-rounded">{(item as any).icon}</span>
+              <span class="material-symbols-rounded" aria-hidden="true" inert>{(item as any).icon}</span>
             {:else if (item as any).iconTheme === 'simple-icons'}
-              <i class={`si si-${(item as any).icon}`}></i>
+              <span class={`si si-${(item as any).icon}`} aria-hidden="true"></span>
             {:else if (item as any).icon}
               <img src={`/kando/icon-themes/${(item as any).iconTheme}/${(item as any).icon}.svg`} alt={item.name} />
             {/if}
@@ -71,8 +82,8 @@
       </div>
     {/each}
   {:else}
-    <div class="label-layer"><div class="label-container"></div></div>
-    <div class="icon-layer" style="{pointerAngle != null ? `--pointer-angle: ${pointerAngle}deg;` : ''}{hoverAngle != null ? ` --hover-angle: ${hoverAngle}deg;` : ''}{hoverAngle != null && !parentHovered ? ` --hovered-child-angle: ${hoverAngle}deg;` : ''}">
+    <div class="label-layer" hidden><div class="label-container"></div></div>
+    <div class="icon-layer" aria-hidden="true" style="{pointerAngle != null ? `--pointer-angle: ${pointerAngle}deg;` : ''}{hoverAngle != null ? ` --hover-angle: ${hoverAngle}deg;` : ''}{hoverAngle != null && !parentHovered ? ` --hovered-child-angle: ${hoverAngle}deg;` : ''}">
       <div class="icon-container"></div>
     </div>
   {/if}
@@ -94,5 +105,10 @@
   .menu-node, .menu-node *, .menu-node *::before, .menu-node *::after {
     user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-select: none; -ms-user-select: none;
   }
+  /* Prevent any text label layer from flashing before icons are ready or unless explicitly requested by theme */
+  :global(html:not(.kando-icons-ready) .menu-node .label-layer),
+  :global(html:not(.kando-icons-ready) .menu-node [data-content="name"]) { opacity: 0 !important; visibility: hidden !important; }
+  :global(html:not(.kando-icons-ready) .material-symbols-rounded) { opacity: 0 !important; visibility: hidden !important; }
+  :global(html:not(.kando-icons-ready) .si) { opacity: 0 !important; visibility: hidden !important; }
   
 </style>

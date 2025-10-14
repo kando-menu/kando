@@ -26,4 +26,8 @@ export type PieMenuContext = {
 
 export const PIE_MENU_CTX: unique symbol = Symbol('pie-menu');
 
+// Optional: internal registry mapping item path -> PieItem component instance
+export type ItemRegistry = Map<string, any>;
+export const ITEM_REGISTRY_CTX: unique symbol = Symbol('item-registry');
+
 

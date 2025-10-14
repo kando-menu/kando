@@ -27,8 +27,10 @@
   export let childClassBase: string = 'child';
   // Theme-driven layers (Kando MenuThemeDescription.layers)
   export let layers: { class: string; content?: 'icon'|'name'|'none' }[] | null = null;
+  export let labelsEnabled: boolean = false;
   export let centerTextWrapWidth: number | null = null;
   export let drawChildrenBelow: boolean = false;
+  export let renderGrandchildren: boolean = true; // allow parent preview to suppress nubs
 
   let childAngles: number[] = [];
   let childPositions: { x: number; y: number }[] = [];
@@ -96,7 +98,7 @@
 {#snippet RenderGrandchildren({ index }: { index: number })}
   {#if (item?.children?.[index] as any)?.children?.length}
     {#each grandAnglesByChild[index] as gAng, j}
-      <PieItem item={(item as any).children[index].children[j] as any}
+    <PieItem item={(item as any).children[index].children[j] as any}
                level={2}
                dirX={grandDirsByChild[index][j].x}
                dirY={grandDirsByChild[index][j].y}
@@ -108,7 +110,8 @@
                angleDiff={null}
                dataPath={`/${index}/${j}`}
                dataLevel={2}
-               layers={(layers as any) ?? [{ class: 'icon-layer' }]} />
+               layers={(layers as any) ?? [{ class: 'icon-layer' }]}
+               labelsEnabled={labelsEnabled} />
     {/each}
   {/if}
 {/snippet}
@@ -127,8 +130,9 @@
              angleDiff={pointerAngle != null ? Math.min(Math.abs((childAngles[i] - pointerAngle) % 360), 360 - Math.abs((childAngles[i] - pointerAngle) % 360)) : null}
              dataPath={`/${i}`}
              dataLevel={1}
-             layers={(layers as any) ?? [{ class: 'icon-layer' }]}
-             below={RenderGrandchildren}
+            layers={(layers as any) ?? [{ class: 'icon-layer' }]}
+            labelsEnabled={labelsEnabled}
+            below={renderGrandchildren ? RenderGrandchildren : null}
              belowIndex={i}
              />
   {/each}
@@ -139,6 +143,9 @@
     {@render RenderChildren()}
   {/if}
   <CenterText text={centerLabel} visible={!!centerLabel && hoverIndex !== -2} wrapWidth={centerTextWrapWidth ?? null} />
+  <output aria-live="polite" aria-atomic="true" style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+    {centerLabel}
+  </output>
 {/snippet}
 
 <div class="pie-level" style={`--child-distance:${radiusPx}px;`}>
@@ -158,6 +165,7 @@
            dataPath={'/'}
            dataLevel={0}
            layers={(layers as any) ?? [{ class: 'icon-layer' }]}
+           labelsEnabled={labelsEnabled}
            connectorStyle={connectorStyle}
            below={drawChildrenBelow ? RenderChildren : null}
            content={CenterContent}
@@ -168,7 +176,7 @@
 </div>
 
 <style>
+
   .pie-level { position: relative; width: 100%; height: 100%; }
-  .node-layer { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
   
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import JSON5 from 'json5';
   import { applyThemeColors, injectThemeCss } from '../lib/theme-loader.ts';
   import * as math from '../../../src/common/math/index.ts';
@@ -29,10 +29,25 @@
   let popupRadius = 140;
   let popupStartPressed = false;
   let popupInitialPointer: { x: number; y: number } | null = null;
+  let popupTarget: unknown = null;
+  let targetArea: HTMLElement | null = null;
+  // Notifier log
+  let logLines: string[] = [];
+  let logRef: HTMLPreElement | null = null;
+  let autoScroll = true;
+  function onLogScroll() {
+    if (!logRef) return;
+    autoScroll = (logRef.scrollTop + logRef.clientHeight) >= (logRef.scrollHeight - 8);
+  }
+  async function addLog(line: string) {
+    logLines = [...logLines, line];
+    await tick();
+    if (autoScroll && logRef) {
+      logRef.scrollTop = logRef.scrollHeight;
+    }
+  }
   let currentItem: any = null; // browsing cursor
   let chain: Array<{ item: any; index?: number; angle?: number }> = [];
-  let mouseeCanvas: HTMLCanvasElement | null = null;
-  let mouseeCtx: CanvasRenderingContext2D | null = null;
 
   // Demo mouse trigger binding for opening the popup in browser
   const demoTrigger: MouseTrigger = { kind: 'mouse', button: 'right', mods: [] };
@@ -104,6 +119,25 @@
       if (theme) {
         injectThemeCss(theme);
         applyThemeColors(theme.colors);
+        // Only mark icons ready after icon fonts are actually loaded (or a conservative timeout).
+        try {
+          const htmlEl = document.documentElement;
+          htmlEl.classList.remove('kando-icons-ready');
+          const fontPromises: Promise<any>[] = [];
+          if ('fonts' in document) {
+            // Try common families used by themes; ignore rejections.
+            fontPromises.push((document as any).fonts.load('1em "Material Symbols Rounded"'));
+            fontPromises.push((document as any).fonts.load('1em "simple-icons"'));
+            // Also wait for the full FontFaceSet to settle.
+            fontPromises.push((document as any).fonts.ready);
+          }
+          // Fall back to a timeout if the FontFaceSet API is not available or takes too long.
+          await Promise.race([
+            Promise.allSettled(fontPromises),
+            new Promise((resolve) => setTimeout(resolve, 1500))
+          ]);
+          htmlEl.classList.add('kando-icons-ready');
+        } catch {}
       }
 
       // math quick-test: compute angles/wedges for the first menu with children
@@ -120,52 +154,70 @@
     }
   });
 
-  function initCanvas() {
-    if (!mouseeCanvas) return;
-    const dpr = window.devicePixelRatio || 1;
-    const widthCss = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const heightCss = 1000;
-    mouseeCanvas.style.width = `${widthCss}px`;
-    mouseeCanvas.style.height = `${heightCss}px`;
-    mouseeCanvas.width = Math.floor(widthCss * dpr);
-    mouseeCanvas.height = Math.floor(heightCss * dpr);
-    mouseeCtx = mouseeCanvas.getContext('2d');
-    if (mouseeCtx) {
-      mouseeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      mouseeCtx.fillStyle = '#f3f3f3';
-      mouseeCtx.fillRect(0, 0, widthCss, heightCss);
-    }
-  }
-
-  function toCanvasPos(e: PointerEvent) {
-    const rect = mouseeCanvas!.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }
-
-  function openPopupAt(x: number, y: number) {
-    popupCenter = { x: Math.round(x) + 0.5, y: Math.round(y) + 0.5 };
+  function openPopupAt(clientX: number, clientY: number) {
+    const rect = targetArea?.getBoundingClientRect();
+    const localX = rect ? clientX - rect.left : clientX;
+    const localY = rect ? clientY - rect.top : clientY;
+    popupCenter = { x: Math.round(localX) + 0.5, y: Math.round(localY) + 0.5 };
     popupOpen = true;
     popupStartPressed = true;
-    popupInitialPointer = { x, y };
+    popupInitialPointer = { x: clientX, y: clientY };
     currentItem = chain.length ? chain[chain.length-1].item : firstRoot;
   }
 
   function onCanvasDown(e: PointerEvent) {
-    if (!mouseeCanvas) return;
     // Suppress native context menu for RMB so we can use it as a trigger in browser
+    if (popupOpen) {
+      // If a pie is already open, ignore background clicks to avoid re-centering/sliding
+      return;
+    }
     if (e.button === 2) {
       e.preventDefault();
     }
-    if (!buttonMatches(e, demoTrigger)) return;
-    const p = toCanvasPos(e);
-    openPopupAt(p.x, p.y);
+    popupTarget = e.target as unknown;
+    openPopupAt(e.clientX, e.clientY);
+    // Mark open immediately for notifier
+    addLog('[open] popup');
   }
 
-  $: mouseeCanvas && initCanvas();
+  // --- Context-based callbacks (loggers) -----------------------------------------
+  function logBase(tag: string, ctx: any) {
+    const line = `[${tag}] t=${new Date(ctx.time).toLocaleTimeString()} chain=${ctx.pie.chain.join('/') || '/'} hover=${ctx.pie.hoverIndex} btn=${ctx.pointer.button} mods=${ctx.pointer.mods.ctrl?'C':''}${ctx.pointer.mods.alt?'A':''}${ctx.pointer.mods.shift?'S':''}${ctx.pointer.mods.meta?'M':''}${ctx.item?` path=${ctx.item.path}`:''}`;
+    console.log(`[demo:${tag}]`, ctx);
+    addLog(line);
+  }
+  function onOpenCtx(ctx: any) { logBase('open', ctx); }
+  function onCloseCtx(ctx: any) { logBase('close', ctx); popupOpen = false; chain = []; }
+  function onCancelCtx(ctx: any) { logBase('cancel', ctx); popupOpen = false; chain = []; }
+  function onHoverCtx(ctx: any) { logBase('hover', ctx); }
+  function onPathChangeCtx(ctx: any) { logBase(`path-${ctx.op}`, ctx); }
+  function onMarkCtx(ctx: any) { logBase(ctx.kind, ctx); }
+  function onSelectCtx(ctx: any) {
+    const line = `[select] path=${ctx.item?.path} name=${ctx.item?.name ?? ''} id=${ctx.item?.id ?? ''}`;
+    console.log('[demo:select]', ctx);
+    addLog(line);
+  }
+
+  // Optional target resolver (symbolic)
+  function resolveTarget(current: unknown, item: any): unknown {
+    const data = (item as any)?.data;
+    if (data && typeof data === 'object') {
+      if ((data as any).target !== undefined) return (data as any).target;
+      if ((data as any).targetId) return { id: (data as any).targetId };
+    }
+    return current;
+  }
 
   function onKey(e: KeyboardEvent) {
     if (!popupOpen) return;
-    if (e.key === 'Escape') { popupOpen = false; chain = []; }
+    if (e.key === 'Escape') { popupOpen = false; chain = []; return; }
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      // Peel back one level
+      if (chain.length) {
+        chain = chain.slice(0, -1);
+        currentItem = chain.length ? chain[chain.length - 1].item : firstRoot;
+      }
+    }
   }
 
   function onChildHover(path: string) {
@@ -211,16 +263,32 @@
     </label>
   </div>
   <h3>Popup target</h3>
-  <div style="position:relative; width: 100%; max-width: 100%; background: #f3f3f3;" on:contextmenu|preventDefault role="application">
-    <canvas bind:this={mouseeCanvas} class="mousee" on:pointerdown={onCanvasDown} style="display:block; width:100%; height:1000px;"></canvas>
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+  <div bind:this={targetArea} style="position:relative; width: 100%; max-width: 100%; height: 500px; background: #f3f3f3;" on:contextmenu|preventDefault role="application" on:pointerdown={onCanvasDown} on:keydown={onKey} tabindex="0" aria-label="Pie menu target">
     {#if popupOpen && firstRoot}
       <div style="position:absolute; inset:0;">
         <PieTree root={firstRoot} center={popupCenter} radiusPx={popupRadius} settings={config}
                  layers={theme?.layers ?? null} centerTextWrapWidth={theme?.centerTextWrapWidth ?? null}
-                 startPressed={popupStartPressed} initialPointer={popupInitialPointer} />
+                 startPressed={popupStartPressed} initialPointer={popupInitialPointer}
+                 initialTarget={popupTarget} resolveTarget={resolveTarget}
+                 labelsEnabled={false}
+                 onOpenCtx={onOpenCtx}
+                 onCloseCtx={onCloseCtx}
+                 onCancelCtx={onCancelCtx}
+                 onHoverCtx={onHoverCtx}
+                 onPathChangeCtx={onPathChangeCtx}
+                 onMarkCtx={onMarkCtx}
+                 onSelectCtx={onSelectCtx} />
       </div>
     {/if}
   </div>
+  <h3>Notifier log</h3>
+  <pre bind:this={logRef} on:scroll={onLogScroll} style="height: 200px; overflow: auto; border: 1px solid #000; padding: 8px; background: #fff; color: #000; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
+{#each logLines as line}
+{line}
+{/each}
+  </pre>
   <h2>Interactive PieMenu preview</h2>
   <div style="width: 420px; height: 420px; border: 1px dashed var(--hr, #999); display: grid; place-items: center;">
     <div style="width: 400px; height: 400px;">
