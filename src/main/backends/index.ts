@@ -37,7 +37,10 @@ export function getBackend(): Backend | null {
     desktop = desktop.toLowerCase();
     session = session.toLowerCase();
 
-    if ((desktop === 'gnome' || desktop === 'unity') && session === 'wayland') {
+    if (
+      (desktop === 'gnome' || desktop === 'zorin:gnome' || desktop === 'unity') &&
+      session === 'wayland'
+    ) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { GnomeBackend } = require('./linux/gnome/wayland/backend');
       return new GnomeBackend();
