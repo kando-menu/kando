@@ -82,6 +82,9 @@
     </screenshots>
 
     <releases>
+        <release version="2.1.0" date="2025-10-19">
+            <url type="details">https://github.com/kando-menu/kando/releases/tag/v2.1.0</url>
+        </release>
         <release version="2.0.0" date="2025-07-16">
             <url type="details">https://github.com/kando-menu/kando/releases/tag/v2.0.0</url>
         </release>
