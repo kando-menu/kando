@@ -21,6 +21,11 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2025-10-19
 
+<a href="https://www.youtube.com/watch?v=wNNS7vrur3M">
+<img align="right" width="400px" src="img/player21.jpg"></img>
+</a>
+
+
 ### :tada: Added
 
 - **An application picker for the run-command item type!** This allows you to select an application from apps installed on your system. It will automatically fill in the command to run the application, the name, and the icon.
