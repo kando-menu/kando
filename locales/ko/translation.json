@@ -78,7 +78,8 @@
         "un-inhibit-shortcuts": "단축키 다시 활성화하기",
         "new-version-notification-body": "[여기]{{link}}에서 다운받으세요.",
         "invalid-link-header": "잘못된 링크예요",
-        "invalid-link-message": "딥 링크를 해석할 수 없어요."
+        "invalid-link-message": "딥 링크를 해석할 수 없어요.",
+        "no-backend-found": "알맞는 백엔드를 찾지 못했어요."
     },
     "menu-items": {
         "command": {
@@ -96,7 +97,8 @@
             "isolated-info": "이 옵션을 선택하면 명령어가 깨끗한 환경에서 실행돼요. 즉, Kando의 환경 변수들을 상속받지 않아요. 이는 일부 명령어가 정상적으로 시작되지 않을 때 도움이 될 수 있어요.",
             "detached": "분리 실행하기",
             "detached-info": "이 옵션을 사용하면 명령어가 Kando와 분리되어 실행되므로, Kando가 종료되더라도 명령어는 계속 실행돼요. 이 옵션을 비활성화하면 일부 명령어가 제대로 시작되지 않는 문제를 해결할 수 있어요.",
-            "tip-6": "앱을 실행하는 명령어를 찾는 방법을 알아보려면 [여기]({{link}})를 클릭하세요."
+            "tip-6": "앱을 실행하는 명령어를 찾는 방법을 알아보려면 [여기]({{link}})를 클릭하세요.",
+            "choose-app": "앱 선택하기…"
         },
         "file": {
             "description": "파일이나 폴더를 열어요.",
@@ -279,7 +281,9 @@
             "reload-note": "CSS의 변경사항은 메뉴가 현재 표시 중이더라도 메뉴 테마를 새로고침하면 적용돼요. 하지만 theme.json 파일의 변경 사항은 메뉴를 다시 열어야 적용돼요.",
             "dev-tools-note": "Kando는 메뉴와 설정을 위해 두 개의 창을 사용해요. 개발자 도구를 열어 두 창을 개별적으로 검사할 수 있어요.",
             "menu-window-dev-tools": "메뉴 검사하기",
-            "settings-window-dev-tools": "설정 검사하기"
+            "settings-window-dev-tools": "설정 검사하기",
+            "hardware-acceleration": "하드웨어 가속 활성화",
+            "hardware-acceleration-info": "이 옵션은 앱의 성능을 높일 수 있지만, 렌더링 아티팩트가 나타날 수 있어요. 이 설정을 적용하려면 Kando를 재시작해야 해요."
         },
         "hover-mode": "호버 모드",
         "hover-mode-info": "숙련된 사용자 전용! 항목 위로 호버링해서 선택해요.",
@@ -407,6 +411,11 @@
             "pick-app-name-title": "애플리케이션 이름 선택하기",
             "pick-window-title-title": "창 제목 선택하기",
             "confirm": "이 값을 사용하기"
+        },
+        "app-picker": {
+            "hint": "시작 메뉴에서 Kando의 메뉴 에디터로 앱을 끌어와 놓을 수 있어요!",
+            "search-placeholder": "앱을 검색하세요…",
+            "use-selected": "선택한 앱 사용하기"
         }
     }
 }

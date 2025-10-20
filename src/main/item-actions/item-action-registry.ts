@@ -16,7 +16,7 @@ import { FileItemAction } from './file-item-action';
 import { HotkeyItemAction } from './hotkey-item-action';
 import { MacroItemAction } from './macro-item-action';
 import { TextItemAction } from './text-item-action';
-import { URItemAction } from './uri-item-action';
+import { URIItemAction } from './uri-item-action';
 import { RedirectItemAction } from './redirect-item-action';
 import { SettingsItemAction } from './settings-item-action';
 
@@ -70,7 +70,7 @@ export class ItemActionRegistry {
     this.actions.set('hotkey', new HotkeyItemAction());
     this.actions.set('macro', new MacroItemAction());
     this.actions.set('text', new TextItemAction());
-    this.actions.set('uri', new URItemAction());
+    this.actions.set('uri', new URIItemAction());
     this.actions.set('redirect', new RedirectItemAction());
     this.actions.set('settings', new SettingsItemAction());
   }

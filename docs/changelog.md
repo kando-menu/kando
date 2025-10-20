@@ -17,9 +17,9 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [unreleased]
+## [Kando 2.1.0](https://github.com/kando-menu/kando/releases/tag/v2.1.0)
 
-**Release Date:** TBD
+**Release Date:** 2025-10-19
 
 ### :tada: Added
 
@@ -45,7 +45,6 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The icon in the top left corner of the settings dialog. It is now a colorful Kando icon instead of a gray one.
 - Improved the readability of the source code by using `type` and `interface` in a more consistent manner. Thanks to [@LitoMore](https://github.com/LitoMore) for working on this!
 - Improved the consistency of the source code by using more ESLint rules. Thanks to [@LitoMore](https://github.com/LitoMore) for this as well!
-- **:collision: [Potentially BREAKING]** Updated Electron to version 38. **This removes support for macOS 11 (Big Sur).** If you want to use Kando on this very old macOS version, you will have to stay either on Kando 2.0.0 or compile your own version of Kando.
 - Updated many other dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
@@ -58,7 +57,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - Unresponsive Dev-Tools on Windows. The Dev-Tools now open in a separate window instead of being initially docked. You either have to manually dock the Dev-Tools or move them to another screen. Else the menu will block the input.
 - Custom fonts in the settings dialog and in the menu. If you used a custom font in your system, this was not respected everywhere in Kando. Now, all widgets should use your custom font. Some menu themes may override this, but the default themes should all use the system font.
 - An issue which caused menu items in the menu editor to be selected when the user clicked somewhere and then dragged the mouse over the item.  Thanks to [@Maksym](https://github.com/AluctuatioAetern) for this contribution!
-- A bug which made it possible to change the path of an open-file item manually.
+- A bug which made it impossible to change the path of an open-file item manually.
+- A bug which made it possible to select items with key-up events even if turbo-mode was disabled.
+- A bug which caused Kando to freeze when attempting to open a directory via a menu item on some Linux systems.
 
 ## [Kando 2.0.0](https://github.com/kando-menu/kando/releases/tag/v2.0.0)
 
