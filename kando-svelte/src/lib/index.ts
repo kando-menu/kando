@@ -1,13 +1,10 @@
-export { default as PieMenuDemo } from './PieMenuDemo.svelte';
-export { default as PieMenu } from './PieMenu.svelte';
-export { default as PieTree } from './PieTree.svelte';
-export { default as CenterText } from './CenterText.svelte';
-// WedgeSeparators and SelectionWedges are internal debug tools; not exported by default
-export { default as PieItem } from './PieItem.svelte';
-export { default as SelectionWedges } from './SelectionWedges.svelte';
-export { default as WedgeSeparators } from './WedgeSeparators.svelte';
-export * from './types';
-export * from './theme-loader';
+export { default as PieMenuDemo } from './components/PieMenuDemo.svelte';
+export { default as PieMenu } from './components/PieMenu.svelte';
+export { default as PieTree } from './components/PieTree.svelte';
+export { default as CenterText } from './components/CenterText.svelte';
+// Internal debug components not exported
+export * from './types.js';
+export * from './theme-loader.js';
 
 export const Vendor = {
   defaultThemeCss: new URL('./vendor/default-theme.css', import.meta.url).toString(),

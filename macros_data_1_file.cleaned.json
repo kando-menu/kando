@@ -1,0 +1,1 @@
+"(.macro_infos.macroInfos) |= map(select(.id != $id))"

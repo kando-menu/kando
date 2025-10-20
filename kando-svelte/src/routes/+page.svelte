@@ -1,4 +1,5 @@
 <script lang="ts">
+
   import { onMount, tick } from 'svelte';
   import JSON5 from 'json5';
   import { applyThemeColors, injectThemeCss } from '../lib/theme-loader.ts';
@@ -7,12 +8,10 @@
   import type { MenuSettingsV1, MenuV1 } from '../../../src/common/settings-schemata/menu-settings-v1.ts';
   import { GENERAL_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/general-settings-v1.js';
   import { MENU_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/menu-settings-v1.js';
-  import { z } from 'zod';
-  import MenuOutline from '../lib/MenuOutline.svelte';
-  import PieMenuDemo from '../lib/PieMenuDemo.svelte';
-  import PieMenu from '../lib/PieMenu.svelte';
-  import PieTree from '../lib/PieTree.svelte';
-  import type { MouseTrigger } from '../lib/types.ts';
+  import MenuOutline from '../lib/components/MenuOutline.svelte';
+  import PieMenuDemo from '../lib/components/PieMenuDemo.svelte';
+  import PieMenu from '../lib/components/PieMenu.svelte';
+  import PieTree from '../lib/components/PieTree.svelte';
 
   let config: Record<string, unknown> | null = null;
   let menuSettings: MenuSettingsV1 | null = null;
@@ -31,58 +30,11 @@
   let popupInitialPointer: { x: number; y: number } | null = null;
   let popupTarget: unknown = null;
   let targetArea: HTMLElement | null = null;
-  // Notifier log
   let logLines: string[] = [];
   let logRef: HTMLPreElement | null = null;
   let autoScroll = true;
-  function onLogScroll() {
-    if (!logRef) return;
-    autoScroll = (logRef.scrollTop + logRef.clientHeight) >= (logRef.scrollHeight - 8);
-  }
-  async function addLog(line: string) {
-    logLines = [...logLines, line];
-    await tick();
-    if (autoScroll && logRef) {
-      logRef.scrollTop = logRef.scrollHeight;
-    }
-  }
   let currentItem: any = null; // browsing cursor
   let chain: Array<{ item: any; index?: number; angle?: number }> = [];
-
-  // Demo mouse trigger binding for opening the popup in browser
-  const demoTrigger: MouseTrigger = { kind: 'mouse', button: 'right', mods: [] };
-  function buttonMatches(e: PointerEvent, trig: MouseTrigger): boolean {
-    const buttonMap: Record<string, number> = { left: 0, middle: 1, right: 2, x1: 3, x2: 4 };
-    const expectBtn = buttonMap[trig.button];
-    const modsOk = (trig.mods ?? []).every((m: 'ctrl'|'alt'|'shift'|'meta') => {
-      if (m === 'ctrl') return e.ctrlKey;
-      if (m === 'alt') return e.altKey;
-      if (m === 'shift') return e.shiftKey;
-      if (m === 'meta') return e.metaKey;
-      return false;
-    });
-    const btnOk = e.button === expectBtn;
-    const result = btnOk && modsOk;
-    console.log('[svelte-trigger] match', { btnOk, modsOk, eButton: e.button, expectBtn, trig });
-    return result;
-  }
-
-  async function getJSON<T>(path: string): Promise<T> {
-    console.log('[demo] fetch JSON', path);
-    const res = await fetch(path);
-    if (!res.ok) throw new Error(`Failed to load ${path}`);
-    const data = await res.json();
-    console.log('[demo] loaded JSON', path);
-    return data as T;
-  }
-  async function getJSON5<T>(path: string): Promise<T> {
-    console.log('[demo] fetch JSON5', path);
-    const res = await fetch(path);
-    if (!res.ok) throw new Error(`Failed to load ${path}`);
-    const text = await res.text();
-    console.log('[demo] loaded JSON5 text', path, `${text.length} chars`);
-    return JSON5.parse(text);
-  }
 
   onMount(async () => {
     console.log('[demo] onMount start');
@@ -106,8 +58,8 @@
       currentItem = firstRoot;
       // load theme list (demo only)
       try {
-        const list = await getJSON<{ themes: Array<{ id: string; name?: string }> }>('api/themes');
-        availableThemes = list.themes;
+        const list = await getJSON<{ themes: { menu: Array<{ id: string; name?: string }>, sound: any, icon: any } }>('/api/themes');
+        availableThemes = list.themes.menu;
       } catch {}
 
       const themeId = selectedThemeId || 'default';
@@ -154,11 +106,45 @@
     }
   });
 
+  function onLogScroll() {
+    if (!logRef) return;
+    autoScroll = (logRef.scrollTop + logRef.clientHeight) >= (logRef.scrollHeight - 8);
+  }
+
+  async function addLog(line: string) {
+    logLines = [...logLines, line];
+    await tick();
+    if (autoScroll && logRef) {
+      logRef.scrollTop = logRef.scrollHeight;
+    }
+  }
+
+  async function getJSON<T>(path: string): Promise<T> {
+    console.log('[demo] fetch JSON', path);
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Failed to load ${path}`);
+    const data = await res.json();
+    console.log('[demo] loaded JSON', path);
+    return data as T;
+  }
+
+  async function getJSON5<T>(path: string): Promise<T> {
+    console.log('[demo] fetch JSON5', path);
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Failed to load ${path}`);
+    const text = await res.text();
+    console.log('[demo] loaded JSON5 text', path, `${text.length} chars`);
+    return JSON5.parse(text);
+  }
+
   function openPopupAt(clientX: number, clientY: number) {
-    const rect = targetArea?.getBoundingClientRect();
-    const localX = rect ? clientX - rect.left : clientX;
-    const localY = rect ? clientY - rect.top : clientY;
-    popupCenter = { x: Math.round(localX) + 0.5, y: Math.round(localY) + 0.5 };
+    // Use viewport coordinates and clamp away from edges similar to Kando's maxMenuRadius
+    let x = clientX, y = clientY;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const pad = Math.max(0, Math.min(popupRadius, (theme?.maxMenuRadius as any) ?? popupRadius));
+    x = Math.min(vw - pad, Math.max(pad, x));
+    y = Math.min(vh - pad, Math.max(pad, y));
+    popupCenter = { x: Math.round(x) + 0.5, y: Math.round(y) + 0.5 };
     popupOpen = true;
     popupStartPressed = true;
     popupInitialPointer = { x: clientX, y: clientY };
@@ -180,18 +166,39 @@
     addLog('[open] popup');
   }
 
-  // --- Context-based callbacks (loggers) -----------------------------------------
   function logBase(tag: string, ctx: any) {
     const line = `[${tag}] t=${new Date(ctx.time).toLocaleTimeString()} chain=${ctx.pie.chain.join('/') || '/'} hover=${ctx.pie.hoverIndex} btn=${ctx.pointer.button} mods=${ctx.pointer.mods.ctrl?'C':''}${ctx.pointer.mods.alt?'A':''}${ctx.pointer.mods.shift?'S':''}${ctx.pointer.mods.meta?'M':''}${ctx.item?` path=${ctx.item.path}`:''}`;
     console.log(`[demo:${tag}]`, ctx);
     addLog(line);
   }
-  function onOpenCtx(ctx: any) { logBase('open', ctx); }
-  function onCloseCtx(ctx: any) { logBase('close', ctx); popupOpen = false; chain = []; }
-  function onCancelCtx(ctx: any) { logBase('cancel', ctx); popupOpen = false; chain = []; }
-  function onHoverCtx(ctx: any) { logBase('hover', ctx); }
-  function onPathChangeCtx(ctx: any) { logBase(`path-${ctx.op}`, ctx); }
-  function onMarkCtx(ctx: any) { logBase(ctx.kind, ctx); }
+  function onOpenCtx(ctx: any) {
+    logBase('open', ctx);
+  }
+
+  function onCloseCtx(ctx: any) {
+    logBase('close', ctx);
+    popupOpen = false;
+    chain = [];
+  }
+
+  function onCancelCtx(ctx: any) {
+    logBase('cancel', ctx);
+    popupOpen = false;
+    chain = [];
+  }
+
+  function onHoverCtx(ctx: any) {
+    logBase('hover', ctx);
+  }
+
+  function onPathChangeCtx(ctx: any) {
+    logBase(`path-${ctx.op}`, ctx);
+  }
+
+  function onMarkCtx(ctx: any) {
+    logBase(ctx.kind, ctx);
+  }
+
   function onSelectCtx(ctx: any) {
     const line = `[select] path=${ctx.item?.path} name=${ctx.item?.name ?? ''} id=${ctx.item?.id ?? ''}`;
     console.log('[demo:select]', ctx);
@@ -208,53 +215,57 @@
     return current;
   }
 
-  function onKey(e: KeyboardEvent) {
-    if (!popupOpen) return;
-    if (e.key === 'Escape') { popupOpen = false; chain = []; return; }
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      // Peel back one level
-      if (chain.length) {
-        chain = chain.slice(0, -1);
-        currentItem = chain.length ? chain[chain.length - 1].item : firstRoot;
-      }
-    }
-  }
-
-  function onChildHover(path: string) {
-    // path is like '/i' from PieMenuDemo; for single-level use, we only need the index
-  }
-
-  function onChildSelect({ detail }: CustomEvent<{ path: string; item: any }>) {
-    const parts = detail.path.split('/').filter(Boolean);
-    const idx = Number(parts[parts.length-1]);
-    const item = currentItem?.children?.[idx];
-    if (!item) return;
-    if (item.children?.length) {
-      chain.push({ item, index: idx });
-      currentItem = item;
-    } else {
-      console.log('[demo-popup] select leaf', item?.name);
-      popupOpen = false;
-      chain = [];
-    }
-  }
 </script>
 
 {#if error}
   <p style="color: red">{error}</p>
 {/if}
 
+{#if firstRoot}
+
+  <h2>Kando Svelte Pie Menu Demo</h2>
+
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+  <div bind:this={targetArea} style="position:relative; width: 100%; max-width: 100%; height: 500px; background: #f3f3f3;" oncontextmenu={(e)=>{ e.preventDefault(); }} role="application" onpointerdown={onCanvasDown} tabindex="0" aria-label="Pie menu target">
+
+    {#if popupOpen}
+      <PieTree root={firstRoot} center={popupCenter} radiusPx={popupRadius} settings={config}
+                layers={theme?.layers ?? null} centerTextWrapWidth={theme?.centerTextWrapWidth ?? null}
+                drawCenterText={theme?.drawCenterText ?? true}
+                drawChildrenBelow={!!theme?.drawChildrenBelow}
+                startPressed={popupStartPressed} initialPointer={popupInitialPointer}
+                initialTarget={popupTarget} resolveTarget={resolveTarget}
+                drawSelectionWedges={!!theme?.drawSelectionWedges}
+                drawWedgeSeparators={!!theme?.drawWedgeSeparators}
+                onOpenCtx={onOpenCtx}
+                onCloseCtx={onCloseCtx}
+                onCancelCtx={onCancelCtx}
+                onHoverCtx={onHoverCtx}
+                onPathChangeCtx={onPathChangeCtx}
+                onMarkCtx={onMarkCtx}
+                onSelectCtx={onSelectCtx} />
+      
+    {/if}
+
+  </div>
+
+{/if}
+
 {#if theme && firstRoot}
+
+  <h2>Menus and Themes</h2>
+
   <div style="display:flex; gap: 12px; align-items: center; margin: 8px 0;">
     <label>Menu:
-      <select bind:value={selectedMenuIndex} on:change={() => { firstRoot = menuSettings?.menus?.[+selectedMenuIndex]?.root ?? null; currentItem = firstRoot; }}>
+      <select bind:value={selectedMenuIndex} onchange={() => { firstRoot = menuSettings?.menus?.[+selectedMenuIndex]?.root ?? null; currentItem = firstRoot; }}>
         {#each availableMenus as m}
           <option value={m.index}>{m.name} {m.shortcutID ? `(${m.shortcutID})` : ''}</option>
         {/each}
       </select>
     </label>
     <label>Theme:
-      <select bind:value={selectedThemeId} on:change={() => location.reload()}>
+      <select bind:value={selectedThemeId} onchange={() => location.reload()}>
         <option value="default">default (vendor)</option>
         {#each availableThemes as t}
           <option value={t.id}>{t.name ?? t.id}</option>
@@ -262,50 +273,42 @@
       </select>
     </label>
   </div>
-  <h3>Popup target</h3>
-  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-  <div bind:this={targetArea} style="position:relative; width: 100%; max-width: 100%; height: 500px; background: #f3f3f3;" on:contextmenu|preventDefault role="application" on:pointerdown={onCanvasDown} on:keydown={onKey} tabindex="0" aria-label="Pie menu target">
-    {#if popupOpen && firstRoot}
-      <div style="position:absolute; inset:0;">
-        <PieTree root={firstRoot} center={popupCenter} radiusPx={popupRadius} settings={config}
-                 layers={theme?.layers ?? null} centerTextWrapWidth={theme?.centerTextWrapWidth ?? null}
-                 startPressed={popupStartPressed} initialPointer={popupInitialPointer}
-                 initialTarget={popupTarget} resolveTarget={resolveTarget}
-                 labelsEnabled={false}
-                 onOpenCtx={onOpenCtx}
-                 onCloseCtx={onCloseCtx}
-                 onCancelCtx={onCancelCtx}
-                 onHoverCtx={onHoverCtx}
-                 onPathChangeCtx={onPathChangeCtx}
-                 onMarkCtx={onMarkCtx}
-                 onSelectCtx={onSelectCtx} />
-      </div>
-    {/if}
-  </div>
-  <h3>Notifier log</h3>
-  <pre bind:this={logRef} on:scroll={onLogScroll} style="height: 200px; overflow: auto; border: 1px solid #000; padding: 8px; background: #fff; color: #000; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
+
+  <h2>Notifier log</h2>
+
+  <pre bind:this={logRef} onscroll={onLogScroll} style="height: 200px; overflow: auto; border: 1px solid #000; padding: 8px; background: #fff; color: #000; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
 {#each logLines as line}
 {line}
 {/each}
-  </pre>
+</pre>
+
   <h2>Interactive PieMenu preview</h2>
+
   <div style="width: 420px; height: 420px; border: 1px dashed var(--hr, #999); display: grid; place-items: center;">
+
     <div style="width: 400px; height: 400px;">
       <PieMenuDemo root={firstRoot} {theme} settings={config}
         on:hover={(e) => console.log('[pie] hover', e.detail.path)}
         on:select={(e) => console.log('[pie] select', e.detail)} />
     </div>
+
   </div>
+
 {/if}
 
 {#if menuSettings}
+
   <h2>Menus (version {menuSettings.version})</h2>
+
   <ul>
+
     {#each menuSettings.menus as m: MenuV1, i}
       <li>
+
         <strong>{m.root?.name ?? `Menu ${i+1}`}</strong>
+
         <ul>
+
           {#if m.shortcut}<li>shortcut: {m.shortcut}</li>{/if}
           {#if m.shortcutID}<li>shortcutID: {m.shortcutID}</li>{/if}
           <li>centered: {String(m.centered ?? false)}</li>
@@ -314,7 +317,9 @@
           {#if m.tags?.length}
             <li>tags: {m.tags.join(', ')}</li>
           {/if}
+
           <li>outline:
+
             {#if m.root}
               <ul>
                 <MenuOutline item={m.root} />
@@ -322,31 +327,46 @@
             {:else}
               <em>no root</em>
             {/if}
+
           </li>
+
         </ul>
+
       </li>
+
     {/each}
+
   </ul>
-  {#if config}
+
+{/if}
+
+{#if config}
+
   <h2>Config</h2>
+
   <pre>{JSON.stringify(config, null, 2)}</pre>
+
 {/if}
 
 {#if theme}
+
   <h2>Theme</h2>
+
   <ul>
     <li>id: {theme.id}</li>
     <li>name: {theme.name}</li>
     <li>engineVersion: {theme.engineVersion}</li>
     <li>layers: {theme.layers.length}</li>
   </ul>
-  {#if mathPreview.angles}
-    <h3>Math quick test</h3>
-    <p>First menu child angles: {mathPreview.angles?.map((a) => a.toFixed(1)).join(', ')}</p>
-    <p>Wedges: {mathPreview.wedges?.map((w) => `${w.start.toFixed(1)}–${w.end.toFixed(1)}`).join(' | ')}</p>
-  {/if}
-{/if}
 
-{:else}
-  <p>Loading menus…</p>
+  {#if mathPreview.angles}
+
+    <h3>Math quick test</h3>
+
+    <p>First menu child angles: {mathPreview.angles?.map((a) => a.toFixed(1)).join(', ')}</p>
+
+    <p>Wedges: {mathPreview.wedges?.map((w) => `${w.start.toFixed(1)}–${w.end.toFixed(1)}`).join(' | ')}</p>
+
+  {/if}
+
 {/if}
