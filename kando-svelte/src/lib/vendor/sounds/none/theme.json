@@ -1,0 +1,10 @@
+{
+  "id": "none",
+  "name": "None",
+  "directory": "internal",
+  "engineVersion": 1,
+  "themeVersion": "1.0.0",
+  "author": "Kando",
+  "license": "CC0-1.0",
+  "sounds": {}
+}
