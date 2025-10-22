@@ -77,13 +77,34 @@ jobs:
           } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
             Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
           }
-      - name: Upload Artifacts
+      - name: Upload Zips
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
-          path: |
-            out/make/zip/win32/*/*
-            out/make/squirrel.windows/*/*.exe
+          path: out/make/zip/win32/*/*
+          retention-days: 7
+      - name: Upload Unsigned Installers
+        id: upload-unsigned-installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}
+          path: out/make/squirrel.windows/*/*.exe
+          retention-days: 7
+      - name: Sign with SignPath
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+          organization-id: '4e74932d-7987-4337-9219-893ea21bd691'
+          project-slug: 'kando'
+          signing-policy-slug: 'test-signing '
+          github-artifact-id: '${{ steps.upload-unsigned-installers.outputs.artifact-id }}'
+          wait-for-completion: true
+          output-artifact-directory: 'out/make/squirrel.windows/signed'
+      - name: Upload Signed Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}
+          path: out/make/squirrel.windows/signed/*/*.exe
           retention-days: 7
 
   macos:
