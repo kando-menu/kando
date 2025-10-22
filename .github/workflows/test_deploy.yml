@@ -82,8 +82,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
-          path: out/make/zip/win32/*/*
-          path: out/make/squirrel.windows/*/*.exe
+          path: |
+            out/make/zip/win32/*/*
+            out/make/squirrel.windows/*/*.exe
           retention-days: 7
       - name: Sign with SignPath
         uses: signpath/github-action-submit-signing-request@v1
