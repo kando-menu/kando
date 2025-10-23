@@ -87,6 +87,7 @@ jobs:
             out/make/squirrel.windows/*/*.exe
           retention-days: 7
       - name: Sign with SignPath
+        if: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
         uses: signpath/github-action-submit-signing-request@v1
         with:
           api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
@@ -97,6 +98,7 @@ jobs:
           wait-for-completion: true
           output-artifact-directory: 'out/make/signed'
       - name: Upload Signed Installer
+        if: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}-signed
