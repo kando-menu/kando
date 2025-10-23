@@ -81,7 +81,7 @@ jobs:
         id: upload-unsigned-artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}
+          name: build-${{ matrix.os }}-unsigned
           path: |
             out/make/zip/win32/*/*
             out/make/squirrel.windows/*/*.exe
@@ -99,9 +99,8 @@ jobs:
       - name: Upload Signed Installer
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}
+          name: build-${{ matrix.os }}-signed
           path: out/make/signed/*
-          overwrite: true
           retention-days: 7
 
   macos:
