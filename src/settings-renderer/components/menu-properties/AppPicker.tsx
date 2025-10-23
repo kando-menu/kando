@@ -40,7 +40,7 @@ export default function AppPicker(props: Props) {
 
   // Filter the installed apps based on the search term.
   const filteredApps = installedApps.filter((app) =>
-    app.name.toLowerCase().includes(filterTerm.toLowerCase())
+    app.name && app.name.toLowerCase().includes(filterTerm.toLowerCase())
   );
 
   // Clear the value when the modal is shown.
