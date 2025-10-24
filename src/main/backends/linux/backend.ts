@@ -93,7 +93,7 @@ export abstract class LinuxBackend extends Backend {
         fs.readdirSync(dir).forEach((file) => {
           if (file.endsWith('.desktop')) {
             const data = this.readDesktopFile(path.join(dir, file));
-            if (data) {
+            if (data?.name) {
               this.installedApps.push(data);
             }
           }
