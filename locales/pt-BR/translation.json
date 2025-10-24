@@ -8,6 +8,9 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando não pode atribuir atalhos globais diretamente no KDE/Wayland. Ao invés disso, especifique um ID de atalho aqui e procure por ele na seção de atalhos globais do KWin nas configurações de sistema do seu KDE. Lá você pode atribuir um atalho que irá abrir esse menu."
+        },
+        "niri": {
+            "shortcut-info": "O Niri ainda não suporta atalhos globais. Mas você pode abrir este menu usando 'kando --menu \"Nome do Menu\"' na linha de comando ou na configuração do Niri."
         }
     },
     "example-menu": {
@@ -75,7 +78,8 @@
         "un-inhibit-shortcuts": "Reativar atalhos",
         "invalid-link-message": "O link não pôde ser interpretado corretamente.",
         "new-version-notification-body": "Obtenha de {{link}}.",
-        "invalid-link-header": "Link inválido"
+        "invalid-link-header": "Link inválido",
+        "no-backend-found": "Nenhum backend adequado foi encontrado."
     },
     "menu-items": {
         "command": {
@@ -93,7 +97,8 @@
             "isolated": "Executar isoladamente",
             "isolated-info": "Isto irá executar o comando em um ambiente limpo, não herdando nenhuma variável de ambiente do Kando. Isso pode ajudar com comandos que não iniciam corretamente.",
             "detached": "Executar separadamente",
-            "detached-info": "Isto irá desconectar o comando do Kando, fazendo com que continue executando mesmo se o Kando estiver fechado. Desabilitar isso pode ajudar a resolver problemas com comandos que não iniciam corretamente."
+            "detached-info": "Isto irá desconectar o comando do Kando, fazendo com que continue executando mesmo se o Kando estiver fechado. Desabilitar isso pode ajudar a resolver problemas com comandos que não iniciam corretamente.",
+            "choose-app": "Escolha um aplicativo…"
         },
         "file": {
             "description": "Abre um arquivo ou pasta.",
@@ -267,7 +272,21 @@
             "movement-threshold": "Limite de movimento",
             "minimum-gesture-length-info": "Movimentos retos devem ser pelo menos longos assim para ativar uma seleção. Padrão é 150px.",
             "gesture-jitter-threshold-info": "Pequenos movimentos não serão considerados na detecção de gestos. Padrão é 10px.",
-            "developer-options": "Opções de desenvolvedor"
+            "developer-options": "Opções de desenvolvedor",
+            "auto-language": "Usar linguagem do sistema",
+            "app-settings": "Configurações do aplicativo",
+            "localization-label": "Linguagem",
+            "localization-info": "Reinicie o Kando para aplicar o novo idioma.",
+            "hardware-acceleration": "Habilitar aceleração de hardware",
+            "hardware-acceleration-info": "Esta opção pode melhorar o desempenho do aplicativo, mas também pode causar alguns artefatos de renderização. Você precisa reiniciar o Kando para aplicar esta configuração.",
+            "keep-input-focus": "Mantenha o aplicativo ativo focado",
+            "keep-input-focus-info": "Se ativado, o menu não receberá o foco da entrada do teclado ao ser aberto. Isso desativa o Modo Turbo, mas pode ser útil se você precisar que outros aplicativos permaneçam em foco enquanto o menu estiver aberto.",
+            "press-again-behavior": "Comportamento de pressionar atalho novamente",
+            "press-again-behavior-info": "Isso determina o que acontece quando o atalho é pressionado novamente enquanto um menu é exibido. Se vários menus estiverem atribuídos ao mesmo atalho , você pode usar isso para percorrer todos os menus correspondentes. Certifique-se de manter pressionada uma tecla modificadora apenas se quiser usar o Modo Turbo junto com uma opção diferente de \"Não fazer nada\".",
+            "do-nothing": "Não faça nada",
+            "cycle-from-first": "Mostrar próximo menu (começar do início)",
+            "cycle-from-recent": "Mostrar próximo menu (continuar do último)",
+            "close-menu": "Fechar menu"
         },
         "hover-mode-info": "Para usuários avançados apenas! Selecione itens flutuando sobre eles.",
         "icon-picker-dialog": {
@@ -396,6 +415,12 @@
             "select-file": "Selecionar arquivo",
             "select-directory": "Selecionar pasta"
         },
-        "duplicate-menu": "Duplicar menu"
+        "duplicate-menu": "Duplicar menu",
+        "add-menu-item-hint": "Arraste este item para adicioná-lo ao menu acima!",
+        "app-picker": {
+            "hint": "Você também pode arrastar e soltar um aplicativo do seu menu Iniciar para o editor de menu do Kando!",
+            "search-placeholder": "Pesquisar um aplicativo…",
+            "use-selected": "Usar selecionado"
+        }
     }
 }
