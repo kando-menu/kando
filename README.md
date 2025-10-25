@@ -54,7 +54,7 @@ Learn how to create your own menus in the [:memo: Configuration Guide](https://k
 
 # :revolving_hearts: Who creates Kando?
 
-👋 Hi there! I am @Schneegans, a software developer from Germany who loves creating free and open-source software.
+👋 Hi there! I am [**@Schneegans**](https://github.com/Schneegans/), a software developer from Germany who loves creating free and open-source software.
 After [Gnome-Pie](https://github.com/Schneegans/Gnome-Pie) and [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), Kando is my third and most ambitious attempt to create a pie menu for the desktop.
 
 Yet the project would not have been possible without the help of the community!
