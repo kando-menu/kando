@@ -99,14 +99,14 @@ jobs:
       - name: Upload Zip
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/signed/*.zip
+          file: out/make/signed/**/*.zip
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Squirrel Installer
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/signed/*.exe
+          file: out/make/signed/**/*.exe
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
