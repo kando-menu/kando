@@ -52,10 +52,23 @@ To learn some basics about the interaction with Kando, you can have a look at th
 Once you are familiar with the basics, you can start creating your own menus.
 Learn how to create your own menus in the [:memo: Configuration Guide](https://kando.menu/creating-menus/)!
 
-# :revolving_hearts: I want to contribute!
+# :revolving_hearts: Who creates Kando?
 
-**I am creating Kando out of sheer passion.** It is completely free, and I am not planning to monetize it in any way.
-But I would be very happy if you could support the project with creative ideas, code contributions, or by sharing it with your friends and followers! 💖
+👋 Hi there! I am @Schneegans, a software developer from Germany who loves creating free and open-source software.
+After [Gnome-Pie](https://github.com/Schneegans/Gnome-Pie) and [Fly-Pie](https://github.com/Schneegans/Fly-Pie/), Kando is my third and most ambitious attempt to create a pie menu for the desktop.
+
+Yet the project would not have been possible without the help of the community!
+A big thanks to everyone who has contributed to Kando by reporting issues, suggesting features, translating texts, or writing code!
+
+<a href="https://github.com/kando-menu/kando/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kando-menu/kando&columns=20" />
+</a>
+
+<small>Graphic made with [contrib.rocks](https://contrib.rocks).</small>
+
+# :tada: I want to contribute as well!
+
+Kando is completely free, but I would be very happy if you could support the project with creative ideas, code contributions, or by sharing it with your friends and followers! 💖
 
 There are always some open issues labeled as [good first issue](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) which are a great starting point for new contributors.
 Just drop a comment if you want to work on one of these issues, and we can discuss the details!
