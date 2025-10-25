@@ -86,7 +86,8 @@
             "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
             "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrió el menú.",
             "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
-            "placeholder": "Inserte cualquier orden…"
+            "placeholder": "Inserte cualquier orden…",
+            "choose-app": "Elija una aplicación…"
         },
         "hotkey": {
             "description": "Presiona una combinación de teclas.",

@@ -45,6 +45,13 @@ export abstract class LinuxBackend extends Backend {
   constructor() {
     super();
 
+    // When running inside a flatpak, we need to adjust the search paths accordingly.
+    // The /usr and /etc directories are mounted under /run/host/.
+    let flatpakPrefix = '';
+    if (process.env.container && process.env.container === 'flatpak') {
+      flatpakPrefix = '/run/host/';
+    }
+
     // Assemble a list of paths to search for icons. The order is important, if a theme is
     // found in multiple locations, the first one has priority.
     const home = os.homedir();
@@ -55,12 +62,16 @@ export abstract class LinuxBackend extends Backend {
       path.join(home, '.pixmaps/'),
     ];
     process.env.XDG_DATA_DIRS?.split(':').forEach((dir) => {
-      this.iconSearchPaths.push(path.join(dir, 'icons/'));
+      if (dir.startsWith('/home/') || dir.startsWith(flatpakPrefix)) {
+        this.iconSearchPaths.push(path.join(dir, 'icons/'));
+      } else {
+        this.iconSearchPaths.push(path.join(flatpakPrefix, dir, 'icons/'));
+      }
     });
-    this.iconSearchPaths.push('/usr/share/icons/');
-    this.iconSearchPaths.push('/usr/local/share/icons/');
-    this.iconSearchPaths.push('/usr/share/pixmaps/');
-    this.iconSearchPaths.push('/usr/local/share/pixmaps/');
+    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/share/icons/'));
+    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/local/share/icons/'));
+    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/share/pixmaps/'));
+    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/local/share/pixmaps/'));
 
     // Make search paths unique.
     this.iconSearchPaths = this.iconSearchPaths.filter(
@@ -69,8 +80,8 @@ export abstract class LinuxBackend extends Backend {
 
     // Collect all installed applications on the system.
     const appDirs = [
-      '/usr/share/applications',
-      '/usr/local/share/applications',
+      path.join(flatpakPrefix, '/usr/share/applications'),
+      path.join(flatpakPrefix, '/usr/local/share/applications'),
       '/var/lib/flatpak/exports/share/applications/',
       '/var/lib/snapd/desktop/applications/',
       path.join(process.env.HOME, '.local/share/applications'),
@@ -82,7 +93,7 @@ export abstract class LinuxBackend extends Backend {
         fs.readdirSync(dir).forEach((file) => {
           if (file.endsWith('.desktop')) {
             const data = this.readDesktopFile(path.join(dir, file));
-            if (data) {
+            if (data?.name) {
               this.installedApps.push(data);
             }
           }
@@ -247,11 +258,21 @@ export abstract class LinuxBackend extends Backend {
 
     const home = os.homedir();
 
+    // If we are inside a flatpak container, we cannot execute commands directly on the
+    // host. Instead we need to use flatpak-spawn.
+    let commandPrefix = '';
+    if (process.env.container && process.env.container === 'flatpak') {
+      commandPrefix = 'flatpak-spawn --host ';
+    }
+
     const tryGNOME = () => {
       try {
-        const output = execSync('gsettings get org.gnome.desktop.interface icon-theme', {
-          encoding: 'utf8',
-        }).trim();
+        const output = execSync(
+          commandPrefix + 'gsettings get org.gnome.desktop.interface icon-theme',
+          {
+            encoding: 'utf8',
+          }
+        ).trim();
         return output.replace(/^'|'$/g, ''); // remove surrounding quotes
       } catch {
         return null;
@@ -275,9 +296,12 @@ export abstract class LinuxBackend extends Backend {
 
     const tryXFCE = () => {
       try {
-        const output = execSync('xfconf-query -c xsettings -p /Net/IconThemeName', {
-          encoding: 'utf8',
-        }).trim();
+        const output = execSync(
+          commandPrefix + 'xfconf-query -c xsettings -p /Net/IconThemeName',
+          {
+            encoding: 'utf8',
+          }
+        ).trim();
         return output || null;
       } catch {
         return null;

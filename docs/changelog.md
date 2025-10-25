@@ -17,6 +17,15 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+### :bug: Fixed
+
+- Discovery of installed applications and icons when running on Linux inside a Flatpak container.
+- A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
+
 ## [Kando 2.1.0](https://github.com/kando-menu/kando/releases/tag/v2.1.0)
 
 **Release Date:** 2025-10-19
@@ -24,7 +33,6 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 <a href="https://www.youtube.com/watch?v=wNNS7vrur3M">
 <img align="right" width="400px" src="img/player21.jpg"></img>
 </a>
-
 
 ### :tada: Added
 
