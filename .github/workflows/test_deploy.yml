@@ -97,7 +97,7 @@ jobs:
           github-artifact-id: '${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}'
           wait-for-completion: true
           output-artifact-directory: 'out/make/signed'
-      - name: Upload Signed Installer
+      - name: Upload Signed Artifacts
         if: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
         uses: actions/upload-artifact@v4
         with:
