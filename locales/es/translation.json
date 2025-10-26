@@ -207,7 +207,7 @@
             "settings-window-dev-tools": "Inspeccionar configuración"
         },
         "icon-picker-dialog": {
-            "search-placeholder": "Buscando iconos…",
+            "search-placeholder": "Buscar iconos…",
             "base64-example": "Ejemplo de Base64:",
             "file-example": "Ejemplo de URI file:",
             "url-example": "Ejemplo de URL:",
