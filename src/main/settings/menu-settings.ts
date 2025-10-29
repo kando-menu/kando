@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { app } from 'electron';
+import fs from 'fs-extra';
 
 import {
   MENU_SETTINGS_SCHEMA_V1,
@@ -47,6 +48,28 @@ export function getMenuSettings(
       error instanceof Error ? error.message : error
     );
     return null;
+  }
+}
+
+/**
+ * Checks whether the given path points to a valid menu settings file. If not, an
+ * exception is thrown.
+ *
+ * @param path The path to check.
+ */
+export function tryLoadMenuSettingsFile(path: string) {
+  // First we try to read the file content. This will throw an exception if the file
+  // cannot be read.
+  const content = fs.readJSONSync(path, 'utf-8');
+
+  // Now we try to parse the content according to the latest schema. This will throw an
+  // exception if the content does not conform to the schema.
+  const result = loadMenuSettings(content);
+
+  // The schema is not very strict as most properties are optional. As a sanity check, we
+  // check whether at least one menu is present.
+  if (result.settings.menus.length === 0) {
+    throw new Error('The provided file does not seem to contain any menus.');
   }
 }
 
