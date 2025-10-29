@@ -25,6 +25,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Discovery of installed applications and icons when running on Linux inside a Flatpak container.
 - A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
+- Opening files and directories on Linux via an open-file action when their path contained spaces.
 
 ## [Kando 2.1.0](https://github.com/kando-menu/kando/releases/tag/v2.1.0)
 
