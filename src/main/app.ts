@@ -30,6 +30,7 @@ import {
   MenuThemeDescription,
   WMInfo,
   SoundType,
+  FileIconThemeDescription,
   SoundEffect,
   CommandlineOptions,
 } from '../common';
@@ -249,6 +250,11 @@ export class KandoApp {
       return true;
     }
 
+    if (options.reloadIconThemes) {
+      this.reloadIconThemes();
+      return true;
+    }
+
     return false;
   }
 
@@ -379,6 +385,17 @@ export class KandoApp {
    */
   public reloadSoundTheme() {
     this.menuWindow?.webContents.send('menu-window.reload-sound-theme');
+  }
+
+  /**
+   * This is called when the --reload-icon-themes command line option is passed or when
+   * the respective button in the settings is pressed.
+   */
+  public async reloadIconThemes() {
+    delete this.iconThemesCache;
+
+    this.menuWindow?.webContents.send('menu-window.reload-icon-themes');
+    this.settingsWindow?.webContents.send('settings-window.reload-icon-themes');
   }
 
   /**
@@ -514,6 +531,11 @@ export class KandoApp {
       this.reloadSoundTheme();
     });
 
+    // Reload the current icon themes if requested.
+    ipcMain.on('settings-window.reload-icon-themes', async () => {
+      this.reloadIconThemes();
+    });
+
     // Allow showing open-file dialogs.
     ipcMain.handle('settings-window.open-file-picker', async (event, config) => {
       const result = await dialog.showOpenDialog(this.settingsWindow, config);
@@ -617,28 +639,30 @@ export class KandoApp {
         return this.iconThemesCache;
       }
 
-      this.iconThemesCache = {
-        userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
-        fileIconThemes: [],
-      };
-
       const themes = await this.listSubdirectories([
         path.join(app.getPath('userData'), 'icon-themes'),
         path.join(__dirname, '../renderer/assets/icon-themes'),
       ]);
+
+      const fileIconThemes: FileIconThemeDescription[] = [];
 
       await Promise.all(
         themes.map(async (theme) => {
           const directory = await this.findIconThemePath(theme);
           const icons = await this.listIconsRecursively(directory);
 
-          this.iconThemesCache.fileIconThemes.push({
+          fileIconThemes.push({
             name: theme,
             directory,
             icons,
           });
         })
       );
+
+      this.iconThemesCache = {
+        userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
+        fileIconThemes,
+      };
 
       return this.iconThemesCache;
     });

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import { Vec2, MenuItem, ShowMenuOptions } from '../common';
@@ -114,6 +114,16 @@ export const MENU_WINDOW_API = {
    */
   onReloadSoundTheme: (func: () => void) => {
     ipcRenderer.on('menu-window.reload-sound-theme', func);
+  },
+
+  /**
+   * This will be called by the host process when the icon themes should be reloaded.
+   *
+   * @param callback This callback will be called when the icon themes should be reloaded.
+   */
+  onReloadIconThemes: (func: () => void) => {
+    webFrame.clearCache();
+    ipcRenderer.on('menu-window.reload-icon-themes', func);
   },
 };
 

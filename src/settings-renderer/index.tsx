@@ -74,6 +74,11 @@ Promise.all([
       );
     });
 
+    // This will be called whenever the icons should be reloaded.
+    window.settingsAPI.onReloadIconThemes(async () => {
+      await IconThemeRegistry.getInstance().init();
+    });
+
     // Initialize the icon theme registry.
     await IconThemeRegistry.getInstance().init();
 
