@@ -16,72 +16,72 @@
             "children": [
               {
                 "type": "redirect",
-                "name": "Redirect",
-                "icon": "redirect-item.svg",
-                "iconTheme": "kando",
                 "data": {
                   "menu": ""
-                }
+                },
+                "name": "Redirect",
+                "icon": "redirect-item.svg",
+                "iconTheme": "kando"
               },
               {
                 "type": "submenu",
+                "data": {},
                 "name": "Submenu",
                 "icon": "submenu-item.svg",
                 "iconTheme": "kando",
-                "data": {},
                 "children": [
                   {
                     "type": "submenu",
+                    "data": {},
                     "name": "Submenu",
                     "icon": "submenu-item.svg",
                     "iconTheme": "kando",
-                    "data": {},
                     "children": [
                       {
                         "type": "submenu",
+                        "data": {},
                         "name": "Submenu",
                         "icon": "submenu-item.svg",
                         "iconTheme": "kando",
-                        "data": {},
                         "children": []
                       },
                       {
                         "type": "text",
-                        "name": "Paste Text",
-                        "icon": "text-item.svg",
-                        "iconTheme": "kando",
                         "data": {
                           "text": ""
-                        }
+                        },
+                        "name": "Paste Text",
+                        "icon": "text-item.svg",
+                        "iconTheme": "kando"
                       },
                       {
                         "type": "text",
-                        "name": "Paste Text",
-                        "icon": "text-item.svg",
-                        "iconTheme": "kando",
                         "data": {
                           "text": ""
-                        }
+                        },
+                        "name": "Paste Text",
+                        "icon": "text-item.svg",
+                        "iconTheme": "kando"
                       }
                     ]
                   },
                   {
                     "type": "text",
-                    "name": "Paste Text",
-                    "icon": "text-item.svg",
-                    "iconTheme": "kando",
                     "data": {
                       "text": ""
-                    }
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
                   },
                   {
                     "type": "text",
-                    "name": "Paste Text",
-                    "icon": "text-item.svg",
-                    "iconTheme": "kando",
                     "data": {
                       "text": ""
-                    }
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
                   }
                 ]
               },
@@ -792,7 +792,7 @@
           }
         ]
       },
-      "shortcut": "",
+      "shortcut": "Control+`",
       "shortcutID": "compass",
       "centered": false,
       "anchored": false,

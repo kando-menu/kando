@@ -65,6 +65,7 @@ export class CenterText {
 
   /** Removes the current text from the container. */
   public hide() {
+    try { console.log('[Kando:CenterText.hide]'); } catch {}
     this.div?.remove();
   }
 
@@ -78,6 +79,7 @@ export class CenterText {
    *   current position of the pie menu on the screen.
    */
   public async show(text: string, position: Vec2) {
+    try { console.log('[Kando:CenterText.show] start', { text, position, diameter: this.diameter }); } catch {}
     const currentCallCount = ++this.callCount;
 
     // If the text is already cached, we can use it directly.
@@ -87,6 +89,7 @@ export class CenterText {
       this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
       this.div.style.visibility = 'initial';
       this.container.appendChild(this.div);
+      try { console.log('[Kando:CenterText.show] use cache'); } catch {}
       return;
     }
 
@@ -189,6 +192,7 @@ export class CenterText {
       this.div = stagingDiv;
       this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
       this.div.style.visibility = 'initial';
+      try { console.log('[Kando:CenterText.show] applied', { fontSize, textHeight }); } catch {}
     } else {
       stagingDiv.remove();
     }

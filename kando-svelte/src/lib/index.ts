@@ -2,9 +2,11 @@ export { default as PieMenuDemo } from './components/PieMenuDemo.svelte';
 export { default as PieMenu } from './components/PieMenu.svelte';
 export { default as PieTree } from './components/PieTree.svelte';
 export { default as CenterText } from './components/CenterText.svelte';
+export { default as KandoWrapper } from './components/KandoWrapper.svelte';
 // Internal debug components not exported
 export * from './types.js';
 export * from './theme-loader.js';
+export * from './kando-web.js';
 
 export const Vendor = {
   defaultThemeCss: new URL('./vendor/default-theme.css', import.meta.url).toString(),

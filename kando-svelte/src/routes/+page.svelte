@@ -9,15 +9,15 @@
   import { GENERAL_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/general-settings-v1.js';
   import { MENU_SETTINGS_SCHEMA_V1 } from '../../../src/common/settings-schemata/menu-settings-v1.js';
   import MenuOutline from '../lib/components/MenuOutline.svelte';
-  import PieMenuDemo from '../lib/components/PieMenuDemo.svelte';
-  import PieMenu from '../lib/components/PieMenu.svelte';
-  import PieTree from '../lib/components/PieTree.svelte';
+  import KandoWrapper from '../lib/components/KandoWrapper.svelte';
 
   let config: Record<string, unknown> | null = null;
   let menuSettings: MenuSettingsV1 | null = null;
   let theme: MenuThemeDescription | null = null;
   let availableThemes: Array<{ id: string; name?: string }> = [];
+  let availableSoundThemes: Array<{ id: string; name?: string }> = [];
   let selectedThemeId: string = 'default';
+  let selectedSoundId: string = 'none';
   let availableMenus: Array<{ index: number; name: string; shortcutID: string }> = [];
   let selectedMenuIndex = 0;
   let error: string | null = null;
@@ -35,6 +35,18 @@
   let autoScroll = true;
   let currentItem: any = null; // browsing cursor
   let chain: Array<{ item: any; index?: number; angle?: number }> = [];
+
+  // Wrapper demo state
+  let wrapperArea: HTMLDivElement | null = null;
+  let wrapperOptions: any = {
+    mousePosition: { x: 0, y: 0 },
+    windowSize: { x: 0, y: 0 },
+    zoomFactor: 1,
+    centeredMode: false,
+    anchoredMode: false,
+    hoverMode: false,
+    systemIconsChanged: false
+  };
 
   onMount(async () => {
     console.log('[demo] onMount start');
@@ -58,39 +70,17 @@
       currentItem = firstRoot;
       // load theme list (demo only)
       try {
-        const list = await getJSON<{ themes: { menu: Array<{ id: string; name?: string }>, sound: any, icon: any } }>('/api/themes');
+        console.log('[page] fetching /api/themes…');
+        const list = await getJSON<{ themes: { menu: Array<{ id: string; name?: string }>, sound: Array<{ id: string; name?: string }>, icon: Array<{ id: string; name?: string }> } }>('/api/themes');
+        console.log('[page] /api/themes ok', list?.themes?.menu?.length, list?.themes?.sound?.length, list?.themes?.icon?.length);
         availableThemes = list.themes.menu;
-      } catch {}
-
-      const themeId = selectedThemeId || 'default';
-      const themeJson = await getJSON5<any>(`/kando/menu-themes/${themeId}/theme.json5`);
-      // Relax typing: theme.layers accepts 'none' as content
-      theme = { ...(themeJson as any), id: themeId, directory: '/kando/menu-themes' } as any;
-      console.log('[demo] theme loaded', theme?.id, theme?.name, 'layers', theme?.layers.length);
-      // inject theme for demo page
-      if (theme) {
-        injectThemeCss(theme);
-        applyThemeColors(theme.colors);
-        // Only mark icons ready after icon fonts are actually loaded (or a conservative timeout).
-        try {
-          const htmlEl = document.documentElement;
-          htmlEl.classList.remove('kando-icons-ready');
-          const fontPromises: Promise<any>[] = [];
-          if ('fonts' in document) {
-            // Try common families used by themes; ignore rejections.
-            fontPromises.push((document as any).fonts.load('1em "Material Symbols Rounded"'));
-            fontPromises.push((document as any).fonts.load('1em "simple-icons"'));
-            // Also wait for the full FontFaceSet to settle.
-            fontPromises.push((document as any).fonts.ready);
-          }
-          // Fall back to a timeout if the FontFaceSet API is not available or takes too long.
-          await Promise.race([
-            Promise.allSettled(fontPromises),
-            new Promise((resolve) => setTimeout(resolve, 1500))
-          ]);
-          htmlEl.classList.add('kando-icons-ready');
-        } catch {}
+        availableSoundThemes = list.themes.sound;
+        selectedSoundId = availableSoundThemes[0]?.id ?? 'none';
+      } catch (err) {
+        console.error('[page] /api/themes failed', err);
       }
+
+      await loadThemeById(selectedThemeId || 'default');
 
       // math quick-test: compute angles/wedges for the first menu with children
       const firstMenu = (menuSettings?.menus as any[])?.find((m: any) => (m as any).root?.children?.length);
@@ -104,6 +94,54 @@
     } finally {
       console.log('[demo] onMount end');
     }
+  });
+
+  async function loadThemeById(themeId: string) {
+    try {
+      console.log('[controls] load theme', themeId);
+      const themeJson = await getJSON5<any>(`/kando/menu-themes/${themeId}/theme.json5`);
+      theme = { ...(themeJson as any), id: themeId, directory: '/kando/menu-themes' } as any;
+      console.log('[demo] theme loaded', theme?.id, theme?.name, 'layers', theme?.layers.length);
+      if (theme) {
+        injectThemeCss(theme);
+        applyThemeColors(theme.colors);
+        try {
+          const htmlEl = document.documentElement;
+          htmlEl.classList.remove('kando-icons-ready');
+          const fontPromises: Promise<any>[] = [];
+          if ('fonts' in document) {
+            fontPromises.push((document as any).fonts.load('1em "Material Symbols Rounded"'));
+            fontPromises.push((document as any).fonts.load('1em "simple-icons"'));
+            fontPromises.push((document as any).fonts.ready);
+          }
+          await Promise.race([
+            Promise.allSettled(fontPromises),
+            new Promise((resolve) => setTimeout(resolve, 1500))
+          ]);
+          htmlEl.classList.add('kando-icons-ready');
+        } catch {}
+      }
+    } catch (err) {
+      console.error('[controls] load theme failed', themeId, err);
+    }
+  }
+
+  // Observe wrapper area size
+  onMount(() => {
+    const updateWrapperOpts = () => {
+      const w = Math.round(window.innerWidth);
+      const h = Math.round(window.innerHeight);
+      wrapperOptions = {
+        ...wrapperOptions,
+        windowSize: { x: w, y: h },
+        mousePosition: { x: Math.floor(w / 2), y: Math.floor(h / 2) }
+      };
+    };
+    updateWrapperOpts();
+    const ro = new ResizeObserver(() => updateWrapperOpts());
+    ro.observe(document.documentElement);
+    window.addEventListener('resize', updateWrapperOpts);
+    return () => { ro.disconnect(); window.removeEventListener('resize', updateWrapperOpts); };
   });
 
   function onLogScroll() {
@@ -205,6 +243,35 @@
     addLog(line);
   }
 
+  // Wrapper logs
+  function itemAtPath(root: any, path: string): any {
+    if (!root) return null;
+    if (!path || path === '/') return root;
+    const parts = path.split('/').filter(Boolean).map((p) => Number(p)).filter((n) => Number.isFinite(n));
+    let node: any = root;
+    for (const idx of parts) {
+      if (!node?.children || !Array.isArray(node.children) || node.children[idx] == null) return null;
+      node = node.children[idx];
+    }
+    return node;
+  }
+
+  function onWrapSelect(path: string) {
+    const root = menuSettings?.menus?.[+selectedMenuIndex]?.root ?? firstRoot;
+    const item = itemAtPath(root, path);
+    console.log('[wrap-select]', { path, item });
+    addLog(`[wrap-select] path=${path}`);
+    if (item) {
+      try { console.log('[wrap-select:item json]', JSON.stringify(item, null, 2)); } catch {}
+      addLog(JSON.stringify(item, null, 2));
+    } else {
+      addLog('[wrap-select] item not found for path');
+    }
+  }
+  function onWrapHover(path: string) { addLog(`[wrap-hover] ${path}`); }
+  function onWrapUnhover(path: string) { addLog(`[wrap-unhover] ${path}`); }
+  function onWrapCancel() { addLog('[wrap-cancel]'); }
+
   // Optional target resolver (symbolic)
   function resolveTarget(current: unknown, item: any): unknown {
     const data = (item as any)?.data;
@@ -221,78 +288,66 @@
   <p style="color: red">{error}</p>
 {/if}
 
-{#if firstRoot}
-
-  <h2>Kando Svelte Pie Menu Demo</h2>
-
-  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-  <div bind:this={targetArea} style="position:relative; width: 100%; max-width: 100%; height: 500px; background: #f3f3f3;" oncontextmenu={(e)=>{ e.preventDefault(); }} role="application" onpointerdown={onCanvasDown} tabindex="0" aria-label="Pie menu target">
-
-    {#if popupOpen}
-      <PieTree root={firstRoot} center={popupCenter} radiusPx={popupRadius} settings={config}
-                layers={theme?.layers ?? null} centerTextWrapWidth={theme?.centerTextWrapWidth ?? null}
-                drawCenterText={theme?.drawCenterText ?? true}
-                drawChildrenBelow={!!theme?.drawChildrenBelow}
-                startPressed={popupStartPressed} initialPointer={popupInitialPointer}
-                initialTarget={popupTarget} resolveTarget={resolveTarget}
-                drawSelectionWedges={!!theme?.drawSelectionWedges}
-                drawWedgeSeparators={!!theme?.drawWedgeSeparators}
-                onOpenCtx={onOpenCtx}
-                onCloseCtx={onCloseCtx}
-                onCancelCtx={onCancelCtx}
-                onHoverCtx={onHoverCtx}
-                onPathChangeCtx={onPathChangeCtx}
-                onMarkCtx={onMarkCtx}
-                onSelectCtx={onSelectCtx} />
-      
-    {/if}
-
-  </div>
-
-{/if}
-
-{#if theme && firstRoot}
-
-  <h2>Menus and Themes</h2>
-
+{#if menuSettings}
   <div style="display:flex; gap: 12px; align-items: center; margin: 8px 0;">
     <label>Menu:
-      <select bind:value={selectedMenuIndex} onchange={() => { firstRoot = menuSettings?.menus?.[+selectedMenuIndex]?.root ?? null; currentItem = firstRoot; }}>
+      <select bind:value={selectedMenuIndex} onchange={() => { console.log('[controls] menu change', selectedMenuIndex); firstRoot = menuSettings?.menus?.[+selectedMenuIndex]?.root ?? null; currentItem = firstRoot; }}>
         {#each availableMenus as m}
           <option value={m.index}>{m.name} {m.shortcutID ? `(${m.shortcutID})` : ''}</option>
         {/each}
       </select>
     </label>
     <label>Theme:
-      <select bind:value={selectedThemeId} onchange={() => location.reload()}>
+      <select bind:value={selectedThemeId} onchange={() => { console.log('[controls] theme change', selectedThemeId); loadThemeById(selectedThemeId); }}>
         <option value="default">default (vendor)</option>
         {#each availableThemes as t}
           <option value={t.id}>{t.name ?? t.id}</option>
         {/each}
       </select>
     </label>
+    <label>Sound:
+      <select bind:value={selectedSoundId} onchange={() => { console.log('[controls] sound theme change', selectedSoundId); addLog(`[controls] sound=${selectedSoundId}`); }}>
+        {#each availableSoundThemes as t}
+          <option value={t.id}>{t.name ?? t.id}</option>
+        {/each}
+      </select>
+    </label>
   </div>
+{/if}
 
-  <h2>Notifier log</h2>
+{#if firstRoot}
 
-  <pre bind:this={logRef} onscroll={onLogScroll} style="height: 200px; overflow: auto; border: 1px solid #000; padding: 8px; background: #fff; color: #000; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
+  <h2>Svelte KandoWrapper Pie Menu Demo</h2>
+  {#if theme}
+    <KandoWrapper
+      root={firstRoot}
+      settings={config as any}
+      theme={theme}
+      colors={theme.colors}
+      options={wrapperOptions}
+      visible={true}
+      globalTarget={true}
+      simulateWarp={false}
+      onSelect={onWrapSelect}
+      onHover={onWrapHover}
+      onUnhover={onWrapUnhover}
+      onCancel={onWrapCancel}
+    />
+  {:else}
+    <div style="padding:8px;">Load a theme to run the native Kando renderer.</div>
+  {/if}
+
+{/if}
+
+{#if theme && firstRoot}
+
+  <h2>Callback Log</h2>
+
+  <pre bind:this={logRef} onscroll={onLogScroll} style="height: 600px; overflow: auto; border: 1px solid #000; padding: 8px; background: #fff; color: #000; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
 {#each logLines as line}
 {line}
 {/each}
 </pre>
-
-  <h2>Interactive PieMenu preview</h2>
-
-  <div style="width: 420px; height: 420px; border: 1px dashed var(--hr, #999); display: grid; place-items: center;">
-
-    <div style="width: 400px; height: 400px;">
-      <PieMenuDemo root={firstRoot} {theme} settings={config}
-        on:hover={(e) => console.log('[pie] hover', e.detail.path)}
-        on:select={(e) => console.log('[pie] select', e.detail)} />
-    </div>
-
-  </div>
 
 {/if}
 

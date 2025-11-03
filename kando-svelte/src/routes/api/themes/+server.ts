@@ -80,15 +80,18 @@ async function listIconThemes(): Promise<Array<{ id: string; name?: string }>> {
 
 export const GET: RequestHandler = async () => {
   try {
+    console.log('[api/themes] GET start');
     const [menu, sound, icon] = await Promise.all([
       listMenuThemes(),
       listSoundThemes(),
       listIconThemes(),
     ]);
+    console.log('[api/themes] resolved', { menu: menu.length, sound: sound.length, icon: icon.length });
     return new Response(JSON.stringify({ themes: { menu, sound, icon } }), {
       headers: { 'content-type': 'application/json' },
     });
   } catch (e) {
+    console.error('[api/themes] error', e);
     return new Response(JSON.stringify({ themes: { menu: [], sound: [], icon: [] }, error: (e as Error).message }), {
       status: 500,
       headers: { 'content-type': 'application/json' },

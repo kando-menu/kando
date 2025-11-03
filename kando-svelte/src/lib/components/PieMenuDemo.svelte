@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { MenuItem, MenuThemeDescription, ShowMenuOptions, Vec2 } from '../types.js';
   import { createEventDispatcher, onMount } from 'svelte';
+  import KandoWrapper from './KandoWrapper.svelte';
   import { fetchThemeJson, injectThemeCss, applyThemeColors } from '../theme-loader.js';
   // Import from monorepo alias during dev; fallback relative if alias not resolved at type time
   // @ts-ignore
@@ -47,7 +48,7 @@
   let currentItem: MenuItem | null = $state(null);
   let chain: Array<{ item: MenuItem; angle?: number; index?: number }> = $state([]);
   const centerLabel = $derived(hoveredIndex >= 0
-    ? (currentItem?.children?.[hoveredIndex] as any)?.name
+    ? ((currentItem as any)?.children?.[hoveredIndex] as any)?.name
     : (hoveredIndex === -2 ? 'parent' : 'center'));
   const nodeStyles = $derived(childPositions.map((p, i) => {
     const style = `left:${p.x}px; top:${p.y}px; transform: translate(-50%, -50%);`;
@@ -61,6 +62,42 @@
   let lastHoveredPath: string | null = null;
   const debug = true;
   const deadZonePx = $derived(Number(settings?.centerDeadZone ?? (options as any)?.centerDeadZone ?? 50));
+
+  // Wrapper demo state
+  let wrapperBox: HTMLDivElement | null = null;
+  const defaultGeneralSettings: any = {
+    fadeInDuration: 120,
+    fadeOutDuration: 120,
+    enableMarkingMode: true,
+    enableTurboMode: true,
+    hoverModeNeedsConfirmation: false,
+    gestureMinStrokeLength: 150,
+    gestureMinStrokeAngle: 20,
+    gestureJitterThreshold: 10,
+    gesturePauseTimeout: 100,
+    fixedStrokeLength: 0,
+    centerDeadZone: 50,
+    enableGamepad: false,
+    minParentDistance: 150,
+    gamepadBackButton: 1,
+    gamepadCloseButton: 2,
+    warpMouse: false,
+    keepInputFocus: false,
+    hideSettingsButton: true,
+    settingsButtonPosition: 'bottom-right',
+    soundTheme: 'none',
+    soundVolume: 0.5
+  };
+  const menuSettings = $derived(settings ?? defaultGeneralSettings);
+  let wrapperOptions: ShowMenuOptions = $state({
+    mousePosition: { x: 0, y: 0 },
+    windowSize: { x: 0, y: 0 },
+    zoomFactor: 1,
+    centeredMode: false,
+    anchoredMode: false,
+    hoverMode: false,
+    systemIconsChanged: false
+  } as any);
 
   onMount(() => {
     (async () => {
@@ -91,9 +128,21 @@
     });
     if (container) ro.observe(container);
 
+    const roWrap = new ResizeObserver(() => {
+      if (!wrapperBox) return;
+      const r = wrapperBox.getBoundingClientRect();
+      wrapperOptions = {
+        ...(wrapperOptions as any),
+        windowSize: { x: Math.round(r.width), y: Math.round(r.height) },
+        mousePosition: { x: Math.round(r.width / 2), y: Math.round(r.height / 2) }
+      } as any;
+    });
+    if (wrapperBox) roWrap.observe(wrapperBox);
+
     return () => {
       if (linkEl) linkEl.remove();
       ro.disconnect();
+      roWrap.disconnect();
     };
   });
 
@@ -343,7 +392,8 @@
     // Simple heuristic: look in static assets shipped with the demo
     // e.g., /kando/icon-themes/<theme>/<icon>.svg
     const base = '/kando/icon-themes';
-    return `${base}/${theme}/${icon}.svg`;
+    const file = icon.endsWith('.svg') ? icon : `${icon}.svg`;
+    return `${base}/${theme}/${file}`;
   }
 
   // Labels: upright, no rotation
@@ -354,6 +404,29 @@
   }
 
 </script>
+
+<!-- Kando Wrapper (Native Kando inside Svelte) -------------------------------------- -->
+<section class="demo-block">
+  <h3>KandoWrapper (native Kando renderer)</h3>
+  <div class="wrapper-host" bind:this={wrapperBox}>
+    {#if themeEffective}
+      <KandoWrapper
+        root={root}
+        settings={menuSettings}
+        theme={themeEffective}
+        colors={themeEffective.colors ?? {}}
+        options={wrapperOptions}
+        visible={true}
+        onSelect={(path) => dispatch('select', { path, item: root })}
+        onHover={(path) => dispatch('hover', { path })}
+        onUnhover={(path) => dispatch('unhover', { path })}
+        onCancel={() => dispatch('cancel')}
+      />
+    {:else}
+      <div class="placeholder">Load a theme to run the native Kando renderer.</div>
+    {/if}
+  </div>
+</section>
 
 <button class="kando-pie-menu" bind:this={container} type="button" onpointermove={onPointerMove} onclick={onClick} onkeydown={onKeydown} aria-label="Pie menu preview">
   {#if currentItem?.children?.length}
@@ -398,6 +471,9 @@
 
 <style>
 
+  .demo-block { margin-bottom: 24px; }
+  .demo-block h3 { margin: 0 0 8px 0; font-size: 14px; font-weight: 600; }
+  .wrapper-host { position: relative; width: 100%; height: 300px; border: 1px dashed rgba(0,0,0,0.2); border-radius: 6px; overflow: hidden; }
   .kando-pie-menu { position: relative; width: 100%; height: 100%; background: none; border: 0; padding: 0; cursor: default; }
   .placeholder { opacity: 0.6; font-size: 14px; padding: 8px; }
   .ring { position: absolute; width: 280px; height: 280px; margin-left:-140px; margin-top:-140px; border-radius: 50%; border: 2px dashed #aaa; pointer-events: none; z-index: 3; }

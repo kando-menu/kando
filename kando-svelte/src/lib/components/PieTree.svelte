@@ -645,24 +645,24 @@
     <!-- Single nested tree model: always render one PieMenu rooted at the parent level.
          When chain is empty, parent==root and no active child is nested. When chain is non-empty,
          parent is the previous item and active child is nested under it by PieMenu itself. -->
-    <PieMenu
+      <PieMenu
       item={chain.length === 0 ? root : parentItem()}
-      center={centerRef}
-      radiusPx={radiusPx}
+        center={centerRef}
+        radiusPx={radiusPx}
       hoverIndex={chain.length === 0 ? hoverIndex : chain[chain.length - 1]}
       activeHoverIndex={chain.length === 0 ? -1 : hoverIndex}
-      pressedDragging={isPressedDragging}
-      childStates={childStates}
-      pointer={pointerAbs ? { clientX: pointerAbs.x, clientY: pointerAbs.y, ...pointerRel } : null}
-      layers={(layers as any)}
-      drawChildrenBelow={drawChildrenBelow}
-      drawCenterText={drawCenterText}
-      drawSelectionWedges={drawSelectionWedges}
-      drawWedgeSeparators={drawWedgeSeparators}
-      centerTextWrapWidth={centerTextWrapWidth}
+        pressedDragging={isPressedDragging}
+        childStates={childStates}
+        pointer={pointerAbs ? { clientX: pointerAbs.x, clientY: pointerAbs.y, ...pointerRel } : null}
+        layers={(layers as any)}
+        drawChildrenBelow={drawChildrenBelow}
+        drawCenterText={drawCenterText}
+        drawSelectionWedges={drawSelectionWedges}
+        drawWedgeSeparators={drawWedgeSeparators}
+        centerTextWrapWidth={centerTextWrapWidth}
       centerStateClasses={chain.length === 0 ? 'active' : 'parent'}
       childClassBase={chain.length === 0 ? 'child' : 'grandchild'}
-      renderChildren={true}
+        renderChildren={true}
       parentPreviewItem={chain.length === 0 ? null : parentItem()}
       showParentLink={false}
     />

@@ -15,6 +15,12 @@ const config = {
 		alias: {
 			'@kando/common': '../src/common',
 			'@kando/schemata': '../src/common/settings-schemata',
+			'@kando/menu': '../src/menu-renderer/menu.ts',
+			'@kando/menu-theme': '../src/menu-renderer/menu-theme.ts',
+			'@kando/gesture': '../src/menu-renderer/input-methods/gesture-detector.ts',
+			'@kando/gamepad': '../src/menu-renderer/input-methods/gamepad.ts',
+			'@kando/sound-theme': '../src/menu-renderer/sound-theme.ts',
+			'@kando/base-css': '../src/menu-renderer/index.scss',
 			'$lib': './src/lib'
 		}
 	}

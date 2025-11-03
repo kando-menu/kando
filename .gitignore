@@ -9,3 +9,7 @@ out
 bin
 .DS_Store
 .codegpt
+
+# Ignore declaration files accidentally emitted into source when aliasing from kando-svelte
+/src/common/**/*.d.ts
+/src/menu-renderer/**/*.d.ts
