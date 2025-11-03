@@ -21,6 +21,15 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+### :tada: Added
+
+- A button in the icon-picker popover to reload all icon themes without restarting Kando.
+- The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
+
+## [unreleased]
+
+**Release Date:** TBD
+
 ### :bug: Fixed
 
 - Discovery of installed applications and icons when running on Linux inside a Flatpak container.
