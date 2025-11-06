@@ -25,6 +25,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Discovery of installed applications and icons when running on Linux inside a Flatpak container.
 - A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
+- Opening files and directories on Linux via an open-file action when their path contained spaces.
 
 ## [Kando 2.1.0](https://github.com/kando-menu/kando/releases/tag/v2.1.0)
 
@@ -69,7 +70,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The varying width of the sidebar in the theme-selection dialog. The sidebar does not change width anymore when switching between the different themes with many accent colors. Thanks to [@kmqwerty](https://github.com/kmqwerty) for this contribution!
 - Unresponsive Dev-Tools on Windows. The Dev-Tools now open in a separate window instead of being initially docked. You either have to manually dock the Dev-Tools or move them to another screen. Else the menu will block the input.
 - Custom fonts in the settings dialog and in the menu. If you used a custom font in your system, this was not respected everywhere in Kando. Now, all widgets should use your custom font. Some menu themes may override this, but the default themes should all use the system font.
-- An issue which caused menu items in the menu editor to be selected when the user clicked somewhere and then dragged the mouse over the item.  Thanks to [@Maksym](https://github.com/AluctuatioAetern) for this contribution!
+- An issue which caused menu items in the menu editor to be selected when the user clicked somewhere and then dragged the mouse over the item.  Thanks to [@AluctuatioAetern](https://github.com/AluctuatioAetern) for this contribution!
 - A bug which made it impossible to change the path of an open-file item manually.
 - A bug which made it possible to select items with key-up events even if turbo-mode was disabled.
 - A bug which caused Kando to freeze when attempting to open a directory via a menu item on some Linux systems.
