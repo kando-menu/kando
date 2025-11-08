@@ -88,20 +88,19 @@ export class WindowsBackend extends Backend {
    *   pointer position.
    */
   public override async getWMInfo() {
-    const window = native.getActiveWindow();
-    const pointer = screen.getCursorScreenPoint();
+    const info = native.getWMInfo();
 
     // For some reason, this makes the method much faster. For now, I have no idea why.
     process.nextTick(() => {});
 
     return {
-      windowName: window.name,
-      appName: window.app,
-      pointerX: pointer.x,
-      pointerY: pointer.y,
+      windowName: info.window || '',
+      appName: info.app || '',
+      pointerX: info.pointerX || 0,
+      pointerY: info.pointerY || 0,
       workArea: screen.getDisplayNearestPoint({
-        x: pointer.x,
-        y: pointer.y,
+        x: info.pointerX || 0,
+        y: info.pointerY || 0,
       }).workArea,
     };
   }
