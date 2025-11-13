@@ -167,6 +167,27 @@ export abstract class Backend extends EventEmitter {
   public abstract simulateKeys(keys: KeySequence): Promise<void>;
 
   /**
+   * Optional: Bind mouse-button based triggers (backend-specific). Default is no-op.
+   * Backends that support mouse buttons can override this to start/stop hooks.
+   *
+   * @param ids An array of trigger IDs (e.g., 'mouse:right', 'ctrl+mouse:right').
+   */
+  public async bindMouseTriggers(ids: string[]): Promise<void> {
+    // Default: do nothing.
+  }
+
+  /**
+   * Derived backends should call this when a configured mouse binding is activated.
+   * This is intentionally separate from keyboard shortcuts to allow non-menu uses later.
+   *
+   * @param binding Normalized id like 'right' or 'ctrl+right'.
+   * @param details Optional extra info (position, modifiers, timestamp).
+   */
+  protected onMouseBinding(binding: string, details?: unknown): void {
+    this.emit('mouseBinding', binding, details);
+  }
+
+  /**
    * This binds the given shortcuts globally. What the shortcut strings look like depends
    * on the backend:
    *

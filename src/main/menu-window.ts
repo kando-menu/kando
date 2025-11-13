@@ -412,14 +412,24 @@ export class MenuWindow extends BrowserWindow {
     // Store scores for all menus which match the trigger.
     const scores: number[] = [];
 
-    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-
     menus.forEach((menu, index) => {
       scores[index] = 0;
 
-      // If the trigger matches, we set the score to 1. Else we skip this menu.
-      const trigger = useID ? menu.shortcutID : menu.shortcut;
-      if (request.trigger === trigger) {
+      // If the trigger matches any configured binding (keyboard shortcut, shortcutID, or mouseBindings)
+      // we set the score to 1. Else skip. For mouse bindings, we also allow a base-only
+      // fallback (e.g., 'right' matching an incoming 'ctrl+right').
+      const triggers: string[] = [];
+      if (menu.shortcut) triggers.push(menu.shortcut);
+      if (menu.shortcutID) triggers.push(menu.shortcutID);
+      if ((menu as any).mouseBindings?.length) triggers.push(...(menu as any).mouseBindings);
+      let matches = triggers.includes(request.trigger);
+      if (!matches && request.trigger?.includes('+')) {
+        const base = request.trigger.split('+').pop();
+        if (base) {
+          matches = triggers.includes(base);
+        }
+      }
+      if (matches) {
         scores[index] += 1;
       } else {
         return;

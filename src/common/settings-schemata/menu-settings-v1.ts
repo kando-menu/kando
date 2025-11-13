@@ -99,6 +99,13 @@ export const MENU_SCHEMA_V1 = z.object({
   shortcutID: z.string().default(''),
 
   /**
+   * Mouse button bindings to open this menu. Strings like 'right', 'middle', 'left',
+   * 'x1', 'x2', optionally with modifiers: 'ctrl+right', 'alt+right', 'shift+right',
+   * 'meta+right'.
+   */
+  mouseBindings: z.array(z.string()).default([]),
+
+  /**
    * If true, the menu will open in the screen's center. Else it will open at the mouse
    * pointer.
    */

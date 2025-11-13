@@ -22,7 +22,7 @@ Although authored inside `kando-svelte`, the primary scope is the main Kando app
 
 ## Configuration Model
 
-We keep `shortcut`/`shortcutID` for backwards compatibility and add a unified `triggers` array. Each entry is one of `keyboard | mouse | gamepad`.
+We keep `shortcut`/`shortcutID` for backwards compatibility and (long‑term) add a unified `triggers` array. Each entry is one of `keyboard | mouse | gamepad`.
 
 Example (JSON excerpt from `menus.json`):
 
@@ -68,6 +68,28 @@ Backward compatibility: if `triggers` is absent, existing `shortcut`/`shortcutID
 
 ### Why not piggyback on `shortcut`?
 - Electron’s accelerators are keyboard‑only; mouse buttons are not supported and would require native hooks anyway. Keeping distinct trigger kinds avoids fragile overloading and keeps the editor UX clear.
+
+---
+
+## Update (MVP implemented now): Layered mouse bindings and V1‑compatible field
+
+To ship incremental support without bumping settings version, we added a simple, V1‑compatible field and layered it through the backend so pie menus can use it today, while other features can hook into the same layer later.
+
+- Schema (V1‑compatible):
+  - `menu.mouseBindings: string[]` (default: `[]`)
+  - Strings like `right`, `middle`, `left`, `x1`, `x2` and with modifiers: `ctrl+right`, `alt+right`, `shift+right`, `meta+right`.
+- Editor UI: root menu shows a TagInput for “Mouse bindings” with a tooltip explaining the syntax (no capture UI yet).
+- Backend layering:
+  - macOS native addon exposes `startMouseHook/stopMouseHook` via CGEventTap (listen‑only for now) and emits down/up with button/coords/mods.
+  - The macOS Backend normalizes a binding (e.g., `ctrl+right`) and emits a high‑level `mouseBinding` event. This is intentionally independent from keyboard shortcuts so other subsystems can consume it later (not just pie menus).
+  - The app listens for `mouseBinding` and currently routes it to `showMenu({ trigger: binding })` so menus can bind to these strings.
+- Menu selection matching:
+  - `chooseMenu()` now matches incoming triggers against `shortcut`, `shortcutID`, and `mouseBindings`.
+  - Base‑only fallback: a binding `right` will also match an incoming `ctrl+right`.
+- Robustness / migration: missing `mouseBindings` is treated as `[]` (no version bump).
+- Future: we can switch the tap to intercept mode (swallow RMB) with a passthrough policy; and add non‑menu consumers of `mouseBinding` (e.g., macro layers, context tools).
+
+This MVP aligns with the long‑term `triggers[]` design while remaining backward compatible today.
 
 ---
 

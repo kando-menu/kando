@@ -64,10 +64,19 @@ class Native : public Napi::Addon<Native> {
    */
   Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
 
+  /** Start/stop a global mouse hook and forward events to JS callback. */
+  void startMouseHook(const Napi::CallbackInfo& info);
+  void stopMouseHook(const Napi::CallbackInfo& info);
+
   // We have to keep track of the current modifier mask to be able to simulate key
   // presses.
   uint32_t mLeftModifierMask  = 0;
   uint32_t mRightModifierMask = 0;
+
+  // Mouse hook state
+  Napi::ThreadSafeFunction mMouseTSFN;
+  CFMachPortRef mEventTap = nullptr;
+  CFRunLoopSourceRef mRunLoopSource = nullptr;
 };
 
 #endif // NATIVE_HPP
