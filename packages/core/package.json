@@ -1,0 +1,24 @@
+{
+  "name": "@kando/core",
+  "version": "0.0.0",
+  "description": "Kando core types, schemata, math and input/gesture state machines (renderer-agnostic).",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "echo \"(placeholder)\"",
+    "dev": "echo \"(placeholder)\"",
+    "clean": "rimraf dist || true"
+  }
+}
+
+
