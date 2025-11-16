@@ -143,6 +143,12 @@ export class KandoApp {
       this.updateChecker.checkForUpdates();
     });
 
+    // Mouse bindings are layered and independent of keyboard shortcuts.
+    this.backend.on('mouseBinding', (binding: string) => {
+      this.showMenu({ trigger: binding });
+      this.updateChecker.checkForUpdates();
+    });
+
     // We ensure that there is always a menu available. If the user deletes all menus,
     // we create a new example menu when Kando is started the next time.
     if (this.menuSettings.get('menus').length === 0) {
@@ -864,6 +870,18 @@ export class KandoApp {
         message: error instanceof Error ? error.message : error,
         type: 'error',
       });
+    }
+
+    // Additionally, pass mouseBindings to the backend so macOS can bind mouse triggers.
+    try {
+      const bindings = this.menuSettings
+        .get('menus')
+        .flatMap((m) => (m as any).mouseBindings || [])
+        .filter((s: string) => s && s.length > 0);
+      await this.backend.bindMouseTriggers(bindings);
+    } catch (error) {
+      // Non-fatal; other backends may not implement this.
+      console.warn('bindMouseTriggers failed:', error);
     }
 
     this.bindingShortcuts = false;

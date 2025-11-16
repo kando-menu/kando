@@ -29,7 +29,6 @@
     "@electron-forge/maker-dmg": "^7.9.0",
     "@electron-forge/maker-rpm": "^7.9.0",
     "@electron-forge/maker-squirrel": "^7.9.0",
-    "@electron-forge/maker-zip": "^7.9.0",
     "@electron-forge/plugin-webpack": "^7.9.0",
     "@eslint/compat": "^1.4.0",
     "@eslint/js": "^9.37.0",
@@ -107,7 +106,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.45.0",
     "typescript-plugin-css-modules": "^5.2.0",
-    "zod": "^4.1.11",
+    "zod": "^3.25.76",
     "zundo": "^2.1.0",
     "zustand": "^5.0.8"
   }

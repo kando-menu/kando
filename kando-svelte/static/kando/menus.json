@@ -1,0 +1,1221 @@
+{
+  "version": "2.1.0",
+  "menus": [
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Example Menu",
+        "icon": "award_star",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "submenu",
+            "name": "Apps",
+            "icon": "apps",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "redirect",
+                "data": {
+                  "menu": ""
+                },
+                "name": "Redirect",
+                "icon": "redirect-item.svg",
+                "iconTheme": "kando"
+              },
+              {
+                "type": "submenu",
+                "data": {},
+                "name": "Submenu",
+                "icon": "submenu-item.svg",
+                "iconTheme": "kando",
+                "children": [
+                  {
+                    "type": "submenu",
+                    "data": {},
+                    "name": "Submenu",
+                    "icon": "submenu-item.svg",
+                    "iconTheme": "kando",
+                    "children": [
+                      {
+                        "type": "submenu",
+                        "data": {},
+                        "name": "Submenu",
+                        "icon": "submenu-item.svg",
+                        "iconTheme": "kando",
+                        "children": []
+                      },
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": ""
+                        },
+                        "name": "Paste Text",
+                        "icon": "text-item.svg",
+                        "iconTheme": "kando"
+                      },
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": ""
+                        },
+                        "name": "Paste Text",
+                        "icon": "text-item.svg",
+                        "iconTheme": "kando"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  }
+                ]
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "open -a Safari"
+                },
+                "name": "Safari",
+                "icon": "safari",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "open -a Mail"
+                },
+                "name": "E-Mail",
+                "icon": "mail",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "open -a Music"
+                },
+                "name": "Music",
+                "icon": "itunes",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "open -a Finder"
+                },
+                "name": "Finder",
+                "icon": "folder_shared",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "open -a Terminal"
+                },
+                "name": "Terminal",
+                "icon": "terminal",
+                "iconTheme": "material-symbols-rounded"
+              }
+            ]
+          },
+          {
+            "type": "redirect",
+            "data": {
+              "menu": "Compass"
+            },
+            "name": "Compass",
+            "icon": "menu",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "data": {
+              "command": "osascript -e 'tell application \"System Events\" to key code 124 using control down'"
+            },
+            "name": "Next Workspace",
+            "icon": "arrow_forward",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "submenu",
+            "name": "Clipboard",
+            "icon": "assignment",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "hotkey",
+                "data": {
+                  "hotkey": "MetaLeft+KeyV",
+                  "delayed": true
+                },
+                "name": "Paste",
+                "icon": "content_paste_go",
+                "iconTheme": "material-symbols-rounded",
+                "angle": 90
+              },
+              {
+                "type": "hotkey",
+                "data": {
+                  "hotkey": "MetaLeft+KeyC",
+                  "delayed": true
+                },
+                "name": "Copy",
+                "icon": "content_copy",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "hotkey",
+                "data": {
+                  "hotkey": "MetaLeft+KeyX",
+                  "delayed": true
+                },
+                "name": "Cut",
+                "icon": "cut",
+                "iconTheme": "material-symbols-rounded"
+              }
+            ]
+          },
+          {
+            "type": "submenu",
+            "name": "Audio",
+            "icon": "play_circle",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Music\" to next track'"
+                },
+                "name": "Next Track",
+                "icon": "skip_next",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Music\" to playpause'"
+                },
+                "name": "Play / Pause",
+                "icon": "play_pause",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Music\" to previous track'"
+                },
+                "name": "Previous Track",
+                "icon": "skip_previous",
+                "iconTheme": "material-symbols-rounded"
+              }
+            ]
+          },
+          {
+            "type": "submenu",
+            "name": "Windows",
+            "icon": "select_window",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"System Events\" to key code 126 using control down'"
+                },
+                "name": "Mission Control",
+                "icon": "select_window",
+                "iconTheme": "material-symbols-rounded",
+                "angle": 0
+              },
+              {
+                "type": "hotkey",
+                "data": {
+                  "hotkey": "ControlLeft+AltLeft+ArrowRight",
+                  "delayed": true
+                },
+                "name": "Tile Right",
+                "icon": "text_select_jump_to_end",
+                "iconTheme": "material-symbols-rounded",
+                "angle": 90
+              },
+              {
+                "type": "hotkey",
+                "data": {
+                  "hotkey": "MetaLeft+KeyW",
+                  "delayed": true
+                },
+                "name": "Close Window",
+                "icon": "cancel_presentation",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "hotkey",
+                "data": {
+                  "hotkey": "ControlLeft+AltLeft+ArrowLeft",
+                  "delayed": true
+                },
+                "name": "Tile Left",
+                "icon": "text_select_jump_to_beginning",
+                "iconTheme": "material-symbols-rounded",
+                "angle": 270
+              }
+            ]
+          },
+          {
+            "type": "command",
+            "data": {
+              "command": "osascript -e 'tell application \"System Events\" to key code 123 using control down'"
+            },
+            "name": "Previous Workspace",
+            "icon": "arrow_back",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "submenu",
+            "name": "Bookmarks",
+            "icon": "folder_special",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Finder\" to open (path to downloads folder as text)'"
+                },
+                "name": "Downloads",
+                "icon": "download",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Finder\" to open (path to movies folder as text)'"
+                },
+                "name": "Videos",
+                "icon": "video_camera_front",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Finder\" to open (path to pictures folder as text)'"
+                },
+                "name": "Pictures",
+                "icon": "imagesmode",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Finder\" to open (path to documents folder as text)'"
+                },
+                "name": "Docuexample-menu.bookmarks.documentsments",
+                "icon": "text_ad",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Finder\" to open (path to desktop folder as text)'"
+                },
+                "name": "Desktop",
+                "icon": "desktop_windows",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "open $HOME"
+                },
+                "name": "Home",
+                "icon": "home",
+                "iconTheme": "material-symbols-rounded"
+              },
+              {
+                "type": "command",
+                "data": {
+                  "command": "osascript -e 'tell application \"Finder\" to open (path to music folder as text)'"
+                },
+                "name": "Music",
+                "icon": "music_note",
+                "iconTheme": "material-symbols-rounded"
+              }
+            ]
+          }
+        ]
+      },
+      "shortcut": "Control+Alt+Space",
+      "shortcutID": "example-menu",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Deep",
+        "icon": "apps",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "submenu",
+            "data": {},
+            "name": "Submenu",
+            "icon": "submenu-item.svg",
+            "iconTheme": "kando",
+            "children": [
+              {
+                "type": "submenu",
+                "data": {},
+                "name": "Submenu",
+                "icon": "submenu-item.svg",
+                "iconTheme": "kando",
+                "children": [
+                  {
+                    "type": "submenu",
+                    "data": {},
+                    "name": "Submenu",
+                    "icon": "submenu-item.svg",
+                    "iconTheme": "kando",
+                    "children": [
+                      {
+                        "type": "submenu",
+                        "data": {},
+                        "name": "Submenu",
+                        "icon": "submenu-item.svg",
+                        "iconTheme": "kando",
+                        "children": [
+                          {
+                            "type": "submenu",
+                            "data": {},
+                            "name": "Submenu",
+                            "icon": "submenu-item.svg",
+                            "iconTheme": "kando",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "data": {
+                  "text": ""
+                },
+                "name": "Paste Text",
+                "icon": "text-item.svg",
+                "iconTheme": "kando"
+              },
+              {
+                "type": "text",
+                "data": {
+                  "text": ""
+                },
+                "name": "Paste Text",
+                "icon": "text-item.svg",
+                "iconTheme": "kando"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "data": {
+              "text": ""
+            },
+            "name": "Paste Text",
+            "icon": "text-item.svg",
+            "iconTheme": "kando"
+          },
+          {
+            "type": "submenu",
+            "data": {},
+            "name": "Submenu",
+            "icon": "submenu-item.svg",
+            "iconTheme": "kando",
+            "children": [
+              {
+                "type": "text",
+                "data": {
+                  "text": ""
+                },
+                "name": "Paste Text",
+                "icon": "text-item.svg",
+                "iconTheme": "kando"
+              },
+              {
+                "type": "submenu",
+                "data": {},
+                "name": "Submenu",
+                "icon": "submenu-item.svg",
+                "iconTheme": "kando",
+                "children": [
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  },
+                  {
+                    "type": "submenu",
+                    "data": {},
+                    "name": "Submenu",
+                    "icon": "submenu-item.svg",
+                    "iconTheme": "kando",
+                    "children": []
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": ""
+                    },
+                    "name": "Paste Text",
+                    "icon": "text-item.svg",
+                    "iconTheme": "kando"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "data": {
+                  "text": ""
+                },
+                "name": "Paste Text",
+                "icon": "text-item.svg",
+                "iconTheme": "kando"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "data": {
+              "text": ""
+            },
+            "name": "Paste Text",
+            "icon": "text-item.svg",
+            "iconTheme": "kando"
+          }
+        ]
+      },
+      "shortcut": "Control+Space",
+      "shortcutID": "",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "conditions": {
+        "appName": "Cursor"
+      },
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Holding Menu",
+        "icon": "award_star",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "submenu",
+            "name": "Web Links",
+            "icon": "public",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://www.google.com"
+                },
+                "name": "Google",
+                "icon": "google",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://github.com/kando-menu/kando"
+                },
+                "name": "Kando on GitHub",
+                "icon": "github",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://ko-fi.com/schneegans"
+                },
+                "name": "Kando on Ko-fi",
+                "icon": "kofi",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://www.youtube.com/@simonschneegans"
+                },
+                "name": "Kando on YouTube",
+                "icon": "youtube",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://discord.gg/hZwbVSDkhy"
+                },
+                "name": "Kando on Discord",
+                "icon": "discord",
+                "iconTheme": "simple-icons"
+              }
+            ]
+          },
+          {
+            "type": "submenu",
+            "name": "Web Links",
+            "icon": "public",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://www.google.com"
+                },
+                "name": "Google",
+                "icon": "google",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://github.com/kando-menu/kando"
+                },
+                "name": "Kando on GitHub",
+                "icon": "github",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://ko-fi.com/schneegans"
+                },
+                "name": "Kando on Ko-fi",
+                "icon": "kofi",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://www.youtube.com/@simonschneegans"
+                },
+                "name": "Kando on YouTube",
+                "icon": "youtube",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://discord.gg/hZwbVSDkhy"
+                },
+                "name": "Kando on Discord",
+                "icon": "discord",
+                "iconTheme": "simple-icons"
+              }
+            ]
+          },
+          {
+            "type": "submenu",
+            "name": "Web Links",
+            "icon": "public",
+            "iconTheme": "material-symbols-rounded",
+            "children": [
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://www.google.com"
+                },
+                "name": "Google",
+                "icon": "google",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://github.com/kando-menu/kando"
+                },
+                "name": "Kando on GitHub",
+                "icon": "github",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://ko-fi.com/schneegans"
+                },
+                "name": "Kando on Ko-fi",
+                "icon": "kofi",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://www.youtube.com/@simonschneegans"
+                },
+                "name": "Kando on YouTube",
+                "icon": "youtube",
+                "iconTheme": "simple-icons"
+              },
+              {
+                "type": "uri",
+                "data": {
+                  "uri": "https://discord.gg/hZwbVSDkhy"
+                },
+                "name": "Kando on Discord",
+                "icon": "discord",
+                "iconTheme": "simple-icons"
+              }
+            ]
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "example-menu",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Compass",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "North",
+            "icon": "north",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "North-East",
+            "icon": "north_east",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "East",
+            "icon": "east",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "South-East",
+            "icon": "south_east",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "South",
+            "icon": "south",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "South-West",
+            "icon": "south_west",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "West",
+            "icon": "west",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "North-West",
+            "icon": "north_west",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "Control+`",
+      "shortcutID": "compass",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Boolean",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "True",
+            "icon": "north",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "False",
+            "icon": "south",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "boolean",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Quad",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "quad",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Octal",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "octal",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Digital",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "8",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "9",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "digital",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Clock",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "12",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "8",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "9",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "10",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "11",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "clock",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    },
+    {
+      "root": {
+        "type": "submenu",
+        "name": "Hex",
+        "icon": "menu",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "0",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "1",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "2",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "3",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "4",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "5",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "6",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "7",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "8",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "9",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "10",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "11",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "12",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "13",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "14",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          },
+          {
+            "type": "command",
+            "name": "15",
+            "icon": "radio_button_unchecked",
+            "iconTheme": "material-symbols-rounded"
+          }
+        ]
+      },
+      "shortcut": "",
+      "shortcutID": "hex",
+      "centered": false,
+      "anchored": false,
+      "hoverMode": false,
+      "tags": []
+    }
+  ],
+  "collections": [
+    {
+      "name": "Favorites",
+      "icon": "favorite",
+      "iconTheme": "material-symbols-rounded",
+      "tags": [
+        "favs"
+      ]
+    }
+  ]
+}

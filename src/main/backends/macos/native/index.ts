@@ -43,6 +43,12 @@ export type Native = {
     id: string;
     base64Icon: string;
   }[];
+
+  /** Start a global mouse hook; callback receives down/up, button, coords, and modifiers. */
+  startMouseHook?(cb: (evt: { type: 'down'|'up'; button: 'left'|'middle'|'right'|'x1'|'x2'; x: number; y: number; mods: { ctrl: boolean; alt: boolean; shift: boolean; meta: boolean } }) => void): void;
+
+  /** Stop the global mouse hook, if running. */
+  stopMouseHook?(): void;
 };
 
 const native: Native = require('./../../../../../build/Release/NativeMacOS.node');

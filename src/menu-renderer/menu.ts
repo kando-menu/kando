@@ -152,6 +152,15 @@ export class Menu extends EventEmitter {
     this.clear();
 
     this.showMenuOptions = showMenuOptions;
+    try {
+      console.log('[Kando:Menu.show] opts', {
+        windowSize: this.showMenuOptions?.windowSize,
+        mousePosition: this.showMenuOptions?.mousePosition,
+        centeredMode: this.showMenuOptions?.centeredMode,
+        anchoredMode: this.showMenuOptions?.anchoredMode,
+        hoverMode: this.showMenuOptions?.hoverMode
+      });
+    } catch {}
 
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
@@ -184,7 +193,9 @@ export class Menu extends EventEmitter {
     this.setupPaths(this.root);
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
-    this.selectItem(this.root, this.getInitialMenuPosition());
+    const initial = this.getInitialMenuPosition();
+    try { console.log('[Kando:Menu.show] initialCenter', initial); } catch {}
+    this.selectItem(this.root, initial);
 
     // If required, move the pointer to the center of the menu.
     if (this.settings.warpMouse && showMenuOptions.centeredMode) {
@@ -279,6 +290,7 @@ export class Menu extends EventEmitter {
    * called if nothing is selected but the menu should be closed.
    */
   public cancel() {
+    try { console.log('[Kando:Menu.cancel]'); } catch {}
     if (!this.hideTimeout) {
       this.soundTheme.playSound(SoundType.eCloseMenu);
       this.emit('cancel');
@@ -306,6 +318,7 @@ export class Menu extends EventEmitter {
     };
 
     const onSelection = (coords: Vec2, type: SelectionType) => {
+      try { console.log('[Kando:Menu.onSelection]', { coords, type }); } catch {}
       // Ignore all input if the menu is in the process of hiding.
       if (this.container.classList.contains('hidden')) {
         return;

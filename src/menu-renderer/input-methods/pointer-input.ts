@@ -110,6 +110,7 @@ export class PointerInput extends InputMethod {
 
   /** @inheritdoc */
   public setCurrentCenter(center: Vec2, radius: number) {
+    try { console.log('[Kando:Pointer.setCurrentCenter]', { center, radius }); } catch {}
     this.update(center, center, this.buttonState);
     this.gestureDetector.reset();
     this.gestureDetector.onMotionEvent(center);
@@ -125,6 +126,7 @@ export class PointerInput extends InputMethod {
    * think it's not an issue.
    */
   public ignoreNextMotionEvents() {
+    try { console.log('[Kando:Pointer.ignoreNextMotionEvents] set=2'); } catch {}
     this.ignoreMotionEvents = 2;
   }
 
@@ -133,6 +135,7 @@ export class PointerInput extends InputMethod {
    * useful if the menu is not opened under the mouse pointer.
    */
   public deferTurboMode() {
+    try { console.log('[Kando:Pointer.deferTurboMode]'); } catch {}
     this.deferredTurboMode = true;
   }
 
@@ -142,6 +145,7 @@ export class PointerInput extends InputMethod {
    * @param event The mouse or touch event.
    */
   public onMotionEvent(event: MouseEvent | TouchEvent) {
+    try { console.log('[Kando:Pointer.motion]', event instanceof MouseEvent ? { x: event.clientX, y: event.clientY, buttons: (event as MouseEvent).buttons } : { x: event.touches?.[0]?.clientX, y: event.touches?.[0]?.clientY }); } catch {}
     event.preventDefault();
     event.stopPropagation();
 
@@ -210,6 +214,7 @@ export class PointerInput extends InputMethod {
    * @param event The mouse or touch event.
    */
   public onPointerDownEvent(event: MouseEvent | TouchEvent) {
+    try { console.log('[Kando:Pointer.down]', event instanceof MouseEvent ? { x: event.clientX, y: event.clientY, button: (event as MouseEvent).button } : { x: event.touches?.[0]?.clientX, y: event.touches?.[0]?.clientY }); } catch {}
     event.preventDefault();
     event.stopPropagation();
 
@@ -249,17 +254,20 @@ export class PointerInput extends InputMethod {
    * @param event The mouse or touch event.
    */
   public onPointerUpEvent(event: MouseEvent | TouchEvent) {
+    try { console.log('[Kando:Pointer.up]', event instanceof MouseEvent ? { x: event.clientX, y: event.clientY, button: (event as MouseEvent).button } : { x: event.changedTouches?.[0]?.clientX, y: event.changedTouches?.[0]?.clientY }); } catch {}
     event.preventDefault();
     event.stopPropagation();
 
     this.gestureDetector.reset();
 
     const clickSelection = this.buttonState === ButtonState.eClicked;
+    try { console.log('[Kando:Pointer.up:selection-check]', { clickSelection, buttonState: this.buttonState }); } catch {}
 
     // Do not trigger marking-mode selections on the center item.
     const markingModeSelection =
       this.buttonState === ButtonState.eDragged &&
       math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
+    try { console.log('[Kando:Pointer.up:marking-check]', { markingModeSelection, centerRadius: this.centerRadius }); } catch {}
     if (clickSelection || markingModeSelection) {
       this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
     }

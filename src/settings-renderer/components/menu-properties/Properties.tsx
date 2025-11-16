@@ -44,10 +44,12 @@ export default function Properties() {
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const [menuTags, setMenuTags] = React.useState([]);
+  const [mouseBindings, setMouseBindings] = React.useState<string[]>([]);
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
     setMenuTags(menus[selectedMenu]?.tags || []);
+    setMouseBindings((menus[selectedMenu] as any)?.mouseBindings || []);
   }, [selectedMenu, menus]);
 
   if (selectedMenu === -1 || selectedMenu >= menus.length) {
@@ -140,6 +142,25 @@ export default function Properties() {
             {
               // Show the hotkey selector for the root menu.
               isRoot ? getShortcutPicker() : null
+            }
+            {
+              // Mouse bindings input (simple strings like 'right', 'ctrl+right').
+              isRoot ? (
+                <TagInput
+                  info={
+                    'Bind this menu to mouse buttons. Use values like right, middle, left, x1, x2 or with modifiers: ctrl+right, alt+right, shift+right, meta+right.'
+                  }
+                  label={'Mouse bindings'}
+                  tags={mouseBindings}
+                  onChange={(newBindings) => {
+                    editMenu(selectedMenu, (menu) => {
+                      (menu as any).mouseBindings = newBindings;
+                      return menu;
+                    });
+                    setMouseBindings(newBindings as string[]);
+                  }}
+                />
+              ) : null
             }
             {
               // If the selected item is the root of the menu, we show the tag editor.

@@ -1,0 +1,160 @@
+Trying with latest versions of:
+
+node: 20.10.0
+npm: 10.2.3
+
+nvm install 20.10.0
+
+Kando for Snap AR Spectacles / Lens Studio!
+https://ar.snap.com/lens-studio
+
+submenus with links back to the parent menu
+kando/src/renderer/math/math.ts
+
+/**
+ * This method receives an array of objects, each representing an item in a menu level.
+ * For each item it computes an angle defining the direction in which the item should be
+ * rendered. The angles are returned in an array (of the same length as the input array).
+ * If an item in the input array already has an 'angle' property, this is considered a
+ * fixed angle and all others are distributed more ore less evenly around. This method
+ * also reserves the required angular space for the back navigation link to the parent
+ * item (if given). Angles in items are always in degrees, 0° is on the top, 90° on the
+ * right, 180° on the bottom and so on. Fixed input angles must be monotonically
+ * increasing. If this is not the case, the smaller angle is ignored.
+ *
+ * @param items The Items for which the angles should be computed. They may already have
+ *   an angle property. If so, this is considered a fixed angle.
+ * @param parentAngle The angle of the parent item. If given, there will be some reserved
+ *   space.
+ * @returns An array of angles in degrees.
+ */
+
+How about the back links only occupy the "inner radius" of the pie
+menu, so you can still put a normal item in the same direction as
+"back", but you just have to move out further to select it, because
+the "back" button has a max radius (i.e. inside the menu label radius).
+
+Or the back link could be the outer radius segment instead of the
+inner radius segment.
+
+This could be a general purpose way of "stacking" multipl pie menu
+items in the same direction, each occupying a radius interval arc. And
+outer arcs can double and further increase the number of directional
+items.
+
+Think of them like segments of orbitals for electrons.
+
+Slices / Petals? Multiple petals per slice.
+
+ChatGPT suggests:
+
+For naming the radial segments in a pie menu, especially when
+considering stacking multiple items in the same direction with
+different radii, you could use terms like "Orbital Layers" or "Radial
+Tiers." Each tier or layer can represent a different level of menu
+items, with the innermost being the back links or primary options, and
+the outer layers for additional or secondary options. The outermost
+layer that extends to the edge of the screen could be called the
+"Peripheral Tier" or "Boundary Layer." These terms can effectively
+convey the idea of multiple, concentric segments within a single
+directional slice of the pie menu.
+
+Each slice has a tierSlices property, an array of integers, defining
+the number of directional slices each layer has. The top level pie
+menu typically has a subtend of 360 degrees (although it could be cut
+in half or quarter at the screen edge or corner). The first layer is
+usually 1 (if there is only one item), 2, 4, 8, or even 12.
+
+tierSlices = [8, 1, 2, 4, 8]
+
+That is an 8 slice pie menu that can hold 8 * (1 + 2 + 4 + 8) = 120
+items.
+
+The narrowest subtend outer layers extend to the screen edge, making
+them easier to select than if their outer radius was limited.
+
+The layout algorithm could normalize the area by adjusting the inner
+and outer radius of each layer, so all but the big outer items had the
+same area.
+
+----
+
+pie menu layout and editor
+
+the layout algorithms should be in the editor, and you should be able
+to plug new ones in, and select different layout and tracking and
+rendering policies per pie, slice, and item. You can select a high
+level style in the editor, and it can apply it recursively to the
+whole menu tree, stashing default values in the objects. Then you can
+edit each pie, slice and item to override and customize those
+parameters. Each policy might have its own parameters, but there is a
+set of standard shared parameters too.
+
+Layout, tracking, and redering policies can declare their parameters
+in a way that the editor can automatically generate editing dialogs
+and direct manipulation interfaces for them.
+
+Use pie menus to edit pie menus!
+
+the MenuNode Path is like /1/2/3, which is a numeric path through the user interface.
+
+It might also be nice to support paths with identifiers instead of (or addition to) 
+paths with numbers, since the user could change the numbers by editing the menus.
+
+So each node would have its own id, which did not have to be globally
+unique, just local to the menu. (what happens when items have the same
+id? barf? stack them together? give them each a unique index?)
+
+You might also want to arrange items in their own semantic hierarchy,
+and give items an id like blender.file.open, to reflect the command
+structure instead of the user interface structure. Those names would
+be unique by definition.
+
+When you have a menu bound to a keystroke you want to use for other purposes,
+double pressing the keystroke should send that keystroke through to the
+current focus. Like telnet!
+
+https://wonderingminstrels.blogspot.com/2004/01/telnet-song-guy-l-steele-jr.html
+
+Implement sharing mouse and keyboard across different devices like synergy.
+Pop up menu of all screens (thumbnames of screens), drag mouse to position and screen to "warp" there!
+
+Logitech haptic feedback plugin api, and ring menu, easy switch to devices.
+https://www.youtube.com/watch?v=id_7aFaMYlE
+
+https://logitech.github.io/actions-sdk-docs/
+
+The new "Redirect" menu item type does not support gesturing into and back from the indirect menu.
+The menu rendering code renders the entire menu tree, but not including recursing down redirect items. 
+Theoretically a redirect menu could refer to itself (i.e. to enter a series of digits) but eagerly rendering recursive redirected menus would explode. 
+But if the menu rendering code was lazy it could support deep and recursive submens (arbtirary graphs).
+Lazy submenu dom generation.
+Items with dynamically generated submenus (need to generate them to know how many there are to draw the numbs of the item before it's selected).
+
+Why not represent the parent links as actual items? Right now they are handled specially.
+
+Absolutely placed items (not associated with slices, but just defined by their area). 
+Put a small parent link in the menu center (but not under the absolute center, maybe offset in the direction of the parent but sitting on the edge of the center circle) instead of consuming a whole slice for the parent link.
+
+Absolute label target area based items would be higher priority than slices and could be placed anywhere, inside or outside the inactive enver, or at screen corners like the settings button. 
+Generalize the idea of the settings button so any menu can have screen corner buttons.
+Corner targets are justifiable since screen corners are easily jump-to-able (see Tog's writings about that).
+Even quarter sub pie menus on the corners. 
+
+How can we support the idea of "slices" that contain "items", including empty slices with no items, and slices with multiple items (pull-out).
+
+Support fixing the number slices in a menu before putting any items in. 
+The parent link will completely consume the slice that's closes to the angle back to the parent, but you could even "pull out" to grand*x parents). 
+Support submenus with a "how many degrees the submenu should encompass" parameter like 120deg or so (or alternatively "how many degrees the parent item should encompass"), like the way logitech actions circle submenus look.
+
+That could also support half and quarter pies for screen edges and corners. 
+
+Here's a way to implement "slices" in kando without changing its model, simply extending it with a new kind of item, like "list item". The list can contain zero or more other items. 
+
+So the editor can encourage 8 item menus by creating a new menu with 8 empty list items, and then the user can drag other items into those. 
+
+Will have to be integrated into the tracking code, for "pull out" item selection (and linear slider functionality with one or zero items).
+
+Direct manipulation pie menu editing.
+As with HyperLook, the editor is an optional plug-in that you can enable by toggling "edit mode", so you don't have to include it in runtime read-only app. It intercepts the normal mouse tracking and lets you drag and drop items and edit every aspect of the pie menus, drawing an overlay of "gadgets" for adjusting parameters, inserting and deleting, resizing, popping up editing menus, etc. It could also enable editing theme parameters like color, layout, measurements, fonts, icons, etc.
+

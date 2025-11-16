@@ -85,6 +85,7 @@ export class GestureDetector extends EventEmitter {
    * @param event
    */
   public onMotionEvent(coords: Vec2): void {
+    try { console.log('[Kando:Gesture.onMotion]', coords); } catch {}
     if (this.strokeStart === null) {
       // It's the first event of this gesture, so we store the current mouse position as
       // start and end. There is nothing more to be done.
@@ -108,6 +109,7 @@ export class GestureDetector extends EventEmitter {
             y: this.strokeStart.y + (strokeDir.y / strokeLength) * minStrokeLength,
           };
 
+          try { console.log('[Kando:Gesture.fixed-length-select]', { idealCoords, minStrokeLength }); } catch {}
           this.reset(idealCoords);
           this.emit('selection', idealCoords);
         }
@@ -138,6 +140,7 @@ export class GestureDetector extends EventEmitter {
           //  Emit the selection events if it exceeds the configured threshold. We pass
           //  the coordinates of E for the selection event.
           if ((angle * 180) / Math.PI > this.minStrokeAngle) {
+            try { console.log('[Kando:Gesture.corner-select]', { angleDeg: (angle * 180) / Math.PI, strokeEnd: this.strokeEnd }); } catch {}
             this.reset(this.strokeEnd);
             this.emit('selection', this.strokeEnd);
             return;
@@ -153,6 +156,7 @@ export class GestureDetector extends EventEmitter {
         // also lead to selections.
         if (this.timeout === null) {
           this.timeout = setTimeout(() => {
+            try { console.log('[Kando:Gesture.pause-select]', coords); } catch {}
             this.reset(coords);
             this.emit('selection', coords);
           }, this.pauseTimeout);
@@ -173,6 +177,7 @@ export class GestureDetector extends EventEmitter {
    *   provide the last corner of the gesture, e.g. the start of the next stroke.
    */
   public reset(lastCorner: Vec2 = null): void {
+    try { console.log('[Kando:Gesture.reset]', { lastCorner }); } catch {}
     if (this.timeout !== null) {
       clearTimeout(this.timeout);
       this.timeout = null;

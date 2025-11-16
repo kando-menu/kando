@@ -87,12 +87,28 @@ Native::Native(Napi::Env env, Napi::Object exports) {
           InstanceMethod("simulateKey", &Native::simulateKey),
           InstanceMethod("getActiveWindow", &Native::getActiveWindow),
           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
+          InstanceMethod("startMouseHook", &Native::startMouseHook),
+          InstanceMethod("stopMouseHook", &Native::stopMouseHook),
       });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 Native::~Native() {
+  // Ensure hook is stopped
+  if (mRunLoopSource) {
+    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), mRunLoopSource, kCFRunLoopCommonModes);
+    CFRelease(mRunLoopSource);
+    mRunLoopSource = nullptr;
+  }
+  if (mEventTap) {
+    CFMachPortInvalidate(mEventTap);
+    CFRelease(mEventTap);
+    mEventTap = nullptr;
+  }
+  if (mMouseTSFN) {
+    mMouseTSFN.Release();
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +250,120 @@ Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
   }
 
   return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+static CGEventRef MouseTapCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon) {
+  Native* self = (Native*)refcon;
+  if (!self) return event;
+  if (type != kCGEventLeftMouseDown && type != kCGEventLeftMouseUp &&
+      type != kCGEventRightMouseDown && type != kCGEventRightMouseUp &&
+      type != kCGEventOtherMouseDown && type != kCGEventOtherMouseUp) {
+    return event;
+  }
+
+  CGPoint pos = CGEventGetLocation(event);
+  // Modifiers
+  CGEventFlags flags = CGEventGetFlags(event);
+  bool ctrl = (flags & kCGEventFlagMaskControl) != 0;
+  bool alt  = (flags & kCGEventFlagMaskAlternate) != 0;
+  bool shift= (flags & kCGEventFlagMaskShift) != 0;
+  bool meta = (flags & kCGEventFlagMaskCommand) != 0;
+
+  // Button mapping
+  int64_t number = CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber);
+  const char* button = "left";
+  if (type == kCGEventRightMouseDown || type == kCGEventRightMouseUp) button = "right";
+  else if (type == kCGEventOtherMouseDown || type == kCGEventOtherMouseUp) {
+    if (number == 1) button = "middle";
+    else if (number == 3) button = "x1";
+    else if (number == 4) button = "x2";
+    else button = "middle";
+  } else if (type == kCGEventLeftMouseDown || type == kCGEventLeftMouseUp) {
+    button = "left";
+  }
+
+  const char* phase = (type == kCGEventLeftMouseDown || type == kCGEventRightMouseDown || type == kCGEventOtherMouseDown) ? "down" : "up";
+
+  if (self->mMouseTSFN) {
+    // Copy values to heap for TSFN
+    auto x = pos.x; auto y = pos.y;
+    std::string btn(button);
+    std::string ph(phase);
+    self->mMouseTSFN.BlockingCall([x, y, btn, ph, ctrl, alt, shift, meta](Napi::Env env, Napi::Function jsCallback) {
+      Napi::Object mods = Napi::Object::New(env);
+      mods.Set("ctrl", Napi::Boolean::New(env, ctrl));
+      mods.Set("alt", Napi::Boolean::New(env, alt));
+      mods.Set("shift", Napi::Boolean::New(env, shift));
+      mods.Set("meta", Napi::Boolean::New(env, meta));
+      Napi::Object evt = Napi::Object::New(env);
+      evt.Set("type", Napi::String::New(env, ph));
+      evt.Set("button", Napi::String::New(env, btn));
+      evt.Set("x", Napi::Number::New(env, x));
+      evt.Set("y", Napi::Number::New(env, y));
+      evt.Set("mods", mods);
+      jsCallback.Call({ evt });
+    });
+  }
+
+  return event; // do not swallow
+}
+
+void Native::startMouseHook(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1 || !info[0].IsFunction()) {
+    Napi::TypeError::New(env, "Callback function expected").ThrowAsJavaScriptException();
+    return;
+  }
+
+  if (mMouseTSFN) {
+    // Already started; replace callback
+    mMouseTSFN.Release();
+  }
+  mMouseTSFN = Napi::ThreadSafeFunction::New(env, info[0].As<Napi::Function>(), "MouseHook", 0, 1);
+
+  if (mEventTap) return; // already active
+
+  if (!CGRequestPostEventAccess()) {
+    Napi::Error::New(env, "Please give accessibility permissions to Kando!").ThrowAsJavaScriptException();
+    return;
+  }
+
+  mEventTap = CGEventTapCreate(kCGHIDEventTap,
+                               kCGHeadInsertEventTap,
+                               kCGEventTapOptionListenOnly,
+                               CGEventMaskBit(kCGEventLeftMouseDown) |
+                                 CGEventMaskBit(kCGEventLeftMouseUp) |
+                                 CGEventMaskBit(kCGEventRightMouseDown) |
+                                 CGEventMaskBit(kCGEventRightMouseUp) |
+                                 CGEventMaskBit(kCGEventOtherMouseDown) |
+                                 CGEventMaskBit(kCGEventOtherMouseUp),
+                               MouseTapCallback,
+                               this);
+  if (!mEventTap) {
+    Napi::Error::New(env, "Failed to create event tap").ThrowAsJavaScriptException();
+    return;
+  }
+  mRunLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mEventTap, 0);
+  CFRunLoopAddSource(CFRunLoopGetCurrent(), mRunLoopSource, kCFRunLoopCommonModes);
+  CGEventTapEnable(mEventTap, true);
+}
+
+void Native::stopMouseHook(const Napi::CallbackInfo& info) {
+  if (mRunLoopSource) {
+    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), mRunLoopSource, kCFRunLoopCommonModes);
+    CFRelease(mRunLoopSource);
+    mRunLoopSource = nullptr;
+  }
+  if (mEventTap) {
+    CFMachPortInvalidate(mEventTap);
+    CFRelease(mEventTap);
+    mEventTap = nullptr;
+  }
+  if (mMouseTSFN) {
+    mMouseTSFN.Release();
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

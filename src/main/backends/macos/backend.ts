@@ -31,6 +31,10 @@ export class MacosBackend extends Backend {
    */
   private systemIcons: Map<string, string> = new Map();
 
+  /** Currently bound mouse trigger IDs like 'mouse:right' or 'ctrl+mouse:right'. */
+  private mouseTriggerIds: Set<string> = new Set();
+  private mouseHookActive = false;
+
   /**
    * On macOS, the window type is set to 'panel'. This makes sure that the window is
    * always on top of other windows and that it is shown on all workspaces.
@@ -182,6 +186,47 @@ export class MacosBackend extends Backend {
       native.movePointer(dx, dy);
     } catch (e) {
       console.error('Failed to move mouse pointer: ' + e.message);
+    }
+  }
+
+  /** Bind macOS mouse triggers based on configured mouseBindings (e.g., 'right', 'ctrl+right'). */
+  public override async bindMouseTriggers(ids: string[]): Promise<void> {
+    const desired = new Set(ids.filter((id) => typeof id === 'string'));
+
+    // If no mouse triggers remain, stop hook if running.
+    if (desired.size === 0) {
+      this.mouseTriggerIds.clear();
+      if (this.mouseHookActive) {
+        try { native.stopMouseHook?.(); } catch {}
+        this.mouseHookActive = false;
+      }
+      return;
+    }
+
+    this.mouseTriggerIds = desired;
+
+    if (!this.mouseHookActive) {
+      try {
+        native.startMouseHook?.((evt: { type: 'down'|'up'; button: 'left'|'middle'|'right'|'x1'|'x2'; x: number; y: number; mods: { ctrl: boolean; alt: boolean; shift: boolean; meta: boolean } }) => {
+          if (evt.type !== 'down') return; // open on down
+          // Build normalized id: 'ctrl+alt+right' (mods in fixed order)
+          const parts: string[] = [];
+          if (evt.mods.ctrl) parts.push('ctrl');
+          if (evt.mods.alt) parts.push('alt');
+          if (evt.mods.shift) parts.push('shift');
+          if (evt.mods.meta) parts.push('meta');
+          const base = evt.button as string;
+          parts.push(base);
+          const id = parts.join('+');
+          if (this.mouseTriggerIds.has(id) || this.mouseTriggerIds.has(base)) {
+            // Emit mouse binding as its own event; app decides what to do (e.g., show menu).
+            this.onMouseBinding(id, { x: evt.x, y: evt.y, mods: evt.mods, base });
+          }
+        });
+        this.mouseHookActive = true;
+      } catch (e) {
+        console.error('Failed to start macOS mouse hook:', e);
+      }
     }
   }
 
