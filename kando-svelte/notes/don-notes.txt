@@ -154,3 +154,7 @@ Here's a way to implement "slices" in kando without changing its model, simply e
 So the editor can encourage 8 item menus by creating a new menu with 8 empty list items, and then the user can drag other items into those. 
 
 Will have to be integrated into the tracking code, for "pull out" item selection (and linear slider functionality with one or zero items).
+
+Direct manipulation pie menu editing.
+As with HyperLook, the editor is an optional plug-in that you can enable by toggling "edit mode", so you don't have to include it in runtime read-only app. It intercepts the normal mouse tracking and lets you drag and drop items and edit every aspect of the pie menus, drawing an overlay of "gadgets" for adjusting parameters, inserting and deleting, resizing, popping up editing menus, etc. It could also enable editing theme parameters like color, layout, measurements, fonts, icons, etc.
+
