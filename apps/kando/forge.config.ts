@@ -18,7 +18,7 @@ const makerSquirrel = new MakerSquirrel({
   loadingGif: 'assets/installer/loading.gif',
   setupIcon: 'assets/icons/icon.ico',
   iconUrl:
-    'https://raw.githubusercontent.com/kando-menu/kando/main/assets/icons/icon.ico',
+    'https://raw.githubusercontent.com/kando-menu/kando/main/apps/kando/assets/icons/icon.ico',
 });
 
 // This is used on all platforms to create a ZIP archive of the app. See the link below for the
