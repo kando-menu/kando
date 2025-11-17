@@ -64,6 +64,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-xo-react": "^0.28.0",
     "eslint-plugin-prettier": "^5.5.4",
+    "events": "^3.3.0",
     "globals": "^16.4.0",
     "howler": "^2.2.4",
     "i18next": "^25.5.3",

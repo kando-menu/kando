@@ -28,5 +28,8 @@ export const rendererConfig: Configuration = {
   externals: ignores,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
+    fallback: {
+      events: require.resolve('events/'),
+    },
   },
 };
