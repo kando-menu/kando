@@ -1,0 +1,8 @@
+{
+  "name": "kando-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
+}
