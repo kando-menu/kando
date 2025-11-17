@@ -60,23 +60,23 @@
 
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot01.png</image>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/main/apps/kando/appstream/screenshots/screenshot01.png</image>
             <caption>Kando's example menu</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot02.png</image>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/main/apps/kando/appstream/screenshots/screenshot02.png</image>
             <caption>An example submenu to control your media player</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot03.png</image>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/main/apps/kando/appstream/screenshots/screenshot03.png</image>
             <caption>Kando using a Minecraft-style theme</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot04.png</image>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/main/apps/kando/appstream/screenshots/screenshot04.png</image>
             <caption>A custom submenu for Firefox</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/kando-menu/kando/7fa98818186fd7f9af4446408b5ba1d5d6cb6570/appstream/screenshots/screenshot05.png</image>
+            <image>https://raw.githubusercontent.com/kando-menu/kando/main/apps/kando/appstream/screenshots/screenshot05.png</image>
             <caption>Kando using the included Neon-Lights theme</caption>
         </screenshot>
     </screenshots>
