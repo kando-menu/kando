@@ -111,5 +111,8 @@
     "zod": "^4.1.11",
     "zundo": "^2.1.0",
     "zustand": "^5.0.8"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.2"
   }
 }

@@ -4,14 +4,17 @@ pnpm-debug.log
 .pnpm-debug.log*
 
 # builds
-dist/
-build/
+**/dist/
+**/build/
 coverage/
 *.tgz
 
 # app-specific
 apps/kando/.webpack/
 apps/kando/build/
+apps/kando/Release/
+.webpack/
+**/.svelte-kit/
 
 # macOS
 .DS_Store
