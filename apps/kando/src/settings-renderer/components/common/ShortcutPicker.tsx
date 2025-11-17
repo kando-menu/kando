@@ -13,7 +13,7 @@ import i18next from 'i18next';
 import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
-import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import { fixKeyCodeCase, isKnownKeyCode } from '@kando/core/key-codes';
 import { Button, SettingsRow } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 import type { Configuration } from 'webpack';
+import path from 'path';
 
 import { rules } from './webpack.rules';
 import { ignores } from './webpack.ignores';
@@ -19,5 +20,8 @@ export const mainConfig: Configuration = {
   externals: ignores,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+    alias: {
+      '@kando/core': path.resolve(__dirname, '../..', 'packages/core/src'),
+    },
   },
 };

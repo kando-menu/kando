@@ -14,13 +14,7 @@ import { produce } from 'immer';
 import { temporal } from 'zundo';
 import lodash from 'lodash';
 
-import {
-  MenuSettings,
-  MENU_SETTINGS_SCHEMA,
-  MenuCollection,
-  Menu,
-  MenuItem,
-} from '../../common';
+import { MenuSettings, MENU_SETTINGS_SCHEMA, MenuCollection, Menu, MenuItem } from '@kando/core/settings-schemata';
 
 // The menu settings state object allows access, modification, and change notification of
 // the settings stored in the user's menus.json. It uses a temporal store. That means that

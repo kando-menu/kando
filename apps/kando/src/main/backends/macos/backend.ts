@@ -14,7 +14,7 @@ import { isexe } from 'isexe';
 import { native } from './native';
 import { Backend } from '../backend';
 import { KeySequence, AppDescription, MenuItem } from '../../../common';
-import { mapKeys } from '../../../common/key-codes';
+import { mapKeys } from '@kando/core/key-codes';
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 
 export class MacosBackend extends Backend {

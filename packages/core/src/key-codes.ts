@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { KeySequence } from '.';
+import type { KeySequence } from './types';
 
 /**
  * This function maps a sequence of key names to platform specific key codes.
@@ -1532,3 +1532,5 @@ const KEY_CODES: Map<string, KeyMapping> = new Map([
     },
   ],
 ]);
+
+

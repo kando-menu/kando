@@ -15,10 +15,15 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "echo \"(placeholder)\"",
-    "dev": "echo \"(placeholder)\"",
-    "clean": "rimraf dist || true"
+    "build": "tsup src/index.ts --format esm",
+    "dev": "tsup src/index.ts --format esm --watch",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^4.1.11"
   }
 }
-
-

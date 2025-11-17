@@ -8,9 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export * from './settings-schemata/menu-settings-v1';
-export * from './settings-schemata';
-
 /** This type is used to pass command line arguments to the app. */
 export type CommandlineOptions = {
   // This optional parameter is specified using the --menu option. It is used to show a

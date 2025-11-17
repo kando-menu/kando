@@ -10,12 +10,8 @@
 
 import { app } from 'electron';
 
-import {
-  MENU_SETTINGS_SCHEMA_V1,
-  MenuSettingsV1,
-} from '../../common/settings-schemata/menu-settings-v1';
-
-import { MENU_SETTINGS_SCHEMA, MenuSettings } from '../../common/settings-schemata';
+import { MENU_SETTINGS_SCHEMA_V1, MenuSettingsV1 } from '@kando/core/settings-schemata/menu-settings-v1';
+import { MENU_SETTINGS_SCHEMA, MenuSettings } from '@kando/core/settings-schemata';
 import { Settings } from './settings';
 
 import { version } from './../../../package.json';

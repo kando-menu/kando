@@ -10,7 +10,7 @@
 
 import { MenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
-import { getClosestEquivalentAngle } from '../common/math';
+import { getClosestEquivalentAngle } from '@kando/core/math';
 import { RenderedMenuItem } from './rendered-menu-item';
 
 /**

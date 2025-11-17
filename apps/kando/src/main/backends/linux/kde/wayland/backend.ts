@@ -18,7 +18,7 @@ import { LinuxBackend } from '../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { GlobalShortcuts } from '../../portals/global-shortcuts';
 import { KeySequence, WMInfo } from '../../../../../common';
-import { mapKeys } from '../../../../../common/key-codes';
+import { mapKeys } from '@kando/core/key-codes';
 import { screen } from 'electron';
 
 /**

@@ -10,7 +10,7 @@
 
 import { create } from 'zustand';
 
-import { GeneralSettings, GENERAL_SETTINGS_SCHEMA } from '../../common';
+import { GeneralSettings, GENERAL_SETTINGS_SCHEMA } from '@kando/core/settings-schemata';
 
 // The general settings state object allows access to the settings stored in the user's
 // config.json. It is always synchronized with the contents of the file, so any changes

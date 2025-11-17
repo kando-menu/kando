@@ -10,7 +10,7 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../../common/math';
+import * as math from '@kando/core/math';
 import { Vec2 } from '../../common';
 
 /**

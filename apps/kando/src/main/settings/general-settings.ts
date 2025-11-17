@@ -10,12 +10,8 @@
 
 import { app } from 'electron';
 
-import {
-  GENERAL_SETTINGS_SCHEMA_V1,
-  GeneralSettingsV1,
-} from '../../common/settings-schemata/general-settings-v1';
-
-import { GENERAL_SETTINGS_SCHEMA, GeneralSettings } from '../../common/settings-schemata';
+import { GENERAL_SETTINGS_SCHEMA_V1, GeneralSettingsV1 } from '@kando/core/settings-schemata/general-settings-v1';
+import { GENERAL_SETTINGS_SCHEMA, GeneralSettings } from '@kando/core/settings-schemata';
 
 import { Settings } from './settings';
 

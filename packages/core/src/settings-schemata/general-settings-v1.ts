@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as z from 'zod';
-import { version } from '../../../package.json';
+import { version } from '../version';
 
 /**
  * Starting with Kando 2.1.0, we use zod to define the schema of the general settings.
@@ -210,3 +210,5 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
 });
 
 export type GeneralSettingsV1 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V1>;
+
+

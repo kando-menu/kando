@@ -16,7 +16,7 @@ import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import * as math from '../../../common/math';
+import * as math from '@kando/core/math';
 import * as utils from './utils';
 
 import { ThemedIcon } from '../common';

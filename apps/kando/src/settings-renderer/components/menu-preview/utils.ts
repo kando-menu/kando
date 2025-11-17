@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import * as math from '../../../common/math';
+import * as math from '@kando/core/math';
 import { Vec2 } from '../../../common';
 
 /**

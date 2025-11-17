@@ -31,6 +31,10 @@ import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 
 // Wire up the the settings --------------------------------------------------------------
 
+// Notify main process that the settings renderer is ready so the window can be shown.
+// App.tsx also signals readiness once mounted; keeping this call minimal here is fine.
+window.settingsAPI.settingsWindowReady();
+
 // We need some information from the main process before we can start.
 Promise.all([
   window.commonAPI.getLocales(),

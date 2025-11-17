@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as z from 'zod';
-import { version } from './../../../package.json';
+import { version } from '../version';
 
 /**
  * This type is used to describe the conditions under which a menu should be shown. When a
@@ -171,3 +171,5 @@ export type MenuItemV1 = z.infer<typeof MENU_ITEM_SCHEMA_V1>;
 export type MenuV1 = z.infer<typeof MENU_SCHEMA_V1>;
 export type MenuCollectionV1 = z.infer<typeof MENU_COLLECTION_SCHEMA_V1>;
 export type MenuSettingsV1 = z.infer<typeof MENU_SETTINGS_SCHEMA_V1>;
+
+

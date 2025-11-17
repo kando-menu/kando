@@ -13,7 +13,7 @@ import DBus from 'dbus-final';
 
 import { LinuxBackend } from '../../backend';
 import { KeySequence } from '../../../../../common';
-import { mapKeys } from '../../../../../common/key-codes';
+import { mapKeys } from '@kando/core/key-codes';
 import { screen } from 'electron';
 
 /**

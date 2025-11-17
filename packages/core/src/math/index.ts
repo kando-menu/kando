@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Vec2 } from '../../common';
+import type { Vec2 } from '../types';
 
 /** This method returns the the given value clamped to the given range. */
 export function clamp(value: number, min: number, max: number): number {
@@ -499,7 +499,7 @@ function cropWedge(start: number, center: number, end: number, cropAngle: number
     end = cropAngle;
   }
 
-  return [start, end];
+  return [start, end] as const;
 }
 
 /**
@@ -517,7 +517,7 @@ function scaleWedge(start: number, center: number, end: number, scale: number) {
   start = center - (center - start) * scale;
   end = center + (end - center) * scale;
 
-  return [start, end];
+  return [start, end] as const;
 }
 
 /**
@@ -540,3 +540,5 @@ export function clampToMonitor(position: Vec2, radius: number, monitorSize: Vec2
   // Ensure integer position.
   return { x: Math.floor(posX), y: Math.floor(posY) };
 }
+
+

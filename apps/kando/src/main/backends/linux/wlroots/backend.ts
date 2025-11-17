@@ -11,7 +11,7 @@
 import { native } from './native';
 import { LinuxBackend } from '../backend';
 import { KeySequence } from '../../../../common';
-import { mapKeys } from '../../../../common/key-codes';
+import { mapKeys } from '@kando/core/key-codes';
 
 /**
  * This is a partial implementation of the Backend interface for wlroots-based Wayland

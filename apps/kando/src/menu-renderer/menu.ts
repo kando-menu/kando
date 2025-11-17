@@ -10,7 +10,7 @@
 
 import { EventEmitter } from 'events';
 
-import * as math from '../common/math';
+import * as math from '@kando/core/math';
 import { GeneralSettings, ShowMenuOptions, Vec2, SoundType } from '../common';
 import { RenderedMenuItem } from './rendered-menu-item';
 import { SelectionWedges } from './selection-wedges';

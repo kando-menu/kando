@@ -8,9 +8,27 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export * from './types';
-export * as math from './math';
-export * from './settings-schemata';
-export * from './key-codes';
+/** A simple 2D vector. */
+export type Vec2 = {
+  x: number;
+  y: number;
+};
+
+/**
+ * This type is used to describe an element of a key sequence. It contains the DOM name of
+ * the key, a boolean indicating whether the key is pressed or released and a delay in
+ * milliseconds.
+ */
+export type KeyStroke = {
+  name: string;
+  down: boolean;
+  delay: number;
+};
+
+/**
+ * This type is used to describe a sequence of key strokes. It is used to simulate
+ * keyboard shortcuts.
+ */
+export type KeySequence = Array<KeyStroke>;
 
 

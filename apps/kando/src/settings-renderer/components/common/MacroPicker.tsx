@@ -14,7 +14,7 @@ import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import { MacroEvent } from '../../../common/item-types/macro-item-type';
-import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import { fixKeyCodeCase, isKnownKeyCode } from '@kando/core/key-codes';
 import { Button } from '.';
 
 import * as classes from './MacroPicker.module.scss';

@@ -94,9 +94,14 @@ export class SettingsWindow extends BrowserWindow {
       return { action: 'deny' };
     });
 
+    // Use the URL emitted by the webpack plugin (keeps main and dev server in sync).
     this.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
 
+    // Minimal lifecycle; the renderer signals readiness and we show the window then.
+
     // Show the window when the renderer is ready.
-    this.windowLoaded.then(() => this.show());
+    this.windowLoaded.then(() => {
+      this.show();
+    });
   }
 }
