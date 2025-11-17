@@ -1,11 +1,17 @@
-# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
-# SPDX-License-Identifier: CC0-1.0
+# dependencies
+node_modules/
+pnpm-debug.log
+.pnpm-debug.log*
 
-.vscode
-.webpack
-node_modules
-build
-out
-bin
+# builds
+dist/
+build/
+coverage/
+*.tgz
+
+# app-specific
+apps/kando/.webpack/
+apps/kando/build/
+
+# macOS
 .DS_Store
-.codegpt
