@@ -29,9 +29,13 @@ export const rendererConfig: Configuration = {
   externals: ignores,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
-    alias: {
-      '@kando/core': path.resolve(__dirname, '../..', 'packages/core/src'),
-    },
+    alias: (() => {
+      const alias: Record<string, string> = {};
+      if (process.env.WEBPACK_SERVE || process.env.NODE_ENV === 'development') {
+        alias['@kando/core'] = path.resolve(__dirname, '../..', 'packages/core/src');
+      }
+      return alias;
+    })(),
     fallback: {
       events: require.resolve('events/'),
     },

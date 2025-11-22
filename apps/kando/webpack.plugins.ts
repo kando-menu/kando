@@ -39,7 +39,15 @@ export const plugins: any[] = [
 if (os.platform() === 'darwin') {
   plugins.push(
     new CopyPlugin({
-      patterns: [{ from: 'trayTemplate*.png', to: 'assets/', context: 'assets/icons/' }],
+      patterns: [
+        { from: 'trayTemplate*.png', to: 'assets/', context: 'assets/icons/' },
+        // Ensure the macOS native addon is available in dev output; ignore if not built.
+        {
+          from: 'build/Release/NativeMacOS.node',
+          to: 'native_modules/NativeMacOS.node',
+          noErrorOnMissing: true,
+        },
+      ],
     })
   );
 }

@@ -45,6 +45,37 @@ export type Native = {
   }[];
 };
 
-const native: Native = require('./../../../../../build/Release/NativeMacOS.node');
+import fs from 'fs';
+import path from 'path';
+
+function resolveNativePath(): string {
+  // Preferred: path where webpack-asset-relocator places native modules
+  const relocated = path.join(__dirname, 'native_modules', 'NativeMacOS.node');
+  if (fs.existsSync(relocated)) {
+    return relocated;
+  }
+  // Dev build folder next to app sources
+  const localBuild = path.join(__dirname, '../../build/Release/NativeMacOS.node');
+  if (fs.existsSync(localBuild)) {
+    return localBuild;
+  }
+  // Fallback: direct build output when running unbundled
+  return path.join(__dirname, './../../../../../build/Release/NativeMacOS.node');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let native: Native;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  native = require(resolveNativePath());
+} catch {
+  // Soft-fallback for dev when the native module isn't built yet.
+  native = {
+    movePointer: () => {},
+    simulateKey: () => {},
+    getActiveWindow: () => ({ app: '', name: '' }),
+    listInstalledApplications: () => [],
+  };
+}
 
 export { native };

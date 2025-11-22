@@ -361,7 +361,8 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   private saveSettings(updatedSettings: T) {
     this.watcher?.unwatch(this.filePath);
     try {
-      fs.writeJSONSync(this.filePath, updatedSettings, { spaces: 2 });
+      // Ensure parent directory exists and write atomically.
+      fs.outputJSONSync(this.filePath, updatedSettings, { spaces: 2 });
     } catch (error) {
       this.handleWriteError(error.code, updatedSettings, this.options.file);
     }

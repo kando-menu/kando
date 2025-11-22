@@ -3,6 +3,7 @@
   "version": "2.1.0",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2025 Simon Schneegans",
+  "private": true,
   "main": ".webpack/main",
   "scripts": {
     "postinstall": "cmake-js compile",

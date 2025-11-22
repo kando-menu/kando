@@ -25,25 +25,30 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
-          npm install
+          sudo apt update
+          sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          pnpm install --frozen-lockfile
       - name: Fix Permissions
         # Workaround for https://github.com/electron/electron/issues/17972
+        working-directory: apps/kando
         run: |
-          sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
-          sudo chown root node_modules/electron/dist/chrome-sandbox
+          sudo chmod 4755 node_modules/electron/dist/chrome-sandbox || true
+          sudo chown root node_modules/electron/dist/chrome-sandbox || true
       - name: Create Packages
-        run: |
-          npm run make
+        run: pnpm --filter ./apps/kando make
       - name: Create AppImage
-        run: |
-          tools/make-app-image.sh
+        run: tools/make-app-image.sh
       - name: Upload Packages
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/**/*
+          file: '**/out/make/**/*'
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
@@ -61,33 +66,41 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
-        run: |
-          npm install
+        run: pnpm install --frozen-lockfile
       - name: Create Release
-        run: |
-          npm run make
+        run: pnpm --filter ./apps/kando make
       - name: Rename Executables
         shell: pwsh
         env:
           MATRIX_OS: ${{ matrix.os }}
         run: |
-          if ($env:MATRIX_OS -eq "windows-2022") {
-            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-x64" + $_.Extension }
-          } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
-            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
+          $paths = @("out/make/squirrel.windows","apps/kando/out/make/squirrel.windows")
+          foreach ($p in $paths) {
+            if (Test-Path $p) {
+              if ($env:MATRIX_OS -eq "windows-2022") {
+                Get-ChildItem -Path "$p/*/*.exe" | Rename-Item -NewName { $_.BaseName + "-x64" + $_.Extension }
+              } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
+                Get-ChildItem -Path "$p/*/*.exe" | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
+              }
+            }
           }
       - name: Upload Zip
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/zip/win32/*/*
+          file: '**/out/make/zip/win32/*/*'
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Squirrel Installer
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/squirrel.windows/*/*.exe
+          file: '**/out/make/squirrel.windows/*/*.exe'
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
@@ -107,10 +120,15 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          npm install
-          npm install appdmg
+          pnpm install --frozen-lockfile
+          pnpm --filter ./apps/kando add -D appdmg
       - name: Add macOS certificates
         env:
           OSX_CERTIFICATE: ${{ secrets.OSX_CERTIFICATE }}
@@ -124,19 +142,18 @@ jobs:
           OSX_APP_SPECIFIC_ID: ${{ secrets.OSX_APP_SPECIFIC_ID }}
           OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
           OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
-        run: |
-          npm run make
+        run: pnpm --filter ./apps/kando make
       - name: Upload DMG
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/*.dmg
+          file: '**/out/make/*.dmg'
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Zip
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/zip/darwin/**/*.zip
+          file: '**/out/make/zip/darwin/**/*.zip'
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true

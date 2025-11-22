@@ -6,6 +6,7 @@ import path from 'path';
 
 import { rules } from './webpack.rules';
 import { ignores } from './webpack.ignores';
+import { plugins } from './webpack.plugins';
 
 export const mainConfig: Configuration = {
   /**
@@ -17,11 +18,17 @@ export const mainConfig: Configuration = {
   module: {
     rules,
   },
+  plugins,
   externals: ignores,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
-    alias: {
-      '@kando/core': path.resolve(__dirname, '../..', 'packages/core/src'),
-    },
+    alias: (() => {
+      const alias: Record<string, string> = {};
+      // Use source alias only in dev/serve; for production let Node resolve the built package
+      if (process.env.WEBPACK_SERVE || process.env.NODE_ENV === 'development') {
+        alias['@kando/core'] = path.resolve(__dirname, '../..', 'packages/core/src');
+      }
+      return alias;
+    })(),
   },
 };

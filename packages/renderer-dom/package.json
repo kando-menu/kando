@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Kando DOM renderer and overlay manager (themes, clamping, pointer-lock/virtual cursor).",
   "license": "MIT",
+  "private": true,
   "type": "module",
   "exports": {
     ".": {

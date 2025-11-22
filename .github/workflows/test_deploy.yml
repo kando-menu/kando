@@ -23,22 +23,26 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
           sudo apt update
           sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev flatpak-builder
-          npm install
+          pnpm install --frozen-lockfile
       - name: Fix Permissions
         # Workaround for https://github.com/electron/electron/issues/17972
+        working-directory: apps/kando
         run: |
-          sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
-          sudo chown root node_modules/electron/dist/chrome-sandbox
+          sudo chmod 4755 node_modules/electron/dist/chrome-sandbox || true
+          sudo chown root node_modules/electron/dist/chrome-sandbox || true
       - name: Create Packages
-        run: |
-          npm run make
+        run: pnpm --filter ./apps/kando make
       - name: Create AppImage
-        run: |
-          tools/make-app-image.sh
+        run: tools/make-app-image.sh
       - name: Create Flatpak bundle
         run: |
           sudo flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -47,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
-          path: out/make/**/*
+          path: '**/out/make/**/*'
           retention-days: 7
 
   windows:
@@ -61,29 +65,37 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
-        run: |
-          npm install
+        run: pnpm install --frozen-lockfile
       - name: Create Release
-        run: |
-          npm run make
+        run: pnpm --filter ./apps/kando make
       - name: Rename Executables
         shell: pwsh
         env:
           MATRIX_OS: ${{ matrix.os }}
         run: |
-          if ($env:MATRIX_OS -eq "windows-2022") {
-            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-x64" + $_.Extension }
-          } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
-            Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
+          $paths = @("out/make/squirrel.windows","apps/kando/out/make/squirrel.windows")
+          foreach ($p in $paths) {
+            if (Test-Path $p) {
+              if ($env:MATRIX_OS -eq "windows-2022") {
+                Get-ChildItem -Path "$p/*/*.exe" | Rename-Item -NewName { $_.BaseName + "-x64" + $_.Extension }
+              } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
+                Get-ChildItem -Path "$p/*/*.exe" | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
+              }
+            }
           }
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: |
-            out/make/zip/win32/*/*
-            out/make/squirrel.windows/*/*.exe
+            **/out/make/zip/win32/*/*
+            **/out/make/squirrel.windows/*/*.exe
           retention-days: 7
 
   macos:
@@ -99,10 +111,15 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          npm install
-          npm install appdmg
+          pnpm install --frozen-lockfile
+          pnpm --filter ./apps/kando add -D appdmg
       - name: Add macOS certificates
         if: ${{ ! github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
         env:
@@ -117,13 +134,12 @@ jobs:
           OSX_APP_SPECIFIC_ID: ${{ secrets.OSX_APP_SPECIFIC_ID }}
           OSX_APP_SPECIFIC_PASSWORD: ${{ secrets.OSX_APP_SPECIFIC_PASSWORD }}
           OSX_TEAM_ID: ${{ secrets.OSX_TEAM_ID }}
-        run: |
-          npm run make
+        run: pnpm --filter ./apps/kando make
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: |
-            out/make/*.dmg
-            out/make/zip/darwin/**/*.zip
+            **/out/make/*.dmg
+            **/out/make/zip/darwin/**/*.zip
           retention-days: 7
