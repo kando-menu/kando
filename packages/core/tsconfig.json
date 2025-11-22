@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "rootDir": "./src",
+    "composite": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}

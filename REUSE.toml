@@ -4,13 +4,13 @@
 version = 1
 
 [[annotations]]
-path = [".node-version", "tsconfig.json", "package.json", "package-lock.json", "patches/*", "src/main/example-menus/**"]
+path = [".node-version", "tsconfig.json", "package.json", "apps/kando/package.json", "apps/kando/package-lock.json", "patches/*", "apps/kando/src/main/example-menus/**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "locales/**"
+path = "apps/kando/locales/**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "MIT"

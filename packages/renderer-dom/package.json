@@ -1,0 +1,31 @@
+{
+  "name": "@kando/renderer-dom",
+  "version": "0.0.0",
+  "description": "Kando DOM renderer and overlay manager (themes, clamping, pointer-lock/virtual cursor).",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "scripts": {
+    "build": "echo \"(placeholder)\"",
+    "dev": "echo \"(placeholder)\"",
+    "clean": "rimraf dist || true"
+  },
+  "dependencies": {
+    "@kando/core": "workspace:*"
+  }
+}
+
+

@@ -23,12 +23,18 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
-          npm ci
+          sudo apt update
+          sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          pnpm install --frozen-lockfile
       - name: Run Tests
-        run: npm run test
+        run: pnpm -r test --if-present
 
   eslint:
     name: ESLint
@@ -40,12 +46,18 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
-          npm ci
+          sudo apt update
+          sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          pnpm install --frozen-lockfile
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm -r lint --if-present
 
   prettier:
     name: Prettier
@@ -57,12 +69,18 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
-          npm ci
+          sudo apt update
+          sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          pnpm install --frozen-lockfile
       - name: Run Prettier
-        run: npm run prettier
+        run: pnpm -r prettier --if-present
 
   tscheck:
     name: TypeScript Check
@@ -74,12 +92,18 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .node-version
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - name: Install Dependencies
         run: |
-          sudo apt install libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
-          npm ci
+          sudo apt update
+          sudo apt install -y libx11-dev libxtst-dev libwayland-dev libxkbcommon-dev
+          pnpm install --frozen-lockfile
       - name: Run TypeScript Check
-        run: npm run tscheck
+        run: pnpm -r tscheck --if-present
 
   reuse:
     name: REUSE
