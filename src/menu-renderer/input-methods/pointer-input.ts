@@ -339,10 +339,11 @@ export class PointerInput extends InputMethod {
     if (pointer instanceof MouseEvent) {
       this.update({ x: pointer.clientX, y: pointer.clientY }, center, button);
     } else if (pointer instanceof TouchEvent) {
+      const hasTouches = pointer.touches && pointer.touches.length > 0;
       this.update(
         {
-          x: pointer.touches[0].clientX,
-          y: pointer.touches[0].clientY,
+          x: hasTouches ? pointer.touches[0].clientX : this.pointerPosition.x,
+          y: hasTouches ? pointer.touches[0].clientY : this.pointerPosition.y,
         },
         center,
         button
