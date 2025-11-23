@@ -215,6 +215,10 @@ export class MenuWindow extends BrowserWindow {
     // Move and resize the window to the work area of the screen where the pointer is.
     this.setBounds(info.workArea);
 
+    // On some system (for instance macOS with stage manager enabled), it helps to
+    // ensure that the window is really maximized.
+    setTimeout(() => this.maximize());
+
     // On all platforms except Windows, we show the window after we moved it.
     if (process.platform !== 'win32') {
       this.show();
