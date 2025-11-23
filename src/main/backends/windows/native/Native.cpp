@@ -190,6 +190,8 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
 
   // Get the app name.
   {
+    HWND foreground_window = GetForegroundWindow();
+
     DWORD pid;
     GetWindowThreadProcessId(foreground_window, &pid);
 
