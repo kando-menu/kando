@@ -220,8 +220,7 @@ export class MenuWindow extends BrowserWindow {
       this.show();
     }
 
-    // Usually, the menu is shown at the pointer position. However, if the menu is
-    // centered, we show it in the center of the screen.
+    // Usually, the menu is shown at the pointer position.
     const mousePosition = {
       x: (info.pointerX - info.workArea.x) / this.webContents.getZoomFactor(),
       y: (info.pointerY - info.workArea.y) / this.webContents.getZoomFactor(),
