@@ -91,6 +91,12 @@ export class PointerInput extends InputMethod {
    */
   private ignoreMotionEvents = 0;
 
+  /**
+   * Motion events come in very frequently. To avoid performance issues, we throttle them
+   * to the screen refresh rate.
+   */
+  private throttledMotionEvent: boolean = false;
+
   /** Creates a new PointerInput instance. */
   constructor() {
     super();
@@ -150,6 +156,15 @@ export class PointerInput extends InputMethod {
       this.ignoreMotionEvents--;
       return;
     }
+
+    // Throttle mouse motion events to avoid performance issues.
+    if (this.throttledMotionEvent) {
+      return;
+    }
+    this.throttledMotionEvent = true;
+    requestAnimationFrame(() => {
+      this.throttledMotionEvent = false;
+    });
 
     // If the mouse moved too much, the current mousedown - mouseup event is not
     // considered to be a click anymore. Instead, we are in marking mode.
