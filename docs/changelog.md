@@ -28,6 +28,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
 - Opening files and directories on Linux via an open-file action when their path contained spaces.
 - Mouse warping to the center of the menu on some Linux systems.
+- Thanks to a fix in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), menus now open again at the pen position on GNOME 49.1 and later when using a stylus.
 
 ## [Kando 2.1.0](https://github.com/kando-menu/kando/releases/tag/v2.1.0)
 
