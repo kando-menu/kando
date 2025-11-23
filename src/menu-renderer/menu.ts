@@ -399,24 +399,27 @@ export class Menu extends EventEmitter {
       this.pointerInput.onKeyUpEvent(event);
     });
 
-    this.container.addEventListener('mousedown', (e) =>
-      this.pointerInput.onPointerDownEvent(e)
-    );
-    this.container.addEventListener('mousemove', (e) =>
-      this.pointerInput.onMotionEvent(e)
-    );
-    this.container.addEventListener('mouseup', (e) =>
-      this.pointerInput.onPointerUpEvent(e)
-    );
-    this.container.addEventListener('touchstart', (e) =>
-      this.pointerInput.onPointerDownEvent(e)
-    );
-    this.container.addEventListener('touchmove', (e) =>
-      this.pointerInput.onMotionEvent(e)
-    );
-    this.container.addEventListener('touchend', (e) =>
-      this.pointerInput.onPointerUpEvent(e)
-    );
+    this.container.addEventListener('mousedown', (e) => {
+      this.pointerInput.onPointerDownEvent(e);
+    });
+    this.container.addEventListener('mousemove', (e) => {
+      this.pointerInput.onMotionEvent(e);
+    });
+    this.container.addEventListener('mouseup', (e) => {
+      this.pointerInput.onPointerUpEvent(e);
+    });
+    this.container.addEventListener('touchstart', (e) => {
+      this.pointerInput.onPointerDownEvent(e);
+    });
+    this.container.addEventListener('touchmove', (e) => {
+      this.pointerInput.onMotionEvent(e);
+    });
+    this.container.addEventListener('touchend', (e) => {
+      this.pointerInput.onPointerUpEvent(e);
+    });
+    this.container.addEventListener('mouseenter', (e) => {
+      console.log('mouseenter at ' + e.clientX + ', ' + e.clientY);
+    });
   }
 
   /**
