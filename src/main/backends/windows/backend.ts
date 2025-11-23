@@ -89,6 +89,10 @@ export class WindowsBackend extends Backend {
    */
   public override async getWMInfo() {
     const info = native.getWMInfo();
+    const point = screen.screenToDipPoint({
+      x: info.pointerX || 0,
+      y: info.pointerY || 0,
+    });
 
     // For some reason, this makes the method much faster. For now, I have no idea why.
     process.nextTick(() => {});
@@ -96,12 +100,9 @@ export class WindowsBackend extends Backend {
     return {
       windowName: info.window || '',
       appName: info.app || '',
-      pointerX: info.pointerX || 0,
-      pointerY: info.pointerY || 0,
-      workArea: screen.getDisplayNearestPoint({
-        x: info.pointerX || 0,
-        y: info.pointerY || 0,
-      }).workArea,
+      pointerX: point.x || 0,
+      pointerY: point.y || 0,
+      workArea: screen.getDisplayNearestPoint(point).workArea,
     };
   }
 
