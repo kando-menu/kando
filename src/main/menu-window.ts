@@ -560,9 +560,9 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('menu-window.move-pointer', (event, dist) => {
       let scale = 1;
 
-      // On macOS, the pointer movement seems to be scaled automatically. We have to
-      // scale the movement manually on other platforms.
-      if (os.platform() !== 'darwin') {
+      // On Windows, the pointer movement has to be scaled to the DPI scale of the
+      // display where the menu is shown.
+      if (os.platform() === 'win32') {
         const bounds = this.getBounds();
         const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
         scale = display.scaleFactor;
