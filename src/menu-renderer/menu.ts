@@ -191,8 +191,8 @@ export class Menu extends EventEmitter {
     // Play the open sound.
     this.soundTheme.playSound(SoundType.eOpenMenu);
 
-    // Sometimes, the menu position passed from the main process is not correct. For
-    // instance, this happens when using pen input on Windows with Windows Ink enabled.
+    // On Windows, the menu position passed from the main process is sometimes not
+    // correct. For instance, this happens when using pen input with Windows Ink enabled.
     // To work around this, we wait a few milliseconds until the first mouse enter event
     // arrives and show the menu there. If no mouse enter event arrives within that time,
     // we simply show the menu at the given position.
@@ -214,19 +214,23 @@ export class Menu extends EventEmitter {
       this.container.classList.remove('hidden');
     };
 
-    this.initialPositionTimeout = setTimeout(showMenu, 100);
+    if (cIsWindows) {
+      this.initialPositionTimeout = setTimeout(showMenu, 100);
 
-    const onMouseEnter = (e: MouseEvent) => {
-      this.showMenuOptions = {
-        ...this.showMenuOptions,
-        mousePosition: { x: e.clientX, y: e.clientY },
+      const onMouseEnter = (e: MouseEvent) => {
+        this.showMenuOptions = {
+          ...this.showMenuOptions,
+          mousePosition: { x: e.clientX, y: e.clientY },
+        };
+        clearTimeout(this.initialPositionTimeout);
+        showMenu();
+        this.container.removeEventListener('mouseenter', onMouseEnter);
       };
-      clearTimeout(this.initialPositionTimeout);
-      showMenu();
-      this.container.removeEventListener('mouseenter', onMouseEnter);
-    };
 
-    this.container.addEventListener('mouseenter', onMouseEnter);
+      this.container.addEventListener('mouseenter', onMouseEnter);
+    } else {
+      showMenu();
+    }
   }
 
   /** Hides the menu. */
