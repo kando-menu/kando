@@ -25,6 +25,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Compatibility with Windows Ink on Windows. Now the menu should open properly at the pen position.
 - Menu positioning on macOS if stage manager is enabled.
+- An issue which caused the center text to not hide properly under certain circumstances.
 - Discovery of installed applications and icons when running on Linux inside a Flatpak container.
 - A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
 - Opening files and directories on Linux via an open-file action when their path contained spaces.

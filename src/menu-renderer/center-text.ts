@@ -65,6 +65,7 @@ export class CenterText {
 
   /** Removes the current text from the container. */
   public hide() {
+    ++this.callCount;
     this.div?.remove();
   }
 
@@ -82,7 +83,7 @@ export class CenterText {
 
     // If the text is already cached, we can use it directly.
     if (this.cache[text]) {
-      this.hide();
+      this.div?.remove();
       this.div = this.cache[text];
       this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
       this.div.style.visibility = 'initial';
@@ -185,7 +186,7 @@ export class CenterText {
     // progress, we can use the staging div as the new text element. Otherwise, we
     // remove the staging div from the DOM, as it is no longer needed.
     if (currentCallCount === this.callCount) {
-      this.hide();
+      this.div?.remove();
       this.div = stagingDiv;
       this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
       this.div.style.visibility = 'initial';
