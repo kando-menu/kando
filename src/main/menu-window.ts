@@ -38,6 +38,9 @@ export class MenuWindow extends BrowserWindow {
    */
   private menuIndex = 0;
 
+  /** This is true if the window is currently visible. */
+  private visible = false;
+
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
     ipcMain.on('menu-window.ready', () => {
@@ -266,7 +269,7 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /** This shows the window. */
-  public show() {
+  public override show() {
     // Cancel any ongoing window-hiding.
     if (this.hideTimeout) {
       clearTimeout(this.hideTimeout);
@@ -296,6 +299,8 @@ export class MenuWindow extends BrowserWindow {
     setTimeout(() => {
       this.focus();
     }, 100);
+
+    this.visible = true;
   }
 
   /**
@@ -305,18 +310,17 @@ export class MenuWindow extends BrowserWindow {
   public override hide() {
     if (this.isVisible()) {
       this.webContents.send('menu-window.hide-menu');
+      this.visible = false;
     }
   }
 
   /**
-   * This checks if the window is visible. A window is considered visible if it is shown,
-   * not minimized, and not about to be hidden (i.e. the fade-out animation is not
-   * running).
+   * If the fade-out animation is currently running, this already returns false.
    *
-   * @returns Returns true if the window is visible and not minimized.
+   * @returns Returns true if the menu window is currently visible and not fading out.
    */
-  public isVisible() {
-    return super.isVisible() && this.hideTimeout === null && !this.isMinimized();
+  public override isVisible() {
+    return this.visible;
   }
 
   /**
@@ -340,6 +344,8 @@ export class MenuWindow extends BrowserWindow {
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
   private async hideWindow() {
+    this.visible = false;
+
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
