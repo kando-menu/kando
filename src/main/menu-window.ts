@@ -217,7 +217,7 @@ export class MenuWindow extends BrowserWindow {
 
     // On macOS with stage manager enabled, this helps to ensure that the window is
     // really maximized. Else the window will be placed next to the stage manager area.
-    if (os.platform() == "darwin") {
+    if (os.platform() == 'darwin') {
       setTimeout(() => this.setBounds(info.workArea, false));
     }
 
