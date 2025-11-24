@@ -23,7 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :bug: Fixed
 
-- Compatibility with Windows Ink on Windows. Now the menu should open properly at the pen position.
+- Compatibility with Windows Ink enabled tablet devices. Now the menu should open properly at the pen position.
 - Menu positioning on macOS if stage manager is enabled.
 - An issue which caused the center text to not hide properly under certain circumstances.
 - An issue which made menus not appear at the mouse pointer when cycling through menus with the same shortcut.
