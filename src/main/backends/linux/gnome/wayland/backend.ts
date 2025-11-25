@@ -98,15 +98,31 @@ export class GnomeBackend extends LinuxBackend {
    */
   public async getWMInfo() {
     const info = await this.interface.GetWMInfo();
+
+    let workArea: Electron.Rectangle;
+
+    // Newer versions of the extension return work area info directly. Else we query
+    // Electron for it, but this will be wrong on some multi-monitor setups.
+    if (info.length === 7) {
+      workArea = {
+        x: info[4],
+        y: info[5],
+        width: info[6],
+        height: info[7],
+      };
+    } else {
+      workArea = screen.getDisplayNearestPoint({
+        x: info[2],
+        y: info[3],
+      }).workArea;
+    }
+
     return {
       windowName: info[0],
       appName: info[1],
       pointerX: info[2],
       pointerY: info[3],
-      workArea: screen.getDisplayNearestPoint({
-        x: info[2],
-        y: info[3],
-      }).workArea,
+      workArea,
     };
   }
 

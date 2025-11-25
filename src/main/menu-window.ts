@@ -216,15 +216,20 @@ export class MenuWindow extends BrowserWindow {
     }
 
     // Move and resize the window to the work area of the screen where the pointer is.
-    this.setBounds(info.workArea);
+    this.setBounds(info.workArea, false);
+
+    // On macOS with stage manager enabled, this helps to ensure that the window is
+    // really maximized. Else the window will be placed next to the stage manager area.
+    if (os.platform() == 'darwin') {
+      setTimeout(() => this.setBounds(info.workArea, false));
+    }
 
     // On all platforms except Windows, we show the window after we moved it.
     if (process.platform !== 'win32') {
       this.show();
     }
 
-    // Usually, the menu is shown at the pointer position. However, if the menu is
-    // centered, we show it in the center of the screen.
+    // Usually, the menu is shown at the pointer position.
     const mousePosition = {
       x: (info.pointerX - info.workArea.x) / this.webContents.getZoomFactor(),
       y: (info.pointerY - info.workArea.y) / this.webContents.getZoomFactor(),
@@ -566,9 +571,9 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('menu-window.move-pointer', (event, dist) => {
       let scale = 1;
 
-      // On macOS, the pointer movement seems to be scaled automatically. We have to
-      // scale the movement manually on other platforms.
-      if (os.platform() !== 'darwin') {
+      // On Windows, the pointer movement has to be scaled to the DPI scale of the
+      // display where the menu is shown.
+      if (os.platform() === 'win32') {
         const bounds = this.getBounds();
         const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
         scale = display.scaleFactor;
