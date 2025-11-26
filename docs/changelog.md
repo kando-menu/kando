@@ -25,6 +25,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Compatibility with Windows Ink enabled tablet devices. Now the menu should open properly at the pen position.
 - Menu positioning on macOS if stage manager is enabled.
+- Some issues with simulated keyboard input on macOS. Some keys like the arrow keys should work more reliable now.
 - An issue which caused the center text to not hide properly under certain circumstances.
 - An issue which made menus not appear at the mouse pointer when cycling through menus with the same shortcut.
 - An issue which made Kando not respond to shortcuts after pressing the right mouse button twice in fast succession on Windows.
