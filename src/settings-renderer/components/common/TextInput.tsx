@@ -61,6 +61,21 @@ export default function TextInput(props: Props) {
   // initialValue prop might change after the component has been initialized.
   React.useEffect(() => setValue(props.initialValue), [props.initialValue]);
 
+  // Handle beforeunload to trigger final onChange if there are unsaved changes.
+  React.useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (value !== props.initialValue && props.onChange) {
+        props.onChange(value);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [value, props]);
+
   return (
     <>
       <SettingsRow isGrowing info={props.info} label={props.label}>

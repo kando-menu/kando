@@ -169,9 +169,18 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   }
 
   // Create a key event.
-  CGEventRef event = CGEventCreateKeyboardEvent(nullptr, keycode, press);
-  CGEventSetFlags(event, mLeftModifierMask | mRightModifierMask);
-  CGEventPost(kCGHIDEventTap, event);
+  CGEventSourceRef src = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
+  CGEventRef event = CGEventCreateKeyboardEvent(src, keycode, press);
+  CFRelease(src);
+
+  // Add modifier flags without removing system flags.
+  CGEventFlags flags = CGEventGetFlags(event);
+  flags |= (mLeftModifierMask | mRightModifierMask);
+  CGEventSetFlags(event, flags);
+
+  // Post at session level for reliability.
+  CGEventPost(kCGSessionEventTap, event);
+
   CFRelease(event);
 }
 
