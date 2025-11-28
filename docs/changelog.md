@@ -17,18 +17,18 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [Kando 2.1.1](https://github.com/kando-menu/kando/releases/tag/v2.1.1)
+## [unreleased]
 
-**Release Date:** 2025-11-28
+**Release Date:** TBD
 
 ### :tada: Added
 
 - A button in the icon-picker popover to reload all icon themes without restarting Kando.
 - The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
 
-## [unreleased]
+## [Kando 2.1.1](https://github.com/kando-menu/kando/releases/tag/v2.1.1)
 
-**Release Date:** TBD
+**Release Date:** 2025-11-28
 
 ### :bug: Fixed
 
