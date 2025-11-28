@@ -55,6 +55,9 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
    */
   enableDarkModeForMenuThemes: z.boolean().default(false),
 
+  /** If disabled, no selection wedges will be drawn. */
+  enableSelectionWedges: z.boolean().default(false),
+
   /** The name of the current sound theme. */
   soundTheme: z.string().default('none'),
 
