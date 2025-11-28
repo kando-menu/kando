@@ -21,10 +21,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
-### :wrench: Added
+### :tada: Added
 
-- Buttons to the general settings dialog to backup and restore the `config.json` and `menus.json` files. This makes it easier to backup your settings before making big changes or to restore them from a previous backup.
-- A setting to enable or disable the drawing of selection wedges in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
+- Buttons to the general settings dialog to **backup and restore** the `config.json` and `menus.json` files. This makes it easier to backup your settings before making big changes or to restore them from a previous backup.
+- A setting to **enable or disable the drawing of selection wedges** in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
 
 ### :wrench: Changed
 
