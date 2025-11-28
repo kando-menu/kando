@@ -110,6 +110,9 @@ export class Menu extends EventEmitter {
   /** This timeout is used to clear the menu div after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout;
 
+  /** This timeout is used to initialize the menu position on mouse enter. */
+  private initialPositionTimeout: NodeJS.Timeout;
+
   /**
    * The constructor will attach event listeners to the given container element. It will
    * also initialize the input tracker and the gesture detection.
@@ -184,22 +187,50 @@ export class Menu extends EventEmitter {
     this.setupPaths(this.root);
     this.setupAngles(this.root);
     this.createNodeTree(this.root, this.container);
-    this.selectItem(this.root, this.getInitialMenuPosition());
-
-    // If required, move the pointer to the center of the menu.
-    if (this.settings.warpMouse && showMenuOptions.centeredMode) {
-      const offset = math.subtract(
-        this.getInitialMenuPosition(),
-        showMenuOptions.mousePosition
-      );
-      this.emit('move-pointer', offset);
-    }
-
-    // Finally, show the menu.
-    this.container.classList.remove('hidden');
 
     // Play the open sound.
     this.soundTheme.playSound(SoundType.eOpenMenu);
+
+    // On Windows, the menu position passed from the main process is sometimes not
+    // correct. For instance, this happens when using pen input with Windows Ink enabled.
+    // To work around this, we wait a few milliseconds until the first mouse enter event
+    // arrives and show the menu there. If no mouse enter event arrives within that time,
+    // we simply show the menu at the given position.
+    const showMenu = () => {
+      this.selectItem(this.root, this.getInitialMenuPosition());
+
+      // If required, move the pointer to the center of the menu.
+      if (this.settings.warpMouse && this.showMenuOptions.centeredMode) {
+        const offset = math.subtract(
+          this.getInitialMenuPosition(),
+          this.showMenuOptions.mousePosition
+        );
+        this.emit('move-pointer', offset);
+      }
+
+      // Finally, show the menu. In order to ensure that all DOM changes are applied
+      // before the fade-in animation starts, flush the browser's rendering pipeline first.
+      this.container.getBoundingClientRect();
+      this.container.classList.remove('hidden');
+    };
+
+    if (cIsWindows) {
+      this.initialPositionTimeout = setTimeout(showMenu, 100);
+
+      const onMouseEnter = (e: MouseEvent) => {
+        this.showMenuOptions = {
+          ...this.showMenuOptions,
+          mousePosition: { x: e.clientX, y: e.clientY },
+        };
+        clearTimeout(this.initialPositionTimeout);
+        showMenu();
+        this.container.removeEventListener('mouseenter', onMouseEnter);
+      };
+
+      this.container.addEventListener('mouseenter', onMouseEnter);
+    } else {
+      showMenu();
+    }
   }
 
   /** Hides the menu. */
@@ -222,6 +253,10 @@ export class Menu extends EventEmitter {
     this.hoveredItem = null;
     this.draggedItem = null;
     this.selectionChain = [];
+    clearTimeout(this.hideTimeout);
+    clearTimeout(this.initialPositionTimeout);
+    this.hideTimeout = null;
+    this.initialPositionTimeout = null;
   }
 
   /**
@@ -399,24 +434,18 @@ export class Menu extends EventEmitter {
       this.pointerInput.onKeyUpEvent(event);
     });
 
-    this.container.addEventListener('mousedown', (e) =>
-      this.pointerInput.onPointerDownEvent(e)
-    );
-    this.container.addEventListener('mousemove', (e) =>
-      this.pointerInput.onMotionEvent(e)
-    );
-    this.container.addEventListener('mouseup', (e) =>
-      this.pointerInput.onPointerUpEvent(e)
-    );
-    this.container.addEventListener('touchstart', (e) =>
-      this.pointerInput.onPointerDownEvent(e)
-    );
-    this.container.addEventListener('touchmove', (e) =>
-      this.pointerInput.onMotionEvent(e)
-    );
-    this.container.addEventListener('touchend', (e) =>
-      this.pointerInput.onPointerUpEvent(e)
-    );
+    this.container.addEventListener('pointerdown', (e) => {
+      this.pointerInput.onPointerDownEvent(e);
+    });
+    this.container.addEventListener('pointermove', (e) => {
+      this.pointerInput.onMotionEvent(e);
+    });
+    this.container.addEventListener('touchmove', (e) => {
+      this.pointerInput.onMotionEvent(e);
+    });
+    this.container.addEventListener('pointerup', (e) => {
+      this.pointerInput.onPointerUpEvent(e);
+    });
   }
 
   /**
@@ -896,9 +925,9 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * This method updates the 2D position of the given menu item and all its children. For
-   * child and grandchild items, the position is computed by the theme in CSS. For parent
-   * and active items, the position is based on where the menu was opened.
+   * This method updates the transform properties of all menu items along the selection
+   * chain. All other item's transforms are reset as they are positioned relative to their
+   * parent items using CSS.
    */
   private updateTransform() {
     for (let i = 0; i < this.selectionChain.length; i++) {

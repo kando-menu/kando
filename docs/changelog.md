@@ -17,9 +17,9 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [unreleased]
+## [Kando 2.1.1](https://github.com/kando-menu/kando/releases/tag/v2.1.1)
 
-**Release Date:** TBD
+**Release Date:** 2025-11-28
 
 ### :wrench: Added
 
@@ -27,10 +27,18 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :bug: Fixed
 
+- Compatibility with Windows Ink enabled tablet devices. Now the menu should open properly at the pen position.
+- Menu positioning on macOS if stage manager is enabled.
+- Some issues with simulated keyboard input on macOS. Some keys like the arrow keys should work more reliable now.
 - An issue which caused the center text to not hide properly under certain circumstances.
+- An issue which made menus not appear at the mouse pointer when cycling through menus with the same shortcut.
+- An issue which made Kando not respond to shortcuts after pressing the right mouse button twice in fast succession on Windows.
+- An issue which made changes made to commands in the run-command item type configuration not being saved properly when the settings dialog is closed with the input focus still in the command text field.
 - Discovery of installed applications and icons when running on Linux inside a Flatpak container.
 - A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
 - Opening files and directories on Linux via an open-file action when their path contained spaces.
+- Mouse warping to the center of the menu on some Linux systems.
+- Thanks to a fix in the [GNOME Shell integration extension](https://github.com/kando-menu/gnome-shell-integration), menus now open again at the pen position on GNOME 49.1 and later when using a stylus.
 
 ## [Kando 2.1.0](https://github.com/kando-menu/kando/releases/tag/v2.1.0)
 

@@ -122,7 +122,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
       {
           InstanceMethod("movePointer", &Native::movePointer),
           InstanceMethod("simulateKey", &Native::simulateKey),
-          InstanceMethod("getActiveWindow", &Native::getActiveWindow),
+          InstanceMethod("getWMInfo", &Native::getWMInfo),
           InstanceMethod("fixAcrylicEffect", &Native::fixAcrylicEffect),
           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
       });
@@ -174,36 +174,53 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
 // This is based on https://github.com/yvesh/active-windows
 
-Napi::Value Native::getActiveWindow(const Napi::CallbackInfo& info) {
+Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
   Napi::Env    env = info.Env();
   Napi::Object obj = Napi::Object::New(env);
 
-  WCHAR window_title[256];
-  HWND  foreground_window = GetForegroundWindow();
-  GetWindowTextW(foreground_window, window_title, 256);
+  // Get the window name.
+  {
+    WCHAR window_title[256];
+    HWND  foreground_window = GetForegroundWindow();
+    GetWindowTextW(foreground_window, window_title, 256);
 
-  DWORD pid;
-  GetWindowThreadProcessId(foreground_window, &pid);
-
-  CHAR  process_filename[MAX_PATH];
-  DWORD charsCarried = MAX_PATH;
-
-  HANDLE hProc = OpenProcess(
-      PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_QUERY_INFORMATION, false, pid);
-
-  QueryFullProcessImageNameA(hProc, 0, process_filename, &charsCarried);
-
-  std::string fullpath = process_filename;
-
-  const size_t last_slash_idx = fullpath.find_last_of("\\/");
-
-  if (std::string::npos != last_slash_idx) {
-    fullpath.erase(0, last_slash_idx + 1);
+    std::wstring ws(window_title);
+    obj.Set("name", WStringToString(ws));
   }
 
-  std::wstring ws(window_title);
-  obj.Set("app", fullpath);
-  obj.Set("name", WStringToString(ws));
+  // Get the app name.
+  {
+    HWND foreground_window = GetForegroundWindow();
+
+    DWORD pid;
+    GetWindowThreadProcessId(foreground_window, &pid);
+
+    CHAR  process_filename[MAX_PATH];
+    DWORD charsCarried = MAX_PATH;
+
+    HANDLE hProc = OpenProcess(
+        PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_QUERY_INFORMATION, false, pid);
+
+    QueryFullProcessImageNameA(hProc, 0, process_filename, &charsCarried);
+
+    std::string fullpath = process_filename;
+
+    const size_t last_slash_idx = fullpath.find_last_of("\\/");
+
+    if (std::string::npos != last_slash_idx) {
+      fullpath.erase(0, last_slash_idx + 1);
+    }
+
+    obj.Set("app", fullpath);
+  }
+
+  // Get the pointer position.
+  {
+    POINT p;
+    GetCursorPos(&p);
+    obj.Set("pointerX", Napi::Number::New(env, p.x));
+    obj.Set("pointerY", Napi::Number::New(env, p.y));
+  }
 
   return obj;
 }

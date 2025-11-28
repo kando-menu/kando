@@ -321,7 +321,7 @@ export class KandoApp {
     // as now Kando will be in focus. We use the old information instead.
     if (this.lastWMInfo && this.menuWindow.isVisible()) {
       this.lastWMInfo = {
-        ...this.lastWMInfo,
+        ...wmInfo,
         appName: this.lastWMInfo.appName,
         windowName: this.lastWMInfo.windowName,
       };
