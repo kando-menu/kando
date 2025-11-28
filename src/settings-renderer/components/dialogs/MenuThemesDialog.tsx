@@ -221,6 +221,11 @@ export default function MenuThemesDialog() {
             width={spinbuttonWidth}
           />
           <SettingsCheckbox
+            info={i18next.t('settings.menu-themes-dialog.selection-wedges-info')}
+            label={i18next.t('settings.menu-themes-dialog.selection-wedges')}
+            settingsKey="enableSelectionWedges"
+          />
+          <SettingsCheckbox
             info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
             label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
             settingsKey="enableDarkModeForMenuThemes"

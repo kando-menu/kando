@@ -34,7 +34,11 @@ import {
   SoundEffect,
   CommandlineOptions,
 } from '../common';
-import { Settings } from './settings';
+import {
+  Settings,
+  tryLoadGeneralSettingsFile,
+  tryLoadMenuSettingsFile,
+} from './settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -547,6 +551,115 @@ export class KandoApp {
       // We only want to return the first file. This is because the user can only select
       // one file at a time.
       return result.filePaths[0];
+    });
+
+    // Allow creating backups of the general settings.
+    ipcMain.on('settings-window.backup-general-settings', async () => {
+      const result = await dialog.showSaveDialog(this.settingsWindow, {
+        title: i18next.t('settings.backup-general-settings-title'),
+        defaultPath: path.join(app.getPath('userData'), 'general-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (result.filePath != '') {
+        fs.copyFileSync(this.generalSettings.filePath, result.filePath);
+      }
+    });
+
+    // Allow creating backups of the menu settings.
+    ipcMain.on('settings-window.backup-menu-settings', async () => {
+      const result = await dialog.showSaveDialog(this.settingsWindow, {
+        defaultPath: path.join(app.getPath('userData'), 'menu-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (result.filePath != '') {
+        fs.copyFileSync(this.menuSettings.filePath, result.filePath);
+      }
+    });
+
+    // Allow restoring the general settings from a backup. We show a warning that this
+    // will overwrite the current settings.
+    ipcMain.on('settings-window.restore-general-settings', async () => {
+      const response = await dialog.showMessageBox(this.settingsWindow, {
+        type: 'warning',
+        buttons: [i18next.t('settings.cancel'), i18next.t('settings.restore-backup')],
+        title: i18next.t('settings.restore-general-settings-warning-title'),
+        message: i18next.t('settings.restore-general-settings-warning-message'),
+      });
+
+      if (response.response === 0) {
+        return;
+      }
+
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        defaultPath: path.join(app.getPath('userData'), 'general-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (!result.canceled) {
+        try {
+          tryLoadGeneralSettingsFile(result.filePaths[0]);
+        } catch (error) {
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.restore-general-settings-error-title'),
+            message: error instanceof Error ? error.message : String(error),
+          });
+
+          return;
+        }
+
+        fs.copyFileSync(result.filePaths[0], this.generalSettings.filePath);
+
+        dialog.showMessageBox(this.settingsWindow, {
+          type: 'info',
+          title: i18next.t('settings.restore-general-settings-success-title'),
+          message: i18next.t('settings.restore-general-settings-success-message'),
+        });
+      }
+    });
+
+    // Allow restoring the menu configuration from a backup. We show a warning that this
+    // will overwrite the current menus.
+    ipcMain.on('settings-window.restore-menu-settings', async () => {
+      const response = await dialog.showMessageBox(this.settingsWindow, {
+        type: 'warning',
+        buttons: [i18next.t('settings.cancel'), i18next.t('settings.restore-backup')],
+        title: i18next.t('settings.restore-menu-settings-warning-title'),
+        message: i18next.t('settings.restore-menu-settings-warning-message'),
+      });
+
+      if (response.response === 0) {
+        return;
+      }
+
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        defaultPath: path.join(app.getPath('userData'), 'menu-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (!result.canceled) {
+        try {
+          tryLoadMenuSettingsFile(result.filePaths[0]);
+        } catch (error) {
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.restore-menu-settings-error-title'),
+            message: error instanceof Error ? error.message : String(error),
+          });
+
+          return;
+        }
+
+        fs.copyFileSync(result.filePaths[0], this.menuSettings.filePath);
+
+        dialog.showMessageBox(this.settingsWindow, {
+          type: 'info',
+          title: i18next.t('settings.restore-menu-settings-success-title'),
+          message: i18next.t('settings.restore-menu-settings-success-message'),
+        });
+      }
     });
 
     // Print a message to the console of the host process.

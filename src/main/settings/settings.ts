@@ -155,7 +155,7 @@ type Options<T> = {
  */
 export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   /** This is the path to the settings file. */
-  private readonly filePath: string;
+  public readonly filePath: string;
 
   /** This is the watcher which is used to watch the settings file for changes. */
   private watcher: FSWatcher | null;

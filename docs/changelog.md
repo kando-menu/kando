@@ -23,8 +23,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
-- A button in the icon-picker popover to reload all icon themes without restarting Kando.
+- Buttons to the general settings dialog to **backup and restore** the `config.json` and `menus.json` files. This makes it easier to backup your settings before making big changes or to restore them from a previous backup.
+- A button in the icon-picker popover to **reload all icon themes** without restarting Kando.
 - The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
+- A setting to **enable or disable the drawing of selection wedges** in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
+
+### :wrench: Changed
+
+- Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ## [Kando 2.1.1](https://github.com/kando-menu/kando/releases/tag/v2.1.1)
 
@@ -38,7 +44,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - An issue which caused the center text to not hide properly under certain circumstances.
 - An issue which made menus not appear at the mouse pointer when cycling through menus with the same shortcut.
 - An issue which made Kando not respond to shortcuts after pressing the right mouse button twice in fast succession on Windows.
-- An issue which changes made to commands in the run-command item type configuration not being saved properly when the settings dialog is closed with the input focus still in the command text field.
+- An issue which made changes made to commands in the run-command item type configuration not being saved properly when the settings dialog is closed with the input focus still in the command text field.
 - Discovery of installed applications and icons when running on Linux inside a Flatpak container.
 - A crash on Linux when an installed application had no `Name` entry in its `.desktop` file. Thanks to [@netizen-ais](https://github.com/netizen-ais) for the fix!
 - Opening files and directories on Linux via an open-file action when their path contained spaces.

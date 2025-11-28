@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { app } from 'electron';
+import fs from 'fs-extra';
 
 import {
   GENERAL_SETTINGS_SCHEMA_V1,
@@ -44,6 +45,30 @@ export function getGeneralSettings(): Settings<GeneralSettings> | null {
     );
     return null;
   }
+}
+
+/**
+ * Checks whether the given path points to a valid general settings file. If not, an
+ * exception is thrown.
+ *
+ * @param path The path to check.
+ */
+export function tryLoadGeneralSettingsFile(path: string) {
+  // First we try to read the file content. This will throw an exception if the file
+  // cannot be read.
+  const content = fs.readJSONSync(path, 'utf-8');
+
+  // The schema is not very strict as most properties are optional. As a sanity check, we
+  // look for the presence of the "version" field.
+  if (!('version' in content)) {
+    throw new Error(
+      'The provided file does not seem to be a valid general settings file.'
+    );
+  }
+
+  // Now we try to parse the content according to the latest schema. This will throw an
+  // exception if the content does not conform to the schema.
+  loadGeneralSettings(content);
 }
 
 /**

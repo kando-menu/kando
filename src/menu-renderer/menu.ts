@@ -459,11 +459,11 @@ export class Menu extends EventEmitter {
    * @param container The container to append the DOM tree to.
    */
   private createNodeTree(rootItem: RenderedMenuItem, rootContainer: HTMLElement) {
-    if (this.theme.drawSelectionWedges) {
+    if (this.theme.drawSelectionWedges && this.settings.enableSelectionWedges) {
       this.selectionWedges = new SelectionWedges(rootContainer);
     }
 
-    if (this.theme.drawWedgeSeparators) {
+    if (this.theme.drawWedgeSeparators && this.settings.enableSelectionWedges) {
       this.wedgeSeparators = new WedgeSeparators(rootContainer);
     }
 

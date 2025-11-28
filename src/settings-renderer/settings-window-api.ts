@@ -123,6 +123,38 @@ export const SETTINGS_WINDOW_API = {
   openFilePicker: (config: OpenDialogOptions): Promise<string> => {
     return ipcRenderer.invoke('settings-window.open-file-picker', config);
   },
+
+  /**
+   * This will open a file picker to let the user select a location to save the backup of
+   * the config.json file.
+   */
+  backupGeneralSettings: () => {
+    ipcRenderer.send('settings-window.backup-general-settings');
+  },
+
+  /**
+   * This will open a file picker to let the user select a location to save the backup of
+   * the menu.json file.
+   */
+  backupMenuSettings: () => {
+    ipcRenderer.send('settings-window.backup-menu-settings');
+  },
+
+  /**
+   * This will open a file picker to let the user select a previously backed up
+   * config.json to restore the general settings from.
+   */
+  restoreGeneralSettings: () => {
+    ipcRenderer.send('settings-window.restore-general-settings');
+  },
+
+  /**
+   * This will open a file picker to let the user select a previously backed up menu.json
+   * to restore the menu settings from.
+   */
+  restoreMenuSettings: () => {
+    ipcRenderer.send('settings-window.restore-menu-settings');
+  },
 };
 
 /**
