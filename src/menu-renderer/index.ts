@@ -67,13 +67,16 @@ Promise.all([
   soundTheme.loadDescription(soundThemeDescription);
   soundTheme.setVolume(settings.soundVolume);
 
-  // This will be called below whenever the sound theme should be reloaded.
-  const reloadSoundTheme = async () => {
+  // This will be called whenever the sound theme should be reloaded.
+  window.menuAPI.onReloadSoundTheme(async () => {
     const description = await window.commonAPI.getSoundTheme();
     soundTheme.loadDescription(description);
-  };
+  });
 
-  window.menuAPI.onReloadSoundTheme(reloadSoundTheme);
+  // This will be called whenever the icons should be reloaded.
+  window.menuAPI.onReloadIconThemes(async () => {
+    await IconThemeRegistry.getInstance().init();
+  });
 
   // Initialize the icon theme registry.
   await IconThemeRegistry.getInstance().init();

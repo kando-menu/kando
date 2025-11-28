@@ -8,6 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { EventEmitter } from 'events';
+
 import { WindowWithAPIs } from '../common-window-api';
 declare const window: WindowWithAPIs;
 
@@ -34,9 +36,12 @@ export interface IconTheme {
    * Creates a div element that contains the icon with the given name.
    *
    * @param icon One of the icons returned by `listIcons`.
+   * @param reloadIteration The current reload iteration. If the icon theme has been
+   *   reloaded, this number is increased by one. This can be used to avoid caching
+   *   issues.
    * @returns A div element that contains the icon.
    */
-  createIcon(icon: string): HTMLElement;
+  createIcon(icon: string, reloadIteration: number): HTMLElement;
 
   iconPickerInfo: {
     /**
@@ -64,8 +69,11 @@ export interface IconTheme {
 /**
  * This class is a registry that contains all available icon themes. It is a singleton
  * class. Use `getInstance` to get the instance of this class.
+ *
+ * Whenever the icon themes are changed (e.g. when the user forces a reload, or when the
+ * system icon theme changes on Linux), a "reload-icon-themes" event is emitted.
  */
-export class IconThemeRegistry {
+export class IconThemeRegistry extends EventEmitter {
   /** The singleton instance of this class. */
   private static instance: IconThemeRegistry = new IconThemeRegistry();
 
@@ -77,6 +85,12 @@ export class IconThemeRegistry {
 
   /** The directory where the user's icon themes are stored. */
   private _userIconThemeDirectory = '';
+
+  /**
+   * The number of times the icon themes have been reloaded. This is used to force reloads
+   * in the icon and to avoid caching issues.
+   */
+  private reloadIteration = 0;
 
   /**
    * Use this method to get the singleton instance of this class.
@@ -91,16 +105,20 @@ export class IconThemeRegistry {
    * Initializes the icon theme registry. This method should be called once at the
    * beginning of the application to register all built-in icon themes and the user icon
    * themes.
+   *
+   * This can also be called later to reload all icon themes (e.g. when the user forces a
+   * reload). If only the system icons should be reloaded, use `reloadSystemIcons`
+   * instead.
    */
   public async init() {
+    this.iconThemes.clear();
+
+    // Add the built-in icon themes.
     this.iconThemes.set('simple-icons', new SimpleIconsTheme());
     this.iconThemes.set('simple-icons-colored', new SimpleIconsColoredTheme());
     this.iconThemes.set('material-symbols-rounded', new MaterialSymbolsTheme());
     this.iconThemes.set('emoji', new EmojiTheme());
     this.iconThemes.set('base64', new Base64Theme());
-
-    // Add the system icon theme if available.
-    await this.reloadSystemIcons();
 
     // Add an icon theme for all icon themes in the user's icon theme directory.
     const info = await window.commonAPI.getIconThemes();
@@ -108,6 +126,10 @@ export class IconThemeRegistry {
     for (const theme of info.fileIconThemes) {
       this.iconThemes.set(theme.name, new FileIconTheme(theme));
     }
+
+    // Add the system icon theme if available. This will also emit the
+    // 'reload-icon-themes' signal and increment the reload iteration.
+    await this.reloadSystemIcons();
   }
 
   /**
@@ -148,11 +170,11 @@ export class IconThemeRegistry {
    * @returns A div element that contains the icon.
    */
   public createIcon(theme: string, icon: string): HTMLElement {
-    const div = this.getTheme(theme).createIcon(icon);
+    const div = this.getTheme(theme).createIcon(icon, this.reloadIteration);
 
     if (!div) {
       console.warn(`Icon "${icon}" not found in theme "${theme}". Using fallback.`);
-      return this.fallbackTheme.createIcon('');
+      return this.fallbackTheme.createIcon('', this.reloadIteration);
     }
 
     return div;
@@ -170,7 +192,8 @@ export class IconThemeRegistry {
 
   /**
    * Reloads the system icons. This is used to update the system icon theme if it has
-   * changed.
+   * changed. Opposed to init(), this method does not reload all icon themes, but only the
+   * system icons.
    */
   public async reloadSystemIcons() {
     const systemIcons = await window.commonAPI.getSystemIcons();
@@ -179,5 +202,10 @@ export class IconThemeRegistry {
     } else {
       this.iconThemes.delete('system');
     }
+
+    this.reloadIteration += 1;
+
+    // Notify listeners that the icon themes have been reloaded.
+    this.emit('reload-icon-themes');
   }
 }

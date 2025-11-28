@@ -35,6 +35,7 @@ const options = program
   .option('-s, --settings', 'show the settings')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
+  .option('--reload-icon-themes', 'reload the any icon themes from disk')
   .allowUnknownOption(true)
   .allowExcessArguments(true)
   .parse()
@@ -46,7 +47,13 @@ const gotTheLock = app.requestSingleInstanceLock(options);
 if (!gotTheLock) {
   // Print a short message and exit. The running instance will get notified and will also
   // show a corresponding desktop notification.
-  if (!options.menu && !options.settings && !options.reloadMenuTheme) {
+  if (
+    !options.menu &&
+    !options.settings &&
+    !options.reloadMenuTheme &&
+    !options.reloadSoundTheme &&
+    !options.reloadIconThemes
+  ) {
     console.log(
       'Kando is already running. Use --help for a list of commands to communicate with the running instance!'
     );
@@ -171,6 +178,7 @@ try {
         settings: parsedUrl.host === 'settings',
         reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
         reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
+        reloadIconThemes: parsedUrl.host === 'reload-icon-themes',
       };
 
       if (!kando.handleCommandLine(options)) {

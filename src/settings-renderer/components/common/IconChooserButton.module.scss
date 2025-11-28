@@ -22,13 +22,12 @@
   flex-direction: row;
   gap: 10px;
 
-  > * {
-    flex-grow: 1;
-  }
-
+  .iconThemeSelector,
   .searchInput {
+    flex-grow: 1;
     display: flex;
 
+    select,
     input {
       background-color: $widget-normal;
       width: 100%;

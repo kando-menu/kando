@@ -28,6 +28,10 @@ export type CommandlineOptions = {
   // This optional parameter is specified using the --reload-sound-theme option. It is
   // used to reload the current sound theme from disk.
   readonly reloadSoundTheme?: boolean;
+
+  // This optional parameter is specified using the --reload-icon-themes option. It is
+  // used to reload the available icon themes from disk.
+  readonly reloadIconThemes?: boolean;
 };
 
 /**

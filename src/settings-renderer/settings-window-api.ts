@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, OpenDialogOptions } from 'electron';
+import { ipcRenderer, OpenDialogOptions, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
@@ -102,6 +102,21 @@ export const SETTINGS_WINDOW_API = {
   /** This will reload the current menu theme. */
   reloadSoundTheme: () => {
     ipcRenderer.send('settings-window.reload-sound-theme');
+  },
+
+  /** This will reload the current icon themes. */
+  reloadIconThemes: () => {
+    ipcRenderer.send('settings-window.reload-icon-themes');
+  },
+
+  /**
+   * This will be called by the host process when the icon themes should be reloaded.
+   *
+   * @param callback This callback will be called when the icon themes should be reloaded.
+   */
+  onReloadIconThemes: (func: () => void) => {
+    webFrame.clearCache();
+    ipcRenderer.on('settings-window.reload-icon-themes', func);
   },
 
   /** This will open a file picker and return the selected file path. */

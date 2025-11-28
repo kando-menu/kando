@@ -5,6 +5,7 @@
       "base64-example": "Base64 example:",
       "file-example": "file: URI example:",
       "url-example": "URL example:",
+      "reload-button-tooltip": "Reload all icon themes",
       "search-placeholder": "Search icons…",
       "hint": "Learn [here]({{link}}) how to add or create your own icon themes."
     },
