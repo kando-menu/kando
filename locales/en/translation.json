@@ -164,7 +164,7 @@
       "fade-out-time": "Fade-out time",
       "menu-scale-info": "Use this to increase or decrease the size of your menus. Default is 1.0.",
       "menu-scale": "Menu scale",
-      "selection-wedges-info": "If enabled and supported by the selected theme, the selectable area of menu items will be drawn.",
+      "selection-wedges-info": "If enabled and supported by the selected theme, the selectable area of menu items will be highlighted.",
       "selection-wedges": "Draw item wedges",
       "light-dark-mode-info": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
       "light-dark-mode": "Enable light/dark mode",
