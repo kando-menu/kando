@@ -36,6 +36,7 @@ import {
 } from '../common';
 import {
   Settings,
+  getConfigDirectory,
   tryLoadGeneralSettingsFile,
   tryLoadMenuSettingsFile,
 } from './settings';
@@ -461,18 +462,18 @@ export class KandoApp {
 
     // Allow the renderer to retrieve the path to the config directory.
     ipcMain.handle('settings-window.get-config-directory', () => {
-      return app.getPath('userData');
+      return getConfigDirectory();
     });
 
     // Allow the renderer to retrieve the path to the menu themes directory.
     ipcMain.handle('settings-window.get-menu-themes-directory', () => {
-      return path.join(app.getPath('userData'), 'menu-themes');
+      return path.join(getConfigDirectory(), 'menu-themes');
     });
 
     // Allow the renderer to retrieve all available menu themes.
     ipcMain.handle('settings-window.get-all-menu-themes', async () => {
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'menu-themes'),
+        path.join(getConfigDirectory(), 'menu-themes'),
         path.join(__dirname, '../renderer/assets/menu-themes'),
       ]);
 
@@ -488,7 +489,7 @@ export class KandoApp {
     // Allow the renderer to retrieve all available sound themes.
     ipcMain.handle('settings-window.get-all-sound-themes', async () => {
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'sound-themes'),
+        path.join(getConfigDirectory(), 'sound-themes'),
         path.join(__dirname, '../renderer/assets/sound-themes'),
       ]);
 
@@ -557,7 +558,7 @@ export class KandoApp {
     ipcMain.on('settings-window.backup-general-settings', async () => {
       const result = await dialog.showSaveDialog(this.settingsWindow, {
         title: i18next.t('settings.backup-general-settings-title'),
-        defaultPath: path.join(app.getPath('userData'), 'general-settings-backup.json'),
+        defaultPath: path.join(getConfigDirectory(), 'general-settings-backup.json'),
         filters: [{ name: 'JSON', extensions: ['json'] }],
       });
 
@@ -569,7 +570,7 @@ export class KandoApp {
     // Allow creating backups of the menu settings.
     ipcMain.on('settings-window.backup-menu-settings', async () => {
       const result = await dialog.showSaveDialog(this.settingsWindow, {
-        defaultPath: path.join(app.getPath('userData'), 'menu-settings-backup.json'),
+        defaultPath: path.join(getConfigDirectory(), 'menu-settings-backup.json'),
         filters: [{ name: 'JSON', extensions: ['json'] }],
       });
 
@@ -593,7 +594,7 @@ export class KandoApp {
       }
 
       const result = await dialog.showOpenDialog(this.settingsWindow, {
-        defaultPath: path.join(app.getPath('userData'), 'general-settings-backup.json'),
+        defaultPath: path.join(getConfigDirectory(), 'general-settings-backup.json'),
         filters: [{ name: 'JSON', extensions: ['json'] }],
       });
 
@@ -635,7 +636,7 @@ export class KandoApp {
       }
 
       const result = await dialog.showOpenDialog(this.settingsWindow, {
-        defaultPath: path.join(app.getPath('userData'), 'menu-settings-backup.json'),
+        defaultPath: path.join(getConfigDirectory(), 'menu-settings-backup.json'),
         filters: [{ name: 'JSON', extensions: ['json'] }],
       });
 
@@ -753,7 +754,7 @@ export class KandoApp {
       }
 
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'icon-themes'),
+        path.join(getConfigDirectory(), 'icon-themes'),
         path.join(__dirname, '../renderer/assets/icon-themes'),
       ]);
 
@@ -773,7 +774,7 @@ export class KandoApp {
       );
 
       this.iconThemesCache = {
-        userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
+        userIconDirectory: path.join(getConfigDirectory(), 'icon-themes'),
         fileIconThemes,
       };
 
@@ -1021,7 +1022,7 @@ export class KandoApp {
    */
   private async findThemePath(directory: string, theme: string) {
     const testPaths = [
-      path.join(app.getPath('userData'), `${directory}/${theme}`),
+      path.join(getConfigDirectory(), `${directory}/${theme}`),
       path.join(__dirname, `../renderer/assets/${directory}/${theme}`),
     ];
 
@@ -1055,7 +1056,7 @@ export class KandoApp {
    */
   private async findIconThemePath(theme: string) {
     const testPaths = [
-      path.join(app.getPath('userData'), 'icon-themes'),
+      path.join(getConfigDirectory(), 'icon-themes'),
       path.join(__dirname, '../renderer/assets/icon-themes'),
     ];
 

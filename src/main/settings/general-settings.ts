@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { app } from 'electron';
 import fs from 'fs-extra';
 
 import {
@@ -18,7 +17,7 @@ import {
 
 import { GENERAL_SETTINGS_SCHEMA, GeneralSettings } from '../../common/settings-schemata';
 
-import { Settings } from './settings';
+import { getConfigDirectory, Settings } from '.';
 
 import { version } from './../../../package.json';
 
@@ -34,7 +33,7 @@ export function getGeneralSettings(): Settings<GeneralSettings> | null {
   try {
     return new Settings<GeneralSettings>({
       file: 'config.json',
-      directory: app.getPath('userData'),
+      directory: getConfigDirectory(),
       defaults: () => GENERAL_SETTINGS_SCHEMA.parse({}),
       load: (content) => loadGeneralSettings(content),
     });
