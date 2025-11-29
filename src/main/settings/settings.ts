@@ -12,7 +12,7 @@ import { app } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
 import chokidar, { FSWatcher } from 'chokidar';
-import lodash, { set } from 'lodash';
+import lodash from 'lodash';
 
 import os from 'os';
 import { Notification } from './../utils/notification';
@@ -21,9 +21,9 @@ import { version } from './../../../package.json';
 
 /**
  * The directory where the settings files are stored. Initialized by the first call to
- * `getSettingsDirectory()`.
+ * `getConfigDirectory()`.
  */
-let settingsDirectory: string | null = null;
+let configDirectory: string | null = null;
 
 /**
  * Gets the directory where the settings files are stored. Usually, this is electron's
@@ -33,8 +33,8 @@ let settingsDirectory: string | null = null;
  *
  * @returns The directory where the settings files and all other config files are stored.
  */
-export function getSettingsDirectory(): string {
-  if (settingsDirectory === null) {
+export function getConfigDirectory(): string {
+  if (configDirectory === null) {
     const execDir = path.dirname(process.execPath);
     console.log('Looking for portableMode.json in', execDir);
 
@@ -42,16 +42,16 @@ export function getSettingsDirectory(): string {
 
     if (fs.existsSync(portableConfigPath)) {
       try {
-        const config = fs.readJSONSync(portableConfigPath);
-        if (config.directory) {
-          settingsDirectory = config.directory;
+        const portableMode = fs.readJSONSync(portableConfigPath);
+        if (portableMode.configDirectory) {
+          configDirectory = portableMode.configDirectory;
 
           // Make sure the directory exists and that it is an absolute path.
-          settingsDirectory = path.resolve(execDir, settingsDirectory);
-          fs.mkdirSync(settingsDirectory, { recursive: true });
-          console.log(`Using portable mode. Settings directory: ${settingsDirectory}`);
+          configDirectory = path.resolve(execDir, configDirectory);
+          fs.mkdirSync(configDirectory, { recursive: true });
+          console.log(`Using portable mode. Settings directory: ${configDirectory}`);
         } else {
-          throw new Error('"directory" field is missing or empty');
+          throw new Error('"configDirectory" field is missing or empty');
         }
       } catch (error) {
         console.error(
@@ -61,13 +61,13 @@ export function getSettingsDirectory(): string {
       }
     }
 
-    if (settingsDirectory === null) {
-      settingsDirectory = app.getPath('userData');
-      console.log(`Not using portable mode. Settings directory: ${settingsDirectory}`);
+    if (configDirectory === null) {
+      configDirectory = app.getPath('userData');
+      console.log(`Not using portable mode. Settings directory: ${configDirectory}`);
     }
   }
 
-  return settingsDirectory;
+  return configDirectory;
 }
 
 /**
@@ -232,7 +232,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   constructor(private options: Options<T>) {
     super();
 
-    this.filePath = path.join(getSettingsDirectory(), options.file);
+    this.filePath = path.join(getConfigDirectory(), options.file);
     this.settings = this.loadSettings();
 
     // Watch the settings file for changes.
@@ -455,7 +455,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       `-${oldVersion}-${timestamp}.json`
     );
 
-    const backupDir = path.join(getSettingsDirectory(), 'backups');
+    const backupDir = path.join(getConfigDirectory(), 'backups');
     const backupFile = path.join(backupDir, fileName);
 
     console.log(`Creating backup of settings file: ${this.filePath} as ${backupFile}`);
