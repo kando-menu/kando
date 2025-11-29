@@ -16,7 +16,7 @@ import {
 } from '../../common/settings-schemata/menu-settings-v1';
 
 import { MENU_SETTINGS_SCHEMA, MenuSettings } from '../../common/settings-schemata';
-import { Settings } from './settings';
+import { getConfigDirectory, Settings } from '.';
 
 import { version } from './../../../package.json';
 
@@ -36,6 +36,7 @@ export function getMenuSettings(
   try {
     return new Settings<MenuSettings>({
       file: 'menus.json',
+      directory: getConfigDirectory(),
       ignoreWriteProtectedConfigFiles,
       defaults: () => MENU_SETTINGS_SCHEMA.parse({}),
       load: (content) => loadMenuSettings(content),

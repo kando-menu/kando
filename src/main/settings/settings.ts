@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { app } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
 import chokidar, { FSWatcher } from 'chokidar';
@@ -18,57 +17,6 @@ import os from 'os';
 import { Notification } from './../utils/notification';
 
 import { version } from './../../../package.json';
-
-/**
- * The directory where the settings files are stored. Initialized by the first call to
- * `getConfigDirectory()`.
- */
-let configDirectory: string | null = null;
-
-/**
- * Gets the directory where the settings files are stored. Usually, this is electron's
- * app.getPath('userData') directory. However, Kando allows for a portable mode where this
- * directory can be set by the user by placing a 'portableMode.json' file next to the
- * executable.
- *
- * @returns The directory where the settings files and all other config files are stored.
- */
-export function getConfigDirectory(): string {
-  if (configDirectory === null) {
-    const execDir = path.dirname(process.execPath);
-    console.log('Looking for portableMode.json in', execDir);
-
-    const portableConfigPath = path.join(execDir, 'portableMode.json');
-
-    if (fs.existsSync(portableConfigPath)) {
-      try {
-        const portableMode = fs.readJSONSync(portableConfigPath);
-        if (portableMode.configDirectory) {
-          configDirectory = portableMode.configDirectory;
-
-          // Make sure the directory exists and that it is an absolute path.
-          configDirectory = path.resolve(execDir, configDirectory);
-          fs.mkdirSync(configDirectory, { recursive: true });
-          console.log(`Using portable mode. Settings directory: ${configDirectory}`);
-        } else {
-          throw new Error('"configDirectory" field is missing or empty');
-        }
-      } catch (error) {
-        console.error(
-          'Error reading portableMode.json:',
-          error instanceof Error ? error.message : error
-        );
-      }
-    }
-
-    if (configDirectory === null) {
-      configDirectory = app.getPath('userData');
-      console.log(`Not using portable mode. Settings directory: ${configDirectory}`);
-    }
-  }
-
-  return configDirectory;
-}
 
 /**
  * This type is used to define all possible events which can be emitted by the
@@ -159,6 +107,9 @@ class PropertyChangeEmitter<T> {
 
 /** The options object which can be passed to the constructor. */
 type Options<T> = {
+  /** The directory in which the settings file should be stored. */
+  directory: string;
+
   /** The name of the settings file, including the '.json' extension. */
   file: string;
 
@@ -232,7 +183,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   constructor(private options: Options<T>) {
     super();
 
-    this.filePath = path.join(getConfigDirectory(), options.file);
+    this.filePath = path.join(options.directory, options.file);
     this.settings = this.loadSettings();
 
     // Watch the settings file for changes.
@@ -455,7 +406,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       `-${oldVersion}-${timestamp}.json`
     );
 
-    const backupDir = path.join(getConfigDirectory(), 'backups');
+    const backupDir = path.join(this.options.directory, 'backups');
     const backupFile = path.join(backupDir, fileName);
 
     console.log(`Creating backup of settings file: ${this.filePath} as ${backupFile}`);
