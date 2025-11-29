@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { app } from 'electron';
 import fs from 'fs-extra';
 
 import {
@@ -37,7 +36,6 @@ export function getMenuSettings(
   try {
     return new Settings<MenuSettings>({
       file: 'menus.json',
-      directory: app.getPath('userData'),
       ignoreWriteProtectedConfigFiles,
       defaults: () => MENU_SETTINGS_SCHEMA.parse({}),
       load: (content) => loadMenuSettings(content),

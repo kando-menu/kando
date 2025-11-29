@@ -73,7 +73,7 @@ import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { Notification } from './utils/notification';
 import { getBackend } from './backends';
 import { KandoApp } from './app';
-import { getGeneralSettings, getMenuSettings } from './settings';
+import { getGeneralSettings, getMenuSettings, getSettingsDirectory } from './settings';
 
 // Initialize the notification system. This will queue notifications until the app is
 // ready so that we can even show notifications before the app is fully initialized. This
@@ -146,7 +146,7 @@ try {
   try {
     const themeDirs = ['menu-themes', 'sound-themes', 'icon-themes'];
     themeDirs.forEach((dir) => {
-      fs.mkdirSync(path.join(app.getPath('userData'), dir), { recursive: true });
+      fs.mkdirSync(path.join(getSettingsDirectory(), dir), { recursive: true });
     });
   } catch (error) {
     if (
