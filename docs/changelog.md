@@ -17,6 +17,14 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [Kando 2.1.2](https://github.com/kando-menu/kando/releases/tag/v2.1.2)
+
+**Release Date:** 2025-12-02
+
+### :bug: Fixed
+
+- A regression which caused the window-name condition to not work properly on Windows.
+
 ## [Kando 2.1.1](https://github.com/kando-menu/kando/releases/tag/v2.1.1)
 
 **Release Date:** 2025-11-28
