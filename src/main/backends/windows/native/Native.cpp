@@ -178,20 +178,19 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
   Napi::Env    env = info.Env();
   Napi::Object obj = Napi::Object::New(env);
 
+  HWND foreground_window = GetForegroundWindow();
+
   // Get the window name.
   {
     WCHAR window_title[256];
-    HWND  foreground_window = GetForegroundWindow();
     GetWindowTextW(foreground_window, window_title, 256);
 
     std::wstring ws(window_title);
-    obj.Set("name", WStringToString(ws));
+    obj.Set("window", WStringToString(ws));
   }
 
   // Get the app name.
   {
-    HWND foreground_window = GetForegroundWindow();
-
     DWORD pid;
     GetWindowThreadProcessId(foreground_window, &pid);
 
