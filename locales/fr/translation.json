@@ -224,8 +224,8 @@
             "gesture-jitter-threshold": "Seuil de tolérance au tremblement gestuel",
             "fixed-stroke-length-info": "En général, les éléments sont sélectionnés lorsque vous arrêtez le mouvement ou lorsque vous deviez. Si vous donnez à ce paramètre une valeur supérieure à 0, ce comportement sera modifié : Désormais, les éléments ne seront sélectionnés que si vous avez fait glisser un élément jusqu'à cette distance du centre. La valeur par défaut est 0px.",
             "none": "Aucun",
-            "title": "Paramètres Générales",
-            "message": "Tous les paramètres de Kando sont stockés dans un fichier JSON que vous pouvez également éditer, partager ou sauvegarder. Cliquez sur [ici]({{link}}) pour ouvrir le répertoire où le fichier config.json est stocké.",
+            "title": "Paramètres Globaux",
+            "message": "Tous les menus et les paramètres de Kando sont stockés dans deux fichiers JSON que vous pouvez également éditer, partager ou sauvegarder. Cliquez sur [ici]({{link}}) pour ouvrir le répertoire où les fichiers sont stocké.",
             "app-behavior": "Comportement de l'application",
             "check-for-new-versions": "Vérifier si de nouvelles versions de l'application sont disponibles",
             "invisible-settings-button-info": "Vous pouvez toujours utiliser le bouton, il apparaîtra lorsque vous passerez la souris dessus.",
@@ -287,7 +287,12 @@
             "keep-input-focus-info": "Si cette option est activée, le menu ne recevra pas le focus de la saisie clavier lorsqu'il sera ouvert. Cette option désactive le mode Turbo, mais peut s'avérer utile si vous souhaitez que d'autres applications restent focalisées lorsque le menu est ouvert.",
             "keep-input-focus": "Maintenir le focus sur l'application active",
             "hardware-acceleration": "Activer l'accélération matérielle",
-            "hardware-acceleration-info": "Cette option peut améliorer les performances de l'application, mais peut également entraîner des artefacts de rendu. Vous devrez redémarrer Kando pour appliquer la modification."
+            "hardware-acceleration-info": "Cette option peut améliorer les performances de l'application, mais peut également entraîner des artefacts de rendu. Vous devrez redémarrer Kando pour appliquer la modification.",
+            "backup-and-restore": "Sauvgarder et Restaurer",
+            "backup-menus": "Sauvgarder menus.json…",
+            "backup-settings": "Sauvgarder config.json…",
+            "restore-menus": "Restaurer menu json…",
+            "restore-settings": "Restorer menu.json…"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
@@ -297,7 +302,8 @@
             "url-example": "Exemple d'URL :",
             "base64-hint": "Les icônes encodées en Base64 permettent d'inclure facilement n'importe quel type d'icône dans vos menus. Vous pouvez utiliser un service comme [www.base64-image.de] ({{link}}) pour convertir n'importe quelle image en une chaîne codée en Base64. Cela fonctionne même pour les gifs animés !",
             "file-example": "file: exemple URI :",
-            "hint": "Apprenez [ici]({{link}}) comment ajouter ou créer vos propres thèmes d'icônes."
+            "hint": "Apprenez [ici]({{link}}) comment ajouter ou créer vos propres thèmes d'icônes.",
+            "reload-button-tooltip": "Recharger tous les icônes"
         },
         "introduction-dialog": {
             "title": "Bienvenue sur Kando !",
@@ -353,7 +359,8 @@
             "fade-out-time-info": "Temps nécessaire pour que le menu s'affiche en fondu. La valeur par défaut est de 200 ms.",
             "menu-scale-info": "Utilisez ceci pour augmenter ou diminuer la taille de tes menus. La valeur par défaut est 1.0.",
             "get-themes-online": "Obtenir des thèmes en ligne",
-            "fade-in-time-info": "Temps nécessaire pour que le menu s'affiche en fondu. La valeur par défaut est de 150 ms."
+            "fade-in-time-info": "Temps nécessaire pour que le menu s'affiche en fondu. La valeur par défaut est de 150 ms.",
+            "selection-wedges-info": "Si cette option est activée et prise en charge par le thème sélectionné, la zone sélectionnable des éléments du menu sera mise en valeur."
         },
         "not-bound": "Non-Attribué",
         "shortcut-id-label": "ID du raccourci clavier",
@@ -423,6 +430,18 @@
             "hint": "Vous pouvez également faire glisser une application de votre menu démarrage dans la fenêtre de Kando !",
             "search-placeholder": "Rechercher une application…",
             "use-selected": "Sélectionner"
-        }
+        },
+        "backup-general-settings-title": "Sauvgarder les Paramètres Globaux…",
+        "restore-backup": "Restorer une sauvegarde…",
+        "restore-general-settings-warning-title": "Souhaitez vous vraiment restorer les paramètres globaux ?",
+        "restore-general-settings-warning-message": "Cette action écrasera les paramètres actuels de l'application par le contenu du fichier sélectionné ! Vos menus et collections ne seront pas affectés.",
+        "restore-general-settings-error-title": "La restauration des paramètres à échoué !",
+        "restore-general-settings-success-title": "Succès !",
+        "restore-general-settings-success-message": "Vos paramètres globaux ont été restaurés du fichier de sauvegarde.",
+        "restore-menu-settings-warning-title": "Voulez-vous vraiment restorer paramètres du menu ?",
+        "restore-menu-settings-warning-message": "Cette action écrasera vos menus actuelles et vos collections par le contenu du fichier sélectionné !",
+        "restore-menu-settings-error-title": "La restauration des menus à échoué !",
+        "restore-menu-settings-success-title": "Succès !",
+        "restore-menu-settings-success-message": "Vos menus et collections ont été restaurés du fichier de sauvegarde."
     }
 }

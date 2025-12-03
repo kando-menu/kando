@@ -235,7 +235,7 @@
             "menu-window-dev-tools": "检查菜单",
             "none": "无",
             "title": "通用设置",
-            "message": "Kando 的所有设置都存储在一个 JSON 文件中，您可以编辑、分享或备份该文件。点击[这里]({{link}})以打开存储 config.json 文件的目录。",
+            "message": "Kando 的菜单设置和应用程序设置分别存储在两个 JSON 文件中，您可以编辑、分享或备份这些文件。点击[这里]({{link}})以打开存储配置文件的目录。",
             "app-behavior": "应用行为",
             "check-for-new-versions": "检查新版本",
             "check-for-new-versions-info": "如果启用，Kando 将会在新版本可用时向您显示一条通知。",
@@ -287,7 +287,12 @@
             "keep-input-focus": "停留在活动应用窗口",
             "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这会禁用极速模式，但如果您希望其他应用程序在菜单打开时保持聚焦，这可能会很有用。",
             "hardware-acceleration": "启用硬件加速",
-            "hardware-acceleration-info": "此选项可提升应用程序的性能，但同时也可能导致渲染异常。您需要重新启动Kando以应用此设置。"
+            "hardware-acceleration-info": "此选项可提升应用程序的性能，但同时也可能导致渲染异常。您需要重新启动Kando以应用此设置。",
+            "backup-and-restore": "备份与恢复",
+            "backup-menus": "备份 menus.json…",
+            "backup-settings": "备份 config.json…",
+            "restore-menus": "恢复 menus.json…",
+            "restore-settings": "恢复 config.json…"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -297,7 +302,8 @@
             "search-placeholder": "搜索图标…",
             "url-example": "URL 示例：",
             "base64-hint": "Base64 编码的图标提供了一种简单的方法将任何类型的图标包含到您的菜单中。您可以使用类似于 [www.base64-image.de]({{link}}) 的服务将任何图像转换为 Base64 编码字符串。这甚至适用于动画 GIF！",
-            "hint": "在 [这里]({{link}}) 了解如何添加或创建您自己的图标主题。"
+            "hint": "在 [这里]({{link}}) 了解如何添加或创建您自己的图标主题。",
+            "reload-button-tooltip": "重载所有图标主题"
         },
         "introduction-dialog": {
             "title": "欢迎使用 Kando！",
@@ -353,7 +359,9 @@
             "menu-scale-info": "使用此选项可以增大或减小菜单的大小。默认值为 1.0。",
             "get-themes-online": "获取在线主题",
             "create-your-own-themes": "创造您自己的主题",
-            "open-theme-directory": "打开主题目录"
+            "open-theme-directory": "打开主题目录",
+            "selection-wedges-info": "如果启用且所选主题支持，则菜单项的可选区域将突出显示。",
+            "selection-wedges": "绘制菜单项选区"
         },
         "not-bound": "未绑定快捷键",
         "shortcut-id-label": "快捷键 ID",
@@ -421,6 +429,18 @@
             "hint": "您也可以从您的开始菜单直接拖放应用到 Kando 的菜单编辑器！",
             "search-placeholder": "搜索应用…",
             "use-selected": "使用此项"
-        }
+        },
+        "backup-general-settings-title": "备份通用设置…",
+        "restore-backup": "从备份恢复…",
+        "restore-general-settings-warning-title": "您确定要恢复通用设置吗？",
+        "restore-general-settings-warning-message": "这将用所选备份文件的内容覆盖您当前的应用程序设置！您的菜单和菜单合集不会受到影响。",
+        "restore-general-settings-error-title": "载入备份设置失败！",
+        "restore-general-settings-success-title": "成功！",
+        "restore-general-settings-success-message": "您的通用设置项已从备份文件恢复。",
+        "restore-menu-settings-warning-title": "您确定要重置菜单设置吗？",
+        "restore-menu-settings-warning-message": "这将用所选备份文件的内容覆盖您当前的菜单和菜单合集！",
+        "restore-menu-settings-error-title": "载入菜单备份文件失败！",
+        "restore-menu-settings-success-title": "成功！",
+        "restore-menu-settings-success-message": "您的菜单和菜单合集项已从备份文件恢复。"
     }
 }
