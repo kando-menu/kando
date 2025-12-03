@@ -23,7 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
-- **Code signing for the Windows builds!** Thanks to the [SignPath Foundation](https://signpath.org/) for providing free code signing certificates. This prevents Windows from showing warnings when installing or running Kando.
+- **Code signing for the Windows builds!** Thanks to [SignPath.io](https://signpath.io/) for providing the code signing infrastructure for this and to the [SignPath Foundation](https://signpath.org/) for providing a free code signing certificate!
 - A **Portable Mode** which can be enabled by creating a `portableMode.json` file next to the Kando executable. This file can contain a `configDirectory` property which specifies where the `config.json` and `menus.json` files are stored. This allows you to run Kando from a USB stick or other portable storage devices with all your settings and menus. Read more in the [documentation](https://kando.menu/advanced-configuration/#portable-mode).
 - Buttons to the general settings dialog to **backup and restore** the `config.json` and `menus.json` files. This makes it easier to backup your settings before making big changes or to restore them from a previous backup.
 - A button in the icon-picker popover to **reload all icon themes** without restarting Kando.
