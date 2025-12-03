@@ -92,7 +92,7 @@ jobs:
           api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
           organization-id: '4e74932d-7987-4337-9219-893ea21bd691'
           project-slug: 'kando'
-          signing-policy-slug: 'test-signing '
+          signing-policy-slug: 'release-signing '
           github-artifact-id: '${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}'
           wait-for-completion: true
           output-artifact-directory: 'out/make/signed'
