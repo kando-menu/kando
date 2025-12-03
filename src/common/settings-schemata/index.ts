@@ -19,3 +19,5 @@ export type {
   MenuSettingsV1 as MenuSettings,
 } from './menu-settings-v1';
 export { MENU_SETTINGS_SCHEMA_V1 as MENU_SETTINGS_SCHEMA } from './menu-settings-v1';
+
+export type { AchievementStatsV1 as AchievementStats } from './achievement-stats-v1';
