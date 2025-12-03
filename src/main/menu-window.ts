@@ -38,6 +38,9 @@ export class MenuWindow extends BrowserWindow {
    */
   private menuIndex = 0;
 
+  /** This is true if the window is currently visible. */
+  private visible = false;
+
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
     ipcMain.on('menu-window.ready', () => {
@@ -213,15 +216,20 @@ export class MenuWindow extends BrowserWindow {
     }
 
     // Move and resize the window to the work area of the screen where the pointer is.
-    this.setBounds(info.workArea);
+    this.setBounds(info.workArea, false);
+
+    // On macOS with stage manager enabled, this helps to ensure that the window is
+    // really maximized. Else the window will be placed next to the stage manager area.
+    if (os.platform() == 'darwin') {
+      setTimeout(() => this.setBounds(info.workArea, false));
+    }
 
     // On all platforms except Windows, we show the window after we moved it.
     if (process.platform !== 'win32') {
       this.show();
     }
 
-    // Usually, the menu is shown at the pointer position. However, if the menu is
-    // centered, we show it in the center of the screen.
+    // Usually, the menu is shown at the pointer position.
     const mousePosition = {
       x: (info.pointerX - info.workArea.x) / this.webContents.getZoomFactor(),
       y: (info.pointerY - info.workArea.y) / this.webContents.getZoomFactor(),
@@ -266,7 +274,7 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /** This shows the window. */
-  public show() {
+  public override show() {
     // Cancel any ongoing window-hiding.
     if (this.hideTimeout) {
       clearTimeout(this.hideTimeout);
@@ -296,6 +304,8 @@ export class MenuWindow extends BrowserWindow {
     setTimeout(() => {
       this.focus();
     }, 100);
+
+    this.visible = true;
   }
 
   /**
@@ -305,18 +315,17 @@ export class MenuWindow extends BrowserWindow {
   public override hide() {
     if (this.isVisible()) {
       this.webContents.send('menu-window.hide-menu');
+      this.visible = false;
     }
   }
 
   /**
-   * This checks if the window is visible. A window is considered visible if it is shown,
-   * not minimized, and not about to be hidden (i.e. the fade-out animation is not
-   * running).
+   * If the fade-out animation is currently running, this already returns false.
    *
-   * @returns Returns true if the window is visible and not minimized.
+   * @returns Returns true if the menu window is currently visible and not fading out.
    */
-  public isVisible() {
-    return super.isVisible() && this.hideTimeout === null && !this.isMinimized();
+  public override isVisible() {
+    return this.visible;
   }
 
   /**
@@ -340,6 +349,8 @@ export class MenuWindow extends BrowserWindow {
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
   private async hideWindow() {
+    this.visible = false;
+
     return new Promise<void>((resolve) => {
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
@@ -560,9 +571,9 @@ export class MenuWindow extends BrowserWindow {
     ipcMain.on('menu-window.move-pointer', (event, dist) => {
       let scale = 1;
 
-      // On macOS, the pointer movement seems to be scaled automatically. We have to
-      // scale the movement manually on other platforms.
-      if (os.platform() !== 'darwin') {
+      // On Windows, the pointer movement has to be scaled to the DPI scale of the
+      // display where the menu is shown.
+      if (os.platform() === 'win32') {
         const bounds = this.getBounds();
         const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
         scale = display.scaleFactor;

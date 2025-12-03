@@ -15,6 +15,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import { TbReload, TbPointer, TbPointerCog, TbSettingsFilled } from 'react-icons/tb';
+import { FaDownload } from 'react-icons/fa';
 import { useAppState, useGeneralSetting } from '../../state';
 
 import {
@@ -25,7 +26,6 @@ import {
   Modal,
   Note,
   Scrollbox,
-  Swirl,
 } from '../common';
 
 /** This dialog allows the user to configure some general settings of Kando. */
@@ -80,22 +80,6 @@ export default function GeneralSettingsDialog() {
             justifyContent: 'center',
             gap: 5,
           }}>
-          <Note
-            isCentered
-            useMarkdown
-            marginLeft="10%"
-            marginRight="10%"
-            marginTop={10}
-            onLinkClick={() => {
-              window.settingsAPI.getConfigDirectory().then((dir) => {
-                window.open('file://' + dir, '_blank');
-              });
-            }}>
-            {i18next.t('settings.general-settings-dialog.message', { link: '' })}
-          </Note>
-
-          <Swirl marginBottom={10} variant="2" width={350} />
-          <h1>{i18next.t('settings.general-settings-dialog.app-settings')}</h1>
           <SettingsDropdown
             info={i18next.t('settings.general-settings-dialog.localization-info')}
             label={i18next.t('settings.general-settings-dialog.localization-label')}
@@ -435,6 +419,55 @@ export default function GeneralSettingsDialog() {
             step={10}
             width={spinbuttonWidth}
           />
+
+          <h1>{i18next.t('settings.general-settings-dialog.backup-and-restore')}</h1>
+          <Note
+            useMarkdown
+            onLinkClick={() => {
+              window.settingsAPI.getConfigDirectory().then((dir) => {
+                window.open('file://' + dir, '_blank');
+              });
+            }}>
+            {i18next.t('settings.general-settings-dialog.message', { link: '' })}
+          </Note>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              isBlock
+              icon={<FaDownload />}
+              label={i18next.t('settings.general-settings-dialog.backup-menus')}
+              paddingBottom={16}
+              paddingTop={16}
+              onClick={() => {
+                window.settingsAPI.backupMenuSettings();
+              }}
+            />
+            <Button
+              isBlock
+              icon={<FaDownload />}
+              label={i18next.t('settings.general-settings-dialog.backup-settings')}
+              paddingBottom={16}
+              paddingTop={16}
+              onClick={() => {
+                window.settingsAPI.backupGeneralSettings();
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              isBlock
+              label={i18next.t('settings.general-settings-dialog.restore-menus')}
+              onClick={() => {
+                window.settingsAPI.restoreMenuSettings();
+              }}
+            />
+            <Button
+              isBlock
+              label={i18next.t('settings.general-settings-dialog.restore-settings')}
+              onClick={() => {
+                window.settingsAPI.restoreGeneralSettings();
+              }}
+            />
+          </div>
 
           <h1>{i18next.t('settings.general-settings-dialog.developer-options')}</h1>
           <Note>{i18next.t('settings.general-settings-dialog.reload-note')}</Note>

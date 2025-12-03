@@ -25,6 +25,9 @@ export class FileIconTheme implements IconTheme {
    */
   private svgIconCache: Map<string, string> = new Map();
 
+  /** The last reload iteration for this icon theme. */
+  private lastReloadIteration = 0;
+
   /**
    * Creates a new FileIconTheme.
    *
@@ -44,9 +47,17 @@ export class FileIconTheme implements IconTheme {
    * Creates a div element that contains the icon with the given name.
    *
    * @param icon One of the icons returned by `listIcons`.
+   * @param reloadIteration The current reload iteration. If the icon theme has been
+   *   reloaded, this number is increased by one. This is used to avoid caching issues.
    * @returns A div element that contains the icon.
    */
-  createIcon(icon: string) {
+  createIcon(icon: string, reloadIteration: number): HTMLElement {
+    // If the icon theme has been reloaded, we clear the SVG icon cache to avoid caching.
+    if (this.lastReloadIteration !== reloadIteration) {
+      this.svgIconCache.clear();
+      this.lastReloadIteration = reloadIteration;
+    }
+
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('icon-container');
 
@@ -59,7 +70,7 @@ export class FileIconTheme implements IconTheme {
     }
 
     const iconDiv = document.createElement('img');
-    iconDiv.src = `file://${this.description.directory}/${icon}`;
+    iconDiv.src = `file://${this.description.directory}/${icon}?reload=${reloadIteration}`;
     iconDiv.draggable = false;
 
     containerDiv.appendChild(iconDiv);

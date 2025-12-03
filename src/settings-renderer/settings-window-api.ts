@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, OpenDialogOptions } from 'electron';
+import { ipcRenderer, OpenDialogOptions, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
@@ -104,9 +104,56 @@ export const SETTINGS_WINDOW_API = {
     ipcRenderer.send('settings-window.reload-sound-theme');
   },
 
+  /** This will reload the current icon themes. */
+  reloadIconThemes: () => {
+    ipcRenderer.send('settings-window.reload-icon-themes');
+  },
+
+  /**
+   * This will be called by the host process when the icon themes should be reloaded.
+   *
+   * @param callback This callback will be called when the icon themes should be reloaded.
+   */
+  onReloadIconThemes: (func: () => void) => {
+    webFrame.clearCache();
+    ipcRenderer.on('settings-window.reload-icon-themes', func);
+  },
+
   /** This will open a file picker and return the selected file path. */
   openFilePicker: (config: OpenDialogOptions): Promise<string> => {
     return ipcRenderer.invoke('settings-window.open-file-picker', config);
+  },
+
+  /**
+   * This will open a file picker to let the user select a location to save the backup of
+   * the config.json file.
+   */
+  backupGeneralSettings: () => {
+    ipcRenderer.send('settings-window.backup-general-settings');
+  },
+
+  /**
+   * This will open a file picker to let the user select a location to save the backup of
+   * the menu.json file.
+   */
+  backupMenuSettings: () => {
+    ipcRenderer.send('settings-window.backup-menu-settings');
+  },
+
+  /**
+   * This will open a file picker to let the user select a previously backed up
+   * config.json to restore the general settings from.
+   */
+  restoreGeneralSettings: () => {
+    ipcRenderer.send('settings-window.restore-general-settings');
+  },
+
+  /**
+   * This will open a file picker to let the user select a previously backed up menu.json
+   * to restore the menu settings from.
+   */
+  restoreMenuSettings: () => {
+    ipcRenderer.send('settings-window.restore-menu-settings');
   },
 };
 

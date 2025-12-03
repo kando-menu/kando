@@ -8,9 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import i18next from 'i18next';
-import { TbBackspaceFilled } from 'react-icons/tb';
+import { TbBackspaceFilled, TbReload } from 'react-icons/tb';
 
 import {
   Popover,
@@ -56,6 +59,7 @@ type Props = {
  * @returns A color button element.
  */
 export default function IconChooserButton(props: Props) {
+  const [reloadCount, setReloadCount] = React.useState(0);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [filterTerm, setFilterTerm] = React.useState('');
   const [theme, setTheme] = React.useState(props.theme);
@@ -64,12 +68,25 @@ export default function IconChooserButton(props: Props) {
     setTheme(props.theme);
   }, [props.theme]);
 
+  // Reload the icon pickers when the icon themes are reloaded.
+  React.useEffect(() => {
+    const onReload = () => {
+      setReloadCount((count) => count + 1);
+    };
+
+    IconThemeRegistry.getInstance().on('reload-icon-themes', onReload);
+    return () => {
+      IconThemeRegistry.getInstance().off('reload-icon-themes', onReload);
+    };
+  }, []);
+
   const pickerInfo = IconThemeRegistry.getInstance().getIconPickerInfo(theme);
 
   const getPicker = () => {
     if (pickerInfo.type === 'list') {
       return (
         <GridIconPicker
+          key={`${theme}-${reloadCount}`}
           filterTerm={filterTerm}
           selectedIcon={props.icon}
           theme={theme}
@@ -80,6 +97,7 @@ export default function IconChooserButton(props: Props) {
     } else if (pickerInfo.type === 'base64') {
       return (
         <Base64IconPicker
+          key={`${theme}-${reloadCount}`}
           initialValue={props.icon}
           onChange={(value) => props.onChange(value, theme)}
         />
@@ -97,14 +115,24 @@ export default function IconChooserButton(props: Props) {
       content={
         <div className={classes.container}>
           <div className={classes.row}>
-            <Dropdown
-              initialValue={theme}
-              options={allThemes.map(([key, name]) => ({
-                value: key,
-                label: name.name,
-              }))}
-              onChange={setTheme}
-            />
+            <div className={classes.iconThemeSelector}>
+              <Dropdown
+                initialValue={theme}
+                options={allThemes.map(([key, name]) => ({
+                  value: key,
+                  label: name.name,
+                }))}
+                onChange={setTheme}
+              />
+              <Button
+                isGrouped
+                icon={<TbReload />}
+                tooltip={i18next.t('settings.icon-picker-dialog.reload-button-tooltip')}
+                onClick={() => {
+                  window.settingsAPI.reloadIconThemes();
+                }}
+              />
+            </div>
             {pickerInfo.type === 'list' && (
               <div className={classes.searchInput}>
                 <input

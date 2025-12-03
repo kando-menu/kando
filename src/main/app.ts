@@ -30,10 +30,16 @@ import {
   MenuThemeDescription,
   WMInfo,
   SoundType,
+  FileIconThemeDescription,
   SoundEffect,
   CommandlineOptions,
 } from '../common';
-import { Settings } from './settings';
+import {
+  Settings,
+  getConfigDirectory,
+  tryLoadGeneralSettingsFile,
+  tryLoadMenuSettingsFile,
+} from './settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -249,6 +255,11 @@ export class KandoApp {
       return true;
     }
 
+    if (options.reloadIconThemes) {
+      this.reloadIconThemes();
+      return true;
+    }
+
     return false;
   }
 
@@ -321,7 +332,7 @@ export class KandoApp {
     // as now Kando will be in focus. We use the old information instead.
     if (this.lastWMInfo && this.menuWindow.isVisible()) {
       this.lastWMInfo = {
-        ...this.lastWMInfo,
+        ...wmInfo,
         appName: this.lastWMInfo.appName,
         windowName: this.lastWMInfo.windowName,
       };
@@ -379,6 +390,17 @@ export class KandoApp {
    */
   public reloadSoundTheme() {
     this.menuWindow?.webContents.send('menu-window.reload-sound-theme');
+  }
+
+  /**
+   * This is called when the --reload-icon-themes command line option is passed or when
+   * the respective button in the settings is pressed.
+   */
+  public async reloadIconThemes() {
+    delete this.iconThemesCache;
+
+    this.menuWindow?.webContents.send('menu-window.reload-icon-themes');
+    this.settingsWindow?.webContents.send('settings-window.reload-icon-themes');
   }
 
   /**
@@ -440,18 +462,18 @@ export class KandoApp {
 
     // Allow the renderer to retrieve the path to the config directory.
     ipcMain.handle('settings-window.get-config-directory', () => {
-      return app.getPath('userData');
+      return getConfigDirectory();
     });
 
     // Allow the renderer to retrieve the path to the menu themes directory.
     ipcMain.handle('settings-window.get-menu-themes-directory', () => {
-      return path.join(app.getPath('userData'), 'menu-themes');
+      return path.join(getConfigDirectory(), 'menu-themes');
     });
 
     // Allow the renderer to retrieve all available menu themes.
     ipcMain.handle('settings-window.get-all-menu-themes', async () => {
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'menu-themes'),
+        path.join(getConfigDirectory(), 'menu-themes'),
         path.join(__dirname, '../renderer/assets/menu-themes'),
       ]);
 
@@ -467,7 +489,7 @@ export class KandoApp {
     // Allow the renderer to retrieve all available sound themes.
     ipcMain.handle('settings-window.get-all-sound-themes', async () => {
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'sound-themes'),
+        path.join(getConfigDirectory(), 'sound-themes'),
         path.join(__dirname, '../renderer/assets/sound-themes'),
       ]);
 
@@ -514,6 +536,11 @@ export class KandoApp {
       this.reloadSoundTheme();
     });
 
+    // Reload the current icon themes if requested.
+    ipcMain.on('settings-window.reload-icon-themes', async () => {
+      this.reloadIconThemes();
+    });
+
     // Allow showing open-file dialogs.
     ipcMain.handle('settings-window.open-file-picker', async (event, config) => {
       const result = await dialog.showOpenDialog(this.settingsWindow, config);
@@ -525,6 +552,115 @@ export class KandoApp {
       // We only want to return the first file. This is because the user can only select
       // one file at a time.
       return result.filePaths[0];
+    });
+
+    // Allow creating backups of the general settings.
+    ipcMain.on('settings-window.backup-general-settings', async () => {
+      const result = await dialog.showSaveDialog(this.settingsWindow, {
+        title: i18next.t('settings.backup-general-settings-title'),
+        defaultPath: path.join(getConfigDirectory(), 'general-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (result.filePath != '') {
+        fs.copyFileSync(this.generalSettings.filePath, result.filePath);
+      }
+    });
+
+    // Allow creating backups of the menu settings.
+    ipcMain.on('settings-window.backup-menu-settings', async () => {
+      const result = await dialog.showSaveDialog(this.settingsWindow, {
+        defaultPath: path.join(getConfigDirectory(), 'menu-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (result.filePath != '') {
+        fs.copyFileSync(this.menuSettings.filePath, result.filePath);
+      }
+    });
+
+    // Allow restoring the general settings from a backup. We show a warning that this
+    // will overwrite the current settings.
+    ipcMain.on('settings-window.restore-general-settings', async () => {
+      const response = await dialog.showMessageBox(this.settingsWindow, {
+        type: 'warning',
+        buttons: [i18next.t('settings.cancel'), i18next.t('settings.restore-backup')],
+        title: i18next.t('settings.restore-general-settings-warning-title'),
+        message: i18next.t('settings.restore-general-settings-warning-message'),
+      });
+
+      if (response.response === 0) {
+        return;
+      }
+
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        defaultPath: path.join(getConfigDirectory(), 'general-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (!result.canceled) {
+        try {
+          tryLoadGeneralSettingsFile(result.filePaths[0]);
+        } catch (error) {
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.restore-general-settings-error-title'),
+            message: error instanceof Error ? error.message : String(error),
+          });
+
+          return;
+        }
+
+        fs.copyFileSync(result.filePaths[0], this.generalSettings.filePath);
+
+        dialog.showMessageBox(this.settingsWindow, {
+          type: 'info',
+          title: i18next.t('settings.restore-general-settings-success-title'),
+          message: i18next.t('settings.restore-general-settings-success-message'),
+        });
+      }
+    });
+
+    // Allow restoring the menu configuration from a backup. We show a warning that this
+    // will overwrite the current menus.
+    ipcMain.on('settings-window.restore-menu-settings', async () => {
+      const response = await dialog.showMessageBox(this.settingsWindow, {
+        type: 'warning',
+        buttons: [i18next.t('settings.cancel'), i18next.t('settings.restore-backup')],
+        title: i18next.t('settings.restore-menu-settings-warning-title'),
+        message: i18next.t('settings.restore-menu-settings-warning-message'),
+      });
+
+      if (response.response === 0) {
+        return;
+      }
+
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        defaultPath: path.join(getConfigDirectory(), 'menu-settings-backup.json'),
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (!result.canceled) {
+        try {
+          tryLoadMenuSettingsFile(result.filePaths[0]);
+        } catch (error) {
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.restore-menu-settings-error-title'),
+            message: error instanceof Error ? error.message : String(error),
+          });
+
+          return;
+        }
+
+        fs.copyFileSync(result.filePaths[0], this.menuSettings.filePath);
+
+        dialog.showMessageBox(this.settingsWindow, {
+          type: 'info',
+          title: i18next.t('settings.restore-menu-settings-success-title'),
+          message: i18next.t('settings.restore-menu-settings-success-message'),
+        });
+      }
     });
 
     // Print a message to the console of the host process.
@@ -617,28 +753,30 @@ export class KandoApp {
         return this.iconThemesCache;
       }
 
-      this.iconThemesCache = {
-        userIconDirectory: path.join(app.getPath('userData'), 'icon-themes'),
-        fileIconThemes: [],
-      };
-
       const themes = await this.listSubdirectories([
-        path.join(app.getPath('userData'), 'icon-themes'),
+        path.join(getConfigDirectory(), 'icon-themes'),
         path.join(__dirname, '../renderer/assets/icon-themes'),
       ]);
+
+      const fileIconThemes: FileIconThemeDescription[] = [];
 
       await Promise.all(
         themes.map(async (theme) => {
           const directory = await this.findIconThemePath(theme);
           const icons = await this.listIconsRecursively(directory);
 
-          this.iconThemesCache.fileIconThemes.push({
+          fileIconThemes.push({
             name: theme,
             directory,
             icons,
           });
         })
       );
+
+      this.iconThemesCache = {
+        userIconDirectory: path.join(getConfigDirectory(), 'icon-themes'),
+        fileIconThemes,
+      };
 
       return this.iconThemesCache;
     });
@@ -884,7 +1022,7 @@ export class KandoApp {
    */
   private async findThemePath(directory: string, theme: string) {
     const testPaths = [
-      path.join(app.getPath('userData'), `${directory}/${theme}`),
+      path.join(getConfigDirectory(), `${directory}/${theme}`),
       path.join(__dirname, `../renderer/assets/${directory}/${theme}`),
     ];
 
@@ -918,7 +1056,7 @@ export class KandoApp {
    */
   private async findIconThemePath(theme: string) {
     const testPaths = [
-      path.join(app.getPath('userData'), 'icon-themes'),
+      path.join(getConfigDirectory(), 'icon-themes'),
       path.join(__dirname, '../renderer/assets/icon-themes'),
     ];
 

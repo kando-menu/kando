@@ -57,6 +57,11 @@ type Props = {
    * the first and last button in the group round. Defaults to false.
    */
   readonly isGrouped?: boolean;
+
+  readonly paddingTop?: number;
+  readonly paddingBottom?: number;
+  readonly paddingLeft?: number;
+  readonly paddingRight?: number;
 };
 
 /**
@@ -83,6 +88,12 @@ export default function Button(props: Props) {
       data-tooltip-content={props.tooltip}
       data-tooltip-id="main-tooltip"
       disabled={props.isDisabled}
+      style={{
+        paddingTop: props.paddingTop,
+        paddingBottom: props.paddingBottom,
+        paddingLeft: props.paddingLeft,
+        paddingRight: props.paddingRight,
+      }}
       type="button"
       onClick={props.onClick}>
       {props.icon}
