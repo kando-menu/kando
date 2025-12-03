@@ -77,17 +77,36 @@ jobs:
           } elseif ($env:MATRIX_OS -eq "windows-11-arm") {
             Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
           }
+      - name: Upload Unsigned Artifacts
+        id: upload-unsigned-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}-unsigned
+          path: |
+            out/make/zip/win32/*/*
+            out/make/squirrel.windows/*/*.exe
+          retention-days: 7
+      - name: Sign with SignPath
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+          organization-id: '4e74932d-7987-4337-9219-893ea21bd691'
+          project-slug: 'kando'
+          signing-policy-slug: 'release-signing '
+          github-artifact-id: '${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}'
+          wait-for-completion: true
+          output-artifact-directory: 'out/make/signed'
       - name: Upload Zip
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/zip/win32/*/*
+          file: out/make/signed/**/*.zip
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Squirrel Installer
         uses: svenstaro/upload-release-action@2.9.0
         with:
-          file: out/make/squirrel.windows/*/*.exe
+          file: out/make/signed/**/*.exe
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true

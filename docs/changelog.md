@@ -23,11 +23,13 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
+- **Code signing for the Windows builds!** Thanks to [SignPath.io](https://signpath.io/) for providing the code signing infrastructure for this and to the [SignPath Foundation](https://signpath.org/) for providing a free code signing certificate!
 - A **Portable Mode** which can be enabled by creating a `portableMode.json` file next to the Kando executable. This file can contain a `configDirectory` property which specifies where the `config.json` and `menus.json` files are stored. This allows you to run Kando from a USB stick or other portable storage devices with all your settings and menus. Read more in the [documentation](https://kando.menu/advanced-configuration/#portable-mode).
 - Buttons to the general settings dialog to **backup and restore** the `config.json` and `menus.json` files. This makes it easier to backup your settings before making big changes or to restore them from a previous backup.
 - A button in the icon-picker popover to **reload all icon themes** without restarting Kando.
 - The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
 - A setting to **enable or disable the drawing of selection wedges** in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
+- Many translation updates: **Thanks to all the contributors!**
 
 ### :wrench: Changed
 
