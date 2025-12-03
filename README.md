@@ -66,7 +66,8 @@ A big thanks to everyone who has contributed to Kando by reporting issues, sugge
 
 <small>Graphic made with [contrib.rocks](https://contrib.rocks).</small>
 
-Also, **a huge thanks to [SignPath.io](https://signpath.io/) for providing the code signing infrastructure and to the [SignPath Foundation](https://signpath.org/) for providing a free code signing certificate for the Windows installers!** This is a great help to make Kando more trustworthy and secure for Windows users.
+**Also, a huge thanks to [SignPath.io](https://signpath.io/) for providing the code signing infrastructure and to the [SignPath Foundation](https://signpath.org/) for providing a free code signing certificate for the Windows installers!**
+For details, see also our [:handshake: Code-Signing Policy](https://kando.menu/code-signing/).
 
 # :tada: I want to contribute as well!
 
