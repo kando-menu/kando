@@ -73,6 +73,10 @@ export abstract class WLRBackend extends LinuxBackend {
    * the pointer.
    */
   protected getPointerPositionAndWorkAreaSize() {
-    return native.getPointerPositionAndWorkAreaSize();
+    const data = native.getPointerPositionAndWorkAreaSize();
+    if (data.pointerGetTimedOut) {
+      console.error('Pointer get timed out');
+    }
+    return data;
   }
 }

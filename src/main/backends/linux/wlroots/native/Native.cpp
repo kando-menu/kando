@@ -395,9 +395,21 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   int fd                      = wl_display_get_fd(mData.mDisplay);
   mData.mPointerEventReceived = false;
 
+  int timeoutMs = 500;
+  using clock = std::chrono::steady_clock;
+  auto start = clock::now();
+  bool mPointerGetTimedOut = false;
   while (!mData.mPointerEventReceived) {
     // Process any pending events first
     wl_display_dispatch_pending(mData.mDisplay);
+
+    // Check if timeout already expired
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start).count();
+    if (elapsed > timeoutMs) {
+      mPointerGetTimedOut = true;
+      wl_display_flush(mData.mDisplay);
+      break;
+    }
 
     // Prepare to read new events
     if (wl_display_prepare_read(mData.mDisplay) != 0) {
@@ -410,8 +422,9 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
     wl_display_flush(mData.mDisplay);
 
     // Wait for events on the Wayland display fd
+    int remaining = timeoutMs - elapsed;
     pollfd pfd = {.fd = fd, .events = POLLIN};
-    int    ret = poll(&pfd, 1, -1); // block indefinitely until event
+    int    ret = poll(&pfd, 1, remaining); // block until event or timeout
 
     if (ret > 0) {
       // Read and dispatch events
@@ -421,6 +434,11 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
       // Poll error, break or handle as needed
       std::cerr << "Poll error in getPointer\n";
       break;
+    } else {
+      mPointerGetTimedOut = true;
+      wl_display_cancel_read(mData.mDisplay);
+      wl_display_flush(mData.mDisplay);
+      break;
     }
   }
 
@@ -428,6 +446,7 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   Napi::Object result = Napi::Object::New(env);
   result.Set("pointerX", Napi::Number::New(env, mData.mPointerX));
   result.Set("pointerY", Napi::Number::New(env, mData.mPointerY));
+  result.Set("pointerGetTimedOut", Napi::Boolean::New(env,mPointerGetTimedOut));
   result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
   result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
 
