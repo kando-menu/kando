@@ -310,7 +310,7 @@
             "slide4-text": "Un sous-menu s'ouvrira **toujours** au niveau de votre curseur. Vous **n'avez pas besoin d'attendre que l'animation se termine**. Faites confiance à votre mémoire musculaire et procédez à votre sélection !",
             "chapter3": "Mode Turbo",
             "slide12-text": "Kando est hautement personnalisable. Vous pouvez l'utiliser pour ouvrir des applications, des fichiers, exécuter des macros clavier, et bien d'autres choses. Vous pouvez [changer le style du menu]({{link1}}), [ajouter des thèmes d'icônes]({{link2}}) et même [utiliser des sons]({{link3}}) dans vos menus !",
-            "slide7-text": "Cliquez et glissez le curseur sur un élément pour passer en Mode Marquage. **Si vous interrompez le mouvement du curseur ou si vous bifurquez, le sous-menu en cours de déplacement s'ouvrira!** Mémorisez le chemin vers un élément et dessinez-le avec des mouvements en zigzag expressifs.",
+            "slide7-text": "Cliquez et glissez le curseur sur un élément pour passer en Mode Marquage. **Si vous interrompez le mouvement du curseur ou si vous bifurquez, le sous-menu en cours de déplacement s'ouvrira!** Mémorisez le chemin vers un élément et tracez-le expressivement en zigzag.",
             "show-again": "Re-afficher cette page dans le futur",
             "slide1-title": "Kando offre un moyen unique et efficace d'interagir avec votre ordinateur.",
             "slide1-text": "Parcourez ces diapositives pour découvrir ce que Kando peut faire pour vous ! Vous pouvez utiliser les chapitre à gauche pour passer rapidement à une partie spécifique de l'introduction.",
@@ -360,7 +360,8 @@
             "menu-scale-info": "Utilisez ceci pour augmenter ou diminuer la taille de tes menus. La valeur par défaut est 1.0.",
             "get-themes-online": "Obtenir des thèmes en ligne",
             "fade-in-time-info": "Temps nécessaire pour que le menu s'affiche en fondu. La valeur par défaut est de 150 ms.",
-            "selection-wedges-info": "Si cette option est activée et prise en charge par le thème sélectionné, la zone sélectionnable des éléments du menu sera mise en valeur."
+            "selection-wedges-info": "Si cette option est activée et prise en charge par le thème sélectionné, la zone sélectionnable des éléments du menu sera mise en valeur.",
+            "selection-wedges": "Afficher la zone de détection"
         },
         "not-bound": "Non-Attribué",
         "shortcut-id-label": "ID du raccourci clavier",
