@@ -42,6 +42,7 @@ import {
 } from './settings';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
+import { AchievementTracker } from './achievements/achievement-tracker';
 import { supportsIsolatedProcesses } from './utils/shell';
 
 /**
@@ -79,6 +80,9 @@ export class KandoApp {
 
   /** This will cache the icon themes. */
   private iconThemesCache?: IconThemesInfo;
+
+  /** This is used to track achievements. */
+  private achievementTracker: AchievementTracker;
 
   /**
    * Most of the initialization is done in the init() method. This constructor is only
@@ -214,6 +218,19 @@ export class KandoApp {
           shell.openExternal('https://github.com/kando-menu/kando/releases');
         },
       });
+    });
+
+    // Initialize the achievement tracker.
+    this.achievementTracker = new AchievementTracker();
+
+    this.achievementTracker.on('completed', (achievementID) => {
+      const achievement = this.achievementTracker.getAchievements().get(achievementID);
+      Notification.show({
+        title: i18next.t('achievements.completed-title'),
+        message: achievement.name,
+      });
+
+      console.log(achievement);
     });
   }
 
@@ -374,6 +391,8 @@ export class KandoApp {
     this.settingsWindow.on('closed', () => {
       this.settingsWindow = undefined;
     });
+
+    this.achievementTracker.onSettingsOpened();
   }
 
   /**

@@ -347,6 +347,65 @@
       "delayed-option": "Wait for fade-out animation"
     }
   },
+  "achievements": {
+    "attributes": {
+      "novice": "Novice",
+      "capable": "Capable",
+      "skilled": "Skilled",
+      "expert": "Expert",
+      "master": "Master"
+    },
+    "tier": {
+      "I": "I",
+      "II": "II",
+      "III": "III",
+      "IV": "IV",
+      "V": "V"
+    },
+    "cancelor": {
+      "name": "{{attribute}} Cancelor",
+      "description": "Abort a selection {{n}} times."
+    },
+    "pielot": {
+      "name": "{{attribute}} Pielot",
+      "description": "Select {{n}} items."
+    },
+    "gesture-selector": {
+      "name1": "{{attribute}} Toplevel Gesture-Selector",
+      "name2": "{{attribute}} Submenu Gesture-Selector",
+      "name3": "{{attribute}} Subsubmenu Gesture-Selector",
+      "description": "Select {{n}} items at depth {{depth}} with gestures."
+    },
+    "click-selector": {
+      "name1": "{{attribute}} Toplevel Click-Selector",
+      "name2": "{{attribute}} Submenu Click-Selector",
+      "name3": "{{attribute}} Subsubmenu Click-Selector",
+      "description": "Select {{n}} items at depth {{depth}} with mouse clicks."
+    },
+    "time-selector": {
+      "name1": "{{attribute}} Toplevel Selector",
+      "name2": "{{attribute}} Submenu Selector",
+      "name3": "{{attribute}} Subsubmenu Selector",
+      "description": "Select {{n}} items at depth {{depth}} in less than {{time}} milliseconds."
+    },
+    "journey": {
+      "name": "The Journey Is The Reward {{tier}}",
+      "description": "Open the settings dialog {{n}} times."
+    },
+    "manyitems": {
+      "name": "",
+      "description": ""
+    },
+    "goodpie": {
+      "name": "Say Good-Pie!",
+      "description": "Delete all of your menus."
+    },
+    "sponsors": {
+      "name": "That's Philanthropie!",
+      "description": "Consider becoming a sponsor of Kando."
+    },
+    "completed-title": "Achievement unlocked!"
+  },
   "main": {
     "new-version-notification-header": "A new version of Kando is available!",
     "new-version-notification-body": "Get it from {{link}}.",

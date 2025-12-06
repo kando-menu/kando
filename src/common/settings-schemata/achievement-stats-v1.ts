@@ -11,9 +11,7 @@
 import * as z from 'zod';
 import { version } from '../../../package.json';
 
-/**
- * Statistics are tracked for the achievements.
- */
+/** Statistics are tracked for the achievements. */
 export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
   /**
    * The last version of Kando. This is used to determine whether the statistics file
@@ -22,9 +20,12 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
   version: z.string().default(version),
 
   /** A map of achievement IDs to the timestamps when they were unlocked. */
-  achievementDates: z.record(z.string(), z.date()).default({}),
+  achievementDates: z.record(z.string(), z.iso.datetime()).default({}),
 
-  /** The number of new achievements. */
+  /**
+   * The number of new achievements. Will be reset when the user looks at the
+   * achievements.
+   */
   unreadAchievements: z.number().default(0),
 
   /** The total number of selections. */
@@ -105,8 +106,11 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
   /** The number of times a menu configuration has been backed up. */
   menusBackedUp: z.number().default(0),
 
-  /** The number items added to menus. */
+  /** The number of items added to menus. */
   addedItems: z.number().default(0),
+
+  /** The number of items removed from menus. */
+  removedItems: z.number().default(0),
 
   /** The number of times all menus have been deleted. */
   deletedAllMenus: z.number().default(0),

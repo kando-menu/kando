@@ -107,6 +107,9 @@ class PropertyChangeEmitter<T> {
 
 /** The options object which can be passed to the constructor. */
 type Options<T> = {
+  /** The name of the settings object. Will be used during console logging. */
+  name: string;
+
   /** The directory in which the settings file should be stored. */
   directory: string;
 
@@ -290,7 +293,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         this.settings = this.loadSettings();
       } catch (error) {
         console.error(
-          'Error loading settings:',
+          `Error loading ${this.options.name}:`,
           error instanceof Error ? error.message : error
         );
         return;
@@ -315,7 +318,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   private loadSettings(): T {
     try {
-      console.log('Loading settings from', this.filePath);
+      console.log(`Loading ${this.options.name} from`, this.filePath);
       const data = fs.readJSONSync(this.filePath);
 
       // If this.options.ignoreWriteProtectedConfigFiles was not set at construction time,
@@ -409,7 +412,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     const backupDir = path.join(this.options.directory, 'backups');
     const backupFile = path.join(backupDir, fileName);
 
-    console.log(`Creating backup of settings file: ${this.filePath} as ${backupFile}`);
+    console.log(
+      `Creating backup of ${this.options.name} file: ${this.filePath} as ${backupFile}`
+    );
 
     try {
       fs.mkdirSync(backupDir, { recursive: true });

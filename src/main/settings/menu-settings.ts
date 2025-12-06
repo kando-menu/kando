@@ -35,6 +35,7 @@ export function getMenuSettings(
 ): Settings<MenuSettings> | null {
   try {
     return new Settings<MenuSettings>({
+      name: 'menus',
       file: 'menus.json',
       directory: getConfigDirectory(),
       ignoreWriteProtectedConfigFiles,
