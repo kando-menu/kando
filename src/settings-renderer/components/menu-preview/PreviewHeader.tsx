@@ -10,7 +10,12 @@
 
 import React from 'react';
 import i18next from 'i18next';
-import { TbSettingsFilled, TbHeartFilled, TbPaletteFilled } from 'react-icons/tb';
+import {
+  TbSettingsFilled,
+  TbHeartFilled,
+  TbPaletteFilled,
+  TbTrophyFilled,
+} from 'react-icons/tb';
 import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 
 import { useAppState, useMenuSettings } from '../../state';
@@ -22,6 +27,9 @@ import { Headerbar, Button } from '../common';
  */
 export default function PreviewHeader() {
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
+  const setAchievementsDialogVisible = useAppState(
+    (state) => state.setAchievementsDialogVisible
+  );
   const setIntroDialogVisible = useAppState((state) => state.setIntroDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
@@ -87,6 +95,13 @@ export default function PreviewHeader() {
           tooltip={i18next.t('settings.general-settings-dialog.title')}
           variant="tool"
           onClick={() => setSettingsDialogVisible(true)}
+        />
+        <Button
+          isGrouped
+          icon={<TbTrophyFilled />}
+          tooltip={i18next.t('settings.achievements-dialog.title')}
+          variant="tool"
+          onClick={() => setAchievementsDialogVisible(true)}
         />
       </span>
       <span>

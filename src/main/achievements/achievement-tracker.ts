@@ -11,59 +11,41 @@
 import { EventEmitter } from 'events';
 import i18next from 'i18next';
 
-import { AchievementStats } from '../../common';
+import {
+  AchievementStats,
+  Achievement,
+  AchievementState,
+  LevelProgress,
+} from '../../common';
 import { Settings } from '../settings';
 import { getAchievementStats } from './achievement-stats';
 
-/**
- * Each achievement can have one of three states. If it's 'locked', it will not be shown
- * in the user interface. Once some specific requirements are fulfilled, it will become
- * 'active' and eventually 'completed'.
- */
-export enum State {
-  eLocked = 0,
-  eActive = 1,
-  eCompleted = 2,
-}
-
-export class Achievement {
-  /**
-   * The name. Most achievements have multiple tiers. A {{tier}} in the name will be
-   * replaced by a corresponding roman number (e.g. I, II, III, IV or V), {{attribute}} by
-   * a corresponding attribute like 'Novice' or 'Master'.
-   */
-  name: string;
-
-  /** The explanation string. */
-  description: string;
-
-  /** A number between range[0] and range[1]. */
-  progress: number;
-
-  /** One of the State values above. */
-  state: State;
-
-  /** Something like 'copper.png'. */
-  bgImage: string;
-
-  /** Something like 'depth1.svg'. */
-  fgImage: string;
-
+/** The meta information for a specific achievement. */
+type AchievementMeta = {
   /** The settings key this achievement is tracking. */
-  statsKey: keyof AchievementStats;
+  statKey: keyof AchievementStats;
+
+  /** A value for the statKey value for which this achievement is active. */
+  statRange: [number, number];
 
   /** The amount of experience gained by completion. */
   xp: number;
-
-  /** A value for the statsKey value for which this achievement is active. */
-  range: [number, number];
 
   /** If set, it's not shown in the UI until revealed by another achievement. */
   hidden: boolean;
 
   /** The ID of a hidden achievement. */
   reveals?: string;
-}
+};
+
+/**
+ * The structure of an achievement in the achievement tracker. The 'common' part is
+ * visible outside of the achievement tracker, the 'meta' part is only used internally.
+ */
+type AchievementDescription = {
+  common: Achievement;
+  meta: AchievementMeta;
+};
 
 /**
  * The constants below are the main balancing tools. These can be tweaked in order to
@@ -99,22 +81,9 @@ const BASE_RANGES = [0, 10, 30, 100, 300, 1000];
  *
  * The following events are emitted:
  *
- * - 'level-changed': This is called whenever the users levels up (or down...). The
- *   parameter provides the new level.
- * - 'experience-changed': This is usually called whenever an achievement is completed. The
- *   first parameter contains the current experience points; the second contains the total
- *   experience points required to level up.
- * - 'progress-changed': This is called whenever the progress of an active achievement
- *   changes. The passed string is the key of the achievement in the getAchievements() map
- *   of this; the second and third parameter are the new progress and maximum progress.
- * - 'completed': This is called whenever an achievement is completed. The passed string is
- *   the key of the completed achievement in the getAchievements() map.
- * - 'unlocked': This is called whenever a new achievement becomes available. The passed
- *   string is the key of the completed achievement in the getAchievements() map. The
- *   completed achievement in the getAchievements() map.
- * - 'locked': This is called whenever an active achievement becomes unavailable. This is
- *   quite unlikely but may happen when the user resets the statistics. The passed string
- *   is the key of the completed achievement in the getAchievements() map.
+ * - 'progress-changed': This is called whenever the experience progress changed.
+ * - 'completed': This is called whenever an achievement is completed. The Achievement
+ *   object is passed as an argument.
  */
 export class AchievementTracker extends EventEmitter {
   /** This will contain the accumulated experience gained by all completed achievements. */
@@ -124,7 +93,7 @@ export class AchievementTracker extends EventEmitter {
   public currentLevel = 1;
 
   /** The list of all available achievements. */
-  private achievements: Map<string, Achievement>;
+  private achievements: Map<string, AchievementDescription>;
 
   /** The settings object containing the achievement statistics. */
   private stats: Settings<AchievementStats>;
@@ -140,49 +109,84 @@ export class AchievementTracker extends EventEmitter {
 
     // Now initialize the state and progress of each achievement based on the statistics.
     this.achievements.forEach((achievement, id) => {
-      // Call the update whenever the corresponding settings key changes.
-      this.stats.onChange(achievement.statsKey, () => {
-        this.updateAchievement(true, id);
-      });
-
-      // Call the initial update.
-      this.updateAchievement(false, id);
+      this.updateAchievement(achievement, id);
     });
 
-    // Calculate the initial experience values.
+    // Compute our initial experience and level.
     this.updateExperience();
+
+    // If any of the statistics change, we have to update the corresponding achievements.
+    this.stats.onAnyChange((_old, _new, changedKeys) => {
+      let anyProgressChanged = false;
+      let anyStateChanged = false;
+
+      // First update all relevant achievements.
+      this.achievements.forEach((achievement, id) => {
+        if (changedKeys.includes(achievement.meta.statKey)) {
+          const oldProgress = achievement.common.progress;
+          const oldState = achievement.common.state;
+
+          this.updateAchievement(achievement, id);
+
+          if (achievement.common.progress != oldProgress) {
+            anyProgressChanged = true;
+          }
+          if (achievement.common.state != oldState) {
+            anyStateChanged = true;
+
+            // If the achievement is now completed, we emit the completed signal.
+            if (achievement.common.state == AchievementState.eCompleted) {
+              this.emit('completed', achievement.common);
+            }
+          }
+        }
+      });
+
+      // If any achievement state changed, we have to recompute our total experience. We
+      // also update the list of unlocked achievement dates in this case.
+      if (anyStateChanged) {
+        this.updateExperience();
+
+        const dates: Record<string, string> = {};
+        this.achievements.forEach((achievement, id) => {
+          if (achievement.common.state == AchievementState.eCompleted) {
+            dates[id] = achievement.common.date;
+          }
+        });
+        this.stats.set({ achievementDates: dates }, false);
+      }
+
+      // Finally, emit the progress-changed signal if necessary.
+      if (anyProgressChanged || anyStateChanged) {
+        this.emit('progress-changed');
+      }
+    });
   }
 
-  /**
-   * Retrieves a map of all achievements. This maps achievement IDs to achievement
-   * objects. The structure of these objects is explained at the top of this file.
-   */
-  public getAchievements() {
-    return this.achievements;
-  }
+  /** Retrieves the current progress of all achievements. */
+  public getProgress(): LevelProgress {
+    const activeAchievements = Array.from(this.achievements.values())
+      .filter((a) => a.common.state === AchievementState.eActive)
+      .map((a) => a.common);
+    const completedAchievements = Array.from(this.achievements.values())
+      .filter((a) => a.common.state === AchievementState.eCompleted)
+      .map((a) => a.common);
 
-  /** Retrieves the current level. This is in the range [1...10] for now. */
-  public getCurrentLevel() {
-    return this.currentLevel;
-  }
-
-  /**
-   * Get the experience points indicating the progress of the current level. This is
-   * computed by the total XP minus the XP required to unlock each of the previous
-   * levels.
-   */
-  public getLevelXP() {
-    let levelXP = this.totalXP;
+    // Get the experience points indicating the progress of the current level. This is
+    // computed by the total XP minus the XP required to unlock each of the previous
+    // levels.
+    let xp = this.totalXP;
     for (let i = 0; i < this.currentLevel - 1; i++) {
-      levelXP -= LEVEL_XP[i];
+      xp -= LEVEL_XP[i];
     }
 
-    return levelXP;
-  }
-
-  /** Returns the XP required to unlock the next level. */
-  public getLevelMaxXP() {
-    return LEVEL_XP[this.currentLevel - 1];
+    return {
+      level: this.currentLevel,
+      xp,
+      maxXp: LEVEL_XP[this.currentLevel - 1],
+      activeAchievements,
+      completedAchievements,
+    };
   }
 
   /** Should be called when the settings are opened. */
@@ -201,142 +205,88 @@ export class AchievementTracker extends EventEmitter {
    */
   private updateExperience() {
     // Accumulate XP of completed achievements.
-    let totalXP = 0;
+    this.totalXP = 0;
     this.achievements.forEach((achievement) => {
-      if (achievement.state == State.eCompleted) {
-        totalXP += achievement.xp;
+      if (achievement.common.state == AchievementState.eCompleted) {
+        this.totalXP += achievement.meta.xp;
       }
     });
 
-    // We will emit a signal if the XP changed.
-    let emitXPChange = false;
-    if (totalXP != this.totalXP) {
-      this.totalXP = totalXP;
-      emitXPChange = true;
-    }
-
     // Compute the current level based on the total XP.
-    let level = 1;
+    this.currentLevel = 1;
     let levelXP = LEVEL_XP[0];
-    while (this.totalXP >= levelXP && level < LEVEL_XP.length) {
-      levelXP += LEVEL_XP[level];
-      ++level;
-    }
-
-    // We will emit a signal if the level changed.
-    let emitLevelChange = false;
-    if (level != this.currentLevel) {
-      this.currentLevel = level;
-      emitLevelChange = true;
-    }
-
-    // Now that the complete internal state is updated, we can safely emit the
-    // signals.
-    if (emitXPChange) {
-      this.emit('experience-changed', this.getLevelXP(), this.getLevelMaxXP());
-    }
-
-    if (emitLevelChange) {
-      this.emit('level-changed', this.currentLevel);
+    while (this.totalXP >= levelXP && this.currentLevel < LEVEL_XP.length) {
+      levelXP += LEVEL_XP[this.currentLevel];
+      ++this.currentLevel;
     }
   }
 
   /**
-   * Updates the state and progress of a specific achievement. If the state or progress
-   * changed, the corresponding signals are emitted.
+   * Updates the state and progress of a specific achievement.
    *
-   * @param emitSignals Whether to emit change signals.
-   * @param id The ID of the achievement to update.
+   * @param achievement The achievement to update.
+   * @param id The ID of the achievement. This is the key in the achievements map.
+   * @returns True if the progress changed, false otherwise.
    */
-  private updateAchievement(emitSignals: boolean, id: string) {
-    const achievement = this.achievements.get(id);
-
-    // Retrieve the current value. For now, all statistics values are numbers.
-    const val = this.stats.get(achievement.statsKey) as number;
+  private updateAchievement(achievement: AchievementDescription, id: string) {
+    // Retrieve the achievement's statistics value.
+    const statValue = this.stats.get(achievement.meta.statKey) as number;
 
     // First compute the state based on the value range of the achievement.
-    let newState = State.eActive;
-    if (val >= achievement.range[1]) {
-      newState = State.eCompleted;
-    } else if (val < achievement.range[0] || achievement.hidden) {
-      newState = State.eLocked;
+    let newState = AchievementState.eActive;
+    if (statValue >= achievement.meta.statRange[1]) {
+      newState = AchievementState.eCompleted;
+    } else if (statValue < achievement.meta.statRange[0] || achievement.meta.hidden) {
+      newState = AchievementState.eLocked;
     }
 
     // If the state changed, we may have to emit some signals.
-    if (newState != achievement.state) {
-      achievement.state = newState;
+    if (newState != achievement.common.state) {
+      achievement.common.state = newState;
 
-      // Get a mutable copy of the achievement dates.
-      const dates = structuredClone(this.stats.get('achievementDates')) as Record<
-        string,
-        string
-      >;
+      // Get all current achievement dates to initialize the achievement's date.
+      const dates = this.stats.get('achievementDates');
 
-      // If the achievement changed from or to the COMPLETED state, we have to update the
+      // If the achievement changed from or to the eCompleted state, we have to update the
       // settings value storing all the timestamps for completing achievements.
-      if (newState == State.eCompleted) {
-        // Store the completion timestamp.
-        dates[id] = new Date().toISOString();
+      if (newState == AchievementState.eCompleted) {
+        // Create or store the completion timestamp.
+        if (id in dates) {
+          achievement.common.date = dates[id];
+        } else {
+          achievement.common.date = new Date().toISOString();
+        }
 
         // If the completed achievement is supposed to reveal another hidden achievement,
         // we do this now.
-        if (achievement.reveals && this.achievements.has(achievement.reveals)) {
-          const revealedAchievement = this.achievements.get(achievement.reveals);
-          revealedAchievement.hidden = false;
-          this.updateAchievement(emitSignals, achievement.reveals);
+        if (achievement.meta.reveals && this.achievements.has(achievement.meta.reveals)) {
+          const revealedAchievement = this.achievements.get(achievement.meta.reveals);
+          revealedAchievement.meta.hidden = false;
+          this.updateAchievement(revealedAchievement, achievement.meta.reveals);
         }
       } else {
-        // Delete the completion timestamp if the achievement got 'uncompleted' for some
-        // reason.
-        if (id in dates) {
-          delete dates[id];
-        }
+        // Delete the completion timestamp if the achievement got 'uncompleted'.
+        achievement.common.date = '';
 
         // Also hide any achievements we may have revealed before.
-        if (achievement.reveals && this.achievements.has(achievement.reveals)) {
-          const revealedAchievement = this.achievements.get(achievement.reveals);
-          revealedAchievement.hidden = true;
-          this.updateAchievement(emitSignals, achievement.reveals);
-        }
-      }
-
-      // Store the updated dates back to the settings.
-      this.stats.set({ achievementDates: dates });
-
-      // If the state changed, we may have to recompute our total experience. We do not do
-      // this for the initial update as it's called once at the end of the constructor.
-      if (emitSignals) {
-        this.updateExperience();
-      }
-
-      // We do not want to emit signals for the first update() call. In this case, the
-      // state member is not yet set.
-      if (emitSignals) {
-        if (newState == State.eActive) {
-          this.emit('unlocked', id);
-        } else if (newState == State.eCompleted) {
-          this.emit('completed', id);
-        } else {
-          this.emit('locked', id);
+        if (achievement.meta.reveals && this.achievements.has(achievement.meta.reveals)) {
+          const revealedAchievement = this.achievements.get(achievement.meta.reveals);
+          revealedAchievement.meta.hidden = true;
+          this.updateAchievement(revealedAchievement, achievement.meta.reveals);
         }
       }
     }
 
     // Now we update the progress of the achievement. This is a value clamped to the
     // minimum and maximum value range of the achievement.
-    const newProgress = Math.min(
-      Math.max(val, achievement.range[0]),
-      achievement.range[1]
+    achievement.common.progress = Math.min(
+      Math.max(
+        (statValue - achievement.meta.statRange[0]) /
+          (achievement.meta.statRange[1] - achievement.meta.statRange[0]),
+        0.0
+      ),
+      1.0
     );
-
-    // Emit a signal if the value changed.
-    if (newProgress != achievement.progress) {
-      achievement.progress = newProgress;
-
-      if (emitSignals) {
-        this.emit('progress-changed', id, newProgress, achievement.range[1]);
-      }
-    }
   }
 
   /**
@@ -370,66 +320,96 @@ export class AchievementTracker extends EventEmitter {
       'platinum.png',
     ];
 
-    const achievements = new Map<string, Achievement>();
+    const achievements = new Map<string, AchievementDescription>();
+
+    // Helper function to create the common part of an achievement.
+    const getCommonHelper = (
+      name: string,
+      description: string,
+      badge: string,
+      icon: string
+    ) => {
+      return {
+        name,
+        description,
+        badge,
+        icon,
+        date: '',
+        progress: 0,
+        state: AchievementState.eLocked,
+      };
+    };
+
+    // Helper function to create the meta part of an achievement.
+    const getMetaHelper = (
+      statKey: keyof AchievementStats,
+      tier: number,
+      statMultiplier: number = 1,
+      xpMultiplier: number = 1
+    ): AchievementMeta => {
+      return {
+        statKey: statKey,
+        statRange: [
+          BASE_RANGES[tier] * statMultiplier,
+          BASE_RANGES[tier + 1] * statMultiplier,
+        ],
+        xp: BASE_XP[tier] * xpMultiplier,
+        hidden: false,
+      };
+    };
 
     // Add the five tiers of the cancel-many-selections achievements.
-    for (let i = 0; i < 5; i++) {
-      achievements.set('cancelor' + i, {
-        name: i18next.t('achievements.cancelor.name', {
-          attribute: attributes[i],
-          tier: numbers[i],
-        }),
-        description: i18next.t('achievements.cancelor.description', {
-          n: BASE_RANGES[i + 1] * 2,
-        }),
-        bgImage: bgImages[i],
-        fgImage: 'cancel.svg',
-        statsKey: 'cancels',
-        xp: BASE_XP[i],
-        range: [BASE_RANGES[i] * 2, BASE_RANGES[i + 1] * 2],
-        hidden: false,
-        progress: 0,
-        state: State.eLocked,
+    for (let tier = 0; tier < 5; tier++) {
+      achievements.set('cancelor' + tier, {
+        common: getCommonHelper(
+          i18next.t('achievements.cancelor.name', {
+            attribute: attributes[tier],
+            tier: numbers[tier],
+          }),
+          i18next.t('achievements.cancelor.description', {
+            n: BASE_RANGES[tier + 1] * 2,
+          }),
+          bgImages[tier],
+          'cancel.svg'
+        ),
+        meta: getMetaHelper('cancels', tier, 2),
       });
     }
 
     // Add the five tiers of the select-many-items achievements.
-    for (let i = 0; i < 5; i++) {
-      achievements.set('pielot' + i, {
-        name: i18next.t('achievements.pielot.name', {
-          attribute: attributes[i],
-          tier: numbers[i],
-        }),
-        description: i18next.t('achievements.pielot.description', {
-          n: BASE_RANGES[i + 1] * 5,
-        }),
-        bgImage: bgImages[i],
-        fgImage: `award${i}.svg`,
-        statsKey: 'selections',
-        xp: BASE_XP[i] * 2,
-        range: [BASE_RANGES[i] * 5, BASE_RANGES[i + 1] * 5],
-        hidden: false,
-        progress: 0,
-        state: State.eLocked,
+    for (let tier = 0; tier < 5; tier++) {
+      achievements.set('pielot' + tier, {
+        common: getCommonHelper(
+          i18next.t('achievements.pielot.name', {
+            attribute: attributes[tier],
+            tier: numbers[tier],
+          }),
+          i18next.t('achievements.pielot.description', {
+            n: BASE_RANGES[tier + 1] * 5,
+          }),
+          bgImages[tier],
+          `award${tier}.svg`
+        ),
+        meta: getMetaHelper('selections', tier, 5, 2),
       });
     }
 
     // Add the 15 achievements for selecting many things at different depths in marking
     // mode.
     for (let depth = 1; depth <= 3; depth++) {
-      for (let i = 0; i < 5; i++) {
+      for (let tier = 0; tier < 5; tier++) {
         const names = [
           i18next.t('achievements.gesture-selector.name1', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
           i18next.t('achievements.gesture-selector.name2', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
           i18next.t('achievements.gesture-selector.name3', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
         ];
 
@@ -439,20 +419,17 @@ export class AchievementTracker extends EventEmitter {
           'gestureSelectionsDepth3',
         ];
 
-        achievements.set(`depth${depth}-gesture-selector${i}`, {
-          name: names[depth - 1],
-          description: i18next.t('achievements.gesture-selector.description', {
-            n: BASE_RANGES[i + 1] * 2,
-            depth,
-          }),
-          bgImage: bgImages[i],
-          fgImage: `gesture${depth}.svg`,
-          statsKey: keys[depth - 1],
-          xp: BASE_XP[i],
-          range: [BASE_RANGES[i] * 2, BASE_RANGES[i + 1] * 2],
-          hidden: false,
-          progress: 0,
-          state: State.eLocked,
+        achievements.set(`depth${depth}-gesture-selector${tier}`, {
+          common: getCommonHelper(
+            names[depth - 1],
+            i18next.t('achievements.gesture-selector.description', {
+              n: BASE_RANGES[tier + 1] * 2,
+              depth,
+            }),
+            bgImages[tier],
+            `gesture${depth}.svg`
+          ),
+          meta: getMetaHelper(keys[depth - 1], tier, 2),
         });
       }
     }
@@ -460,19 +437,19 @@ export class AchievementTracker extends EventEmitter {
     // Add the 15 achievements for selecting many things at different depths with
     // mouse clicks.
     for (let depth = 1; depth <= 3; depth++) {
-      for (let i = 0; i < 5; i++) {
+      for (let tier = 0; tier < 5; tier++) {
         const names = [
           i18next.t('achievements.click-selector.name1', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
           i18next.t('achievements.click-selector.name2', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
           i18next.t('achievements.click-selector.name3', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
         ];
 
@@ -482,26 +459,23 @@ export class AchievementTracker extends EventEmitter {
           'clickSelectionsDepth3',
         ];
 
-        achievements.set(`depth${depth}-click-selector${i}`, {
-          name: names[depth - 1],
-          description: i18next.t('achievements.click-selector.description', {
-            n: BASE_RANGES[i + 1] * 2,
-            depth,
-          }),
-          bgImage: bgImages[i],
-          fgImage: `click${depth}.svg`,
-          statsKey: keys[depth - 1],
-          xp: BASE_XP[i],
-          range: [BASE_RANGES[i] * 2, BASE_RANGES[i + 1] * 2],
-          hidden: false,
-          progress: 0,
-          state: State.eLocked,
+        achievements.set(`depth${depth}-click-selector${tier}`, {
+          common: getCommonHelper(
+            names[depth - 1],
+            i18next.t('achievements.click-selector.description', {
+              n: BASE_RANGES[tier + 1] * 2,
+              depth,
+            }),
+            bgImages[tier],
+            `click${depth}.svg`
+          ),
+          meta: getMetaHelper(keys[depth - 1], tier, 2),
         });
       }
     }
 
     for (let depth = 1; depth <= 3; depth++) {
-      for (let i = 0; i < 5; i++) {
+      for (let tier = 0; tier < 5; tier++) {
         const timeLimits = [
           [1000, 750, 500, 250, 150],
           [2000, 1000, 750, 500, 250],
@@ -512,16 +486,16 @@ export class AchievementTracker extends EventEmitter {
 
         const names = [
           i18next.t('achievements.time-selector.name1', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
           i18next.t('achievements.time-selector.name2', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
           i18next.t('achievements.time-selector.name3', {
-            attribute: attributes[i],
-            tier: numbers[i],
+            attribute: attributes[tier],
+            tier: numbers[tier],
           }),
         ];
 
@@ -543,94 +517,94 @@ export class AchievementTracker extends EventEmitter {
           'selections500msDepth3',
         ];
 
-        achievements.set(`depth${depth}-selector${i}`, {
-          name: names[depth - 1],
-          description: i18next.t('achievements.time-selector.description', {
-            n: counts[i],
-            depth,
-            time: timeLimits[depth - 1][i],
-          }),
-          bgImage: bgImages[i],
-          fgImage: `timer.svg`,
-          statsKey: keys[(depth - 1) * 5 + i],
-          xp: BASE_XP[i],
-          range: [0, counts[i]],
-          hidden: i > 0,
-          reveals: i < 5 ? `depth${depth}-selector${i + 1}` : null,
-          progress: 0,
-          state: State.eLocked,
+        achievements.set(`depth${depth}-selector${tier}`, {
+          common: getCommonHelper(
+            names[depth - 1],
+            i18next.t('achievements.time-selector.description', {
+              n: counts[tier],
+              depth,
+              time: timeLimits[depth - 1][tier],
+            }),
+            bgImages[tier],
+            `timer.svg`
+          ),
+          meta: {
+            statKey: keys[(depth - 1) * 5 + tier],
+            xp: BASE_XP[tier],
+            statRange: [0, counts[tier]],
+            hidden: tier > 0,
+            reveals: tier < 5 ? `depth${depth}-selector${tier + 1}` : null,
+          },
         });
       }
     }
 
     // Add the five tiers of the settings-opened achievements.
-    for (let i = 0; i < 5; i++) {
-      achievements.set('journey' + i, {
-        name: i18next.t('achievements.journey.name', {
-          attribute: attributes[i],
-          tier: numbers[i],
-        }),
-        description: i18next.t('achievements.journey.description', {
-          n: BASE_RANGES[i + 1] / 2,
-        }),
-        bgImage: bgImages[i],
-        fgImage: 'gear.svg',
-        statsKey: 'settingsOpened',
-        xp: BASE_XP[i],
-        range: [BASE_RANGES[i] / 2, BASE_RANGES[i + 1] / 2],
-        hidden: false,
-        progress: 0,
-        state: State.eLocked,
+    for (let tier = 0; tier < 5; tier++) {
+      achievements.set('journey' + tier, {
+        common: getCommonHelper(
+          i18next.t('achievements.journey.name', {
+            attribute: attributes[tier],
+            tier: numbers[tier],
+          }),
+          i18next.t('achievements.journey.description', {
+            n: BASE_RANGES[tier + 1] / 2,
+          }),
+          bgImages[tier],
+          'gear.svg'
+        ),
+        meta: getMetaHelper('settingsOpened', tier, 0.5),
       });
     }
 
     // Add the five tiers of the create-many-items-in-menus achievements.
-    for (let i = 0; i < 5; i++) {
-      achievements.set('manyitems' + i, {
-        name: i18next.t('achievements.manyitems.name', {
-          attribute: attributes[i],
-          tier: numbers[i],
-        }),
-        description: i18next.t('achievements.manyitems.description', {
-          n: BASE_RANGES[i + 1] / 2,
-        }),
-        bgImage: bgImages[i],
-        fgImage: 'dots.svg',
-        statsKey: 'addedItems',
-        xp: BASE_XP[i],
-        range: [BASE_RANGES[i] / 2, BASE_RANGES[i + 1] / 2],
-        hidden: false,
-        progress: 0,
-        state: State.eLocked,
+    for (let tier = 0; tier < 5; tier++) {
+      achievements.set('manyitems' + tier, {
+        common: getCommonHelper(
+          i18next.t('achievements.manyitems.name', {
+            attribute: attributes[tier],
+            tier: numbers[tier],
+          }),
+          i18next.t('achievements.manyitems.description', {
+            n: BASE_RANGES[tier + 1] / 2,
+          }),
+          bgImages[tier],
+          'dots.svg'
+        ),
+        meta: getMetaHelper('addedItems', tier, 0.5),
       });
     }
 
     // Add the delete-all-menus achievement.
     achievements.set('goodpie', {
-      name: i18next.t('achievements.goodpie.name'),
-      description: i18next.t('achievements.goodpie.description'),
-      bgImage: 'special2.png',
-      fgImage: 'fire.svg',
-      statsKey: 'deletedAllMenus',
-      xp: BASE_XP[2],
-      range: [0, 1],
-      hidden: true,
-      progress: 0,
-      state: State.eLocked,
+      common: getCommonHelper(
+        i18next.t('achievements.goodpie.name'),
+        i18next.t('achievements.goodpie.description'),
+        'special2.png',
+        'fire.svg'
+      ),
+      meta: {
+        statKey: 'deletedAllMenus',
+        xp: BASE_XP[2],
+        statRange: [0, 1],
+        hidden: true,
+      },
     });
 
     // Add the click-on-sponsor achievement.
     achievements.set('sponsors', {
-      name: i18next.t('achievements.sponsors.name'),
-      description: i18next.t('achievements.sponsors.description'),
-      bgImage: 'special3.png',
-      fgImage: 'heart.svg',
-      statsKey: 'sponsorsViewed',
-      xp: BASE_XP[1],
-      range: [0, 1],
-      hidden: true,
-      progress: 0,
-      state: State.eLocked,
+      common: getCommonHelper(
+        i18next.t('achievements.sponsors.name'),
+        i18next.t('achievements.sponsors.description'),
+        'special3.png',
+        'heart.svg'
+      ),
+      meta: {
+        statKey: 'sponsorsViewed',
+        xp: BASE_XP[1],
+        statRange: [0, 1],
+        hidden: true,
+      },
     });
 
     return achievements;

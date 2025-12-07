@@ -19,6 +19,7 @@ import {
   WMInfo,
   SystemInfo,
   AppDescription,
+  LevelProgress,
 } from '../common';
 
 /**
@@ -85,8 +86,21 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-all-sound-themes');
   },
 
+  /** This will return all installed applications. */
   getInstalledApps: (): Promise<Array<AppDescription>> => {
     return ipcRenderer.invoke('settings-window.get-installed-apps');
+  },
+
+  /** This will return the current level and achievements progress. */
+  getLevelProgress: (): Promise<LevelProgress> => {
+    return ipcRenderer.invoke('settings-window.get-level-progress');
+  },
+
+  /** This will be called when the level progress has been changed. */
+  onLevelProgressChanged: (func: (progress: LevelProgress) => void) => {
+    ipcRenderer.on('settings-window.level-progress-changed', (event, progress) => {
+      func(progress);
+    });
   },
 
   /** This will show the web developer tools. */

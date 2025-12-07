@@ -23,10 +23,10 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
   achievementDates: z.record(z.string(), z.iso.datetime()).default({}),
 
   /**
-   * The number of new achievements. Will be reset when the user looks at the
-   * achievements.
+   * The timestamp when the user last viewed the achievements screen. Used to compute the
+   * new achievements since last view.
    */
-  unreadAchievements: z.number().default(0),
+  lastViewed: z.iso.datetime().optional(),
 
   /** The total number of selections. */
   selections: z.number().default(0),

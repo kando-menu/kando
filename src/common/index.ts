@@ -412,3 +412,63 @@ export type AppDescription = {
   /** The icon theme used for the above icon. */
   readonly iconTheme: string;
 };
+
+/**
+ * Each achievement can have one of three states. If it's 'locked', it will not be shown
+ * in the user interface. Once some specific requirements are fulfilled, it will become
+ * 'active' and eventually 'completed'.
+ */
+export enum AchievementState {
+  eLocked = 0,
+  eActive = 1,
+  eCompleted = 2,
+}
+
+/**
+ * An achievement represents a specific goal that the user can accomplish while using
+ * Kando. Achievements are tracked based on specific statistics stored in the settings.
+ */
+export type Achievement = {
+  /**
+   * The name. Most achievements have multiple tiers. A {{tier}} in the localization will
+   * be replaced by a corresponding roman number (e.g. I, II, III, IV or V), {{attribute}}
+   * by a corresponding attribute like 'Novice' or 'Master'.
+   */
+  name: string;
+
+  /** The explanation string. */
+  description: string;
+
+  /** A number between 0 and 1. */
+  progress: number;
+
+  /** One of the State values above. */
+  state: AchievementState;
+
+  /** If the achievement was completed, this contains the completion date as a string. */
+  date: string;
+
+  /** Absolute path to the background image for the badge. */
+  badge: string;
+
+  /** The icon drawn for the achievement. */
+  icon: string;
+};
+
+/** This type is used to transfer the user's current level progress. */
+export type LevelProgress = {
+  /** The current level. */
+  level: number;
+
+  /** The current experience points. */
+  xp: number;
+
+  /** The total experience points required to reach the next level. */
+  maxXp: number;
+
+  /** All active achievements. */
+  activeAchievements: Achievement[];
+
+  /** All completed achievements. */
+  completedAchievements: Achievement[];
+};

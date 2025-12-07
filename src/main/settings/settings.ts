@@ -164,7 +164,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   private watcher: FSWatcher | null;
 
   /** This array contains all listeners which are called when a setting changes. */
-  private anyChangeListeners: Array<(newSettings: T, oldSettings: T) => void> = [];
+  private anyChangeListeners: Array<
+    (newSettings: T, oldSettings: T, changedKeys: Array<keyof T>) => void
+  > = [];
 
   /**
    * This is the current settings object. It is loaded from the settings file when the
@@ -257,7 +259,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    *
    * @param listener The listener function which will be called when any setting changes.
    */
-  public onAnyChange(listener: (newSettings: T, oldSettings: T) => void) {
+  public onAnyChange(
+    listener: (newSettings: T, oldSettings: T, changedKeys: Array<keyof T>) => void
+  ) {
     this.anyChangeListeners.push(listener);
   }
 
@@ -267,7 +271,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    *
    * @param listener The listener function to disconnect.
    */
-  public disconnectAnyChange(listener: (newSettings: T, oldSettings: T) => void) {
+  public disconnectAnyChange(
+    listener: (newSettings: T, oldSettings: T, changedKeys: Array<keyof T>) => void
+  ) {
     const index = this.anyChangeListeners.indexOf(listener);
     if (index >= 0) {
       this.anyChangeListeners.splice(index, 1);
@@ -378,7 +384,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * @param oldSettings The old settings object.
    */
   private emitEvents(newSettings: T, oldSettings: T) {
-    let anyChanged = false;
+    const changedKeys: Array<keyof T> = [];
 
     for (const key in newSettings) {
       if (
@@ -386,12 +392,14 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
         this.emit(key, newSettings[key], oldSettings[key]);
-        anyChanged = true;
+        changedKeys.push(key);
       }
     }
 
-    if (anyChanged) {
-      this.anyChangeListeners.forEach((listener) => listener(newSettings, oldSettings));
+    if (changedKeys.length > 0) {
+      this.anyChangeListeners.forEach((listener) =>
+        listener(newSettings, oldSettings, changedKeys)
+      );
     }
   }
 

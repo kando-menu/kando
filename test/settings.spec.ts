@@ -32,6 +32,7 @@ describe('settings', () => {
   });
 
   const settings = new Settings({
+    name: 'test settings',
     file: 'kando_test.json',
     directory: os.tmpdir(),
     defaults: () => SETTINGS_SCHEMA.parse({}),

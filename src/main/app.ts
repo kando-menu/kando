@@ -223,14 +223,18 @@ export class KandoApp {
     // Initialize the achievement tracker.
     this.achievementTracker = new AchievementTracker();
 
-    this.achievementTracker.on('completed', (achievementID) => {
-      const achievement = this.achievementTracker.getAchievements().get(achievementID);
+    this.achievementTracker.on('completed', (achievement) => {
       Notification.show({
         title: i18next.t('achievements.completed-title'),
         message: achievement.name,
       });
+    });
 
-      console.log(achievement);
+    this.achievementTracker.on('progress-changed', (progress) => {
+      this.settingsWindow?.webContents.send(
+        'settings-window.level-progress-changed',
+        progress
+      );
     });
   }
 
@@ -524,6 +528,11 @@ export class KandoApp {
     // Allow the renderer to retrieve all installed applications.
     ipcMain.handle('settings-window.get-installed-apps', () => {
       return this.backend.getInstalledApps();
+    });
+
+    // Allow the renderer to retrieve the current level progress.
+    ipcMain.handle('settings-window.get-level-progress', () => {
+      return this.achievementTracker.getProgress();
     });
 
     // Show the web developer tools if requested.

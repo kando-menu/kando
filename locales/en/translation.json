@@ -39,6 +39,9 @@
       "check-latest-release": "Check latest release",
       "read-release-notes": "Read release notes"
     },
+    "achievements-dialog": {
+      "title": "Achievements"
+    },
     "general-settings-dialog": {
       "none": "None",
       "auto-language": "Use system language",
@@ -393,8 +396,8 @@
       "description": "Open the settings dialog {{n}} times."
     },
     "manyitems": {
-      "name": "",
-      "description": ""
+      "name": "You Can Have It All {{tier}}",
+      "description": "Create {{n}} items in the menu editor."
     },
     "goodpie": {
       "name": "Say Good-Pie!",

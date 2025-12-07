@@ -63,6 +63,9 @@ type AppState = {
   /** Whether the settings dialog is visible. */
   settingsDialogVisible: boolean;
 
+  /** Whether the achievements dialog is visible. */
+  achievementsDialogVisible: boolean;
+
   /** Whether the app is in dark mode. */
   darkMode: boolean;
 
@@ -148,6 +151,13 @@ type AppStateActions = {
   setSettingsDialogVisible: (settingsDialogVisible: boolean) => void;
 
   /**
+   * Shows or hides the achievements dialog.
+   *
+   * @param achievementsDialogVisible Whether the achievements dialog is visible.
+   */
+  setAchievementsDialogVisible: (achievementsDialogVisible: boolean) => void;
+
+  /**
    * Shows or hides the collection editor above the menu list.
    *
    * @param collectionDetailsVisible Whether the collection editor is visible.
@@ -173,6 +183,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   introDialogVisible: false,
   themesDialogVisible: false,
   settingsDialogVisible: false,
+  achievementsDialogVisible: false,
   darkMode: false,
   backendInfo: null,
   versionInfo: null,
@@ -192,6 +203,8 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
   setSettingsDialogVisible: (settingsDialogVisible: boolean) =>
     set({ settingsDialogVisible }),
+  setAchievementsDialogVisible: (achievementsDialogVisible: boolean) =>
+    set({ achievementsDialogVisible }),
   setCollectionDetailsVisible: (collectionDetailsVisible: boolean) =>
     set({ collectionDetailsVisible }),
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) =>
