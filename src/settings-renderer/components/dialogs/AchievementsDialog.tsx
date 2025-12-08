@@ -15,10 +15,10 @@ import classNames from 'classnames/bind';
 import * as classes from './AchievementsDialog.module.scss';
 const cx = classNames.bind(classes);
 
-import { TbTrophyFilled } from 'react-icons/tb';
+import { TbTrophyFilled, TbRestore } from 'react-icons/tb';
 import { useAppState } from '../../state';
 
-import { SettingsCheckbox, Modal, Scrollbox, ProgressBar } from '../common';
+import { Modal, Scrollbox, ProgressBar, Button } from '../common';
 
 const LEVEL_BADGES = [
   require('../../../../assets/images/levels/level1.png'),
@@ -42,19 +42,20 @@ export default function AchievementsDialog() {
     (state) => state.setAchievementsDialogVisible
   );
   const levelProgress = useAppState((state) => state.levelProgress);
+  const [showCompleted, setShowCompleted] = React.useState(false);
 
   return (
     <Modal
       icon={<TbTrophyFilled />}
       isVisible={achievementsDialogVisible}
       maxWidth={800}
-      paddingBottom={5}
-      paddingLeft={5}
-      paddingRight={5}
+      paddingBottom={0}
+      paddingLeft={0}
+      paddingRight={0}
       paddingTop={0}
       title={i18next.t('settings.achievements-dialog.title')}
       onClose={() => setAchievementsDialogVisible(false)}>
-      <div className={cx('levelContainer')}>
+      <div className={classes.levelContainer}>
         <img src={LEVEL_BADGES[levelProgress.level - 1]} />
         {levelProgress.xp} / {levelProgress.maxXp} XP
         <ProgressBar
@@ -62,37 +63,72 @@ export default function AchievementsDialog() {
           value={(levelProgress.xp / levelProgress.maxXp) * 100}
         />
       </div>
-      <Scrollbox maxHeight="min(40vh, 500px)">
-        <h3>Active Achievements</h3>
-        {levelProgress.activeAchievements.length === 0 && <p>No active achievements.</p>}
-        <ul>
-          {levelProgress.activeAchievements.map((achievement) => (
-            <li key={achievement.id}>
-              {achievement.name} - {achievement.description} ({achievement.statValue} /{' '}
-              {achievement.statRange[1]})
-            </li>
-          ))}
-        </ul>
-        <h3>Completed Achievements</h3>
-        {levelProgress.completedAchievements.length === 0 && (
-          <p>No completed achievements.</p>
-        )}
-        <ul>
-          {levelProgress.completedAchievements.map((achievement) => (
-            <li key={achievement.id}>
-              {achievement.name} - {achievement.description} ({achievement.date})
-            </li>
-          ))}
-        </ul>
-      </Scrollbox>
-      <div className={cx('footer')}>
-        <SettingsCheckbox
-          isFlipped
-          label={i18next.t('settings.achievements-dialog.enable-achievements')}
-          settingsKey="enableAchievements"
-        />
-        <div>Toogle</div>
-        <div>Clear</div>
+      <div className={classes.achievementContainer}>
+        <div className={cx({ achievementSlider: true, showCompleted })}>
+          <div className={classes.achievementListWrapper}>
+            <Scrollbox maxHeight="min(45vh, 500px)" paddingRight={8}>
+              <div className={classes.achievementList}>
+                {levelProgress.activeAchievements.map((achievement) => (
+                  <div key={achievement.id} className={classes.achievement}>
+                    <div className={classes.row}>
+                      <div className={classes.achievementName}>{achievement.name}</div>
+                      <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                    </div>
+                    <div className={classes.row} style={{ marginBottom: '4px' }}>
+                      <div>{achievement.description}</div>
+                      <div className={classes.achievementStat}>
+                        {achievement.statValue} / {achievement.statRange[1]}
+                      </div>
+                    </div>
+                    <ProgressBar
+                      barStyle="normal"
+                      value={(achievement.statValue / achievement.statRange[1]) * 100}
+                    />
+                  </div>
+                ))}
+              </div>
+            </Scrollbox>
+          </div>
+          <div className={classes.achievementListWrapper}>
+            <Scrollbox maxHeight="min(45vh, 500px)">
+              <div className={classes.achievementList}>
+                {levelProgress.completedAchievements.map((achievement) => (
+                  <div key={achievement.id} className={classes.achievement}>
+                    <div className={classes.row}>
+                      <div className={classes.achievementName}>{achievement.name}</div>
+                      <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                    </div>
+                    <div className={classes.row}>
+                      <div>{achievement.description}</div>
+                      <div className={classes.achievementStat}>
+                        {new Date(achievement.date).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Scrollbox>
+          </div>
+        </div>
+      </div>
+      <div className={classes.footerContainer}>
+        <div className={classes.viewButtons}>
+          <Button
+            isGrouped
+            isPressed={!showCompleted}
+            label="In Progress"
+            variant="secondary"
+            onClick={() => setShowCompleted(false)}
+          />
+          <Button
+            isGrouped
+            isPressed={showCompleted}
+            label="Completed"
+            variant="secondary"
+            onClick={() => setShowCompleted(true)}
+          />
+        </div>
+        <Button icon={<TbRestore />} tooltip="Reset all achievements" variant="primary" />
       </div>
     </Modal>
   );

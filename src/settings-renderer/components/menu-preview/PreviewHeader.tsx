@@ -18,7 +18,7 @@ import {
 } from 'react-icons/tb';
 import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 
-import { useAppState, useMenuSettings } from '../../state';
+import { useAppState, useMenuSettings, useGeneralSetting } from '../../state';
 import { Headerbar, Button } from '../common';
 
 /**
@@ -33,6 +33,7 @@ export default function PreviewHeader() {
   const setIntroDialogVisible = useAppState((state) => state.setIntroDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
+  const [enableAchievements] = useGeneralSetting('enableAchievements');
 
   // Undo/Redo buttons that only re-render when undo/redo state changes.
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -63,51 +64,56 @@ export default function PreviewHeader() {
     );
   });
 
-  const headerButtons = (
-    <>
-      <span style={{ marginRight: '8px' }}>
-        <Button
-          isGrouped
-          icon={<IoSchool />}
-          tooltip={i18next.t('settings.introduction-dialog.title')}
-          variant="tool"
-          onClick={() => setIntroDialogVisible(true)}
-        />
-        <Button
-          isGrouped
-          icon={<TbHeartFilled />}
-          tooltip={i18next.t('settings.about-dialog.title')}
-          variant="tool"
-          onClick={() => setAboutDialogVisible(true)}
-        />
-      </span>
-      <span style={{ marginRight: '8px' }}>
-        <Button
-          isGrouped
-          icon={<TbPaletteFilled />}
-          tooltip={i18next.t('settings.menu-themes-dialog.title')}
-          variant="tool"
-          onClick={() => setThemesDialogVisible(true)}
-        />
-        <Button
-          isGrouped
-          icon={<TbSettingsFilled />}
-          tooltip={i18next.t('settings.general-settings-dialog.title')}
-          variant="tool"
-          onClick={() => setSettingsDialogVisible(true)}
-        />
-        <Button
-          isGrouped
-          icon={<TbTrophyFilled />}
-          tooltip={i18next.t('settings.achievements-dialog.title')}
-          variant="tool"
-          onClick={() => setAchievementsDialogVisible(true)}
-        />
-      </span>
-      <span>
-        <UndoRedoButtons />
-      </span>
-    </>
+  return (
+    <Headerbar
+      center={
+        <>
+          <span style={{ marginRight: '8px' }}>
+            <Button
+              isGrouped
+              icon={<IoSchool />}
+              tooltip={i18next.t('settings.introduction-dialog.title')}
+              variant="tool"
+              onClick={() => setIntroDialogVisible(true)}
+            />
+            <Button
+              isGrouped
+              icon={<TbHeartFilled />}
+              tooltip={i18next.t('settings.about-dialog.title')}
+              variant="tool"
+              onClick={() => setAboutDialogVisible(true)}
+            />
+          </span>
+          <span style={{ marginRight: '8px' }}>
+            <Button
+              isGrouped
+              icon={<TbPaletteFilled />}
+              tooltip={i18next.t('settings.menu-themes-dialog.title')}
+              variant="tool"
+              onClick={() => setThemesDialogVisible(true)}
+            />
+            <Button
+              isGrouped
+              icon={<TbSettingsFilled />}
+              tooltip={i18next.t('settings.general-settings-dialog.title')}
+              variant="tool"
+              onClick={() => setSettingsDialogVisible(true)}
+            />
+            {enableAchievements ? (
+              <Button
+                isGrouped
+                icon={<TbTrophyFilled />}
+                tooltip={i18next.t('settings.achievements-dialog.title')}
+                variant="tool"
+                onClick={() => setAchievementsDialogVisible(true)}
+              />
+            ) : null}
+          </span>
+          <span>
+            <UndoRedoButtons />
+          </span>
+        </>
+      }
+    />
   );
-  return <Headerbar center={headerButtons} />;
 }

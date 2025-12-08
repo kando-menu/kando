@@ -37,6 +37,10 @@ $widget-primary-hover: light-dark(
   color.adjust($key-light, $lightness: -10%),
   color.adjust($key-dark, $lightness: 10%)
 );
+$widget-primary-active: light-dark(
+  color.adjust($key-light, $lightness: -20%),
+  color.adjust($key-dark, $lightness: 20%)
+);
 
 $widget-dark: light-dark(
   rgba(color.adjust($base-light, $lightness: -30%), 0.5),
@@ -54,6 +58,10 @@ $widget-normal: light-dark(
 $widget-normal-hover: light-dark(
   rgba(color.adjust($base-light, $lightness: -30%), 0.5),
   rgba(color.adjust($base-dark, $lightness: 30%), 0.5)
+);
+$widget-normal-active: light-dark(
+  rgba(color.adjust($base-light, $lightness: -40%), 0.5),
+  rgba(color.adjust($base-dark, $lightness: 40%), 0.5)
 );
 
 $widget-light: light-dark(

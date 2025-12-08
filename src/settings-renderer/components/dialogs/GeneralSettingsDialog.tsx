@@ -231,6 +231,11 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.lazy-initialization')}
             settingsKey="lazyInitialization"
           />
+          <SettingsCheckbox
+            info={i18next.t('settings.general-settings-dialog.enable-achievements-info')}
+            label={i18next.t('settings.general-settings-dialog.enable-achievements')}
+            settingsKey="enableAchievements"
+          />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
           <SettingsCheckbox

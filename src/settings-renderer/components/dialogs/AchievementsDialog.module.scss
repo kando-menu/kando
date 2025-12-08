@@ -11,16 +11,69 @@
 @use '../../variables.scss' as *;
 
 .levelContainer {
-  margin: 0 50px;
+  color: $text-normal;
+  margin: 0 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.footer {
-  margin: 0 50px;
+.achievementContainer {
+  overflow: hidden;
+}
+
+.achievementSlider {
+  color: $text-normal;
   display: flex;
-  align-self: stretch;
-  align-items: stretch;
-  gap: 10px;
+  width: 200%;
+  transition: transform 0.3s ease-in-out;
+
+  &.showCompleted {
+    transform: translateX(-50%);
+  }
+}
+
+.achievementListWrapper {
+  margin: 0 16px;
+  width: 100%;
+}
+
+.achievementList {
+  margin-top: 24px;
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.achievement {
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .achievementName {
+    font-weight: bold;
+  }
+
+  .achievementStat {
+    color: $text-muted;
+    font-size: 0.9em;
+  }
+}
+
+.footerContainer {
+  color: $text-normal;
+  margin: 0 16px 16px 16px;
+  display: flex;
+  justify-content: end;
+}
+
+.viewButtons {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

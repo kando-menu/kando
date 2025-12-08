@@ -58,6 +58,9 @@ type Props = {
    */
   readonly isGrouped?: boolean;
 
+  /** Whether to display the button in a pressed state. */
+  readonly isPressed?: boolean;
+
   readonly paddingTop?: number;
   readonly paddingBottom?: number;
   readonly paddingLeft?: number;
@@ -80,6 +83,7 @@ export default function Button(props: Props) {
     grouped: props.isGrouped,
     block: props.isBlock,
     grow: props.isGrowing,
+    pressed: props.isPressed,
   });
 
   return (
