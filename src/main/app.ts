@@ -230,10 +230,10 @@ export class KandoApp {
       });
     });
 
-    this.achievementTracker.on('progress-changed', (progress) => {
+    this.achievementTracker.on('progress-changed', () => {
       this.settingsWindow?.webContents.send(
         'settings-window.level-progress-changed',
-        progress
+        this.achievementTracker.getProgress()
       );
     });
   }

@@ -44,6 +44,7 @@ Promise.all([
   window.settingsAPI.getAllMenuThemes(),
   window.settingsAPI.getAllSoundThemes(),
   window.settingsAPI.getCurrentMenu(),
+  window.settingsAPI.getLevelProgress(),
 ]).then(
   async ([
     locales,
@@ -57,6 +58,7 @@ Promise.all([
     menuThemes,
     soundThemes,
     selectedMenu,
+    levelProgress,
   ]) => {
     // Initialize i18next with the current locale and the english fallback locale.
     await i18next.init({
@@ -146,6 +148,7 @@ Promise.all([
       menuThemes,
       soundThemes,
       selectedMenu,
+      levelProgress,
     });
 
     // Update the state whenever the settings change in the main process.
@@ -159,6 +162,10 @@ Promise.all([
 
     window.commonAPI.darkModeChanged((darkMode) => {
       useAppState.setState({ darkMode });
+    });
+
+    window.settingsAPI.onLevelProgressChanged((levelProgress) => {
+      useAppState.setState({ levelProgress });
     });
 
     useGeneralSettings.subscribe((newSettings) => {

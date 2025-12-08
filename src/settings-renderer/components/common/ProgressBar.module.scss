@@ -10,16 +10,29 @@
 
 @use '../../variables.scss' as *;
 
-.info {
-  color: $widget-normal;
-  font-size: 1.2em;
+.progressBar {
+  width: 100%;
+  height: 8px;
+  border-radius: 10px;
+  overflow: hidden;
 
-  &:hover {
-    color: $widget-normal-hover;
+  &.big {
+    height: 12px;
   }
 
-  svg {
-    position: relative;
-    top: 0.2em;
+  span {
+    display: block;
+    height: 100%;
+  }
+
+  .bar {
+    width: 100%;
+    height: 100%;
+    background-color: $toolbar-background;
+  }
+
+  .progress {
+    background-color: $text-link;
+    transition: width 0.2s ease-in-out;
   }
 }

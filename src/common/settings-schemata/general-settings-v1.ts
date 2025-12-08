@@ -210,6 +210,9 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
    * the settings window. If disabled, the default hotkey will be ignored.
    */
   useDefaultOsShowSettingsHotkey: z.boolean().default(true),
+
+  /** If enabled, achievements are tracked. */
+  enableAchievements: z.boolean().default(true),
 });
 
 export type GeneralSettingsV1 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V1>;

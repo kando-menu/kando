@@ -8,8 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export * from './settings-schemata/menu-settings-v1';
 export * from './settings-schemata';
+
+import { AchievementStats } from './settings-schemata';
 
 /** This type is used to pass command line arguments to the app. */
 export type CommandlineOptions = {
@@ -429,6 +430,9 @@ export enum AchievementState {
  * Kando. Achievements are tracked based on specific statistics stored in the settings.
  */
 export type Achievement = {
+  /** The ID of the achievement. This is a unique identifier used to track the achievement. */
+  id: string;
+
   /**
    * The name. Most achievements have multiple tiers. A {{tier}} in the localization will
    * be replaced by a corresponding roman number (e.g. I, II, III, IV or V), {{attribute}}
@@ -438,9 +442,6 @@ export type Achievement = {
 
   /** The explanation string. */
   description: string;
-
-  /** A number between 0 and 1. */
-  progress: number;
 
   /** One of the State values above. */
   state: AchievementState;
@@ -453,6 +454,24 @@ export type Achievement = {
 
   /** The icon drawn for the achievement. */
   icon: string;
+
+  /** The settings key this achievement is tracking. */
+  statKey: keyof AchievementStats;
+
+  /** The current value of the statKey, clamped to the statRange. */
+  statValue: number;
+
+  /** A value for the statKey value for which this achievement is active. */
+  statRange: [number, number];
+
+  /** The amount of experience gained by completion. */
+  xp: number;
+
+  /** If set, it's not shown in the UI until revealed by another achievement. */
+  hidden: boolean;
+
+  /** The ID of a hidden achievement. */
+  reveals?: string;
 };
 
 /** This type is used to transfer the user's current level progress. */

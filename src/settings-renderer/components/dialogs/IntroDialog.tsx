@@ -232,6 +232,7 @@ export default function IntroDialog() {
           </ol>
           <div style={{ marginTop: 'auto' }}>
             <SettingsCheckbox
+              isFlipped
               label={i18next.t('settings.introduction-dialog.show-again')}
               settingsKey="showIntroductionDialog"
             />

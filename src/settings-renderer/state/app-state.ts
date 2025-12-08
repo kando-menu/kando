@@ -18,6 +18,7 @@ import {
   SoundThemeDescription,
   Menu,
   AppDescription,
+  LevelProgress,
 } from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
@@ -86,6 +87,9 @@ type AppState = {
 
   /** Descriptions of all available sound themes. */
   soundThemes: Array<SoundThemeDescription>;
+
+  /** The current level progress. */
+  levelProgress: LevelProgress;
 };
 
 /** These actions can be performed on the app state. */
@@ -191,6 +195,13 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   installedApps: [],
   menuThemes: [],
   soundThemes: [],
+  levelProgress: {
+    level: 0,
+    xp: 0,
+    maxXp: 0,
+    activeAchievements: [],
+    completedAchievements: [],
+  },
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),
   selectChildPath: (selectedChildPath: number[]) => set({ selectedChildPath }),
   selectParent: () =>

@@ -40,7 +40,8 @@
       "read-release-notes": "Read release notes"
     },
     "achievements-dialog": {
-      "title": "Achievements"
+      "title": "Achievements",
+      "enable-achievements": "Track achievements"
     },
     "general-settings-dialog": {
       "none": "None",

@@ -10,16 +10,17 @@
 
 @use '../../variables.scss' as *;
 
-.info {
-  color: $widget-normal;
-  font-size: 1.2em;
+.levelContainer {
+  margin: 0 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  &:hover {
-    color: $widget-normal-hover;
-  }
-
-  svg {
-    position: relative;
-    top: 0.2em;
-  }
+.footer {
+  margin: 0 50px;
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+  gap: 10px;
 }

@@ -40,6 +40,9 @@ type Props = {
 
   /** Whether the widget is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
+
+  /** Whether to show the widget on the left side. Defaults to 'false'. */
+  readonly isFlipped?: boolean;
 };
 
 /**
@@ -53,19 +56,19 @@ export default function SettingsRow(props: Props) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Element = props.isLabelClickable ? 'label' : 'div';
 
-  return (
-    <Element
-      className={cx({
-        row: true,
-        clickable: props.isLabelClickable,
-        disabled: props.isDisabled,
-      })}>
-      {props.label || props.info ? (
-        <div className={classes.labelContainer}>
-          <span className={classes.label}>{props.label}</span>&nbsp;
-          {props.info ? <InfoItem info={props.info} /> : null}
-        </div>
-      ) : null}
+  const widgets = Array<React.ReactNode>();
+
+  if (props.label || props.info) {
+    widgets.push(
+      <div className={classes.labelContainer}>
+        <span className={classes.label}>{props.label}</span>&nbsp;
+        {props.info ? <InfoItem info={props.info} /> : null}
+      </div>
+    );
+  }
+
+  if (props.children) {
+    widgets.push(
       <div
         className={cx({
           widget: true,
@@ -76,6 +79,17 @@ export default function SettingsRow(props: Props) {
         }}>
         {props.children}
       </div>
+    );
+  }
+
+  return (
+    <Element
+      className={cx({
+        row: true,
+        clickable: props.isLabelClickable,
+        disabled: props.isDisabled,
+      })}>
+      {props.isFlipped ? widgets.reverse() : widgets}
     </Element>
   );
 }
