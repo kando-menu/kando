@@ -35,6 +35,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
 
+### :bug: Fixed
+
+- An issue where a menu would not show up on Niri if the pointer was not in a client-drawable area. Thanks to [@make-42](https://github.com/make-42) for the fix!
+
 ## [Kando 2.1.2](https://github.com/kando-menu/kando/releases/tag/v2.1.2)
 
 **Release Date:** 2025-12-02
