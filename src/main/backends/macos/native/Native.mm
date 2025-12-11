@@ -29,16 +29,36 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
     return Napi::Object();
   }
 
-  NSString* name     = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
+  // Filter out bundles that are background-only or UI elements (agents/helpers).
+  NSDictionary* infoDict = [bundle infoDictionary];
+  if (infoDict) {
+    NSNumber* lsbg = infoDict[@"LSBackgroundOnly"];
+    if (lsbg && [lsbg boolValue]) {
+      return Napi::Object();
+    }
+
+    NSNumber* lsui = infoDict[@"LSUIElement"];
+    if (lsui && [lsui boolValue]) {
+      return Napi::Object();
+    }
+  }
+
+  // If there is no executable, this is likely not a user-visible app.
   NSString* execName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
-  NSImage*  icon     = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
+  if (!execName || [execName length] == 0) {
+    return Napi::Object();
+  }
+
+  // If there is no icon at all, skip — many helpers/agents don't expose a proper icon.
+  NSImage* icon = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
+  if (!icon || [icon size].width == 0) {
+    return Napi::Object();
+  }
+
+  NSString* name = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
 
   if (!name) {
     name = [[appPath lastPathComponent] stringByDeletingPathExtension];
-  }
-
-  if (!execName) {
-    execName = @"";
   }
 
   // Create a 64x64 bitmap and draw the icon into it
@@ -253,7 +273,7 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
 
   @autoreleasepool {
     NSArray<NSString*>* appDirs = @[
-      @"/Applications", @"/System/Applications",
+      @"/Applications", @"/System/Applications", @"/System/Library/CoreServices",
       [NSHomeDirectory() stringByAppendingPathComponent:@"Applications"],
       [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Applications"]
     ];
