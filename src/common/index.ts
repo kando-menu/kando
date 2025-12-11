@@ -426,6 +426,40 @@ export enum AchievementState {
 }
 
 /**
+ * The achievement badges are composed of different layers. There is a badge type which
+ * defines the base layer. Then there is an icon layer which is drawn on top of the badge.
+ * Finally, there is a gloss layer which is drawn on top of everything to give the badge a
+ * shiny look.
+ */
+export enum AchievementBadgeType {
+  eCopper,
+  eBronze,
+  eSilver,
+  eGold,
+  ePlatinum,
+  eSpecial1,
+  eSpecial2,
+  eSpecial3,
+}
+
+/** The achievement icons are drawn on top of the achievement badges. */
+export enum AchievementBadgeIcon {
+  ePielot1,
+  ePielot2,
+  ePielot3,
+  ePielot4,
+  ePielot5,
+  eGestureSelector1,
+  eGestureSelector2,
+  eGestureSelector3,
+  eClickSelector1,
+  eClickSelector2,
+  eClickSelector3,
+  eJourney,
+  eFallback, // This is used for achievements that do not have a specific icon.
+}
+
+/**
  * An achievement represents a specific goal that the user can accomplish while using
  * Kando. Achievements are tracked based on specific statistics stored in the settings.
  */
@@ -449,11 +483,11 @@ export type Achievement = {
   /** If the achievement was completed, this contains the completion date as a string. */
   date: string;
 
-  /** Absolute path to the background image for the badge. */
-  badge: string;
+  /** The badge type for the achievement. */
+  badge: AchievementBadgeType;
 
   /** The icon drawn for the achievement. */
-  icon: string;
+  icon: AchievementBadgeIcon;
 
   /** The settings key this achievement is tracking. */
   statKey: keyof AchievementStats;

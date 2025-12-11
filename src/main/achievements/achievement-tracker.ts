@@ -16,6 +16,8 @@ import {
   Achievement,
   AchievementState,
   LevelProgress,
+  AchievementBadgeIcon,
+  AchievementBadgeType,
 } from '../../common';
 import { Settings } from '../settings';
 import { getAchievementStats } from './achievement-stats';
@@ -138,12 +140,21 @@ export class AchievementTracker extends EventEmitter {
 
   /** Retrieves the current progress of all achievements. */
   public getProgress(): LevelProgress {
-    const activeAchievements = Array.from(this.achievements.values()).filter(
-      (a) => a.state === AchievementState.eActive
-    );
-    const completedAchievements = Array.from(this.achievements.values()).filter(
-      (a) => a.state === AchievementState.eCompleted
-    );
+    // Compile a list of all active achievements sorted by their current progress.
+    const activeAchievements = Array.from(this.achievements.values())
+      .filter((a) => a.state === AchievementState.eActive)
+      .sort((a, b) => {
+        const aProgress = a.statValue / a.statRange[1];
+        const bProgress = b.statValue / b.statRange[1];
+        return bProgress - aProgress;
+      });
+
+    // Compile a list of all completed achievements sorted by completion date.
+    const completedAchievements = Array.from(this.achievements.values())
+      .filter((a) => a.state === AchievementState.eCompleted)
+      .sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
 
     // Get the experience points indicating the progress of the current level. This is
     // computed by the total XP minus the XP required to unlock each of the previous
@@ -287,13 +298,12 @@ export class AchievementTracker extends EventEmitter {
       i18next.t('achievements.tier.V'),
     ];
 
-    // These are the icon background images used by the five tiers.
-    const bgImages = [
-      'copper.png',
-      'bronze.png',
-      'silver.png',
-      'gold.png',
-      'platinum.png',
+    const standardBadges = [
+      AchievementBadgeType.eCopper,
+      AchievementBadgeType.eBronze,
+      AchievementBadgeType.eSilver,
+      AchievementBadgeType.eGold,
+      AchievementBadgeType.ePlatinum,
     ];
 
     const achievements = new Array<Achievement>();
@@ -320,8 +330,8 @@ export class AchievementTracker extends EventEmitter {
         description: i18next.t('achievements.cancelor.description', {
           n: BASE_RANGES[tier + 1] * 2,
         }),
-        badge: bgImages[tier],
-        icon: 'cancel.svg',
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
         statKey: 'cancels',
         statRange: [BASE_RANGES[tier] * 2, BASE_RANGES[tier + 1] * 2],
         xp: BASE_XP[tier],
@@ -329,6 +339,14 @@ export class AchievementTracker extends EventEmitter {
     }
 
     // Add the five tiers of the select-many-items achievements.
+    let icons = [
+      AchievementBadgeIcon.ePielot1,
+      AchievementBadgeIcon.ePielot2,
+      AchievementBadgeIcon.ePielot3,
+      AchievementBadgeIcon.ePielot4,
+      AchievementBadgeIcon.ePielot5,
+    ];
+
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
         id: 'pielot' + tier,
@@ -339,8 +357,8 @@ export class AchievementTracker extends EventEmitter {
         description: i18next.t('achievements.pielot.description', {
           n: BASE_RANGES[tier + 1] * 5,
         }),
-        badge: bgImages[tier],
-        icon: `award${tier}.svg`,
+        badge: standardBadges[tier],
+        icon: icons[tier],
         statKey: 'selections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
         xp: BASE_XP[tier] * 2,
@@ -349,6 +367,12 @@ export class AchievementTracker extends EventEmitter {
 
     // Add the 15 achievements for selecting many things at different depths in marking
     // mode.
+    icons = [
+      AchievementBadgeIcon.eGestureSelector1,
+      AchievementBadgeIcon.eGestureSelector2,
+      AchievementBadgeIcon.eGestureSelector3,
+    ];
+
     for (let depth = 1; depth <= 3; depth++) {
       for (let tier = 0; tier < 5; tier++) {
         const names = [
@@ -379,8 +403,8 @@ export class AchievementTracker extends EventEmitter {
             n: BASE_RANGES[tier + 1] * 2,
             depth,
           }),
-          badge: bgImages[tier],
-          icon: `gesture${depth}.svg`,
+          badge: standardBadges[tier],
+          icon: icons[depth - 1],
           statKey: keys[depth - 1],
           statRange: [BASE_RANGES[tier] * 2, BASE_RANGES[tier + 1] * 2],
           xp: BASE_XP[tier],
@@ -390,6 +414,12 @@ export class AchievementTracker extends EventEmitter {
 
     // Add the 15 achievements for selecting many things at different depths with
     // mouse clicks.
+    icons = [
+      AchievementBadgeIcon.eClickSelector1,
+      AchievementBadgeIcon.eClickSelector2,
+      AchievementBadgeIcon.eClickSelector3,
+    ];
+
     for (let depth = 1; depth <= 3; depth++) {
       for (let tier = 0; tier < 5; tier++) {
         const names = [
@@ -420,8 +450,8 @@ export class AchievementTracker extends EventEmitter {
             n: BASE_RANGES[tier + 1] * 2,
             depth,
           }),
-          badge: bgImages[tier],
-          icon: `click${depth}.svg`,
+          badge: standardBadges[tier],
+          icon: icons[depth - 1],
           statKey: keys[depth - 1],
           statRange: [BASE_RANGES[tier] * 2, BASE_RANGES[tier + 1] * 2],
           xp: BASE_XP[tier],
@@ -480,8 +510,8 @@ export class AchievementTracker extends EventEmitter {
             depth,
             time: timeLimits[depth - 1][tier],
           }),
-          badge: bgImages[tier],
-          icon: `timer.svg`,
+          badge: standardBadges[tier],
+          icon: AchievementBadgeIcon.eFallback,
           state: AchievementState.eLocked,
           statKey: keys[(depth - 1) * 5 + tier],
           statRange: [0, counts[tier]],
@@ -503,8 +533,8 @@ export class AchievementTracker extends EventEmitter {
         description: i18next.t('achievements.journey.description', {
           n: BASE_RANGES[tier + 1] / 2,
         }),
-        badge: bgImages[tier],
-        icon: 'gear.svg',
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eJourney,
         statKey: 'settingsOpened',
         statRange: [BASE_RANGES[tier] / 2, BASE_RANGES[tier + 1] / 2],
         xp: BASE_XP[tier],
@@ -522,8 +552,8 @@ export class AchievementTracker extends EventEmitter {
         description: i18next.t('achievements.manyitems.description', {
           n: BASE_RANGES[tier + 1] / 2,
         }),
-        badge: bgImages[tier],
-        icon: 'dots.svg',
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
         statKey: 'addedItems',
         statRange: [BASE_RANGES[tier] / 2, BASE_RANGES[tier + 1] / 2],
         xp: BASE_XP[tier],
@@ -535,8 +565,8 @@ export class AchievementTracker extends EventEmitter {
       id: 'goodpie',
       name: i18next.t('achievements.goodpie.name'),
       description: i18next.t('achievements.goodpie.description'),
-      badge: 'special2.png',
-      icon: 'fire.svg',
+      badge: AchievementBadgeType.eSpecial2,
+      icon: AchievementBadgeIcon.eFallback,
       statKey: 'deletedAllMenus',
       statRange: [0, 1],
       xp: BASE_XP[2],
@@ -548,8 +578,8 @@ export class AchievementTracker extends EventEmitter {
       id: 'sponsors',
       name: i18next.t('achievements.sponsors.name'),
       description: i18next.t('achievements.sponsors.description'),
-      badge: 'special3.png',
-      icon: 'heart.svg',
+      badge: AchievementBadgeType.eSpecial3,
+      icon: AchievementBadgeIcon.eFallback,
       statKey: 'sponsorsViewed',
       statRange: [0, 1],
       xp: BASE_XP[1],

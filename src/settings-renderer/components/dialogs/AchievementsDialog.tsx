@@ -18,20 +18,53 @@ const cx = classNames.bind(classes);
 import { TbTrophyFilled, TbRestore } from 'react-icons/tb';
 import { useAppState } from '../../state';
 
+import { AchievementBadgeType, AchievementBadgeIcon } from '../../../common';
 import { Modal, Scrollbox, ProgressBar, Button } from '../common';
 
 const LEVEL_BADGES = [
-  require('../../../../assets/images/levels/level1.png'),
-  require('../../../../assets/images/levels/level2.png'),
-  require('../../../../assets/images/levels/level3.png'),
-  require('../../../../assets/images/levels/level4.png'),
-  require('../../../../assets/images/levels/level5.png'),
-  require('../../../../assets/images/levels/level6.png'),
-  require('../../../../assets/images/levels/level7.png'),
-  require('../../../../assets/images/levels/level8.png'),
-  require('../../../../assets/images/levels/level9.png'),
-  require('../../../../assets/images/levels/level10.png'),
+  require('../../../../assets/images/achievements/levels/level1.png'),
+  require('../../../../assets/images/achievements/levels/level2.png'),
+  require('../../../../assets/images/achievements/levels/level3.png'),
+  require('../../../../assets/images/achievements/levels/level4.png'),
+  require('../../../../assets/images/achievements/levels/level5.png'),
+  require('../../../../assets/images/achievements/levels/level6.png'),
+  require('../../../../assets/images/achievements/levels/level7.png'),
+  require('../../../../assets/images/achievements/levels/level8.png'),
+  require('../../../../assets/images/achievements/levels/level9.png'),
+  require('../../../../assets/images/achievements/levels/level10.png'),
 ];
+
+// Type-safe record that ensures every badge type has a corresponding image.
+const ACHIEVEMENT_BADGES: Record<AchievementBadgeType, string> = {
+  [AchievementBadgeType.eCopper]: require('../../../../assets/images/achievements/badges/copper.png'),
+  [AchievementBadgeType.eBronze]: require('../../../../assets/images/achievements/badges/bronze.png'),
+  [AchievementBadgeType.eSilver]: require('../../../../assets/images/achievements/badges/silver.png'),
+  [AchievementBadgeType.eGold]: require('../../../../assets/images/achievements/badges/gold.png'),
+  [AchievementBadgeType.ePlatinum]: require('../../../../assets/images/achievements/badges/platinum.png'),
+  [AchievementBadgeType.eSpecial1]: require('../../../../assets/images/achievements/badges/special1.png'),
+  [AchievementBadgeType.eSpecial2]: require('../../../../assets/images/achievements/badges/special2.png'),
+  [AchievementBadgeType.eSpecial3]: require('../../../../assets/images/achievements/badges/special3.png'),
+} as const;
+
+// Type-safe record that ensures every icon type has a corresponding image.
+const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
+  [AchievementBadgeIcon.ePielot1]: require('../../../../assets/images/achievements/icons/pielot1.svg'),
+  [AchievementBadgeIcon.ePielot2]: require('../../../../assets/images/achievements/icons/pielot2.svg'),
+  [AchievementBadgeIcon.ePielot3]: require('../../../../assets/images/achievements/icons/pielot3.svg'),
+  [AchievementBadgeIcon.ePielot4]: require('../../../../assets/images/achievements/icons/pielot4.svg'),
+  [AchievementBadgeIcon.ePielot5]: require('../../../../assets/images/achievements/icons/pielot5.svg'),
+  [AchievementBadgeIcon.eGestureSelector1]: require('../../../../assets/images/achievements/icons/gestureSelector1.svg'),
+  [AchievementBadgeIcon.eGestureSelector2]: require('../../../../assets/images/achievements/icons/gestureSelector2.svg'),
+  [AchievementBadgeIcon.eGestureSelector3]: require('../../../../assets/images/achievements/icons/gestureSelector3.svg'),
+  [AchievementBadgeIcon.eClickSelector1]: require('../../../../assets/images/achievements/icons/clickSelector1.svg'),
+  [AchievementBadgeIcon.eClickSelector2]: require('../../../../assets/images/achievements/icons/clickSelector2.svg'),
+  [AchievementBadgeIcon.eClickSelector3]: require('../../../../assets/images/achievements/icons/clickSelector3.svg'),
+  [AchievementBadgeIcon.eJourney]: require('../../../../assets/images/achievements/icons/journey.svg'),
+  [AchievementBadgeIcon.eFallback]: require('../../../../assets/images/achievements/icons/fallback.svg'),
+} as const;
+
+// Gloss overlay for achievement badges.
+const ACHIEVEMENT_BADGE_GLOSS = require('../../../../assets/images/achievements/badges/gloss.png');
 
 /** This dialog allows the user to configure some general settings of Kando. */
 export default function AchievementsDialog() {
@@ -56,8 +89,10 @@ export default function AchievementsDialog() {
       title={i18next.t('settings.achievements-dialog.title')}
       onClose={() => setAchievementsDialogVisible(false)}>
       <div className={classes.levelContainer}>
-        <img src={LEVEL_BADGES[levelProgress.level - 1]} />
-        {levelProgress.xp} / {levelProgress.maxXp} XP
+        <img height={256} src={LEVEL_BADGES[levelProgress.level - 1]} width={256} />
+        <div className={classes.levelText}>
+          {levelProgress.xp} / {levelProgress.maxXp} XP
+        </div>
         <ProgressBar
           barStyle="big"
           value={(levelProgress.xp / levelProgress.maxXp) * 100}
@@ -70,20 +105,27 @@ export default function AchievementsDialog() {
               <div className={classes.achievementList}>
                 {levelProgress.activeAchievements.map((achievement) => (
                   <div key={achievement.id} className={classes.achievement}>
-                    <div className={classes.row}>
-                      <div className={classes.achievementName}>{achievement.name}</div>
-                      <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                    <div className={classes.achievementBadge}>
+                      <img src={ACHIEVEMENT_BADGES[achievement.badge]} />
+                      <img src={ACHIEVEMENT_ICONS[achievement.icon]} />
+                      <img src={ACHIEVEMENT_BADGE_GLOSS} />
                     </div>
-                    <div className={classes.row} style={{ marginBottom: '4px' }}>
-                      <div>{achievement.description}</div>
-                      <div className={classes.achievementStat}>
-                        {achievement.statValue} / {achievement.statRange[1]}
+                    <div className={classes.achievementData}>
+                      <div className={classes.row}>
+                        <div className={classes.achievementName}>{achievement.name}</div>
+                        <div className={classes.achievementStat}>{achievement.xp} XP</div>
                       </div>
+                      <div className={classes.row} style={{ marginBottom: '4px' }}>
+                        <div>{achievement.description}</div>
+                        <div className={classes.achievementStat}>
+                          {achievement.statValue} / {achievement.statRange[1]}
+                        </div>
+                      </div>
+                      <ProgressBar
+                        barStyle="normal"
+                        value={(achievement.statValue / achievement.statRange[1]) * 100}
+                      />
                     </div>
-                    <ProgressBar
-                      barStyle="normal"
-                      value={(achievement.statValue / achievement.statRange[1]) * 100}
-                    />
                   </div>
                 ))}
               </div>
@@ -94,14 +136,21 @@ export default function AchievementsDialog() {
               <div className={classes.achievementList}>
                 {levelProgress.completedAchievements.map((achievement) => (
                   <div key={achievement.id} className={classes.achievement}>
-                    <div className={classes.row}>
-                      <div className={classes.achievementName}>{achievement.name}</div>
-                      <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                    <div className={classes.achievementBadge}>
+                      <img src={ACHIEVEMENT_BADGES[achievement.badge]} />
+                      <img src={ACHIEVEMENT_ICONS[achievement.icon]} />
+                      <img src={ACHIEVEMENT_BADGE_GLOSS} />
                     </div>
-                    <div className={classes.row}>
-                      <div>{achievement.description}</div>
-                      <div className={classes.achievementStat}>
-                        {new Date(achievement.date).toLocaleDateString()}
+                    <div className={classes.achievementData}>
+                      <div className={classes.row}>
+                        <div className={classes.achievementName}>{achievement.name}</div>
+                        <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                      </div>
+                      <div className={classes.row}>
+                        <div>{achievement.description}</div>
+                        <div className={classes.achievementStat}>
+                          {new Date(achievement.date).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
                   </div>

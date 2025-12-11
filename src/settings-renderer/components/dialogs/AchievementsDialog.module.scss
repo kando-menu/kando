@@ -22,6 +22,10 @@
   overflow: hidden;
 }
 
+.levelText {
+  margin-bottom: 4px;
+}
+
 .achievementSlider {
   color: $text-normal;
   display: flex;
@@ -47,6 +51,26 @@
 }
 
 .achievement {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  .achievementBadge {
+    height: 64px;
+    width: 64px;
+    position: relative;
+
+    img {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+    }
+  }
+
+  .achievementData {
+    flex-grow: 1;
+  }
+
   .row {
     display: flex;
     justify-content: space-between;
@@ -76,4 +100,9 @@
   transform: translateX(-50%);
   display: grid;
   grid-template-columns: 1fr 1fr;
+
+  button {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
 }
