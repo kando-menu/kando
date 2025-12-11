@@ -540,6 +540,26 @@ export class KandoApp {
       this.achievementTracker.onAchievementsViewed();
     });
 
+    // This will be called when the achievements and level progress should be reset. We
+    // will show a confirmation dialog before doing this.
+    ipcMain.on('settings-window.reset-level-progress', async () => {
+      const response = await dialog.showMessageBox(this.settingsWindow, {
+        type: 'warning',
+        buttons: [
+          i18next.t('settings.cancel'),
+          i18next.t('settings.achievements-dialog.reset-button'),
+        ],
+        title: i18next.t('settings.achievements-dialog.reset-confirmation-title'),
+        message: i18next.t('settings.achievements-dialog.reset-confirmation-message'),
+      });
+
+      if (response.response === 0) {
+        return;
+      }
+
+      this.achievementTracker.resetProgress();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on(
       'settings-window.show-dev-tools',

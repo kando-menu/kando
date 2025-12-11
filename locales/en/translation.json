@@ -9,8 +9,17 @@
       "search-placeholder": "Search icons…",
       "hint": "Learn [here]({{link}}) how to add or create your own icon themes."
     },
-    "backup-general-settings-title": "Backup General Settings…",
     "cancel": "Cancel",
+    "achievements-dialog": {
+      "reset-button": "Reset Progress",
+      "reset-confirmation-title": "Do you really want to reset all progress?",
+      "reset-confirmation-message": "All achievements and level progress will be lost. This action cannot be undone.",
+      "title": "Achievements",
+      "in-progress-button": "In Progress",
+      "completed-button": "Completed",
+      "reset-button-tooltip": "Reset all achievements and level progress"
+    },
+    "backup-general-settings-title": "Backup General Settings…",
     "restore-backup": "Restore Backup…",
     "restore-general-settings-warning-title": "Do you really want to restore the general settings?",
     "restore-general-settings-warning-message": "This will overwrite your current application settings with the contents of the selected backup file! Your menus and menu collections will not be affected.",
@@ -38,10 +47,6 @@
       "chrome-version": "Chrome Version",
       "check-latest-release": "Check latest release",
       "read-release-notes": "Read release notes"
-    },
-    "achievements-dialog": {
-      "title": "Achievements",
-      "enable-achievements": "Track achievements"
     },
     "general-settings-dialog": {
       "none": "None",
@@ -82,6 +87,8 @@
       "black": "Black",
       "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
       "lazy-initialization": "Lazy initialization",
+      "enable-achievements-info": "",
+      "enable-achievements": "",
       "menu-behavior": "Menu Behavior",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
       "keep-input-focus": "Keep active application focused",

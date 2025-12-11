@@ -18,6 +18,7 @@ import {
   LevelProgress,
   AchievementBadgeIcon,
   AchievementBadgeType,
+  ACHIEVEMENT_STATS_SCHEMA,
 } from '../../common';
 import { Settings } from '../settings';
 import { getAchievementStats } from './achievement-stats';
@@ -189,6 +190,11 @@ export class AchievementTracker extends EventEmitter {
       completedAchievements,
       newAchievementsCount,
     };
+  }
+
+  /** Resets the level progress and achievements. */
+  public resetProgress() {
+    this.stats.set(ACHIEVEMENT_STATS_SCHEMA.parse({}));
   }
 
   /** Should be called when the achievements are viewed by the user. */

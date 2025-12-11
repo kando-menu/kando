@@ -174,7 +174,7 @@ export default function AchievementsDialog() {
           <Button
             isGrouped
             isPressed={!showCompleted}
-            label="In Progress"
+            label={i18next.t('settings.achievements-dialog.in-progress-button')}
             variant="secondary"
             onClick={() => setShowCompleted(false)}
           />
@@ -186,7 +186,7 @@ export default function AchievementsDialog() {
                 : undefined
             }
             isPressed={showCompleted}
-            label="Completed"
+            label={i18next.t('settings.achievements-dialog.completed-button')}
             variant="secondary"
             onClick={() => {
               setShowCompleted(true);
@@ -194,7 +194,12 @@ export default function AchievementsDialog() {
             }}
           />
         </div>
-        <Button icon={<TbRestore />} tooltip="Reset all achievements" variant="primary" />
+        <Button
+          icon={<TbRestore />}
+          tooltip={i18next.t('settings.achievements-dialog.reset-button-tooltip')}
+          variant="primary"
+          onClick={() => window.settingsAPI.resetLevelProgress()}
+        />
       </div>
     </Modal>
   );
