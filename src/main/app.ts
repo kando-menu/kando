@@ -535,6 +535,11 @@ export class KandoApp {
       return this.achievementTracker.getProgress();
     });
 
+    // This will be called when the completed achievements are viewed in the settings.
+    ipcMain.on('settings-window.mark-achievements-as-viewed', () => {
+      this.achievementTracker.onAchievementsViewed();
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on(
       'settings-window.show-dev-tools',

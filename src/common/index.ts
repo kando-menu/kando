@@ -444,6 +444,11 @@ export enum AchievementBadgeType {
 
 /** The achievement icons are drawn on top of the achievement badges. */
 export enum AchievementBadgeIcon {
+  eCancelor1,
+  eCancelor2,
+  eCancelor3,
+  eCancelor4,
+  eCancelor5,
   ePielot1,
   ePielot2,
   ePielot3,
@@ -456,6 +461,7 @@ export enum AchievementBadgeIcon {
   eClickSelector2,
   eClickSelector3,
   eJourney,
+  eSponsors,
   eFallback, // This is used for achievements that do not have a specific icon.
 }
 
@@ -518,6 +524,9 @@ export type LevelProgress = {
 
   /** The total experience points required to reach the next level. */
   maxXp: number;
+
+  /** The number of new achievements since the user last viewed the dialog. */
+  newAchievementsCount: number;
 
   /** All active achievements. */
   activeAchievements: Achievement[];

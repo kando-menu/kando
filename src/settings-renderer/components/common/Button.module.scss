@@ -44,6 +44,24 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+
+  .indicator {
+    width: 8px;
+    height: 8px;
+    background-color: $widget-primary;
+    border-radius: 50%;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
+  .badge {
+    font-size: 0.75em;
+    background-color: $widget-primary;
+    border-radius: 4px;
+    padding: 2px 8px;
+    transform: translateX(8px);
+  }
 }
 
 .left {

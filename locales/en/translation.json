@@ -390,7 +390,7 @@
       "name1": "{{attribute}} Toplevel Selector",
       "name2": "{{attribute}} Submenu Selector",
       "name3": "{{attribute}} Subsubmenu Selector",
-      "description": "Select {{n}} items at depth {{depth}} in less than {{time}} milliseconds."
+      "description": "Select {{n}} items at depth {{depth}} in less than {{time}} ms."
     },
     "journey": {
       "name": "The Journey Is The Reward {{tier}}",

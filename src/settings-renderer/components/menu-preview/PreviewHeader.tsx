@@ -33,6 +33,10 @@ export default function PreviewHeader() {
   const setIntroDialogVisible = useAppState((state) => state.setIntroDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
+
+  // We show the achievements-button only if achievements are enabled. Also, we show a
+  // tiny indicator on it if there are new achievements.
+  const levelProgress = useAppState((state) => state.levelProgress);
   const [enableAchievements] = useGeneralSetting('enableAchievements');
 
   // Undo/Redo buttons that only re-render when undo/redo state changes.
@@ -102,6 +106,7 @@ export default function PreviewHeader() {
             {enableAchievements ? (
               <Button
                 isGrouped
+                hasIndicator={levelProgress.newAchievementsCount > 0}
                 icon={<TbTrophyFilled />}
                 tooltip={i18next.t('settings.achievements-dialog.title')}
                 variant="tool"

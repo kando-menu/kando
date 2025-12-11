@@ -61,6 +61,12 @@ type Props = {
   /** Whether to display the button in a pressed state. */
   readonly isPressed?: boolean;
 
+  /** Whether to display a tiny indicator dot on the button. */
+  readonly hasIndicator?: boolean;
+
+  /** Whether to add a counter badge to the button. */
+  readonly badgeCount?: number;
+
   readonly paddingTop?: number;
   readonly paddingBottom?: number;
   readonly paddingLeft?: number;
@@ -101,7 +107,11 @@ export default function Button(props: Props) {
       type="button"
       onClick={props.onClick}>
       {props.icon}
+      {props.hasIndicator ? <span className={classes.indicator} /> : null}
       {props.label ? <span className={classes.text}>{props.label}</span> : null}
+      {props.badgeCount !== undefined ? (
+        <span className={classes.badge}>{props.badgeCount}</span>
+      ) : null}
     </button>
   );
 }

@@ -48,6 +48,10 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  &.completed {
+    gap: 4px;
+  }
 }
 
 .achievement {
@@ -89,7 +93,7 @@
 
 .footerContainer {
   color: $text-normal;
-  margin: 0 16px 16px 16px;
+  margin: 8px 16px 16px 16px;
   display: flex;
   justify-content: end;
 }
@@ -102,7 +106,7 @@
   grid-template-columns: 1fr 1fr;
 
   button {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
   }
 }

@@ -103,6 +103,11 @@ export const SETTINGS_WINDOW_API = {
     });
   },
 
+  /** Mark the achievements as viewed. */
+  markAchievementsAsViewed: () => {
+    ipcRenderer.send('settings-window.mark-achievements-as-viewed');
+  },
+
   /** This will show the web developer tools. */
   showDevTools: (forWindow: 'menu-window' | 'settings-window') => {
     ipcRenderer.send('settings-window.show-dev-tools', forWindow);

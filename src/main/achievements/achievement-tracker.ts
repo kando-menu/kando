@@ -131,6 +131,12 @@ export class AchievementTracker extends EventEmitter {
         this.stats.set({ achievementDates: dates }, false);
       }
 
+      // If the lastViewed statistic changed, we also consider this a progress change,
+      // since the progress returns also the number of new achievements.
+      if (!anyProgressChanged && changedKeys.includes('lastViewed')) {
+        anyProgressChanged = true;
+      }
+
       // Finally, emit the progress-changed signal if necessary.
       if (anyProgressChanged || anyStateChanged) {
         this.emit('progress-changed');
@@ -164,13 +170,30 @@ export class AchievementTracker extends EventEmitter {
       xp -= LEVEL_XP[i];
     }
 
+    // Count the number of new achievements.
+    let newAchievementsCount = 0;
+    const lastViewed = this.stats.get('lastViewed') || new Date(0).toISOString();
+
+    while (
+      completedAchievements.length > newAchievementsCount &&
+      completedAchievements[newAchievementsCount].date > lastViewed
+    ) {
+      newAchievementsCount++;
+    }
+
     return {
       level: this.currentLevel,
       xp,
       maxXp: LEVEL_XP[this.currentLevel - 1],
       activeAchievements,
       completedAchievements,
+      newAchievementsCount,
     };
+  }
+
+  /** Should be called when the achievements are viewed by the user. */
+  public onAchievementsViewed() {
+    this.stats.set({ lastViewed: new Date().toISOString() });
   }
 
   /** Should be called when the settings are opened. */
@@ -320,6 +343,14 @@ export class AchievementTracker extends EventEmitter {
     };
 
     // Add the five tiers of the cancel-many-selections achievements.
+    let icons = [
+      AchievementBadgeIcon.eCancelor1,
+      AchievementBadgeIcon.eCancelor2,
+      AchievementBadgeIcon.eCancelor3,
+      AchievementBadgeIcon.eCancelor4,
+      AchievementBadgeIcon.eCancelor5,
+    ];
+
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
         id: 'cancelor' + tier,
@@ -331,7 +362,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] * 2,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: icons[tier],
         statKey: 'cancels',
         statRange: [BASE_RANGES[tier] * 2, BASE_RANGES[tier + 1] * 2],
         xp: BASE_XP[tier],
@@ -339,7 +370,7 @@ export class AchievementTracker extends EventEmitter {
     }
 
     // Add the five tiers of the select-many-items achievements.
-    let icons = [
+    icons = [
       AchievementBadgeIcon.ePielot1,
       AchievementBadgeIcon.ePielot2,
       AchievementBadgeIcon.ePielot3,
@@ -579,7 +610,7 @@ export class AchievementTracker extends EventEmitter {
       name: i18next.t('achievements.sponsors.name'),
       description: i18next.t('achievements.sponsors.description'),
       badge: AchievementBadgeType.eSpecial3,
-      icon: AchievementBadgeIcon.eFallback,
+      icon: AchievementBadgeIcon.eSponsors,
       statKey: 'sponsorsViewed',
       statRange: [0, 1],
       xp: BASE_XP[1],

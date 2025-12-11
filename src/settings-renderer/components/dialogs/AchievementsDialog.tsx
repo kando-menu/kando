@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
@@ -48,6 +51,11 @@ const ACHIEVEMENT_BADGES: Record<AchievementBadgeType, string> = {
 
 // Type-safe record that ensures every icon type has a corresponding image.
 const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
+  [AchievementBadgeIcon.eCancelor1]: require('../../../../assets/images/achievements/icons/cancelor1.svg'),
+  [AchievementBadgeIcon.eCancelor2]: require('../../../../assets/images/achievements/icons/cancelor2.svg'),
+  [AchievementBadgeIcon.eCancelor3]: require('../../../../assets/images/achievements/icons/cancelor3.svg'),
+  [AchievementBadgeIcon.eCancelor4]: require('../../../../assets/images/achievements/icons/cancelor4.svg'),
+  [AchievementBadgeIcon.eCancelor5]: require('../../../../assets/images/achievements/icons/cancelor5.svg'),
   [AchievementBadgeIcon.ePielot1]: require('../../../../assets/images/achievements/icons/pielot1.svg'),
   [AchievementBadgeIcon.ePielot2]: require('../../../../assets/images/achievements/icons/pielot2.svg'),
   [AchievementBadgeIcon.ePielot3]: require('../../../../assets/images/achievements/icons/pielot3.svg'),
@@ -60,6 +68,7 @@ const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
   [AchievementBadgeIcon.eClickSelector2]: require('../../../../assets/images/achievements/icons/clickSelector2.svg'),
   [AchievementBadgeIcon.eClickSelector3]: require('../../../../assets/images/achievements/icons/clickSelector3.svg'),
   [AchievementBadgeIcon.eJourney]: require('../../../../assets/images/achievements/icons/journey.svg'),
+  [AchievementBadgeIcon.eSponsors]: require('../../../../assets/images/achievements/icons/sponsors.svg'),
   [AchievementBadgeIcon.eFallback]: require('../../../../assets/images/achievements/icons/fallback.svg'),
 } as const;
 
@@ -133,7 +142,7 @@ export default function AchievementsDialog() {
           </div>
           <div className={classes.achievementListWrapper}>
             <Scrollbox maxHeight="min(45vh, 500px)">
-              <div className={classes.achievementList}>
+              <div className={cx({ achievementList: true, completed: true })}>
                 {levelProgress.completedAchievements.map((achievement) => (
                   <div key={achievement.id} className={classes.achievement}>
                     <div className={classes.achievementBadge}>
@@ -171,10 +180,18 @@ export default function AchievementsDialog() {
           />
           <Button
             isGrouped
+            badgeCount={
+              levelProgress.newAchievementsCount > 0
+                ? levelProgress.newAchievementsCount
+                : undefined
+            }
             isPressed={showCompleted}
             label="Completed"
             variant="secondary"
-            onClick={() => setShowCompleted(true)}
+            onClick={() => {
+              setShowCompleted(true);
+              window.settingsAPI.markAchievementsAsViewed();
+            }}
           />
         </div>
         <Button icon={<TbRestore />} tooltip="Reset all achievements" variant="primary" />
