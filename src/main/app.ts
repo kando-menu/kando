@@ -227,6 +227,14 @@ export class KandoApp {
       Notification.show({
         title: i18next.t('achievements.completed-title'),
         message: achievement.name,
+        onClick: () => {
+          this.showSettings();
+          this.settingsWindow.onWindowLoaded.then(() => {
+            this.settingsWindow.webContents.send(
+              'settings-window.show-achievements-dialog'
+            );
+          });
+        },
       });
     });
 

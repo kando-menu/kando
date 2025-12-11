@@ -168,6 +168,11 @@ Promise.all([
       useAppState.setState({ levelProgress });
     });
 
+    window.settingsAPI.onShowAchievementsDialog(() => {
+      console.log('Showing achievements dialog');
+      useAppState.setState({ achievementsDialogVisible: true });
+    });
+
     useGeneralSettings.subscribe((newSettings) => {
       window.commonAPI.generalSettings.set(newSettings);
     });

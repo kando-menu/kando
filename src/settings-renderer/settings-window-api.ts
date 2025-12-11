@@ -96,7 +96,7 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-level-progress');
   },
 
-  /** This will be called when the level progress has been changed. */
+  /** This will be called by the host when the level progress has been changed. */
   onLevelProgressChanged: (func: (progress: LevelProgress) => void) => {
     ipcRenderer.on('settings-window.level-progress-changed', (event, progress) => {
       func(progress);
@@ -111,6 +111,13 @@ export const SETTINGS_WINDOW_API = {
   /** This will reset the level progress and achievements. */
   resetLevelProgress: () => {
     ipcRenderer.send('settings-window.reset-level-progress');
+  },
+
+  /** This will be called by the host when achievement dialog should be shown. */
+  onShowAchievementsDialog: (func: () => void) => {
+    ipcRenderer.on('settings-window.show-achievements-dialog', () => {
+      func();
+    });
   },
 
   /** This will show the web developer tools. */

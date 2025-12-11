@@ -60,7 +60,7 @@ export default function SettingsRow(props: Props) {
 
   if (props.label || props.info) {
     widgets.push(
-      <div className={classes.labelContainer}>
+      <div key="label" className={classes.labelContainer}>
         <span className={classes.label}>{props.label}</span>&nbsp;
         {props.info ? <InfoItem info={props.info} /> : null}
       </div>
@@ -70,6 +70,7 @@ export default function SettingsRow(props: Props) {
   if (props.children) {
     widgets.push(
       <div
+        key="widget"
         className={cx({
           widget: true,
           grow: props.isGrowing,
