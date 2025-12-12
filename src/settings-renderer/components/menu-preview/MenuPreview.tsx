@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import classNames from 'classnames/bind';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -709,6 +712,8 @@ export default function MenuPreview() {
                       });
                       selectChildPath(centerItemPath.concat(dropIndex));
                     }
+
+                    window.commonAPI.incrementAchievementStat('addedItems');
                   }
                 }
 

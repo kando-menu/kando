@@ -649,6 +649,7 @@ export class MenuWindow extends BrowserWindow {
     // wait for the fade-out animation to finish.
     ipcMain.on('menu-window.cancel-selection', () => {
       this.hideWindow();
+      this.kando.achievementTracker.incrementStat('cancels');
     });
 
     // Show the settings window when the user clicks on the settings button in the menu.

@@ -100,17 +100,14 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
   /** The number of times the settings dialog has been opened. */
   settingsOpened: z.number().default(0),
 
-  /** The number of times a menu configuration has been restored. */
-  menusRestored: z.number().default(0),
+  /** The number of times the settings were restored. */
+  settingsRestored: z.number().default(0),
 
-  /** The number of times a menu configuration has been backed up. */
-  menusBackedUp: z.number().default(0),
+  /** The number of times the settings were backed up. */
+  settingsBackedUp: z.number().default(0),
 
   /** The number of items added to menus. */
   addedItems: z.number().default(0),
-
-  /** The number of items removed from menus. */
-  removedItems: z.number().default(0),
 
   /** The number of times all menus have been deleted. */
   deletedAllMenus: z.number().default(0),

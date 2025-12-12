@@ -199,6 +199,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
     level: 0,
     xp: 0,
     maxXp: 0,
+    newAchievementsCount: 0,
     activeAchievements: [],
     completedAchievements: [],
   },

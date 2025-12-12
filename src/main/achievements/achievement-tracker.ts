@@ -13,12 +13,14 @@ import i18next from 'i18next';
 
 import {
   AchievementStats,
+  AchievementStatsNumberKeys,
   Achievement,
   AchievementState,
   LevelProgress,
   AchievementBadgeIcon,
   AchievementBadgeType,
   ACHIEVEMENT_STATS_SCHEMA,
+  GeneralSettings,
 } from '../../common';
 import { Settings } from '../settings';
 import { getAchievementStats } from './achievement-stats';
@@ -74,7 +76,7 @@ export class AchievementTracker extends EventEmitter {
   /** The settings object containing the achievement statistics. */
   private stats: Settings<AchievementStats>;
 
-  constructor() {
+  constructor(private generalSettings: Settings<GeneralSettings>) {
     super();
 
     // Store a reference to the settings object containing the achievement statistics.
@@ -202,14 +204,11 @@ export class AchievementTracker extends EventEmitter {
     this.stats.set({ lastViewed: new Date().toISOString() });
   }
 
-  /** Should be called when the settings are opened. */
-  public onSettingsOpened() {
-    this.incrementStat('settingsOpened');
-  }
-
   /** Adds one to the given statistic. */
-  private incrementStat(key: keyof AchievementStats) {
-    this.stats.set({ [key]: ((this.stats.get(key) as number) || 0) + 1 });
+  public incrementStat(key: AchievementStatsNumberKeys) {
+    if (this.generalSettings.get('enableAchievements')) {
+      this.stats.set({ [key]: ((this.stats.get(key) as number) || 0) + 1 });
+    }
   }
 
   /**
@@ -578,6 +577,44 @@ export class AchievementTracker extends EventEmitter {
       });
     }
 
+    // Add the five tiers of the backup settings achievements.
+    for (let tier = 0; tier < 5; tier++) {
+      addAchievement({
+        id: 'backup' + tier,
+        name: i18next.t('achievements.backup.name', {
+          attribute: attributes[tier],
+          tier: numbers[tier],
+        }),
+        description: i18next.t('achievements.backup.description', {
+          n: BASE_RANGES[tier + 1] / 5,
+        }),
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
+        statKey: 'settingsBackedUp',
+        statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
+        xp: BASE_XP[tier] / 2,
+      });
+    }
+
+    // Add the five tiers of the restore settings achievements.
+    for (let tier = 0; tier < 5; tier++) {
+      addAchievement({
+        id: 'restore' + tier,
+        name: i18next.t('achievements.restore.name', {
+          attribute: attributes[tier],
+          tier: numbers[tier],
+        }),
+        description: i18next.t('achievements.restore.description', {
+          n: BASE_RANGES[tier + 1] / 5,
+        }),
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
+        statKey: 'settingsRestored',
+        statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
+        xp: BASE_XP[tier] / 2,
+      });
+    }
+
     // Add the five tiers of the create-many-items-in-menus achievements.
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
@@ -587,13 +624,13 @@ export class AchievementTracker extends EventEmitter {
           tier: numbers[tier],
         }),
         description: i18next.t('achievements.manyitems.description', {
-          n: BASE_RANGES[tier + 1] / 2,
+          n: BASE_RANGES[tier + 1],
         }),
         badge: standardBadges[tier],
         icon: AchievementBadgeIcon.eFallback,
         statKey: 'addedItems',
-        statRange: [BASE_RANGES[tier] / 2, BASE_RANGES[tier + 1] / 2],
-        xp: BASE_XP[tier],
+        statRange: [BASE_RANGES[tier], BASE_RANGES[tier + 1]],
+        xp: BASE_XP[tier] / 2,
       });
     }
 
@@ -606,7 +643,7 @@ export class AchievementTracker extends EventEmitter {
       icon: AchievementBadgeIcon.eFallback,
       statKey: 'deletedAllMenus',
       statRange: [0, 1],
-      xp: BASE_XP[2],
+      xp: BASE_XP[1],
       hidden: true,
     });
 
@@ -619,7 +656,7 @@ export class AchievementTracker extends EventEmitter {
       icon: AchievementBadgeIcon.eSponsors,
       statKey: 'sponsorsViewed',
       statRange: [0, 1],
-      xp: BASE_XP[1],
+      xp: BASE_XP[2],
       hidden: true,
     });
 

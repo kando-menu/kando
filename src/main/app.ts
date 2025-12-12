@@ -25,6 +25,7 @@ import {
   MenuSettings,
   GeneralSettings,
   ShowMenuRequest,
+  AchievementStatsNumberKeys,
   IconThemesInfo,
   SoundThemeDescription,
   MenuThemeDescription,
@@ -52,6 +53,9 @@ import { supportsIsolatedProcesses } from './utils/shell';
  * interaction.
  */
 export class KandoApp {
+  /** This is used to track achievements. */
+  public achievementTracker: AchievementTracker;
+
   /** This is used to check for updates. */
   private updateChecker = new UpdateChecker();
 
@@ -80,9 +84,6 @@ export class KandoApp {
 
   /** This will cache the icon themes. */
   private iconThemesCache?: IconThemesInfo;
-
-  /** This is used to track achievements. */
-  private achievementTracker: AchievementTracker;
 
   /**
    * Most of the initialization is done in the init() method. This constructor is only
@@ -221,7 +222,7 @@ export class KandoApp {
     });
 
     // Initialize the achievement tracker.
-    this.achievementTracker = new AchievementTracker();
+    this.achievementTracker = new AchievementTracker(this.generalSettings);
 
     this.achievementTracker.on('completed', (achievement) => {
       Notification.show({
@@ -404,7 +405,7 @@ export class KandoApp {
       this.settingsWindow = undefined;
     });
 
-    this.achievementTracker.onSettingsOpened();
+    this.achievementTracker.incrementStat('settingsOpened');
   }
 
   /**
@@ -625,6 +626,7 @@ export class KandoApp {
 
       if (result.filePath != '') {
         fs.copyFileSync(this.generalSettings.filePath, result.filePath);
+        this.achievementTracker.incrementStat('settingsBackedUp');
       }
     });
 
@@ -637,6 +639,7 @@ export class KandoApp {
 
       if (result.filePath != '') {
         fs.copyFileSync(this.menuSettings.filePath, result.filePath);
+        this.achievementTracker.incrementStat('settingsBackedUp');
       }
     });
 
@@ -673,6 +676,7 @@ export class KandoApp {
         }
 
         fs.copyFileSync(result.filePaths[0], this.generalSettings.filePath);
+        this.achievementTracker.incrementStat('settingsRestored');
 
         dialog.showMessageBox(this.settingsWindow, {
           type: 'info',
@@ -715,6 +719,7 @@ export class KandoApp {
         }
 
         fs.copyFileSync(result.filePaths[0], this.menuSettings.filePath);
+        this.achievementTracker.incrementStat('settingsRestored');
 
         dialog.showMessageBox(this.settingsWindow, {
           type: 'info',
@@ -781,6 +786,10 @@ export class KandoApp {
 
     // Tell the renderers when the menu settings change.
     this.menuSettings.onAnyChange((newSettings, oldSettings) => {
+      if (newSettings.menus.length === 0) {
+        this.achievementTracker.incrementStat('deletedAllMenus');
+      }
+
       this.menuWindow?.webContents.send(
         'common.menu-settings-changed',
         newSettings,
@@ -902,6 +911,14 @@ export class KandoApp {
       'common.create-menu-item-for-file',
       async (event, name: string, path: string) => {
         return this.backend.createItemForDroppedFile(name, path);
+      }
+    );
+
+    // Allow the renderer to increment an achievement statistic.
+    ipcMain.on(
+      'common.increment-achievement-stat',
+      (event, key: AchievementStatsNumberKeys) => {
+        this.achievementTracker.incrementStat(key);
       }
     );
   }

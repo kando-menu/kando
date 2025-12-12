@@ -87,8 +87,8 @@
       "black": "Black",
       "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
       "lazy-initialization": "Lazy initialization",
-      "enable-achievements-info": "",
-      "enable-achievements": "",
+      "enable-achievements-info": "If enabled, Kando will track your progress towards achievements.",
+      "enable-achievements": "Track achievements",
       "menu-behavior": "Menu Behavior",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
       "keep-input-focus": "Keep active application focused",
@@ -402,6 +402,14 @@
     "journey": {
       "name": "The Journey Is The Reward {{tier}}",
       "description": "Open the settings dialog {{n}} times."
+    },
+    "backup": {
+      "name": "Better Safe Than Sorry {{tier}}",
+      "description": "Backup your menus or settings {{n}} times."
+    },
+    "restore": {
+      "name": "This Was Not Part Of The Plan {{tier}}",
+      "description": "Restore a backup {{n}} times."
     },
     "manyitems": {
       "name": "You Can Have It All {{tier}}",

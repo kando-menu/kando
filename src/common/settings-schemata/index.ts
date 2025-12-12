@@ -20,5 +20,13 @@ export type {
 } from './menu-settings-v1';
 export { MENU_SETTINGS_SCHEMA_V1 as MENU_SETTINGS_SCHEMA } from './menu-settings-v1';
 
+import type { AchievementStatsV1 as AchievementStats } from './achievement-stats-v1';
 export type { AchievementStatsV1 as AchievementStats } from './achievement-stats-v1';
 export { ACHIEVEMENT_STATS_SCHEMA_V1 as ACHIEVEMENT_STATS_SCHEMA } from './achievement-stats-v1';
+
+// Type to extract only the number keys from AchievementStats
+type NumberKeys<T> = {
+  [K in keyof T]: T[K] extends number ? K : never;
+}[keyof T];
+
+export type AchievementStatsNumberKeys = NumberKeys<AchievementStats>;
