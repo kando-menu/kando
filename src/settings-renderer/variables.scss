@@ -25,7 +25,7 @@ $text-link-hover: light-dark(
 );
 
 $toolbar-background: light-dark(
-  rgba(color.adjust($base-light, $lightness: -5%), 0.9),
+  rgba(color.adjust($base-light, $lightness: -10%), 0.9),
   rgba(color.adjust($base-dark, $lightness: -5%), 0.9)
 );
 $window-background: light-dark($base-light, $base-dark);

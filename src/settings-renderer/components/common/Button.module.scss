@@ -48,7 +48,7 @@
   .indicator {
     width: 8px;
     height: 8px;
-    background-color: $widget-primary;
+    background-color: $key-dark;
     border-radius: 50%;
     position: absolute;
     top: 4px;
@@ -57,7 +57,8 @@
 
   .badge {
     font-size: 0.75em;
-    background-color: $widget-primary;
+    background-color: $key-dark;
+    color: $text-inverted;
     border-radius: 4px;
     padding: 2px 8px;
     transform: translateX(8px);

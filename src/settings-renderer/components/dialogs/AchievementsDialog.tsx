@@ -96,7 +96,10 @@ export default function AchievementsDialog() {
       paddingRight={0}
       paddingTop={0}
       title={i18next.t('settings.achievements-dialog.title')}
-      onClose={() => setAchievementsDialogVisible(false)}>
+      onClose={() => {
+        setAchievementsDialogVisible(false);
+        window.settingsAPI.markAchievementsAsViewed();
+      }}>
       <div className={classes.levelContainer}>
         <img height={256} src={LEVEL_BADGES[levelProgress.level - 1]} width={256} />
         <div className={classes.levelText}>
@@ -143,8 +146,13 @@ export default function AchievementsDialog() {
           <div className={classes.achievementListWrapper}>
             <Scrollbox maxHeight="min(45vh, 500px)">
               <div className={cx({ achievementList: true, completed: true })}>
-                {levelProgress.completedAchievements.map((achievement) => (
-                  <div key={achievement.id} className={classes.achievement}>
+                {levelProgress.completedAchievements.map((achievement, i) => (
+                  <div
+                    key={achievement.id}
+                    className={cx({
+                      achievement: true,
+                      new: i < levelProgress.newAchievementsCount,
+                    })}>
                     <div className={classes.achievementBadge}>
                       <img src={ACHIEVEMENT_BADGES[achievement.badge]} />
                       <img src={ACHIEVEMENT_ICONS[achievement.icon]} />
@@ -176,7 +184,10 @@ export default function AchievementsDialog() {
             isPressed={!showCompleted}
             label={i18next.t('settings.achievements-dialog.in-progress-button')}
             variant="secondary"
-            onClick={() => setShowCompleted(false)}
+            onClick={() => {
+              setShowCompleted(false);
+              window.settingsAPI.markAchievementsAsViewed();
+            }}
           />
           <Button
             isGrouped
@@ -188,10 +199,7 @@ export default function AchievementsDialog() {
             isPressed={showCompleted}
             label={i18next.t('settings.achievements-dialog.completed-button')}
             variant="secondary"
-            onClick={() => {
-              setShowCompleted(true);
-              window.settingsAPI.markAchievementsAsViewed();
-            }}
+            onClick={() => setShowCompleted(true)}
           />
         </div>
         <Button
