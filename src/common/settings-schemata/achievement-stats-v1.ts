@@ -108,6 +108,9 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
 
   /** The number of times the sponsor button has been pressed. */
   sponsorsViewed: z.number().default(0),
+
+  /** The number of times the tutorial slides have been viewed. */
+  tutorialViewed: z.number().default(0),
 });
 
 export type AchievementStatsV1 = z.infer<typeof ACHIEVEMENT_STATS_SCHEMA_V1>;

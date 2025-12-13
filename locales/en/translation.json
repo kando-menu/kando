@@ -364,7 +364,7 @@
       "capable": "Capable",
       "skilled": "Skilled",
       "expert": "Expert",
-      "master": "Master"
+      "master": "Sensei"
     },
     "tier": {
       "I": "I",
@@ -374,21 +374,21 @@
       "V": "V"
     },
     "cancelor": {
-      "name": "{{attribute}} Cancelor",
+      "name": "Road of Emptiness {{tier}}",
       "description": "Abort a selection {{n}} times."
     },
     "selector": {
       "name": "{{attribute}} Samurai",
       "description": "Select {{n}} items."
     },
-    "time-selector": {
-      "name1": "{{attribute}} Toplevel Selector",
-      "name2": "{{attribute}} Submenu Selector",
-      "name3": "{{attribute}} Subsubmenu Selector",
+    "depth-selector": {
+      "name1": "{{attribute}} Slicer",
+      "name2": "{{attribute}} Two-Layer Slicer",
+      "name3": "{{attribute}} Deep Slicer",
       "description": "Select {{n}} items at depth {{depth}} in less than {{time}} ms."
     },
     "click-selector": {
-      "name": "{{attribute}} Clicker",
+      "name": "{{attribute}} Click-Click Champion",
       "description": "Select {{n}} items using mouse clicks."
     },
     "keyboard-selector": {
@@ -403,29 +403,33 @@
       "name": "{{attribute}} Power Ninja",
       "description": "Select {{n}} items using turbo or marking mode."
     },
-    "journey": {
-      "name": "The Journey Is The Reward {{tier}}",
+    "settings-opened": {
+      "name": "The Journey is the Reward {{tier}}",
       "description": "Open the settings dialog {{n}} times."
     },
     "backup": {
-      "name": "Better Safe Than Sorry {{tier}}",
+      "name": "Path of Foresight {{tier}}",
       "description": "Backup your menus or settings {{n}} times."
     },
     "restore": {
-      "name": "This Was Not Part Of The Plan {{tier}}",
+      "name": "Second Chance {{tier}}",
       "description": "Restore a backup {{n}} times."
     },
-    "manyitems": {
-      "name": "You Can Have It All {{tier}}",
+    "added-items": {
+      "name": "Way of Kando {{tier}}",
       "description": "Create {{n}} items in the menu editor."
     },
-    "goodpie": {
-      "name": "Say Good-Pie!",
+    "deleted-all-menus": {
+      "name": "Clear the Dojo",
       "description": "Delete all of your menus."
     },
-    "sponsors": {
-      "name": "That's Philanthropie!",
+    "sponsors-viewed": {
+      "name": "Guardian of Kando",
       "description": "Consider becoming a sponsor of Kando."
+    },
+    "tutorial-viewed": {
+      "name": "The Journey Begins",
+      "description": "Complete the Kando introduction tutorial."
     },
     "completed-title": "Achievement unlocked!"
   },

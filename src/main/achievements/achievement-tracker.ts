@@ -459,18 +459,24 @@ export class AchievementTracker extends EventEmitter {
     }
 
     // Add the fifteen tiers of the time-based selection achievements.
+    icons = [
+      AchievementBadgeIcon.eDepthSelector1,
+      AchievementBadgeIcon.eDepthSelector2,
+      AchievementBadgeIcon.eDepthSelector3,
+    ];
+
     for (let depth = 1; depth <= 3; depth++) {
       for (let tier = 0; tier < 5; tier++) {
         const names = [
-          i18next.t('achievements.time-selector.name1', {
+          i18next.t('achievements.depth-selector.name1', {
             attribute: attributes[tier],
             tier: numbers[tier],
           }),
-          i18next.t('achievements.time-selector.name2', {
+          i18next.t('achievements.depth-selector.name2', {
             attribute: attributes[tier],
             tier: numbers[tier],
           }),
-          i18next.t('achievements.time-selector.name3', {
+          i18next.t('achievements.depth-selector.name3', {
             attribute: attributes[tier],
             tier: numbers[tier],
           }),
@@ -479,13 +485,13 @@ export class AchievementTracker extends EventEmitter {
         addAchievement({
           id: `depth${depth}-selector${tier}`,
           name: names[depth - 1],
-          description: i18next.t('achievements.time-selector.description', {
+          description: i18next.t('achievements.depth-selector.description', {
             n: BASE_RANGES[tier + 1] * 2,
             depth,
             time: SELECTION_TIME_LIMITS[depth - 1][tier],
           }),
           badge: standardBadges[tier],
-          icon: AchievementBadgeIcon.eFallback,
+          icon: icons[depth - 1],
           state: AchievementState.eLocked,
           statKey: `selectionsSpeed${tier + 1}Depth${depth}` as keyof AchievementStats,
           statRange: [0, BASE_RANGES[tier + 1] * 2],
@@ -575,16 +581,16 @@ export class AchievementTracker extends EventEmitter {
     // Add the five tiers of the settings-opened achievements.
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
-        id: 'journey' + tier,
-        name: i18next.t('achievements.journey.name', {
+        id: 'settings-opened' + tier,
+        name: i18next.t('achievements.settings-opened.name', {
           attribute: attributes[tier],
           tier: numbers[tier],
         }),
-        description: i18next.t('achievements.journey.description', {
+        description: i18next.t('achievements.settings-opened.description', {
           n: BASE_RANGES[tier + 1] / 2,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eJourney,
+        icon: AchievementBadgeIcon.eSettingsOpened,
         statKey: 'settingsOpened',
         statRange: [BASE_RANGES[tier] / 2, BASE_RANGES[tier + 1] / 2],
         xp: BASE_XP[tier],
@@ -632,12 +638,12 @@ export class AchievementTracker extends EventEmitter {
     // Add the five tiers of the create-many-items-in-menus achievements.
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
-        id: 'manyitems' + tier,
-        name: i18next.t('achievements.manyitems.name', {
+        id: 'added-items' + tier,
+        name: i18next.t('achievements.added-items.name', {
           attribute: attributes[tier],
           tier: numbers[tier],
         }),
-        description: i18next.t('achievements.manyitems.description', {
+        description: i18next.t('achievements.added-items.description', {
           n: BASE_RANGES[tier + 1],
         }),
         badge: standardBadges[tier],
@@ -650,9 +656,9 @@ export class AchievementTracker extends EventEmitter {
 
     // Add the delete-all-menus achievement.
     addAchievement({
-      id: 'goodpie',
-      name: i18next.t('achievements.goodpie.name'),
-      description: i18next.t('achievements.goodpie.description'),
+      id: 'deleted-all-menus',
+      name: i18next.t('achievements.deleted-all-menus.name'),
+      description: i18next.t('achievements.deleted-all-menus.description'),
       badge: AchievementBadgeType.eSpecial2,
       icon: AchievementBadgeIcon.eFallback,
       statKey: 'deletedAllMenus',
@@ -663,14 +669,27 @@ export class AchievementTracker extends EventEmitter {
 
     // Add the click-on-sponsor achievement.
     addAchievement({
-      id: 'sponsors',
-      name: i18next.t('achievements.sponsors.name'),
-      description: i18next.t('achievements.sponsors.description'),
+      id: 'sponsors-viewed',
+      name: i18next.t('achievements.sponsors-viewed.name'),
+      description: i18next.t('achievements.sponsors-viewed.description'),
       badge: AchievementBadgeType.eSpecial3,
       icon: AchievementBadgeIcon.eSponsors,
       statKey: 'sponsorsViewed',
       statRange: [0, 1],
       xp: BASE_XP[2],
+      hidden: true,
+    });
+
+    // Add the tutorial-viewed achievement.
+    addAchievement({
+      id: 'tutorial-viewed',
+      name: i18next.t('achievements.tutorial-viewed.name'),
+      description: i18next.t('achievements.tutorial-viewed.description'),
+      badge: AchievementBadgeType.eSpecial1,
+      icon: AchievementBadgeIcon.eFallback,
+      statKey: 'tutorialViewed',
+      statRange: [0, 1],
+      xp: BASE_XP[3],
       hidden: true,
     });
 
