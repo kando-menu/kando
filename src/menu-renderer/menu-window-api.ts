@@ -11,7 +11,7 @@
 import { ipcRenderer, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
-import { Vec2, MenuItem, ShowMenuOptions } from '../common';
+import { Vec2, MenuItem, ShowMenuOptions, SelectionSource } from '../common';
 
 /**
  * These functions are available in the menu window's renderer process. They are available
@@ -62,9 +62,12 @@ export const MENU_WINDOW_API = {
    * This will be called by the render process when the user selects a menu item.
    *
    * @param path The path of the selected menu item.
+   * @param time The time it took to select the item in milliseconds. This is used for
+   *   achievement tracking.
+   * @param source The source used to make the selection.
    */
-  selectItem: (path: string) => {
-    ipcRenderer.send('menu-window.select-item', path);
+  selectItem: (path: string, time: number, source: SelectionSource) => {
+    ipcRenderer.send('menu-window.select-item', path, time, source);
   },
 
   /**

@@ -449,11 +449,11 @@ export enum AchievementBadgeIcon {
   eCancelor3,
   eCancelor4,
   eCancelor5,
-  ePielot1,
-  ePielot2,
-  ePielot3,
-  ePielot4,
-  ePielot5,
+  eSelector1,
+  eSelector2,
+  eSelector3,
+  eSelector4,
+  eSelector5,
   eGestureSelector1,
   eGestureSelector2,
   eGestureSelector3,
@@ -534,3 +534,15 @@ export type LevelProgress = {
   /** All completed achievements. */
   completedAchievements: Achievement[];
 };
+
+/**
+ * For achievement tracking, it is important to know the source of a selection. This enum
+ * is used to indicate whether a selection was made using the mouse, a gesture (marking
+ * mode or turbo mode) or a gamepad.
+ */
+export enum SelectionSource {
+  eClick = 'click',
+  eKeyboard = 'keyboard',
+  eGesture = 'gesture',
+  eGamepad = 'gamepad',
+}

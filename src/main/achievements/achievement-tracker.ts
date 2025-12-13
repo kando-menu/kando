@@ -21,6 +21,7 @@ import {
   AchievementBadgeType,
   ACHIEVEMENT_STATS_SCHEMA,
   GeneralSettings,
+  SelectionSource,
 } from '../../common';
 import { Settings } from '../settings';
 import { getAchievementStats } from './achievement-stats';
@@ -48,6 +49,17 @@ const BASE_XP = [100, 250, 500, 750, 1000];
  * numbers which are divisible by 10.
  */
 const BASE_RANGES = [0, 10, 30, 100, 300, 1000];
+
+/**
+ * There's a set of achievements which are triggered when a certain number of selections
+ * was made at a certain depth within a certain time limit. The time limits for each depth
+ * and tier are defined in the array below.
+ */
+const SELECTION_TIME_LIMITS = [
+  [1000, 750, 500, 250, 150],
+  [2000, 1000, 750, 500, 250],
+  [3000, 2000, 1000, 750, 500],
+];
 
 /**
  * This class can be instantiated to track the progress of all achievements. Once
@@ -204,10 +216,55 @@ export class AchievementTracker extends EventEmitter {
     this.stats.set({ lastViewed: new Date().toISOString() });
   }
 
+  /**
+   * Should be called when a selection is made. Depending on the speed and depth,
+   * different stats are incremented.
+   *
+   * @param depth The depth at which the selection was made (1, 2, or 3). For deeper
+   *   selections, it should be clamped to 3.
+   * @param time The time in milliseconds it took to make the selection.
+   * @param source The source used to make the selection.
+   */
+  public onSelectionMade(depth: 1 | 2 | 3, time: number, source: SelectionSource) {
+    const keys: AchievementStatsNumberKeys[] = [];
+
+    // Increment the source-based selection stats.
+    keys.push(`${source}Selections`);
+
+    // Increment the time-based selection stats.
+    let tier = 0;
+    for (; tier < 5; tier++) {
+      if (time <= SELECTION_TIME_LIMITS[depth - 1][tier]) {
+        keys.push(
+          `selectionsSpeed${tier + 1}Depth${depth}` as AchievementStatsNumberKeys
+        );
+      }
+    }
+
+    // With this stat, all selections are counted.
+    keys.push('selections');
+
+    this.incrementStats(keys);
+  }
+
   /** Adds one to the given statistic. */
   public incrementStat(key: AchievementStatsNumberKeys) {
     if (this.generalSettings.get('enableAchievements')) {
       this.stats.set({ [key]: ((this.stats.get(key) as number) || 0) + 1 });
+    }
+  }
+
+  /**
+   * Use this to increment multiple statistics at once. Prefer this over multiple calls to
+   * incrementStat.
+   */
+  public incrementStats(keys: AchievementStatsNumberKeys[]) {
+    if (this.generalSettings.get('enableAchievements')) {
+      const updates: Partial<AchievementStats> = {};
+      keys.forEach((key) => {
+        updates[key] = ((this.stats.get(key) as number) || 0) + 1;
+      });
+      this.stats.set(updates);
     }
   }
 
@@ -376,135 +433,34 @@ export class AchievementTracker extends EventEmitter {
 
     // Add the five tiers of the select-many-items achievements.
     icons = [
-      AchievementBadgeIcon.ePielot1,
-      AchievementBadgeIcon.ePielot2,
-      AchievementBadgeIcon.ePielot3,
-      AchievementBadgeIcon.ePielot4,
-      AchievementBadgeIcon.ePielot5,
+      AchievementBadgeIcon.eSelector1,
+      AchievementBadgeIcon.eSelector2,
+      AchievementBadgeIcon.eSelector3,
+      AchievementBadgeIcon.eSelector4,
+      AchievementBadgeIcon.eSelector5,
     ];
 
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
-        id: 'pielot' + tier,
-        name: i18next.t('achievements.pielot.name', {
+        id: 'selector' + tier,
+        name: i18next.t('achievements.selector.name', {
           attribute: attributes[tier],
           tier: numbers[tier],
         }),
-        description: i18next.t('achievements.pielot.description', {
-          n: BASE_RANGES[tier + 1] * 5,
+        description: i18next.t('achievements.selector.description', {
+          n: BASE_RANGES[tier + 1] * 20,
         }),
         badge: standardBadges[tier],
         icon: icons[tier],
         statKey: 'selections',
-        statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
+        statRange: [BASE_RANGES[tier] * 20, BASE_RANGES[tier + 1] * 20],
         xp: BASE_XP[tier] * 2,
       });
     }
 
-    // Add the 15 achievements for selecting many things at different depths in marking
-    // mode.
-    icons = [
-      AchievementBadgeIcon.eGestureSelector1,
-      AchievementBadgeIcon.eGestureSelector2,
-      AchievementBadgeIcon.eGestureSelector3,
-    ];
-
+    // Add the fifteen tiers of the time-based selection achievements.
     for (let depth = 1; depth <= 3; depth++) {
       for (let tier = 0; tier < 5; tier++) {
-        const names = [
-          i18next.t('achievements.gesture-selector.name1', {
-            attribute: attributes[tier],
-            tier: numbers[tier],
-          }),
-          i18next.t('achievements.gesture-selector.name2', {
-            attribute: attributes[tier],
-            tier: numbers[tier],
-          }),
-          i18next.t('achievements.gesture-selector.name3', {
-            attribute: attributes[tier],
-            tier: numbers[tier],
-          }),
-        ];
-
-        const keys: Array<keyof AchievementStats> = [
-          'gestureSelectionsDepth1',
-          'gestureSelectionsDepth2',
-          'gestureSelectionsDepth3',
-        ];
-
-        addAchievement({
-          id: `depth${depth}-gesture-selector${tier}`,
-          name: names[depth - 1],
-          description: i18next.t('achievements.gesture-selector.description', {
-            n: BASE_RANGES[tier + 1] * 2,
-            depth,
-          }),
-          badge: standardBadges[tier],
-          icon: icons[depth - 1],
-          statKey: keys[depth - 1],
-          statRange: [BASE_RANGES[tier] * 2, BASE_RANGES[tier + 1] * 2],
-          xp: BASE_XP[tier],
-        });
-      }
-    }
-
-    // Add the 15 achievements for selecting many things at different depths with
-    // mouse clicks.
-    icons = [
-      AchievementBadgeIcon.eClickSelector1,
-      AchievementBadgeIcon.eClickSelector2,
-      AchievementBadgeIcon.eClickSelector3,
-    ];
-
-    for (let depth = 1; depth <= 3; depth++) {
-      for (let tier = 0; tier < 5; tier++) {
-        const names = [
-          i18next.t('achievements.click-selector.name1', {
-            attribute: attributes[tier],
-            tier: numbers[tier],
-          }),
-          i18next.t('achievements.click-selector.name2', {
-            attribute: attributes[tier],
-            tier: numbers[tier],
-          }),
-          i18next.t('achievements.click-selector.name3', {
-            attribute: attributes[tier],
-            tier: numbers[tier],
-          }),
-        ];
-
-        const keys: Array<keyof AchievementStats> = [
-          'clickSelectionsDepth1',
-          'clickSelectionsDepth2',
-          'clickSelectionsDepth3',
-        ];
-
-        addAchievement({
-          id: `depth${depth}-click-selector${tier}`,
-          name: names[depth - 1],
-          description: i18next.t('achievements.click-selector.description', {
-            n: BASE_RANGES[tier + 1] * 2,
-            depth,
-          }),
-          badge: standardBadges[tier],
-          icon: icons[depth - 1],
-          statKey: keys[depth - 1],
-          statRange: [BASE_RANGES[tier] * 2, BASE_RANGES[tier + 1] * 2],
-          xp: BASE_XP[tier],
-        });
-      }
-    }
-
-    for (let depth = 1; depth <= 3; depth++) {
-      for (let tier = 0; tier < 5; tier++) {
-        const timeLimits = [
-          [1000, 750, 500, 250, 150],
-          [2000, 1000, 750, 500, 250],
-          [3000, 2000, 1000, 750, 500],
-        ];
-
-        const counts = [50, 100, 150, 200, 250];
-
         const names = [
           i18next.t('achievements.time-selector.name1', {
             attribute: attributes[tier],
@@ -520,42 +476,100 @@ export class AchievementTracker extends EventEmitter {
           }),
         ];
 
-        const keys: Array<keyof AchievementStats> = [
-          'selections1000msDepth1',
-          'selections750msDepth1',
-          'selections500msDepth1',
-          'selections250msDepth1',
-          'selections150msDepth1',
-          'selections2000msDepth2',
-          'selections1000msDepth2',
-          'selections750msDepth2',
-          'selections500msDepth2',
-          'selections250msDepth2',
-          'selections3000msDepth3',
-          'selections2000msDepth3',
-          'selections1000msDepth3',
-          'selections750msDepth3',
-          'selections500msDepth3',
-        ];
-
         addAchievement({
           id: `depth${depth}-selector${tier}`,
           name: names[depth - 1],
           description: i18next.t('achievements.time-selector.description', {
-            n: counts[tier],
+            n: BASE_RANGES[tier + 1] * 2,
             depth,
-            time: timeLimits[depth - 1][tier],
+            time: SELECTION_TIME_LIMITS[depth - 1][tier],
           }),
           badge: standardBadges[tier],
           icon: AchievementBadgeIcon.eFallback,
           state: AchievementState.eLocked,
-          statKey: keys[(depth - 1) * 5 + tier],
-          statRange: [0, counts[tier]],
+          statKey: `selectionsSpeed${tier + 1}Depth${depth}` as keyof AchievementStats,
+          statRange: [0, BASE_RANGES[tier + 1] * 2],
           xp: BASE_XP[tier],
           hidden: tier > 0,
           reveals: tier < 5 ? `depth${depth}-selector${tier + 1}` : null,
         });
       }
+    }
+
+    // Add the five tiers of the mouse-click-selections achievements.
+    for (let tier = 0; tier < 5; tier++) {
+      addAchievement({
+        id: 'click-selector' + tier,
+        name: i18next.t('achievements.click-selector.name', {
+          attribute: attributes[tier],
+          tier: numbers[tier],
+        }),
+        description: i18next.t('achievements.click-selector.description', {
+          n: BASE_RANGES[tier + 1] * 5,
+        }),
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
+        statKey: 'clickSelections',
+        statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
+        xp: BASE_XP[tier] / 2,
+      });
+    }
+
+    // Add the five tiers of the keyboard-selections achievements.
+    for (let tier = 0; tier < 5; tier++) {
+      addAchievement({
+        id: 'keyboard-selector' + tier,
+        name: i18next.t('achievements.keyboard-selector.name', {
+          attribute: attributes[tier],
+          tier: numbers[tier],
+        }),
+        description: i18next.t('achievements.keyboard-selector.description', {
+          n: BASE_RANGES[tier + 1] * 5,
+        }),
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
+        statKey: 'keyboardSelections',
+        statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
+        xp: BASE_XP[tier] / 2,
+      });
+    }
+
+    // Add the five tiers of the gamepad-selections achievements.
+    for (let tier = 0; tier < 5; tier++) {
+      addAchievement({
+        id: 'gamepad-selector' + tier,
+        name: i18next.t('achievements.gamepad-selector.name', {
+          attribute: attributes[tier],
+          tier: numbers[tier],
+        }),
+        description: i18next.t('achievements.gamepad-selector.description', {
+          n: BASE_RANGES[tier + 1] * 5,
+        }),
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
+        statKey: 'gamepadSelections',
+        statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
+        xp: BASE_XP[tier] / 2,
+      });
+    }
+
+    // Add the five tiers of the marking-mode-selections achievements.
+    for (let tier = 0; tier < 5; tier++) {
+      addAchievement({
+        id: 'gesture-selector' + tier,
+        name: i18next.t('achievements.gesture-selector.name', {
+          attribute: attributes[tier],
+          tier: numbers[tier],
+        }),
+        description: i18next.t('achievements.gesture-selector.description', {
+          n: BASE_RANGES[tier + 1] * 5,
+        }),
+        badge: standardBadges[tier],
+        icon: AchievementBadgeIcon.eFallback,
+        statKey: 'gestureSelections',
+        statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
+        xp: BASE_XP[tier],
+      });
     }
 
     // Add the five tiers of the settings-opened achievements.

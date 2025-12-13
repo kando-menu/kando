@@ -11,7 +11,13 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
-import { GeneralSettings, ShowMenuOptions, Vec2, SoundType } from '../common';
+import {
+  GeneralSettings,
+  ShowMenuOptions,
+  Vec2,
+  SoundType,
+  SelectionSource,
+} from '../common';
 import { RenderedMenuItem } from './rendered-menu-item';
 import { SelectionWedges } from './selection-wedges';
 import { WedgeSeparators } from './wedge-separators';
@@ -113,6 +119,9 @@ export class Menu extends EventEmitter {
   /** This timeout is used to initialize the menu position on mouse enter. */
   private initialPositionTimeout: NodeJS.Timeout;
 
+  /** The time when the current menu was shown. Used to track selection times. */
+  private menuShownTime: number;
+
   /**
    * The constructor will attach event listeners to the given container element. It will
    * also initialize the input tracker and the gesture detection.
@@ -197,7 +206,11 @@ export class Menu extends EventEmitter {
     // arrives and show the menu there. If no mouse enter event arrives within that time,
     // we simply show the menu at the given position.
     const showMenu = () => {
-      this.selectItem(this.root, this.getInitialMenuPosition());
+      this.selectItem(
+        this.root,
+        SelectionSource.eKeyboard,
+        this.getInitialMenuPosition()
+      );
 
       // If required, move the pointer to the center of the menu.
       if (this.settings.warpMouse && this.showMenuOptions.centeredMode) {
@@ -212,6 +225,7 @@ export class Menu extends EventEmitter {
       // before the fade-in animation starts, flush the browser's rendering pipeline first.
       this.container.getBoundingClientRect();
       this.container.classList.remove('hidden');
+      this.menuShownTime = Date.now();
     };
 
     if (cIsWindows) {
@@ -329,7 +343,7 @@ export class Menu extends EventEmitter {
   private initializeInput() {
     const onCloseMenu = () => {
       if (this.settings.rmbSelectsParent) {
-        this.selectParent();
+        this.selectParent(SelectionSource.eClick);
       } else {
         this.cancel();
       }
@@ -340,20 +354,20 @@ export class Menu extends EventEmitter {
       this.redraw();
     };
 
-    const onSelection = (coords: Vec2, type: SelectionType) => {
+    const onSelection = (coords: Vec2, type: SelectionType, source: SelectionSource) => {
       // Ignore all input if the menu is in the process of hiding.
       if (this.container.classList.contains('hidden')) {
         return;
       }
 
       if (type === SelectionType.eParent) {
-        this.selectParent(coords);
+        this.selectParent(source, coords);
         return;
       }
 
       // If there is an item currently dragged, select it. If we are in Marking Mode or
       // Turbo Mode, the selection type will be eSubmenuOnly. In this case, we only select
-      // subemnus in order to prevent unwanted actions. This way the user can always check
+      // submenus in order to prevent unwanted actions. This way the user can always check
       // if the correct action was selected before executing it.
       // We also do not trigger selections of the parent item when moving the mouse in the
       // center zone of the menu. This feels more natural and prevents accidental
@@ -365,7 +379,7 @@ export class Menu extends EventEmitter {
         item.type === 'submenu' &&
         this.latestInput.distance > this.settings.centerDeadZone
       ) {
-        this.selectItem(item, coords);
+        this.selectItem(item, source, coords);
         return;
       }
 
@@ -375,7 +389,7 @@ export class Menu extends EventEmitter {
         if (this.selectionChain.length === 1 && item === this.root) {
           this.cancel();
         } else {
-          this.selectItem(item, coords);
+          this.selectItem(item, source, coords);
         }
         return;
       }
@@ -399,17 +413,21 @@ export class Menu extends EventEmitter {
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
       const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
       if (!anyModifierPressed && event.key === 'Backspace') {
-        this.selectParent();
+        this.selectParent(SelectionSource.eKeyboard);
       } else if (!anyModifierPressed && menuKeys.includes(event.key)) {
         const index = menuKeys.indexOf(event.key);
         if (index === 0) {
-          this.selectParent();
+          this.selectParent(SelectionSource.eKeyboard);
         } else {
           const currentItem = this.selectionChain[this.selectionChain.length - 1];
           if (currentItem.children) {
             const child = currentItem.children[index - 1];
             if (child) {
-              this.selectItem(child, this.getCenterItemPosition());
+              this.selectItem(
+                child,
+                SelectionSource.eKeyboard,
+                this.getCenterItemPosition()
+              );
             }
           }
         }
@@ -548,10 +566,12 @@ export class Menu extends EventEmitter {
    * If the given item is a leaf item, the "select" event is emitted.
    *
    * @param item The newly selected menu item.
+   * @param source The input method which was used to make the selection. Used for
+   *   achievement tracking.
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectItem(item: RenderedMenuItem, coords?: Vec2) {
+  private selectItem(item: RenderedMenuItem, source: SelectionSource, coords?: Vec2) {
     this.clickItem(null);
     this.hoverItem(null);
     this.dragItem(null);
@@ -681,7 +701,7 @@ export class Menu extends EventEmitter {
 
     if (item.type !== 'submenu') {
       this.container.classList.add('selected');
-      this.emit('select', item.path);
+      this.emit('select', item.path, Date.now() - this.menuShownTime, source);
     }
   }
 
@@ -689,13 +709,19 @@ export class Menu extends EventEmitter {
    * This method will select the parent of the currently selected item. If the currently
    * selected item is the root item, the "cancel" event will be emitted.
    *
+   * @param source The input method which was used to make the selection. Used for
+   *   achievement tracking.
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectParent(coords?: Vec2) {
+  private selectParent(source: SelectionSource, coords?: Vec2) {
     if (this.selectionChain.length > 1) {
       this.soundTheme.playSound(SoundType.eSelectParent);
-      this.selectItem(this.selectionChain[this.selectionChain.length - 2], coords);
+      this.selectItem(
+        this.selectionChain[this.selectionChain.length - 2],
+        source,
+        coords
+      );
     } else {
       this.cancel();
     }

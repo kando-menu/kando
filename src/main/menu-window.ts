@@ -12,7 +12,7 @@ import os from 'node:os';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './settings';
-import { ShowMenuRequest, Menu, MenuItem, WMInfo } from '../common';
+import { ShowMenuRequest, Menu, MenuItem, WMInfo, SelectionSource } from '../common';
 import { ItemActionRegistry } from './item-actions/item-action-registry';
 import { Notification } from './utils/notification';
 import { KandoApp } from './app';
@@ -591,49 +591,59 @@ export class MenuWindow extends BrowserWindow {
     // When the user selects an item, we execute the corresponding action. Depending on
     // the action, we might need to wait for the fade-out animation to finish before we
     // execute the action.
-    ipcMain.on('menu-window.select-item', (event, path) => {
-      const execute = (item: DeepReadonly<MenuItem>) => {
-        ItemActionRegistry.getInstance()
-          .execute(item, this.kando)
-          .catch((error) => {
-            Notification.show({
-              title: 'Failed to execute action',
-              message: error instanceof Error ? error.message : error,
-              type: 'error',
+    ipcMain.on(
+      'menu-window.select-item',
+      (event, path: string, time: number, source: SelectionSource) => {
+        const execute = (item: DeepReadonly<MenuItem>) => {
+          ItemActionRegistry.getInstance()
+            .execute(item, this.kando)
+            .catch((error) => {
+              Notification.show({
+                title: 'Failed to execute action',
+                message: error instanceof Error ? error.message : error,
+                type: 'error',
+              });
             });
+        };
+
+        let item: DeepReadonly<MenuItem>;
+        let executeDelayed = false;
+
+        try {
+          // Find the selected item.
+          item = this.getMenuItemAtPath(this.lastMenu.root, path);
+
+          // If the action is not delayed, we execute it immediately.
+          executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
+          if (!executeDelayed) {
+            execute(item);
+          }
+        } catch (error) {
+          Notification.show({
+            title: 'Failed to select item',
+            message: error instanceof Error ? error.message : error,
+            type: 'error',
           });
-      };
-
-      let item: DeepReadonly<MenuItem>;
-      let executeDelayed = false;
-
-      try {
-        // Find the selected item.
-        item = this.getMenuItemAtPath(this.lastMenu.root, path);
-
-        // If the action is not delayed, we execute it immediately.
-        executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
-        if (!executeDelayed) {
-          execute(item);
         }
-      } catch (error) {
-        Notification.show({
-          title: 'Failed to select item',
-          message: error instanceof Error ? error.message : error,
-          type: 'error',
+
+        // Also wait with the execution of the selected action until the fade-out
+        // animation is finished to make sure that any resulting events (such as virtual
+        // key presses) are not captured by the window.
+        this.hideWindow().then(() => {
+          // If the action is delayed, we execute it after the window is hidden.
+          if (executeDelayed) {
+            execute(item);
+          }
         });
-      }
 
-      // Also wait with the execution of the selected action until the fade-out
-      // animation is finished to make sure that any resulting events (such as virtual
-      // key presses) are not captured by the window.
-      this.hideWindow().then(() => {
-        // If the action is delayed, we execute it after the window is hidden.
-        if (executeDelayed) {
-          execute(item);
-        }
-      });
-    });
+        // Track selection for achievements.
+        this.kando.achievementTracker.onSelectionMade(
+          Math.min(Math.max(path.split('/').length - 1, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
+          time,
+          source
+        );
+      }
+    );
 
     // When the user hovers a menu item, we report this to the main process.
     ipcMain.on('menu-window.hover-item', (/*event, path*/) => {

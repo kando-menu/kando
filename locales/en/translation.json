@@ -377,27 +377,31 @@
       "name": "{{attribute}} Cancelor",
       "description": "Abort a selection {{n}} times."
     },
-    "pielot": {
-      "name": "{{attribute}} Pielot",
+    "selector": {
+      "name": "{{attribute}} Samurai",
       "description": "Select {{n}} items."
-    },
-    "gesture-selector": {
-      "name1": "{{attribute}} Toplevel Gesture-Selector",
-      "name2": "{{attribute}} Submenu Gesture-Selector",
-      "name3": "{{attribute}} Subsubmenu Gesture-Selector",
-      "description": "Select {{n}} items at depth {{depth}} with gestures."
-    },
-    "click-selector": {
-      "name1": "{{attribute}} Toplevel Click-Selector",
-      "name2": "{{attribute}} Submenu Click-Selector",
-      "name3": "{{attribute}} Subsubmenu Click-Selector",
-      "description": "Select {{n}} items at depth {{depth}} with mouse clicks."
     },
     "time-selector": {
       "name1": "{{attribute}} Toplevel Selector",
       "name2": "{{attribute}} Submenu Selector",
       "name3": "{{attribute}} Subsubmenu Selector",
       "description": "Select {{n}} items at depth {{depth}} in less than {{time}} ms."
+    },
+    "click-selector": {
+      "name": "{{attribute}} Clicker",
+      "description": "Select {{n}} items using mouse clicks."
+    },
+    "keyboard-selector": {
+      "name": "{{attribute}} Hotkey Hero",
+      "description": "Select {{n}} items using your keyboard."
+    },
+    "gamepad-selector": {
+      "name": "{{attribute}} Gamepad Warrior",
+      "description": "Select {{n}} items using a gamepad."
+    },
+    "gesture-selector": {
+      "name": "{{attribute}} Power Ninja",
+      "description": "Select {{n}} items using turbo or marking mode."
     },
     "journey": {
       "name": "The Journey Is The Reward {{tier}}",

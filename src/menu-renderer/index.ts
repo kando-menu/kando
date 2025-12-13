@@ -157,10 +157,10 @@ Promise.all([
   });
 
   // Hide Kando's window when the user selects an item and notify the main process.
-  menu.on('select', (path) => {
+  menu.on('select', (path, time, source) => {
     menu.hide();
     settingsButton.hide();
-    window.menuAPI.selectItem(path);
+    window.menuAPI.selectItem(path, time, source);
   });
 
   // Report hover events to the main process.

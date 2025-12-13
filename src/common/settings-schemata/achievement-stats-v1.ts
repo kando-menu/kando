@@ -31,68 +31,62 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
   /** The total number of selections. */
   selections: z.number().default(0),
 
-  /** The total number of gesture selections at depth 1. */
-  gestureSelectionsDepth1: z.number().default(0),
+  /** The total number of mouse-click selections. */
+  clickSelections: z.number().default(0),
 
-  /** The total number of gesture selections at depth 2. */
-  gestureSelectionsDepth2: z.number().default(0),
+  /** The total number of keyboard selections. */
+  keyboardSelections: z.number().default(0),
 
-  /** The total number of gesture selections at depth 3. */
-  gestureSelectionsDepth3: z.number().default(0),
+  /** The total number of marking-mode or turbo-mode selections. */
+  gestureSelections: z.number().default(0),
 
-  /** The total number of click selections at depth 1. */
-  clickSelectionsDepth1: z.number().default(0),
-
-  /** The total number of click selections at depth 2. */
-  clickSelectionsDepth2: z.number().default(0),
-
-  /** The total number of click selections at depth 3. */
-  clickSelectionsDepth3: z.number().default(0),
+  /** The total number of gamepad selections. */
+  gamepadSelections: z.number().default(0),
 
   /** The number of selections at depth 1 faster than 1000ms. */
-  selections1000msDepth1: z.number().default(0),
+  selectionsSpeed1Depth1: z.number().default(0),
 
   /** The number of selections at depth 1 faster than 750ms. */
-  selections750msDepth1: z.number().default(0),
+  selectionsSpeed2Depth1: z.number().default(0),
 
   /** The number of selections at depth 1 faster than 500ms. */
-  selections500msDepth1: z.number().default(0),
+  selectionsSpeed3Depth1: z.number().default(0),
 
   /** The number of selections at depth 1 faster than 250ms. */
-  selections250msDepth1: z.number().default(0),
+  selectionsSpeed4Depth1: z.number().default(0),
 
   /** The number of selections at depth 1 faster than 150ms. */
-  selections150msDepth1: z.number().default(0),
+  selectionsSpeed5Depth1: z.number().default(0),
 
   /** The number of selections at depth 2 faster than 2000ms. */
-  selections2000msDepth2: z.number().default(0),
+  selectionsSpeed1Depth2: z.number().default(0),
 
   /** The number of selections at depth 2 faster than 1000ms. */
-  selections1000msDepth2: z.number().default(0),
+  selectionsSpeed2Depth2: z.number().default(0),
 
   /** The number of selections at depth 2 faster than 750ms. */
-  selections750msDepth2: z.number().default(0),
+  selectionsSpeed3Depth2: z.number().default(0),
 
   /** The number of selections at depth 2 faster than 500ms. */
-  selections500msDepth2: z.number().default(0),
+  selectionsSpeed4Depth2: z.number().default(0),
 
   /** The number of selections at depth 2 faster than 250ms. */
-  selections250msDepth2: z.number().default(0),
+  selectionsSpeed5Depth2: z.number().default(0),
 
   /** The number of selections at depth 3 faster than 3000ms. */
-  selections3000msDepth3: z.number().default(0),
+  selectionsSpeed1Depth3: z.number().default(0),
 
   /** The number of selections at depth 3 faster than 2000ms. */
-  selections2000msDepth3: z.number().default(0),
+  selectionsSpeed2Depth3: z.number().default(0),
 
   /** The number of selections at depth 3 faster than 1000ms. */
-  selections1000msDepth3: z.number().default(0),
+  selectionsSpeed3Depth3: z.number().default(0),
 
   /** The number of selections at depth 3 faster than 750ms. */
-  selections750msDepth3: z.number().default(0),
+  selectionsSpeed4Depth3: z.number().default(0),
 
   /** The number of selections at depth 3 faster than 500ms. */
-  selections500msDepth3: z.number().default(0),
+  selectionsSpeed5Depth3: z.number().default(0),
 
   /** The number of canceled selections. */
   cancels: z.number().default(0),
