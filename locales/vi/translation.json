@@ -135,7 +135,9 @@
             "reload-sound-theme": "Tải lại chủ đề âm thanh",
             "dev-tools-note": "Kando sử dụng hai cửa sổ: Một cho menu và một cho cài đặt. Bạn có thể mở các công cụ phát triển để kiểm tra cả hai cửa sổ một cách riêng biệt.",
             "menu-window-dev-tools": "Kiểm tra menu",
-            "settings-window-dev-tools": "Kiểm tra cài đặt"
+            "settings-window-dev-tools": "Kiểm tra cài đặt",
+            "enable-achievements-info": "Nếu đã bật, Kando sẽ theo dõi tiến trình hướng tới thành tích của bạn.",
+            "enable-achievements": "Theo dõi thành tích"
         },
         "introduction-dialog": {
             "slide1-title": "Kando cung cấp một cách độc đáo và hiệu quả để tương tác với máy tính của bạn.",
@@ -261,6 +263,16 @@
             "start-countdown": "Bắt đầu đếm ngược",
             "countdown_other": "Đang chọn trong {{count}} giây…",
             "confirm": "Sử dụng giá trị này"
+        },
+        "achievements-dialog": {
+            "reset-button": "Đặt lại tiến độ",
+            "reset-confirmation-title": "Bạn có thực sự muốn thiết lập lại tất cả tiến trình không?",
+            "reset-confirmation-message": "Tất cả thành tích và tiến bộ cấp độ sẽ bị mất. Không thể hoàn tác hành động này.",
+            "title": "Thành tích",
+            "xp": "XP",
+            "in-progress-button": "Đang tiến hành",
+            "completed-button": "Đã hoàn thành",
+            "reset-button-tooltip": "Đặt lại tất cả thành tích và tiến độ cấp độ"
         }
     },
     "menu-items": {
@@ -425,5 +437,92 @@
         "niri": {
             "shortcut-info": "Niri chưa hỗ trợ các phím tắt toàn cục. Nhưng bạn có thể mở menu này bằng cách sử dụng 'kando --menu \"Tên menu\"' từ dòng lệnh hoặc từ cấu hình niri của bạn."
         }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "Người mới",
+            "capable": "Có khả năng",
+            "skilled": "Có tay nghề",
+            "expert": "Chuyên gia",
+            "master": "Bậc thầy"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "Con Đường Tánh Không {{tier}}",
+            "description": "Hủy bỏ lựa chọn {{n}} lần."
+        },
+        "selector": {
+            "name": "{{attribute}} Samurai",
+            "description": "Chọn {{n}} mục."
+        },
+        "depth-selector": {
+            "name1": "{{attribute}} Máy cắt lát",
+            "name2": "{{attribute}} Máy cắt hai lớp",
+            "name3": "{{attribute}} Máy cắt sâu",
+            "description": "Chọn {{n}} mục ở độ sâu {{depth}} trong chưa đầy {{time}} mili giây."
+        },
+        "click-selector": {
+            "name": "{{attribute}} Nhà vô địch về nhấp chuột",
+            "description": "Chọn các mục {{n}} bằng cách nhấp chuột."
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}} Anh hùng phím nóng",
+            "description": "Chọn {{n}} mục bằng bàn phím của bạn."
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}} Chiến binh tay cầm chơi game",
+            "description": "Chọn {{n}} mục bằng gamepad."
+        },
+        "gesture-selector": {
+            "name": "{{attribute}} Ninja nguồn",
+            "description": "Chọn các mục {{n}} bằng chế độ turbo hoặc đánh dấu."
+        },
+        "settings-opened": {
+            "name": "Hành trình là phần thưởng {{tier}}",
+            "description": "Mở hộp thoại cài đặt {{n}} lần."
+        },
+        "backup": {
+            "name": "Con đường tiên tri {{tier}}",
+            "description": "Sao lưu menu hoặc cài đặt của bạn {{n}} lần."
+        },
+        "restore": {
+            "name": "Cơ hội thứ hai {{tier}}",
+            "description": "Khôi phục bản sao lưu {{n}} lần."
+        },
+        "added-items": {
+            "name": "Con đường Kando {{tier}}",
+            "description": "Tạo các mục {{n}} trong trình chỉnh sửa menu."
+        },
+        "deleted-all-menus": {
+            "name": "Xóa Dojo",
+            "description": "Xóa tất cả các menu của bạn."
+        },
+        "full-menu": {
+            "name": "Chiều rộng hơn chiều sâu",
+            "description": "Tạo một menu với hơn 12 món."
+        },
+        "deep-menu": {
+            "name": "Bậc thầy về chiều sâu",
+            "description": "Thêm một mục menu vào menu con sâu bốn cấp."
+        },
+        "sponsors-viewed": {
+            "name": "Người bảo vệ Kando",
+            "description": "Hãy cân nhắc việc trở thành nhà tài trợ của Kando."
+        },
+        "menu-themes-selected": {
+            "name": "Con đường thẩm mỹ",
+            "description": "Chuyển chủ đề menu {{n}} lần."
+        },
+        "tutorial-viewed": {
+            "name": "Cuộc hành trình bắt đầu",
+            "description": "Hoàn thành phần hướng dẫn giới thiệu Kando."
+        },
+        "completed-title": "Đã mở khóa thành tích!"
     }
 }
