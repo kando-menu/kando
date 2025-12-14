@@ -294,7 +294,9 @@
             "backup-menus": "Резервне копіювання menus.json…",
             "backup-settings": "Резервне копіювання config.json…",
             "restore-menus": "Відновлення menus.json…",
-            "restore-settings": "Відновлення config.json…"
+            "restore-settings": "Відновлення config.json…",
+            "enable-achievements-info": "Якщо ввімкнено, Kando відстежуватиме ваш прогрес у досягненні.",
+            "enable-achievements": "Відстеження досягнень"
         },
         "hover-mode": "Режим наведення",
         "hover-mode-info": "Тільки для досвідчених користувачів! Виберіть елементи, навівши на них курсор.",
@@ -445,6 +447,103 @@
         "restore-menu-settings-warning-message": "Це перезапише ваші поточні меню та колекції меню вмістом вибраного файлу резервної копії!",
         "restore-menu-settings-error-title": "Не вдалося завантажити резервну копію меню!",
         "restore-menu-settings-success-title": "Успіх!",
-        "restore-menu-settings-success-message": "Ваші меню та колекції меню відновлено з резервної копії."
+        "restore-menu-settings-success-message": "Ваші меню та колекції меню відновлено з резервної копії.",
+        "achievements-dialog": {
+            "reset-button": "Скинути прогрес",
+            "reset-confirmation-title": "Ви справді хочете скинути весь прогрес?",
+            "reset-confirmation-message": "Усі досягнення та прогрес на рівнях будуть втрачені. Цю дію не можна скасувати.",
+            "title": "Досягнення",
+            "xp": "XP",
+            "in-progress-button": "У процесі",
+            "completed-button": "Завершено",
+            "reset-button-tooltip": "Скинути всі досягнення та прогрес рівня"
+        }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "Новачок",
+            "capable": "Здатний",
+            "skilled": "Кваліфікований",
+            "expert": "Експерт",
+            "master": "Сенсей"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "Дорога порожнечі {{tier}}",
+            "description": "Перервати вибір {{n}} разів."
+        },
+        "selector": {
+            "name": "{{attribute}} Самурай",
+            "description": "Виберіть {{n}} елементів."
+        },
+        "depth-selector": {
+            "name1": "Зріз {{attribute}}",
+            "name2": "{{attribute}} Двошаровий зріз",
+            "name3": "{{attribute}} Глибокий зріз",
+            "description": "Виберіть {{n}} елементів на глибині {{depth}} за менш ніж {{time}} мс."
+        },
+        "click-selector": {
+            "name": "{{attribute}} Чемпіон із клік-клік",
+            "description": "Виберіть {{n}} елементів за допомогою кліків миші."
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}} Герой гарячих клавіш",
+            "description": "Виберіть {{n}} елементів за допомогою клавіатури."
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}} Воїн на геймпаді",
+            "description": "Виберіть {{n}} предметів за допомогою геймпада."
+        },
+        "gesture-selector": {
+            "name": "{{attribute}} Силовий ніндзя",
+            "description": "Виберіть {{n}} елементів за допомогою турбо-режиму або режиму маркування."
+        },
+        "settings-opened": {
+            "name": "Подорож – це нагорода {{tier}}",
+            "description": "Відкрийте діалогове вікно налаштувань {{n}} разів."
+        },
+        "backup": {
+            "name": "Шлях Передбачення {{tier}}",
+            "description": "Зробіть резервну копію меню або налаштувань {{n}} разів."
+        },
+        "restore": {
+            "name": "Другий шанс {{tier}}",
+            "description": "Відновити резервну копію {{n}} разів."
+        },
+        "added-items": {
+            "name": "Шлях до Kando {{tier}}",
+            "description": "Створіть {{n}} елементів у редакторі меню."
+        },
+        "deleted-all-menus": {
+            "name": "Очистіть Додзьо",
+            "description": "Видаліть усі свої меню."
+        },
+        "full-menu": {
+            "name": "Широта над глибиною",
+            "description": "Створіть меню з більш ніж дванадцятьма пунктами."
+        },
+        "deep-menu": {
+            "name": "Майстер глибини",
+            "description": "Додати пункт меню до чотирирівневого глибокого підменю."
+        },
+        "sponsors-viewed": {
+            "name": "Хранитель Кандо",
+            "description": "Розгляньте можливість стати спонсором Kando."
+        },
+        "menu-themes-selected": {
+            "name": "Шлях естета",
+            "description": "Змінити тему меню {{n}} разів."
+        },
+        "tutorial-viewed": {
+            "name": "Подорож починається",
+            "description": "Завершіть вступний посібник з Kando."
+        },
+        "completed-title": "Досягнення розблоковано!"
     }
 }
