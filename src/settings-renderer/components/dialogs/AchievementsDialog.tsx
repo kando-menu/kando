@@ -18,6 +18,7 @@ import classNames from 'classnames/bind';
 import * as classes from './AchievementsDialog.module.scss';
 const cx = classNames.bind(classes);
 
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbTrophyFilled, TbRestore } from 'react-icons/tb';
 import { useAppState } from '../../state';
 
@@ -97,6 +98,10 @@ export default function AchievementsDialog() {
   const levelProgress = useAppState((state) => state.levelProgress);
   const [showCompleted, setShowCompleted] = React.useState(false);
 
+  // Animate the sorting, addition, and removal of achievements.
+  const [animatedInProgressList] = useAutoAnimate({ duration: 200 });
+  const [animatedCompletedList] = useAutoAnimate({ duration: 200 });
+
   return (
     <Modal
       icon={<TbTrophyFilled />}
@@ -127,7 +132,7 @@ export default function AchievementsDialog() {
         <div className={cx({ achievementSlider: true, showCompleted })}>
           <div className={classes.achievementListWrapper}>
             <Scrollbox maxHeight="min(45vh, 500px)" paddingRight={8}>
-              <div className={classes.achievementList}>
+              <div ref={animatedInProgressList} className={classes.achievementList}>
                 {levelProgress.activeAchievements.map((achievement) => (
                   <div key={achievement.id} className={classes.achievement}>
                     <div className={classes.achievementBadge}>
@@ -158,7 +163,9 @@ export default function AchievementsDialog() {
           </div>
           <div className={classes.achievementListWrapper}>
             <Scrollbox maxHeight="min(45vh, 500px)">
-              <div className={cx({ achievementList: true, completed: true })}>
+              <div
+                ref={animatedCompletedList}
+                className={cx({ achievementList: true, completed: true })}>
                 {levelProgress.completedAchievements.map((achievement, i) => (
                   <div
                     key={achievement.id}
