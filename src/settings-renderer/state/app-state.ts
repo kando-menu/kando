@@ -18,6 +18,7 @@ import {
   SoundThemeDescription,
   Menu,
   AppDescription,
+  LevelProgress,
 } from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
@@ -63,6 +64,9 @@ type AppState = {
   /** Whether the settings dialog is visible. */
   settingsDialogVisible: boolean;
 
+  /** Whether the achievements dialog is visible. */
+  achievementsDialogVisible: boolean;
+
   /** Whether the app is in dark mode. */
   darkMode: boolean;
 
@@ -83,6 +87,9 @@ type AppState = {
 
   /** Descriptions of all available sound themes. */
   soundThemes: Array<SoundThemeDescription>;
+
+  /** The current level progress. */
+  levelProgress: LevelProgress;
 };
 
 /** These actions can be performed on the app state. */
@@ -148,6 +155,13 @@ type AppStateActions = {
   setSettingsDialogVisible: (settingsDialogVisible: boolean) => void;
 
   /**
+   * Shows or hides the achievements dialog.
+   *
+   * @param achievementsDialogVisible Whether the achievements dialog is visible.
+   */
+  setAchievementsDialogVisible: (achievementsDialogVisible: boolean) => void;
+
+  /**
    * Shows or hides the collection editor above the menu list.
    *
    * @param collectionDetailsVisible Whether the collection editor is visible.
@@ -173,6 +187,7 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   introDialogVisible: false,
   themesDialogVisible: false,
   settingsDialogVisible: false,
+  achievementsDialogVisible: false,
   darkMode: false,
   backendInfo: null,
   versionInfo: null,
@@ -180,6 +195,14 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   installedApps: [],
   menuThemes: [],
   soundThemes: [],
+  levelProgress: {
+    level: 0,
+    xp: 0,
+    maxXp: 0,
+    newAchievementsCount: 0,
+    activeAchievements: [],
+    completedAchievements: [],
+  },
   selectMenu: (selectedMenu: number) => set({ selectedMenu, selectedChildPath: [] }),
   selectChildPath: (selectedChildPath: number[]) => set({ selectedChildPath }),
   selectParent: () =>
@@ -192,6 +215,8 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
   setThemesDialogVisible: (themesDialogVisible: boolean) => set({ themesDialogVisible }),
   setSettingsDialogVisible: (settingsDialogVisible: boolean) =>
     set({ settingsDialogVisible }),
+  setAchievementsDialogVisible: (achievementsDialogVisible: boolean) =>
+    set({ achievementsDialogVisible }),
   setCollectionDetailsVisible: (collectionDetailsVisible: boolean) =>
     set({ collectionDetailsVisible }),
   setMenuSearchBarVisible: (menuSearchBarVisible: boolean) =>

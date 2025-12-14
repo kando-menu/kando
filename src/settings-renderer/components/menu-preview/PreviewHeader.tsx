@@ -10,10 +10,15 @@
 
 import React from 'react';
 import i18next from 'i18next';
-import { TbSettingsFilled, TbHeartFilled, TbPaletteFilled } from 'react-icons/tb';
+import {
+  TbSettingsFilled,
+  TbHeartFilled,
+  TbPaletteFilled,
+  TbTrophyFilled,
+} from 'react-icons/tb';
 import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 
-import { useAppState, useMenuSettings } from '../../state';
+import { useAppState, useMenuSettings, useGeneralSetting } from '../../state';
 import { Headerbar, Button } from '../common';
 
 /**
@@ -22,9 +27,17 @@ import { Headerbar, Button } from '../common';
  */
 export default function PreviewHeader() {
   const setAboutDialogVisible = useAppState((state) => state.setAboutDialogVisible);
+  const setAchievementsDialogVisible = useAppState(
+    (state) => state.setAchievementsDialogVisible
+  );
   const setIntroDialogVisible = useAppState((state) => state.setIntroDialogVisible);
   const setThemesDialogVisible = useAppState((state) => state.setThemesDialogVisible);
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
+
+  // We show the achievements-button only if achievements are enabled. Also, we show a
+  // tiny indicator on it if there are new achievements.
+  const levelProgress = useAppState((state) => state.levelProgress);
+  const [enableAchievements] = useGeneralSetting('enableAchievements');
 
   // Undo/Redo buttons that only re-render when undo/redo state changes.
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -55,44 +68,57 @@ export default function PreviewHeader() {
     );
   });
 
-  const headerButtons = (
-    <>
-      <span style={{ marginRight: '8px' }}>
-        <Button
-          isGrouped
-          icon={<IoSchool />}
-          tooltip={i18next.t('settings.introduction-dialog.title')}
-          variant="tool"
-          onClick={() => setIntroDialogVisible(true)}
-        />
-        <Button
-          isGrouped
-          icon={<TbHeartFilled />}
-          tooltip={i18next.t('settings.about-dialog.title')}
-          variant="tool"
-          onClick={() => setAboutDialogVisible(true)}
-        />
-      </span>
-      <span style={{ marginRight: '8px' }}>
-        <Button
-          isGrouped
-          icon={<TbPaletteFilled />}
-          tooltip={i18next.t('settings.menu-themes-dialog.title')}
-          variant="tool"
-          onClick={() => setThemesDialogVisible(true)}
-        />
-        <Button
-          isGrouped
-          icon={<TbSettingsFilled />}
-          tooltip={i18next.t('settings.general-settings-dialog.title')}
-          variant="tool"
-          onClick={() => setSettingsDialogVisible(true)}
-        />
-      </span>
-      <span>
-        <UndoRedoButtons />
-      </span>
-    </>
+  return (
+    <Headerbar
+      center={
+        <>
+          <span style={{ marginRight: '8px' }}>
+            <Button
+              isGrouped
+              icon={<IoSchool />}
+              tooltip={i18next.t('settings.introduction-dialog.title')}
+              variant="tool"
+              onClick={() => setIntroDialogVisible(true)}
+            />
+            <Button
+              isGrouped
+              icon={<TbHeartFilled />}
+              tooltip={i18next.t('settings.about-dialog.title')}
+              variant="tool"
+              onClick={() => setAboutDialogVisible(true)}
+            />
+          </span>
+          <span style={{ marginRight: '8px' }}>
+            <Button
+              isGrouped
+              icon={<TbPaletteFilled />}
+              tooltip={i18next.t('settings.menu-themes-dialog.title')}
+              variant="tool"
+              onClick={() => setThemesDialogVisible(true)}
+            />
+            <Button
+              isGrouped
+              icon={<TbSettingsFilled />}
+              tooltip={i18next.t('settings.general-settings-dialog.title')}
+              variant="tool"
+              onClick={() => setSettingsDialogVisible(true)}
+            />
+            {enableAchievements ? (
+              <Button
+                isGrouped
+                hasIndicator={levelProgress.newAchievementsCount > 0}
+                icon={<TbTrophyFilled />}
+                tooltip={i18next.t('settings.achievements-dialog.title')}
+                variant="tool"
+                onClick={() => setAchievementsDialogVisible(true)}
+              />
+            ) : null}
+          </span>
+          <span>
+            <UndoRedoButtons />
+          </span>
+        </>
+      }
+    />
   );
-  return <Headerbar center={headerButtons} />;
 }

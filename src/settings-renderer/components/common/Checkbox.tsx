@@ -29,6 +29,9 @@ type Props = {
 
   /** Whether the checkbox is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
+
+  /** Whether to show the checkbox on the left side. Defaults to 'false'. */
+  readonly isFlipped?: boolean;
 };
 
 /**
@@ -43,6 +46,7 @@ export default function Checkbox(props: Props) {
       isLabelClickable
       info={props.info}
       isDisabled={props.isDisabled}
+      isFlipped={props.isFlipped}
       label={props.label}>
       <input
         checked={props.initialValue || false}

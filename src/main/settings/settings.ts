@@ -107,6 +107,9 @@ class PropertyChangeEmitter<T> {
 
 /** The options object which can be passed to the constructor. */
 type Options<T> = {
+  /** The name of the settings object. Will be used during console logging. */
+  name: string;
+
   /** The directory in which the settings file should be stored. */
   directory: string;
 
@@ -161,7 +164,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
   private watcher: FSWatcher | null;
 
   /** This array contains all listeners which are called when a setting changes. */
-  private anyChangeListeners: Array<(newSettings: T, oldSettings: T) => void> = [];
+  private anyChangeListeners: Array<
+    (newSettings: T, oldSettings: T, changedKeys: Array<keyof T>) => void
+  > = [];
 
   /**
    * This is the current settings object. It is loaded from the settings file when the
@@ -254,7 +259,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    *
    * @param listener The listener function which will be called when any setting changes.
    */
-  public onAnyChange(listener: (newSettings: T, oldSettings: T) => void) {
+  public onAnyChange(
+    listener: (newSettings: T, oldSettings: T, changedKeys: Array<keyof T>) => void
+  ) {
     this.anyChangeListeners.push(listener);
   }
 
@@ -264,7 +271,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    *
    * @param listener The listener function to disconnect.
    */
-  public disconnectAnyChange(listener: (newSettings: T, oldSettings: T) => void) {
+  public disconnectAnyChange(
+    listener: (newSettings: T, oldSettings: T, changedKeys: Array<keyof T>) => void
+  ) {
     const index = this.anyChangeListeners.indexOf(listener);
     if (index >= 0) {
       this.anyChangeListeners.splice(index, 1);
@@ -290,7 +299,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         this.settings = this.loadSettings();
       } catch (error) {
         console.error(
-          'Error loading settings:',
+          `Error loading ${this.options.name}:`,
           error instanceof Error ? error.message : error
         );
         return;
@@ -315,7 +324,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    */
   private loadSettings(): T {
     try {
-      console.log('Loading settings from', this.filePath);
+      console.log(`Loading ${this.options.name} from`, this.filePath);
       const data = fs.readJSONSync(this.filePath);
 
       // If this.options.ignoreWriteProtectedConfigFiles was not set at construction time,
@@ -375,7 +384,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * @param oldSettings The old settings object.
    */
   private emitEvents(newSettings: T, oldSettings: T) {
-    let anyChanged = false;
+    const changedKeys: Array<keyof T> = [];
 
     for (const key in newSettings) {
       if (
@@ -383,12 +392,14 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         !lodash.isEqual(newSettings[key], oldSettings[key])
       ) {
         this.emit(key, newSettings[key], oldSettings[key]);
-        anyChanged = true;
+        changedKeys.push(key);
       }
     }
 
-    if (anyChanged) {
-      this.anyChangeListeners.forEach((listener) => listener(newSettings, oldSettings));
+    if (changedKeys.length > 0) {
+      this.anyChangeListeners.forEach((listener) =>
+        listener(newSettings, oldSettings, changedKeys)
+      );
     }
   }
 
@@ -409,7 +420,9 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     const backupDir = path.join(this.options.directory, 'backups');
     const backupFile = path.join(backupDir, fileName);
 
-    console.log(`Creating backup of settings file: ${this.filePath} as ${backupFile}`);
+    console.log(
+      `Creating backup of ${this.options.name} file: ${this.filePath} as ${backupFile}`
+    );
 
     try {
       fs.mkdirSync(backupDir, { recursive: true });

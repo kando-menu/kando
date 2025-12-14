@@ -44,6 +44,25 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+
+  .indicator {
+    width: 8px;
+    height: 8px;
+    background-color: $key-dark;
+    border-radius: 50%;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
+  .badge {
+    font-size: 0.75em;
+    background-color: $key-dark;
+    color: $text-inverted;
+    border-radius: 4px;
+    padding: 2px 8px;
+    transform: translateX(8px);
+  }
 }
 
 .left {
@@ -63,6 +82,10 @@
 
   &:hover {
     background-color: $widget-normal-hover;
+  }
+
+  &.pressed {
+    background-color: $widget-normal-active;
   }
 }
 
@@ -89,6 +112,10 @@
   &:hover {
     background-color: $widget-primary-hover;
   }
+
+  &.pressed {
+    background-color: $widget-primary-active;
+  }
 }
 
 .floating {
@@ -97,6 +124,10 @@
 
   &:hover {
     background-color: $widget-normal-hover;
+  }
+
+  &.pressed {
+    background-color: $widget-normal-active;
   }
 }
 

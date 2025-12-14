@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../common/math';
-import { Vec2 } from '../../common';
+import { Vec2, SelectionSource } from '../../common';
 import { InputMethod, ButtonState, InputState, SelectionType } from './input-method';
 import { GestureDetector } from './gesture-detector';
 
@@ -109,7 +109,8 @@ export class PointerInput extends InputMethod {
         position,
         this.enableHoverMode && !this.hoverModeNeedsConfirmation
           ? SelectionType.eActiveItem
-          : SelectionType.eSubmenuOnly
+          : SelectionType.eSubmenuOnly,
+        SelectionSource.eGesture
       );
     });
   }
@@ -236,7 +237,11 @@ export class PointerInput extends InputMethod {
 
     // Go back using the mouse back button.
     if ((event as MouseEvent).button === 3) {
-      this.selectCallback(this.pointerPosition, SelectionType.eParent);
+      this.selectCallback(
+        this.pointerPosition,
+        SelectionType.eParent,
+        SelectionSource.eClick
+      );
       return;
     }
 
@@ -276,7 +281,11 @@ export class PointerInput extends InputMethod {
       this.buttonState === ButtonState.eDragged &&
       math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
     if (clickSelection || markingModeSelection) {
-      this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
+      this.selectCallback(
+        this.pointerPosition,
+        SelectionType.eActiveItem,
+        SelectionSource.eClick
+      );
     }
 
     this.clickPosition = null;
@@ -328,7 +337,11 @@ export class PointerInput extends InputMethod {
         math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius
       ) {
         this.gestureDetector.reset();
-        this.selectCallback(this.pointerPosition, SelectionType.eActiveItem);
+        this.selectCallback(
+          this.pointerPosition,
+          SelectionType.eActiveItem,
+          SelectionSource.eGesture
+        );
       }
 
       this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);

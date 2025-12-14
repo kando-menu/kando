@@ -17,6 +17,7 @@ import {
   SoundThemeDescription,
   MenuSettings,
   IconThemesInfo,
+  AchievementStatsNumberKeys,
 } from '.';
 
 /**
@@ -167,6 +168,15 @@ export const COMMON_WINDOW_API = {
     const name = file.name;
     const path = webUtils.getPathForFile(file);
     return ipcRenderer.invoke('common.create-menu-item-for-file', name, path);
+  },
+
+  /**
+   * Increments the given achievement statistic by one.
+   *
+   * @param keys The keys of the statistics to increment.
+   */
+  incrementAchievementStats(keys: AchievementStatsNumberKeys[]): void {
+    ipcRenderer.send('common.increment-achievement-stats', keys);
   },
 };
 

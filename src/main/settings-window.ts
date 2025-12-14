@@ -22,7 +22,7 @@ declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
 /** This is window which contains the settings of Kando. */
 export class SettingsWindow extends BrowserWindow {
   /** This will resolve once the window has fully loaded. */
-  private windowLoaded = new Promise<void>((resolve) => {
+  public onWindowLoaded = new Promise<void>((resolve) => {
     ipcMain.on('settings-window.ready', () => {
       resolve();
     });
@@ -97,6 +97,6 @@ export class SettingsWindow extends BrowserWindow {
     this.loadURL(SETTINGS_WINDOW_WEBPACK_ENTRY);
 
     // Show the window when the renderer is ready.
-    this.windowLoaded.then(() => this.show());
+    this.onWindowLoaded.then(() => this.show());
   }
 }

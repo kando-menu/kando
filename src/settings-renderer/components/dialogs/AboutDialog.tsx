@@ -48,7 +48,11 @@ export default function AboutDialog() {
           marginLeft="10%"
           marginRight="10%"
           marginTop={10}
-          noteStyle="big">
+          noteStyle="big"
+          onLinkClick={(href) => {
+            window.open(href, '_blank');
+            window.commonAPI.incrementAchievementStats(['sponsorsViewed']);
+          }}>
           {i18next.t('settings.about-dialog.message', {
             link: 'https://ko-fi.com/schneegans',
           })}

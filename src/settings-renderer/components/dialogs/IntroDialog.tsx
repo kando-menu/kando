@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
@@ -232,6 +235,7 @@ export default function IntroDialog() {
           </ol>
           <div style={{ marginTop: 'auto' }}>
             <SettingsCheckbox
+              isFlipped
               label={i18next.t('settings.introduction-dialog.show-again')}
               settingsKey="showIntroductionDialog"
             />
@@ -245,7 +249,14 @@ export default function IntroDialog() {
           effect="cards"
           initialSlide={activeIndex}
           modules={[EffectCards]}
-          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}>
+          onSlideChange={(swiper) => {
+            setActiveIndex(swiper.activeIndex);
+
+            // Check if this is the last slide.
+            if (swiper.activeIndex === slides.length - 1) {
+              window.commonAPI.incrementAchievementStats(['tutorialViewed']);
+            }
+          }}>
           {slides.map((slide, index) => (
             <SwiperSlide key={`${String(index)}`} className={classes.slide}>
               {slide}

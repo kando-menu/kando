@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Vec2 } from '../../common';
+import { Vec2, SelectionSource } from '../../common';
 
 /**
  * The logical button state of the input device. This will be set to clicked once a button
@@ -78,9 +78,15 @@ export abstract class InputMethod {
   /**
    * This callback should be called whenever an item should be selected. The position
    * should be the absolute pointer position. The type can provide a hint what should be
-   * selected. See the SelectionType enum for more information.
+   * selected. See the SelectionType enum for more information. The source indicates which
+   * input method was used to make the selection. This is only used for achievement
+   * tracking.
    */
-  protected selectCallback: (position: Vec2, type: SelectionType) => void = () => {};
+  protected selectCallback: (
+    position: Vec2,
+    type: SelectionType,
+    source: SelectionSource
+  ) => void = () => {};
 
   /** This callback should be called whenever the menu should be closed. */
   protected closeCallback: () => void = () => {};
@@ -113,9 +119,14 @@ export abstract class InputMethod {
    * Also, the selection type can provide a hint what should be selected. See the
    * SelectionType enum for more information.
    *
+   * The source indicates which input method was used to make the selection. This is only
+   * used for achievement tracking.
+   *
    * @param callback - This will be called whenever an item should be selected.
    */
-  public onSelection(callback: (position: Vec2, type: SelectionType) => void) {
+  public onSelection(
+    callback: (position: Vec2, type: SelectionType, source: SelectionSource) => void
+  ) {
     this.selectCallback = callback;
   }
 

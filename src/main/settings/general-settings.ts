@@ -32,6 +32,7 @@ import { version } from './../../../package.json';
 export function getGeneralSettings(): Settings<GeneralSettings> | null {
   try {
     return new Settings<GeneralSettings>({
+      name: 'settings',
       file: 'config.json',
       directory: getConfigDirectory(),
       defaults: () => GENERAL_SETTINGS_SCHEMA.parse({}),

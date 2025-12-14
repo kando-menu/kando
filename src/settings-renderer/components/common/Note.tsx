@@ -41,7 +41,7 @@ type Props = {
   readonly useMarkdown?: boolean;
 
   /**
-   * Callback function to execute when a link is clicked. IF not given, the link will be
+   * Callback function to execute when a link is clicked. If not given, the link will be
    * opened in the browser.
    */
   readonly onLinkClick?: (href: string) => void;

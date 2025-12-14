@@ -9,8 +9,17 @@
       "search-placeholder": "Search icons…",
       "hint": "Learn [here]({{link}}) how to add or create your own icon themes."
     },
-    "backup-general-settings-title": "Backup General Settings…",
     "cancel": "Cancel",
+    "achievements-dialog": {
+      "reset-button": "Reset Progress",
+      "reset-confirmation-title": "Do you really want to reset all progress?",
+      "reset-confirmation-message": "All achievements and level progress will be lost. This action cannot be undone.",
+      "title": "Achievements",
+      "in-progress-button": "In Progress",
+      "completed-button": "Completed",
+      "reset-button-tooltip": "Reset all achievements and level progress"
+    },
+    "backup-general-settings-title": "Backup General Settings…",
     "restore-backup": "Restore Backup…",
     "restore-general-settings-warning-title": "Do you really want to restore the general settings?",
     "restore-general-settings-warning-message": "This will overwrite your current application settings with the contents of the selected backup file! Your menus and menu collections will not be affected.",
@@ -78,6 +87,8 @@
       "black": "Black",
       "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
       "lazy-initialization": "Lazy initialization",
+      "enable-achievements-info": "If enabled, Kando will track your progress towards achievements.",
+      "enable-achievements": "Track achievements",
       "menu-behavior": "Menu Behavior",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
       "keep-input-focus": "Keep active application focused",
@@ -346,6 +357,93 @@
       "delayed-option-info": "Useful if the action targets a window that needs to be focused.",
       "delayed-option": "Wait for fade-out animation"
     }
+  },
+  "achievements": {
+    "attributes": {
+      "novice": "Novice",
+      "capable": "Capable",
+      "skilled": "Skilled",
+      "expert": "Expert",
+      "master": "Sensei"
+    },
+    "tier": {
+      "I": "I",
+      "II": "II",
+      "III": "III",
+      "IV": "IV",
+      "V": "V"
+    },
+    "cancelor": {
+      "name": "Road of Emptiness {{tier}}",
+      "description": "Abort a selection {{n}} times."
+    },
+    "selector": {
+      "name": "{{attribute}} Samurai",
+      "description": "Select {{n}} items."
+    },
+    "depth-selector": {
+      "name1": "{{attribute}} Slicer",
+      "name2": "{{attribute}} Two-Layer Slicer",
+      "name3": "{{attribute}} Deep Slicer",
+      "description": "Select {{n}} items at depth {{depth}} in less than {{time}} ms."
+    },
+    "click-selector": {
+      "name": "{{attribute}} Click-Click Champion",
+      "description": "Select {{n}} items using mouse clicks."
+    },
+    "keyboard-selector": {
+      "name": "{{attribute}} Hotkey Hero",
+      "description": "Select {{n}} items using your keyboard."
+    },
+    "gamepad-selector": {
+      "name": "{{attribute}} Gamepad Warrior",
+      "description": "Select {{n}} items using a gamepad."
+    },
+    "gesture-selector": {
+      "name": "{{attribute}} Power Ninja",
+      "description": "Select {{n}} items using turbo or marking mode."
+    },
+    "settings-opened": {
+      "name": "The Journey is the Reward {{tier}}",
+      "description": "Open the settings dialog {{n}} times."
+    },
+    "backup": {
+      "name": "Path of Foresight {{tier}}",
+      "description": "Backup your menus or settings {{n}} times."
+    },
+    "restore": {
+      "name": "Second Chance {{tier}}",
+      "description": "Restore a backup {{n}} times."
+    },
+    "added-items": {
+      "name": "Way of Kando {{tier}}",
+      "description": "Create {{n}} items in the menu editor."
+    },
+    "deleted-all-menus": {
+      "name": "Clear the Dojo",
+      "description": "Delete all of your menus."
+    },
+    "full-menu": {
+      "name": "Breadth over Depth",
+      "description": "Create a menu with more than twelve items."
+    },
+    "deep-menu": {
+      "name": "Master of Depth",
+      "description": "Add a menu item to a four-level deep submenu."
+    },
+    "sponsors-viewed": {
+      "name": "Guardian of Kando",
+      "description": "Consider becoming a sponsor of Kando."
+    },
+    "menu-themes-selected": {
+      "name": "Way of the Aesthete",
+      "description": "Switch the menu theme {{n}} times."
+    },
+    "tutorial-viewed": {
+      "name": "The Journey Begins",
+      "description": "Complete the Kando introduction tutorial."
+    },
+    "completed-title": "Achievement unlocked!"
   },
   "main": {
     "new-version-notification-header": "A new version of Kando is available!",

@@ -8,8 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export * from './settings-schemata/menu-settings-v1';
 export * from './settings-schemata';
+
+import { AchievementStats } from './settings-schemata';
 
 /** This type is used to pass command line arguments to the app. */
 export type CommandlineOptions = {
@@ -412,3 +413,147 @@ export type AppDescription = {
   /** The icon theme used for the above icon. */
   readonly iconTheme: string;
 };
+
+/**
+ * Each achievement can have one of three states. If it's 'locked', it will not be shown
+ * in the user interface. Once some specific requirements are fulfilled, it will become
+ * 'active' and eventually 'completed'.
+ */
+export enum AchievementState {
+  eLocked = 0,
+  eActive = 1,
+  eCompleted = 2,
+}
+
+/**
+ * The achievement badges are composed of different layers. There is a badge type which
+ * defines the base layer. Then there is an icon layer which is drawn on top of the badge.
+ * Finally, there is a gloss layer which is drawn on top of everything to give the badge a
+ * shiny look.
+ */
+export enum AchievementBadgeType {
+  eCopper,
+  eBronze,
+  eSilver,
+  eGold,
+  ePlatinum,
+  eSpecial1,
+  eSpecial2,
+  eSpecial3,
+  eSpecial4,
+  eSpecial5,
+  eSpecial6,
+}
+
+/** The achievement icons are drawn on top of the achievement badges. */
+export enum AchievementBadgeIcon {
+  eAddedItems,
+  eBackedUp,
+  eCancelor1,
+  eCancelor2,
+  eCancelor3,
+  eCancelor4,
+  eCancelor5,
+  eClickSelector,
+  eDeepMenu,
+  eDeletedAllMenus,
+  eDepthSelector1,
+  eDepthSelector2,
+  eDepthSelector3,
+  eFullMenu,
+  eGamepadSelector,
+  eGestureSelector,
+  eKeyboardSelector,
+  eMenuThemesSelected,
+  eRestored,
+  eSelector1,
+  eSelector2,
+  eSelector3,
+  eSelector4,
+  eSelector5,
+  eSettingsOpened,
+  eSponsors,
+  eTutorialViewed,
+}
+
+/**
+ * An achievement represents a specific goal that the user can accomplish while using
+ * Kando. Achievements are tracked based on specific statistics stored in the settings.
+ */
+export type Achievement = {
+  /** The ID of the achievement. This is a unique identifier used to track the achievement. */
+  id: string;
+
+  /**
+   * The name. Most achievements have multiple tiers. A {{tier}} in the localization will
+   * be replaced by a corresponding roman number (e.g. I, II, III, IV or V), {{attribute}}
+   * by a corresponding attribute like 'Novice' or 'Master'.
+   */
+  name: string;
+
+  /** The explanation string. */
+  description: string;
+
+  /** One of the State values above. */
+  state: AchievementState;
+
+  /** If the achievement was completed, this contains the completion date as a string. */
+  date: string;
+
+  /** The badge type for the achievement. */
+  badge: AchievementBadgeType;
+
+  /** The icon drawn for the achievement. */
+  icon: AchievementBadgeIcon;
+
+  /** The settings key this achievement is tracking. */
+  statKey: keyof AchievementStats;
+
+  /** The current value of the statKey, clamped to the statRange. */
+  statValue: number;
+
+  /** A value for the statKey value for which this achievement is active. */
+  statRange: [number, number];
+
+  /** The amount of experience gained by completion. */
+  xp: number;
+
+  /** If set, it's not shown in the UI until revealed by another achievement. */
+  hidden: boolean;
+
+  /** The ID of a hidden achievement. */
+  reveals?: string;
+};
+
+/** This type is used to transfer the user's current level progress. */
+export type LevelProgress = {
+  /** The current level. */
+  level: number;
+
+  /** The current experience points. */
+  xp: number;
+
+  /** The total experience points required to reach the next level. */
+  maxXp: number;
+
+  /** The number of new achievements since the user last viewed the dialog. */
+  newAchievementsCount: number;
+
+  /** All active achievements. */
+  activeAchievements: Achievement[];
+
+  /** All completed achievements. */
+  completedAchievements: Achievement[];
+};
+
+/**
+ * For achievement tracking, it is important to know the source of a selection. This enum
+ * is used to indicate whether a selection was made using the mouse, a gesture (marking
+ * mode or turbo mode) or a gamepad.
+ */
+export enum SelectionSource {
+  eClick = 'click',
+  eKeyboard = 'keyboard',
+  eGesture = 'gesture',
+  eGamepad = 'gamepad',
+}

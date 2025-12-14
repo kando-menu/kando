@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { useGeneralSetting, useMenuSettings } from '../state';
 import {
   AboutDialog,
+  AchievementsDialog,
   GeneralSettingsDialog,
   MenuThemesDialog,
   IntroDialog,
@@ -105,6 +106,7 @@ export default function App() {
           <Properties />
         </Sidebar>
         <GeneralSettingsDialog />
+        <AchievementsDialog />
         <AboutDialog />
         <IntroDialog />
         <MenuThemesDialog />

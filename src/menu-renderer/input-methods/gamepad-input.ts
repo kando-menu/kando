@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../common/math';
-import { Vec2 } from '../../common';
+import { Vec2, SelectionSource } from '../../common';
 import { Gamepad } from './gamepad';
 import { InputMethod, ButtonState, InputState, SelectionType } from './input-method';
 
@@ -54,11 +54,19 @@ export class GamepadInput extends InputMethod {
         }
 
         if (this.backButton >= 0 && buttonIndex === this.backButton) {
-          this.selectCallback(this.centerPosition, SelectionType.eParent);
+          this.selectCallback(
+            this.centerPosition,
+            SelectionType.eParent,
+            SelectionSource.eGamepad
+          );
           return;
         }
 
-        this.selectCallback(this.centerPosition, SelectionType.eActiveItem);
+        this.selectCallback(
+          this.centerPosition,
+          SelectionType.eActiveItem,
+          SelectionSource.eGamepad
+        );
       }
     });
 

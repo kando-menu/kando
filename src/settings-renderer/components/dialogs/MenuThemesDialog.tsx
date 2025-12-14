@@ -74,6 +74,7 @@ export default function MenuThemesDialog() {
     } else {
       setCurrentThemeID(themeID);
     }
+    window.commonAPI.incrementAchievementStats(['menuThemesSelected']);
   };
 
   // Returns true if the given theme should be highlighted. This incorporates the
