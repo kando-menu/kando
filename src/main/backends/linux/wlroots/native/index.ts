@@ -32,6 +32,7 @@ export type Native = {
   getPointerPositionAndWorkAreaSize(): {
     pointerX: number;
     pointerY: number;
+    pointerGetTimedOut: boolean;
     workAreaWidth: number;
     workAreaHeight: number;
   };
