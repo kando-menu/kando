@@ -619,7 +619,6 @@ export class KandoApp {
     // Allow creating backups of the general settings.
     ipcMain.on('settings-window.backup-general-settings', async () => {
       const result = await dialog.showSaveDialog(this.settingsWindow, {
-        title: i18next.t('settings.backup-general-settings-title'),
         defaultPath: path.join(getConfigDirectory(), 'general-settings-backup.json'),
         filters: [{ name: 'JSON', extensions: ['json'] }],
       });
