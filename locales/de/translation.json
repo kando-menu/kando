@@ -332,7 +332,8 @@
             "file-example": "file: URI-Beispiel:",
             "search-placeholder": "Symbole suchen…",
             "url-example": "URL-Beispiel:",
-            "hint": "Erfahren Sie [hier]({{link}}), wie Sie eigene Symbolthemen hinzufügen oder erstellen können."
+            "hint": "Erfahren Sie [hier]({{link}}), wie Sie eigene Symbolthemen hinzufügen oder erstellen können.",
+            "reload-button-tooltip": "Alle Icon-Sets neu laden"
         },
         "introduction-dialog": {
             "slide1-title": "Kando bietet eine einzigartige und effiziente Möglichkeit, mit Ihrem Computer zu interagieren.",
@@ -425,6 +426,20 @@
             "hint": "Sie können auch Anwendungen direkt aus Ihrem Startmenü in den Menü Editor ziehen!",
             "search-placeholder": "Anwendungen durchsuchen…",
             "use-selected": "Auswählen"
-        }
+        },
+        "achievements-dialog": {
+            "reset-button": "Fortschritt Zurücksetzen",
+            "reset-confirmation-title": "Wollen Sie wirklich allen Fortschritt zurücksetzen?",
+            "reset-confirmation-message": "Alle Errungenschaften und Levelfortschritte werden verloren gehen. Diese Aktion kann nicht rückgängig gemacht werden.",
+            "title": "Errungenschaften",
+            "xp": "XP",
+            "in-progress-button": "Aktiv",
+            "completed-button": "Abgeschlossen",
+            "reset-button-tooltip": "Alle Errungenschaften und Levelfortschritte zurücksetzen"
+        },
+        "backup-general-settings-title": "Einstellungen sichern…",
+        "restore-backup": "Einstellungen Wiederherstellen…",
+        "restore-general-settings-warning-title": "Möchten Sie wirklich die Einstellungen wiederherstellen?",
+        "restore-general-settings-warning-message": "Dies wird Ihre aktuellen Einstellungen mit den Inhalten der ausgewählten Backup-Datei überschreiben! Ihre Menüs und Menüsammlungen werden nicht überschrieben."
     }
 }
