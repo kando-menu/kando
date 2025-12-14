@@ -51,7 +51,7 @@ export default function AboutDialog() {
           noteStyle="big"
           onLinkClick={(href) => {
             window.open(href, '_blank');
-            window.commonAPI.incrementAchievementStat('sponsorsViewed');
+            window.commonAPI.incrementAchievementStats(['sponsorsViewed']);
           }}>
           {i18next.t('settings.about-dialog.message', {
             link: 'https://ko-fi.com/schneegans',

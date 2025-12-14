@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+[[annotations]]
+path = [
+    "addedItems.svg",
+    "cancelor1.svg",
+    "cancelor2.svg",
+    "cancelor3.svg",
+    "cancelor4.svg",
+    "cancelor5.svg",
+    "depthSelector1.svg",
+    "depthSelector2.svg",
+    "depthSelector3.svg",
+    "gestureSelector.svg",
+    "selector1.svg",
+    "selector2.svg",
+    "selector3.svg",
+    "selector4.svg",
+    "selector5.svg"
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+    "backedUp.svg",
+    "clickSelector.svg",
+    "deepMenu.svg",
+    "deletedAllMenus.svg",
+    "fullMenu.svg",
+    "gamepadSelector.svg",
+    "keyboardSelector.svg",
+    "menuThemesSelected.svg",
+    "restored.svg",
+    "settingsOpened.svg",
+    "sponsors.svg",
+    "tutorialViewed.svg"
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["Simon Schneegans <code@simonschneegans.de>", "Paweł Kuna <https://tabler.io/icons>"]
+SPDX-License-Identifier = "MIT"

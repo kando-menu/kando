@@ -514,7 +514,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] * 5,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eClickSelector,
         statKey: 'clickSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
         xp: BASE_XP[tier] / 2,
@@ -533,7 +533,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] * 5,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eKeyboardSelector,
         statKey: 'keyboardSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
         xp: BASE_XP[tier] / 2,
@@ -552,7 +552,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] * 5,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eGamepadSelector,
         statKey: 'gamepadSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
         xp: BASE_XP[tier] / 2,
@@ -571,7 +571,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] * 5,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eGestureSelector,
         statKey: 'gestureSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
         xp: BASE_XP[tier],
@@ -600,7 +600,7 @@ export class AchievementTracker extends EventEmitter {
     // Add the five tiers of the backup settings achievements.
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
-        id: 'backup' + tier,
+        id: 'backed-up' + tier,
         name: i18next.t('achievements.backup.name', {
           attribute: attributes[tier],
           tier: numbers[tier],
@@ -609,7 +609,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] / 5,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eBackedUp,
         statKey: 'settingsBackedUp',
         statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
         xp: BASE_XP[tier] / 2,
@@ -619,7 +619,7 @@ export class AchievementTracker extends EventEmitter {
     // Add the five tiers of the restore settings achievements.
     for (let tier = 0; tier < 5; tier++) {
       addAchievement({
-        id: 'restore' + tier,
+        id: 'restored' + tier,
         name: i18next.t('achievements.restore.name', {
           attribute: attributes[tier],
           tier: numbers[tier],
@@ -628,7 +628,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1] / 5,
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eRestored,
         statKey: 'settingsRestored',
         statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
         xp: BASE_XP[tier] / 2,
@@ -647,7 +647,7 @@ export class AchievementTracker extends EventEmitter {
           n: BASE_RANGES[tier + 1],
         }),
         badge: standardBadges[tier],
-        icon: AchievementBadgeIcon.eFallback,
+        icon: AchievementBadgeIcon.eAddedItems,
         statKey: 'addedItems',
         statRange: [BASE_RANGES[tier], BASE_RANGES[tier + 1]],
         xp: BASE_XP[tier] / 2,
@@ -660,8 +660,34 @@ export class AchievementTracker extends EventEmitter {
       name: i18next.t('achievements.deleted-all-menus.name'),
       description: i18next.t('achievements.deleted-all-menus.description'),
       badge: AchievementBadgeType.eSpecial2,
-      icon: AchievementBadgeIcon.eFallback,
+      icon: AchievementBadgeIcon.eDeletedAllMenus,
       statKey: 'deletedAllMenus',
+      statRange: [0, 1],
+      xp: BASE_XP[1],
+      hidden: true,
+    });
+
+    // Add the full-menu achievement.
+    addAchievement({
+      id: 'full-menu',
+      name: i18next.t('achievements.full-menu.name'),
+      description: i18next.t('achievements.full-menu.description'),
+      badge: AchievementBadgeType.eSpecial3,
+      icon: AchievementBadgeIcon.eFullMenu,
+      statKey: 'addedItemsToFullMenu',
+      statRange: [0, 1],
+      xp: BASE_XP[1],
+      hidden: true,
+    });
+
+    // Add the deep-menu achievement.
+    addAchievement({
+      id: 'deep-menu',
+      name: i18next.t('achievements.deep-menu.name'),
+      description: i18next.t('achievements.deep-menu.description'),
+      badge: AchievementBadgeType.eSpecial3,
+      icon: AchievementBadgeIcon.eDeepMenu,
+      statKey: 'addedItemsToDeepMenu',
       statRange: [0, 1],
       xp: BASE_XP[1],
       hidden: true,
@@ -672,11 +698,26 @@ export class AchievementTracker extends EventEmitter {
       id: 'sponsors-viewed',
       name: i18next.t('achievements.sponsors-viewed.name'),
       description: i18next.t('achievements.sponsors-viewed.description'),
-      badge: AchievementBadgeType.eSpecial3,
+      badge: AchievementBadgeType.eSpecial4,
       icon: AchievementBadgeIcon.eSponsors,
       statKey: 'sponsorsViewed',
       statRange: [0, 1],
       xp: BASE_XP[2],
+      hidden: true,
+    });
+
+    // Add the select-menu-theme achievement.
+    addAchievement({
+      id: 'menu-themes-selected',
+      name: i18next.t('achievements.menu-themes-selected.name'),
+      description: i18next.t('achievements.menu-themes-selected.description', {
+        n: 25,
+      }),
+      badge: AchievementBadgeType.eSpecial5,
+      icon: AchievementBadgeIcon.eMenuThemesSelected,
+      statKey: 'menuThemesSelected',
+      statRange: [0, 25],
+      xp: BASE_XP[1],
       hidden: true,
     });
 
@@ -686,10 +727,10 @@ export class AchievementTracker extends EventEmitter {
       name: i18next.t('achievements.tutorial-viewed.name'),
       description: i18next.t('achievements.tutorial-viewed.description'),
       badge: AchievementBadgeType.eSpecial1,
-      icon: AchievementBadgeIcon.eFallback,
+      icon: AchievementBadgeIcon.eTutorialViewed,
       statKey: 'tutorialViewed',
       statRange: [0, 1],
-      xp: BASE_XP[3],
+      xp: BASE_XP[1],
       hidden: true,
     });
 

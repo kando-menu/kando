@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="64"
+   height="64"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="backedUp.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true"
+     inkscape:zoom="13.71875"
+     inkscape:cx="24.528474"
+     inkscape:cy="34.733485"
+     inkscape:window-width="1793"
+     inkscape:window-height="1310"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1">
+    <sodipodi:guide
+       position="32,32"
+       orientation="-1,0"
+       id="guide1"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="32,32"
+       orientation="0,1"
+       id="guide2"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <path
+     stroke="none"
+     d="M 27,41 H 51 V 65 H 27 Z"
+     fill="none"
+     id="path1-1" />
+  <path
+     stroke="none"
+     d="M -16,-6 H 8 v 24 h -24 z"
+     fill="none"
+     id="path1" />
+  <path
+     stroke="none"
+     d="M 41,36 H 65 V 60 H 41 Z"
+     fill="none"
+     id="path1-6" />
+  <path
+     d="m 31.795175,20.147092 0.136465,-0.0084 0.141253,0.0084 0.07063,0.0096 0.07302,0.01556 0.132874,0.0407 a 1.1886834,1.1886834 0 0 1 0.259763,0.134071 l 0.124494,0.09816 0.305251,0.26096 a 13.167691,13.167691 0 0 0 8.605685,3.036948 l 0.409395,-0.01197 a 1.1970628,1.1970628 0 0 1 1.203048,0.858294 15.561816,15.561816 0 0 1 -11.022554,19.45227 1.1970628,1.1970628 0 0 1 -0.600926,0 15.561816,15.561816 0 0 1 -11.023751,-19.45227 1.1970628,1.1970628 0 0 1 1.203048,-0.858294 13.167691,13.167691 0 0 0 9.01508,-3.024978 l 0.314828,-0.269339 0.114918,-0.08978 a 1.1886834,1.1886834 0 0 1 0.259762,-0.134071 l 0.134071,-0.0407 a 1.1611509,1.1611509 0 0 1 0.142451,-0.02514 z"
+     id="path2"
+     style="font-variation-settings:normal;opacity:0.65;vector-effect:none;fill:#17152c;fill-opacity:1;stroke-width:1.0794;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:stroke fill markers;stop-color:#000000;stop-opacity:1" />
+</svg>

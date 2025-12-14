@@ -440,19 +440,32 @@ export enum AchievementBadgeType {
   eSpecial1,
   eSpecial2,
   eSpecial3,
+  eSpecial4,
+  eSpecial5,
+  eSpecial6,
 }
 
 /** The achievement icons are drawn on top of the achievement badges. */
 export enum AchievementBadgeIcon {
+  eAddedItems,
+  eBackedUp,
   eCancelor1,
   eCancelor2,
   eCancelor3,
   eCancelor4,
   eCancelor5,
+  eClickSelector,
+  eDeepMenu,
+  eDeletedAllMenus,
   eDepthSelector1,
   eDepthSelector2,
   eDepthSelector3,
+  eFullMenu,
+  eGamepadSelector,
   eGestureSelector,
+  eKeyboardSelector,
+  eMenuThemesSelected,
+  eRestored,
   eSelector1,
   eSelector2,
   eSelector3,
@@ -460,7 +473,7 @@ export enum AchievementBadgeIcon {
   eSelector5,
   eSettingsOpened,
   eSponsors,
-  eFallback, // This is used for achievements that do not have a specific icon.
+  eTutorialViewed,
 }
 
 /**

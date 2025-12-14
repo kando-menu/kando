@@ -914,11 +914,11 @@ export class KandoApp {
       }
     );
 
-    // Allow the renderer to increment an achievement statistic.
+    // Allow the renderer to increment achievement statistics.
     ipcMain.on(
-      'common.increment-achievement-stat',
-      (event, key: AchievementStatsNumberKeys) => {
-        this.achievementTracker.incrementStat(key);
+      'common.increment-achievement-stats',
+      (event, keys: AchievementStatsNumberKeys[]) => {
+        this.achievementTracker.incrementStats(keys);
       }
     );
   }

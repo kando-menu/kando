@@ -47,19 +47,32 @@ const ACHIEVEMENT_BADGES: Record<AchievementBadgeType, string> = {
   [AchievementBadgeType.eSpecial1]: require('../../../../assets/images/achievements/badges/special1.png'),
   [AchievementBadgeType.eSpecial2]: require('../../../../assets/images/achievements/badges/special2.png'),
   [AchievementBadgeType.eSpecial3]: require('../../../../assets/images/achievements/badges/special3.png'),
+  [AchievementBadgeType.eSpecial4]: require('../../../../assets/images/achievements/badges/special4.png'),
+  [AchievementBadgeType.eSpecial5]: require('../../../../assets/images/achievements/badges/special5.png'),
+  [AchievementBadgeType.eSpecial6]: require('../../../../assets/images/achievements/badges/special6.png'),
 } as const;
 
 // Type-safe record that ensures every icon type has a corresponding image.
 const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
+  [AchievementBadgeIcon.eAddedItems]: require('../../../../assets/images/achievements/icons/addedItems.svg'),
+  [AchievementBadgeIcon.eBackedUp]: require('../../../../assets/images/achievements/icons/backedUp.svg'),
   [AchievementBadgeIcon.eCancelor1]: require('../../../../assets/images/achievements/icons/cancelor1.svg'),
   [AchievementBadgeIcon.eCancelor2]: require('../../../../assets/images/achievements/icons/cancelor2.svg'),
   [AchievementBadgeIcon.eCancelor3]: require('../../../../assets/images/achievements/icons/cancelor3.svg'),
   [AchievementBadgeIcon.eCancelor4]: require('../../../../assets/images/achievements/icons/cancelor4.svg'),
   [AchievementBadgeIcon.eCancelor5]: require('../../../../assets/images/achievements/icons/cancelor5.svg'),
+  [AchievementBadgeIcon.eClickSelector]: require('../../../../assets/images/achievements/icons/clickSelector.svg'),
+  [AchievementBadgeIcon.eDeepMenu]: require('../../../../assets/images/achievements/icons/deepMenu.svg'),
+  [AchievementBadgeIcon.eDeletedAllMenus]: require('../../../../assets/images/achievements/icons/deletedAllMenus.svg'),
   [AchievementBadgeIcon.eDepthSelector1]: require('../../../../assets/images/achievements/icons/depthSelector1.svg'),
   [AchievementBadgeIcon.eDepthSelector2]: require('../../../../assets/images/achievements/icons/depthSelector2.svg'),
   [AchievementBadgeIcon.eDepthSelector3]: require('../../../../assets/images/achievements/icons/depthSelector3.svg'),
+  [AchievementBadgeIcon.eFullMenu]: require('../../../../assets/images/achievements/icons/fullMenu.svg'),
+  [AchievementBadgeIcon.eGamepadSelector]: require('../../../../assets/images/achievements/icons/gamepadSelector.svg'),
   [AchievementBadgeIcon.eGestureSelector]: require('../../../../assets/images/achievements/icons/gestureSelector.svg'),
+  [AchievementBadgeIcon.eKeyboardSelector]: require('../../../../assets/images/achievements/icons/keyboardSelector.svg'),
+  [AchievementBadgeIcon.eMenuThemesSelected]: require('../../../../assets/images/achievements/icons/menuThemesSelected.svg'),
+  [AchievementBadgeIcon.eRestored]: require('../../../../assets/images/achievements/icons/restored.svg'),
   [AchievementBadgeIcon.eSelector1]: require('../../../../assets/images/achievements/icons/selector1.svg'),
   [AchievementBadgeIcon.eSelector2]: require('../../../../assets/images/achievements/icons/selector2.svg'),
   [AchievementBadgeIcon.eSelector3]: require('../../../../assets/images/achievements/icons/selector3.svg'),
@@ -67,7 +80,7 @@ const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
   [AchievementBadgeIcon.eSelector5]: require('../../../../assets/images/achievements/icons/selector5.svg'),
   [AchievementBadgeIcon.eSettingsOpened]: require('../../../../assets/images/achievements/icons/settingsOpened.svg'),
   [AchievementBadgeIcon.eSponsors]: require('../../../../assets/images/achievements/icons/sponsors.svg'),
-  [AchievementBadgeIcon.eFallback]: require('../../../../assets/images/achievements/icons/fallback.svg'),
+  [AchievementBadgeIcon.eTutorialViewed]: require('../../../../assets/images/achievements/icons/tutorialViewed.svg'),
 } as const;
 
 // Gloss overlay for achievement badges.

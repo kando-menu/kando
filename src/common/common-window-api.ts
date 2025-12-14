@@ -173,10 +173,10 @@ export const COMMON_WINDOW_API = {
   /**
    * Increments the given achievement statistic by one.
    *
-   * @param key The key of the statistic to increment.
+   * @param keys The keys of the statistics to increment.
    */
-  incrementAchievementStat(key: AchievementStatsNumberKeys): void {
-    ipcRenderer.send('common.increment-achievement-stat', key);
+  incrementAchievementStats(keys: AchievementStatsNumberKeys[]): void {
+    ipcRenderer.send('common.increment-achievement-stats', keys);
   },
 };
 

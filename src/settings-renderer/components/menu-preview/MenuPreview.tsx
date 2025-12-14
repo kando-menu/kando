@@ -19,6 +19,7 @@ import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
+import { AchievementStatsNumberKeys } from '../../../common';
 import * as math from '../../../common/math';
 import * as utils from './utils';
 
@@ -690,11 +691,26 @@ export default function MenuPreview() {
                   );
 
                   if (item) {
+                    const addAchievementStats = (depth: number, siblings: number) => {
+                      const achievementStats: AchievementStatsNumberKeys[] = [
+                        'addedItems',
+                      ];
+                      if (siblings == 12) {
+                        achievementStats.push('addedItemsToFullMenu');
+                      }
+                      if (depth == 4) {
+                        achievementStats.push('addedItemsToDeepMenu');
+                      }
+
+                      window.commonAPI.incrementAchievementStats(achievementStats);
+                    };
+
                     if (dropIndex === -1 && dropInto) {
                       // Create new item in parent.
                       const parentPath = centerItemPath.slice(0, -1);
                       editMenuItem(selectedMenu, parentPath, (parent) => {
                         parent.children.push(item);
+                        addAchievementStats(parentPath.length, parent.children.length);
                         return parent;
                       });
                     } else if (dropIndex >= 0 && dropInto) {
@@ -702,18 +718,22 @@ export default function MenuPreview() {
                       const submenuPath = centerItemPath.concat(dropIndex);
                       editMenuItem(selectedMenu, submenuPath, (submenu) => {
                         submenu.children.push(item);
+                        addAchievementStats(submenuPath.length, submenu.children.length);
                         return submenu;
                       });
                     } else if (dropIndex >= 0) {
                       // Create new item among siblings and select it.
                       editMenuItem(selectedMenu, centerItemPath, (center) => {
                         center.children.splice(dropIndex, 0, item);
+                        addAchievementStats(
+                          centerItemPath.length,
+                          center.children.length
+                        );
+
                         return center;
                       });
                       selectChildPath(centerItemPath.concat(dropIndex));
                     }
-
-                    window.commonAPI.incrementAchievementStat('addedItems');
                   }
                 }
 

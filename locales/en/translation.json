@@ -423,9 +423,21 @@
       "name": "Clear the Dojo",
       "description": "Delete all of your menus."
     },
+    "full-menu": {
+      "name": "Breadth over Depth",
+      "description": "Create a menu with more than twelve items."
+    },
+    "deep-menu": {
+      "name": "Master of Depth",
+      "description": "Add a menu item to a four-level deep submenu."
+    },
     "sponsors-viewed": {
       "name": "Guardian of Kando",
       "description": "Consider becoming a sponsor of Kando."
+    },
+    "menu-themes-selected": {
+      "name": "Way of the Aesthete",
+      "description": "Switch the menu theme {{n}} times."
     },
     "tutorial-viewed": {
       "name": "The Journey Begins",

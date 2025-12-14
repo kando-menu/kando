@@ -254,7 +254,7 @@ export default function IntroDialog() {
 
             // Check if this is the last slide.
             if (swiper.activeIndex === slides.length - 1) {
-              window.commonAPI.incrementAchievementStat('tutorialViewed');
+              window.commonAPI.incrementAchievementStats(['tutorialViewed']);
             }
           }}>
           {slides.map((slide, index) => (
