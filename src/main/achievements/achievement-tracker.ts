@@ -495,7 +495,7 @@ export class AchievementTracker extends EventEmitter {
           state: AchievementState.eLocked,
           statKey: `selectionsSpeed${tier + 1}Depth${depth}` as keyof AchievementStats,
           statRange: [0, BASE_RANGES[tier + 1] * 2],
-          xp: BASE_XP[tier],
+          xp: BASE_XP[tier] * 2,
           hidden: tier > 0,
           reveals: tier < 5 ? `depth${depth}-selector${tier + 1}` : null,
         });
@@ -517,7 +517,7 @@ export class AchievementTracker extends EventEmitter {
         icon: AchievementBadgeIcon.eClickSelector,
         statKey: 'clickSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
-        xp: BASE_XP[tier] / 2,
+        xp: BASE_XP[tier],
       });
     }
 
@@ -536,7 +536,7 @@ export class AchievementTracker extends EventEmitter {
         icon: AchievementBadgeIcon.eKeyboardSelector,
         statKey: 'keyboardSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
-        xp: BASE_XP[tier] / 2,
+        xp: BASE_XP[tier],
       });
     }
 
@@ -555,7 +555,7 @@ export class AchievementTracker extends EventEmitter {
         icon: AchievementBadgeIcon.eGamepadSelector,
         statKey: 'gamepadSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
-        xp: BASE_XP[tier] / 2,
+        xp: BASE_XP[tier],
       });
     }
 
@@ -574,7 +574,7 @@ export class AchievementTracker extends EventEmitter {
         icon: AchievementBadgeIcon.eGestureSelector,
         statKey: 'gestureSelections',
         statRange: [BASE_RANGES[tier] * 5, BASE_RANGES[tier + 1] * 5],
-        xp: BASE_XP[tier],
+        xp: BASE_XP[tier] * 2,
       });
     }
 
@@ -612,7 +612,7 @@ export class AchievementTracker extends EventEmitter {
         icon: AchievementBadgeIcon.eBackedUp,
         statKey: 'settingsBackedUp',
         statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
-        xp: BASE_XP[tier] / 2,
+        xp: BASE_XP[tier],
       });
     }
 
@@ -631,7 +631,7 @@ export class AchievementTracker extends EventEmitter {
         icon: AchievementBadgeIcon.eRestored,
         statKey: 'settingsRestored',
         statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
-        xp: BASE_XP[tier] / 2,
+        xp: BASE_XP[tier],
       });
     }
 
@@ -644,13 +644,13 @@ export class AchievementTracker extends EventEmitter {
           tier: numbers[tier],
         }),
         description: i18next.t('achievements.added-items.description', {
-          n: BASE_RANGES[tier + 1],
+          n: BASE_RANGES[tier + 1] / 2,
         }),
         badge: standardBadges[tier],
         icon: AchievementBadgeIcon.eAddedItems,
         statKey: 'addedItems',
-        statRange: [BASE_RANGES[tier], BASE_RANGES[tier + 1]],
-        xp: BASE_XP[tier] / 2,
+        statRange: [BASE_RANGES[tier] / 2, BASE_RANGES[tier + 1] / 2],
+        xp: BASE_XP[tier],
       });
     }
 

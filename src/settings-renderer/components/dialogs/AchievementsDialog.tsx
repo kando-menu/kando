@@ -114,7 +114,9 @@ export default function AchievementsDialog() {
       <div className={classes.levelContainer}>
         <img height={256} src={LEVEL_BADGES[levelProgress.level - 1]} width={256} />
         <div className={classes.levelText}>
-          {levelProgress.xp} / {levelProgress.maxXp} XP
+          {levelProgress.maxXp === Infinity
+            ? `${levelProgress.xp} XP`
+            : `${levelProgress.xp} / ${levelProgress.maxXp} XP`}
         </div>
         <ProgressBar
           barStyle="big"
