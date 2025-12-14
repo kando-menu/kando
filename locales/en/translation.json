@@ -15,6 +15,7 @@
       "reset-confirmation-title": "Do you really want to reset all progress?",
       "reset-confirmation-message": "All achievements and level progress will be lost. This action cannot be undone.",
       "title": "Achievements",
+      "xp": "XP",
       "in-progress-button": "In Progress",
       "completed-button": "Completed",
       "reset-button-tooltip": "Reset all achievements and level progress"

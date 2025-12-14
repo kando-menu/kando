@@ -120,8 +120,8 @@ export default function AchievementsDialog() {
         <img height={256} src={LEVEL_BADGES[levelProgress.level - 1]} width={256} />
         <div className={classes.levelText}>
           {levelProgress.maxXp === Infinity
-            ? `${levelProgress.xp} XP`
-            : `${levelProgress.xp} / ${levelProgress.maxXp} XP`}
+            ? `${levelProgress.xp} ${i18next.t('settings.achievements-dialog.xp')}`
+            : `${levelProgress.xp} / ${levelProgress.maxXp} ${i18next.t('settings.achievements-dialog.xp')}`}
         </div>
         <ProgressBar
           barStyle="big"
@@ -143,7 +143,9 @@ export default function AchievementsDialog() {
                     <div className={classes.achievementData}>
                       <div className={classes.row}>
                         <div className={classes.achievementName}>{achievement.name}</div>
-                        <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                        <div className={classes.achievementStat}>
+                          {achievement.xp} {i18next.t('settings.achievements-dialog.xp')}
+                        </div>
                       </div>
                       <div className={classes.row} style={{ marginBottom: '4px' }}>
                         <div>{achievement.description}</div>
@@ -181,7 +183,9 @@ export default function AchievementsDialog() {
                     <div className={classes.achievementData}>
                       <div className={classes.row}>
                         <div className={classes.achievementName}>{achievement.name}</div>
-                        <div className={classes.achievementStat}>{achievement.xp} XP</div>
+                        <div className={classes.achievementStat}>
+                          {achievement.xp} {i18next.t('settings.achievements-dialog.xp')}
+                        </div>
                       </div>
                       <div className={classes.row}>
                         <div>{achievement.description}</div>
