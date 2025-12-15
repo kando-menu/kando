@@ -35,7 +35,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :wrench: Changed
 
-- The macOS builds are now created on macOS 14 instead of macOS 13.
+- The macOS builds are now created on macOS 15 instead of macOS 13.
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
