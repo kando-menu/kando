@@ -20,7 +20,6 @@
       "completed-button": "Completed",
       "reset-button-tooltip": "Reset all achievements and level progress"
     },
-    "backup-general-settings-title": "Backup General Settings…",
     "restore-backup": "Restore Backup…",
     "restore-general-settings-warning-title": "Do you really want to restore the general settings?",
     "restore-general-settings-warning-message": "This will overwrite your current application settings with the contents of the selected backup file! Your menus and menu collections will not be affected.",
