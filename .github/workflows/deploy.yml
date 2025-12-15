@@ -115,7 +115,7 @@ jobs:
     name: macOS
     strategy:
       matrix:
-        oos: [macos-14, macos-14-large]
+        oos: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
