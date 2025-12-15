@@ -90,7 +90,7 @@ jobs:
     name: macOS
     strategy:
       matrix:
-        os: [macos-14, macos-14-large]
+        os: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
     steps:
       # https://github.com/electron/forge/issues/2807
