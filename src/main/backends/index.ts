@@ -38,7 +38,10 @@ export function getBackend(): Backend | null {
     session = session.toLowerCase();
 
     if (
-      (desktop === 'gnome' || desktop === 'zorin:gnome' || desktop === 'unity') &&
+      (desktop === 'gnome' ||
+        desktop === 'zorin:gnome' ||
+        desktop === 'unity' ||
+        desktop === 'gnome-classic:gnome') &&
       session === 'wayland'
     ) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
