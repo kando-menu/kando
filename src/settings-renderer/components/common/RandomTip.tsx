@@ -24,12 +24,20 @@ type Props = {
 };
 
 /**
- * Shows a random tip of the day. The tip is chosen from the given list of tips.
+ * Shows a random tip of the day. The tip is chosen from the given list of tips. The tip
+ * is randomly selected on component mount and remains stable across re-renders.
  *
  * @param props - The properties for the tip component.
  * @returns A note element.
  */
 export default function RandomTip(props: Props) {
+  // Choose a random tip index only once on mount using useRef for stability
+  const selectedTipIndexRef = React.useRef<number | null>(null);
+
+  if (selectedTipIndexRef.current === null) {
+    selectedTipIndexRef.current = Math.floor(Math.random() * props.tips.length);
+  }
+
   return (
     <Note
       isCentered
@@ -38,7 +46,7 @@ export default function RandomTip(props: Props) {
       marginLeft="10%"
       marginRight="10%"
       marginTop={props.marginTop}>
-      {props.tips[Math.floor(Math.random() * props.tips.length)]}
+      {props.tips[selectedTipIndexRef.current]}
     </Note>
   );
 }
