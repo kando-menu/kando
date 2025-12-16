@@ -6,7 +6,8 @@
             "file-example": "file: URI 範例：",
             "url-example": "URL 範例：",
             "search-placeholder": "搜尋圖示…",
-            "hint": "[點此]({{link}})了解如何新增或建立您自己的圖示主題。"
+            "hint": "[點此]({{link}})了解如何新增或建立自己的圖示主題。",
+            "reload-button-tooltip": "重新載入所有圖示"
         },
         "not-bound": "未綁定",
         "file-picker": {
@@ -21,12 +22,12 @@
             "electron-version": "Electron 版本",
             "chrome-version": "Chrome 版本",
             "check-latest-release": "檢查最新發布",
-            "message": "我出於熱愛開發了 Kando。如果您在使用時，能感受到與我開發時相同的喜悅，歡迎請我[喝杯咖啡]({{link}})！\n\n💖 Simon",
+            "message": "我出於熱愛開發了 Kando。如果您在使用時，感受到與我開發時相同的喜悅，歡迎請我[喝杯咖啡]({{link}})！\n\n💖 Simon",
             "read-release-notes": "閱讀版本資訊"
         },
         "general-settings-dialog": {
             "title": "一般設定",
-            "message": "Kando 的所有設定都儲存在一個 JSON 檔案中，您可以對其進行編輯、分享或備份。點擊[這裡]({{link}})以開啟 config.json 檔案所在的目錄。",
+            "message": "您的所有選單與 Kando 設定都儲存在兩個 JSON 檔案中，您可以編輯、分享或備份這些檔案。點擊[這裡]({{link}})即可開啟檔案所在的目錄。",
             "app-behavior": "應用程式行為",
             "check-for-new-versions": "檢查新版本",
             "check-for-new-versions-info": "啟用後，當有新版本發布時，Kando 將會顯示通知。",
@@ -37,7 +38,7 @@
             "settings-window-color-scheme": "設定視窗配色方案",
             "system": "系統",
             "settings-window-flavor": "設定視窗風格",
-            "settings-window-flavor-info": "若您選擇透明風格，必須重新啟動設定視窗才能套用效果。",
+            "settings-window-flavor-info": "若選擇透明風格，必須重新啟動設定視窗才能套用效果。",
             "light": "淺色",
             "dark": "深色",
             "transparent-light": "透明（淺色）",
@@ -52,7 +53,7 @@
             "black": "黑色",
             "lazy-initialization": "延遲初始化",
             "menu-behavior": "選單行為",
-            "enable-marking-mode-info": "啟用畫筆模式後，您可以透過拖曳滑鼠來選取項目。",
+            "enable-marking-mode-info": "啟用畫筆模式後，可透過拖曳滑鼠來選取項目。",
             "enable-marking-mode": "啟用畫筆模式",
             "enable-turbo-mode": "啟用極速模式",
             "enable-turbo-mode-info": "啟用極速模式後，只需按住 Shift 或 Ctrl 等修飾鍵，即可進行手勢操作。",
@@ -61,7 +62,7 @@
             "right-mouse-button-selects-parent": "滑鼠右鍵選擇上層選單",
             "right-mouse-button-selects-parent-info": "若取消勾選，滑鼠右鍵則會關閉選單。",
             "menu-sounds": "選單音效",
-            "sound-theme-info": "音效主題是一組您與選單互動時所播放的音效。",
+            "sound-theme-info": "音效主題是一組與選單互動時播放的音效。",
             "volume": "音量",
             "center-click-zone-radius": "中心點擊區域半徑",
             "center-click-zone-radius-info": "選單中心可觸發「關閉選單」或「返回上一層」的區域半徑。預設值為 50 像素。",
@@ -75,7 +76,7 @@
             "gesture-pause-timeout-info": "將手勢暫停達此設定值的時間長度，即可觸發選取。預設值為 100 毫秒。",
             "gesture-jitter-threshold-info": "在手勢偵測中，小於此設定值的移動將會被忽略。預設值為 10 像素。",
             "gesture-pause-timeout": "手勢暫停逾時",
-            "reload-note": "當您重新載入選單主題時，即使當前選單正在顯示，CSS 的變更也會立即套用。若要套用對 theme.json 檔案的變更，則需要重新開啟選單。",
+            "reload-note": "當重新載入選單主題時，即使當前選單正在顯示，CSS 的變更也會立即套用。若要套用對 theme.json 檔案的變更，則須重新開啟選單。",
             "reload-menu-theme": "重新載入選單主題",
             "developer-options": "開發者選項",
             "reload-sound-theme": "重新載入音效主題",
@@ -83,10 +84,10 @@
             "menu-window-dev-tools": "檢視選單",
             "settings-window-dev-tools": "檢視設定",
             "invisible-settings-button": "隱藏設定按鈕",
-            "invisible-settings-button-info": "您依然可以使用此按鈕，當滑鼠懸停其上時便會顯示。",
+            "invisible-settings-button-info": "您依然可使用此按鈕，當滑鼠懸停其上時便會顯示。",
             "settings-button-position-info": "選擇設定按鈕要顯示在螢幕的哪個角落。",
             "bottom-right": "右下角",
-            "settings-window-color-scheme-info": "若您選擇「系統」，設定視窗將會採用與您作業系統相同的配色方案。",
+            "settings-window-color-scheme-info": "若選擇「系統」，設定視窗將會採用與作業系統相同的配色方案。",
             "none": "無",
             "sakura-system": "櫻花粉（系統）",
             "move-pointer-to-menu-center": "將指標移至選單中心",
@@ -94,15 +95,15 @@
             "transparent-dark": "透明（深色）",
             "minimum-submenu-distance": "最小子選單距離",
             "learn-how-to-add-sound-themes": "[點此]({{link}})了解如何為 Kando 新增音效主題！",
-            "lazy-initialization-info": "若啟用此選項，選單視窗只會在您首次開啟時才建立。這會使第一次開啟選單的速度稍慢，但可以避免因 Kando 在登入過程中過早啟動而造成問題。此選項預設為停用。",
+            "lazy-initialization-info": "若啟用此選項，選單視窗只會在首次開啟時才建立。這會使第一次開啟選單的速度稍慢，但可以避免因 Kando 在登入過程中過早啟動而造成問題。此選項預設為停用。",
             "move-pointer-to-menu-center-info": "若勾選此選項，滑鼠指標將在必要時被移至選單或子選單的中心。例如，當選單在太靠近螢幕邊緣的位置開啟，或是在置中模式下開啟時，便會觸發此行為。",
             "enable-gamepad-support": "啟用遊戲手把支援",
             "sound-theme": "音效主題",
-            "advanced-menu-options-note": "一般來說，您可以將這些設定保留在預設值即可。",
+            "advanced-menu-options-note": "一般來說，這些設定保留在預設值即可。",
             "movement-threshold-info": "在畫筆或極速模式中，小於此設定值的滑鼠移動將會被忽略。預設值為 15 像素。",
             "volume-info": "音效主題的整體音量。預設值為 0.5。",
-            "enable-gamepad-support-info": "若勾選此項，您便可使用已連接的遊戲手把控制選單。",
-            "fixed-stroke-length-info": "通常，當您停止移動或轉向時，項目就會被選取。若將此值設定為大於 0 的值，則此行為將會改變：現在，只有當您從中心點拖曳的距離超過此設定值時，項目才會被選取。預設值為 0 像素。",
+            "enable-gamepad-support-info": "若勾選此項，便可使用已連接的遊戲手把控制選單。",
+            "fixed-stroke-length-info": "通常，當停止移動或轉向時，項目就會被選取。若將此值設定為大於 0 的值，則此行為將會改變：現在，只有當從中心點拖曳的距離超過此設定值時，項目才會被選取。預設值為 0 像素。",
             "fixed-stroke-length": "固定筆畫距離",
             "press-again-behavior": "再次按下快捷鍵的行為",
             "cycle-menus": "循環切換符合的選單",
@@ -111,38 +112,43 @@
             "press-again-behavior-info": "此選項決定當選單已顯示時，再次按下快捷鍵會執行的行為。如果有多個選單綁定至同一個快捷鍵，您可以用此功能來循環切換所有符合條件的選單。若要將極速模式與「無動作」以外的選項搭配使用，請務必只按住修飾鍵。",
             "localization-label": "語言",
             "auto-language": "使用系統語言",
-            "localization-info": "需重新啟動 Kando，語言設定才會生效。",
+            "localization-info": "須重新啟動 Kando，語言設定才會生效。",
             "app-settings": "應用程式設定",
             "cycle-from-recent": "顯示下一個選單（記住最後）",
             "cycle-from-first": "顯示下一個選單（從頭開始）",
             "keep-input-focus": "保持作用中應用程式的焦點",
-            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需要在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。",
+            "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，但若需在選單開啟期間讓其他應用程式保持焦點，此選項會有所幫助。",
             "hardware-acceleration": "啟用硬體加速",
-            "hardware-acceleration-info": "此選項可以提升應用程式的效能，但也可能導致一些顯示異常。此設定需重新啟動 Kando 才會生效。"
+            "hardware-acceleration-info": "此選項可提升應用程式的效能，但也可能導致一些顯示異常。此設定須重新啟動 Kando 才會生效。",
+            "backup-and-restore": "備份與還原",
+            "backup-menus": "備份 menus.json…",
+            "backup-settings": "備份 config.json…",
+            "restore-menus": "還原 menus.json…",
+            "restore-settings": "還原 config.json…"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
-            "slide1-text": "滑動瀏覽這些投影片，來了解 Kando 能為您做些什麼！您可以使用左側的章節標記，快速跳轉至介紹的特定部分。",
+            "slide1-text": "滑動瀏覽這些投影片，來了解 Kando 能為您做些什麼！可使用左側的章節標記，快速跳轉至介紹的特定部分。",
             "slide2-title": "開啟選單！",
             "slide2-text-standard": "如果您是第一次啟動 Kando，可以按下 Ctrl+Space 開啟範例選單。要關閉選單，則可以按下 Escape 鍵，或在螢幕的任何位置點擊滑鼠右鍵。",
-            "slide2-text-no-shortcuts": "如果您是第一次啟動 Kando，[可能需要在 Linux 上執行一些額外步驟，才能讓全域熱鍵正常工作]({{link}})。設定完成以後，您便可以透過 Escape 鍵或滑鼠右鍵來關閉選單。",
-            "slide3-hint1": "您也可以點擊這裡來關閉選單。",
+            "slide2-text-no-shortcuts": "如果您是第一次啟動 Kando，[可能需在 Linux 上執行一些額外步驟，才能讓全域熱鍵正常工作]({{link}})。設定完成以後，便可以透過 Escape 鍵或滑鼠右鍵來關閉選單。",
+            "slide3-hint1": "也可點擊此處關閉選單。",
             "slide3-hint2": "點擊此處的任何位置即可選取項目。",
-            "slide3-text": "在 Kando 中，**您的整個螢幕都是可點擊的目標**！您不需要瞄準圖示，只需在項目所屬的扇形區域內點擊任何位置即可。這大大提升了選取項目的效率。",
-            "slide4-text": "子選單**永遠**會在您滑鼠指標的位置開啟。您**不需要等待動畫結束**。相信您的肌肉記憶，直接繼續進行選取！",
+            "slide3-text": "在 Kando 中，**整個螢幕都是可點擊的目標**！不需瞄準圖示，只需在項目所屬的扇形區域內點擊任何位置即可。這大大提升了選取項目的效率。",
+            "slide4-text": "子選單**永遠**會在滑鼠指標的位置開啟。**不需等待動畫結束**。相信您的肌肉記憶，直接繼續進行選取！",
             "slide5-hint": "點擊此處的任何位置即可返回上一層。",
             "slide5-text": "若要**返回**，請點擊上層選單的扇形區域或選單中心。",
-            "slide6-text": "如此一來，您便可以快速地探索選單結構。",
+            "slide6-text": "如此一來，便可快速地探索選單結構。",
             "slide7-title": "提升速度：畫筆模式",
-            "slide7-text": "點擊並拖曳滑鼠經過項目，即可進入畫筆模式。**若您暫停移動指標或轉向，便會開啟目前指標下的子選單！**記住通往某個項目的路徑，並靈活地畫出 Z 字形來開啟它。",
-            "slide8-text": "**選單會對您的滑鼠移動做出反應！**子選單會在您需要時開啟。稍加練習後，您甚至不需要看著選單就能選取項目。",
+            "slide7-text": "點擊並拖曳滑鼠經過項目，即可進入畫筆模式。**若暫停移動指標或轉向，便會開啟目前指標下的子選單！**記住通往某個項目的路徑，並靈活地畫出 Z 字形來開啟它。",
+            "slide8-text": "**選單會對滑鼠移動做出反應！**子選單會在需要時開啟。稍加練習後，甚至不需看著選單就能選取項目。",
             "slide9-title": "快如閃電：極速模式",
-            "slide9-text": "若您在開啟選單後**持續按住一個按鍵**（例如_Ctrl_、_Shift_或_Alt_），您便只需移動指標即可進行選取。無需點擊或拖曳。",
+            "slide9-text": "若在開啟選單後**持續按住一個按鍵**（例如_Ctrl_、_Shift_或_Alt_），便只需移動指標即可進行選取。無需點擊或拖曳。",
             "slide10-text": "**不必等待動畫結束！**直接畫出 Z 字形在選單中穿梭。這是選取項目最快的方式！",
-            "slide11-text": "**別擔心會不小心選錯！**在畫筆模式中，只有在您放開滑鼠按鈕時，動作才會被執行；在極速模式中，則是在放開鍵盤按鍵時。善用這點來探索選單吧！",
+            "slide11-text": "**別擔心會不小心選錯！**在畫筆模式中，只有在放開滑鼠按鈕時，動作才會被執行；在極速模式中，則是在放開鍵盤按鍵時。善用這點來探索選單吧！",
             "slide12-title": "還有更多！",
-            "slide12-text": "Kando 的可自訂性極高。您可以用它來開啟應用程式、檔案、執行鍵盤巨集以及許多其他操作。還可以[變更選單樣式]({{link1}})、[新增圖示主題]({{link2}})，甚至在您的選單中[使用音效]({{link3}})！",
-            "slide13-text": "如果您在任何時候需要幫助，歡迎隨時加入我們的 [Discord 伺服器]({{link1}})或查閱[說明文件]({{link2}})！",
+            "slide12-text": "Kando 的可自訂性極高。您可以用它來開啟應用程式、檔案、執行鍵盤巨集以及許多其他操作。還可以[變更選單樣式]({{link1}})、[新增圖示主題]({{link2}})，甚至在選單中[使用音效]({{link3}})！",
+            "slide13-text": "如果在任何時候需要幫助，歡迎隨時加入我們的 [Discord 伺服器]({{link1}})或查閱[說明文件]({{link2}})！",
             "chapter1": "快速入門",
             "chapter2": "畫筆模式",
             "chapter3": "極速模式",
@@ -170,15 +176,17 @@
             "light-dark-mode-info": "啟用後，您可以根據系統的淺色或深色模式，分別選擇不同的主題與配色。",
             "open-theme-directory": "開啟主題目錄",
             "get-themes-online": "線上取得主題",
-            "create-your-own-themes": "建立您自己的主題",
-            "author": "由 {{author}} 製作"
+            "create-your-own-themes": "建立自己的主題",
+            "author": "由 {{author}} 製作",
+            "selection-wedges-info": "若啟用且所選主題支援時，選單項目的可選取區域將會以高亮顯示。",
+            "selection-wedges": "繪製項目選取區域"
         },
         "all-menus": "所有選單",
         "search-menus-placeholder": "搜尋選單…",
-        "no-menus": "您沒有任何選單。",
-        "no-menus-note": "如果您不小心刪除了最後一個選單，可以使用還原按鈕來復原。",
+        "no-menus": "您有任何選單。",
+        "no-menus-note": "如果不小心刪除了最後一個選單，可以使用還原按鈕來復原。",
         "no-matching-menus": "找不到選單。",
-        "add-collection-tooltip": "建立新的選單收藏夾。使用收藏夾來按標籤分組您的選單！",
+        "add-collection-tooltip": "建立新的選單收藏夾。使用收藏夾來按標籤分組選單！",
         "no-matching-menus-note": "或許可以試試其他的搜尋關鍵字？",
         "create-menu-button": "新增選單",
         "duplicate-menu": "複製選單",
@@ -187,17 +195,17 @@
         "undo": "還原",
         "redo": "重做",
         "menu-behavior": "選單行為",
-        "menu-behavior-info": "在您啟用這些選項前，我們建議您[在此]({{link}})了解我們偏好這些 Kando 預設行為的原因！",
+        "menu-behavior-info": "在啟用這些選項前，建議您[在此]({{link}})了解我們為什麼偏好這些 Kando 的預設行為！",
         "centered-mode": "置中模式",
         "empty-collection": "此收藏夾為空。",
-        "empty-collection-note": "您可以編輯上方的標籤，或使用下方的按鈕將一個全新的選單新增至此收藏夾。",
+        "empty-collection-note": "可以編輯上方的標籤，或使用下方的按鈕將一個全新的選單新增至此收藏夾。",
         "centered-mode-info": "在螢幕中心開啟選單，而非在指標位置。",
         "anchored-mode": "錨定模式",
         "hover-mode": "懸停模式",
         "anchored-mode-info": "在與上層選單相同的位置開啟子選單。勾選此項將會停用畫筆模式及極速模式。",
         "hover-mode-info": "僅供進階使用者使用！透過懸停在項目上來選取它們。",
         "menu-conditions": "選單條件",
-        "menu-conditions-info": "您可以將多個選單綁定至同一組快捷鍵，並依據不同條件來決定要顯示哪一個選單。",
+        "menu-conditions-info": "可以將多個選單綁定至同一組快捷鍵，並依據不同條件來決定要顯示哪一個選單。",
         "app-condition-placeholder": "應用程式名稱",
         "app-condition": "指定應用程式",
         "app-condition-info": "僅在指定應用程式為焦點時才顯示此選單。此處支援正規表達式，例如 /firefox|chrome/i。",
@@ -221,17 +229,17 @@
         "delete-menu-item": "刪除選單項目",
         "screen-area-picker": {
             "top-left-value": "左：{{x}}，上：{{y}}",
-            "top-left": "將此圖示拖曳至您選取區域的左上角。",
+            "top-left": "將此圖示拖曳至選取區域的左上角。",
             "bottom-right-value": "右：{{x}}，下：{{y}}",
-            "bottom-right": "將此圖示拖曳至您選取區域的右下角。",
+            "bottom-right": "將此圖示拖曳至選取區域的右下角。",
             "title": "選取螢幕區域",
-            "valid": "太好了！您已選取一個有效的區域。",
+            "valid": "太好了！已選取一個有效的區域。",
             "invalid": "請確保左上角位於右下角的左上方。",
             "confirm": "使用此區域"
         },
         "cancel": "取消",
         "window-picker-dialog": {
-            "result": "您已選擇「{{name}}」。",
+            "result": "已選擇「{{name}}」。",
             "instructions": "點擊下方按鈕，並在接下來的五秒內點選目標視窗。",
             "restart-countdown": "重新倒數",
             "start-countdown": "開始倒數",
@@ -240,30 +248,42 @@
             "pick-window-title-title": "選取視窗標題",
             "confirm": "使用此值"
         },
-        "shortcut-info": "開啟此選單的快捷鍵。它必須包含一個普通按鍵以及任意數量的修飾鍵，如 Ctrl、Alt 或 Shift。錄製時，您不需要一次按下所有按鍵，也可以一個接一個地按。如果某個快捷鍵已被另一個選單綁定，此功能會有所幫助！",
+        "shortcut-info": "開啟此選單的快捷鍵。它必須包含一個普通按鍵以及任意數量的修飾鍵，如 Ctrl、Alt 或 Shift。錄製時，不需一次按下所有按鍵，可以一個接一個地按。如果某個快捷鍵已被另一個選單綁定，此功能會有所幫助！",
         "area-condition-info": "僅在指標位於螢幕上指定區域時才顯示此選單。此區域是以像素為單位，相對於主螢幕左上角的座標。若將欄位留空，該方向將不設邊界。",
         "add-menu-item-hint": "將此項目拖曳至上方的選單即可新增！",
         "app-picker": {
             "hint": "您也可以將應用程式從開始選單拖曳至 Kando 的選單編輯器！",
             "search-placeholder": "搜尋應用程式…",
             "use-selected": "使用所選項"
-        }
+        },
+        "restore-backup": "還原備份…",
+        "restore-general-settings-warning-title": "確定要還原一般設定嗎？",
+        "restore-general-settings-warning-message": "這將會使用所選備份檔案的內容，覆寫目前的應用程式設定！您的選單與收藏夾不會受到影響。",
+        "restore-general-settings-error-title": "載入一般設定備份失敗！",
+        "restore-general-settings-success-title": "成功！",
+        "restore-general-settings-success-message": "您的一般設定已從備份檔案還原。",
+        "restore-menu-settings-warning-title": "確定要還原選單設定嗎？",
+        "restore-menu-settings-warning-message": "這將會使用所選備份檔案的內容，覆寫目前的選單與收藏夾！",
+        "restore-menu-settings-error-title": "載入選單備份失敗！",
+        "restore-menu-settings-success-title": "成功！",
+        "restore-menu-settings-success-message": "您的選單與收藏夾已從備份檔案還原。",
+        "backup-general-settings-title": "備份一般設定…"
     },
     "menu-items": {
         "text": {
-            "tip-1": "此操作會使用您的剪貼簿來貼上文字。執行後，剪貼簿的內容將會是這段文字。",
+            "tip-1": "此操作會使用剪貼簿來貼上文字。執行後，剪貼簿的內容將會是這段文字。",
             "name": "貼上文字",
             "description": "插入指定的文字。",
             "placeholder": "輸入任何文字…"
         },
         "hotkey": {
-            "tip-3": "點擊[此連結]({{link}})以查看所有有效的按鍵名稱。",
+            "tip-3": "點擊[此連結]({{link}})查看所有有效的按鍵名稱。",
             "name": "模擬快捷鍵",
             "description": "按下組合鍵。",
             "hotkey": "快捷鍵",
-            "hotkey-info": "當此項目被選取時，將會觸發此快捷鍵。錄製時，您不需要一次按下所有按鍵，也可以一個接一個地按。如果某個快捷鍵已被綁定至全域操作，此功能會有所幫助！",
+            "hotkey-info": "當此項目被選取時，將會觸發此快捷鍵。錄製時，不需一次按下所有按鍵，也可以一個接一個地按。如果某個快捷鍵已被綁定至全域操作，此功能會有所幫助！",
             "recording-placeholder": "輸入快捷鍵…",
-            "tip-1": "錄製快捷鍵時，您不需要一次按下所有按鍵，可以一個接一個地按。",
+            "tip-1": "錄製快捷鍵時，不需一次按下所有按鍵，可以一個接一個地按。",
             "tip-2": "如果某個按鍵因已被系統使用而無法錄製，請嘗試直接輸入其名稱。"
         },
         "settings": {
@@ -276,19 +296,19 @@
             "name": "執行巨集",
             "description": "輸入一段鍵盤巨集。",
             "recording-placeholder": "按下任意按鍵…",
-            "tip-2": "您也可以手動編輯巨集。如果您想要調整按鍵的時序，此功能會有所幫助。",
-            "tip-1": "預設情況下，Kando 會在每個按鍵事件前加入 10 毫秒的延遲。您可以使用「delay」屬性來變更此值。"
+            "tip-2": "您也可以手動編輯巨集。如果想調整按鍵的時序，此功能會有所幫助。",
+            "tip-1": "預設情況下，Kando 會在每個按鍵事件前加入 10 毫秒的延遲。可以使用「delay」屬性來變更此值。"
         },
         "command": {
             "name": "執行命令",
             "description": "啟動應用程式或指令碼。",
             "placeholder": "輸入任何命令…",
             "isolated": "在隔離環境中執行",
-            "isolated-info": "此選項會將命令在一個純淨的環境中執行，代表它不會繼承 Kando 的任何環境變數。這有助於解決無法正常啟動命令所遇到的問題。",
+            "isolated-info": "此選項會將命令在一個純淨的環境中執行，代表它不會繼承 Kando 的任何環境變數。這有助於解決無法正常啟動命令的問題。",
             "detached-info": "此選項會將命令與 Kando 分離，使其在 Kando 關閉後仍能繼續執行。停用此選項或許能解決某些無法正常啟動命令的問題。",
             "detached": "以分離模式執行",
-            "tip-2": "如果執行檔的路徑中包含空格，您應使用引號（\"\"）將其包裹起來。",
-            "tip-1": "您可以使用「執行命令」項目類型，來啟動應用程式或指令碼。",
+            "tip-2": "如果執行檔的路徑中包含空格，應使用引號（\"\"）將其包裹起來。",
+            "tip-1": "可以使用「執行命令」項目類型，來啟動應用程式或指令碼。",
             "tip-4": "使用 {{window_name}} 來插入開啟選單時的焦點視窗標題。",
             "tip-3": "使用 {{app_name}} 來插入開啟選單時的焦點應用程式名稱。",
             "tip-5": "使用 {{pointer_x}} 與 {{pointer_y}} 來插入開啟選單時的指標位置。",
@@ -299,7 +319,7 @@
             "name": "開啟檔案",
             "description": "開啟檔案或資料夾。",
             "placeholder": "選擇檔案或資料夾…",
-            "tip-1": "您可以使用此項目類型來開啟檔案或資料夾。"
+            "tip-1": "可使用此項目類型來開啟檔案或資料夾。"
         },
         "redirect": {
             "name": "選單跳轉",
@@ -309,27 +329,27 @@
             "name": "子選單",
             "description": "用以包含其他選單項目。",
             "tip-1": "子選單可用於將項目分組。",
-            "tip-2": "您可以在子選單中再建立子選單。",
+            "tip-2": "可在子選單中再建立子選單。",
             "tip-3": "子選單可用於建立複雜的選單結構。",
-            "tip-6": "您可以在預覽中透過拖曳來重新排序項目。",
-            "tip-7": "您可以使用下方的垃圾筒圖示來刪除選單或項目。",
-            "tip-4": "建議您避免在子選單中加入超過十二個項目。八個是比較理想的數量。",
-            "tip-5": "您可以使用預覽中的鎖頭小圖示，將項目固定在選單中的指定位置。"
+            "tip-6": "可在預覽中透過拖曳來重新排序項目。",
+            "tip-7": "可使用下方的垃圾筒圖示來刪除選單或項目。",
+            "tip-4": "建議避免在子選單中加入超過十二個項目。八個是比較理想的數量。",
+            "tip-5": "可使用預覽中的鎖頭小圖示，將項目固定在選單中的指定位置。"
         },
         "uri": {
             "name": "開啟 URI",
-            "tip-3": "您可以使用「開啟 URI」項目類型，來開啟 mailto: 連結。",
+            "tip-3": "可使用「開啟 URI」項目類型，來開啟 mailto: 連結。",
             "description": "開啟網站或其他連結。",
             "placeholder": "輸入任何 URI…",
-            "tip-1": "您可以使用「開啟 URI」項目類型，透過 http:// 協定來開啟網站。",
-            "tip-2": "您可以用此功能來呼叫自訂的 URI 配置，例如 slack:// 或 zoommtg://。",
+            "tip-1": "可使用「開啟 URI」項目類型，透過 http:// 協定來開啟網站。",
+            "tip-2": "可用此功能來呼叫自訂的 URI 配置，例如 slack:// 或 zoommtg://。",
             "tip-4": "使用 {{app_name}} 來插入開啟選單時的焦點應用程式名稱。",
             "tip-5": "使用 {{window_name}} 來插入開啟選單時的焦點視窗標題。",
             "tip-6": "使用 {{pointer_x}} 與 {{pointer_y}} 來插入開啟選單時的指標位置。"
         },
         "common": {
             "delayed-option": "等待淡出動畫結束",
-            "delayed-option-info": "當操作目標為需要取得焦點的視窗時，此選項會有所幫助。"
+            "delayed-option-info": "當操作目標為需取得焦點的視窗時，此選項會有所幫助。"
         }
     },
     "example-menu": {
@@ -402,16 +422,16 @@
     },
     "backends": {
         "hyprland": {
-            "shortcut-info": "在 Hyprland 上，Kando 無法直接綁定全域快捷鍵。請改為在此處指定一個快捷鍵 ID，並於您的 hyprland.conf 設定檔中，透過類似「bind = CTRL, Space, global, kando:example-menu」的指令來綁定。請將 example-menu 替換為您在此處所選擇的 ID。"
+            "shortcut-info": "在 Hyprland 上，Kando 無法直接綁定全域快捷鍵。請改為在此處指定一個快捷鍵 ID，並於您的 hyprland.conf 設定檔中，透過類似「bind = CTRL, Space, global, kando:example-menu」的指令來綁定。請將 example-menu 替換為在此處選擇的 ID。"
         },
         "kde-wayland": {
-            "shortcut-info": "在 KDE / Wayland 上，Kando 無法直接綁定全域快捷鍵。請改為在此處指定一個快捷鍵 ID，然後至 KDE 系統設定的全域快捷鍵中，於 KWin 區塊內搜尋此 ID。您可以在該處指派用以開啟此選單的快捷鍵。"
+            "shortcut-info": "在 KDE / Wayland 上，Kando 無法直接綁定全域快捷鍵。請改為在此處指定一個快捷鍵 ID，然後至 KDE 系統設定的全域快捷鍵中，於 KWin 區塊內搜尋此 ID。您可在該處指派快捷鍵以開啟此選單。"
         },
         "gnome": {
             "error": "無法連線至 GNOME Shell 擴充功能 Kando Integration。您可以從此處取得：{{link}}"
         },
         "niri": {
-            "shortcut-info": "Niri 尚不支援全域快捷鍵。但您可透過命令列執行 'kando --menu \"選單名稱\"'，或在您的 Niri 設定檔中設定，來開啟此選單。"
+            "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列執行 'kando --menu \"選單名稱\"'，或在您的 Niri 設定檔中設定以開啟此選單。"
         }
     }
 }
