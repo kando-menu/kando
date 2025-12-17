@@ -274,6 +274,7 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
   @autoreleasepool {
     NSArray<NSString*>* appDirs = @[
       @"/Applications", @"/System/Applications", @"/System/Library/CoreServices",
+       @"/System/Library/CoreServices/Applications",
       [NSHomeDirectory() stringByAppendingPathComponent:@"Applications"],
       [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Applications"]
     ];

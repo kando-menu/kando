@@ -35,6 +35,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 ### :wrench: Changed
 
 - The macOS builds are now created on macOS 15 instead of macOS 13.
+- Added `/System/Library/CoreServices` and `/System/Library/CoreServices/Applications` to the app and icon search paths on macOS. Thanks to [@LitoMore](https://github.com/LitoMore) for this!
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
