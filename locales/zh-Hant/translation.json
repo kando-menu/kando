@@ -470,8 +470,67 @@
             "description": "選取 {{n}} 個項目。"
         },
         "depth-selector": {
-            "name1": "{{attribute}}切割者",
-            "name2": "{{attribute}}雙層切割者"
-        }
+            "name1": "{{attribute}}刀客",
+            "name2": "{{attribute}}雙層刀客",
+            "name3": "{{attribute}}深淵刀客",
+            "description": "在 {{time}} 毫秒內，於第 {{depth}} 層選取 {{n}} 個項目。"
+        },
+        "click-selector": {
+            "name": "{{attribute}}點擊霸主",
+            "description": "使用滑鼠點擊選取 {{n}} 個項目。"
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}}快捷鍵英豪",
+            "description": "使用鍵盤選取 {{n}} 個項目。"
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}}手把戰士",
+            "description": "使用遊戲手把選取 {{n}} 個項目。"
+        },
+        "gesture-selector": {
+            "name": "{{attribute}}疾風忍者",
+            "description": "使用極速模式或畫筆模式選取 {{n}} 個項目。"
+        },
+        "settings-opened": {
+            "name": "旅程即是獎賞 {{tier}}",
+            "description": "開啟設定視窗 {{n}} 次。"
+        },
+        "backup": {
+            "name": "先見之路 {{tier}}",
+            "description": "備份您的選單或設定 {{n}} 次。"
+        },
+        "restore": {
+            "name": "再起之機 {{tier}}",
+            "description": "還原備份 {{n}} 次。"
+        },
+        "added-items": {
+            "name": "Kando 之道 {{tier}}",
+            "description": "在選單編輯器中建立 {{n}} 個項目。"
+        },
+        "deleted-all-menus": {
+            "name": "淨空道場",
+            "description": "刪除您的所有選單。"
+        },
+        "full-menu": {
+            "name": "廣度勝於深度",
+            "description": "建立一個包含超過十二個項目的選單。"
+        },
+        "deep-menu": {
+            "name": "深淵宗師",
+            "description": "將項目新增至深度達四層的子選單中。"
+        },
+        "sponsors-viewed": {
+            "name": "Kando 守護者",
+            "description": "考慮成為 Kando 的贊助者。"
+        },
+        "menu-themes-selected": {
+            "name": "美學之道",
+            "description": "切換選單主題 {{n}} 次。"
+        },
+        "tutorial-viewed": {
+            "name": "旅程的起點",
+            "description": "完成 Kando 的導覽教學。"
+        },
+        "completed-title": "成就已解鎖！"
     }
 }
