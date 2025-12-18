@@ -72,8 +72,8 @@
     "achievements": {
         "attributes": {
             "novice": "Anfänger-",
-            "capable": "Fähiger ",
-            "skilled": "Erfahrener ",
+            "capable": "Fähiger",
+            "skilled": "Erfahrener",
             "expert": "Experten-",
             "master": "Meister-"
         },
@@ -330,7 +330,7 @@
             "top-right": "Oben rechts",
             "bottom-left": "Unten links",
             "bottom-right": "Unten rechts",
-            "message": "Alle Einstellungen von Kando werden in einer JSON-Datei gespeichert, die Sie auch bearbeiten, teilen oder sichern können. Klicken Sie [hier]({{link}}), um das Verzeichnis zu öffnen, in dem die config.json gespeichert ist.",
+            "message": "Alle Einstellungen von Kando werden in zwei JSON-Dateien gespeichert, die Sie auch bearbeiten, teilen oder sichern können. Klicken Sie [hier]({{link}}), um das Verzeichnis zu öffnen, in dem die Dateien gespeichert sind.",
             "app-behavior": "App-Verhalten",
             "settings-window-color-scheme": "Farbschema des Einstellungsfensters",
             "settings-window-color-scheme-info": "Wenn Sie 'System' wählen, verwendet das Einstellungsfenster dasselbe Farbschema wie Ihr Betriebssystem.",
@@ -409,7 +409,14 @@
             "cycle-from-first": "Nächstes Menü anzeigen (am Anfang starten)",
             "keep-input-focus-info": "Wenn aktiviert, erhält das Menü beim Öffnen keinen Tastatureingabefokus. Das deaktiviert den Turbo-Modus, kann aber nützlich sein, wenn andere Anwendungen fokussiert bleiben sollen, während das Menü geöffnet ist.",
             "hardware-acceleration": "Hardwarebeschleunigung aktivieren",
-            "hardware-acceleration-info": "Diese Option kann die Leistung der App erhöhen, kann aber auch zu Darstellungsfehlern führen. Sie müssen Kando neu starten, um diese Einstellung anzuwenden."
+            "hardware-acceleration-info": "Diese Option kann die Leistung der App erhöhen, kann aber auch zu Darstellungsfehlern führen. Sie müssen Kando neu starten, um diese Einstellung anzuwenden.",
+            "enable-achievements-info": "Wenn aktiviert, wird Kando den Fortschritt Ihrer Errungenschaften aufzeichnen.",
+            "enable-achievements": "Errungenschaften verfolgen",
+            "backup-and-restore": "Backup und Wiederherstellung",
+            "backup-menus": "menus.json sichern…",
+            "backup-settings": "config.json sichern…",
+            "restore-menus": "menus.json wiederherstellen…",
+            "restore-settings": "config.json wiederherstellen…"
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
@@ -478,7 +485,9 @@
             "no-accent-colors": "Dieses Design unterstützt keine Akzentfarben.",
             "get-themes-online": "Designs online abrufen",
             "create-your-own-themes": "Erstellen Sie Ihre eigenen Designs",
-            "open-theme-directory": "Design-Verzeichnis öffnen"
+            "open-theme-directory": "Design-Verzeichnis öffnen",
+            "selection-wedges-info": "Wenn aktiviert und vom aktiven Menü-Design unterstützt, werden die auswählbaren Bereich der Menüeinträge hervorgehoben.",
+            "selection-wedges": "Klickbereiche hervorheben"
         },
         "not-bound": "Nicht gebunden",
         "redo": "Wiederholen",
@@ -527,6 +536,14 @@
         "backup-general-settings-title": "Einstellungen sichern…",
         "restore-backup": "Einstellungen Wiederherstellen…",
         "restore-general-settings-warning-title": "Möchten Sie wirklich die Einstellungen wiederherstellen?",
-        "restore-general-settings-warning-message": "Dies wird Ihre aktuellen Einstellungen mit den Inhalten der ausgewählten Backup-Datei überschreiben! Ihre Menüs und Menüsammlungen werden nicht überschrieben."
+        "restore-general-settings-warning-message": "Dies wird Ihre aktuellen Einstellungen mit den Inhalten der ausgewählten Backup-Datei überschreiben! Ihre Menüs und Menüsammlungen werden nicht überschrieben.",
+        "restore-general-settings-error-title": "Das Laden der Sicherungsdatei ist fehlgeschlagen!",
+        "restore-general-settings-success-title": "Erfolg!",
+        "restore-general-settings-success-message": "Ihre allgemeinen Einstellungen wurden aus der Sicherungsdatei wiederhergestellt.",
+        "restore-menu-settings-warning-title": "Möchten Sie wirklich die Menüeinstellungen wiederherstellen?",
+        "restore-menu-settings-warning-message": "Dies wird Ihre aktuellen Menüs und Menüsammlungen mit den Inhalten der ausgewählten Backup-Datei überschreiben!",
+        "restore-menu-settings-error-title": "Das Laden der Sicherungsdatei ist fehlgeschlagen!",
+        "restore-menu-settings-success-title": "Erfolg!",
+        "restore-menu-settings-success-message": "Ihre Menüs und Menüsammlungen wurden aus der Backup-Datei wiederhergestellt."
     }
 }
