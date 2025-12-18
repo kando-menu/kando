@@ -124,7 +124,9 @@
             "backup-menus": "備份 menus.json…",
             "backup-settings": "備份 config.json…",
             "restore-menus": "還原 menus.json…",
-            "restore-settings": "還原 config.json…"
+            "restore-settings": "還原 config.json…",
+            "enable-achievements-info": "啟用後，Kando 將會記錄您的成就進度。",
+            "enable-achievements": "記錄成就"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
@@ -267,7 +269,17 @@
         "restore-menu-settings-error-title": "載入選單備份失敗！",
         "restore-menu-settings-success-title": "成功！",
         "restore-menu-settings-success-message": "您的選單與收藏夾已從備份檔案還原。",
-        "backup-general-settings-title": "備份一般設定…"
+        "backup-general-settings-title": "備份一般設定…",
+        "achievements-dialog": {
+            "reset-button": "重設進度",
+            "reset-confirmation-title": "確定要重設所有進度嗎？",
+            "reset-confirmation-message": "所有成就與等級進度將會遺失。此動作無法復原。",
+            "title": "成就",
+            "xp": "XP",
+            "in-progress-button": "進行中",
+            "completed-button": "已完成",
+            "reset-button-tooltip": "重設所有成就與等級進度"
+        }
     },
     "menu-items": {
         "text": {
@@ -432,6 +444,34 @@
         },
         "niri": {
             "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列執行 'kando --menu \"選單名稱\"'，或在您的 Niri 設定檔中設定以開啟此選單。"
+        }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "新手",
+            "capable": "老手",
+            "skilled": "高手",
+            "expert": "專家",
+            "master": "宗師"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "虛空之路 {{tier}}",
+            "description": "取消選取 {{n}} 次。"
+        },
+        "selector": {
+            "name": "{{attribute}}武士",
+            "description": "選取 {{n}} 個項目。"
+        },
+        "depth-selector": {
+            "name1": "{{attribute}}切割者",
+            "name2": "{{attribute}}雙層切割者"
         }
     }
 }
