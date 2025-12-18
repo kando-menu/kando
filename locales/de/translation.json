@@ -69,6 +69,93 @@
             "toggle-maximize": "Maximieren"
         }
     },
+    "achievements": {
+        "attributes": {
+            "novice": "Anfänger-",
+            "capable": "Fähiger ",
+            "skilled": "Erfahrener ",
+            "expert": "Experten-",
+            "master": "Meister-"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "Weg der Leere {{tier}}",
+            "description": "Brich eine Auswahl {{n}}-mal ab."
+        },
+        "selector": {
+            "name": "{{attribute}}Samurai",
+            "description": "Wähle {{n}} Elemente aus."
+        },
+        "depth-selector": {
+            "name1": "{{attribute}}Schlitzer",
+            "name2": "{{attribute}}Assassine",
+            "name3": "{{attribute}}Ninja",
+            "description": "Wähle {{n}} Elemente auf Ebene {{depth}} in weniger als {{time}} ms aus."
+        },
+        "click-selector": {
+            "name": "{{attribute}}Klick-Klick-Champion",
+            "description": "Wähle {{n}} Elemente mit Mausklicks aus."
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}}Hotkey-Held",
+            "description": "Wähle {{n}} Elemente mit der Tastatur aus."
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}}Gamepad-Krieger",
+            "description": "Wähle {{n}} Elemente mit einem Gamepad aus."
+        },
+        "gesture-selector": {
+            "name": "{{attribute}}Power-Ninja",
+            "description": "Wähle {{n}} Elemente im Turbo- oder Markierungsmodus aus."
+        },
+        "settings-opened": {
+            "name": "Der Weg ist das Ziel {{tier}}",
+            "description": "Öffne den Einstellungsdialog {{n}}-mal."
+        },
+        "backup": {
+            "name": "Pfad der Voraussicht {{tier}}",
+            "description": "Sichere deine Menüs oder Einstellungen {{n}}-mal."
+        },
+        "restore": {
+            "name": "Zweite Chance {{tier}}",
+            "description": "Stelle ein Backup {{n}}-mal wieder her."
+        },
+        "added-items": {
+            "name": "Kandos Weg {{tier}}",
+            "description": "Erstelle {{n}} Elemente im Menü-Editor."
+        },
+        "deleted-all-menus": {
+            "name": "Das Dojo leeren",
+            "description": "Lösche alle deine Menüs."
+        },
+        "full-menu": {
+            "name": "Breite vor Tiefe",
+            "description": "Erstelle ein Menü mit mehr als zwölf Elementen."
+        },
+        "deep-menu": {
+            "name": "Meister der Tiefe",
+            "description": "Füge ein Menüelement zu einem vier Ebenen tiefen Untermenü hinzu."
+        },
+        "sponsors-viewed": {
+            "name": "Wächter von Kando",
+            "description": "Ziehe in Betracht, Kando zu unterstützen."
+        },
+        "menu-themes-selected": {
+            "name": "Weg des Ästheten",
+            "description": "Wechsle das Menü-Design {{n}}-mal."
+        },
+        "tutorial-viewed": {
+            "name": "Die Reise beginnt",
+            "description": "Schließe das Kando-Einführungstutorial ab."
+        },
+        "completed-title": "Errungenschaft freigeschaltet!"
+    },
     "main": {
         "failed-to-start-header": "Kando konnte nicht gestartet werden",
         "inhibit-shortcuts": "Deaktiviere vorübergehend alle Tastenkombos",
