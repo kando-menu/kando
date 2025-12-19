@@ -6,7 +6,8 @@
             "file-example": "датотека: пример URI:",
             "url-example": "URL пример:",
             "search-placeholder": "Претражи иконе…",
-            "hint": "Сазнајте [here]({{link}}) како да додате или креирате сопствене теме икона."
+            "hint": "Сазнајте [here]({{link}}) како да додате или креирате сопствене теме икона.",
+            "reload-button-tooltip": "Освежи све теме иконица"
         },
         "not-bound": "Није повезано",
         "invalid-dropdown-selection": "Одабрати опцију…",
@@ -117,7 +118,14 @@
             "reload-sound-theme": "Освежи звучну тему",
             "dev-tools-note": "Kando користи два прозора: Један за мени и други за поставке. Можете отворити алатке за развој да бисте инспектирали сваки прозор одвојено.",
             "menu-window-dev-tools": "Отвори алатке за развој за прозор менија",
-            "settings-window-dev-tools": "Отвори алатке за развој за прозор подешавања"
+            "settings-window-dev-tools": "Отвори алатке за развој за прозор подешавања",
+            "enable-achievements-info": "Уколико је активно, Кандо ће пратити напредак ка достигнућима.",
+            "enable-achievements": "Прати достигнућа",
+            "backup-and-restore": "Сачувај и поврати",
+            "backup-menus": "Сачувај менус.јсон…",
+            "backup-settings": "Сачувај цонфиг.јсон…",
+            "restore-menus": "Поврати менус.јсон…",
+            "restore-settings": "Поврати цонфиг.јсон…"
         },
         "introduction-dialog": {
             "slide1-title": "Kando нуди јединствен и ефикасан начин интеракције са рачунаром.",
@@ -169,7 +177,9 @@
             "get-themes-online": "Преузми теме онлајн",
             "create-your-own-themes": "Направи своје теме",
             "open-theme-directory": "Отвори фасциклу са темама",
-            "author": "од {{author}}"
+            "author": "од {{author}}",
+            "selection-wedges": "Користи означавање елемената",
+            "selection-wedges-info": "Уколико је укључено и доступно у активној теми, зона селекције менија ће бити означена."
         },
         "all-menus": "Сви менији",
         "search-menus-placeholder": "Претражи меније…",
@@ -244,7 +254,28 @@
             "countdown_few": "Одабирање за {{count}} сек…",
             "countdown_other": "Одабирање за {{count}} сек…",
             "confirm": "Употреби ову вредност"
-        }
+        },
+        "achievements-dialog": {
+            "reset-confirmation-message": "Сва достигнућа и ниво напретка ће бити изгубљени. Овај поступак је неопозив.",
+            "title": "Достигнућа",
+            "xp": "Поени",
+            "in-progress-button": "У току",
+            "completed-button": "Завршени",
+            "reset-button-tooltip": "Поништи сва достигнућа и нивое напредовања",
+            "reset-button": "Ресетуј напредак",
+            "reset-confirmation-title": "Да ли заиста желиш да ресетујеш сав напредак?"
+        },
+        "restore-backup": "Врати сачувана подешавања…",
+        "restore-general-settings-warning-title": "Да ли заиста желите да вратите генерална подешавања?",
+        "restore-general-settings-warning-message": "Ово ће преписати ваша тренутна подешавања апликације садржајем из означене резервне датотеке. Ваши мени и колекције менија ће остати непромењени.",
+        "restore-general-settings-error-title": "Неуспешно учитавање резервног генералног подешавања!",
+        "restore-general-settings-success-title": "Успешно!",
+        "restore-general-settings-success-message": "Вашеа генерална подешавања су успешно преузета из резервне датотеке.",
+        "restore-menu-settings-warning-title": "Да ли заисза желите да вратите подешавања менија?",
+        "restore-menu-settings-warning-message": "Ово ће преписати ваше тренутне меније и колекције менија садржајем одабране резервне датотеке!",
+        "restore-menu-settings-error-title": "Неуспешно учитавање резерве менија!",
+        "restore-menu-settings-success-title": "Успешно!",
+        "restore-menu-settings-success-message": "Ваши менији и колекције менија су успешно учитани из резервне датотеке."
     },
     "menu-items": {
         "command": {
