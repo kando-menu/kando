@@ -65,7 +65,7 @@
   .label-layer {
     opacity: 0;
     background-color: var(--label-background-color);
-    color: hsl(var(--angle), 90%, 95%);
+    color: var(--label-color);
     border: 2px solid hsl(var(--angle), 50%, 60%);
     white-space: nowrap;
     height: var(--icon-size);
@@ -76,7 +76,6 @@
   }
 
   &.hovered>.label-layer {
-    color: white;
     border-color: hsl(var(--parent-angle, 0deg), 50%, 85%);
     box-shadow: 0 0 10px hsla(var(--angle), 80%, 80%, 0.4) inset;
   }

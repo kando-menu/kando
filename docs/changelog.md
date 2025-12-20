@@ -32,6 +32,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A setting to **enable or disable the drawing of selection wedges** in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
 - Many translation updates: **Thanks to all the contributors!**
 - Add support for GNOME's classic mode.
+- The possibility to change the label color of the "Rainbow Labels" theme.
 
 ### :wrench: Changed
 

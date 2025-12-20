@@ -36,6 +36,7 @@
   colors: {
     'icon-color': '#333',
     'label-background-color': '#333',
+    'label-color': '#ddd',
   },
 
   // This theme uses two layers, one for the icon and the background and one for the arrow
