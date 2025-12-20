@@ -443,6 +443,14 @@
       "name": "The Journey Begins",
       "description": "Complete the Kando introduction tutorial."
     },
+    "many-selections-streak": {
+      "name": "Hands of Lightning",
+      "description": "Select {{n}} items within {{time}} s."
+    },
+    "speedy-selections-streak": {
+      "name": "Faster than Thought",
+      "description": "Make {{n}} consecutive selections faster than {{time}} ms."
+    },
     "completed-title": "Achievement unlocked!"
   },
   "main": {

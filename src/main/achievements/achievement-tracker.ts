@@ -734,6 +734,38 @@ export class AchievementTracker extends EventEmitter {
       hidden: true,
     });
 
+    // Add the many-selections-streak achievement.
+    addAchievement({
+      id: 'many-selections-streak',
+      name: i18next.t('achievements.many-selections-streak.name'),
+      description: i18next.t('achievements.many-selections-streak.description', {
+        n: 10,
+        time: 30,
+      }),
+      badge: AchievementBadgeType.eSpecial3,
+      icon: AchievementBadgeIcon.eManySelectionsStreak,
+      statKey: 'manySelectionsStreaks',
+      statRange: [0, 1],
+      xp: BASE_XP[1],
+      hidden: true,
+    });
+
+    // Add the speedy-selections-streak achievement.
+    addAchievement({
+      id: 'speedy-selections-streak',
+      name: i18next.t('achievements.speedy-selections-streak.name'),
+      description: i18next.t('achievements.speedy-selections-streak.description', {
+        n: 10,
+        time: 500,
+      }),
+      badge: AchievementBadgeType.eSpecial3,
+      icon: AchievementBadgeIcon.eSpeedySelectionsStreak,
+      statKey: 'speedySelectionsStreaks',
+      statRange: [0, 1],
+      xp: BASE_XP[1],
+      hidden: true,
+    });
+
     return achievements;
   }
 }

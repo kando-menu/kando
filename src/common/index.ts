@@ -464,6 +464,7 @@ export enum AchievementBadgeIcon {
   eGamepadSelector,
   eGestureSelector,
   eKeyboardSelector,
+  eManySelectionsStreak,
   eMenuThemesSelected,
   eRestored,
   eSelector1,
@@ -472,6 +473,7 @@ export enum AchievementBadgeIcon {
   eSelector4,
   eSelector5,
   eSettingsOpened,
+  eSpeedySelectionsStreak,
   eSponsors,
   eTutorialViewed,
 }
