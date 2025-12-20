@@ -131,7 +131,7 @@ export default function AchievementsDialog() {
       <div className={classes.achievementContainer}>
         <div className={cx({ achievementSlider: true, showCompleted })}>
           <div className={classes.achievementListWrapper}>
-            <Scrollbox maxHeight="min(45vh, 500px)" paddingRight={8}>
+            <Scrollbox maxHeight="min(40vh, 500px)" paddingRight={8}>
               <div ref={animatedInProgressList} className={classes.achievementList}>
                 {levelProgress.activeAchievements.map((achievement) => (
                   <div key={achievement.id} className={classes.achievement}>
@@ -164,7 +164,7 @@ export default function AchievementsDialog() {
             </Scrollbox>
           </div>
           <div className={classes.achievementListWrapper}>
-            <Scrollbox maxHeight="min(45vh, 500px)">
+            <Scrollbox maxHeight="min(40vh, 500px)">
               <div
                 ref={animatedCompletedList}
                 className={cx({ achievementList: true, completed: true })}>
