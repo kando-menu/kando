@@ -658,22 +658,35 @@ export class MenuWindow extends BrowserWindow {
         if (this.lastSelections.length === 10) {
           const oldest = this.lastSelections[0];
           const newest = this.lastSelections[9];
-          if (newest.date.getTime() - oldest.date.getTime() <= 30000) {
-            this.kando.achievementTracker.incrementStat('manySelectionsStreaks');
+          const timeDiff = newest.date.getTime() - oldest.date.getTime();
+
+          if (timeDiff <= 30000) {
+            this.kando.achievementTracker.incrementStat('manySelectionsStreaks1');
+          }
+
+          if (timeDiff <= 20000) {
+            this.kando.achievementTracker.incrementStat('manySelectionsStreaks2');
+          }
+
+          if (timeDiff <= 10000) {
+            this.kando.achievementTracker.incrementStat('manySelectionsStreaks3');
           }
         }
 
         // Check for the speedy-selections-streak achievement.
         if (this.lastSelections.length === 10) {
-          let speedy = true;
-          for (let i = 1; i < 10; i++) {
-            if (this.lastSelections[i].time > 500) {
-              speedy = false;
-              break;
-            }
+          let average = 0.0;
+          this.lastSelections.forEach((selection) => {
+            average += selection.time / this.lastSelections.length;
+          });
+          if (average < 750) {
+            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks1');
           }
-          if (speedy) {
-            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks');
+          if (average < 500) {
+            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks2');
+          }
+          if (average < 250) {
+            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks3');
           }
         }
       }

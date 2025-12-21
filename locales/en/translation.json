@@ -444,12 +444,12 @@
       "description": "Complete the Kando introduction tutorial."
     },
     "many-selections-streak": {
-      "name": "Hands of Lightning",
+      "name": "Hands of Lightning {{tier}}",
       "description": "Select {{n}} items within {{time}} s."
     },
     "speedy-selections-streak": {
-      "name": "Faster than Thought",
-      "description": "Make {{n}} consecutive selections faster than {{time}} ms."
+      "name": "Faster than Thought {{tier}}",
+      "description": "Make {{n}} consecutive selections on average faster than {{time}} ms."
     },
     "completed-title": "Achievement unlocked!"
   },
