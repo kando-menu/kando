@@ -72,6 +72,7 @@ const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
   [AchievementBadgeIcon.eGamepadSelector]: require('../../../../assets/images/achievements/icons/gamepadSelector.svg'),
   [AchievementBadgeIcon.eGestureSelector]: require('../../../../assets/images/achievements/icons/gestureSelector.svg'),
   [AchievementBadgeIcon.eKeyboardSelector]: require('../../../../assets/images/achievements/icons/keyboardSelector.svg'),
+  [AchievementBadgeIcon.eManySelectionsStreak]: require('../../../../assets/images/achievements/icons/manySelectionsStreak.svg'),
   [AchievementBadgeIcon.eMenuThemesSelected]: require('../../../../assets/images/achievements/icons/menuThemesSelected.svg'),
   [AchievementBadgeIcon.eRestored]: require('../../../../assets/images/achievements/icons/restored.svg'),
   [AchievementBadgeIcon.eSelector1]: require('../../../../assets/images/achievements/icons/selector1.svg'),
@@ -80,6 +81,7 @@ const ACHIEVEMENT_ICONS: Record<AchievementBadgeIcon, string> = {
   [AchievementBadgeIcon.eSelector4]: require('../../../../assets/images/achievements/icons/selector4.svg'),
   [AchievementBadgeIcon.eSelector5]: require('../../../../assets/images/achievements/icons/selector5.svg'),
   [AchievementBadgeIcon.eSettingsOpened]: require('../../../../assets/images/achievements/icons/settingsOpened.svg'),
+  [AchievementBadgeIcon.eSpeedySelectionsStreak]: require('../../../../assets/images/achievements/icons/speedySelectionsStreak.svg'),
   [AchievementBadgeIcon.eSponsors]: require('../../../../assets/images/achievements/icons/sponsors.svg'),
   [AchievementBadgeIcon.eTutorialViewed]: require('../../../../assets/images/achievements/icons/tutorialViewed.svg'),
 } as const;

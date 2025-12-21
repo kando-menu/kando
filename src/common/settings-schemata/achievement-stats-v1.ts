@@ -123,6 +123,33 @@ export const ACHIEVEMENT_STATS_SCHEMA_V1 = z.object({
 
   /** Increased every time the user adds an item to a menu at level four or deeper. */
   addedItemsToDeepMenu: z.number().default(0),
+
+  /** Increased every time when 10 selections were made within 30s. */
+  manySelectionsStreaks1: z.number().default(0),
+
+  /** Increased every time when 10 selections were made within 20s. */
+  manySelectionsStreaks2: z.number().default(0),
+
+  /** Increased every time when 10 selections were made within 10s. */
+  manySelectionsStreaks3: z.number().default(0),
+
+  /**
+   * Increased every time 10 consecutive selections were made on average faster than
+   * 750ms.
+   */
+  speedySelectionsStreaks1: z.number().default(0),
+
+  /**
+   * Increased every time 10 consecutive selections were made on average faster than
+   * 500ms.
+   */
+  speedySelectionsStreaks2: z.number().default(0),
+
+  /**
+   * Increased every time 10 consecutive selections were made on average faster than
+   * 250ms.
+   */
+  speedySelectionsStreaks3: z.number().default(0),
 });
 
 export type AchievementStatsV1 = z.infer<typeof ACHIEVEMENT_STATS_SCHEMA_V1>;

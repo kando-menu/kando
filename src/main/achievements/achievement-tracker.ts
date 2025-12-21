@@ -734,6 +734,70 @@ export class AchievementTracker extends EventEmitter {
       hidden: true,
     });
 
+    // Add the three many-selections-streak achievements.
+    const badges = [
+      AchievementBadgeType.eSpecial6,
+      AchievementBadgeType.eSpecial3,
+      AchievementBadgeType.eSpecial5,
+    ];
+
+    let keys: (keyof AchievementStats)[] = [
+      'manySelectionsStreaks1',
+      'manySelectionsStreaks2',
+      'manySelectionsStreaks3',
+    ];
+
+    let times = [30, 20, 10];
+
+    for (let i = 0; i < 3; i++) {
+      addAchievement({
+        id: 'many-selections-streak' + i,
+        name: i18next.t('achievements.many-selections-streak.name', {
+          attribute: attributes[i],
+          tier: numbers[i],
+        }),
+        description: i18next.t('achievements.many-selections-streak.description', {
+          n: 10,
+          time: times[i],
+        }),
+        badge: badges[i],
+        icon: AchievementBadgeIcon.eManySelectionsStreak,
+        statKey: keys[i],
+        statRange: [0, 1],
+        xp: BASE_XP[i],
+        hidden: true,
+      });
+    }
+
+    // Add the three speedy-selections-streak achievement.
+    keys = [
+      'speedySelectionsStreaks1',
+      'speedySelectionsStreaks2',
+      'speedySelectionsStreaks3',
+    ];
+
+    times = [750, 500, 250];
+
+    for (let i = 0; i < 3; i++) {
+      addAchievement({
+        id: 'speedy-selections-streak' + i,
+        name: i18next.t('achievements.speedy-selections-streak.name', {
+          attribute: attributes[i],
+          tier: numbers[i],
+        }),
+        description: i18next.t('achievements.speedy-selections-streak.description', {
+          n: 10,
+          time: times[i],
+        }),
+        badge: badges[i],
+        icon: AchievementBadgeIcon.eSpeedySelectionsStreak,
+        statKey: keys[i],
+        statRange: [0, 1],
+        xp: BASE_XP[i],
+        hidden: true,
+      });
+    }
+
     return achievements;
   }
 }

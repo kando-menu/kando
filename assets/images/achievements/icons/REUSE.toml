@@ -34,9 +34,11 @@ path = [
     "fullMenu.svg",
     "gamepadSelector.svg",
     "keyboardSelector.svg",
+    "manySelectionsStreak.svg",
     "menuThemesSelected.svg",
     "restored.svg",
     "settingsOpened.svg",
+    "speedySelectionsStreak.svg",
     "sponsors.svg",
     "tutorialViewed.svg"
 ]

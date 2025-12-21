@@ -32,6 +32,12 @@ export class MenuWindow extends BrowserWindow {
   public lastMenu?: DeepReadonly<Menu>;
 
   /**
+   * This contains the time points when the last ten selections were made. It is used to
+   * trigger some achievements.
+   */
+  public lastSelections: { time: number; date: Date }[] = [];
+
+  /**
    * This index is used to select the next menu from the list of menus which would match
    * the current request. If the sameShortcutBehavior is set to 'cycle', this index is
    * incremented each time the user presses the same shortcut again.
@@ -642,6 +648,47 @@ export class MenuWindow extends BrowserWindow {
           time,
           source
         );
+
+        this.lastSelections.push({ time, date: new Date() });
+        if (this.lastSelections.length > 10) {
+          this.lastSelections.shift();
+        }
+
+        // Check for many-selections-streak achievement.
+        if (this.lastSelections.length === 10) {
+          const oldest = this.lastSelections[0];
+          const newest = this.lastSelections[9];
+          const timeDiff = newest.date.getTime() - oldest.date.getTime();
+
+          if (timeDiff <= 30000) {
+            this.kando.achievementTracker.incrementStat('manySelectionsStreaks1');
+          }
+
+          if (timeDiff <= 20000) {
+            this.kando.achievementTracker.incrementStat('manySelectionsStreaks2');
+          }
+
+          if (timeDiff <= 10000) {
+            this.kando.achievementTracker.incrementStat('manySelectionsStreaks3');
+          }
+        }
+
+        // Check for the speedy-selections-streak achievement.
+        if (this.lastSelections.length === 10) {
+          let average = 0.0;
+          this.lastSelections.forEach((selection) => {
+            average += selection.time / this.lastSelections.length;
+          });
+          if (average < 750) {
+            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks1');
+          }
+          if (average < 500) {
+            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks2');
+          }
+          if (average < 250) {
+            this.kando.achievementTracker.incrementStat('speedySelectionsStreaks3');
+          }
+        }
       }
     );
 
