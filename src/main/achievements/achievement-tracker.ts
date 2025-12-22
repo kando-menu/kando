@@ -495,7 +495,7 @@ export class AchievementTracker extends EventEmitter {
           state: AchievementState.eLocked,
           statKey: `selectionsSpeed${tier + 1}Depth${depth}` as keyof AchievementStats,
           statRange: [0, BASE_RANGES[tier + 1] * 2],
-          xp: BASE_XP[tier] * 2,
+          xp: BASE_XP[tier],
           hidden: tier > 0,
           reveals: tier < 5 ? `depth${depth}-selector${tier + 1}` : null,
         });
@@ -606,12 +606,12 @@ export class AchievementTracker extends EventEmitter {
           tier: numbers[tier],
         }),
         description: i18next.t('achievements.backup.description', {
-          n: BASE_RANGES[tier + 1] / 5,
+          n: BASE_RANGES[tier + 1] / 10,
         }),
         badge: standardBadges[tier],
         icon: AchievementBadgeIcon.eBackedUp,
         statKey: 'settingsBackedUp',
-        statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
+        statRange: [BASE_RANGES[tier] / 10, BASE_RANGES[tier + 1] / 10],
         xp: BASE_XP[tier],
       });
     }
@@ -625,12 +625,12 @@ export class AchievementTracker extends EventEmitter {
           tier: numbers[tier],
         }),
         description: i18next.t('achievements.restore.description', {
-          n: BASE_RANGES[tier + 1] / 5,
+          n: BASE_RANGES[tier + 1] / 10,
         }),
         badge: standardBadges[tier],
         icon: AchievementBadgeIcon.eRestored,
         statKey: 'settingsRestored',
-        statRange: [BASE_RANGES[tier] / 5, BASE_RANGES[tier + 1] / 5],
+        statRange: [BASE_RANGES[tier] / 10, BASE_RANGES[tier + 1] / 10],
         xp: BASE_XP[tier],
       });
     }

@@ -42,6 +42,13 @@
   width: 100%;
 }
 
+.noAchievements {
+  color: $text-muted;
+  font-style: italic;
+  margin-top: 100px;
+  text-align: center;
+}
+
 .achievementList {
   margin-top: 20px;
   padding: 0 80px;
@@ -101,6 +108,7 @@
 
   .achievementData {
     flex-grow: 1;
+    flex-basis: 0;
   }
 
   .row {
@@ -117,6 +125,7 @@
     color: $text-muted;
     font-size: 0.9em;
     align-self: flex-start;
+    flex-shrink: 0;
   }
 }
 
