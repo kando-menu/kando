@@ -42,6 +42,13 @@
   width: 100%;
 }
 
+.noAchievements {
+  color: $text-muted;
+  font-style: italic;
+  margin-top: 100px;
+  text-align: center;
+}
+
 .achievementList {
   margin-top: 20px;
   padding: 0 80px;
