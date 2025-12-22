@@ -278,7 +278,9 @@
             "xp": "XP",
             "in-progress-button": "進行中",
             "completed-button": "已完成",
-            "reset-button-tooltip": "重設所有成就與等級進度"
+            "reset-button-tooltip": "重設所有成就與等級進度",
+            "no-in-progress-achievements": "恭喜！您已完成所有成就。",
+            "no-completed-achievements": "您尚未完成任何成就。"
         }
     },
     "menu-items": {
@@ -443,7 +445,7 @@
             "error": "無法連線至 GNOME Shell 擴充功能 Kando Integration。可從此處取得：{{link}}"
         },
         "niri": {
-            "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列執行 'kando --menu \"選單名稱\"'，或在您的 Niri 設定檔中設定以開啟此選單。"
+            "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列或您的 Niri 設定檔，執行 'kando --menu \"選單名稱\"' 來開啟此選單。"
         }
     },
     "achievements": {
