@@ -94,7 +94,7 @@
     "react-virtualized-auto-sizer": "^1.0.25",
     "react-window": "^1.8.11",
     "read-ini-file": "^4.0.0",
-    "sass": "^1.96.0",
+    "sass": "^1.97.1",
     "sass-loader": "^16.0.5",
     "simple-icons-font": "^15.16.1",
     "string-replace-loader": "^3.3.0",
@@ -107,7 +107,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0",
     "typescript-plugin-css-modules": "^5.2.0",
-    "zod": "^4.2.0",
+    "zod": "^4.2.1",
     "zundo": "^2.1.0",
     "zustand": "^5.0.9"
   }
