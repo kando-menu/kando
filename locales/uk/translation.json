@@ -456,7 +456,9 @@
             "xp": "XP",
             "in-progress-button": "У процесі",
             "completed-button": "Завершено",
-            "reset-button-tooltip": "Скинути всі досягнення та прогрес рівня"
+            "reset-button-tooltip": "Скинути всі досягнення та прогрес рівня",
+            "no-in-progress-achievements": "Вітаємо! Ви виконали всі досягнення.",
+            "no-completed-achievements": "Ви ще не виконали жодних досягнень."
         }
     },
     "achievements": {
