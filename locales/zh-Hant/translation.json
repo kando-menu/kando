@@ -531,6 +531,14 @@
             "name": "旅程的起點",
             "description": "完成 Kando 的導覽教學。"
         },
-        "completed-title": "成就已解鎖！"
+        "completed-title": "成就已解鎖！",
+        "many-selections-streak": {
+            "name": "迅雷之手 {{tier}}",
+            "description": "在 {{time}} 秒內選取 {{n}} 個項目。"
+        },
+        "speedy-selections-streak": {
+            "name": "凌駕思緒 {{tier}}",
+            "description": "連續選取 {{n}} 次，且平均時間少於 {{time}} 毫秒。"
+        }
     }
 }

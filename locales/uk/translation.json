@@ -544,6 +544,14 @@
             "name": "Подорож починається",
             "description": "Завершіть вступний посібник з Kando."
         },
-        "completed-title": "Досягнення розблоковано!"
+        "completed-title": "Досягнення розблоковано!",
+        "many-selections-streak": {
+            "name": "Руки блискавки {{tier}}",
+            "description": "Виберіть {{n}} елементів протягом {{time}} с."
+        },
+        "speedy-selections-streak": {
+            "name": "Швидше, ніж думка {{tier}}",
+            "description": "Зробіть {{n}} послідовних виборів у середньому швидше, ніж {{time}} мс."
+        }
     }
 }
