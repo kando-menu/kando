@@ -63,22 +63,25 @@ export class HotkeyItemAction implements ItemAction {
       }
 
       // Finally, we simulate the key presses using the backend.
-      app.getBackend().simulateKeys(keys).then(
-        () => {
-          // Restore all shortcuts after simulation completes if they were inhibited.
-          if (data.inhibitShortcuts) {
-            app.getBackend().inhibitShortcuts([]);
+      app
+        .getBackend()
+        .simulateKeys(keys)
+        .then(
+          () => {
+            // Restore all shortcuts after simulation completes if they were inhibited.
+            if (data.inhibitShortcuts) {
+              app.getBackend().inhibitShortcuts([]);
+            }
+            resolve();
+          },
+          (error) => {
+            // Restore all shortcuts even if an error occurred.
+            if (data.inhibitShortcuts) {
+              app.getBackend().inhibitShortcuts([]);
+            }
+            reject(error);
           }
-          resolve();
-        },
-        (error) => {
-          // Restore all shortcuts even if an error occurred.
-          if (data.inhibitShortcuts) {
-            app.getBackend().inhibitShortcuts([]);
-          }
-          reject(error);
-        }
-      );
+        );
     });
   }
 }
