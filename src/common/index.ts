@@ -220,9 +220,7 @@ export type ShowMenuOptions = {
    */
   readonly hoverMode: boolean;
 
-  /**
-   * If this is set, clicking the center of the menu will repeat the last selected action.
-   */
+  /** If this is set, clicking the center of the menu will repeat the last selected action. */
   readonly repeatLastAction: boolean;
 
   /**

@@ -742,8 +742,8 @@ export class Menu extends EventEmitter {
   }
 
   /**
-   * This method repeats the last selected action for this menu by directly selecting
-   * the previously selected item immediately.
+   * This method repeats the last selected action for this menu by directly selecting the
+   * previously selected item immediately.
    *
    * @param source The input method which was used to make the selection. Used for
    *   achievement tracking.
@@ -1283,6 +1283,7 @@ export class Menu extends EventEmitter {
 
 /**
  * Gets the last selected item path for a specific menu.
+ *
  * @param menuKey The path or key of the menu
  * @returns The path of the last selected item, or null if no item has been selected.
  */

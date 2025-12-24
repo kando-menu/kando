@@ -251,7 +251,7 @@ export class PointerInput extends InputMethod {
         Math.pow(this.pointerPosition.x - this.centerPosition.x, 2) +
           Math.pow(this.pointerPosition.y - this.centerPosition.y, 2)
       );
-      
+
       // If clicking very close to the center with no hovered item, trigger repeat action
       if (distance < this.centerRadius * 0.5) {
         this.selectCallback(
