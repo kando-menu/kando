@@ -233,6 +233,8 @@
     "anchored-mode": "Anchored Mode",
     "hover-mode-info": "For power users only! Select items by hovering over them.",
     "hover-mode": "Hover Mode",
+    "repeat-last-action-info": "Click the center of the menu to repeat the last selected action.",
+    "repeat-last-action": "Repeat Last Action",
     "menu-conditions": "Menu Conditions",
     "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
     "app-condition-info": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",

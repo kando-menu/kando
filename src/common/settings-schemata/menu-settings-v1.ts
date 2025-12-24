@@ -117,6 +117,12 @@ export const MENU_SCHEMA_V1 = z.object({
   hoverMode: z.boolean().default(false),
 
   /**
+   * If true, clicking the center of the menu will repeat the last selected action for this
+   * menu.
+   */
+  repeatLastAction: z.boolean().default(false),
+
+  /**
    * Conditions are matched before showing a menu. The one that has more conditions and
    * met them all is selected.
    */

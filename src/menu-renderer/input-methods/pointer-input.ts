@@ -245,6 +245,24 @@ export class PointerInput extends InputMethod {
       return;
     }
 
+    // Repeat last action on left click on the center (when no item is hovered).
+    if ((event as MouseEvent).button === 0) {
+      const distance = Math.sqrt(
+        Math.pow(this.pointerPosition.x - this.centerPosition.x, 2) +
+          Math.pow(this.pointerPosition.y - this.centerPosition.y, 2)
+      );
+      
+      // If clicking very close to the center with no hovered item, trigger repeat action
+      if (distance < this.centerRadius * 0.5) {
+        this.selectCallback(
+          this.pointerPosition,
+          SelectionType.eRepeatLastAction,
+          SelectionSource.eClick
+        );
+        return;
+      }
+    }
+
     if (event instanceof MouseEvent) {
       this.clickPosition = { x: event.clientX, y: event.clientY };
     } else {

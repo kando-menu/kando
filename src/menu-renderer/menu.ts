@@ -28,6 +28,9 @@ import { ButtonState, InputState, SelectionType } from './input-methods/input-me
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 
+/** Map to store the last selected item path for each menu (by menu root path). */
+const lastSelectedItemByMenu: Map<string, string> = new Map();
+
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
  * the menu. The menu is shown by calling the show() method and hidden by calling the
@@ -362,6 +365,14 @@ export class Menu extends EventEmitter {
 
       if (type === SelectionType.eParent) {
         this.selectParent(source, coords);
+        return;
+      }
+
+      if (type === SelectionType.eRepeatLastAction) {
+        // Only execute repeat action if it's enabled for this menu
+        if (this.showMenuOptions.repeatLastAction) {
+          this.repeatLastAction(source, coords);
+        }
         return;
       }
 
@@ -701,6 +712,9 @@ export class Menu extends EventEmitter {
 
     if (item.type !== 'submenu') {
       this.container.classList.add('selected');
+      // Store the last selected item path for this menu's repeat functionality
+      const menuKey = this.root.path || '/';
+      lastSelectedItemByMenu.set(menuKey, item.path);
       this.emit('select', item.path, Date.now() - this.menuShownTime, source);
     }
   }
@@ -724,6 +738,49 @@ export class Menu extends EventEmitter {
       );
     } else {
       this.cancel();
+    }
+  }
+
+  /**
+   * This method repeats the last selected action for this menu by directly selecting
+   * the previously selected item immediately.
+   *
+   * @param source The input method which was used to make the selection. Used for
+   *   achievement tracking.
+   * @param coords The position where the selection most likely happened. If it is not
+   *   given, the latest pointer input position is used.
+   */
+  private repeatLastAction(source: SelectionSource, coords?: Vec2) {
+    // Check if repeat last action is enabled for this menu
+    const menuKey = this.root.path || '/';
+    const lastActionPath = lastSelectedItemByMenu.get(menuKey);
+
+    if (!lastActionPath) {
+      return;
+    }
+
+    // Parse the path to get the indices
+    const pathSegments = lastActionPath
+      .split('/')
+      .filter((s) => s)
+      .map((s) => parseInt(s, 10));
+
+    if (pathSegments.length === 0) {
+      return;
+    }
+
+    // Navigate to the item using the path
+    let currentItem = this.root;
+    for (const index of pathSegments) {
+      if (!currentItem.children || !currentItem.children[index]) {
+        return;
+      }
+      currentItem = currentItem.children[index];
+    }
+
+    // Select the item if it's not a submenu
+    if (currentItem && currentItem.type !== 'submenu') {
+      this.selectItem(currentItem, source, coords);
     }
   }
 
@@ -1222,4 +1279,13 @@ export class Menu extends EventEmitter {
 
     return this.showMenuOptions.mousePosition;
   }
+}
+
+/**
+ * Gets the last selected item path for a specific menu.
+ * @param menuKey The path or key of the menu
+ * @returns The path of the last selected item, or null if no item has been selected.
+ */
+export function getLastSelectedItemPathForMenu(menuKey: string): string | null {
+  return lastSelectedItemByMenu.get(menuKey) || null;
 }

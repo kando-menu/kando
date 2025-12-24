@@ -61,6 +61,17 @@ export default function MenuBehavior() {
           });
         }}
       />
+      <Checkbox
+        info={i18next.t('settings.repeat-last-action-info')}
+        initialValue={menus[selectedMenu].repeatLastAction}
+        label={i18next.t('settings.repeat-last-action')}
+        onChange={(repeatLastAction) => {
+          editMenu(selectedMenu, (menu) => {
+            menu.repeatLastAction = repeatLastAction;
+            return menu;
+          });
+        }}
+      />
     </>
   );
 }

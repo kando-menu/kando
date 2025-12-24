@@ -221,6 +221,11 @@ export type ShowMenuOptions = {
   readonly hoverMode: boolean;
 
   /**
+   * If this is set, clicking the center of the menu will repeat the last selected action.
+   */
+  readonly repeatLastAction: boolean;
+
+  /**
    * If this is set, the system-icon theme has changed since the last time the menu was
    * opened. This is used to determine if the menu needs to be reloaded.
    */

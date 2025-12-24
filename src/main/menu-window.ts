@@ -266,6 +266,7 @@ export class MenuWindow extends BrowserWindow {
         centeredMode: this.lastMenu.centered,
         anchoredMode: this.lastMenu.anchored,
         hoverMode: this.lastMenu.hoverMode,
+        repeatLastAction: this.lastMenu.repeatLastAction,
         systemIconsChanged,
       },
       {
