@@ -363,7 +363,7 @@ export default function MenuList() {
           />
           <Button
             isGrouped
-            icon={<TbDownload />}
+            icon={<TbUpload />}
             size="large"
             tooltip={i18next.t('settings.export-menu')}
             variant="floating"
@@ -371,7 +371,7 @@ export default function MenuList() {
           />
           <Button
             isGrouped
-            icon={<TbUpload />}
+            icon={<TbDownload />}
             size="large"
             tooltip={i18next.t('settings.import-menu')}
             variant="floating"
