@@ -810,46 +810,54 @@ export class KandoApp {
     });
 
     // Export a single menu to a JSON file
-    ipcMain.handle('settings-window.export-menu', async (event, menuIndex: number, filePath: string) => {
-      const settings = this.menuSettings.get();
-      
-      if (menuIndex < 0 || menuIndex >= settings.menus.length) {
-        throw new Error('Invalid menu index');
-      }
+    ipcMain.handle(
+      'settings-window.export-menu',
+      async (event, menuIndex: number, filePath: string) => {
+        const settings = this.menuSettings.get();
 
-      const menu = settings.menus[menuIndex];
-      const menuData = {
-        version: settings.version,
-        menu: menu,
-      };
+        if (menuIndex < 0 || menuIndex >= settings.menus.length) {
+          throw new Error('Invalid menu index');
+        }
 
-      try {
-        fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf-8');
-      } catch (error) {
-        throw new Error(`Failed to export menu: ${error instanceof Error ? error.message : String(error)}`);
+        const menu = settings.menus[menuIndex];
+        const menuData = {
+          version: settings.version,
+          menu: menu,
+        };
+
+        try {
+          fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf-8');
+        } catch (error) {
+          throw new Error(
+            `Failed to export menu: ${error instanceof Error ? error.message : String(error)}`
+          );
+        }
       }
-    });
+    );
 
     // Import a menu from a JSON file
     ipcMain.handle('settings-window.import-menu', async (event, filePath: string) => {
       try {
         const content = fsExtra.readJsonSync(filePath, 'utf-8');
-        
+
         // Validate the menu data using the schema
-        const validatedMenu = MENU_SCHEMA_V1.parse(content.menu || content, { reportInput: true });
-        
+        const validatedMenu = MENU_SCHEMA_V1.parse(content.menu || content, {
+          reportInput: true,
+        });
+
         // Add the menu to the settings
         const settings = this.menuSettings.get();
         const newMenus = [...settings.menus, validatedMenu];
-        
-        // Update the settings - use partial cast to avoid readonly issues
-        const settingsUpdate: any = { menus: newMenus };
-        this.menuSettings.set(settingsUpdate);
-        
+
+        // Update the settings
+        this.menuSettings.set({ menus: newMenus as Partial<MenuSettings>['menus'] });
+
         return true;
       } catch (error) {
         console.error('Error importing menu:', error);
-        throw new Error(`Failed to import menu: ${error instanceof Error ? error.message : String(error)}`);
+        throw new Error(
+          `Failed to import menu: ${error instanceof Error ? error.message : String(error)}`
+        );
       }
     });
 
@@ -860,13 +868,16 @@ export class KandoApp {
     });
 
     // Show error dialog
-    ipcMain.handle('settings-window.show-error-dialog', async (event, title: string, message: string) => {
-      await dialog.showMessageBox(this.settingsWindow, {
-        type: 'error',
-        title,
-        message,
-      });
-    });
+    ipcMain.handle(
+      'settings-window.show-error-dialog',
+      async (event, title: string, message: string) => {
+        await dialog.showMessageBox(this.settingsWindow, {
+          type: 'error',
+          title,
+          message,
+        });
+      }
+    );
 
     // Allow the renderer to retrieve the i18next locales.
     ipcMain.handle('common.get-locales', () => {

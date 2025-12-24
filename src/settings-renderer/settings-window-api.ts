@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, OpenDialogOptions, webFrame } from 'electron';
+import { ipcRenderer, OpenDialogOptions, SaveDialogOptions, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
@@ -198,7 +198,7 @@ export const SETTINGS_WINDOW_API = {
   },
 
   /** This will show a save dialog for exporting. */
-  showSaveDialog: (options: any): Promise<string> => {
+  showSaveDialog: (options: SaveDialogOptions): Promise<string> => {
     return ipcRenderer.invoke('settings-window.show-save-dialog', options);
   },
 
