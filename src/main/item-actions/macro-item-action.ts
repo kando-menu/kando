@@ -50,8 +50,29 @@ export class MacroItemAction implements ItemAction {
         keys.push({ name, down, delay });
       });
 
+      // Inhibit all shortcuts while simulating keys if the option is enabled.
+      // This prevents the simulated input from triggering other Kando shortcuts.
+      if (data.inhibitShortcuts) {
+        app.getBackend().inhibitAllShortcuts();
+      }
+
       // Finally, we simulate the key presses using the backend.
-      app.getBackend().simulateKeys(keys).then(resolve, reject);
+      app.getBackend().simulateKeys(keys).then(
+        () => {
+          // Restore all shortcuts after simulation completes if they were inhibited.
+          if (data.inhibitShortcuts) {
+            app.getBackend().inhibitShortcuts([]);
+          }
+          resolve();
+        },
+        (error) => {
+          // Restore all shortcuts even if an error occurred.
+          if (data.inhibitShortcuts) {
+            app.getBackend().inhibitShortcuts([]);
+          }
+          reject(error);
+        }
+      );
     });
   }
 }
