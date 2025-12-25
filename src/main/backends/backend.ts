@@ -34,6 +34,9 @@ export abstract class Backend extends EventEmitter {
   /** A list of all shortcuts which are currently inhibited. */
   private inhibitedShortcuts: string[] = [];
 
+  /** A stack of previously bound shortcuts, used for temporary shortcut changes. */
+  private boundShortcutsStack: string[][] = [];
+
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
    * for more information. This method may be called before the backend is initialized.
@@ -250,6 +253,40 @@ export abstract class Backend extends EventEmitter {
    */
   public getInhibitedShortcuts(): string[] {
     return this.inhibitedShortcuts;
+  }
+
+  /**
+   * Pushes the current set of bound shortcuts onto a stack, then temporarily changes the
+   * bound shortcuts to the provided set. This allows for temporary shortcut changes that
+   * can be easily reverted with popBoundShortcuts().
+   *
+   * This is useful for scenarios like temporarily inhibiting certain shortcuts during
+   * macro execution, key simulation, or when the menu is shown.
+   *
+   * @param shortcuts The new set of shortcuts to bind temporarily.
+   * @returns A promise which resolves when the shortcuts have been changed.
+   */
+  public async pushBoundShortcuts(shortcuts: string[]): Promise<void> {
+    // Save the current state to the stack
+    this.boundShortcutsStack.push([...this.shortcuts]);
+    // Bind the new shortcuts
+    await this.bindShortcuts(shortcuts);
+  }
+
+  /**
+   * Pops the previously saved set of bound shortcuts from the stack and restores them.
+   * If the stack is empty, this does nothing. This should be called after a corresponding
+   * pushBoundShortcuts() call to restore the previous state.
+   *
+   * @returns A promise which resolves when the shortcuts have been restored, or if the
+   *   stack was empty.
+   */
+  public async popBoundShortcuts(): Promise<void> {
+    if (this.boundShortcutsStack.length === 0) {
+      return;
+    }
+    const previousShortcuts = this.boundShortcutsStack.pop()!;
+    await this.bindShortcuts(previousShortcuts);
   }
 
   /**
