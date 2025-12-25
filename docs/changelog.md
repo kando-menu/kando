@@ -43,6 +43,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 ### :bug: Fixed
 
 - An issue where a menu would not show up on Niri if the pointer was not in a client-drawable area. Thanks to [@make-42](https://github.com/make-42) for the fix!
+- An issue where some button text would flow out of the button in the about dialog on certain languages.
 
 ## [Kando 2.1.2](https://github.com/kando-menu/kando/releases/tag/v2.1.2)
 
