@@ -38,7 +38,8 @@ export class HotkeyItemAction implements ItemAction {
    */
   async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
     return new Promise<void>((resolve, reject) => {
-      const keyNames = (item.data as ItemData).hotkey.split('+');
+      const data = item.data as ItemData;
+      const keyNames = data.hotkey.split('+');
 
       // We simulate the key press by first pressing all keys and then releasing
       // them again. We add a small delay between the key presses to make sure
@@ -55,8 +56,32 @@ export class HotkeyItemAction implements ItemAction {
         keys.push({ name: key, down: false, delay: 10 });
       }
 
+      // Inhibit all shortcuts while simulating keys if the option is enabled.
+      // This prevents the simulated input from triggering other Kando shortcuts.
+      if (data.inhibitShortcuts) {
+        app.getBackend().inhibitAllShortcuts();
+      }
+
       // Finally, we simulate the key presses using the backend.
-      app.getBackend().simulateKeys(keys).then(resolve, reject);
+      app
+        .getBackend()
+        .simulateKeys(keys)
+        .then(
+          () => {
+            // Restore all shortcuts after simulation completes if they were inhibited.
+            if (data.inhibitShortcuts) {
+              app.getBackend().inhibitShortcuts([]);
+            }
+            resolve();
+          },
+          (error) => {
+            // Restore all shortcuts even if an error occurred.
+            if (data.inhibitShortcuts) {
+              app.getBackend().inhibitShortcuts([]);
+            }
+            reject(error);
+          }
+        );
     });
   }
 }
