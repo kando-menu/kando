@@ -243,7 +243,7 @@
             "minimum-gesture-length-info": "Rovné pohyby musí být alespoň takto dlouhé pro spuštění výběru. Výchozí je 150px.",
             "developer-options": "Vývojářské Možnosti",
             "settings-window-dev-tools": "Nastavení Inspekce",
-            "message": "Všechny nastavení Kando jsou uloženy v souboru JSON, který můžete také upravovat, sdílet nebo zálohovat. Kliknutím [zde]({{link}}) otevřete adresář, kde je soubor config. json uložen.",
+            "message": "Všechna vaše menu a Kando nastavení jsou uloženy ve dvou souborech JSON, které můžete také upravit, sdílet nebo zálohovat. Kliknutím na tlačítko [zde]({{link}}) otevřete adresář, kde jsou soubory uloženy.",
             "app-behavior": "Chování Apky",
             "check-for-new-versions": "Kontrolovat nové verze",
             "check-for-new-versions-info": "Pokud je povoleno, Kando zobrazí upozornění pokud je k dispozici nová verze.",
@@ -286,7 +286,14 @@
             "close-menu": "Zavřít menu",
             "localization-info": "Restartujte Kando pro použití nového jazyka.",
             "hardware-acceleration": "Povolit hardwarovou akceleraci",
-            "hardware-acceleration-info": "Tato možnost může zvýšit výkon aplikace, ale může také vést k vykreslování artefaktů. Musíte restartovat Kando pro použítí tohoto nastavení."
+            "hardware-acceleration-info": "Tato možnost může zvýšit výkon aplikace, ale může také vést k vykreslování artefaktů. Musíte restartovat Kando pro použítí tohoto nastavení.",
+            "enable-achievements-info": "Pokud povoleno, Kando bude sledovat váš pokrok k úspěchům.",
+            "enable-achievements": "Sledovat úspěchy",
+            "backup-and-restore": "Záloha a Obnovení",
+            "backup-menus": "Zálohovat menus.json…",
+            "backup-settings": "Zálohovat config.json…",
+            "restore-menus": "Obnovit menus.json…",
+            "restore-settings": "Obnovit config.json…"
         },
         "hover-mode": "Hover Mód",
         "hover-mode-info": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
@@ -296,7 +303,8 @@
             "url-example": "URL příklad:",
             "base64-hint": "Base64 kódované ikony poskytují snadný způsob, jak zahrnout libovolný typ ikon do vašich menu. Můžete použít službu, jako je [www.base64-image.de]({{link}}) pro konverzi jakéhokoli obrazu do base64 kódovaného řetězce. To funguje dokonce pro animované gify!",
             "file-example": "soubor: URI příklad:",
-            "hint": "Naučte se [zde]({{link}}) jak přidat, nebo vytvořit vlastní motivy ikon."
+            "hint": "Naučte se [zde]({{link}}) jak přidat, nebo vytvořit vlastní témata ikon.",
+            "reload-button-tooltip": "Znovu načíst všechny témata ikon"
         },
         "introduction-dialog": {
             "title": "Vítejte v Kando!",
@@ -352,7 +360,9 @@
             "light-dark-mode": "Povolit světlý/tmavý mód",
             "create-your-own-themes": "Vytvořte si vlastní motivy",
             "open-theme-directory": "Otevřít adresář motivů",
-            "no-accent-colors": "Toto téma nepodporuje zabarvení."
+            "no-accent-colors": "Toto téma nepodporuje zabarvení.",
+            "selection-wedges-info": "Pokud povoleno a podporováno vybraným tématem, vybraná oblast menu bude zvýrazněna.",
+            "selection-wedges": "Nakreslete klín položky"
         },
         "not-bound": "Nepřiřazeno",
         "shortcut-id-label": "Zkratka ID",
@@ -422,6 +432,124 @@
             "hint": "Můžete také přetáhnout aplikaci z nabídky Start do editoru Kando menu!",
             "search-placeholder": "Vyhledat aplikaci…",
             "use-selected": "Použít vybrané"
-        }
+        },
+        "achievements-dialog": {
+            "reset-button": "Obnovit postup",
+            "reset-confirmation-title": "Opravdu chcete obnovit všechen pokrok?",
+            "reset-confirmation-message": "Všechny úspěchy a úrovně pokroku budou ztraceny. Tato akce nelze zrušit.",
+            "title": "Úspěchy",
+            "xp": "XP",
+            "no-in-progress-achievements": "Gratulujeme! Dokončili jste všechny úspěchy.",
+            "no-completed-achievements": "Zatím jste nedosáhli žádných úspěchů.",
+            "in-progress-button": "V pokroku",
+            "completed-button": "Dokončeno",
+            "reset-button-tooltip": "Obnovit všechny úspěchy a pokrok"
+        },
+        "restore-backup": "Obnovit zálohu…",
+        "restore-general-settings-warning-title": "Opravdu chcete obnovit obecné nastavení?",
+        "restore-general-settings-warning-message": "Toto přepíše aktuální nastavení aplikace obsahem vybraného záložního souboru! Vaše nabídky a menu kolekce nebudou ovlivněny.",
+        "restore-general-settings-error-title": "Načtení celkové zálohy nastavení bylo neúspěšné!",
+        "restore-general-settings-success-title": "Úspěch!",
+        "restore-general-settings-success-message": "Vaše obecné nastavení bylo obnoveno ze záložního souboru.",
+        "restore-menu-settings-warning-title": "Opravdu chcete obnovit menu nastavení?",
+        "restore-menu-settings-warning-message": "Toto přepíše vaše aktuální menu a menu kolekce obsahem vybraného záložního souboru!",
+        "restore-menu-settings-error-title": "Obnova menu ze zálohy se nezdařila!",
+        "restore-menu-settings-success-title": "Úspěch!",
+        "restore-menu-settings-success-message": "Vaše menu a manu kolekce byly obnoveny ze záložního souboru."
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "Nováček",
+            "capable": "Schopný",
+            "skilled": "Zkušený",
+            "expert": "Odborník",
+            "master": "Učitel"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "Cesta prázdnoty {{tier}}",
+            "description": "Zrušte výběr {{n}} krát."
+        },
+        "selector": {
+            "name": "{{attribute}} Samuraj",
+            "description": "Vyberte {{n}} položek."
+        },
+        "depth-selector": {
+            "name1": "{{attribute}} Kráječ",
+            "name2": "{{attribute}} Dvouvrstvý Kráječ",
+            "name3": "{{attribute}} Hlubinný Kráječ",
+            "description": "Vyberte {{n}} položek v hloubce {{depth}} rychleji než {{time}} ms."
+        },
+        "click-selector": {
+            "name": "{{attribute}} Klik-Klik Šampion",
+            "description": "Vyberte {{n}} položek pomocí kliknutí myší."
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}} Hrdina Zkratek",
+            "description": "Vyberte {{n}} položek pomocí klávesnice."
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}} Bojovník Ovladače",
+            "description": "Vyberte {{n}} položek pomocí ovladače."
+        },
+        "gesture-selector": {
+            "name": "{{attribute}} Mocný Ninja",
+            "description": "Vyberte {{n}} položek pomocí režimu turbo nebo značení."
+        },
+        "settings-opened": {
+            "name": "Putování je Odměnou {{tier}}",
+            "description": "Otevřete {{n}} krát okno nastavení."
+        },
+        "backup": {
+            "name": "Cesta Prozíravosti {{tier}}",
+            "description": "Zálohujte menu nebo nastavení {{n}} krát."
+        },
+        "restore": {
+            "name": "Druhá Šance {{tier}}",
+            "description": "Obnovte {{n}} krát zálohu."
+        },
+        "added-items": {
+            "name": "Stezka Kando {{tier}}",
+            "description": "Vytvořte {{n}} položek v menu editoru."
+        },
+        "deleted-all-menus": {
+            "name": "Vyčištěné Dojo",
+            "description": "Smažte všechna menu."
+        },
+        "full-menu": {
+            "name": "Širší než Hlubší",
+            "description": "Vytvořte menu s více než dvanácti položkami."
+        },
+        "deep-menu": {
+            "name": "Hlubinný Mistr",
+            "description": "Přidejte položku menu do čtyři úrovňe hlubokého podmenu."
+        },
+        "sponsors-viewed": {
+            "name": "Strážce Kando",
+            "description": "Zvažte, zda se nestát mecenášem Kando."
+        },
+        "menu-themes-selected": {
+            "name": "Cesta Estéta",
+            "description": "Přepněte motiv menu {{n}} krát."
+        },
+        "tutorial-viewed": {
+            "name": "Výprava Začíná",
+            "description": "Dokončete úvodní výukový program Kando."
+        },
+        "many-selections-streak": {
+            "name": "Ruce Blesku {{tier}}",
+            "description": "Vyberte {{n}} položek v {{time}} s."
+        },
+        "speedy-selections-streak": {
+            "name": "Rychlejší než Myšlenka {{tier}}",
+            "description": "Vytvořte {{n}} po sobě jdoucích výběrů v průměru rychleji než {{time}} ms."
+        },
+        "completed-title": "Úspěch odemčen!"
     }
 }

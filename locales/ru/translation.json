@@ -453,7 +453,9 @@
             "xp": "XP",
             "in-progress-button": "В процессе",
             "completed-button": "Завершены",
-            "reset-button-tooltip": "Сбросить все достижения и уровень прогресса"
+            "reset-button-tooltip": "Сбросить все достижения и уровень прогресса",
+            "no-in-progress-achievements": "Поздравляю! Вы выполнили все достижения.",
+            "no-completed-achievements": "Вы еще не выполнили ни одного достижения."
         }
     },
     "achievements": {

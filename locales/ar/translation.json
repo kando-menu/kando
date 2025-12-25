@@ -118,7 +118,14 @@
             "black": "اسود",
             "lazy-initialization": "التهيئة الكسولة",
             "hardware-acceleration": "تمكين مسرع المعالج الرسومي",
-            "hardware-acceleration-info": "يمكن أن يُحسّن هذا الخيار أداء التطبيق، ولكنه قد يُؤدي أيضًا إلى بعض الأخطاء في العرض. يجب إعادة تشغيل كاندو لتطبيق هذا الإعداد."
+            "hardware-acceleration-info": "يمكن أن يُحسّن هذا الخيار أداء التطبيق، ولكنه قد يُؤدي أيضًا إلى بعض الأخطاء في العرض. يجب إعادة تشغيل كاندو لتطبيق هذا الإعداد.",
+            "enable-achievements-info": "في حال تفعيل هذه الميزة، سيقوم تطبيق Kando بتتبع تقدمك نحو تحقيق الإنجازات.",
+            "enable-achievements": "تتبع الإنجازات",
+            "backup-and-restore": "النسخ الاحتياطي والاستعادة",
+            "backup-menus": "قم بعمل نسخة احتياطية من ملف القوائم menus.json…",
+            "backup-settings": "قم بعمل نسخة احتياطية من ملف الاعدادات config.json…",
+            "restore-menus": "استعادة ملف القوائم menus.json…",
+            "restore-settings": "استعادة ملف الاعدادات config.json…"
         },
         "introduction-dialog": {
             "slide1-title": "كاندو يوفر وسيلة فريدة وفعالة للتفاعل مع جهاز الكمبيوتر الخاص بك.",
@@ -170,7 +177,8 @@
             "get-themes-online": "احصل على السمات عبر الإنترنت",
             "create-your-own-themes": "إنشاء السمات الخاصة بك",
             "open-theme-directory": "فتح مسار السمات",
-            "author": "من {{author}}"
+            "author": "من {{author}}",
+            "selection-wedges-info": "إذا تم تمكين هذه الميزة ودعمها بواسطة السمة المختارة، فسيتم تمييز المنطقة القابلة للتحديد من عناصر القائمة."
         },
         "all-menus": "جميع القوائم",
         "search-menus-placeholder": "بحث القوائم…",
@@ -248,7 +256,30 @@
             "restart-countdown": "ابدأ العد التنازلي مرة أخرى",
             "start-countdown": "ابدأ العد التنازلي",
             "confirm": "استخدم هذه القيمة"
-        }
+        },
+        "achievements-dialog": {
+            "reset-button": "إعادة ضبط التقدم",
+            "reset-confirmation-title": "هل تريد حقاً إعادة ضبط كل التقدم؟",
+            "reset-confirmation-message": "ستُفقد جميع الإنجازات والتقدم في المستويات. لا يمكن التراجع عن هذا الإجراء.",
+            "title": "الإنجازات",
+            "xp": "نقاط الخبرة",
+            "no-in-progress-achievements": "تهانينا! لقد أكملت جميع الإنجازات.",
+            "no-completed-achievements": "لم تُكمل أي إنجازات حتى الآن.",
+            "in-progress-button": "في التَقَدم",
+            "completed-button": "مكتمل",
+            "reset-button-tooltip": "إعادة ضبط جميع الإنجازات وتقدم المستوى"
+        },
+        "restore-backup": "استعادة النسخة الاحتياطية…",
+        "restore-general-settings-warning-title": "هل تريد حقاً استعادة الإعدادات العامة؟",
+        "restore-general-settings-warning-message": "سيؤدي هذا إلى استبدال إعدادات التطبيق الحالية بمحتويات ملف النسخ الاحتياطي المحدد! لن تتأثر قوائمك ومجموعات القوائم.",
+        "restore-general-settings-error-title": "فشل تحميل النسخة الاحتياطية للإعدادات العامة!",
+        "restore-general-settings-success-title": "نجاحٌ!",
+        "restore-general-settings-success-message": "تم استعادة إعداداتك العامة من ملف النسخ الاحتياطي.",
+        "restore-menu-settings-warning-title": "هل تريد حقاً استعادة إعدادات القائمة؟",
+        "restore-menu-settings-warning-message": "سيؤدي هذا إلى استبدال قوائمك الحالية ومجموعات القوائم بمحتويات ملف النسخ الاحتياطي المحدد!",
+        "restore-menu-settings-error-title": "فشل تحميل النسخ الاحتياطي للقوائم!",
+        "restore-menu-settings-success-title": "نجاحٌ!",
+        "restore-menu-settings-success-message": "تم استعادة قوائمك ومجموعات القوائم الخاصة بك من ملف النسخ الاحتياطي."
     },
     "backends": {
         "niri": {
@@ -413,6 +444,34 @@
             "desktop": "سطح المكتب",
             "home": "البيت",
             "music": "موسيقى"
+        }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "مبتدئ",
+            "capable": "قادر",
+            "skilled": "ماهر",
+            "expert": "خبير",
+            "master": "خُرافي"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "طريق الفراغ{{tier}}",
+            "description": "قم بإلغاء عملية الاختيار {{n}} مرة."
+        },
+        "selector": {
+            "name": "{{attribute}} ساموراي",
+            "description": "اختر {{n}} عنصرًا."
+        },
+        "depth-selector": {
+            "name1": "القطاع {{attribute}}",
+            "name2": "القاطع طبقتين {{attribute}}"
         }
     }
 }
