@@ -44,7 +44,7 @@ export const MENU_ITEM_SCHEMA_V1 = z.object({
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf
-   * menu items will have this field.
+   * menu items will have this field. For submenu items, this may include centerAction.
    */
   data: z.unknown().nullish(),
 

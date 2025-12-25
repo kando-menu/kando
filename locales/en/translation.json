@@ -235,6 +235,16 @@
     "hover-mode": "Hover Mode",
     "repeat-last-action-info": "Click the center of the menu to repeat the last selected action.",
     "repeat-last-action": "Repeat Last Action",
+    "centerAction": {
+      "label": "Center Action",
+      "tip": "Configure what happens when you click the center of this menu.",
+      "closeMenu": "Close Menu",
+      "goToParent": "Go to Parent Menu",
+      "repeatGlobal": "Execute Previous Action (Last Global)",
+      "repeatMenu": "Execute Previous Action (Last in Menu)",
+      "repeatSubmenu": "Execute Previous Action (Last in Submenu)"
+    },
+    "child": "Child",
     "menu-conditions": "Menu Conditions",
     "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
     "app-condition-info": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",

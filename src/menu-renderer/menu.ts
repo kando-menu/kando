@@ -31,6 +31,9 @@ import { SoundTheme } from './sound-theme';
 /** Map to store the last selected item path for each menu (by menu root path). */
 const lastSelectedItemByMenu: Map<string, string> = new Map();
 
+/** Map to store the last selected item path in each submenu. */
+const lastSelectedItemBySubmenu: Map<string, string> = new Map();
+
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
  * the menu. The menu is shown by calling the show() method and hidden by calling the
@@ -369,10 +372,8 @@ export class Menu extends EventEmitter {
       }
 
       if (type === SelectionType.eRepeatLastAction) {
-        // Only execute repeat action if it's enabled for this menu
-        if (this.showMenuOptions.repeatLastAction) {
-          this.repeatLastAction(source, coords);
-        }
+        // Handle center action configuration
+        this.handleCenterAction(source, coords);
         return;
       }
 
@@ -715,6 +716,14 @@ export class Menu extends EventEmitter {
       // Store the last selected item path for this menu's repeat functionality
       const menuKey = this.root.path || '/';
       lastSelectedItemByMenu.set(menuKey, item.path);
+      
+      // Also track last item selected in the current submenu
+      const activeItem = this.selectionChain[this.selectionChain.length - 1];
+      if (activeItem) {
+        const submenuKey = activeItem.path || '/';
+        lastSelectedItemBySubmenu.set(submenuKey, item.path);
+      }
+      
       this.emit('select', item.path, Date.now() - this.menuShownTime, source);
     }
   }
@@ -749,7 +758,47 @@ export class Menu extends EventEmitter {
    *   achievement tracking.
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
+  /**
+   * This handles center action when the center of the menu is clicked. It checks the
+   * center action configuration of the current submenu and acts accordingly.
+   *
+   * @param source The input source (mouse, gamepad, etc.)
+   * @param coords The coordinates of the selection
    */
+  private handleCenterAction(source: SelectionSource, coords?: Vec2) {
+    // Get the center action from the current submenu item's data
+    const activeItem = this.selectionChain[this.selectionChain.length - 1];
+    const centerActionValue = (activeItem?.data && typeof activeItem.data === 'object' && 'centerAction' in activeItem.data)
+      ? activeItem.data.centerAction
+      : 'default';
+
+    // Handle different center action types
+    if (centerActionValue === 'default') {
+      // Default: close menu or go to parent
+      if (this.selectionChain.length === 1) {
+        this.cancel();
+      } else {
+        this.selectParent(source, coords);
+      }
+    } else if (centerActionValue === 'repeat-global') {
+      // Repeat last action globally
+      this.repeatLastAction(source, coords);
+    } else if (centerActionValue === 'repeat-menu') {
+      // Repeat last action in current menu
+      this.repeatLastActionInMenu(source, coords);
+    } else if (centerActionValue === 'repeat-submenu') {
+      // Repeat last action in current submenu
+      this.repeatLastActionInSubmenu(source, coords);
+    } else if (centerActionValue.startsWith('child:')) {
+      // Select a specific child by name
+      const childName = centerActionValue.substring(6); // Remove 'child:' prefix
+      const child = activeItem?.children?.find((c) => c.name === childName);
+      if (child) {
+        this.selectItem(child, source, coords);
+      }
+    }
+  }
+
   private repeatLastAction(source: SelectionSource, coords?: Vec2) {
     // Check if repeat last action is enabled for this menu
     const menuKey = this.root.path || '/';
@@ -783,6 +832,85 @@ export class Menu extends EventEmitter {
       this.selectItem(currentItem, source, coords);
     }
   }
+
+  /**
+   * Repeats the last action executed in the current menu (root menu).
+   */
+  private repeatLastActionInMenu(source: SelectionSource, coords?: Vec2) {
+    const menuKey = this.root.path || '/';
+    const lastActionPath = lastSelectedItemByMenu.get(menuKey);
+
+    if (!lastActionPath) {
+      return;
+    }
+
+    // Parse the path to get the indices
+    const pathSegments = lastActionPath
+      .split('/')
+      .filter((s) => s)
+      .map((s) => parseInt(s, 10));
+
+    if (pathSegments.length === 0) {
+      return;
+    }
+
+    // Navigate to the item using the path
+    let currentItem = this.root;
+    for (const index of pathSegments) {
+      if (!currentItem.children || !currentItem.children[index]) {
+        return;
+      }
+      currentItem = currentItem.children[index];
+    }
+
+    // Select the item if it's not a submenu
+    if (currentItem && currentItem.type !== 'submenu') {
+      this.selectItem(currentItem, source, coords);
+    }
+  }
+
+  /**
+   * Repeats the last action executed in the current submenu.
+   */
+  private repeatLastActionInSubmenu(source: SelectionSource, coords?: Vec2) {
+    // Get the current submenu item
+    const activeItem = this.selectionChain[this.selectionChain.length - 1];
+    if (!activeItem) {
+      return;
+    }
+
+    const submenuKey = activeItem.path || '/';
+    const lastActionPath = lastSelectedItemBySubmenu.get(submenuKey);
+
+    if (!lastActionPath) {
+      return;
+    }
+
+    // Parse the path to get the indices
+    const pathSegments = lastActionPath
+      .split('/')
+      .filter((s) => s)
+      .map((s) => parseInt(s, 10));
+
+    if (pathSegments.length === 0) {
+      return;
+    }
+
+    // Navigate to the item using the path
+    let currentItem = this.root;
+    for (const index of pathSegments) {
+      if (!currentItem.children || !currentItem.children[index]) {
+        return;
+      }
+      currentItem = currentItem.children[index];
+    }
+
+    // Select the item if it's not a submenu
+    if (currentItem && currentItem.type !== 'submenu') {
+      this.selectItem(currentItem, source, coords);
+    }
+  }
+
 
   /**
    * This will assign the CSS class 'hovered' to the given menu item's node div element.
