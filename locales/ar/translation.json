@@ -471,7 +471,24 @@
         },
         "depth-selector": {
             "name1": "القطاع {{attribute}}",
-            "name2": "القاطع طبقتين {{attribute}}"
+            "name2": "القاطع طبقتين {{attribute}}",
+            "name3": "القاطع العميق {{attribute}}",
+            "description": "حدد {{n}} عنصرًا على عمق {{depth}} في أقل من {{time}} مللي ثانية."
+        },
+        "click-selector": {
+            "name": "بطل النقر {{attribute}}",
+            "description": "حدد {{n}} عنصر باستخدام نقرات الفأرة."
+        },
+        "keyboard-selector": {
+            "name": "بطل الاختصارات {{attribute}}",
+            "description": "حدد {{n}} عنصر باستخدام لوحة المفاتيح."
+        },
+        "gamepad-selector": {
+            "name": "محارب يد تحكم الالعاب {{attribute}}",
+            "description": "حدد {{n}} عنصر باستخدام يد تحكم الالعاب."
+        },
+        "gesture-selector": {
+            "name": "قوة النينجا {{attribute}}"
         }
     }
 }
