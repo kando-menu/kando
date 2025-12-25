@@ -37,6 +37,9 @@ export abstract class Backend extends EventEmitter {
   /** A stack of previously bound shortcuts, used for temporary shortcut changes. */
   private boundShortcutsStack: string[][] = [];
 
+  /** A stack of previously inhibited shortcuts, used to restore inhibition state. */
+  private inhibitedShortcutsStack: string[][] = [];
+
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
    * for more information. This method may be called before the backend is initialized.
@@ -267,15 +270,20 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the shortcuts have been changed.
    */
   public async pushBoundShortcuts(shortcuts: string[]): Promise<void> {
-    // Save the current state to the stack
+    // Save the current state to the stacks
     this.boundShortcutsStack.push([...this.shortcuts]);
-    // Bind the new shortcuts
-    await this.bindShortcuts(shortcuts);
+    this.inhibitedShortcutsStack.push([...this.inhibitedShortcuts]);
+
+    // Bind the new shortcuts while preserving the inhibited shortcuts
+    if (!lodash.isEqual(shortcuts, this.shortcuts)) {
+      await this.bindShortcutsImpl(shortcuts, this.shortcuts);
+      this.shortcuts = shortcuts;
+    }
   }
 
   /**
-   * Pops the previously saved set of bound shortcuts from the stack and restores them.
-   * If the stack is empty, this does nothing. This should be called after a corresponding
+   * Pops the previously saved set of bound shortcuts from the stack and restores them. If
+   * the stack is empty, this does nothing. This should be called after a corresponding
    * pushBoundShortcuts() call to restore the previous state.
    *
    * @returns A promise which resolves when the shortcuts have been restored, or if the
@@ -285,8 +293,21 @@ export abstract class Backend extends EventEmitter {
     if (this.boundShortcutsStack.length === 0) {
       return;
     }
+
     const previousShortcuts = this.boundShortcutsStack.pop()!;
-    await this.bindShortcuts(previousShortcuts);
+    const previousInhibited = this.inhibitedShortcutsStack.pop()!;
+
+    // Restore the shortcuts and inhibited state
+    if (!lodash.isEqual(previousShortcuts, this.shortcuts)) {
+      await this.bindShortcutsImpl(previousShortcuts, this.shortcuts);
+      this.shortcuts = previousShortcuts;
+    }
+
+    // Restore the inhibited shortcuts without clearing them first
+    if (!lodash.isEqual(previousInhibited, this.inhibitedShortcuts)) {
+      await this.inhibitShortcutsImpl(previousInhibited, this.inhibitedShortcuts);
+      this.inhibitedShortcuts = previousInhibited;
+    }
   }
 
   /**
