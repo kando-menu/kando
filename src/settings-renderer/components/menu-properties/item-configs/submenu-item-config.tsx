@@ -13,9 +13,7 @@ import i18next from 'i18next';
 import { useMenuSettings, useAppState, getSelectedChild } from '../../../state';
 import { Dropdown } from '../../common';
 
-/**
- * The configuration component for submenu items allows configuring the center action.
- */
+/** The configuration component for submenu items allows configuring the center action. */
 export default function SubmenuItemConfig() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
@@ -61,22 +59,29 @@ export default function SubmenuItemConfig() {
 
   // Get/set centerAction from item.data
   const centerAction =
-    selectedItem.data && typeof selectedItem.data === 'object' && 'centerAction' in selectedItem.data
+    selectedItem.data &&
+    typeof selectedItem.data === 'object' &&
+    'centerAction' in selectedItem.data
       ? (selectedItem.data.centerAction as string)
       : 'default';
 
   const handleChange = (value: string) => {
     editMenuItem(selectedMenu, selectedChildPath, (oldItem) => {
-      const newData = { ...(typeof oldItem.data === 'object' && oldItem.data !== null ? oldItem.data : {}), centerAction: value };
+      const newData = {
+        ...(typeof oldItem.data === 'object' && oldItem.data !== null
+          ? oldItem.data
+          : {}),
+        centerAction: value,
+      };
       return { ...oldItem, data: newData };
     });
   };
 
   return (
     <Dropdown
-      label={i18next.t('settings.centerAction.label')}
       info={i18next.t('settings.centerAction.tip')}
       initialValue={centerAction}
+      label={i18next.t('settings.centerAction.label')}
       options={centerActionOptions}
       onChange={handleChange}
     />

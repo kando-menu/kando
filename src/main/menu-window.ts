@@ -619,18 +619,18 @@ export class MenuWindow extends BrowserWindow {
         try {
           // Find the selected item. Support cross-menu invocation using the format "<menuName>::<path>".
           if (typeof path === 'string' && path.indexOf('::') !== -1) {
-              const sep = path.indexOf('::');
-              const menuName = path.substring(0, sep);
-              const itemPath = path.substring(sep + 2);
+            const sep = path.indexOf('::');
+            const menuName = path.substring(0, sep);
+            const itemPath = path.substring(sep + 2);
 
-              const menus = this.kando.getMenuSettings().get('menus');
-              if (!Array.isArray(menus)) {
-                throw new Error('Menu settings corrupted.');
-              }
-              const targetMenu = menus.find((m) => m.root.name === menuName);
-              if (!targetMenu) {
-                throw new Error(`Menu with name "${menuName}" not found.`);
-              }
+            const menus = this.kando.getMenuSettings().get('menus');
+            if (!Array.isArray(menus)) {
+              throw new Error('Menu settings corrupted.');
+            }
+            const targetMenu = menus.find((m) => m.root.name === menuName);
+            if (!targetMenu) {
+              throw new Error(`Menu with name "${menuName}" not found.`);
+            }
             item = this.getMenuItemAtPath(targetMenu.root, itemPath);
 
             // If the action is not delayed, we execute it immediately.

@@ -31,7 +31,10 @@ import { SoundTheme } from './sound-theme';
 /** Map to store the last selected item path for each menu (keyed by menu name). */
 const lastSelectedItemByMenu: Map<string, string> = new Map();
 
-/** Map to store the last selected item path in each submenu (keyed by "<menuName>::<submenuPath>"). */
+/**
+ * Map to store the last selected item path in each submenu (keyed by
+ * "<menuName>::<submenuPath>").
+ */
 const lastSelectedItemBySubmenu: Map<string, string> = new Map();
 
 /** Global last selected item across all menus. */
@@ -724,7 +727,10 @@ export class Menu extends EventEmitter {
       lastSelectedGlobal = { menuName, path: item.path };
 
       // Also track last item selected in the parent submenu (keyed by menuName::parentPath)
-      const parent = this.selectionChain.length >= 2 ? this.selectionChain[this.selectionChain.length - 2] : null;
+      const parent =
+        this.selectionChain.length >= 2
+          ? this.selectionChain[this.selectionChain.length - 2]
+          : null;
       if (parent && parent.type === 'submenu') {
         const submenuKey = `${menuName}::${parent.path || '/'}`;
         lastSelectedItemBySubmenu.set(submenuKey, item.path);
@@ -763,20 +769,21 @@ export class Menu extends EventEmitter {
    * @param source The input method which was used to make the selection. Used for
    *   achievement tracking.
    * @param coords The position where the selection most likely happened. If it is not
-   *   given, the latest pointer input position is used.
-  /**
-   * This handles center action when the center of the menu is clicked. It checks the
-   * center action configuration of the current submenu and acts accordingly.
-   *
+   *   given, the latest pointer input position is used. /** This handles center action
+   *   when the center of the menu is clicked. It checks the center action configuration
+   *   of the current submenu and acts accordingly.
    * @param source The input source (mouse, gamepad, etc.)
    * @param coords The coordinates of the selection
    */
   private handleCenterAction(source: SelectionSource, coords?: Vec2) {
     // Get the center action from the current submenu item's data
     const activeItem = this.selectionChain[this.selectionChain.length - 1];
-    const centerActionValue = (activeItem?.data && typeof activeItem.data === 'object' && 'centerAction' in activeItem.data)
-      ? activeItem.data.centerAction
-      : 'default';
+    const centerActionValue =
+      activeItem?.data &&
+      typeof activeItem.data === 'object' &&
+      'centerAction' in activeItem.data
+        ? activeItem.data.centerAction
+        : 'default';
 
     // Handle different center action types
     if (centerActionValue === 'default') {
@@ -788,7 +795,7 @@ export class Menu extends EventEmitter {
       }
     } else if (centerActionValue === 'repeat-global') {
       // Repeat last action globally
-      this.repeatLastAction(source, coords);
+      this.repeatLastAction(source);
     } else if (centerActionValue === 'repeat-menu') {
       // Repeat last action in current menu
       this.repeatLastActionInMenu(source, coords);
@@ -805,20 +812,23 @@ export class Menu extends EventEmitter {
     }
   }
 
-  private repeatLastAction(source: SelectionSource, coords?: Vec2) {
+  private repeatLastAction(source: SelectionSource): void {
     // Execute the last global action if available
     if (lastSelectedGlobal) {
       const { menuName, path } = lastSelectedGlobal;
       // Hide the menu before executing the cross-menu action
       this.hide();
       // Use the main process to execute the specified menu item across menus
-      (window as any).menuAPI.selectItem(`${menuName}::${path}`, 0, source);
+      const menuAPI = window as unknown as {
+        menuAPI: {
+          selectItem: (path: string, time: number, source: SelectionSource) => void;
+        };
+      };
+      menuAPI.menuAPI.selectItem(`${menuName}::${path}`, 0, source);
     }
   }
 
-  /**
-   * Repeats the last action executed in the current menu (root menu).
-   */
+  /** Repeats the last action executed in the current menu (root menu). */
   private repeatLastActionInMenu(source: SelectionSource, coords?: Vec2) {
     const menuName = this.root.name || '/';
     const lastActionPath = lastSelectedItemByMenu.get(menuName);
@@ -852,9 +862,7 @@ export class Menu extends EventEmitter {
     }
   }
 
-  /**
-   * Repeats the last action executed in the current submenu.
-   */
+  /** Repeats the last action executed in the current submenu. */
   private repeatLastActionInSubmenu(source: SelectionSource, coords?: Vec2) {
     // Get the current submenu item (or root if at root level)
     const activeItem = this.selectionChain[this.selectionChain.length - 1];
@@ -864,7 +872,7 @@ export class Menu extends EventEmitter {
 
     const menuName = this.root.name || '/';
     // For root menu, use '/' as the key
-    const submenuPath = activeItem === this.root ? '/' : (activeItem.path || '/');
+    const submenuPath = activeItem === this.root ? '/' : activeItem.path || '/';
     const submenuKey = `${menuName}::${submenuPath}`;
     const lastActionPath = lastSelectedItemBySubmenu.get(submenuKey);
 
@@ -896,7 +904,6 @@ export class Menu extends EventEmitter {
       this.selectItem(currentItem, source, coords);
     }
   }
-
 
   /**
    * This will assign the CSS class 'hovered' to the given menu item's node div element.

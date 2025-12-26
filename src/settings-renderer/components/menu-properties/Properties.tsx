@@ -52,11 +52,13 @@ export default function Properties() {
   }, [selectedMenu, menus]);
 
   // Center action options for the root menu
-  const rootChildOptions = (menus[selectedMenu]?.root?.children || []).map((child, index) => {
-    // Use index as the unique identifier to handle duplicate child names
-    const value = `child:${index}`;
-    return { value, label: child.name };
-  });
+  const rootChildOptions = (menus[selectedMenu]?.root?.children || []).map(
+    (child, index) => {
+      // Use index as the unique identifier to handle duplicate child names
+      const value = `child:${index}`;
+      return { value, label: child.name };
+    }
+  );
 
   const rootCenterActionOptions = [
     {
@@ -69,13 +71,19 @@ export default function Properties() {
     ...rootChildOptions,
   ];
 
-  const rootCenterAction = (menus[selectedMenu]?.root?.data && typeof menus[selectedMenu].root.data === 'object' && 'centerAction' in menus[selectedMenu].root.data)
-    ? String((menus[selectedMenu].root.data as any).centerAction)
-    : 'default';
+  const rootCenterAction =
+    menus[selectedMenu]?.root?.data &&
+    typeof menus[selectedMenu].root.data === 'object' &&
+    'centerAction' in menus[selectedMenu].root.data
+      ? String((menus[selectedMenu].root.data as Record<string, unknown>).centerAction)
+      : 'default';
 
   const setRootCenterAction = (value: string) => {
     editMenu(selectedMenu, (menu) => {
-      const newData = { ...(menu.root.data && typeof menu.root.data === 'object' ? menu.root.data : {}), centerAction: value };
+      const newData = {
+        ...(menu.root.data && typeof menu.root.data === 'object' ? menu.root.data : {}),
+        centerAction: value,
+      };
       menu.root.data = newData;
       return menu;
     });
@@ -194,9 +202,9 @@ export default function Properties() {
               isRoot ? (
                 <>
                   <Dropdown
-                    label={i18next.t('settings.centerAction.label')}
                     info={i18next.t('settings.centerAction.tip')}
                     initialValue={rootCenterAction}
+                    label={i18next.t('settings.centerAction.label')}
                     options={rootCenterActionOptions}
                     onChange={setRootCenterAction}
                   />
