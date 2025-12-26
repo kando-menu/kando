@@ -295,7 +295,8 @@
             "url-example": "URL de exemplo:",
             "file-example": "arquivo: URI de exemplo:",
             "hint": "Veja [aqui]({{link}}) como adicionar ou criar seus próprios temas de ícones.",
-            "base64-hint": "Ícones codificados em base64 são uma forma fácil de incluir qualquer tipo de ícone em seus menus. Você pode usar um serviço como [www.base64-image.de]({{link}}) para converter qualquer imagem em um texto codificado em base64. Funciona até para gifs animados!"
+            "base64-hint": "Ícones codificados em base64 são uma forma fácil de incluir qualquer tipo de ícone em seus menus. Você pode usar um serviço como [www.base64-image.de]({{link}}) para converter qualquer imagem em um texto codificado em base64. Funciona até para gifs animados!",
+            "reload-button-tooltip": "Recarregar todos os temas de ícones"
         },
         "introduction-dialog": {
             "title": "Bem-vindo ao Kando!",
@@ -421,6 +422,15 @@
             "hint": "Você também pode arrastar e soltar um aplicativo do seu menu Iniciar para o editor de menu do Kando!",
             "search-placeholder": "Pesquisar um aplicativo…",
             "use-selected": "Usar selecionado"
+        },
+        "achievements-dialog": {
+            "reset-confirmation-message": "Todas as conquistas e o progresso no nível serão perdidos. Essa ação não pode ser desfeita.",
+            "title": "Conquistas",
+            "xp": "XP",
+            "no-in-progress-achievements": "Parabéns! Você completou todas as conquistas.",
+            "no-completed-achievements": "Você ainda não completou nenhuma conquista.",
+            "in-progress-button": "Em Progresso",
+            "completed-button": "Completas"
         }
     }
 }
