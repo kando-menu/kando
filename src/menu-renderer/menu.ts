@@ -28,11 +28,14 @@ import { ButtonState, InputState, SelectionType } from './input-methods/input-me
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 
-/** Map to store the last selected item path for each menu (by menu root path). */
+/** Map to store the last selected item path for each menu (keyed by menu name). */
 const lastSelectedItemByMenu: Map<string, string> = new Map();
 
-/** Map to store the last selected item path in each submenu. */
+/** Map to store the last selected item path in each submenu (keyed by "<menuName>::<submenuPath>"). */
 const lastSelectedItemBySubmenu: Map<string, string> = new Map();
+
+/** Global last selected item across all menus. */
+let lastSelectedGlobal: { menuName: string; path: string } | null = null;
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -714,16 +717,19 @@ export class Menu extends EventEmitter {
     if (item.type !== 'submenu') {
       this.container.classList.add('selected');
       // Store the last selected item path for this menu's repeat functionality
-      const menuKey = this.root.path || '/';
-      lastSelectedItemByMenu.set(menuKey, item.path);
-      
-      // Also track last item selected in the current submenu
-      const activeItem = this.selectionChain[this.selectionChain.length - 1];
-      if (activeItem) {
-        const submenuKey = activeItem.path || '/';
+      const menuName = this.root.name || '/';
+      lastSelectedItemByMenu.set(menuName, item.path);
+
+      // Update global last selected (for Execute Previous Action - Global)
+      lastSelectedGlobal = { menuName, path: item.path };
+
+      // Also track last item selected in the parent submenu (keyed by menuName::parentPath)
+      const parent = this.selectionChain.length >= 2 ? this.selectionChain[this.selectionChain.length - 2] : null;
+      if (parent && parent.type === 'submenu') {
+        const submenuKey = `${menuName}::${parent.path || '/'}`;
         lastSelectedItemBySubmenu.set(submenuKey, item.path);
       }
-      
+
       this.emit('select', item.path, Date.now() - this.menuShownTime, source);
     }
   }
@@ -790,9 +796,9 @@ export class Menu extends EventEmitter {
       // Repeat last action in current submenu
       this.repeatLastActionInSubmenu(source, coords);
     } else if (centerActionValue.startsWith('child:')) {
-      // Select a specific child by name
-      const childName = centerActionValue.substring(6); // Remove 'child:' prefix
-      const child = activeItem?.children?.find((c) => c.name === childName);
+      // Select a specific child by index (handles duplicate names)
+      const childIndex = parseInt(centerActionValue.substring(6), 10); // Remove 'child:' prefix
+      const child = activeItem?.children?.[childIndex];
       if (child) {
         this.selectItem(child, source, coords);
       }
@@ -800,36 +806,13 @@ export class Menu extends EventEmitter {
   }
 
   private repeatLastAction(source: SelectionSource, coords?: Vec2) {
-    // Check if repeat last action is enabled for this menu
-    const menuKey = this.root.path || '/';
-    const lastActionPath = lastSelectedItemByMenu.get(menuKey);
-
-    if (!lastActionPath) {
-      return;
-    }
-
-    // Parse the path to get the indices
-    const pathSegments = lastActionPath
-      .split('/')
-      .filter((s) => s)
-      .map((s) => parseInt(s, 10));
-
-    if (pathSegments.length === 0) {
-      return;
-    }
-
-    // Navigate to the item using the path
-    let currentItem = this.root;
-    for (const index of pathSegments) {
-      if (!currentItem.children || !currentItem.children[index]) {
-        return;
-      }
-      currentItem = currentItem.children[index];
-    }
-
-    // Select the item if it's not a submenu
-    if (currentItem && currentItem.type !== 'submenu') {
-      this.selectItem(currentItem, source, coords);
+    // Execute the last global action if available
+    if (lastSelectedGlobal) {
+      const { menuName, path } = lastSelectedGlobal;
+      // Hide the menu before executing the cross-menu action
+      this.hide();
+      // Use the main process to execute the specified menu item across menus
+      (window as any).menuAPI.selectItem(`${menuName}::${path}`, 0, source);
     }
   }
 
@@ -837,8 +820,8 @@ export class Menu extends EventEmitter {
    * Repeats the last action executed in the current menu (root menu).
    */
   private repeatLastActionInMenu(source: SelectionSource, coords?: Vec2) {
-    const menuKey = this.root.path || '/';
-    const lastActionPath = lastSelectedItemByMenu.get(menuKey);
+    const menuName = this.root.name || '/';
+    const lastActionPath = lastSelectedItemByMenu.get(menuName);
 
     if (!lastActionPath) {
       return;
@@ -873,13 +856,16 @@ export class Menu extends EventEmitter {
    * Repeats the last action executed in the current submenu.
    */
   private repeatLastActionInSubmenu(source: SelectionSource, coords?: Vec2) {
-    // Get the current submenu item
+    // Get the current submenu item (or root if at root level)
     const activeItem = this.selectionChain[this.selectionChain.length - 1];
     if (!activeItem) {
       return;
     }
 
-    const submenuKey = activeItem.path || '/';
+    const menuName = this.root.name || '/';
+    // For root menu, use '/' as the key
+    const submenuPath = activeItem === this.root ? '/' : (activeItem.path || '/');
+    const submenuKey = `${menuName}::${submenuPath}`;
     const lastActionPath = lastSelectedItemBySubmenu.get(submenuKey);
 
     if (!lastActionPath) {

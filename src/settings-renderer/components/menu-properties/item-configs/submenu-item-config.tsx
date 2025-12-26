@@ -30,10 +30,11 @@ export default function SubmenuItemConfig() {
   }
 
   // Center action options
-  const childOptions = (selectedItem.children || []).map((child) => ({
-    value: `child:${child.name}`,
-    label: child.name,
-  }));
+  const childOptions = (selectedItem.children || []).map((child, index) => {
+    // Use index as the unique identifier to handle duplicate child names
+    const value = `child:${index}`;
+    return { value, label: child.name };
+  });
 
   const centerActionOptions = [
     {
