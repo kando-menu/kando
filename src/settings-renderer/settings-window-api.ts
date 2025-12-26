@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, OpenDialogOptions, webFrame } from 'electron';
+import { ipcRenderer, OpenDialogOptions, SaveDialogOptions, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
@@ -185,6 +185,26 @@ export const SETTINGS_WINDOW_API = {
    */
   restoreMenuSettings: () => {
     ipcRenderer.send('settings-window.restore-menu-settings');
+  },
+
+  /** This will export a single menu to a JSON file. */
+  exportMenu: (menuIndex: number, filePath: string): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.export-menu', menuIndex, filePath);
+  },
+
+  /** This will import a menu from a JSON file. */
+  importMenu: (filePath: string): Promise<boolean> => {
+    return ipcRenderer.invoke('settings-window.import-menu', filePath);
+  },
+
+  /** This will show a save dialog for exporting. */
+  showSaveDialog: (options: SaveDialogOptions): Promise<string> => {
+    return ipcRenderer.invoke('settings-window.show-save-dialog', options);
+  },
+
+  /** This will show an error dialog. */
+  showErrorDialog: (title: string, message: string): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.show-error-dialog', title, message);
   },
 };
 
