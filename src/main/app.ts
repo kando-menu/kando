@@ -43,6 +43,7 @@ import {
   tryLoadMenuSettingsFile,
 } from './settings';
 import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
+import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
@@ -819,13 +820,18 @@ export class KandoApp {
           throw new Error('Invalid menu index');
         }
 
+        // We only export the root menu item (so exported files stay compact and
+        // don't include local UI flags like centered/anchored/hoverMode). This
+        // also makes future extensions easier.
         const menu = settings.menus[menuIndex];
         const menuData = {
           version: settings.version,
-          menu: menu,
+          menu: menu.root,
         };
 
         try {
+          // Validate the exported shape before writing to disk
+          EXPORTED_MENU_SCHEMA_V1.parse(menuData, { reportInput: true });
           fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf-8');
         } catch (error) {
           throw new Error(
@@ -840,10 +846,12 @@ export class KandoApp {
       try {
         const content = fsExtra.readJsonSync(filePath, 'utf-8');
 
-        // Validate the menu data using the schema
-        const validatedMenu = MENU_SCHEMA_V1.parse(content.menu || content, {
-          reportInput: true,
-        });
+        // Validate the exported file format first (version + root menu item)
+        const exported = EXPORTED_MENU_SCHEMA_V1.parse(content, { reportInput: true });
+
+        // Convert the exported root into a full MENU object so defaults (like
+        // centered/anchored/hoverMode and shortcut fields) are applied.
+        const validatedMenu = MENU_SCHEMA_V1.parse({ root: exported.menu }, { reportInput: true });
 
         // Add the menu to the settings
         const settings = this.menuSettings.get();
