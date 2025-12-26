@@ -782,7 +782,7 @@ export class Menu extends EventEmitter {
       activeItem?.data &&
       typeof activeItem.data === 'object' &&
       'centerAction' in activeItem.data
-        ? activeItem.data.centerAction
+        ? (activeItem.data.centerAction as string)
         : 'default';
 
     // Handle different center action types
