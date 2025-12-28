@@ -488,7 +488,40 @@
             "description": "حدد {{n}} عنصر باستخدام يد تحكم الالعاب."
         },
         "gesture-selector": {
-            "name": "قوة النينجا {{attribute}}"
+            "name": "قوة النينجا {{attribute}}",
+            "description": "حدد {{n}} عنصرًا باستخدام وضع التوربو أو وضع التحديد."
+        },
+        "settings-opened": {
+            "name": "{{tier}} الرحلة هي المكافأة",
+            "description": "افتح مربع حوار الإعدادات {{n}} مرة."
+        },
+        "backup": {
+            "name": "{{tier}} مسار الاستبصار",
+            "description": "قم بعمل نسخة احتياطية من قوائمك أو إعداداتك {{n}} مرة."
+        },
+        "restore": {
+            "name": "{{tier}} فرصة ثانية",
+            "description": "استعادة نسخة احتياطية {{n}} مرة."
+        },
+        "added-items": {
+            "name": "{{tier}} طريق كاندو",
+            "description": "أنشئ {{n}} عنصرًا في محرر القوائم."
+        },
+        "deleted-all-menus": {
+            "name": "امسح الدوجو",
+            "description": "احذف جميع قوائمك."
+        },
+        "full-menu": {
+            "name": "الاتساع على العمق",
+            "description": "أنشئ قائمة تحتوي على أكثر من اثني عشر عنصرًا."
+        },
+        "deep-menu": {
+            "name": "سيد العمق",
+            "description": "أضف عنصر قائمة إلى قائمة فرعية ذات أربعة مستويات."
+        },
+        "sponsors-viewed": {
+            "name": "حارس كاندو",
+            "description": "فكر في أن تصبح راعياً لـ Kando."
         }
     }
 }
