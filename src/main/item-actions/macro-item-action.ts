@@ -38,44 +38,36 @@ export class MacroItemAction implements ItemAction {
    * @returns A promise which resolves when the macro has been successfully simulated.
    */
   async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
-    return new Promise<void>((resolve, reject) => {
-      const data = item.data as ItemData;
+    const data = item.data as ItemData;
 
-      const keys: KeySequence = [];
+    const keys: KeySequence = [];
 
-      data.macro.forEach((event) => {
-        const delay = event.delay || 10;
-        const name = event.key;
-        const down = event.type === 'keyDown';
-        keys.push({ name, down, delay });
+    data.macro.forEach((event) => {
+      keys.push({
+        name: event.key,
+        down: event.type === 'keyDown',
+        delay: event.delay ?? 10,
       });
-
-      // Inhibit all shortcuts while simulating keys if the option is enabled.
-      // This prevents the simulated input from triggering other Kando shortcuts.
-      if (data.inhibitShortcuts) {
-        app.getBackend().inhibitAllShortcuts();
-      }
-
-      // Finally, we simulate the key presses using the backend.
-      app
-        .getBackend()
-        .simulateKeys(keys)
-        .then(
-          () => {
-            // Restore all shortcuts after simulation completes if they were inhibited.
-            if (data.inhibitShortcuts) {
-              app.getBackend().inhibitShortcuts([]);
-            }
-            resolve();
-          },
-          (error) => {
-            // Restore all shortcuts even if an error occurred.
-            if (data.inhibitShortcuts) {
-              app.getBackend().inhibitShortcuts([]);
-            }
-            reject(error);
-          }
-        );
     });
+
+    const backend = app.getBackend();
+
+    // Temporarily inhibit all shortcuts while simulating keys if enabled.
+    // This prevents the simulated input from triggering other Kando shortcuts.
+    // Use the shortcut stack to properly restore the previous state.
+    if (data.inhibitShortcuts) {
+      await backend.pushBoundShortcuts([]);
+    }
+
+    try {
+      // Simulate the key presses using the backend.
+      await backend.simulateKeys(keys);
+    } finally {
+      // Restore all shortcuts after simulation completes if they were inhibited.
+      // The finally block ensures this happens even if an error occurred.
+      if (data.inhibitShortcuts) {
+        await backend.popBoundShortcuts();
+      }
+    }
   }
 }
