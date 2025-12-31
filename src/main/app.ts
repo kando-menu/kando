@@ -291,7 +291,7 @@ export class KandoApp {
     }
 
     if (options.closeMenu) {
-      this.menuWindow?.webContents.send('menu-window.hide-menu');
+      this.menuWindow?.hide();
       return true;
     }
 
