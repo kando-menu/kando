@@ -810,36 +810,59 @@ export class KandoApp {
       );
     });
 
-    // Export a single menu to a JSON file
-    ipcMain.handle(
-      'settings-window.export-menu',
-      async (event, menuIndex: number, filePath: string) => {
-        const settings = this.menuSettings.get();
+    // Export a single menu to a JSON file. If no filePath is provided, show a save dialog.
+    ipcMain.handle('settings-window.export-menu', async (event, menuIndex: number, filePath?: string) => {
+      const settings = this.menuSettings.get();
 
-        if (menuIndex < 0 || menuIndex >= settings.menus.length) {
-          throw new Error('Invalid menu index');
-        }
-
-        // We only export the root menu item (so exported files stay compact and
-        // don't include local UI flags like centered/anchored/hoverMode). This
-        // also makes future extensions easier.
-        const menu = settings.menus[menuIndex];
-        const menuData = {
-          version: settings.version,
-          menu: menu.root,
-        };
-
-        try {
-          // Validate the exported shape before writing to disk
-          EXPORTED_MENU_SCHEMA_V1.parse(menuData, { reportInput: true });
-          fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf-8');
-        } catch (error) {
-          throw new Error(
-            `Failed to export menu: ${error instanceof Error ? error.message : String(error)}`
-          );
-        }
+      if (menuIndex < 0 || menuIndex >= settings.menus.length) {
+        await dialog.showMessageBox(this.settingsWindow, {
+          type: 'error',
+          title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
+          message: i18next.t('settings.export-menu-error-message', 'The selected menu index is invalid.'),
+        });
+        return false;
       }
-    );
+
+      // We only export the root menu item (so exported files stay compact and
+      // don't include local UI flags like centered/anchored/hoverMode). This
+      // also makes future extensions easier.
+      const menu = settings.menus[menuIndex];
+      const menuData = {
+        version: settings.version,
+        menu: menu.root,
+      };
+
+      try {
+        // Validate the exported shape before writing to disk
+        EXPORTED_MENU_SCHEMA_V1.parse(menuData, { reportInput: true });
+
+        let targetPath = filePath;
+        if (!targetPath) {
+          const result = await dialog.showSaveDialog(this.settingsWindow, {
+            defaultPath: `${menu.root.name}.json`,
+            filters: [{ name: 'JSON', extensions: ['json'] }],
+          });
+
+          if (result.canceled || !result.filePath) {
+            return false;
+          }
+
+          targetPath = result.filePath;
+        }
+
+        fs.writeFileSync(targetPath, JSON.stringify(menuData, null, 2), 'utf-8');
+        return true;
+      } catch (error) {
+        console.error('Failed to export menu:', error);
+        await dialog.showMessageBox(this.settingsWindow, {
+          type: 'error',
+          title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
+          message: 'Failed to export menu.',
+          detail: error instanceof Error ? error.message : String(error),
+        });
+        return false;
+      }
+    });
 
     // Import a menu from a JSON file
     ipcMain.handle('settings-window.import-menu', async (event, filePath: string) => {
@@ -863,29 +886,26 @@ export class KandoApp {
         return true;
       } catch (error) {
         console.error('Error importing menu:', error);
-        throw new Error(
-          `Failed to import menu: ${error instanceof Error ? error.message : String(error)}`
-        );
-      }
-    });
 
-    // Show save dialog for exporting
-    ipcMain.handle('settings-window.show-save-dialog', async (event, options) => {
-      const result = await dialog.showSaveDialog(this.settingsWindow, options);
-      return result.filePath || '';
-    });
+        let detail = error instanceof Error ? error.message : String(error);
 
-    // Show error dialog
-    ipcMain.handle(
-      'settings-window.show-error-dialog',
-      async (event, title: string, message: string) => {
+        // If this is a schema/validation error, try to extract useful messages.
+        if (error && (error as any).issues && Array.isArray((error as any).issues)) {
+          detail = (error as any).issues
+            .map((issue: any) => `${issue.path?.join('.') || '<root>'}: ${issue.message}`)
+            .join('\n');
+        }
+
         await dialog.showMessageBox(this.settingsWindow, {
           type: 'error',
-          title,
-          message,
+          title: i18next.t('settings.import-menu-error-title', 'Failed to import menu'),
+          message: 'The selected file could not be imported. It does not contain a valid Kando exported menu.',
+          detail,
         });
+
+        return false;
       }
-    );
+    });
 
     // Allow the renderer to retrieve the i18next locales.
     ipcMain.handle('common.get-locales', () => {

@@ -82,14 +82,8 @@ export default function MenuList() {
       return;
     }
 
-    const result = await window.settingsAPI.showSaveDialog({
-      defaultPath: `${menus[selectedMenu].name}.json`,
-      filters: [{ name: 'JSON', extensions: ['json'] }],
-    });
-
-    if (result) {
-      await window.settingsAPI.exportMenu(selectedMenu, result);
-    }
+    // Let the main process show the save dialog and perform the export.
+    await window.settingsAPI.exportMenu(selectedMenu);
   };
 
   // Handle menu import
@@ -99,17 +93,13 @@ export default function MenuList() {
     });
 
     if (result) {
-      try {
-        await window.settingsAPI.importMenu(result);
-      } catch (error) {
-        console.error('Error importing menu:', error);
-        window.settingsAPI.showErrorDialog(
-          i18next.t('settings.import-menu-error-title'),
-          error instanceof Error ? error.message : String(error)
-        );
+      const success = await window.settingsAPI.importMenu(result);
+      if (!success) {
+        // Import failed; the main process already showed a descriptive error dialog.
+        console.error('Import failed for file:', result);
       }
     }
-  };
+  }; 
 
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
