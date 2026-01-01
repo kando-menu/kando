@@ -290,6 +290,11 @@ export class KandoApp {
       return true;
     }
 
+    if (options.closeMenu) {
+      this.menuWindow?.hide();
+      return true;
+    }
+
     return false;
   }
 

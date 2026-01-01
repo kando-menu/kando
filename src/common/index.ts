@@ -33,6 +33,10 @@ export type CommandlineOptions = {
   // This optional parameter is specified using the --reload-icon-themes option. It is
   // used to reload the available icon themes from disk.
   readonly reloadIconThemes?: boolean;
+
+  // This optional parameter is specified using the --close-menu option. It is used to
+  // close the currently open menu.
+  readonly closeMenu?: boolean;
 };
 
 /**
