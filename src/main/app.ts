@@ -270,6 +270,11 @@ export class KandoApp {
       return true;
     }
 
+    if (options.trigger) {
+      this.showMenu({ trigger: options.trigger });
+      return true;
+    }
+
     if (options.settings) {
       this.showSettings();
       return true;
