@@ -31,12 +31,14 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
 - A setting to **enable or disable the drawing of selection wedges** in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
 - A new `--close-menu` command line flag which closes the currently opened menu. Thanks to [@yar2000T](https://github.com/yar2000T) for this contribution!
+- A new `--trigger <shortcut>` command line flag which opens the menu assigned to the given shortcut or shortcut ID. It behaves as if the shortcut had been pressed, so all context conditions are checked. Also, if multiple menus are assigned to the same shortcut, the one with the most specific conditions will be opened. Furthermore, if a menu is already open, calling this command will be like pressing the shortcut again - so it will either close the menu or cycle through the matching menus depending on your settings.
 - Many translation updates: **Thanks to all the contributors!**
 - Add support for GNOME's classic mode.
 - The possibility to change the label color of the "Rainbow Labels" theme.
 
 ### :wrench: Changed
 
+- The behavior of the `--menu <menu name>` command line flag. Now, the menu conditions are checked before opening the menu. If multiple menus with the same name exist, the one with the most specific conditions will be opened. Furthermore, if a menu is already open, calling this command will be like pressing the shortcut again - so it will either close the menu or cycle through the matching menus depending on your settings.
 - The macOS builds are now created on macOS 15 instead of macOS 13.
 - Added `/System/Library/CoreServices` and `/System/Library/CoreServices/Applications` to the app and icon search paths on macOS. Thanks to [@LitoMore](https://github.com/LitoMore) for this!
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!

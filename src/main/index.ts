@@ -31,7 +31,11 @@ const options = program
   .name('kando')
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
-  .option('-m, --menu <menu>', 'show the menu with the given name')
+  .option('-m, --menu <menu name>', 'show the menu with the given name')
+  .option(
+    '-t, --trigger <shortcut>',
+    'show the menu with the given shortcut or shortcut ID'
+  )
   .option('-s, --settings', 'show the settings')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
@@ -50,6 +54,7 @@ if (!gotTheLock) {
   // show a corresponding desktop notification.
   if (
     !options.menu &&
+    !options.trigger &&
     !options.settings &&
     !options.reloadMenuTheme &&
     !options.reloadSoundTheme &&
@@ -177,6 +182,7 @@ try {
       const parsedUrl = new URL(deepLink);
       const options = {
         menu: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('name'),
+        trigger: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('trigger'),
         settings: parsedUrl.host === 'settings',
         reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
         reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
