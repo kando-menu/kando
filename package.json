@@ -31,7 +31,7 @@
     "@electron-forge/maker-squirrel": "^7.9.0",
     "@electron-forge/maker-zip": "^7.9.0",
     "@electron-forge/plugin-webpack": "^7.9.0",
-    "@eslint/compat": "^1.4.0",
+    "@eslint/compat": "^2.0.0",
     "@eslint/js": "^9.39.2",
     "@formkit/auto-animate": "0.8.2",
     "@types/chai": "^5.2.2",
