@@ -356,7 +356,7 @@ export class KandoApp {
    *
    * @param request Required information to select correct menu.
    */
-  public async showMenu(request: Partial<ShowMenuRequest>) {
+  public async showMenu(request: ShowMenuRequest) {
     // Create and load the main window if it does not exist yet.
     if (!this.menuWindow) {
       this.menuWindow = new MenuWindow(this);

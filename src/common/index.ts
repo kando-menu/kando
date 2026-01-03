@@ -10,7 +10,7 @@
 
 export * from './settings-schemata';
 
-import { AchievementStats } from './settings-schemata';
+import { AchievementStats, Menu } from './settings-schemata';
 
 /** This type is used to pass command line arguments to the app. */
 export type CommandlineOptions = {
@@ -179,12 +179,14 @@ export type KeySequence = Array<KeyStroke>;
 /**
  * There are different reasons why a menu should be shown. This type is used to describe
  * the request to show a menu. A menu can be shown because a shortcut was pressed (in this
- * case `trigger` will be the shortcut or the shortcut ID) or because a menu was requested
- * by name.
+ * case `trigger` will be the shortcut or the shortcut ID), because a menu was requested
+ * by name, or a custom menu is requested (in this case `menu` contains the menu
+ * structure).
  */
 export type ShowMenuRequest = {
-  readonly trigger: string;
-  readonly name: string;
+  readonly trigger?: string;
+  readonly name?: string;
+  readonly menu?: Menu;
 };
 
 /**

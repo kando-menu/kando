@@ -137,19 +137,13 @@ export class MenuWindow extends BrowserWindow {
    * @param systemIconsChanged True if the system icon theme has changed since the last
    *   time the menu was shown.
    */
-  public showMenu(
-    request: Partial<ShowMenuRequest>,
-    info: WMInfo,
-    systemIconsChanged: boolean
-  ) {
+  public showMenu(request: ShowMenuRequest, info: WMInfo, systemIconsChanged: boolean) {
     const sameShortcutBehavior = this.kando
       .getGeneralSettings()
       .get('sameShortcutBehavior');
 
     // If a menu is currently shown and the user presses the same shortcut again we will
-    // either close the menu or show the next one with the same shortcut. There is also
-    // the option to do nothing in this case, but in this case the menu's shortcut will be
-    // inhibited and thus this method will not be called in the first place.
+    // either close the menu or show the next one with the same shortcut.
     if (this.isVisible()) {
       let isSameMenu = false;
       if (request.name != null) {
@@ -206,7 +200,9 @@ export class MenuWindow extends BrowserWindow {
     if (!this.kando.allShortcutsInhibited() && sameShortcutBehavior === 'nothing') {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const shortcut = useID ? menu.shortcutID : menu.shortcut;
-      this.kando.getBackend().inhibitShortcuts([shortcut]);
+      if (shortcut && shortcut.length > 0) {
+        this.kando.getBackend().inhibitShortcuts([shortcut]);
+      }
     }
 
     // Store the last menu to be able to execute the selected action later. The WMInfo
@@ -404,21 +400,27 @@ export class MenuWindow extends BrowserWindow {
   /**
    * This chooses the correct menu depending on the environment.
    *
-   * If the request contains a menu name, this menu is chosen. If no menu with the given
-   * name is found, an exception is thrown. If there are multiple menus with the same
-   * name, the first one is chosen. No other conditions are checked in this case.
+   * If the request contains a custom menu, this menu is returned. No other conditions are
+   * checked in this case.
    *
-   * If the request contains a trigger (shortcut or shortcutID), a list of menus bound to
-   * this trigger is assembled and the menu with the best matching conditions is chosen.
-   * If no menu with the given trigger is found, null is returned.
+   * If the request contains a trigger (shortcut or shortcutID) or menu name, we first
+   * check whether there are any menus with the given trigger or name. If none are found,
+   * an exception is thrown.
    *
-   * If neither a menu name nor a trigger is given, null is returned.
+   * Then, a list of menu candidates is assembled and the menu with the best matching
+   * conditions is chosen. If no menu with the given trigger or name is found, null is
+   * returned.
    *
    * @param request Required information to select correct menu.
    * @param info Information about current desktop environment.
    * @returns The selected menu or null if no menu was found.
    */
-  public chooseMenu(request: Partial<ShowMenuRequest>, info: WMInfo) {
+  public chooseMenu(request: ShowMenuRequest, info: WMInfo) {
+    // If a custom menu is given in the request, we return this menu directly.
+    if (request.menu) {
+      return request.menu;
+    }
+
     // Get list of current menus.
     const menus = this.kando.getMenuSettings().get('menus');
 
@@ -427,7 +429,19 @@ export class MenuWindow extends BrowserWindow {
     if (request.name != null) {
       const menu = menus.find((m) => m.root.name === request.name);
       if (!menu) {
-        throw new Error(`Menu with name "${request.name}" not found.`);
+        throw new Error(`No menu with name "${request.name}" found.`);
+      }
+    }
+
+    // We check if the request has a trigger. If no menu with this trigger is found, we
+    // throw an error.
+    if (request.trigger != null) {
+      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+      const menu = menus.find(
+        (m) => (useID ? m.shortcutID : m.shortcut) === request.trigger
+      );
+      if (!menu) {
+        throw new Error(`No menu with trigger "${request.trigger}" found.`);
       }
     }
 
