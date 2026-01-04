@@ -107,6 +107,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0",
     "typescript-plugin-css-modules": "^5.2.0",
+    "ws": "^8.18.3",
     "zod": "^4.2.0",
     "zundo": "^2.1.0",
     "zustand": "^5.0.9"

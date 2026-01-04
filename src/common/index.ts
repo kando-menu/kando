@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 export * from './settings-schemata';
+export * from './typed-event-emitter';
 
 import { AchievementStats, Menu } from './settings-schemata';
 
