@@ -20,6 +20,7 @@ import { ItemType } from './item-type-registry';
 export type ItemData = {
   hotkey: string;
   delayed: boolean;
+  inhibitShortcuts: boolean;
 };
 
 /** This class provides meta information for menu items that simulate a hotkey. */
@@ -44,6 +45,7 @@ export class HotkeyItemType implements ItemType {
     return {
       hotkey: '',
       delayed: true,
+      inhibitShortcuts: false,
     };
   }
 

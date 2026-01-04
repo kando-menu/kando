@@ -381,7 +381,7 @@ export class KandoApp {
     }
 
     try {
-      this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
+      await this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
     } catch (error) {
       Notification.show({
         title: 'Failed to show menu',
