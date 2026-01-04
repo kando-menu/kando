@@ -406,6 +406,9 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   mData.mPointerEventReceived = false;
 
   int timeoutMs = 500;
+  if (mData.mSeatCapabilities & WL_SEAT_CAPABILITY_TOUCH) {
+    timeoutMs = 1000;
+  }
   using clock = std::chrono::steady_clock;
   auto start = clock::now();
   bool mPointerGetTimedOut = false;
