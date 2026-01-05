@@ -24,6 +24,7 @@ import {
   Swirl,
   Scrollbox,
   TextInput,
+  Dropdown,
 } from '../common';
 import { getConfigComponent } from './item-configs';
 import MenuConditions from './MenuConditions';
@@ -49,6 +50,44 @@ export default function Properties() {
   React.useEffect(() => {
     setMenuTags(menus[selectedMenu]?.tags || []);
   }, [selectedMenu, menus]);
+
+  // Center action options for the root menu
+  const rootChildOptions = (menus[selectedMenu]?.root?.children || []).map(
+    (child, index) => {
+      // Use index as the unique identifier to handle duplicate child names
+      const value = `child:${index}`;
+      return { value, label: child.name };
+    }
+  );
+
+  const rootCenterActionOptions = [
+    {
+      value: 'default',
+      label: i18next.t('settings.centerAction.closeMenu'),
+    },
+    { value: 'repeat-global', label: i18next.t('settings.centerAction.repeatGlobal') },
+    { value: 'repeat-menu', label: i18next.t('settings.centerAction.repeatMenu') },
+    { value: 'repeat-submenu', label: i18next.t('settings.centerAction.repeatSubmenu') },
+    ...rootChildOptions,
+  ];
+
+  const rootCenterAction =
+    menus[selectedMenu]?.root?.data &&
+    typeof menus[selectedMenu].root.data === 'object' &&
+    'centerAction' in menus[selectedMenu].root.data
+      ? String((menus[selectedMenu].root.data as Record<string, unknown>).centerAction)
+      : 'default';
+
+  const setRootCenterAction = (value: string) => {
+    editMenu(selectedMenu, (menu) => {
+      const newData = {
+        ...(menu.root.data && typeof menu.root.data === 'object' ? menu.root.data : {}),
+        centerAction: value,
+      };
+      menu.root.data = newData;
+      return menu;
+    });
+  };
 
   if (selectedMenu === -1 || selectedMenu >= menus.length) {
     return (
@@ -162,6 +201,13 @@ export default function Properties() {
               // We also show the sections for the menu behavior and conditions.
               isRoot ? (
                 <>
+                  <Dropdown
+                    info={i18next.t('settings.centerAction.tip')}
+                    initialValue={rootCenterAction}
+                    label={i18next.t('settings.centerAction.label')}
+                    options={rootCenterActionOptions}
+                    onChange={setRootCenterAction}
+                  />
                   <MenuBehavior />
                   <MenuConditions />
                 </>
