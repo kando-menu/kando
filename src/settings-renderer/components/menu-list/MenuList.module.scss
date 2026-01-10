@@ -28,16 +28,20 @@
 }
 
 .menu {
+  position: relative;
   display: block;
+  box-sizing: border-box;
   background-color: $widget-normal;
   color: $text-normal;
   border: 1px solid transparent;
+  line-height: normal;
 
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 8px;
   text-align: left;
   width: 100%;
+  overflow: hidden;
 
   transition: box-shadow 0.2s;
 
@@ -48,9 +52,10 @@
   &.selected {
     background-color: $widget-selected;
     border: $border-selected;
+    padding-right: 36px;
 
     &:hover {
-      background-color: $widget-selected-hover;
+      background-color: $widget-selected;
     }
   }
 
@@ -58,7 +63,7 @@
     background-color: $widget-normal-hover;
   }
 
-  &:active {
+  &:not(.selected):active {
     transform: translateY(1px);
   }
 
@@ -75,6 +80,34 @@
 
   &.dropping {
     box-shadow: $drop-highlight;
+  }
+
+  .options {
+    pointer-events: all;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 5px;
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+    color: $text-link;
+    transform: translateX(100%);
+    transition: transform 0.2s;
+  }
+
+  &.selected .options {
+    transform: none;
+
+    &:hover {
+      color: $text-link-hover;
+      background-color: light-dark(rgba($key-dark, 0.2), rgba($key-light, 0.2));
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
   }
 }
 

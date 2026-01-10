@@ -126,7 +126,7 @@ const config: ForgeConfig = {
         "font-src 'self' file: data:; " +
         "style-src-elem 'self' 'unsafe-inline' file: data:; " +
         "media-src 'self' file: data:; " +
-        "connect-src 'self' file:; ",
+        "connect-src 'self' file: ws:; ",
 
       mainConfig,
       renderer: {

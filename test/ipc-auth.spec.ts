@@ -48,7 +48,7 @@ describe('IPC Protocol', function () {
       respond('accept');
     });
 
-    const client = new IPCClient('TestClient', tmpDir);
+    const client = new IPCClient('TestClient', server.getPort());
     const { token, permissions } = await client.init();
 
     expect(token).to.be.a('string');
@@ -111,7 +111,7 @@ describe('IPC Protocol', function () {
       respond('decline');
     });
 
-    const client = new IPCClient('DeclinedClient', tmpDir);
+    const client = new IPCClient('DeclinedClient', server.getPort());
 
     try {
       await client.init();
@@ -129,7 +129,7 @@ describe('IPC Protocol', function () {
       respond('cancel');
     });
 
-    const client = new IPCClient('CanceledClient', tmpDir);
+    const client = new IPCClient('CanceledClient', server.getPort());
 
     try {
       await client.init();
@@ -148,13 +148,13 @@ describe('IPC Protocol', function () {
     });
 
     // Create and authenticate the first client.
-    const client = new IPCClient('TestClient', tmpDir);
+    const client = new IPCClient('TestClient', server.getPort());
     await client.init();
     client.close();
 
     // Create the same client a second time. We do not provide the token of the first
     // client, so this should be declined.
-    const client2 = new IPCClient('TestClient', tmpDir);
+    const client2 = new IPCClient('TestClient', server.getPort());
 
     try {
       await client2.init();
@@ -173,12 +173,12 @@ describe('IPC Protocol', function () {
     });
 
     // Create and authenticate the first client.
-    const client = new IPCClient('TestClient', tmpDir);
+    const client = new IPCClient('TestClient', server.getPort());
     const { token } = await client.init();
     client.close();
 
     // Create the same client a second time, now providing the token. This should work.
-    const client2 = new IPCClient('TestClient', tmpDir, token);
+    const client2 = new IPCClient('TestClient', server.getPort(), token);
     const authResult = await client2.init();
 
     expect(authResult.token).to.equal(token);
@@ -192,13 +192,13 @@ describe('IPC Protocol', function () {
     });
 
     // Create and authenticate the first client.
-    const client = new IPCClient('TestClient', tmpDir);
+    const client = new IPCClient('TestClient', server.getPort());
     const { token } = await client.init();
     client.close();
 
     // Create the same client a second time, now providing an invalid token. This should
     // be declined.
-    const client2 = new IPCClient('TestClient', tmpDir, token + 'invalid');
+    const client2 = new IPCClient('TestClient', server.getPort(), token + 'invalid');
 
     try {
       await client2.init();
@@ -208,5 +208,29 @@ describe('IPC Protocol', function () {
     }
 
     client2.close();
+  });
+
+  it('should silently accept kando as a client', async function () {
+    // Make the server decline all clients.
+    server.on('auth-request', (clientName, permissions, respond) => {
+      respond('decline');
+    });
+
+    // Get the special Kando token.
+    const kandoToken = server.getKandoToken();
+    expect(kandoToken.clientName).to.equal('kando');
+    expect(kandoToken.token).to.be.a('string');
+
+    // Create the kando client using the special token. This should be accepted.
+    const kandoClient = new IPCClient(
+      kandoToken.clientName,
+      server.getPort(),
+      kandoToken.token
+    );
+    const authResult = await kandoClient.init();
+
+    expect(authResult.token).to.equal(kandoToken.token);
+    expect(authResult.permissions).to.include(IPCTypes.IPCPermission.eShowMenu);
+    kandoClient.close();
   });
 });

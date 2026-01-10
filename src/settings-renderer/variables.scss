@@ -16,7 +16,8 @@ $key-dark: #9f3b67;
 $key-light: #f0cece;
 
 $text-normal: light-dark(#333, #eee);
-$text-inverted: light-dark(#eee, #fff);
+$text-inverted: light-dark(#eee, #333);
+$text-always-light: light-dark(#eee, #fff);
 $text-muted: light-dark(#777, #aaa);
 $text-link: light-dark($key-dark, $key-light);
 $text-link-hover: light-dark(

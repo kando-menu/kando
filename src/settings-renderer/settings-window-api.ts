@@ -21,6 +21,7 @@ import {
   AppDescription,
   LevelProgress,
 } from '../common';
+import { IPCMenuManager } from './utils/ipc-menu-manager';
 
 /**
  * These functions are available in the settings window's renderer process. They are
@@ -195,4 +196,5 @@ export const SETTINGS_WINDOW_API = {
 export type WindowWithAPIs = {
   readonly commonAPI: typeof COMMON_WINDOW_API;
   readonly settingsAPI: typeof SETTINGS_WINDOW_API;
+  ipcAPI: IPCMenuManager;
 } & Window;

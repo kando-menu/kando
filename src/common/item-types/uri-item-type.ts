@@ -26,6 +26,10 @@ export class URIItemType implements ItemType {
     return false;
   }
 
+  get isUserSelectable(): boolean {
+    return true;
+  }
+
   get defaultName(): string {
     return i18next.t('menu-items.uri.name');
   }

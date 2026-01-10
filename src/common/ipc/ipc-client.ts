@@ -9,12 +9,25 @@
 // SPDX-License-Identifier: MIT
 
 import { EventEmitter } from 'events';
-import WebSocket from 'ws';
-import fs from 'fs';
-import path from 'path';
 
 import * as IPCTypes from './types';
 import { TypedEventEmitter, MenuItem } from '..';
+
+// Select the appropriate WebSocket implementation for Node.js or browser/Electron renderer.
+const crossWebSocket =
+  typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined'
+    ? window.WebSocket
+    : require('ws');
+
+// Define a minimal cross-environment WebSocket type
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type CrossWebSocket = {
+  send(data: string): void;
+  close(): void;
+  onopen?: () => void;
+  onmessage?: (event: { data: string }) => void;
+  onerror?: (event: unknown) => void;
+};
 
 /** These events are emitted by the IPC client when menu interactions occur. */
 type IPCClientEvents = {
@@ -39,11 +52,7 @@ type IPCClientEvents = {
  *     client.on('hover', (path) => { ... });
  */
 export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCClientEvents>) {
-  /** The protocol version supported by this server. Clients must match this version. */
-  private static readonly cAPIVersion = 1;
-
-  private ws: WebSocket | null = null;
-  private ipcInfo: IPCTypes.IPCInfo | null = null;
+  private ws: CrossWebSocket | null = null;
   private authenticated = false;
 
   /**
@@ -51,14 +60,13 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
    *
    * @param clientName The name of the client. Used for authentication and identification.
    *   This will be shown to users when they approve or deny access.
-   * @param infoDir The directory where the ipc-info.json file is stored (which contains
-   *   the websocket port).
+   * @param port The port used by the IPC server.
    * @param token Optional authentication token. If not provided, a new one will be
    *   requested. However, if the user has previously denied access, this will fail.
    */
   constructor(
     private clientName: string,
-    private infoDir: string,
+    private port: number,
     private token?: string
   ) {
     super();
@@ -74,34 +82,16 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
    * @throws If the ipc-info.json file is missing, or authentication fails.
    */
   public async init(): Promise<{ token: string; permissions: IPCTypes.IPCPermission[] }> {
-    const infoPath = path.join(this.infoDir, 'ipc-info.json');
-    if (!fs.existsSync(infoPath)) {
-      throw new Error('ipc-info.json not found');
-    }
-
-    const infoRaw = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
-    const infoParsed = IPCTypes.IPC_INFO_SCHEMA.safeParse(infoRaw);
-    if (infoParsed.success) {
-      this.ipcInfo = infoParsed.data;
-
-      if (this.ipcInfo.apiVersion !== IPCClient.cAPIVersion) {
-        throw new Error(
-          `IPC API version mismatch: Client supports ${IPCClient.cAPIVersion}, ` +
-            `server supports ${this.ipcInfo.apiVersion}`
-        );
-      }
-
-      this.ws = new WebSocket(`ws://127.0.0.1:${this.ipcInfo.port}`);
-    } else {
-      throw new Error('Invalid ipc-info.json format');
-    }
-
+    this.ws = new crossWebSocket(`ws://127.0.0.1:${this.port}`) as CrossWebSocket;
     return new Promise<{ token: string; permissions: IPCTypes.IPCPermission[] }>(
       (resolve, reject) => {
         let authResolved = false;
+        const ws = this.ws!;
+        ws.onopen = () => handleOpen();
+        ws.onmessage = (event: { data: string }) => handleMessage(event.data);
+        ws.onerror = (event: unknown) => handleError(event);
 
-        // Authenticate using the provided token or request a new one.
-        this.ws.on('open', () => {
+        const handleOpen = (): void => {
           if (this.token) {
             const authMsg: IPCTypes.AuthMessage = {
               type: 'auth',
@@ -109,7 +99,7 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
               token: this.token,
               apiVersion: 1,
             };
-            this.ws.send(JSON.stringify(authMsg));
+            ws.send(JSON.stringify(authMsg));
           } else {
             const authReqMsg: IPCTypes.AuthRequestMessage = {
               type: 'auth-request',
@@ -117,13 +107,12 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
               permissions: [IPCTypes.IPCPermission.eShowMenu],
               apiVersion: 1,
             };
-            this.ws.send(JSON.stringify(authReqMsg));
+            ws.send(JSON.stringify(authReqMsg));
           }
-        });
+        };
 
-        this.ws.on('message', (data) => {
-          const msg = JSON.parse(data.toString());
-
+        const handleMessage = (data: string): void => {
+          const msg = JSON.parse(data);
           // Handle authentication responses.
           if (!this.authenticated && !authResolved) {
             const acceptedParse = IPCTypes.AUTH_ACCEPTED_MESSAGE.safeParse(msg);
@@ -134,7 +123,6 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
               resolve({ token: this.token, permissions: acceptedParse.data.permissions });
               return;
             }
-
             const declinedParse = IPCTypes.AUTH_DECLINED_MESSAGE.safeParse(msg);
             if (declinedParse.success) {
               authResolved = true;
@@ -142,7 +130,6 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
               return;
             }
           }
-
           // Handle menu events (after authentication).
           if (this.authenticated) {
             if (IPCTypes.SELECT_ITEM_MESSAGE.safeParse(msg).success) {
@@ -153,13 +140,13 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
               this.emit('hover', (msg as IPCTypes.HoverItemMessage).path);
             }
           }
-        });
+        };
 
-        this.ws.on('error', (err) => {
+        const handleError = (err: unknown): void => {
           if (!authResolved) {
             reject(err);
           }
-        });
+        };
       }
     );
   }
@@ -174,11 +161,7 @@ export class IPCClient extends (EventEmitter as new () => TypedEventEmitter<IPCC
     if (!this.ws || !this.authenticated) {
       throw new Error('Not connected or authenticated');
     }
-    const msg: IPCTypes.ShowMenuMessage = {
-      type: 'show-menu',
-      menu,
-    };
-    this.ws.send(JSON.stringify(msg));
+    this.ws.send(JSON.stringify({ type: 'show-menu', menu }));
   }
 
   /** Closes the WebSocket connection, allowing tests and processes to exit cleanly. */

@@ -92,7 +92,7 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
         // Retrieve the assigned port and write it to ipc-info.json.
         const address = this.wss.address() as AddressInfo;
         this.port = address.port;
-        console.log(`IPCServer Listening on ws://127.0.0.1:${this.port}`);
+        console.log(`Listening for show-menu requests on ws://127.0.0.1:${this.port}`);
         try {
           const info: IPCTypes.IPCInfo = {
             port: this.port,
@@ -116,6 +116,16 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
       this.wss.close();
       this.wss = undefined;
     }
+  }
+
+  /** Returns the token for Kando's own IPC client. */
+  public getKandoToken() {
+    return this.auth.getKandoToken();
+  }
+
+  /** Returns the port the server is listening on. */
+  public getPort(): number {
+    return this.port;
   }
 
   /**

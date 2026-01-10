@@ -17,6 +17,7 @@ import { CommandItemType } from './command-item-type';
 import { FileItemType } from './file-item-type';
 import { HotkeyItemType } from './hotkey-item-type';
 import { MacroItemType } from './macro-item-type';
+import { SimpleButtonItemType } from './simple-button-type';
 import { SubmenuItemType } from './submenu-item-type';
 import { TextItemType } from './text-item-type';
 import { URIItemType } from './uri-item-type';
@@ -32,6 +33,13 @@ import { SettingsItemType } from './settings-item-type';
 export interface ItemType {
   /** Whether this type of menu item has children. */
   hasChildren: boolean;
+
+  /**
+   * If false, this item type will not be available in the menu editor. Items of this type
+   * can still be created programmatically, for instance when opening a menu via the IPC
+   * API.
+   */
+  isUserSelectable: boolean;
 
   /** The default name for new menu items of this kind. */
   defaultName: string;
@@ -81,6 +89,7 @@ export class ItemTypeRegistry {
     this.types.set('uri', new URIItemType());
     this.types.set('redirect', new RedirectItemType());
     this.types.set('settings', new SettingsItemType());
+    this.types.set('simple-button', new SimpleButtonItemType());
   }
 
   /**

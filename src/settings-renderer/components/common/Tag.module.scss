@@ -18,7 +18,7 @@
   height: 20px;
 
   background-color: $widget-inverted;
-  color: $text-inverted;
+  color: $text-always-light;
   border: none;
 
   border-radius: 0 5px 5px 0;
@@ -55,7 +55,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: $text-inverted;
+    background: $text-always-light;
     transition: opacity 0.1s;
   }
 

@@ -23,7 +23,7 @@ type IPCClientInfo = {
 export class IPCAuth {
   private clients: Record<string, IPCClientInfo> = {};
   private tokenPath: string;
-  private ownClientName = 'kando';
+  private kandoClientName = 'kando';
 
   constructor(dir: string) {
     this.tokenPath = path.join(dir, 'ipc-tokens.json');
@@ -93,10 +93,10 @@ export class IPCAuth {
   }
 
   /** Returns the token for Kando's own IPC client. */
-  public getOwnToken(): { clientName: string; token: string } {
+  public getKandoToken(): { clientName: string; token: string } {
     return {
-      clientName: this.ownClientName,
-      token: this.clients[this.ownClientName].token,
+      clientName: this.kandoClientName,
+      token: this.clients[this.kandoClientName].token,
     };
   }
 
@@ -112,8 +112,8 @@ export class IPCAuth {
     }
 
     // Ensure Kando itself can connect.
-    const token = this.generateToken(this.ownClientName);
-    this.clients[this.ownClientName] = {
+    const token = this.generateToken(this.kandoClientName);
+    this.clients[this.kandoClientName] = {
       token,
       permissions: [IPCPermission.eShowMenu],
     };

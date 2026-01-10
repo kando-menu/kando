@@ -8,50 +8,39 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import i18next from 'i18next';
-
 import { ItemType } from './item-type-registry';
 
 /**
- * For this type of menu items, the user can configure a hotkey that will be simulated
- * when the item is clicked. If the `delayed` flag is set, the hotkey will be simulated
- * after the Kando window has been closed.
+ * This class provides meta information for the simple-button item type. This item type is
+ * not user-selectable; it is not available in the menu editor. It can only be used
+ * programmatically. In fact it, is the basic action which is used in IPC menus.
  */
-export type ItemData = {
-  hotkey: string;
-  delayed: boolean;
-};
-
-/** This class provides meta information for menu items that simulate a hotkey. */
-export class HotkeyItemType implements ItemType {
+export class SimpleButtonItemType implements ItemType {
   get hasChildren(): boolean {
     return false;
   }
 
   get isUserSelectable(): boolean {
-    return true;
+    return false;
   }
 
   get defaultName(): string {
-    return i18next.t('menu-items.hotkey.name');
+    return 'Button';
   }
 
   get defaultIcon(): string {
-    return 'hotkey-item.svg';
+    return 'settings-item.svg';
   }
 
   get defaultIconTheme(): string {
     return 'kando';
   }
 
-  get defaultData(): ItemData {
-    return {
-      hotkey: '',
-      delayed: true,
-    };
+  get defaultData() {
+    return {};
   }
 
   get genericDescription(): string {
-    return i18next.t('menu-items.hotkey.description');
+    return 'A simple button without any action.';
   }
 }

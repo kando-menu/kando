@@ -8,11 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+import { WindowWithAPIs } from '../../settings-window-api';
+declare const window: WindowWithAPIs;
+
 import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus, TbCopy, TbTrash } from 'react-icons/tb';
+import { TbPlus, TbCopy, TbTrash, TbDots } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -172,7 +175,7 @@ export default function MenuList() {
 
             {renderedMenus.map((menu) => {
               return (
-                <button
+                <div
                   key={menu.key}
                   draggable
                   className={cx({
@@ -180,7 +183,6 @@ export default function MenuList() {
                     selected: menu.index === selectedMenu,
                     dragging: dragIndex === menu.index,
                   })}
-                  type="button"
                   onClick={() => selectMenu(menu.index)}
                   onDragEnd={() => {
                     moveMenu(dragIndex, dropIndex);
@@ -286,16 +288,65 @@ export default function MenuList() {
                       deleteMenu(menu.index);
                     }
                   }}>
-                  <div style={{ display: 'flex' }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between', flex: 1 }}>
                     <div style={{ flexShrink: 0, width: 32, marginRight: 10 }}>
                       <ThemedIcon name={menu.icon} theme={menu.iconTheme} />
                     </div>
-                    <div style={{ minWidth: 0 }}>
+                    <div style={{ minWidth: 0, flexGrow: 1 }}>
                       <div className={classes.menuTitle}>{menu.name}</div>
                       <div className={classes.menuSubtitle}>{menu.shortcut}</div>
                     </div>
+
+                    <div
+                      className={cx({
+                        options: true,
+                      })}
+                      onClick={() =>
+                        window.ipcAPI.showMenu(
+                          'Test Menu',
+                          'settings-item.svg',
+                          'kando',
+                          [
+                            {
+                              name: i18next.t('settings.duplicate-menu'),
+                              icon: 'content_copy',
+                              iconTheme: 'material-symbols-rounded',
+                              callback: () => {
+                                console.log('Duplicate triggered');
+                              },
+                            },
+                            {
+                              name: 'Import Menu',
+                              icon: 'download_2',
+                              iconTheme: 'material-symbols-rounded',
+                              callback: () => {
+                                console.log('Import triggered');
+                              },
+                            },
+                            {
+                              name: i18next.t('settings.delete-menu'),
+                              icon: 'delete',
+                              iconTheme: 'material-symbols-rounded',
+                              callback: () => {
+                                console.log('Delete triggered');
+                              },
+                            },
+                            {
+                              name: 'Export Menu',
+                              icon: 'upload_2',
+                              iconTheme: 'material-symbols-rounded',
+                              callback: () => {
+                                console.log('Export triggered');
+                              },
+                            },
+                          ]
+                        )
+                      }>
+                      <TbDots />
+                    </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>

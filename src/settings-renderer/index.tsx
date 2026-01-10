@@ -21,6 +21,7 @@ import { enableDragDropTouch } from 'drag-drop-touch';
 import App from './components/App';
 import { useAppState, useGeneralSettings, useMenuSettings } from './state';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
+import { IPCMenuManager } from './utils/ipc-menu-manager';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is
@@ -129,6 +130,19 @@ Promise.all([
 
     useAppState.subscribe(validateState);
     useMenuSettings.subscribe(validateState);
+
+    // Initialize IPCMenuManager globally and attach to window ---------------------------
+
+    try {
+      window.ipcAPI = new IPCMenuManager(
+        systemInfo.ipcClientName,
+        systemInfo.ipcPort,
+        systemInfo.ipcToken
+      );
+      await window.ipcAPI.init();
+    } catch (e) {
+      console.error('Failed to initialize IPCMenuManager:', e);
+    }
 
     // Initialize the global state objects -----------------------------------------------
 

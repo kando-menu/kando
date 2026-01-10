@@ -33,16 +33,18 @@ export default function PreviewFooter() {
       </div>
       <div className={classes.shadow} />
       <div className={classes.newItems}>
-        {allItemTypes.map(([name, type]) => (
-          <FooterButton
-            key={name}
-            description={type.genericDescription}
-            icon={type.defaultIcon}
-            iconTheme={type.defaultIconTheme}
-            id={name}
-            name={type.defaultName}
-          />
-        ))}
+        {allItemTypes
+          .filter(([, type]) => type.isUserSelectable)
+          .map(([name, type]) => (
+            <FooterButton
+              key={name}
+              description={type.genericDescription}
+              icon={type.defaultIcon}
+              iconTheme={type.defaultIconTheme}
+              id={name}
+              name={type.defaultName}
+            />
+          ))}
       </div>
     </div>
   );
