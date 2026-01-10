@@ -245,6 +245,20 @@ export class KandoApp {
         this.achievementTracker.getProgress()
       );
     });
+
+    // Reinit the backend when settings change
+    this.generalSettings.onChange('wlrootsPointerGetTimeoutMouse', () => {
+      this.backend.deinit();
+      this.backend.init(this.generalSettings);
+    });
+    this.generalSettings.onChange('wlrootsPointerGetTimeoutTouch', () => {
+      this.backend.deinit();
+      this.backend.init(this.generalSettings);
+    });
+    this.generalSettings.onChange('wlrootsPointerGetTimeoutDefaultBehavior', () => {
+      this.backend.deinit();
+      this.backend.init(this.generalSettings);
+    });
   }
 
   /** This is called when the app is closed. It will unbind all shortcuts. */

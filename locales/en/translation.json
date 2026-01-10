@@ -68,6 +68,7 @@
       "top-right": "Top Right",
       "bottom-left": "Bottom Left",
       "bottom-right": "Bottom Right",
+      "center": "Center",
       "settings-window-color-scheme-info": "If you choose 'system', the settings window will use the same color scheme as your operating system.",
       "settings-window-color-scheme": "Settings window color scheme",
       "system": "System",
@@ -148,7 +149,16 @@
       "reload-sound-theme": "Reload sound theme",
       "dev-tools-note": "Kando uses two windows: One for the menu and one for the settings. You can open the development tools to inspect both windows separately.",
       "menu-window-dev-tools": "Inspect menu",
-      "settings-window-dev-tools": "Inspect settings"
+      "settings-window-dev-tools": "Inspect settings",
+      "wlroots-specific-options": "wlroots-specific Options",
+      "options-that-will-only-affect-the-wlroots-backend": "These options only affect wlroots-based backends and have no effect on other backends.",
+      "wlroots-pointer-get-timeout-mouse": "Mouse pointer get timeout",
+      "wlroots-pointer-get-timeout-mouse-info": "The maximum time in milliseconds to wait for a mouse pointer position from the wlroots-based backends. If the timeout is reached, a fallback position will be used. Default is 500ms.",
+      "wlroots-pointer-get-timeout-touch": "Touch pointer get timeout",
+      "wlroots-pointer-get-timeout-touch-info": "The maximum time in milliseconds to wait for a touch pointer position from the wlroots-based backends. If the timeout is reached, a fallback position will be used. Default is 1500ms.",
+      "wlroots-pointer-get-timeout-default-behavior": "Pointer timeout fallback position",
+      "wlroots-pointer-get-timeout-default-behavior-info": "Determines where the pointer should be assumed to be if no position could be obtained from the wlroots-based backends within the configured timeout.",
+      "previously-reported": "Previously reported"
     },
     "introduction-dialog": {
       "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",
