@@ -1,6 +1,6 @@
 {
   "name": "kando",
-  "version": "2.2.0-alpha.1",
+  "version": "2.2.0-beta.1",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2025 Simon Schneegans",
   "main": ".webpack/main",
@@ -96,7 +96,7 @@
     "read-ini-file": "^4.0.0",
     "sass": "^1.96.0",
     "sass-loader": "^16.0.5",
-    "simple-icons-font": "^15.16.1",
+    "simple-icons-font": "^16.2.0",
     "string-replace-loader": "^3.3.0",
     "style-loader": "^4.0.0",
     "swiper": "^12.0.2",

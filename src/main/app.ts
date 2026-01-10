@@ -273,6 +273,11 @@ export class KandoApp {
       return true;
     }
 
+    if (options.trigger) {
+      this.showMenu({ trigger: options.trigger });
+      return true;
+    }
+
     if (options.settings) {
       this.showSettings();
       return true;
@@ -290,6 +295,11 @@ export class KandoApp {
 
     if (options.reloadIconThemes) {
       this.reloadIconThemes();
+      return true;
+    }
+
+    if (options.closeMenu) {
+      this.menuWindow?.hide();
       return true;
     }
 

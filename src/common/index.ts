@@ -15,8 +15,13 @@ import { AchievementStats } from './settings-schemata';
 /** This type is used to pass command line arguments to the app. */
 export type CommandlineOptions = {
   // This optional parameter is specified using the --menu option. It is used to show a
-  // menu when the app or a second instance of the app is started.
+  // menu with the given name when the app or a second instance of the app is started.
   readonly menu?: string;
+
+  // This optional parameter is specified using the --trigger option. It is used to show
+  // the menu with the given shortcut or shortcut ID when the app or a second instance of
+  // the app is started.
+  readonly trigger?: string;
 
   // This optional parameter is specified using the --settings option. It is used to show
   // the settings when the app or a second instance of the app is started.
@@ -33,6 +38,10 @@ export type CommandlineOptions = {
   // This optional parameter is specified using the --reload-icon-themes option. It is
   // used to reload the available icon themes from disk.
   readonly reloadIconThemes?: boolean;
+
+  // This optional parameter is specified using the --close-menu option. It is used to
+  // close the currently open menu.
+  readonly closeMenu?: boolean;
 };
 
 /**

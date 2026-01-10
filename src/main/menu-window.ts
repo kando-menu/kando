@@ -151,10 +151,22 @@ export class MenuWindow extends BrowserWindow {
     // the option to do nothing in this case, but in this case the menu's shortcut will be
     // inhibited and thus this method will not be called in the first place.
     if (this.isVisible()) {
-      const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
-      const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
+      let isSameMenu = false;
+      if (request.name != null) {
+        const lastMenuName = this.lastMenu.root.name;
+        isSameMenu = request.name === lastMenuName;
+      } else if (request.trigger != null) {
+        const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+        const lastTrigger = useID ? this.lastMenu.shortcutID : this.lastMenu.shortcut;
+        isSameMenu = request.trigger === lastTrigger;
+      }
 
-      if (lastTrigger && request.trigger === lastTrigger) {
+      if (isSameMenu) {
+        // If the 'sameShortcutBehavior' is set to 'nothing', we do nothing :)
+        if (sameShortcutBehavior === 'nothing') {
+          return;
+        }
+
         // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
         if (sameShortcutBehavior === 'close') {
           this.webContents.send('menu-window.hide-menu');
@@ -410,36 +422,41 @@ export class MenuWindow extends BrowserWindow {
     // Get list of current menus.
     const menus = this.kando.getMenuSettings().get('menus');
 
-    // We check if the request has a menu name. If that's the case we return it as chosen
-    // menu, there's no need to check the rest.
+    // We check if the request has a menu name. If no menu with this name is found, we
+    // throw an error.
     if (request.name != null) {
       const menu = menus.find((m) => m.root.name === request.name);
-      if (menu) {
-        return menu;
+      if (!menu) {
+        throw new Error(`Menu with name "${request.name}" not found.`);
       }
-
-      throw new Error(`Menu with name "${request.name}" not found.`);
     }
 
-    // If no trigger is given, we can stop here.
-    if (request.trigger == null) {
+    // If no trigger or name is given, we can stop here (this should not happen).
+    if (request.trigger == null && request.name == null) {
       return null;
     }
 
-    // Store scores for all menus which match the trigger.
+    // Store scores for all menus which match the request.
     const scores: number[] = [];
-
-    const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
 
     menus.forEach((menu, index) => {
       scores[index] = 0;
 
-      // If the trigger matches, we set the score to 1. Else we skip this menu.
-      const trigger = useID ? menu.shortcutID : menu.shortcut;
-      if (request.trigger === trigger) {
-        scores[index] += 1;
-      } else {
-        return;
+      // If the trigger or name matches, we set the score to 1. Else we skip this menu.
+      if (request.trigger) {
+        const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
+        const menuTrigger = useID ? menu.shortcutID : menu.shortcut;
+        if (request.trigger === menuTrigger) {
+          scores[index] += 1;
+        } else {
+          return;
+        }
+      } else if (request.name) {
+        if (request.name === menu.root.name) {
+          scores[index] += 1;
+        } else {
+          return;
+        }
       }
 
       // If no conditions are given, we can stop here. The menu is a solid candidate.

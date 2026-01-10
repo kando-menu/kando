@@ -37,17 +37,17 @@ export default function AboutDialog() {
     <Modal
       icon={<TbHeartFilled />}
       isVisible={aboutDialogVisible}
-      maxWidth={500}
+      maxWidth={650}
       title={i18next.t('settings.about-dialog.title')}
       onClose={() => setAboutDialogVisible(false)}>
       <div className={classes.container}>
-        <img src={logo} width={128} />
+        <img src={logo} width={150} />
         <Note
           isCentered
           useMarkdown
-          marginLeft="10%"
-          marginRight="10%"
-          marginTop={10}
+          marginLeft="20%"
+          marginRight="20%"
+          marginTop={20}
           noteStyle="big"
           onLinkClick={(href) => {
             window.open(href, '_blank');
