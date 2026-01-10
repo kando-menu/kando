@@ -827,15 +827,12 @@ export class KandoApp {
       // don't include local UI flags like centered/anchored/hoverMode). This
       // also makes future extensions easier.
       const menu = settings.menus[menuIndex];
-      const menuData = {
+      const menuData: ExportedMenu = {
         version: settings.version,
-        menu: menu.root,
+        menu: menu.root as MenuItem,
       };
 
       try {
-        // Validate the exported shape before writing to disk
-        EXPORTED_MENU_SCHEMA_V1.parse(menuData, { reportInput: true });
-
         let targetPath = filePath;
         if (!targetPath) {
           const result = await dialog.showSaveDialog(this.settingsWindow, {
