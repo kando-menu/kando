@@ -218,6 +218,7 @@
     "export-menu": "Export menu",
     "import-menu": "Import menu",
     "import-menu-error-title": "Failed to import menu",
+    "import-menu-error-message": "The selected file could not be imported. It does not contain a valid Kando exported menu.",
     "delete-menu": "Delete menu",
     "add-menu-item-hint": "Drag this item to add it to the menu above!",
     "add-menu-items": "Add Menu Items",

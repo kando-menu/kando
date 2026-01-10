@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { ipcRenderer, OpenDialogOptions, SaveDialogOptions, webFrame } from 'electron';
+import { ipcRenderer, OpenDialogOptions, webFrame } from 'electron';
 
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {

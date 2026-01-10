@@ -43,7 +43,7 @@ import {
   tryLoadMenuSettingsFile,
 } from './settings';
 import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
-import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
+import { EXPORTED_MENU_SCHEMA_V1, ExportedMenuV1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
@@ -825,11 +825,7 @@ export class KandoApp {
       const settings = this.menuSettings.get();
 
       if (menuIndex < 0 || menuIndex >= settings.menus.length) {
-        await dialog.showMessageBox(this.settingsWindow, {
-          type: 'error',
-          title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
-          message: i18next.t('settings.export-menu-error-message', 'The selected menu index is invalid.'),
-        });
+        console.error('Failed to export menu: Invalid menu index.');
         return false;
       }
 
@@ -837,7 +833,7 @@ export class KandoApp {
       // don't include local UI flags like centered/anchored/hoverMode). This
       // also makes future extensions easier.
       const menu = settings.menus[menuIndex];
-      const menuData: ExportedMenu = {
+      const menuData: ExportedMenuV1 = {
         version: settings.version,
         menu: menu.root as MenuItem,
       };
@@ -905,8 +901,8 @@ export class KandoApp {
 
         await dialog.showMessageBox(this.settingsWindow, {
           type: 'error',
-          title: i18next.t('settings.import-menu-error-title', 'Failed to import menu'),
-          message: 'The selected file could not be imported. It does not contain a valid Kando exported menu.',
+          title: i18next.t('settings.import-menu-error-title'),
+          message: i18next.t('settings.import-menu-error-message'),
           detail,
         });
 
