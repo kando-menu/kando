@@ -99,7 +99,7 @@ export default function MenuList() {
         console.error('Import failed for file:', result);
       }
     }
-  }; 
+  };
 
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');

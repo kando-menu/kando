@@ -43,7 +43,10 @@ import {
   tryLoadMenuSettingsFile,
 } from './settings';
 import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
-import { EXPORTED_MENU_SCHEMA_V1, ExportedMenuV1 } from '../common/settings-schemata/exported-menu-v1';
+import {
+  EXPORTED_MENU_SCHEMA_V1,
+  ExportedMenuV1,
+} from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
@@ -821,51 +824,54 @@ export class KandoApp {
     });
 
     // Export a single menu to a JSON file. If no filePath is provided, show a save dialog.
-    ipcMain.handle('settings-window.export-menu', async (event, menuIndex: number, filePath?: string) => {
-      const settings = this.menuSettings.get();
+    ipcMain.handle(
+      'settings-window.export-menu',
+      async (event, menuIndex: number, filePath?: string) => {
+        const settings = this.menuSettings.get();
 
-      if (menuIndex < 0 || menuIndex >= settings.menus.length) {
-        console.error('Failed to export menu: Invalid menu index.');
-        return false;
-      }
-
-      // We only export the root menu item (so exported files stay compact and
-      // don't include local UI flags like centered/anchored/hoverMode). This
-      // also makes future extensions easier.
-      const menu = settings.menus[menuIndex];
-      const menuData: ExportedMenuV1 = {
-        version: settings.version,
-        menu: menu.root as MenuItem,
-      };
-
-      try {
-        let targetPath = filePath;
-        if (!targetPath) {
-          const result = await dialog.showSaveDialog(this.settingsWindow, {
-            defaultPath: `${menu.root.name}.json`,
-            filters: [{ name: 'JSON', extensions: ['json'] }],
-          });
-
-          if (result.canceled || !result.filePath) {
-            return false;
-          }
-
-          targetPath = result.filePath;
+        if (menuIndex < 0 || menuIndex >= settings.menus.length) {
+          console.error('Failed to export menu: Invalid menu index.');
+          return false;
         }
 
-        fs.writeFileSync(targetPath, JSON.stringify(menuData, null, 2), 'utf-8');
-        return true;
-      } catch (error) {
-        console.error('Failed to export menu:', error);
-        await dialog.showMessageBox(this.settingsWindow, {
-          type: 'error',
-          title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
-          message: 'Failed to export menu.',
-          detail: error instanceof Error ? error.message : String(error),
-        });
-        return false;
+        // We only export the root menu item (so exported files stay compact and
+        // don't include local UI flags like centered/anchored/hoverMode). This
+        // also makes future extensions easier.
+        const menu = settings.menus[menuIndex];
+        const menuData: ExportedMenuV1 = {
+          version: settings.version,
+          menu: menu.root as MenuItem,
+        };
+
+        try {
+          let targetPath = filePath;
+          if (!targetPath) {
+            const result = await dialog.showSaveDialog(this.settingsWindow, {
+              defaultPath: `${menu.root.name}.json`,
+              filters: [{ name: 'JSON', extensions: ['json'] }],
+            });
+
+            if (result.canceled || !result.filePath) {
+              return false;
+            }
+
+            targetPath = result.filePath;
+          }
+
+          fs.writeFileSync(targetPath, JSON.stringify(menuData, null, 2), 'utf-8');
+          return true;
+        } catch (error) {
+          console.error('Failed to export menu:', error);
+          await dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
+            message: 'Failed to export menu.',
+            detail: error instanceof Error ? error.message : String(error),
+          });
+          return false;
+        }
       }
-    });
+    );
 
     // Import a menu from a JSON file
     ipcMain.handle('settings-window.import-menu', async (event, filePath: string) => {
@@ -877,7 +883,10 @@ export class KandoApp {
 
         // Convert the exported root into a full MENU object so defaults (like
         // centered/anchored/hoverMode and shortcut fields) are applied.
-        const validatedMenu = MENU_SCHEMA_V1.parse({ root: exported.menu }, { reportInput: true });
+        const validatedMenu = MENU_SCHEMA_V1.parse(
+          { root: exported.menu },
+          { reportInput: true }
+        );
 
         // Add the menu to the settings
         const settings = this.menuSettings.get();
@@ -893,9 +902,21 @@ export class KandoApp {
         let detail = error instanceof Error ? error.message : String(error);
 
         // If this is a schema/validation error, try to extract useful messages.
-        if (error && (error as any).issues && Array.isArray((error as any).issues)) {
-          detail = (error as any).issues
-            .map((issue: any) => `${issue.path?.join('.') || '<root>'}: ${issue.message}`)
+        if (
+          error &&
+          (
+            error as unknown as {
+              issues?: { path?: (string | number)[]; message: string }[];
+            }
+          ).issues
+        ) {
+          const issues = (
+            error as unknown as {
+              issues: { path?: (string | number)[]; message: string }[];
+            }
+          ).issues;
+          detail = issues
+            .map((issue) => `${issue.path?.join('.') || '<root>'}: ${issue.message}`)
             .join('\n');
         }
 
