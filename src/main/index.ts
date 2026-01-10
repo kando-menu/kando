@@ -234,7 +234,7 @@ try {
         },
       });
     })
-    .then(() => backend.init())
+    .then(() => backend.init(generalSettings))
     .then(() => kando.init())
     .then(() => {
       // Show a nifty message when the app is about to quit.

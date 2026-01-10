@@ -388,6 +388,13 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
 Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
+
+  // We need to check the number of arguments and their types. If something is wrong, we
+  // throw a JavaScript exception.
+  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
+    Napi::TypeError::New(env, "2 Numbers expected").ThrowAsJavaScriptException();
+  }
+
   // Ensure Wayland is initialized
   if (!mData.mDisplay) {
     init(env);
@@ -405,9 +412,9 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   int fd                      = wl_display_get_fd(mData.mDisplay);
   mData.mPointerEventReceived = false;
 
-  int timeoutMs = 500;
+  int timeoutMs = info[0].As<Napi::Number>().Int32Value();;
   if (mData.mSeatCapabilities & WL_SEAT_CAPABILITY_TOUCH) {
-    timeoutMs = 1000;
+    timeoutMs = info[1].As<Napi::Number>().Int32Value();;
   }
   using clock = std::chrono::steady_clock;
   auto start = clock::now();

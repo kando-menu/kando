@@ -60,6 +60,8 @@ export default function GeneralSettingsDialog() {
     label: i18next.t('settings.general-settings-dialog.auto-language'),
   });
 
+  const backend = useAppState((state) => state.backendInfo);
+
   return (
     <Modal
       icon={<TbSettingsFilled />}
@@ -424,7 +426,84 @@ export default function GeneralSettingsDialog() {
             step={10}
             width={spinbuttonWidth}
           />
-
+          {backend.name === 'Niri' ? (
+            <>
+              <h1>
+                {i18next.t('settings.general-settings-dialog.wlroots-specific-options')}
+              </h1>
+              <Note useMarkdown marginTop={-5}>
+                {i18next.t(
+                  'settings.general-settings-dialog.options-that-will-only-affect-the-wlroots-backend'
+                )}
+              </Note>
+              <SettingsSpinbutton
+                info={i18next.t(
+                  'settings.general-settings-dialog.wlroots-pointer-get-timeout-mouse-info'
+                )}
+                label={i18next.t(
+                  'settings.general-settings-dialog.wlroots-pointer-get-timeout-mouse'
+                )}
+                max={5000}
+                min={0}
+                settingsKey="wlrootsPointerGetTimeoutMouse"
+                step={100}
+                width={spinbuttonWidth}
+              />
+              <SettingsSpinbutton
+                info={i18next.t(
+                  'settings.general-settings-dialog.wlroots-pointer-get-timeout-touch-info'
+                )}
+                label={i18next.t(
+                  'settings.general-settings-dialog.wlroots-pointer-get-timeout-touch'
+                )}
+                max={5000}
+                min={0}
+                settingsKey="wlrootsPointerGetTimeoutTouch"
+                step={100}
+                width={spinbuttonWidth}
+              />
+              <SettingsDropdown
+                info={i18next.t(
+                  'settings.general-settings-dialog.wlroots-pointer-get-timeout-default-behavior-info'
+                )}
+                label={i18next.t(
+                  'settings.general-settings-dialog.wlroots-pointer-get-timeout-default-behavior'
+                )}
+                maxWidth={200}
+                options={[
+                  {
+                    value: 'top-left',
+                    label: i18next.t('settings.general-settings-dialog.top-left'),
+                  },
+                  {
+                    value: 'top-right',
+                    label: i18next.t('settings.general-settings-dialog.top-right'),
+                  },
+                  {
+                    value: 'bottom-left',
+                    label: i18next.t('settings.general-settings-dialog.bottom-left'),
+                  },
+                  {
+                    value: 'bottom-right',
+                    label: i18next.t('settings.general-settings-dialog.bottom-right'),
+                  },
+                  {
+                    value: 'center',
+                    label: i18next.t('settings.general-settings-dialog.center'),
+                  },
+                  {
+                    value: 'previously-reported-position',
+                    label: i18next.t(
+                      'settings.general-settings-dialog.previously-reported'
+                    ),
+                  },
+                ]}
+                settingsKey="wlrootsPointerGetTimeoutDefaultBehavior"
+              />
+            </>
+          ) : (
+            ''
+          )}
           <h1>{i18next.t('settings.general-settings-dialog.backup-and-restore')}</h1>
           <Note
             useMarkdown

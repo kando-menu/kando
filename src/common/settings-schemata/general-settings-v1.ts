@@ -206,6 +206,30 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
     .default('nothing'),
 
   /**
+   * How long the WLRoots backend will wait before spawning the menu if it can't find the
+   * the pointer and you're using a mouse
+   */
+  wlrootsPointerGetTimeoutMouse: z.number().min(0).default(500),
+
+  /**
+   * How long the WLRoots backend will wait before spawning the menu if it can't find the
+   * the pointer and you're using a mouse
+   */
+  wlrootsPointerGetTimeoutTouch: z.number().min(0).default(1500),
+
+  /** How the WLRoots handles reporting pointer position when the pointer get has timed out */
+  wlrootsPointerGetTimeoutDefaultBehavior: z
+    .enum([
+      'top-left',
+      'top-right',
+      'bottom-left',
+      'bottom-right',
+      'center',
+      'previously-reported-position',
+    ])
+    .default('center'),
+
+  /**
    * If enabled, pressing 'cmd + ,' on macOS or 'ctrl + ,' on Linux or Windows will open
    * the settings window. If disabled, the default hotkey will be ignored.
    */
