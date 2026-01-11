@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
+
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
+<svg
+  width="256"
+  height="256"
+  viewBox="0 0 256 256"
+  version="1.1"
+  id="svg1"
+  xml:space="preserve"
+  sodipodi:docname="preview-menu.svg"
+  inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+  xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true"
+     inkscape:zoom="2.0439805"
+     inkscape:cx="191.29341"
+     inkscape:cy="127.20278"
+     inkscape:window-width="2055"
+     inkscape:window-height="1385"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1"><sodipodi:guide
+       position="128,129.76424"
+       orientation="-1,0"
+       id="guide1"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" /><sodipodi:guide
+       position="166.3182,128"
+       orientation="0,1"
+       id="guide2"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" /></sodipodi:namedview><defs
+     id="defs1" /><path
+     id="path6"
+     style="fill:currentColor;stroke:currentColor;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     d="m 172.58034,127.81386 -64.82452,44.48803 -1e-5,-88.976064 z" /></svg>

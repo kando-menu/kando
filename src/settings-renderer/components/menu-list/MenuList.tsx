@@ -300,39 +300,57 @@ export default function MenuList() {
 
                     <div
                       className={cx({
-                        options: true,
-                      })}
-                      data-tooltip-content="More Options"
-                      data-tooltip-id="main-tooltip"
-                      onClick={() =>
-                        window.ipcAPI.showMenu('Menu Options', 'open-menu.svg', 'kando', [
-                          {
-                            name: i18next.t('settings.duplicate-menu'),
-                            icon: 'content_copy',
-                            iconTheme: 'material-symbols-rounded',
-                            callback: () => {
-                              duplicateMenu(selectedMenu);
-                            },
-                          },
-                          {
-                            name: i18next.t('settings.delete-menu'),
-                            icon: 'delete',
-                            iconTheme: 'material-symbols-rounded',
-                            callback: () => {
-                              deleteMenu(selectedMenu);
-                            },
-                          },
-                          {
-                            name: 'Export Menu',
-                            icon: 'upload_2',
-                            iconTheme: 'material-symbols-rounded',
-                            callback: () => {
-                              console.log('Export triggered');
-                            },
-                          },
-                        ])
-                      }>
-                      <ThemedIcon name="open-menu.svg" size={16} theme="kando" />
+                        toolButtonContainer: true,
+                      })}>
+                      <div
+                        className={cx({
+                          toolButton: true,
+                        })}
+                        data-tooltip-content="Preview Menu"
+                        data-tooltip-id="main-tooltip">
+                        <ThemedIcon name="preview-menu.svg" theme="kando" />
+                      </div>
+                      <div
+                        className={cx({
+                          toolButton: true,
+                        })}
+                        data-tooltip-content="More Options"
+                        data-tooltip-id="main-tooltip"
+                        onClick={() =>
+                          window.ipcAPI.showMenu(
+                            'Menu Options',
+                            'open-menu.svg',
+                            'kando',
+                            [
+                              {
+                                name: i18next.t('settings.duplicate-menu'),
+                                icon: 'content_copy',
+                                iconTheme: 'material-symbols-rounded',
+                                callback: () => {
+                                  duplicateMenu(selectedMenu);
+                                },
+                              },
+                              {
+                                name: i18next.t('settings.delete-menu'),
+                                icon: 'delete',
+                                iconTheme: 'material-symbols-rounded',
+                                callback: () => {
+                                  deleteMenu(selectedMenu);
+                                },
+                              },
+                              {
+                                name: 'Export Menu',
+                                icon: 'upload_2',
+                                iconTheme: 'material-symbols-rounded',
+                                callback: () => {
+                                  console.log('Export triggered');
+                                },
+                              },
+                            ]
+                          )
+                        }>
+                        <ThemedIcon name="open-menu.svg" theme="kando" />
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -52,7 +52,7 @@
   &.selected {
     background-color: $widget-selected;
     border: $border-selected;
-    padding-right: 36px;
+    padding-right: 75px;
 
     &:hover {
       background-color: $widget-selected;
@@ -82,30 +82,39 @@
     box-shadow: $drop-highlight;
   }
 
-  .options {
-    pointer-events: all;
+  .toolButtonContainer {
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     right: 5px;
-    border-radius: 50%;
-    height: 36px;
-    width: 36px;
-    color: $text-link;
-    transform: translateX(100%);
-    transition: transform 0.2s;
+    opacity: 0;
+    transform: translateX(20px);
+    transition:
+      transform 0.2s,
+      opacity 0.2s;
   }
 
-  &.selected .options {
-    transform: none;
+  .toolButton {
+    display: inline-block;
+    border-radius: 50%;
+    height: 22px;
+    width: 22px;
+    padding: 6px;
+    color: $text-link;
+  }
 
-    &:hover {
+  &.selected .toolButtonContainer {
+    transform: none;
+    opacity: 1;
+
+    .toolButton {
+      pointer-events: all;
+    }
+
+    .toolButton:hover {
       color: $text-link-hover;
       background-color: light-dark(rgba($key-dark, 0.2), rgba($key-light, 0.2));
     }
 
-    &:active {
+    .toolButton:active {
       transform: translateY(1px);
     }
   }
