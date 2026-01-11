@@ -616,6 +616,11 @@ export class KandoApp {
       this.achievementTracker.resetProgress();
     });
 
+    // Allow the renderer to open a specific menu. This is used for previewing menus.
+    ipcMain.on('settings-window.open-menu', (e, index: number) => {
+      this.showMenu({ menu: this.menuSettings.get('menus')[index] as MenuType });
+    });
+
     // Show the web developer tools if requested.
     ipcMain.on(
       'settings-window.show-dev-tools',

@@ -307,7 +307,8 @@ export default function MenuList() {
                           toolButton: true,
                         })}
                         data-tooltip-content="Preview Menu"
-                        data-tooltip-id="main-tooltip">
+                        data-tooltip-id="main-tooltip"
+                        onClick={() => window.settingsAPI.openMenu(selectedMenu)}>
                         <ThemedIcon name="preview-menu.svg" theme="kando" />
                       </div>
                       <div

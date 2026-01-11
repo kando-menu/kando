@@ -121,6 +121,11 @@ export const SETTINGS_WINDOW_API = {
     });
   },
 
+  /** Open the menu with the given index in the list of all menus. */
+  openMenu: (index: number) => {
+    ipcRenderer.send('settings-window.open-menu', index);
+  },
+
   /** This will show the web developer tools. */
   showDevTools: (forWindow: 'menu-window' | 'settings-window') => {
     ipcRenderer.send('settings-window.show-dev-tools', forWindow);
