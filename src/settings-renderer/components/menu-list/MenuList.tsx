@@ -15,7 +15,7 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus, TbCopy, TbTrash, TbDots } from 'react-icons/tb';
+import { TbPlus } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -302,48 +302,37 @@ export default function MenuList() {
                       className={cx({
                         options: true,
                       })}
+                      data-tooltip-content="More Options"
+                      data-tooltip-id="main-tooltip"
                       onClick={() =>
-                        window.ipcAPI.showMenu(
-                          'Test Menu',
-                          'settings-item.svg',
-                          'kando',
-                          [
-                            {
-                              name: i18next.t('settings.duplicate-menu'),
-                              icon: 'content_copy',
-                              iconTheme: 'material-symbols-rounded',
-                              callback: () => {
-                                console.log('Duplicate triggered');
-                              },
+                        window.ipcAPI.showMenu('Menu Options', 'open-menu.svg', 'kando', [
+                          {
+                            name: i18next.t('settings.duplicate-menu'),
+                            icon: 'content_copy',
+                            iconTheme: 'material-symbols-rounded',
+                            callback: () => {
+                              duplicateMenu(selectedMenu);
                             },
-                            {
-                              name: 'Import Menu',
-                              icon: 'download_2',
-                              iconTheme: 'material-symbols-rounded',
-                              callback: () => {
-                                console.log('Import triggered');
-                              },
+                          },
+                          {
+                            name: i18next.t('settings.delete-menu'),
+                            icon: 'delete',
+                            iconTheme: 'material-symbols-rounded',
+                            callback: () => {
+                              deleteMenu(selectedMenu);
                             },
-                            {
-                              name: i18next.t('settings.delete-menu'),
-                              icon: 'delete',
-                              iconTheme: 'material-symbols-rounded',
-                              callback: () => {
-                                console.log('Delete triggered');
-                              },
+                          },
+                          {
+                            name: 'Export Menu',
+                            icon: 'upload_2',
+                            iconTheme: 'material-symbols-rounded',
+                            callback: () => {
+                              console.log('Export triggered');
                             },
-                            {
-                              name: 'Export Menu',
-                              icon: 'upload_2',
-                              iconTheme: 'material-symbols-rounded',
-                              callback: () => {
-                                console.log('Export triggered');
-                              },
-                            },
-                          ]
-                        )
+                          },
+                        ])
                       }>
-                      <TbDots />
+                      <ThemedIcon name="open-menu.svg" size={16} theme="kando" />
                     </div>
                   </div>
                 </div>
@@ -362,26 +351,6 @@ export default function MenuList() {
             onClick={() => {
               addMenu(menuCollections[selectedCollection]?.tags || []);
               selectMenu(menus.length);
-            }}
-          />
-          <Button
-            isGrouped
-            icon={<TbCopy />}
-            size="large"
-            tooltip={i18next.t('settings.duplicate-menu')}
-            variant="floating"
-            onClick={() => {
-              duplicateMenu(selectedMenu);
-            }}
-          />
-          <Button
-            isGrouped
-            icon={<TbTrash />}
-            size="large"
-            tooltip={i18next.t('settings.delete-menu')}
-            variant="floating"
-            onClick={() => {
-              deleteMenu(selectedMenu);
             }}
           />
         </div>

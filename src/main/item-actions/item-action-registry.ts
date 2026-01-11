@@ -15,6 +15,7 @@ import { CommandItemAction } from './command-item-action';
 import { FileItemAction } from './file-item-action';
 import { HotkeyItemAction } from './hotkey-item-action';
 import { MacroItemAction } from './macro-item-action';
+import { NoItemAction } from './no-item-action';
 import { TextItemAction } from './text-item-action';
 import { URIItemAction } from './uri-item-action';
 import { RedirectItemAction } from './redirect-item-action';
@@ -73,6 +74,7 @@ export class ItemActionRegistry {
     this.actions.set('uri', new URIItemAction());
     this.actions.set('redirect', new RedirectItemAction());
     this.actions.set('settings', new SettingsItemAction());
+    this.actions.set('simple-button', new NoItemAction());
   }
 
   /**

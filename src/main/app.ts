@@ -194,10 +194,15 @@ export class KandoApp {
     // renderer.
     this.ipcServer = new IPCServer(app.getPath('userData'));
     await this.ipcServer.init();
+
+    // For now, we decline all authentication requests. In the future, we will want to
+    // show a dialog to the user to approve or decline the request.
     this.ipcServer.on('auth-request', (clientName, permissions, respond) => {
-      respond('accept');
+      respond('decline');
     });
-    this.ipcServer.on('show-menu', (menuItem) => {
+
+    // When a menu is requested via IPC, we show it.
+    this.ipcServer.on('show-menu', (menuItem, callbacks) => {
       const menu: MenuType = {
         root: menuItem,
         shortcut: '',
@@ -207,7 +212,7 @@ export class KandoApp {
         hoverMode: false,
         tags: [],
       };
-      this.showMenu({ menu });
+      this.showMenu({ menu, callbacks });
     });
 
     // Initialize the common IPC communication to the renderer process. This will be

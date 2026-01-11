@@ -31,6 +31,9 @@ export class MenuWindow extends BrowserWindow {
    */
   public lastMenu?: DeepReadonly<Menu>;
 
+  /** This contains the last request which was used to show the menu. */
+  public lastRequest?: ShowMenuRequest;
+
   /**
    * This contains the time points when the last ten selections were made. It is used to
    * trigger some achievements.
@@ -208,6 +211,7 @@ export class MenuWindow extends BrowserWindow {
     // Store the last menu to be able to execute the selected action later. The WMInfo
     // will be passed to the action as well.
     this.lastMenu = menu;
+    this.lastRequest = request;
 
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
@@ -570,6 +574,19 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * This converts a path string to an array of numbers.
+   *
+   * @param path The path string to convert.
+   * @returns The array of numbers.
+   */
+  private pathToArray(path: string): number[] {
+    return path
+      .substring(1)
+      .split('/')
+      .map((x: string) => parseInt(x));
+  }
+
+  /**
    * This returns the menu item at the given path from the given root menu. The path is a
    * string of numbers separated by slashes. Each number is the index of the child menu
    * item to select. For example, the path "0/2/1" would select the second child of the
@@ -582,10 +599,7 @@ export class MenuWindow extends BrowserWindow {
    */
   private getMenuItemAtPath(root: DeepReadonly<MenuItem>, path: string) {
     let item = root;
-    const indices = path
-      .substring(1)
-      .split('/')
-      .map((x: string) => parseInt(x));
+    const indices = this.pathToArray(path);
 
     for (const index of indices) {
       if (!item.children || index >= item.children.length) {
@@ -673,9 +687,13 @@ export class MenuWindow extends BrowserWindow {
           }
         });
 
+        // Call the provided callbacks if they exist.
+        const pathArray = this.pathToArray(path);
+        this.lastRequest.callbacks?.onSelection(pathArray);
+
         // Track selection for achievements.
         this.kando.achievementTracker.onSelectionMade(
-          Math.min(Math.max(path.split('/').length - 1, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
+          Math.min(Math.max(pathArray.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
           time,
           source
         );
@@ -723,9 +741,9 @@ export class MenuWindow extends BrowserWindow {
       }
     );
 
-    // When the user hovers a menu item, we report this to the main process.
-    ipcMain.on('menu-window.hover-item', (/*event, path*/) => {
-      // Nothing to do here yet.
+    // When the user hovers a menu item, we report this to whoever requested the menu.
+    ipcMain.on('menu-window.hover-item', (event, path) => {
+      this.lastRequest.callbacks?.onHover(this.pathToArray(path));
     });
 
     // When the user unhovers a menu item, we report this to the main process.
@@ -737,6 +755,7 @@ export class MenuWindow extends BrowserWindow {
     // wait for the fade-out animation to finish.
     ipcMain.on('menu-window.cancel-selection', () => {
       this.hideWindow();
+      this.lastRequest.callbacks?.onClose();
       this.kando.achievementTracker.incrementStat('cancels');
     });
 
