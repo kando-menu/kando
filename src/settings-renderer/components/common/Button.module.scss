@@ -121,8 +121,10 @@
 .floating {
   background-color: $widget-normal;
   border-radius: 50px;
+  color: $text-link;
 
   &:hover {
+    color: $text-link-hover;
     background-color: $widget-normal-hover;
   }
 
