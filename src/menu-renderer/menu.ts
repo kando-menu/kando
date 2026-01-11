@@ -165,19 +165,16 @@ export class Menu extends EventEmitter {
 
     this.showMenuOptions = showMenuOptions;
 
-    // If the pointer is not warped to the center of the menu, we should not enter
-    // turbo-mode right away.
-    if (!this.settings.warpMouse && showMenuOptions.centeredMode) {
-      this.pointerInput.deferTurboMode();
-    }
-
     // On some wayland compositors (for instance KWin), one or two initial mouse motion
     // events are sent containing wrong coordinates. They seem to be the coordinates of
     // the last mouse motion event over any XWayland surface before Kando's window was
     // opened. We simply ignore these events. This code is currently used on all platforms
     // but I think it's not an issue. Instead, we pass the initial menu position as a
     // first motion event to the input tracker.
-    this.pointerInput.ignoreNextMotionEvents();
+    // Also, if the pointer is not warped to the center of the menu, we should not enter
+    // turbo-mode right away.
+    const deferTurboMode = !this.settings.warpMouse && showMenuOptions.centeredMode;
+    this.pointerInput.onShowMenu(deferTurboMode);
 
     // In anchored mode, we have to disable turbo and marking mode.
     this.pointerInput.enableMarkingMode =

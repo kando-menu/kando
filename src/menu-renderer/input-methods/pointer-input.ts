@@ -131,16 +131,11 @@ export class PointerInput extends InputMethod {
    * We simply ignore these events. This code is currently used on all platforms but I
    * think it's not an issue.
    */
-  public ignoreNextMotionEvents() {
+  public onShowMenu(deferTurboMode: boolean) {
     this.ignoreMotionEvents = 2;
-  }
-
-  /**
-   * If set to true, the turbo mode can only be activated after a key is released. This is
-   * useful if the menu is not opened under the mouse pointer.
-   */
-  public deferTurboMode() {
-    this.deferredTurboMode = true;
+    this.buttonState = ButtonState.eReleased;
+    this.anyKeyPressed = false;
+    this.deferredTurboMode = deferTurboMode;
   }
 
   /*
