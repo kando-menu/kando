@@ -183,6 +183,7 @@ export default function MenuList() {
                     selected: menu.index === selectedMenu,
                     dragging: dragIndex === menu.index,
                   })}
+                  tabIndex={0}
                   onClick={() => selectMenu(menu.index)}
                   onDragEnd={() => {
                     moveMenu(dragIndex, dropIndex);
