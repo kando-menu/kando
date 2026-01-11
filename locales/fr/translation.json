@@ -443,6 +443,10 @@
         "restore-menu-settings-warning-message": "Cette action écrasera vos menus actuelles et vos collections par le contenu du fichier sélectionné !",
         "restore-menu-settings-error-title": "La restauration des menus à échoué !",
         "restore-menu-settings-success-title": "Succès !",
-        "restore-menu-settings-success-message": "Vos menus et collections ont été restaurés du fichier de sauvegarde."
+        "restore-menu-settings-success-message": "Vos menus et collections ont été restaurés du fichier de sauvegarde.",
+        "achievements-dialog": {
+            "reset-confirmation-title": "Voulez-vous vraiment réinitialiser toute la progression ?",
+            "reset-button": "Réinitialiser la progression"
+        }
     }
 }
