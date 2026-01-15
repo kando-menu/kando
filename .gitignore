@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 .vscode
+.idea
 .webpack
 node_modules
 build
