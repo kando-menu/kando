@@ -139,7 +139,7 @@
             "detailed-description_one": "",
             "detailed-description_many": "Contém {{count}} itens de menu.",
             "detailed-description_other": "",
-            "name": "Submenu",
+            "name": "",
             "tip-1": "Submenus podem ser usados para agrupar itens.",
             "tip-2": "Você também pode aninhar submenus dentro de submenus.",
             "tip-3": "Submenus podem ser usados para criar estruturas de menu complexas.",
