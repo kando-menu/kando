@@ -274,7 +274,7 @@
             "close-menu": "Chiudi menu"
         },
         "icon-picker-dialog": {
-            "search-placeholder": "Cerca Icone…",
+            "search-placeholder": "Cerca icone…",
             "base64-example": "Esempio di base64:",
             "hint": "Impara [qui]({{link}}) come aggiungere o creare i tuoi temi di icone.",
             "url-example": "Esempio di URL:",

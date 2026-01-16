@@ -1,12 +1,12 @@
 {
     "settings": {
         "icon-picker-dialog": {
-            "base64-hint": "Ikony zakodowane w Base64 stanowią prosty sposób na dołączanie dowolnego rodzaju ikony do menu. Możesz użyć portalu takiego jak www.base64-image.de do konwersji dowolnego obrazu na zakodowany ciąg Base64. Działa to nawet w przypadku animowanych gifów!",
+            "base64-hint": "Ikony zakodowane w Base64 stanowią prosty sposób na dołączanie dowolnego rodzaju ikony do menu. Możesz użyć portalu takiego jak [www.base64-image.de]({{link}}) do konwersji dowolnego obrazu na zakodowany ciąg Base64. Działa to nawet w przypadku animowanych gifów!",
             "base64-example": "Przykład użycia Base64:",
             "file-example": "plik: przykład URI:",
             "url-example": "Przykład URL:",
             "search-placeholder": "Szukaj ikon…",
-            "hint": "Sprawdź [here]({{link}}) aby dowiedzieć się jak dodać lub stworzyć swoje własne motywy ikon"
+            "hint": "Sprawdź [here]({{link}}) aby dowiedzieć się jak dodać lub stworzyć swoje własne motywy ikon."
         },
         "not-bound": "Nie związany",
         "invalid-dropdown-selection": "Wybierz opcję…",
