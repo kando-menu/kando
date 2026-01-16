@@ -71,7 +71,7 @@
         "inhibit-shortcuts": "Kısayolları Geçici Olarak Devre Dışı Bırak",
         "new-version-notification-header": "Kando'nun yeni bir sürümü mevcut!",
         "quit": "Çıkış",
-        "show-settings": "Ayarları Göster",
+        "show-settings": "Ayarları göster",
         "un-inhibit-shortcuts": "Kısayolları Yeniden Etkinleştir"
     },
     "menu-items": {
@@ -164,7 +164,7 @@
         "hover-mode": "Üzerine Gelme Modu",
         "hover-mode-info": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
         "icon-picker-dialog": {
-            "search-placeholder": "Simgeleri Ara…"
+            "search-placeholder": "Simgeleri ara…"
         },
         "introduction-dialog": {
             "title": "Kando'ya Hoş Geldiniz!"
