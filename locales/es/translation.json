@@ -4,10 +4,10 @@
             "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: {{link}}"
         },
         "hyprland": {
-            "shortcut-info": "Utilice hyprland.conf para vincular esto."
+            "shortcut-info": ""
         },
         "kde-wayland": {
-            "shortcut-info": "Utilice la configuración del sistema de KDE para enlazar esto."
+            "shortcut-info": ""
         }
     },
     "example-menu": {
