@@ -386,7 +386,7 @@
             "file-browser": "File Browser",
             "terminal": "ターミナル"
         },
-        "name": "",
+        "name": "Example Menu",
         "web-links": {
             "submenu": "ウェブリンク",
             "google": "Google",
@@ -421,11 +421,11 @@
     },
     "achievements": {
         "attributes": {
-            "novice": "初心者",
+            "novice": "初心の",
             "capable": "一人前の",
             "skilled": "熟練の",
-            "expert": "エキスパート",
-            "master": "センセイ"
+            "expert": "達人級",
+            "master": "センセイ級"
         },
         "tier": {
             "I": "I",
@@ -443,13 +443,13 @@
             "description": "{{n}}個の項目を選択する。"
         },
         "depth-selector": {
-            "name1": "{{attribute}} スライサー",
-            "name2": "{{attribute}} 2層スライサー",
-            "name3": "{{attribute}} ディープスライサー",
+            "name1": "{{attribute}} 抜刀術",
+            "name2": "{{attribute}} 燕返し",
+            "name3": "{{attribute}} 三連斬り",
             "description": "{{time}}ミリ秒未満で、深さ{{depth}}にある項目を{{n}}個選択する。"
         },
         "click-selector": {
-            "name": "{{attribute}} クリック クリック チャンピオン",
+            "name": "{{attribute}} クリック・クリック・チャンピオン",
             "description": "マウスで{{n}}個の項目を選択する。"
         },
         "keyboard-selector": {
@@ -457,7 +457,7 @@
             "description": "キーボードで{{n}}個の項目を選択する。"
         },
         "gamepad-selector": {
-            "name": "{{attribute}} ゲームパッドウォリアー",
+            "name": "{{attribute}} ゲームパッド戦士",
             "description": "ゲームパッドで{{n}}個の項目を選択する。"
         },
         "gesture-selector": {
@@ -469,7 +469,7 @@
             "description": "設定ダイアログを{{n}}回開く。"
         },
         "backup": {
-            "name": "未来予見の道 {{tier}}",
+            "name": "先見の明 {{tier}}",
             "description": "メニューや設定を{{n}}回バックアップする。"
         },
         "restore": {
@@ -489,15 +489,15 @@
             "description": "項目が12個以上のメニューを作成する。"
         },
         "deep-menu": {
-            "name": "深淵の達人",
+            "name": "深淵を極めし者",
             "description": "深さが4層目のサブメニューにメニュー項目を追加する。"
         },
         "sponsors-viewed": {
             "name": "Kandoの守護者",
-            "description": "Kandoのスポンサーになることをご検討ください。"
+            "description": "Kandoのスポンサーになる。"
         },
         "menu-themes-selected": {
-            "name": "美学者の道",
+            "name": "美の探究道",
             "description": "メニューのテーマを{{n}}回変更する。"
         },
         "tutorial-viewed": {
