@@ -365,7 +365,7 @@
     },
     "main": {
         "new-version-notification-header": "Kando の新しいバージョンが利用可能です！",
-        "new-version-notification-body": "入手はこちらから {{link}}",
+        "new-version-notification-body": "入手はこちらから {{link}}.",
         "show-settings": "設定を表示",
         "un-inhibit-shortcuts": "ショートカットを再度有効化",
         "inhibit-shortcuts": "すべてのショートカットを一時的に無効化",
@@ -386,7 +386,7 @@
             "file-browser": "File Browser",
             "terminal": "ターミナル"
         },
-        "name": "Example Menu",
+        "name": "",
         "web-links": {
             "submenu": "ウェブリンク",
             "google": "Google",
