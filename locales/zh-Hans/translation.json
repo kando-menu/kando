@@ -292,7 +292,9 @@
             "backup-menus": "备份 menus.json…",
             "backup-settings": "备份 config.json…",
             "restore-menus": "恢复 menus.json…",
-            "restore-settings": "恢复 config.json…"
+            "restore-settings": "恢复 config.json…",
+            "enable-achievements-info": "启用后，Kando 将记录您的成就进度。",
+            "enable-achievements": "记录成就"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -361,7 +363,7 @@
             "create-your-own-themes": "创造您自己的主题",
             "open-theme-directory": "打开主题目录",
             "selection-wedges-info": "如果启用且所选主题支持，则菜单项的可选区域将突出显示。",
-            "selection-wedges": "绘制菜单项选区"
+            "selection-wedges": "绘制项目选区"
         },
         "not-bound": "未绑定快捷键",
         "shortcut-id-label": "快捷键 ID",
@@ -441,6 +443,113 @@
         "restore-menu-settings-warning-message": "这将用所选备份文件的内容覆盖您当前的菜单和菜单合集！",
         "restore-menu-settings-error-title": "载入菜单备份文件失败！",
         "restore-menu-settings-success-title": "成功！",
-        "restore-menu-settings-success-message": "您的菜单和菜单合集项已从备份文件恢复。"
+        "restore-menu-settings-success-message": "您的菜单和菜单合集项已从备份文件恢复。",
+        "achievements-dialog": {
+            "reset-button": "重置进度",
+            "reset-confirmation-title": "您确定要重置所有进度吗？",
+            "reset-confirmation-message": "所有成就和等级进度将会丢失。此操作无法复原。",
+            "title": "成就",
+            "xp": "XP",
+            "no-in-progress-achievements": "恭喜！您已达成所有成就。",
+            "no-completed-achievements": "您尚未完成任何成就。",
+            "in-progress-button": "进行中",
+            "completed-button": "已完成",
+            "reset-button-tooltip": "重置所有成就与等级进度"
+        }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "新手",
+            "capable": "熟手",
+            "skilled": "高手",
+            "expert": "专家",
+            "master": "大师"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "虚空长路 {{tier}}",
+            "description": "取消选择 {{n}} 次。"
+        },
+        "selector": {
+            "name": "{{attribute}} 武士",
+            "description": "选择 {{n}} 个菜单项目。"
+        },
+        "depth-selector": {
+            "name1": "{{attribute}} 刀客",
+            "name2": "{{attribute}} 双层刀客",
+            "name3": "{{attribute}} 深渊刀客",
+            "description": "在 {{time}} 毫秒内，于第 {{depth}} 层选取 {{n}} 个项目。"
+        },
+        "click-selector": {
+            "name": "{{attribute}} 点击圣手",
+            "description": "用鼠标点击选取 {{n}} 个项目。"
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}} 热键侠",
+            "description": "使用键盘选取 {{n}} 个项目。"
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}} 头号玩家",
+            "description": "使用游戏手柄选取 {{n}} 个项目。"
+        },
+        "gesture-selector": {
+            "name": "{{attribute}} 疾风忍者",
+            "description": "使用极速模式或画笔模式选取 {{n}} 个项目。"
+        },
+        "settings-opened": {
+            "name": "旅程即是奖赏 {{tier}}",
+            "description": "打开设置窗口 {{n}} 次。"
+        },
+        "backup": {
+            "name": "先见之明 {{tier}}",
+            "description": "备份您的菜单或设置项 {{n}} 次。"
+        },
+        "restore": {
+            "name": "再起之机 {{tier}}",
+            "description": "还原备份 {{n}} 次。"
+        },
+        "added-items": {
+            "name": "Kando 之道 {{tier}}",
+            "description": "在菜单编辑器中创建 {{n}} 个菜单项。"
+        },
+        "deleted-all-menus": {
+            "name": "归零之境",
+            "description": "删除您所有的菜单。"
+        },
+        "full-menu": {
+            "name": "海纳百川",
+            "description": "创建一个包含超过十二个项目的菜单。"
+        },
+        "deep-menu": {
+            "name": "根深蒂固",
+            "description": "将一个菜单项添加到深度达四层的子菜单中。"
+        },
+        "sponsors-viewed": {
+            "name": "Kando 守护者",
+            "description": "考虑成为 Kando 的赞助者。"
+        },
+        "menu-themes-selected": {
+            "name": "臻美之道",
+            "description": "更换菜单主题 {{n}} 次。"
+        },
+        "tutorial-viewed": {
+            "name": "旅途的起点",
+            "description": "完成 Kando 的导览教程。"
+        },
+        "many-selections-streak": {
+            "name": "秒开仙人 {{tier}}",
+            "description": "在 {{time}} 秒内选取 {{n}} 个菜单项。"
+        },
+        "speedy-selections-streak": {
+            "name": "零帧起手 {{tier}}",
+            "description": "连续选取 {{n}} 次，且平均时间少于 {{time}} 毫秒。"
+        },
+        "completed-title": "获得成就！"
     }
 }
