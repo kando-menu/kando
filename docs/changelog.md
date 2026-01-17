@@ -21,7 +21,9 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** 2026-01-17
 
-**Release Date:** TBD
+<a href="https://www.youtube.com/watch?v=hhgRq3wdSHA">
+<img align="right" width="400px" src="img/player22.jpg"></img>
+</a>
 
 ### :tada: Added
 
