@@ -63,9 +63,7 @@ for more information.
     });
 
     // Set timeout options
-    this.mouseTimeout = generalSettings.get('wlrootsPointerGetTimeoutMouse');
-    this.touchTimeout = generalSettings.get('wlrootsPointerGetTimeoutTouch');
-    this.defaultBehavior = generalSettings.get('wlrootsPointerGetTimeoutDefaultBehavior');
+    this.generalSettings = generalSettings;
   }
 
   /** Nothing to be done here. */

@@ -10,8 +10,9 @@
 
 import { native } from './native';
 import { LinuxBackend } from '../backend';
-import { KeySequence } from '../../../../common';
+import { GeneralSettings, KeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
+import { Settings } from '../../../../main/settings';
 
 /**
  * This is a partial implementation of the Backend interface for wlroots-based Wayland
@@ -33,8 +34,7 @@ type PointerTimeoutBehavior =
 export abstract class WLRBackend extends LinuxBackend {
   private previouslyReportedX = 0;
   private previouslyReportedY = 0;
-  public mouseTimeout: number = 0;
-  public touchTimeout: number = 0;
+  public generalSettings: Settings<GeneralSettings>;
   public defaultBehavior: PointerTimeoutBehavior = 'center';
 
   /**
@@ -89,8 +89,8 @@ export abstract class WLRBackend extends LinuxBackend {
    */
   protected getPointerPositionAndWorkAreaSize() {
     const data = native.getPointerPositionAndWorkAreaSize(
-      this.mouseTimeout,
-      this.touchTimeout
+      this.generalSettings.get('wlrootsPointerGetTimeoutMouse'),
+      this.generalSettings.get('wlrootsPointerGetTimeoutTouch')
     );
     if (data.pointerGetTimedOut) {
       console.error('Pointer get timed out');

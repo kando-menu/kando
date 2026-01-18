@@ -213,7 +213,7 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
 
   /**
    * How long the WLRoots backend will wait before spawning the menu if it can't find the
-   * the pointer and you're using a mouse
+   * the pointer and you're using touch input
    */
   wlrootsPointerGetTimeoutTouch: z.number().min(0).default(1500),
 
