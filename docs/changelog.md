@@ -25,6 +25,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Some wlroots-specific options to handle the case where no pointer position is available. There are some timeouts which can now be configured in the settings dialog. Thanks to [@make-42](https://github.com/make-42) for this contribution!
 
+### :wrench: Changed
+
+- Upgraded many dependencies to their latest versions. This includes an upgrade to Electron 39 which uses Wayland natively now. Feel free to report any issues you encounter!
+
 ### :bug: Fixed
 
 - Fixed an issue where Kando would not open a menu on Niri if no pointer device was connected. Thanks to [@make-42](https://github.com/make-42) for fixing this!
