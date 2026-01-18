@@ -17,6 +17,18 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+**Release Date:** TBD
+
+### :tada: Added
+
+- Some wlroots-specific options to handle the case where no pointer position is available. There are some timeouts which can now be configured in the settings dialog. Thanks to [@make-42](https://github.com/make-42) for this contribution!
+
+### :bug: Fixed
+
+- Fixed an issue where Kando would not open a menu on Niri if no pointer device was connected. Thanks to [@make-42](https://github.com/make-42) for fixing this!
+
 ## [Kando 2.2.0](https://github.com/kando-menu/kando/releases/tag/v2.2.0)
 
 **Release Date:** 2026-01-17
