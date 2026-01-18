@@ -29,7 +29,10 @@ export type Native = {
    * This gets the pointer's position and work area size by spawning a temporary
    * wlr_layer_shell overlay surface.
    */
-  getPointerPositionAndWorkAreaSize(): {
+  getPointerPositionAndWorkAreaSize(
+    mouseTimeout: number,
+    touchTimeout: number
+  ): {
     pointerX: number;
     pointerY: number;
     pointerGetTimedOut: boolean;

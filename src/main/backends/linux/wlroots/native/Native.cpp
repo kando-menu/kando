@@ -153,6 +153,15 @@ void Native::init(Napi::Env const& env) {
     return;
   }
 
+  static const wl_seat_listener seatListener = {
+    .capabilities = [](void* data, wl_seat* seat, uint32_t caps) {
+      auto* d = static_cast<Native::WaylandData*>(data);
+
+      d->mSeatCapabilities = caps;
+    },
+    .name = [](void*, wl_seat*, const char*) {},
+  };
+
   // This function will be called whenever a new global Wayland object is available. We
   // use it to find the seat and the virtual pointer manager.
   auto handleGlobal = [](void* userData, wl_registry* registry, uint32_t name,
@@ -167,6 +176,7 @@ void Native::init(Napi::Env const& env) {
       data->mSeat =
           static_cast<wl_seat*>(wl_registry_bind(registry, name, &wl_seat_interface,
               4)); // this has to be v4 (this is the version Niri uses)
+      wl_seat_add_listener(data->mSeat, &seatListener, data);
     } else if (strcmp(interface, zwlr_layer_shell_v1_interface.name) == 0) {
       data->mLayerShell = static_cast<zwlr_layer_shell_v1*>(
           wl_registry_bind(registry, name, &zwlr_layer_shell_v1_interface,
@@ -378,6 +388,13 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
 Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
+
+  // We need to check the number of arguments and their types. If something is wrong, we
+  // throw a JavaScript exception.
+  if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
+    Napi::TypeError::New(env, "2 Numbers expected").ThrowAsJavaScriptException();
+  }
+
   // Ensure Wayland is initialized
   if (!mData.mDisplay) {
     init(env);
@@ -387,7 +404,7 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
 
   // Create surface and pointer listener
   createSurfaceAndPointer();
-  if (!mData.mSurface || !mData.mPointer) {
+  if (!mData.mSurface || !(mData.mPointer || mData.mTouch)) {
     destroySurfaceAndPointer();
     return env.Null();
   }
@@ -395,7 +412,10 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   int fd                      = wl_display_get_fd(mData.mDisplay);
   mData.mPointerEventReceived = false;
 
-  int timeoutMs = 500;
+  int timeoutMs = info[0].As<Napi::Number>().Int32Value();;
+  if (mData.mSeatCapabilities & WL_SEAT_CAPABILITY_TOUCH) {
+    timeoutMs = info[1].As<Napi::Number>().Int32Value();;
+  }
   using clock = std::chrono::steady_clock;
   auto start = clock::now();
   bool mPointerGetTimedOut = false;
@@ -432,6 +452,7 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
       wl_display_dispatch_pending(mData.mDisplay);
     } else if (ret == -1) {
       // Poll error, break or handle as needed
+      wl_display_cancel_read(mData.mDisplay);
       std::cerr << "Poll error in getPointer\n";
       break;
     } else {
@@ -519,7 +540,6 @@ void Native::createSurfaceAndPointer() {
 
   wl_surface_commit(mData.mSurface);
   wl_display_roundtrip(mData.mDisplay);
-  mData.mPointer = wl_seat_get_pointer(mData.mSeat);
 
   static const wl_pointer_listener pointerListener = {
       .enter =
@@ -546,7 +566,34 @@ void Native::createSurfaceAndPointer() {
       .axis_value120 = nullptr,
   };
 
-  wl_pointer_add_listener(mData.mPointer, &pointerListener, &mData);
+  static const wl_touch_listener touchListener = {
+  .down = [](void* data, wl_touch*, uint32_t, uint32_t,
+             wl_surface*, int32_t, wl_fixed_t x, wl_fixed_t y) {
+    auto* d                  = static_cast<Native::WaylandData*>(data);
+    d->mPointerX             = wl_fixed_to_double(x);
+    d->mPointerY             = wl_fixed_to_double(y);
+    d->mPointerEventReceived = true;
+  },
+  .up     = [](void*, wl_touch*, uint32_t, uint32_t, int32_t) {},
+  .motion = [](void* data, wl_touch*, uint32_t,
+               int32_t, wl_fixed_t x, wl_fixed_t y) {
+    auto* d                  = static_cast<Native::WaylandData*>(data);
+    d->mPointerX             = wl_fixed_to_double(x);
+    d->mPointerY             = wl_fixed_to_double(y);
+    d->mPointerEventReceived = true;
+  },
+  .frame  = [](void*, wl_touch*) {},
+  .cancel = [](void*, wl_touch*) {},
+};
+
+  if (mData.mSeatCapabilities & WL_SEAT_CAPABILITY_POINTER) { 
+    mData.mPointer = wl_seat_get_pointer(mData.mSeat);
+    wl_pointer_add_listener(mData.mPointer, &pointerListener, &mData);
+  } 
+  if (mData.mSeatCapabilities & WL_SEAT_CAPABILITY_TOUCH) {
+    mData.mTouch = wl_seat_get_touch(mData.mSeat);
+    wl_touch_add_listener(mData.mTouch, &touchListener, &mData);
+  }
   mData.mPointerEventReceived = false;
 }
 
@@ -556,6 +603,11 @@ void Native::destroySurfaceAndPointer() {
   if (mData.mPointer) {
     wl_pointer_destroy(mData.mPointer);
     mData.mPointer = nullptr;
+  }
+
+  if (mData.mTouch) {
+    wl_touch_destroy(mData.mTouch);
+    mData.mTouch = nullptr;
   }
 
   if (mData.mLayerSurface) {

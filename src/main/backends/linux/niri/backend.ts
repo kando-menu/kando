@@ -15,6 +15,9 @@ import { WLRBackend } from '../wlroots/backend';
 import { GlobalShortcuts } from '../portals/global-shortcuts';
 import { screen } from 'electron';
 
+import { GeneralSettings } from '../../../../common';
+import { Settings } from '../../../../main/settings';
+
 /**
  * This backend is used on Niri. It uses the generic wlroots backend and adds the missing
  * functionality using the niri msg command line utility and the global-shortcuts desktop
@@ -42,7 +45,7 @@ export class NiriBackend extends WLRBackend {
    * This is called when the backend is created. We use it to print a warning, as the user
    * still needs to set up some window rules and bind the shortcuts.
    */
-  public async init() {
+  public async init(generalSettings: Settings<GeneralSettings>) {
     console.log(
       `
 The Niri backend is still a bit experimental!
@@ -58,6 +61,9 @@ for more information.
         this.onShortcutPressed(shortcutID);
       }
     });
+
+    // Set timeout options
+    this.generalSettings = generalSettings;
   }
 
   /** Nothing to be done here. */
