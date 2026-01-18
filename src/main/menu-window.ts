@@ -76,7 +76,6 @@ export class MenuWindow extends BrowserWindow {
         preload: MENU_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
       transparent: true,
-      resizable: false,
       skipTaskbar: true,
       frame: false,
       hasShadow: false,
