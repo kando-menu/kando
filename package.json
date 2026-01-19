@@ -91,7 +91,7 @@
     "react-markdown": "^10.1.0",
     "react-tooltip": "^5.29.1",
     "react-transition-group": "^4.4.5",
-    "react-virtualized-auto-sizer": "^1.0.25",
+    "react-virtualized-auto-sizer": "^2.0.2",
     "react-window": "^1.8.11",
     "read-ini-file": "^4.0.0",
     "sass": "^1.97.2",
