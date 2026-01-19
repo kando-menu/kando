@@ -56,6 +56,17 @@ export default () => {
           });
         }}
       />
+      <Checkbox
+        info={i18next.t('menu-items.common.inhibit-shortcuts-info')}
+        initialValue={data.inhibitShortcuts}
+        label={i18next.t('menu-items.common.inhibit-shortcuts')}
+        onChange={(value) => {
+          editMenuItem(selectedMenu, selectedChildPath, (item) => {
+            (item.data as ItemData).inhibitShortcuts = value;
+            return item;
+          });
+        }}
+      />
       <RandomTip
         marginTop={50}
         tips={[
