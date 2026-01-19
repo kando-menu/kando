@@ -294,7 +294,17 @@
             "restore-menus": "Restaurer menu json…",
             "restore-settings": "Restorer menu.json…",
             "enable-achievements-info": "Si cette option est activée, Kando suivra l'avancement de vos succès.",
-            "enable-achievements": "Tracker les succès"
+            "enable-achievements": "Tracker les succès",
+            "center": "Au centre",
+            "wlroots-specific-options": "Options pour les backends basés sur wlroots",
+            "options-that-will-only-affect-the-wlroots-backend": "Ces options n'affectent que les backends basés sur wlroots et n'ont aucun effet sur les autres backends.",
+            "wlroots-pointer-get-timeout-mouse": "Délai d'attente pour Get-pointer-position",
+            "wlroots-pointer-get-timeout-mouse-info": "Durée d'attente maximale en millisecondes pour recevoir la position du curseur de la souris via des backends basés sur wlroots. Si le délai d'attente est atteint, une position de secours sera utilisée. La valeur par défaut est 500 ms.",
+            "wlroots-pointer-get-timeout-touch": "Délai d'attente pour Get-touch-position",
+            "wlroots-pointer-get-timeout-touch-info": "Durée d'attente maximale en millisecondes pour recevoir la position du curseur tactile via des backends basés sur wlroots. Si le délai d'attente est atteint, une position de secours sera utilisée. La valeur par défaut est 1500 ms.",
+            "wlroots-pointer-get-timeout-default-behavior": "Position de secours du curseur",
+            "wlroots-pointer-get-timeout-default-behavior-info": "Détermine la position supposée du curseur si aucune position n'a pu être obtenue à partir des backends basés sur wlroots dans le délai configuré.",
+            "previously-reported": "Précédemment signalé"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
