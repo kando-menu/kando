@@ -14,6 +14,7 @@ import i18next from 'i18next';
 import * as classes from './PreviewFooter.module.scss';
 
 import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
+import { useAppState, useMenuSettings } from '../../state';
 
 import FooterButton from './FooterButton';
 
@@ -22,6 +23,8 @@ import FooterButton from './FooterButton';
  * preview.
  */
 export default function PreviewFooter() {
+  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
+  const selectedMenu = useAppState((state) => state.selectedMenu);
   const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
 
   return (
@@ -32,7 +35,19 @@ export default function PreviewFooter() {
         <div className={classes.rightLine} />
       </div>
       <div className={classes.shadow} />
-      <div className={classes.newItems}>
+      <div
+        className={classes.newItems}
+        onDrop={async (event) => {
+          const dragItemPathData = event.dataTransfer.getData('kando/child-path');
+          if (dragItemPathData) {
+            event.preventDefault();
+            // Wait for the next frame to allow onDragEnd to fire first
+            requestAnimationFrame(() => {
+              const dragItemPath = JSON.parse(dragItemPathData);
+              deleteMenuItem(selectedMenu, dragItemPath);
+            });
+          }
+        }}>
         {allItemTypes.map(([name, type]) => (
           <FooterButton
             key={name}
