@@ -27,7 +27,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :wrench: Changed
 
-- Upgraded many dependencies to their latest versions. This includes an upgrade to Electron 39 which uses Wayland natively now. Feel free to report any issues you encounter!
+- Upgraded many dependencies to their latest versions. This includes an upgrade to Electron 40 which uses Wayland natively now. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
 
