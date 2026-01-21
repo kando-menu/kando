@@ -74,6 +74,7 @@ export class MenuWindow extends BrowserWindow {
         // background throttling disabled.
         backgroundThrottling: false,
         preload: MENU_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        spellcheck: false,
       },
       transparent: true,
       skipTaskbar: true,

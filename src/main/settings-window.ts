@@ -54,6 +54,7 @@ export class SettingsWindow extends BrowserWindow {
         // Hence, we have to disable webSecurity in development mode.
         webSecurity: process.env.NODE_ENV !== 'development',
         preload: SETTINGS_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        spellcheck: false,
       },
       backgroundColor: '#00000000',
       titleBarStyle: 'hidden',
