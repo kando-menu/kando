@@ -16,7 +16,8 @@
             "url-example": "URL eksempel:",
             "search-placeholder": "Søg efter ikoner…",
             "base64-hint": "Base64-kodede ikoner giver en nem måde at inkludere enhver form for ikon i dine menuer. Du kan bruge en tjeneste som [www.base64-image.de]({{link}}) til at konvertere et hvilket som helst billede til en base64-kodet streng. Det fungerer endda med animerede gifs!",
-            "hint": "Lær [her]({{link}}), hvordan du tilføjer eller laver dine egne ikontemaer."
+            "hint": "Lær [her]({{link}}), hvordan du tilføjer eller laver dine egne ikontemaer.",
+            "reload-button-tooltip": "Genindlæs alle ikon-temaer"
         },
         "not-bound": "Ikke Bundet",
         "invalid-dropdown-selection": "Vælg en valgmulighed…",
@@ -69,7 +70,12 @@
             "dev-tools-note": "Kando bruger to vinduer: Et til menuen og et til indstillingerne. Du kan åbne udviklingsværktøjerne for at inspicere begge vinduer separat.",
             "developer-options": "Indstillinger for udviklere",
             "enable-gamepad-support": "Aktiver understøttelse af gamepad",
-            "sound-theme-info": "Et lydtema er en samling af lyde, der afspilles, når du interagerer med menuen."
+            "sound-theme-info": "Et lydtema er en samling af lyde, der afspilles, når du interagerer med menuen.",
+            "auto-language": "Brug systemsproget",
+            "localization-info": "Genstart Kando for at anvende det nye sprog.",
+            "localization-label": "Sprog",
+            "hardware-acceleration-info": "Denne indstilling kan øge ydelsen af programmet, men kan også føre til nogle gengivelsesproblemer. Du er nødt til at genstarte Kando for at anvende denne indstilling.",
+            "hardware-acceleration": "Aktiver hardware-acceleration"
         },
         "file-picker": {
             "select-directory": "Vælg en mappe",
@@ -132,7 +138,31 @@
         "empty-collection": "Denne samling er tom.",
         "empty-collection-note": "Rediger tagsene ovenfor, eller tilføj en helt ny menu til denne samling med knappen nedenfor.",
         "all-menus": "Alle Menuer",
-        "undo": "Fortryd"
+        "undo": "Fortryd",
+        "cancel": "Afbryd",
+        "achievements-dialog": {
+            "in-progress-button": "Under Udførelse",
+            "completed-button": "Fuldendt",
+            "reset-button": "Nulstil Fremskridt",
+            "reset-confirmation-title": "Er du sikker på at nulstille alt fremskridt?",
+            "reset-confirmation-message": "Alle præstationer og niveaufremskridt vil gå tabt. Denne handling kan ikke fortrydes.",
+            "title": "Præstationer",
+            "xp": "XP",
+            "no-in-progress-achievements": "Tillykke! Du har gennemført alle præstationer.",
+            "no-completed-achievements": "Du har ikke gennemført nogen præstationer endnu.",
+            "reset-button-tooltip": "Nulstil alle præstationer og niveaufremskridt"
+        },
+        "restore-backup": "Genopret Sikkerhedskopi…",
+        "restore-general-settings-warning-title": "Er du siker på at genoprette de generelle indstillinger?",
+        "restore-general-settings-warning-message": "Dette vil overskrive dine nuværende indstillinger for programmet med indholdet af den valgte sikkerhedskopi-fil! Dine menuer og menu-samlinger vil ikke blive påvirket.",
+        "restore-general-settings-error-title": "Indlæsningen af de generelle indstillinger mislykkedes!",
+        "restore-general-settings-success-title": "Succes!",
+        "restore-general-settings-success-message": "Dine generelle indstillinger er blevet genoprettet fra sikkerhedskopi-filen.",
+        "restore-menu-settings-warning-title": "Er du sikker på at genoprette menuindstillingerne?",
+        "restore-menu-settings-warning-message": "Dette vil overskrive dine aktuelle menuer og menu-samlinger med indholdet af den valgte sikkerhedskopi!",
+        "restore-menu-settings-error-title": "Indlæsningen af menu-sikkerhedskopien mislykkedes!",
+        "restore-menu-settings-success-title": "Succes!",
+        "restore-menu-settings-success-message": "Dine menuer og menu-samlinger er blevet genoprettet fra sikkerhedskopi-filen."
     },
     "menu-items": {
         "text": {
