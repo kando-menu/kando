@@ -293,7 +293,8 @@
             "restore-menus": "Восстановить menus.json…",
             "restore-settings": "Восстановить config.json…",
             "enable-achievements-info": "Если включено, Kando будет отслеживать ваш прогресс для достижений.",
-            "enable-achievements": "Отслеживать достижения"
+            "enable-achievements": "Отслеживать достижения",
+            "center": "По центру"
         },
         "hover-mode": "Режим Наведения",
         "hover-mode-info": "Только для продвинутых пользователей! Выбор элементов меню наведением курсора.",
