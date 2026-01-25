@@ -73,7 +73,11 @@
         "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
         "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
         "quit": "Lopeta",
-        "show-settings": "Näytä asetukset"
+        "show-settings": "Näytä asetukset",
+        "new-version-notification-body": "Hanki se osoitteesta {{link}}.",
+        "un-inhibit-shortcuts": "Ota pikanäppäimet uudelleen käyttöön",
+        "inhibit-shortcuts": "Poista kaikki pikanäppäimet käytöstä väliaikaisesti",
+        "invalid-link-header": "Virheellinen linkki"
     },
     "menu-items": {
         "command": {
@@ -432,6 +436,62 @@
         },
         "click-selector": {
             "description": "Valitse {{n}} kohdetta hiiren napsautuksella."
-        }
+        },
+        "keyboard-selector": {
+            "description": "Valitse {{n}} kohdetta näppäimistöllä."
+        },
+        "gamepad-selector": {
+            "description": "Valitse {{n}} kohdetta peliohjaimella."
+        },
+        "gesture-selector": {
+            "description": "Valitse {{n}} kohdetta käyttäen turbo- tai merkintätilaa."
+        },
+        "settings-opened": {
+            "name": "Matka on palkkio {{tier}}",
+            "description": "Avaa asetusikkuna {{n}} kertaa."
+        },
+        "backup": {
+            "name": "Kaukokatseisuuden polku {{tier}}",
+            "description": "Varmuuskopioi valikot tai asetukset {{n}} kertaa."
+        },
+        "restore": {
+            "name": "Toinen mahdollisuus {{tier}}",
+            "description": "Palauta varmuuskopio {{n}} kertaa."
+        },
+        "added-items": {
+            "name": "Kandon tapa {{tier}}",
+            "description": "Luo {{n}} kohdetta valikkomuokkaimella."
+        },
+        "deleted-all-menus": {
+            "description": "Poista kaikki valikot."
+        },
+        "full-menu": {
+            "name": "Leveyttä syvyyden sijaan",
+            "description": "Luo yli 12 kohdetta sisältävä valikko."
+        },
+        "deep-menu": {
+            "name": "Syvyyden mestari",
+            "description": "Lisää valikkokohde neljä tasoa syvään alivalikkoon."
+        },
+        "sponsors-viewed": {
+            "name": "Kandon suojelija",
+            "description": "Harkitse Kandon sponsoriksi ryhtymistä."
+        },
+        "menu-themes-selected": {
+            "name": "Esteetikon tapa",
+            "description": "Vaihda valikkoteemaa {{n}} kertaa."
+        },
+        "tutorial-viewed": {
+            "name": "Matka alkaa",
+            "description": "Suorita Kandon esittelykurssi."
+        },
+        "many-selections-streak": {
+            "description": "Valitse {{n}} kohdetta {{time}} sekunnissa.",
+            "name": "Salamannopeat kädet {{tier}}"
+        },
+        "speedy-selections-streak": {
+            "name": "Ajatusta nopeampi {{tier}}"
+        },
+        "completed-title": "Saavutus avattu!"
     }
 }
