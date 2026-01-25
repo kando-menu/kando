@@ -169,7 +169,7 @@
             "none": "Ei mitään",
             "auto-language": "Käytä järjestelmän kieltä",
             "title": "Yleiset asetukset",
-            "message": "Kaikki Kandon asetukset on tallennettu JSON tiedostoon, jota voit muokata, jakaa ja varmuuskopioida. Paina [tästä]({{link}}) avataksesi config.json-tiedoston sisältävän hakemiston.",
+            "message": "Kaikki valikot ja Kandon asetukset on tallennettu kahteen JSON-tiedostoon, joita voi muokata, jakaa ja varmuuskopioida. Napsauta [tästä]({{link}}) avataksesi kansion, johon tiedostot on tallennettu.",
             "app-settings": "Sovelluksen asetukset",
             "localization-label": "Kieli",
             "localization-info": "Käynnistä Kando uudelleen vahvistaaksesi kielivalinnan.",
@@ -233,7 +233,23 @@
             "advanced-menu-options": "Kehittyneet valikko-asetukset",
             "advanced-menu-options-note": "Yleensä voit jättää nämä asetukset niiden oletusarvoihin.",
             "developer-options": "Kehittäjän valinnat",
-            "settings-window-dev-tools": "Tarkista asetukset"
+            "settings-window-dev-tools": "Tarkista asetukset",
+            "hardware-acceleration-info": "Tämä valinta voi nostaa sovelluksen suorituskykyä, mutta voi myös johtaa renderöintivirheisiin. Käynnistä Kando uudelleen, jotta tämä asetus tulee voimaan.",
+            "hardware-acceleration": "Käytä laitteistokiihdytystä",
+            "invisible-settings-button": "Näkymätön asetuspainike",
+            "center": "Keskellä",
+            "enable-achievements-info": "Jos käytössä, Kando seuraa edistymistäsi saavutusten näkökulmasta.",
+            "enable-achievements": "Seuraa saavutuksia",
+            "minimum-submenu-distance": "Alivalikon vähimmäisetäisyys",
+            "movement-threshold": "Liikkumisen kynnys",
+            "minimum-gesture-length": "Eleen vähimmäispituus",
+            "minimum-gesture-angle": "Eleen vähimmäiskulma",
+            "gesture-pause-timeout": "Eleen keskeytyksen aikakatkaisu",
+            "backup-and-restore": "Varmuuskopiointi ja palautus",
+            "backup-menus": "Varmuuskopioi menus.json…",
+            "backup-settings": "Varmuuskopioi config.json…",
+            "restore-menus": "Palauta menus.json…",
+            "restore-settings": "Palauta config.json…"
         },
         "hover-mode": "Kohdistustila",
         "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
@@ -242,7 +258,9 @@
             "search-placeholder": "Etsi kuvakkeita…",
             "file-example": "tiedosto: URI esimerkki:",
             "url-example": "URL esimerkki:",
-            "hint": "[Opi]({{link}}) kuinka lisätä tai luoda omia kuvaketeemojasi."
+            "hint": "[Opi]({{link}}) kuinka lisätä tai luoda omia kuvaketeemojasi.",
+            "base64-hint": "Base64-koodatut kuvakkeet tarjoavat helpon tavan sisällyttää minkälaisia kuvakkeita tahansa valikkoihin. Voit käyttää palveluita, kuten [www.base64-image.de]({{link}}), muuntaaksesi minkä tahansa kuvan base64-koodatuksi merkkijonoksi. Tämä toimii jopa animoitujen gif-kuvien kanssa!",
+            "reload-button-tooltip": "Lataa uudelleen kaikki kuvaketeemat"
         },
         "introduction-dialog": {
             "title": "Tervetuloa, tämä on Kando!",
@@ -341,6 +359,28 @@
         "tags-info": "Tunnisteita voidaan käyttää valikoiden ryhmittelemiseksi kokoelmiin.",
         "duplicate-menu-item": "Monista valikon kohde",
         "delete-menu-item": "Poista valikon kohde",
-        "shortcut-info": "Tämä pikanäppäin avaa valikon. Sen on sisällettävä yksi normaali näppäin ja mikä tahansa määrä muuntimia, kuten Ctrl, Alt tai Shift. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu toiselle valikolle!"
+        "shortcut-info": "Tämä pikanäppäin avaa valikon. Sen on sisällettävä yksi normaali näppäin ja mikä tahansa määrä muuntimia, kuten Ctrl, Alt tai Shift. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu toiselle valikolle!",
+        "achievements-dialog": {
+            "reset-button": "Nollaa edistyminen",
+            "reset-confirmation-title": "Haluatko varmasti nollata kaiken edistymisen?",
+            "reset-confirmation-message": "Kaikki saavutukset ja tasoedistyminen katoavat. Tätä toimintoa ei voi perua.",
+            "title": "Saavutukset",
+            "no-in-progress-achievements": "Onnittelut! Sait kaikki saavutukset.",
+            "no-completed-achievements": "Et ole saanut vielä yhtäkään saavutusta.",
+            "in-progress-button": "Kesken",
+            "completed-button": "Valmis",
+            "reset-button-tooltip": "Nollaa kaikki saavutukset ja tasoedistyminen"
+        },
+        "restore-backup": "Palauta varmuuskopio…",
+        "restore-general-settings-warning-title": "Haluatko varmasti palauttaa yleiset asetukset?",
+        "restore-general-settings-warning-message": "Tämä korvaa kaikki nykyiset sovelluksen asetukset valitun varmuuskopiotiedoston sisällöllä! Tällä ei ole vaikutusta valikkoihin ja valikkokokoelmiin.",
+        "restore-general-settings-error-title": "Yleisten asetusten varmuuskopion lataaminen epäonnistui!",
+        "restore-general-settings-success-title": "Onnistui!",
+        "restore-general-settings-success-message": "Yleiset asetukset on palautettu varmuuskopiotiedostosta.",
+        "restore-menu-settings-warning-title": "Haluatko varmasti palauttaa valikkoasetukset?",
+        "restore-menu-settings-warning-message": "Tämä korvaa nykyiset valikot ja valikkokokoelmat valitun varmuuskopiotiedoston sisällöllä!",
+        "restore-menu-settings-error-title": "Valikkojen varmuuskopion lataaminen epäonnistui!",
+        "restore-menu-settings-success-title": "Onnistui!",
+        "restore-menu-settings-success-message": "Valikot ja valikkokokoelmat on palautettu varmuuskopiotiedostosta."
     }
 }
