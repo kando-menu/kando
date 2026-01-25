@@ -85,7 +85,10 @@
             "isolated-info": "Tämä suorittaa komennon puhtaassa ympäristössä, mikä tarkoittaa, että se ei peri mitään ympäristömuuttujia Kandolta. Tämä voi auttaa käskyissä, jotka eivät käynnisty kunnolla.",
             "isolated": "Suorita eristettynä",
             "detached": "Suorita irrallisena",
-            "detached-info": "Tämä irrottaa komennon Kandosta, joten se jatkaa toimintaansa, vaikka Kando olisi suljettu. Tämän poistaminen käytöstä saattaa ratkaista ongelmat komennoilla, jotka eivät käynnisty kunnolla."
+            "detached-info": "Tämä irrottaa komennon Kandosta, joten se jatkaa toimintaansa, vaikka Kando olisi suljettu. Tämän poistaminen käytöstä saattaa ratkaista ongelmat komennoilla, jotka eivät käynnisty kunnolla.",
+            "choose-app": "Valitse sovellus…",
+            "tip-1": "Voit käyttää Komento-kohdetyyppiä käynnistääksesi sovelluksia tai komentosarjoja.",
+            "tip-2": "Jos polku suoritettavaan tiedostoon sisältää välilyöntejä, anna polku \"lainausmerkkien kera\"."
         },
         "file": {
             "description": "Avaa tiedoston tai kansion.",
@@ -97,7 +100,8 @@
         "macro": {
             "name": "Suorita makro",
             "recording-placeholder": "Paina näppäimiä…",
-            "tip-1": "Oletusarvon mukaan Kando lisää kymmenen millisekunnin viiveen ennen jokaista näppäintapahtumaa. Voit muuttaa tätä \"viive\"-ominaisuudella."
+            "tip-1": "Oletusarvon mukaan Kando lisää kymmenen millisekunnin viiveen ennen jokaista näppäintapahtumaa. Voit muuttaa tätä \"viive\"-ominaisuudella.",
+            "description": "Kirjoittaa näppäimistömakron."
         },
         "redirect": {
             "description": "Avaa toisen valikon.",
@@ -249,7 +253,10 @@
             "backup-menus": "Varmuuskopioi menus.json…",
             "backup-settings": "Varmuuskopioi config.json…",
             "restore-menus": "Palauta menus.json…",
-            "restore-settings": "Palauta config.json…"
+            "restore-settings": "Palauta config.json…",
+            "reload-note": "Kun lataat uudelleen valikkoteeman, CSS-muutokset toteutetaan vaikka valikko olisi avoinna. Muutokset, jotka on tehty theme.json-tiedostoon, vaativat valikon avaamisen uudelleen.",
+            "dev-tools-note": "Kando käyttää kahta ikkunaa: yksi valikkoa varten, toinen asetuksia varten. Voit avata kehitystyökalut ja tutkia molempia ikkunoita toisistaan erillään.",
+            "menu-window-dev-tools": "Tutki valikkoa"
         },
         "hover-mode": "Kohdistustila",
         "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
@@ -272,7 +279,21 @@
             "slide2-text-no-shortcuts": "Jos käynnistit Kandon ensimmäistä kertaa, sinun [saattaa tarvita suorittaa joitakin välivaiheita Linuxilla saadaksesi järjestelmän pikanäppäimet toimimaan]({{link}}). Kun tämä toimii, voit sulkea valikon Escape-näppäimellä tai hiiren oikealla painikkeella.",
             "slide3-hint1": "Voi myös painaa tästä sulkeaksesi valikon.",
             "slide3-hint2": "Valitse kohde napsauttamalla mistä tahansa täältä.",
-            "slide3-text": "Kandossa **koko näyttösi on painalluksen kohde**! Sinun ei tarvitse tähdätä kuvakkeita, vaan voit napsauttaa missä tahansa kohteen sektorilla. Tämä tekee kohteiden valinnasta paljon kätevämpää."
+            "slide3-text": "Kandossa **koko näyttösi on painalluksen kohde**! Sinun ei tarvitse tähdätä kuvakkeita, vaan voit napsauttaa missä tahansa kohteen sektorilla. Tämä tekee kohteiden valinnasta paljon kätevämpää.",
+            "slide4-text": "Alivalikko avautuu **aina** hiiren osoittimen kohdalle. Sinun **ei tarvitse odottaa animaation valmistumista**. Luota lihasmuistiisi ja tee valintasi!",
+            "slide5-hint": "Napsauta missä tahansa täällä siirtyäksesi yhden tason ylemmäs.",
+            "slide6-text": "Tällä tavalla voit tutkia valikon rakennetta nopeasti.",
+            "slide8-text": "**Valikko reagoi hiiren liikkeisiin!** Alivalikko avautuu, kun haluat sen avautuvan. Pienellä harjoittelulla voit valita kohteita ilman, että edes katsot valikkoon päin.",
+            "slide9-title": "Ole salamannopea: turbotila",
+            "slide10-text": "**Älä jää odottamaan animaation valmistumista!** Pujottele tiesi valikon läpi. Se on nopein tapa valita valikkokohteita!",
+            "slide12-title": "Ja vielä jotain lisäksi!",
+            "slide12-text": "Kando on erittäin mukautettava. Voit käyttää sitä sovellusten ja tiedostojen avaamiseen, näppäimistömakrojen suorittamiseen ja moniin muihin tarpeisiin. Voit [muuttaa valikon tyyliä]({{link1}}), [lisätä kuvaketeemoja]({{link2}}) ja [käyttää jopa ääniä]({{link3}}) valikoissasi!",
+            "slide13-text": "Jos tarvitset apua, liity [Discord-palvelimelle]({{link1}}) tai lue [dokumentaatio]({{link2}})!",
+            "chapter1": "Aloitetaan",
+            "chapter2": "Merkintätila",
+            "chapter3": "Turbotila",
+            "chapter4": "Seuraavat askeleet",
+            "chapter5": "Tuki"
         },
         "menu-behavior": "Valikon toiminta",
         "menu-conditions": "Valikon ehdollisuudet",
@@ -381,6 +402,36 @@
         "restore-menu-settings-warning-message": "Tämä korvaa nykyiset valikot ja valikkokokoelmat valitun varmuuskopiotiedoston sisällöllä!",
         "restore-menu-settings-error-title": "Valikkojen varmuuskopion lataaminen epäonnistui!",
         "restore-menu-settings-success-title": "Onnistui!",
-        "restore-menu-settings-success-message": "Valikot ja valikkokokoelmat on palautettu varmuuskopiotiedostosta."
+        "restore-menu-settings-success-message": "Valikot ja valikkokokoelmat on palautettu varmuuskopiotiedostosta.",
+        "app-picker": {
+            "search-placeholder": "Etsi sovellusta…",
+            "use-selected": "Käytä valittua"
+        }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "Noviisi",
+            "capable": "Kykenevä",
+            "skilled": "Taitava",
+            "expert": "Asiantuntija",
+            "master": "Sensei"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "Matka tyhjyyteen {{tier}}",
+            "description": "Keskeytä valinta {{n}} kertaa."
+        },
+        "selector": {
+            "description": "Valitse {{n}} kohdetta."
+        },
+        "click-selector": {
+            "description": "Valitse {{n}} kohdetta hiiren napsautuksella."
+        }
     }
 }
