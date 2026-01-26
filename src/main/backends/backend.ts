@@ -28,16 +28,17 @@ import { BackendInfo, KeySequence, WMInfo, MenuItem, AppDescription } from '../.
  * See index.ts for information about how the backend is selected.
  */
 export abstract class Backend extends EventEmitter {
-  /** Stack of state frames. Each frame contains the currently bound and inhibited sets.
-   * The top frame represents the current effective state. */
-  private stateStack: Array<{ bound: string[]; inhibited: string[] }> = [
-    { bound: [], inhibited: [] },
-  ];
+  /** A list of all shortcuts which are currently bound. */
+  private shortcuts: string[] = [];
 
-  // Convenience getter for the current frame
-  private get currentFrame() {
-    return this.stateStack[this.stateStack.length - 1];
-  }
+  /** A list of all shortcuts which are currently inhibited. */
+  private inhibitedShortcuts: string[] = [];
+
+  /** A stack of previously bound shortcuts, used for temporary shortcut changes. */
+  private boundShortcutsStack: string[][] = [];
+
+  /** A stack of previously inhibited shortcuts, used to restore inhibition state. */
+  private inhibitedShortcutsStack: string[][] = [];
 
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
@@ -195,10 +196,9 @@ export abstract class Backend extends EventEmitter {
   public async bindShortcuts(shortcuts: string[]): Promise<void> {
     await this.inhibitShortcuts([]);
 
-    const frame = this.currentFrame;
-    if (!lodash.isEqual(shortcuts, frame.bound)) {
-      await this.bindShortcutsImpl(shortcuts, frame.bound);
-      frame.bound = shortcuts;
+    if (!lodash.isEqual(shortcuts, this.shortcuts)) {
+      await this.bindShortcutsImpl(shortcuts, this.shortcuts);
+      this.shortcuts = shortcuts;
     }
   }
 
@@ -218,10 +218,9 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the shortcuts have been inhibited.
    */
   public async inhibitShortcuts(shortcuts: string[]): Promise<void> {
-    const frame = this.currentFrame;
-    if (!lodash.isEqual(shortcuts, frame.inhibited)) {
-      await this.inhibitShortcutsImpl(shortcuts, frame.inhibited);
-      frame.inhibited = shortcuts;
+    if (!lodash.isEqual(shortcuts, this.inhibitedShortcuts)) {
+      await this.inhibitShortcutsImpl(shortcuts, this.inhibitedShortcuts);
+      this.inhibitedShortcuts = shortcuts;
     }
   }
 
@@ -231,10 +230,9 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when all shortcuts have been inhibited.
    */
   public async inhibitAllShortcuts(): Promise<void> {
-    const frame = this.currentFrame;
-    if (!lodash.isEqual(frame.bound, frame.inhibited)) {
-      await this.inhibitShortcutsImpl(frame.bound, frame.inhibited);
-      frame.inhibited = [...frame.bound];
+    if (!lodash.isEqual(this.shortcuts, this.inhibitedShortcuts)) {
+      await this.inhibitShortcutsImpl(this.shortcuts, this.inhibitedShortcuts);
+      this.inhibitedShortcuts = [...this.shortcuts];
     }
   }
 
@@ -246,7 +244,7 @@ export abstract class Backend extends EventEmitter {
    *   currently bound shortcuts.
    */
   public getBoundShortcuts(): string[] {
-    return this.currentFrame.bound;
+    return this.shortcuts;
   }
 
   /**
@@ -257,7 +255,7 @@ export abstract class Backend extends EventEmitter {
    *   currently inhibited shortcuts.
    */
   public getInhibitedShortcuts(): string[] {
-    return this.currentFrame.inhibited;
+    return this.inhibitedShortcuts;
   }
 
   /**
@@ -272,16 +270,14 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the shortcuts have been changed.
    */
   public async pushBoundShortcuts(shortcuts: string[]): Promise<void> {
-    const prev = this.currentFrame;
-
-    // Push a copy of the previous frame
-    this.stateStack.push({ bound: [...prev.bound], inhibited: [...prev.inhibited] });
-    const top = this.currentFrame;
+    // Save the current state to the stacks
+    this.boundShortcutsStack.push([...this.shortcuts]);
+    this.inhibitedShortcutsStack.push([...this.inhibitedShortcuts]);
 
     // Bind the new shortcuts while preserving the inhibited shortcuts
-    if (!lodash.isEqual(shortcuts, prev.bound)) {
-      await this.bindShortcutsImpl(shortcuts, prev.bound);
-      top.bound = shortcuts;
+    if (!lodash.isEqual(shortcuts, this.shortcuts)) {
+      await this.bindShortcutsImpl(shortcuts, this.shortcuts);
+      this.shortcuts = shortcuts;
     }
   }
 
@@ -294,22 +290,23 @@ export abstract class Backend extends EventEmitter {
    *   stack was empty.
    */
   public async popBoundShortcuts(): Promise<void> {
-    // Keep at least one frame (the initial one)
-    if (this.stateStack.length <= 1) {
+    if (this.boundShortcutsStack.length === 0) {
       return;
     }
 
-    const popped = this.stateStack.pop()!;
-    const target = this.currentFrame;
+    const previousShortcuts = this.boundShortcutsStack.pop()!;
+    const previousInhibited = this.inhibitedShortcutsStack.pop()!;
 
-    // Restore the bound shortcuts (bind target.bound using popped.bound as previous)
-    if (!lodash.isEqual(target.bound, popped.bound)) {
-      await this.bindShortcutsImpl(target.bound, popped.bound);
+    // Restore the shortcuts and inhibited state
+    if (!lodash.isEqual(previousShortcuts, this.shortcuts)) {
+      await this.bindShortcutsImpl(previousShortcuts, this.shortcuts);
+      this.shortcuts = previousShortcuts;
     }
 
-    // Restore the inhibited shortcuts
-    if (!lodash.isEqual(target.inhibited, popped.inhibited)) {
-      await this.inhibitShortcutsImpl(target.inhibited, popped.inhibited);
+    // Restore the inhibited shortcuts without clearing them first
+    if (!lodash.isEqual(previousInhibited, this.inhibitedShortcuts)) {
+      await this.inhibitShortcutsImpl(previousInhibited, this.inhibitedShortcuts);
+      this.inhibitedShortcuts = previousInhibited;
     }
   }
 
