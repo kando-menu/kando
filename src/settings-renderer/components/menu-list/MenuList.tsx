@@ -12,16 +12,19 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus, TbCopy, TbTrash } from 'react-icons/tb';
+import { TbPlus, TbCopy, TbTrash, TbDownload, TbUpload } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../state';
+import { WindowWithAPIs } from '../../settings-window-api';
 
 import { Scrollbox, ThemedIcon, Swirl, Note, Button } from '../common';
 import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
+
+declare const window: WindowWithAPIs;
 
 /** For rendering the menus, a list of these objects is created. */
 type RenderedMenu = {
@@ -72,6 +75,31 @@ export default function MenuList() {
   const duplicateMenu = useMenuSettings((state) => state.duplicateMenu);
   const moveMenu = useMenuSettings((state) => state.moveMenu);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
+
+  // Handle menu export
+  const handleExportMenu = async () => {
+    if (selectedMenu < 0 || selectedMenu >= menus.length) {
+      return;
+    }
+
+    // Let the main process show the save dialog and perform the export.
+    await window.settingsAPI.exportMenu(selectedMenu);
+  };
+
+  // Handle menu import
+  const handleImportMenu = async () => {
+    const result = await window.settingsAPI.openFilePicker({
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+
+    if (result) {
+      const success = await window.settingsAPI.importMenu(result);
+      if (!success) {
+        // Import failed; the main process already showed a descriptive error dialog.
+        console.error('Import failed for file:', result);
+      }
+    }
+  };
 
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
@@ -322,6 +350,22 @@ export default function MenuList() {
             onClick={() => {
               duplicateMenu(selectedMenu);
             }}
+          />
+          <Button
+            isGrouped
+            icon={<TbUpload />}
+            size="large"
+            tooltip={i18next.t('settings.export-menu')}
+            variant="floating"
+            onClick={handleExportMenu}
+          />
+          <Button
+            isGrouped
+            icon={<TbDownload />}
+            size="large"
+            tooltip={i18next.t('settings.import-menu')}
+            variant="floating"
+            onClick={handleImportMenu}
           />
           <Button
             isGrouped
