@@ -272,7 +272,9 @@
             "xp": "XP",
             "in-progress-button": "Đang tiến hành",
             "completed-button": "Đã hoàn thành",
-            "reset-button-tooltip": "Đặt lại tất cả thành tích và tiến độ cấp độ"
+            "reset-button-tooltip": "Đặt lại tất cả thành tích và tiến độ cấp độ",
+            "no-in-progress-achievements": "Chúc mừng! Bạn đã hoàn thành tất cả các thành tựu.",
+            "no-completed-achievements": "Bạn chưa hoàn thành bất kỳ thành tựu nào."
         }
     },
     "menu-items": {
@@ -523,6 +525,14 @@
             "name": "Cuộc hành trình bắt đầu",
             "description": "Hoàn thành phần hướng dẫn giới thiệu Kando."
         },
-        "completed-title": "Đã mở khóa thành tích!"
+        "completed-title": "Đã mở khóa thành tích!",
+        "many-selections-streak": {
+            "name": "Bàn tay sấm sét {{tier}}",
+            "description": "Chọn {{n}} mục trong vòng {{time}} giây."
+        },
+        "speedy-selections-streak": {
+            "name": "Nhanh hơn suy nghĩ {{tier}}",
+            "description": "Thực hiện trung bình {{n}} lựa chọn liên tiếp nhanh hơn {{time}} ms."
+        }
     }
 }

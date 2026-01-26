@@ -143,17 +143,6 @@ type Options<T> = {
  * instantiated and are automatically saved when the `set()` method is called.
  * Additionally, the class emits events when a setting changes.
  *
- * @example
- *   ```ts
- *   const settings = new Settings({defaults: { foo: 'bar' }});
- *
- *   settings.onChange('foo', (newValue, oldValue) => {
- *   console.log(`foo changed from ${oldValue} to ${newValue}`);
- *   });
- *
- *   settings.set({ foo: 'baz' });
- *   ```
- *
  * @template T The type of the settings object.
  */
 export class Settings<T extends object> extends PropertyChangeEmitter<T> {

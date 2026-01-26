@@ -10,8 +10,9 @@
 
 import { native } from './native';
 import { LinuxBackend } from '../backend';
-import { KeySequence } from '../../../../common';
+import { GeneralSettings, KeySequence } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
+import { Settings } from '../../../../main/settings';
 
 /**
  * This is a partial implementation of the Backend interface for wlroots-based Wayland
@@ -21,7 +22,21 @@ import { mapKeys } from '../../../../common/key-codes';
  * - Moving the mouse pointer using the wlr-virtual-pointer-unstable-v1 protocol.
  * - Sending key input using the virtual-keyboard-unstable-v1 protocol.
  */
+
+type PointerTimeoutBehavior =
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right'
+  | 'center'
+  | 'previously-reported-position';
+
 export abstract class WLRBackend extends LinuxBackend {
+  private previouslyReportedX = 0;
+  private previouslyReportedY = 0;
+  public generalSettings: Settings<GeneralSettings>;
+  public defaultBehavior: PointerTimeoutBehavior = 'center';
+
   /**
    * Moves the pointer by the given amount using the native module which uses the
    * wlr-virtual-pointer-unstable-v1 Wayland protocol.
@@ -73,10 +88,40 @@ export abstract class WLRBackend extends LinuxBackend {
    * the pointer.
    */
   protected getPointerPositionAndWorkAreaSize() {
-    const data = native.getPointerPositionAndWorkAreaSize();
+    const data = native.getPointerPositionAndWorkAreaSize(
+      this.generalSettings.get('wlrootsPointerGetTimeoutMouse'),
+      this.generalSettings.get('wlrootsPointerGetTimeoutTouch')
+    );
     if (data.pointerGetTimedOut) {
       console.error('Pointer get timed out');
+      switch (this.defaultBehavior) {
+        case 'top-left':
+          data.pointerX = 0;
+          data.pointerY = 0;
+          break;
+        case 'top-right':
+          data.pointerX = data.workAreaWidth;
+          data.pointerY = 0;
+          break;
+        case 'bottom-left':
+          data.pointerX = 0;
+          data.pointerY = data.workAreaHeight;
+          break;
+        case 'bottom-right':
+          data.pointerX = data.workAreaWidth;
+          data.pointerY = data.workAreaHeight;
+          break;
+        case 'center':
+          data.pointerX = data.workAreaWidth / 2;
+          data.pointerY = data.workAreaHeight / 2;
+          break;
+        case 'previously-reported-position':
+          data.pointerX = this.previouslyReportedX;
+          data.pointerY = this.previouslyReportedY;
+      }
     }
+    this.previouslyReportedX = data.pointerX;
+    this.previouslyReportedY = data.pointerY;
     return data;
   }
 }

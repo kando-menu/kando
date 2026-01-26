@@ -4,7 +4,7 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=wNNS7vrur3M"><img src="docs/img/video.jpg" /></a>
+  <a href="https://www.youtube.com/watch?v=hhgRq3wdSHA"><img src="docs/img/video.jpg" /></a>
 </p>
 
 [![checks](https://img.shields.io/github/actions/workflow/status/kando-menu/kando/checks.yml?branch=main&logo=github&label=Checks)](https://github.com/kando-menu/kando/actions)
@@ -13,8 +13,8 @@ SPDX-License-Identifier: CC-BY-4.0
 [![translate](https://hosted.weblate.org/widget/kando/svg-badge.svg)](https://hosted.weblate.org/engage/kando/)
 [![downloads](https://img.shields.io/github/downloads/kando-menu/kando/total?label=Downloads)](https://github.com/kando-menu/kando/releases)
 [![sponsors](https://gist.githubusercontent.com/Schneegans/2d06edf0937c480951feb86b9e719304/raw/weekly.svg)](https://schneegans.github.io/sponsors/)
-[![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2)](https://discord.gg/hZwbVSDkhy)
-[![docs](https://img.shields.io/badge/🌸_Docs_at-kando.menu-9f3b67.svg?labelColor=303030)](https://kando.menu)
+[![Discord](https://img.shields.io/discord/1124300911574003732?logo=discord&label=Discord&color=%235865f2&logoColor=fff)](https://discord.gg/hZwbVSDkhy)
+[![docs](https://img.shields.io/badge/Docs_at-kando.menu-9f3b67.svg?logo=kando&labelColor=303030)](https://kando.menu)
 [![contributions](https://img.shields.io/badge/🎉_Contributions-welcome-green.svg?labelColor=303030)](https://github.com/kando-menu/kando/issues?q=is%3Aissue+is%3Aopen+label%3A%22contributions+welcome%22)
 
 

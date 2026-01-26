@@ -186,6 +186,16 @@ export const SETTINGS_WINDOW_API = {
   restoreMenuSettings: () => {
     ipcRenderer.send('settings-window.restore-menu-settings');
   },
+
+  /** This will trigger the export of the given menu to a JSON file. */
+  exportMenu: (menuIndex: number): Promise<boolean> => {
+    return ipcRenderer.invoke('settings-window.export-menu', menuIndex);
+  },
+
+  /** This will trigger the import of a menu from a JSON file. */
+  importMenu: (): Promise<boolean> => {
+    return ipcRenderer.invoke('settings-window.import-menu');
+  },
 };
 
 /**

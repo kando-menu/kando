@@ -13,7 +13,15 @@ import { globalShortcut } from 'electron';
 import lodash from 'lodash';
 import mime from 'mime-types';
 
-import { BackendInfo, KeySequence, WMInfo, MenuItem, AppDescription } from '../../common';
+import {
+  BackendInfo,
+  KeySequence,
+  WMInfo,
+  MenuItem,
+  AppDescription,
+  GeneralSettings,
+} from '../../common';
+import { Settings } from '../settings';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
@@ -54,7 +62,7 @@ export abstract class Backend extends EventEmitter {
    *
    * @returns A promise which resolves when the backend is ready to be used.
    */
-  public abstract init(): Promise<void>;
+  public abstract init(generalSettings: Settings<GeneralSettings>): Promise<void>;
 
   /**
    * This method will be called when Kando is about to exit. It can be used to disconnect

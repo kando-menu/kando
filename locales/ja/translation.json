@@ -17,7 +17,7 @@
             "check-for-new-versions-info": "有効化すると最新のバージョンが利用可能になったときに Kando で通知が表示されます。",
             "none": "なし",
             "title": "一般設定",
-            "message": "Kando のすべての設定は JSON ファイルに保存されており、編集や共有、バックアップも可能です。config.json ファイルが保存されているディレクトリを開くには、[ここ]({{link}})をクリックしてください。",
+            "message": "メニューとKandoの設定はすべて、編集、共有、バックアップが可能な2つのJSONファイルに保存されています。ファイルが保存されているディレクトリを開くには、[こちら]({{link}})をクリックしてください。",
             "app-settings": "アプリケーションの設定",
             "localization-label": "言語",
             "localization-info": "言語を適用するには Kando を再起動してください。",
@@ -78,7 +78,29 @@
             "require-click-for-hover-mode-info": "チェックを外すとホバーモードを使用するメニューで、マウスを項目の上に移動するとその項目が即座に選択されます。",
             "sound-theme-info": "サウンドテーマはメニューを操作時に再生されるサウンドのコレクションになります。",
             "minimum-submenu-distance-info": "サブメニューが親メニューの近くに開かれた場合、親メニューはこの距離だけ離れるようにします。既定は 150 px です。",
-            "gesture-jitter-threshold": "ジェスチャージッターのしきい値"
+            "gesture-jitter-threshold": "ジェスチャージッターのしきい値",
+            "keep-input-focus": "アクティブなアプリのフォーカスを維持する",
+            "cycle-from-first": "次のメニューを表示（最初から）",
+            "cycle-from-recent": "次のメニューを表示（続きから）",
+            "keep-input-focus-info": "有効中、メニューはキーボードの入力を受けなくなります。この設定はターボモードを無効にしますが、メニューが開いている間もアプリのフォーカスを保ちたい場合に有用です。",
+            "minimum-gesture-length-info": "選択を実行するために必要な最低直線距離。既定は 150 px です。",
+            "fixed-stroke-length-info": "通常の場合、操作の停止、または移動方向の大きな変更で選択が行われます。この値を０より大きい値に設定すると動作が次のように変化します：選択したい項目を中心からこの値の分ドラッグで選択。既定はは 0px です。",
+            "backup-and-restore": "バックアップと復元",
+            "reload-note": "メニューテーマを再読み込みすると、メニューが表示されている状態でもCSSの変更が適用されます。ただし、theme.json を使った変化にはメニューを開きなおす必要があります。",
+            "settings-window-dev-tools": "設定のインスペクト",
+            "gesture-pause-timeout-info": "選択の実行に必要なジェスチャー停止時間。既定は 100msです。",
+            "hardware-acceleration-info": "このオプションはアプリの動作速度を上げることができますが、レンダリングの不具合を引き起こす可能性もあります。この設定を適用するにはKandoの再起動が必要です。",
+            "hardware-acceleration": "ハードウエアアクセラレーションを有効にする",
+            "dev-tools-note": "Kando はメニュー用と設定用の二つのウインドウを使用します。開発ツールでそれぞれのウィンドウを個別にインスペクトできます。",
+            "menu-window-dev-tools": "メニューのインスペクト",
+            "gesture-jitter-threshold-info": "ジェスチャー検出では、小さな動きは無視されます。既定は 10px です。",
+            "backup-menus": "menus.json のバックアップ…",
+            "backup-settings": "config.json のバックアップ…",
+            "restore-menus": "menus.json の復元…",
+            "restore-settings": "config.json の復元…",
+            "enable-achievements-info": "有効にすると、Kandoは実績解除に向けたあなたの進捗状況を記録します。",
+            "enable-achievements": "実績を記録",
+            "minimum-gesture-angle-info": "直線的な動きからのわずかなずれでは、選択はトリガーされません。既定は 20° です。"
         },
         "menu-themes-dialog": {
             "accent-colors": "アクセントカラー",
@@ -95,13 +117,23 @@
             "open-theme-directory": "テーマのディレクトリを開く",
             "author": ": {{author}}",
             "fade-out-time": "フェードアウトの時間",
-            "light-dark-mode": "ライト/ダークモードを有効化"
+            "light-dark-mode": "ライト/ダークモードを有効化",
+            "fade-in-time-info": "メニューがフェードインするまでの時間。既定は150msです。",
+            "fade-out-time-info": "メニューがフェードアウトするまでの時間。既定は200msです。",
+            "menu-scale-info": "メニューのサイズを拡大・縮小するために使用します。既定は1.0です。",
+            "selection-wedges-info": "有効かつ選択されたテーマでサポートされている場合、メニュー項目の選択可能領域がハイライト表示されます。",
+            "selection-wedges": "項目の範囲を描画する",
+            "light-dark-mode-info": "有効にすると、システムがライトモードかダークモードかによって、異なるテーマや配色を選択できます。"
         },
         "window-picker-dialog": {
             "confirm": "この値を使用",
             "pick-app-name-title": "アプリ名を選択",
             "pick-window-title-title": "ウィンドウタイトルを選択",
-            "start-countdown": "開始のカウントダウン"
+            "start-countdown": "開始のカウントダウン",
+            "result": "\"{{name}}\" を選択しました。",
+            "instructions": "下のボタンを押して、5秒以内にターゲットウィンドウにフォーカスしてください。",
+            "restart-countdown": "もう一度やりなおす",
+            "countdown_other": "{{count}} 秒後に選択…"
         },
         "icon-picker-dialog": {
             "base64-hint": "Base64 にエンコードされたアイコンを使えば、あらゆる種類のアイコンを簡単にメニューに組み込むことができます。[www.base64-image.de]({{link}}) のようなサービスを使うことであらゆる画像を Base64 にエンコードされた文字列に変換できます。アニメーション GIF にも対応しています！",
@@ -109,7 +141,8 @@
             "search-placeholder": "アイコンを検索…",
             "file-example": "file: URI の例:",
             "url-example": "URL の例:",
-            "hint": "[こちら]({{link}})で独自のアイコンテーマの追加または作成する方法が確認できます。"
+            "hint": "[こちら]({{link}})で独自のアイコンテーマの追加または作成する方法が確認できます。",
+            "reload-button-tooltip": "すべてのアイコンテーマを再読み込み"
         },
         "introduction-dialog": {
             "chapter5": "ヘルプの取得",
@@ -125,7 +158,22 @@
             "slide7-title": "より速くする: マーキングモード",
             "slide3-hint1": "ここをクリックしてメニューを閉じることもできます。",
             "slide5-hint": "ここをクリックすると 1 つ上のレベルに移動します。",
-            "slide9-title": "超高速: ターボモード"
+            "slide9-title": "超高速: ターボモード",
+            "slide1-title": "Kando はユニークで効率的な方法でのコンピューターの操作を可能にします。",
+            "slide1-text": "これらのスライドをスワイプして、Kandoがあなたのために何ができるかをご覧ください！左側のチャプターマークを使って、紹介の特定の部分へ素早くジャンプできます。",
+            "slide2-text-standard": "Kandoを初めて起動した場合、Ctrl+Spaceでサンプルメニューを開くことができます。Escapeキーまたは画面上のどこでも右クリックすることで、再度閉じることができます。",
+            "slide2-text-no-shortcuts": "Kando を初めて起動する場合、[Linux でグローバルホットキーを機能させるために、追加設定が必要なことがあります]({{link}})。それが完了すると、Escapeキーまた右クリックでメニューを閉じることができます。",
+            "slide3-text": "Kando では**画面全体がクリック対象**です！アイコンにカーソルを合わせる必要はなく、項目の範囲内であればどこでもクリックできます。これにより、項目の選択が格段に効率化されます。",
+            "slide4-text": "サブメニューは**常に**マウスポインターの位置で開きます。**アニメーションの終了を待つ必要はありません**。慣れた操作で素早く選択していきましょう！",
+            "slide5-text": "**ひとつ前に戻る**には、親の範囲、またはメニューの中心をクリックして下さい。",
+            "slide8-text": "**メニューはマウスの動きに反応します！** サブメニューは、開きたいときに開きます。少し練習すれば、メニューを見なくても項目を選択できるようになります。",
+            "slide9-text": "メニューを開いた後、_Ctrl_、_Shift_、_Alt_などのキーを**押したままにすると**、ポインターを動かすだけで選択できるようになります。クリックやドラッグは不要です。",
+            "slide10-text": "**アニメーションが終わるのを待たないでください！**メニューをジグザグに進んでください。これが項目を選択する最速の方法です！",
+            "slide11-text": "**誤った選択を恐れる必要はありません！**マーキングモードではマウスボタンを、ターボモードではキーボードのキーを離したときにのみ、アクションが実行されます。これを活用して、メニューを自由に探索してください！",
+            "slide12-text": "Kandoは非常にカスタマイズ性が高く、アプリケーションやファイルの起動、キーボードマクロの実行など、様々な用途に利用できます。[メニューのスタイル変更]({{link1}})、[アイコンテーマの追加]({{link2}})、さらには[サウンドの使用]({{link3}})といったことも可能です！",
+            "slide13-text": "もし何か困ったことがあれば、いつでも[Discordサーバー]({{link1}})に参加するか、[ドキュメント]({{link2}})をご覧ください！",
+            "show-again": "このダイアログを再度表示",
+            "slide7-text": "項目をクリック＆ドラッグして「マーキングモード」に入ります。**ポインターの動きを止めたり、方向転換したりすると、現在ドラッグ中のサブメニューが開きます！** 項目までの経路を記憶し、表情豊かなジグザグの動きで描きましょう。"
         },
         "duplicate-menu": "メニューを重複",
         "centered-mode": "中央モード",
@@ -133,12 +181,16 @@
         "screen-area-picker": {
             "bottom-right-value": "右: {{x}} | 下: {{y}}",
             "top-left-value": "左: {{x}} | 上: {{y}}",
-            "confirm": "このエリアを使用"
+            "confirm": "このエリアを使用",
+            "top-left": "選択したいエリアの左上にドラッグしてください。",
+            "bottom-right": "選択したいエリアの右下にドラッグしてください。",
+            "valid": "素晴らしい！有効なエリアを選択しました。",
+            "invalid": "左上の角が右下の角よりも上かつ左側にあることを確認してください。"
         },
         "area-condition-tooltip": "画面エリアを選択",
         "shortcut-id-label": "ショートカット ID",
         "tags": "タグ",
-        "not-bound": "縛りなし",
+        "not-bound": "未設定",
         "invalid-dropdown-selection": "オプションを選択…",
         "file-picker": {
             "select-file": "ファイルを選択",
@@ -174,12 +226,292 @@
         "create-menu-button": "新しいメニュー",
         "hover-mode": "ホバーモード",
         "area-condition-bottom-placeholder": "下",
-        "area-condition-right-placeholder": "右"
+        "area-condition-right-placeholder": "右",
+        "restore-general-settings-warning-title": "一般設定を復元してもよろしいですか？",
+        "restore-general-settings-warning-message": "現在のアプリケーション設定が、選択されたバックアップファイルの内容で上書きされます。メニューやメニューコレクションは影響を受けません。",
+        "restore-general-settings-error-title": "一般設定のバックアップの読み込みに失敗しました！",
+        "restore-general-settings-success-title": "成功！",
+        "restore-general-settings-success-message": "一般設定がバックアップファイルから復元されました。",
+        "restore-menu-settings-warning-title": "メニュー設定を本当に復元しますか？",
+        "restore-menu-settings-warning-message": "選択されたバックアップファイルの内容で、現在のメニューおよびメニューコレクションが上書きされます！",
+        "restore-menu-settings-error-title": "メニューのバックアップの読み込みに失敗しました！",
+        "restore-menu-settings-success-title": "成功！",
+        "restore-menu-settings-success-message": "バックアップファイルから、メニューとメニューコレクションが復元されました。",
+        "add-collection-tooltip": "新しいメニューコレクションを作成します。タグでメニューをグループ化するため使用してください！",
+        "no-menus": "メニューがありません。",
+        "no-menus-note": "もし間違って最後のものを削除してしまった場合は、元に戻すボタンで復元できます。",
+        "no-matching-menus": "メニューが見つかりませんでした。",
+        "no-matching-menus-note": "別の検索キーワードを試してみてはどうですか？",
+        "empty-collection-note": "上のタグを編集するか、下のボタンでこのコレクションに全く新しいメニューを追加してください。",
+        "add-menu-item-hint": "この項目をドラッグして、上のメニューに追加してください！",
+        "undo": "元に戻す",
+        "redo": "やり直し",
+        "app-picker": {
+            "hint": "スタートメニューからKandoのメニューエディターへ、アプリをドラッグ＆ドロップすることもできます！",
+            "search-placeholder": "アプリを検索…",
+            "use-selected": "選択したものを利用"
+        },
+        "menu-behavior-info": "これらのオプションを有効にする前に、Kandoの既定の動作を好む理由について、[こちら]({{link}})でご確認いただくことをお勧めします！",
+        "centered-mode-info": "カーソル位置ではなく、画面中央にメニューを開きます。",
+        "anchored-mode-info": "親メニューと同じ位置でサブメニューを開きます。これをチェックすると、マーキングモードとターボモードが無効になります。",
+        "hover-mode-info": "上級者向け！項目にカーソルを合わせると選択できます。",
+        "menu-conditions": "メニューの条件",
+        "menu-conditions-info": "複数のメニューを同じショートカットに割り当て、各メニューを表示する条件を設定できます。",
+        "app-condition-info": "特定のアプリケーションにフォーカスがある場合のみメニューを表示します。これは /firefox|chrome/i のような正規表現もサポートしています。",
+        "app-condition": "特定のアプリに制限する",
+        "window-condition-info": "フォーカスされているウィンドウのタイトルに指定したテキストが含まれている場合のみ、メニューを表示します。これは /youtube|vimeo/i のような正規表現もサポートしています。",
+        "window-condition": "特定のウィンドウタイトルに制限する",
+        "area-condition-info": "ポインターが指定された画面領域内にある場合にのみメニューを表示します。この領域は、メインディスプレイの左上隅からのピクセルで指定されます。フィールドを空にした場合、その方向の領域は無制限になります。",
+        "area-condition": "特定の画面領域に限定する",
+        "shortcut-info": "このショートカットはメニューを開きます。通常キー1つと、Ctrl、Alt、Shiftなどの修飾キーのいずれか1つ以上を含める必要があります。記録時には、すべてのキーを同時に押す必要はありません。順番に押すことも可能です。これは、ショートカットが別のメニューに既に割り当てられている場合に役立ちます！",
+        "shortcut-recording": "ショートカットキーを入力…",
+        "tags-info": "タグは、メニューコレクション内でメニューをグループ化するために使用できます。",
+        "restore-backup": "バックアップを復元…",
+        "achievements-dialog": {
+            "reset-button": "進捗をリセット",
+            "reset-confirmation-title": "本当にすべての進捗をリセットしますか？",
+            "reset-confirmation-message": "すべての実績とレベルの進捗が失われます。この操作は元に戻せません。",
+            "xp": "XP",
+            "no-in-progress-achievements": "おめでとう！全ての実績を達成しました。",
+            "no-completed-achievements": "まだ獲得した実績はありません。",
+            "in-progress-button": "進行中",
+            "completed-button": "獲得済み",
+            "reset-button-tooltip": "全ての実績とレベル進行状況をリセットする",
+            "title": "実績"
+        }
     },
     "menu-items": {
         "command": {
             "name": "コマンドを実行",
-            "description": "アプリまたはスクリプトを起動します。"
+            "description": "アプリまたはスクリプトを起動します。",
+            "choose-app": "アプリを選択…",
+            "placeholder": "コマンドを入力…",
+            "isolated-info": "これにより、Kandoから環境変数を継承しない、クリーンな環境でコマンドが実行されます。これは、正しく開始されないコマンドの助けになる可能性があります。",
+            "detached-info": "これにより、コマンドはKandoから切り離され、Kandoが閉じられた後も実行を継続します。これを無効にすると、正しく開始されないコマンドの問題が解決される可能性があります。",
+            "tip-1": "コマンド項目タイプを使用すると、アプリケーションやスクリプトを起動できます。",
+            "tip-2": "実行可能ファイルのパスにスペースが含まれている場合は、そのパスを \"クォートで囲む\" 必要があります。",
+            "tip-3": "メニューを開いたときにフォーカスされていたアプリケーションの名前を挿入するには、 {{app_name}} を使用してください。",
+            "tip-4": "メニューを開いたときにフォーカスされていたウィンドウの名前を挿入するには、 {{window_name}} を使用してください。",
+            "tip-5": "メニューを開いた位置を挿入するには、{{pointer_x}}と{{pointer_y}}を使用してください。",
+            "tip-6": "アプリを起動するコマンドを見つける方法については、[こちら]({{link}})をクリックしてください。",
+            "detached": "バックグラウンドで実行",
+            "isolated": "隔離して実行"
+        },
+        "hotkey": {
+            "hotkey": "ショートカットキー",
+            "name": "ショートカットキーをシミュレート",
+            "description": "キーの組み合わせを押します。",
+            "hotkey-info": "このショートカットキーは、項目が選択されたときにトリガーされます。記録時には、すべてのキーを同時に押す必要はなく、順番に押すこともできます。これは、ホットキーが既にグローバルアクションにバインドされている場合に役立ちます！",
+            "recording-placeholder": "ショートカットキーを入力…",
+            "tip-1": "ショートカットキーを記録する際、すべてのキーを同時に押す必要はありません。順番に押していくことができます。",
+            "tip-2": "システムでキーが使用されているため、キーを記録できない場合は、名前を直接入力してみてください。",
+            "tip-3": "有効なキー名のすべてを見るには、[こちら]({{link}})のリンク をクリックしてください。"
+        },
+        "file": {
+            "tip-1": "この項目タイプで、ファイルやフォルダを開くことができます。",
+            "placeholder": "ファイルまたはフォルダを選択…",
+            "name": "ファイルを開く",
+            "description": "ファイルまたはフォルダを開きます。"
+        },
+        "macro": {
+            "name": "マクロを実行",
+            "description": "キーボードマクロを入力します。",
+            "placeholder": "記録を開始するには、記録ボタンを押してください！",
+            "recording-placeholder": "キーを入力…",
+            "tip-1": "既定では、Kandoは各キーイベントの前に10ミリ秒の遅延を追加します。この設定は\"delay\"プロパティで変更できます。",
+            "tip-2": "マクロは手動で編集することもできます。キーのタイミングを調整したい場合に便利です。"
+        },
+        "redirect": {
+            "name": "リダイレクト",
+            "description": "別のメニューを開きます。"
+        },
+        "settings": {
+            "name": "設定を開く",
+            "description": "Kandoの設定ウィンドウを開きます。",
+            "tip-1": "この項目タイプを選択すると、Kando設定ウィンドウが開きます。"
+        },
+        "submenu": {
+            "name": "サブメニュー",
+            "description": "他のメニュー項目を含みます。",
+            "tip-1": "サブメニューは項目のグループ化に使用できます。",
+            "tip-2": "サブメニューの中にさらにサブメニューをネストすることも可能です。",
+            "tip-3": "サブメニューを使うと、複雑なメニュー構造を作成できます。",
+            "tip-4": "サブメニューに12個以上の項目を追加するのは避けるべきです。8個程度が適当でしょう。",
+            "tip-5": "プレビューにある小さなロックアイコンを有効にすると、メニュー内の項目の位置を固定できます。",
+            "tip-6": "プレビューで項目をドラッグして並び替えることができます。",
+            "tip-7": "メニューやメニュー項目は、下にあるゴミ箱アイコンで削除できます。"
+        },
+        "text": {
+            "name": "テキストの貼り付け",
+            "description": "指定されたテキストを挿入します。",
+            "placeholder": "テキストを入力…",
+            "tip-1": "このアクションは、クリップボードを使用してテキストを貼り付けます。アクション使用後、クリップボードにはそのテキストが保持されます。"
+        },
+        "uri": {
+            "name": "URIを開く",
+            "description": "ウェブサイトなどを開きます。",
+            "placeholder": "URIを入力…",
+            "tip-1": "URI項目タイプを使用すると、http://プロトコルを使ってウェブサイトを開くことができます。",
+            "tip-2": "slack://やzoommtg://のようなカスタムURIスキームの実行に使用できます。",
+            "tip-3": "mailto: リンクを開くには、URI項目タイプを使用できます。",
+            "tip-4": "メニューを開いたときにフォーカスされていたアプリケーションの名前を挿入するには、 {{app_name}} を使用してください。",
+            "tip-5": "メニューを開いたときにフォーカスされていたウィンドウの名前を挿入するには、 {{window_name}} を使用してください。",
+            "tip-6": "メニューを開いたときのポインターの位置を挿入するには、{{pointer_x}} と {{pointer_y}} を使用してください。"
+        },
+        "common": {
+            "delayed-option": "フェードアウトアニメーションが終わるまで待機",
+            "delayed-option-info": "そのアクションが、フォーカスを必要とするウィンドウを対象としている場合に便利です。"
         }
+    },
+    "main": {
+        "new-version-notification-header": "Kando の新しいバージョンが利用可能です！",
+        "new-version-notification-body": "入手はこちらから {{link}}.",
+        "show-settings": "設定を表示",
+        "un-inhibit-shortcuts": "ショートカットを再度有効化",
+        "inhibit-shortcuts": "すべてのショートカットを一時的に無効化",
+        "quit": "終了",
+        "invalid-link-header": "無効なリンク",
+        "invalid-link-message": "ディープリンクを解析できませんでした。"
+    },
+    "example-menu": {
+        "apps": {
+            "submenu": "アプリ",
+            "safari": "Safari",
+            "web-browser": "ウェブブラウザ",
+            "email": "E-Mail",
+            "apple-music": "Music",
+            "gimp": "GIMP",
+            "paint": "ペイント",
+            "finder": "Finder",
+            "file-browser": "File Browser",
+            "terminal": "ターミナル"
+        },
+        "name": "Example Menu",
+        "web-links": {
+            "submenu": "ウェブリンク",
+            "google": "Google",
+            "kando-on-github": "Kando on GitHub",
+            "kando-on-kofi": "Kando on Ko-fi",
+            "kando-on-youtube": "Kando on YouTube",
+            "kando-on-discord": "Kando on Discord"
+        },
+        "next-workspace": "次のワークスペース",
+        "clipboard": {
+            "submenu": "クリップボード",
+            "paste": "貼り付け",
+            "copy": "コピー",
+            "cut": "切り取り"
+        },
+        "audio": {
+            "submenu": "オーディオ",
+            "next-track": "次の曲",
+            "play-pause": "再生 / 一時停止",
+            "mute": "ミュート",
+            "previous-track": "前の曲"
+        },
+        "windows": {
+            "submenu": "ウィンドウ",
+            "toggle-maximize": "最大化/元に戻す",
+            "close-window": "ウィンドウを閉じる"
+        },
+        "previous-workspace": "前のワークスペース",
+        "bookmarks": {
+            "submenu": "ブックマーク"
+        }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "初心の",
+            "capable": "一人前の",
+            "skilled": "熟練の",
+            "expert": "達人級",
+            "master": "センセイ級"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "虚無への道 {{tier}}",
+            "description": "{{n}}回選択を中止する。"
+        },
+        "selector": {
+            "name": "{{attribute}} サムライ",
+            "description": "{{n}}個の項目を選択する。"
+        },
+        "depth-selector": {
+            "name1": "{{attribute}} 抜刀術",
+            "name2": "{{attribute}} 燕返し",
+            "name3": "{{attribute}} 三連斬り",
+            "description": "{{time}}ミリ秒未満で、深さ{{depth}}にある項目を{{n}}個選択する。"
+        },
+        "click-selector": {
+            "name": "{{attribute}} クリック・クリック・チャンピオン",
+            "description": "マウスで{{n}}個の項目を選択する。"
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}} ショートカットヒーロー",
+            "description": "キーボードで{{n}}個の項目を選択する。"
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}} ゲームパッド戦士",
+            "description": "ゲームパッドで{{n}}個の項目を選択する。"
+        },
+        "gesture-selector": {
+            "name": "{{attribute}} パワーニンジャ",
+            "description": "ターボモードまたはマーキングモードで{{n}}個の項目を選択する。"
+        },
+        "settings-opened": {
+            "name": "旅そのものがご褒美 {{tier}}",
+            "description": "設定ダイアログを{{n}}回開く。"
+        },
+        "backup": {
+            "name": "先見の明 {{tier}}",
+            "description": "メニューや設定を{{n}}回バックアップする。"
+        },
+        "restore": {
+            "name": "セカンドチャンス {{tier}}",
+            "description": "バックアップを{{n}}回復元する。"
+        },
+        "added-items": {
+            "name": "Kando流 {{tier}}",
+            "description": "メニューエディタで{{n}}個の項目を作成する。"
+        },
+        "deleted-all-menus": {
+            "name": "道場掃除",
+            "description": "すべてのメニューを削除する。"
+        },
+        "full-menu": {
+            "name": "浅く広く",
+            "description": "項目が12個以上のメニューを作成する。"
+        },
+        "deep-menu": {
+            "name": "深淵を極めし者",
+            "description": "深さが4層目のサブメニューにメニュー項目を追加する。"
+        },
+        "sponsors-viewed": {
+            "name": "Kandoの守護者",
+            "description": "Kandoのスポンサーになる。"
+        },
+        "menu-themes-selected": {
+            "name": "美の探究道",
+            "description": "メニューのテーマを{{n}}回変更する。"
+        },
+        "tutorial-viewed": {
+            "name": "旅の始まり",
+            "description": "Kandoの紹介チュートリアルを完了する。"
+        },
+        "many-selections-streak": {
+            "name": "稲妻の御手 {{tier}}",
+            "description": "{{time}}秒以内に{{n}}個の項目を選択する。"
+        },
+        "speedy-selections-streak": {
+            "name": "思考より速く {{tier}}",
+            "description": "平均して{{n}}回連続で{{time}}ミリ秒未満で選択する。"
+        },
+        "completed-title": "実績解除！"
     }
 }

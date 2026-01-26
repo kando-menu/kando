@@ -12,16 +12,19 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus, TbCopy, TbTrash } from 'react-icons/tb';
+import { TbPlus, TbCopy, TbTrash, TbDownload, TbUpload } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../state';
+import { WindowWithAPIs } from '../../settings-window-api';
 
 import { Scrollbox, ThemedIcon, Swirl, Note, Button } from '../common';
 import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
+
+declare const window: WindowWithAPIs;
 
 /** For rendering the menus, a list of these objects is created. */
 type RenderedMenu = {
@@ -321,6 +324,32 @@ export default function MenuList() {
             variant="floating"
             onClick={() => {
               duplicateMenu(selectedMenu);
+            }}
+          />
+          <Button
+            isGrouped
+            icon={<TbUpload />}
+            size="large"
+            tooltip={i18next.t('settings.export-menu')}
+            variant="floating"
+            onClick={async () => {
+              if (selectedMenu < 0 || selectedMenu >= menus.length) {
+                return;
+              }
+
+              // Let the main process show the save dialog and perform the export.
+              await window.settingsAPI.exportMenu(selectedMenu);
+            }}
+          />
+          <Button
+            isGrouped
+            icon={<TbDownload />}
+            size="large"
+            tooltip={i18next.t('settings.import-menu')}
+            variant="floating"
+            onClick={async () => {
+              // Let the main process show the open dialog and perform the import.
+              await window.settingsAPI.importMenu();
             }}
           />
           <Button

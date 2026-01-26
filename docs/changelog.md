@@ -17,9 +17,30 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
-## [unreleased]
+## [Unreleased]
 
 **Release Date:** TBD
+
+### :tada: Added
+
+- Added the possibility to import and export individual menus via JSON files. Thanks to [@Yar2000T](https://github.com/Yar2000T) for this contribution!
+- Some wlroots-specific options to handle the case where no pointer position is available. There are some timeouts which can now be configured in the settings dialog. Thanks to [@make-42](https://github.com/make-42) for this contribution!
+
+### :wrench: Changed
+
+- Upgraded many dependencies to their latest versions. This includes an upgrade to Electron 40 which uses Wayland natively now. Feel free to report any issues you encounter!
+
+### :bug: Fixed
+
+- Fixed an issue where Kando would not open a menu on Niri if no pointer device was connected. Thanks to [@make-42](https://github.com/make-42) for fixing this!
+
+## [Kando 2.2.0](https://github.com/kando-menu/kando/releases/tag/v2.2.0)
+
+**Release Date:** 2026-01-17
+
+<a href="https://www.youtube.com/watch?v=hhgRq3wdSHA">
+<img align="right" width="400px" src="img/player22.jpg"></img>
+</a>
 
 ### :tada: Added
 
@@ -28,14 +49,17 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A **Portable Mode** which can be enabled by creating a `portableMode.json` file next to the Kando executable. This file can contain a `configDirectory` property which specifies where the `config.json` and `menus.json` files are stored. This allows you to run Kando from a USB stick or other portable storage devices with all your settings and menus. Read more in the [documentation](https://kando.menu/advanced-configuration/#portable-mode).
 - Buttons to the general settings dialog to **backup and restore** the `config.json` and `menus.json` files. This makes it easier to backup your settings before making big changes or to restore them from a previous backup.
 - A button in the icon-picker popover to **reload all icon themes** without restarting Kando.
-- The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
 - A setting to **enable or disable the drawing of selection wedges** in supported menu themes. This can be found in the theme-settings dialog. It is disabled by default as the selection wedges are quite resource-intensive to draw currently.
+- The command line flag `--reload-icon-themes` which can be used to tell a running Kando instance to reload all icon themes.
+- A new `--close-menu` command line flag which closes the currently opened menu. Thanks to [@yar2000T](https://github.com/yar2000T) for this contribution!
+- A new `--trigger <shortcut>` command line flag which opens the menu assigned to the given shortcut or shortcut ID. It behaves as if the shortcut had been pressed, so all context conditions are checked. Also, if multiple menus are assigned to the same shortcut, the one with the most specific conditions will be opened. Furthermore, if a menu is already open, calling this command will be like pressing the shortcut again - so it will either close the menu or cycle through the matching menus depending on your settings.
 - Many translation updates: **Thanks to all the contributors!**
 - Add support for GNOME's classic mode.
 - The possibility to change the label color of the "Rainbow Labels" theme.
 
 ### :wrench: Changed
 
+- The behavior of the `--menu <menu name>` command line flag. Now, the menu conditions are checked before opening the menu. If multiple menus with the same name exist, the one with the most specific conditions will be opened. Furthermore, if a menu is already open, calling this command will be like pressing the shortcut again - so it will either close the menu or cycle through the matching menus depending on your settings.
 - The macOS builds are now created on macOS 15 instead of macOS 13.
 - Added `/System/Library/CoreServices` and `/System/Library/CoreServices/Applications` to the app and icon search paths on macOS. Thanks to [@LitoMore](https://github.com/LitoMore) for this!
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!

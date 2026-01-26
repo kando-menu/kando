@@ -31,11 +31,16 @@ const options = program
   .name('kando')
   .description('The cross-platform pie menu.')
   .version(app.getVersion())
-  .option('-m, --menu <menu>', 'show the menu with the given name')
+  .option('-m, --menu <menu name>', 'show the menu with the given name')
+  .option(
+    '-t, --trigger <shortcut>',
+    'show the menu with the given shortcut or shortcut ID'
+  )
   .option('-s, --settings', 'show the settings')
   .option('--reload-menu-theme', 'reload the current menu theme from disk')
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .option('--reload-icon-themes', 'reload the any icon themes from disk')
+  .option('--close-menu', 'close the currently open menu')
   .allowUnknownOption(true)
   .allowExcessArguments(true)
   .parse()
@@ -49,10 +54,12 @@ if (!gotTheLock) {
   // show a corresponding desktop notification.
   if (
     !options.menu &&
+    !options.trigger &&
     !options.settings &&
     !options.reloadMenuTheme &&
     !options.reloadSoundTheme &&
-    !options.reloadIconThemes
+    !options.reloadIconThemes &&
+    !options.closeMenu
   ) {
     console.log(
       'Kando is already running. Use --help for a list of commands to communicate with the running instance!'
@@ -175,10 +182,12 @@ try {
       const parsedUrl = new URL(deepLink);
       const options = {
         menu: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('name'),
+        trigger: parsedUrl.host === 'menu' && parsedUrl.searchParams.get('trigger'),
         settings: parsedUrl.host === 'settings',
         reloadMenuTheme: parsedUrl.host === 'reload-menu-theme',
         reloadSoundTheme: parsedUrl.host === 'reload-sound-theme',
         reloadIconThemes: parsedUrl.host === 'reload-icon-themes',
+        closeMenu: parsedUrl.host === 'close-menu',
       };
 
       if (!kando.handleCommandLine(options)) {
@@ -225,7 +234,7 @@ try {
         },
       });
     })
-    .then(() => backend.init())
+    .then(() => backend.init(generalSettings))
     .then(() => kando.init())
     .then(() => {
       // Show a nifty message when the app is about to quit.

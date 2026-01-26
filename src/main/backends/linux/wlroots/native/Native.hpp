@@ -105,6 +105,7 @@ class Native : public Napi::Addon<Native> {
     wl_registry*   mRegistry   = nullptr;
     wl_compositor* mCompositor = nullptr;
     wl_seat*       mSeat       = nullptr;
+    uint32_t mSeatCapabilities = 0;
 
     wl_registry_listener mRegistryListener{};
 
@@ -119,6 +120,7 @@ class Native : public Napi::Addon<Native> {
     xkb_state*   mXkbState   = nullptr;
 
     wl_pointer*            mPointer      = nullptr;
+    wl_touch*              mTouch        = nullptr;
     zwlr_layer_shell_v1*   mLayerShell   = nullptr;
     zwlr_layer_surface_v1* mLayerSurface = nullptr;
     wl_surface*            mSurface      = nullptr;
