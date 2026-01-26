@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
+- Added the possibility to import and export individual menus via JSON files. Thanks to [@Yar2000T](https://github.com/Yar2000T) for this contribution!
 - Some wlroots-specific options to handle the case where no pointer position is available. There are some timeouts which can now be configured in the settings dialog. Thanks to [@make-42](https://github.com/make-42) for this contribution!
 
 ### :wrench: Changed

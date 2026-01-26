@@ -823,60 +823,61 @@ export class KandoApp {
       );
     });
 
-    // Export a single menu to a JSON file. If no filePath is provided, show a save dialog.
-    ipcMain.handle(
-      'settings-window.export-menu',
-      async (event, menuIndex: number, filePath?: string) => {
-        const settings = this.menuSettings.get();
+    // Export a single menu to a JSON file. If no filePath is provided, show a save
+    // dialog.
+    ipcMain.handle('settings-window.export-menu', async (event, menuIndex: number) => {
+      const settings = this.menuSettings.get();
 
-        if (menuIndex < 0 || menuIndex >= settings.menus.length) {
-          console.error('Failed to export menu: Invalid menu index.');
-          return false;
-        }
-
-        // We only export the root menu item (so exported files stay compact and
-        // don't include local UI flags like centered/anchored/hoverMode). This
-        // also makes future extensions easier.
-        const menu = settings.menus[menuIndex];
-        const menuData: ExportedMenuV1 = {
-          version: settings.version,
-          menu: menu.root as MenuItem,
-        };
-
-        try {
-          let targetPath = filePath;
-          if (!targetPath) {
-            const result = await dialog.showSaveDialog(this.settingsWindow, {
-              defaultPath: `${menu.root.name}.json`,
-              filters: [{ name: 'JSON', extensions: ['json'] }],
-            });
-
-            if (result.canceled || !result.filePath) {
-              return false;
-            }
-
-            targetPath = result.filePath;
-          }
-
-          fs.writeFileSync(targetPath, JSON.stringify(menuData, null, 2), 'utf-8');
-          return true;
-        } catch (error) {
-          console.error('Failed to export menu:', error);
-          await dialog.showMessageBox(this.settingsWindow, {
-            type: 'error',
-            title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
-            message: 'Failed to export menu.',
-            detail: error instanceof Error ? error.message : String(error),
-          });
-          return false;
-        }
+      if (menuIndex < 0 || menuIndex >= settings.menus.length) {
+        console.error('Failed to export menu: Invalid menu index.');
+        return false;
       }
-    );
+
+      // We only export the root menu item (so exported files stay compact and don't
+      // include local UI flags like centered/anchored/hoverMode). This also makes future
+      // extensions easier.
+      const menu = settings.menus[menuIndex];
+      const menuData: ExportedMenuV1 = {
+        version: settings.version,
+        menu: menu.root as MenuItem,
+      };
+
+      try {
+        const result = await dialog.showSaveDialog(this.settingsWindow, {
+          defaultPath: `${menu.root.name}.json`,
+          filters: [{ name: 'JSON', extensions: ['json'] }],
+        });
+
+        if (result.canceled || !result.filePath) {
+          return false;
+        }
+
+        fs.writeFileSync(result.filePath, JSON.stringify(menuData, null, 2), 'utf-8');
+        return true;
+      } catch (error) {
+        console.error('Failed to export menu:', error);
+        await dialog.showMessageBox(this.settingsWindow, {
+          type: 'error',
+          title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
+          message: 'Failed to export menu.',
+          detail: error instanceof Error ? error.message : String(error),
+        });
+        return false;
+      }
+    });
 
     // Import a menu from a JSON file
-    ipcMain.handle('settings-window.import-menu', async (event, filePath: string) => {
+    ipcMain.handle('settings-window.import-menu', async () => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (result.canceled || !result.filePaths[0]) {
+        return false;
+      }
+
       try {
-        const content = fsExtra.readJsonSync(filePath, 'utf-8');
+        const content = fsExtra.readJsonSync(result.filePaths[0], 'utf-8');
 
         // Validate the exported file format first (version + root menu item)
         const exported = EXPORTED_MENU_SCHEMA_V1.parse(content, { reportInput: true });

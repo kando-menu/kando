@@ -187,20 +187,14 @@ export const SETTINGS_WINDOW_API = {
     ipcRenderer.send('settings-window.restore-menu-settings');
   },
 
-  /**
-   * This will export a single menu to a JSON file. The native save dialog will be shown
-   * if no file path is given.
-   */
-  exportMenu: (menuIndex: number, filePath?: string): Promise<boolean> => {
-    return ipcRenderer.invoke('settings-window.export-menu', menuIndex, filePath);
+  /** This will trigger the export of the given menu to a JSON file. */
+  exportMenu: (menuIndex: number): Promise<boolean> => {
+    return ipcRenderer.invoke('settings-window.export-menu', menuIndex);
   },
 
-  /**
-   * This will import a menu from a JSON file. The handler will show an error dialog on
-   * failure.
-   */
-  importMenu: (filePath: string): Promise<boolean> => {
-    return ipcRenderer.invoke('settings-window.import-menu', filePath);
+  /** This will trigger the import of a menu from a JSON file. */
+  importMenu: (): Promise<boolean> => {
+    return ipcRenderer.invoke('settings-window.import-menu');
   },
 };
 

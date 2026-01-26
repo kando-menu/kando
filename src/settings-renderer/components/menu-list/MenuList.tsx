@@ -76,31 +76,6 @@ export default function MenuList() {
   const moveMenu = useMenuSettings((state) => state.moveMenu);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
 
-  // Handle menu export
-  const handleExportMenu = async () => {
-    if (selectedMenu < 0 || selectedMenu >= menus.length) {
-      return;
-    }
-
-    // Let the main process show the save dialog and perform the export.
-    await window.settingsAPI.exportMenu(selectedMenu);
-  };
-
-  // Handle menu import
-  const handleImportMenu = async () => {
-    const result = await window.settingsAPI.openFilePicker({
-      filters: [{ name: 'JSON', extensions: ['json'] }],
-    });
-
-    if (result) {
-      const success = await window.settingsAPI.importMenu(result);
-      if (!success) {
-        // Import failed; the main process already showed a descriptive error dialog.
-        console.error('Import failed for file:', result);
-      }
-    }
-  };
-
   // This is set by the search bar in the collection details.
   const [filterTerm, setFilterTerm] = React.useState('');
 
@@ -357,7 +332,14 @@ export default function MenuList() {
             size="large"
             tooltip={i18next.t('settings.export-menu')}
             variant="floating"
-            onClick={handleExportMenu}
+            onClick={async () => {
+              if (selectedMenu < 0 || selectedMenu >= menus.length) {
+                return;
+              }
+
+              // Let the main process show the save dialog and perform the export.
+              await window.settingsAPI.exportMenu(selectedMenu);
+            }}
           />
           <Button
             isGrouped
@@ -365,7 +347,10 @@ export default function MenuList() {
             size="large"
             tooltip={i18next.t('settings.import-menu')}
             variant="floating"
-            onClick={handleImportMenu}
+            onClick={async () => {
+              // Let the main process show the open dialog and perform the import.
+              await window.settingsAPI.importMenu();
+            }}
           />
           <Button
             isGrouped
