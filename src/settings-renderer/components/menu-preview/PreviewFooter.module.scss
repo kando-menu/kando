@@ -60,12 +60,10 @@
   }
 
   .newItems {
-    word-wrap: break-word;
-    text-align: center;
+    display: flex;           /* Change from inline-block children */
+    flex-wrap: wrap;         /* Allow wrapping */
+    justify-content: center; /* Center the items */
+    gap: 8px;                /* Add consistent spacing */
     padding: 10px;
-
-    & > * {
-      display: inline-block;
-    }
   }
 }

@@ -81,6 +81,8 @@ import { Notification } from './utils/notification';
 import { getBackend } from './backends';
 import { KandoApp } from './app';
 import { getGeneralSettings, getMenuSettings, getConfigDirectory } from './settings';
+// PLUGIN SYSTEM IMPORT - Add this line
+import { PluginManager, registerPluginIPCHandlers } from './plugins';
 
 // Initialize the notification system. This will queue notifications until the app is
 // ready so that we can even show notifications before the app is fully initialized. This
@@ -236,6 +238,20 @@ try {
     })
     .then(() => backend.init(generalSettings))
     .then(() => kando.init())
+    // PLUGIN SYSTEM INITIALIZATION - Add this block
+    .then(() => {
+      // Initialize plugin system: scan for installed plugins and register IPC handlers
+      const pluginManager = PluginManager.getInstance();
+      const plugins = pluginManager.scanPlugins();
+      console.log(
+        `[Kando] Discovered ${plugins.length} plugin(s):`,
+        plugins.map((p) => p.id)
+      );
+
+      // Register IPC handlers so the settings UI can communicate with the plugin system
+      registerPluginIPCHandlers();
+    })
+    // END PLUGIN SYSTEM INITIALIZATION
     .then(() => {
       // Show a nifty message when the app is about to quit.
       app.on('will-quit', async () => {

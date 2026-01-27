@@ -368,6 +368,14 @@
     "common": {
       "delayed-option-info": "Useful if the action targets a window that needs to be focused.",
       "delayed-option": "Wait for fade-out animation"
+    },
+    "plugin": {
+      "name": "Plugin",
+      "description": "Execute an external plugin application.",
+      "placeholder": "Select a plugin...",
+      "loading": "Loading plugins...",
+      "no-plugins": "No plugins installed. Import a plugin ZIP file to get started.",
+      "tip-1": "Plugins are external applications that run in their own window when triggered from the pie menu."
     }
   },
   "achievements": {

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World Plugin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .greeting {
+      font-size: 18px;
+      margin-bottom: 15px;
+      opacity: 0.9;
+    }
+    
+    .timestamp {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    
+    .close-btn {
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Hello World Plugin</h1>
+    <p class="greeting" id="greeting">Loading...</p>
+    <p class="timestamp" id="timestamp"></p>
+    <button class="close-btn" onclick="window.close()">Close</button>
+  </div>
+
+  <script>
+    // Access plugin configuration injected by Kando
+    // The config is available via window.kandoPluginConfig
+    document.addEventListener('DOMContentLoaded', () => {
+      const config = window.kandoPluginConfig || {};
+      
+      // Display greeting from config or default
+      const greeting = config.greeting || 'Hello from Kando!';
+      document.getElementById('greeting').textContent = greeting;
+      
+      // Show timestamp if enabled
+      const showTimestamp = config.showTimestamp !== false;
+      const timestampEl = document.getElementById('timestamp');
+      
+      if (showTimestamp) {
+        const now = new Date();
+        timestampEl.textContent = `Current time: ${now.toLocaleTimeString()}`;
+      } else {
+        timestampEl.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

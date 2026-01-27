@@ -34,6 +34,7 @@
     "@eslint/compat": "^2.0.0",
     "@eslint/js": "^9.39.2",
     "@formkit/auto-animate": "0.8.2",
+    "@types/adm-zip": "^0.5.7",
     "@types/chai": "^5.2.2",
     "@types/chroma-js": "^3.1.1",
     "@types/howler": "^2.2.12",
@@ -110,5 +111,8 @@
     "zod": "^4.3.5",
     "zundo": "^2.1.0",
     "zustand": "^5.0.9"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16"
   }
 }

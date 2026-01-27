@@ -22,6 +22,7 @@ import { TextItemType } from './text-item-type';
 import { URIItemType } from './uri-item-type';
 import { RedirectItemType } from './redirect-item-type';
 import { SettingsItemType } from './settings-item-type';
+import { PluginItemType } from './plugin-item-type';  
 
 /**
  * This type describes meta information about a menu-item type. Every available type
@@ -81,6 +82,7 @@ export class ItemTypeRegistry {
     this.types.set('uri', new URIItemType());
     this.types.set('redirect', new RedirectItemType());
     this.types.set('settings', new SettingsItemType());
+    this.types.set('plugin', new PluginItemType());
   }
 
   /**

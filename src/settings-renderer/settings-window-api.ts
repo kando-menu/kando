@@ -186,6 +186,82 @@ export const SETTINGS_WINDOW_API = {
   restoreMenuSettings: () => {
     ipcRenderer.send('settings-window.restore-menu-settings');
   },
+
+  // =========================================================================
+  // PLUGIN SYSTEM METHODS - START
+  // =========================================================================
+
+  /**
+   * Get list of all installed plugins for the dropdown selector.
+   */
+  getPlugins: (): Promise<
+    Array<{
+      id: string;
+      name: string;
+      description?: string;
+      version: string;
+      author?: string;
+    }>
+  > => {
+      return ipcRenderer.invoke('plugins:get-list');
+  },
+
+  /**
+   * Get a specific plugin's full manifest.
+   */
+  getPluginManifest: (pluginId: string): Promise<unknown> => {
+    return ipcRenderer.invoke('plugins:get-manifest', pluginId);
+  },
+
+  /**
+   * Open file dialog and import a plugin from a ZIP file.
+   */
+  importPlugin: (): Promise<{
+    success: boolean;
+    pluginId?: string;
+    error?: string;
+  }> => {
+    return ipcRenderer.invoke('plugins:import');
+  },
+
+  /**
+   * Remove an installed plugin.
+   */
+  removePlugin: (
+    pluginId: string
+  ): Promise<{ success: boolean; pluginId: string }> => {
+    return ipcRenderer.invoke('plugins:remove', pluginId);
+  },
+
+  /**
+   * Get user configuration for a specific plugin.
+   */
+  getPluginConfig: (pluginId: string): Promise<Record<string, unknown>> => {
+    return ipcRenderer.invoke('plugins:get-config', pluginId);
+  },
+
+  /**
+   * Save user configuration for a specific plugin.
+   */
+  savePluginConfig: (
+    pluginId: string,
+    config: Record<string, unknown>
+  ): Promise<{ success: boolean }> => {
+    return ipcRenderer.invoke('plugins:save-config', pluginId, config);
+  },
+
+  /**
+   * Force rescan of the plugins directory.
+   */
+  rescanPlugins: (): Promise<
+    Array<{ id: string; name: string; version: string }>
+  > => {
+    return ipcRenderer.invoke('plugins:rescan');
+  },
+
+  // =========================================================================
+  // PLUGIN SYSTEM METHODS - END
+  // =========================================================================
 };
 
 /**

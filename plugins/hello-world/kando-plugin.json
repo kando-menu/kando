@@ -1,0 +1,26 @@
+{
+  "id": "hello-world",
+  "name": "Hello World",
+  "description": "A simple test plugin to verify the Kando plugin system.",
+  "version": "1.0.0",
+  "author": "Kando Team",
+  "window": {
+    "width": 400,
+    "height": 300,
+    "frame": true
+  },
+  "parameters": {
+    "greeting": {
+      "type": "string",
+      "title": "Greeting Message",
+      "description": "The message to display when the plugin runs.",
+      "default": "Hello from Kando!"
+    },
+    "showTimestamp": {
+      "type": "boolean",
+      "title": "Show Timestamp",
+      "description": "Whether to display the current time.",
+      "default": true
+    }
+  }
+}

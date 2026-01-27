@@ -19,6 +19,8 @@ import { TextItemAction } from './text-item-action';
 import { URIItemAction } from './uri-item-action';
 import { RedirectItemAction } from './redirect-item-action';
 import { SettingsItemAction } from './settings-item-action';
+import { PluginItemAction } from './plugin-item-action';
+import { PluginManager } from '../plugins';
 
 /**
  * This type describes the action of a menu item. The action is what happens when the menu
@@ -73,6 +75,7 @@ export class ItemActionRegistry {
     this.actions.set('uri', new URIItemAction());
     this.actions.set('redirect', new RedirectItemAction());
     this.actions.set('settings', new SettingsItemAction());
+    this.actions.set('plugin', new PluginItemAction(PluginManager.getInstance()));
   }
 
   /**
