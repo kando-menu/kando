@@ -469,7 +469,11 @@
             "reset-button-tooltip": "Скинути всі досягнення та прогрес рівня",
             "no-in-progress-achievements": "Вітаємо! Ви виконали всі досягнення.",
             "no-completed-achievements": "Ви ще не виконали жодних досягнень."
-        }
+        },
+        "export-menu": "Експорт меню",
+        "import-menu": "Меню імпорту",
+        "import-menu-error-title": "Не вдалося імпортувати меню",
+        "import-menu-error-message": "Не вдалося імпортувати вибраний файл. Він не містить дійсного експортованого меню Kando."
     },
     "achievements": {
         "attributes": {
