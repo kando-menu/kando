@@ -142,7 +142,7 @@ export class GnomeBackend extends LinuxBackend {
    *
    * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(keys: KeySequence) {
+  protected override async simulateKeysImpl(keys: KeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'linux');
@@ -162,22 +162,34 @@ export class GnomeBackend extends LinuxBackend {
    * use the DBus interface of the Kando GNOME Shell integration extension to bind and
    * unbind shortcuts.
    *
-   * @param shortcuts The shortcuts that should be bound now.
-   * @param previouslyBound The shortcuts that were bound before this call.
-   * @returns A promise which resolves when the shortcuts have been bound.
+   * @param currentShortcuts The shortcuts that should be bound now. Some of these may be
+   *   inhibited and should therefore not lead to emitting the 'shortcutPressed' event.
+   * @param previousShortcuts The shortcuts that were bound before this call.
+   * @param currentEffectiveShortcuts The list of currently effectively bound shortcuts.
+   *   That is the list of all currently bound shortcuts minus the ones which are
+   *   currently inhibited by any active inhibition.
+   * @param previousEffectiveShortcuts The list of shortcuts which were effectively bound
+   *   before this call.
+   * @returns A promise which resolves when the shortcuts have been updated.
    */
-  protected override async bindShortcutsImpl(
-    shortcuts: string[],
-    previouslyBound: string[]
-  ) {
+  protected async onShortcutsChanged(
+    currentShortcuts: string[],
+    previousShortcuts: string[],
+    currentEffectiveShortcuts: string[],
+    previousEffectiveShortcuts: string[]
+  ): Promise<void> {
     // Use a shortcut if we unbind all shortcuts :)
-    if (shortcuts.length === 0) {
+    if (currentEffectiveShortcuts.length === 0) {
       await this.interface.UnbindAllShortcuts();
       return;
     }
 
-    const shortcutsToUnbind = previouslyBound.filter((s) => !shortcuts.includes(s));
-    const shortcutsToBind = shortcuts.filter((s) => !previouslyBound.includes(s));
+    const shortcutsToUnbind = previousEffectiveShortcuts.filter(
+      (s) => !currentEffectiveShortcuts.includes(s)
+    );
+    const shortcutsToBind = currentEffectiveShortcuts.filter(
+      (s) => !previousEffectiveShortcuts.includes(s)
+    );
 
     // Unbind the obsolete shortcuts.
     for (const shortcut of shortcutsToUnbind) {

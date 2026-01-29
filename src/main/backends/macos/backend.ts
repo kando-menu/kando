@@ -190,7 +190,7 @@ export class MacosBackend extends Backend {
    *
    * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(keys: KeySequence) {
+  protected override async simulateKeysImpl(keys: KeySequence) {
     // We first need to convert the given DOM key names to Apple key codes.  If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'macos');

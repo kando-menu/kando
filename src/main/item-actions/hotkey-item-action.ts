@@ -57,22 +57,6 @@ export class HotkeyItemAction implements ItemAction {
 
     const backend = app.getBackend();
 
-    // Temporarily inhibit all shortcuts while simulating keys if the option is enabled.
-    // This prevents the simulated input from triggering other Kando shortcuts.
-    // Use the shortcut stack to properly restore the previous state.
-    if (data.inhibitShortcuts) {
-      await backend.pushBoundShortcuts([]);
-    }
-
-    try {
-      // Simulate the key presses using the backend.
-      await backend.simulateKeys(keys);
-    } finally {
-      // Restore all shortcuts after simulation completes if they were inhibited.
-      // The finally block ensures this happens even if an error occurred.
-      if (data.inhibitShortcuts) {
-        await backend.popBoundShortcuts();
-      }
-    }
+    await backend.simulateKeys(keys, data.inhibitShortcuts);
   }
 }

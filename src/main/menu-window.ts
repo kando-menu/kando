@@ -48,10 +48,10 @@ export class MenuWindow extends BrowserWindow {
   private visible = false;
 
   /**
-   * This tracks whether we have pushed shortcuts onto the stack when showing the menu. If
-   * true, we need to pop them when hiding the menu.
+   * This is set to a value > 0 if we have currently inhibited the shortcut of the active
+   * menu.
    */
-  private shortcutsPushed = false;
+  private shortcutInhibitionID = 0;
 
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
@@ -205,23 +205,16 @@ export class MenuWindow extends BrowserWindow {
 
     // We temporarily inhibit the shortcut of the menu (if any) so that key-repeat events
     // can be received by the renderer. These are necessary for the turbo-mode to work for
-    // single-key shortcuts. The shortcut is restored when the window is hidden via the
-    // shortcut stack mechanism.
+    // single-key shortcuts. The shortcut is restored when the window is hidden.
     //
     // If 'sameShortcutBehavior' is set to anything but 'nothing', we have to keep the
     // shortcut active so that we know when the user presses the shortcut again.
-    if (!this.kando.allShortcutsInhibited() && sameShortcutBehavior === 'nothing') {
+    if (sameShortcutBehavior !== 'nothing') {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const shortcut = useID ? menu.shortcutID : menu.shortcut;
 
       // Push the current shortcuts to the stack and inhibit the menu's shortcut
-      await this.kando.getBackend().pushBoundShortcuts(
-        this.kando
-          .getBackend()
-          .getBoundShortcuts()
-          .filter((s) => s !== shortcut)
-      );
-      this.shortcutsPushed = true;
+      this.shortcutInhibitionID = await this.kando.getBackend().inhibitShortcut(shortcut);
     }
 
     // Store the last menu to be able to execute the selected action later. The WMInfo
@@ -388,17 +381,10 @@ export class MenuWindow extends BrowserWindow {
       clearTimeout(this.hideTimeout);
     }
 
-    // If we pushed shortcuts onto the stack when showing the menu, pop them now
-    // to restore the previous state. This is cleaner than directly calling
-    // inhibitShortcuts and respects the stack-based architecture.
-    if (this.shortcutsPushed) {
-      await this.kando.getBackend().popBoundShortcuts();
-      this.shortcutsPushed = false;
-    } else if (!this.kando.allShortcutsInhibited()) {
-      // Only restore shortcuts if they were inhibited and we didn't use the stack.
-      // If shortcuts are inhibited globally (via the tray icon for instance), we do
-      // not restore them here.
-      await this.kando.getBackend().inhibitShortcuts([]);
+    // If we inhibited the menu's shortcut, we restore it now.
+    if (this.shortcutInhibitionID > 0) {
+      await this.kando.getBackend().releaseInhibition(this.shortcutInhibitionID);
+      this.shortcutInhibitionID = 0;
     }
 
     return new Promise<void>((resolve) => {
