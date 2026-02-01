@@ -89,7 +89,9 @@ export default function MenuThemesDialog() {
   let accentColorsNode: ReactNode = null;
   // Presets state and popover hooks (declared unconditionally so hooks order stays stable)
   const [isPresetPopoverOpen, setIsPresetPopoverOpen] = React.useState(false);
-  const [presets, setPresets] = React.useState<Array<{ name: string; colors?: Record<string, string>; error?: string }>>([]);
+  const [presets, setPresets] = React.useState<
+    Array<{ name: string; colors?: Record<string, string>; error?: string }>
+  >([]);
 
   React.useEffect(() => {
     // Reset presets when theme changes
@@ -104,7 +106,10 @@ export default function MenuThemesDialog() {
     }
 
     try {
-      const p = await window.settingsAPI.getMenuThemePresets(currentTheme.directory, currentTheme.id);
+      const p = await window.settingsAPI.getMenuThemePresets(
+        currentTheme.directory,
+        currentTheme.id
+      );
       setPresets(p || []);
     } catch (e) {
       console.error('Failed to load presets:', e);
@@ -149,24 +154,35 @@ export default function MenuThemesDialog() {
                 gap: 10,
                 flexWrap: 'wrap',
               }}>
-              <div style={{ width: '100%', display: 'flex', gap: 10, alignItems: 'center' }}>
+              <div
+                style={{ width: '100%', display: 'flex', gap: 10, alignItems: 'center' }}>
                 <Popover
                   content={
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', maxWidth: '400px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: 8,
+                          flexWrap: 'wrap',
+                          maxWidth: '400px',
+                        }}>
                         {presets.length === 0 && (
-                          <Note>{i18next.t('settings.menu-themes-dialog.no-presets')}</Note>
+                          <Note>
+                            {i18next.t('settings.menu-themes-dialog.no-presets')}
+                          </Note>
                         )}
                         {presets.map((p) => (
                           <div
                             key={p.name}
-                            title={p.error || undefined}
-                            style={p.error ? { position: 'relative' } : {}}>
+                            style={p.error ? { position: 'relative' } : {}}
+                            title={p.error || undefined}>
                             <Button
-                              label={p.name}
                               isDisabled={!!p.error}
+                              label={p.name}
                               onClick={() => {
-                                if (p.error) return;
+                                if (p.error) {
+                                  return;
+                                }
                                 const overrides = lodash.cloneDeep(currentColorOverrides);
                                 if (!overrides[currentTheme.id]) {
                                   overrides[currentTheme.id] = {};
@@ -180,7 +196,7 @@ export default function MenuThemesDialog() {
                                 setIsPresetPopoverOpen(false);
                               }}
                             />
-                            {p.error && (
+                            {p.error ? (
                               <div
                                 style={{
                                   position: 'absolute',
@@ -193,18 +209,26 @@ export default function MenuThemesDialog() {
                                   pointerEvents: 'none',
                                 }}
                               />
-                            )}
+                            ) : null}
                           </div>
                         ))}
                       </div>
                       <div style={{ display: 'flex', gap: 8 }}>
                         <Button
                           icon={<TbFolderOpen />}
-                          label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
+                          label={i18next.t(
+                            'settings.menu-themes-dialog.open-theme-directory'
+                          )}
                           onClick={() => {
                             // Open the theme directory so users can add presets.
-                            const themePath = currentTheme.directory + (cIsWindows ? '\\' : '/') + currentTheme.id;
-                            window.open('file://' + themePath.replace(/\\/g, '/'), '_blank');
+                            const themePath =
+                              currentTheme.directory +
+                              (cIsWindows ? '\\' : '/') +
+                              currentTheme.id;
+                            window.open(
+                              'file://' + themePath.replace(/\\/g, '/'),
+                              '_blank'
+                            );
                           }}
                         />
                       </div>
