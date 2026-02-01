@@ -534,6 +534,71 @@ export class KandoApp {
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    // Allow the renderer to retrieve all presets for a given menu theme.
+    // Returns both valid and broken presets (broken ones have an error field).
+    ipcMain.handle('settings-window.get-menu-theme-presets', async (event, themeDirectory: string, themeId: string) => {
+      try {
+        const themePath = path.join(themeDirectory, themeId);
+        const presetsDir = path.join(themePath, 'presets');
+
+        if (!fs.existsSync(presetsDir)) {
+          return [];
+        }
+
+        const files = fs.readdirSync(presetsDir);
+        const presets: Array<{ name: string; colors?: Record<string, string>; error?: string }> = [];
+
+        for (const file of files) {
+          const full = path.join(presetsDir, file);
+
+          // Only consider files (not subdirectories) and JSON files.
+          if (!fs.statSync(full).isFile() || path.extname(file).toLowerCase() !== '.json') {
+            continue;
+          }
+
+          const presetName = path.basename(file, '.json');
+
+          try {
+            const content = fs.readFileSync(full, { encoding: 'utf8' });
+            const data = json5.parse(content);
+
+            // Validate the structure: must be an object with a `colors` object.
+            if (!data || typeof data !== 'object' || !data.colors || typeof data.colors !== 'object') {
+              presets.push({ name: presetName, error: 'Invalid structure: missing or invalid colors object' });
+              continue;
+            }
+
+            const colors: Record<string, string> = {};
+            let hasInvalidColor = false;
+
+            for (const [k, v] of Object.entries(data.colors)) {
+              if (typeof v !== 'string') {
+                hasInvalidColor = true;
+                break;
+              }
+              colors[k] = v;
+            }
+
+            if (hasInvalidColor) {
+              presets.push({ name: presetName, error: 'Invalid color value: colors must be strings' });
+              continue;
+            }
+
+            presets.push({ name: presetName, colors });
+          } catch (e) {
+            const errorMsg = e instanceof Error ? e.message : String(e);
+            console.error(`Failed to parse preset "${presetName}":`, errorMsg);
+            presets.push({ name: presetName, error: errorMsg });
+          }
+        }
+
+        return presets;
+      } catch (e) {
+        console.error('Failed to load presets:', e);
+        return [];
+      }
+    });
+
     // Allow the renderer to retrieve all available sound themes.
     ipcMain.handle('settings-window.get-all-sound-themes', async () => {
       const themes = await this.listSubdirectories([

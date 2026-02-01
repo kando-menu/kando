@@ -212,6 +212,8 @@
       "get-themes-online": "Get themes online",
       "create-your-own-themes": "Create your own themes",
       "open-theme-directory": "Open theme directory",
+      "apply-preset": "Apply Preset",
+      "no-presets": "No presets found",
       "author": "by {{author}}"
     },
     "all-menus": "All Menus",

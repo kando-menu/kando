@@ -81,6 +81,11 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-all-menu-themes');
   },
 
+  /** This will return all available presets for a given menu theme directory. */
+  getMenuThemePresets: (themeDirectory: string, themeId: string): Promise<Array<{ name: string; colors?: Record<string, string>; error?: string }>> => {
+    return ipcRenderer.invoke('settings-window.get-menu-theme-presets', themeDirectory, themeId);
+  },
+
   /** This will return all available sound themes. */
   getAllSoundThemes: (): Promise<Array<SoundThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-sound-themes');
