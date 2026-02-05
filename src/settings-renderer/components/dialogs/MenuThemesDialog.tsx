@@ -139,10 +139,11 @@ export default function MenuThemesDialog() {
 
     // Build preset options: "Default Colors" + all presets
     const presetOptions = [
-      { value: '__default__', label: i18next.t('settings.menu-themes-dialog.default-colors') },
-      ...presets
-        .filter((p) => !p.error)
-        .map((p) => ({ value: p.name, label: p.name })),
+      {
+        value: '__default__',
+        label: i18next.t('settings.menu-themes-dialog.default-colors'),
+      },
+      ...presets.filter((p) => !p.error).map((p) => ({ value: p.name, label: p.name })),
     ];
 
     accentColorsNode = (

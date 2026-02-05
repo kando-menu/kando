@@ -623,7 +623,12 @@ export class KandoApp {
     // Allow the renderer to export the current menu theme colors as a preset.
     ipcMain.on(
       'settings-window.export-menu-theme-preset',
-      async (event, themeDirectory: string, themeId: string, colors: Record<string, string>) => {
+      async (
+        event,
+        themeDirectory: string,
+        themeId: string,
+        colors: Record<string, string>
+      ) => {
         try {
           const presetsDir = path.join(themeDirectory, themeId, 'presets');
 
