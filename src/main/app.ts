@@ -620,6 +620,71 @@ export class KandoApp {
       }
     );
 
+    // Allow the renderer to export the current menu theme colors as a preset.
+    ipcMain.on(
+      'settings-window.export-menu-theme-preset',
+      async (event, themeDirectory: string, themeId: string, colors: Record<string, string>) => {
+        try {
+          const presetsDir = path.join(themeDirectory, themeId, 'presets');
+
+          // Create the presets directory if it doesn't exist.
+          if (!fs.existsSync(presetsDir)) {
+            fs.mkdirSync(presetsDir, { recursive: true });
+          }
+
+          // Open a save dialog to let the user choose the filename.
+          const result = await dialog.showSaveDialog(this.settingsWindow, {
+            title: i18next.t('settings.menu-themes-dialog.export-preset-title'),
+            defaultPath: path.join(presetsDir, 'my-preset.json'),
+            filters: [{ name: 'JSON Files', extensions: ['json'] }],
+          });
+
+          if (!result.canceled && result.filePath) {
+            // Ensure the file is saved in the presets directory.
+            if (!result.filePath.startsWith(presetsDir)) {
+              console.error('Attempted to save preset outside of presets directory');
+              return;
+            }
+
+            const presetData = { colors };
+            fs.writeFileSync(result.filePath, JSON.stringify(presetData, null, 2), {
+              encoding: 'utf8',
+            });
+
+            // Reload the presets in the renderer.
+            this.settingsWindow.webContents.send('settings-window.presets-changed');
+          }
+        } catch (e) {
+          console.error('Failed to export preset:', e);
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.menu-themes-dialog.export-preset-error-title'),
+            message: i18next.t('settings.menu-themes-dialog.export-preset-error-message'),
+          });
+        }
+      }
+    );
+
+    // Allow the renderer to open the presets directory for a given menu theme.
+    ipcMain.on(
+      'settings-window.open-menu-theme-presets-directory',
+      async (event, themeDirectory: string, themeId: string) => {
+        try {
+          const presetsDir = path.join(themeDirectory, themeId, 'presets');
+
+          // Create the presets directory if it doesn't exist.
+          if (!fs.existsSync(presetsDir)) {
+            fs.mkdirSync(presetsDir, { recursive: true });
+          }
+
+          // Open the presets directory in the file manager.
+          shell.openPath(presetsDir);
+        } catch (e) {
+          console.error('Failed to open presets directory:', e);
+        }
+      }
+    );
+
     // Allow the renderer to retrieve all available sound themes.
     ipcMain.handle('settings-window.get-all-sound-themes', async () => {
       const themes = await this.listSubdirectories([

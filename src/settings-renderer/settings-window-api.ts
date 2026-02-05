@@ -201,14 +201,38 @@ export const SETTINGS_WINDOW_API = {
     ipcRenderer.send('settings-window.restore-menu-settings');
   },
 
-  /** This will trigger the export of the given menu to a JSON file. */
-  exportMenu: (menuIndex: number): Promise<boolean> => {
-    return ipcRenderer.invoke('settings-window.export-menu', menuIndex);
+  /**
+   * This will open a save dialog to export the current menu theme colors as a preset.
+   *
+   * @param themeDirectory The directory of the theme.
+   * @param themeId The ID of the theme.
+   * @param colors The colors to export.
+   */
+  exportMenuThemePreset: (
+    themeDirectory: string,
+    themeId: string,
+    colors: Record<string, string>
+  ) => {
+    ipcRenderer.send(
+      'settings-window.export-menu-theme-preset',
+      themeDirectory,
+      themeId,
+      colors
+    );
   },
 
-  /** This will trigger the import of a menu from a JSON file. */
-  importMenu: (): Promise<boolean> => {
-    return ipcRenderer.invoke('settings-window.import-menu');
+  /**
+   * This will open the directory containing the presets for the given menu theme.
+   *
+   * @param themeDirectory The directory of the theme.
+   * @param themeId The ID of the theme.
+   */
+  openMenuThemePresetsDirectory: (themeDirectory: string, themeId: string) => {
+    ipcRenderer.send(
+      'settings-window.open-menu-theme-presets-directory',
+      themeDirectory,
+      themeId
+    );
   },
 };
 

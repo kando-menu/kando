@@ -19,8 +19,9 @@ import {
   TbFolderOpen,
   TbCircleCheck,
   TbPaletteFilled,
+  TbReload,
+  TbDownload,
 } from 'react-icons/tb';
-import { RiDeleteBack2Fill } from 'react-icons/ri';
 import lodash from 'lodash';
 
 import { useAppState, useGeneralSetting } from '../../state';
@@ -28,7 +29,7 @@ import { useAppState, useGeneralSetting } from '../../state';
 import {
   Button,
   ColorButton,
-  Popover,
+  Dropdown,
   Modal,
   Note,
   Scrollbox,
@@ -46,6 +47,11 @@ const openThemeDirectory = () => {
   window.settingsAPI
     .getMenuThemesDirectory()
     .then((dir) => window.open('file://' + dir, '_blank'));
+};
+
+// This is called when the user clicks the "Open presets directory" button.
+const openPresetsDirectory = (themeDirectory: string, themeId: string) => {
+  window.settingsAPI.openMenuThemePresetsDirectory(themeDirectory, themeId);
 };
 
 /**
@@ -87,16 +93,17 @@ export default function MenuThemesDialog() {
 
   const currentTheme = themes.find((theme) => isSelected(theme.id));
   let accentColorsNode: ReactNode = null;
-  // Presets state and popover hooks (declared unconditionally so hooks order stays stable)
-  const [isPresetPopoverOpen, setIsPresetPopoverOpen] = React.useState(false);
+
+  // Presets state (declared unconditionally so hooks order stays stable)
   const [presets, setPresets] = React.useState<
     Array<{ name: string; colors?: Record<string, string>; error?: string }>
   >([]);
+  const [selectedPreset, setSelectedPreset] = React.useState<string>('__default__');
 
   React.useEffect(() => {
     // Reset presets when theme changes
     setPresets([]);
-    setIsPresetPopoverOpen(false);
+    setSelectedPreset('__default__');
   }, [currentTheme?.id]);
 
   const fetchPresets = React.useCallback(async () => {
@@ -117,14 +124,26 @@ export default function MenuThemesDialog() {
     }
   }, [currentTheme]);
 
+  // Load presets whenever the current theme changes
+  React.useEffect(() => {
+    fetchPresets();
+  }, [fetchPresets]);
+
   if (currentTheme && Object.keys(currentTheme.colors).length > 0) {
     const currentColorOverrides = darkMode && useDarkMode ? darkColors : colors;
-
     const currentColors = lodash.merge(
       {},
       currentTheme.colors,
       currentColorOverrides[currentTheme.id]
     );
+
+    // Build preset options: "Default Colors" + all presets
+    const presetOptions = [
+      { value: '__default__', label: i18next.t('settings.menu-themes-dialog.default-colors') },
+      ...presets
+        .filter((p) => !p.error)
+        .map((p) => ({ value: p.name, label: p.name })),
+    ];
 
     accentColorsNode = (
       <>
@@ -141,157 +160,106 @@ export default function MenuThemesDialog() {
             />
           </h1>
         </div>
+
+        {/* Preset selector with buttons */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 0,
+            alignItems: 'center',
+            marginBottom: 15,
+            width: '100%',
+          }}>
+          <Dropdown
+            initialValue={selectedPreset}
+            options={presetOptions}
+            onChange={(value) => {
+              setSelectedPreset(value);
+              if (value === '__default__') {
+                // Reset to default by clearing overrides
+                if (darkMode && useDarkMode) {
+                  const updatedDarkColors = { ...darkColors };
+                  delete updatedDarkColors[currentTheme.id];
+                  setDarkColors(updatedDarkColors);
+                } else {
+                  const updatedColors = { ...colors };
+                  delete updatedColors[currentTheme.id];
+                  setColors(updatedColors);
+                }
+              } else {
+                // Apply the selected preset
+                const preset = presets.find((p) => p.name === value);
+                if (preset && preset.colors) {
+                  const overrides = lodash.cloneDeep(currentColorOverrides);
+                  if (!overrides[currentTheme.id]) {
+                    overrides[currentTheme.id] = {};
+                  }
+                  overrides[currentTheme.id] = preset.colors;
+                  if (darkMode && useDarkMode) {
+                    setDarkColors(overrides);
+                  } else {
+                    setColors(overrides);
+                  }
+                }
+              }
+            }}
+          />
+
+          <Button
+            isGrouped
+            icon={<TbReload />}
+            tooltip={i18next.t('settings.menu-themes-dialog.reload-presets')}
+            onClick={async () => {
+              await fetchPresets();
+            }}
+          />
+
+          <Button
+            isGrouped
+            icon={<TbDownload />}
+            tooltip={i18next.t('settings.menu-themes-dialog.export-preset')}
+            onClick={() => {
+              window.settingsAPI.exportMenuThemePreset(
+                currentTheme.directory,
+                currentTheme.id,
+                currentColors
+              );
+            }}
+          />
+        </div>
+
+        {/* Color buttons for manual editing */}
         <div
           style={{
             display: 'flex',
             gap: 10,
-            justifyContent: 'space-between',
+            flexWrap: 'wrap',
           }}>
-          <Scrollbox maxHeight="min(20vh, 400px)" paddingLeft={0} width="100%">
-            <div
-              style={{
-                display: 'flex',
-                gap: 10,
-                flexWrap: 'wrap',
-              }}>
-              <div
-                style={{ width: '100%', display: 'flex', gap: 10, alignItems: 'center' }}>
-                <Popover
-                  content={
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: 8,
-                          flexWrap: 'wrap',
-                          maxWidth: '400px',
-                        }}>
-                        {presets.length === 0 && (
-                          <Note>
-                            {i18next.t('settings.menu-themes-dialog.no-presets')}
-                          </Note>
-                        )}
-                        {presets.map((p) => (
-                          <div
-                            key={p.name}
-                            style={p.error ? { position: 'relative' } : {}}
-                            title={p.error || undefined}>
-                            <Button
-                              isDisabled={!!p.error}
-                              label={p.name}
-                              onClick={() => {
-                                if (p.error) {
-                                  return;
-                                }
-                                const overrides = lodash.cloneDeep(currentColorOverrides);
-                                if (!overrides[currentTheme.id]) {
-                                  overrides[currentTheme.id] = {};
-                                }
-                                overrides[currentTheme.id] = p.colors;
-                                if (darkMode && useDarkMode) {
-                                  setDarkColors(overrides);
-                                } else {
-                                  setColors(overrides);
-                                }
-                                setIsPresetPopoverOpen(false);
-                              }}
-                            />
-                            {p.error ? (
-                              <div
-                                style={{
-                                  position: 'absolute',
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                                  borderRadius: '4px',
-                                  pointerEvents: 'none',
-                                }}
-                              />
-                            ) : null}
-                          </div>
-                        ))}
-                      </div>
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <Button
-                          icon={<TbFolderOpen />}
-                          label={i18next.t(
-                            'settings.menu-themes-dialog.open-theme-directory'
-                          )}
-                          onClick={() => {
-                            // Open the theme directory so users can add presets.
-                            const themePath =
-                              currentTheme.directory +
-                              (cIsWindows ? '\\' : '/') +
-                              currentTheme.id;
-                            window.open(
-                              'file://' + themePath.replace(/\\/g, '/'),
-                              '_blank'
-                            );
-                          }}
-                        />
-                      </div>
-                    </div>
+          {Object.keys(currentColors).map((key) => {
+            return (
+              <ColorButton
+                key={key}
+                color={currentColors[key]}
+                name={key}
+                onChange={(color) => {
+                  // Create a new object to avoid mutating the state directly.
+                  const overrides = lodash.cloneDeep(currentColorOverrides);
+
+                  if (!overrides[currentTheme.id]) {
+                    overrides[currentTheme.id] = {};
                   }
-                  isVisible={isPresetPopoverOpen}
-                  position="bottom"
-                  onClose={() => setIsPresetPopoverOpen(false)}>
-                  <Button
-                    icon={<TbPaletteFilled />}
-                    label={i18next.t('settings.menu-themes-dialog.apply-preset')}
-                    onClick={async () => {
-                      // Fetch presets lazily when opening the popover.
-                      if (!isPresetPopoverOpen) {
-                        await fetchPresets();
-                      }
-                      setIsPresetPopoverOpen(!isPresetPopoverOpen);
-                    }}
-                  />
-                </Popover>
-              </div>
-              {Object.keys(currentColors).map((key) => {
-                return (
-                  <ColorButton
-                    key={key}
-                    color={currentColors[key]}
-                    name={key}
-                    onChange={(color) => {
-                      // Create a new object to avoid mutating the state directly.
-                      const overrides = lodash.cloneDeep(currentColorOverrides);
 
-                      if (!overrides[currentTheme.id]) {
-                        overrides[currentTheme.id] = {};
-                      }
+                  overrides[currentTheme.id][key] = color;
 
-                      overrides[currentTheme.id][key] = color;
-
-                      if (darkMode && useDarkMode) {
-                        setDarkColors(overrides);
-                      } else {
-                        setColors(overrides);
-                      }
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </Scrollbox>
-          <Button
-            icon={<RiDeleteBack2Fill />}
-            tooltip={i18next.t('settings.menu-themes-dialog.reset-color-picker')}
-            onClick={() => {
-              if (darkMode && useDarkMode) {
-                const updatedDarkColors = { ...darkColors };
-                delete updatedDarkColors[currentTheme.id];
-                setDarkColors(updatedDarkColors);
-              } else {
-                const updatedColors = { ...colors };
-                delete updatedColors[currentTheme.id];
-                setColors(updatedColors);
-              }
-            }}
-          />
+                  if (darkMode && useDarkMode) {
+                    setDarkColors(overrides);
+                  } else {
+                    setColors(overrides);
+                  }
+                }}
+              />
+            );
+          })}
         </div>
       </>
     );
@@ -386,6 +354,12 @@ export default function MenuThemesDialog() {
             icon={<TbFolderOpen />}
             label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
             onClick={openThemeDirectory}
+          />
+          <Button
+            isBlock
+            icon={<TbFolderOpen />}
+            label={i18next.t('settings.menu-themes-dialog.open-presets-directory')}
+            onClick={() => openPresetsDirectory(currentTheme.directory, currentTheme.id)}
           />
         </div>
         <Scrollbox maxHeight="min(80vh, 600px)" width="100%">
