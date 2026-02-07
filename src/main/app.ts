@@ -231,18 +231,20 @@ export class KandoApp {
     this.achievementTracker = new AchievementTracker(this.generalSettings);
 
     this.achievementTracker.on('completed', (achievement) => {
-      Notification.show({
-        title: i18next.t('achievements.completed-title'),
-        message: achievement.name,
-        onClick: () => {
-          this.showSettings();
-          this.settingsWindow.onWindowLoaded.then(() => {
-            this.settingsWindow.webContents.send(
-              'settings-window.show-achievements-dialog'
-            );
-          });
-        },
-      });
+      if (this.generalSettings.get('enableAchievementNotifications')) {
+        Notification.show({
+          title: i18next.t('achievements.completed-title'),
+          message: achievement.name,
+          onClick: () => {
+            this.showSettings();
+            this.settingsWindow.onWindowLoaded.then(() => {
+              this.settingsWindow.webContents.send(
+                'settings-window.show-achievements-dialog'
+              );
+            });
+          },
+        });
+      }
     });
 
     this.achievementTracker.on('progress-changed', () => {
