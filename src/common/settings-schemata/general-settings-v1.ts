@@ -237,6 +237,9 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
 
   /** If enabled, achievements are tracked. */
   enableAchievements: z.boolean().default(true),
+
+  /** If enabled, notifications are shown when achievements are unlocked. */
+  enableAchievementNotifications: z.boolean().default(true),
 });
 
 export type GeneralSettingsV1 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V1>;

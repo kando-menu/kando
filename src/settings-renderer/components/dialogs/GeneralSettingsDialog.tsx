@@ -238,6 +238,15 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.enable-achievements')}
             settingsKey="enableAchievements"
           />
+          <SettingsCheckbox
+            info={i18next.t(
+              'settings.general-settings-dialog.enable-achievement-notifications-info'
+            )}
+            label={i18next.t(
+              'settings.general-settings-dialog.enable-achievement-notifications'
+            )}
+            settingsKey="enableAchievementNotifications"
+          />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
           <SettingsCheckbox
