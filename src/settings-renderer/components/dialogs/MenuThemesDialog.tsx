@@ -181,7 +181,6 @@ export default function MenuThemesDialog() {
                   'settings.menu-themes-dialog.choose-preset',
                   'Choose Preset...'
                 ),
-                disabled: true,
               },
               ...presetOptions,
             ]}
