@@ -98,12 +98,12 @@ export default function MenuThemesDialog() {
   const [presets, setPresets] = React.useState<
     Array<{ name: string; colors?: Record<string, string>; error?: string }>
   >([]);
-  const [selectedPreset, setSelectedPreset] = React.useState<string>('__default__');
+  const [resetDropdown, setResetDropdown] = React.useState(0);
 
   React.useEffect(() => {
     // Reset presets when theme changes
     setPresets([]);
-    setSelectedPreset('__default__');
+    setResetDropdown((prev) => prev + 1);
   }, [currentTheme?.id]);
 
   const fetchPresets = React.useCallback(async () => {
@@ -137,7 +137,7 @@ export default function MenuThemesDialog() {
       currentColorOverrides[currentTheme.id]
     );
 
-    // Build preset options: "Default Colors" + all presets
+    // Build preset options: "Default Colors" + all presets (no placeholder)
     const presetOptions = [
       {
         value: '__default__',
@@ -166,16 +166,27 @@ export default function MenuThemesDialog() {
         <div
           style={{
             display: 'flex',
-            gap: 0,
+            gap: 8,
             alignItems: 'center',
             marginBottom: 15,
             width: '100%',
           }}>
           <Dropdown
-            initialValue={selectedPreset}
-            options={presetOptions}
+            key={resetDropdown}
+            initialValue="__placeholder__"
+            options={[
+              {
+                value: '__placeholder__',
+                label: i18next.t('settings.menu-themes-dialog.choose-preset', 'Choose Preset...'),
+                disabled: true,
+              },
+              ...presetOptions,
+            ]}
             onChange={(value) => {
-              setSelectedPreset(value);
+              if (value === '__placeholder__') {
+                return;
+              }
+
               if (value === '__default__') {
                 // Reset to default by clearing overrides
                 if (darkMode && useDarkMode) {
@@ -203,6 +214,9 @@ export default function MenuThemesDialog() {
                   }
                 }
               }
+
+              // Reset dropdown to show placeholder again
+              setResetDropdown((prev) => prev + 1);
             }}
           />
 

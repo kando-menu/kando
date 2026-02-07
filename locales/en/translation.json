@@ -196,6 +196,7 @@
       "dark": "Dark Mode",
       "light": "Light Mode",
       "accent-colors-info": "Use presets to quickly apply different color schemes. You can create custom presets by editing the files in the presets directory.",
+      "choose-preset": "Choose Preset...",
       "default-colors": "Default Colors",
       "reload-presets": "Reload Presets",
       "export-preset": "Export as Preset",
