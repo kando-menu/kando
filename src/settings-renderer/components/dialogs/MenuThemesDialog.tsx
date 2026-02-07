@@ -177,7 +177,10 @@ export default function MenuThemesDialog() {
             options={[
               {
                 value: '__placeholder__',
-                label: i18next.t('settings.menu-themes-dialog.choose-preset', 'Choose Preset...'),
+                label: i18next.t(
+                  'settings.menu-themes-dialog.choose-preset',
+                  'Choose Preset...'
+                ),
                 disabled: true,
               },
               ...presetOptions,
