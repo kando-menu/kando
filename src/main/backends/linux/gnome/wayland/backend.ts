@@ -103,7 +103,7 @@ export class GnomeBackend extends LinuxBackend {
 
     // Newer versions of the extension return work area info directly. Else we query
     // Electron for it, but this will be wrong on some multi-monitor setups.
-    if (info.length === 7) {
+    if (info.length === 8) {
       workArea = {
         x: info[4],
         y: info[5],
@@ -111,6 +111,9 @@ export class GnomeBackend extends LinuxBackend {
         height: info[7],
       };
     } else {
+      console.warn(
+        'The Kando GNOME Shell integration extension is outdated. Please update to the latest version to improve multi-monitor support.'
+      );
       workArea = screen.getDisplayNearestPoint({
         x: info[2],
         y: info[3],
