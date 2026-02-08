@@ -209,7 +209,7 @@ export class MenuWindow extends BrowserWindow {
     //
     // If 'sameShortcutBehavior' is set to anything but 'nothing', we have to keep the
     // shortcut active so that we know when the user presses the shortcut again.
-    if (sameShortcutBehavior !== 'nothing') {
+    if (sameShortcutBehavior === 'nothing') {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const shortcut = useID ? menu.shortcutID : menu.shortcut;
 

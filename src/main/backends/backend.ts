@@ -232,7 +232,7 @@ export abstract class Backend extends EventEmitter {
    * Temporarily disables a keyboard shortcut. What this does exactly, depends on the
    * backend: Ideally, it should unbind the given shortcut so that other applications can
    * use it. If this is not possible, backends may choose to just not emit the
-   * 'shortcutPressed' signal of the inhibited shortcut.
+   * 'shortcutPressed' signal for the inhibited shortcut.
    *
    * The returned inhibition ID must be used to release the inhibition again using
    * releaseInhibition() later.
@@ -240,9 +240,6 @@ export abstract class Backend extends EventEmitter {
    * Multiple inhibitions may be active at the same time. The backend must ensure that
    * shortcuts are only re-enabled when all inhibitions which disabled them have been
    * released.
-   *
-   * Backends may use the getEffectiveShortcuts() method to determine which shortcuts are
-   * currently effectively bound (i.e. bound but not inhibited by any active inhibition).
    *
    * @param shortcut A unique ID or key combination of the shortcut to inhibit. These are
    *   the same as the ones used in the bindShortcuts method.
@@ -273,20 +270,7 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when all shortcuts have been inhibited.
    */
   public async inhibitAllShortcuts(): Promise<number> {
-    const inhibitionID = this.nextInhibitionID++;
-
-    const previousEffectiveShortcuts = this.getEffectiveShortcuts();
-    this.inhibitedShortcuts.set(inhibitionID, '*');
-    const currentEffectiveShortcuts = this.getEffectiveShortcuts();
-
-    await this.onShortcutsChanged(
-      this.boundShortcuts,
-      this.boundShortcuts,
-      currentEffectiveShortcuts,
-      previousEffectiveShortcuts
-    );
-
-    return inhibitionID;
+    return this.inhibitShortcut('*');
   }
 
   /**
@@ -335,7 +319,8 @@ export abstract class Backend extends EventEmitter {
    *
    * @param currentShortcuts The shortcuts that should be bound now. Some of these may be
    *   inhibited and should therefore not lead to emitting the 'shortcutPressed' event.
-   * @param previousShortcuts The shortcuts that were bound before this call.
+   * @param previousShortcuts The shortcuts that were bound before this call. These may be
+   *   the same as currentShortcuts if only the inhibition state changed.
    * @param currentEffectiveShortcuts The list of currently effectively bound shortcuts.
    *   That is the list of all currently bound shortcuts minus the ones which are
    *   currently inhibited by any active inhibition.
