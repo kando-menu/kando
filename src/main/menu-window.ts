@@ -47,6 +47,12 @@ export class MenuWindow extends BrowserWindow {
   /** This is true if the window is currently visible. */
   private visible = false;
 
+  /**
+   * This is set to a value > 0 if we have currently inhibited the shortcut of the active
+   * menu.
+   */
+  private shortcutInhibitionID = 0;
+
   /** This will resolve once the window has fully loaded. */
   private windowLoaded = new Promise<void>((resolve) => {
     ipcMain.on('menu-window.ready', () => {
@@ -137,7 +143,7 @@ export class MenuWindow extends BrowserWindow {
    * @param systemIconsChanged True if the system icon theme has changed since the last
    *   time the menu was shown.
    */
-  public showMenu(
+  public async showMenu(
     request: Partial<ShowMenuRequest>,
     info: WMInfo,
     systemIconsChanged: boolean
@@ -197,16 +203,18 @@ export class MenuWindow extends BrowserWindow {
       return;
     }
 
-    // We inhibit the shortcut of the menu (if any) so that key-repeat events can be
-    // received by the renderer. These are necessary for the turbo-mode to work for
+    // We temporarily inhibit the shortcut of the menu (if any) so that key-repeat events
+    // can be received by the renderer. These are necessary for the turbo-mode to work for
     // single-key shortcuts. The shortcut is restored when the window is hidden.
     //
     // If 'sameShortcutBehavior' is set to anything but 'nothing', we have to keep the
     // shortcut active so that we know when the user presses the shortcut again.
-    if (!this.kando.allShortcutsInhibited() && sameShortcutBehavior === 'nothing') {
+    if (sameShortcutBehavior === 'nothing') {
       const useID = !this.kando.getBackend().getBackendInfo().supportsShortcuts;
       const shortcut = useID ? menu.shortcutID : menu.shortcut;
-      this.kando.getBackend().inhibitShortcuts([shortcut]);
+
+      // Push the current shortcuts to the stack and inhibit the menu's shortcut
+      this.shortcutInhibitionID = await this.kando.getBackend().inhibitShortcut(shortcut);
     }
 
     // Store the last menu to be able to execute the selected action later. The WMInfo
@@ -369,18 +377,17 @@ export class MenuWindow extends BrowserWindow {
   private async hideWindow() {
     this.visible = false;
 
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
+    }
+
+    // If we inhibited the menu's shortcut, we restore it now.
+    if (this.shortcutInhibitionID > 0) {
+      await this.kando.getBackend().releaseInhibition(this.shortcutInhibitionID);
+      this.shortcutInhibitionID = 0;
+    }
+
     return new Promise<void>((resolve) => {
-      if (this.hideTimeout) {
-        clearTimeout(this.hideTimeout);
-      }
-
-      // Restore any shortcuts which were inhibited when the menu was shown. If the
-      // shortcuts are inhibited globally (via the tray icon for instance), we do not
-      // restore them here.
-      if (!this.kando.allShortcutsInhibited()) {
-        this.kando.getBackend().inhibitShortcuts([]);
-      }
-
       this.hideTimeout = setTimeout(() => {
         if (process.platform === 'win32') {
           this.setIgnoreMouseEvents(true);

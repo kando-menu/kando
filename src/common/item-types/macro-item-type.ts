@@ -26,6 +26,7 @@ export type MacroEvent = {
 export type ItemData = {
   macro: MacroEvent[];
   delayed: boolean;
+  inhibitShortcuts: boolean;
 };
 
 /** This class provides meta information for menu items that simulate a macro. */
@@ -50,6 +51,7 @@ export class MacroItemType implements ItemType {
     return {
       macro: [],
       delayed: true,
+      inhibitShortcuts: false,
     };
   }
 

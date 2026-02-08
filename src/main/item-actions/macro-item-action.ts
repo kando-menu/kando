@@ -38,20 +38,20 @@ export class MacroItemAction implements ItemAction {
    * @returns A promise which resolves when the macro has been successfully simulated.
    */
   async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
-    return new Promise<void>((resolve, reject) => {
-      const data = item.data as ItemData;
+    const data = item.data as ItemData;
 
-      const keys: KeySequence = [];
+    const keys: KeySequence = [];
 
-      data.macro.forEach((event) => {
-        const delay = event.delay || 10;
-        const name = event.key;
-        const down = event.type === 'keyDown';
-        keys.push({ name, down, delay });
+    data.macro.forEach((event) => {
+      keys.push({
+        name: event.key,
+        down: event.type === 'keyDown',
+        delay: event.delay ?? 10,
       });
-
-      // Finally, we simulate the key presses using the backend.
-      app.getBackend().simulateKeys(keys).then(resolve, reject);
     });
+
+    const backend = app.getBackend();
+
+    await backend.simulateKeys(keys, data.inhibitShortcuts);
   }
 }

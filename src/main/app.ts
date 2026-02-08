@@ -73,8 +73,8 @@ export class KandoApp {
   private menuWindow?: MenuWindow;
   private settingsWindow?: SettingsWindow;
 
-  /** True if shortcuts are currently inhibited. */
-  private inhibitAllShortcuts = false;
+  /** Set to a value > 0 if shortcuts are currently inhibited. */
+  private inhibitAllShortcutsID = 0;
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
@@ -352,11 +352,6 @@ export class KandoApp {
     return this.settingsWindow?.isVisible();
   }
 
-  /** @returns True if the shortcuts are currently inhibited. */
-  public allShortcutsInhibited() {
-    return this.inhibitAllShortcuts;
-  }
-
   /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
@@ -389,7 +384,7 @@ export class KandoApp {
     }
 
     try {
-      this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
+      await this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
     } catch (error) {
       Notification.show({
         title: 'Failed to show menu',
@@ -1141,21 +1136,20 @@ export class KandoApp {
     });
 
     // Add an entry to pause or unpause the shortcuts.
-    if (this.inhibitAllShortcuts) {
+    if (this.inhibitAllShortcutsID > 0) {
       template.push({
         label: i18next.t('main.un-inhibit-shortcuts'),
-        click: () => {
-          this.inhibitAllShortcuts = false;
-          this.backend.inhibitShortcuts([]);
+        click: async () => {
+          await this.backend.releaseInhibition(this.inhibitAllShortcutsID);
+          this.inhibitAllShortcutsID = 0;
           this.updateTrayMenu();
         },
       });
     } else {
       template.push({
         label: i18next.t('main.inhibit-shortcuts'),
-        click: () => {
-          this.inhibitAllShortcuts = true;
-          this.backend.inhibitAllShortcuts();
+        click: async () => {
+          this.inhibitAllShortcutsID = await this.backend.inhibitAllShortcuts();
           this.updateTrayMenu();
         },
       });
