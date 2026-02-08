@@ -243,6 +243,13 @@ export default function MenuThemesDialog() {
               );
             }}
           />
+
+          <Button
+            isGrouped
+            icon={<TbFolderOpen />}
+            tooltip={i18next.t('settings.menu-themes-dialog.open-presets-directory')}
+            onClick={() => openPresetsDirectory(currentTheme.directory, currentTheme.id)}
+          />
         </div>
 
         {/* Color buttons for manual editing */}
@@ -371,12 +378,6 @@ export default function MenuThemesDialog() {
             icon={<TbFolderOpen />}
             label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
             onClick={openThemeDirectory}
-          />
-          <Button
-            isBlock
-            icon={<TbFolderOpen />}
-            label={i18next.t('settings.menu-themes-dialog.open-presets-directory')}
-            onClick={() => openPresetsDirectory(currentTheme.directory, currentTheme.id)}
           />
         </div>
         <Scrollbox maxHeight="min(80vh, 600px)" width="100%">
