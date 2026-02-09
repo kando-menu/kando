@@ -168,7 +168,9 @@
         },
         "common": {
             "delayed-option": "S'exécute après l'animation de sortie",
-            "delayed-option-info": "Utile si l'action cible une fenêtre qui doit être active."
+            "delayed-option-info": "Utile si l'action cible une fenêtre qui doit être active.",
+            "inhibit-shortcuts-info": "Désactive tous les raccourcis Kando pendant la simulation du raccourci clavier ou de la macro. Cela empêche la saisie simulée de déclencher accidentellement d'autres raccourcis de menu.",
+            "inhibit-shortcuts": "Désactiver les raccourcis"
         }
     },
     "settings": {
@@ -304,7 +306,9 @@
             "wlroots-pointer-get-timeout-touch-info": "Durée d'attente maximale en millisecondes pour recevoir la position du curseur tactile via des backends basés sur wlroots. Si le délai d'attente est atteint, une position de secours sera utilisée. La valeur par défaut est 1500 ms.",
             "wlroots-pointer-get-timeout-default-behavior": "Position de secours du curseur",
             "wlroots-pointer-get-timeout-default-behavior-info": "Détermine la position supposée du curseur si aucune position n'a pu être obtenue à partir des backends basés sur wlroots dans le délai configuré.",
-            "previously-reported": "Précédemment signalé"
+            "previously-reported": "Précédemment signalé",
+            "enable-achievement-notifications-info": "Si cette option est activée, des notifications s'affichent lorsque des succès sont débloqués.",
+            "enable-achievement-notifications": "Afficher les notifications de succès"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
@@ -467,7 +471,10 @@
             "in-progress-button": "En Cours",
             "completed-button": "Terminés",
             "reset-button-tooltip": "Réinitialiser tous les succès et la progression des niveaux"
-        }
+        },
+        "export-menu-error-title": "Échec de l'exportation du menu",
+        "import-menu-error-title": "Échec de l'importation du menu",
+        "import-menu-error-message": "Le fichier sélectionné n'a pas pu être importé. Il ne contient pas de menu Kando valide."
     },
     "achievements": {
         "attributes": {
