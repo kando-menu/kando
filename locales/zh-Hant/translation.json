@@ -126,7 +126,17 @@
             "restore-menus": "還原 menus.json…",
             "restore-settings": "還原 config.json…",
             "enable-achievements-info": "啟用後，Kando 將會記錄您的成就進度。",
-            "enable-achievements": "記錄成就"
+            "enable-achievements": "記錄成就",
+            "center": "置中",
+            "wlroots-specific-options": "wlroots 後端選項",
+            "options-that-will-only-affect-the-wlroots-backend": "這些選項只會影響基於 wlroots 的後端，對其他後端無效。",
+            "wlroots-pointer-get-timeout-mouse": "取得指標位置逾時",
+            "wlroots-pointer-get-timeout-mouse-info": "等待 wlroots 後端回傳滑鼠指標位置的最長時間（毫秒）。若超過此時間將使用備用位置。預設值為 500 毫秒。",
+            "wlroots-pointer-get-timeout-touch": "取得觸控位置逾時",
+            "wlroots-pointer-get-timeout-touch-info": "等待 wlroots 後端回傳觸控位置的最長時間（毫秒）。若超過此時間將使用備用位置。預設值為 1500 毫秒。",
+            "wlroots-pointer-get-timeout-default-behavior": "指標備用位置",
+            "wlroots-pointer-get-timeout-default-behavior-info": "決定若在設定時間內無法從 wlroots 後端取得位置時，指標應位於何處。",
+            "previously-reported": "先前已回報"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
@@ -281,7 +291,11 @@
             "reset-button-tooltip": "重設所有成就與等級進度",
             "no-in-progress-achievements": "恭喜！您已完成所有成就。",
             "no-completed-achievements": "您尚未完成任何成就。"
-        }
+        },
+        "export-menu": "匯出選單",
+        "import-menu": "匯入選單",
+        "import-menu-error-title": "匯入選單失敗",
+        "import-menu-error-message": "無法匯入所選檔案。該檔案並非自 Kando 匯出的有效選單。"
     },
     "menu-items": {
         "text": {
