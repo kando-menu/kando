@@ -12,6 +12,7 @@ import i18next from 'i18next';
 import { app } from 'electron';
 import fs from 'fs';
 import DBus from 'dbus-final';
+import lodash from 'lodash';
 import { exec } from 'child_process';
 
 import { LinuxBackend } from '../../backend';
@@ -117,7 +118,7 @@ export class KDEWaylandBackend extends LinuxBackend {
     // unbinding them, we only prevent the action from being executed if the shortcut
     // is in the inhibitedShortcuts array.
     const onShortcutActivated = (shortcutID: string) => {
-      if (!this.getInhibitedShortcuts().includes(shortcutID)) {
+      if (!this.isShortcutInhibited(shortcutID)) {
         this.onShortcutPressed(shortcutID);
       }
     };
@@ -201,7 +202,7 @@ export class KDEWaylandBackend extends LinuxBackend {
    *
    * @param shortcut The keys to simulate.
    */
-  public async simulateKeys(keys: KeySequence): Promise<void> {
+  protected override async simulateKeysImpl(keys: KeySequence) {
     // We first need to convert the given DOM key names to X11 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'linux');
@@ -224,22 +225,27 @@ export class KDEWaylandBackend extends LinuxBackend {
    * portal if it is available. If it is not available, it falls back to a KWin script
    * which registers the shortcuts via the KWin scripting interface.
    *
-   * @param shortcuts The shortcuts that should be bound now.
-   * @param previouslyBound The shortcuts that were bound before this call.
-   * @returns A promise which resolves when the shortcuts have been bound.
+   * @param currentShortcuts The shortcuts that should be bound now. Some of these may be
+   *   inhibited and should therefore not lead to emitting the 'shortcutPressed' event.
+   * @param previousShortcuts The shortcuts that were bound before this call.
+   * @returns A promise which resolves when the shortcuts have been updated.
    */
-  protected override async bindShortcutsImpl(
-    shortcuts: string[],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    previouslyBound: string[]
-  ) {
+  protected override async onShortcutsChanged(
+    currentShortcuts: string[],
+    previousShortcuts: string[]
+  ): Promise<void> {
+    // No need to do anything if the shortcuts did not change.
+    if (lodash.isEqual(currentShortcuts, previousShortcuts)) {
+      return;
+    }
+
     // If the global shortcuts portal is available, we use it to bind the shortcuts.
     if (this.globalShortcutsAvailable) {
-      return this.bindShortcutsViaPortal(shortcuts);
+      return this.bindShortcutsViaPortal(currentShortcuts);
     }
 
     // Otherwise, we use the KWin scripting interface to bind the shortcuts.
-    return this.bindShortcutsViaKWin(shortcuts);
+    return this.bindShortcutsViaKWin(currentShortcuts);
   }
 
   /**

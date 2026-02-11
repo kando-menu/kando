@@ -50,7 +50,7 @@ export class TextItemAction implements ItemAction {
         { name: ctrl, down: false, delay: 10 },
       ];
 
-      app.getBackend().simulateKeys(ctrlV);
+      app.getBackend().simulateKeys(ctrlV, true);
     }
   }
 }

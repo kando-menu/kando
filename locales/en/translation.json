@@ -33,6 +33,9 @@
     "restore-menu-settings-error-title": "Failed to load menus backup!",
     "restore-menu-settings-success-title": "Success!",
     "restore-menu-settings-success-message": "Your menus and menu collections have been restored from the backup file.",
+    "export-menu-error-title": "Failed to export menu",
+    "import-menu-error-title": "Failed to import menu",
+    "import-menu-error-message": "The selected file could not be imported. It does not contain a valid Kando exported menu.",
     "not-bound": "Not Bound",
     "invalid-dropdown-selection": "Select an option…",
     "file-picker": {
@@ -91,6 +94,8 @@
       "lazy-initialization": "Lazy initialization",
       "enable-achievements-info": "If enabled, Kando will track your progress towards achievements.",
       "enable-achievements": "Track achievements",
+      "enable-achievement-notifications-info": "If enabled, notifications are shown when achievements are unlocked.",
+      "enable-achievement-notifications": "Show achievement notifications",
       "menu-behavior": "Menu Behavior",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
       "keep-input-focus": "Keep active application focused",
@@ -136,6 +141,16 @@
       "gesture-pause-timeout": "Gesture Pause Timeout",
       "fixed-stroke-length-info": "Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px.",
       "fixed-stroke-length": "Fixed Stroke Length",
+      "wlroots-specific-options": "Options for wlroots-based Backends",
+      "options-that-will-only-affect-the-wlroots-backend": "These options only affect wlroots-based backends and have no effect on other backends.",
+      "wlroots-pointer-get-timeout-mouse-info": "The maximum time in milliseconds to wait for a mouse pointer position from wlroots-based backends. If the timeout is reached, a fallback position will be used. Default is 500ms.",
+      "wlroots-pointer-get-timeout-mouse": "Get-pointer-position timeout",
+      "wlroots-pointer-get-timeout-touch-info": "The maximum time in milliseconds to wait for a touch pointer position from wlroots-based backends. If the timeout is reached, a fallback position will be used. Default is 1500ms.",
+      "wlroots-pointer-get-timeout-touch": "Get-touch-position timeout",
+      "wlroots-pointer-get-timeout-default-behavior-info": "Determines where the pointer should be assumed to be if no position could be obtained from the wlroots-based backends within the configured timeout.",
+      "wlroots-pointer-get-timeout-default-behavior": "Pointer fallback position",
+      "center": "Center",
+      "previously-reported": "Previously reported",
       "backup-and-restore": "Backup and Restore",
       "message": "All your menus and Kando's settings are stored in two JSON files which you can also edit, share, or backup. Click [here]({{link}}) to open the directory where the files are stored.",
       "backup-menus": "Backup menus.json…",
@@ -215,6 +230,8 @@
     "empty-collection-note": "Edit the tags above or add a completely new menu to this collection with the button below.",
     "create-menu-button": "New menu",
     "duplicate-menu": "Duplicate menu",
+    "export-menu": "Export menu",
+    "import-menu": "Import menu",
     "delete-menu": "Delete menu",
     "add-menu-item-hint": "Drag this item to add it to the menu above!",
     "add-menu-items": "Add Menu Items",
@@ -357,7 +374,9 @@
     },
     "common": {
       "delayed-option-info": "Useful if the action targets a window that needs to be focused.",
-      "delayed-option": "Wait for fade-out animation"
+      "delayed-option": "Wait for fade-out animation",
+      "inhibit-shortcuts-info": "Disables all Kando shortcuts while the hotkey or macro is being simulated. This prevents the simulated input from accidentally triggering other menu shortcuts.",
+      "inhibit-shortcuts": "Disable shortcuts"
     }
   },
   "achievements": {

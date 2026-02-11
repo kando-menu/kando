@@ -37,26 +37,26 @@ export class HotkeyItemAction implements ItemAction {
    * @returns A promise which resolves when the hotkey has been successfully simulated.
    */
   async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
-    return new Promise<void>((resolve, reject) => {
-      const keyNames = (item.data as ItemData).hotkey.split('+');
+    const data = item.data as ItemData;
+    const keyNames = data.hotkey.split('+');
 
-      // We simulate the key press by first pressing all keys and then releasing
-      // them again. We add a small delay between the key presses to make sure
-      // that the keys are pressed in the correct order.
-      const keys: KeySequence = [];
+    // We simulate the key press by first pressing all keys and then releasing
+    // them again. We add a small delay between the key presses to make sure
+    // that the keys are pressed in the correct order.
+    const keys: KeySequence = [];
 
-      // First press all keys.
-      for (const key of keyNames) {
-        keys.push({ name: key, down: true, delay: 10 });
-      }
+    // First press all keys.
+    for (const key of keyNames) {
+      keys.push({ name: key, down: true, delay: 10 });
+    }
 
-      // Then release all keys.
-      for (const key of keyNames) {
-        keys.push({ name: key, down: false, delay: 10 });
-      }
+    // Then release all keys.
+    for (const key of keyNames) {
+      keys.push({ name: key, down: false, delay: 10 });
+    }
 
-      // Finally, we simulate the key presses using the backend.
-      app.getBackend().simulateKeys(keys).then(resolve, reject);
-    });
+    const backend = app.getBackend();
+
+    await backend.simulateKeys(keys, data.inhibitShortcuts);
   }
 }

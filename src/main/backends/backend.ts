@@ -13,7 +13,15 @@ import { globalShortcut } from 'electron';
 import lodash from 'lodash';
 import mime from 'mime-types';
 
-import { BackendInfo, KeySequence, WMInfo, MenuItem, AppDescription } from '../../common';
+import {
+  BackendInfo,
+  KeySequence,
+  WMInfo,
+  MenuItem,
+  AppDescription,
+  GeneralSettings,
+} from '../../common';
+import { Settings } from '../settings';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
@@ -29,10 +37,16 @@ import { BackendInfo, KeySequence, WMInfo, MenuItem, AppDescription } from '../.
  */
 export abstract class Backend extends EventEmitter {
   /** A list of all shortcuts which are currently bound. */
-  private shortcuts: string[] = [];
+  private boundShortcuts: string[] = [];
 
-  /** A list of all shortcuts which are currently inhibited. */
-  private inhibitedShortcuts: string[] = [];
+  /**
+   * A map of all shortcuts which are currently inhibited. The keys are the inhibition IDs
+   * which were returned by inhibitShortcuts().
+   */
+  private inhibitedShortcuts: Map<number, string> = new Map();
+
+  /** The next inhibition ID to be used. */
+  private nextInhibitionID: number = 1;
 
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
@@ -48,7 +62,7 @@ export abstract class Backend extends EventEmitter {
    *
    * @returns A promise which resolves when the backend is ready to be used.
    */
-  public abstract init(): Promise<void>;
+  public abstract init(generalSettings: Settings<GeneralSettings>): Promise<void>;
 
   /**
    * This method will be called when Kando is about to exit. It can be used to disconnect
@@ -162,9 +176,23 @@ export abstract class Backend extends EventEmitter {
    * keyboard macros.
    *
    * @param keys The keys to simulate.
+   * @param inhibitShortcuts If true, all currently bound shortcuts should be inhibited
+   *   while simulating the key sequence.
    * @returns A promise which resolves when the key sequence has been simulated.
    */
-  public abstract simulateKeys(keys: KeySequence): Promise<void>;
+  public async simulateKeys(keys: KeySequence, inhibitShortcuts: boolean): Promise<void> {
+    let inhibitionID = 0;
+
+    if (inhibitShortcuts) {
+      inhibitionID = await this.inhibitAllShortcuts();
+    }
+
+    await this.simulateKeysImpl(keys);
+
+    if (inhibitShortcuts) {
+      await this.releaseInhibition(inhibitionID);
+    }
+  }
 
   /**
    * This binds the given shortcuts globally. What the shortcut strings look like depends
@@ -181,75 +209,93 @@ export abstract class Backend extends EventEmitter {
    * Calling this method will override all previously bound shortcuts. So calling this
    * method with an empty array will unbind all previously bound shortcuts.
    *
-   * If any shortcuts are currently inhibited, they will be restored if they are again in
-   * the new sets of to-be-bound shortcuts.
-   *
    * @param shortcuts The shortcuts to bind (IDs or key combinations as described above).
    * @returns A promise which resolves when the shortcuts have been bound.
    */
   public async bindShortcuts(shortcuts: string[]): Promise<void> {
-    await this.inhibitShortcuts([]);
+    if (!lodash.isEqual(shortcuts, this.boundShortcuts)) {
+      const previousShortcuts = Array.from(this.boundShortcuts);
+      const previousEffectiveShortcuts = this.getEffectiveShortcuts();
+      this.boundShortcuts = shortcuts;
+      const currentEffectiveShortcuts = this.getEffectiveShortcuts();
 
-    if (!lodash.isEqual(shortcuts, this.shortcuts)) {
-      await this.bindShortcutsImpl(shortcuts, this.shortcuts);
-      this.shortcuts = shortcuts;
+      await this.onShortcutsChanged(
+        shortcuts,
+        previousShortcuts,
+        currentEffectiveShortcuts,
+        previousEffectiveShortcuts
+      );
     }
   }
 
   /**
-   * Temporarily disables some keyboard shortcuts. What this does exactly, depends on the
-   * backend: Ideally, it should unbind all given shortcuts so that other applications can
-   * use them. If this is not possible, backends may choose to just not emit the
-   * 'shortcutPressed' signal of the inhibited shortcuts.
+   * Temporarily disables a keyboard shortcut. What this does exactly, depends on the
+   * backend: Ideally, it should unbind the given shortcut so that other applications can
+   * use it. If this is not possible, backends may choose to just not emit the
+   * 'shortcutPressed' signal for the inhibited shortcut.
    *
-   * Calling this method multiple times will override the previously inhibited shortcuts.
-   * So calling this method with an empty array restores all previously inhibited
-   * shortcuts.
+   * The returned inhibition ID must be used to release the inhibition again using
+   * releaseInhibition() later.
    *
-   * @param shortcuts An array of strings containing the unique IDs or key combinations of
-   *   the shortcuts to inhibit. These are the same as the ones used in the bindShortcuts
-   *   method.
-   * @returns A promise which resolves when the shortcuts have been inhibited.
+   * Multiple inhibitions may be active at the same time. The backend must ensure that
+   * shortcuts are only re-enabled when all inhibitions which disabled them have been
+   * released.
+   *
+   * @param shortcut A unique ID or key combination of the shortcut to inhibit. These are
+   *   the same as the ones used in the bindShortcuts method.
+   * @returns A promise which resolves to an inhibition ID which must be used to release
+   *   the inhibition later.
    */
-  public async inhibitShortcuts(shortcuts: string[]): Promise<void> {
-    if (!lodash.isEqual(shortcuts, this.inhibitedShortcuts)) {
-      await this.inhibitShortcutsImpl(shortcuts, this.inhibitedShortcuts);
-      this.inhibitedShortcuts = shortcuts;
-    }
+  public async inhibitShortcut(shortcut: string): Promise<number> {
+    const inhibitionID = this.nextInhibitionID++;
+
+    const previousEffectiveShortcuts = this.getEffectiveShortcuts();
+    this.inhibitedShortcuts.set(inhibitionID, shortcut);
+    const currentEffectiveShortcuts = this.getEffectiveShortcuts();
+
+    await this.onShortcutsChanged(
+      this.boundShortcuts,
+      this.boundShortcuts,
+      currentEffectiveShortcuts,
+      previousEffectiveShortcuts
+    );
+
+    return inhibitionID;
   }
 
   /**
-   * A convenience method to inhibit all currently bound shortcuts.
+   * It is also possible to inhibit all currently bound shortcuts at once using this
+   * method.
    *
    * @returns A promise which resolves when all shortcuts have been inhibited.
    */
-  public async inhibitAllShortcuts(): Promise<void> {
-    if (!lodash.isEqual(this.shortcuts, this.inhibitedShortcuts)) {
-      await this.inhibitShortcutsImpl(this.shortcuts, this.inhibitedShortcuts);
-      this.inhibitedShortcuts = [...this.shortcuts];
+  public async inhibitAllShortcuts(): Promise<number> {
+    return this.inhibitShortcut('*');
+  }
+
+  /**
+   * Releases a previously created inhibition.
+   *
+   * @param inhibitionID The inhibition ID that was returned by inhibitShortcut() or
+   *   inhibitAllShortcuts().
+   * @returns A promise which resolves when the inhibition has been released.
+   */
+  public async releaseInhibition(inhibitionID: number): Promise<void> {
+    if (!this.inhibitedShortcuts.has(inhibitionID)) {
+      console.warn(`Tried to release unknown shortcut inhibition ID ${inhibitionID}!`);
+      return;
     }
-  }
 
-  /**
-   * This returns the currently bound shortcuts. These are the same strings as used in the
-   * bindShortcuts method.
-   *
-   * @returns An array of strings containing the unique IDs or key combinations of the
-   *   currently bound shortcuts.
-   */
-  public getBoundShortcuts(): string[] {
-    return this.shortcuts;
-  }
+    const previousEffectiveShortcuts = this.getEffectiveShortcuts();
+    this.inhibitedShortcuts.delete(inhibitionID);
+    const currentEffectiveShortcuts = this.getEffectiveShortcuts();
 
-  /**
-   * This returns the currently inhibited shortcuts. These are the same strings as used in
-   * the inhibitShortcuts method.
-   *
-   * @returns An array of strings containing the unique IDs or key combinations of the
-   *   currently inhibited shortcuts.
-   */
-  public getInhibitedShortcuts(): string[] {
-    return this.inhibitedShortcuts;
+    await this.onShortcutsChanged(
+      this.boundShortcuts,
+      this.boundShortcuts,
+      currentEffectiveShortcuts,
+      previousEffectiveShortcuts
+    );
   }
 
   /**
@@ -263,29 +309,43 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
-   * This method is called by the bindShortcuts method to actually bind the shortcuts. The
-   * implementation in this class uses Electron's globalShortcut module, however, this
-   * does not work on all platforms. Therefore, derived backends can override this method
-   * to provide their own binding logic.
+   * This method is called by the bind-shortcuts and inhibit-shortcuts methods above to
+   * actually bind the shortcuts. The implementation in this class uses Electron's
+   * globalShortcut module, however, this does not work on all platforms. Therefore,
+   * derived backends can override this method to provide their own binding logic.
    *
-   * This method will never be called with the same shortcuts for both arguments.
+   * Depending on whether the shortcuts got inhibited or bound, the parameters have the
+   * following meaning:
    *
-   * @param shortcuts The shortcuts that should be bound now.
-   * @param previouslyBound The shortcuts that were bound before this call.
-   * @returns A promise which resolves when the shortcuts have been bound.
+   * @param currentShortcuts The shortcuts that should be bound now. Some of these may be
+   *   inhibited and should therefore not lead to emitting the 'shortcutPressed' event.
+   * @param previousShortcuts The shortcuts that were bound before this call. These may be
+   *   the same as currentShortcuts if only the inhibition state changed.
+   * @param currentEffectiveShortcuts The list of currently effectively bound shortcuts.
+   *   That is the list of all currently bound shortcuts minus the ones which are
+   *   currently inhibited by any active inhibition.
+   * @param previousEffectiveShortcuts The list of shortcuts which were effectively bound
+   *   before this call.
+   * @returns A promise which resolves when the shortcuts have been updated.
    */
-  protected async bindShortcutsImpl(
-    shortcuts: string[],
-    previouslyBound: string[]
+  protected async onShortcutsChanged(
+    currentShortcuts: string[],
+    previousShortcuts: string[],
+    currentEffectiveShortcuts: string[],
+    previousEffectiveShortcuts: string[]
   ): Promise<void> {
     // Use a shortcut if we unbind all shortcuts :)
-    if (shortcuts.length === 0) {
+    if (currentEffectiveShortcuts.length === 0) {
       globalShortcut.unregisterAll();
       return;
     }
 
-    const shortcutsToUnbind = previouslyBound.filter((s) => !shortcuts.includes(s));
-    const shortcutsToBind = shortcuts.filter((s) => !previouslyBound.includes(s));
+    const shortcutsToUnbind = previousEffectiveShortcuts.filter(
+      (s) => !currentEffectiveShortcuts.includes(s)
+    );
+    const shortcutsToBind = currentEffectiveShortcuts.filter(
+      (s) => !previousEffectiveShortcuts.includes(s)
+    );
 
     // Unbind the obsolete shortcuts.
     for (const shortcut of shortcutsToUnbind) {
@@ -301,38 +361,48 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
-   * This method is called by the inhibitShortcuts method to actually inhibit the
-   * shortcuts. This implementation uses the bindShortcutsImpl method to simply unbind
-   * shortcuts which are supposed to be inhibited. However, this does not work on all
-   * platforms. Some platforms, like KDE Wayland cannot silently change the set of global
-   * shortcuts. Such platforms can override this method and choose to not unbind the
-   * shortcuts, but rather just not emit the 'shortcutPressed' event for the inhibited
-   * shortcuts.
+   * Each backend must provide a way to simulate a key sequence. This is used to execute
+   * keyboard macros.
    *
-   * This method will never be called with the same shortcuts for both arguments.
-   *
-   * @param shortcuts The shortcuts that should be inhibited now.
-   * @param previouslyInhibited The shortcuts that were inhibited before this call.
-   * @returns A promise which resolves when the shortcuts have been inhibited.
+   * @param keys The keys to simulate.
+   * @returns A promise which resolves when the key sequence has been simulated.
    */
-  protected async inhibitShortcutsImpl(
-    shortcuts: string[],
-    previouslyInhibited: string[]
-  ): Promise<void> {
-    // Assemble a list of shortcuts that were actually bound before this call. This is the
-    // bound shortcuts minus the ones that are currently inhibited.
-    const boundShortcuts = this.getBoundShortcuts().filter(
-      (s) => !previouslyInhibited.includes(s)
-    );
+  protected abstract simulateKeysImpl(keys: KeySequence): Promise<void>;
 
-    // Assemble a list of shortcuts that should be bound after this call. This is the
-    // bound shortcuts minus the ones that are supposed to be inhibited.
-    const shortcutsToBind = this.getBoundShortcuts().filter(
-      (s) => !shortcuts.includes(s)
-    );
+  /**
+   * A helper method which returns whether the given shortcut is currently inhibited.
+   *
+   * @param shortcut The shortcut to check.
+   * @returns True if the shortcut is currently inhibited, false otherwise.
+   */
+  protected isShortcutInhibited(shortcut: string): boolean {
+    const inhibitedShortcuts = Array.from(this.inhibitedShortcuts.values());
 
-    // Now use the bindShortcutsImpl method to unbind the inhibited shortcuts and
-    // rebind the ones which are not inhibited anymore.
-    await this.bindShortcutsImpl(shortcutsToBind, boundShortcuts);
+    // If all shortcuts are inhibited, return true.
+    if (inhibitedShortcuts.includes('*')) {
+      return true;
+    }
+
+    // Otherwise, check if the given shortcut is in the list of inhibited shortcuts.
+    return inhibitedShortcuts.includes(shortcut);
+  }
+
+  /**
+   * A helper method which returns the list of currently effectively bound shortcuts. This
+   * means the list of all bound shortcuts minus the ones which are currently inhibited by
+   * any active inhibition.
+   *
+   * @returns The list of currently effectively bound shortcuts.
+   */
+  private getEffectiveShortcuts(): string[] {
+    const inhibitedShortcuts = Array.from(this.inhibitedShortcuts.values());
+
+    // If all shortcuts are inhibited, return an empty list.
+    if (inhibitedShortcuts.includes('*')) {
+      return [];
+    }
+
+    // Otherwise, return the bound shortcuts minus the inhibited ones.
+    return this.boundShortcuts.filter((s) => !inhibitedShortcuts.includes(s));
   }
 }

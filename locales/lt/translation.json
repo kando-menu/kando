@@ -188,7 +188,7 @@
         "app-condition-tooltip": "Pasirinkti programą",
         "window-condition-tooltip": "Pasirinkti langą",
         "area-condition-tooltip": "Pasirinkti ekrano sritį",
-        "duplicate-menu-item": "",
+        "duplicate-menu-item": "Dubliuoti meniu elementą",
         "screen-area-picker": {
             "confirm": "Naudoti šią sritį"
         },

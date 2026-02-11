@@ -10,10 +10,14 @@
 
 import i18next from 'i18next';
 import { exec } from 'child_process';
+import lodash from 'lodash';
 
 import { WLRBackend } from '../wlroots/backend';
 import { GlobalShortcuts } from '../portals/global-shortcuts';
 import { screen } from 'electron';
+
+import { GeneralSettings } from '../../../../common';
+import { Settings } from '../../../../main/settings';
 
 /**
  * This backend is used on Niri. It uses the generic wlroots backend and adds the missing
@@ -42,7 +46,7 @@ export class NiriBackend extends WLRBackend {
    * This is called when the backend is created. We use it to print a warning, as the user
    * still needs to set up some window rules and bind the shortcuts.
    */
-  public async init() {
+  public async init(generalSettings: Settings<GeneralSettings>) {
     console.log(
       `
 The Niri backend is still a bit experimental!
@@ -54,10 +58,13 @@ for more information.
 
     // Emit the 'shortcutPressed' event when a shortcut is activated.
     this.globalShortcuts.on('ShortcutActivated', (shortcutID: string) => {
-      if (!this.getInhibitedShortcuts().includes(shortcutID)) {
+      if (!this.isShortcutInhibited(shortcutID)) {
         this.onShortcutPressed(shortcutID);
       }
     });
+
+    // Set timeout options
+    this.generalSettings = generalSettings;
   }
 
   /** Nothing to be done here. */
@@ -109,22 +116,22 @@ for more information.
    * This method binds the given global shortcuts. It uses the global-shortcuts desktop
    * portal.
    *
-   * @param shortcuts The shortcuts that should be bound now.
-   * @param previouslyBound The shortcuts that were bound before this call.
-   * @returns A promise which resolves when the shortcuts have been bound.
+   * @param currentShortcuts The shortcuts that should be bound now. Some of these may be
+   *   inhibited and should therefore not lead to emitting the 'shortcutPressed' event.
+   * @param previousShortcuts The shortcuts that were bound before this call.
+   * @returns A promise which resolves when the shortcuts have been updated.
    */
-  protected override async bindShortcutsImpl(
-    shortcuts: string[],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    previouslyBound: string[]
-  ) {
-    // Nothing to do if no shortcuts are given.
-    if (shortcuts.length === 0) {
+  protected override async onShortcutsChanged(
+    currentShortcuts: string[],
+    previousShortcuts: string[]
+  ): Promise<void> {
+    // No need to do anything if the shortcuts did not change.
+    if (lodash.isEqual(currentShortcuts, previousShortcuts)) {
       return;
     }
 
     this.globalShortcuts.bindShortcuts(
-      shortcuts.map((shortcut) => {
+      currentShortcuts.map((shortcut) => {
         return {
           id: shortcut,
           description: 'Open the Kando menu with ID "' + shortcut + '"',

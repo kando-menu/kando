@@ -207,7 +207,7 @@ export class WindowsBackend extends Backend {
    *
    * @param keys The keys to simulate.
    */
-  public override async simulateKeys(keys: KeySequence) {
+  protected override async simulateKeysImpl(keys: KeySequence) {
     // We first need to convert the given DOM key names to Win32 key codes. If a key code is
     // not found, this throws an error.
     const keyCodes = mapKeys(keys, 'windows');

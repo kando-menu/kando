@@ -10,6 +10,7 @@
 
 import os from 'node:os';
 import fs from 'fs';
+import fsExtra from 'fs-extra';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
@@ -44,6 +45,11 @@ import {
   tryLoadMenuSettingsFile,
 } from './settings';
 import { IPCServer } from '../common/ipc';
+import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
+import {
+  EXPORTED_MENU_SCHEMA_V1,
+  ExportedMenuV1,
+} from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
@@ -64,8 +70,8 @@ export class KandoApp {
   private menuWindow?: MenuWindow;
   private settingsWindow?: SettingsWindow;
 
-  /** True if shortcuts are currently inhibited. */
-  private inhibitAllShortcuts = false;
+  /** Set to a value > 0 if shortcuts are currently inhibited. */
+  private inhibitAllShortcutsID = 0;
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
@@ -256,18 +262,20 @@ export class KandoApp {
     this.achievementTracker = new AchievementTracker(this.generalSettings);
 
     this.achievementTracker.on('completed', (achievement) => {
-      Notification.show({
-        title: i18next.t('achievements.completed-title'),
-        message: achievement.name,
-        onClick: () => {
-          this.showSettings();
-          this.settingsWindow.onWindowLoaded.then(() => {
-            this.settingsWindow.webContents.send(
-              'settings-window.show-achievements-dialog'
-            );
-          });
-        },
-      });
+      if (this.generalSettings.get('enableAchievementNotifications')) {
+        Notification.show({
+          title: i18next.t('achievements.completed-title'),
+          message: achievement.name,
+          onClick: () => {
+            this.showSettings();
+            this.settingsWindow.onWindowLoaded.then(() => {
+              this.settingsWindow.webContents.send(
+                'settings-window.show-achievements-dialog'
+              );
+            });
+          },
+        });
+      }
     });
 
     this.achievementTracker.on('progress-changed', () => {
@@ -376,11 +384,6 @@ export class KandoApp {
     return this.settingsWindow?.isVisible();
   }
 
-  /** @returns True if the shortcuts are currently inhibited. */
-  public allShortcutsInhibited() {
-    return this.inhibitAllShortcuts;
-  }
-
   /**
    * This is usually called when the user presses the shortcut. However, it can also be
    * called for other reasons, e.g. when the user runs the app a second time. It will get
@@ -413,7 +416,7 @@ export class KandoApp {
     }
 
     try {
-      this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
+      await this.menuWindow.showMenu(request, this.lastWMInfo, systemIconsChanged);
     } catch (error) {
       Notification.show({
         title: 'Failed to show menu',
@@ -859,6 +862,115 @@ export class KandoApp {
       );
     });
 
+    // Export a single menu to a JSON file. If no filePath is provided, show a save
+    // dialog.
+    ipcMain.handle('settings-window.export-menu', async (event, menuIndex: number) => {
+      const settings = this.menuSettings.get();
+
+      if (menuIndex < 0 || menuIndex >= settings.menus.length) {
+        console.error('Failed to export menu: Invalid menu index.');
+        return false;
+      }
+
+      // We only export the root menu item (so exported files stay compact and don't
+      // include local UI flags like centered/anchored/hoverMode). This also makes future
+      // extensions easier.
+      const menu = settings.menus[menuIndex];
+      const menuData: ExportedMenuV1 = {
+        version: settings.version,
+        menu: menu.root as MenuItem,
+      };
+
+      try {
+        const result = await dialog.showSaveDialog(this.settingsWindow, {
+          defaultPath: `${menu.root.name}.json`,
+          filters: [{ name: 'JSON', extensions: ['json'] }],
+        });
+
+        if (result.canceled || !result.filePath) {
+          return false;
+        }
+
+        fs.writeFileSync(result.filePath, JSON.stringify(menuData, null, 2), 'utf-8');
+        return true;
+      } catch (error) {
+        console.error('Failed to export menu:', error);
+        await dialog.showMessageBox(this.settingsWindow, {
+          type: 'error',
+          title: i18next.t('settings.export-menu-error-title', 'Failed to export menu'),
+          message: 'Failed to export menu.',
+          detail: error instanceof Error ? error.message : String(error),
+        });
+        return false;
+      }
+    });
+
+    // Import a menu from a JSON file
+    ipcMain.handle('settings-window.import-menu', async () => {
+      const result = await dialog.showOpenDialog(this.settingsWindow, {
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+
+      if (result.canceled || !result.filePaths[0]) {
+        return false;
+      }
+
+      try {
+        const content = fsExtra.readJsonSync(result.filePaths[0], 'utf-8');
+
+        // Validate the exported file format first (version + root menu item)
+        const exported = EXPORTED_MENU_SCHEMA_V1.parse(content, { reportInput: true });
+
+        // Convert the exported root into a full MENU object so defaults (like
+        // centered/anchored/hoverMode and shortcut fields) are applied.
+        const validatedMenu = MENU_SCHEMA_V1.parse(
+          { root: exported.menu },
+          { reportInput: true }
+        );
+
+        // Add the menu to the settings
+        const settings = this.menuSettings.get();
+        const newMenus = [...settings.menus, validatedMenu];
+
+        // Update the settings
+        this.menuSettings.set({ menus: newMenus as Partial<MenuSettings>['menus'] });
+
+        return true;
+      } catch (error) {
+        console.error('Error importing menu:', error);
+
+        let detail = error instanceof Error ? error.message : String(error);
+
+        // If this is a schema/validation error, try to extract useful messages.
+        if (
+          error &&
+          (
+            error as unknown as {
+              issues?: { path?: (string | number)[]; message: string }[];
+            }
+          ).issues
+        ) {
+          const issues = (
+            error as unknown as {
+              issues: { path?: (string | number)[]; message: string }[];
+            }
+          ).issues;
+          detail = issues
+            .map((issue) => `${issue.path?.join('.') || '<root>'}: ${issue.message}`)
+            .join('\n');
+        }
+
+        await dialog.showMessageBox(this.settingsWindow, {
+          type: 'error',
+          title: i18next.t('settings.import-menu-error-title'),
+          message: i18next.t('settings.import-menu-error-message'),
+          detail,
+        });
+
+        return false;
+      }
+    });
+
     // Allow the renderer to retrieve the i18next locales.
     ipcMain.handle('common.get-locales', () => {
       return {
@@ -1066,21 +1178,20 @@ export class KandoApp {
     });
 
     // Add an entry to pause or unpause the shortcuts.
-    if (this.inhibitAllShortcuts) {
+    if (this.inhibitAllShortcutsID > 0) {
       template.push({
         label: i18next.t('main.un-inhibit-shortcuts'),
-        click: () => {
-          this.inhibitAllShortcuts = false;
-          this.backend.inhibitShortcuts([]);
+        click: async () => {
+          await this.backend.releaseInhibition(this.inhibitAllShortcutsID);
+          this.inhibitAllShortcutsID = 0;
           this.updateTrayMenu();
         },
       });
     } else {
       template.push({
         label: i18next.t('main.inhibit-shortcuts'),
-        click: () => {
-          this.inhibitAllShortcuts = true;
-          this.backend.inhibitAllShortcuts();
+        click: async () => {
+          this.inhibitAllShortcutsID = await this.backend.inhibitAllShortcuts();
           this.updateTrayMenu();
         },
       });

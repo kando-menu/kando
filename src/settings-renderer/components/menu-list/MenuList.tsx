@@ -15,7 +15,7 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus } from 'react-icons/tb';
+import { TbPlus, TbCopy, TbTrash, TbDownload, TbUpload } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -345,7 +345,7 @@ export default function MenuList() {
                                 icon: 'upload_2',
                                 iconTheme: 'material-symbols-rounded',
                                 callback: () => {
-                                  console.log('Export triggered');
+                                  window.settingsAPI.exportMenu(selectedMenu);
                                 },
                               },
                             ]
@@ -371,6 +371,16 @@ export default function MenuList() {
             onClick={() => {
               addMenu(menuCollections[selectedCollection]?.tags || []);
               selectMenu(menus.length);
+            }}
+          />
+          <Button
+            isGrouped
+            icon={<TbDownload />}
+            size="large"
+            tooltip={i18next.t('settings.import-menu')}
+            variant="floating"
+            onClick={() => {
+              window.settingsAPI.importMenu();
             }}
           />
         </div>
