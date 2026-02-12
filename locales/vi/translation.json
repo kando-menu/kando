@@ -137,7 +137,19 @@
             "menu-window-dev-tools": "Kiểm tra menu",
             "settings-window-dev-tools": "Kiểm tra cài đặt",
             "enable-achievements-info": "Nếu đã bật, Kando sẽ theo dõi tiến trình hướng tới thành tích của bạn.",
-            "enable-achievements": "Theo dõi thành tích"
+            "enable-achievements": "Theo dõi thành tích",
+            "enable-achievement-notifications-info": "Nếu được bật, thông báo sẽ hiển thị khi thành tích được mở khóa.",
+            "enable-achievement-notifications": "Hiển thị thông báo thành tích",
+            "wlroots-specific-options": "Tùy chọn cho wlroots-based Backends",
+            "options-that-will-only-affect-the-wlroots-backend": "Các tùy chọn này chỉ ảnh hưởng đến wlroots-based backends và không ảnh hưởng đến backends khác.",
+            "wlroots-pointer-get-timeout-mouse-info": "Thời gian tối đa tính bằng mili giây để chờ vị trí con trỏ chuột từ wlroots-based backends. Nếu đạt đến thời gian chờ, vị trí dự phòng sẽ được sử dụng. Mặc định là 500ms.",
+            "wlroots-pointer-get-timeout-mouse": "Hết thời gian nhận vị trí con trỏ",
+            "wlroots-pointer-get-timeout-touch-info": "Thời gian tối đa tính bằng mili giây để chờ vị trí con trỏ cảm ứng từ wlroots-based backends. Nếu đạt đến thời gian chờ, vị trí dự phòng sẽ được sử dụng. Mặc định là 1500ms.",
+            "wlroots-pointer-get-timeout-touch": "Hết thời gian chờ nhận vị trí",
+            "wlroots-pointer-get-timeout-default-behavior-info": "Xác định vị trí của con trỏ nếu không thể lấy được vị trí nào từ wlroots-based backends trong thời gian chờ đã định cấu hình.",
+            "wlroots-pointer-get-timeout-default-behavior": "Vị trí dự phòng con trỏ",
+            "center": "Trung tâm",
+            "previously-reported": "Đã báo cáo trước đây"
         },
         "introduction-dialog": {
             "slide1-title": "Kando cung cấp một cách độc đáo và hiệu quả để tương tác với máy tính của bạn.",
@@ -275,7 +287,12 @@
             "reset-button-tooltip": "Đặt lại tất cả thành tích và tiến độ cấp độ",
             "no-in-progress-achievements": "Chúc mừng! Bạn đã hoàn thành tất cả các thành tựu.",
             "no-completed-achievements": "Bạn chưa hoàn thành bất kỳ thành tựu nào."
-        }
+        },
+        "export-menu-error-title": "Không xuất được menu",
+        "import-menu-error-title": "Không thể nhập menu",
+        "import-menu-error-message": "Không thể nhập tệp đã chọn. Nó không chứa menu xuất Kando hợp lệ.",
+        "export-menu": "Xuất menu",
+        "import-menu": "Nhập menu"
     },
     "menu-items": {
         "command": {
@@ -357,7 +374,9 @@
         },
         "common": {
             "delayed-option-info": "Hữu ích nếu hành động nhắm vào một cửa sổ cần được tập trung.",
-            "delayed-option": "Đợi hoạt ảnh mờ dần"
+            "delayed-option": "Đợi hoạt ảnh mờ dần",
+            "inhibit-shortcuts-info": "Tắt tất cả các phím tắt Kando trong khi phím nóng hoặc macro đang được mô phỏng. Điều này ngăn chặn đầu vào mô phỏng vô tình kích hoạt các phím tắt menu khác.",
+            "inhibit-shortcuts": "Tắt phím tắt"
         }
     },
     "main": {
