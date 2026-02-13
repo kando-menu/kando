@@ -44,7 +44,7 @@ export const MENU_ITEM_SCHEMA_V1 = z.object({
 
   /**
    * The data of the menu item. What this contains depends on the type. Usually, only leaf
-   * menu items will have this field.
+   * menu items will have this field. For submenu items, this may include centerAction.
    */
   data: z.unknown().nullish(),
 
@@ -115,6 +115,12 @@ export const MENU_SCHEMA_V1 = z.object({
    * selected by only hovering over them.
    */
   hoverMode: z.boolean().default(false),
+
+  /**
+   * If true, clicking the center of the menu will repeat the last selected action for
+   * this menu.
+   */
+  repeatLastAction: z.boolean().default(false),
 
   /**
    * Conditions are matched before showing a menu. The one that has more conditions and
