@@ -1,497 +1,557 @@
 {
-    "backends": {
-        "gnome": {
-            "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: {{link}}"
-        },
-        "hyprland": {
-            "shortcut-info": "Kando ei voi suoraan asettaa Hyprlandin globaaleja pikanäppäimiä. Sen sijaan määritä pikanäppäintunnus tähän ja aseta pikanäppäin hyprland.conf -tiedostossasi jollain tavalla, kuten \"bind = CTRL, Space, global, kando:esimerkkivalikko\". Korvaa 'esimerkkivalikko' tässä valitulla tunnuksella."
-        },
-        "kde-wayland": {
-            "shortcut-info": "Kando ei voi suoraan asettaa järjestelmän pikanäppäimiä KDE/Waylandissa. Määritä sen sijaan pikanäppäintunnus tästä ja etsi se sitten KDE:n järjestelmäasetuksissa olevien järjestelmän pikanäppäinten KWin-osiosta. Siellä voit määrittää pikanäppäimen, joka avaa tämän valikon."
-        },
-        "niri": {
-            "shortcut-info": "Niri ei vielä tue globaaleja pikanäppäimiä. Voit kuitenkin avata tämän valikon käyttäen 'kando --menu \"valikon nimi\"' komentoriviltä tai Nirin config-tiedostosta."
-        }
+  "achievements": {
+    "added-items": {
+      "description": "Luo {{n}} kohdetta valikkomuokkaimella.",
+      "name": "Kandon tapa {{tier}}"
     },
-    "example-menu": {
-        "apps": {
-            "apple-music": "Musiikki",
-            "email": "Sähköposti",
-            "file-browser": "Tiedostonhallinta",
-            "finder": "Finder",
-            "gimp": "GIMP",
-            "paint": "Paint",
-            "safari": "Safari",
-            "submenu": "Sovellukset",
-            "terminal": "Pääte",
-            "web-browser": "Verkkoselain"
-        },
-        "audio": {
-            "mute": "Mykistä",
-            "next-track": "Seuraava kappale",
-            "play-pause": "Toista/keskeytä",
-            "previous-track": "Edellinen kappale",
-            "submenu": "Ääni"
-        },
-        "bookmarks": {
-            "desktop": "Työpöytä",
-            "documents": "Asiakirjat",
-            "downloads": "Lataukset",
-            "home": "Koti",
-            "music": "Musiikki",
-            "pictures": "Kuvat",
-            "submenu": "Kirjanmerkit",
-            "videos": "Videot"
-        },
-        "clipboard": {
-            "copy": "Kopioi",
-            "cut": "Leikkaa",
-            "paste": "Liitä",
-            "submenu": "Leikepöytä"
-        },
-        "name": "Valikon esimerkki",
-        "next-workspace": "Seuraava työtila",
-        "previous-workspace": "Edellinen työtila",
-        "web-links": {
-            "google": "Google",
-            "kando-on-discord": "Kando Discordissa",
-            "kando-on-github": "Kando GitHubissa",
-            "kando-on-kofi": "Kando Ko-fi:ssa",
-            "kando-on-youtube": "Kando YouTubessa",
-            "submenu": "Verkkolinkit"
-        },
-        "windows": {
-            "close-window": "Sulje ikkuna",
-            "mission-control": "Mission Control",
-            "submenu": "Ikkunat",
-            "tile-left": "Laatoita vasemmalle",
-            "tile-right": "Laatoita oikealle",
-            "toggle-maximize": "Suurenna päällä/pois"
-        }
+    "attributes": {
+      "capable": "Kykenevä",
+      "expert": "Asiantuntija",
+      "master": "Sensei",
+      "novice": "Noviisi",
+      "skilled": "Taitava"
     },
-    "main": {
-        "failed-to-start-header": "Kandon käynnistäminen epäonnistui",
-        "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
-        "quit": "Lopeta",
-        "show-settings": "Näytä asetukset",
-        "new-version-notification-body": "Hanki se osoitteesta {{link}}.",
-        "un-inhibit-shortcuts": "Ota pikanäppäimet uudelleen käyttöön",
-        "inhibit-shortcuts": "Poista kaikki pikanäppäimet käytöstä väliaikaisesti",
-        "invalid-link-header": "Virheellinen linkki"
+    "backup": {
+      "description": "Varmuuskopioi valikot tai asetukset {{n}} kertaa.",
+      "name": "Kaukokatseisuuden polku {{tier}}"
     },
-    "menu-items": {
-        "command": {
-            "command": "Komento",
-            "command-info": "Tämä suoritetaan.",
-            "description": "Suorittaa komentorivikomennon.",
-            "name": "Suorita komento",
-            "placeholder": "Lisää mikä tahansa komento…",
-            "isolated-info": "Tämä suorittaa komennon puhtaassa ympäristössä, mikä tarkoittaa, että se ei peri mitään ympäristömuuttujia Kandolta. Tämä voi auttaa käskyissä, jotka eivät käynnisty kunnolla.",
-            "isolated": "Suorita eristettynä",
-            "detached": "Suorita irrallisena",
-            "detached-info": "Tämä irrottaa komennon Kandosta, joten se jatkaa toimintaansa, vaikka Kando olisi suljettu. Tämän poistaminen käytöstä saattaa ratkaista ongelmat komennoilla, jotka eivät käynnisty kunnolla.",
-            "choose-app": "Valitse sovellus…",
-            "tip-1": "Voit käyttää Komento-kohdetyyppiä käynnistääksesi sovelluksia tai komentosarjoja.",
-            "tip-2": "Jos polku suoritettavaan tiedostoon sisältää välilyöntejä, anna polku \"lainausmerkkien kera\"."
-        },
-        "file": {
-            "description": "Avaa tiedoston tai kansion.",
-            "file": "Tiedostopolku",
-            "name": "Avaa tiedosto",
-            "placeholder": "Valitse tiedosto tai kansio…",
-            "tip-1": "Voit käyttää tätä kohdetyyppiä avaamaan tiedostoja tai kansioita."
-        },
-        "macro": {
-            "name": "Suorita makro",
-            "recording-placeholder": "Paina näppäimiä…",
-            "tip-1": "Oletusarvon mukaan Kando lisää kymmenen millisekunnin viiveen ennen jokaista näppäintapahtumaa. Voit muuttaa tätä \"viive\"-ominaisuudella.",
-            "description": "Kirjoittaa näppäimistömakron."
-        },
-        "redirect": {
-            "description": "Avaa toisen valikon.",
-            "name": "Uudelleenohjaus"
-        },
-        "settings": {
-            "description": "Avaa Kandon asetusikkunan.",
-            "name": "Avaa asetukset",
-            "tip-1": "Tämä toiminto avaa Kandon asetusikkunan."
-        },
-        "submenu": {
-            "description": "Sisältää muita valikkotietueita.",
-            "name": "Alivalikko",
-            "tip-1": "Alavalikkoja voidaan käyttää kohteiden ryhmittelyyn.",
-            "tip-2": "Voit myös lisätä alavalikkoja toisten alavalikoiden sisälle.",
-            "tip-3": "Alavalikoita voidaan käyttää monimutkaisten valikkorakenteiden luomiseksi.",
-            "tip-4": "Kannattaa välttää lisäämästä enemmän kuin kaksitoista kohdetta yhteen alavalikkoon. Kahdeksan on hyvä määrä.",
-            "tip-5": "Voit käyttää esikatselun pieniä lukituskuvakkeita kohteen sijainnin korjaamiseen valikossa.",
-            "tip-6": "Voit järjestää kohteet uudelleen vetämällä niitä esikatselussa.",
-            "tip-7": "Voit poistaa valikon tai valikon kohteen roskakorin kuvakkeella alapuolella."
-        },
-        "text": {
-            "name": "Liitä teksti",
-            "placeholder": "Syötä mitä tahansa tekstiä…",
-            "description": "Syöttää annetun tekstin.",
-            "tip-1": "Tämä toiminto käyttää leikepöytääsi tekstin liittämiseen. Toiminnan käytön jälkeen teksti jää leikepöydälle."
-        },
-        "uri": {
-            "description": "Avaa tiedostoja tai verkkosivuja.",
-            "name": "Avaa URI",
-            "placeholder": "Syötä mikä tahansa URI…"
-        },
-        "hotkey": {
-            "name": "Simuloi pikanäppäin",
-            "description": "Painaa näppäinyhdistelmää.",
-            "hotkey": "Pikanäppäin",
-            "hotkey-info": "Tämä pikanäppäin käynnistyy, kun kohde on valittu. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu johonkin muuhun toimintaan!",
-            "recording-placeholder": "Kirjoita pikanäppäin…",
-            "tip-1": "Tallentaessasi pikanäppäintä, sinun ei tarvitse painaa kaikkia näppäimiä kerralla. Voit painaa niitä yksitellen.",
-            "tip-2": "Jos et voi tallentaa näppäintä koska järjestelmä käyttää sitä jo, yritä kirjoittamalla sen nimi suoraan.",
-            "tip-3": "Paina [tästä linkistä]({{link}}) nähdäksesi kaikkien hyväksyttyjen näppäinten nimet."
-        }
+    "cancelor": {
+      "description": "Keskeytä valinta {{n}} kertaa.",
+      "name": "Matka tyhjyyteen {{tier}}"
+    },
+    "click-selector": {
+      "description": "Valitse {{n}} kohdetta hiiren napsautuksella.",
+      "name": ""
+    },
+    "completed-title": "Saavutus avattu!",
+    "deep-menu": {
+      "description": "Lisää valikkokohde neljä tasoa syvään alivalikkoon.",
+      "name": "Syvyyden mestari"
+    },
+    "deleted-all-menus": {
+      "description": "Poista kaikki valikot.",
+      "name": ""
+    },
+    "depth-selector": {
+      "description": "",
+      "name1": "",
+      "name2": "",
+      "name3": ""
+    },
+    "full-menu": {
+      "description": "Luo yli 12 kohdetta sisältävä valikko.",
+      "name": "Leveyttä syvyyden sijaan"
+    },
+    "gamepad-selector": {
+      "description": "Valitse {{n}} kohdetta peliohjaimella.",
+      "name": ""
+    },
+    "gesture-selector": {
+      "description": "Valitse {{n}} kohdetta käyttäen turbo- tai merkintätilaa.",
+      "name": ""
+    },
+    "keyboard-selector": {
+      "description": "Valitse {{n}} kohdetta näppäimistöllä.",
+      "name": ""
+    },
+    "many-selections-streak": {
+      "description": "Valitse {{n}} kohdetta {{time}} sekunnissa.",
+      "name": "Salamannopeat kädet {{tier}}"
+    },
+    "menu-themes-selected": {
+      "description": "Vaihda valikkoteemaa {{n}} kertaa.",
+      "name": "Esteetikon tapa"
+    },
+    "restore": {
+      "description": "Palauta varmuuskopio {{n}} kertaa.",
+      "name": "Toinen mahdollisuus {{tier}}"
+    },
+    "selector": {
+      "description": "Valitse {{n}} kohdetta.",
+      "name": ""
+    },
+    "settings-opened": {
+      "description": "Avaa asetusikkuna {{n}} kertaa.",
+      "name": "Matka on palkkio {{tier}}"
+    },
+    "speedy-selections-streak": {
+      "description": "",
+      "name": "Ajatusta nopeampi {{tier}}"
+    },
+    "sponsors-viewed": {
+      "description": "Harkitse Kandon sponsoriksi ryhtymistä.",
+      "name": "Kandon suojelija"
+    },
+    "tier": {
+      "I": "I",
+      "II": "II",
+      "III": "III",
+      "IV": "IV",
+      "V": "V"
+    },
+    "tutorial-viewed": {
+      "description": "Suorita Kandon esittelykurssi.",
+      "name": "Matka alkaa"
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": "Yhdistäminen Kando-integraation Gnome-laajennukseen ei onnistunut. Hanki laajennus täältä: {{link}}"
+    },
+    "hyprland": {
+      "shortcut-info": "Kando ei voi suoraan asettaa Hyprlandin globaaleja pikanäppäimiä. Sen sijaan määritä pikanäppäintunnus tähän ja aseta pikanäppäin hyprland.conf -tiedostossasi jollain tavalla, kuten \"bind = CTRL, Space, global, kando:esimerkkivalikko\". Korvaa 'esimerkkivalikko' tässä valitulla tunnuksella."
+    },
+    "kde-wayland": {
+      "shortcut-info": "Kando ei voi suoraan asettaa järjestelmän pikanäppäimiä KDE/Waylandissa. Määritä sen sijaan pikanäppäintunnus tästä ja etsi se sitten KDE:n järjestelmäasetuksissa olevien järjestelmän pikanäppäinten KWin-osiosta. Siellä voit määrittää pikanäppäimen, joka avaa tämän valikon."
+    },
+    "niri": {
+      "shortcut-info": "Niri ei vielä tue globaaleja pikanäppäimiä. Voit kuitenkin avata tämän valikon käyttäen 'kando --menu \"valikon nimi\"' komentoriviltä tai Nirin config-tiedostosta."
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "Musiikki",
+      "email": "Sähköposti",
+      "file-browser": "Tiedostonhallinta",
+      "finder": "Finder",
+      "gimp": "GIMP",
+      "paint": "Paint",
+      "safari": "Safari",
+      "submenu": "Sovellukset",
+      "terminal": "Pääte",
+      "web-browser": "Verkkoselain"
+    },
+    "audio": {
+      "mute": "Mykistä",
+      "next-track": "Seuraava kappale",
+      "play-pause": "Toista/keskeytä",
+      "previous-track": "Edellinen kappale",
+      "submenu": "Ääni"
+    },
+    "bookmarks": {
+      "desktop": "Työpöytä",
+      "documents": "Asiakirjat",
+      "downloads": "Lataukset",
+      "home": "Koti",
+      "music": "Musiikki",
+      "pictures": "Kuvat",
+      "submenu": "Kirjanmerkit",
+      "videos": "Videot"
+    },
+    "clipboard": {
+      "copy": "Kopioi",
+      "cut": "Leikkaa",
+      "paste": "Liitä",
+      "submenu": "Leikepöytä"
+    },
+    "name": "Valikon esimerkki",
+    "next-workspace": "Seuraava työtila",
+    "previous-workspace": "Edellinen työtila",
+    "web-links": {
+      "google": "Google",
+      "kando-on-discord": "Kando Discordissa",
+      "kando-on-github": "Kando GitHubissa",
+      "kando-on-kofi": "Kando Ko-fi:ssa",
+      "kando-on-youtube": "Kando YouTubessa",
+      "submenu": "Verkkolinkit"
+    },
+    "windows": {
+      "close-window": "Sulje ikkuna",
+      "mission-control": "Mission Control",
+      "submenu": "Ikkunat",
+      "tile-left": "Laatoita vasemmalle",
+      "tile-right": "Laatoita oikealle",
+      "toggle-maximize": "Suurenna päällä/pois"
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "Poista kaikki pikanäppäimet käytöstä väliaikaisesti",
+    "invalid-link-header": "Virheellinen linkki",
+    "invalid-link-message": "",
+    "new-version-notification-body": "Hanki se osoitteesta {{link}}.",
+    "new-version-notification-header": "Uusi Kando-versio on saatavilla!",
+    "quit": "Lopeta",
+    "show-settings": "Näytä asetukset",
+    "un-inhibit-shortcuts": "Ota pikanäppäimet uudelleen käyttöön"
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "Valitse sovellus…",
+      "description": "Suorittaa komentorivikomennon.",
+      "detached": "Suorita irrallisena",
+      "detached-info": "Tämä irrottaa komennon Kandosta, joten se jatkaa toimintaansa, vaikka Kando olisi suljettu. Tämän poistaminen käytöstä saattaa ratkaista ongelmat komennoilla, jotka eivät käynnisty kunnolla.",
+      "isolated": "Suorita eristettynä",
+      "isolated-info": "Tämä suorittaa komennon puhtaassa ympäristössä, mikä tarkoittaa, että se ei peri mitään ympäristömuuttujia Kandolta. Tämä voi auttaa käskyissä, jotka eivät käynnisty kunnolla.",
+      "name": "Suorita komento",
+      "placeholder": "Lisää mikä tahansa komento…",
+      "tip-1": "Voit käyttää Komento-kohdetyyppiä käynnistääksesi sovelluksia tai komentosarjoja.",
+      "tip-2": "Jos polku suoritettavaan tiedostoon sisältää välilyöntejä, anna polku \"lainausmerkkien kera\".",
+      "tip-3": "",
+      "tip-4": "",
+      "tip-5": "",
+      "tip-6": ""
+    },
+    "common": {
+      "delayed-option": "",
+      "delayed-option-info": "",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "Avaa tiedoston tai kansion.",
+      "name": "Avaa tiedosto",
+      "placeholder": "Valitse tiedosto tai kansio…",
+      "tip-1": "Voit käyttää tätä kohdetyyppiä avaamaan tiedostoja tai kansioita."
+    },
+    "hotkey": {
+      "description": "Painaa näppäinyhdistelmää.",
+      "hotkey": "Pikanäppäin",
+      "hotkey-info": "Tämä pikanäppäin käynnistyy, kun kohde on valittu. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu johonkin muuhun toimintaan!",
+      "name": "Simuloi pikanäppäin",
+      "recording-placeholder": "Kirjoita pikanäppäin…",
+      "tip-1": "Tallentaessasi pikanäppäintä, sinun ei tarvitse painaa kaikkia näppäimiä kerralla. Voit painaa niitä yksitellen.",
+      "tip-2": "Jos et voi tallentaa näppäintä koska järjestelmä käyttää sitä jo, yritä kirjoittamalla sen nimi suoraan.",
+      "tip-3": "Paina [tästä linkistä]({{link}}) nähdäksesi kaikkien hyväksyttyjen näppäinten nimet."
+    },
+    "macro": {
+      "description": "Kirjoittaa näppäimistömakron.",
+      "name": "Suorita makro",
+      "placeholder": "",
+      "recording-placeholder": "Paina näppäimiä…",
+      "tip-1": "Oletusarvon mukaan Kando lisää kymmenen millisekunnin viiveen ennen jokaista näppäintapahtumaa. Voit muuttaa tätä \"viive\"-ominaisuudella.",
+      "tip-2": ""
+    },
+    "redirect": {
+      "description": "Avaa toisen valikon.",
+      "name": "Uudelleenohjaus"
     },
     "settings": {
-        "about-dialog": {
-            "chrome-version": "Chrome-versio",
-            "electron-version": "Electron-versio",
-            "kando-backend": "Kando-taustaosa",
-            "kando-version": "Kando-versio",
-            "message": "Olen luonut Kandon pelkästä intohimosta. Jos nautit sen käyttämisestä yhtä paljon kuin minä sen kehittämisestä, voit [tarjota kahvit]({{link}})!\n\n💖 Simon",
-            "title": "Tietoa Kandosta",
-            "check-latest-release": "Tarkista viimeisin julkaisu",
-            "read-release-notes": "Lue julkaisun tiedot"
-        },
-        "anchored-mode": "Ankkuroitu tila",
-        "app-condition": "Rajaa tiettyihin sovelluksiin",
-        "area-condition": "Rajaa tiettyyn näytön alueeseen",
-        "area-condition-bottom-placeholder": "Alaosa",
-        "area-condition-left-placeholder": "Vasen",
-        "area-condition-right-placeholder": "Oikea",
-        "area-condition-top-placeholder": "Yläosa",
-        "cancel": "Peru",
-        "centered-mode": "Keskitetty tila",
-        "centered-mode-info": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
-        "general-settings-dialog": {
-            "reload-menu-theme": "Lataa valikkoteema uudelleen",
-            "reload-menu-theme-tooltip": "CSS-muutokset tulevat voimaan välittömästi, mutta theme.json-tiedostoon tehtyjen muutosten osalta valikko tulee avata uudelleen.",
-            "reload-sound-theme": "Lataa ääniteema uudelleen",
-            "none": "Ei mitään",
-            "auto-language": "Käytä järjestelmän kieltä",
-            "title": "Yleiset asetukset",
-            "message": "Kaikki valikot ja Kandon asetukset on tallennettu kahteen JSON-tiedostoon, joita voi muokata, jakaa ja varmuuskopioida. Napsauta [tästä]({{link}}) avataksesi kansion, johon tiedostot on tallennettu.",
-            "app-settings": "Sovelluksen asetukset",
-            "localization-label": "Kieli",
-            "localization-info": "Käynnistä Kando uudelleen vahvistaaksesi kielivalinnan.",
-            "check-for-new-versions": "Tarkista päivitykset",
-            "check-for-new-versions-info": "Jos päällä, Kando lähettää ilmoituksen kun uusi versio on saatavilla.",
-            "invisible-settings-button-info": "Voit yhä käyttää painiketta, se tulee näkyviin siirtäessäsi osoittimen sen päälle.",
-            "settings-button-position": "Asetukset-painikkeen sijainti",
-            "settings-button-position-info": "Valitse näytön kulma asetukset-painikkeen näyttämiseksi.",
-            "top-left": "Ylhäällä vasemmalla",
-            "top-right": "Ylhäällä oikealla",
-            "bottom-left": "Alhaalla vasemmalla",
-            "bottom-right": "Alhaalla oikealla",
-            "settings-window-color-scheme": "Asetusikkunan väriteema",
-            "settings-window-color-scheme-info": "Valitessasi vaihtoehdon 'järjestelmä', asetusikkuna käyttää samaa väriteemaa kuin käyttöjärjestelmäsi.",
-            "system": "Järjestelmä",
-            "light": "Vaalea",
-            "dark": "Tumma",
-            "settings-window-flavor": "Asetusikkunan tyyli",
-            "settings-window-flavor-info": "Valitessasi läpinäkyvän tyylin, asetusikkuna on käynnistettävä uudelleen ennen tyylin voimaantuloa.",
-            "transparent-light": "Läpinäkyvä vaalea",
-            "transparent-dark": "Läpinäkyvä tumma",
-            "transparent-system": "Läpinäkyvä järjestelmä",
-            "sakura-light": "Sakura vaalea",
-            "sakura-dark": "Sakura tumma",
-            "sakura-system": "Sakura järjestelmä",
-            "tray-icon-flavor-info": "Voit myös valita piilottaa tarjotinkuvakkeen kokonaan.",
-            "tray-icon-flavor": "Tarjotinkuvakkeen tyyli",
-            "hidden": "Piilotettu",
-            "color": "Väri",
-            "white": "Valkoinen",
-            "black": "Musta",
-            "lazy-initialization": "Laiska alustus",
-            "lazy-initialization-info": "Jos käytössä, valikkoikkuna näytetään vain, kun valikko avataan ensimmäistä kertaa. Tämä tekee valikon ensimmäisestä avaamisesta hieman hitaamman, mutta se voi estää ongelmat, kun Kando käynnistetään liian aikaisin kirjautumisen aikana. Oletuksena poistettu käytöstä.",
-            "menu-behavior": "Valikon käyttäytyminen",
-            "keep-input-focus": "Pidä aktiivinen sovellus kohdistettuna",
-            "keep-input-focus-info": "Jos käytössä, valikko ei avattaessa saa näppäimistön kohdistusta. Tämä poistaa käytöstä Turbo-tilan, mutta voi olla käytännöllinen jos haluat pitää kohdistuksen muissa sovelluksissa valikon avautuessa.",
-            "enable-turbo-mode": "Ota Turbo-tila käyttöön",
-            "enable-marking-mode": "Ota Merkintätila käyttöön",
-            "enable-marking-mode-info": "Kun Merkintätila on käytössä, voit valita kohteita siirtämällä osoittimen niiden päälle.",
-            "enable-turbo-mode-info": "Kun Turbo-tila on käytössä, voit suorittaa eleitä, kunhan pidät muokkausnäppäintä, kuten Shift tai Ctrl, painettuna.",
-            "move-pointer-to-menu-center": "Siirrä osoitin valikon keskelle",
-            "move-pointer-to-menu-center-info": "Jos valittuna, hiiren osoitin siirretään tarvittaessa valikon tai alivalikon keskelle. Näin voi olla, jos valikko avataan liian lähelle näytön reunaa tai jos valikko avataan Keskitetyssä tilassa.",
-            "require-click-for-hover-mode": "Vaadi napsautus valintoihin Kohdistustilassa",
-            "require-click-for-hover-mode-info": "Jos valitsematta, kohteet valitaan välittömästi, kun osoitin siirretään niiden yli valikoissa, joissa käytetään Kohdistustilaa.",
-            "volume": "Äänenvoimakkuus",
-            "volume-info": "Yleinen äänenvoimakkuus ääniteemalle. Oletus on 0.5.",
-            "sound-theme": "Ääniteema",
-            "sound-theme-info": "Ääniteema on kokoelma ääniä, jotka soitetaan vuorovaikuttaessasi valikon kanssa.",
-            "menu-sounds": "Valikon äänet",
-            "right-mouse-button-selects-parent": "Hiiren oikea painike valitsee \"ylemmän\" valikon",
-            "right-mouse-button-selects-parent-info": "Jos valitsematta, hiiren oikea painike sulkee valikon.",
-            "enable-gamepad-support": "Ota peliohjaimen tuki käyttöön",
-            "enable-gamepad-support-info": "Jos valittuna, yhdistettyä peliohjainta voidaan käyttää valikossa navigoimiseen.",
-            "press-again-behavior-info": "Tämä määrittää, mitä tapahtuu pikanäppäintä painettaessa uudelleen, kun valikko näytetään. Jos samalle pikanäppäimelle on määritetty useita valikoita, voit käyttää tätä kyseisten valikoiden läpikäymiseen. Varmista, että pidät muokkausnäppäintä painettuna vain, jos haluat käyttää Turbo-tilaa yhdessä jonkin muun vaihtoehdon kanssa kuin 'Älä tee mitään'.",
-            "press-again-behavior": "Käyttäytyminen painettaessa pikanäppäintä uudelleen",
-            "do-nothing": "Älä tee mitään",
-            "cycle-from-first": "Näytä seuraava valikko (aloita ensimmäisestä)",
-            "cycle-from-recent": "Näytä seuraava valikko (jatka viimeisimmästä)",
-            "close-menu": "Sulje valikko",
-            "learn-how-to-add-sound-themes": "Opi [tästä]({{link}}) kuinka lisätä uusia ääniteemoja Kandoon!",
-            "advanced-menu-options": "Kehittyneet valikko-asetukset",
-            "advanced-menu-options-note": "Yleensä voit jättää nämä asetukset niiden oletusarvoihin.",
-            "developer-options": "Kehittäjän valinnat",
-            "settings-window-dev-tools": "Tarkista asetukset",
-            "hardware-acceleration-info": "Tämä valinta voi nostaa sovelluksen suorituskykyä, mutta voi myös johtaa renderöintivirheisiin. Käynnistä Kando uudelleen, jotta tämä asetus tulee voimaan.",
-            "hardware-acceleration": "Käytä laitteistokiihdytystä",
-            "invisible-settings-button": "Näkymätön asetuspainike",
-            "center": "Keskellä",
-            "enable-achievements-info": "Jos käytössä, Kando seuraa edistymistäsi saavutusten näkökulmasta.",
-            "enable-achievements": "Seuraa saavutuksia",
-            "minimum-submenu-distance": "Alivalikon vähimmäisetäisyys",
-            "movement-threshold": "Liikkumisen kynnys",
-            "minimum-gesture-length": "Eleen vähimmäispituus",
-            "minimum-gesture-angle": "Eleen vähimmäiskulma",
-            "gesture-pause-timeout": "Eleen keskeytyksen aikakatkaisu",
-            "backup-and-restore": "Varmuuskopiointi ja palautus",
-            "backup-menus": "Varmuuskopioi menus.json…",
-            "backup-settings": "Varmuuskopioi config.json…",
-            "restore-menus": "Palauta menus.json…",
-            "restore-settings": "Palauta config.json…",
-            "reload-note": "Kun lataat uudelleen valikkoteeman, CSS-muutokset toteutetaan vaikka valikko olisi avoinna. Muutokset, jotka on tehty theme.json-tiedostoon, vaativat valikon avaamisen uudelleen.",
-            "dev-tools-note": "Kando käyttää kahta ikkunaa: yksi valikkoa varten, toinen asetuksia varten. Voit avata kehitystyökalut ja tutkia molempia ikkunoita toisistaan erillään.",
-            "menu-window-dev-tools": "Tutki valikkoa"
-        },
-        "hover-mode": "Kohdistustila",
-        "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
-        "icon-picker-dialog": {
-            "base64-example": "Base64-esimerkki:",
-            "search-placeholder": "Etsi kuvakkeita…",
-            "file-example": "tiedosto: URI esimerkki:",
-            "url-example": "URL esimerkki:",
-            "hint": "[Opi]({{link}}) kuinka lisätä tai luoda omia kuvaketeemojasi.",
-            "base64-hint": "Base64-koodatut kuvakkeet tarjoavat helpon tavan sisällyttää minkälaisia kuvakkeita tahansa valikkoihin. Voit käyttää palveluita, kuten [www.base64-image.de]({{link}}), muuntaaksesi minkä tahansa kuvan base64-koodatuksi merkkijonoksi. Tämä toimii jopa animoitujen gif-kuvien kanssa!",
-            "reload-button-tooltip": "Lataa uudelleen kaikki kuvaketeemat"
-        },
-        "introduction-dialog": {
-            "title": "Tervetuloa, tämä on Kando!",
-            "show-again": "Näytä seuraavan kerran avattaessa",
-            "slide1-title": "Kando tarjoaa ainutlaatuisen ja kätevän tavan vuorovaikuttaa tietokoneesi kanssa.",
-            "slide1-text": "Pyyhkäise diojen läpi oppiaksesi, mitä Kando voi tehdä hyväksesi! Voit käyttää vasemmalla olevia lukujen merkkejä hypätäksesi nopeasti tiettyyn johdannon osaan.",
-            "slide2-title": "Avaa valikko!",
-            "slide2-text-standard": "Jos käynnistit Kandon ensimmäistä kertaa, voit avata esimerkkivalikon painamalla Ctrl+välilyönti. Sulje se uudelleen Esc-näppäimellä tai hiiren oikealla näppäimellä missä tahansa näytöllä.",
-            "slide2-text-no-shortcuts": "Jos käynnistit Kandon ensimmäistä kertaa, sinun [saattaa tarvita suorittaa joitakin välivaiheita Linuxilla saadaksesi järjestelmän pikanäppäimet toimimaan]({{link}}). Kun tämä toimii, voit sulkea valikon Escape-näppäimellä tai hiiren oikealla painikkeella.",
-            "slide3-hint1": "Voi myös painaa tästä sulkeaksesi valikon.",
-            "slide3-hint2": "Valitse kohde napsauttamalla mistä tahansa täältä.",
-            "slide3-text": "Kandossa **koko näyttösi on painalluksen kohde**! Sinun ei tarvitse tähdätä kuvakkeita, vaan voit napsauttaa missä tahansa kohteen sektorilla. Tämä tekee kohteiden valinnasta paljon kätevämpää.",
-            "slide4-text": "Alivalikko avautuu **aina** hiiren osoittimen kohdalle. Sinun **ei tarvitse odottaa animaation valmistumista**. Luota lihasmuistiisi ja tee valintasi!",
-            "slide5-hint": "Napsauta missä tahansa täällä siirtyäksesi yhden tason ylemmäs.",
-            "slide6-text": "Tällä tavalla voit tutkia valikon rakennetta nopeasti.",
-            "slide8-text": "**Valikko reagoi hiiren liikkeisiin!** Alivalikko avautuu, kun haluat sen avautuvan. Pienellä harjoittelulla voit valita kohteita ilman, että edes katsot valikkoon päin.",
-            "slide9-title": "Ole salamannopea: turbotila",
-            "slide10-text": "**Älä jää odottamaan animaation valmistumista!** Pujottele tiesi valikon läpi. Se on nopein tapa valita valikkokohteita!",
-            "slide12-title": "Ja vielä jotain lisäksi!",
-            "slide12-text": "Kando on erittäin mukautettava. Voit käyttää sitä sovellusten ja tiedostojen avaamiseen, näppäimistömakrojen suorittamiseen ja moniin muihin tarpeisiin. Voit [muuttaa valikon tyyliä]({{link1}}), [lisätä kuvaketeemoja]({{link2}}) ja [käyttää jopa ääniä]({{link3}}) valikoissasi!",
-            "slide13-text": "Jos tarvitset apua, liity [Discord-palvelimelle]({{link1}}) tai lue [dokumentaatio]({{link2}})!",
-            "chapter1": "Aloitetaan",
-            "chapter2": "Merkintätila",
-            "chapter3": "Turbotila",
-            "chapter4": "Seuraavat askeleet",
-            "chapter5": "Tuki"
-        },
-        "menu-behavior": "Valikon toiminta",
-        "menu-conditions": "Valikon ehdollisuudet",
-        "menu-themes-dialog": {
-            "author": "tekijä {{author}}",
-            "reset-color-picker": "Palauta värien oletusarvot",
-            "title": "Valikkoteemat",
-            "accent-colors": "Korostusvärit",
-            "dark": "Tumma teema",
-            "light": "Vaalea teema",
-            "accent-colors-info": "Jokaisella teemalla voi olla erilainen tarjonta korostusvärejä.",
-            "no-accent-colors": "Tämä teema ei tue korostusvärejä.",
-            "fade-in-time": "Ilmaantumisaika",
-            "fade-in-time-info": "Aika joka valikolla kestää ilmaantua. Oletus on 150ms.",
-            "fade-out-time": "Poistumisaika",
-            "fade-out-time-info": "Aika joka valikolla kestää poistua näkyvistä. Oletus on 200ms.",
-            "menu-scale": "Valikon mittakaava",
-            "menu-scale-info": "Käytä suurentaaksesi tai pienentääksesi valikoiden kokoa. Oletus on 1.0.",
-            "light-dark-mode": "Ota käyttöön vaalea/tumma tila",
-            "light-dark-mode-info": "Jos käytössä, voit valita eri teeman ja väriasetukset kuin järjestelmässäsi oletuksena.",
-            "get-themes-online": "Hae teemoja verkosta",
-            "create-your-own-themes": "Luo omia teemoja",
-            "open-theme-directory": "Lataa teema tietokoneelta"
-        },
-        "shortcut-label": "Pikanäppäin",
-        "shortcut-recording": "Paina pikanäppäintä…",
-        "window-condition": "Rajaa tiettyihin ikkunaotsikkoihin",
-        "invalid-dropdown-selection": "Valitse vaihtoehto…",
-        "file-picker": {
-            "select-file": "Valitse tiedosto",
-            "select-directory": "Valitse hakemisto"
-        },
-        "add-tags-placeholder": "Lisää tunnisteita…",
-        "all-menus": "Kaikki valikot",
-        "search-menus-placeholder": "Etsi valikkoja…",
-        "add-collection-tooltip": "Luo uusi valikkokokoelma. Käytä kokoelmia järjestääksesi valikoita ryhmiin tunnisteilla!",
-        "no-menus": "Sinulla ei ole valikkoja.",
-        "no-menus-note": "Jos poistit edellisen vahingossa, voit palauttaa sen käyttäen palautuspainiketta.",
-        "no-matching-menus": "Valikkoja ei löytynyt.",
-        "no-matching-menus-note": "Kenties voisit kokeilla erilaista hakutermiä?",
-        "empty-collection": "Tämä kokoelma on tyhjä.",
-        "empty-collection-note": "Muokkaa tunnisteita yläpuolella tai lisää täysin uusi valikko tähän kokoelmaan painikkeella alapuolella.",
-        "create-menu-button": "Uusi valikko",
-        "duplicate-menu": "Monista valikko",
-        "delete-menu": "Poista valikko",
-        "add-menu-item-hint": "Lisää kohde yllä olevaan valikkoon vetämällä tästä!",
-        "add-menu-items": "Lisää kohteita valikkoon",
-        "undo": "Palauta",
-        "redo": "Tee uudelleen",
-        "menu-behavior-info": "Ennen kuin otat mitään seuraavista käyttöön, suosittelemme lukemaan [tästä]({{link}}) miksi pidämme Kandon oletuskäyttäytymisestä!",
-        "anchored-mode-info": "Avaa alavalikko samassa paikassa kuin päävalikko. Tämän käyttäminen poistaa Merkintätilan ja Turbo-tilan käytöstä.",
-        "window-condition-placeholder": "Ikkunan otsikko",
-        "window-condition-tooltip": "Valitse ikkuna",
-        "app-condition-tooltip": "Valitse sovellus",
-        "app-condition-placeholder": "Sovelluksen nimi",
-        "area-condition-tooltip": "Valitse näytön alue",
-        "screen-area-picker": {
-            "title": "Valitse näytön alue",
-            "confirm": "Käytä tätä aluetta",
-            "valid": "Hienoa! Olet valinnut hyväksyttävän alueen.",
-            "top-left-value": "Vasen: {{x}}, Ylä: {{y}}",
-            "top-left": "Vedä tämä alueen vasempaan yläkulmaan.",
-            "bottom-right-value": "Oikea: {{x}}, Ala: {{y}}",
-            "bottom-right": "Vedä tämä alueen oikeaan alakulmaan.",
-            "invalid": "Varmista, että vasen yläkulma on oikean alakulman yläpuolella ja vasemmalla puolella."
-        },
-        "window-picker-dialog": {
-            "result": "Valitsit \"{{name}}\"n.",
-            "instructions": "Aloita painamalla painiketta alapuolella ja valitse kohdeikkuna viiden sekunnin kuluessa.",
-            "restart-countdown": "Aloita laskenta uudelleen",
-            "start-countdown": "Aloita laskenta",
-            "countdown_one": "Valitaan {{count}} sekunnissa…",
-            "countdown_other": "Valitaan {{count}} sekunnissa…",
-            "pick-app-name-title": "Valitse sovelluksen nimi",
-            "pick-window-title-title": "Valitse ikkunan otsikko",
-            "confirm": "Käytä tätä"
-        },
-        "area-condition-info": "Näytä valikko vain, jos osoitin on tietyllä alueella näytöllä. Alue on annettu pikseleinä suhteessa päänäyttösi vasempaan yläkulmaan. Jos jätät kentän tyhjäksi, alue on rajaton.",
-        "menu-conditions-info": "Voit asettaa useita valikoita samalle pikanäppäimelle ja valita sitten millä ehdoilla jokainen valikko tulee näyttää.",
-        "app-condition-info": "Näytä valikko vain, jos tietty sovellus on keskitettynä. Tämä tukee säännöllisiä ilmaisuja, kuten /firefox|chrome/i.",
-        "window-condition-info": "Näytä valikko vain, jos keskitetyn ikkunan otsikko sisältää tietyn tekstin. Tämä tukee säännöllisiä lausekkeita, kuten /youtube|vimeo/i.",
-        "shortcut-id-label": "Pikanäppäimen tunnus",
-        "tags": "Tunnisteet",
-        "tags-info": "Tunnisteita voidaan käyttää valikoiden ryhmittelemiseksi kokoelmiin.",
-        "duplicate-menu-item": "Monista valikon kohde",
-        "delete-menu-item": "Poista valikon kohde",
-        "shortcut-info": "Tämä pikanäppäin avaa valikon. Sen on sisällettävä yksi normaali näppäin ja mikä tahansa määrä muuntimia, kuten Ctrl, Alt tai Shift. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu toiselle valikolle!",
-        "achievements-dialog": {
-            "reset-button": "Nollaa edistyminen",
-            "reset-confirmation-title": "Haluatko varmasti nollata kaiken edistymisen?",
-            "reset-confirmation-message": "Kaikki saavutukset ja tasoedistyminen katoavat. Tätä toimintoa ei voi perua.",
-            "title": "Saavutukset",
-            "no-in-progress-achievements": "Onnittelut! Sait kaikki saavutukset.",
-            "no-completed-achievements": "Et ole saanut vielä yhtäkään saavutusta.",
-            "in-progress-button": "Kesken",
-            "completed-button": "Valmis",
-            "reset-button-tooltip": "Nollaa kaikki saavutukset ja tasoedistyminen"
-        },
-        "restore-backup": "Palauta varmuuskopio…",
-        "restore-general-settings-warning-title": "Haluatko varmasti palauttaa yleiset asetukset?",
-        "restore-general-settings-warning-message": "Tämä korvaa kaikki nykyiset sovelluksen asetukset valitun varmuuskopiotiedoston sisällöllä! Tällä ei ole vaikutusta valikkoihin ja valikkokokoelmiin.",
-        "restore-general-settings-error-title": "Yleisten asetusten varmuuskopion lataaminen epäonnistui!",
-        "restore-general-settings-success-title": "Onnistui!",
-        "restore-general-settings-success-message": "Yleiset asetukset on palautettu varmuuskopiotiedostosta.",
-        "restore-menu-settings-warning-title": "Haluatko varmasti palauttaa valikkoasetukset?",
-        "restore-menu-settings-warning-message": "Tämä korvaa nykyiset valikot ja valikkokokoelmat valitun varmuuskopiotiedoston sisällöllä!",
-        "restore-menu-settings-error-title": "Valikkojen varmuuskopion lataaminen epäonnistui!",
-        "restore-menu-settings-success-title": "Onnistui!",
-        "restore-menu-settings-success-message": "Valikot ja valikkokokoelmat on palautettu varmuuskopiotiedostosta.",
-        "app-picker": {
-            "search-placeholder": "Etsi sovellusta…",
-            "use-selected": "Käytä valittua"
-        }
+      "description": "Avaa Kandon asetusikkunan.",
+      "name": "Avaa asetukset",
+      "tip-1": "Tämä toiminto avaa Kandon asetusikkunan."
     },
-    "achievements": {
-        "attributes": {
-            "novice": "Noviisi",
-            "capable": "Kykenevä",
-            "skilled": "Taitava",
-            "expert": "Asiantuntija",
-            "master": "Sensei"
-        },
-        "tier": {
-            "I": "I",
-            "II": "II",
-            "III": "III",
-            "IV": "IV",
-            "V": "V"
-        },
-        "cancelor": {
-            "name": "Matka tyhjyyteen {{tier}}",
-            "description": "Keskeytä valinta {{n}} kertaa."
-        },
-        "selector": {
-            "description": "Valitse {{n}} kohdetta."
-        },
-        "click-selector": {
-            "description": "Valitse {{n}} kohdetta hiiren napsautuksella."
-        },
-        "keyboard-selector": {
-            "description": "Valitse {{n}} kohdetta näppäimistöllä."
-        },
-        "gamepad-selector": {
-            "description": "Valitse {{n}} kohdetta peliohjaimella."
-        },
-        "gesture-selector": {
-            "description": "Valitse {{n}} kohdetta käyttäen turbo- tai merkintätilaa."
-        },
-        "settings-opened": {
-            "name": "Matka on palkkio {{tier}}",
-            "description": "Avaa asetusikkuna {{n}} kertaa."
-        },
-        "backup": {
-            "name": "Kaukokatseisuuden polku {{tier}}",
-            "description": "Varmuuskopioi valikot tai asetukset {{n}} kertaa."
-        },
-        "restore": {
-            "name": "Toinen mahdollisuus {{tier}}",
-            "description": "Palauta varmuuskopio {{n}} kertaa."
-        },
-        "added-items": {
-            "name": "Kandon tapa {{tier}}",
-            "description": "Luo {{n}} kohdetta valikkomuokkaimella."
-        },
-        "deleted-all-menus": {
-            "description": "Poista kaikki valikot."
-        },
-        "full-menu": {
-            "name": "Leveyttä syvyyden sijaan",
-            "description": "Luo yli 12 kohdetta sisältävä valikko."
-        },
-        "deep-menu": {
-            "name": "Syvyyden mestari",
-            "description": "Lisää valikkokohde neljä tasoa syvään alivalikkoon."
-        },
-        "sponsors-viewed": {
-            "name": "Kandon suojelija",
-            "description": "Harkitse Kandon sponsoriksi ryhtymistä."
-        },
-        "menu-themes-selected": {
-            "name": "Esteetikon tapa",
-            "description": "Vaihda valikkoteemaa {{n}} kertaa."
-        },
-        "tutorial-viewed": {
-            "name": "Matka alkaa",
-            "description": "Suorita Kandon esittelykurssi."
-        },
-        "many-selections-streak": {
-            "description": "Valitse {{n}} kohdetta {{time}} sekunnissa.",
-            "name": "Salamannopeat kädet {{tier}}"
-        },
-        "speedy-selections-streak": {
-            "name": "Ajatusta nopeampi {{tier}}"
-        },
-        "completed-title": "Saavutus avattu!"
+    "submenu": {
+      "description": "Sisältää muita valikkotietueita.",
+      "name": "Alivalikko",
+      "tip-1": "Alavalikkoja voidaan käyttää kohteiden ryhmittelyyn.",
+      "tip-2": "Voit myös lisätä alavalikkoja toisten alavalikoiden sisälle.",
+      "tip-3": "Alavalikoita voidaan käyttää monimutkaisten valikkorakenteiden luomiseksi.",
+      "tip-4": "Kannattaa välttää lisäämästä enemmän kuin kaksitoista kohdetta yhteen alavalikkoon. Kahdeksan on hyvä määrä.",
+      "tip-5": "Voit käyttää esikatselun pieniä lukituskuvakkeita kohteen sijainnin korjaamiseen valikossa.",
+      "tip-6": "Voit järjestää kohteet uudelleen vetämällä niitä esikatselussa.",
+      "tip-7": "Voit poistaa valikon tai valikon kohteen roskakorin kuvakkeella alapuolella."
+    },
+    "text": {
+      "description": "Syöttää annetun tekstin.",
+      "name": "Liitä teksti",
+      "placeholder": "Syötä mitä tahansa tekstiä…",
+      "tip-1": "Tämä toiminto käyttää leikepöytääsi tekstin liittämiseen. Toiminnan käytön jälkeen teksti jää leikepöydälle."
+    },
+    "uri": {
+      "description": "Avaa tiedostoja tai verkkosivuja.",
+      "name": "Avaa URI",
+      "placeholder": "Syötä mikä tahansa URI…",
+      "tip-1": "",
+      "tip-2": "",
+      "tip-3": "",
+      "tip-4": "",
+      "tip-5": "",
+      "tip-6": ""
     }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "Tarkista viimeisin julkaisu",
+      "chrome-version": "Chrome-versio",
+      "electron-version": "Electron-versio",
+      "kando-backend": "Kando-taustaosa",
+      "kando-version": "Kando-versio",
+      "message": "Olen luonut Kandon pelkästä intohimosta. Jos nautit sen käyttämisestä yhtä paljon kuin minä sen kehittämisestä, voit [tarjota kahvit]({{link}})!\n\n💖 Simon",
+      "read-release-notes": "Lue julkaisun tiedot",
+      "title": "Tietoa Kandosta"
+    },
+    "achievements-dialog": {
+      "completed-button": "Valmis",
+      "in-progress-button": "Kesken",
+      "no-completed-achievements": "Et ole saanut vielä yhtäkään saavutusta.",
+      "no-in-progress-achievements": "Onnittelut! Sait kaikki saavutukset.",
+      "reset-button": "Nollaa edistyminen",
+      "reset-button-tooltip": "Nollaa kaikki saavutukset ja tasoedistyminen",
+      "reset-confirmation-message": "Kaikki saavutukset ja tasoedistyminen katoavat. Tätä toimintoa ei voi perua.",
+      "reset-confirmation-title": "Haluatko varmasti nollata kaiken edistymisen?",
+      "title": "Saavutukset",
+      "xp": ""
+    },
+    "add-collection-tooltip": "Luo uusi valikkokokoelma. Käytä kokoelmia järjestääksesi valikoita ryhmiin tunnisteilla!",
+    "add-menu-item-hint": "Lisää kohde yllä olevaan valikkoon vetämällä tästä!",
+    "add-menu-items": "Lisää kohteita valikkoon",
+    "add-tags-placeholder": "Lisää tunnisteita…",
+    "all-menus": "Kaikki valikot",
+    "anchored-mode": "Ankkuroitu tila",
+    "anchored-mode-info": "Avaa alavalikko samassa paikassa kuin päävalikko. Tämän käyttäminen poistaa Merkintätilan ja Turbo-tilan käytöstä.",
+    "app-condition": "Rajaa tiettyihin sovelluksiin",
+    "app-condition-info": "Näytä valikko vain, jos tietty sovellus on keskitettynä. Tämä tukee säännöllisiä ilmaisuja, kuten /firefox|chrome/i.",
+    "app-condition-placeholder": "Sovelluksen nimi",
+    "app-condition-tooltip": "Valitse sovellus",
+    "app-picker": {
+      "hint": "",
+      "search-placeholder": "Etsi sovellusta…",
+      "use-selected": "Käytä valittua"
+    },
+    "area-condition": "Rajaa tiettyyn näytön alueeseen",
+    "area-condition-bottom-placeholder": "Alaosa",
+    "area-condition-info": "Näytä valikko vain, jos osoitin on tietyllä alueella näytöllä. Alue on annettu pikseleinä suhteessa päänäyttösi vasempaan yläkulmaan. Jos jätät kentän tyhjäksi, alue on rajaton.",
+    "area-condition-left-placeholder": "Vasen",
+    "area-condition-right-placeholder": "Oikea",
+    "area-condition-tooltip": "Valitse näytön alue",
+    "area-condition-top-placeholder": "Yläosa",
+    "cancel": "Peru",
+    "centered-mode": "Keskitetty tila",
+    "centered-mode-info": "Avaa valikko näytön keskelle osoittimen sijainnin sijaan.",
+    "create-menu-button": "Uusi valikko",
+    "delete-menu": "Poista valikko",
+    "delete-menu-item": "Poista valikon kohde",
+    "duplicate-menu": "Monista valikko",
+    "duplicate-menu-item": "Monista valikon kohde",
+    "empty-collection": "Tämä kokoelma on tyhjä.",
+    "empty-collection-note": "Muokkaa tunnisteita yläpuolella tai lisää täysin uusi valikko tähän kokoelmaan painikkeella alapuolella.",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "Valitse hakemisto",
+      "select-file": "Valitse tiedosto"
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "Kehittyneet valikko-asetukset",
+      "advanced-menu-options-note": "Yleensä voit jättää nämä asetukset niiden oletusarvoihin.",
+      "auto-language": "Käytä järjestelmän kieltä",
+      "backup-and-restore": "Varmuuskopiointi ja palautus",
+      "backup-menus": "Varmuuskopioi menus.json…",
+      "backup-settings": "Varmuuskopioi config.json…",
+      "black": "Musta",
+      "bottom-left": "Alhaalla vasemmalla",
+      "bottom-right": "Alhaalla oikealla",
+      "center": "Keskellä",
+      "center-click-zone-radius": "",
+      "center-click-zone-radius-info": "",
+      "check-for-new-versions": "Tarkista päivitykset",
+      "check-for-new-versions-info": "Jos päällä, Kando lähettää ilmoituksen kun uusi versio on saatavilla.",
+      "close-menu": "Sulje valikko",
+      "color": "Väri",
+      "cycle-from-first": "Näytä seuraava valikko (aloita ensimmäisestä)",
+      "cycle-from-recent": "Näytä seuraava valikko (jatka viimeisimmästä)",
+      "dark": "Tumma",
+      "dev-tools-note": "Kando käyttää kahta ikkunaa: yksi valikkoa varten, toinen asetuksia varten. Voit avata kehitystyökalut ja tutkia molempia ikkunoita toisistaan erillään.",
+      "developer-options": "Kehittäjän valinnat",
+      "do-nothing": "Älä tee mitään",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "Seuraa saavutuksia",
+      "enable-achievements-info": "Jos käytössä, Kando seuraa edistymistäsi saavutusten näkökulmasta.",
+      "enable-gamepad-support": "Ota peliohjaimen tuki käyttöön",
+      "enable-gamepad-support-info": "Jos valittuna, yhdistettyä peliohjainta voidaan käyttää valikossa navigoimiseen.",
+      "enable-marking-mode": "Ota Merkintätila käyttöön",
+      "enable-marking-mode-info": "Kun Merkintätila on käytössä, voit valita kohteita siirtämällä osoittimen niiden päälle.",
+      "enable-turbo-mode": "Ota Turbo-tila käyttöön",
+      "enable-turbo-mode-info": "Kun Turbo-tila on käytössä, voit suorittaa eleitä, kunhan pidät muokkausnäppäintä, kuten Shift tai Ctrl, painettuna.",
+      "fixed-stroke-length": "",
+      "fixed-stroke-length-info": "",
+      "gesture-jitter-threshold": "",
+      "gesture-jitter-threshold-info": "",
+      "gesture-pause-timeout": "Eleen keskeytyksen aikakatkaisu",
+      "gesture-pause-timeout-info": "",
+      "hardware-acceleration": "Käytä laitteistokiihdytystä",
+      "hardware-acceleration-info": "Tämä valinta voi nostaa sovelluksen suorituskykyä, mutta voi myös johtaa renderöintivirheisiin. Käynnistä Kando uudelleen, jotta tämä asetus tulee voimaan.",
+      "hidden": "Piilotettu",
+      "invisible-settings-button": "Näkymätön asetuspainike",
+      "invisible-settings-button-info": "Voit yhä käyttää painiketta, se tulee näkyviin siirtäessäsi osoittimen sen päälle.",
+      "keep-input-focus": "Pidä aktiivinen sovellus kohdistettuna",
+      "keep-input-focus-info": "Jos käytössä, valikko ei avattaessa saa näppäimistön kohdistusta. Tämä poistaa käytöstä Turbo-tilan, mutta voi olla käytännöllinen jos haluat pitää kohdistuksen muissa sovelluksissa valikon avautuessa.",
+      "lazy-initialization": "Laiska alustus",
+      "lazy-initialization-info": "Jos käytössä, valikkoikkuna näytetään vain, kun valikko avataan ensimmäistä kertaa. Tämä tekee valikon ensimmäisestä avaamisesta hieman hitaamman, mutta se voi estää ongelmat, kun Kando käynnistetään liian aikaisin kirjautumisen aikana. Oletuksena poistettu käytöstä.",
+      "learn-how-to-add-sound-themes": "Opi [tästä]({{link}}) kuinka lisätä uusia ääniteemoja Kandoon!",
+      "light": "Vaalea",
+      "localization-info": "Käynnistä Kando uudelleen vahvistaaksesi kielivalinnan.",
+      "localization-label": "Kieli",
+      "menu-behavior": "Valikon käyttäytyminen",
+      "menu-sounds": "Valikon äänet",
+      "menu-window-dev-tools": "Tutki valikkoa",
+      "message": "Kaikki valikot ja Kandon asetukset on tallennettu kahteen JSON-tiedostoon, joita voi muokata, jakaa ja varmuuskopioida. Napsauta [tästä]({{link}}) avataksesi kansion, johon tiedostot on tallennettu.",
+      "minimum-gesture-angle": "Eleen vähimmäiskulma",
+      "minimum-gesture-angle-info": "",
+      "minimum-gesture-length": "Eleen vähimmäispituus",
+      "minimum-gesture-length-info": "",
+      "minimum-submenu-distance": "Alivalikon vähimmäisetäisyys",
+      "minimum-submenu-distance-info": "",
+      "move-pointer-to-menu-center": "Siirrä osoitin valikon keskelle",
+      "move-pointer-to-menu-center-info": "Jos valittuna, hiiren osoitin siirretään tarvittaessa valikon tai alivalikon keskelle. Näin voi olla, jos valikko avataan liian lähelle näytön reunaa tai jos valikko avataan Keskitetyssä tilassa.",
+      "movement-threshold": "Liikkumisen kynnys",
+      "movement-threshold-info": "",
+      "none": "Ei mitään",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "Käyttäytyminen painettaessa pikanäppäintä uudelleen",
+      "press-again-behavior-info": "Tämä määrittää, mitä tapahtuu pikanäppäintä painettaessa uudelleen, kun valikko näytetään. Jos samalle pikanäppäimelle on määritetty useita valikoita, voit käyttää tätä kyseisten valikoiden läpikäymiseen. Varmista, että pidät muokkausnäppäintä painettuna vain, jos haluat käyttää Turbo-tilaa yhdessä jonkin muun vaihtoehdon kanssa kuin 'Älä tee mitään'.",
+      "previously-reported": "",
+      "reload-menu-theme": "Lataa valikkoteema uudelleen",
+      "reload-note": "Kun lataat uudelleen valikkoteeman, CSS-muutokset toteutetaan vaikka valikko olisi avoinna. Muutokset, jotka on tehty theme.json-tiedostoon, vaativat valikon avaamisen uudelleen.",
+      "reload-sound-theme": "Lataa ääniteema uudelleen",
+      "require-click-for-hover-mode": "Vaadi napsautus valintoihin Kohdistustilassa",
+      "require-click-for-hover-mode-info": "Jos valitsematta, kohteet valitaan välittömästi, kun osoitin siirretään niiden yli valikoissa, joissa käytetään Kohdistustilaa.",
+      "restore-menus": "Palauta menus.json…",
+      "restore-settings": "Palauta config.json…",
+      "right-mouse-button-selects-parent": "Hiiren oikea painike valitsee \"ylemmän\" valikon",
+      "right-mouse-button-selects-parent-info": "Jos valitsematta, hiiren oikea painike sulkee valikon.",
+      "sakura-dark": "Sakura tumma",
+      "sakura-light": "Sakura vaalea",
+      "sakura-system": "Sakura järjestelmä",
+      "settings-button-position": "Asetukset-painikkeen sijainti",
+      "settings-button-position-info": "Valitse näytön kulma asetukset-painikkeen näyttämiseksi.",
+      "settings-window-color-scheme": "Asetusikkunan väriteema",
+      "settings-window-color-scheme-info": "Valitessasi vaihtoehdon 'järjestelmä', asetusikkuna käyttää samaa väriteemaa kuin käyttöjärjestelmäsi.",
+      "settings-window-dev-tools": "Tarkista asetukset",
+      "settings-window-flavor": "Asetusikkunan tyyli",
+      "settings-window-flavor-info": "Valitessasi läpinäkyvän tyylin, asetusikkuna on käynnistettävä uudelleen ennen tyylin voimaantuloa.",
+      "sound-theme": "Ääniteema",
+      "sound-theme-info": "Ääniteema on kokoelma ääniä, jotka soitetaan vuorovaikuttaessasi valikon kanssa.",
+      "system": "Järjestelmä",
+      "title": "Yleiset asetukset",
+      "top-left": "Ylhäällä vasemmalla",
+      "top-right": "Ylhäällä oikealla",
+      "transparent-dark": "Läpinäkyvä tumma",
+      "transparent-light": "Läpinäkyvä vaalea",
+      "transparent-system": "Läpinäkyvä järjestelmä",
+      "tray-icon-flavor": "Tarjotinkuvakkeen tyyli",
+      "tray-icon-flavor-info": "Voit myös valita piilottaa tarjotinkuvakkeen kokonaan.",
+      "volume": "Äänenvoimakkuus",
+      "volume-info": "Yleinen äänenvoimakkuus ääniteemalle. Oletus on 0.5.",
+      "white": "Valkoinen",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "Kohdistustila",
+    "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
+    "icon-picker-dialog": {
+      "base64-example": "Base64-esimerkki:",
+      "base64-hint": "Base64-koodatut kuvakkeet tarjoavat helpon tavan sisällyttää minkälaisia kuvakkeita tahansa valikkoihin. Voit käyttää palveluita, kuten [www.base64-image.de]({{link}}), muuntaaksesi minkä tahansa kuvan base64-koodatuksi merkkijonoksi. Tämä toimii jopa animoitujen gif-kuvien kanssa!",
+      "file-example": "tiedosto: URI esimerkki:",
+      "hint": "[Opi]({{link}}) kuinka lisätä tai luoda omia kuvaketeemojasi.",
+      "reload-button-tooltip": "Lataa uudelleen kaikki kuvaketeemat",
+      "search-placeholder": "Etsi kuvakkeita…",
+      "url-example": "URL esimerkki:"
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "Aloitetaan",
+      "chapter2": "Merkintätila",
+      "chapter3": "Turbotila",
+      "chapter4": "Seuraavat askeleet",
+      "chapter5": "Tuki",
+      "show-again": "Näytä seuraavan kerran avattaessa",
+      "slide1-text": "Pyyhkäise diojen läpi oppiaksesi, mitä Kando voi tehdä hyväksesi! Voit käyttää vasemmalla olevia lukujen merkkejä hypätäksesi nopeasti tiettyyn johdannon osaan.",
+      "slide1-title": "Kando tarjoaa ainutlaatuisen ja kätevän tavan vuorovaikuttaa tietokoneesi kanssa.",
+      "slide10-text": "**Älä jää odottamaan animaation valmistumista!** Pujottele tiesi valikon läpi. Se on nopein tapa valita valikkokohteita!",
+      "slide11-text": "",
+      "slide12-text": "Kando on erittäin mukautettava. Voit käyttää sitä sovellusten ja tiedostojen avaamiseen, näppäimistömakrojen suorittamiseen ja moniin muihin tarpeisiin. Voit [muuttaa valikon tyyliä]({{link1}}), [lisätä kuvaketeemoja]({{link2}}) ja [käyttää jopa ääniä]({{link3}}) valikoissasi!",
+      "slide12-title": "Ja vielä jotain lisäksi!",
+      "slide13-text": "Jos tarvitset apua, liity [Discord-palvelimelle]({{link1}}) tai lue [dokumentaatio]({{link2}})!",
+      "slide2-text-no-shortcuts": "Jos käynnistit Kandon ensimmäistä kertaa, sinun [saattaa tarvita suorittaa joitakin välivaiheita Linuxilla saadaksesi järjestelmän pikanäppäimet toimimaan]({{link}}). Kun tämä toimii, voit sulkea valikon Escape-näppäimellä tai hiiren oikealla painikkeella.",
+      "slide2-text-standard": "Jos käynnistit Kandon ensimmäistä kertaa, voit avata esimerkkivalikon painamalla Ctrl+välilyönti. Sulje se uudelleen Esc-näppäimellä tai hiiren oikealla näppäimellä missä tahansa näytöllä.",
+      "slide2-title": "Avaa valikko!",
+      "slide3-hint1": "Voi myös painaa tästä sulkeaksesi valikon.",
+      "slide3-hint2": "Valitse kohde napsauttamalla mistä tahansa täältä.",
+      "slide3-text": "Kandossa **koko näyttösi on painalluksen kohde**! Sinun ei tarvitse tähdätä kuvakkeita, vaan voit napsauttaa missä tahansa kohteen sektorilla. Tämä tekee kohteiden valinnasta paljon kätevämpää.",
+      "slide4-text": "Alivalikko avautuu **aina** hiiren osoittimen kohdalle. Sinun **ei tarvitse odottaa animaation valmistumista**. Luota lihasmuistiisi ja tee valintasi!",
+      "slide5-hint": "Napsauta missä tahansa täällä siirtyäksesi yhden tason ylemmäs.",
+      "slide5-text": "",
+      "slide6-text": "Tällä tavalla voit tutkia valikon rakennetta nopeasti.",
+      "slide7-text": "",
+      "slide7-title": "",
+      "slide8-text": "**Valikko reagoi hiiren liikkeisiin!** Alivalikko avautuu, kun haluat sen avautuvan. Pienellä harjoittelulla voit valita kohteita ilman, että edes katsot valikkoon päin.",
+      "slide9-text": "",
+      "slide9-title": "Ole salamannopea: turbotila",
+      "title": "Tervetuloa, tämä on Kando!"
+    },
+    "invalid-dropdown-selection": "Valitse vaihtoehto…",
+    "menu-behavior": "Valikon toiminta",
+    "menu-behavior-info": "Ennen kuin otat mitään seuraavista käyttöön, suosittelemme lukemaan [tästä]({{link}}) miksi pidämme Kandon oletuskäyttäytymisestä!",
+    "menu-conditions": "Valikon ehdollisuudet",
+    "menu-conditions-info": "Voit asettaa useita valikoita samalle pikanäppäimelle ja valita sitten millä ehdoilla jokainen valikko tulee näyttää.",
+    "menu-themes-dialog": {
+      "accent-colors": "Korostusvärit",
+      "accent-colors-info": "Jokaisella teemalla voi olla erilainen tarjonta korostusvärejä.",
+      "author": "tekijä {{author}}",
+      "create-your-own-themes": "Luo omia teemoja",
+      "dark": "Tumma teema",
+      "fade-in-time": "Ilmaantumisaika",
+      "fade-in-time-info": "Aika joka valikolla kestää ilmaantua. Oletus on 150ms.",
+      "fade-out-time": "Poistumisaika",
+      "fade-out-time-info": "Aika joka valikolla kestää poistua näkyvistä. Oletus on 200ms.",
+      "get-themes-online": "Hae teemoja verkosta",
+      "light": "Vaalea teema",
+      "light-dark-mode": "Ota käyttöön vaalea/tumma tila",
+      "light-dark-mode-info": "Jos käytössä, voit valita eri teeman ja väriasetukset kuin järjestelmässäsi oletuksena.",
+      "menu-scale": "Valikon mittakaava",
+      "menu-scale-info": "Käytä suurentaaksesi tai pienentääksesi valikoiden kokoa. Oletus on 1.0.",
+      "no-accent-colors": "Tämä teema ei tue korostusvärejä.",
+      "open-theme-directory": "Lataa teema tietokoneelta",
+      "reset-color-picker": "Palauta värien oletusarvot",
+      "selection-wedges": "",
+      "selection-wedges-info": "",
+      "title": "Valikkoteemat"
+    },
+    "no-matching-menus": "Valikkoja ei löytynyt.",
+    "no-matching-menus-note": "Kenties voisit kokeilla erilaista hakutermiä?",
+    "no-menus": "Sinulla ei ole valikkoja.",
+    "no-menus-note": "Jos poistit edellisen vahingossa, voit palauttaa sen käyttäen palautuspainiketta.",
+    "not-bound": "",
+    "redo": "Tee uudelleen",
+    "restore-backup": "Palauta varmuuskopio…",
+    "restore-general-settings-error-title": "Yleisten asetusten varmuuskopion lataaminen epäonnistui!",
+    "restore-general-settings-success-message": "Yleiset asetukset on palautettu varmuuskopiotiedostosta.",
+    "restore-general-settings-success-title": "Onnistui!",
+    "restore-general-settings-warning-message": "Tämä korvaa kaikki nykyiset sovelluksen asetukset valitun varmuuskopiotiedoston sisällöllä! Tällä ei ole vaikutusta valikkoihin ja valikkokokoelmiin.",
+    "restore-general-settings-warning-title": "Haluatko varmasti palauttaa yleiset asetukset?",
+    "restore-menu-settings-error-title": "Valikkojen varmuuskopion lataaminen epäonnistui!",
+    "restore-menu-settings-success-message": "Valikot ja valikkokokoelmat on palautettu varmuuskopiotiedostosta.",
+    "restore-menu-settings-success-title": "Onnistui!",
+    "restore-menu-settings-warning-message": "Tämä korvaa nykyiset valikot ja valikkokokoelmat valitun varmuuskopiotiedoston sisällöllä!",
+    "restore-menu-settings-warning-title": "Haluatko varmasti palauttaa valikkoasetukset?",
+    "screen-area-picker": {
+      "bottom-right": "Vedä tämä alueen oikeaan alakulmaan.",
+      "bottom-right-value": "Oikea: {{x}}, Ala: {{y}}",
+      "confirm": "Käytä tätä aluetta",
+      "invalid": "Varmista, että vasen yläkulma on oikean alakulman yläpuolella ja vasemmalla puolella.",
+      "top-left": "Vedä tämä alueen vasempaan yläkulmaan.",
+      "top-left-value": "Vasen: {{x}}, Ylä: {{y}}",
+      "valid": "Hienoa! Olet valinnut hyväksyttävän alueen."
+    },
+    "search-menus-placeholder": "Etsi valikkoja…",
+    "shortcut-id-label": "Pikanäppäimen tunnus",
+    "shortcut-info": "Tämä pikanäppäin avaa valikon. Sen on sisällettävä yksi normaali näppäin ja mikä tahansa määrä muuntimia, kuten Ctrl, Alt tai Shift. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu toiselle valikolle!",
+    "shortcut-label": "Pikanäppäin",
+    "shortcut-recording": "Paina pikanäppäintä…",
+    "tags": "Tunnisteet",
+    "tags-info": "Tunnisteita voidaan käyttää valikoiden ryhmittelemiseksi kokoelmiin.",
+    "undo": "Palauta",
+    "window-condition": "Rajaa tiettyihin ikkunaotsikkoihin",
+    "window-condition-info": "Näytä valikko vain, jos keskitetyn ikkunan otsikko sisältää tietyn tekstin. Tämä tukee säännöllisiä lausekkeita, kuten /youtube|vimeo/i.",
+    "window-condition-placeholder": "Ikkunan otsikko",
+    "window-condition-tooltip": "Valitse ikkuna",
+    "window-picker-dialog": {
+      "confirm": "Käytä tätä",
+      "countdown_one": "Valitaan {{count}} sekunnissa…",
+      "countdown_other": "Valitaan {{count}} sekunnissa…",
+      "instructions": "Aloita painamalla painiketta alapuolella ja valitse kohdeikkuna viiden sekunnin kuluessa.",
+      "restart-countdown": "Aloita laskenta uudelleen",
+      "result": "Valitsit \"{{name}}\"n.",
+      "start-countdown": "Aloita laskenta"
+    }
+  }
 }

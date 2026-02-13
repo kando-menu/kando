@@ -1,205 +1,559 @@
 {
-    "example-menu": {
-        "apps": {
-            "apple-music": "Muzika",
-            "email": "El. paštas",
-            "file-browser": "Failų naršyklė",
-            "gimp": "GIMP",
-            "safari": "Safari",
-            "submenu": "Programos",
-            "terminal": "Terminalas",
-            "web-browser": "Saityno naršyklė"
-        },
-        "audio": {
-            "mute": "Nutildyti",
-            "next-track": "Kitas takelis",
-            "play-pause": "Atkurti / Pristabdyti",
-            "previous-track": "Ankstesnis takelis"
-        },
-        "bookmarks": {
-            "desktop": "Darbalaukis",
-            "documents": "Dokumentai",
-            "downloads": "Atsiuntimai",
-            "music": "Muzika",
-            "videos": "Vaizdo įrašai"
-        },
-        "clipboard": {
-            "copy": "Kopijuoti",
-            "cut": "Iškirpti",
-            "paste": "Įdėti",
-            "submenu": "Iškarpinė"
-        },
-        "name": "Pavyzdinis meniu",
-        "next-workspace": "Kita darbo sritis",
-        "previous-workspace": "Ankstesnė darbo sritis",
-        "web-links": {
-            "google": "Google",
-            "submenu": "Saityno nuorodos"
-        },
-        "windows": {
-            "close-window": "Užverti langą",
-            "mission-control": "Mission Control",
-            "submenu": "Langai",
-            "toggle-maximize": "Perjungti išskleidimą"
-        }
+  "achievements": {
+    "added-items": {
+      "description": "",
+      "name": ""
     },
-    "main": {
-        "failed-to-start-header": "Nepavyko paleisti Kando"
+    "attributes": {
+      "capable": "",
+      "expert": "",
+      "master": "",
+      "novice": "",
+      "skilled": ""
     },
-    "menu-items": {
-        "command": {
-            "command": "Komanda",
-            "description": "Paleisti programas ar scenarijus.",
-            "name": "Paleisti komandą",
-            "choose-app": "Pasirinkti programą…",
-            "placeholder": "Įterpkite bet kokią komandą…"
-        },
-        "macro": {
-            "recording-placeholder": "Paspauskite klavišus…"
-        },
-        "submenu": {
-            "description": "Talpina savyje kitus meniu elementus.",
-            "detailed-description_one": "",
-            "detailed-description_few": "Talpina {{count}} meniu elementus.",
-            "detailed-description_other": "",
-            "name": "Submeniu",
-            "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
-            "tip-2": "Be to, galite įterpti vienus submeniu į kitus.",
-            "tip-3": "Submeniu gali būti naudojami sudėtingų meniu struktūrų kūrimui.",
-            "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
-            "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje."
-        },
-        "text": {
-            "description": "Įdeda nurodytą tekstą.",
-            "name": "Įdėti tekstą",
-            "placeholder": "Įterpkite bet kokį tekstą…"
-        },
-        "uri": {
-            "description": "Atveria failus ar internetines svetaines.",
-            "name": "Atverti URI",
-            "uri": "URI",
-            "placeholder": "Įterpkite bet kokį URI…"
-        },
-        "file": {
-            "name": "Atverti failą",
-            "description": "Atveria failą ar aplanką.",
-            "placeholder": "Pasirinkti failą ar aplanką…"
-        },
-        "redirect": {
-            "description": "Atveria kitą meniu."
-        }
+    "backup": {
+      "description": "",
+      "name": ""
+    },
+    "cancelor": {
+      "description": "",
+      "name": ""
+    },
+    "click-selector": {
+      "description": "",
+      "name": ""
+    },
+    "completed-title": "",
+    "deep-menu": {
+      "description": "",
+      "name": ""
+    },
+    "deleted-all-menus": {
+      "description": "",
+      "name": ""
+    },
+    "depth-selector": {
+      "description": "",
+      "name1": "",
+      "name2": "",
+      "name3": ""
+    },
+    "full-menu": {
+      "description": "",
+      "name": ""
+    },
+    "gamepad-selector": {
+      "description": "",
+      "name": ""
+    },
+    "gesture-selector": {
+      "description": "",
+      "name": ""
+    },
+    "keyboard-selector": {
+      "description": "",
+      "name": ""
+    },
+    "many-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "menu-themes-selected": {
+      "description": "",
+      "name": ""
+    },
+    "restore": {
+      "description": "",
+      "name": ""
+    },
+    "selector": {
+      "description": "",
+      "name": ""
+    },
+    "settings-opened": {
+      "description": "",
+      "name": ""
+    },
+    "speedy-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "sponsors-viewed": {
+      "description": "",
+      "name": ""
+    },
+    "tier": {
+      "I": "",
+      "II": "",
+      "III": "",
+      "IV": "",
+      "V": ""
+    },
+    "tutorial-viewed": {
+      "description": "",
+      "name": ""
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": ""
+    },
+    "hyprland": {
+      "shortcut-info": ""
+    },
+    "kde-wayland": {
+      "shortcut-info": ""
+    },
+    "niri": {
+      "shortcut-info": ""
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "Muzika",
+      "email": "El. paštas",
+      "file-browser": "Failų naršyklė",
+      "finder": "",
+      "gimp": "GIMP",
+      "paint": "",
+      "safari": "Safari",
+      "submenu": "Programos",
+      "terminal": "Terminalas",
+      "web-browser": "Saityno naršyklė"
+    },
+    "audio": {
+      "mute": "Nutildyti",
+      "next-track": "Kitas takelis",
+      "play-pause": "Atkurti / Pristabdyti",
+      "previous-track": "Ankstesnis takelis",
+      "submenu": ""
+    },
+    "bookmarks": {
+      "desktop": "Darbalaukis",
+      "documents": "Dokumentai",
+      "downloads": "Atsiuntimai",
+      "home": "",
+      "music": "Muzika",
+      "pictures": "",
+      "submenu": "",
+      "videos": "Vaizdo įrašai"
+    },
+    "clipboard": {
+      "copy": "Kopijuoti",
+      "cut": "Iškirpti",
+      "paste": "Įdėti",
+      "submenu": "Iškarpinė"
+    },
+    "name": "Pavyzdinis meniu",
+    "next-workspace": "Kita darbo sritis",
+    "previous-workspace": "Ankstesnė darbo sritis",
+    "web-links": {
+      "google": "Google",
+      "kando-on-discord": "",
+      "kando-on-github": "",
+      "kando-on-kofi": "",
+      "kando-on-youtube": "",
+      "submenu": "Saityno nuorodos"
+    },
+    "windows": {
+      "close-window": "Užverti langą",
+      "mission-control": "Mission Control",
+      "submenu": "Langai",
+      "tile-left": "",
+      "tile-right": "",
+      "toggle-maximize": "Perjungti išskleidimą"
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "",
+    "invalid-link-header": "",
+    "invalid-link-message": "",
+    "new-version-notification-body": "",
+    "new-version-notification-header": "",
+    "quit": "",
+    "show-settings": "",
+    "un-inhibit-shortcuts": ""
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "Pasirinkti programą…",
+      "description": "Paleisti programas ar scenarijus.",
+      "detached": "",
+      "detached-info": "",
+      "isolated": "",
+      "isolated-info": "",
+      "name": "Paleisti komandą",
+      "placeholder": "Įterpkite bet kokią komandą…",
+      "tip-1": "",
+      "tip-2": "",
+      "tip-3": "",
+      "tip-4": "",
+      "tip-5": "",
+      "tip-6": ""
+    },
+    "common": {
+      "delayed-option": "",
+      "delayed-option-info": "",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "Atveria failą ar aplanką.",
+      "name": "Atverti failą",
+      "placeholder": "Pasirinkti failą ar aplanką…",
+      "tip-1": ""
+    },
+    "hotkey": {
+      "description": "",
+      "hotkey": "",
+      "hotkey-info": "",
+      "name": "",
+      "recording-placeholder": "",
+      "tip-1": "",
+      "tip-2": "",
+      "tip-3": ""
+    },
+    "macro": {
+      "description": "",
+      "name": "",
+      "placeholder": "",
+      "recording-placeholder": "Paspauskite klavišus…",
+      "tip-1": "",
+      "tip-2": ""
+    },
+    "redirect": {
+      "description": "Atveria kitą meniu.",
+      "name": ""
     },
     "settings": {
-        "area-condition-bottom-placeholder": "Apačia",
-        "area-condition-left-placeholder": "Kairė",
-        "area-condition-right-placeholder": "Dešinė",
-        "area-condition-top-placeholder": "Viršus",
-        "cancel": "Atsisakyti",
-        "centered-mode": "Centruota veiksena",
-        "centered-mode-info": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
-        "icon-picker-dialog": {
-            "search-placeholder": "Ieškoti piktogramų…",
-            "base64-example": "Base64 pavyzdys:",
-            "url-example": "URL pavyzdys:"
-        },
-        "menu-behavior": "Meniu elgsena",
-        "menu-conditions": "Meniu sąlygos",
-        "achievements-dialog": {
-            "reset-button": "Atstatyti pažangą",
-            "reset-confirmation-title": "Ar tikrai norite atstatyti visą pažangą?",
-            "title": "Pasiekimai",
-            "in-progress-button": "Eigoje"
-        },
-        "restore-backup": "Atkurti atsarginę kopiją…",
-        "restore-general-settings-success-title": "Pavyko!",
-        "restore-menu-settings-error-title": "Nepavyko įkelti meniu atsarginės kopijos!",
-        "restore-menu-settings-success-title": "Pavyko!",
-        "file-picker": {
-            "select-file": "Pasirinkti failą",
-            "select-directory": "Pasirinkti katalogą"
-        },
-        "about-dialog": {
-            "title": "Apie Kando",
-            "message": "Aš kuriu Kando vedamas vien tik aistros. Jeigu jums patinka naudotis šia programa taip pat, kaip man patinka ją kurti, tada galite [pavaišinti mane kava]({{link}})!\n\n💖 Simon",
-            "kando-version": "Kando versija",
-            "electron-version": "Electron versija",
-            "chrome-version": "Chrome versija"
-        },
-        "general-settings-dialog": {
-            "none": "Nėra",
-            "auto-language": "Naudoti sistemos kalbą",
-            "localization-info": "Paleiskite Kando iš naujo norėdami pritaikyti naują kalbą.",
-            "localization-label": "Kalba",
-            "hardware-acceleration": "Įjungti aparatinės įrangos spartinimą",
-            "check-for-new-versions-info": "Jei įjungta, Kando rodys pranešimą, kai bus prieinama nauja versija.",
-            "check-for-new-versions": "Tikrinti, ar yra naujų versijų",
-            "invisible-settings-button-info": "Jūs vis tiek galite naudoti mygtuką, jis atsiras, kai virš jo judinsite pelės rodyklę.",
-            "top-left": "Viršuje kairėje",
-            "top-right": "Viršuje dešinėje",
-            "bottom-left": "Apačioje kairėje",
-            "bottom-right": "Apačioje dešinėje",
-            "tray-icon-flavor-info": "Taip pat galite pasirinkti visiškai paslėpti dėklo piktogramą.",
-            "menu-behavior": "Meniu elgsena",
-            "do-nothing": "Nieko nedaryti",
-            "cycle-from-first": "Rodyti kitą meniu (pradėti nuo pirmojo)",
-            "cycle-from-recent": "Rodyti kitą meniu (tęsti nuo paskutiniojo)",
-            "close-menu": "Užverti meniu",
-            "menu-sounds": "Meniu garsai",
-            "backup-and-restore": "Atsarginė kopija ir atkūrimas",
-            "restore-menus": "Atkurti menus.json…",
-            "restore-settings": "Atkurti config.json…"
-        },
-        "introduction-dialog": {
-            "slide1-title": "Kando pateikia išskirtinį ir efektyvų būdą sąveikauti su savo kompiuteriu.",
-            "slide3-hint1": "Taip pat galite spustelėti čia norėdami užverti meniu.",
-            "slide3-hint2": "Spustelėkite čia bet kurioje vietoje norėdami pasirinkti elementą.",
-            "slide5-hint": "Spustelėkite čia bet kurioje vietoje norėdami eiti vienu lygiu aukštyn.",
-            "slide13-text": "Jeigu jums prireiks kažkokios pagalbos, nesivaržykite prisijungti prie mūsų [Discord serverio]({{link1}}) arba pasiskaitykite [dokumentaciją]({{link2}})!",
-            "title": "Jus sveikina Kando!",
-            "show-again": "Rodyti šį dialogą dar kartą"
-        },
-        "menu-themes-dialog": {
-            "dark": "Tamsi veiksena",
-            "light": "Šviesi veiksena",
-            "reset-color-picker": "Atstatyti numatytąsias reikšmes",
-            "title": "Meniu apipavidalinimai",
-            "fade-in-time-info": "Kiek laiko užtrunka laipsniškas meniu atsiradimas. Pagal numatymą – 150 ms.",
-            "fade-in-time": "Laipsniško atsiradimo laikas",
-            "fade-out-time-info": "Kiek laiko užtrunka laipsniškas meniu išnykimas. Pagal numatymą – 200 ms.",
-            "fade-out-time": "Laipsniško išnykimo laikas",
-            "light-dark-mode": "Įjungti šviesią/tamsią veikseną",
-            "get-themes-online": "Gauti apipavidalinimus iš interneto",
-            "create-your-own-themes": "Kurti nuosavus apipavidalinimus",
-            "open-theme-directory": "Atverti apipavidalinimų katalogą"
-        },
-        "all-menus": "Visi meniu",
-        "no-menus": "Jūs neturite jokių meniu.",
-        "create-menu-button": "Naujas meniu",
-        "duplicate-menu": "Dubliuoti meniu",
-        "delete-menu": "Ištrinti meniu",
-        "add-menu-items": "Pridėti meniu elementus",
-        "undo": "Atšaukti",
-        "redo": "Grąžinti",
-        "app-picker": {
-            "search-placeholder": "Ieškoti programos…",
-            "use-selected": "Naudoti pasirinktą"
-        },
-        "app-condition-placeholder": "Programos pavadinimas",
-        "app-condition-tooltip": "Pasirinkti programą",
-        "window-condition-tooltip": "Pasirinkti langą",
-        "area-condition-tooltip": "Pasirinkti ekrano sritį",
-        "duplicate-menu-item": "Dubliuoti meniu elementą",
-        "screen-area-picker": {
-            "confirm": "Naudoti šią sritį"
-        },
-        "window-picker-dialog": {
-            "result": "Jūs pasirinkote „{{name}}“.",
-            "restart-countdown": "Dar kartą pradėti atgalinį skaičiavimą",
-            "start-countdown": "Pradėti atgalinį skaičiavimą",
-            "countdown_one": "Pasirenkama po {{count}} sekundės…",
-            "countdown_few": "Pasirenkama po {{count}} sekundžių…",
-            "countdown_other": "Pasirenkama po {{count}} sekundžių…",
-            "confirm": "Naudoti šią reikšmę"
-        }
+      "description": "",
+      "name": "",
+      "tip-1": ""
+    },
+    "submenu": {
+      "description": "Talpina savyje kitus meniu elementus.",
+      "name": "Submeniu",
+      "tip-1": "Submeniu gali būti naudojami elementų grupavimui.",
+      "tip-2": "Be to, galite įterpti vienus submeniu į kitus.",
+      "tip-3": "Submeniu gali būti naudojami sudėtingų meniu struktūrų kūrimui.",
+      "tip-4": "Jums derėtų vengti pridėti į submeniu daugiau kaip dvylika elementų. Aštuoni yra geras skaičius.",
+      "tip-5": "",
+      "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje.",
+      "tip-7": ""
+    },
+    "text": {
+      "description": "Įdeda nurodytą tekstą.",
+      "name": "Įdėti tekstą",
+      "placeholder": "Įterpkite bet kokį tekstą…",
+      "tip-1": ""
+    },
+    "uri": {
+      "description": "Atveria failus ar internetines svetaines.",
+      "name": "Atverti URI",
+      "placeholder": "Įterpkite bet kokį URI…",
+      "tip-1": "",
+      "tip-2": "",
+      "tip-3": "",
+      "tip-4": "",
+      "tip-5": "",
+      "tip-6": ""
     }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "",
+      "chrome-version": "Chrome versija",
+      "electron-version": "Electron versija",
+      "kando-backend": "",
+      "kando-version": "Kando versija",
+      "message": "Aš kuriu Kando vedamas vien tik aistros. Jeigu jums patinka naudotis šia programa taip pat, kaip man patinka ją kurti, tada galite [pavaišinti mane kava]({{link}})!\n\n💖 Simon",
+      "read-release-notes": "",
+      "title": "Apie Kando"
+    },
+    "achievements-dialog": {
+      "completed-button": "",
+      "in-progress-button": "Eigoje",
+      "no-completed-achievements": "",
+      "no-in-progress-achievements": "",
+      "reset-button": "Atstatyti pažangą",
+      "reset-button-tooltip": "",
+      "reset-confirmation-message": "",
+      "reset-confirmation-title": "Ar tikrai norite atstatyti visą pažangą?",
+      "title": "Pasiekimai",
+      "xp": ""
+    },
+    "add-collection-tooltip": "",
+    "add-menu-item-hint": "",
+    "add-menu-items": "Pridėti meniu elementus",
+    "add-tags-placeholder": "",
+    "all-menus": "Visi meniu",
+    "anchored-mode": "",
+    "anchored-mode-info": "",
+    "app-condition": "",
+    "app-condition-info": "",
+    "app-condition-placeholder": "Programos pavadinimas",
+    "app-condition-tooltip": "Pasirinkti programą",
+    "app-picker": {
+      "hint": "",
+      "search-placeholder": "Ieškoti programos…",
+      "use-selected": "Naudoti pasirinktą"
+    },
+    "area-condition": "",
+    "area-condition-bottom-placeholder": "Apačia",
+    "area-condition-info": "",
+    "area-condition-left-placeholder": "Kairė",
+    "area-condition-right-placeholder": "Dešinė",
+    "area-condition-tooltip": "Pasirinkti ekrano sritį",
+    "area-condition-top-placeholder": "Viršus",
+    "cancel": "Atsisakyti",
+    "centered-mode": "Centruota veiksena",
+    "centered-mode-info": "Atverti meniu ekrano centre, o ne šalia pelės žymeklio.",
+    "create-menu-button": "Naujas meniu",
+    "delete-menu": "Ištrinti meniu",
+    "delete-menu-item": "",
+    "duplicate-menu": "Dubliuoti meniu",
+    "duplicate-menu-item": "Dubliuoti meniu elementą",
+    "empty-collection": "",
+    "empty-collection-note": "",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "Pasirinkti katalogą",
+      "select-file": "Pasirinkti failą"
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "",
+      "advanced-menu-options-note": "",
+      "auto-language": "Naudoti sistemos kalbą",
+      "backup-and-restore": "Atsarginė kopija ir atkūrimas",
+      "backup-menus": "",
+      "backup-settings": "",
+      "black": "",
+      "bottom-left": "Apačioje kairėje",
+      "bottom-right": "Apačioje dešinėje",
+      "center": "",
+      "center-click-zone-radius": "",
+      "center-click-zone-radius-info": "",
+      "check-for-new-versions": "Tikrinti, ar yra naujų versijų",
+      "check-for-new-versions-info": "Jei įjungta, Kando rodys pranešimą, kai bus prieinama nauja versija.",
+      "close-menu": "Užverti meniu",
+      "color": "",
+      "cycle-from-first": "Rodyti kitą meniu (pradėti nuo pirmojo)",
+      "cycle-from-recent": "Rodyti kitą meniu (tęsti nuo paskutiniojo)",
+      "dark": "",
+      "dev-tools-note": "",
+      "developer-options": "",
+      "do-nothing": "Nieko nedaryti",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "",
+      "enable-achievements-info": "",
+      "enable-gamepad-support": "",
+      "enable-gamepad-support-info": "",
+      "enable-marking-mode": "",
+      "enable-marking-mode-info": "",
+      "enable-turbo-mode": "",
+      "enable-turbo-mode-info": "",
+      "fixed-stroke-length": "",
+      "fixed-stroke-length-info": "",
+      "gesture-jitter-threshold": "",
+      "gesture-jitter-threshold-info": "",
+      "gesture-pause-timeout": "",
+      "gesture-pause-timeout-info": "",
+      "hardware-acceleration": "Įjungti aparatinės įrangos spartinimą",
+      "hardware-acceleration-info": "",
+      "hidden": "",
+      "invisible-settings-button": "",
+      "invisible-settings-button-info": "Jūs vis tiek galite naudoti mygtuką, jis atsiras, kai virš jo judinsite pelės rodyklę.",
+      "keep-input-focus": "",
+      "keep-input-focus-info": "",
+      "lazy-initialization": "",
+      "lazy-initialization-info": "",
+      "learn-how-to-add-sound-themes": "",
+      "light": "",
+      "localization-info": "Paleiskite Kando iš naujo norėdami pritaikyti naują kalbą.",
+      "localization-label": "Kalba",
+      "menu-behavior": "Meniu elgsena",
+      "menu-sounds": "Meniu garsai",
+      "menu-window-dev-tools": "",
+      "message": "",
+      "minimum-gesture-angle": "",
+      "minimum-gesture-angle-info": "",
+      "minimum-gesture-length": "",
+      "minimum-gesture-length-info": "",
+      "minimum-submenu-distance": "",
+      "minimum-submenu-distance-info": "",
+      "move-pointer-to-menu-center": "",
+      "move-pointer-to-menu-center-info": "",
+      "movement-threshold": "",
+      "movement-threshold-info": "",
+      "none": "Nėra",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "",
+      "press-again-behavior-info": "",
+      "previously-reported": "",
+      "reload-menu-theme": "",
+      "reload-note": "",
+      "reload-sound-theme": "",
+      "require-click-for-hover-mode": "",
+      "require-click-for-hover-mode-info": "",
+      "restore-menus": "Atkurti menus.json…",
+      "restore-settings": "Atkurti config.json…",
+      "right-mouse-button-selects-parent": "",
+      "right-mouse-button-selects-parent-info": "",
+      "sakura-dark": "",
+      "sakura-light": "",
+      "sakura-system": "",
+      "settings-button-position": "",
+      "settings-button-position-info": "",
+      "settings-window-color-scheme": "",
+      "settings-window-color-scheme-info": "",
+      "settings-window-dev-tools": "",
+      "settings-window-flavor": "",
+      "settings-window-flavor-info": "",
+      "sound-theme": "",
+      "sound-theme-info": "",
+      "system": "",
+      "title": "",
+      "top-left": "Viršuje kairėje",
+      "top-right": "Viršuje dešinėje",
+      "transparent-dark": "",
+      "transparent-light": "",
+      "transparent-system": "",
+      "tray-icon-flavor": "",
+      "tray-icon-flavor-info": "Taip pat galite pasirinkti visiškai paslėpti dėklo piktogramą.",
+      "volume": "",
+      "volume-info": "",
+      "white": "",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "",
+    "hover-mode-info": "",
+    "icon-picker-dialog": {
+      "base64-example": "Base64 pavyzdys:",
+      "base64-hint": "",
+      "file-example": "",
+      "hint": "",
+      "reload-button-tooltip": "",
+      "search-placeholder": "Ieškoti piktogramų…",
+      "url-example": "URL pavyzdys:"
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "",
+      "chapter2": "",
+      "chapter3": "",
+      "chapter4": "",
+      "chapter5": "",
+      "show-again": "Rodyti šį dialogą dar kartą",
+      "slide1-text": "",
+      "slide1-title": "Kando pateikia išskirtinį ir efektyvų būdą sąveikauti su savo kompiuteriu.",
+      "slide10-text": "",
+      "slide11-text": "",
+      "slide12-text": "",
+      "slide12-title": "",
+      "slide13-text": "Jeigu jums prireiks kažkokios pagalbos, nesivaržykite prisijungti prie mūsų [Discord serverio]({{link1}}) arba pasiskaitykite [dokumentaciją]({{link2}})!",
+      "slide2-text-no-shortcuts": "",
+      "slide2-text-standard": "",
+      "slide2-title": "",
+      "slide3-hint1": "Taip pat galite spustelėti čia norėdami užverti meniu.",
+      "slide3-hint2": "Spustelėkite čia bet kurioje vietoje norėdami pasirinkti elementą.",
+      "slide3-text": "",
+      "slide4-text": "",
+      "slide5-hint": "Spustelėkite čia bet kurioje vietoje norėdami eiti vienu lygiu aukštyn.",
+      "slide5-text": "",
+      "slide6-text": "",
+      "slide7-text": "",
+      "slide7-title": "",
+      "slide8-text": "",
+      "slide9-text": "",
+      "slide9-title": "",
+      "title": "Jus sveikina Kando!"
+    },
+    "invalid-dropdown-selection": "",
+    "menu-behavior": "Meniu elgsena",
+    "menu-behavior-info": "",
+    "menu-conditions": "Meniu sąlygos",
+    "menu-conditions-info": "",
+    "menu-themes-dialog": {
+      "accent-colors": "",
+      "accent-colors-info": "",
+      "author": "",
+      "create-your-own-themes": "Kurti nuosavus apipavidalinimus",
+      "dark": "Tamsi veiksena",
+      "fade-in-time": "Laipsniško atsiradimo laikas",
+      "fade-in-time-info": "Kiek laiko užtrunka laipsniškas meniu atsiradimas. Pagal numatymą – 150 ms.",
+      "fade-out-time": "Laipsniško išnykimo laikas",
+      "fade-out-time-info": "Kiek laiko užtrunka laipsniškas meniu išnykimas. Pagal numatymą – 200 ms.",
+      "get-themes-online": "Gauti apipavidalinimus iš interneto",
+      "light": "Šviesi veiksena",
+      "light-dark-mode": "Įjungti šviesią/tamsią veikseną",
+      "light-dark-mode-info": "",
+      "menu-scale": "",
+      "menu-scale-info": "",
+      "no-accent-colors": "",
+      "open-theme-directory": "Atverti apipavidalinimų katalogą",
+      "reset-color-picker": "Atstatyti numatytąsias reikšmes",
+      "selection-wedges": "",
+      "selection-wedges-info": "",
+      "title": "Meniu apipavidalinimai"
+    },
+    "no-matching-menus": "",
+    "no-matching-menus-note": "",
+    "no-menus": "Jūs neturite jokių meniu.",
+    "no-menus-note": "",
+    "not-bound": "",
+    "redo": "Grąžinti",
+    "restore-backup": "Atkurti atsarginę kopiją…",
+    "restore-general-settings-error-title": "",
+    "restore-general-settings-success-message": "",
+    "restore-general-settings-success-title": "Pavyko!",
+    "restore-general-settings-warning-message": "",
+    "restore-general-settings-warning-title": "",
+    "restore-menu-settings-error-title": "Nepavyko įkelti meniu atsarginės kopijos!",
+    "restore-menu-settings-success-message": "",
+    "restore-menu-settings-success-title": "Pavyko!",
+    "restore-menu-settings-warning-message": "",
+    "restore-menu-settings-warning-title": "",
+    "screen-area-picker": {
+      "bottom-right": "",
+      "bottom-right-value": "",
+      "confirm": "Naudoti šią sritį",
+      "invalid": "",
+      "top-left": "",
+      "top-left-value": "",
+      "valid": ""
+    },
+    "search-menus-placeholder": "",
+    "shortcut-id-label": "",
+    "shortcut-info": "",
+    "shortcut-label": "",
+    "shortcut-recording": "",
+    "tags": "",
+    "tags-info": "",
+    "undo": "Atšaukti",
+    "window-condition": "",
+    "window-condition-info": "",
+    "window-condition-placeholder": "",
+    "window-condition-tooltip": "Pasirinkti langą",
+    "window-picker-dialog": {
+      "confirm": "Naudoti šią reikšmę",
+      "countdown_one": "Pasirenkama po {{count}} sekundės…",
+      "countdown_few": "Pasirenkama po {{count}} sekundžių…",
+      "countdown_many": "",
+      "countdown_other": "Pasirenkama po {{count}} sekundžių…",
+      "instructions": "",
+      "restart-countdown": "Dar kartą pradėti atgalinį skaičiavimą",
+      "result": "Jūs pasirinkote „{{name}}“.",
+      "start-countdown": "Pradėti atgalinį skaičiavimą"
+    }
+  }
 }

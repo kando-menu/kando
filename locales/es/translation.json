@@ -1,299 +1,558 @@
 {
-    "backends": {
-        "gnome": {
-            "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: {{link}}"
-        },
-        "hyprland": {
-            "shortcut-info": ""
-        },
-        "kde-wayland": {
-            "shortcut-info": ""
-        }
+  "achievements": {
+    "added-items": {
+      "description": "",
+      "name": ""
     },
-    "example-menu": {
-        "apps": {
-            "apple-music": "Música",
-            "email": "Correo Electrónico",
-            "file-browser": "Administrador de Archivos",
-            "finder": "Finder",
-            "gimp": "GIMP",
-            "paint": "Paint",
-            "safari": "Safari",
-            "submenu": "Aplicaciones",
-            "terminal": "Terminal",
-            "web-browser": "Navegador"
-        },
-        "audio": {
-            "mute": "Silencio",
-            "next-track": "Siguiente pista",
-            "play-pause": "Reproducir / Pausa",
-            "previous-track": "Anterior pista",
-            "submenu": "Sonido"
-        },
-        "bookmarks": {
-            "desktop": "Escritorio",
-            "documents": "Documentos",
-            "downloads": "Descargas",
-            "home": "Inicio",
-            "music": "Música",
-            "pictures": "Imágenes",
-            "submenu": "Favoritos",
-            "videos": "Videos"
-        },
-        "clipboard": {
-            "copy": "Copiar",
-            "cut": "Cortar",
-            "paste": "Pegar",
-            "submenu": "Portapapeles"
-        },
-        "name": "Menú de ejemplo",
-        "next-workspace": "Siguiente espacio de trabajo",
-        "previous-workspace": "Espacio de trabajo anterior",
-        "web-links": {
-            "google": "Google",
-            "kando-on-discord": "Kando en Discord",
-            "kando-on-github": "Kando en GitHub",
-            "kando-on-kofi": "Kando en Ko-fi",
-            "kando-on-youtube": "Kando en YouTube",
-            "submenu": "Sitios Web"
-        },
-        "windows": {
-            "close-window": "Cerrar ventana",
-            "mission-control": "Mission Control",
-            "submenu": "Ventanas",
-            "tile-left": "Ajustar a la izquierda",
-            "tile-right": "Ajustar a la derecha",
-            "toggle-maximize": "Alternar maximizar"
-        }
+    "attributes": {
+      "capable": "",
+      "expert": "",
+      "master": "",
+      "novice": "",
+      "skilled": ""
     },
-    "main": {
-        "failed-to-start-header": "Kando no se ha iniciado",
-        "new-version-notification-header": "Una nueva versión de Kando está disponible!",
-        "invalid-link-header": "Enlace no válido",
-        "quit": "Salir",
-        "show-settings": "Mostrar configuración",
-        "un-inhibit-shortcuts": "Reactivar atajos",
-        "inhibit-shortcuts": "Desactivar todos los atajos temporalmente"
+    "backup": {
+      "description": "",
+      "name": ""
     },
-    "menu-items": {
-        "command": {
-            "command": "Comando",
-            "command-info": "Esto se ejecutará.",
-            "description": "Ejecute aplicaciones o secuencias de órdenes.",
-            "name": "Ejecutar orden",
-            "tip-1": "Puede usar el tipo de elemento Orden para iniciar aplicaciones o secuencias.",
-            "tip-2": "Si la dirección al ejecutable contiene espacios, \"entrecomíllela\".",
-            "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
-            "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrió el menú.",
-            "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
-            "placeholder": "Inserte cualquier orden…",
-            "choose-app": "Elija una aplicación…"
-        },
-        "hotkey": {
-            "description": "Presiona una combinación de teclas.",
-            "hotkey": "Atajo",
-            "name": "Simular atajo",
-            "recording-placeholder": "Presione un atajo…",
-            "tip-1": "Al grabar un atajo, no es necesario presionar todas las teclas a la vez. Puede presionarlas una tras otra.",
-            "tip-2": "Si no puede grabar una tecla porque la utiliza el sistema, pruebe a escribir directamente su nombre."
-        },
-        "macro": {
-            "description": "Escribe una macro del teclado.",
-            "name": "Simular Macro",
-            "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
-            "recording-placeholder": "Presiona las teclas…",
-            "tip-1": "De manera predeterminada, Kando añade una demora de 10 ms antes de cada suceso de tecla. Puede cambiarlo con la propiedad «delay»."
-        },
-        "submenu": {
-            "description": "Contiene otras opciones de menú.",
-            "detailed-description_one": "",
-            "detailed-description_many": "Contiene {{count}} elementos en el menú.",
-            "detailed-description_other": "",
-            "name": "Submenú",
-            "tip-1": "Los submenús pueden utilizarse para agrupar elementos.",
-            "tip-2": "También puedes anidar submenús dentro de submenús.",
-            "tip-3": "Los submenús permiten crear estructuras de menú complejas.",
-            "tip-4": "Evite añadir más de doce elementos a un submenú. Ocho es un buen número.",
-            "tip-5": "Puedes usar lo íconos de bloqueo en la vista previa para fijar la posición de un elemento en el menú.",
-            "tip-6": "Puede reordenar los elementos arrastrándolos en la vista previa."
-        },
-        "text": {
-            "description": "Inserta el texto indicado.",
-            "name": "Pegar texto",
-            "placeholder": "Inserta cualquier texto…",
-            "tip-1": "Esta acción utiliza el portapapeles para pegar el texto. Después de usar la acción, el portapapeles contendrá el texto."
-        },
-        "uri": {
-            "description": "Abrir archivos o sitios web.",
-            "name": "Abrir URI",
-            "tip-1": "Puedes usar el elemento de tipo URI para abrir un sitio web utilizando el protocolo http://.",
-            "tip-2": "Puedes usar el elemento de tipo URI para abrir un archivo o carpeta usando el protocolo file://.",
-            "tip-3": "Puedes usar el elemento de tipo URI para abrir un link mailto:.",
-            "tip-4": "Usa {{app_name}} para insertar el nombre de la aplicación que fué enfocada cuando abriste el menú.",
-            "tip-5": "Use {{window_name}} para insertar el nombre de la ventana que estaba activa cuando abrió el menú.",
-            "tip-6": "Utilice {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
-            "uri": "URI",
-            "placeholder": "Inserte cualquier URI…"
-        },
-        "file": {
-            "placeholder": "Elegir archivo o carpeta…",
-            "tip-1": "Puede usar este tipo de elemento para abrir archivos o carpetas.",
-            "name": "Abrir archivo",
-            "description": "Abre un archivo o carpeta."
-        },
-        "redirect": {
-            "description": "Abre otro menú."
-        },
-        "settings": {
-            "description": "Abre la ventana de configuración de Kando.",
-            "name": "Abrir configuración",
-            "tip-1": "Este tipo de elemento abre la ventana de configuración de Kando."
-        }
+    "cancelor": {
+      "description": "",
+      "name": ""
+    },
+    "click-selector": {
+      "description": "",
+      "name": ""
+    },
+    "completed-title": "",
+    "deep-menu": {
+      "description": "",
+      "name": ""
+    },
+    "deleted-all-menus": {
+      "description": "",
+      "name": ""
+    },
+    "depth-selector": {
+      "description": "",
+      "name1": "",
+      "name2": "",
+      "name3": ""
+    },
+    "full-menu": {
+      "description": "",
+      "name": ""
+    },
+    "gamepad-selector": {
+      "description": "",
+      "name": ""
+    },
+    "gesture-selector": {
+      "description": "",
+      "name": ""
+    },
+    "keyboard-selector": {
+      "description": "",
+      "name": ""
+    },
+    "many-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "menu-themes-selected": {
+      "description": "",
+      "name": ""
+    },
+    "restore": {
+      "description": "",
+      "name": ""
+    },
+    "selector": {
+      "description": "",
+      "name": ""
+    },
+    "settings-opened": {
+      "description": "",
+      "name": ""
+    },
+    "speedy-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "sponsors-viewed": {
+      "description": "",
+      "name": ""
+    },
+    "tier": {
+      "I": "",
+      "II": "",
+      "III": "",
+      "IV": "",
+      "V": ""
+    },
+    "tutorial-viewed": {
+      "description": "",
+      "name": ""
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": "No se pudo conectar a la extensión de GNOME Shell de Kando Integration. Puede obtenerla desde aquí: {{link}}"
+    },
+    "hyprland": {
+      "shortcut-info": ""
+    },
+    "kde-wayland": {
+      "shortcut-info": ""
+    },
+    "niri": {
+      "shortcut-info": ""
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "Música",
+      "email": "Correo Electrónico",
+      "file-browser": "Administrador de Archivos",
+      "finder": "Finder",
+      "gimp": "GIMP",
+      "paint": "Paint",
+      "safari": "Safari",
+      "submenu": "Aplicaciones",
+      "terminal": "Terminal",
+      "web-browser": "Navegador"
+    },
+    "audio": {
+      "mute": "Silencio",
+      "next-track": "Siguiente pista",
+      "play-pause": "Reproducir / Pausa",
+      "previous-track": "Anterior pista",
+      "submenu": "Sonido"
+    },
+    "bookmarks": {
+      "desktop": "Escritorio",
+      "documents": "Documentos",
+      "downloads": "Descargas",
+      "home": "Inicio",
+      "music": "Música",
+      "pictures": "Imágenes",
+      "submenu": "Favoritos",
+      "videos": "Videos"
+    },
+    "clipboard": {
+      "copy": "Copiar",
+      "cut": "Cortar",
+      "paste": "Pegar",
+      "submenu": "Portapapeles"
+    },
+    "name": "Menú de ejemplo",
+    "next-workspace": "Siguiente espacio de trabajo",
+    "previous-workspace": "Espacio de trabajo anterior",
+    "web-links": {
+      "google": "Google",
+      "kando-on-discord": "Kando en Discord",
+      "kando-on-github": "Kando en GitHub",
+      "kando-on-kofi": "Kando en Ko-fi",
+      "kando-on-youtube": "Kando en YouTube",
+      "submenu": "Sitios Web"
+    },
+    "windows": {
+      "close-window": "Cerrar ventana",
+      "mission-control": "Mission Control",
+      "submenu": "Ventanas",
+      "tile-left": "Ajustar a la izquierda",
+      "tile-right": "Ajustar a la derecha",
+      "toggle-maximize": "Alternar maximizar"
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "Desactivar todos los atajos temporalmente",
+    "invalid-link-header": "Enlace no válido",
+    "invalid-link-message": "",
+    "new-version-notification-body": "",
+    "new-version-notification-header": "Una nueva versión de Kando está disponible!",
+    "quit": "Salir",
+    "show-settings": "Mostrar configuración",
+    "un-inhibit-shortcuts": "Reactivar atajos"
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "Elija una aplicación…",
+      "description": "Ejecute aplicaciones o secuencias de órdenes.",
+      "detached": "",
+      "detached-info": "",
+      "isolated": "",
+      "isolated-info": "",
+      "name": "Ejecutar orden",
+      "placeholder": "Inserte cualquier orden…",
+      "tip-1": "Puede usar el tipo de elemento Orden para iniciar aplicaciones o secuencias.",
+      "tip-2": "Si la dirección al ejecutable contiene espacios, \"entrecomíllela\".",
+      "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
+      "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrió el menú.",
+      "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
+      "tip-6": ""
+    },
+    "common": {
+      "delayed-option": "",
+      "delayed-option-info": "",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "Abre un archivo o carpeta.",
+      "name": "Abrir archivo",
+      "placeholder": "Elegir archivo o carpeta…",
+      "tip-1": "Puede usar este tipo de elemento para abrir archivos o carpetas."
+    },
+    "hotkey": {
+      "description": "Presiona una combinación de teclas.",
+      "hotkey": "Atajo",
+      "hotkey-info": "",
+      "name": "Simular atajo",
+      "recording-placeholder": "Presione un atajo…",
+      "tip-1": "Al grabar un atajo, no es necesario presionar todas las teclas a la vez. Puede presionarlas una tras otra.",
+      "tip-2": "Si no puede grabar una tecla porque la utiliza el sistema, pruebe a escribir directamente su nombre.",
+      "tip-3": ""
+    },
+    "macro": {
+      "description": "Escribe una macro del teclado.",
+      "name": "Simular Macro",
+      "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
+      "recording-placeholder": "Presiona las teclas…",
+      "tip-1": "De manera predeterminada, Kando añade una demora de 10 ms antes de cada suceso de tecla. Puede cambiarlo con la propiedad «delay».",
+      "tip-2": ""
+    },
+    "redirect": {
+      "description": "Abre otro menú.",
+      "name": ""
     },
     "settings": {
-        "anchored-mode": "Modo Fijado",
-        "app-condition": "Limitar a aplicaciones específicas",
-        "area-condition": "Limitar a área de ventana específica",
-        "area-condition-bottom-placeholder": "Abajo",
-        "area-condition-left-placeholder": "Izquierda",
-        "area-condition-right-placeholder": "Derecha",
-        "area-condition-top-placeholder": "Arriba",
-        "cancel": "Cancelar",
-        "centered-mode": "Modo centrado",
-        "centered-mode-info": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
-        "general-settings-dialog": {
-            "reload-menu-theme": "Recargar el tema del menú",
-            "reload-menu-theme-tooltip": "Los cambios de CSS se aplican inmediatamente. Para realizar cambios en el archivo theme.json, deberá volver a abrir el menú.",
-            "settings-button-position": "Posición del botón Configuración",
-            "app-behavior": "Comportamiento de la aplicación",
-            "invisible-settings-button": "Botón de configuración invisible",
-            "system": "Del sistema",
-            "transparent-light": "Claro transparente",
-            "transparent-dark": "Oscuro transparente",
-            "transparent-system": "Del sistema transparente",
-            "sakura-light": "Claro sakura",
-            "sakura-dark": "Oscuro sakura",
-            "sakura-system": "Del sistema sakura",
-            "black": "Negro",
-            "lazy-initialization": "Inicialización diferida",
-            "menu-behavior": "Comportamiento del menú",
-            "enable-turbo-mode": "Activar modo turbo",
-            "menu-sounds": "Sonidos del menú",
-            "sound-theme": "Tema de sonidos",
-            "volume": "Volumen",
-            "advanced-menu-options": "Opciones avanzadas del menú",
-            "reload-sound-theme": "Recargar tema de sonidos",
-            "none": "Ninguno",
-            "title": "Configuración general",
-            "check-for-new-versions": "Comprobar si hay versiones nuevas",
-            "invisible-settings-button-info": "Aún podrá usar el botón, ya que aparecerá cuando se pose el ratón por encima.",
-            "settings-button-position-info": "Escoja la esquina de la pantalla en la que se mostrará el botón Configuración..",
-            "top-left": "Superior izquierda",
-            "top-right": "Superior derecha",
-            "bottom-left": "Inferior izquierda",
-            "bottom-right": "Inferior derecha",
-            "light": "Claro",
-            "dark": "Oscuro",
-            "color": "Color",
-            "white": "Blanco",
-            "movement-threshold": "Umbral de movimiento",
-            "developer-options": "Opciones de desarrollo",
-            "minimum-gesture-angle": "Ángulo mínimo de gesto",
-            "reload-note": "Cuando vuelva a cargar el tema del menú, los cambios al CSS se aplicarán aun si se está mostrando un menú. Para que se reflejen los cambios en el archivo theme.json, deberá reabrir el menú.",
-            "check-for-new-versions-info": "Si se activa, Kando mostrará una notificación cuando esté disponible una versión nueva.",
-            "menu-window-dev-tools": "Inspeccionar menú",
-            "hidden": "Oculto",
-            "dev-tools-note": "Kando utiliza dos ventanas: una para el menú y otra para la configuración. Puede abrir las herramientas de desarrollo para inspeccionar ambas ventanas de forma separada.",
-            "settings-window-dev-tools": "Inspeccionar configuración"
-        },
-        "icon-picker-dialog": {
-            "search-placeholder": "Buscar iconos…",
-            "base64-example": "Ejemplo de Base64:",
-            "file-example": "Ejemplo de URI file:",
-            "url-example": "Ejemplo de URL:",
-            "hint": "Aprenda [aquí]({{link}}) a añadir o crear sus propios temas de iconos."
-        },
-        "introduction-dialog": {
-            "title": "Le damos la bienvenida a Kando",
-            "slide12-title": "¡Hay más!",
-            "chapter1": "Primeros pasos",
-            "chapter3": "Modo turbo",
-            "chapter4": "Próximos pasos",
-            "chapter5": "Obtener ayuda",
-            "show-again": "Mostrar este diálogo nuevamente",
-            "slide3-hint1": "También puede pulsar aquí para cerrar el menú.",
-            "slide1-title": "Kando brinda una manera única y eficiente de interactuar con su equipo."
-        },
-        "menu-behavior": "Comportamiento del menú",
-        "menu-conditions": "Condiciones de menú",
-        "menu-conditions-info": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
-        "menu-themes-dialog": {
-            "author": "Por {{author}}",
-            "light-dark-mode-info": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
-            "reset-color-picker": "Reiniciar colores por defecto",
-            "title": "Temas del menú",
-            "light": "Modo claro",
-            "dark": "Modo oscuro",
-            "theme-colors": "Colores del tema",
-            "open-theme-directory": "Abrir directorio de temas",
-            "create-your-own-themes": "Cree sus propios temas",
-            "menu-scale": "Escala del menú",
-            "get-themes-online": "Obtener temas en línea"
-        },
-        "not-bound": "No asignado",
-        "shortcut-id-label": "Id. de atajo",
-        "shortcut-label": "Tecla de acceso directo",
-        "shortcut-recording": "Presiona un atajo…",
-        "window-condition": "Limitar a títulos de ventana específicos",
-        "all-menus": "Todos los menús",
-        "undo": "Deshacer",
-        "redo": "Rehacer",
-        "app-condition-placeholder": "Nombre de la aplicación",
-        "add-tags-placeholder": "Añadir etiquetas…",
-        "about-dialog": {
-            "title": "Acerca de Kando",
-            "kando-version": "Versión de Kando",
-            "electron-version": "Versión de Electron",
-            "chrome-version": "Versión de Chrome",
-            "kando-backend": "Motor de Kando",
-            "read-release-notes": "Leer las novedades"
-        },
-        "window-picker-dialog": {
-            "confirm": "Usar este valor",
-            "result": "Seleccionó «{{name}}».",
-            "pick-app-name-title": "Seleccione un nombre de aplicación",
-            "countdown_one": "Seleccionando en {{count}} segundo…",
-            "countdown_many": "Seleccionando en {{count}} segundos…",
-            "countdown_other": "Seleccionando en {{count}} segundos…",
-            "pick-window-title-title": "Seleccione un título de ventana"
-        },
-        "create-menu-button": "Menú nuevo",
-        "tags": "Etiquetas",
-        "file-picker": {
-            "select-file": "Seleccione un archivo",
-            "select-directory": "Seleccione un directorio"
-        },
-        "search-menus-placeholder": "Buscar en los menús…",
-        "add-collection-tooltip": "Cree una colección de menús nueva. Use las colecciones para agrupar sus menús por etiquetas.",
-        "add-menu-items": "Añadir elementos al menú",
-        "window-condition-placeholder": "Título de la ventana",
-        "duplicate-menu": "Duplicar menú",
-        "delete-menu": "Eliminar menú",
-        "tags-info": "Las etiquetas pueden usarse para agrupar los menús en colecciones.",
-        "delete-menu-item": "Eliminar elemento del menú",
-        "no-menus": "No tiene ningún menú.",
-        "no-matching-menus": "No se encontró ningún menú.",
-        "no-menus-note": "Si eliminó el último por accidente, puede restaurarlo con el botón Deshacer.",
-        "empty-collection": "Esta colección está vacía.",
-        "no-matching-menus-note": "Pruebe con algún otro término de búsqueda.",
-        "area-condition-tooltip": "Seleccione un área de la pantalla",
-        "duplicate-menu-item": "Duplicar elemento del menú",
-        "invalid-dropdown-selection": "Seleccionar una opción…",
-        "empty-collection-note": "Edite las etiquetas más arriba o añada un menú totalmente nuevo a esta colección con el botón siguiente.",
-        "window-condition-tooltip": "Seleccione una ventana",
-        "screen-area-picker": {
-            "valid": "¡Bien!, ha seleccionado un área válida.",
-            "confirm": "Usar esta área"
-        }
+      "description": "Abre la ventana de configuración de Kando.",
+      "name": "Abrir configuración",
+      "tip-1": "Este tipo de elemento abre la ventana de configuración de Kando."
+    },
+    "submenu": {
+      "description": "Contiene otras opciones de menú.",
+      "name": "Submenú",
+      "tip-1": "Los submenús pueden utilizarse para agrupar elementos.",
+      "tip-2": "También puedes anidar submenús dentro de submenús.",
+      "tip-3": "Los submenús permiten crear estructuras de menú complejas.",
+      "tip-4": "Evite añadir más de doce elementos a un submenú. Ocho es un buen número.",
+      "tip-5": "Puedes usar lo íconos de bloqueo en la vista previa para fijar la posición de un elemento en el menú.",
+      "tip-6": "Puede reordenar los elementos arrastrándolos en la vista previa.",
+      "tip-7": ""
+    },
+    "text": {
+      "description": "Inserta el texto indicado.",
+      "name": "Pegar texto",
+      "placeholder": "Inserta cualquier texto…",
+      "tip-1": "Esta acción utiliza el portapapeles para pegar el texto. Después de usar la acción, el portapapeles contendrá el texto."
+    },
+    "uri": {
+      "description": "Abrir archivos o sitios web.",
+      "name": "Abrir URI",
+      "placeholder": "Inserte cualquier URI…",
+      "tip-1": "Puedes usar el elemento de tipo URI para abrir un sitio web utilizando el protocolo http://.",
+      "tip-2": "Puedes usar el elemento de tipo URI para abrir un archivo o carpeta usando el protocolo file://.",
+      "tip-3": "Puedes usar el elemento de tipo URI para abrir un link mailto:.",
+      "tip-4": "Usa {{app_name}} para insertar el nombre de la aplicación que fué enfocada cuando abriste el menú.",
+      "tip-5": "Use {{window_name}} para insertar el nombre de la ventana que estaba activa cuando abrió el menú.",
+      "tip-6": "Utilice {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú."
     }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "",
+      "chrome-version": "Versión de Chrome",
+      "electron-version": "Versión de Electron",
+      "kando-backend": "Motor de Kando",
+      "kando-version": "Versión de Kando",
+      "message": "",
+      "read-release-notes": "Leer las novedades",
+      "title": "Acerca de Kando"
+    },
+    "achievements-dialog": {
+      "completed-button": "",
+      "in-progress-button": "",
+      "no-completed-achievements": "",
+      "no-in-progress-achievements": "",
+      "reset-button": "",
+      "reset-button-tooltip": "",
+      "reset-confirmation-message": "",
+      "reset-confirmation-title": "",
+      "title": "",
+      "xp": ""
+    },
+    "add-collection-tooltip": "Cree una colección de menús nueva. Use las colecciones para agrupar sus menús por etiquetas.",
+    "add-menu-item-hint": "",
+    "add-menu-items": "Añadir elementos al menú",
+    "add-tags-placeholder": "Añadir etiquetas…",
+    "all-menus": "Todos los menús",
+    "anchored-mode": "Modo Fijado",
+    "anchored-mode-info": "",
+    "app-condition": "Limitar a aplicaciones específicas",
+    "app-condition-info": "",
+    "app-condition-placeholder": "Nombre de la aplicación",
+    "app-condition-tooltip": "",
+    "app-picker": {
+      "hint": "",
+      "search-placeholder": "",
+      "use-selected": ""
+    },
+    "area-condition": "Limitar a área de ventana específica",
+    "area-condition-bottom-placeholder": "Abajo",
+    "area-condition-info": "",
+    "area-condition-left-placeholder": "Izquierda",
+    "area-condition-right-placeholder": "Derecha",
+    "area-condition-tooltip": "Seleccione un área de la pantalla",
+    "area-condition-top-placeholder": "Arriba",
+    "cancel": "Cancelar",
+    "centered-mode": "Modo centrado",
+    "centered-mode-info": "Abre el menú en el centro de la pantalla en vez de en el cursor.",
+    "create-menu-button": "Menú nuevo",
+    "delete-menu": "Eliminar menú",
+    "delete-menu-item": "Eliminar elemento del menú",
+    "duplicate-menu": "Duplicar menú",
+    "duplicate-menu-item": "Duplicar elemento del menú",
+    "empty-collection": "Esta colección está vacía.",
+    "empty-collection-note": "Edite las etiquetas más arriba o añada un menú totalmente nuevo a esta colección con el botón siguiente.",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "Seleccione un directorio",
+      "select-file": "Seleccione un archivo"
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "Opciones avanzadas del menú",
+      "advanced-menu-options-note": "",
+      "auto-language": "",
+      "backup-and-restore": "",
+      "backup-menus": "",
+      "backup-settings": "",
+      "black": "Negro",
+      "bottom-left": "Inferior izquierda",
+      "bottom-right": "Inferior derecha",
+      "center": "",
+      "center-click-zone-radius": "",
+      "center-click-zone-radius-info": "",
+      "check-for-new-versions": "Comprobar si hay versiones nuevas",
+      "check-for-new-versions-info": "Si se activa, Kando mostrará una notificación cuando esté disponible una versión nueva.",
+      "close-menu": "",
+      "color": "Color",
+      "cycle-from-first": "",
+      "cycle-from-recent": "",
+      "dark": "Oscuro",
+      "dev-tools-note": "Kando utiliza dos ventanas: una para el menú y otra para la configuración. Puede abrir las herramientas de desarrollo para inspeccionar ambas ventanas de forma separada.",
+      "developer-options": "Opciones de desarrollo",
+      "do-nothing": "",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "",
+      "enable-achievements-info": "",
+      "enable-gamepad-support": "",
+      "enable-gamepad-support-info": "",
+      "enable-marking-mode": "",
+      "enable-marking-mode-info": "",
+      "enable-turbo-mode": "Activar modo turbo",
+      "enable-turbo-mode-info": "",
+      "fixed-stroke-length": "",
+      "fixed-stroke-length-info": "",
+      "gesture-jitter-threshold": "",
+      "gesture-jitter-threshold-info": "",
+      "gesture-pause-timeout": "",
+      "gesture-pause-timeout-info": "",
+      "hardware-acceleration": "",
+      "hardware-acceleration-info": "",
+      "hidden": "Oculto",
+      "invisible-settings-button": "Botón de configuración invisible",
+      "invisible-settings-button-info": "Aún podrá usar el botón, ya que aparecerá cuando se pose el ratón por encima.",
+      "keep-input-focus": "",
+      "keep-input-focus-info": "",
+      "lazy-initialization": "Inicialización diferida",
+      "lazy-initialization-info": "",
+      "learn-how-to-add-sound-themes": "",
+      "light": "Claro",
+      "localization-info": "",
+      "localization-label": "",
+      "menu-behavior": "Comportamiento del menú",
+      "menu-sounds": "Sonidos del menú",
+      "menu-window-dev-tools": "Inspeccionar menú",
+      "message": "",
+      "minimum-gesture-angle": "Ángulo mínimo de gesto",
+      "minimum-gesture-angle-info": "",
+      "minimum-gesture-length": "",
+      "minimum-gesture-length-info": "",
+      "minimum-submenu-distance": "",
+      "minimum-submenu-distance-info": "",
+      "move-pointer-to-menu-center": "",
+      "move-pointer-to-menu-center-info": "",
+      "movement-threshold": "Umbral de movimiento",
+      "movement-threshold-info": "",
+      "none": "Ninguno",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "",
+      "press-again-behavior-info": "",
+      "previously-reported": "",
+      "reload-menu-theme": "Recargar el tema del menú",
+      "reload-note": "Cuando vuelva a cargar el tema del menú, los cambios al CSS se aplicarán aun si se está mostrando un menú. Para que se reflejen los cambios en el archivo theme.json, deberá reabrir el menú.",
+      "reload-sound-theme": "Recargar tema de sonidos",
+      "require-click-for-hover-mode": "",
+      "require-click-for-hover-mode-info": "",
+      "restore-menus": "",
+      "restore-settings": "",
+      "right-mouse-button-selects-parent": "",
+      "right-mouse-button-selects-parent-info": "",
+      "sakura-dark": "Oscuro sakura",
+      "sakura-light": "Claro sakura",
+      "sakura-system": "Del sistema sakura",
+      "settings-button-position": "Posición del botón Configuración",
+      "settings-button-position-info": "Escoja la esquina de la pantalla en la que se mostrará el botón Configuración..",
+      "settings-window-color-scheme": "",
+      "settings-window-color-scheme-info": "",
+      "settings-window-dev-tools": "Inspeccionar configuración",
+      "settings-window-flavor": "",
+      "settings-window-flavor-info": "",
+      "sound-theme": "Tema de sonidos",
+      "sound-theme-info": "",
+      "system": "Del sistema",
+      "title": "Configuración general",
+      "top-left": "Superior izquierda",
+      "top-right": "Superior derecha",
+      "transparent-dark": "Oscuro transparente",
+      "transparent-light": "Claro transparente",
+      "transparent-system": "Del sistema transparente",
+      "tray-icon-flavor": "",
+      "tray-icon-flavor-info": "",
+      "volume": "Volumen",
+      "volume-info": "",
+      "white": "Blanco",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "",
+    "hover-mode-info": "",
+    "icon-picker-dialog": {
+      "base64-example": "Ejemplo de Base64:",
+      "base64-hint": "",
+      "file-example": "Ejemplo de URI file:",
+      "hint": "Aprenda [aquí]({{link}}) a añadir o crear sus propios temas de iconos.",
+      "reload-button-tooltip": "",
+      "search-placeholder": "Buscar iconos…",
+      "url-example": "Ejemplo de URL:"
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "Primeros pasos",
+      "chapter2": "",
+      "chapter3": "Modo turbo",
+      "chapter4": "Próximos pasos",
+      "chapter5": "Obtener ayuda",
+      "show-again": "Mostrar este diálogo nuevamente",
+      "slide1-text": "",
+      "slide1-title": "Kando brinda una manera única y eficiente de interactuar con su equipo.",
+      "slide10-text": "",
+      "slide11-text": "",
+      "slide12-text": "",
+      "slide12-title": "¡Hay más!",
+      "slide13-text": "",
+      "slide2-text-no-shortcuts": "",
+      "slide2-text-standard": "",
+      "slide2-title": "",
+      "slide3-hint1": "También puede pulsar aquí para cerrar el menú.",
+      "slide3-hint2": "",
+      "slide3-text": "",
+      "slide4-text": "",
+      "slide5-hint": "",
+      "slide5-text": "",
+      "slide6-text": "",
+      "slide7-text": "",
+      "slide7-title": "",
+      "slide8-text": "",
+      "slide9-text": "",
+      "slide9-title": "",
+      "title": "Le damos la bienvenida a Kando"
+    },
+    "invalid-dropdown-selection": "Seleccionar una opción…",
+    "menu-behavior": "Comportamiento del menú",
+    "menu-behavior-info": "",
+    "menu-conditions": "Condiciones de menú",
+    "menu-conditions-info": "Puede vincular varios menús al mismo acceso directo y luego elegir bajo qué condiciones se mostrará cada menú.",
+    "menu-themes-dialog": {
+      "accent-colors": "",
+      "accent-colors-info": "",
+      "author": "Por {{author}}",
+      "create-your-own-themes": "Cree sus propios temas",
+      "dark": "Modo oscuro",
+      "fade-in-time": "",
+      "fade-in-time-info": "",
+      "fade-out-time": "",
+      "fade-out-time-info": "",
+      "get-themes-online": "Obtener temas en línea",
+      "light": "Modo claro",
+      "light-dark-mode": "",
+      "light-dark-mode-info": "Cuando está habilitado, se pueden seleccionar diferentes temas y colores cuando el sistema está en modo claro u oscuro respectivamente.",
+      "menu-scale": "Escala del menú",
+      "menu-scale-info": "",
+      "no-accent-colors": "",
+      "open-theme-directory": "Abrir directorio de temas",
+      "reset-color-picker": "Reiniciar colores por defecto",
+      "selection-wedges": "",
+      "selection-wedges-info": "",
+      "title": "Temas del menú"
+    },
+    "no-matching-menus": "No se encontró ningún menú.",
+    "no-matching-menus-note": "Pruebe con algún otro término de búsqueda.",
+    "no-menus": "No tiene ningún menú.",
+    "no-menus-note": "Si eliminó el último por accidente, puede restaurarlo con el botón Deshacer.",
+    "not-bound": "No asignado",
+    "redo": "Rehacer",
+    "restore-backup": "",
+    "restore-general-settings-error-title": "",
+    "restore-general-settings-success-message": "",
+    "restore-general-settings-success-title": "",
+    "restore-general-settings-warning-message": "",
+    "restore-general-settings-warning-title": "",
+    "restore-menu-settings-error-title": "",
+    "restore-menu-settings-success-message": "",
+    "restore-menu-settings-success-title": "",
+    "restore-menu-settings-warning-message": "",
+    "restore-menu-settings-warning-title": "",
+    "screen-area-picker": {
+      "bottom-right": "",
+      "bottom-right-value": "",
+      "confirm": "Usar esta área",
+      "invalid": "",
+      "top-left": "",
+      "top-left-value": "",
+      "valid": "¡Bien!, ha seleccionado un área válida."
+    },
+    "search-menus-placeholder": "Buscar en los menús…",
+    "shortcut-id-label": "Id. de atajo",
+    "shortcut-info": "",
+    "shortcut-label": "Tecla de acceso directo",
+    "shortcut-recording": "Presiona un atajo…",
+    "tags": "Etiquetas",
+    "tags-info": "Las etiquetas pueden usarse para agrupar los menús en colecciones.",
+    "undo": "Deshacer",
+    "window-condition": "Limitar a títulos de ventana específicos",
+    "window-condition-info": "",
+    "window-condition-placeholder": "Título de la ventana",
+    "window-condition-tooltip": "Seleccione una ventana",
+    "window-picker-dialog": {
+      "confirm": "Usar este valor",
+      "countdown_one": "Seleccionando en {{count}} segundo…",
+      "countdown_many": "Seleccionando en {{count}} segundos…",
+      "countdown_other": "Seleccionando en {{count}} segundos…",
+      "instructions": "",
+      "restart-countdown": "",
+      "result": "Seleccionó «{{name}}».",
+      "start-countdown": ""
+    }
+  }
 }

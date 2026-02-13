@@ -1,187 +1,557 @@
 {
-    "backends": {
-        "gnome": {
-            "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: {{link}}"
-        },
-        "hyprland": {
-            "shortcut-info": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
-        },
-        "kde-wayland": {
-            "shortcut-info": "Bunu bağlamak için KDE sistem ayarlarını kullanın."
-        }
+  "achievements": {
+    "added-items": {
+      "description": "",
+      "name": ""
     },
-    "example-menu": {
-        "apps": {
-            "apple-music": "Müzik",
-            "email": "E-Posta",
-            "file-browser": "Dosya Tarayıcısı",
-            "finder": "Finder",
-            "gimp": "GIMP",
-            "paint": "Paint",
-            "safari": "Safari",
-            "submenu": "Uygulamalar",
-            "terminal": "Terminal",
-            "web-browser": "Web Tarayıcısı"
-        },
-        "audio": {
-            "mute": "Sessiz",
-            "next-track": "Sonraki Parça",
-            "play-pause": "Oynat / Duraklat",
-            "previous-track": "Önceki Parça",
-            "submenu": "Ses"
-        },
-        "bookmarks": {
-            "desktop": "Masaüstü",
-            "documents": "Belgeler",
-            "downloads": "İndirilenler",
-            "home": "Ana Sayfa",
-            "music": "Müzik",
-            "pictures": "Resimler",
-            "submenu": "Yer İmleri",
-            "videos": "Videolar"
-        },
-        "clipboard": {
-            "copy": "Kopyala",
-            "cut": "Kes",
-            "paste": "Yapıştır",
-            "submenu": "Pano"
-        },
-        "name": "Örnek Menü",
-        "next-workspace": "Sonraki Çalışma Alanı",
-        "previous-workspace": "Önceki Çalışma Alanı",
-        "web-links": {
-            "google": "Google",
-            "kando-on-discord": "Discord'da Kando",
-            "kando-on-github": "GitHub'da Kando",
-            "kando-on-kofi": "Ko-fi'de Kando",
-            "kando-on-youtube": "YouTube'da Kando",
-            "submenu": "Web Bağlantıları"
-        },
-        "windows": {
-            "close-window": "Pencereyi Kapat",
-            "mission-control": "Görev Kontrolü",
-            "submenu": "Pencereler",
-            "tile-left": "Sola Döşe",
-            "tile-right": "Sağa Döşe",
-            "toggle-maximize": "Büyütmeyi Aç/Kapat"
-        }
+    "attributes": {
+      "capable": "",
+      "expert": "",
+      "master": "",
+      "novice": "",
+      "skilled": ""
     },
-    "main": {
-        "failed-to-start-header": "Kando başlatılamadı",
-        "inhibit-shortcuts": "Kısayolları Geçici Olarak Devre Dışı Bırak",
-        "new-version-notification-header": "Kando'nun yeni bir sürümü mevcut!",
-        "quit": "Çıkış",
-        "show-settings": "Ayarları göster",
-        "un-inhibit-shortcuts": "Kısayolları Yeniden Etkinleştir"
+    "backup": {
+      "description": "",
+      "name": ""
     },
-    "menu-items": {
-        "command": {
-            "command": "Komut",
-            "command-info": "Bu yürütülecektir.",
-            "description": "Herhangi bir kabuk komutunu çalıştırır.",
-            "name": "Komut Çalıştır",
-            "tip-1": "Uygulama veya komut dosyalarını başlatmak için Komut öğe tipini kullanabilirsiniz.",
-            "tip-2": "Bir yürütülebilir dosyanın yolu boşluk içeriyorsa, \"tırnak içine almalısınız\".",
-            "tip-3": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
-            "tip-4": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
-            "tip-5": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın."
-        },
-        "file": {
-            "description": "Bir dosya veya klasör açar.",
-            "file": "Dosya Yolu",
-            "name": "Dosya Aç",
-            "tip-1": "Dosya veya klasörleri açmak için bu öğe tipini kullanabilirsiniz."
-        },
-        "hotkey": {
-            "description": "Bir kısayol tuşuna basar.",
-            "hotkey": "Kısayol Tuşu",
-            "name": "Kısayol Tuşu Simüle Et",
-            "recording-placeholder": "Bir kısayol tuşuna basın…",
-            "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
-            "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin."
-        },
-        "macro": {
-            "description": "Bir klavye makrosu yazar.",
-            "name": "Makro Simüle Et",
-            "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
-            "recording-placeholder": "Tuşlara basın…",
-            "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz."
-        },
-        "redirect": {
-            "description": "Başka bir menüyü açar.",
-            "name": "Yönlendirme"
-        },
-        "submenu": {
-            "description": "Diğer menü öğelerini içerir.",
-            "name": "Alt Menü",
-            "tip-1": "Alt menüler öğeleri gruplandırmak için kullanılabilir.",
-            "tip-2": "Alt menülerin içine de alt menüler ekleyebilirsiniz.",
-            "tip-3": "Alt menüler karmaşık menü yapıları oluşturmak için kullanılabilir.",
-            "tip-4": "Bir alt menüye on ikiden fazla öğe eklemeyin. Sekiz iyi bir sayıdır.",
-            "tip-5": "Önizlemedeki küçük kilit simgelerini kullanarak bir öğenin menüdeki konumunu sabitleyebilirsiniz.",
-            "tip-6": "Önizlemede sürükleyerek öğeleri yeniden sıralayabilirsiniz."
-        },
-        "text": {
-            "description": "Belirtilen metni ekler.",
-            "name": "Metin Yapıştır",
-            "placeholder": "Herhangi bir metin ekleyin…",
-            "tip-1": "Bu eylem, metni yapıştırmak için panonuzu kullanır. Eylemi kullandıktan sonra, pano metni içerecektir."
-        },
-        "uri": {
-            "description": "Web siteleri ve daha fazlasını açar.",
-            "name": "URI Aç",
-            "tip-1": "HTTP:// protokolünü kullanarak bir web sitesini açmak için URI öğe tipini kullanabilirsiniz.",
-            "tip-2": "Bunu slack:// veya zoommtg:// gibi özel URI şemalarını çağırmak için kullanabilirsiniz.",
-            "tip-3": "Bir mailto: bağlantısını açmak için URI öğe tipini kullanabilirsiniz.",
-            "tip-4": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
-            "tip-5": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
-            "tip-6": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın.",
-            "uri": "URI"
-        }
+    "cancelor": {
+      "description": "",
+      "name": ""
+    },
+    "click-selector": {
+      "description": "",
+      "name": ""
+    },
+    "completed-title": "",
+    "deep-menu": {
+      "description": "",
+      "name": ""
+    },
+    "deleted-all-menus": {
+      "description": "",
+      "name": ""
+    },
+    "depth-selector": {
+      "description": "",
+      "name1": "",
+      "name2": "",
+      "name3": ""
+    },
+    "full-menu": {
+      "description": "",
+      "name": ""
+    },
+    "gamepad-selector": {
+      "description": "",
+      "name": ""
+    },
+    "gesture-selector": {
+      "description": "",
+      "name": ""
+    },
+    "keyboard-selector": {
+      "description": "",
+      "name": ""
+    },
+    "many-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "menu-themes-selected": {
+      "description": "",
+      "name": ""
+    },
+    "restore": {
+      "description": "",
+      "name": ""
+    },
+    "selector": {
+      "description": "",
+      "name": ""
+    },
+    "settings-opened": {
+      "description": "",
+      "name": ""
+    },
+    "speedy-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "sponsors-viewed": {
+      "description": "",
+      "name": ""
+    },
+    "tier": {
+      "I": "",
+      "II": "",
+      "III": "",
+      "IV": "",
+      "V": ""
+    },
+    "tutorial-viewed": {
+      "description": "",
+      "name": ""
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": "Kando Entegrasyonu GNOME Kabuk uzantısına bağlanılamadı. Buradan edinebilirsiniz: {{link}}"
+    },
+    "hyprland": {
+      "shortcut-info": "Bunu bağlamak için hyprland.conf dosyanızı kullanın."
+    },
+    "kde-wayland": {
+      "shortcut-info": "Bunu bağlamak için KDE sistem ayarlarını kullanın."
+    },
+    "niri": {
+      "shortcut-info": ""
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "Müzik",
+      "email": "E-Posta",
+      "file-browser": "Dosya Tarayıcısı",
+      "finder": "Finder",
+      "gimp": "GIMP",
+      "paint": "Paint",
+      "safari": "Safari",
+      "submenu": "Uygulamalar",
+      "terminal": "Terminal",
+      "web-browser": "Web Tarayıcısı"
+    },
+    "audio": {
+      "mute": "Sessiz",
+      "next-track": "Sonraki Parça",
+      "play-pause": "Oynat / Duraklat",
+      "previous-track": "Önceki Parça",
+      "submenu": "Ses"
+    },
+    "bookmarks": {
+      "desktop": "Masaüstü",
+      "documents": "Belgeler",
+      "downloads": "İndirilenler",
+      "home": "Ana Sayfa",
+      "music": "Müzik",
+      "pictures": "Resimler",
+      "submenu": "Yer İmleri",
+      "videos": "Videolar"
+    },
+    "clipboard": {
+      "copy": "Kopyala",
+      "cut": "Kes",
+      "paste": "Yapıştır",
+      "submenu": "Pano"
+    },
+    "name": "Örnek Menü",
+    "next-workspace": "Sonraki Çalışma Alanı",
+    "previous-workspace": "Önceki Çalışma Alanı",
+    "web-links": {
+      "google": "Google",
+      "kando-on-discord": "Discord'da Kando",
+      "kando-on-github": "GitHub'da Kando",
+      "kando-on-kofi": "Ko-fi'de Kando",
+      "kando-on-youtube": "YouTube'da Kando",
+      "submenu": "Web Bağlantıları"
+    },
+    "windows": {
+      "close-window": "Pencereyi Kapat",
+      "mission-control": "Görev Kontrolü",
+      "submenu": "Pencereler",
+      "tile-left": "Sola Döşe",
+      "tile-right": "Sağa Döşe",
+      "toggle-maximize": "Büyütmeyi Aç/Kapat"
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "Kısayolları Geçici Olarak Devre Dışı Bırak",
+    "invalid-link-header": "",
+    "invalid-link-message": "",
+    "new-version-notification-body": "",
+    "new-version-notification-header": "Kando'nun yeni bir sürümü mevcut!",
+    "quit": "Çıkış",
+    "show-settings": "Ayarları göster",
+    "un-inhibit-shortcuts": "Kısayolları Yeniden Etkinleştir"
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "",
+      "description": "Herhangi bir kabuk komutunu çalıştırır.",
+      "detached": "",
+      "detached-info": "",
+      "isolated": "",
+      "isolated-info": "",
+      "name": "Komut Çalıştır",
+      "placeholder": "",
+      "tip-1": "Uygulama veya komut dosyalarını başlatmak için Komut öğe tipini kullanabilirsiniz.",
+      "tip-2": "Bir yürütülebilir dosyanın yolu boşluk içeriyorsa, \"tırnak içine almalısınız\".",
+      "tip-3": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
+      "tip-4": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
+      "tip-5": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın.",
+      "tip-6": ""
+    },
+    "common": {
+      "delayed-option": "",
+      "delayed-option-info": "",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "Bir dosya veya klasör açar.",
+      "name": "Dosya Aç",
+      "placeholder": "",
+      "tip-1": "Dosya veya klasörleri açmak için bu öğe tipini kullanabilirsiniz."
+    },
+    "hotkey": {
+      "description": "Bir kısayol tuşuna basar.",
+      "hotkey": "Kısayol Tuşu",
+      "hotkey-info": "",
+      "name": "Kısayol Tuşu Simüle Et",
+      "recording-placeholder": "Bir kısayol tuşuna basın…",
+      "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
+      "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin.",
+      "tip-3": ""
+    },
+    "macro": {
+      "description": "Bir klavye makrosu yazar.",
+      "name": "Makro Simüle Et",
+      "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
+      "recording-placeholder": "Tuşlara basın…",
+      "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz.",
+      "tip-2": ""
+    },
+    "redirect": {
+      "description": "Başka bir menüyü açar.",
+      "name": "Yönlendirme"
     },
     "settings": {
-        "about-dialog": {
-            "chrome-version": "Chrome Sürümü",
-            "electron-version": "Electron Sürümü",
-            "kando-backend": "Kando Arka Ucu",
-            "kando-version": "Kando Sürümü"
-        },
-        "anchored-mode": "Sabitlenmiş Mod",
-        "app-condition": "Belirli Uygulamalarla Sınırla",
-        "area-condition": "Belirli Ekran Alanlarına Sınırla",
-        "area-condition-bottom-placeholder": "Alt",
-        "area-condition-left-placeholder": "Sol",
-        "area-condition-right-placeholder": "Sağ",
-        "area-condition-top-placeholder": "Üst",
-        "cancel": "İptal",
-        "centered-mode": "Ortalanmış Mod",
-        "centered-mode-info": "Menüyü imleç yerine ekranın ortasında açın.",
-        "general-settings-dialog": {
-            "reload-menu-theme": "Mevcut Menü Temasını Yeniden Yükle",
-            "reload-menu-theme-tooltip": "CSS değişiklikleri anında uygulanacaktır, theme.json dosyasında yapılan değişiklikler için menüyü yeniden açmanız gerekir.",
-            "reload-sound-theme": "Mevcut Ses Temasını Yeniden Yükle"
-        },
-        "hover-mode": "Üzerine Gelme Modu",
-        "hover-mode-info": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
-        "icon-picker-dialog": {
-            "search-placeholder": "Simgeleri ara…"
-        },
-        "introduction-dialog": {
-            "title": "Kando'ya Hoş Geldiniz!"
-        },
-        "menu-behavior": "Menü Davranışı",
-        "menu-conditions": "Menü Koşulları",
-        "menu-conditions-info": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
-        "menu-themes-dialog": {
-            "author": "{{author}} tarafından",
-            "light-dark-mode-info": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
-            "reset-color-picker": "Tüm renkleri varsayılanlarına sıfırla",
-            "title": "Menü Temaları"
-        },
-        "not-bound": "Bağlı Değil",
-        "shortcut-id-label": "Genel Kısayol Kimliği",
-        "shortcut-label": "Kısayol",
-        "shortcut-recording": "Bir kısayola basın…",
-        "window-condition": "Belirli Pencere Başlıklarına Sınırla"
+      "description": "",
+      "name": "",
+      "tip-1": ""
+    },
+    "submenu": {
+      "description": "Diğer menü öğelerini içerir.",
+      "name": "Alt Menü",
+      "tip-1": "Alt menüler öğeleri gruplandırmak için kullanılabilir.",
+      "tip-2": "Alt menülerin içine de alt menüler ekleyebilirsiniz.",
+      "tip-3": "Alt menüler karmaşık menü yapıları oluşturmak için kullanılabilir.",
+      "tip-4": "Bir alt menüye on ikiden fazla öğe eklemeyin. Sekiz iyi bir sayıdır.",
+      "tip-5": "Önizlemedeki küçük kilit simgelerini kullanarak bir öğenin menüdeki konumunu sabitleyebilirsiniz.",
+      "tip-6": "Önizlemede sürükleyerek öğeleri yeniden sıralayabilirsiniz.",
+      "tip-7": ""
+    },
+    "text": {
+      "description": "Belirtilen metni ekler.",
+      "name": "Metin Yapıştır",
+      "placeholder": "Herhangi bir metin ekleyin…",
+      "tip-1": "Bu eylem, metni yapıştırmak için panonuzu kullanır. Eylemi kullandıktan sonra, pano metni içerecektir."
+    },
+    "uri": {
+      "description": "Web siteleri ve daha fazlasını açar.",
+      "name": "URI Aç",
+      "placeholder": "",
+      "tip-1": "HTTP:// protokolünü kullanarak bir web sitesini açmak için URI öğe tipini kullanabilirsiniz.",
+      "tip-2": "Bunu slack:// veya zoommtg:// gibi özel URI şemalarını çağırmak için kullanabilirsiniz.",
+      "tip-3": "Bir mailto: bağlantısını açmak için URI öğe tipini kullanabilirsiniz.",
+      "tip-4": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
+      "tip-5": "Menüyü açtığınızda odaklanmış olan pencerenin adını eklemek için {{window_name}} kullanın.",
+      "tip-6": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın."
     }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "",
+      "chrome-version": "Chrome Sürümü",
+      "electron-version": "Electron Sürümü",
+      "kando-backend": "Kando Arka Ucu",
+      "kando-version": "Kando Sürümü",
+      "message": "",
+      "read-release-notes": "",
+      "title": ""
+    },
+    "achievements-dialog": {
+      "completed-button": "",
+      "in-progress-button": "",
+      "no-completed-achievements": "",
+      "no-in-progress-achievements": "",
+      "reset-button": "",
+      "reset-button-tooltip": "",
+      "reset-confirmation-message": "",
+      "reset-confirmation-title": "",
+      "title": "",
+      "xp": ""
+    },
+    "add-collection-tooltip": "",
+    "add-menu-item-hint": "",
+    "add-menu-items": "",
+    "add-tags-placeholder": "",
+    "all-menus": "",
+    "anchored-mode": "Sabitlenmiş Mod",
+    "anchored-mode-info": "",
+    "app-condition": "Belirli Uygulamalarla Sınırla",
+    "app-condition-info": "",
+    "app-condition-placeholder": "",
+    "app-condition-tooltip": "",
+    "app-picker": {
+      "hint": "",
+      "search-placeholder": "",
+      "use-selected": ""
+    },
+    "area-condition": "Belirli Ekran Alanlarına Sınırla",
+    "area-condition-bottom-placeholder": "Alt",
+    "area-condition-info": "",
+    "area-condition-left-placeholder": "Sol",
+    "area-condition-right-placeholder": "Sağ",
+    "area-condition-tooltip": "",
+    "area-condition-top-placeholder": "Üst",
+    "cancel": "İptal",
+    "centered-mode": "Ortalanmış Mod",
+    "centered-mode-info": "Menüyü imleç yerine ekranın ortasında açın.",
+    "create-menu-button": "",
+    "delete-menu": "",
+    "delete-menu-item": "",
+    "duplicate-menu": "",
+    "duplicate-menu-item": "",
+    "empty-collection": "",
+    "empty-collection-note": "",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "",
+      "select-file": ""
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "",
+      "advanced-menu-options-note": "",
+      "auto-language": "",
+      "backup-and-restore": "",
+      "backup-menus": "",
+      "backup-settings": "",
+      "black": "",
+      "bottom-left": "",
+      "bottom-right": "",
+      "center": "",
+      "center-click-zone-radius": "",
+      "center-click-zone-radius-info": "",
+      "check-for-new-versions": "",
+      "check-for-new-versions-info": "",
+      "close-menu": "",
+      "color": "",
+      "cycle-from-first": "",
+      "cycle-from-recent": "",
+      "dark": "",
+      "dev-tools-note": "",
+      "developer-options": "",
+      "do-nothing": "",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "",
+      "enable-achievements-info": "",
+      "enable-gamepad-support": "",
+      "enable-gamepad-support-info": "",
+      "enable-marking-mode": "",
+      "enable-marking-mode-info": "",
+      "enable-turbo-mode": "",
+      "enable-turbo-mode-info": "",
+      "fixed-stroke-length": "",
+      "fixed-stroke-length-info": "",
+      "gesture-jitter-threshold": "",
+      "gesture-jitter-threshold-info": "",
+      "gesture-pause-timeout": "",
+      "gesture-pause-timeout-info": "",
+      "hardware-acceleration": "",
+      "hardware-acceleration-info": "",
+      "hidden": "",
+      "invisible-settings-button": "",
+      "invisible-settings-button-info": "",
+      "keep-input-focus": "",
+      "keep-input-focus-info": "",
+      "lazy-initialization": "",
+      "lazy-initialization-info": "",
+      "learn-how-to-add-sound-themes": "",
+      "light": "",
+      "localization-info": "",
+      "localization-label": "",
+      "menu-behavior": "",
+      "menu-sounds": "",
+      "menu-window-dev-tools": "",
+      "message": "",
+      "minimum-gesture-angle": "",
+      "minimum-gesture-angle-info": "",
+      "minimum-gesture-length": "",
+      "minimum-gesture-length-info": "",
+      "minimum-submenu-distance": "",
+      "minimum-submenu-distance-info": "",
+      "move-pointer-to-menu-center": "",
+      "move-pointer-to-menu-center-info": "",
+      "movement-threshold": "",
+      "movement-threshold-info": "",
+      "none": "",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "",
+      "press-again-behavior-info": "",
+      "previously-reported": "",
+      "reload-menu-theme": "Mevcut Menü Temasını Yeniden Yükle",
+      "reload-note": "",
+      "reload-sound-theme": "Mevcut Ses Temasını Yeniden Yükle",
+      "require-click-for-hover-mode": "",
+      "require-click-for-hover-mode-info": "",
+      "restore-menus": "",
+      "restore-settings": "",
+      "right-mouse-button-selects-parent": "",
+      "right-mouse-button-selects-parent-info": "",
+      "sakura-dark": "",
+      "sakura-light": "",
+      "sakura-system": "",
+      "settings-button-position": "",
+      "settings-button-position-info": "",
+      "settings-window-color-scheme": "",
+      "settings-window-color-scheme-info": "",
+      "settings-window-dev-tools": "",
+      "settings-window-flavor": "",
+      "settings-window-flavor-info": "",
+      "sound-theme": "",
+      "sound-theme-info": "",
+      "system": "",
+      "title": "",
+      "top-left": "",
+      "top-right": "",
+      "transparent-dark": "",
+      "transparent-light": "",
+      "transparent-system": "",
+      "tray-icon-flavor": "",
+      "tray-icon-flavor-info": "",
+      "volume": "",
+      "volume-info": "",
+      "white": "",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "Üzerine Gelme Modu",
+    "hover-mode-info": "Sadece güçlü kullanıcılar için! Öğelerin üzerine gelerek seçin.",
+    "icon-picker-dialog": {
+      "base64-example": "",
+      "base64-hint": "",
+      "file-example": "",
+      "hint": "",
+      "reload-button-tooltip": "",
+      "search-placeholder": "Simgeleri ara…",
+      "url-example": ""
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "",
+      "chapter2": "",
+      "chapter3": "",
+      "chapter4": "",
+      "chapter5": "",
+      "show-again": "",
+      "slide1-text": "",
+      "slide1-title": "",
+      "slide10-text": "",
+      "slide11-text": "",
+      "slide12-text": "",
+      "slide12-title": "",
+      "slide13-text": "",
+      "slide2-text-no-shortcuts": "",
+      "slide2-text-standard": "",
+      "slide2-title": "",
+      "slide3-hint1": "",
+      "slide3-hint2": "",
+      "slide3-text": "",
+      "slide4-text": "",
+      "slide5-hint": "",
+      "slide5-text": "",
+      "slide6-text": "",
+      "slide7-text": "",
+      "slide7-title": "",
+      "slide8-text": "",
+      "slide9-text": "",
+      "slide9-title": "",
+      "title": "Kando'ya Hoş Geldiniz!"
+    },
+    "invalid-dropdown-selection": "",
+    "menu-behavior": "Menü Davranışı",
+    "menu-behavior-info": "",
+    "menu-conditions": "Menü Koşulları",
+    "menu-conditions-info": "Aynı kısayola birden fazla menü bağlayabilir ve ardından her menünün hangi koşullarda gösterileceğini seçebilirsiniz.",
+    "menu-themes-dialog": {
+      "accent-colors": "",
+      "accent-colors-info": "",
+      "author": "{{author}} tarafından",
+      "create-your-own-themes": "",
+      "dark": "",
+      "fade-in-time": "",
+      "fade-in-time-info": "",
+      "fade-out-time": "",
+      "fade-out-time-info": "",
+      "get-themes-online": "",
+      "light": "",
+      "light-dark-mode": "",
+      "light-dark-mode-info": "Etkinleştirilirse, sisteminiz açık veya koyu renk modundaysa farklı bir tema ve renk seti seçebilirsiniz.",
+      "menu-scale": "",
+      "menu-scale-info": "",
+      "no-accent-colors": "",
+      "open-theme-directory": "",
+      "reset-color-picker": "Tüm renkleri varsayılanlarına sıfırla",
+      "selection-wedges": "",
+      "selection-wedges-info": "",
+      "title": "Menü Temaları"
+    },
+    "no-matching-menus": "",
+    "no-matching-menus-note": "",
+    "no-menus": "",
+    "no-menus-note": "",
+    "not-bound": "Bağlı Değil",
+    "redo": "",
+    "restore-backup": "",
+    "restore-general-settings-error-title": "",
+    "restore-general-settings-success-message": "",
+    "restore-general-settings-success-title": "",
+    "restore-general-settings-warning-message": "",
+    "restore-general-settings-warning-title": "",
+    "restore-menu-settings-error-title": "",
+    "restore-menu-settings-success-message": "",
+    "restore-menu-settings-success-title": "",
+    "restore-menu-settings-warning-message": "",
+    "restore-menu-settings-warning-title": "",
+    "screen-area-picker": {
+      "bottom-right": "",
+      "bottom-right-value": "",
+      "confirm": "",
+      "invalid": "",
+      "top-left": "",
+      "top-left-value": "",
+      "valid": ""
+    },
+    "search-menus-placeholder": "",
+    "shortcut-id-label": "Genel Kısayol Kimliği",
+    "shortcut-info": "",
+    "shortcut-label": "Kısayol",
+    "shortcut-recording": "Bir kısayola basın…",
+    "tags": "",
+    "tags-info": "",
+    "undo": "",
+    "window-condition": "Belirli Pencere Başlıklarına Sınırla",
+    "window-condition-info": "",
+    "window-condition-placeholder": "",
+    "window-condition-tooltip": "",
+    "window-picker-dialog": {
+      "confirm": "",
+      "countdown_one": "",
+      "countdown_other": "",
+      "instructions": "",
+      "restart-countdown": "",
+      "result": "",
+      "start-countdown": ""
+    }
+  }
 }

@@ -1,32 +1,557 @@
 {
-    "menu-items": {
-        "command": {
-            "command": "دستور",
-            "command-info": "اجرا خواهد شد.",
-            "description": "هر دستوری را اجرا می کند.",
-            "name": "اجرای دستور",
-            "tip-1": "می توانید از نوع ایتم دستور برای اجرای برنامه ها یا دستور ها استفاده کنید.",
-            "tip-2": "اگر مسیر یک فایل اجرایی حاوی فاصله باشد، باید آن را در نقل قول یا \" \" بپیچید.",
-            "tip-3": "از {{app_name}} برای درج کردن اسم برنامه ای که هنگام باز کردن منو متمرکز بود استفاده کنید.",
-            "tip-4": "از {{window_name}} برای درج کردن اسم پنجره ای که هنگام باز کردن منو متمرکز بود استفاده کنید.",
-            "tip-5": "از {{pointer_x}} و {{pointer_y}} برای درج کردن موقعیت نشانگر جایی که منو باز شده بود استفاده کنید."
-        },
-        "file": {
-            "description": "فایل یا پوشه ای را باز می کند.",
-            "file": "مسیر فایل",
-            "name": "فایل را باز کنید",
-            "tip-1": "می توانید از این نوع آیتم برای باز کردن فایل ها یا پوشه ها استفاده کنید."
-        },
-        "hotkey": {
-            "description": "یک کلید میانبر را فشار می دهد.",
-            "name": "شبیه سازی میانبر",
-            "tip-1": "هنگام ضبط یک کلید میانبر، لازم نیست همه کلیدها را همزمان فشار دهید. می توانید آنها را یکی پس از دیگری فشار دهید.",
-            "tip-2": "اگر نمی توانید کلیدی را ضبط کنید زیرا توسط سیستم استفاده می شود، نام آن را مستقیماً تایپ کنید."
-        },
-        "macro": {
-            "description": "یک ماکرو تایپ می کند.",
-            "name": "شبیه سازی ماکرو",
-            "tip-1": "به‌طور پیش‌فرض، کاندو یک تأخیر 10 میلی‌ثانیه ای قبل از هر رویداد کلید اضافه می‌کند. می توانید این مورد را با ویژگی \"تاخیر\" تغییر دهید."
-        }
+  "achievements": {
+    "added-items": {
+      "description": "",
+      "name": ""
+    },
+    "attributes": {
+      "capable": "",
+      "expert": "",
+      "master": "",
+      "novice": "",
+      "skilled": ""
+    },
+    "backup": {
+      "description": "",
+      "name": ""
+    },
+    "cancelor": {
+      "description": "",
+      "name": ""
+    },
+    "click-selector": {
+      "description": "",
+      "name": ""
+    },
+    "completed-title": "",
+    "deep-menu": {
+      "description": "",
+      "name": ""
+    },
+    "deleted-all-menus": {
+      "description": "",
+      "name": ""
+    },
+    "depth-selector": {
+      "description": "",
+      "name1": "",
+      "name2": "",
+      "name3": ""
+    },
+    "full-menu": {
+      "description": "",
+      "name": ""
+    },
+    "gamepad-selector": {
+      "description": "",
+      "name": ""
+    },
+    "gesture-selector": {
+      "description": "",
+      "name": ""
+    },
+    "keyboard-selector": {
+      "description": "",
+      "name": ""
+    },
+    "many-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "menu-themes-selected": {
+      "description": "",
+      "name": ""
+    },
+    "restore": {
+      "description": "",
+      "name": ""
+    },
+    "selector": {
+      "description": "",
+      "name": ""
+    },
+    "settings-opened": {
+      "description": "",
+      "name": ""
+    },
+    "speedy-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "sponsors-viewed": {
+      "description": "",
+      "name": ""
+    },
+    "tier": {
+      "I": "",
+      "II": "",
+      "III": "",
+      "IV": "",
+      "V": ""
+    },
+    "tutorial-viewed": {
+      "description": "",
+      "name": ""
     }
+  },
+  "backends": {
+    "gnome": {
+      "error": ""
+    },
+    "hyprland": {
+      "shortcut-info": ""
+    },
+    "kde-wayland": {
+      "shortcut-info": ""
+    },
+    "niri": {
+      "shortcut-info": ""
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "",
+      "email": "",
+      "file-browser": "",
+      "finder": "",
+      "gimp": "",
+      "paint": "",
+      "safari": "",
+      "submenu": "",
+      "terminal": "",
+      "web-browser": ""
+    },
+    "audio": {
+      "mute": "",
+      "next-track": "",
+      "play-pause": "",
+      "previous-track": "",
+      "submenu": ""
+    },
+    "bookmarks": {
+      "desktop": "",
+      "documents": "",
+      "downloads": "",
+      "home": "",
+      "music": "",
+      "pictures": "",
+      "submenu": "",
+      "videos": ""
+    },
+    "clipboard": {
+      "copy": "",
+      "cut": "",
+      "paste": "",
+      "submenu": ""
+    },
+    "name": "",
+    "next-workspace": "",
+    "previous-workspace": "",
+    "web-links": {
+      "google": "",
+      "kando-on-discord": "",
+      "kando-on-github": "",
+      "kando-on-kofi": "",
+      "kando-on-youtube": "",
+      "submenu": ""
+    },
+    "windows": {
+      "close-window": "",
+      "mission-control": "",
+      "submenu": "",
+      "tile-left": "",
+      "tile-right": "",
+      "toggle-maximize": ""
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "",
+    "invalid-link-header": "",
+    "invalid-link-message": "",
+    "new-version-notification-body": "",
+    "new-version-notification-header": "",
+    "quit": "",
+    "show-settings": "",
+    "un-inhibit-shortcuts": ""
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "",
+      "description": "هر دستوری را اجرا می کند.",
+      "detached": "",
+      "detached-info": "",
+      "isolated": "",
+      "isolated-info": "",
+      "name": "اجرای دستور",
+      "placeholder": "",
+      "tip-1": "می توانید از نوع ایتم دستور برای اجرای برنامه ها یا دستور ها استفاده کنید.",
+      "tip-2": "اگر مسیر یک فایل اجرایی حاوی فاصله باشد، باید آن را در نقل قول یا \" \" بپیچید.",
+      "tip-3": "از {{app_name}} برای درج کردن اسم برنامه ای که هنگام باز کردن منو متمرکز بود استفاده کنید.",
+      "tip-4": "از {{window_name}} برای درج کردن اسم پنجره ای که هنگام باز کردن منو متمرکز بود استفاده کنید.",
+      "tip-5": "از {{pointer_x}} و {{pointer_y}} برای درج کردن موقعیت نشانگر جایی که منو باز شده بود استفاده کنید.",
+      "tip-6": ""
+    },
+    "common": {
+      "delayed-option": "",
+      "delayed-option-info": "",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "فایل یا پوشه ای را باز می کند.",
+      "name": "فایل را باز کنید",
+      "placeholder": "",
+      "tip-1": "می توانید از این نوع آیتم برای باز کردن فایل ها یا پوشه ها استفاده کنید."
+    },
+    "hotkey": {
+      "description": "یک کلید میانبر را فشار می دهد.",
+      "hotkey": "",
+      "hotkey-info": "",
+      "name": "شبیه سازی میانبر",
+      "recording-placeholder": "",
+      "tip-1": "هنگام ضبط یک کلید میانبر، لازم نیست همه کلیدها را همزمان فشار دهید. می توانید آنها را یکی پس از دیگری فشار دهید.",
+      "tip-2": "اگر نمی توانید کلیدی را ضبط کنید زیرا توسط سیستم استفاده می شود، نام آن را مستقیماً تایپ کنید.",
+      "tip-3": ""
+    },
+    "macro": {
+      "description": "یک ماکرو تایپ می کند.",
+      "name": "شبیه سازی ماکرو",
+      "placeholder": "",
+      "recording-placeholder": "",
+      "tip-1": "به‌طور پیش‌فرض، کاندو یک تأخیر 10 میلی‌ثانیه ای قبل از هر رویداد کلید اضافه می‌کند. می توانید این مورد را با ویژگی \"تاخیر\" تغییر دهید.",
+      "tip-2": ""
+    },
+    "redirect": {
+      "description": "",
+      "name": ""
+    },
+    "settings": {
+      "description": "",
+      "name": "",
+      "tip-1": ""
+    },
+    "submenu": {
+      "description": "",
+      "name": "",
+      "tip-1": "",
+      "tip-2": "",
+      "tip-3": "",
+      "tip-4": "",
+      "tip-5": "",
+      "tip-6": "",
+      "tip-7": ""
+    },
+    "text": {
+      "description": "",
+      "name": "",
+      "placeholder": "",
+      "tip-1": ""
+    },
+    "uri": {
+      "description": "",
+      "name": "",
+      "placeholder": "",
+      "tip-1": "",
+      "tip-2": "",
+      "tip-3": "",
+      "tip-4": "",
+      "tip-5": "",
+      "tip-6": ""
+    }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "",
+      "chrome-version": "",
+      "electron-version": "",
+      "kando-backend": "",
+      "kando-version": "",
+      "message": "",
+      "read-release-notes": "",
+      "title": ""
+    },
+    "achievements-dialog": {
+      "completed-button": "",
+      "in-progress-button": "",
+      "no-completed-achievements": "",
+      "no-in-progress-achievements": "",
+      "reset-button": "",
+      "reset-button-tooltip": "",
+      "reset-confirmation-message": "",
+      "reset-confirmation-title": "",
+      "title": "",
+      "xp": ""
+    },
+    "add-collection-tooltip": "",
+    "add-menu-item-hint": "",
+    "add-menu-items": "",
+    "add-tags-placeholder": "",
+    "all-menus": "",
+    "anchored-mode": "",
+    "anchored-mode-info": "",
+    "app-condition": "",
+    "app-condition-info": "",
+    "app-condition-placeholder": "",
+    "app-condition-tooltip": "",
+    "app-picker": {
+      "hint": "",
+      "search-placeholder": "",
+      "use-selected": ""
+    },
+    "area-condition": "",
+    "area-condition-bottom-placeholder": "",
+    "area-condition-info": "",
+    "area-condition-left-placeholder": "",
+    "area-condition-right-placeholder": "",
+    "area-condition-tooltip": "",
+    "area-condition-top-placeholder": "",
+    "cancel": "",
+    "centered-mode": "",
+    "centered-mode-info": "",
+    "create-menu-button": "",
+    "delete-menu": "",
+    "delete-menu-item": "",
+    "duplicate-menu": "",
+    "duplicate-menu-item": "",
+    "empty-collection": "",
+    "empty-collection-note": "",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "",
+      "select-file": ""
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "",
+      "advanced-menu-options-note": "",
+      "auto-language": "",
+      "backup-and-restore": "",
+      "backup-menus": "",
+      "backup-settings": "",
+      "black": "",
+      "bottom-left": "",
+      "bottom-right": "",
+      "center": "",
+      "center-click-zone-radius": "",
+      "center-click-zone-radius-info": "",
+      "check-for-new-versions": "",
+      "check-for-new-versions-info": "",
+      "close-menu": "",
+      "color": "",
+      "cycle-from-first": "",
+      "cycle-from-recent": "",
+      "dark": "",
+      "dev-tools-note": "",
+      "developer-options": "",
+      "do-nothing": "",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "",
+      "enable-achievements-info": "",
+      "enable-gamepad-support": "",
+      "enable-gamepad-support-info": "",
+      "enable-marking-mode": "",
+      "enable-marking-mode-info": "",
+      "enable-turbo-mode": "",
+      "enable-turbo-mode-info": "",
+      "fixed-stroke-length": "",
+      "fixed-stroke-length-info": "",
+      "gesture-jitter-threshold": "",
+      "gesture-jitter-threshold-info": "",
+      "gesture-pause-timeout": "",
+      "gesture-pause-timeout-info": "",
+      "hardware-acceleration": "",
+      "hardware-acceleration-info": "",
+      "hidden": "",
+      "invisible-settings-button": "",
+      "invisible-settings-button-info": "",
+      "keep-input-focus": "",
+      "keep-input-focus-info": "",
+      "lazy-initialization": "",
+      "lazy-initialization-info": "",
+      "learn-how-to-add-sound-themes": "",
+      "light": "",
+      "localization-info": "",
+      "localization-label": "",
+      "menu-behavior": "",
+      "menu-sounds": "",
+      "menu-window-dev-tools": "",
+      "message": "",
+      "minimum-gesture-angle": "",
+      "minimum-gesture-angle-info": "",
+      "minimum-gesture-length": "",
+      "minimum-gesture-length-info": "",
+      "minimum-submenu-distance": "",
+      "minimum-submenu-distance-info": "",
+      "move-pointer-to-menu-center": "",
+      "move-pointer-to-menu-center-info": "",
+      "movement-threshold": "",
+      "movement-threshold-info": "",
+      "none": "",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "",
+      "press-again-behavior-info": "",
+      "previously-reported": "",
+      "reload-menu-theme": "",
+      "reload-note": "",
+      "reload-sound-theme": "",
+      "require-click-for-hover-mode": "",
+      "require-click-for-hover-mode-info": "",
+      "restore-menus": "",
+      "restore-settings": "",
+      "right-mouse-button-selects-parent": "",
+      "right-mouse-button-selects-parent-info": "",
+      "sakura-dark": "",
+      "sakura-light": "",
+      "sakura-system": "",
+      "settings-button-position": "",
+      "settings-button-position-info": "",
+      "settings-window-color-scheme": "",
+      "settings-window-color-scheme-info": "",
+      "settings-window-dev-tools": "",
+      "settings-window-flavor": "",
+      "settings-window-flavor-info": "",
+      "sound-theme": "",
+      "sound-theme-info": "",
+      "system": "",
+      "title": "",
+      "top-left": "",
+      "top-right": "",
+      "transparent-dark": "",
+      "transparent-light": "",
+      "transparent-system": "",
+      "tray-icon-flavor": "",
+      "tray-icon-flavor-info": "",
+      "volume": "",
+      "volume-info": "",
+      "white": "",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "",
+    "hover-mode-info": "",
+    "icon-picker-dialog": {
+      "base64-example": "",
+      "base64-hint": "",
+      "file-example": "",
+      "hint": "",
+      "reload-button-tooltip": "",
+      "search-placeholder": "",
+      "url-example": ""
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "",
+      "chapter2": "",
+      "chapter3": "",
+      "chapter4": "",
+      "chapter5": "",
+      "show-again": "",
+      "slide1-text": "",
+      "slide1-title": "",
+      "slide10-text": "",
+      "slide11-text": "",
+      "slide12-text": "",
+      "slide12-title": "",
+      "slide13-text": "",
+      "slide2-text-no-shortcuts": "",
+      "slide2-text-standard": "",
+      "slide2-title": "",
+      "slide3-hint1": "",
+      "slide3-hint2": "",
+      "slide3-text": "",
+      "slide4-text": "",
+      "slide5-hint": "",
+      "slide5-text": "",
+      "slide6-text": "",
+      "slide7-text": "",
+      "slide7-title": "",
+      "slide8-text": "",
+      "slide9-text": "",
+      "slide9-title": "",
+      "title": ""
+    },
+    "invalid-dropdown-selection": "",
+    "menu-behavior": "",
+    "menu-behavior-info": "",
+    "menu-conditions": "",
+    "menu-conditions-info": "",
+    "menu-themes-dialog": {
+      "accent-colors": "",
+      "accent-colors-info": "",
+      "author": "",
+      "create-your-own-themes": "",
+      "dark": "",
+      "fade-in-time": "",
+      "fade-in-time-info": "",
+      "fade-out-time": "",
+      "fade-out-time-info": "",
+      "get-themes-online": "",
+      "light": "",
+      "light-dark-mode": "",
+      "light-dark-mode-info": "",
+      "menu-scale": "",
+      "menu-scale-info": "",
+      "no-accent-colors": "",
+      "open-theme-directory": "",
+      "reset-color-picker": "",
+      "selection-wedges": "",
+      "selection-wedges-info": "",
+      "title": ""
+    },
+    "no-matching-menus": "",
+    "no-matching-menus-note": "",
+    "no-menus": "",
+    "no-menus-note": "",
+    "not-bound": "",
+    "redo": "",
+    "restore-backup": "",
+    "restore-general-settings-error-title": "",
+    "restore-general-settings-success-message": "",
+    "restore-general-settings-success-title": "",
+    "restore-general-settings-warning-message": "",
+    "restore-general-settings-warning-title": "",
+    "restore-menu-settings-error-title": "",
+    "restore-menu-settings-success-message": "",
+    "restore-menu-settings-success-title": "",
+    "restore-menu-settings-warning-message": "",
+    "restore-menu-settings-warning-title": "",
+    "screen-area-picker": {
+      "bottom-right": "",
+      "bottom-right-value": "",
+      "confirm": "",
+      "invalid": "",
+      "top-left": "",
+      "top-left-value": "",
+      "valid": ""
+    },
+    "search-menus-placeholder": "",
+    "shortcut-id-label": "",
+    "shortcut-info": "",
+    "shortcut-label": "",
+    "shortcut-recording": "",
+    "tags": "",
+    "tags-info": "",
+    "undo": "",
+    "window-condition": "",
+    "window-condition-info": "",
+    "window-condition-placeholder": "",
+    "window-condition-tooltip": "",
+    "window-picker-dialog": {
+      "confirm": "",
+      "countdown_one": "",
+      "countdown_other": "",
+      "instructions": "",
+      "restart-countdown": "",
+      "result": "",
+      "start-countdown": ""
+    }
+  }
 }
