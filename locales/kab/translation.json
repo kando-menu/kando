@@ -1,1 +1,38 @@
-{}
+{
+    "settings": {
+        "icon-picker-dialog": {
+            "base64-hint": "Tignitin n usettenggel n Base64 i d-yettaken abrid fessusen akken ad ternuḍ kra n tignit ɣer wumuɣen-ik·im. Tzemreḍ ad tesqedceḍ ameẓlu am [www.base64-image.de]({{link}} iwakken ad tselkteḍ tugna i tebɣiḍ ɣer uzrar yettwasetgel s base64. Annect-a yettedu ula i tugniwin gift imrayen!",
+            "base64-example": "Amedya Base64:",
+            "file-example": "afaylu: amedya URI:",
+            "url-example": "amedya ɣef tansa URL:",
+            "reload-button-tooltip": "Ales asali n isental n tignitin meṛṛa",
+            "search-placeholder": "Nadi tignitin…",
+            "hint": "Lmed [dagi]({{link}}) amek ara ternuḍ neɣ ad d-tesnulfuḍ isental-ik·im n tignit."
+        },
+        "cancel": "Sefsex",
+        "achievements-dialog": {
+            "reset-button": "Ales awennez n usfari",
+            "reset-confirmation-title": "D tidet tebɣiḍ ad talseḍ awennez n usfari?",
+            "reset-confirmation-message": "Akk iseḍruyen d ufara n yiswiren ad ruḥen. Tigawt-agi ulamek ara ad tettwasemmet.",
+            "title": "Iseḍruyen",
+            "xp": "XP",
+            "no-in-progress-achievements": "Ayyuz! Tfukkeḍ akk iseḍruyen.",
+            "no-completed-achievements": "Mazal ur tfukkeḍ ara akk yakan iseḍruyen.",
+            "in-progress-button": "Deg usfari",
+            "completed-button": "Immed",
+            "reset-button-tooltip": "Ales awennez n meṛṛa n iseḍruyen d usfari n iswiren"
+        },
+        "restore-backup": "Err-d aḥraz…",
+        "restore-general-settings-warning-title": "D tidet tebɣiḍ ad d-terreḍ iɣewwaṛen imuta?",
+        "restore-general-settings-error-title": "Yecceḍ usali n aḥraz n yiɣewwaren imuta!",
+        "restore-general-settings-success-title": "Yedda akken iwata!",
+        "restore-general-settings-success-message": "Iɣewwaṛen-ik·im imuta ttwarran-d seg ufaylu n weḥraz.",
+        "restore-menu-settings-warning-title": "D tidet tebɣiḍ ad d-terreḍ iɣewwaṛen n wumuɣ?",
+        "restore-menu-settings-warning-message": "Ayagi ad isemselsi umuɣen-ik·im amiran akked tigrummiwin n wumuɣen s igburen n ufaylu n weḥraz yettwafernen!",
+        "restore-menu-settings-error-title": "Yecceḍ usali n weḥraz n wumuɣen!",
+        "restore-menu-settings-success-title": "Yedda akken iwata!",
+        "restore-menu-settings-success-message": "Umuɣen-ik·im akked tigrummiwin n wumuɣ ttwarran-d seg ufaylu n weḥraz.",
+        "export-menu-error-title": "Yecceḍ usifeḍ n wumuɣ",
+        "import-menu-error-title": "Yecceḍ uktar n wumuɣ"
+    }
+}
