@@ -1,555 +1,559 @@
 {
-    "backends": {
-        "gnome": {
-            "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: {{link}}"
-        },
-        "hyprland": {
-            "shortcut-info": "Kando nemůže přímo vázat zkratky v Hyprlandu. Místo toho zadejte ID zkratky zde a přidejte zkratku do hyprland.conf s něčím jako \"bind = CTRL, Space, global, kando:example-menu\". Nahraďte example-menu s ID vybraném zde."
-        },
-        "kde-wayland": {
-            "shortcut-info": "Kando nemůže přímo vázat zkratky v KDE/Waylandu. Místo toho zadejte ID zkratky zde a najděte zkratku v KWin sekci v KDE nastaveni systému. Tam můžete přiřadit zkratku která otevře toto menu."
-        },
-        "niri": {
-            "shortcut-info": "Niri zatím nepodporuje globální zástupce. Ale můžete otevřít toto menu pomocí 'kando --menu \"Název Menu\" z příkazového řádku nebo z vašeho niri nastavení."
-        }
+  "achievements": {
+    "added-items": {
+      "description": "Vytvořte {{n}} položek v menu editoru.",
+      "name": "Stezka Kando {{tier}}"
     },
-    "example-menu": {
-        "apps": {
-            "apple-music": "Hudba",
-            "email": "E-Mail",
-            "file-browser": "Správce souborů",
-            "finder": "Hledač",
-            "gimp": "GIMP",
-            "paint": "Malování",
-            "safari": "Safari",
-            "submenu": "Aplikace",
-            "terminal": "Terminál",
-            "web-browser": "Prohlížeč"
-        },
-        "audio": {
-            "mute": "Ztlumit",
-            "next-track": "Další skladba",
-            "play-pause": "Přehrát / Pozastavit",
-            "previous-track": "Předchozí skladba",
-            "submenu": "Zvuk"
-        },
-        "bookmarks": {
-            "desktop": "Plocha",
-            "documents": "Dokumenty",
-            "downloads": "Stažené soubory",
-            "home": "Domovská složka",
-            "music": "Hudba",
-            "pictures": "Obrázky",
-            "submenu": "Záložky",
-            "videos": "Videa"
-        },
-        "clipboard": {
-            "copy": "Kopírovat",
-            "cut": "Vyjmout",
-            "paste": "Vložit",
-            "submenu": "Schránka"
-        },
-        "name": "Ukázkové menu",
-        "next-workspace": "Další pracovní plocha",
-        "previous-workspace": "Předchozí pracovní plocha",
-        "web-links": {
-            "google": "Google",
-            "kando-on-discord": "Kando Discord",
-            "kando-on-github": "Kando GitHub",
-            "kando-on-kofi": "Kando Ko-fi",
-            "kando-on-youtube": "Kando YouTube",
-            "submenu": "Webové odkazy"
-        },
-        "windows": {
-            "close-window": "Zavřít okno",
-            "mission-control": "Ovládání oken",
-            "submenu": "Okna",
-            "tile-left": "Přichytit vlevo",
-            "tile-right": "Přichytit vpravo",
-            "toggle-maximize": "Přepnout maximalizaci"
-        }
+    "attributes": {
+      "capable": "Schopný",
+      "expert": "Odborník",
+      "master": "Učitel",
+      "novice": "Nováček",
+      "skilled": "Zkušený"
     },
-    "main": {
-        "failed-to-start-header": "Kando se nepodařilo spustit",
-        "inhibit-shortcuts": "Dočasně zakázat všechny zkratky",
-        "new-version-notification-header": "Je dostupná nová verze Kando!",
-        "quit": "Ukončit",
-        "show-settings": "Zobrazit nastavení",
-        "un-inhibit-shortcuts": "Znovu povolit zkratky",
-        "new-version-notification-body": "Získejte z {{link}}.",
-        "invalid-link-header": "Neplatný odkaz",
-        "invalid-link-message": "Hluboký odkaz nemohl být analyzován.",
-        "no-backend-found": "Nebyl nalezen žádný vhodný backend."
+    "backup": {
+      "description": "Zálohujte menu nebo nastavení {{n}} krát.",
+      "name": "Cesta Prozíravosti {{tier}}"
     },
-    "menu-items": {
-        "command": {
-            "command": "Příkaz",
-            "command-info": "Tento příkaz bude vykonán.",
-            "description": "Spustit apku nebo skript.",
-            "name": "Spustit příkaz",
-            "tip-1": "Příkazy můžete použít ke spouštění aplikací nebo skriptů.",
-            "tip-2": "Pokud cesta k programu obsahuje mezery, měli byste ji \"vložit do uvozovek\".",
-            "tip-3": "Použijte {{app_name}} pro vložení názvu aplikace, která byla aktivní při otevření menu.",
-            "tip-4": "Pomocí {{window_name}} vložte název aplikace, která byla zaměřena když jste menu otevírali.",
-            "tip-5": "Použijte {{pointer_x}} a {{pointer_y}} pro vložení polohy kurzoru při otevření menu.",
-            "placeholder": "Vložte libovolný příkaz…",
-            "tip-6": "Kliknutím [zde]({{link}}) se dozvíte, jak najít příkazy pro spuštění vašich aplikací.",
-            "detached": "Spustit odpojené",
-            "isolated": "Spustit izolovaně",
-            "detached-info": "Odpojí příkaz z Kando, takže běh bude pokračovat i v případě, že je Kando uzavřeno. Zakázání může vyřešit problémy s příkazy, které se nespouští správně.",
-            "isolated-info": "Spustí příkaz v čistém prostředí, to znamená, že nebude dědit žádné proměnné z Kando. To může pomoci s příkazy, které se nespouští správně.",
-            "choose-app": "Vybrat aplikaci…"
-        },
-        "file": {
-            "description": "Otevře soubor nebo složku.",
-            "file": "Cesta k souboru",
-            "name": "Otevřít soubor",
-            "tip-1": "Tento typ položky můžete použít k otevírání souborů nebo složek.",
-            "placeholder": "Vyberte soubor nebo složku…"
-        },
-        "hotkey": {
-            "description": "Stiskněte kombinaci kláves.",
-            "hotkey": "Klávesová zkratka",
-            "name": "Simulovat klávesovou zkratku",
-            "recording-placeholder": "Stiskněte klávesovou zkratku…",
-            "tip-1": "Při nahrávání klávesové zkratky nemusíte stisknout všechny klávesy najednou. Můžete je zadávat postupně.",
-            "tip-2": "Pokud nelze klávesu nahrát, protože ji používá systém, zkuste její název napsat přímo.",
-            "tip-3": "Klikněte na [tento odkaz]({{link}}) pro zobrazení všech platných klíčů.",
-            "hotkey-info": "Tato zkratka bude spuštěna, když je vybrána položka. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na globální akci!"
-        },
-        "macro": {
-            "description": "Použije sled kláves.",
-            "name": "Simulovat makro",
-            "placeholder": "Stiskněte tlačítko záznamu pro spuštění nahrávání!",
-            "recording-placeholder": "Stiskněte klávesy…",
-            "tip-1": "Kando standardně přidává 10ms prodlevu před každou událostí klávesnice. Můžete to změnit pomocí vlastnosti \"delay\".",
-            "tip-2": "Můžete upravit makra také ručně. To je užitečné, pokud chcete upravit načasování kláves."
-        },
-        "redirect": {
-            "description": "Otevřít jiné menu.",
-            "name": "Přesměrování"
-        },
-        "settings": {
-            "description": "Otevře okno nastavení Kando.",
-            "name": "Otevřít nastavení",
-            "tip-1": "Tato akce otevře okno nastavení Kando."
-        },
-        "submenu": {
-            "description": "Obsahuje další položky menu.",
-            "detailed-description_one": "",
-            "detailed-description_few": "Obsahuje {{count}} položek menu.",
-            "detailed-description_other": "",
-            "name": "Podmenu",
-            "tip-1": "Podmenu můžete použít ke skupinování položek.",
-            "tip-2": "Můžete také vnořit podmenu do jiného podmenu.",
-            "tip-3": "Podmenu lze využít k vytvoření složitějších menu struktur.",
-            "tip-4": "Vyvarujte se přidání více než dvanácti položek do podmenu. Osm je optimální počet.",
-            "tip-5": "V náhledu můžete použít malé ikony zámků pro upevnění pozice položek v menu.",
-            "tip-6": "Položky lze přeuspořádat jejich přetažením v náhledu.",
-            "tip-7": "Můžete smazat menu nebo menu položku s pomocí ikony koše níže."
-        },
-        "text": {
-            "description": "Vloží zadaný text.",
-            "name": "Vložit text",
-            "placeholder": "Vložte libovolný text…",
-            "tip-1": "Tato akce používá schránku k vložení textu. Po použití akce bude schránka obsahovat tento text."
-        },
-        "uri": {
-            "description": "Otevře webové stránky a další.",
-            "name": "Otevřít URI",
-            "tip-1": "Tento typ položky můžete použít k otevření webové stránky pomocí protokolu http://.",
-            "tip-2": "Můžete ho použít k volání vlastních URI schémat jako slack:// nebo zoommtg://.",
-            "tip-3": "Tento typ položky můžete použít k otevření odkazu mailto: link.",
-            "tip-4": "Použijte {{app_name}} k vložení názvu aplikace, která byla aktivní při otevření menu.",
-            "tip-5": "Použijte {{window_name}} k vložení názvu okna, které bylo aktivní při otevření menu.",
-            "tip-6": "Použijte {{pointer_x}} a {{pointer_y}} k vložení polohy kurzoru při otevření menu.",
-            "uri": "URI",
-            "placeholder": "Vložte libovolné URI…"
-        },
-        "common": {
-            "delayed-option": "Počkat na dokončení animace",
-            "delayed-option-info": "Užitečné pokud akce cílí na okno, které musí být zaměřeno."
-        }
+    "cancelor": {
+      "description": "Zrušte výběr {{n}} krát.",
+      "name": "Cesta prázdnoty {{tier}}"
+    },
+    "click-selector": {
+      "description": "Vyberte {{n}} položek pomocí kliknutí myší.",
+      "name": "{{attribute}} Klik-Klik Šampion"
+    },
+    "completed-title": "Úspěch odemčen!",
+    "deep-menu": {
+      "description": "Přidejte položku menu do čtyři úrovňe hlubokého podmenu.",
+      "name": "Hlubinný Mistr"
+    },
+    "deleted-all-menus": {
+      "description": "Smažte všechna menu.",
+      "name": "Vyčištěné Dojo"
+    },
+    "depth-selector": {
+      "description": "Vyberte {{n}} položek v hloubce {{depth}} rychleji než {{time}} ms.",
+      "name1": "{{attribute}} Kráječ",
+      "name2": "{{attribute}} Dvouvrstvý Kráječ",
+      "name3": "{{attribute}} Hlubinný Kráječ"
+    },
+    "full-menu": {
+      "description": "Vytvořte menu s více než dvanácti položkami.",
+      "name": "Širší než Hlubší"
+    },
+    "gamepad-selector": {
+      "description": "Vyberte {{n}} položek pomocí ovladače.",
+      "name": "{{attribute}} Bojovník Ovladače"
+    },
+    "gesture-selector": {
+      "description": "Vyberte {{n}} položek pomocí režimu turbo nebo značení.",
+      "name": "{{attribute}} Mocný Ninja"
+    },
+    "keyboard-selector": {
+      "description": "Vyberte {{n}} položek pomocí klávesnice.",
+      "name": "{{attribute}} Hrdina Zkratek"
+    },
+    "many-selections-streak": {
+      "description": "Vyberte {{n}} položek v {{time}} s.",
+      "name": "Ruce Blesku {{tier}}"
+    },
+    "menu-themes-selected": {
+      "description": "Přepněte motiv menu {{n}} krát.",
+      "name": "Cesta Estéta"
+    },
+    "restore": {
+      "description": "Obnovte {{n}} krát zálohu.",
+      "name": "Druhá Šance {{tier}}"
+    },
+    "selector": {
+      "description": "Vyberte {{n}} položek.",
+      "name": "{{attribute}} Samuraj"
+    },
+    "settings-opened": {
+      "description": "Otevřete {{n}} krát okno nastavení.",
+      "name": "Putování je Odměnou {{tier}}"
+    },
+    "speedy-selections-streak": {
+      "description": "Vytvořte {{n}} po sobě jdoucích výběrů v průměru rychleji než {{time}} ms.",
+      "name": "Rychlejší než Myšlenka {{tier}}"
+    },
+    "sponsors-viewed": {
+      "description": "Zvažte, zda se nestát mecenášem Kando.",
+      "name": "Strážce Kando"
+    },
+    "tier": {
+      "I": "I",
+      "II": "II",
+      "III": "III",
+      "IV": "IV",
+      "V": "V"
+    },
+    "tutorial-viewed": {
+      "description": "Dokončete úvodní výukový program Kando.",
+      "name": "Výprava Začíná"
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": "Nepodařilo se připojit k rozšíření Kando Integration pro GNOME Shell. Můžete jej získat zde: {{link}}"
+    },
+    "hyprland": {
+      "shortcut-info": "Kando nemůže přímo vázat zkratky v Hyprlandu. Místo toho zadejte ID zkratky zde a přidejte zkratku do hyprland.conf s něčím jako \"bind = CTRL, Space, global, kando:example-menu\". Nahraďte example-menu s ID vybraném zde."
+    },
+    "kde-wayland": {
+      "shortcut-info": "Kando nemůže přímo vázat zkratky v KDE/Waylandu. Místo toho zadejte ID zkratky zde a najděte zkratku v KWin sekci v KDE nastaveni systému. Tam můžete přiřadit zkratku která otevře toto menu."
+    },
+    "niri": {
+      "shortcut-info": "Niri zatím nepodporuje globální zástupce. Ale můžete otevřít toto menu pomocí 'kando --menu \"Název Menu\" z příkazového řádku nebo z vašeho niri nastavení."
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "Hudba",
+      "email": "E-Mail",
+      "file-browser": "Správce souborů",
+      "finder": "Hledač",
+      "gimp": "GIMP",
+      "paint": "Malování",
+      "safari": "Safari",
+      "submenu": "Aplikace",
+      "terminal": "Terminál",
+      "web-browser": "Prohlížeč"
+    },
+    "audio": {
+      "mute": "Ztlumit",
+      "next-track": "Další skladba",
+      "play-pause": "Přehrát / Pozastavit",
+      "previous-track": "Předchozí skladba",
+      "submenu": "Zvuk"
+    },
+    "bookmarks": {
+      "desktop": "Plocha",
+      "documents": "Dokumenty",
+      "downloads": "Stažené soubory",
+      "home": "Domovská složka",
+      "music": "Hudba",
+      "pictures": "Obrázky",
+      "submenu": "Záložky",
+      "videos": "Videa"
+    },
+    "clipboard": {
+      "copy": "Kopírovat",
+      "cut": "Vyjmout",
+      "paste": "Vložit",
+      "submenu": "Schránka"
+    },
+    "name": "Ukázkové menu",
+    "next-workspace": "Další pracovní plocha",
+    "previous-workspace": "Předchozí pracovní plocha",
+    "web-links": {
+      "google": "Google",
+      "kando-on-discord": "Kando Discord",
+      "kando-on-github": "Kando GitHub",
+      "kando-on-kofi": "Kando Ko-fi",
+      "kando-on-youtube": "Kando YouTube",
+      "submenu": "Webové odkazy"
+    },
+    "windows": {
+      "close-window": "Zavřít okno",
+      "mission-control": "Ovládání oken",
+      "submenu": "Okna",
+      "tile-left": "Přichytit vlevo",
+      "tile-right": "Přichytit vpravo",
+      "toggle-maximize": "Přepnout maximalizaci"
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "Dočasně zakázat všechny zkratky",
+    "invalid-link-header": "Neplatný odkaz",
+    "invalid-link-message": "Hluboký odkaz nemohl být analyzován.",
+    "new-version-notification-body": "Získejte z {{link}}.",
+    "new-version-notification-header": "Je dostupná nová verze Kando!",
+    "quit": "Ukončit",
+    "show-settings": "Zobrazit nastavení",
+    "un-inhibit-shortcuts": "Znovu povolit zkratky"
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "Vybrat aplikaci…",
+      "description": "Spustit apku nebo skript.",
+      "detached": "Spustit odpojené",
+      "detached-info": "Odpojí příkaz z Kando, takže běh bude pokračovat i v případě, že je Kando uzavřeno. Zakázání může vyřešit problémy s příkazy, které se nespouští správně.",
+      "isolated": "Spustit izolovaně",
+      "isolated-info": "Spustí příkaz v čistém prostředí, to znamená, že nebude dědit žádné proměnné z Kando. To může pomoci s příkazy, které se nespouští správně.",
+      "name": "Spustit příkaz",
+      "placeholder": "Vložte libovolný příkaz…",
+      "tip-1": "Příkazy můžete použít ke spouštění aplikací nebo skriptů.",
+      "tip-2": "Pokud cesta k programu obsahuje mezery, měli byste ji \"vložit do uvozovek\".",
+      "tip-3": "Použijte {{app_name}} pro vložení názvu aplikace, která byla aktivní při otevření menu.",
+      "tip-4": "Pomocí {{window_name}} vložte název aplikace, která byla zaměřena když jste menu otevírali.",
+      "tip-5": "Použijte {{pointer_x}} a {{pointer_y}} pro vložení polohy kurzoru při otevření menu.",
+      "tip-6": "Kliknutím [zde]({{link}}) se dozvíte, jak najít příkazy pro spuštění vašich aplikací."
+    },
+    "common": {
+      "delayed-option": "Počkat na dokončení animace",
+      "delayed-option-info": "Užitečné pokud akce cílí na okno, které musí být zaměřeno.",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "Otevře soubor nebo složku.",
+      "name": "Otevřít soubor",
+      "placeholder": "Vyberte soubor nebo složku…",
+      "tip-1": "Tento typ položky můžete použít k otevírání souborů nebo složek."
+    },
+    "hotkey": {
+      "description": "Stiskněte kombinaci kláves.",
+      "hotkey": "Klávesová zkratka",
+      "hotkey-info": "Tato zkratka bude spuštěna, když je vybrána položka. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na globální akci!",
+      "name": "Simulovat klávesovou zkratku",
+      "recording-placeholder": "Stiskněte klávesovou zkratku…",
+      "tip-1": "Při nahrávání klávesové zkratky nemusíte stisknout všechny klávesy najednou. Můžete je zadávat postupně.",
+      "tip-2": "Pokud nelze klávesu nahrát, protože ji používá systém, zkuste její název napsat přímo.",
+      "tip-3": "Klikněte na [tento odkaz]({{link}}) pro zobrazení všech platných klíčů."
+    },
+    "macro": {
+      "description": "Použije sled kláves.",
+      "name": "Simulovat makro",
+      "placeholder": "Stiskněte tlačítko záznamu pro spuštění nahrávání!",
+      "recording-placeholder": "Stiskněte klávesy…",
+      "tip-1": "Kando standardně přidává 10ms prodlevu před každou událostí klávesnice. Můžete to změnit pomocí vlastnosti \"delay\".",
+      "tip-2": "Můžete upravit makra také ručně. To je užitečné, pokud chcete upravit načasování kláves."
+    },
+    "redirect": {
+      "description": "Otevřít jiné menu.",
+      "name": "Přesměrování"
     },
     "settings": {
-        "about-dialog": {
-            "chrome-version": "Chrome Verze",
-            "electron-version": "Electron Verze",
-            "kando-backend": "Kando Backend",
-            "kando-version": "Kando Verze",
-            "title": "O Kando",
-            "message": "Kando vytvářím z čiré vášně. Pokud se vám bude líbit jeho používání stejně, jako mně jeho vytváření, můžete [mi koupit kávu]({{link}})!\n\n💖 Simon",
-            "check-latest-release": "Zkontrolovat nejnovější vydání",
-            "read-release-notes": "Přečíst poznámky o vydání"
-        },
-        "anchored-mode": "Mód Kotvy",
-        "app-condition": "Omezit na konkrétní aplikace",
-        "area-condition": "Omezit na konkrétní oblast obrazovky",
-        "area-condition-bottom-placeholder": "Dole",
-        "area-condition-left-placeholder": "Vlevo",
-        "area-condition-right-placeholder": "Vpravo",
-        "area-condition-top-placeholder": "Nahoře",
-        "cancel": "Zrušit",
-        "centered-mode": "Centr Mód",
-        "centered-mode-info": "Otevře menu uprostřed obrazovky místo u kurzoru.",
-        "general-settings-dialog": {
-            "reload-menu-theme": "Znovu načíst téma menu",
-            "reload-menu-theme-tooltip": "Změny v CSS se použijí okamžitě, ale pro změny v souboru theme.json je nutné menu znovu otevřít.",
-            "reload-sound-theme": "Znovu načíst zvukové téma",
-            "none": "Nic",
-            "title": "Obecná nastavení",
-            "top-left": "Vlevo Nahoře",
-            "top-right": "Vpravo Nahoře",
-            "bottom-left": "Vlevo Dole",
-            "bottom-right": "Vpravo Dole",
-            "settings-window-color-scheme-info": "Pokud zvolíte 'systém', okno nastavení použije stejné barevné schéma jako operační systém.",
-            "system": "Systém",
-            "light": "Světlá",
-            "settings-window-flavor": "Nastavit odrůdu oken",
-            "settings-window-flavor-info": "Pokud vyberete průhlednou odrůdu, budete muset restartovat okno nastavení, aby se změny projevily.",
-            "dark": "Tmavá",
-            "transparent-light": "Transparentní Světlá",
-            "transparent-dark": "Transparentní Tmavá",
-            "transparent-system": "Transparentní Systém",
-            "sakura-light": "Sakura Světlá",
-            "tray-icon-flavor": "Odrůda ikon panelu",
-            "sakura-dark": "Sakura Tmavá",
-            "sakura-system": "Sakura Systém",
-            "tray-icon-flavor-info": "Můžete si také vybrat, aby se skrývaly tray ikony zcela.",
-            "hidden": "Skrytá",
-            "color": "Barevná",
-            "white": "Bílá",
-            "black": "Černá",
-            "lazy-initialization": "Líná inicializace",
-            "menu-behavior": "Menu Chování",
-            "enable-marking-mode": "Povolit Označovací Mód",
-            "enable-marking-mode-info": "S povoleným Označovacím Módem, můžete vybrat položky přetažením myši nad nimi.",
-            "enable-turbo-mode": "Povolit Turbo Mód",
-            "enable-turbo-mode-info": "Při zapnutém Turbo Módu můžete provádět gesta, dokud držíte stisknutou modifikační klávesu, jako Shift nebo Ctrl.",
-            "move-pointer-to-menu-center": "Přesunout kurzor do centra menu",
-            "require-click-for-hover-mode": "Požadovat klik pro výběr v Hover Módu",
-            "move-pointer-to-menu-center-info": "Pokud je zaškrtnuto, kurzor myši bude přesunut na střed menu nebo podmenu, pokud je to nutné. To by mohlo být v případě, že je menu otevřeno příliš blízko k okraji obrazovky, nebo pokud je menu otevřeno v Centrovaném Módu.",
-            "require-click-for-hover-mode-info": "Pokud nezaškrtnuto, položky budou vybrány okamžitě, když přes ně přejedete myší pro menu používající Hover Mód.",
-            "right-mouse-button-selects-parent": "Pravé tlačítko myši vybere rodiče",
-            "right-mouse-button-selects-parent-info": "Pokud nezaškrtnuto, zavře se menu pravým tlačítkem myši.",
-            "enable-gamepad-support": "Povolit podporu gamepadů",
-            "enable-gamepad-support-info": "Pokud vybráno, můžete použít připojený gamepad ke kontrole menu.",
-            "sound-theme-info": "Zvukový motiv je sbírka zvuků, které hrají při interakci s menu.",
-            "menu-sounds": "Menu Zvuků",
-            "learn-how-to-add-sound-themes": "Zjistěte, jak přidat nové zvukové motivy do Kando [zde]({{link}})!",
-            "sound-theme": "Zvukové téma",
-            "advanced-menu-options": "Pokročilé možnosti",
-            "advanced-menu-options-note": "Obvykle můžete nechat tyto nastavení ve svých výchozích hodnotách.",
-            "minimum-gesture-length-info": "Rovné pohyby musí být alespoň takto dlouhé pro spuštění výběru. Výchozí je 150px.",
-            "developer-options": "Vývojářské Možnosti",
-            "settings-window-dev-tools": "Nastavení Inspekce",
-            "message": "Všechna vaše menu a Kando nastavení jsou uloženy ve dvou souborech JSON, které můžete také upravit, sdílet nebo zálohovat. Kliknutím na tlačítko [zde]({{link}}) otevřete adresář, kde jsou soubory uloženy.",
-            "app-behavior": "Chování Apky",
-            "check-for-new-versions": "Kontrolovat nové verze",
-            "check-for-new-versions-info": "Pokud je povoleno, Kando zobrazí upozornění pokud je k dispozici nová verze.",
-            "invisible-settings-button-info": "Stále můžete tlačítko použít, objeví se, když přes něj přejedete myší.",
-            "settings-button-position": "Nastavení pozice tlačítka",
-            "invisible-settings-button": "Nastavit neviditelné tlačítko",
-            "settings-button-position-info": "Vyberte roh obrazovky, kde bude zobrazeno tlačítko nastavení.",
-            "settings-window-color-scheme": "Nastavit barevné schéma okna",
-            "volume": "Hlasitost",
-            "volume-info": "Celková hlasitost zvukového tématu. Výchozí je 0.5.",
-            "lazy-initialization-info": "Když povoleno, okno menu se vytvoří jen, pokud je menu otevřeno poprvé. To bude dělat první otevření menu trochu pomalejší, ale může zabránit problémům, kdy Kando začne příliš brzy po přihlášení. Výchozí je zakázáno.",
-            "minimum-gesture-length": "Minimální délka gest",
-            "minimum-gesture-angle": "Minimální Úhel Gest",
-            "minimum-gesture-angle-info": "Menší odchylka od rovných pohybů nespustí výběr. Výchozí je 20°.",
-            "gesture-jitter-threshold": "Práh Chvění Gest",
-            "gesture-jitter-threshold-info": "Menší pohyby nebudou brány v potaz detekcí gest. Výchozí je 10px.",
-            "gesture-pause-timeout": "Limit Pauzy Gest",
-            "gesture-pause-timeout-info": "Zastavte gesto na tuto dobu, aby se spustil výběr. Výchozí je 100 ms.",
-            "dev-tools-note": "Kando používá dvě okna: Jedno pro menu a jedno pro nastavení. Můžete otevřít vývojové nástroje pro kontrolu obou oken samostatně.",
-            "menu-window-dev-tools": "Inspekce menu",
-            "reload-note": "Když načtete znovu motiv menu, budou změny CSS použity i v případě, že je menu zrovna zobrazeno. Pro změny provedené v theme.json souboru, musíte znovu otevřít menu.",
-            "center-click-zone-radius-info": "Velikost plochy uprostřed menu, která se buď zavře nebo přejdete o úroveň výš, když kliknete. Výchozí je 50px.",
-            "center-click-zone-radius": "Poloměr zóny kliknutí",
-            "minimum-submenu-distance": "Minimální vzdálenost podmenu",
-            "minimum-submenu-distance-info": "Pokud se podmenu otevře v blízkosti menu rodiče, bude rodič přesunut do této vzdálenosti. Výchozí je 150px.",
-            "movement-threshold": "Práh pohybu",
-            "movement-threshold-info": "Menší pohyby myši nebudou brány v úvahu ve Markovací nebo Turbo Módu. Výchozí je 15px.",
-            "fixed-stroke-length-info": "Obvykle jsou položky vybrány, když zastavíte nebo provedete obrat. Pokud nastavíte hodnotu vyšší než 0, toto chování se změní: Nyní budou položky vybrány pouze v případě, že je přetáhnete pryč tak daleko z centra. Výchozí je 0px.",
-            "fixed-stroke-length": "Upravená Délka Potahu",
-            "auto-language": "Použít jazyk systému",
-            "app-settings": "Nastavení Aplikace",
-            "localization-label": "Jazyk",
-            "keep-input-focus": "Udržet zaměření aktivní aplikace",
-            "keep-input-focus-info": "Pokud povoleno, menu nepřevezme zaměření klávesnice při otevření. To deaktivuje Turbo mód, ale může být užitečné, pokud potřebujete, aby ostatní aplikace zůstaly zaměřeny, zatímco menu je otevřeno.",
-            "press-again-behavior": "Chování Opětovného-stisknutí-zkratky",
-            "press-again-behavior-info": "Určuje, co se stane, pokud je zkratka stisknuta znovu, když je zobrazeno menu. Pokud je přiřazeno více menu na stejné zkratce, můžete použít tento cyklus všemi odpovídajícími menu. Ujistěte se, že držíte modifikační klávesu jen, pokud chcete použít Turbo Mód společně s jinou možností než \"Nedělat nic\".",
-            "do-nothing": "Nedělat nic",
-            "cycle-from-first": "Zobrazit další menu (začít s prvním)",
-            "cycle-from-recent": "Zobrazit další menu (pokračovat od posledního)",
-            "close-menu": "Zavřít menu",
-            "localization-info": "Restartujte Kando pro použití nového jazyka.",
-            "hardware-acceleration": "Povolit hardwarovou akceleraci",
-            "hardware-acceleration-info": "Tato možnost může zvýšit výkon aplikace, ale může také vést k vykreslování artefaktů. Musíte restartovat Kando pro použítí tohoto nastavení.",
-            "enable-achievements-info": "Pokud povoleno, Kando bude sledovat váš pokrok k úspěchům.",
-            "enable-achievements": "Sledovat úspěchy",
-            "backup-and-restore": "Záloha a Obnovení",
-            "backup-menus": "Zálohovat menus.json…",
-            "backup-settings": "Zálohovat config.json…",
-            "restore-menus": "Obnovit menus.json…",
-            "restore-settings": "Obnovit config.json…"
-        },
-        "hover-mode": "Hover Mód",
-        "hover-mode-info": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
-        "icon-picker-dialog": {
-            "base64-example": "Base64 příklad:",
-            "search-placeholder": "Hledat ikony…",
-            "url-example": "URL příklad:",
-            "base64-hint": "Base64 kódované ikony poskytují snadný způsob, jak zahrnout libovolný typ ikon do vašich menu. Můžete použít službu, jako je [www.base64-image.de]({{link}}) pro konverzi jakéhokoli obrazu do base64 kódovaného řetězce. To funguje dokonce pro animované gify!",
-            "file-example": "soubor: URI příklad:",
-            "hint": "Naučte se [zde]({{link}}) jak přidat, nebo vytvořit vlastní témata ikon.",
-            "reload-button-tooltip": "Znovu načíst všechny témata ikon"
-        },
-        "introduction-dialog": {
-            "title": "Vítejte v Kando!",
-            "slide2-title": "Otevřít menu!",
-            "slide3-hint2": "Klikněte kdekoli zde pro výběr položky.",
-            "slide1-title": "Kando nabízí unikátní a efektivní způsob pro interakci s počítačem.",
-            "slide3-hint1": "Můžete také kliknout zde, pro zavření menu.",
-            "slide5-hint": "Klikněte kdekoli zde pro přechod o úroveň výš.",
-            "slide5-text": "Pro **navigaci zpět**, klikněte buď na výseč rodiče, nebo střed menu.",
-            "slide6-text": "Tímto způsobem můžete rychle prozkoumat strukturu menu.",
-            "slide7-title": "Buďte rychlejší: Markovací Mód",
-            "slide12-text": "Kando je vysoce přizpůsobitelné. Může být použito k otevírání aplikací, souborů, spouštění klávesových maker a mnoho dalších věcí. Může [měnit styly menu]({{link1}}), [přidávat motivy ikonám]({{link2}}) a dokonce [používat i zvuky]({{link3}}) ve vašich menu!",
-            "chapter5": "Jak začít",
-            "chapter3": "Turbo Mód",
-            "chapter1": "Začínáme",
-            "chapter2": "Markovací Mód",
-            "chapter4": "Další Kroky",
-            "slide9-title": "Být jako blesk: Turbo Mód",
-            "slide12-title": "Je toho víc!",
-            "slide13-text": "Pokud potřebujete pomoc v jakémkoli bodě, neváhejte se připojit k našemu [Discord Serveru]({{link1}}) nebo se podívejte do [dokumentace]({{link2}})!",
-            "slide7-text": "Klepněte a přetáhněte položku do Markovacího Módu. **Jestliže zastavíte, nebo začnete hýbat myší, přetahované podmenu se otevře!** Zapamatujte si cestu k položce a nakreslete ji výraznými cik-cak pohyby.",
-            "slide2-text-standard": "Pokud jste spustili Kando poprvé, můžete otevřít příklad menu pomocí Ctrl+Mezerník. Znovu zavřete klávesou Escape nebo pravým tlačítkem myši kdekoli na obrazovce.",
-            "slide3-text": "V Kando, **Celá obrazovka je cíl-kliku**! Nemusíte zaměřovat ikony, můžete kliknout kdekoli ve výseči položek. To dělá vybírání pložek mnohem efektivnější.",
-            "show-again": "Zobrazit tento dialog znovu",
-            "slide1-text": "Projděte tyto snímky, abyste se naučili, co pro Vás Kando může dělat! Můžete použít kapitoly na levé straně pro rychlý přesun na konkrétní část predstavení.",
-            "slide2-text-no-shortcuts": "Pokud jste spustili Kando poprvé, [Na Linuxu možná bude potřeba provést další kroky, aby fungovaly klávesové zkratky]({{link}}). Jakmile budou fungovat, můžete zavřít menu pomocí klávesy Escape nebo pravým tlačítkem myši.",
-            "slide4-text": "Podmenu bude **vždy** otevřeno pod kurzorem myši. Nemusíte **čekat na animaci do konce**. Důvěřujte své svalové paměti a pokračujte s výběrem!",
-            "slide8-text": "**Menu reaguje na pohyby myši!** Podmenu se otevře, když budete chtít. S nějakou praxí budete moci vybírat položky, bez dívání na menu.",
-            "slide10-text": "**Nečekejte na dokončení animace!** Stačí cikcak procestovat přes menu. Je to nejrychlejší způsob pro výběr položek!",
-            "slide11-text": "**Nebojte se náhodných výběrů!** Akce se spustí jen pokud pustíte tlačítko myši v Markovacím Módu, nebo klávesu v Turbo Módu. Používejte to k prozkoumání menu!",
-            "slide9-text": "Pokud budete **držet klávesu** (např. _Ctrl_, _Shift_, nebo _Alt_) po otevření menu, můžete vybrat pouhým pohybem kurzoru. Klikání nebo tahání není nutné."
-        },
-        "menu-behavior": "Chování menu",
-        "menu-conditions": "Podmínky menu",
-        "menu-conditions-info": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
-        "menu-themes-dialog": {
-            "author": "od {{author}}",
-            "light-dark-mode-info": "Pokud je povoleno, můžete zvolit různé motivy a zabarvení pokud je váš systém ve světlém či tmavém módu.",
-            "reset-color-picker": "Obnovit všechny barvy na výchozí hodnoty",
-            "title": "Témata menu",
-            "get-themes-online": "Získejte témata online",
-            "light": "Světlý mód",
-            "dark": "Tmavý Mód",
-            "accent-colors-info": "Každý motiv může mít jinou sadu zabarvení.",
-            "theme-colors": "Barvy Motivu",
-            "fade-out-time-info": "Čas vyblednutí menu. Výchozí je 200ms.",
-            "menu-scale": "Zvětšení menu",
-            "accent-colors": "Zbarvení",
-            "fade-in-time-info": "Čas za který menu vybledne. Výchozí je 150ms.",
-            "fade-in-time": "Čas vyblednutí",
-            "fade-out-time": "Doba zhasnutí",
-            "menu-scale-info": "Toto použijte pro zvětšení nebo zmenšení velikosti vašich menu. Výchozí je 1.0.",
-            "light-dark-mode": "Povolit světlý/tmavý mód",
-            "create-your-own-themes": "Vytvořte si vlastní motivy",
-            "open-theme-directory": "Otevřít adresář motivů",
-            "no-accent-colors": "Toto téma nepodporuje zabarvení.",
-            "selection-wedges-info": "Pokud povoleno a podporováno vybraným tématem, vybraná oblast menu bude zvýrazněna.",
-            "selection-wedges": "Nakreslete klín položky"
-        },
-        "not-bound": "Nepřiřazeno",
-        "shortcut-id-label": "Zkratka ID",
-        "shortcut-label": "Zkratka",
-        "shortcut-recording": "Stiskněte zkratku…",
-        "window-condition": "Omezit na konkrétní názvy oken",
-        "invalid-dropdown-selection": "Vyberte možnost…",
-        "add-tags-placeholder": "Přidat značky…",
-        "window-picker-dialog": {
-            "countdown_one": "Vyberu za {{count}} sekundu…",
-            "countdown_few": "Vyberu za {{count}} sekund…",
-            "countdown_other": "Vyberu za {{count}} sekund…",
-            "result": "Vybrali jste \"{{name}}\".",
-            "restart-countdown": "Začít odpočet znovu",
-            "start-countdown": "Začít odpočet",
-            "instructions": "Stiskněte tlačítko níže a zaměřte cílové okno do dalších pěti sekund.",
-            "pick-app-name-title": "Vybrat Jméno Aplikace",
-            "confirm": "Použít tuto hodnotu",
-            "pick-window-title-title": "Vybrat Název Okna"
-        },
-        "file-picker": {
-            "select-file": "Vyberte soubor",
-            "select-directory": "Vyberte adresář"
-        },
-        "all-menus": "Všechna Menu",
-        "search-menus-placeholder": "Prohledat menu…",
-        "add-collection-tooltip": "Vytvořit novou kolekci menu. Použijte kolekci pro sdružování do skupin podle značek!",
-        "anchored-mode-info": "Otevře podmenu na stejné pozici jako rodičovské menu. Zaškrtnutí, zakáže Markovací a Turbo Mód.",
-        "app-condition-info": "Zobrazí menu pouze když je konkrétní aplikace zaměřena. Podporuje regulární výrazy jako /firefox|chrome/i.",
-        "tags-info": "Značky lze použít pro sdružení menu v menu kolekcích.",
-        "screen-area-picker": {
-            "top-left": "Přetáhněte do horního rohu vašeho prostoru.",
-            "valid": "Skvělé! Vybrali jste platnou oblast.",
-            "confirm": "Použít tuto oblast",
-            "bottom-right-value": "Vpravo: {{x}}, Dole: {{y}}",
-            "top-left-value": "Vlevo: {{x}}, Nahoře: {{y}}",
-            "title": "Vyberte oblast obrazovky",
-            "invalid": "Ujistěte se, že horní levý roh je nad a vlevo od dolního pravého rohu.",
-            "bottom-right": "Přetáhněte do pravého dolního rohu vašeho prostoru."
-        },
-        "window-condition-tooltip": "Vybrat okno",
-        "area-condition-tooltip": "Vybrat oblast obrazovky",
-        "add-menu-items": "Přidat Menu Položky",
-        "undo": "Vrátit",
-        "redo": "Opakovat",
-        "app-condition-placeholder": "Název apky",
-        "app-condition-tooltip": "Vybrat apku",
-        "delete-menu": "Smazat menu",
-        "duplicate-menu-item": "Duplikovat položku menu",
-        "delete-menu-item": "Smazat položku menu",
-        "create-menu-button": "Nové menu",
-        "menu-behavior-info": "Než povolíte tyto možnosti, doporučujeme se poučit, proč se nám líbí výchozí chování Kando [zde]({{link}})!",
-        "window-condition-info": "Zobrazit menu jen pokud název zaostřeného okna obsahuje daný text. Podporuje regulární výrazy jako /youtube|vimeo/i.",
-        "window-condition-placeholder": "Název okna",
-        "area-condition-info": "Zobrazit menu pouze pokud je kurzor myši v dané oblasti obrazovky. Oblast je dána v pixelech vzhledem k levém horním rohu vaší hlavní obrazovky. Pokud zanecháte pole prázdné, oblast bude v tomto směru vynechána.",
-        "shortcut-info": "Tato zkratka otevře menu. Musí obsahovat jednu normální klávesu a libovolný počet modifikátorů, jako je Ctrl, Alt nebo Shift. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na další menu!",
-        "tags": "Značky",
-        "duplicate-menu": "Duplikovat menu",
-        "no-menus": "Nemáte žádná menu.",
-        "no-menus-note": "Pokud jste to poslední odstranili omylem, můžete jej obnovit pomocí tlačítka undo.",
-        "no-matching-menus": "Žádné menu nenalezeno.",
-        "no-matching-menus-note": "Možná zkuste vyhledat něco jiného?",
-        "empty-collection-note": "Upravte štítky výše, nebo přidejte zcela nové menu do této kolekce pomocí tlačítka níže.",
-        "empty-collection": "Tato kolekce je prázdná.",
-        "add-menu-item-hint": "Přetáhněte tuto položku pro přidání do menu výše!",
-        "app-picker": {
-            "hint": "Můžete také přetáhnout aplikaci z nabídky Start do editoru Kando menu!",
-            "search-placeholder": "Vyhledat aplikaci…",
-            "use-selected": "Použít vybrané"
-        },
-        "achievements-dialog": {
-            "reset-button": "Obnovit postup",
-            "reset-confirmation-title": "Opravdu chcete obnovit všechen pokrok?",
-            "reset-confirmation-message": "Všechny úspěchy a úrovně pokroku budou ztraceny. Tato akce nelze zrušit.",
-            "title": "Úspěchy",
-            "xp": "XP",
-            "no-in-progress-achievements": "Gratulujeme! Dokončili jste všechny úspěchy.",
-            "no-completed-achievements": "Zatím jste nedosáhli žádných úspěchů.",
-            "in-progress-button": "V pokroku",
-            "completed-button": "Dokončeno",
-            "reset-button-tooltip": "Obnovit všechny úspěchy a pokrok"
-        },
-        "restore-backup": "Obnovit zálohu…",
-        "restore-general-settings-warning-title": "Opravdu chcete obnovit obecné nastavení?",
-        "restore-general-settings-warning-message": "Toto přepíše aktuální nastavení aplikace obsahem vybraného záložního souboru! Vaše nabídky a menu kolekce nebudou ovlivněny.",
-        "restore-general-settings-error-title": "Načtení celkové zálohy nastavení bylo neúspěšné!",
-        "restore-general-settings-success-title": "Úspěch!",
-        "restore-general-settings-success-message": "Vaše obecné nastavení bylo obnoveno ze záložního souboru.",
-        "restore-menu-settings-warning-title": "Opravdu chcete obnovit menu nastavení?",
-        "restore-menu-settings-warning-message": "Toto přepíše vaše aktuální menu a menu kolekce obsahem vybraného záložního souboru!",
-        "restore-menu-settings-error-title": "Obnova menu ze zálohy se nezdařila!",
-        "restore-menu-settings-success-title": "Úspěch!",
-        "restore-menu-settings-success-message": "Vaše menu a manu kolekce byly obnoveny ze záložního souboru."
+      "description": "Otevře okno nastavení Kando.",
+      "name": "Otevřít nastavení",
+      "tip-1": "Tato akce otevře okno nastavení Kando."
     },
-    "achievements": {
-        "attributes": {
-            "novice": "Nováček",
-            "capable": "Schopný",
-            "skilled": "Zkušený",
-            "expert": "Odborník",
-            "master": "Učitel"
-        },
-        "tier": {
-            "I": "I",
-            "II": "II",
-            "III": "III",
-            "IV": "IV",
-            "V": "V"
-        },
-        "cancelor": {
-            "name": "Cesta prázdnoty {{tier}}",
-            "description": "Zrušte výběr {{n}} krát."
-        },
-        "selector": {
-            "name": "{{attribute}} Samuraj",
-            "description": "Vyberte {{n}} položek."
-        },
-        "depth-selector": {
-            "name1": "{{attribute}} Kráječ",
-            "name2": "{{attribute}} Dvouvrstvý Kráječ",
-            "name3": "{{attribute}} Hlubinný Kráječ",
-            "description": "Vyberte {{n}} položek v hloubce {{depth}} rychleji než {{time}} ms."
-        },
-        "click-selector": {
-            "name": "{{attribute}} Klik-Klik Šampion",
-            "description": "Vyberte {{n}} položek pomocí kliknutí myší."
-        },
-        "keyboard-selector": {
-            "name": "{{attribute}} Hrdina Zkratek",
-            "description": "Vyberte {{n}} položek pomocí klávesnice."
-        },
-        "gamepad-selector": {
-            "name": "{{attribute}} Bojovník Ovladače",
-            "description": "Vyberte {{n}} položek pomocí ovladače."
-        },
-        "gesture-selector": {
-            "name": "{{attribute}} Mocný Ninja",
-            "description": "Vyberte {{n}} položek pomocí režimu turbo nebo značení."
-        },
-        "settings-opened": {
-            "name": "Putování je Odměnou {{tier}}",
-            "description": "Otevřete {{n}} krát okno nastavení."
-        },
-        "backup": {
-            "name": "Cesta Prozíravosti {{tier}}",
-            "description": "Zálohujte menu nebo nastavení {{n}} krát."
-        },
-        "restore": {
-            "name": "Druhá Šance {{tier}}",
-            "description": "Obnovte {{n}} krát zálohu."
-        },
-        "added-items": {
-            "name": "Stezka Kando {{tier}}",
-            "description": "Vytvořte {{n}} položek v menu editoru."
-        },
-        "deleted-all-menus": {
-            "name": "Vyčištěné Dojo",
-            "description": "Smažte všechna menu."
-        },
-        "full-menu": {
-            "name": "Širší než Hlubší",
-            "description": "Vytvořte menu s více než dvanácti položkami."
-        },
-        "deep-menu": {
-            "name": "Hlubinný Mistr",
-            "description": "Přidejte položku menu do čtyři úrovňe hlubokého podmenu."
-        },
-        "sponsors-viewed": {
-            "name": "Strážce Kando",
-            "description": "Zvažte, zda se nestát mecenášem Kando."
-        },
-        "menu-themes-selected": {
-            "name": "Cesta Estéta",
-            "description": "Přepněte motiv menu {{n}} krát."
-        },
-        "tutorial-viewed": {
-            "name": "Výprava Začíná",
-            "description": "Dokončete úvodní výukový program Kando."
-        },
-        "many-selections-streak": {
-            "name": "Ruce Blesku {{tier}}",
-            "description": "Vyberte {{n}} položek v {{time}} s."
-        },
-        "speedy-selections-streak": {
-            "name": "Rychlejší než Myšlenka {{tier}}",
-            "description": "Vytvořte {{n}} po sobě jdoucích výběrů v průměru rychleji než {{time}} ms."
-        },
-        "completed-title": "Úspěch odemčen!"
+    "submenu": {
+      "description": "Obsahuje další položky menu.",
+      "name": "Podmenu",
+      "tip-1": "Podmenu můžete použít ke skupinování položek.",
+      "tip-2": "Můžete také vnořit podmenu do jiného podmenu.",
+      "tip-3": "Podmenu lze využít k vytvoření složitějších menu struktur.",
+      "tip-4": "Vyvarujte se přidání více než dvanácti položek do podmenu. Osm je optimální počet.",
+      "tip-5": "V náhledu můžete použít malé ikony zámků pro upevnění pozice položek v menu.",
+      "tip-6": "Položky lze přeuspořádat jejich přetažením v náhledu.",
+      "tip-7": "Můžete smazat menu nebo menu položku s pomocí ikony koše níže."
+    },
+    "text": {
+      "description": "Vloží zadaný text.",
+      "name": "Vložit text",
+      "placeholder": "Vložte libovolný text…",
+      "tip-1": "Tato akce používá schránku k vložení textu. Po použití akce bude schránka obsahovat tento text."
+    },
+    "uri": {
+      "description": "Otevře webové stránky a další.",
+      "name": "Otevřít URI",
+      "placeholder": "Vložte libovolné URI…",
+      "tip-1": "Tento typ položky můžete použít k otevření webové stránky pomocí protokolu http://.",
+      "tip-2": "Můžete ho použít k volání vlastních URI schémat jako slack:// nebo zoommtg://.",
+      "tip-3": "Tento typ položky můžete použít k otevření odkazu mailto: link.",
+      "tip-4": "Použijte {{app_name}} k vložení názvu aplikace, která byla aktivní při otevření menu.",
+      "tip-5": "Použijte {{window_name}} k vložení názvu okna, které bylo aktivní při otevření menu.",
+      "tip-6": "Použijte {{pointer_x}} a {{pointer_y}} k vložení polohy kurzoru při otevření menu."
     }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "Zkontrolovat nejnovější vydání",
+      "chrome-version": "Chrome Verze",
+      "electron-version": "Electron Verze",
+      "kando-backend": "Kando Backend",
+      "kando-version": "Kando Verze",
+      "message": "Kando vytvářím z čiré vášně. Pokud se vám bude líbit jeho používání stejně, jako mně jeho vytváření, můžete [mi koupit kávu]({{link}})!\n\n💖 Simon",
+      "read-release-notes": "Přečíst poznámky o vydání",
+      "title": "O Kando"
+    },
+    "achievements-dialog": {
+      "completed-button": "Dokončeno",
+      "in-progress-button": "V pokroku",
+      "no-completed-achievements": "Zatím jste nedosáhli žádných úspěchů.",
+      "no-in-progress-achievements": "Gratulujeme! Dokončili jste všechny úspěchy.",
+      "reset-button": "Obnovit postup",
+      "reset-button-tooltip": "Obnovit všechny úspěchy a pokrok",
+      "reset-confirmation-message": "Všechny úspěchy a úrovně pokroku budou ztraceny. Tato akce nelze zrušit.",
+      "reset-confirmation-title": "Opravdu chcete obnovit všechen pokrok?",
+      "title": "Úspěchy",
+      "xp": "XP"
+    },
+    "add-collection-tooltip": "Vytvořit novou kolekci menu. Použijte kolekci pro sdružování do skupin podle značek!",
+    "add-menu-item-hint": "Přetáhněte tuto položku pro přidání do menu výše!",
+    "add-menu-items": "Přidat Menu Položky",
+    "add-tags-placeholder": "Přidat značky…",
+    "all-menus": "Všechna Menu",
+    "anchored-mode": "Mód Kotvy",
+    "anchored-mode-info": "Otevře podmenu na stejné pozici jako rodičovské menu. Zaškrtnutí, zakáže Markovací a Turbo Mód.",
+    "app-condition": "Omezit na konkrétní aplikace",
+    "app-condition-info": "Zobrazí menu pouze když je konkrétní aplikace zaměřena. Podporuje regulární výrazy jako /firefox|chrome/i.",
+    "app-condition-placeholder": "Název apky",
+    "app-condition-tooltip": "Vybrat apku",
+    "app-picker": {
+      "hint": "Můžete také přetáhnout aplikaci z nabídky Start do editoru Kando menu!",
+      "search-placeholder": "Vyhledat aplikaci…",
+      "use-selected": "Použít vybrané"
+    },
+    "area-condition": "Omezit na konkrétní oblast obrazovky",
+    "area-condition-bottom-placeholder": "Dole",
+    "area-condition-info": "Zobrazit menu pouze pokud je kurzor myši v dané oblasti obrazovky. Oblast je dána v pixelech vzhledem k levém horním rohu vaší hlavní obrazovky. Pokud zanecháte pole prázdné, oblast bude v tomto směru vynechána.",
+    "area-condition-left-placeholder": "Vlevo",
+    "area-condition-right-placeholder": "Vpravo",
+    "area-condition-tooltip": "Vybrat oblast obrazovky",
+    "area-condition-top-placeholder": "Nahoře",
+    "cancel": "Zrušit",
+    "centered-mode": "Centr Mód",
+    "centered-mode-info": "Otevře menu uprostřed obrazovky místo u kurzoru.",
+    "create-menu-button": "Nové menu",
+    "delete-menu": "Smazat menu",
+    "delete-menu-item": "Smazat položku menu",
+    "duplicate-menu": "Duplikovat menu",
+    "duplicate-menu-item": "Duplikovat položku menu",
+    "empty-collection": "Tato kolekce je prázdná.",
+    "empty-collection-note": "Upravte štítky výše, nebo přidejte zcela nové menu do této kolekce pomocí tlačítka níže.",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "Vyberte adresář",
+      "select-file": "Vyberte soubor"
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "Pokročilé možnosti",
+      "advanced-menu-options-note": "Obvykle můžete nechat tyto nastavení ve svých výchozích hodnotách.",
+      "auto-language": "Použít jazyk systému",
+      "backup-and-restore": "Záloha a Obnovení",
+      "backup-menus": "Zálohovat menus.json…",
+      "backup-settings": "Zálohovat config.json…",
+      "black": "Černá",
+      "bottom-left": "Vlevo Dole",
+      "bottom-right": "Vpravo Dole",
+      "center": "",
+      "center-click-zone-radius": "Poloměr zóny kliknutí",
+      "center-click-zone-radius-info": "Velikost plochy uprostřed menu, která se buď zavře nebo přejdete o úroveň výš, když kliknete. Výchozí je 50px.",
+      "check-for-new-versions": "Kontrolovat nové verze",
+      "check-for-new-versions-info": "Pokud je povoleno, Kando zobrazí upozornění pokud je k dispozici nová verze.",
+      "close-menu": "Zavřít menu",
+      "color": "Barevná",
+      "cycle-from-first": "Zobrazit další menu (začít s prvním)",
+      "cycle-from-recent": "Zobrazit další menu (pokračovat od posledního)",
+      "dark": "Tmavá",
+      "dev-tools-note": "Kando používá dvě okna: Jedno pro menu a jedno pro nastavení. Můžete otevřít vývojové nástroje pro kontrolu obou oken samostatně.",
+      "developer-options": "Vývojářské Možnosti",
+      "do-nothing": "Nedělat nic",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "Sledovat úspěchy",
+      "enable-achievements-info": "Pokud povoleno, Kando bude sledovat váš pokrok k úspěchům.",
+      "enable-gamepad-support": "Povolit podporu gamepadů",
+      "enable-gamepad-support-info": "Pokud vybráno, můžete použít připojený gamepad ke kontrole menu.",
+      "enable-marking-mode": "Povolit Označovací Mód",
+      "enable-marking-mode-info": "S povoleným Označovacím Módem, můžete vybrat položky přetažením myši nad nimi.",
+      "enable-turbo-mode": "Povolit Turbo Mód",
+      "enable-turbo-mode-info": "Při zapnutém Turbo Módu můžete provádět gesta, dokud držíte stisknutou modifikační klávesu, jako Shift nebo Ctrl.",
+      "fixed-stroke-length": "Upravená Délka Potahu",
+      "fixed-stroke-length-info": "Obvykle jsou položky vybrány, když zastavíte nebo provedete obrat. Pokud nastavíte hodnotu vyšší než 0, toto chování se změní: Nyní budou položky vybrány pouze v případě, že je přetáhnete pryč tak daleko z centra. Výchozí je 0px.",
+      "gesture-jitter-threshold": "Práh Chvění Gest",
+      "gesture-jitter-threshold-info": "Menší pohyby nebudou brány v potaz detekcí gest. Výchozí je 10px.",
+      "gesture-pause-timeout": "Limit Pauzy Gest",
+      "gesture-pause-timeout-info": "Zastavte gesto na tuto dobu, aby se spustil výběr. Výchozí je 100 ms.",
+      "hardware-acceleration": "Povolit hardwarovou akceleraci",
+      "hardware-acceleration-info": "Tato možnost může zvýšit výkon aplikace, ale může také vést k vykreslování artefaktů. Musíte restartovat Kando pro použítí tohoto nastavení.",
+      "hidden": "Skrytá",
+      "invisible-settings-button": "Nastavit neviditelné tlačítko",
+      "invisible-settings-button-info": "Stále můžete tlačítko použít, objeví se, když přes něj přejedete myší.",
+      "keep-input-focus": "Udržet zaměření aktivní aplikace",
+      "keep-input-focus-info": "Pokud povoleno, menu nepřevezme zaměření klávesnice při otevření. To deaktivuje Turbo mód, ale může být užitečné, pokud potřebujete, aby ostatní aplikace zůstaly zaměřeny, zatímco menu je otevřeno.",
+      "lazy-initialization": "Líná inicializace",
+      "lazy-initialization-info": "Když povoleno, okno menu se vytvoří jen, pokud je menu otevřeno poprvé. To bude dělat první otevření menu trochu pomalejší, ale může zabránit problémům, kdy Kando začne příliš brzy po přihlášení. Výchozí je zakázáno.",
+      "learn-how-to-add-sound-themes": "Zjistěte, jak přidat nové zvukové motivy do Kando [zde]({{link}})!",
+      "light": "Světlá",
+      "localization-info": "Restartujte Kando pro použití nového jazyka.",
+      "localization-label": "Jazyk",
+      "menu-behavior": "Menu Chování",
+      "menu-sounds": "Menu Zvuků",
+      "menu-window-dev-tools": "Inspekce menu",
+      "message": "Všechna vaše menu a Kando nastavení jsou uloženy ve dvou souborech JSON, které můžete také upravit, sdílet nebo zálohovat. Kliknutím na tlačítko [zde]({{link}}) otevřete adresář, kde jsou soubory uloženy.",
+      "minimum-gesture-angle": "Minimální Úhel Gest",
+      "minimum-gesture-angle-info": "Menší odchylka od rovných pohybů nespustí výběr. Výchozí je 20°.",
+      "minimum-gesture-length": "Minimální délka gest",
+      "minimum-gesture-length-info": "Rovné pohyby musí být alespoň takto dlouhé pro spuštění výběru. Výchozí je 150px.",
+      "minimum-submenu-distance": "Minimální vzdálenost podmenu",
+      "minimum-submenu-distance-info": "Pokud se podmenu otevře v blízkosti menu rodiče, bude rodič přesunut do této vzdálenosti. Výchozí je 150px.",
+      "move-pointer-to-menu-center": "Přesunout kurzor do centra menu",
+      "move-pointer-to-menu-center-info": "Pokud je zaškrtnuto, kurzor myši bude přesunut na střed menu nebo podmenu, pokud je to nutné. To by mohlo být v případě, že je menu otevřeno příliš blízko k okraji obrazovky, nebo pokud je menu otevřeno v Centrovaném Módu.",
+      "movement-threshold": "Práh pohybu",
+      "movement-threshold-info": "Menší pohyby myši nebudou brány v úvahu ve Markovací nebo Turbo Módu. Výchozí je 15px.",
+      "none": "Nic",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "Chování Opětovného-stisknutí-zkratky",
+      "press-again-behavior-info": "Určuje, co se stane, pokud je zkratka stisknuta znovu, když je zobrazeno menu. Pokud je přiřazeno více menu na stejné zkratce, můžete použít tento cyklus všemi odpovídajícími menu. Ujistěte se, že držíte modifikační klávesu jen, pokud chcete použít Turbo Mód společně s jinou možností než \"Nedělat nic\".",
+      "previously-reported": "",
+      "reload-menu-theme": "Znovu načíst téma menu",
+      "reload-note": "Když načtete znovu motiv menu, budou změny CSS použity i v případě, že je menu zrovna zobrazeno. Pro změny provedené v theme.json souboru, musíte znovu otevřít menu.",
+      "reload-sound-theme": "Znovu načíst zvukové téma",
+      "require-click-for-hover-mode": "Požadovat klik pro výběr v Hover Módu",
+      "require-click-for-hover-mode-info": "Pokud nezaškrtnuto, položky budou vybrány okamžitě, když přes ně přejedete myší pro menu používající Hover Mód.",
+      "restore-menus": "Obnovit menus.json…",
+      "restore-settings": "Obnovit config.json…",
+      "right-mouse-button-selects-parent": "Pravé tlačítko myši vybere rodiče",
+      "right-mouse-button-selects-parent-info": "Pokud nezaškrtnuto, zavře se menu pravým tlačítkem myši.",
+      "sakura-dark": "Sakura Tmavá",
+      "sakura-light": "Sakura Světlá",
+      "sakura-system": "Sakura Systém",
+      "settings-button-position": "Nastavení pozice tlačítka",
+      "settings-button-position-info": "Vyberte roh obrazovky, kde bude zobrazeno tlačítko nastavení.",
+      "settings-window-color-scheme": "Nastavit barevné schéma okna",
+      "settings-window-color-scheme-info": "Pokud zvolíte 'systém', okno nastavení použije stejné barevné schéma jako operační systém.",
+      "settings-window-dev-tools": "Nastavení Inspekce",
+      "settings-window-flavor": "Nastavit odrůdu oken",
+      "settings-window-flavor-info": "Pokud vyberete průhlednou odrůdu, budete muset restartovat okno nastavení, aby se změny projevily.",
+      "sound-theme": "Zvukové téma",
+      "sound-theme-info": "Zvukový motiv je sbírka zvuků, které hrají při interakci s menu.",
+      "system": "Systém",
+      "title": "Obecná nastavení",
+      "top-left": "Vlevo Nahoře",
+      "top-right": "Vpravo Nahoře",
+      "transparent-dark": "Transparentní Tmavá",
+      "transparent-light": "Transparentní Světlá",
+      "transparent-system": "Transparentní Systém",
+      "tray-icon-flavor": "Odrůda ikon panelu",
+      "tray-icon-flavor-info": "Můžete si také vybrat, aby se skrývaly tray ikony zcela.",
+      "volume": "Hlasitost",
+      "volume-info": "Celková hlasitost zvukového tématu. Výchozí je 0.5.",
+      "white": "Bílá",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "Hover Mód",
+    "hover-mode-info": "Pouze pro pokročilé uživatele! Položky vyberete najetím kurzoru.",
+    "icon-picker-dialog": {
+      "base64-example": "Base64 příklad:",
+      "base64-hint": "Base64 kódované ikony poskytují snadný způsob, jak zahrnout libovolný typ ikon do vašich menu. Můžete použít službu, jako je [www.base64-image.de]({{link}}) pro konverzi jakéhokoli obrazu do base64 kódovaného řetězce. To funguje dokonce pro animované gify!",
+      "file-example": "soubor: URI příklad:",
+      "hint": "Naučte se [zde]({{link}}) jak přidat, nebo vytvořit vlastní témata ikon.",
+      "reload-button-tooltip": "Znovu načíst všechny témata ikon",
+      "search-placeholder": "Hledat ikony…",
+      "url-example": "URL příklad:"
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "Začínáme",
+      "chapter2": "Markovací Mód",
+      "chapter3": "Turbo Mód",
+      "chapter4": "Další Kroky",
+      "chapter5": "Jak začít",
+      "show-again": "Zobrazit tento dialog znovu",
+      "slide1-text": "Projděte tyto snímky, abyste se naučili, co pro Vás Kando může dělat! Můžete použít kapitoly na levé straně pro rychlý přesun na konkrétní část predstavení.",
+      "slide1-title": "Kando nabízí unikátní a efektivní způsob pro interakci s počítačem.",
+      "slide10-text": "**Nečekejte na dokončení animace!** Stačí cikcak procestovat přes menu. Je to nejrychlejší způsob pro výběr položek!",
+      "slide11-text": "**Nebojte se náhodných výběrů!** Akce se spustí jen pokud pustíte tlačítko myši v Markovacím Módu, nebo klávesu v Turbo Módu. Používejte to k prozkoumání menu!",
+      "slide12-text": "Kando je vysoce přizpůsobitelné. Může být použito k otevírání aplikací, souborů, spouštění klávesových maker a mnoho dalších věcí. Může [měnit styly menu]({{link1}}), [přidávat motivy ikonám]({{link2}}) a dokonce [používat i zvuky]({{link3}}) ve vašich menu!",
+      "slide12-title": "Je toho víc!",
+      "slide13-text": "Pokud potřebujete pomoc v jakémkoli bodě, neváhejte se připojit k našemu [Discord Serveru]({{link1}}) nebo se podívejte do [dokumentace]({{link2}})!",
+      "slide2-text-no-shortcuts": "Pokud jste spustili Kando poprvé, [Na Linuxu možná bude potřeba provést další kroky, aby fungovaly klávesové zkratky]({{link}}). Jakmile budou fungovat, můžete zavřít menu pomocí klávesy Escape nebo pravým tlačítkem myši.",
+      "slide2-text-standard": "Pokud jste spustili Kando poprvé, můžete otevřít příklad menu pomocí Ctrl+Mezerník. Znovu zavřete klávesou Escape nebo pravým tlačítkem myši kdekoli na obrazovce.",
+      "slide2-title": "Otevřít menu!",
+      "slide3-hint1": "Můžete také kliknout zde, pro zavření menu.",
+      "slide3-hint2": "Klikněte kdekoli zde pro výběr položky.",
+      "slide3-text": "V Kando, **Celá obrazovka je cíl-kliku**! Nemusíte zaměřovat ikony, můžete kliknout kdekoli ve výseči položek. To dělá vybírání pložek mnohem efektivnější.",
+      "slide4-text": "Podmenu bude **vždy** otevřeno pod kurzorem myši. Nemusíte **čekat na animaci do konce**. Důvěřujte své svalové paměti a pokračujte s výběrem!",
+      "slide5-hint": "Klikněte kdekoli zde pro přechod o úroveň výš.",
+      "slide5-text": "Pro **navigaci zpět**, klikněte buď na výseč rodiče, nebo střed menu.",
+      "slide6-text": "Tímto způsobem můžete rychle prozkoumat strukturu menu.",
+      "slide7-text": "Klepněte a přetáhněte položku do Markovacího Módu. **Jestliže zastavíte, nebo začnete hýbat myší, přetahované podmenu se otevře!** Zapamatujte si cestu k položce a nakreslete ji výraznými cik-cak pohyby.",
+      "slide7-title": "Buďte rychlejší: Markovací Mód",
+      "slide8-text": "**Menu reaguje na pohyby myši!** Podmenu se otevře, když budete chtít. S nějakou praxí budete moci vybírat položky, bez dívání na menu.",
+      "slide9-text": "Pokud budete **držet klávesu** (např. _Ctrl_, _Shift_, nebo _Alt_) po otevření menu, můžete vybrat pouhým pohybem kurzoru. Klikání nebo tahání není nutné.",
+      "slide9-title": "Být jako blesk: Turbo Mód",
+      "title": "Vítejte v Kando!"
+    },
+    "invalid-dropdown-selection": "Vyberte možnost…",
+    "menu-behavior": "Chování menu",
+    "menu-behavior-info": "Než povolíte tyto možnosti, doporučujeme se poučit, proč se nám líbí výchozí chování Kando [zde]({{link}})!",
+    "menu-conditions": "Podmínky menu",
+    "menu-conditions-info": "Můžete přiřadit více menu ke stejné zkratce a vybrat, za jakých podmínek se má každé menu zobrazit.",
+    "menu-themes-dialog": {
+      "accent-colors": "Zbarvení",
+      "accent-colors-info": "Každý motiv může mít jinou sadu zabarvení.",
+      "author": "od {{author}}",
+      "create-your-own-themes": "Vytvořte si vlastní motivy",
+      "dark": "Tmavý Mód",
+      "fade-in-time": "Čas vyblednutí",
+      "fade-in-time-info": "Čas za který menu vybledne. Výchozí je 150ms.",
+      "fade-out-time": "Doba zhasnutí",
+      "fade-out-time-info": "Čas vyblednutí menu. Výchozí je 200ms.",
+      "get-themes-online": "Získejte témata online",
+      "light": "Světlý mód",
+      "light-dark-mode": "Povolit světlý/tmavý mód",
+      "light-dark-mode-info": "Pokud je povoleno, můžete zvolit různé motivy a zabarvení pokud je váš systém ve světlém či tmavém módu.",
+      "menu-scale": "Zvětšení menu",
+      "menu-scale-info": "Toto použijte pro zvětšení nebo zmenšení velikosti vašich menu. Výchozí je 1.0.",
+      "no-accent-colors": "Toto téma nepodporuje zabarvení.",
+      "open-theme-directory": "Otevřít adresář motivů",
+      "reset-color-picker": "Obnovit všechny barvy na výchozí hodnoty",
+      "selection-wedges": "Nakreslete klín položky",
+      "selection-wedges-info": "Pokud povoleno a podporováno vybraným tématem, vybraná oblast menu bude zvýrazněna.",
+      "title": "Témata menu"
+    },
+    "no-matching-menus": "Žádné menu nenalezeno.",
+    "no-matching-menus-note": "Možná zkuste vyhledat něco jiného?",
+    "no-menus": "Nemáte žádná menu.",
+    "no-menus-note": "Pokud jste to poslední odstranili omylem, můžete jej obnovit pomocí tlačítka undo.",
+    "not-bound": "Nepřiřazeno",
+    "redo": "Opakovat",
+    "restore-backup": "Obnovit zálohu…",
+    "restore-general-settings-error-title": "Načtení celkové zálohy nastavení bylo neúspěšné!",
+    "restore-general-settings-success-message": "Vaše obecné nastavení bylo obnoveno ze záložního souboru.",
+    "restore-general-settings-success-title": "Úspěch!",
+    "restore-general-settings-warning-message": "Toto přepíše aktuální nastavení aplikace obsahem vybraného záložního souboru! Vaše nabídky a menu kolekce nebudou ovlivněny.",
+    "restore-general-settings-warning-title": "Opravdu chcete obnovit obecné nastavení?",
+    "restore-menu-settings-error-title": "Obnova menu ze zálohy se nezdařila!",
+    "restore-menu-settings-success-message": "Vaše menu a manu kolekce byly obnoveny ze záložního souboru.",
+    "restore-menu-settings-success-title": "Úspěch!",
+    "restore-menu-settings-warning-message": "Toto přepíše vaše aktuální menu a menu kolekce obsahem vybraného záložního souboru!",
+    "restore-menu-settings-warning-title": "Opravdu chcete obnovit menu nastavení?",
+    "screen-area-picker": {
+      "bottom-right": "Přetáhněte do pravého dolního rohu vašeho prostoru.",
+      "bottom-right-value": "Vpravo: {{x}}, Dole: {{y}}",
+      "confirm": "Použít tuto oblast",
+      "invalid": "Ujistěte se, že horní levý roh je nad a vlevo od dolního pravého rohu.",
+      "top-left": "Přetáhněte do horního rohu vašeho prostoru.",
+      "top-left-value": "Vlevo: {{x}}, Nahoře: {{y}}",
+      "valid": "Skvělé! Vybrali jste platnou oblast."
+    },
+    "search-menus-placeholder": "Prohledat menu…",
+    "shortcut-id-label": "Zkratka ID",
+    "shortcut-info": "Tato zkratka otevře menu. Musí obsahovat jednu normální klávesu a libovolný počet modifikátorů, jako je Ctrl, Alt nebo Shift. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na další menu!",
+    "shortcut-label": "Zkratka",
+    "shortcut-recording": "Stiskněte zkratku…",
+    "tags": "Značky",
+    "tags-info": "Značky lze použít pro sdružení menu v menu kolekcích.",
+    "undo": "Vrátit",
+    "window-condition": "Omezit na konkrétní názvy oken",
+    "window-condition-info": "Zobrazit menu jen pokud název zaostřeného okna obsahuje daný text. Podporuje regulární výrazy jako /youtube|vimeo/i.",
+    "window-condition-placeholder": "Název okna",
+    "window-condition-tooltip": "Vybrat okno",
+    "window-picker-dialog": {
+      "confirm": "Použít tuto hodnotu",
+      "countdown_one": "Vyberu za {{count}} sekundu…",
+      "countdown_few": "Vyberu za {{count}} sekund…",
+      "countdown_many": "",
+      "countdown_other": "Vyberu za {{count}} sekund…",
+      "instructions": "Stiskněte tlačítko níže a zaměřte cílové okno do dalších pěti sekund.",
+      "restart-countdown": "Začít odpočet znovu",
+      "result": "Vybrali jste \"{{name}}\".",
+      "start-countdown": "Začít odpočet"
+    }
+  }
 }

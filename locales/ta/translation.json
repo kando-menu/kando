@@ -1,171 +1,557 @@
 {
-    "backends": {
-        "gnome": {
-            "error": "காண்டோ ஒருங்கிணைப்பு க்னோம் செல் நீட்டிப்புடன் இணைக்க முடியவில்லை. நீங்கள் அதை இங்கிருந்து பெறலாம்: {{link}}"
-        },
-        "hyprland": {
-            "shortcut-info": "இதை பிணைக்க உங்கள் hyprland.conf ஐப் பயன்படுத்தவும்."
-        },
-        "kde-wayland": {
-            "shortcut-info": "இதை பிணைக்க KDE இன் கணினி அமைப்புகளைப் பயன்படுத்தவும்."
-        }
+  "achievements": {
+    "added-items": {
+      "description": "",
+      "name": ""
     },
-    "example-menu": {
-        "apps": {
-            "apple-music": "இசை",
-            "email": "மின்னஞ்சல்",
-            "file-browser": "கோப்பு உலாவி",
-            "finder": "கண்டுபிடிப்பாளர்",
-            "gimp": "சிம்ப்",
-            "paint": "வண்ணப்பூச்சு",
-            "safari": "சஃபாரி",
-            "submenu": "பயன்பாடுகள்",
-            "terminal": "முனையத்தில்",
-            "web-browser": "வலை உலாவி"
-        },
-        "audio": {
-            "mute": "முடக்கு",
-            "next-track": "அடுத்த பாடல்",
-            "play-pause": "விளையாடு / இடைநிறுத்தம்",
-            "previous-track": "முந்தைய பாடல்",
-            "submenu": "ஆடியோ"
-        },
-        "bookmarks": {
-            "desktop": "டெச்க்டாப்",
-            "documents": "ஆவணங்கள்",
-            "downloads": "பதிவிறக்கங்கள்",
-            "home": "வீடு",
-            "music": "இசை",
-            "pictures": "படங்கள்",
-            "submenu": "புக்மார்க்குகள்",
-            "videos": "வீடியோக்கள்"
-        },
-        "clipboard": {
-            "copy": "நகலெடு",
-            "cut": "வெட்டு",
-            "paste": "ஒட்டு",
-            "submenu": "இடைநிலைப் பலகை"
-        },
-        "name": "எடுத்துக்காட்டு பட்டியல்",
-        "next-workspace": "அடுத்த பணியிடம்",
-        "previous-workspace": "முந்தைய பணியிடம்",
-        "web-links": {
-            "google": "கூகிள்",
-            "kando-on-discord": "கருத்து வேறுபாடு",
-            "kando-on-github": "கிட்அப்பில் ஒதுக்கி",
-            "kando-on-kofi": "உணர்திறன் ஒலி",
-            "kando-on-youtube": "YouTube இல் காந்தோ",
-            "submenu": "வலை இணைப்புகள்"
-        },
-        "windows": {
-            "close-window": "சாளரத்தை மூடு",
-            "mission-control": "மிசன் கட்டுப்பாடு",
-            "submenu": "சாளரங்கள்",
-            "tile-left": "ஓடு இடது",
-            "tile-right": "ஓடு வலது",
-            "toggle-maximize": "அதிகபட்சத்தை மாற்றவும்"
-        }
+    "attributes": {
+      "capable": "",
+      "expert": "",
+      "master": "",
+      "novice": "",
+      "skilled": ""
     },
-    "main": {
-        "failed-to-start-header": "காண்டோ தொடங்கத் தவறிவிட்டார்",
-        "new-version-notification-header": "காண்டோவின் புதிய பதிப்பு கிடைக்கிறது!"
+    "backup": {
+      "description": "",
+      "name": ""
     },
-    "menu-items": {
-        "command": {
-            "command": "கட்டளை",
-            "command-info": "இது செயல்படுத்தப்படும்.",
-            "description": "எந்த செல் கட்டளையையும் இயக்குகிறது.",
-            "name": "கட்டளை இயக்கவும்",
-            "tip-1": "பயன்பாடுகள் அல்லது ச்கிரிப்ட்களைத் தொடங்க கட்டளை உருப்படி வகையைப் பயன்படுத்தலாம்.",
-            "tip-2": "இயங்கக்கூடிய பாதையில் இடைவெளிகள் இருந்தால், நீங்கள் \"அதை மேற்கோள்களில் போர்த்தி\" வேண்டும்.",
-            "tip-3": "நீங்கள் மெனுவைத் திறக்கும்போது கவனம் செலுத்திய பயன்பாட்டின் பெயரைச் செருக {{app_name}} bet ஐப் பயன்படுத்தவும்.",
-            "tip-4": "நீங்கள் மெனுவைத் திறந்தபோது கவனம் செலுத்திய சாளரத்தின் பெயரைச் செருக {{window_name}} bet ஐப் பயன்படுத்தவும்.",
-            "tip-5": "பட்டியல் திறக்கப்பட்ட சுட்டிக்காட்டி நிலையை செருக {{pointer_x}}} மற்றும் {{pointer_y}} bed ஐப் பயன்படுத்தவும்."
-        },
-        "hotkey": {
-            "description": "ஒரு ஆட்ச்கியை அழுத்துகிறது.",
-            "hotkey": "ஆட்ச்கி",
-            "name": "ஆட்ச்கியை உருவகப்படுத்துங்கள்",
-            "recording-placeholder": "ஒரு ஆட்ச்கியை அழுத்தவும்…",
-            "tip-1": "ஆட்ச்கியை பதிவு செய்யும் போது, நீங்கள் எல்லா விசைகளையும் ஒரே நேரத்தில் அழுத்த வேண்டியதில்லை. நீங்கள் அவற்றை ஒன்றன்பின் ஒன்றாக அழுத்தலாம்.",
-            "tip-2": "ஒரு விசையை நீங்கள் பதிவு செய்ய முடியாவிட்டால், அது கணினியால் பயன்படுத்தப்படுவதால், அதன் பெயரை நேரடியாக தட்டச்சு செய்ய முயற்சிக்கவும்."
-        },
-        "macro": {
-            "description": "விசைப்பலகை மேக்ரோ வகைகள்.",
-            "name": "மேக்ரோ உருவகப்படுத்துதல்",
-            "placeholder": "பதிவு செய்ய பதிவு பொத்தானை அழுத்தவும்!",
-            "recording-placeholder": "சாவியை அழுத்தவும்…",
-            "tip-1": "இயல்புநிலைக்கு, ஒவ்வொரு முக்கிய நிகழ்விற்கும் முன் காண்டோ 10 மீ தாமதத்தை சேர்க்கிறது. இதை \"நேரந்தவறுகை\" சொத்துடன் மாற்றலாம்."
-        },
-        "submenu": {
-            "description": "பிற பட்டியல் உருப்படிகளைக் கொண்டுள்ளது.",
-            "name": "துணைமெனு",
-            "tip-1": "குழு உருப்படிகளுக்கு துணைமெனச் பயன்படுத்தப்படலாம்.",
-            "tip-2": "நீங்கள் துணைமெனசின் உள்ளே சப்மெனசையும் கூடு செய்யலாம்.",
-            "tip-3": "சிக்கலான பட்டியல் கட்டமைப்புகளை உருவாக்க துணைமெனச் பயன்படுத்தப்படலாம்.",
-            "tip-4": "ஒரு துணைமெனுவில் பன்னிரண்டு பொருட்களைச் சேர்ப்பதை நீங்கள் தவிர்க்க வேண்டும். எட்டு ஒரு நல்ல எண்.",
-            "tip-5": "பட்டியலில் ஒரு பொருளின் நிலையை சரிசெய்ய நீங்கள் முன்னோட்டத்தில் சிறிய பூட்டு ஐகான்களைப் பயன்படுத்தலாம்.",
-            "tip-6": "உருப்படிகளை முன்னோட்டத்தில் இழுத்து அவற்றை மறுவரிசைப்படுத்தலாம்."
-        },
-        "text": {
-            "description": "கொடுக்கப்பட்ட உரையை செருகும்.",
-            "name": "உரையை ஒட்டவும்",
-            "placeholder": "எந்த உரையையும் செருகவும்…",
-            "tip-1": "இந்த செயல் உரையை ஒட்ட உங்கள் கிளிப்போர்டைப் பயன்படுத்துகிறது. செயலைப் பயன்படுத்திய பிறகு, கிளிப்போர்டில் உரையைக் கொண்டிருக்கும்."
-        },
-        "uri": {
-            "description": "கோப்புகள் அல்லது வலைத்தளங்களைத் திறக்கிறது.",
-            "name": "திறந்த யூரி",
-            "tip-1": "HTTP: // நெறிமுறையைப் பயன்படுத்தி வலைத்தளத்தைத் திறக்க நீங்கள் யூரி உருப்படி வகையைப் பயன்படுத்தலாம்.",
-            "tip-2": "கோப்பு: // நெறிமுறையைப் பயன்படுத்தி ஒரு கோப்பு அல்லது கோப்புறையைத் திறக்க நீங்கள் யூரி உருப்படி வகையைப் பயன்படுத்தலாம்.",
-            "tip-3": "ஒரு மெயில்டோவைத் திறக்க நீங்கள் யூரி உருப்படி வகையைப் பயன்படுத்தலாம்: இணைப்பு.",
-            "tip-4": "நீங்கள் மெனுவைத் திறக்கும்போது கவனம் செலுத்திய பயன்பாட்டின் பெயரைச் செருக {{app_name}} bet ஐப் பயன்படுத்தவும்.",
-            "tip-5": "நீங்கள் மெனுவைத் திறந்தபோது கவனம் செலுத்திய சாளரத்தின் பெயரைச் செருக {{window_name}} bet ஐப் பயன்படுத்தவும்.",
-            "tip-6": "பட்டியல் திறக்கப்பட்ட சுட்டிக்காட்டி நிலையை செருக {{pointer_x}}} மற்றும் {{pointer_y}} bed ஐப் பயன்படுத்தவும்.",
-            "uri": "யூரி"
-        }
+    "cancelor": {
+      "description": "",
+      "name": ""
+    },
+    "click-selector": {
+      "description": "",
+      "name": ""
+    },
+    "completed-title": "",
+    "deep-menu": {
+      "description": "",
+      "name": ""
+    },
+    "deleted-all-menus": {
+      "description": "",
+      "name": ""
+    },
+    "depth-selector": {
+      "description": "",
+      "name1": "",
+      "name2": "",
+      "name3": ""
+    },
+    "full-menu": {
+      "description": "",
+      "name": ""
+    },
+    "gamepad-selector": {
+      "description": "",
+      "name": ""
+    },
+    "gesture-selector": {
+      "description": "",
+      "name": ""
+    },
+    "keyboard-selector": {
+      "description": "",
+      "name": ""
+    },
+    "many-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "menu-themes-selected": {
+      "description": "",
+      "name": ""
+    },
+    "restore": {
+      "description": "",
+      "name": ""
+    },
+    "selector": {
+      "description": "",
+      "name": ""
+    },
+    "settings-opened": {
+      "description": "",
+      "name": ""
+    },
+    "speedy-selections-streak": {
+      "description": "",
+      "name": ""
+    },
+    "sponsors-viewed": {
+      "description": "",
+      "name": ""
+    },
+    "tier": {
+      "I": "",
+      "II": "",
+      "III": "",
+      "IV": "",
+      "V": ""
+    },
+    "tutorial-viewed": {
+      "description": "",
+      "name": ""
+    }
+  },
+  "backends": {
+    "gnome": {
+      "error": "காண்டோ ஒருங்கிணைப்பு க்னோம் செல் நீட்டிப்புடன் இணைக்க முடியவில்லை. நீங்கள் அதை இங்கிருந்து பெறலாம்: {{link}}"
+    },
+    "hyprland": {
+      "shortcut-info": "இதை பிணைக்க உங்கள் hyprland.conf ஐப் பயன்படுத்தவும்."
+    },
+    "kde-wayland": {
+      "shortcut-info": "இதை பிணைக்க KDE இன் கணினி அமைப்புகளைப் பயன்படுத்தவும்."
+    },
+    "niri": {
+      "shortcut-info": ""
+    }
+  },
+  "example-menu": {
+    "apps": {
+      "apple-music": "இசை",
+      "email": "மின்னஞ்சல்",
+      "file-browser": "கோப்பு உலாவி",
+      "finder": "கண்டுபிடிப்பாளர்",
+      "gimp": "சிம்ப்",
+      "paint": "வண்ணப்பூச்சு",
+      "safari": "சஃபாரி",
+      "submenu": "பயன்பாடுகள்",
+      "terminal": "முனையத்தில்",
+      "web-browser": "வலை உலாவி"
+    },
+    "audio": {
+      "mute": "முடக்கு",
+      "next-track": "அடுத்த பாடல்",
+      "play-pause": "விளையாடு / இடைநிறுத்தம்",
+      "previous-track": "முந்தைய பாடல்",
+      "submenu": "ஆடியோ"
+    },
+    "bookmarks": {
+      "desktop": "டெச்க்டாப்",
+      "documents": "ஆவணங்கள்",
+      "downloads": "பதிவிறக்கங்கள்",
+      "home": "வீடு",
+      "music": "இசை",
+      "pictures": "படங்கள்",
+      "submenu": "புக்மார்க்குகள்",
+      "videos": "வீடியோக்கள்"
+    },
+    "clipboard": {
+      "copy": "நகலெடு",
+      "cut": "வெட்டு",
+      "paste": "ஒட்டு",
+      "submenu": "இடைநிலைப் பலகை"
+    },
+    "name": "எடுத்துக்காட்டு பட்டியல்",
+    "next-workspace": "அடுத்த பணியிடம்",
+    "previous-workspace": "முந்தைய பணியிடம்",
+    "web-links": {
+      "google": "கூகிள்",
+      "kando-on-discord": "கருத்து வேறுபாடு",
+      "kando-on-github": "கிட்அப்பில் ஒதுக்கி",
+      "kando-on-kofi": "உணர்திறன் ஒலி",
+      "kando-on-youtube": "YouTube இல் காந்தோ",
+      "submenu": "வலை இணைப்புகள்"
+    },
+    "windows": {
+      "close-window": "சாளரத்தை மூடு",
+      "mission-control": "மிசன் கட்டுப்பாடு",
+      "submenu": "சாளரங்கள்",
+      "tile-left": "ஓடு இடது",
+      "tile-right": "ஓடு வலது",
+      "toggle-maximize": "அதிகபட்சத்தை மாற்றவும்"
+    }
+  },
+  "main": {
+    "inhibit-shortcuts": "",
+    "invalid-link-header": "",
+    "invalid-link-message": "",
+    "new-version-notification-body": "",
+    "new-version-notification-header": "காண்டோவின் புதிய பதிப்பு கிடைக்கிறது!",
+    "quit": "",
+    "show-settings": "",
+    "un-inhibit-shortcuts": ""
+  },
+  "menu-items": {
+    "command": {
+      "choose-app": "",
+      "description": "எந்த செல் கட்டளையையும் இயக்குகிறது.",
+      "detached": "",
+      "detached-info": "",
+      "isolated": "",
+      "isolated-info": "",
+      "name": "கட்டளை இயக்கவும்",
+      "placeholder": "",
+      "tip-1": "பயன்பாடுகள் அல்லது ச்கிரிப்ட்களைத் தொடங்க கட்டளை உருப்படி வகையைப் பயன்படுத்தலாம்.",
+      "tip-2": "இயங்கக்கூடிய பாதையில் இடைவெளிகள் இருந்தால், நீங்கள் \"அதை மேற்கோள்களில் போர்த்தி\" வேண்டும்.",
+      "tip-3": "நீங்கள் மெனுவைத் திறக்கும்போது கவனம் செலுத்திய பயன்பாட்டின் பெயரைச் செருக {{app_name}} bet ஐப் பயன்படுத்தவும்.",
+      "tip-4": "நீங்கள் மெனுவைத் திறந்தபோது கவனம் செலுத்திய சாளரத்தின் பெயரைச் செருக {{window_name}} bet ஐப் பயன்படுத்தவும்.",
+      "tip-5": "பட்டியல் திறக்கப்பட்ட சுட்டிக்காட்டி நிலையை செருக {{pointer_x}}} மற்றும் {{pointer_y}} bed ஐப் பயன்படுத்தவும்.",
+      "tip-6": ""
+    },
+    "common": {
+      "delayed-option": "",
+      "delayed-option-info": "",
+      "inhibit-shortcuts": "",
+      "inhibit-shortcuts-info": ""
+    },
+    "file": {
+      "description": "",
+      "name": "",
+      "placeholder": "",
+      "tip-1": ""
+    },
+    "hotkey": {
+      "description": "ஒரு ஆட்ச்கியை அழுத்துகிறது.",
+      "hotkey": "ஆட்ச்கி",
+      "hotkey-info": "",
+      "name": "ஆட்ச்கியை உருவகப்படுத்துங்கள்",
+      "recording-placeholder": "ஒரு ஆட்ச்கியை அழுத்தவும்…",
+      "tip-1": "ஆட்ச்கியை பதிவு செய்யும் போது, நீங்கள் எல்லா விசைகளையும் ஒரே நேரத்தில் அழுத்த வேண்டியதில்லை. நீங்கள் அவற்றை ஒன்றன்பின் ஒன்றாக அழுத்தலாம்.",
+      "tip-2": "ஒரு விசையை நீங்கள் பதிவு செய்ய முடியாவிட்டால், அது கணினியால் பயன்படுத்தப்படுவதால், அதன் பெயரை நேரடியாக தட்டச்சு செய்ய முயற்சிக்கவும்.",
+      "tip-3": ""
+    },
+    "macro": {
+      "description": "விசைப்பலகை மேக்ரோ வகைகள்.",
+      "name": "மேக்ரோ உருவகப்படுத்துதல்",
+      "placeholder": "பதிவு செய்ய பதிவு பொத்தானை அழுத்தவும்!",
+      "recording-placeholder": "சாவியை அழுத்தவும்…",
+      "tip-1": "இயல்புநிலைக்கு, ஒவ்வொரு முக்கிய நிகழ்விற்கும் முன் காண்டோ 10 மீ தாமதத்தை சேர்க்கிறது. இதை \"நேரந்தவறுகை\" சொத்துடன் மாற்றலாம்.",
+      "tip-2": ""
+    },
+    "redirect": {
+      "description": "",
+      "name": ""
     },
     "settings": {
-        "about-dialog": {
-            "chrome-version": "குரோம் பதிப்பு",
-            "electron-version": "எலக்ட்ரான் பதிப்பு",
-            "kando-backend": "பின்தளத்தில்",
-            "kando-version": "பதிப்பில்"
-        },
-        "anchored-mode": "நங்கூரமிட்ட பயன்முறை",
-        "app-condition": "குறிப்பிட்ட பயன்பாடுகளுக்கு வரம்பு",
-        "area-condition": "குறிப்பிட்ட திரை பகுதிக்கு வரம்பு",
-        "area-condition-bottom-placeholder": "கீழே",
-        "area-condition-left-placeholder": "இடது",
-        "area-condition-right-placeholder": "வலது",
-        "area-condition-top-placeholder": "மேலே",
-        "cancel": "ரத்துசெய்",
-        "centered-mode": "மையப்படுத்தப்பட்ட பயன்முறை",
-        "centered-mode-info": "கர்சருக்கு பதிலாக திரையின் மையத்தில் மெனுவைத் திறக்கவும்.",
-        "general-settings-dialog": {
-            "reload-menu-theme": "தற்போதைய பட்டியல் கருப்பொருள் மீண்டும் ஏற்றவும்",
-            "reload-menu-theme-tooltip": "சிஎச்எச் மாற்றங்கள் உடனடியாக பயன்படுத்தப்படும், தீம்.சான் கோப்பில் செய்யப்பட்ட மாற்றங்களுக்கு, நீங்கள் மெனுவை மீண்டும் திறக்க வேண்டும்.",
-            "reload-sound-theme": "தற்போதைய ஒலி கருப்பொருள் மீண்டும் ஏற்றவும்"
-        },
-        "icon-picker-dialog": {
-            "search-placeholder": "ஐகான்களைத் தேடுங்கள்…"
-        },
-        "introduction-dialog": {
-            "title": "காண்டோவுக்கு வருக!"
-        },
-        "menu-behavior": "பட்டி நடத்தை",
-        "menu-conditions": "பட்டியல் நிபந்தனைகள்",
-        "menu-conditions-info": "நீங்கள் பல மெனுக்களை ஒரே குறுக்குவழியுடன் பிணைக்கலாம், பின்னர் ஒவ்வொரு மெனுவையும் எந்த நிபந்தனைகளின் கீழ் காட்ட வேண்டும் என்பதைத் தேர்வுசெய்யலாம்.",
-        "menu-themes-dialog": {
-            "author": "வழங்கியவர் {{author}}",
-            "light-dark-mode-info": "இயக்கப்பட்டால், உங்கள் கணினி ஒளி அல்லது இருண்ட வண்ண பயன்முறையில் இருந்தால் வேறு கருப்பொருள் மற்றும் வண்ணத் தொகுப்பை நீங்கள் தேர்வு செய்யலாம்.",
-            "reset-color-picker": "எல்லா வண்ணங்களையும் அவற்றின் இயல்புநிலைக்கு மீட்டமைக்கவும்",
-            "title": "பட்டியல் கருப்பொருள்கள்"
-        },
-        "not-bound": "பிணைக்கப்படவில்லை",
-        "shortcut-id-label": "உலகளாவிய குறுக்குவழி ஐடி",
-        "shortcut-label": "குறுக்குவழி",
-        "shortcut-recording": "குறுக்குவழியை அழுத்தவும்…",
-        "window-condition": "குறிப்பிட்ட சாளர தலைப்புகளுக்கு வரம்பு"
+      "description": "",
+      "name": "",
+      "tip-1": ""
+    },
+    "submenu": {
+      "description": "பிற பட்டியல் உருப்படிகளைக் கொண்டுள்ளது.",
+      "name": "துணைமெனு",
+      "tip-1": "குழு உருப்படிகளுக்கு துணைமெனச் பயன்படுத்தப்படலாம்.",
+      "tip-2": "நீங்கள் துணைமெனசின் உள்ளே சப்மெனசையும் கூடு செய்யலாம்.",
+      "tip-3": "சிக்கலான பட்டியல் கட்டமைப்புகளை உருவாக்க துணைமெனச் பயன்படுத்தப்படலாம்.",
+      "tip-4": "ஒரு துணைமெனுவில் பன்னிரண்டு பொருட்களைச் சேர்ப்பதை நீங்கள் தவிர்க்க வேண்டும். எட்டு ஒரு நல்ல எண்.",
+      "tip-5": "பட்டியலில் ஒரு பொருளின் நிலையை சரிசெய்ய நீங்கள் முன்னோட்டத்தில் சிறிய பூட்டு ஐகான்களைப் பயன்படுத்தலாம்.",
+      "tip-6": "உருப்படிகளை முன்னோட்டத்தில் இழுத்து அவற்றை மறுவரிசைப்படுத்தலாம்.",
+      "tip-7": ""
+    },
+    "text": {
+      "description": "கொடுக்கப்பட்ட உரையை செருகும்.",
+      "name": "உரையை ஒட்டவும்",
+      "placeholder": "எந்த உரையையும் செருகவும்…",
+      "tip-1": "இந்த செயல் உரையை ஒட்ட உங்கள் கிளிப்போர்டைப் பயன்படுத்துகிறது. செயலைப் பயன்படுத்திய பிறகு, கிளிப்போர்டில் உரையைக் கொண்டிருக்கும்."
+    },
+    "uri": {
+      "description": "கோப்புகள் அல்லது வலைத்தளங்களைத் திறக்கிறது.",
+      "name": "திறந்த யூரி",
+      "placeholder": "",
+      "tip-1": "HTTP: // நெறிமுறையைப் பயன்படுத்தி வலைத்தளத்தைத் திறக்க நீங்கள் யூரி உருப்படி வகையைப் பயன்படுத்தலாம்.",
+      "tip-2": "கோப்பு: // நெறிமுறையைப் பயன்படுத்தி ஒரு கோப்பு அல்லது கோப்புறையைத் திறக்க நீங்கள் யூரி உருப்படி வகையைப் பயன்படுத்தலாம்.",
+      "tip-3": "ஒரு மெயில்டோவைத் திறக்க நீங்கள் யூரி உருப்படி வகையைப் பயன்படுத்தலாம்: இணைப்பு.",
+      "tip-4": "நீங்கள் மெனுவைத் திறக்கும்போது கவனம் செலுத்திய பயன்பாட்டின் பெயரைச் செருக {{app_name}} bet ஐப் பயன்படுத்தவும்.",
+      "tip-5": "நீங்கள் மெனுவைத் திறந்தபோது கவனம் செலுத்திய சாளரத்தின் பெயரைச் செருக {{window_name}} bet ஐப் பயன்படுத்தவும்.",
+      "tip-6": "பட்டியல் திறக்கப்பட்ட சுட்டிக்காட்டி நிலையை செருக {{pointer_x}}} மற்றும் {{pointer_y}} bed ஐப் பயன்படுத்தவும்."
     }
+  },
+  "settings": {
+    "about-dialog": {
+      "check-latest-release": "",
+      "chrome-version": "குரோம் பதிப்பு",
+      "electron-version": "எலக்ட்ரான் பதிப்பு",
+      "kando-backend": "பின்தளத்தில்",
+      "kando-version": "பதிப்பில்",
+      "message": "",
+      "read-release-notes": "",
+      "title": ""
+    },
+    "achievements-dialog": {
+      "completed-button": "",
+      "in-progress-button": "",
+      "no-completed-achievements": "",
+      "no-in-progress-achievements": "",
+      "reset-button": "",
+      "reset-button-tooltip": "",
+      "reset-confirmation-message": "",
+      "reset-confirmation-title": "",
+      "title": "",
+      "xp": ""
+    },
+    "add-collection-tooltip": "",
+    "add-menu-item-hint": "",
+    "add-menu-items": "",
+    "add-tags-placeholder": "",
+    "all-menus": "",
+    "anchored-mode": "நங்கூரமிட்ட பயன்முறை",
+    "anchored-mode-info": "",
+    "app-condition": "குறிப்பிட்ட பயன்பாடுகளுக்கு வரம்பு",
+    "app-condition-info": "",
+    "app-condition-placeholder": "",
+    "app-condition-tooltip": "",
+    "app-picker": {
+      "hint": "",
+      "search-placeholder": "",
+      "use-selected": ""
+    },
+    "area-condition": "குறிப்பிட்ட திரை பகுதிக்கு வரம்பு",
+    "area-condition-bottom-placeholder": "கீழே",
+    "area-condition-info": "",
+    "area-condition-left-placeholder": "இடது",
+    "area-condition-right-placeholder": "வலது",
+    "area-condition-tooltip": "",
+    "area-condition-top-placeholder": "மேலே",
+    "cancel": "ரத்துசெய்",
+    "centered-mode": "மையப்படுத்தப்பட்ட பயன்முறை",
+    "centered-mode-info": "கர்சருக்கு பதிலாக திரையின் மையத்தில் மெனுவைத் திறக்கவும்.",
+    "create-menu-button": "",
+    "delete-menu": "",
+    "delete-menu-item": "",
+    "duplicate-menu": "",
+    "duplicate-menu-item": "",
+    "empty-collection": "",
+    "empty-collection-note": "",
+    "export-menu": "",
+    "export-menu-error-title": "",
+    "file-picker": {
+      "select-directory": "",
+      "select-file": ""
+    },
+    "general-settings-dialog": {
+      "advanced-menu-options": "",
+      "advanced-menu-options-note": "",
+      "auto-language": "",
+      "backup-and-restore": "",
+      "backup-menus": "",
+      "backup-settings": "",
+      "black": "",
+      "bottom-left": "",
+      "bottom-right": "",
+      "center": "",
+      "center-click-zone-radius": "",
+      "center-click-zone-radius-info": "",
+      "check-for-new-versions": "",
+      "check-for-new-versions-info": "",
+      "close-menu": "",
+      "color": "",
+      "cycle-from-first": "",
+      "cycle-from-recent": "",
+      "dark": "",
+      "dev-tools-note": "",
+      "developer-options": "",
+      "do-nothing": "",
+      "enable-achievement-notifications": "",
+      "enable-achievement-notifications-info": "",
+      "enable-achievements": "",
+      "enable-achievements-info": "",
+      "enable-gamepad-support": "",
+      "enable-gamepad-support-info": "",
+      "enable-marking-mode": "",
+      "enable-marking-mode-info": "",
+      "enable-turbo-mode": "",
+      "enable-turbo-mode-info": "",
+      "fixed-stroke-length": "",
+      "fixed-stroke-length-info": "",
+      "gesture-jitter-threshold": "",
+      "gesture-jitter-threshold-info": "",
+      "gesture-pause-timeout": "",
+      "gesture-pause-timeout-info": "",
+      "hardware-acceleration": "",
+      "hardware-acceleration-info": "",
+      "hidden": "",
+      "invisible-settings-button": "",
+      "invisible-settings-button-info": "",
+      "keep-input-focus": "",
+      "keep-input-focus-info": "",
+      "lazy-initialization": "",
+      "lazy-initialization-info": "",
+      "learn-how-to-add-sound-themes": "",
+      "light": "",
+      "localization-info": "",
+      "localization-label": "",
+      "menu-behavior": "",
+      "menu-sounds": "",
+      "menu-window-dev-tools": "",
+      "message": "",
+      "minimum-gesture-angle": "",
+      "minimum-gesture-angle-info": "",
+      "minimum-gesture-length": "",
+      "minimum-gesture-length-info": "",
+      "minimum-submenu-distance": "",
+      "minimum-submenu-distance-info": "",
+      "move-pointer-to-menu-center": "",
+      "move-pointer-to-menu-center-info": "",
+      "movement-threshold": "",
+      "movement-threshold-info": "",
+      "none": "",
+      "options-that-will-only-affect-the-wlroots-backend": "",
+      "press-again-behavior": "",
+      "press-again-behavior-info": "",
+      "previously-reported": "",
+      "reload-menu-theme": "தற்போதைய பட்டியல் கருப்பொருள் மீண்டும் ஏற்றவும்",
+      "reload-note": "",
+      "reload-sound-theme": "தற்போதைய ஒலி கருப்பொருள் மீண்டும் ஏற்றவும்",
+      "require-click-for-hover-mode": "",
+      "require-click-for-hover-mode-info": "",
+      "restore-menus": "",
+      "restore-settings": "",
+      "right-mouse-button-selects-parent": "",
+      "right-mouse-button-selects-parent-info": "",
+      "sakura-dark": "",
+      "sakura-light": "",
+      "sakura-system": "",
+      "settings-button-position": "",
+      "settings-button-position-info": "",
+      "settings-window-color-scheme": "",
+      "settings-window-color-scheme-info": "",
+      "settings-window-dev-tools": "",
+      "settings-window-flavor": "",
+      "settings-window-flavor-info": "",
+      "sound-theme": "",
+      "sound-theme-info": "",
+      "system": "",
+      "title": "",
+      "top-left": "",
+      "top-right": "",
+      "transparent-dark": "",
+      "transparent-light": "",
+      "transparent-system": "",
+      "tray-icon-flavor": "",
+      "tray-icon-flavor-info": "",
+      "volume": "",
+      "volume-info": "",
+      "white": "",
+      "wlroots-pointer-get-timeout-default-behavior": "",
+      "wlroots-pointer-get-timeout-default-behavior-info": "",
+      "wlroots-pointer-get-timeout-mouse": "",
+      "wlroots-pointer-get-timeout-mouse-info": "",
+      "wlroots-pointer-get-timeout-touch": "",
+      "wlroots-pointer-get-timeout-touch-info": "",
+      "wlroots-specific-options": ""
+    },
+    "hover-mode": "",
+    "hover-mode-info": "",
+    "icon-picker-dialog": {
+      "base64-example": "",
+      "base64-hint": "",
+      "file-example": "",
+      "hint": "",
+      "reload-button-tooltip": "",
+      "search-placeholder": "ஐகான்களைத் தேடுங்கள்…",
+      "url-example": ""
+    },
+    "import-menu": "",
+    "import-menu-error-message": "",
+    "import-menu-error-title": "",
+    "introduction-dialog": {
+      "chapter1": "",
+      "chapter2": "",
+      "chapter3": "",
+      "chapter4": "",
+      "chapter5": "",
+      "show-again": "",
+      "slide1-text": "",
+      "slide1-title": "",
+      "slide10-text": "",
+      "slide11-text": "",
+      "slide12-text": "",
+      "slide12-title": "",
+      "slide13-text": "",
+      "slide2-text-no-shortcuts": "",
+      "slide2-text-standard": "",
+      "slide2-title": "",
+      "slide3-hint1": "",
+      "slide3-hint2": "",
+      "slide3-text": "",
+      "slide4-text": "",
+      "slide5-hint": "",
+      "slide5-text": "",
+      "slide6-text": "",
+      "slide7-text": "",
+      "slide7-title": "",
+      "slide8-text": "",
+      "slide9-text": "",
+      "slide9-title": "",
+      "title": "காண்டோவுக்கு வருக!"
+    },
+    "invalid-dropdown-selection": "",
+    "menu-behavior": "பட்டி நடத்தை",
+    "menu-behavior-info": "",
+    "menu-conditions": "பட்டியல் நிபந்தனைகள்",
+    "menu-conditions-info": "நீங்கள் பல மெனுக்களை ஒரே குறுக்குவழியுடன் பிணைக்கலாம், பின்னர் ஒவ்வொரு மெனுவையும் எந்த நிபந்தனைகளின் கீழ் காட்ட வேண்டும் என்பதைத் தேர்வுசெய்யலாம்.",
+    "menu-themes-dialog": {
+      "accent-colors": "",
+      "accent-colors-info": "",
+      "author": "வழங்கியவர் {{author}}",
+      "create-your-own-themes": "",
+      "dark": "",
+      "fade-in-time": "",
+      "fade-in-time-info": "",
+      "fade-out-time": "",
+      "fade-out-time-info": "",
+      "get-themes-online": "",
+      "light": "",
+      "light-dark-mode": "",
+      "light-dark-mode-info": "இயக்கப்பட்டால், உங்கள் கணினி ஒளி அல்லது இருண்ட வண்ண பயன்முறையில் இருந்தால் வேறு கருப்பொருள் மற்றும் வண்ணத் தொகுப்பை நீங்கள் தேர்வு செய்யலாம்.",
+      "menu-scale": "",
+      "menu-scale-info": "",
+      "no-accent-colors": "",
+      "open-theme-directory": "",
+      "reset-color-picker": "எல்லா வண்ணங்களையும் அவற்றின் இயல்புநிலைக்கு மீட்டமைக்கவும்",
+      "selection-wedges": "",
+      "selection-wedges-info": "",
+      "title": "பட்டியல் கருப்பொருள்கள்"
+    },
+    "no-matching-menus": "",
+    "no-matching-menus-note": "",
+    "no-menus": "",
+    "no-menus-note": "",
+    "not-bound": "பிணைக்கப்படவில்லை",
+    "redo": "",
+    "restore-backup": "",
+    "restore-general-settings-error-title": "",
+    "restore-general-settings-success-message": "",
+    "restore-general-settings-success-title": "",
+    "restore-general-settings-warning-message": "",
+    "restore-general-settings-warning-title": "",
+    "restore-menu-settings-error-title": "",
+    "restore-menu-settings-success-message": "",
+    "restore-menu-settings-success-title": "",
+    "restore-menu-settings-warning-message": "",
+    "restore-menu-settings-warning-title": "",
+    "screen-area-picker": {
+      "bottom-right": "",
+      "bottom-right-value": "",
+      "confirm": "",
+      "invalid": "",
+      "top-left": "",
+      "top-left-value": "",
+      "valid": ""
+    },
+    "search-menus-placeholder": "",
+    "shortcut-id-label": "உலகளாவிய குறுக்குவழி ஐடி",
+    "shortcut-info": "",
+    "shortcut-label": "குறுக்குவழி",
+    "shortcut-recording": "குறுக்குவழியை அழுத்தவும்…",
+    "tags": "",
+    "tags-info": "",
+    "undo": "",
+    "window-condition": "குறிப்பிட்ட சாளர தலைப்புகளுக்கு வரம்பு",
+    "window-condition-info": "",
+    "window-condition-placeholder": "",
+    "window-condition-tooltip": "",
+    "window-picker-dialog": {
+      "confirm": "",
+      "countdown_one": "",
+      "countdown_other": "",
+      "instructions": "",
+      "restart-countdown": "",
+      "result": "",
+      "start-countdown": ""
+    }
+  }
 }

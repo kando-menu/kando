@@ -1426,7 +1426,7 @@ export class KandoApp {
    */
   private createExampleMenu(): MenuType {
     // To enable localization of the example menus, we need to lookup the strings with
-    // i18next after loading the menu structure from JSON. i18next-parser cannot extract
+    // i18next after loading the menu structure from JSON. i18next-cli cannot extract
     // the strings from JSON files, therefore we have to specify all strings from the
     // example menus here in a comment. This way, the parser will find them.
     /*
