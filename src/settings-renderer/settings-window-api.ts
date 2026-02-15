@@ -81,6 +81,20 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-all-menu-themes');
   },
 
+  /** This will return all available presets for a given menu theme directory. */
+  getMenuThemePresets: (
+    themeDirectory: string,
+    themeId: string
+  ): Promise<
+    Array<{ name: string; colors?: Record<string, string>; error?: string }>
+  > => {
+    return ipcRenderer.invoke(
+      'settings-window.get-menu-theme-presets',
+      themeDirectory,
+      themeId
+    );
+  },
+
   /** This will return all available sound themes. */
   getAllSoundThemes: (): Promise<Array<SoundThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-sound-themes');
@@ -195,6 +209,40 @@ export const SETTINGS_WINDOW_API = {
   /** This will trigger the import of a menu from a JSON file. */
   importMenu: (): Promise<boolean> => {
     return ipcRenderer.invoke('settings-window.import-menu');
+  },
+
+  /**
+   * This will open a save dialog to export the current menu theme colors as a preset.
+   *
+   * @param themeDirectory The directory of the theme.
+   * @param themeId The ID of the theme.
+   * @param colors The colors to export.
+   */
+  exportMenuThemePreset: (
+    themeDirectory: string,
+    themeId: string,
+    colors: Record<string, string>
+  ) => {
+    ipcRenderer.send(
+      'settings-window.export-menu-theme-preset',
+      themeDirectory,
+      themeId,
+      colors
+    );
+  },
+
+  /**
+   * This will open the directory containing the presets for the given menu theme.
+   *
+   * @param themeDirectory The directory of the theme.
+   * @param themeId The ID of the theme.
+   */
+  openMenuThemePresetsDirectory: (themeDirectory: string, themeId: string) => {
+    ipcRenderer.send(
+      'settings-window.open-menu-theme-presets-directory',
+      themeDirectory,
+      themeId
+    );
   },
 };
 
