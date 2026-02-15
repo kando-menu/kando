@@ -540,8 +540,7 @@ export class KandoApp {
       'settings-window.get-menu-theme-presets',
       async (event, themeDirectory: string, themeId: string) => {
         try {
-          const themePath = path.join(themeDirectory, themeId);
-          const presetsDir = path.join(themePath, 'presets');
+          const presetsDir = this.getUserThemePresetsDirectory(themeId);
 
           if (!fs.existsSync(presetsDir)) {
             return [];
@@ -630,7 +629,7 @@ export class KandoApp {
         colors: Record<string, string>
       ) => {
         try {
-          const presetsDir = path.join(themeDirectory, themeId, 'presets');
+          const presetsDir = this.getUserThemePresetsDirectory(themeId);
 
           // Create the presets directory if it doesn't exist.
           if (!fs.existsSync(presetsDir)) {
@@ -675,7 +674,7 @@ export class KandoApp {
       'settings-window.open-menu-theme-presets-directory',
       async (event, themeDirectory: string, themeId: string) => {
         try {
-          const presetsDir = path.join(themeDirectory, themeId, 'presets');
+          const presetsDir = this.getUserThemePresetsDirectory(themeId);
 
           // Create the presets directory if it doesn't exist.
           if (!fs.existsSync(presetsDir)) {
@@ -1363,6 +1362,18 @@ export class KandoApp {
     }
 
     this.bindingShortcuts = false;
+  }
+
+  /**
+   * Gets the directory where presets for a specific menu theme are stored. All presets
+   * are stored in the user's config directory to ensure they persist even if the theme is
+   * updated or located in the app's bundled assets.
+   *
+   * @param themeId The ID of the theme.
+   * @returns The absolute path to the presets directory for the given theme.
+   */
+  private getUserThemePresetsDirectory(themeId: string): string {
+    return path.join(getConfigDirectory(), 'menu-themes', themeId, 'presets');
   }
 
   /**
