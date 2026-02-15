@@ -168,7 +168,9 @@
         },
         "common": {
             "delayed-option": "等待淡出动画结束",
-            "delayed-option-info": "如果此操作仅针对需要聚焦的窗口，勾选此项将很有用。"
+            "delayed-option-info": "如果此操作仅针对需要聚焦的窗口，勾选此项将很有用。",
+            "inhibit-shortcuts-info": "在快捷键或宏被模拟时禁用所有Kando快捷键。这可以防止模拟输入意外触发其他菜单快捷键。",
+            "inhibit-shortcuts": "禁用快捷键"
         }
     },
     "settings": {
@@ -294,7 +296,19 @@
             "restore-menus": "恢复 menus.json…",
             "restore-settings": "恢复 config.json…",
             "enable-achievements-info": "启用后，Kando 将记录您的成就进度。",
-            "enable-achievements": "记录成就"
+            "enable-achievements": "记录成就",
+            "enable-achievement-notifications-info": "如果启用，当成就解锁时会向您发送通知。",
+            "enable-achievement-notifications": "显示成就通知",
+            "wlroots-specific-options": "wlroots 后端选项",
+            "options-that-will-only-affect-the-wlroots-backend": "这些选项仅影响基于 wlroots 的后端，对其他后端无效。",
+            "wlroots-pointer-get-timeout-mouse-info": "等待 wlroots 后端回传鼠标指针位置的最长时间（毫秒）。若超过此时间将使用备选位置。默认为 500 毫秒。",
+            "wlroots-pointer-get-timeout-mouse": "获取指针位置超时时限",
+            "wlroots-pointer-get-timeout-touch-info": "等待 wlroots 后端回传触控点位置的最长时间（毫秒）。若超过此时间将使用备选位置。默认为 1000 毫秒。",
+            "wlroots-pointer-get-timeout-touch": "获取触控点位置的超时时限",
+            "wlroots-pointer-get-timeout-default-behavior-info": "决定若在设定时间内无法从 wlroots 后端取得位置时，指针应位于何处。",
+            "wlroots-pointer-get-timeout-default-behavior": "指针备选位置",
+            "center": "中心",
+            "previously-reported": "上次传回值"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -455,7 +469,12 @@
             "in-progress-button": "进行中",
             "completed-button": "已完成",
             "reset-button-tooltip": "重置所有成就与等级进度"
-        }
+        },
+        "export-menu-error-title": "导出菜单失败",
+        "import-menu-error-title": "导入菜单失败",
+        "import-menu-error-message": "无法导入所选的文件。该文件不是从 Kando 导出的有效菜单。",
+        "export-menu": "导出菜单",
+        "import-menu": "导入菜单"
     },
     "achievements": {
         "attributes": {
