@@ -126,7 +126,19 @@
             "backup-menus": "قم بعمل نسخة احتياطية من ملف القوائم menus.json…",
             "backup-settings": "قم بعمل نسخة احتياطية من ملف الاعدادات config.json…",
             "restore-menus": "استعادة ملف القوائم menus.json…",
-            "restore-settings": "استعادة ملف الاعدادات config.json…"
+            "restore-settings": "استعادة ملف الاعدادات config.json…",
+            "enable-achievement-notifications-info": "في حال تفعيل هذه الخاصية، ستظهر الإشعارات عند فتح الإنجازات.",
+            "enable-achievement-notifications": "عرض إشعارات الإنجازات",
+            "wlroots-specific-options": "خيارات للخوادم الخلفية المستندة إلى wlroots",
+            "options-that-will-only-affect-the-wlroots-backend": "تؤثر هذه الخيارات فقط على الواجهات الخلفية المستندة إلى wlroots وليس لها أي تأثير على الواجهات الخلفية الأخرى.",
+            "wlroots-pointer-get-timeout-mouse-info": "الحد الأقصى للوقت بالمللي ثانية للانتظار حتى يتم تحديد موضع مؤشر الماوس من الخوادم الخلفية القائمة على wlroots. في حال انقضاء المهلة، سيتم استخدام موضع احتياطي. القيمة الافتراضية هي 500 مللي ثانية.",
+            "wlroots-pointer-get-timeout-mouse": "مهلة الحصول على موضع المؤشر",
+            "wlroots-pointer-get-timeout-touch-info": "الحد الأقصى للوقت بالمللي ثانية للانتظار حتى يتم تحديد موضع مؤشر اللمس من الخوادم الخلفية القائمة على wlroots. في حال انقضاء المهلة، سيتم استخدام موضع احتياطي. القيمة الافتراضية هي 1500 مللي ثانية.",
+            "wlroots-pointer-get-timeout-touch": "مهلة تحديد موقع اللمس",
+            "wlroots-pointer-get-timeout-default-behavior-info": "يحدد هذا الخيار المكان الذي يجب افتراض وجود المؤشر فيه إذا لم يكن من الممكن الحصول على أي موضع من الخوادم الخلفية المستندة إلى wlroots خلال المهلة الزمنية المحددة.",
+            "wlroots-pointer-get-timeout-default-behavior": "وضع احتياطي للمؤشر",
+            "center": "المركز",
+            "previously-reported": "سبق الإبلاغ عنه"
         },
         "introduction-dialog": {
             "slide1-title": "كاندو يوفر وسيلة فريدة وفعالة للتفاعل مع جهاز الكمبيوتر الخاص بك.",
@@ -179,7 +191,8 @@
             "create-your-own-themes": "إنشاء السمات الخاصة بك",
             "open-theme-directory": "فتح مسار السمات",
             "author": "من {{author}}",
-            "selection-wedges-info": "إذا تم تمكين هذه الميزة ودعمها بواسطة السمة المختارة، فسيتم تمييز المنطقة القابلة للتحديد من عناصر القائمة."
+            "selection-wedges-info": "إذا تم تمكين هذه الميزة ودعمها بواسطة السمة المختارة، فسيتم تمييز المنطقة القابلة للتحديد من عناصر القائمة.",
+            "selection-wedges": "ارسم أجزاء العناصر"
         },
         "all-menus": "جميع القوائم",
         "search-menus-placeholder": "بحث القوائم…",
@@ -280,7 +293,12 @@
         "restore-menu-settings-warning-message": "سيؤدي هذا إلى استبدال قوائمك الحالية ومجموعات القوائم بمحتويات ملف النسخ الاحتياطي المحدد!",
         "restore-menu-settings-error-title": "فشل تحميل النسخ الاحتياطي للقوائم!",
         "restore-menu-settings-success-title": "نجاحٌ!",
-        "restore-menu-settings-success-message": "تم استعادة قوائمك ومجموعات القوائم الخاصة بك من ملف النسخ الاحتياطي."
+        "restore-menu-settings-success-message": "تم استعادة قوائمك ومجموعات القوائم الخاصة بك من ملف النسخ الاحتياطي.",
+        "export-menu-error-title": "فشل تصدير القائمة",
+        "import-menu-error-title": "فشل استيراد القائمة",
+        "import-menu-error-message": "تعذر استيراد الملف المحدد. فهو لا يحتوي على قائمة مُصدّرة صالحة من كاندو.",
+        "export-menu": "تصدير القائمة",
+        "import-menu": "استيراد القائمة"
     },
     "backends": {
         "niri": {
@@ -376,7 +394,9 @@
         },
         "common": {
             "delayed-option": "انتظر الرسوم المتحركة لتتلاشى",
-            "delayed-option-info": "يكون مفيدًا إذا كان الإجراء يستهدف نافذة تحتاج إلى التركيز عليها."
+            "delayed-option-info": "يكون مفيدًا إذا كان الإجراء يستهدف نافذة تحتاج إلى التركيز عليها.",
+            "inhibit-shortcuts-info": "يعطّل هذا الخيار جميع اختصارات كاندو أثناء محاكاة مفتاح الاختصار أو الماكرو. يمنع هذا الإدخال المُحاكى من تشغيل اختصارات القوائم الأخرى عن طريق الخطأ.",
+            "inhibit-shortcuts": "تعطيل الاختصارات"
         }
     },
     "main": {
