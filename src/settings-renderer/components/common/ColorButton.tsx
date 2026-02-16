@@ -35,12 +35,15 @@ type Props = {
  */
 export default function ColorButton(props: Props) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [pickerColor, setPickerColor] = React.useState(chroma(props.color).css());
   const [cssColor, setCSSColor] = React.useState(chroma(props.color).css());
   const [inputColor, setInputColor] = React.useState(chroma(props.color).css());
 
   React.useEffect(() => {
-    setCSSColor(chroma(props.color).css());
-    setInputColor(chroma(props.color).css());
+    const color = chroma(props.color).css();
+    setPickerColor(color);
+    setCSSColor(color);
+    setInputColor(color);
   }, [props.color]);
 
   return (
@@ -49,11 +52,12 @@ export default function ColorButton(props: Props) {
         <>
           {props.name ? <div className={classes.popoverHeader}>{props.name}</div> : null}
           <RgbaStringColorPicker
-            color={cssColor}
+            color={pickerColor}
             onChange={(newColor) => {
-              const cssColor = chroma(newColor).css();
-              setCSSColor(cssColor);
-              setInputColor(cssColor);
+              setPickerColor(newColor);
+              const converted = chroma(newColor).css();
+              setCSSColor(converted);
+              setInputColor(converted);
             }}
           />
           <input
