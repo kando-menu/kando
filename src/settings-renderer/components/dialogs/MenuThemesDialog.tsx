@@ -20,7 +20,7 @@ import {
   TbCircleCheck,
   TbPaletteFilled,
   TbReload,
-  TbDownload,
+  TbUpload,
 } from 'react-icons/tb';
 import lodash from 'lodash';
 
@@ -233,7 +233,7 @@ export default function MenuThemesDialog() {
 
           <Button
             isGrouped
-            icon={<TbDownload />}
+            icon={<TbUpload />}
             tooltip={i18next.t('settings.menu-themes-dialog.export-preset')}
             onClick={() => {
               window.settingsAPI.exportMenuThemePreset(
