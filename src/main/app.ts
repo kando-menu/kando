@@ -644,7 +644,6 @@ export class KandoApp {
           });
 
           if (!result.canceled && result.filePath) {
-
             const presetData = { colors };
             fs.writeFileSync(result.filePath, JSON.stringify(presetData, null, 2), {
               encoding: 'utf8',
