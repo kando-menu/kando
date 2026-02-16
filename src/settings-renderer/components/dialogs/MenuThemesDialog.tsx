@@ -129,6 +129,28 @@ export default function MenuThemesDialog() {
     fetchPresets();
   }, [fetchPresets]);
 
+  // Listen for preset reload events from the main process
+  React.useEffect(() => {
+    const listener = () => {
+      // Re-fetch presets directly
+      if (currentTheme) {
+        (async () => {
+          try {
+            const p = await window.settingsAPI.getMenuThemePresets(
+              currentTheme.directory,
+              currentTheme.id
+            );
+            setPresets(p || []);
+          } catch (e) {
+            console.error('Failed to load presets:', e);
+          }
+        })();
+      }
+    };
+
+    window.settingsAPI.onPresetsChanged(listener);
+  }, [currentTheme]);
+
   if (currentTheme && Object.keys(currentTheme.colors).length > 0) {
     const currentColorOverrides = darkMode && useDarkMode ? darkColors : colors;
     const currentColors = lodash.merge(

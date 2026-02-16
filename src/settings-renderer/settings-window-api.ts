@@ -244,6 +244,15 @@ export const SETTINGS_WINDOW_API = {
       themeId
     );
   },
+
+  /**
+   * This will be called by the host when menu theme presets have been changed.
+   *
+   * @param callback This callback will be called when presets are changed (e.g., after export).
+   */
+  onPresetsChanged: (callback: () => void) => {
+    ipcRenderer.on('settings-window.presets-changed', callback);
+  },
 };
 
 /**

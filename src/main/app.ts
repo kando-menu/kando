@@ -644,11 +644,6 @@ export class KandoApp {
           });
 
           if (!result.canceled && result.filePath) {
-            // Ensure the file is saved in the presets directory.
-            if (!result.filePath.startsWith(presetsDir)) {
-              console.error('Attempted to save preset outside of presets directory');
-              return;
-            }
 
             const presetData = { colors };
             fs.writeFileSync(result.filePath, JSON.stringify(presetData, null, 2), {
