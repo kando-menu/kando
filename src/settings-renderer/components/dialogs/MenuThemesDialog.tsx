@@ -21,6 +21,7 @@ import {
   TbPaletteFilled,
   TbReload,
   TbUpload,
+  TbX,
 } from 'react-icons/tb';
 import lodash from 'lodash';
 
@@ -100,6 +101,11 @@ export default function MenuThemesDialog() {
   >([]);
   const [resetDropdown, setResetDropdown] = React.useState(0);
 
+  // Export dialog state
+  const [showExportDialog, setShowExportDialog] = React.useState(false);
+  const [exportPresetName, setExportPresetName] = React.useState('');
+  const [exportError, setExportError] = React.useState<string | null>(null);
+
   React.useEffect(() => {
     // Reset presets when theme changes
     setPresets([]);
@@ -128,6 +134,56 @@ export default function MenuThemesDialog() {
   React.useEffect(() => {
     fetchPresets();
   }, [fetchPresets]);
+
+  // Handle exporting the current theme colors as a preset
+  const handleExportPreset = async () => {
+    if (!exportPresetName.trim()) {
+      setExportError(
+        i18next.t(
+          'settings.menu-themes-dialog.preset-name-empty',
+          'Preset name cannot be empty'
+        )
+      );
+      return;
+    }
+
+    // Validate preset name (only letters, numbers, hyphens, underscores, and spaces)
+    if (!/^[a-zA-Z0-9_\-\s]+$/.test(exportPresetName)) {
+      setExportError(
+        i18next.t(
+          'settings.menu-themes-dialog.preset-name-invalid',
+          'Preset name can only contain letters, numbers, hyphens, underscores, and spaces'
+        )
+      );
+      return;
+    }
+
+    try {
+      if (!currentTheme) {
+        throw new Error('No theme selected');
+      }
+
+      // Compute current colors
+      const currentColorOverrides = darkMode && useDarkMode ? darkColors : colors;
+      const currentColors = lodash.merge(
+        {},
+        currentTheme.colors,
+        currentColorOverrides[currentTheme.id]
+      );
+
+      await window.settingsAPI.exportMenuThemePreset(
+        currentTheme.id,
+        currentColors,
+        exportPresetName
+      );
+      setShowExportDialog(false);
+      setExportPresetName('');
+      setExportError(null);
+    } catch (e) {
+      const errorMsg = e instanceof Error ? e.message : 'Failed to export preset';
+      setExportError(errorMsg);
+    }
+  };
 
   // Listen for preset reload events from the main process
   React.useEffect(() => {
@@ -258,11 +314,9 @@ export default function MenuThemesDialog() {
             icon={<TbUpload />}
             tooltip={i18next.t('settings.menu-themes-dialog.export-preset')}
             onClick={() => {
-              window.settingsAPI.exportMenuThemePreset(
-                currentTheme.directory,
-                currentTheme.id,
-                currentColors
-              );
+              setShowExportDialog(true);
+              setExportError(null);
+              setExportPresetName('');
             }}
           />
 
@@ -439,6 +493,89 @@ export default function MenuThemesDialog() {
           </div>
         </Scrollbox>
       </div>
+
+      {/* Export Preset Dialog */}
+      {showExportDialog && currentTheme ? (
+        <div
+          className={classes.exportDialogOverlay}
+          onClick={() => {
+            setShowExportDialog(false);
+            setExportError(null);
+          }}>
+          <div className={classes.exportDialog} onClick={(e) => e.stopPropagation()}>
+            <div className={classes.exportDialogHeader}>
+              <h2>
+                {i18next.t(
+                  'settings.menu-themes-dialog.export-preset-name-title',
+                  'Save Preset'
+                )}
+              </h2>
+              <button
+                aria-label="Close dialog"
+                className={classes.exportDialogClose}
+                type="button"
+                onClick={() => {
+                  setShowExportDialog(false);
+                  setExportError(null);
+                }}>
+                <TbX />
+              </button>
+            </div>
+
+            <div className={classes.exportDialogInput}>
+              <label>
+                {i18next.t(
+                  'settings.menu-themes-dialog.export-preset-name-label',
+                  'Preset Name'
+                )}
+              </label>
+              <input
+                autoFocus
+                placeholder={i18next.t(
+                  'settings.menu-themes-dialog.preset-name-placeholder',
+                  'e.g. My Custom Colors'
+                )}
+                type="text"
+                value={exportPresetName}
+                onChange={(e) => {
+                  setExportPresetName(e.target.value);
+                  setExportError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleExportPreset();
+                  } else if (e.key === 'Escape') {
+                    setShowExportDialog(false);
+                    setExportError(null);
+                  }
+                }}
+              />
+            </div>
+
+            {exportError ? (
+              <div className={classes.exportDialogError}>{exportError}</div>
+            ) : null}
+
+            <div className={classes.exportDialogButtons}>
+              <button
+                className={classes.cancelButton}
+                type="button"
+                onClick={() => {
+                  setShowExportDialog(false);
+                  setExportError(null);
+                }}>
+                {i18next.t('common.cancel', 'Cancel')}
+              </button>
+              <button
+                className={classes.saveButton}
+                type="button"
+                onClick={handleExportPreset}>
+                {i18next.t('settings.menu-themes-dialog.save-preset', 'Save Preset')}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </Modal>
   );
 }

@@ -212,22 +212,22 @@ export const SETTINGS_WINDOW_API = {
   },
 
   /**
-   * This will open a save dialog to export the current menu theme colors as a preset.
+   * This will export the current menu theme colors as a preset with the given name.
    *
-   * @param themeDirectory The directory of the theme.
    * @param themeId The ID of the theme.
    * @param colors The colors to export.
+   * @param presetName The name to save the preset as.
    */
   exportMenuThemePreset: (
-    themeDirectory: string,
     themeId: string,
-    colors: Record<string, string>
-  ) => {
-    ipcRenderer.send(
+    colors: Record<string, string>,
+    presetName: string
+  ): Promise<void> => {
+    return ipcRenderer.invoke(
       'settings-window.export-menu-theme-preset',
-      themeDirectory,
       themeId,
-      colors
+      colors,
+      presetName
     );
   },
 
