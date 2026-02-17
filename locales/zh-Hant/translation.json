@@ -136,7 +136,9 @@
             "wlroots-pointer-get-timeout-touch-info": "等待 wlroots 後端回傳觸控位置的最長時間（毫秒）。若超過此時間將使用備用位置。預設值為 1500 毫秒。",
             "wlroots-pointer-get-timeout-default-behavior": "指標備用位置",
             "wlroots-pointer-get-timeout-default-behavior-info": "決定若在設定時間內無法從 wlroots 後端取得位置時，指標應位於何處。",
-            "previously-reported": "先前已回報"
+            "previously-reported": "先前已回報",
+            "enable-achievement-notifications-info": "啟用後，當成就解鎖時將會顯示通知。",
+            "enable-achievement-notifications": "顯示成就通知"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 提供了一種獨特且高效的方式，讓您與電腦互動。",
@@ -295,7 +297,8 @@
         "export-menu": "匯出選單",
         "import-menu": "匯入選單",
         "import-menu-error-title": "匯入選單失敗",
-        "import-menu-error-message": "無法匯入所選檔案。該檔案並非自 Kando 匯出的有效選單。"
+        "import-menu-error-message": "無法匯入所選檔案。該檔案並非自 Kando 匯出的有效選單。",
+        "export-menu-error-title": "匯出選單失敗"
     },
     "menu-items": {
         "text": {
@@ -377,7 +380,9 @@
         },
         "common": {
             "delayed-option": "等待淡出動畫結束",
-            "delayed-option-info": "當操作目標為需取得焦點的視窗時，此選項會有所幫助。"
+            "delayed-option-info": "當操作目標為需取得焦點的視窗時，此選項會有所幫助。",
+            "inhibit-shortcuts-info": "當模擬快捷鍵或執行巨集時，停用所有 Kando 快捷鍵。可避免模擬輸入時意外觸發其他選單快捷鍵。",
+            "inhibit-shortcuts": "停用快捷鍵"
         }
     },
     "example-menu": {
