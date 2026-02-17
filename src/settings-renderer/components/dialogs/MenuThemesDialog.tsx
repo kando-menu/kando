@@ -101,15 +101,16 @@ export default function MenuThemesDialog() {
   >([]);
   const [resetDropdown, setResetDropdown] = React.useState(0);
 
-  // Export dialog state
-  const [showExportDialog, setShowExportDialog] = React.useState(false);
-  const [exportPresetName, setExportPresetName] = React.useState('');
-  const [exportError, setExportError] = React.useState<string | null>(null);
+  // Save preset dialog state
+  const [showSavePresetDialog, setShowSavePresetDialog] = React.useState(false);
+  const [savePresetName, setSavePresetName] = React.useState('');
+  const [saveError, setSaveError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     // Reset presets when theme changes
     setPresets([]);
     setResetDropdown((prev) => prev + 1);
+    setShowSavePresetDialog(false);
   }, [currentTheme?.id]);
 
   const fetchPresets = React.useCallback(async () => {
@@ -135,10 +136,10 @@ export default function MenuThemesDialog() {
     fetchPresets();
   }, [fetchPresets]);
 
-  // Handle exporting the current theme colors as a preset
-  const handleExportPreset = async () => {
-    if (!exportPresetName.trim()) {
-      setExportError(
+  // Handle saving the current theme colors as a preset
+  const handleSavePreset = async () => {
+    if (!savePresetName.trim()) {
+      setSaveError(
         i18next.t(
           'settings.menu-themes-dialog.preset-name-empty',
           'Preset name cannot be empty'
@@ -148,8 +149,8 @@ export default function MenuThemesDialog() {
     }
 
     // Validate preset name (only letters, numbers, hyphens, underscores, and spaces)
-    if (!/^[a-zA-Z0-9_\-\s]+$/.test(exportPresetName)) {
-      setExportError(
+    if (!/^[a-zA-Z0-9_\-\s]+$/.test(savePresetName)) {
+      setSaveError(
         i18next.t(
           'settings.menu-themes-dialog.preset-name-invalid',
           'Preset name can only contain letters, numbers, hyphens, underscores, and spaces'
@@ -174,14 +175,14 @@ export default function MenuThemesDialog() {
       await window.settingsAPI.exportMenuThemePreset(
         currentTheme.id,
         currentColors,
-        exportPresetName
+        savePresetName
       );
-      setShowExportDialog(false);
-      setExportPresetName('');
-      setExportError(null);
+      setShowSavePresetDialog(false);
+      setSavePresetName('');
+      setSaveError(null);
     } catch (e) {
-      const errorMsg = e instanceof Error ? e.message : 'Failed to export preset';
-      setExportError(errorMsg);
+      const errorMsg = e instanceof Error ? e.message : 'Failed to save preset';
+      setSaveError(errorMsg);
     }
   };
 
@@ -312,11 +313,11 @@ export default function MenuThemesDialog() {
           <Button
             isGrouped
             icon={<TbUpload />}
-            tooltip={i18next.t('settings.menu-themes-dialog.export-preset')}
+            tooltip={i18next.t('settings.menu-themes-dialog.save-preset')}
             onClick={() => {
-              setShowExportDialog(true);
-              setExportError(null);
-              setExportPresetName('');
+              setShowSavePresetDialog(true);
+              setSaveError(null);
+              setSavePresetName('');
             }}
           />
 
@@ -494,19 +495,19 @@ export default function MenuThemesDialog() {
         </Scrollbox>
       </div>
 
-      {/* Export Preset Dialog */}
-      {showExportDialog && currentTheme ? (
+      {/* Save Preset Dialog */}
+      {showSavePresetDialog && currentTheme ? (
         <div
           className={classes.exportDialogOverlay}
           onClick={() => {
-            setShowExportDialog(false);
-            setExportError(null);
+            setShowSavePresetDialog(false);
+            setSaveError(null);
           }}>
           <div className={classes.exportDialog} onClick={(e) => e.stopPropagation()}>
             <div className={classes.exportDialogHeader}>
               <h2>
                 {i18next.t(
-                  'settings.menu-themes-dialog.export-preset-name-title',
+                  'settings.menu-themes-dialog.save-preset-name-title',
                   'Save Preset'
                 )}
               </h2>
@@ -515,8 +516,8 @@ export default function MenuThemesDialog() {
                 className={classes.exportDialogClose}
                 type="button"
                 onClick={() => {
-                  setShowExportDialog(false);
-                  setExportError(null);
+                  setShowSavePresetDialog(false);
+                  setSaveError(null);
                 }}>
                 <TbX />
               </button>
@@ -525,7 +526,7 @@ export default function MenuThemesDialog() {
             <div className={classes.exportDialogInput}>
               <label>
                 {i18next.t(
-                  'settings.menu-themes-dialog.export-preset-name-label',
+                  'settings.menu-themes-dialog.save-preset-name-label',
                   'Preset Name'
                 )}
               </label>
@@ -536,24 +537,24 @@ export default function MenuThemesDialog() {
                   'e.g. My Custom Colors'
                 )}
                 type="text"
-                value={exportPresetName}
+                value={savePresetName}
                 onChange={(e) => {
-                  setExportPresetName(e.target.value);
-                  setExportError(null);
+                  setSavePresetName(e.target.value);
+                  setSaveError(null);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handleExportPreset();
+                    handleSavePreset();
                   } else if (e.key === 'Escape') {
-                    setShowExportDialog(false);
-                    setExportError(null);
+                    setShowSavePresetDialog(false);
+                    setSaveError(null);
                   }
                 }}
               />
             </div>
 
-            {exportError ? (
-              <div className={classes.exportDialogError}>{exportError}</div>
+            {saveError ? (
+              <div className={classes.exportDialogError}>{saveError}</div>
             ) : null}
 
             <div className={classes.exportDialogButtons}>
@@ -561,15 +562,15 @@ export default function MenuThemesDialog() {
                 className={classes.cancelButton}
                 type="button"
                 onClick={() => {
-                  setShowExportDialog(false);
-                  setExportError(null);
+                  setShowSavePresetDialog(false);
+                  setSaveError(null);
                 }}>
                 {i18next.t('common.cancel', 'Cancel')}
               </button>
               <button
                 className={classes.saveButton}
                 type="button"
-                onClick={handleExportPreset}>
+                onClick={handleSavePreset}>
                 {i18next.t('settings.menu-themes-dialog.save-preset', 'Save Preset')}
               </button>
             </div>
