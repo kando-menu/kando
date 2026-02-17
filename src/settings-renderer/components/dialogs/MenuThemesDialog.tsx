@@ -181,8 +181,7 @@ export default function MenuThemesDialog() {
       setSavePresetName('');
       setSaveError(null);
     } catch (e) {
-      const errorMsg = e instanceof Error ? e.message : 'Failed to save preset';
-      setSaveError(errorMsg);
+      console.error('Failed to save preset:', e);
     }
   };
 
@@ -505,12 +504,7 @@ export default function MenuThemesDialog() {
           }}>
           <div className={classes.exportDialog} onClick={(e) => e.stopPropagation()}>
             <div className={classes.exportDialogHeader}>
-              <h2>
-                {i18next.t(
-                  'settings.menu-themes-dialog.save-preset-name-title',
-                  'Save Preset'
-                )}
-              </h2>
+              <h2>{i18next.t('settings.menu-themes-dialog.save-preset-name-title')}</h2>
               <button
                 aria-label="Close dialog"
                 className={classes.exportDialogClose}
@@ -525,16 +519,12 @@ export default function MenuThemesDialog() {
 
             <div className={classes.exportDialogInput}>
               <label>
-                {i18next.t(
-                  'settings.menu-themes-dialog.save-preset-name-label',
-                  'Preset Name'
-                )}
+                {i18next.t('settings.menu-themes-dialog.save-preset-name-label')}
               </label>
               <input
                 autoFocus
                 placeholder={i18next.t(
-                  'settings.menu-themes-dialog.preset-name-placeholder',
-                  'e.g. My Custom Colors'
+                  'settings.menu-themes-dialog.preset-name-placeholder'
                 )}
                 type="text"
                 value={savePresetName}
@@ -565,13 +555,13 @@ export default function MenuThemesDialog() {
                   setShowSavePresetDialog(false);
                   setSaveError(null);
                 }}>
-                {i18next.t('common.cancel', 'Cancel')}
+                {i18next.t('common.cancel')}
               </button>
               <button
                 className={classes.saveButton}
                 type="button"
                 onClick={handleSavePreset}>
-                {i18next.t('settings.menu-themes-dialog.save-preset', 'Save Preset')}
+                {i18next.t('settings.menu-themes-dialog.save-preset')}
               </button>
             </div>
           </div>

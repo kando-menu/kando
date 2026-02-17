@@ -655,7 +655,15 @@ export class KandoApp {
         } catch (e) {
           const errorMsg = e instanceof Error ? e.message : 'Failed to export preset';
           console.error('Failed to export preset:', e);
-          throw new Error(errorMsg);
+
+          // Show error dialog with localized title and message
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.menu-themes-dialog.save-preset-error-title'),
+            message: i18next.t('settings.menu-themes-dialog.save-preset-error-message', {
+              error: errorMsg,
+            }),
+          });
         }
       }
     );
