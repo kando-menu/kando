@@ -107,7 +107,14 @@
             "reset-color-picker": "Ales awennez ɣer umezwer",
             "no-accent-colors": "Asentel-agi ur isefrak ara initen n uɣdebbu.",
             "title": "Isental n wumuɣ",
-            "fade-in-time-info": "Akud yettaṭṭaf i wumuɣ akken ad d-iban cwiṭ, cwiṭ. Amezwer deg 150mili-tasint."
+            "fade-in-time-info": "Akud yettaṭṭaf i wumuɣ akken ad d-iban cwiṭ, cwiṭ. Amezwer d 150mili-tasint.",
+            "fade-out-time-info": "Akud yettaṭṭaf i wumuɣ akken ad ixsi. Amezwer d 200mili-tasint.",
+            "fade-in-time": "Akud yettaṭṭaf i teskant",
+            "fade-out-time": "Akud yettaṭṭaf i usexsi",
+            "menu-scale-info": "Seqdec wagi iwakken ad tsimɣureḍ neɣ ad tessidreḍ tiddi n wumuɣen-ik·im. Amezwer d 1.0.",
+            "menu-scale": "Tafesna n wumuɣ",
+            "selection-wedges-info": "Ma yella yermed yerna itteddu deg usentel yettwafernen, teɣzut n wefran n iferdisen ad ttwasebrureq.",
+            "selection-wedges": "Suneɣ iḥricen n iferdisen"
         },
         "all-menus": "Akk umuɣen",
         "search-menus-placeholder": "Nadi umuɣen…",
