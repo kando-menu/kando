@@ -20,9 +20,9 @@ import {
   TbCircleCheck,
   TbPaletteFilled,
   TbReload,
-  TbUpload,
   TbX,
 } from 'react-icons/tb';
+import { IoIosSave } from 'react-icons/io';
 import lodash from 'lodash';
 
 import { useAppState, useGeneralSetting } from '../../state';
@@ -312,7 +312,7 @@ export default function MenuThemesDialog() {
 
           <Button
             isGrouped
-            icon={<TbUpload />}
+            icon={<IoIosSave />}
             tooltip={i18next.t('settings.menu-themes-dialog.save-preset')}
             onClick={() => {
               setShowSavePresetDialog(true);

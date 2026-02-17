@@ -235,10 +235,7 @@ $gradient-end: light-dark(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
     &:focus {
       outline: none;
       border-color: $text-link;
-      box-shadow: 0 0 0 2px light-dark(
-        rgba(150, 59, 103, 0.1),
-        rgba(240, 206, 206, 0.15)
-      );
+      box-shadow: 0 0 0 2px light-dark(rgba(150, 59, 103, 0.1), rgba(240, 206, 206, 0.15));
       background-color: light-dark(rgba(#fff, 0.9), rgba(#000, 0.2));
     }
 
@@ -251,10 +248,7 @@ $gradient-end: light-dark(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
 .exportDialogError {
   margin-bottom: 15px;
   padding: 12px;
-  background-color: light-dark(
-    rgba(#ff6b6b, 0.1),
-    rgba(#ff6b6b, 0.15)
-  );
+  background-color: light-dark(rgba(#ff6b6b, 0.1), rgba(#ff6b6b, 0.15));
   border-left: 3px solid light-dark(#d63031, #ff6b6b);
   border-radius: 4px;
   color: light-dark(#d63031, #ff6b6b);
@@ -306,4 +300,3 @@ $gradient-end: light-dark(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
     }
   }
 }
-
