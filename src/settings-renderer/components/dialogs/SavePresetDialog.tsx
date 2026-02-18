@@ -12,7 +12,6 @@ import React from 'react';
 import i18next from 'i18next';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { IoIosSave } from 'react-icons/io';
-import classNames from 'classnames/bind';
 
 import { Modal, Button, Swirl } from '../common';
 
