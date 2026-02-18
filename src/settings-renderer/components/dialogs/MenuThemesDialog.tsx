@@ -20,7 +20,6 @@ import {
   TbCircleCheck,
   TbPaletteFilled,
   TbReload,
-  TbX,
 } from 'react-icons/tb';
 import { IoIosSave } from 'react-icons/io';
 import lodash from 'lodash';
@@ -39,6 +38,7 @@ import {
   Swirl,
   InfoItem,
 } from '../common';
+import SavePresetDialog from './SavePresetDialog';
 
 import * as classes from './MenuThemesDialog.module.scss';
 const cx = classNames.bind(classes);
@@ -103,8 +103,6 @@ export default function MenuThemesDialog() {
 
   // Save preset dialog state
   const [showSavePresetDialog, setShowSavePresetDialog] = React.useState(false);
-  const [savePresetName, setSavePresetName] = React.useState('');
-  const [saveError, setSaveError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     // Reset presets when theme changes
@@ -137,52 +135,24 @@ export default function MenuThemesDialog() {
   }, [fetchPresets]);
 
   // Handle saving the current theme colors as a preset
-  const handleSavePreset = async () => {
-    if (!savePresetName.trim()) {
-      setSaveError(
-        i18next.t(
-          'settings.menu-themes-dialog.preset-name-empty',
-          'Preset name cannot be empty'
-        )
-      );
-      return;
+  const handleSavePreset = async (presetName: string) => {
+    if (!currentTheme) {
+      throw new Error('No theme selected');
     }
 
-    // Validate preset name (only letters, numbers, hyphens, underscores, and spaces)
-    if (!/^[a-zA-Z0-9_\-\s]+$/.test(savePresetName)) {
-      setSaveError(
-        i18next.t(
-          'settings.menu-themes-dialog.preset-name-invalid',
-          'Preset name can only contain letters, numbers, hyphens, underscores, and spaces'
-        )
-      );
-      return;
-    }
+    // Compute current colors
+    const currentColorOverrides = darkMode && useDarkMode ? darkColors : colors;
+    const currentColors = lodash.merge(
+      {},
+      currentTheme.colors,
+      currentColorOverrides[currentTheme.id]
+    );
 
-    try {
-      if (!currentTheme) {
-        throw new Error('No theme selected');
-      }
-
-      // Compute current colors
-      const currentColorOverrides = darkMode && useDarkMode ? darkColors : colors;
-      const currentColors = lodash.merge(
-        {},
-        currentTheme.colors,
-        currentColorOverrides[currentTheme.id]
-      );
-
-      await window.settingsAPI.exportMenuThemePreset(
-        currentTheme.id,
-        currentColors,
-        savePresetName
-      );
-      setShowSavePresetDialog(false);
-      setSavePresetName('');
-      setSaveError(null);
-    } catch (e) {
-      console.error('Failed to save preset:', e);
-    }
+    await window.settingsAPI.exportMenuThemePreset(
+      currentTheme.id,
+      currentColors,
+      presetName
+    );
   };
 
   // Listen for preset reload events from the main process
@@ -315,8 +285,6 @@ export default function MenuThemesDialog() {
             tooltip={i18next.t('settings.menu-themes-dialog.save-preset')}
             onClick={() => {
               setShowSavePresetDialog(true);
-              setSaveError(null);
-              setSavePresetName('');
             }}
           />
 
@@ -494,79 +462,11 @@ export default function MenuThemesDialog() {
         </Scrollbox>
       </div>
 
-      {/* Save Preset Dialog */}
-      {showSavePresetDialog && currentTheme ? (
-        <div
-          className={classes.exportDialogOverlay}
-          onClick={() => {
-            setShowSavePresetDialog(false);
-            setSaveError(null);
-          }}>
-          <div className={classes.exportDialog} onClick={(e) => e.stopPropagation()}>
-            <div className={classes.exportDialogHeader}>
-              <h2>{i18next.t('settings.menu-themes-dialog.save-preset-name-title')}</h2>
-              <button
-                aria-label="Close dialog"
-                className={classes.exportDialogClose}
-                type="button"
-                onClick={() => {
-                  setShowSavePresetDialog(false);
-                  setSaveError(null);
-                }}>
-                <TbX />
-              </button>
-            </div>
-
-            <div className={classes.exportDialogInput}>
-              <label>
-                {i18next.t('settings.menu-themes-dialog.save-preset-name-label')}
-              </label>
-              <input
-                autoFocus
-                placeholder={i18next.t(
-                  'settings.menu-themes-dialog.preset-name-placeholder'
-                )}
-                type="text"
-                value={savePresetName}
-                onChange={(e) => {
-                  setSavePresetName(e.target.value);
-                  setSaveError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSavePreset();
-                  } else if (e.key === 'Escape') {
-                    setShowSavePresetDialog(false);
-                    setSaveError(null);
-                  }
-                }}
-              />
-            </div>
-
-            {saveError ? (
-              <div className={classes.exportDialogError}>{saveError}</div>
-            ) : null}
-
-            <div className={classes.exportDialogButtons}>
-              <button
-                className={classes.cancelButton}
-                type="button"
-                onClick={() => {
-                  setShowSavePresetDialog(false);
-                  setSaveError(null);
-                }}>
-                {i18next.t('common.cancel')}
-              </button>
-              <button
-                className={classes.saveButton}
-                type="button"
-                onClick={handleSavePreset}>
-                {i18next.t('settings.menu-themes-dialog.save-preset')}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <SavePresetDialog
+        isVisible={showSavePresetDialog}
+        onClose={() => setShowSavePresetDialog(false)}
+        onSave={handleSavePreset}
+      />
     </Modal>
   );
 }
