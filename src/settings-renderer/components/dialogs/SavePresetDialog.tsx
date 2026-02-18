@@ -29,8 +29,8 @@ type Props = {
 };
 
 /**
- * This component allows the user to save the current theme colors as a preset.
- * It follows the same pattern as AppPicker for consistency.
+ * This component allows the user to save the current theme colors as a preset. It follows
+ * the same pattern as AppPicker for consistency.
  */
 export default function SavePresetDialog(props: Props) {
   const [presetName, setPresetName] = React.useState('');
@@ -48,21 +48,13 @@ export default function SavePresetDialog(props: Props) {
 
   const handleSave = async () => {
     if (!presetName.trim()) {
-      setError(
-        i18next.t(
-          'settings.menu-themes-dialog.preset-name-empty',
-        )
-      );
+      setError(i18next.t('settings.menu-themes-dialog.preset-name-empty'));
       return;
     }
 
     // Validate preset name (only letters, numbers, hyphens, underscores, and spaces)
     if (!/^[a-zA-Z0-9_\-\s]+$/.test(presetName)) {
-      setError(
-        i18next.t(
-          'settings.menu-themes-dialog.preset-name-invalid',
-        )
-      );
+      setError(i18next.t('settings.menu-themes-dialog.preset-name-invalid'));
       return;
     }
 
@@ -82,47 +74,45 @@ export default function SavePresetDialog(props: Props) {
 
   return (
     <Modal
+      icon={<IoIosSave />}
       isVisible={props.isVisible}
       maxWidth={400}
       paddingTop={15}
       title={i18next.t('settings.menu-themes-dialog.save-preset-name-title')}
-      icon={<IoIosSave />}
       onClose={props.onClose}>
       <div className={classes.container}>
         <Swirl marginBottom={10} variant="2" width={350} />
 
         <TextInput
           initialValue={presetName}
+          isDisabled={isSaving}
           label={i18next.t('settings.menu-themes-dialog.save-preset-name-label')}
-          placeholder={i18next.t(
-            'settings.menu-themes-dialog.preset-name-placeholder'
-          )}
+          placeholder={i18next.t('settings.menu-themes-dialog.preset-name-placeholder')}
           onChange={(value) => {
             setPresetName(value);
             setError(null);
           }}
-          isDisabled={isSaving}
         />
 
-        {error && <div className={classes.error}>{error}</div>}
+        {error ? <div className={classes.error}>{error}</div> : null}
 
         <div className={classes.buttons}>
           <Button
             isBlock
             icon={<TbX />}
+            isDisabled={isSaving}
             label={i18next.t('settings.cancel')}
             onClick={() => {
               props.onClose();
             }}
-            isDisabled={isSaving}
           />
           <Button
             isBlock
             icon={<TbCheck />}
+            isDisabled={!presetName.trim() || isSaving}
             label={i18next.t('settings.menu-themes-dialog.save-preset')}
             variant="primary"
             onClick={handleSave}
-            isDisabled={!presetName.trim() || isSaving}
           />
         </div>
       </div>
