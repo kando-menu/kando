@@ -66,7 +66,12 @@
             "color": "Ini",
             "white": "Amellal",
             "black": "Aberkan",
-            "gesture-pause-timeout": "Tanzagt n uraǧu n imussa"
+            "gesture-pause-timeout": "Tanzagt n uraǧu n imussa",
+            "reload-menu-theme": "Ales asali n usentel n wumuɣ",
+            "reload-sound-theme": "Ales asali n usentel n imesli",
+            "dev-tools-note": "Kando iseqdac sin n yisfuyla: Yiwen i wumuɣ, yiwen i yiɣewwaṛen. Tzemreḍ ad teldiḍ ifecka n tneflit akken ad tsewḍeḍ yal yiwen seg sin n yisfuyla-agi.",
+            "menu-window-dev-tools": "Umuɣ n usweḍ",
+            "settings-window-dev-tools": "Iɣewwaṛen n usweḍ"
         },
         "introduction-dialog": {
             "slide3-hint1": "Tzemreḍ daɣen ad tsiteḍ dagi akken ad tmedleḍ umuɣ.",
@@ -91,7 +96,13 @@
             "chapter4": "Isurifen uḍfiren",
             "chapter5": "Awi-d tallelt",
             "title": "Ansuf ɣer Kando!",
-            "show-again": "Sken adiwenni-agi tikkelt-nniḍen"
+            "show-again": "Sken adiwenni-agi tikkelt-nniḍen",
+            "slide1-title": "Kando yettak-d abrid asuf s tmellit i teywalt akked uselkim-ik·im.",
+            "slide1-text": "Sedrurem gar tigriwin-agi iwakken ad tlemdeḍ acu kando yezmer ad k·em-yexdem! Tzemreḍ ad tesqedceḍ ticraḍ n yixef deg uzelmaḍ iwakken ad tneggezeḍ s tɣawla ɣer wuḥric tebɣiḍ deg tazwart.",
+            "slide2-title": "Ldi umuɣ!",
+            "slide2-text-standard": "Ma tesnekreḍ Kando i tikkelt tamezwarut, tzemreḍ ad teldiḍ umuɣ umedya s Ctrl+Space. Mdel-it tikkelt niḍen s tqeffalt Escape neɣ s tqeffalt tayeffust n tɣerdayt deg wanda i tebɣiḍ deg ugdil.",
+            "slide2-text-no-shortcuts": "Ma tesnekreḍ Kando i tikkelt tamezwarut, tzemreḍ [ad tgeḍ kra n yisurifen imernanen i Linux akken ad ddunt inegzumen unasiw amatu] ({{link}}). Ma ifat yetteddu waya, tzemreḍ ad tmedleḍ umuɣ s tsarut Escape neɣ s teqfalt tayefust n tɣerdayt.",
+            "slide11-text": "**Ur ttaggad ara seg tefrayt n usehwu** Tigawin ttuselkment akken kan ara tserḥeḍ i tqeffalt n tɣerdayt-ik·im deg uskar n ucraḍ neɣ s tsarut n unasiw deg uskar Turbu. Seqdec wagi iwakken ad tesnirmeḍ umuɣ!"
         },
         "menu-themes-dialog": {
             "light-dark-mode-info": "Ma yermed, tzemreḍ ad tferneḍ asentel-nniḍen akked yiniten yemgaraden almend n unagraw-ik·im ma yella uskar d aceɛlal neɣ aɣmayan.",
@@ -142,6 +153,16 @@
         "menu-behavior": "Tiddin n umuɣ",
         "menu-behavior-info": "Send ad tremdeḍ tinefrunin-a, ad k-nwelleh ad nelmed amek i nḥemmel tiddin tamezwert n Kando [here]({{link}})!",
         "centered-mode-info": "Ldi umuɣ deg tlemmast n ugdil wala ɣer uswir n teḥnaccaḍt.",
-        "centered-mode": "Askar Ulmis"
+        "centered-mode": "Askar Ulmis",
+        "anchored-mode-info": "Ldi umuɣ anaddaw deg yiwen n yideg am wumuɣ amarraw. Aṛṛcem n waya, ad isexsi Askar n ucraḍ d uskar Turbu.",
+        "anchored-mode": "Askar usbiḍ",
+        "hover-mode-info": "I yiseqdacen inaẓiyen kan! Fren iferdisen s uɛeddi sufella-nsen.",
+        "hover-mode": "Askar n wesriffeg",
+        "menu-conditions": "Tiwtilin n wumuɣ",
+        "menu-conditions-info": "Tzemreḍ ad tesdukleḍ deqs n wumuɣen deg yiwen unegzum syin fren s daww anta tiwtilin i ilaqen i yal umuɣ akken ad yettwasken.",
+        "app-condition-info": "Sken kan umuɣ-agi ma yella asaḍes ɣef usnas uzzig. Aya yessefrak tanfalit talugant am /firefox|chrome/i.",
+        "app-condition": "Ad yeddu kan i Kra n Isnasen",
+        "app-condition-placeholder": "Isem n usnas",
+        "app-condition-tooltip": "Fren asnas"
     }
 }
