@@ -18,6 +18,34 @@
   gap: 10px;
 }
 
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 0.9em;
+    color: $text-muted;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+.input {
+  @include text-input;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 0.95em;
+  flex: 1;
+  box-sizing: border-box;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
 .error {
   color: light-dark(#d63031, #ff6b6b);
   font-size: 0.85em;

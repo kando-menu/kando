@@ -12,8 +12,9 @@ import React from 'react';
 import i18next from 'i18next';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { IoIosSave } from 'react-icons/io';
+import classNames from 'classnames/bind';
 
-import { Modal, Button, Swirl, TextInput } from '../common';
+import { Modal, Button, Swirl } from '../common';
 
 import * as classes from './SavePresetDialog.module.scss';
 
@@ -83,16 +84,28 @@ export default function SavePresetDialog(props: Props) {
       <div className={classes.container}>
         <Swirl marginBottom={10} variant="2" width={350} />
 
-        <TextInput
-          initialValue={presetName}
-          isDisabled={isSaving}
-          label={i18next.t('settings.menu-themes-dialog.save-preset-name-label')}
-          placeholder={i18next.t('settings.menu-themes-dialog.preset-name-placeholder')}
-          onChange={(value) => {
-            setPresetName(value);
-            setError(null);
-          }}
-        />
+        <div className={classes.inputContainer}>
+          <label>{i18next.t('settings.menu-themes-dialog.save-preset-name-label')}</label>
+          <input
+            autoFocus
+            className={classes.input}
+            disabled={isSaving}
+            placeholder={i18next.t('settings.menu-themes-dialog.preset-name-placeholder')}
+            type="text"
+            value={presetName}
+            onChange={(e) => {
+              setPresetName(e.target.value);
+              setError(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && presetName.trim()) {
+                handleSave();
+              } else if (e.key === 'Escape') {
+                props.onClose();
+              }
+            }}
+          />
+        </div>
 
         {error ? <div className={classes.error}>{error}</div> : null}
 
