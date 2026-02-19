@@ -535,10 +535,9 @@ export class KandoApp {
     });
 
     // Allow the renderer to retrieve all presets for a given menu theme.
-    // Returns both valid and broken presets (broken ones have an error field).
     ipcMain.handle(
       'settings-window.get-menu-theme-presets',
-      async (event, themeDirectory: string, themeId: string) => {
+      async (event, themeId: string) => {
         try {
           const presetsDir = this.getUserThemePresetsDirectory(themeId);
 
@@ -549,8 +548,7 @@ export class KandoApp {
           const files = fs.readdirSync(presetsDir);
           const presets: Array<{
             name: string;
-            colors?: Record<string, string>;
-            error?: string;
+            colors: Record<string, string>;
           }> = [];
 
           for (const file of files) {
@@ -577,10 +575,9 @@ export class KandoApp {
                 !data.colors ||
                 typeof data.colors !== 'object'
               ) {
-                presets.push({
-                  name: presetName,
-                  error: 'Invalid structure: missing or invalid colors object',
-                });
+                console.error(
+                  `Failed to load preset "${presetName}": Invalid structure: missing or invalid colors object`
+                );
                 continue;
               }
 
@@ -596,10 +593,9 @@ export class KandoApp {
               }
 
               if (hasInvalidColor) {
-                presets.push({
-                  name: presetName,
-                  error: 'Invalid color value: colors must be strings',
-                });
+                console.error(
+                  `Failed to load preset "${presetName}": Invalid color value: colors must be strings`
+                );
                 continue;
               }
 
@@ -607,7 +603,6 @@ export class KandoApp {
             } catch (e) {
               const errorMsg = e instanceof Error ? e.message : String(e);
               console.error(`Failed to parse preset "${presetName}":`, errorMsg);
-              presets.push({ name: presetName, error: errorMsg });
             }
           }
 
@@ -671,7 +666,7 @@ export class KandoApp {
     // Allow the renderer to open the presets directory for a given menu theme.
     ipcMain.on(
       'settings-window.open-menu-theme-presets-directory',
-      async (event, themeDirectory: string, themeId: string) => {
+      async (event, themeId: string) => {
         try {
           const presetsDir = this.getUserThemePresetsDirectory(themeId);
 

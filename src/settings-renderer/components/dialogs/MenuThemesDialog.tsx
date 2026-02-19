@@ -51,8 +51,8 @@ const openThemeDirectory = () => {
 };
 
 // This is called when the user clicks the "Open presets directory" button.
-const openPresetsDirectory = (themeDirectory: string, themeId: string) => {
-  window.settingsAPI.openMenuThemePresetsDirectory(themeDirectory, themeId);
+const openPresetsDirectory = (themeId: string) => {
+  window.settingsAPI.openMenuThemePresetsDirectory(themeId);
 };
 
 /**
@@ -118,10 +118,7 @@ export default function MenuThemesDialog() {
     }
 
     try {
-      const p = await window.settingsAPI.getMenuThemePresets(
-        currentTheme.directory,
-        currentTheme.id
-      );
+      const p = await window.settingsAPI.getMenuThemePresets(currentTheme.id);
       setPresets(p || []);
     } catch (e) {
       console.error('Failed to load presets:', e);
@@ -137,7 +134,8 @@ export default function MenuThemesDialog() {
   // Handle saving the current theme colors as a preset
   const handleSavePreset = async (presetName: string) => {
     if (!currentTheme) {
-      throw new Error('No theme selected');
+      console.error('No theme selected when trying to save preset');
+      return;
     }
 
     // Compute current colors
@@ -162,10 +160,7 @@ export default function MenuThemesDialog() {
       if (currentTheme) {
         (async () => {
           try {
-            const p = await window.settingsAPI.getMenuThemePresets(
-              currentTheme.directory,
-              currentTheme.id
-            );
+            const p = await window.settingsAPI.getMenuThemePresets(currentTheme.id);
             setPresets(p || []);
           } catch (e) {
             console.error('Failed to load presets:', e);
@@ -174,7 +169,8 @@ export default function MenuThemesDialog() {
       }
     };
 
-    window.settingsAPI.onPresetsChanged(listener);
+    const cleanup = window.settingsAPI.onPresetsChanged(listener);
+    return cleanup;
   }, [currentTheme]);
 
   if (currentTheme && Object.keys(currentTheme.colors).length > 0) {
@@ -292,7 +288,7 @@ export default function MenuThemesDialog() {
             isGrouped
             icon={<TbFolderOpen />}
             tooltip={i18next.t('settings.menu-themes-dialog.open-presets-directory')}
-            onClick={() => openPresetsDirectory(currentTheme.directory, currentTheme.id)}
+            onClick={() => openPresetsDirectory(currentTheme.id)}
           />
         </div>
 

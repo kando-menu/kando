@@ -83,16 +83,9 @@ export const SETTINGS_WINDOW_API = {
 
   /** This will return all available presets for a given menu theme directory. */
   getMenuThemePresets: (
-    themeDirectory: string,
     themeId: string
-  ): Promise<
-    Array<{ name: string; colors?: Record<string, string>; error?: string }>
-  > => {
-    return ipcRenderer.invoke(
-      'settings-window.get-menu-theme-presets',
-      themeDirectory,
-      themeId
-    );
+  ): Promise<Array<{ name: string; colors: Record<string, string> }>> => {
+    return ipcRenderer.invoke('settings-window.get-menu-theme-presets', themeId);
   },
 
   /** This will return all available sound themes. */
@@ -234,15 +227,10 @@ export const SETTINGS_WINDOW_API = {
   /**
    * This will open the directory containing the presets for the given menu theme.
    *
-   * @param themeDirectory The directory of the theme.
    * @param themeId The ID of the theme.
    */
-  openMenuThemePresetsDirectory: (themeDirectory: string, themeId: string) => {
-    ipcRenderer.send(
-      'settings-window.open-menu-theme-presets-directory',
-      themeDirectory,
-      themeId
-    );
+  openMenuThemePresetsDirectory: (themeId: string) => {
+    ipcRenderer.send('settings-window.open-menu-theme-presets-directory', themeId);
   },
 
   /**
@@ -250,9 +238,14 @@ export const SETTINGS_WINDOW_API = {
    *
    * @param callback This callback will be called when presets are changed (e.g., after
    *   export).
+   * @returns A function to disconnect the listener.
    */
-  onPresetsChanged: (callback: () => void) => {
+  onPresetsChanged: (callback: () => void): (() => void) => {
     ipcRenderer.on('settings-window.presets-changed', callback);
+
+    return () => {
+      ipcRenderer.off('settings-window.presets-changed', callback);
+    };
   },
 };
 
