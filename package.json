@@ -99,7 +99,7 @@
     "simple-icons-font": "^16.9.0",
     "string-replace-loader": "^3.3.0",
     "style-loader": "^4.0.0",
-    "swiper": "^12.1.1",
+    "swiper": "^12.1.2",
     "ts-loader": "^9.5.4",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
