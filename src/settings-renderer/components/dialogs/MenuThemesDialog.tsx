@@ -187,7 +187,7 @@ export default function MenuThemesDialog() {
         value: '__default__',
         label: i18next.t('settings.menu-themes-dialog.default-colors'),
       },
-      ...presets.filter((p) => !p.error).map((p) => ({ value: p.name, label: p.name })),
+      ...presets.map((p) => ({ value: p.name, label: p.name })),
     ];
 
     accentColorsNode = (
@@ -459,6 +459,7 @@ export default function MenuThemesDialog() {
       </div>
 
       <SavePresetDialog
+        existingPresetNames={presets.map((p) => p.name)}
         isVisible={showSavePresetDialog}
         onClose={() => setShowSavePresetDialog(false)}
         onSave={handleSavePreset}
