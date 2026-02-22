@@ -23,6 +23,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
+- Added the possibility to include color presets in menu themes. It is even possible to make your own color presets and share them with the community!  Thanks to [@Yar2000T](https://github.com/Yar2000T) and [@elfi-ox](https://github.com/elfi-ox) for this contribution!
 - Added the possibility to import and export individual menus via JSON files. Thanks to [@Yar2000T](https://github.com/Yar2000T) for this contribution!
 - Added the possibility to temporarily disable all Kando shortcuts while simulating hotkeys or executing macros. This is useful if you want to use a shortcut which is also used by Kando to trigger a menu. Surprisingly, this required a complete rewrite of how the binding of shortcuts works, so feel free to report any issues you encounter with shortcuts!
 - Added an option to disable achievement notifications. This can be found in the general settings dialog.
