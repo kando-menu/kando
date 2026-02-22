@@ -36,7 +36,6 @@ import {
   SettingsCheckbox,
   SettingsSpinbutton,
   Swirl,
-  InfoItem,
 } from '../common';
 import SavePresetDialog from './SavePresetDialog';
 
