@@ -97,6 +97,8 @@
       "enable-achievement-notifications-info": "If enabled, notifications are shown when achievements are unlocked.",
       "enable-achievement-notifications": "Show achievement notifications",
       "menu-behavior": "Menu Behavior",
+      "windows-ink-workaround-info": "This enables a workaround for the issue where getting the stylus position is not possible with Windows Ink enabled. This introduces a delay of 100ms before opening the menu, so if you don't use a stylus, you can disable it to make the menu open faster.",
+      "windows-ink-workaround": "Windows-Ink workaround",
       "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
       "keep-input-focus": "Keep active application focused",
       "enable-marking-mode-info": "With Marking Mode enabled, you can select items by dragging the mouse over them.",
