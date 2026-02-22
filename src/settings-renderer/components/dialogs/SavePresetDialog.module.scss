@@ -15,55 +15,32 @@
   color: $text-normal;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.inputContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-
-  label {
-    font-size: 0.9em;
-    color: $text-muted;
-    font-weight: 500;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
+  gap: 5px;
 }
 
 .input {
   @include text-input;
-  padding: 8px 10px;
-  border-radius: 5px;
-  font-size: 0.95em;
-  flex: 1;
-  box-sizing: border-box;
+  padding: 10px;
 
-  &:disabled {
-    opacity: 0.5;
+  &.error {
+    box-shadow: 0 0 15px rgba(255, 64, 64, 1) inset;
+  }
+
+  &.warning {
+    box-shadow: 0 0 15px rgb(255, 200, 64) inset;
   }
 }
 
-.error {
+.errorMessage {
   color: light-dark(#d63031, #ff6b6b);
   font-size: 0.85em;
-  padding: 8px 10px;
-  background-color: light-dark(rgba(#ff6b6b, 0.1), rgba(#ff6b6b, 0.15));
-  border-radius: 4px;
-  border-left: 2px solid light-dark(#d63031, #ff6b6b);
-  margin-top: -5px;
+  line-height: 1.3em;
 }
 
-.warning {
+.warningMessage {
   color: light-dark(#f39c12, #ffc107);
   font-size: 0.85em;
-  padding: 8px 10px;
-  background-color: light-dark(rgba(#ffc107, 0.1), rgba(#ffc107, 0.15));
-  border-radius: 4px;
-  border-left: 2px solid light-dark(#f39c12, #ffc107);
-  margin-top: -5px;
+  line-height: 1.3em;
 }
 
 .buttons {

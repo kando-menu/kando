@@ -10,12 +10,14 @@
 
 import React from 'react';
 import i18next from 'i18next';
+import classNames from 'classnames/bind';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { TbCheck, TbX } from 'react-icons/tb';
-import { IoIosSave } from 'react-icons/io';
 
-import { Modal, Button, Swirl } from '../common';
+import { Modal, Button } from '../common';
 
 import * as classes from './SavePresetDialog.module.scss';
+const cx = classNames.bind(classes);
 
 type Props = {
   /** Function to call when the preset should be saved. */
@@ -39,7 +41,9 @@ export default function SavePresetDialog(props: Props) {
   const [presetName, setPresetName] = React.useState('');
   const [error, setError] = React.useState<string | null>(null);
   const [warning, setWarning] = React.useState<string | null>(null);
-  const [isSaving, setIsSaving] = React.useState(false);
+
+  const [containerRef] = useAutoAnimate({ duration: 250 });
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Clear the value when the modal is shown.
   React.useEffect(() => {
@@ -47,7 +51,7 @@ export default function SavePresetDialog(props: Props) {
       setPresetName('');
       setError(null);
       setWarning(null);
-      setIsSaving(false);
+      inputRef.current?.focus();
     }
   }, [props.isVisible]);
 
@@ -101,7 +105,6 @@ export default function SavePresetDialog(props: Props) {
     }
 
     try {
-      setIsSaving(true);
       await props.onSave(presetName);
       setPresetName('');
       setError(null);
@@ -110,50 +113,41 @@ export default function SavePresetDialog(props: Props) {
     } catch (e) {
       console.error('Failed to save preset:', e);
       setError((e as Error).message || 'Failed to save preset');
-    } finally {
-      setIsSaving(false);
     }
   };
 
   return (
     <Modal
-      icon={<IoIosSave />}
       isVisible={props.isVisible}
       maxWidth={400}
       paddingTop={15}
-      title={i18next.t('settings.menu-themes-dialog.save-preset-name-title')}
       onClose={props.onClose}>
       <div className={classes.container}>
-        <Swirl marginBottom={10} variant="2" width={350} />
+        <input
+          ref={inputRef}
+          className={cx({ input: true, error: !!error, warning: !!warning })}
+          placeholder={i18next.t('settings.menu-themes-dialog.preset-name-placeholder')}
+          type="text"
+          value={presetName}
+          onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !error && presetName.trim()) {
+              handleSave();
+            } else if (e.key === 'Escape') {
+              props.onClose();
+            }
+          }}
+        />
 
-        <div className={classes.inputContainer}>
-          <label>{i18next.t('settings.menu-themes-dialog.save-preset-name-label')}</label>
-          <input
-            autoFocus
-            className={classes.input}
-            disabled={isSaving}
-            placeholder={i18next.t('settings.menu-themes-dialog.preset-name-placeholder')}
-            type="text"
-            value={presetName}
-            onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !error && presetName.trim()) {
-                handleSave();
-              } else if (e.key === 'Escape') {
-                props.onClose();
-              }
-            }}
-          />
+        <div ref={containerRef}>
+          {error ? <div className={classes.errorMessage}>{error}</div> : null}
+          {warning ? <div className={classes.warningMessage}>{warning}</div> : null}
         </div>
-
-        {error ? <div className={classes.error}>{error}</div> : null}
-        {warning ? <div className={classes.warning}>{warning}</div> : null}
 
         <div className={classes.buttons}>
           <Button
             isBlock
             icon={<TbX />}
-            isDisabled={isSaving}
             label={i18next.t('settings.cancel')}
             onClick={() => {
               props.onClose();
@@ -162,7 +156,7 @@ export default function SavePresetDialog(props: Props) {
           <Button
             isBlock
             icon={<TbCheck />}
-            isDisabled={!presetName.trim() || !!error || isSaving}
+            isDisabled={!presetName.trim() || !!error}
             label={i18next.t('settings.menu-themes-dialog.save-preset')}
             variant="primary"
             onClick={handleSave}

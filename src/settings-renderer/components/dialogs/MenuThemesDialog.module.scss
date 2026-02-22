@@ -120,3 +120,29 @@ $gradient-end: light-dark(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
   // triangle shape
   clip-path: polygon(0% 0%, 100% 100%, 100% 0%);
 }
+
+.presetSelector {
+  display: flex;
+  margin-bottom: 10px;
+
+  :first-child {
+    flex-grow: 1;
+  }
+
+  select,
+  input {
+    background-color: $widget-normal;
+    width: 100%;
+    color: $text-normal;
+    border: none;
+    border-radius: 0;
+    border-radius: 5px 0 0 5px;
+
+    padding: 5px 10px;
+    font-size: 1rem;
+
+    &:hover {
+      background-color: $widget-normal-hover;
+    }
+  }
+}

@@ -192,29 +192,17 @@ export default function MenuThemesDialog() {
 
     accentColorsNode = (
       <>
-        <div style={{ marginTop: 15, marginBottom: 10 }}>
-          <h1>
-            {i18next.t('settings.menu-themes-dialog.accent-colors')}
-            {useDarkMode
-              ? darkMode
-                ? ` (${i18next.t('settings.menu-themes-dialog.dark')})`
-                : ` (${i18next.t('settings.menu-themes-dialog.light')})`
-              : ''}
-            <InfoItem
-              info={i18next.t('settings.menu-themes-dialog.accent-colors-info')}
-            />
-          </h1>
-        </div>
+        <h1>
+          {i18next.t('settings.menu-themes-dialog.accent-colors')}
+          {useDarkMode
+            ? darkMode
+              ? ` (${i18next.t('settings.menu-themes-dialog.dark')})`
+              : ` (${i18next.t('settings.menu-themes-dialog.light')})`
+            : ''}
+        </h1>
 
         {/* Preset selector with buttons */}
-        <div
-          style={{
-            display: 'flex',
-            gap: 8,
-            alignItems: 'center',
-            marginBottom: 15,
-            width: '100%',
-          }}>
+        <div className={classes.presetSelector}>
           <Dropdown
             key={resetDropdown}
             initialValue="__placeholder__"
