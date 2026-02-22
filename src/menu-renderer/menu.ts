@@ -206,11 +206,16 @@ export class Menu extends EventEmitter {
     // arrives and show the menu there. If no mouse enter event arrives within that time,
     // we simply show the menu at the given position.
     const showMenu = () => {
+      this.container.classList.add('no-transitions');
       this.selectItem(
         this.root,
         SelectionSource.eKeyboard,
         this.getInitialMenuPosition()
       );
+      // To ensure that all DOM changes are applied, flush the browser's rendering
+      // pipeline first.
+      this.container.getBoundingClientRect();
+      this.container.classList.remove('no-transitions');
 
       // If required, move the pointer to the center of the menu.
       if (this.settings.warpMouse && this.showMenuOptions.centeredMode) {
@@ -221,9 +226,7 @@ export class Menu extends EventEmitter {
         this.emit('move-pointer', offset);
       }
 
-      // Finally, show the menu. In order to ensure that all DOM changes are applied
-      // before the fade-in animation starts, flush the browser's rendering pipeline first.
-      this.container.getBoundingClientRect();
+      // Finally, show the menu.
       this.container.classList.remove('hidden');
       this.menuShownTime = Date.now();
     };

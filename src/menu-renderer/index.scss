@@ -59,8 +59,9 @@ body {
       transition: opacity calc(var(--fade-out-duration) * 0.5) ease;
       transition-delay: calc(var(--fade-out-duration) * 0.5);
     }
+  }
 
-    // We do not want any transitions on the menu nodes while fading in or out.
+  &.no-transitions {
     .menu-node {
       transition: none !important;
     }

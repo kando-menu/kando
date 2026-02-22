@@ -36,6 +36,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :bug: Fixed
 
+- Fixed a regression which caused the animation of menu items to be skipped when closing the menu.
 - Fixed an issue where the color pickers in the settings dialog would glitch out. Thanks to [@Haruto-works333](https://github.com/Haruto-works333) for this contribution!
 - Fixed an issue where Kando would not open a menu on Niri if no pointer device was connected. Thanks to [@make-42](https://github.com/make-42) for fixing this!
 
