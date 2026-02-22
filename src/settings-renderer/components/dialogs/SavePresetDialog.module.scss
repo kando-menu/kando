@@ -56,6 +56,16 @@
   margin-top: -5px;
 }
 
+.warning {
+  color: light-dark(#f39c12, #ffc107);
+  font-size: 0.85em;
+  padding: 8px 10px;
+  background-color: light-dark(rgba(#ffc107, 0.1), rgba(#ffc107, 0.15));
+  border-radius: 4px;
+  border-left: 2px solid light-dark(#f39c12, #ffc107);
+  margin-top: -5px;
+}
+
 .buttons {
   display: flex;
   gap: 5px;
