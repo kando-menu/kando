@@ -531,6 +531,155 @@ export class KandoApp {
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    // Allow the renderer to retrieve all presets for a given menu theme.
+    ipcMain.handle(
+      'settings-window.get-menu-theme-presets',
+      async (event, themeId: string) => {
+        try {
+          const presetsDir = this.getUserThemePresetsDirectory(themeId);
+
+          if (!fs.existsSync(presetsDir)) {
+            return [];
+          }
+
+          const files = fs.readdirSync(presetsDir);
+          const presets: Array<{
+            name: string;
+            colors: Record<string, string>;
+          }> = [];
+
+          for (const file of files) {
+            const full = path.join(presetsDir, file);
+
+            // Only consider files (not subdirectories) and JSON files.
+            if (
+              !fs.statSync(full).isFile() ||
+              path.extname(file).toLowerCase() !== '.json'
+            ) {
+              continue;
+            }
+
+            const presetName = path.basename(file, '.json');
+
+            try {
+              const content = fs.readFileSync(full, { encoding: 'utf8' });
+              const data = json5.parse(content);
+
+              // Validate the structure: must be an object with a `colors` object.
+              if (
+                !data ||
+                typeof data !== 'object' ||
+                !data.colors ||
+                typeof data.colors !== 'object'
+              ) {
+                console.error(
+                  `Failed to load preset "${presetName}": Invalid structure: missing or invalid colors object`
+                );
+                continue;
+              }
+
+              const colors: Record<string, string> = {};
+              let hasInvalidColor = false;
+
+              for (const [k, v] of Object.entries(data.colors)) {
+                if (typeof v !== 'string') {
+                  hasInvalidColor = true;
+                  break;
+                }
+                colors[k] = v;
+              }
+
+              if (hasInvalidColor) {
+                console.error(
+                  `Failed to load preset "${presetName}": Invalid color value: colors must be strings`
+                );
+                continue;
+              }
+
+              presets.push({ name: presetName, colors });
+            } catch (e) {
+              const errorMsg = e instanceof Error ? e.message : String(e);
+              console.error(`Failed to parse preset "${presetName}":`, errorMsg);
+            }
+          }
+
+          return presets;
+        } catch (e) {
+          console.error('Failed to load presets:', e);
+          return [];
+        }
+      }
+    );
+
+    // Allow the renderer to export the current menu theme colors as a preset.
+    ipcMain.handle(
+      'settings-window.export-menu-theme-preset',
+      async (
+        event,
+        themeId: string,
+        colors: Record<string, string>,
+        presetName: string
+      ) => {
+        try {
+          const presetsDir = this.getUserThemePresetsDirectory(themeId);
+
+          // Create the presets directory if it doesn't exist.
+          if (!fs.existsSync(presetsDir)) {
+            fs.mkdirSync(presetsDir, { recursive: true });
+          }
+
+          // Validate preset name (only allow letters, numbers, hyphens, underscores, and spaces)
+          if (!/^[a-zA-Z0-9_\-\s]+$/.test(presetName)) {
+            throw new Error(
+              'Invalid preset name. Only letters, numbers, hyphens, underscores, and spaces are allowed.'
+            );
+          }
+
+          // Save the preset file
+          const presetFilePath = path.join(presetsDir, `${presetName}.json`);
+          const presetData = { colors };
+          fs.writeFileSync(presetFilePath, JSON.stringify(presetData, null, 2), {
+            encoding: 'utf8',
+          });
+
+          // Reload the presets in the renderer.
+          this.settingsWindow.webContents.send('settings-window.presets-changed');
+        } catch (e) {
+          const errorMsg = e instanceof Error ? e.message : 'Failed to export preset';
+          console.error('Failed to export preset:', e);
+
+          // Show error dialog with localized title and message
+          dialog.showMessageBox(this.settingsWindow, {
+            type: 'error',
+            title: i18next.t('settings.menu-themes-dialog.save-preset-error-title'),
+            message: i18next.t('settings.menu-themes-dialog.save-preset-error-message', {
+              error: errorMsg,
+            }),
+          });
+        }
+      }
+    );
+
+    // Allow the renderer to open the presets directory for a given menu theme.
+    ipcMain.on(
+      'settings-window.open-menu-theme-presets-directory',
+      async (event, themeId: string) => {
+        try {
+          const presetsDir = this.getUserThemePresetsDirectory(themeId);
+
+          // Create the presets directory if it doesn't exist.
+          if (!fs.existsSync(presetsDir)) {
+            fs.mkdirSync(presetsDir, { recursive: true });
+          }
+
+          // Open the presets directory in the file manager.
+          shell.openPath(presetsDir);
+        } catch (e) {
+          console.error('Failed to open presets directory:', e);
+        }
+      }
+    );
+
     // Allow the renderer to retrieve all available sound themes.
     ipcMain.handle('settings-window.get-all-sound-themes', async () => {
       const themes = await this.listSubdirectories([
@@ -1203,6 +1352,18 @@ export class KandoApp {
     }
 
     this.bindingShortcuts = false;
+  }
+
+  /**
+   * Gets the directory where presets for a specific menu theme are stored. All presets
+   * are stored in the user's config directory to ensure they persist even if the theme is
+   * updated or located in the app's bundled assets.
+   *
+   * @param themeId The ID of the theme.
+   * @returns The absolute path to the presets directory for the given theme.
+   */
+  private getUserThemePresetsDirectory(themeId: string): string {
+    return path.join(getConfigDirectory(), 'menu-themes', themeId, 'presets');
   }
 
   /**

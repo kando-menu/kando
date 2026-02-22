@@ -1,0 +1,73 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: yar2000T <https://github.com/yar2000T>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
+
+.container {
+  color: $text-normal;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 0.9em;
+    color: $text-muted;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+.input {
+  @include text-input;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 0.95em;
+  flex: 1;
+  box-sizing: border-box;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.error {
+  color: light-dark(#d63031, #ff6b6b);
+  font-size: 0.85em;
+  padding: 8px 10px;
+  background-color: light-dark(rgba(#ff6b6b, 0.1), rgba(#ff6b6b, 0.15));
+  border-radius: 4px;
+  border-left: 2px solid light-dark(#d63031, #ff6b6b);
+  margin-top: -5px;
+}
+
+.warning {
+  color: light-dark(#f39c12, #ffc107);
+  font-size: 0.85em;
+  padding: 8px 10px;
+  background-color: light-dark(rgba(#ffc107, 0.1), rgba(#ffc107, 0.15));
+  border-radius: 4px;
+  border-left: 2px solid light-dark(#f39c12, #ffc107);
+  margin-top: -5px;
+}
+
+.buttons {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}

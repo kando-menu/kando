@@ -81,6 +81,13 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-all-menu-themes');
   },
 
+  /** This will return all available presets for a given menu theme directory. */
+  getMenuThemePresets: (
+    themeId: string
+  ): Promise<Array<{ name: string; colors: Record<string, string> }>> => {
+    return ipcRenderer.invoke('settings-window.get-menu-theme-presets', themeId);
+  },
+
   /** This will return all available sound themes. */
   getAllSoundThemes: (): Promise<Array<SoundThemeDescription>> => {
     return ipcRenderer.invoke('settings-window.get-all-sound-themes');
@@ -195,6 +202,50 @@ export const SETTINGS_WINDOW_API = {
   /** This will trigger the import of a menu from a JSON file. */
   importMenu: (): Promise<boolean> => {
     return ipcRenderer.invoke('settings-window.import-menu');
+  },
+
+  /**
+   * This will export the current menu theme colors as a preset with the given name.
+   *
+   * @param themeId The ID of the theme.
+   * @param colors The colors to export.
+   * @param presetName The name to save the preset as.
+   */
+  exportMenuThemePreset: (
+    themeId: string,
+    colors: Record<string, string>,
+    presetName: string
+  ): Promise<void> => {
+    return ipcRenderer.invoke(
+      'settings-window.export-menu-theme-preset',
+      themeId,
+      colors,
+      presetName
+    );
+  },
+
+  /**
+   * This will open the directory containing the presets for the given menu theme.
+   *
+   * @param themeId The ID of the theme.
+   */
+  openMenuThemePresetsDirectory: (themeId: string) => {
+    ipcRenderer.send('settings-window.open-menu-theme-presets-directory', themeId);
+  },
+
+  /**
+   * This will be called by the host when menu theme presets have been changed.
+   *
+   * @param callback This callback will be called when presets are changed (e.g., after
+   *   export).
+   * @returns A function to disconnect the listener.
+   */
+  onPresetsChanged: (callback: () => void): (() => void) => {
+    ipcRenderer.on('settings-window.presets-changed', callback);
+
+    return () => {
+      ipcRenderer.off('settings-window.presets-changed', callback);
+    };
   },
 };
 
