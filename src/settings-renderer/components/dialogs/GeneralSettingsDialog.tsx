@@ -249,6 +249,17 @@ export default function GeneralSettingsDialog() {
           />
 
           <h1>{i18next.t('settings.general-settings-dialog.menu-behavior')}</h1>
+          {backend.name === 'Windows' ? (
+            <SettingsCheckbox
+              info={i18next.t(
+                'settings.general-settings-dialog.windows-ink-workaround-info'
+              )}
+              label={i18next.t('settings.general-settings-dialog.windows-ink-workaround')}
+              settingsKey="windowsInkWorkaround"
+            />
+          ) : (
+            ''
+          )}
           <SettingsCheckbox
             info={i18next.t('settings.general-settings-dialog.keep-input-focus-info')}
             label={i18next.t('settings.general-settings-dialog.keep-input-focus')}

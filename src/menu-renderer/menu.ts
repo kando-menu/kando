@@ -228,9 +228,7 @@ export class Menu extends EventEmitter {
       this.menuShownTime = Date.now();
     };
 
-    if (cIsWindows) {
-      this.initialPositionTimeout = setTimeout(showMenu, 100);
-
+    if (cIsWindows && this.settings.windowsInkWorkaround) {
       const onMouseEnter = (e: MouseEvent) => {
         this.showMenuOptions = {
           ...this.showMenuOptions,
@@ -240,6 +238,11 @@ export class Menu extends EventEmitter {
         showMenu();
         this.container.removeEventListener('mouseenter', onMouseEnter);
       };
+
+      this.initialPositionTimeout = setTimeout(() => {
+        this.container.removeEventListener('mouseenter', onMouseEnter);
+        showMenu();
+      }, 100);
 
       this.container.addEventListener('mouseenter', onMouseEnter);
     } else {

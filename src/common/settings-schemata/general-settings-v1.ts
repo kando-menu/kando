@@ -111,6 +111,12 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
     .enum(['top-left', 'top-right', 'bottom-left', 'bottom-right'])
     .default('bottom-right'),
 
+  /**
+   * If true, the menu will introduce a delay of 100ms before opening on Windows to work
+   * around the issue where getting the stylus position is otherwise not possible.
+   */
+  windowsInkWorkaround: z.boolean().default(true),
+
   /** Clicking inside this radius will select the parent element. */
   centerDeadZone: z.number().min(0).default(50),
 
