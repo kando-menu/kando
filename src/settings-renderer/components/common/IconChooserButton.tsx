@@ -127,6 +127,7 @@ export default function IconChooserButton(props: Props) {
               <Button
                 isGrouped
                 icon={<TbReload />}
+                size="small"
                 tooltip={i18next.t('settings.icon-picker-dialog.reload-button-tooltip')}
                 onClick={() => {
                   window.settingsAPI.reloadIconThemes();

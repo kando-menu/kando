@@ -256,6 +256,7 @@ export default function MenuThemesDialog() {
           <Button
             isGrouped
             icon={<TbReload />}
+            size="small"
             tooltip={i18next.t('settings.menu-themes-dialog.reload-presets')}
             onClick={async () => {
               await fetchPresets();
@@ -265,6 +266,7 @@ export default function MenuThemesDialog() {
           <Button
             isGrouped
             icon={<IoIosSave />}
+            size="small"
             tooltip={i18next.t('settings.menu-themes-dialog.save-preset')}
             onClick={() => {
               setShowSavePresetDialog(true);
@@ -274,6 +276,7 @@ export default function MenuThemesDialog() {
           <Button
             isGrouped
             icon={<TbFolderOpen />}
+            size="small"
             tooltip={i18next.t('settings.menu-themes-dialog.open-presets-directory')}
             onClick={() => openPresetsDirectory(currentTheme.id)}
           />
