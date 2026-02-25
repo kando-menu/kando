@@ -286,6 +286,7 @@ export class MenuWindow extends BrowserWindow {
         centeredMode: this.lastMenu.centered,
         anchoredMode: this.lastMenu.anchored,
         hoverMode: this.lastMenu.hoverMode,
+        repeatLastAction: this.lastMenu.repeatLastAction,
         systemIconsChanged,
       },
       {
@@ -640,7 +641,91 @@ export class MenuWindow extends BrowserWindow {
         let executeDelayed = false;
 
         try {
-          // Find the selected item.
+          // Find the selected item. Support cross-menu invocation using the format "<menuName>::<path>".
+          if (typeof path === 'string' && path.indexOf('::') !== -1) {
+            const sep = path.indexOf('::');
+            const menuName = path.substring(0, sep);
+            const itemPath = path.substring(sep + 2);
+
+            const menus = this.kando.getMenuSettings().get('menus');
+            if (!Array.isArray(menus)) {
+              throw new Error('Menu settings corrupted.');
+            }
+            const targetMenu = menus.find((m) => m.root.name === menuName);
+            if (!targetMenu) {
+              throw new Error(`Menu with name "${menuName}" not found.`);
+            }
+            item = this.getMenuItemAtPath(targetMenu.root, itemPath);
+
+            // If the action is not delayed, we execute it immediately.
+            executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
+            if (!executeDelayed) {
+              execute(item);
+            }
+
+            // Also wait with the execution of the selected action until the fade-out
+            // animation is finished to make sure that any resulting events (such as virtual
+            // key presses) are not captured by the window.
+            this.hideWindow().then(() => {
+              if (executeDelayed) {
+                execute(item);
+              }
+            });
+
+            // Track selection for achievements using the itemPath (not the composite path)
+            this.kando.achievementTracker.onSelectionMade(
+              Math.min(Math.max(itemPath.split('/').length - 1, 1), 3) as 1 | 2 | 3,
+              time,
+              source
+            );
+
+            // Push last selection metadata
+            this.lastSelections.push({ time, date: new Date() });
+            if (this.lastSelections.length > 10) {
+              this.lastSelections.shift();
+            }
+
+            // Check achievements as before (duplicated logic kept for cross-menu path)
+            if (this.lastSelections.length === 10) {
+              const oldest = this.lastSelections[0];
+              const newest = this.lastSelections[9];
+              const timeDiff = newest.date.getTime() - oldest.date.getTime();
+
+              if (timeDiff <= 30000) {
+                this.kando.achievementTracker.incrementStat('manySelectionsStreaks1');
+              }
+
+              if (timeDiff <= 20000) {
+                this.kando.achievementTracker.incrementStat('manySelectionsStreaks2');
+              }
+
+              if (timeDiff <= 10000) {
+                this.kando.achievementTracker.incrementStat('manySelectionsStreaks3');
+              }
+            }
+
+            // Speedy selections check
+            if (this.lastSelections.length === 10) {
+              let average = 0.0;
+              this.lastSelections.forEach((selection) => {
+                average += selection.time / this.lastSelections.length;
+              });
+              if (average < 750) {
+                this.kando.achievementTracker.incrementStat('speedySelectionsStreaks1');
+              }
+              if (average < 500) {
+                this.kando.achievementTracker.incrementStat('speedySelectionsStreaks2');
+              }
+              if (average < 250) {
+                this.kando.achievementTracker.incrementStat('speedySelectionsStreaks3');
+              }
+            }
+
+            // We're done handling the cross-menu selection.
+            return;
+          }
+
+          // Default behavior: selection inside the currently shown menu
           item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
           // If the action is not delayed, we execute it immediately.
@@ -664,14 +749,57 @@ export class MenuWindow extends BrowserWindow {
           if (executeDelayed) {
             execute(item);
           }
-        });
 
-        // Track selection for achievements.
-        this.kando.achievementTracker.onSelectionMade(
-          Math.min(Math.max(path.split('/').length - 1, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
-          time,
-          source
-        );
+          // Track selection for achievements (default path behavior)
+          if (!path || path.indexOf('::') === -1) {
+            this.kando.achievementTracker.onSelectionMade(
+              Math.min(Math.max(path.split('/').length - 1, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
+              time,
+              source
+            );
+
+            this.lastSelections.push({ time, date: new Date() });
+            if (this.lastSelections.length > 10) {
+              this.lastSelections.shift();
+            }
+
+            // Check for many-selections-streak achievement.
+            if (this.lastSelections.length === 10) {
+              const oldest = this.lastSelections[0];
+              const newest = this.lastSelections[9];
+              const timeDiff = newest.date.getTime() - oldest.date.getTime();
+
+              if (timeDiff <= 30000) {
+                this.kando.achievementTracker.incrementStat('manySelectionsStreaks1');
+              }
+
+              if (timeDiff <= 20000) {
+                this.kando.achievementTracker.incrementStat('manySelectionsStreaks2');
+              }
+
+              if (timeDiff <= 10000) {
+                this.kando.achievementTracker.incrementStat('manySelectionsStreaks3');
+              }
+            }
+
+            // Check for the speedy-selections-streak achievement.
+            if (this.lastSelections.length === 10) {
+              let average = 0.0;
+              this.lastSelections.forEach((selection) => {
+                average += selection.time / this.lastSelections.length;
+              });
+              if (average < 750) {
+                this.kando.achievementTracker.incrementStat('speedySelectionsStreaks1');
+              }
+              if (average < 500) {
+                this.kando.achievementTracker.incrementStat('speedySelectionsStreaks2');
+              }
+              if (average < 250) {
+                this.kando.achievementTracker.incrementStat('speedySelectionsStreaks3');
+              }
+            }
+          }
+        });
 
         this.lastSelections.push({ time, date: new Date() });
         if (this.lastSelections.length > 10) {

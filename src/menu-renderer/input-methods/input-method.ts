@@ -30,6 +30,7 @@ export enum SelectionType {
   eActiveItem,
   eSubmenuOnly,
   eParent,
+  eRepeatLastAction,
 }
 
 /**
