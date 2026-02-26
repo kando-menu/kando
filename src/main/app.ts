@@ -536,74 +536,34 @@ export class KandoApp {
       'settings-window.get-menu-theme-presets',
       async (event, themeId: string) => {
         try {
-          const presetsDir = this.getUserThemePresetsDirectory(themeId);
+          // Load presets from both user directory and assets directory
+          const userPresetsDir = this.getUserThemePresetsDirectory(themeId);
+          const assetsPresetsDir = path.join(
+            __dirname,
+            `../renderer/assets/menu-themes/${themeId}/presets`
+          );
 
-          if (!fs.existsSync(presetsDir)) {
-            return [];
+          const userPresets = await this.loadPresetsFromDirectory(userPresetsDir);
+          const assetsPresets = await this.loadPresetsFromDirectory(assetsPresetsDir);
+
+          // Combine presets, giving priority to user presets (they can override built-in ones)
+          // Create a map with asset presets first
+          const presetsMap = new Map<
+            string,
+            { name: string; colors: Record<string, string> }
+          >();
+
+          // Add asset presets first
+          for (const preset of assetsPresets) {
+            presetsMap.set(preset.name, preset);
           }
 
-          const files = fs.readdirSync(presetsDir);
-          const presets: Array<{
-            name: string;
-            colors: Record<string, string>;
-          }> = [];
-
-          for (const file of files) {
-            const full = path.join(presetsDir, file);
-
-            // Only consider files (not subdirectories) and JSON files.
-            if (
-              !fs.statSync(full).isFile() ||
-              path.extname(file).toLowerCase() !== '.json'
-            ) {
-              continue;
-            }
-
-            const presetName = path.basename(file, '.json');
-
-            try {
-              const content = fs.readFileSync(full, { encoding: 'utf8' });
-              const data = json5.parse(content);
-
-              // Validate the structure: must be an object with a `colors` object.
-              if (
-                !data ||
-                typeof data !== 'object' ||
-                !data.colors ||
-                typeof data.colors !== 'object'
-              ) {
-                console.error(
-                  `Failed to load preset "${presetName}": Invalid structure: missing or invalid colors object`
-                );
-                continue;
-              }
-
-              const colors: Record<string, string> = {};
-              let hasInvalidColor = false;
-
-              for (const [k, v] of Object.entries(data.colors)) {
-                if (typeof v !== 'string') {
-                  hasInvalidColor = true;
-                  break;
-                }
-                colors[k] = v;
-              }
-
-              if (hasInvalidColor) {
-                console.error(
-                  `Failed to load preset "${presetName}": Invalid color value: colors must be strings`
-                );
-                continue;
-              }
-
-              presets.push({ name: presetName, colors });
-            } catch (e) {
-              const errorMsg = e instanceof Error ? e.message : String(e);
-              console.error(`Failed to parse preset "${presetName}":`, errorMsg);
-            }
+          // Add user presets (overwrite assets if same name)
+          for (const preset of userPresets) {
+            presetsMap.set(preset.name, preset);
           }
 
-          return presets;
+          return Array.from(presetsMap.values());
         } catch (e) {
           console.error('Failed to load presets:', e);
           return [];
@@ -1364,6 +1324,97 @@ export class KandoApp {
    */
   private getUserThemePresetsDirectory(themeId: string): string {
     return path.join(getConfigDirectory(), 'menu-themes', themeId, 'presets');
+  }
+
+  /**
+   * Loads all presets from a given directory.
+   *
+   * @param presetsDir The directory to load presets from.
+   * @returns An array of presets with their names and colors.
+   */
+  private async loadPresetsFromDirectory(presetsDir: string) {
+    const presets: Array<{
+      name: string;
+      colors: Record<string, string>;
+    }> = [];
+
+    try {
+      // Check if directory exists
+      const exists = await fs.promises
+        .access(presetsDir, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false);
+
+      if (!exists) {
+        return presets;
+      }
+
+      const files = await fs.promises.readdir(presetsDir);
+
+      for (const file of files) {
+        const full = path.join(presetsDir, file);
+
+        try {
+          const stat = await fs.promises.stat(full);
+
+          // Only consider files (not subdirectories) and JSON files.
+          if (!stat.isFile() || path.extname(file).toLowerCase() !== '.json') {
+            continue;
+          }
+
+          const presetName = path.basename(file, '.json');
+
+          try {
+            const content = await fs.promises.readFile(full, { encoding: 'utf8' });
+            const data = json5.parse(content);
+
+            // Validate the structure: must be an object with a `colors` object.
+            if (
+              !data ||
+              typeof data !== 'object' ||
+              !data.colors ||
+              typeof data.colors !== 'object'
+            ) {
+              console.error(
+                `Failed to load preset "${presetName}": Invalid structure: missing or invalid colors object`
+              );
+              continue;
+            }
+
+            const colors: Record<string, string> = {};
+            let hasInvalidColor = false;
+
+            for (const [k, v] of Object.entries(data.colors)) {
+              if (typeof v !== 'string') {
+                hasInvalidColor = true;
+                break;
+              }
+              colors[k] = v;
+            }
+
+            if (hasInvalidColor) {
+              console.error(
+                `Failed to load preset "${presetName}": Invalid color value: colors must be strings`
+              );
+              continue;
+            }
+
+            presets.push({ name: presetName, colors });
+          } catch (e) {
+            const errorMsg = e instanceof Error ? e.message : String(e);
+            console.error(`Failed to parse preset "${presetName}":`, errorMsg);
+          }
+        } catch (e) {
+          const errorMsg = e instanceof Error ? e.message : String(e);
+          console.error(`Failed to read preset file "${file}":`, errorMsg);
+        }
+      }
+    } catch (e) {
+      const errorMsg = e instanceof Error ? e.message : String(e);
+      console.error(`Failed to read presets directory "${presetsDir}":`, errorMsg);
+    }
+
+    return presets;
   }
 
   /**
