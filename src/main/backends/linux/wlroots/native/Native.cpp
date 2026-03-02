@@ -184,6 +184,12 @@ void Native::init(Napi::Env const& env) {
     } else if (strcmp(interface, wl_shm_interface.name) == 0) {
       data->mShm =
           static_cast<wl_shm*>(wl_registry_bind(registry, name, &wl_shm_interface, 1));
+    } else if (strcmp(interface, zxdg_output_manager_v1_interface.name) == 0) {
+      data->mXdgOutputManager = static_cast<zxdg_output_manager_v1*>(
+        wl_registry_bind(registry, name, &zxdg_output_manager_v1_interface, 3));
+    } else if (strcmp(interface, wl_output_interface.name) == 0) {
+      data->mOutput = static_cast<wl_output*>(
+          wl_registry_bind(registry, name, &wl_output_interface, 4));
     }
 
     // Store a reference to the virtual pointer manager.
@@ -409,6 +415,26 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
     return env.Null();
   }
 
+  if (mData.mXdgOutputManager && mData.mOutput) {
+    auto* xdgOutput = zxdg_output_manager_v1_get_xdg_output(
+        mData.mXdgOutputManager, mData.mOutput);
+
+    static const zxdg_output_v1_listener xdgOutputListener = {
+        .logical_position = [](void* data, zxdg_output_v1*, int32_t x, int32_t y) {
+            auto* d = static_cast<WaylandData*>(data);
+            d->mOutputX = x;
+            d->mOutputY = y;
+        },
+        .logical_size = [](void*, zxdg_output_v1*, int32_t, int32_t) {},
+        .done        = [](void*, zxdg_output_v1*) {},
+        .name        = [](void*, zxdg_output_v1*, const char*) {},
+        .description = [](void*, zxdg_output_v1*, const char*) {},
+    };
+    zxdg_output_v1_add_listener(xdgOutput, &xdgOutputListener, &mData);
+    wl_display_roundtrip(mData.mDisplay);
+    zxdg_output_v1_destroy(xdgOutput);
+  }
+
   int fd                      = wl_display_get_fd(mData.mDisplay);
   mData.mPointerEventReceived = false;
 
@@ -465,8 +491,8 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
 
   // Return the pointer coordinates and work area geometry
   Napi::Object result = Napi::Object::New(env);
-  result.Set("pointerX", Napi::Number::New(env, mData.mPointerX));
-  result.Set("pointerY", Napi::Number::New(env, mData.mPointerY));
+  result.Set("pointerX", Napi::Number::New(env, mData.mPointerX + mData.mOutputX));
+  result.Set("pointerY", Napi::Number::New(env, mData.mPointerY + mData.mOutputY));
   result.Set("pointerGetTimedOut", Napi::Boolean::New(env,mPointerGetTimedOut));
   result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
   result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
@@ -488,6 +514,17 @@ void Native::createSurfaceAndPointer() {
     std::cerr << "Failed to create Wayland surface!\n";
     return;
   }
+
+  static const wl_surface_listener wlSurfaceListener = {
+      .enter = [](void* data, wl_surface*, wl_output* output) {
+          auto* d = static_cast<Native::WaylandData*>(data);
+          d->mOutput = output;
+      },
+      .leave                      = [](void*, wl_surface*, wl_output*) {},
+      .preferred_buffer_scale     = [](void*, wl_surface*, int32_t) {},
+      .preferred_buffer_transform = [](void*, wl_surface*, uint32_t) {},
+  };
+  wl_surface_add_listener(mData.mSurface, &wlSurfaceListener, &mData);
 
   static const zwlr_layer_surface_v1_listener surfaceListener = {
       .configure =
@@ -623,6 +660,10 @@ void Native::destroySurfaceAndPointer() {
   }
 
   mData.mPointerEventReceived = false;
+
+  mData.mOutput = nullptr;
+  mData.mOutputX = 0;
+  mData.mOutputY = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
