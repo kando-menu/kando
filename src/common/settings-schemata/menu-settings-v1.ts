@@ -57,6 +57,9 @@ export const MENU_ITEM_SCHEMA_V1 = z.object({
   /** The theme from which the above icon should be used. */
   iconTheme: z.string(),
 
+  /** The quick-select key for selecting this menu item. */
+  quickSelectKey: z.string().nullish(),
+
   /**
    * The children of this menu item. If this property is set, the menu item represents a
    * submenu.

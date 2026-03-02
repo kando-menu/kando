@@ -13,7 +13,7 @@ import i18next from 'i18next';
 import { TbApps } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
-import { RandomTip, TextInput, Checkbox, Button } from '../../common';
+import { TextInput, Checkbox, Button } from '../../common';
 import { ItemData } from '../../../../common/item-types/command-item-type';
 import AppPicker from '../AppPicker';
 
@@ -21,7 +21,7 @@ import AppPicker from '../AppPicker';
  * The configuration component for command items is primarily a text input field for the
  * command.
  */
-export default () => {
+export function CommandItemConfig() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
@@ -96,19 +96,6 @@ export default () => {
           });
         }}
       />
-      <RandomTip
-        marginTop={50}
-        tips={[
-          i18next.t('menu-items.command.tip-1'),
-          i18next.t('menu-items.command.tip-2'),
-          i18next.t('menu-items.command.tip-3'),
-          i18next.t('menu-items.command.tip-4'),
-          i18next.t('menu-items.command.tip-5'),
-          i18next.t('menu-items.command.tip-6', {
-            link: 'https://kando.menu/item-run-command/',
-          }),
-        ]}
-      />
       <AppPicker
         isVisible={appPickerVisible}
         onClose={() => setAppPickerVisible(false)}
@@ -124,4 +111,18 @@ export default () => {
       />
     </>
   );
-};
+}
+
+/** The tips component for command items shows a list of useful tips for command items. */
+export function getCommandItemTips() {
+  return [
+    i18next.t('menu-items.command.tip-1'),
+    i18next.t('menu-items.command.tip-2'),
+    i18next.t('menu-items.command.tip-3'),
+    i18next.t('menu-items.command.tip-4'),
+    i18next.t('menu-items.command.tip-5'),
+    i18next.t('menu-items.command.tip-6', {
+      link: 'https://kando.menu/item-run-command/',
+    }),
+  ];
+}

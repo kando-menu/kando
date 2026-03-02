@@ -21,11 +21,12 @@ import {
   IconChooserButton,
   TagInput,
   ShortcutPicker,
+  RandomTip,
   Swirl,
   Scrollbox,
   TextInput,
 } from '../common';
-import { getConfigComponent } from './item-configs';
+import { getConfigComponent, getItemTips } from './item-configs';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
 
@@ -72,6 +73,8 @@ export default function Properties() {
     if (backend.supportsShortcuts) {
       return (
         <ShortcutPicker
+          isGrowing
+          useModifiers
           info={i18next.t('settings.shortcut-info')}
           initialValue={menus[selectedMenu].shortcut}
           label={i18next.t('settings.shortcut-label')}
@@ -167,7 +170,41 @@ export default function Properties() {
                 </>
               ) : null
             }
-            {!isRoot && selectedItem ? getConfigComponent(selectedItem.type) : null}
+            {
+              // For all other items, we show the config component that is specific to the
+              // item type.
+              !isRoot && selectedItem ? getConfigComponent(selectedItem.type) : null
+            }
+            {
+              // Also, each menu item has the quick-select key. The default value for this
+              // is the menu item's number.
+              !isRoot && selectedItem ? (
+                <ShortcutPicker
+                  info={i18next.t('settings.quick-select-key-info')}
+                  initialValue={
+                    selectedItem.quickSelectKey || selectedChildPath.length > 0
+                      ? (selectedChildPath[selectedChildPath.length - 1] + 1).toString()
+                      : ''
+                  }
+                  label={i18next.t('settings.quick-select-key-label')}
+                  mode="key-names"
+                  recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
+                  useModifiers={false}
+                  onChange={(shortcut) => {
+                    editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                      item.quickSelectKey = shortcut;
+                      return item;
+                    });
+                  }}
+                />
+              ) : null
+            }
+            {
+              // Finally, we show the tips for the currently selected item type.
+              !isRoot && selectedItem ? (
+                <RandomTip marginTop={50} tips={getItemTips(selectedItem.type)} />
+              ) : null
+            }
           </div>
         </Scrollbox>
         {!isRoot && (
