@@ -285,9 +285,9 @@
     "shortcut-id-label": "Shortcut\u00a0ID",
     "tags-info": "Tags can be used to group menus in menu collections.",
     "tags": "Tags",
-    "quick-select-key-info": "This key allows you to quickly select the menu item. It must contain one normal key and no modifiers such as Ctrl, Alt, or Shift.",
+    "quick-select-key-info": "This key allows you to quickly select the menu item.",
     "quick-select-key-label": "Quick-select key",
-    "quick-select-key-recording": "Press a key…",
+    "quick-select-key-recording": "Select key…",
     "duplicate-menu-item": "Duplicate menu item",
     "delete-menu-item": "Delete menu item",
     "screen-area-picker": {

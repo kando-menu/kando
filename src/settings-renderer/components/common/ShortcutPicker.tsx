@@ -135,7 +135,7 @@ export default function ShortcutPicker(props: Props) {
             recording ? props.recordingPlaceholder : i18next.t('settings.not-bound')
           }
           spellCheck="false"
-          style={!props.isGrowing ? { maxWidth: '75px' } : undefined}
+          style={!props.isGrowing ? { maxWidth: '100px' } : undefined}
           type="text"
           value={shortcut}
           onBlur={(event) => {

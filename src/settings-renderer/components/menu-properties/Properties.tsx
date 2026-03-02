@@ -182,9 +182,10 @@ export default function Properties() {
                 <ShortcutPicker
                   info={i18next.t('settings.quick-select-key-info')}
                   initialValue={
-                    selectedItem.quickSelectKey || selectedChildPath.length > 0
+                    selectedItem.quickSelectKey ||
+                    (selectedChildPath.length > 0
                       ? (selectedChildPath[selectedChildPath.length - 1] + 1).toString()
-                      : ''
+                      : '')
                   }
                   label={i18next.t('settings.quick-select-key-label')}
                   mode="key-names"
