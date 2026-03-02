@@ -15,6 +15,7 @@
 #include "wlr-layer-shell-unstable-v1.h"
 #include "wlr-virtual-pointer-unstable-v1.h"
 #include "xdg-shell.h"
+#include "xdg-output-unstable-v1.h"
 
 #include <napi.h>
 #include <xkbcommon/xkbcommon.h>
@@ -115,6 +116,9 @@ class Native : public Napi::Addon<Native> {
     zwp_virtual_keyboard_manager_v1* mKeyboardManager = nullptr;
     zwp_virtual_keyboard_v1*         mVirtualKeyboard = nullptr;
 
+    zxdg_output_manager_v1* mXdgOutputManager = nullptr;
+    wl_output* mOutput = nullptr;
+
     xkb_context* mXkbContext = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
     xkb_keymap*  mXkbKeymap  = nullptr;
     xkb_state*   mXkbState   = nullptr;
@@ -129,6 +133,8 @@ class Native : public Napi::Addon<Native> {
 
     double mPointerX       = 0;
     double mPointerY       = 0;
+    double mOutputX       = 0;
+    double mOutputY       = 0;
     double mWorkAreaWidth  = 0;
     double mWorkAreaHeight = 0;
 
