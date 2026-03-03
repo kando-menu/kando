@@ -40,6 +40,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :bug: Fixed
 
+- Fixed null focused-window on niri when no windows are open
 - A regression which caused the animation of menu items to be skipped when closing the menu.
 - An issue where the color pickers in the settings dialog would glitch out. Thanks to [@Haruto-works333](https://github.com/Haruto-works333) for this contribution!
 - An issue where Kando would not open a menu on Niri if no pointer device was connected. Thanks to [@make-42](https://github.com/make-42) for fixing this!

@@ -93,8 +93,8 @@ for more information.
       return {
         pointerX,
         pointerY,
-        windowName: activewindow['title'] || '',
-        appName: activewindow['app_id'] || '',
+        windowName: activewindow?.['title'] || '',
+        appName: activewindow?.['app_id'] || '',
         workArea,
       };
     } catch (error) {
