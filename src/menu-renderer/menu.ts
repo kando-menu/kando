@@ -11,6 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as math from '../common/math';
+import KeyMapper from '../common/key-mapper';
 import {
   GeneralSettings,
   ShowMenuOptions,
@@ -421,29 +422,39 @@ export class Menu extends EventEmitter {
         return;
       }
 
+      let keyHandled = false;
       const anyModifierPressed =
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
-      const menuKeys = '0123456789abcdefghijklmnopqrstuvwxyz';
-      if (!anyModifierPressed && event.key === 'Backspace') {
-        this.selectParent(SelectionSource.eKeyboard);
-      } else if (!anyModifierPressed && menuKeys.includes(event.key)) {
-        const index = menuKeys.indexOf(event.key);
-        if (index === 0) {
+
+      if (!anyModifierPressed) {
+        if (event.key === 'Backspace') {
           this.selectParent(SelectionSource.eKeyboard);
+          keyHandled = true;
         } else {
           const currentItem = this.selectionChain[this.selectionChain.length - 1];
           if (currentItem.children) {
-            const child = currentItem.children[index - 1];
-            if (child) {
-              this.selectItem(
-                child,
-                SelectionSource.eKeyboard,
-                this.getCenterItemPosition()
-              );
+            for (let i = 0; i < currentItem.children.length; i++) {
+              const child = currentItem.children[i] as RenderedMenuItem;
+              const quickSelectKey = (
+                child.quickSelectKey || (i < 9 ? `${i + 1}` : '')
+              ).toLocaleLowerCase();
+              const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
+
+              if (quickSelectKey === eventKey) {
+                this.selectItem(
+                  child,
+                  SelectionSource.eKeyboard,
+                  this.getCenterItemPosition()
+                );
+                keyHandled = true;
+                break;
+              }
             }
           }
         }
-      } else if (event.key !== 'Escape') {
+      }
+
+      if (!keyHandled && event.key !== 'Escape') {
         this.pointerInput.onKeyDownEvent();
       }
     });

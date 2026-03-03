@@ -67,6 +67,9 @@ export default function Properties() {
     selectedChildPath
   );
 
+  const itemIndex =
+    selectedChildPath.length > 0 ? selectedChildPath[selectedChildPath.length - 1] : -1;
+
   // Returns a shortcut picker if the current backend supports shortcuts, else it will
   // return a text input for the shortcut ID.
   const getShortcutPicker = () => {
@@ -183,9 +186,7 @@ export default function Properties() {
                   info={i18next.t('settings.quick-select-key-info')}
                   initialValue={
                     selectedItem.quickSelectKey ||
-                    (selectedChildPath.length > 0
-                      ? (selectedChildPath[selectedChildPath.length - 1] + 1).toString()
-                      : '')
+                    (itemIndex < 10 ? `${itemIndex + 1}` : '')
                   }
                   label={i18next.t('settings.quick-select-key-label')}
                   mode="key-names"

@@ -14,6 +14,7 @@ import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import KeyMapper from '../../../common/key-mapper';
 import { Button, SettingsRow } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
@@ -223,18 +224,11 @@ export default function ShortcutPicker(props: Props) {
  * https://www.electronjs.org/docs/latest/api/accelerator.
  */
 class KeyNameImpl {
-  private keymap: Map<string, string>;
-
   /**
    * Creates a new KeyNameImpl instance. If useModifiers is set, modifiers will be allowed
    * in the shortcuts recorded by this instance.
    */
-  constructor(private useModifiers: boolean) {
-    // @ts-expect-error The navigator is indeed available in Electron.
-    window.navigator.keyboard.getLayoutMap().then((map) => {
-      this.keymap = map;
-    });
-  }
+  constructor(private useModifiers: boolean) {}
 
   /**
    * This method appends a key according to the given KeyboardEvent to the input field.
@@ -274,47 +268,10 @@ class KeyNameImpl {
       }
     }
 
-    let key = this.keymap.get(event.code) || event.key;
-
-    // Some DOM names differ from the names used by Electron. We need to map them.
-    const nameMap = new Map([
-      ['+', 'Plus'],
-      [' ', 'Space'],
-      ['Enter', 'Return'],
-      ['ArrowUp', 'Up'],
-      ['ArrowDown', 'Down'],
-      ['ArrowLeft', 'Left'],
-      ['ArrowRight', 'Right'],
-    ]);
-
-    key = nameMap.get(key) || key;
+    let key = KeyMapper.getName(event.nativeEvent);
 
     // Fix the case of the key.
     key = this.normalizeInput(key);
-
-    // We can explicitly bind to numpad keys. We check location property to determine
-    // if the key is on the numpad.
-    if (event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
-      const nameMap = new Map([
-        ['0', 'num0'],
-        ['1', 'num1'],
-        ['2', 'num2'],
-        ['3', 'num3'],
-        ['4', 'num4'],
-        ['5', 'num5'],
-        ['6', 'num6'],
-        ['7', 'num7'],
-        ['8', 'num8'],
-        ['9', 'num9'],
-        [',', 'numdec'],
-        ['+', 'numadd'],
-        ['-', 'numsub'],
-        ['*', 'nummult'],
-        ['/', 'numdiv'],
-      ]);
-
-      key = nameMap.get(key) || key;
-    }
 
     const isComplete = this.isValidKey(key);
 
