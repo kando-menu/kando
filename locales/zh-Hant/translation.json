@@ -1,7 +1,7 @@
 {
     "settings": {
         "icon-picker-dialog": {
-            "base64-hint": "Base64 編碼圖示可讓您輕鬆將各種圖示加入選單中。您可以使用像 [www.base64-image.de]({{link}}) 這樣的服務，將任何圖片轉換為 Base64 字串，甚至支援 GIF 動畫！",
+            "base64-hint": "Base64 編碼圖示可讓您輕鬆將各種圖示加入選單中。您可以使用像 [www.base64-image.de]({{link}}) 這樣的服務，將任何圖片轉換為 Base64 字串，甚至支援 gif 動畫！",
             "base64-example": "Base64 範例：",
             "file-example": "file: URI 範例：",
             "url-example": "URL 範例：",
@@ -140,7 +140,9 @@
             "enable-achievement-notifications-info": "啟用後，當成就解鎖時將會顯示通知。",
             "enable-achievement-notifications": "顯示成就通知",
             "windows-ink-workaround-info": "此選項會啟用一項相容性修正，解決在 Windows Ink 啟用時無法取得觸控筆位置的問題。將在開啟選單前增加 100 毫秒的延遲，因此若您不使用觸控筆，可停用此選項以加快選單開啟速度。",
-            "windows-ink-workaround": "Windows Ink 相容性修正"
+            "windows-ink-workaround": "Windows Ink 相容性修正",
+            "max-selection-radius-info": "若設為大於 0 的值，點擊此半徑以外的區域將關閉選單。預設為 0，表示不限制最大選取半徑。",
+            "max-selection-radius": "最大選取半徑"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 為您提供了一種獨特且高效的方式與電腦互動。",
