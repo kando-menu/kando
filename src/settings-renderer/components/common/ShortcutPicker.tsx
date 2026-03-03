@@ -14,6 +14,7 @@ import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import KeyMapper from '../../../common/key-mapper';
 import { Button, SettingsRow } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
@@ -30,8 +31,17 @@ type Props = {
   /** Initial shortcut. */
   readonly initialValue: string;
 
+  /**
+   * Placeholder text to display when the shortcut picker is not bound. Defaults to a
+   * localized "Not bound" string.
+   */
+  readonly placeholder?: string;
+
   /** Placeholder text to display when the shortcut picker is recording. */
   readonly recordingPlaceholder: string;
+
+  /** If set to true, the widget will grow if there is space available. Defaults to false. */
+  readonly isGrowing?: boolean;
 
   /** Optional label text to display next to the shortcut picker. */
   readonly label?: string;
@@ -44,6 +54,12 @@ type Props = {
    * component documentation below for more details.
    */
   readonly mode: 'key-names' | 'key-codes';
+
+  /**
+   * If set, no modifiers are allowed in the shortcut. This is used for example for the
+   * item hotkeys for navigating the menu.
+   */
+  readonly useModifiers: boolean;
 };
 
 /**
@@ -61,6 +77,8 @@ type Props = {
  * invoke pressing the physical key "Z" which may be labeled differently on different
  * keyboards for example "Y" on a German keyboard.
  *
+ * See also https://kando.menu/valid-keynames/ for more information on this topic.
+ *
  * @param props - The properties for the component.
  * @returns A React component that allows the user to enter a shortcut.
  */
@@ -75,8 +93,10 @@ export default function ShortcutPicker(props: Props) {
 
   // Depending on the mode, we use different implementations for recording the input.
   const impl = React.useMemo(() => {
-    return props.mode === 'key-names' ? new KeyNameImpl() : new KeyCodeImpl();
-  }, [props.mode]);
+    return props.mode === 'key-names'
+      ? new KeyNameImpl(props.useModifiers)
+      : new KeyCodeImpl(props.useModifiers);
+  }, [props.mode, props.useModifiers]);
 
   // This method checks if the given hotkey is valid. A hotkey is valid if it contains
   // exactly one key and any number of modifier keys. The key and modifier keys must be
@@ -104,7 +124,7 @@ export default function ShortcutPicker(props: Props) {
           return false;
         }
         hasKey = true;
-      } else if (!impl.isValidModifier(part)) {
+      } else if (!impl.isValidModifier(part) || !props.useModifiers) {
         return false;
       }
     }
@@ -113,15 +133,18 @@ export default function ShortcutPicker(props: Props) {
   };
 
   return (
-    <SettingsRow isGrowing info={props.info} label={props.label}>
+    <SettingsRow info={props.info} isGrowing={props.isGrowing} label={props.label}>
       <div className={classes.shortcutPicker}>
         <input
           ref={inputRef}
           className={cx({ recording, invalid: !isValid(shortcut) })}
           placeholder={
-            recording ? props.recordingPlaceholder : i18next.t('settings.not-bound')
+            recording
+              ? props.recordingPlaceholder
+              : props.placeholder || i18next.t('settings.not-bound')
           }
           spellCheck="false"
+          style={!props.isGrowing ? { maxWidth: '100px' } : undefined}
           type="text"
           value={shortcut}
           onBlur={(event) => {
@@ -209,14 +232,11 @@ export default function ShortcutPicker(props: Props) {
  * https://www.electronjs.org/docs/latest/api/accelerator.
  */
 class KeyNameImpl {
-  private keymap: Map<string, string>;
-
-  constructor() {
-    // @ts-expect-error The navigator is indeed available in Electron.
-    window.navigator.keyboard.getLayoutMap().then((map) => {
-      this.keymap = map;
-    });
-  }
+  /**
+   * Creates a new KeyNameImpl instance. If useModifiers is set, modifiers will be allowed
+   * in the shortcuts recorded by this instance.
+   */
+  constructor(private useModifiers: boolean) {}
 
   /**
    * This method appends a key according to the given KeyboardEvent to the input field.
@@ -238,63 +258,28 @@ class KeyNameImpl {
       }
     };
 
-    if (event.ctrlKey) {
-      push('Control');
+    if (this.useModifiers) {
+      if (event.ctrlKey) {
+        push('Control');
+      }
+
+      if (event.shiftKey) {
+        push('Shift');
+      }
+
+      if (event.altKey) {
+        push('Alt');
+      }
+
+      if (event.metaKey) {
+        push('Meta');
+      }
     }
 
-    if (event.shiftKey) {
-      push('Shift');
-    }
-
-    if (event.altKey) {
-      push('Alt');
-    }
-
-    if (event.metaKey) {
-      push('Meta');
-    }
-
-    let key = this.keymap.get(event.code) || event.key;
-
-    // Some DOM names differ from the names used by Electron. We need to map them.
-    const nameMap = new Map([
-      ['+', 'Plus'],
-      [' ', 'Space'],
-      ['Enter', 'Return'],
-      ['ArrowUp', 'Up'],
-      ['ArrowDown', 'Down'],
-      ['ArrowLeft', 'Left'],
-      ['ArrowRight', 'Right'],
-    ]);
-
-    key = nameMap.get(key) || key;
+    let key = KeyMapper.getName(event.nativeEvent);
 
     // Fix the case of the key.
     key = this.normalizeInput(key);
-
-    // We can explicitly bind to numpad keys. We check location property to determine
-    // if the key is on the numpad.
-    if (event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
-      const nameMap = new Map([
-        ['0', 'num0'],
-        ['1', 'num1'],
-        ['2', 'num2'],
-        ['3', 'num3'],
-        ['4', 'num4'],
-        ['5', 'num5'],
-        ['6', 'num6'],
-        ['7', 'num7'],
-        ['8', 'num8'],
-        ['9', 'num9'],
-        [',', 'numdec'],
-        ['+', 'numadd'],
-        ['-', 'numsub'],
-        ['*', 'nummult'],
-        ['/', 'numdiv'],
-      ]);
-
-      key = nameMap.get(key) || key;
-    }
 
     const isComplete = this.isValidKey(key);
 
@@ -395,6 +380,12 @@ class KeyNameImpl {
  */
 class KeyCodeImpl {
   /**
+   * Creates a new KeyCodeImpl instance. If useModifiers is set, modifiers will be allowed
+   * in the shortcuts recorded by this instance.
+   */
+  constructor(private useModifiers: boolean) {}
+
+  /**
    * This method appends the key code of the given KeyboardEvent to the input field. If
    * the input field contains a valid shortcut after appending the key code, the method
    * returns true to indicate that the shortcut is complete.
@@ -415,7 +406,12 @@ class KeyCodeImpl {
       return false;
     }
 
-    parts.push(event.code);
+    if (
+      this.useModifiers ||
+      (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey)
+    ) {
+      parts.push(event.code);
+    }
 
     event.currentTarget.value = parts.join('+');
 

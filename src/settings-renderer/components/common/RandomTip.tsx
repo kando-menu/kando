@@ -23,20 +23,24 @@ type Props = {
   readonly marginBottom?: number | string;
 };
 
+function getRandomTipIndex(tipCount: number) {
+  if (tipCount <= 0) {
+    return 0;
+  }
+
+  return Math.floor(Math.random() * tipCount);
+}
+
 /**
  * Shows a random tip of the day. The tip is chosen from the given list of tips. The tip
- * is randomly selected on component mount using useState lazy initialization and remains
- * stable across re-renders.
+ * is randomly selected on component mount and re-selected whenever the list of tips
+ * changes.
  *
  * @param props - The properties for the tip component.
  * @returns A note element.
  */
 export default function RandomTip(props: Props) {
-  // Choose a random tip index only once on mount using useState with lazy initialization
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedTipIndex, setSelectedTipIndex] = React.useState(() =>
-    Math.floor(Math.random() * props.tips.length)
-  );
+  const selectedTipIndex = getRandomTipIndex(props.tips.length);
 
   return (
     <Note
@@ -46,7 +50,7 @@ export default function RandomTip(props: Props) {
       marginLeft="10%"
       marginRight="10%"
       marginTop={props.marginTop}>
-      {props.tips[selectedTipIndex]}
+      {props.tips[selectedTipIndex] ?? ''}
     </Note>
   );
 }

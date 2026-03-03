@@ -77,14 +77,17 @@ export class CenterText {
    * @param text The text to display.
    * @param position The position of the text element relative to the container. Aka the
    *   current position of the pie menu on the screen.
+   * @param accessKey An optional access key for the text element. The first occurrence of
+   *   the given character will be underlined.
    */
-  public async show(text: string, position: Vec2) {
+  public async show(text: string, position: Vec2, accessKey?: string) {
     const currentCallCount = ++this.callCount;
+    const key = text + (accessKey ?? '');
 
     // If the text is already cached, we can use it directly.
-    if (this.cache[text]) {
+    if (this.cache[key]) {
       this.div?.remove();
-      this.div = this.cache[text];
+      this.div = this.cache[key];
       this.div.style.transform = `translate(${position.x}px, ${position.y}px)`;
       this.div.style.visibility = 'initial';
       this.container.appendChild(this.div);
@@ -105,11 +108,24 @@ export class CenterText {
     this.appendWithClass(stagingDiv, 'half-circle-wrap-right');
     const textDiv = this.appendWithClass(stagingDiv, 'text');
 
+    const p = document.createElement('p');
+
     // We want to allow breaking the text at some special characters like / and \ to
     // avoid long words, especially in the case of URLs. For this, we add invisible
     // spaces after these characters.
-    const p = document.createElement('p');
-    p.textContent = text.replace(/([/\\.])/g, '$1\u200B');
+    let formattedText = text.replace(/([/\\.])/g, '$1\u200B');
+
+    // If an access key is given, we want to underline the first occurrence of the access
+    // key in the text. For this, we wrap it in a <u> element. We also need to use
+    // innerHTML instead of textContent in this case.
+    if (accessKey) {
+      const regex = new RegExp(`(${accessKey})`, 'i');
+      formattedText = formattedText.replace(regex, '<u>$1</u>');
+      p.innerHTML = formattedText;
+    } else {
+      p.innerText = formattedText;
+    }
+
     textDiv.appendChild(p);
 
     // We query the initial font size only once for performance reasons.
@@ -180,7 +196,7 @@ export class CenterText {
     }
 
     // Cache the text element for future use.
-    this.cache[text] = stagingDiv;
+    this.cache[key] = stagingDiv;
 
     // If no new layout computation was started while the current one was still in
     // progress, we can use the staging div as the new text element. Otherwise, we

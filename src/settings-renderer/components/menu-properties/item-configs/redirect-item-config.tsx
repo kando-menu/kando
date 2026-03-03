@@ -18,7 +18,7 @@ import { ItemData } from '../../../../common/item-types/redirect-item-type';
  * The configuration component for redirect items is primarily a text input field for the
  * redirect.
  */
-export default () => {
+export function RedirectItemConfig() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
@@ -54,4 +54,4 @@ export default () => {
       }}
     />
   );
-};
+}

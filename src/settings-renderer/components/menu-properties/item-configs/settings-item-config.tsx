@@ -8,15 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
 import i18next from 'i18next';
 
-import { RandomTip } from '../../common';
-
-/**
- * The configuration component for settings items is quite simple - it only shows a random
- * tip of the day.
- */
-export default () => {
-  return <RandomTip tips={[i18next.t('menu-items.settings.tip-1')]} />;
-};
+/** The tips component for settings items shows a list of useful tips for settings items. */
+export function getSettingsItemTips() {
+  return [i18next.t('menu-items.settings.tip-1')];
+}

@@ -12,11 +12,11 @@ import React from 'react';
 import i18next from 'i18next';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
-import { RandomTip, ShortcutPicker, Checkbox } from '../../common';
+import { ShortcutPicker, Checkbox } from '../../common';
 import { ItemData } from '../../../../common/item-types/hotkey-item-type';
 
 /** The configuration component for hotkey items is a shortcut picker. */
-export default () => {
+export function HotkeyItemConfig() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
@@ -33,6 +33,8 @@ export default () => {
   return (
     <>
       <ShortcutPicker
+        isGrowing
+        useModifiers
         info={i18next.t('menu-items.hotkey.hotkey-info')}
         initialValue={data.hotkey}
         label={i18next.t('menu-items.hotkey.hotkey')}
@@ -67,16 +69,17 @@ export default () => {
           });
         }}
       />
-      <RandomTip
-        marginTop={50}
-        tips={[
-          i18next.t('menu-items.hotkey.tip-1'),
-          i18next.t('menu-items.hotkey.tip-2'),
-          i18next.t('menu-items.hotkey.tip-3', {
-            link: 'https://kando.menu/valid-keynames/',
-          }),
-        ]}
-      />
     </>
   );
-};
+}
+
+/** The tips component for hotkey items shows a list of useful tips for hotkey items. */
+export function getHotkeyItemTips() {
+  return [
+    i18next.t('menu-items.hotkey.tip-1'),
+    i18next.t('menu-items.hotkey.tip-2'),
+    i18next.t('menu-items.hotkey.tip-3', {
+      link: 'https://kando.menu/valid-keynames/',
+    }),
+  ];
+}

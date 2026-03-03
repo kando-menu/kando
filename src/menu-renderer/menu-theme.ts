@@ -188,7 +188,14 @@ export class MenuTheme {
       layerDiv.classList.add(layer.class);
 
       if (layer.content === 'name') {
-        layerDiv.innerText = item.name;
+        // If the item has a quick select key, we underline the first occurrence of the
+        // key in the name.
+        if (item.quickSelectKey) {
+          const regex = new RegExp(`(${item.quickSelectKey})`, 'i');
+          layerDiv.innerHTML = item.name.replace(regex, '<u>$1</u>');
+        } else {
+          layerDiv.innerText = item.name;
+        }
       } else if (layer.content === 'icon') {
         const icon = IconThemeRegistry.getInstance().createIcon(
           item.iconTheme,
