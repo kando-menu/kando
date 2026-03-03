@@ -417,6 +417,7 @@ export class Menu extends EventEmitter {
     this.pointerInput.onSelection(onSelection);
     this.gamepadInput.onSelection(onSelection);
 
+    // Handle keyboard events for quick selection and going back to the parent item.
     document.addEventListener('keydown', (event) => {
       if (this.container.classList.contains('hidden')) {
         return;
@@ -902,7 +903,11 @@ export class Menu extends EventEmitter {
           this.centerText.hide();
         } else {
           const position = this.getCenterItemPosition();
-          this.centerText.show(newHoveredItem.name, position);
+          this.centerText.show(
+            newHoveredItem.name,
+            position,
+            newHoveredItem.quickSelectKey
+          );
         }
       }
     }

@@ -31,6 +31,12 @@ type Props = {
   /** Initial shortcut. */
   readonly initialValue: string;
 
+  /**
+   * Placeholder text to display when the shortcut picker is not bound. Defaults to a
+   * localized "Not bound" string.
+   */
+  readonly placeholder?: string;
+
   /** Placeholder text to display when the shortcut picker is recording. */
   readonly recordingPlaceholder: string;
 
@@ -133,7 +139,9 @@ export default function ShortcutPicker(props: Props) {
           ref={inputRef}
           className={cx({ recording, invalid: !isValid(shortcut) })}
           placeholder={
-            recording ? props.recordingPlaceholder : i18next.t('settings.not-bound')
+            recording
+              ? props.recordingPlaceholder
+              : props.placeholder || i18next.t('settings.not-bound')
           }
           spellCheck="false"
           style={!props.isGrowing ? { maxWidth: '100px' } : undefined}

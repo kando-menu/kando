@@ -184,12 +184,12 @@ export default function Properties() {
               !isRoot && selectedItem ? (
                 <ShortcutPicker
                   info={i18next.t('settings.quick-select-key-info')}
-                  initialValue={
-                    selectedItem.quickSelectKey ||
-                    (itemIndex < 10 ? `${itemIndex + 1}` : '')
-                  }
+                  initialValue={selectedItem.quickSelectKey || ''}
                   label={i18next.t('settings.quick-select-key-label')}
                   mode="key-names"
+                  placeholder={
+                    itemIndex < 9 ? `${itemIndex + 1}` : i18next.t('settings.not-bound')
+                  }
                   recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
                   useModifiers={false}
                   onChange={(shortcut) => {
