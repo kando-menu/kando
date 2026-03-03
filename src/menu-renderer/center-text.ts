@@ -123,7 +123,7 @@ export class CenterText {
       formattedText = formattedText.replace(regex, '<u>$1</u>');
       p.innerHTML = formattedText;
     } else {
-      p.textContent = formattedText;
+      p.innerText = formattedText;
     }
 
     textDiv.appendChild(p);
