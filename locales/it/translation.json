@@ -271,7 +271,16 @@
             "cycle-menus": "Passa attraverso i menu corrispondenti",
             "press-again-behavior": "Comportamento premi-di-nuovo-la-scorciatoia",
             "press-again-behavior-info": "Questo determina cosa accade quando la scorciatoia è premuta di nuovo mentre è mostrato un menu. Se più o meno sono assegnati alla stessa scorciatoia, poi utilizzare questo per passare attraverso tutti i menu corrispondenti. Assicurati sulla mente di tenere premuto un tasto modificatore se vuoi usare la modalità turbo insieme a un'opzione diversa da 'Non fare nulla'.",
-            "close-menu": "Chiudi menu"
+            "close-menu": "Chiudi menu",
+            "auto-language": "Usa lingua di sistema",
+            "localization-info": "Riavvia Kando per applicare la nuova lingua.",
+            "localization-label": "Lingua",
+            "hardware-acceleration-info": "Questa opzione può velocizzare le prestazioni dell'app, ma può anche produrre artefatti di visualizzazione. Devi riavviare Kando per applicare questa impostazione.",
+            "hardware-acceleration": "Abilita accelerazione hardware",
+            "enable-achievements-info": "Se attivato, Kando terrà traccia dei tuoi progressi verso gli obiettivi.",
+            "enable-achievements": "Traccia obiettivi",
+            "enable-achievement-notifications-info": "Se abilitato, le notifiche sono mostrate quando gli obiettivi vengono sbloccati.",
+            "enable-achievement-notifications": "Mostra notifiche obiettivi"
         },
         "icon-picker-dialog": {
             "search-placeholder": "Cerca icone…",
@@ -279,7 +288,8 @@
             "hint": "Impara [qui]({{link}}) come aggiungere o creare i tuoi temi di icone.",
             "url-example": "Esempio di URL:",
             "file-example": "esempio di file: URI:",
-            "base64-hint": "Le icone con codifica Base64 forniscono un modo semplice per includere qualunque tipo di icona nei tuoi menu. Puoi usare un servizio come [www.base64-image.de]({{link}}) per convertire una qualunque immagine in una stringa codificata in base64. Questo funziona anche per le gif animate!"
+            "base64-hint": "Le icone con codifica Base64 forniscono un modo semplice per includere qualunque tipo di icona nei tuoi menu. Puoi usare un servizio come [www.base64-image.de]({{link}}) per convertire una qualunque immagine in una stringa codificata in base64. Questo funziona anche per le gif animate!",
+            "reload-button-tooltip": "Ricarica tutte le icone dei temi"
         },
         "introduction-dialog": {
             "title": "Benvenuto/a in Kando!",
@@ -320,7 +330,7 @@
             "light-dark-mode-info": "Se abilitato, puoi scegliere un differente tema e set di colori a seconda che il tuo sistema sia in modalità chiara o scura.",
             "reset-color-picker": "Ripristina tutti i colori ai valori di default",
             "title": "Temi di Menu",
-            "accent-colors": "Colori di accento",
+            "accent-colors": "Colori di Accento",
             "no-accent-colors": "Questo tema non supporta i colori di accento.",
             "fade-out-time-info": "Il tempo richiesto al menu per scomparire. Il default è 200ms.",
             "menu-scale": "Scala del menu",
@@ -334,7 +344,20 @@
             "fade-in-time-info": "Il tempo richiesto al menu per apparire. Il default è 150ms.",
             "get-themes-online": "Ottieni temi online",
             "open-theme-directory": "Apri la cartella dei temi",
-            "dark": "Modalità Scura"
+            "dark": "Modalità Scura",
+            "save-preset-error-title": "Salvataggio preset fallito",
+            "save-preset-error-message": "Salvataggio del preset dei colori fallito. Per favore verifica che la cartella sia scrivibile. Errore: {{error}}",
+            "default-colors": "Colori di default",
+            "choose-preset": "Scegli un preset…",
+            "reload-presets": "Ricarica i preset",
+            "save-preset": "Salva preset",
+            "open-presets-directory": "Apri la cartella dei preset",
+            "selection-wedges-info": "Se attivato e supportato dal tema selezionato, l'area selezionabile degli elementi di menù sarà evidenziata.",
+            "selection-wedges": "Disegna spicchi degli elementi",
+            "preset-name-empty": "Il nome del preset non può essere vuoto!",
+            "preset-name-invalid": "Il nome del preset può contenere solo lettere, numeri, punteggiatura, trattini bassi e spazi!",
+            "preset-name-exists": "Un preset con questo nome esiste già.",
+            "preset-name-placeholder": "es. Miei Colori Personalizzati"
         },
         "not-bound": "Non Assegnato",
         "shortcut-id-label": "ID Scorciatoia",
@@ -401,6 +424,32 @@
         "no-menus-note": "Se hai cancellato l'ultimo per errore, puoi recuperarlo usando il bottone Annulla.",
         "search-menus-placeholder": "Cerca menu…",
         "all-menus": "Tutti i Menu",
-        "add-menu-item-hint": "Trascina questo elemento per aggiungerlo al menu di sopra!"
+        "add-menu-item-hint": "Trascina questo elemento per aggiungerlo al menu di sopra!",
+        "achievements-dialog": {
+            "reset-button": "Resetta il Progresso",
+            "reset-confirmation-title": "Vuoi davvero resettare tutto il progresso?",
+            "reset-confirmation-message": "Tutti gli obiettivi e progressi di livello verranno persi. Questa azione non può essere annullata.",
+            "title": "Obiettivi",
+            "xp": "XP",
+            "no-in-progress-achievements": "Congratulazioni! Hai completato tutti gli obiettivi.",
+            "no-completed-achievements": "Non hai ancora raggiunto ancora alcun obiettivo.",
+            "in-progress-button": "In Corso",
+            "completed-button": "Completato",
+            "reset-button-tooltip": "Resetta tutti i progressi di obiettivi e livello"
+        },
+        "restore-backup": "Recupera Bacukp…",
+        "restore-general-settings-warning-title": "Vuoi davvero recuperare le impostazioni generali?",
+        "restore-general-settings-warning-message": "Questo sovrascriverà le tue attuali impostazioni dell'applicazione con i contenuti del file di backup selezionato! I tuoi menù e collezioni non saranno modificati.",
+        "restore-general-settings-error-title": "E' fallito il caricamento del backup delle impostazioni generali!",
+        "restore-general-settings-success-title": "Successo!",
+        "restore-general-settings-success-message": "Le tue impostazioni generali sono state recuperate dal file di backup.",
+        "restore-menu-settings-warning-title": "Vuoi davvero recuperare le impostazioni dei menù?",
+        "restore-menu-settings-warning-message": "Questo sovrascriverà i tuoi attuali menù e collezioni di menù con i contenuti del file di backup selezionato!",
+        "restore-menu-settings-error-title": "Fallito il caricamento del backup dei menù!",
+        "restore-menu-settings-success-title": "Successo!",
+        "restore-menu-settings-success-message": "I tuoi menù e collezioni di menù sono stati recuperati dal file di backup.",
+        "export-menu-error-title": "Fallita l'esportazione dei menù",
+        "import-menu-error-title": "Fallita l'importazione dei menù",
+        "import-menu-error-message": "Non è stato possibile importare il file selezionato. Non contiene un menù esportato valido di Kando."
     }
 }
