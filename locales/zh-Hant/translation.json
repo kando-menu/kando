@@ -313,7 +313,10 @@
         "import-menu": "匯入選單",
         "import-menu-error-title": "匯入選單失敗",
         "import-menu-error-message": "無法匯入所選檔案。該檔案並非自 Kando 匯出的有效選單。",
-        "export-menu-error-title": "匯出選單失敗"
+        "export-menu-error-title": "匯出選單失敗",
+        "quick-select-key-recording": "按下按鍵…",
+        "quick-select-key-info": "此按鍵可讓您快速選取選單項目。",
+        "quick-select-key-label": "快速選取鍵"
     },
     "menu-items": {
         "text": {
