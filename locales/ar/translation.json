@@ -313,7 +313,10 @@
         "import-menu-error-title": "فشل استيراد القائمة",
         "import-menu-error-message": "تعذر استيراد الملف المحدد. فهو لا يحتوي على قائمة مُصدّرة صالحة من كاندو.",
         "export-menu": "تصدير القائمة",
-        "import-menu": "استيراد القائمة"
+        "import-menu": "استيراد القائمة",
+        "quick-select-key-info": "يتيح لك هذا المفتاح تحديد عنصر القائمة بسرعة.",
+        "quick-select-key-label": "مفتاح التحديد السريع",
+        "quick-select-key-recording": "حدد المفتاح…"
     },
     "backends": {
         "niri": {
