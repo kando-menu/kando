@@ -490,7 +490,10 @@
         "import-menu": "Импортировать меню",
         "import-menu-error-title": "Не получилось импортировать меню",
         "import-menu-error-message": "Этот файл не может быть импортирован. Кажется, это даже не меню Kando...",
-        "export-menu-error-title": "Не получилось экспортировать меню"
+        "export-menu-error-title": "Не получилось экспортировать меню",
+        "quick-select-key-info": "Это - клавиша быстрого выбора элемента.",
+        "quick-select-key-label": "Клавиша быстрого выбора",
+        "quick-select-key-recording": "Нажмите клавишу…"
     },
     "achievements": {
         "attributes": {
