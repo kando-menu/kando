@@ -154,7 +154,15 @@
             "name": "Die Reise beginnt",
             "description": "Schließe das Kando-Einführungstutorial ab."
         },
-        "completed-title": "Errungenschaft freigeschaltet!"
+        "completed-title": "Errungenschaft freigeschaltet!",
+        "many-selections-streak": {
+            "name": "Hand der Blitze {{tier}}",
+            "description": "Wählen Sie {{n}} Elemente innerhalb von {{time}} s."
+        },
+        "speedy-selections-streak": {
+            "name": "Schneller als gedacht {{tier}}",
+            "description": "Wählen Sie {{n}} Einträge nacheinander durchschnittlich schneller als {{time}} ms aus."
+        }
     },
     "main": {
         "failed-to-start-header": "Kando konnte nicht gestartet werden",
@@ -189,7 +197,9 @@
         },
         "common": {
             "delayed-option-info": "Nützlich, wenn die Aktion ein Fenster anvisiert, das fokussiert werden muss.",
-            "delayed-option": "Auf Schließen des Menüs warten"
+            "delayed-option": "Auf Schließen des Menüs warten",
+            "inhibit-shortcuts-info": "Deaktiviert alle Kando Shortcuts, während die Tasten simuliert werden. Dadurch wird verhindert, dass die simulierte Eingabe versehentlich andere Menüs aktiviert.",
+            "inhibit-shortcuts": "Deaktivieren von Shortcuts"
         },
         "file": {
             "description": "Öffnet eine Datei oder einen Ordner.",
@@ -416,7 +426,23 @@
             "backup-menus": "menus.json sichern…",
             "backup-settings": "config.json sichern…",
             "restore-menus": "menus.json wiederherstellen…",
-            "restore-settings": "config.json wiederherstellen…"
+            "restore-settings": "config.json wiederherstellen…",
+            "enable-achievement-notifications-info": "Wenn aktiviert, werden Meldungen angezeigt, wenn Erfolge abgeschlossen werden.",
+            "enable-achievement-notifications": "Erfolgsbenachrichtigungen anzeigen",
+            "windows-ink-workaround-info": "Dies aktiviert einen Workaround für das Problem, dass die Stiftposition nicht ermittelt werden kann, wenn Windows Ink aktiviert ist. Dies führt allerdings zu einer Verzögerung von bis zu 100ms vor dem Öffnen des Menüs.",
+            "windows-ink-workaround": "Windows-Ink-Workaround",
+            "max-selection-radius-info": "Wenn auf einen Wert größer als 0 gesetzt, schließen Klicks außerhalb dieses Radius das Menü. Standard ist 0, was bedeutet, dass es keinen maximalen Auswahlradius gibt.",
+            "max-selection-radius": "Maximaler Auswahlradius",
+            "wlroots-specific-options": "Optionen für wlroots-basierte Backends",
+            "options-that-will-only-affect-the-wlroots-backend": "Diese Optionen beeinflussen nur wlroots-basierte Backends und haben keine Auswirkungen auf andere Backends.",
+            "wlroots-pointer-get-timeout-mouse-info": "Die maximale Zeit in Millisekunden, um auf eine Mauszeigerposition von wlroots-basierten Backends zu warten. Wird der Timeout erreicht, wird eine Standardposition verwendet. Standard ist 500ms.",
+            "wlroots-pointer-get-timeout-mouse": "Timeout für die Mauspositionserfassung",
+            "wlroots-pointer-get-timeout-touch-info": "Die maximale Zeit in Millisekunden, um auf eine Touchpointer-Position von wlroots-basierten Backends zu warten. Wird der Timeout erreicht, wird eine Standardposition verwendet. Standard ist 1500ms.",
+            "wlroots-pointer-get-timeout-touch": "Timeout für die Touch-Positionserfassung",
+            "wlroots-pointer-get-timeout-default-behavior-info": "Bestimmt die Standardposition, wenn keine Position aus den wlroots-basierten Backends innerhalb der konfigurierten Timeouts erhalten werden konnte.",
+            "wlroots-pointer-get-timeout-default-behavior": "Zeiger-Timeout-Position",
+            "center": "Mitte",
+            "previously-reported": "Letzte Position"
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
@@ -487,7 +513,18 @@
             "create-your-own-themes": "Erstellen Sie Ihre eigenen Designs",
             "open-theme-directory": "Design-Verzeichnis öffnen",
             "selection-wedges-info": "Wenn aktiviert und vom aktiven Menü-Design unterstützt, werden die auswählbaren Bereich der Menüeinträge hervorgehoben.",
-            "selection-wedges": "Klickbereiche hervorheben"
+            "selection-wedges": "Klickbereiche hervorheben",
+            "save-preset-error-title": "Voreinstellung konnte nicht gespeichert werden",
+            "save-preset-error-message": "Die Farbvoreinstellung konnte nicht gespeichert werden. Bitte prüfen Sie, ob das Verzeichnis schreibbar ist. Fehler: {{error}}",
+            "default-colors": "Standardfarben",
+            "choose-preset": "Wählen Sie eine Voreinstellung…",
+            "reload-presets": "Voreinstellungen neuladen",
+            "save-preset": "Voreinstellung speichern",
+            "open-presets-directory": "Voreinstellungsverzeichnis öffnen",
+            "preset-name-empty": "Der Name der Voreinstellung darf nicht leer sein!",
+            "preset-name-invalid": "Der Name kann nur Buchstaben, Zahlen, Bindestriche, Unterstriche und Leerzeichen enthalten!",
+            "preset-name-exists": "Eine Voreinstellung mit diesem Namen existiert bereits.",
+            "preset-name-placeholder": "z.B. Meine Lieblingsfarben"
         },
         "not-bound": "Nicht gebunden",
         "redo": "Wiederholen",
@@ -531,7 +568,9 @@
             "xp": "XP",
             "in-progress-button": "Aktiv",
             "completed-button": "Abgeschlossen",
-            "reset-button-tooltip": "Alle Errungenschaften und Levelfortschritte zurücksetzen"
+            "reset-button-tooltip": "Alle Errungenschaften und Levelfortschritte zurücksetzen",
+            "no-in-progress-achievements": "Glückwunsch! Sie haben alle Erfolge erreicht.",
+            "no-completed-achievements": "Sie haben noch keine Erfolge abgeschlossen."
         },
         "backup-general-settings-title": "Einstellungen sichern…",
         "restore-backup": "Einstellungen Wiederherstellen…",
@@ -544,6 +583,13 @@
         "restore-menu-settings-warning-message": "Dies wird Ihre aktuellen Menüs und Menüsammlungen mit den Inhalten der ausgewählten Backup-Datei überschreiben!",
         "restore-menu-settings-error-title": "Das Laden der Sicherungsdatei ist fehlgeschlagen!",
         "restore-menu-settings-success-title": "Erfolg!",
-        "restore-menu-settings-success-message": "Ihre Menüs und Menüsammlungen wurden aus der Backup-Datei wiederhergestellt."
+        "restore-menu-settings-success-message": "Ihre Menüs und Menüsammlungen wurden aus der Backup-Datei wiederhergestellt.",
+        "export-menu-error-title": "Export des Menüs fehlgeschlagen",
+        "import-menu-error-title": "Import des Menüs fehlgeschlagen",
+        "import-menu-error-message": "Die ausgewählte Datei konnte nicht importiert werden. Sie enthält kein gültiges Kando-Menü.",
+        "import-menu": "Menü importieren",
+        "quick-select-key-info": "Mit dieser Taste können Sie schnell den Menüeintrag auswählen.",
+        "quick-select-key-label": "Schnellwahltaste",
+        "quick-select-key-recording": "Taste wählen…"
     }
 }
