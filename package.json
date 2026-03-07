@@ -32,7 +32,7 @@
     "@electron-forge/maker-zip": "^7.9.0",
     "@electron-forge/plugin-webpack": "^7.9.0",
     "@eslint/compat": "^2.0.2",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@formkit/auto-animate": "0.8.2",
     "@types/chai": "^5.2.2",
     "@types/chroma-js": "^3.1.1",
