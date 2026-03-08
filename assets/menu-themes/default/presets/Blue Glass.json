@@ -1,0 +1,10 @@
+{
+  "colors": {
+    "background-color": "rgb(60 67 107 / 0.81)",
+    "text-color": "rgb(255 255 255)",
+    "border-color": "rgb(82 64 87 / 0)",
+    "hover-color": "rgb(60 67 107 / 0.52)",
+    "wedge-highlight-color": "rgb(45 93 168 / 0.07)",
+    "wedge-color": "rgb(0 0 0 / 0)"
+  }
+}

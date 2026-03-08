@@ -1,0 +1,8 @@
+{
+  "colors": {
+    "glow-color": "rgb(84 255 74)",
+    "connector-color": "rgb(199 255 201 / 0.75)",
+    "separator-color": "rgb(255 255 255 / 0.2)",
+    "wedge-color": "rgb(140 255 162 / 0.1)"
+  }
+}
