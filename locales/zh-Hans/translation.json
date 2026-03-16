@@ -155,7 +155,7 @@
             "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。"
         },
         "uri": {
-            "description": "打开网页或调用其它URI方案。",
+            "description": "打开网页或调用其它链接方案。",
             "name": "打开 URI",
             "tip-1": "使用 http:// 协议来打开网站。",
             "tip-2": "您可以使用它来调用自定义URI方案，如 slack:// 或 zoommtg:// 。",
@@ -308,7 +308,11 @@
             "wlroots-pointer-get-timeout-default-behavior-info": "决定若在设定时间内无法从 wlroots 后端取得位置时，指针应位于何处。",
             "wlroots-pointer-get-timeout-default-behavior": "指针备选位置",
             "center": "中心",
-            "previously-reported": "上次传回值"
+            "previously-reported": "上次传回值",
+            "windows-ink-workaround-info": "此选项会启用一项兼容性修正，可以解决在 Windows Ink 启用时无法取得触控笔位置的问题。此项会在开启菜单前增加 100 毫秒的延迟，因此如果您不使用触控笔，可关闭此选项提升菜单开启速度。",
+            "windows-ink-workaround": "Windows Ink 兼容支持",
+            "max-selection-radius-info": "若设置为大于 0 的值，点击此半径外的区域将关闭菜单。默认值为 0，表示不限制最大选取半径。",
+            "max-selection-radius": "最大选取半径"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -317,7 +321,7 @@
             "file-example": "file: URI 示例：",
             "search-placeholder": "搜索图标…",
             "url-example": "URL 示例：",
-            "base64-hint": "Base64 编码的图标提供了一种简单的方法将任何类型的图标包含到您的菜单中。您可以使用类似于 [www.base64-image.de]({{link}}) 的服务将任何图像转换为 Base64 编码字符串。这甚至适用于动画 GIF！",
+            "base64-hint": "Base64 编码的图标提供了一种简单的方法将任何类型的图标包含到您的菜单中。您可以使用类似于 [www.base64-image.de]({{link}}) 的服务将任何图像转换为 base64 编码字符串。这甚至适用于动画 GIF！",
             "hint": "在 [这里]({{link}}) 了解如何添加或创建您自己的图标主题。",
             "reload-button-tooltip": "重载所有图标主题"
         },
@@ -377,7 +381,18 @@
             "create-your-own-themes": "创造您自己的主题",
             "open-theme-directory": "打开主题目录",
             "selection-wedges-info": "如果启用且所选主题支持，则菜单项的可选区域将突出显示。",
-            "selection-wedges": "绘制项目选区"
+            "selection-wedges": "绘制项目选区",
+            "save-preset-error-title": "预设集保存失败",
+            "save-preset-error-message": "无法保存色彩预设集。请确认该目录是否具备写入权限。错误： {{error}}",
+            "default-colors": "默认色彩",
+            "choose-preset": "选择预设集…",
+            "reload-presets": "重载预设集",
+            "save-preset": "保存预设集",
+            "open-presets-directory": "打开预设集目录",
+            "preset-name-empty": "预设集名称不能为空！",
+            "preset-name-invalid": "预设集名称只能包含英文字母、数字、连字符、下划线和空格！",
+            "preset-name-exists": "已存在相同名称的预设集。",
+            "preset-name-placeholder": "例：My Custom Colors"
         },
         "not-bound": "未绑定快捷键",
         "shortcut-id-label": "快捷键 ID",
@@ -474,7 +489,10 @@
         "import-menu-error-title": "导入菜单失败",
         "import-menu-error-message": "无法导入所选的文件。该文件不是从 Kando 导出的有效菜单。",
         "export-menu": "导出菜单",
-        "import-menu": "导入菜单"
+        "import-menu": "导入菜单",
+        "quick-select-key-info": "此按键可让您快速选择菜单项。",
+        "quick-select-key-label": "快速选择键",
+        "quick-select-key-recording": "按下按键…"
     },
     "achievements": {
         "attributes": {
