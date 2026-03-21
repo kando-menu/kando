@@ -211,7 +211,8 @@
             "base64-example": "Ejemplo de Base64:",
             "file-example": "Ejemplo de URI file:",
             "url-example": "Ejemplo de URL:",
-            "hint": "Aprenda [aquí]({{link}}) a añadir o crear sus propios temas de iconos."
+            "hint": "Aprenda [aquí]({{link}}) a añadir o crear sus propios temas de iconos.",
+            "base64-hint": "Los iconos codificados en Base64 proporcionan una manera fácil de incluir cualquier tipo de icono dentro de sus menús. Puede usar un servicio como [www.base64.image.de] ({{link}}) para convertir cualquier imagen en código base64. ¡Esto también funciona con los gifs animados!"
         },
         "introduction-dialog": {
             "title": "Le damos la bienvenida a Kando!",
@@ -238,7 +239,8 @@
             "open-theme-directory": "Abrir directorio de temas",
             "create-your-own-themes": "Cree sus propios temas",
             "menu-scale": "Escala del menú",
-            "get-themes-online": "Obtener temas en línea"
+            "get-themes-online": "Obtener temas en línea",
+            "save-preset-error-title": "Error al guardar configuración"
         },
         "not-bound": "No asignado",
         "shortcut-id-label": "Id. de atajo",
