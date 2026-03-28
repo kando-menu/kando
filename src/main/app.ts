@@ -514,6 +514,12 @@ export class KandoApp {
       },
     });
     await this.menuWindow.load();
+
+    // Make sure that closing the menu window just hides it instead of actually closing it.
+    this.menuWindow.on('close', (event) => {
+      event.preventDefault();
+      this.menuWindow.hide();
+    });
   }
 
   /**
