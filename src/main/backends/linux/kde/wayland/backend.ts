@@ -62,12 +62,14 @@ export class KDEWaylandBackend extends LinuxBackend {
    * temporary directory.
    */
   private wmInfoScriptPath: string;
+  private wmInfoScriptName = 'kando-get-info.js';
 
   /**
    * The trigger script is reloaded whenever a new shortcut is bound. We need to store the
    * script ID to be able to unload it.
    */
   private triggerScriptID = -1;
+  private triggerScriptName = 'kando-global-shortcuts.js';
 
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
@@ -94,24 +96,6 @@ export class KDEWaylandBackend extends LinuxBackend {
   public async init() {
     this.kwinVersion = await this.getKWinVersion();
     this.globalShortcutsAvailable = await this.globalShortcuts.isAvailable();
-
-    // Create the KWin script which will send information about the currently focused
-    // window and the mouse pointer position to Kando.
-    const property = this.kwinVersion[0] >= 6 ? 'activeWindow' : 'activeClient';
-    this.wmInfoScriptPath = this.storeScript(
-      'get-info.js',
-      `callDBus('menu.kando.Kando', '/menu/kando/Kando',
-               'menu.kando.Kando', 'sendWMInfo',
-               workspace.${property} ? workspace.${property}.caption : "",
-               workspace.${property} ? workspace.${property}.resourceClass : "",
-               workspace.cursorPos.x, workspace.cursorPos.y,
-               () => {
-                 console.log('Kando: Successfully transmitted the data.');
-               }
-      );
-      console.log('Kando: Received data request.');
-    `
-    );
 
     // This is called if a shortcut is activated either via the global shortcuts portal
     // or via the KWin script. As this backend does not support inhibiting shortcuts by
@@ -144,6 +128,24 @@ export class KDEWaylandBackend extends LinuxBackend {
     // Acquire the KWin scripting interface to run the scripts.
     const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
     this.scriptingInterface = obj.getInterface('org.kde.kwin.Scripting');
+
+    // Create the KWin script which will send information about the currently focused
+    // window and the mouse pointer position to Kando.
+    const property = this.kwinVersion[0] >= 6 ? 'activeWindow' : 'activeClient';
+    this.wmInfoScriptPath = this.storeScript(
+      this.wmInfoScriptName,
+      `callDBus('menu.kando.Kando', '/menu/kando/Kando',
+               'menu.kando.Kando', 'sendWMInfo',
+               workspace.${property} ? workspace.${property}.caption : "",
+               workspace.${property} ? workspace.${property}.resourceClass : "",
+               workspace.cursorPos.x, workspace.cursorPos.y,
+               () => {
+                 console.log('Kando: Successfully transmitted the data.');
+               }
+      );
+      console.log('Kando: Received data request.');
+    `
+    );
   }
 
   /**
@@ -154,6 +156,10 @@ export class KDEWaylandBackend extends LinuxBackend {
   public async deinit(): Promise<void> {
     if (!this.globalShortcutsAvailable) {
       await this.bindShortcuts([]);
+    }
+
+    if (this.triggerScriptID >= 0) {
+      await this.stopScript(this.triggerScriptID, this.triggerScriptName);
     }
   }
 
@@ -179,8 +185,8 @@ export class KDEWaylandBackend extends LinuxBackend {
       }, 1000);
 
       // Run the script. We can stop the script again right after it completed.
-      this.startScript(this.wmInfoScriptPath).then((id) => {
-        this.stopScript(id);
+      this.startScript(this.wmInfoScriptPath, this.wmInfoScriptName).then((scriptID) => {
+        this.stopScript(scriptID, this.wmInfoScriptName);
       });
     });
   }
@@ -301,7 +307,7 @@ export class KDEWaylandBackend extends LinuxBackend {
   private async bindShortcutsViaKWin(shortcuts: string[]) {
     // First disable all shortcuts by stopping the script.
     if (this.triggerScriptID >= 0) {
-      await this.stopScript(this.triggerScriptID);
+      await this.stopScript(this.triggerScriptID, this.triggerScriptName);
       this.triggerScriptID = -1;
     }
 
@@ -333,10 +339,10 @@ export class KDEWaylandBackend extends LinuxBackend {
       })
       .join('\n');
 
-    const scriptPath = this.storeScript('global-shortcuts.js', script);
+    const scriptPath = this.storeScript(this.triggerScriptName, script);
 
     // Finally bind the global shortcut by running the trigger script.
-    this.triggerScriptID = await this.startScript(scriptPath);
+    this.triggerScriptID = await this.startScript(scriptPath, this.triggerScriptName);
   }
 
   /**
@@ -360,29 +366,32 @@ export class KDEWaylandBackend extends LinuxBackend {
    * Starts a KWin script.
    *
    * @param scriptPath Full path to a JavaScript file.
+   * @param scriptName Name of the script. Can be any unique string.
    * @returns An ID which can be used to stop the script.
    */
-  private async startScript(scriptPath: string) {
+  private async startScript(scriptPath: string, scriptName: string): Promise<number> {
+    const scriptID = await this.scriptingInterface.loadScript(scriptPath, scriptName);
+
     const scriptInterface = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
-    const id = await this.scriptingInterface.loadScript(scriptPath);
     await DBus.sessionBus().call(
       new DBus.Message({
         destination: 'org.kde.KWin',
-        path: scriptInterface + id,
+        path: scriptInterface + scriptID,
         interface: 'org.kde.kwin.Script',
         member: 'run',
       })
     );
 
-    return id;
+    return scriptID;
   }
 
   /**
    * Stops a KWin script.
    *
    * @param scriptID The ID of the script to stop.
+   * @param scriptName Name of the script. Can be any unique string.
    */
-  private async stopScript(scriptID: number) {
+  private async stopScript(scriptID: number, scriptName: string) {
     const scriptInterface = this.kwinVersion[0] >= 6 ? '/Scripting/Script' : '/';
     await DBus.sessionBus().call(
       new DBus.Message({
@@ -392,6 +401,8 @@ export class KDEWaylandBackend extends LinuxBackend {
         member: 'stop',
       })
     );
+
+    await this.scriptingInterface.unloadScript(scriptName);
   }
 
   /**
