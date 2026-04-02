@@ -81,7 +81,8 @@ for more information.
       ]);
 
       return {
-        windowName: activewindow['initialTitle'] || '',
+        windowName:
+          (activewindow['initialTitle'] || '') + ' - ' + (activewindow['title'] || ''),
         appName: activewindow['initialClass'] || '',
         pointerX: cursorpos['x'],
         pointerY: cursorpos['y'],
