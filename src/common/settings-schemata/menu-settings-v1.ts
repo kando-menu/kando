@@ -61,6 +61,12 @@ export const MENU_ITEM_SCHEMA_V1 = z.object({
   quickSelectKey: z.string().nullish(),
 
   /**
+   * If true, the menu will stay open after this item is selected. This is useful for
+   * items that should be executed repeatedly without closing the menu each time.
+   */
+  keepOpen: z.boolean().optional().default(false),
+
+  /**
    * The children of this menu item. If this property is set, the menu item represents a
    * submenu.
    */

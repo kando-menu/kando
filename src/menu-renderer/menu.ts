@@ -87,6 +87,12 @@ export class Menu extends EventEmitter {
   private draggedItem: RenderedMenuItem = null;
 
   /**
+   * Stores the root's relative position just before a "keep open" leaf item is selected,
+   * so that resetLeafSelection() can restore the menu to its original position.
+   */
+  private savedRootPosition: { x: number; y: number } | null = null;
+
+  /**
    * The selection chain is the chain of menu items from the root item to the currently
    * selected item. The first element of the array is the root item, the last element is
    * the currently selected item.
@@ -611,6 +617,15 @@ export class Menu extends EventEmitter {
     // Is the item the parent of the currently active item?
     const selectedParent = this.isParentOfCenterItem(item);
 
+    // If the item has keepOpen, save the root position now so we can restore it after
+    // the selection repositions the menu.
+    if (item.keepOpen && !selectedParent && item.type !== 'submenu') {
+      this.savedRootPosition = {
+        x: this.root.relativePosition?.x ?? 0,
+        y: this.root.relativePosition?.y ?? 0,
+      };
+    }
+
     // If the menu item is the parent of the currently selected item, we have to pop the
     // currently selected item from the list of selected menu items. If the item is a
     // child of the currently selected item, we have to push it to the list of selected
@@ -738,9 +753,31 @@ export class Menu extends EventEmitter {
         interactionTarget,
         item.path,
         Date.now() - this.menuShownTime,
-        source
+        source,
+        interactionTarget === InteractionTarget.eItem && item.keepOpen === true
       );
     }
+  }
+
+  /**
+   * This method removes the last selected leaf item from the selection chain and resets
+   * the menu to its interactive state. It is used when a "keep open" item is selected
+   * so that the user can select the item again without the menu closing.
+   */
+  public resetLeafSelection() {
+    if (this.selectionChain.length > 1) {
+      this.selectionChain.pop();
+    }
+    // Restore the root position to where it was before the selection moved it,
+    // so the menu doesn't shift after executing a keep-open action.
+    if (this.savedRootPosition) {
+      this.root.relativePosition = this.savedRootPosition;
+      this.savedRootPosition = null;
+    }
+    this.container.classList.remove('selected');
+    this.updateCSSClasses();
+    this.updateConnectors();
+    this.redraw();
   }
 
   /**

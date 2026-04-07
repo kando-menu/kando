@@ -699,10 +699,16 @@ export class MenuWindow extends BrowserWindow {
             // Find the selected item.
             item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
-            // If the action is not delayed, we execute it immediately.
-            executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
-            if (!executeDelayed) {
+            // If the item has keepOpen set, execute the action immediately and keep
+            // the window open so the user can select the item again.
+            if (item.keepOpen) {
               execute(item);
+            } else {
+              // If the action is not delayed, we execute it immediately.
+              executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
+              if (!executeDelayed) {
+                execute(item);
+              }
             }
           } catch (error) {
             Notification.show({
@@ -712,15 +718,18 @@ export class MenuWindow extends BrowserWindow {
             });
           }
 
-          // Also wait with the execution of the selected action until the fade-out
-          // animation is finished to make sure that any resulting events (such as virtual
-          // key presses) are not captured by the window.
-          this.hideWindow().then(() => {
-            // If the action is delayed, we execute it after the window is hidden.
-            if (executeDelayed) {
-              execute(item);
-            }
-          });
+          // For keepOpen items, we skip hiding the window entirely.
+          if (!item?.keepOpen) {
+            // Also wait with the execution of the selected action until the fade-out
+            // animation is finished to make sure that any resulting events (such as
+            // virtual key presses) are not captured by the window.
+            this.hideWindow().then(() => {
+              // If the action is delayed, we execute it after the window is hidden.
+              if (executeDelayed) {
+                execute(item);
+              }
+            });
+          }
 
           // Track selection for achievements.
           this.kando.achievementTracker.onSelectionMade(

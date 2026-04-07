@@ -18,6 +18,7 @@ import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
   Headerbar,
   Button,
+  Checkbox,
   IconChooserButton,
   TagInput,
   ShortcutPicker,
@@ -177,6 +178,23 @@ export default function Properties() {
               // For all other items, we show the config component that is specific to the
               // item type.
               !isRoot && selectedItem ? getConfigComponent(selectedItem.type) : null
+            }
+            {
+              // For non-submenu items, show the "keep open" option so the user can
+              // execute the action repeatedly without closing the menu.
+              !isRoot && selectedItem && selectedItem.type !== 'submenu' ? (
+                <Checkbox
+                  info={i18next.t('menu-items.common.keep-open-info')}
+                  initialValue={selectedItem.keepOpen || false}
+                  label={i18next.t('menu-items.common.keep-open')}
+                  onChange={(value) => {
+                    editMenuItem(selectedMenu, selectedChildPath, (item) => {
+                      item.keepOpen = value;
+                      return item;
+                    });
+                  }}
+                />
+              ) : null
             }
             {
               // Also, each menu item has the quick-select key. The default value for this

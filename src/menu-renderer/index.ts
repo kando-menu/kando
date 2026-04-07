@@ -157,10 +157,14 @@ Promise.all([
   });
 
   // Hide Kando's window when the user selects an item and notify the main process.
-  menu.on('select', (target, path, time, source) => {
-    if (target === 'item') {
+  menu.on('select', (target, path, time, source, keepOpen) => {
+    if (target === 'item' && !keepOpen) {
       menu.hide();
       settingsButton.hide();
+    } else if (target === 'item' && keepOpen) {
+      // For "keep open" items, reset the selection state so the user can
+      // click the item again without the menu closing.
+      menu.resetLeafSelection();
     }
     window.menuAPI.selectItem(target, path, time, source);
   });
