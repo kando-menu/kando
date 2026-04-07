@@ -28,5 +28,10 @@ export const rendererConfig: Configuration = {
   externals: ignores,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
+    // Node.js built-ins like 'events' are not polyfilled by webpack 5 by default.
+    // The renderer process uses EventEmitter from 'events', so we need a browser polyfill.
+    fallback: {
+      events: require.resolve('events/'),
+    },
   },
 };
