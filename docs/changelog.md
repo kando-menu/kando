@@ -43,6 +43,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 ### :bug: Fixed
 
 - A regression which caused the animation of menu items to be skipped when closing the menu.
+- A regression which caused paste-text menu items to not work on Wayland.
 - A bug which would make it impossible to open a menu until Kando was restarted after a menu got closed by the window manager (e.g. by pressing <kbd>Alt</kbd>+<kbd>F4</kbd>).
 - An issue where the color pickers in the settings dialog would glitch out. Thanks to [@Haruto-works333](https://github.com/Haruto-works333) for this contribution!
 - An issue which prevent the menu to open on Niri if no windows were open. Thanks to [@AurelienJt](https://github.com/AurelienJt) for this fix!
