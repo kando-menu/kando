@@ -187,10 +187,12 @@ export abstract class Backend extends EventEmitter {
       inhibitionID = await this.inhibitAllShortcuts();
     }
 
-    await this.simulateKeysImpl(keys);
-
-    if (inhibitShortcuts) {
-      await this.releaseInhibition(inhibitionID);
+    try {
+      await this.simulateKeysImpl(keys);
+    } finally {
+      if (inhibitShortcuts) {
+        await this.releaseInhibition(inhibitionID);
+      }
     }
   }
 

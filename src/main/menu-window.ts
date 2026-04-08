@@ -708,17 +708,29 @@ export class MenuWindow extends BrowserWindow {
               // the previous app so that hotkey/macro actions reach the right target.
               if (process.platform === 'darwin') {
                 const prevApp = this.kando.getLastWMInfo()?.appName;
+                console.log(`[keepOpen] prevApp: ${prevApp}`);
                 if (prevApp) {
-                  exec(`open -b "${prevApp}"`, () => {
+                  console.log(`[keepOpen] Activating "${prevApp}" via open -b`);
+                  exec(`open -b "${prevApp}"`, (err) => {
+                    if (err) {
+                      console.error(`[keepOpen] open -b failed:`, err.message);
+                    } else {
+                      console.log(`[keepOpen] App activated, executing action in 150ms`);
+                    }
                     // Give the OS a moment to switch the active app, then execute.
                     setTimeout(() => {
+                      console.log(`[keepOpen] Executing action for item: ${item.name}`);
                       execute(item);
                       // After key simulation completes, bring the Kando window back
                       // into focus so the menu remains interactive.
-                      setTimeout(() => this.focus(), 300);
+                      setTimeout(() => {
+                        console.log(`[keepOpen] Refocusing Kando window`);
+                        this.focus();
+                      }, 300);
                     }, 150);
                   });
                 } else {
+                  console.log(`[keepOpen] No prevApp found, executing directly`);
                   execute(item);
                 }
               } else {
