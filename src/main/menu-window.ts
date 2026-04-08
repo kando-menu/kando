@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
+import { exec } from 'node:child_process';
 import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './settings';
@@ -699,10 +700,30 @@ export class MenuWindow extends BrowserWindow {
             // Find the selected item.
             item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
-            // If the item has keepOpen set, execute the action immediately and keep
-            // the window open so the user can select the item again.
+            // If the item has keepOpen set, execute the action and keep the window
+            // open so the user can select the item again.
             if (item.keepOpen) {
-              execute(item);
+              // On macOS, simulated key events go to the frontmost app. Since the
+              // Kando window is active while the menu is open, we must first activate
+              // the previous app so that hotkey/macro actions reach the right target.
+              if (process.platform === 'darwin') {
+                const prevApp = this.kando.getLastWMInfo()?.appName;
+                if (prevApp) {
+                  exec(`open -b "${prevApp}"`, () => {
+                    // Give the OS a moment to switch the active app, then execute.
+                    setTimeout(() => {
+                      execute(item);
+                      // After key simulation completes, bring the Kando window back
+                      // into focus so the menu remains interactive.
+                      setTimeout(() => this.focus(), 300);
+                    }, 150);
+                  });
+                } else {
+                  execute(item);
+                }
+              } else {
+                execute(item);
+              }
             } else {
               // If the action is not delayed, we execute it immediately.
               executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
