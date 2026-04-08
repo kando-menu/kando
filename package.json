@@ -1,5 +1,6 @@
 {
   "name": "kando",
+  "desktopName": "menu.kando.Kando",
   "version": "2.3.0-beta.1",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2026 Simon Schneegans",
@@ -57,7 +58,7 @@
     "css-loader": "^7.1.4",
     "dbus-final": "github:Jelmerro/dbus-final",
     "drag-drop-touch": "github:kando-menu/dragdroptouch",
-    "electron": "^40.6.1",
+    "electron": "^41.2.0",
     "electron-devtools-installer": "^4.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "emojilib": "^4.0.2",
@@ -112,6 +113,7 @@
     "ws": "^8.18.3",
     "zod": "^4.3.6",
     "zundo": "^2.1.0",
-    "zustand": "^5.0.11"
+    "zustand": "^5.0.11",
+    "clipboardy": "^5.3.1"
   }
 }

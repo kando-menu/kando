@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import os from 'node:os';
-import { clipboard } from 'electron';
+import clipboard from 'clipboardy';
 
 import { MenuItem } from '../../common/index';
 import { ItemAction } from './item-action-registry';
@@ -39,7 +39,9 @@ export class TextItemAction implements ItemAction {
   async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
     const text = (item.data as ItemData).text;
     if (text) {
-      clipboard.writeText(text);
+      // Since Electron 33, the clipboard API seems to be broken on Wayland. Hence, we use
+      // the clipboardy package instead.
+      clipboard.writeSync(text);
 
       const ctrl = os.platform() === 'darwin' ? 'MetaLeft' : 'ControlLeft';
 

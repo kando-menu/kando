@@ -21,12 +21,17 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+Beware that this release adds some changes which **may break** some functionality for Hyprland and KDE users only.
+They are marked with a **:collision:** emoji below.
+
 ### :tada: Added
 
 - **Keyboard Navigation!** You can now navigate through the menu items using customizable keyboard shortcuts. For each menu item, you can set a key which can be used to select the item. This is especially powerful in combination with submenus: Open a menu and press a couple of keys quickly to navigate through the submenus and select the item you want!
 - The possibility to include **color presets** in menu themes. The default themes all ship with a few presets now! It is even possible to make your own color presets and share them with the community! Thanks to [@Yar2000T](https://github.com/Yar2000T) and [@elfi-ox](https://github.com/elfi-ox) for this contribution!
+- New buttons in the menu editor to preview the selected menu. This is especially helpful if you are opening menus not directly via keyboard shortcuts.
 - The possibility to import and **export individual menus** via JSON files. Thanks to [@Yar2000T](https://github.com/Yar2000T) for this contribution!
 - A **"Maximum Selection Radius"** setting. If this is set to a value greater than 0, clicks outside this radius will close the menu. This has been requested several times and should make it easier to use Kando on big screens. However keep in mind, that this will usually make your selections slower as you have to be more precise with your mouse movements.
+- An **IPC API** which allows other applications to open custom menus or to listen for menu interactions! With this, you can write plugins for other applications which trigger Kando menus. For instance, you could write a plugin for your code editor which opens a Kando menu with actions related to the current file when you press a certain shortcut. Or you can use this API to add haptic feedback to Kando! Read more about this in the [documentation](https://kando.menu/ipc-interface/).
 - The possibility to temporarily **disable all Kando shortcuts while simulating hotkeys** or executing macros. This is useful if you want to use a shortcut which is also used by Kando to trigger a menu. Surprisingly, this required a complete rewrite of how the binding of shortcuts works, so feel free to report any issues you encounter with shortcuts!
 - An option to **disable achievement notifications**. This can be found in the general settings dialog.
 - An option on Windows to **disable the workaround for the issue where getting the stylus position is not possible with Windows Ink enabled**. This workaround introduces a delay of up to 100ms before opening the menu, so if you don't use a stylus, you can disable it to make the menu open faster.
@@ -35,14 +40,17 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :wrench: Changed
 
+- **:collision: The Hyprland backend** now uses the `title` property of windows in addition to the `initialTitle` property. With this change, you can now make menus which only show up for windows with dynamic titles (e.g. a terminal showing the current directory in the title, or a browser showing the current page title). It considers the window's name now to be **_initialTitle_ - _title_**. If you used window-name conditions in your menus, you may have to update them to match the new window name format.
+- **:collision: On KDE Wayland and Hyprland** the global-shortcuts portal now uses the correct application ID "menu.kando.Kando" even if running the non-flatpak version of Kando. As a consequence, you may need to update your global shortcut configurations. KDE will prompt you to update your shortcuts, on Hyprland you will have to replace any global bindings like ":example-menu" with "menu.kando.Kando:example-menu".
+- **The GNOME Wayland backend** is now used if `XDG_CURRENT_DESKTOP` contains ":gnome" instead of checking for a hard-coded list of GNOME versions. This should make it more robust and compatible with more desktop environments which identify themselves as GNOME-compatible. Thanks to [@radmorecameron](https://github.com/radmorecameron) for this contribution!
 - The icon-picker dialog will now remember the last selected icon theme if you closed it by accident. Before, it would always reset to the currently selected icon theme which could be quite annoying. Thanks to [@Haruto-works333](https://github.com/Haruto-works333) for this contribution!
-- The GNOME Wayland backend is now used if `XDG_CURRENT_DESKTOP` contains ":gnome" instead of checking for a hard-coded list of GNOME versions. This should make it more robust and compatible with more desktop environments which identify themselves as GNOME-compatible. Thanks to [@radmorecameron](https://github.com/radmorecameron) for this contribution!
 - Upgraded many dependencies to their latest versions. This includes an upgrade to Electron 40 which uses Wayland natively now on Linux. Feel free to report any issues you encounter!
 - Pinned all GitHub Actions to specific commit SHAs to increase the security of the build process. Thanks to [@pgoslatara](https://github.com/pgoslatara) for this contribution!
 
 ### :bug: Fixed
 
 - A regression which caused the animation of menu items to be skipped when closing the menu.
+- A regression which caused paste-text menu items to not work on Wayland.
 - A bug which would make it impossible to open a menu until Kando was restarted after a menu got closed by the window manager (e.g. by pressing <kbd>Alt</kbd>+<kbd>F4</kbd>).
 - An issue where the color pickers in the settings dialog would glitch out. Thanks to [@Haruto-works333](https://github.com/Haruto-works333) for this contribution!
 - An issue which prevent the menu to open on Niri if no windows were open. Thanks to [@AurelienJt](https://github.com/AurelienJt) for this fix!
