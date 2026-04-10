@@ -20,7 +20,7 @@ export default defineConfig([
   includeIgnoreFile(gitignorePath),
   js.configs.recommended,
   ...ts.configs.recommended,
-  ...xoReact,
+  ...xoReact(),
   prettierRecommended,
   {
     languageOptions: {
