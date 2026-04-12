@@ -491,7 +491,10 @@
         "import-menu-error-title": "Échec de l'importation du menu",
         "import-menu-error-message": "Le fichier sélectionné n'a pas pu être importé. Il ne contient pas de menu Kando valide.",
         "export-menu": "Exporter le menu",
-        "import-menu": "Importer le menu"
+        "import-menu": "Importer le menu",
+        "quick-select-key-info": "Cette touche permet de rapidement sélectionner l'élément.",
+        "quick-select-key-label": "Touche de sélection rapide",
+        "quick-select-key-recording": "Sélectionnez une touche…"
     },
     "achievements": {
         "attributes": {
