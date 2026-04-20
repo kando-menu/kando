@@ -16,7 +16,7 @@
     "prettier": "prettier --check src",
     "format": "prettier --write src",
     "test": "ts-mocha test/**/*.spec.ts",
-    "i18n": "i18next 'src/**/*.ts' 'src/**/*.tsx'"
+    "i18n": "tsx scripts/i18n.ts"
   },
   "keywords": [],
   "author": {
@@ -68,8 +68,8 @@
     "globals": "^17.4.0",
     "howler": "^2.2.4",
     "i18next": "^25.8.13",
+    "i18next-cli": "^1.42.8",
     "i18next-fs-backend": "^2.6.3",
-    "i18next-parser": "^9.4.0",
     "immer": "^11.1.4",
     "isexe": "^4.0.0",
     "json5": "^2.2.3",
