@@ -16,7 +16,7 @@
     "prettier": "prettier --check src",
     "format": "prettier --write src",
     "test": "ts-mocha test/**/*.spec.ts",
-    "i18n": "tsx scripts/i18n.ts"
+    "i18n": "i18next-cli extract"
   },
   "keywords": [],
   "author": {
