@@ -96,7 +96,7 @@
     "react-transition-group": "^4.4.5",
     "react-virtualized-auto-sizer": "^1.0.25",
     "react-window": "^1.8.11",
-    "read-ini-file": "^4.0.0",
+    "read-ini-file": "^5.0.0",
     "sass": "^1.97.3",
     "sass-loader": "^16.0.7",
     "simple-icons-font": "^16.17.0",
