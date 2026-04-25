@@ -12,9 +12,10 @@ export default defineConfig({
     primaryLanguage: 'en',
     functions: ['t', '*.t'],
     transComponents: ['Trans'],
+    sort: false,
   },
   types: {
-    input: ['locales/{{language}}/{{namespace}}.json'],
+    input: ['locales/en/*.json'],
     output: 'src/types/i18next.d.ts',
   },
 });

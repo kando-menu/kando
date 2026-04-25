@@ -16,6 +16,7 @@ import path from 'path';
 import json5 from 'json5';
 import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
 import i18next from 'i18next';
+import type { ParseKeys } from 'i18next';
 
 import { MenuWindow } from './menu-window';
 import { SettingsWindow } from './settings-window';
@@ -1790,7 +1791,7 @@ export class KandoApp {
     }
 
     const translate = (item: MenuItem) => {
-      item.name = i18next.t(item.name);
+      item.name = i18next.t(item.name as ParseKeys);
       if (item.children) {
         for (const child of item.children) {
           translate(child);

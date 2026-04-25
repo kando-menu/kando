@@ -14,3 +14,9 @@ path = "locales/**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/types/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
+SPDX-License-Identifier = "MIT"

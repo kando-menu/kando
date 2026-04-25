@@ -18,6 +18,9 @@ const gitignorePath = path.resolve(dirname, '.gitignore');
 
 export default defineConfig([
   includeIgnoreFile(gitignorePath),
+  {
+    ignores: ['src/types/**'],
+  },
   js.configs.recommended,
   ...ts.configs.recommended,
   ...xoReact(),
