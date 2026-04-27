@@ -99,7 +99,7 @@
     "read-ini-file": "^4.0.0",
     "sass": "^1.97.3",
     "sass-loader": "^16.0.7",
-    "simple-icons-font": "^16.17.0",
+    "simple-icons-font": "^16.18.0",
     "string-replace-loader": "^3.3.0",
     "style-loader": "^4.0.0",
     "swiper": "^12.1.3",
