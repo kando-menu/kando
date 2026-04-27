@@ -106,7 +106,8 @@
             "gesture-jitter-threshold": "Próg drżenia gestu",
             "gesture-jitter-threshold-info": "Mniejsze ruchy nie będą brane pod uwagę w detekcji gestów. Domyślnie jest to 10px.",
             "gesture-pause-timeout-info": "Zatrzymaj gest na tak długo, aby uruchomić wybór. Domyślnie jest to 100 ms.",
-            "fixed-stroke-length": "Ustalona długość skoku"
+            "fixed-stroke-length": "Ustalona długość skoku",
+            "max-selection-radius": "Maxymalny promień zaznaczania"
         }
     }
 }
