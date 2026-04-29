@@ -252,6 +252,12 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
 
   /** If enabled, notifications are shown when achievements are unlocked. */
   enableAchievementNotifications: z.boolean().default(true),
+
+  /** If true, all CSS transitions and animations in the menu are disabled. */
+  disableMenuAnimations: z.boolean().default(false),
+
+  /** If true, pointer-distance scaling of menu items is disabled. */
+  disablePointerScaling: z.boolean().default(false),
 });
 
 export type GeneralSettingsV1 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V1>;

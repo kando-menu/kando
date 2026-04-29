@@ -147,7 +147,16 @@ export class MenuTheme {
     link.type = 'text/css';
     link.id = 'kando-menu-theme';
     head.appendChild(link);
-
+    const oldStyle = document.getElementById('kando-no-animations-style');
+    if (oldStyle) {
+      oldStyle.remove();
+    }
+    const style = document.createElement('style');
+    style.id = 'kando-no-animations-style';
+    style.textContent =
+    '#kando-menu.no-animations, #kando-menu.no-animations * {' +
+    'transition: none !important; animation: none !important; }';
+    head.appendChild(style);
     // Register the colors as CSS properties.
     Object.entries(this.description.colors).forEach(([name, color]) => {
       // Try to register the property. If this fails, we had registered it before and

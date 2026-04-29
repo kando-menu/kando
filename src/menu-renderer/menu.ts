@@ -228,6 +228,7 @@ export class Menu extends EventEmitter {
       }
 
       // Finally, show the menu.
+      this.container.classList.toggle('no-animations', !!this.settings.disableMenuAnimations);
       this.container.classList.remove('hidden');
       this.menuShownTime = Date.now();
     };
@@ -307,7 +308,7 @@ export class Menu extends EventEmitter {
       '--fade-out-duration',
       `${this.settings.fadeOutDuration}ms`
     );
-
+    this.container.classList.toggle('no-animations', !!this.settings.disableMenuAnimations);
     this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
     this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
     this.pointerInput.dragThreshold = this.settings.dragThreshold;
@@ -1062,7 +1063,12 @@ export class Menu extends EventEmitter {
           } else {
             // Set the custom CSS properties of the item, like the angular difference between
             // the item and the mouse pointer direction.
-            this.theme.setChildProperties(child, this.latestInput.angle);
+            this.theme.setChildProperties(
+              child,
+              this.settings.disablePointerScaling
+              ? (child.angle + 180) % 360
+              : this.latestInput.angle
+            );
             child.nodeDiv.style.transform = '';
             delete child.relativePosition;
           }

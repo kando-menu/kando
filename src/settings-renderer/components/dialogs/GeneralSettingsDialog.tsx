@@ -360,6 +360,20 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.enable-gamepad-support')}
             settingsKey="enableGamepad"
           />
+          <SettingsCheckbox
+          info={i18next.t(
+            'settings.general-settings-dialog.disable-menu-animations-info'
+          )}
+          label={i18next.t('settings.general-settings-dialog.disable-menu-animations')}
+          settingsKey="disableMenuAnimations"
+          />
+          <SettingsCheckbox
+          info={i18next.t(
+            'settings.general-settings-dialog.disable-pointer-scaling-info'
+          )}
+          label={i18next.t('settings.general-settings-dialog.disable-pointer-scaling')}
+          settingsKey="disablePointerScaling"
+          />
           {backend.name === 'Windows' && (
             <SettingsCheckbox
               info={i18next.t(
