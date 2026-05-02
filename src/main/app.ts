@@ -526,10 +526,10 @@ export class KandoApp {
 
     // Make sure that closing the menu window just hides it instead of actually closing it.
     this.menuWindow.on('close', (event) => {
-      if (!this.isQuitting) {
-        event.preventDefault();
-        this.menuWindow.hide();
-      }
+      // if (!this.isQuitting) {
+      //   event.preventDefault();
+      //   this.menuWindow.hide();
+      // }
     });
   }
 
