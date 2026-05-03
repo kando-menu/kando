@@ -13,7 +13,7 @@ import i18next from 'i18next';
 
 import * as classes from './PreviewFooter.module.scss';
 
-import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
+import { ItemTypeRegistry } from '../../../common/action-meta-registry';
 
 import FooterButton from './FooterButton';
 

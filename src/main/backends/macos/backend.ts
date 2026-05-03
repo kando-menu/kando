@@ -15,7 +15,7 @@ import { native } from './native';
 import { Backend } from '../backend';
 import { KeySequence, AppDescription, MenuItem } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
-import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
+import { ItemTypeRegistry } from '../../../common/action-meta-registry';
 
 export class MacosBackend extends Backend {
   /**

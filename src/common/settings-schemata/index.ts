@@ -12,14 +12,16 @@ export type { GeneralSettingsV1 as GeneralSettings } from './general-settings-v1
 export { GENERAL_SETTINGS_SCHEMA_V1 as GENERAL_SETTINGS_SCHEMA } from './general-settings-v1';
 
 export type {
-  MenuConditionsV1 as MenuConditions,
-  MenuItemV1 as MenuItem,
-  MenuV1 as Menu,
-  MenuCollectionV1 as MenuCollection,
-  MenuSettingsV1 as MenuSettings,
-} from './menu-settings-v1';
-export { MENU_SETTINGS_SCHEMA_V1 as MENU_SETTINGS_SCHEMA } from './menu-settings-v1';
-export { MENU_ITEM_SCHEMA_V1 as MENU_ITEM_SCHEMA } from './menu-settings-v1';
+  MenuConditionsV2 as MenuConditions,
+  MenuItemV2 as MenuItem,
+  MenuV2 as Menu,
+  MenuCollectionV2 as MenuCollection,
+  MenuSettingsV2 as MenuSettings,
+  MenuActionV2 as MenuAction,
+  MenuActionTypeV2 as MenuActionType,
+} from './menu-settings-v2';
+export { MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA } from './menu-settings-v2';
+export { MENU_ITEM_SCHEMA_V2 as MENU_ITEM_SCHEMA } from './menu-settings-v2';
 
 export type { ExportedMenuV1 as ExportedMenu } from './exported-menu-v1';
 export { EXPORTED_MENU_SCHEMA_V1 as EXPORTED_MENU_SCHEMA } from './exported-menu-v1';

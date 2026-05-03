@@ -1,7 +1,7 @@
 {
   "name": "kando",
   "desktopName": "menu.kando.Kando",
-  "version": "2.3.0",
+  "version": "3.0.0-alpha1",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2026 Simon Schneegans",
   "main": ".webpack/main",
@@ -48,11 +48,13 @@
     "@types/react-dom": "^19.2.0",
     "@types/react-transition-group": "^4.4.12",
     "@types/react-window": "^1.8.8",
+    "@types/semver": "^7.7.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "chai": "^6.2.2",
     "chokidar": "^5.0.0",
     "chroma-js": "^3.2.0",
     "classnames": "^2.5.1",
+    "clipboardy": "^5.3.1",
     "cmake-js": "^8.0.0",
     "commander": "^14.0.3",
     "copy-webpack-plugin": "^14.0.0",
@@ -99,6 +101,7 @@
     "read-ini-file": "^4.0.0",
     "sass": "^1.97.3",
     "sass-loader": "^16.0.7",
+    "semver": "^7.7.4",
     "simple-icons-font": "^16.17.0",
     "string-replace-loader": "^3.3.0",
     "style-loader": "^4.0.0",
@@ -113,7 +116,6 @@
     "ws": "^8.20.0",
     "zod": "^4.3.6",
     "zundo": "^2.1.0",
-    "zustand": "^5.0.12",
-    "clipboardy": "^5.3.1"
+    "zustand": "^5.0.12"
   }
 }
