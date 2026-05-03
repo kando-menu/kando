@@ -13,6 +13,8 @@ import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './settings';
 import {
+  MenuSubmenuItem,
+  MenuButtonItem,
   ShowMenuRequest,
   Menu,
   MenuItem,
@@ -21,8 +23,7 @@ import {
   InteractionTarget,
 } from '../common';
 import { IPCCallbacks } from '../common/ipc';
-import { ItemActionRegistry } from './item-actions/item-action-registry';
-import { Notification } from './utils/notification';
+import { ActionRegistry } from './actions/action-registry';
 import { KandoApp } from './app';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -620,16 +621,18 @@ export class MenuWindow extends BrowserWindow {
    *
    * @param root The root item of the menu.
    * @param path The path to the menu item to select.
-   * @returns The menu item at the given path.
-   * @throws If the path is invalid.
+   * @returns The menu item at the given path or null if no item is found at the path.
    */
-  private getMenuItemAtPath(root: DeepReadonly<MenuItem>, path: string) {
+  private getMenuItemAtPath(
+    root: DeepReadonly<MenuItem>,
+    path: string
+  ): DeepReadonly<MenuItem> | null {
     let item = root;
     const indices = this.pathToArray(path);
 
     for (const index of indices) {
-      if (!item.children || index >= item.children.length) {
-        throw new Error(`Invalid path "${path}".`);
+      if (item.type !== 'submenu' || !item.children || index >= item.children.length) {
+        return null;
       }
 
       item = item.children[index];
@@ -677,48 +680,49 @@ export class MenuWindow extends BrowserWindow {
         time: number,
         source: SelectionSource
       ) => {
+        const item = this.getMenuItemAtPath(this.lastMenu.root, path);
+
+        if (!item) {
+          console.error('No item found at path: ', path);
+          return;
+        }
+
         const pathArray = this.pathToArray(path);
 
-        if (target === InteractionTarget.eItem) {
-          const execute = (item: DeepReadonly<MenuItem>) => {
-            ItemActionRegistry.getInstance()
-              .execute(item, this.kando)
-              .catch((error) => {
-                Notification.show({
-                  title: 'Failed to execute action',
-                  message: error instanceof Error ? error.message : error,
-                  type: 'error',
-                });
-              });
-          };
+        // If the target of the selection is a submenu, we execute its openWorkflow.
+        // The openWorkflow of a submenu uses the same type as the hoverWorkflow.
+        if (target === InteractionTarget.eSubmenu) {
+          const submenu = item as DeepReadonly<MenuSubmenuItem>;
+          if (submenu.openWorkflow) {
+            ActionRegistry.getInstance().executeHoverWorkflow(
+              submenu.openWorkflow,
+              this.kando
+            );
+          }
+        }
 
-          let item: DeepReadonly<MenuItem>;
-          let executeDelayed = false;
+        // For buttons, we execute the selectWorkflow. Yet we have to check whether we
+        // have to wait for the fade-out animation to finish before executing the
+        // workflow.
+        if (target === InteractionTarget.eItem && item.type === 'button') {
+          const button = item as DeepReadonly<MenuButtonItem>;
 
-          try {
-            // Find the selected item.
-            item = this.getMenuItemAtPath(this.lastMenu.root, path);
-
-            // If the action is not delayed, we execute it immediately.
-            executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
-            if (!executeDelayed) {
-              execute(item);
-            }
-          } catch (error) {
-            Notification.show({
-              title: 'Failed to select item',
-              message: error instanceof Error ? error.message : error,
-              type: 'error',
-            });
+          // If the action is not delayed, we execute it immediately.
+          if (!button.selectWorkflow.waitForFadeout) {
+            ActionRegistry.getInstance().executeSelectWorkflow(
+              button.selectWorkflow,
+              this.kando
+            );
           }
 
-          // Also wait with the execution of the selected action until the fade-out
-          // animation is finished to make sure that any resulting events (such as virtual
-          // key presses) are not captured by the window.
+          // Else we execute the action after the window is hidden.
           this.hideWindow().then(() => {
             // If the action is delayed, we execute it after the window is hidden.
-            if (executeDelayed) {
-              execute(item);
+            if (button.selectWorkflow.waitForFadeout) {
+              ActionRegistry.getInstance().executeSelectWorkflow(
+                button.selectWorkflow,
+                this.kando
+              );
             }
           });
 
@@ -771,13 +775,30 @@ export class MenuWindow extends BrowserWindow {
           }
         }
 
-        // Call the provided callbacks if they exist.
+        // Call the provided IPC callbacks if they exist.
         this.ipcCallbacks.onSelect(target, pathArray);
       }
     );
 
-    // When the user hovers a menu item, we report this to whoever requested the menu.
+    // When the user hovers a menu item, we report this to whoever requested the menu. We
+    // also run any hover-workflow of the item if it has one.
     ipcMain.on('menu-window.hover-item', (event, target, path) => {
+      const item = this.getMenuItemAtPath(this.lastMenu.root, path);
+
+      if (!item) {
+        console.error('No item found at path: ', path);
+        return;
+      }
+
+      if (target === InteractionTarget.eItem || target === InteractionTarget.eSubmenu) {
+        if (item.hoverWorkflow) {
+          ActionRegistry.getInstance().executeHoverWorkflow(
+            item.hoverWorkflow,
+            this.kando
+          );
+        }
+      }
+
       this.ipcCallbacks.onHover(target, this.pathToArray(path));
     });
 

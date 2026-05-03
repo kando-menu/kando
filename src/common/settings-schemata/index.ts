@@ -22,11 +22,15 @@ export type {
   SimulateHotkeyActionV2 as SimulateHotkeyAction,
   MenuConditionsV2 as MenuConditions,
   MenuItemV2 as MenuItem,
+  MenuSubmenuItemV2 as MenuSubmenuItem,
+  MenuButtonItemV2 as MenuButtonItem,
   MenuV2 as Menu,
   MenuCollectionV2 as MenuCollection,
   MenuSettingsV2 as MenuSettings,
   WorkflowActionV2 as WorkflowAction,
   WorkflowActionTypeV2 as WorkflowActionType,
+  SelectWorkflowV2 as SelectWorkflow,
+  HoverWorkflowV2 as HoverWorkflow,
 } from './menu-settings-v2';
 export {
   MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA,

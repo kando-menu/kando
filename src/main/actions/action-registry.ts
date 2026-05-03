@@ -8,8 +8,14 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuItem, WorkflowAction, WorkflowActionType } from '../../common';
+import {
+  HoverWorkflow,
+  SelectWorkflow,
+  WorkflowAction,
+  WorkflowActionType,
+} from '../../common';
 import { KandoApp } from '../app';
+import { Notification } from '../utils/notification';
 import { DeepReadonly } from '../settings';
 
 import { execute as executeCommand } from './execute-command';
@@ -74,40 +80,74 @@ export class ActionRegistry {
   }
 
   /**
-   * This method executes the action of the given menu item.
+   * Executes the select-workflow of a menu item.
    *
-   * @param item The menu item which is executed.
+   * @param workflow The select-workflow to execute.
    * @param app The app which executed the action.
-   * @returns A promise which resolves when the action has been successfully executed.
    */
-  async execute(item: DeepReadonly<MenuItem>, app: KandoApp) {
-    if (item.type !== 'button' || !item.selectWorkflow) {
-      return;
-    }
-
+  public async executeSelectWorkflow(
+    workflow: DeepReadonly<SelectWorkflow>,
+    app: KandoApp
+  ) {
     let inhibitionID = 0;
-    if (item.selectWorkflow.inhibitShortcuts) {
+    if (workflow.inhibitShortcuts) {
       inhibitionID = await app.getBackend().inhibitAllShortcuts();
     }
 
     try {
-      for (const action of item.selectWorkflow.actions) {
+      for (const action of workflow.actions) {
         await this.executeAction(action, app);
       }
+    } catch (error) {
+      Notification.show({
+        title: 'Failed to execute workflow',
+        message: error instanceof Error ? error.message : error,
+        type: 'error',
+      });
     } finally {
-      if (item.selectWorkflow.inhibitShortcuts) {
+      if (workflow.inhibitShortcuts) {
         await app.getBackend().releaseInhibition(inhibitionID);
       }
     }
   }
 
+  /**
+   * Executes the hover-workflow of a menu item.
+   *
+   * @param workflow The hover-workflow to execute.
+   * @param app The app which executed the action.
+   */
+  public async executeHoverWorkflow(
+    workflow: DeepReadonly<HoverWorkflow>,
+    app: KandoApp
+  ) {
+    try {
+      for (const action of workflow.actions) {
+        await this.executeAction(action, app);
+      }
+    } catch (error) {
+      Notification.show({
+        title: 'Failed to execute workflow',
+        message: error instanceof Error ? error.message : error,
+        type: 'error',
+      });
+    }
+  }
+
+  /**
+   * Executes the given action.
+   *
+   * @param action The action to execute.
+   * @param app The app which executed the action.
+   * @returns A promise which resolves when the action has been executed.
+   */
   private executeAction(
     action: DeepReadonly<WorkflowAction>,
     app: KandoApp
   ): Promise<void> {
-    const executor = ACTION_EXECUTORS[
-      action.type
-    ] as WorkflowActionExecutor<WorkflowActionType>;
+    const executor = ACTION_EXECUTORS[action.type] as WorkflowActionExecutor<
+      typeof action.type
+    >;
     return executor(action, app);
   }
 }

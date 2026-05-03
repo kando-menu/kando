@@ -433,6 +433,7 @@ export const WORKFLOW_ACTION_TYPE_META_V2: Readonly<
 // ------------------------------------------------------------------------------------ //
 
 export type MenuV2 = z.infer<typeof MENU_SCHEMA_V2>;
+
 export type ExecuteCommandActionV2 = z.infer<typeof EXECUTE_COMMAND_ACTION_SCHEMA_V2>;
 export type ExecuteMacroActionV2 = z.infer<typeof EXECUTE_MACRO_ACTION_SCHEMA_V2>;
 export type OpenFileActionV2 = z.infer<typeof OPEN_FILE_ACTION_SCHEMA_V2>;
@@ -442,12 +443,17 @@ export type OpenURIActionV2 = z.infer<typeof OPEN_URI_ACTION_SCHEMA_V2>;
 export type SetClipboardActionV2 = z.infer<typeof SET_CLIPBOARD_ACTION_SCHEMA_V2>;
 export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
 
+export type SelectWorkflowV2 = z.infer<typeof SELECT_WORKFLOW_SCHEMA_V2>;
+export type HoverWorkflowV2 = z.infer<typeof HOVER_WORKFLOW_SCHEMA_V2>;
+
 /**
  * Due to the recursive nature of the menu items, we need to explicitly define this type
  * here.
  */
 export type MenuSubmenuItemV2 = z.infer<typeof MENU_ITEM_BASE_SCHEMA_V2> & {
   type: 'submenu';
+  hoverWorkflow?: HoverWorkflowV2;
+  openWorkflow?: HoverWorkflowV2;
   children?: MenuItemV2[] | null;
 };
 export type MenuButtonItemV2 = z.infer<typeof MENU_BUTTON_ITEM_SCHEMA_V2>;
