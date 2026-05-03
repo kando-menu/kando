@@ -36,6 +36,7 @@ export {
   MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA,
   MENU_ITEM_SCHEMA_V2 as MENU_ITEM_SCHEMA,
   WORKFLOW_ACTION_TYPE_META_V2 as WORKFLOW_ACTION_TYPE_META,
+  MENU_SUBMENU_ITEM_SCHEMA_V2 as MENU_SUBMENU_ITEM_SCHEMA,
 } from './menu-settings-v2';
 
 export type { ExportedMenuV1 as ExportedMenu } from './exported-menu-v1';

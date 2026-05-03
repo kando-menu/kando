@@ -232,7 +232,7 @@ export const MENU_CONDITIONS_SCHEMA_V2 = z.object({
  */
 export const MENU_SCHEMA_V2 = z.object({
   /** The root item of the menu. */
-  root: MENU_ITEM_SCHEMA_V2,
+  root: MENU_SUBMENU_ITEM_SCHEMA_V2,
 
   /**
    * The shortcut to open the menu. Something like 'Control+Space'.

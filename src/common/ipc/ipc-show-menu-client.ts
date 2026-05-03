@@ -11,7 +11,7 @@
 import { EventEmitter } from 'events';
 
 import * as IPCTypes from './types';
-import { TypedEventEmitter, MenuItem, InteractionTarget } from '..';
+import { TypedEventEmitter, InteractionTarget, MenuSubmenuItem } from '..';
 import { createCrossWebSocket } from './cross-websocket';
 
 /** These events are emitted by the IPC client when menu interactions occur. */
@@ -117,12 +117,12 @@ export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmit
 
   /**
    * Sends a show-menu request to the IPC server. The menu structure must conform to the
-   * MenuItem type. Emits the 'error' event if the request is malformed or if the client
-   * is not connected.
+   * MenuSubmenuItem type. Emits the 'error' event if the request is malformed or if the
+   * client is not connected.
    *
-   * @param menu The menu structure to show, as a MenuItem object.
+   * @param menu The menu structure to show, as a MenuSubmenuItem object.
    */
-  public showMenu(menu: MenuItem): void {
+  public showMenu(menu: MenuSubmenuItem): void {
     if (!this.ws) {
       this.emit('error', IPCTypes.IPCErrorReason.eNotConnected);
       return;

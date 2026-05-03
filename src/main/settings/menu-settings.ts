@@ -23,6 +23,7 @@ import {
   MenuSettingsV2,
   MenuItemV2,
   MenuV2,
+  MenuSubmenuItemV2,
 } from '../../common/settings-schemata/menu-settings-v2';
 
 import { MenuSettings } from '../../common/settings-schemata';
@@ -282,7 +283,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
   // lot. We copy over the menus and transform the menu items to the new format.
   for (const oldMenu of oldSettings.menus) {
     const newMenu: MenuV2 = {
-      root: migrateToMenuItemV2(oldMenu.root),
+      root: migrateToMenuItemV2(oldMenu.root) as MenuSubmenuItemV2,
       shortcut: oldMenu.shortcut,
       shortcutID: oldMenu.shortcutID,
       centered: oldMenu.centered,

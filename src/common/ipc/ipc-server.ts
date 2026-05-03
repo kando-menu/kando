@@ -15,7 +15,7 @@ import fs from 'fs';
 import path from 'path';
 import * as IPCTypes from './types';
 
-import { TypedEventEmitter, MenuItem, InteractionTarget } from '..';
+import { TypedEventEmitter, InteractionTarget, MenuSubmenuItem } from '..';
 
 /**
  * Callbacks that are provided to the IPC server event handlers to report menu
@@ -33,7 +33,7 @@ export type IPCCallbacks = {
 /** These events are emitted by the IPC server when clients send requests. */
 type IPCServerEvents = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  'show-menu': [menu: MenuItem];
+  'show-menu': [menu: MenuSubmenuItem];
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'start-observing': [observerID: number, callbacks: IPCCallbacks];
   // eslint-disable-next-line @typescript-eslint/naming-convention

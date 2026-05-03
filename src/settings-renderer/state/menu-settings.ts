@@ -20,6 +20,7 @@ import {
   MenuCollection,
   Menu,
   MenuItem,
+  MenuSubmenuItem,
 } from '../../common';
 
 // The menu settings state object allows access, modification, and change notification of
@@ -312,7 +313,8 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
 
             const toSubmenuPath = toPath.slice(0, toPath.length - 1);
             let toIndex = toPath[toPath.length - 1];
-            const { item: toSubmenu } = getMenuItem(toMenu.root, toSubmenuPath);
+            const toSubmenu = getMenuItem(toMenu.root, toSubmenuPath)
+              .item as MenuSubmenuItem;
 
             // If the last index is -1, we want to insert the item at the end of the
             // children array of the submenu.
@@ -460,15 +462,15 @@ function getMenuItem(
 ): {
   item: MenuItem;
   index: number | null;
-  parent: MenuItem | null;
+  parent: MenuSubmenuItem | null;
 } {
   let item = root;
   let index = null;
   let parent = null;
   for (let i = 0; i < itemPath.length; i++) {
-    parent = item;
+    parent = item as MenuSubmenuItem;
     index = itemPath[i];
-    item = item.children[index];
+    item = parent.children[index];
   }
 
   // If the parent was not changed above, we are editing the root item.
