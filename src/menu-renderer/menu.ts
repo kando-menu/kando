@@ -435,7 +435,7 @@ export class Menu extends EventEmitter {
           keyHandled = true;
         } else {
           const currentItem = this.selectionChain[this.selectionChain.length - 1];
-          if (currentItem.children) {
+          if (currentItem.type === 'submenu') {
             for (let i = 0; i < currentItem.children.length; i++) {
               const child = currentItem.children[i] as RenderedMenuItem;
               const quickSelectKey = (
@@ -560,7 +560,7 @@ export class Menu extends EventEmitter {
       item.nodeDiv.classList.add(`level-${level}`);
       item.nodeDiv.classList.add(`type-${item.type}`);
 
-      if (item.children) {
+      if (item.type === 'submenu') {
         item.connectorDiv = document.createElement('div');
         item.connectorDiv.classList.add('connector');
         nodeDiv.appendChild(item.connectorDiv);
@@ -1012,7 +1012,7 @@ export class Menu extends EventEmitter {
     // If the mouse is not in the center, check if it is in one of the children of the
     // currently selected item.
     const currentItem = this.selectionChain[this.selectionChain.length - 1];
-    if (currentItem.children) {
+    if (currentItem.type === 'submenu') {
       for (const child of currentItem.children as RenderedMenuItem[]) {
         if (
           math.isAngleBetween(this.latestInput.angle, child.wedge.start, child.wedge.end)
@@ -1056,22 +1056,24 @@ export class Menu extends EventEmitter {
           this.isParentOfCenterItem(this.hoveredItem)
         );
 
-        for (let j = 0; j < item.children?.length; ++j) {
-          const child = item.children[j] as RenderedMenuItem;
-          if (child === this.draggedItem || child === this.clickedItem) {
-            child.relativePosition = this.latestInput.relativePosition;
-            child.nodeDiv.style.transform = `translate(${child.relativePosition.x}px, ${child.relativePosition.y}px)`;
-          } else {
-            // Set the custom CSS properties of the item, like the angular difference between
-            // the item and the mouse pointer direction.
-            this.theme.setChildProperties(
-              child,
-              this.settings.enablePointerReactiveEffects
-                ? this.latestInput.angle
-                : (child.angle + 180) % 360
-            );
-            child.nodeDiv.style.transform = '';
-            delete child.relativePosition;
+        if (item.type === 'submenu') {
+          for (let j = 0; j < item.children.length; ++j) {
+            const child = item.children[j] as RenderedMenuItem;
+            if (child === this.draggedItem || child === this.clickedItem) {
+              child.relativePosition = this.latestInput.relativePosition;
+              child.nodeDiv.style.transform = `translate(${child.relativePosition.x}px, ${child.relativePosition.y}px)`;
+            } else {
+              // Set the custom CSS properties of the item, like the angular difference between
+              // the item and the mouse pointer direction.
+              this.theme.setChildProperties(
+                child,
+                this.settings.enablePointerReactiveEffects
+                  ? this.latestInput.angle
+                  : (child.angle + 180) % 360
+              );
+              child.nodeDiv.style.transform = '';
+              delete child.relativePosition;
+            }
           }
         }
       }
@@ -1161,12 +1163,12 @@ export class Menu extends EventEmitter {
       if (i === this.selectionChain.length - 1) {
         item.nodeDiv.classList.add('active');
 
-        if (item.children) {
+        if (item.type === 'submenu') {
           for (const child of item.children as RenderedMenuItem[]) {
             clearClasses(child);
             child.nodeDiv.classList.add('child');
 
-            if (child.children) {
+            if (child.type === 'submenu') {
               for (const grandchild of child.children as RenderedMenuItem[]) {
                 clearClasses(grandchild);
                 grandchild.nodeDiv.classList.add('grandchild');
@@ -1177,7 +1179,7 @@ export class Menu extends EventEmitter {
       } else {
         item.nodeDiv.classList.add('parent');
 
-        if (item.children) {
+        if (item.type === 'submenu') {
           for (const child of item.children as RenderedMenuItem[]) {
             clearClasses(child);
             child.nodeDiv.classList.add('grandchild');
@@ -1199,9 +1201,11 @@ export class Menu extends EventEmitter {
   private setupPaths(item: RenderedMenuItem, path = '') {
     item.path = path === '' ? '/' : path;
 
-    for (let i = 0; i < item.children?.length; ++i) {
-      const child = item.children[i] as RenderedMenuItem;
-      this.setupPaths(child, `${path}/${i}`);
+    if (item.type === 'submenu') {
+      for (let i = 0; i < item.children.length; ++i) {
+        const child = item.children[i] as RenderedMenuItem;
+        this.setupPaths(child, `${path}/${i}`);
+      }
     }
   }
 
@@ -1216,7 +1220,7 @@ export class Menu extends EventEmitter {
    */
   private setupAngles(item: RenderedMenuItem) {
     // If the item has no children, we can stop here.
-    if (!item.children || item.children.length === 0) {
+    if (item.type !== 'submenu' || item.children.length === 0) {
       return;
     }
 
@@ -1263,6 +1267,9 @@ export class Menu extends EventEmitter {
 
   private isChildOfCenterItem(item: RenderedMenuItem) {
     const centerItem = this.selectionChain[this.selectionChain.length - 1];
+    if (centerItem.type !== 'submenu') {
+      return false;
+    }
     return centerItem.children?.includes(item);
   }
 

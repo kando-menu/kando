@@ -24,7 +24,6 @@ import * as math from '../../../common/math';
 import * as utils from './utils';
 
 import { ThemedIcon } from '../common';
-import { ItemTypeRegistry } from '../../../common/action-meta-registry';
 import { ensureUniqueKeys } from '../../utils';
 
 /**
@@ -131,7 +130,7 @@ export default function MenuPreview() {
   for (let i = 0; i < selectedChildPath.length; i++) {
     const childIndex = selectedChildPath[i];
     const child = centerItem.children[childIndex];
-    const type = ItemTypeRegistry.getInstance().getType(child.type);
+    const type = ActionRegistry.getInstance().getType(child.type);
     if (type?.hasChildren) {
       showingRootMenu = false;
       parentAngle = utils.getParentAngle(childAngles[childIndex]);
@@ -323,7 +322,7 @@ export default function MenuPreview() {
     // the key of the CSSTransition component.
     if (doAnimation) {
       const child = centerItem.children[which];
-      const type = ItemTypeRegistry.getInstance().getType(child.type);
+      const type = ActionRegistry.getInstance().getType(child.type);
       if (type?.hasChildren) {
         setTransitionPing(!transitionPing);
         setTransitionAngle(childAngles[which]);
@@ -563,7 +562,7 @@ export default function MenuPreview() {
 
     // Compile a list of potential drop targets.
     const children = centerItem.children.map((child) => {
-      const type = ItemTypeRegistry.getInstance().getType(child.type);
+      const type = ActionRegistry.getInstance().getType(child.type);
       return {
         angle: child.angle,
         dropTarget: type?.hasChildren,
@@ -621,7 +620,7 @@ export default function MenuPreview() {
                 // we create a temporary dragged item which will be used as a "drop
                 // indicator" item.
                 if (tempItem === null && dragIndex === null) {
-                  const supported = ItemTypeRegistry.getInstance().hasSupportedDataType(
+                  const supported = ActionRegistry.getInstance().hasSupportedDataType(
                     event.dataTransfer
                   );
 
@@ -686,7 +685,7 @@ export default function MenuPreview() {
                     }
                   }
                 } else {
-                  const item = await ItemTypeRegistry.getInstance().createItem(
+                  const item = await ActionRegistry.getInstance().createItem(
                     event.dataTransfer
                   );
 

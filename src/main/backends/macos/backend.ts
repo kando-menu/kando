@@ -13,9 +13,13 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { KeySequence, AppDescription, MenuItem } from '../../../common';
+import {
+  KeySequence,
+  AppDescription,
+  MenuItem,
+  WORKFLOW_ACTION_TYPE_META,
+} from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
-import { ItemTypeRegistry } from '../../../common/action-meta-registry';
 
 export class MacosBackend extends Backend {
   /**
@@ -135,18 +139,26 @@ export class MacosBackend extends Backend {
     name: string,
     path: string
   ): Promise<MenuItem | null> {
-    const commandItemType = ItemTypeRegistry.getInstance().getType('command');
     const appName = name.slice(0, name.lastIndexOf('.'));
 
     // If an executable file was dropped, create a menu item for it.
     if (await isexe(path, { ignoreErrors: true })) {
       return {
-        type: 'command',
+        type: 'button',
         name: appName,
-        icon: commandItemType.defaultIcon,
-        iconTheme: commandItemType.defaultIconTheme,
-        data: {
-          command: '"' + path + '"',
+        icon: WORKFLOW_ACTION_TYPE_META['execute-command'].icon,
+        iconTheme: WORKFLOW_ACTION_TYPE_META['execute-command'].iconTheme,
+        selectWorkflow: {
+          waitForFadeout: false,
+          inhibitShortcuts: false,
+          actions: [
+            {
+              type: 'execute-command',
+              command: '"' + path + '"',
+              detached: true,
+              isolated: true,
+            },
+          ],
         },
       };
     }
@@ -157,12 +169,21 @@ export class MacosBackend extends Backend {
 
     if (app) {
       return {
-        type: 'command',
+        type: 'button',
         name: app.name,
         icon: app.name,
         iconTheme: 'system',
-        data: {
-          command: app.command,
+        selectWorkflow: {
+          waitForFadeout: false,
+          inhibitShortcuts: false,
+          actions: [
+            {
+              type: 'execute-command',
+              command: app.command,
+              detached: true,
+              isolated: true,
+            },
+          ],
         },
       };
     }

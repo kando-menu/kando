@@ -1792,7 +1792,7 @@ export class KandoApp {
 
     const translate = (item: MenuItem) => {
       item.name = i18next.t(item.name as ParseKeys);
-      if (item.children) {
+      if (item.type === 'submenu') {
         for (const child of item.children) {
           translate(child);
         }

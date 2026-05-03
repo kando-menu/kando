@@ -16,8 +16,7 @@ import { execSync } from 'child_process';
 import { isexe } from 'isexe';
 
 import { Backend } from '../backend';
-import { MenuItem, AppDescription } from '../../../common';
-import { ItemTypeRegistry } from '../../../common/action-meta-registry';
+import { MenuItem, AppDescription, WORKFLOW_ACTION_TYPE_META } from '../../../common';
 
 /**
  * This generic Linux backend class provides the basic functionality for all Linux
@@ -171,25 +170,44 @@ export abstract class LinuxBackend extends Backend {
       }
 
       return {
-        type: 'command',
+        type: 'button',
         name: data.name || name,
         icon: data.icon || 'application-x-executable',
         iconTheme: data.iconTheme,
-        data: { command: data.command },
+        selectWorkflow: {
+          waitForFadeout: false,
+          inhibitShortcuts: false,
+          actions: [
+            {
+              type: 'execute-command',
+              command: data.command,
+              detached: true,
+              isolated: true,
+            },
+          ],
+        },
       };
     }
 
     // For any other executable file, we create a command item.
     const isExe = await isexe(path);
     if (isExe) {
-      const itemType = ItemTypeRegistry.getInstance().getType('command');
       return {
-        type: 'command',
+        type: 'button',
         name,
-        icon: itemType.defaultIcon,
-        iconTheme: itemType.defaultIconTheme,
-        data: {
-          command: '"' + path + '"',
+        icon: WORKFLOW_ACTION_TYPE_META['execute-command'].icon,
+        iconTheme: WORKFLOW_ACTION_TYPE_META['execute-command'].iconTheme,
+        selectWorkflow: {
+          waitForFadeout: false,
+          inhibitShortcuts: false,
+          actions: [
+            {
+              type: 'execute-command',
+              command: '"' + path + '"',
+              detached: true,
+              isolated: true,
+            },
+          ],
         },
       };
     }

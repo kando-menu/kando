@@ -14,9 +14,13 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { KeySequence, MenuItem, AppDescription } from '../../../common';
+import {
+  KeySequence,
+  MenuItem,
+  AppDescription,
+  WORKFLOW_ACTION_TYPE_META,
+} from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
-import { ItemTypeRegistry } from '../../../common/action-meta-registry';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -146,8 +150,6 @@ export class WindowsBackend extends Backend {
     name: string,
     path: string
   ): Promise<MenuItem | null> {
-    const commandItemType = ItemTypeRegistry.getInstance().getType('command');
-
     // If an executable file was dropped, create a menu item for it. We will attempt to
     // find a matching application in the list of installed apps. If we find one, we can
     // use the icon and the name of the application. We simply assume that lnk files are
@@ -157,12 +159,23 @@ export class WindowsBackend extends Backend {
       const app = this.installedApps.find((app) => app.name === appName);
 
       return {
-        type: 'command',
-        name: app ? app.name : commandItemType.defaultName,
-        icon: app ? app.name : commandItemType.defaultIcon,
-        iconTheme: app ? 'system' : commandItemType.defaultIconTheme,
-        data: {
-          command: '"' + path + '"',
+        type: 'button',
+        name: app ? app.name : WORKFLOW_ACTION_TYPE_META['execute-command'].name,
+        icon: app ? app.name : WORKFLOW_ACTION_TYPE_META['execute-command'].icon,
+        iconTheme: app
+          ? 'system'
+          : WORKFLOW_ACTION_TYPE_META['execute-command'].iconTheme,
+        selectWorkflow: {
+          waitForFadeout: false,
+          inhibitShortcuts: false,
+          actions: [
+            {
+              type: 'execute-command',
+              command: '"' + path + '"',
+              detached: true,
+              isolated: true,
+            },
+          ],
         },
       };
     }
@@ -177,12 +190,21 @@ export class WindowsBackend extends Backend {
 
     if (app) {
       return {
-        type: 'command',
+        type: 'button',
         name: app.name,
         icon: app.name,
         iconTheme: 'system',
-        data: {
-          command: app.command,
+        selectWorkflow: {
+          waitForFadeout: false,
+          inhibitShortcuts: false,
+          actions: [
+            {
+              type: 'execute-command',
+              command: app.command,
+              detached: true,
+              isolated: true,
+            },
+          ],
         },
       };
     }
