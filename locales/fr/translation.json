@@ -85,8 +85,6 @@
         "command": {
             "command": "Commande",
             "command-info": "Cette commande sera exécutée.",
-            "description": "Lancer une application ou un scripte.",
-            "name": "Exécuter une Commande",
             "tip-1": "Tu peux utiliser l'élément Commande pour lancer des applications ou des scripts.",
             "tip-2": "Si le chemin d'un exécutable contient des espaces, il faut le \"mettre entre guillemets\".",
             "tip-3": "Utilisez {{app_name}} pour insérer le nom de l'application qui était active lorsque vous avez ouvert le menu.",
@@ -101,16 +99,12 @@
             "choose-app": "Choisir une application…"
         },
         "file": {
-            "description": "Ouvre un fichier ou dossier.",
             "file": "Chemin d'accès au fichier",
-            "name": "Ouvrir un fichier",
             "tip-1": "Utilisez ce type d'élément pour ouvrir des fichiers ou dossiers.",
             "placeholder": "Choisir un fichier ou un dossier…"
         },
         "hotkey": {
-            "description": "Exécute un raccourci clavier.",
             "hotkey": "Raccourci clavier",
-            "name": "Simuler une touche de raccourci",
             "recording-placeholder": "Écrire le raccourci clavier…",
             "tip-1": "Lors de l'enregistrement du raccourci clavier, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
             "tip-2": "Si une touche ne peut pas être enregistrée car elle est utilisée par le système, essayez de taper son nom directement.",
@@ -118,20 +112,12 @@
             "tip-3": "Cliquez sur [ce lien]({{link}}) pour voir tous les noms de clés valides."
         },
         "macro": {
-            "description": "Exécute une macro clavier.",
-            "name": "Simuler une Macro",
             "placeholder": "Cliquez sur le rond pour commencer à enregistrer !",
             "recording-placeholder": "Appuyez sur un touche…",
             "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touche. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\".",
             "tip-2": "Vous pouvez également modifier la macro à la main. C'est utile si vous souhaitez ajuster le timing des touches."
         },
-        "redirect": {
-            "description": "Ouvre un autre menu.",
-            "name": "Rediriger"
-        },
         "settings": {
-            "description": "Ouvre la fenêtre de configuration de Kando.",
-            "name": "Ouvrir les paramètres",
             "tip-1": "Ce type d'élément ouvre la fenêtre de configuration de Kando."
         },
         "submenu": {
@@ -149,14 +135,10 @@
             "tip-7": "Vous pouvez supprimer un menu ou un élément de menu à l'aide de l'icône corbeille située en dessous."
         },
         "text": {
-            "description": "Insère un texte donné.",
-            "name": "Coller le texte",
             "placeholder": "Insérez un texte…",
             "tip-1": "Cette action utilise votre presse-papiers pour coller le texte. Après avoir utilisé l'action, le presse-papiers contiendra toujours le texte."
         },
         "uri": {
-            "description": "Ouvre des sites web et plus encore.",
-            "name": "Ouvrir un URI",
             "tip-1": "Vous pouvez utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole \"http://\".",
             "tip-2": "Vous pouvez l'utliser pour ouvrir des schémas d'URI comme slack:// ou zoommtg://.",
             "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien \"mailto:\".",
@@ -590,5 +572,39 @@
             "description": "Effectuez en moyenne {{n}} sélections consécutives plus rapidement que {{time}} millisecondes."
         },
         "completed-title": "Succès débloqué !"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Ouvrir un fichier",
+            "description": "Ouvre un fichier ou dossier."
+        },
+        "execute-command": {
+            "name": "Exécuter une Commande",
+            "description": "Lancer une application ou un scripte."
+        },
+        "open-menu": {
+            "name": "Rediriger",
+            "description": "Ouvre un autre menu."
+        },
+        "open-settings": {
+            "name": "Ouvrir les paramètres",
+            "description": "Ouvre la fenêtre de configuration de Kando."
+        },
+        "open-uri": {
+            "name": "Ouvrir un URI",
+            "description": "Ouvre des sites web et plus encore."
+        },
+        "simulate-hotkey": {
+            "name": "Simuler une touche de raccourci",
+            "description": "Exécute un raccourci clavier."
+        },
+        "set-clipboard": {
+            "name": "Coller le texte",
+            "description": "Insère un texte donné."
+        },
+        "execute-macro": {
+            "name": "Simuler une Macro",
+            "description": "Exécute une macro clavier."
+        }
     }
 }

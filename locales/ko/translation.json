@@ -85,8 +85,6 @@
         "command": {
             "command": "명령어",
             "command-info": "이 명령어가 실행될 거예요.",
-            "description": "앱이나 스크립트를 실행해요.",
-            "name": "명령어 실행하기",
             "tip-1": "Command 항목 유형을 사용하여 애플리케이션이나 스크립트를 실행할 수 있어요.",
             "tip-2": "실행파일의 경로에 공백 문자가 포함된다면, 경로를 \"쌍따옴표 안에 넣으세요\".",
             "tip-3": "메뉴를 열었을 때 포커스되어 있던 애플리케이션의 이름을 삽입하려면 {{app_name}}을 사용하세요.",
@@ -101,16 +99,12 @@
             "choose-app": "앱 선택하기…"
         },
         "file": {
-            "description": "파일이나 폴더를 열어요.",
             "file": "파일 경로",
-            "name": "파일 열기",
             "tip-1": "이 항목 유형으로 파일 또는 폴더를 열 수 있어요.",
             "placeholder": "파일이나 폴더를 고르세요…"
         },
         "hotkey": {
-            "description": "키 조합을 입력해요.",
             "hotkey": "단축키",
-            "name": "단축키 실행하기",
             "recording-placeholder": "단축키를 눌러주세요…",
             "tip-1": "단축키를 녹화할 때, 모든 키를 한번에 누를 필요는 없습니다. 하나씩 눌러도 돼요.",
             "tip-2": "시스템이 사용중이라 녹화할 수 없는 키가 있다면, 키의 이름을 직접 입력해 보세요.",
@@ -118,20 +112,12 @@
             "tip-3": "모든 유효한 키 이름을 보려면 [이 링크]({{link}})를 클릭하세요."
         },
         "macro": {
-            "description": "키보드 매크로를 실행해요.",
-            "name": "매크로 실행하기",
             "placeholder": "녹화 버튼을 눌러 녹화를 시작하세요!",
             "recording-placeholder": "키를 눌러주세요…",
             "tip-1": "기본적으로 Kando는 키 이벤트 사이에 10ms의 지연을 추가해요. 이 지연 시간은 \"delay\" 속성으로 변경할 수 있어요.",
             "tip-2": "매크로는 직접 수동으로도 편집할 수 있어요. 키 입력 간격을 조정하고 싶을 때 유용해요."
         },
-        "redirect": {
-            "description": "다른 메뉴를 열어요.",
-            "name": "리다이렉트"
-        },
         "settings": {
-            "description": "Kando의 설정 메뉴가 열려요.",
-            "name": "설정 열기",
             "tip-1": "이 동작은 Kando 설정 메뉴를 열어요."
         },
         "submenu": {
@@ -146,14 +132,10 @@
             "tip-7": "아래의 휴지통 아이콘으로 메뉴나 메뉴 항목을 삭제할 수 있어요."
         },
         "text": {
-            "description": "지정된 텍스트를 삽입해요.",
-            "name": "텍스트 붙여넣기",
             "placeholder": "아무 텍스트나 넣어보세요…",
             "tip-1": "이 동작은 시스템의 클립보드를 사용하여 텍스트를 붙여넣어요. 동작이 실행된 이후에도 클립보드에 텍스트가 남아있을 거예요."
         },
         "uri": {
-            "description": "웹사이트 등을 열어요.",
-            "name": "URI 열기",
             "tip-1": "URI 타입으로 http:// 프로토콜을 사용하여 웹사이트를 열 수 있어요.",
             "tip-2": "slack:// 또는 zoommtg://와 같은 URI를 사용할 수 있어요.",
             "tip-3": "URI 타입으로 mailto: 링크를 열 수 있어요.",
@@ -430,5 +412,39 @@
         },
         "restore-backup": "백업 불러오기…",
         "restore-general-settings-warning-title": "정말로 설정을 불러올까요?"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "파일 열기",
+            "description": "파일이나 폴더를 열어요."
+        },
+        "execute-command": {
+            "name": "명령어 실행하기",
+            "description": "앱이나 스크립트를 실행해요."
+        },
+        "open-menu": {
+            "name": "리다이렉트",
+            "description": "다른 메뉴를 열어요."
+        },
+        "open-settings": {
+            "name": "설정 열기",
+            "description": "Kando의 설정 메뉴가 열려요."
+        },
+        "open-uri": {
+            "name": "URI 열기",
+            "description": "웹사이트 등을 열어요."
+        },
+        "simulate-hotkey": {
+            "name": "단축키 실행하기",
+            "description": "키 조합을 입력해요."
+        },
+        "set-clipboard": {
+            "name": "텍스트 붙여넣기",
+            "description": "지정된 텍스트를 삽입해요."
+        },
+        "execute-macro": {
+            "name": "매크로 실행하기",
+            "description": "키보드 매크로를 실행해요."
+        }
     }
 }

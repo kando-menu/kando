@@ -88,8 +88,6 @@
         "command": {
             "command": "命令",
             "command-info": "该命令将被运行。",
-            "description": "运行应用或脚本。",
-            "name": "运行命令",
             "tip-1": "您可以用命令来启动一个应用或脚本。",
             "tip-2": "如果程序路径包含空格，您需要 \"用英文引号括住整个路径\"。",
             "tip-3": "使用 {{app_name}} 变量代表打开菜单时正在使用的应用名称。",
@@ -104,16 +102,12 @@
             "choose-app": "选取应用…"
         },
         "file": {
-            "description": "打开一个文件或文件夹。",
             "file": "文件路径",
-            "name": "打开文件",
             "tip-1": "您可以使用此菜单项打开文件或文件夹。",
             "placeholder": "请选择一个文件或文件夹…"
         },
         "hotkey": {
-            "description": "按下一套组合键。",
             "hotkey": "按键",
-            "name": "模拟按键",
             "recording-placeholder": "请按下按键…",
             "tip-1": "录制快捷键时，您不必一次性按下所有按键，可以一个接一个地按。",
             "tip-2": "如果某个按键被系统占用导致无法录制，试试直接输入按键名称。",
@@ -121,20 +115,12 @@
             "hotkey-info": "选择该菜单项时，将触发此快捷键。在录制快捷键时，您不必一次按下所有按键，也可以一个接一个地按。这在热键已绑定到某个全局操作时非常有用！"
         },
         "macro": {
-            "description": "执行一系列按键。",
-            "name": "模拟宏",
             "placeholder": "点击录制按钮开始录制！",
             "recording-placeholder": "请按下按键…",
             "tip-1": "每个按键事件前默认延迟 10 毫秒，可以修改 \"delay\" 属性来设定延迟时长。",
             "tip-2": "您也可以手动编辑模拟宏。如果您想调整按键的触发时间，这将非常有用。"
         },
-        "redirect": {
-            "description": "打开另一个菜单。",
-            "name": "重定向"
-        },
         "settings": {
-            "description": "打开Kando的设置窗口。",
-            "name": "打开设置",
             "tip-1": "此操作将打开Kando的设置窗口。"
         },
         "submenu": {
@@ -149,14 +135,10 @@
             "tip-7": "您可以用下面的垃圾桶图标删除菜单或菜单项。"
         },
         "text": {
-            "description": "插入给定文本。",
-            "name": "粘贴文本",
             "placeholder": "请输入任意文本…",
             "tip-1": "此操作使用您的剪贴板粘贴文本。使用该操作后，剪贴板将包含文本。"
         },
         "uri": {
-            "description": "打开网页或调用其它链接方案。",
-            "name": "打开 URI",
             "tip-1": "使用 http:// 协议来打开网站。",
             "tip-2": "您可以使用它来调用自定义URI方案，如 slack:// 或 zoommtg:// 。",
             "tip-3": "使用 mailto: 协议来打开邮箱。",
@@ -588,5 +570,39 @@
             "description": "连续选取 {{n}} 次，且平均时间少于 {{time}} 毫秒。"
         },
         "completed-title": "获得成就！"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "打开文件",
+            "description": "打开一个文件或文件夹。"
+        },
+        "execute-command": {
+            "name": "运行命令",
+            "description": "运行应用或脚本。"
+        },
+        "open-menu": {
+            "name": "重定向",
+            "description": "打开另一个菜单。"
+        },
+        "open-settings": {
+            "name": "打开设置",
+            "description": "打开Kando的设置窗口。"
+        },
+        "open-uri": {
+            "name": "打开 URI",
+            "description": "打开网页或调用其它链接方案。"
+        },
+        "simulate-hotkey": {
+            "name": "模拟按键",
+            "description": "按下一套组合键。"
+        },
+        "set-clipboard": {
+            "name": "粘贴文本",
+            "description": "插入给定文本。"
+        },
+        "execute-macro": {
+            "name": "模拟宏",
+            "description": "执行一系列按键。"
+        }
     }
 }

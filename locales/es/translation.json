@@ -79,8 +79,6 @@
         "command": {
             "command": "Comando",
             "command-info": "Esto se ejecutará.",
-            "description": "Ejecute aplicaciones o secuencias de órdenes.",
-            "name": "Ejecutar orden",
             "tip-1": "Puede usar el tipo de elemento Orden para iniciar aplicaciones o secuencias.",
             "tip-2": "Si la dirección al ejecutable contiene espacios, \"entrecomíllela\".",
             "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
@@ -90,16 +88,12 @@
             "choose-app": "Elija una aplicación…"
         },
         "hotkey": {
-            "description": "Presiona una combinación de teclas.",
             "hotkey": "Atajo",
-            "name": "Simular atajo",
             "recording-placeholder": "Presione un atajo…",
             "tip-1": "Al grabar un atajo, no es necesario presionar todas las teclas a la vez. Puede presionarlas una tras otra.",
             "tip-2": "Si no puede grabar una tecla porque la utiliza el sistema, pruebe a escribir directamente su nombre."
         },
         "macro": {
-            "description": "Escribe una macro del teclado.",
-            "name": "Simular Macro",
             "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
             "recording-placeholder": "Presiona las teclas…",
             "tip-1": "De manera predeterminada, Kando añade una demora de 10 ms antes de cada suceso de tecla. Puede cambiarlo con la propiedad «delay»."
@@ -118,14 +112,10 @@
             "tip-6": "Puede reordenar los elementos arrastrándolos en la vista previa."
         },
         "text": {
-            "description": "Inserta el texto indicado.",
-            "name": "Pegar texto",
             "placeholder": "Inserta cualquier texto…",
             "tip-1": "Esta acción utiliza el portapapeles para pegar el texto. Después de usar la acción, el portapapeles contendrá el texto."
         },
         "uri": {
-            "description": "Abrir archivos o sitios web.",
-            "name": "Abrir URI",
             "tip-1": "Puedes usar el elemento de tipo URI para abrir un sitio web utilizando el protocolo http://.",
             "tip-2": "Puedes usar el elemento de tipo URI para abrir un archivo o carpeta usando el protocolo file://.",
             "tip-3": "Puedes usar el elemento de tipo URI para abrir un link mailto:.",
@@ -137,16 +127,9 @@
         },
         "file": {
             "placeholder": "Elegir archivo o carpeta…",
-            "tip-1": "Puede usar este tipo de elemento para abrir archivos o carpetas.",
-            "name": "Abrir archivo",
-            "description": "Abre un archivo o carpeta."
-        },
-        "redirect": {
-            "description": "Abre otro menú."
+            "tip-1": "Puede usar este tipo de elemento para abrir archivos o carpetas."
         },
         "settings": {
-            "description": "Abre la ventana de configuración de Kando.",
-            "name": "Abrir configuración",
             "tip-1": "Este tipo de elemento abre la ventana de configuración de Kando."
         }
     },
@@ -296,6 +279,39 @@
         "screen-area-picker": {
             "valid": "¡Bien!, ha seleccionado un área válida.",
             "confirm": "Usar esta área"
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Abrir archivo",
+            "description": "Abre un archivo o carpeta."
+        },
+        "execute-command": {
+            "name": "Ejecutar orden",
+            "description": "Ejecute aplicaciones o secuencias de órdenes."
+        },
+        "open-settings": {
+            "name": "Abrir configuración",
+            "description": "Abre la ventana de configuración de Kando."
+        },
+        "open-uri": {
+            "name": "Abrir URI",
+            "description": "Abrir archivos o sitios web."
+        },
+        "simulate-hotkey": {
+            "name": "Simular atajo",
+            "description": "Presiona una combinación de teclas."
+        },
+        "set-clipboard": {
+            "name": "Pegar texto",
+            "description": "Inserta el texto indicado."
+        },
+        "open-menu": {
+            "description": "Abre otro menú."
+        },
+        "execute-macro": {
+            "name": "Simular Macro",
+            "description": "Escribe una macro del teclado."
         }
     }
 }

@@ -180,8 +180,6 @@
         "command": {
             "command-info": "Dieser Befehl wird ausgeführt wenn das Element aktiviert wird.",
             "command": "Befehl",
-            "description": "Startet Anwendungen oder Skripte.",
-            "name": "Befehl Ausführen",
             "tip-1": "Mit dem Elementtyp „Befehl Ausführen“ können Sie Anwendungen oder Skripte starten.",
             "tip-2": "Wenn der Pfad zu einer ausführbaren Datei Leerzeichen enthält, sollten Sie ihn „in Anführungszeichen setzen“.",
             "tip-3": "Verwenden Sie {{app_name}}, um den Namen der Anwendung einzufügen, die beim Öffnen des Menüs fokussiert war.",
@@ -202,40 +200,30 @@
             "inhibit-shortcuts": "Deaktivieren von Shortcuts"
         },
         "file": {
-            "description": "Öffnet eine Datei oder einen Ordner.",
             "file-info": "Die Datei oder der Ordner wird mit der entsprechenden Standardanwendung geöffnet.",
             "file": "Dateipfad",
-            "name": "Datei Öffnen",
             "tip-1": "Sie können diesen Typ verwenden, um Dateien oder Ordner zu öffnen.",
             "placeholder": "Wählen Sie eine Datei oder ein Verzeichnis…"
         },
         "hotkey": {
-            "description": "Drückt eine Tastenkombination.",
             "hotkey-info": "Dieser Hotkey wird ausgelöst, wenn das Element ausgewählt wird. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn ein Hotkey bereits einer globalen Aktion zugewiesen ist!",
             "hotkey": "Hotkey",
-            "name": "Hotkey Simulieren",
             "recording-placeholder": "Drücken Sie einen Hotkey…",
             "tip-1": "Beim Aufzeichnen eines Hotkeys müssen Sie nicht alle Tasten gleichzeitig drücken. Sie können sie auch nacheinander drücken.",
             "tip-2": "Wenn Sie eine Taste nicht aufnehmen können, weil sie vom System verwendet wird, versuchen Sie, ihren Namen direkt einzugeben.",
             "tip-3": "Klicken Sie [auf diesen Link]({{link}}), um alle gültigen Tastenbezeichnungen zu sehen."
         },
         "macro": {
-            "description": "Führt ein Tastaturmakro aus.",
-            "name": "Makro Ausführen",
             "placeholder": "Drücken Sie die Aufnahmetaste, um die Aufnahme zu starten!",
             "recording-placeholder": "Drücken Sie die Tasten…",
             "tip-1": "Standardmäßig fügt Kando vor jedem Tastenereignis eine Verzögerung von 10 ms hinzu. Sie können dies mit der Eigenschaft „delay“ ändern.",
             "tip-2": "Sie können das Makro auch manuell bearbeiten. Dies ist nützlich, wenn Sie das Timing der Tasten anpassen möchten."
         },
         "redirect": {
-            "description": "Öffnet ein anderes Menü.",
-            "name": "Verknüpfung",
             "redirect-info": "Das Menü wird geöffnet, wenn Sie dieses Element aktivieren.",
             "redirect": "Verknüpftes Menü"
         },
         "settings": {
-            "description": "Öffnet das Kando-Einstellungsfenster.",
-            "name": "Einstellungen Öffnen",
             "tip-1": "Dieser Elementtyp öffnet das Kando-Einstellungsfenster."
         },
         "submenu": {
@@ -250,14 +238,10 @@
             "tip-7": "Sie können ein Menü oder ein Menüelement mit dem Papierkorbsymbol unten löschen."
         },
         "text": {
-            "description": "Fügt den gegebenen Text ein.",
-            "name": "Text Einfügen",
             "placeholder": "Geben Sie den Text ein…",
             "tip-1": "Diese Aktion verwendet die Zwischenablage, um den Text einzufügen. Nach der Aktion wird die Zwischenablage den Text enthalten."
         },
         "uri": {
-            "description": "Öffnet Webseiten und mehr.",
-            "name": "URI Öffnen",
             "tip-1": "Sie können den URI-Elementtyp verwenden, um eine Website über das http:// Protokoll zu öffnen.",
             "tip-2": "Sie können dies verwenden, um benutzerdefinierte URI-Schema wie slack:// oder zoommtg:// zu öffnen.",
             "tip-3": "Sie können den URI-Elementtyp verwenden, um einen mailto:-Link zu öffnen.",
@@ -591,5 +575,39 @@
         "quick-select-key-info": "Mit dieser Taste können Sie schnell den Menüeintrag auswählen.",
         "quick-select-key-label": "Schnellwahltaste",
         "quick-select-key-recording": "Taste wählen…"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Datei Öffnen",
+            "description": "Öffnet eine Datei oder einen Ordner."
+        },
+        "execute-command": {
+            "name": "Befehl Ausführen",
+            "description": "Startet Anwendungen oder Skripte."
+        },
+        "open-menu": {
+            "name": "Verknüpfung",
+            "description": "Öffnet ein anderes Menü."
+        },
+        "open-settings": {
+            "name": "Einstellungen Öffnen",
+            "description": "Öffnet das Kando-Einstellungsfenster."
+        },
+        "open-uri": {
+            "name": "URI Öffnen",
+            "description": "Öffnet Webseiten und mehr."
+        },
+        "simulate-hotkey": {
+            "name": "Hotkey Simulieren",
+            "description": "Drückt eine Tastenkombination."
+        },
+        "set-clipboard": {
+            "name": "Text Einfügen",
+            "description": "Fügt den gegebenen Text ein."
+        },
+        "execute-macro": {
+            "name": "Makro Ausführen",
+            "description": "Führt ein Tastaturmakro aus."
+        }
     }
 }

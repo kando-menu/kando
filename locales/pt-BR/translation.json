@@ -85,8 +85,6 @@
         "command": {
             "command": "Comando",
             "command-info": "Isso será executado.",
-            "description": "Executa aplicativos ou scripts.",
-            "name": "Executar Comando",
             "tip-1": "Você pode usar o item do tipo Comando para iniciar aplicativos ou scripts.",
             "tip-2": "Se o caminho para um executável contem espaços, você deve \"colocar entre aspas\".",
             "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
@@ -101,16 +99,12 @@
             "choose-app": "Escolha um aplicativo…"
         },
         "file": {
-            "description": "Abre um arquivo ou pasta.",
             "file": "Caminho do Arquivo",
-            "name": "Abrir Arquivo",
             "tip-1": "Você pode usar esse tipo de item para abrir arquivos ou pastas.",
             "placeholder": "Escolher arquivo ou pasta…"
         },
         "hotkey": {
-            "description": "Pressione uma combinação de teclas.",
             "hotkey": "Tecla de Atalho",
-            "name": "Simular atalho de teclado",
             "recording-placeholder": "Pressione uma tecla de atalho…",
             "tip-1": "Ao gravar uma tecla de atalho, você não precisa pressionar todas as teclas ao mesmo tempo. Você pode pressionar uma após a outra.",
             "tip-2": "Se você não consegue gravar uma tecla porque ela é usada pelo sistema, tente digitar o nome da tecla diretamente.",
@@ -118,21 +112,13 @@
             "hotkey-info": "Essa tecla de atalho será acionada quando o item é selecionado. Quando estiver gravando, você não precisa pressionar todas as teclas de uma vez, você também pode pressioná-las uma após a outra. Isso é útil se uma tecla de atalho já está atribuída a alguma ação global!"
         },
         "macro": {
-            "description": "Digita um macro de teclado.",
-            "name": "Simular Macro",
             "placeholder": "Aperte o botão de gravação para começar a gravar!",
             "recording-placeholder": "Pressione as teclas…",
             "tip-1": "Por padrão, Kando adiciona 10ms de delay antes de cada evento de tecla. Você pode mudar isso com a propriedade \"delay\".",
             "tip-2": "Você pode editar esse macro manualmente. Isso é útil se você quer ajustar o tempo das teclas."
         },
-        "redirect": {
-            "description": "Abre outro menu.",
-            "name": "Redirecionar"
-        },
         "settings": {
-            "name": "Abrir Ajustes",
-            "tip-1": "Está ação abrirá a janela de configurações Kando.",
-            "description": "Abre a janela de configurações do Kando."
+            "tip-1": "Está ação abrirá a janela de configurações Kando."
         },
         "submenu": {
             "description": "Contém outros itens de menu.",
@@ -149,14 +135,10 @@
             "tip-7": "Você pode excluir um menu ou item do menu pelo ícone de lixeira abaixo."
         },
         "text": {
-            "description": "Insere o texto fornecido.",
-            "name": "Pasta texto",
             "placeholder": "Insira qualquer texto…",
             "tip-1": "Esta ação usa sua área de transferência para colar o texto. Depois de usar a ação, a área de transferência conterá o texto."
         },
         "uri": {
-            "description": "Abre sites e mais.",
-            "name": "Abrir URI",
             "tip-1": "Você pode usar o item URI para abrir um site usando o protocolo http://.",
             "tip-2": "Você pode usar o item URI para abrir um arquivo ou pasta usando o protocolo file://.",
             "tip-3": "Você pode usar o item URI para abrir um link do tipo mailto: .",
@@ -431,6 +413,40 @@
             "no-completed-achievements": "Você ainda não completou nenhuma conquista.",
             "in-progress-button": "Em Progresso",
             "completed-button": "Completas"
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Abrir Arquivo",
+            "description": "Abre um arquivo ou pasta."
+        },
+        "execute-command": {
+            "name": "Executar Comando",
+            "description": "Executa aplicativos ou scripts."
+        },
+        "open-menu": {
+            "name": "Redirecionar",
+            "description": "Abre outro menu."
+        },
+        "open-settings": {
+            "name": "Abrir Ajustes",
+            "description": "Abre a janela de configurações do Kando."
+        },
+        "open-uri": {
+            "name": "Abrir URI",
+            "description": "Abre sites e mais."
+        },
+        "simulate-hotkey": {
+            "name": "Simular atalho de teclado",
+            "description": "Pressione uma combinação de teclas."
+        },
+        "set-clipboard": {
+            "name": "Pasta texto",
+            "description": "Insere o texto fornecido."
+        },
+        "execute-macro": {
+            "name": "Simular Macro",
+            "description": "Digita um macro de teclado."
         }
     }
 }

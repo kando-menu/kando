@@ -38,6 +38,20 @@ export const MENU_EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
   isolated: z.boolean().default(false),
 });
 
+/** This action will trigger a complex macro when triggered. */
+export const MENU_EXECUTE_MACRO_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('execute-macro'),
+
+  /** The macro to trigger. */
+  macro: z.array(
+    z.object({
+      type: z.enum(['keyDown', 'keyUp']),
+      delay: z.number().default(0),
+      key: z.string(),
+    })
+  ),
+});
+
 /** This action will open a file when triggered. */
 export const MENU_OPEN_FILE_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('open-file'),
@@ -67,6 +81,14 @@ export const MENU_OPEN_URI_ACTION_SCHEMA_V2 = z.object({
   uri: z.string(),
 });
 
+/** This action will set the clipboard when triggered. */
+export const MENU_SET_CLIPBOARD_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('set-clipboard'),
+
+  /** The text to copy to the clipboard. */
+  text: z.string(),
+});
+
 /** This action will simulate a hotkey when triggered. */
 export const MENU_SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('simulate-hotkey'),
@@ -75,38 +97,16 @@ export const MENU_SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
   hotkey: z.string(),
 });
 
-/** This action will trigger a complex macro when triggered. */
-export const MENU_SIMULATE_MACRO_ACTION_SCHEMA_V2 = z.object({
-  type: z.literal('simulate-macro'),
-
-  /** The macro to trigger. */
-  macro: z.array(
-    z.object({
-      type: z.enum(['keyDown', 'keyUp']),
-      delay: z.number().default(0),
-      key: z.string(),
-    })
-  ),
-});
-
-/** This action will update the clipboard when triggered. */
-export const MENU_UPDATE_CLIPBOARD_ACTION_SCHEMA_V2 = z.object({
-  type: z.literal('update-clipboard'),
-
-  /** The text to copy to the clipboard. */
-  text: z.string(),
-});
-
 /** This type describes the possible actions that can be performed in a workflow. */
 export const MENU_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
   MENU_EXECUTE_COMMAND_ACTION_SCHEMA_V2,
+  MENU_EXECUTE_MACRO_ACTION_SCHEMA_V2,
   MENU_OPEN_FILE_ACTION_SCHEMA_V2,
   MENU_OPEN_MENU_ACTION_SCHEMA_V2,
   MENU_OPEN_SETTINGS_ACTION_SCHEMA_V2,
   MENU_OPEN_URI_ACTION_SCHEMA_V2,
+  MENU_SET_CLIPBOARD_ACTION_SCHEMA_V2,
   MENU_SIMULATE_HOTKEY_ACTION_SCHEMA_V2,
-  MENU_SIMULATE_MACRO_ACTION_SCHEMA_V2,
-  MENU_UPDATE_CLIPBOARD_ACTION_SCHEMA_V2,
 ]);
 
 /** This type describes a workflow for a menu item is triggered when it is selected. */
@@ -333,73 +333,73 @@ const MENU_ACTION_TYPE_META_ENTRIES_V2: Array<[MenuActionTypeV2, MenuActionTypeM
     [
       'execute-command',
       {
-        name: i18next.t('menu-items.command.name'),
+        name: i18next.t('menu-actions.execute-command.name'),
         icon: 'command-item.svg',
         iconTheme: 'kando',
-        description: i18next.t('menu-items.command.description'),
+        description: i18next.t('menu-actions.execute-command.description'),
+      },
+    ],
+    [
+      'execute-macro',
+      {
+        name: i18next.t('menu-actions.execute-macro.name'),
+        icon: 'macro-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.execute-macro.description'),
       },
     ],
     [
       'open-file',
       {
-        name: i18next.t('menu-items.file.name'),
+        name: i18next.t('menu-actions.open-file.name'),
         icon: 'file-item.svg',
         iconTheme: 'kando',
-        description: i18next.t('menu-items.file.description'),
+        description: i18next.t('menu-actions.open-file.description'),
       },
     ],
     [
       'open-menu',
       {
-        name: i18next.t('menu-items.redirect.name'),
+        name: i18next.t('menu-actions.open-menu.name'),
         icon: 'redirect-item.svg',
         iconTheme: 'kando',
-        description: i18next.t('menu-items.redirect.description'),
+        description: i18next.t('menu-actions.open-menu.description'),
       },
     ],
     [
       'open-settings',
       {
-        name: i18next.t('menu-items.settings.name'),
+        name: i18next.t('menu-actions.open-settings.name'),
         icon: 'settings-item.svg',
         iconTheme: 'kando',
-        description: i18next.t('menu-items.settings.description'),
+        description: i18next.t('menu-actions.open-settings.description'),
       },
     ],
     [
       'open-uri',
       {
-        name: i18next.t('menu-items.uri.name'),
+        name: i18next.t('menu-actions.open-uri.name'),
         icon: 'uri-item.svg',
         iconTheme: 'kando',
-        description: i18next.t('menu-items.uri.description'),
+        description: i18next.t('menu-actions.open-uri.description'),
+      },
+    ],
+    [
+      'set-clipboard',
+      {
+        name: i18next.t('menu-actions.set-clipboard.name'),
+        icon: 'clipboard-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.set-clipboard.description'),
       },
     ],
     [
       'simulate-hotkey',
       {
-        name: i18next.t('menu-items.hotkey.name'),
+        name: i18next.t('menu-actions.simulate-hotkey.name'),
         icon: 'hotkey-item.svg',
         iconTheme: 'kando',
-        description: i18next.t('menu-items.hotkey.description'),
-      },
-    ],
-    [
-      'simulate-macro',
-      {
-        name: i18next.t('menu-items.macro.name'),
-        icon: 'macro-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-items.macro.description'),
-      },
-    ],
-    [
-      'update-clipboard',
-      {
-        name: i18next.t('menu-items.text.name'),
-        icon: 'clipboard-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-items.text.description'),
+        description: i18next.t('menu-actions.simulate-hotkey.description'),
       },
     ],
   ];

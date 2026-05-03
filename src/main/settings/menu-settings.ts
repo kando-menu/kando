@@ -205,7 +205,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
           waitForFadeout: (oldItem.data as { delay?: boolean }).delay ?? true,
           actions: [
             {
-              type: 'simulate-macro',
+              type: 'execute-macro',
               macro: lodash.cloneDeep(
                 (
                   oldItem.data as {
@@ -226,7 +226,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
           inhibitShortcuts: true,
           actions: [
             {
-              type: 'update-clipboard',
+              type: 'set-clipboard',
               text: (oldItem.data as { text?: string }).text ?? '',
             },
             {

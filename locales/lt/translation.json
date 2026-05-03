@@ -49,8 +49,6 @@
     "menu-items": {
         "command": {
             "command": "Komanda",
-            "description": "Paleisti programas ar scenarijus.",
-            "name": "Paleisti komandą",
             "choose-app": "Pasirinkti programą…",
             "placeholder": "Įterpkite bet kokią komandą…"
         },
@@ -70,23 +68,14 @@
             "tip-6": "Galite pertvarkyti elementus tempdami juos peržiūroje."
         },
         "text": {
-            "description": "Įdeda nurodytą tekstą.",
-            "name": "Įdėti tekstą",
             "placeholder": "Įterpkite bet kokį tekstą…"
         },
         "uri": {
-            "description": "Atveria failus ar internetines svetaines.",
-            "name": "Atverti URI",
             "uri": "URI",
             "placeholder": "Įterpkite bet kokį URI…"
         },
         "file": {
-            "name": "Atverti failą",
-            "description": "Atveria failą ar aplanką.",
             "placeholder": "Pasirinkti failą ar aplanką…"
-        },
-        "redirect": {
-            "description": "Atveria kitą meniu."
         }
     },
     "settings": {
@@ -200,6 +189,27 @@
             "countdown_few": "Pasirenkama po {{count}} sekundžių…",
             "countdown_other": "Pasirenkama po {{count}} sekundžių…",
             "confirm": "Naudoti šią reikšmę"
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Atverti failą",
+            "description": "Atveria failą ar aplanką."
+        },
+        "execute-command": {
+            "name": "Paleisti komandą",
+            "description": "Paleisti programas ar scenarijus."
+        },
+        "open-uri": {
+            "name": "Atverti URI",
+            "description": "Atveria failus ar internetines svetaines."
+        },
+        "set-clipboard": {
+            "name": "Įdėti tekstą",
+            "description": "Įdeda nurodytą tekstą."
+        },
+        "open-menu": {
+            "description": "Atveria kitą meniu."
         }
     }
 }

@@ -85,8 +85,6 @@
         "command": {
             "command": "Příkaz",
             "command-info": "Tento příkaz bude vykonán.",
-            "description": "Spustit apku nebo skript.",
-            "name": "Spustit příkaz",
             "tip-1": "Příkazy můžete použít ke spouštění aplikací nebo skriptů.",
             "tip-2": "Pokud cesta k programu obsahuje mezery, měli byste ji \"vložit do uvozovek\".",
             "tip-3": "Použijte {{app_name}} pro vložení názvu aplikace, která byla aktivní při otevření menu.",
@@ -101,16 +99,12 @@
             "choose-app": "Vybrat aplikaci…"
         },
         "file": {
-            "description": "Otevře soubor nebo složku.",
             "file": "Cesta k souboru",
-            "name": "Otevřít soubor",
             "tip-1": "Tento typ položky můžete použít k otevírání souborů nebo složek.",
             "placeholder": "Vyberte soubor nebo složku…"
         },
         "hotkey": {
-            "description": "Stiskněte kombinaci kláves.",
             "hotkey": "Klávesová zkratka",
-            "name": "Simulovat klávesovou zkratku",
             "recording-placeholder": "Stiskněte klávesovou zkratku…",
             "tip-1": "Při nahrávání klávesové zkratky nemusíte stisknout všechny klávesy najednou. Můžete je zadávat postupně.",
             "tip-2": "Pokud nelze klávesu nahrát, protože ji používá systém, zkuste její název napsat přímo.",
@@ -118,20 +112,12 @@
             "hotkey-info": "Tato zkratka bude spuštěna, když je vybrána položka. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na globální akci!"
         },
         "macro": {
-            "description": "Použije sled kláves.",
-            "name": "Simulovat makro",
             "placeholder": "Stiskněte tlačítko záznamu pro spuštění nahrávání!",
             "recording-placeholder": "Stiskněte klávesy…",
             "tip-1": "Kando standardně přidává 10ms prodlevu před každou událostí klávesnice. Můžete to změnit pomocí vlastnosti \"delay\".",
             "tip-2": "Můžete upravit makra také ručně. To je užitečné, pokud chcete upravit načasování kláves."
         },
-        "redirect": {
-            "description": "Otevřít jiné menu.",
-            "name": "Přesměrování"
-        },
         "settings": {
-            "description": "Otevře okno nastavení Kando.",
-            "name": "Otevřít nastavení",
             "tip-1": "Tato akce otevře okno nastavení Kando."
         },
         "submenu": {
@@ -149,14 +135,10 @@
             "tip-7": "Můžete smazat menu nebo menu položku s pomocí ikony koše níže."
         },
         "text": {
-            "description": "Vloží zadaný text.",
-            "name": "Vložit text",
             "placeholder": "Vložte libovolný text…",
             "tip-1": "Tato akce používá schránku k vložení textu. Po použití akce bude schránka obsahovat tento text."
         },
         "uri": {
-            "description": "Otevře webové stránky a další.",
-            "name": "Otevřít URI",
             "tip-1": "Tento typ položky můžete použít k otevření webové stránky pomocí protokolu http://.",
             "tip-2": "Můžete ho použít k volání vlastních URI schémat jako slack:// nebo zoommtg://.",
             "tip-3": "Tento typ položky můžete použít k otevření odkazu mailto: link.",
@@ -572,5 +554,39 @@
             "description": "Vytvořte {{n}} po sobě jdoucích výběrů v průměru rychleji než {{time}} ms."
         },
         "completed-title": "Úspěch odemčen!"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Otevřít soubor",
+            "description": "Otevře soubor nebo složku."
+        },
+        "execute-command": {
+            "name": "Spustit příkaz",
+            "description": "Spustit apku nebo skript."
+        },
+        "open-menu": {
+            "name": "Přesměrování",
+            "description": "Otevřít jiné menu."
+        },
+        "open-settings": {
+            "name": "Otevřít nastavení",
+            "description": "Otevře okno nastavení Kando."
+        },
+        "open-uri": {
+            "name": "Otevřít URI",
+            "description": "Otevře webové stránky a další."
+        },
+        "simulate-hotkey": {
+            "name": "Simulovat klávesovou zkratku",
+            "description": "Stiskněte kombinaci kláves."
+        },
+        "set-clipboard": {
+            "name": "Vložit text",
+            "description": "Vloží zadaný text."
+        },
+        "execute-macro": {
+            "name": "Simulovat makro",
+            "description": "Použije sled kláves."
+        }
     }
 }

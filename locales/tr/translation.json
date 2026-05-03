@@ -78,8 +78,6 @@
         "command": {
             "command": "Komut",
             "command-info": "Bu yürütülecektir.",
-            "description": "Herhangi bir kabuk komutunu çalıştırır.",
-            "name": "Komut Çalıştır",
             "tip-1": "Uygulama veya komut dosyalarını başlatmak için Komut öğe tipini kullanabilirsiniz.",
             "tip-2": "Bir yürütülebilir dosyanın yolu boşluk içeriyorsa, \"tırnak içine almalısınız\".",
             "tip-3": "Menüyü açtığınızda odaklanmış olan uygulamanın adını eklemek için {{app_name}} kullanın.",
@@ -87,29 +85,19 @@
             "tip-5": "Menünün açıldığı imleç konumunu eklemek için {{pointer_x}} ve {{pointer_y}} kullanın."
         },
         "file": {
-            "description": "Bir dosya veya klasör açar.",
             "file": "Dosya Yolu",
-            "name": "Dosya Aç",
             "tip-1": "Dosya veya klasörleri açmak için bu öğe tipini kullanabilirsiniz."
         },
         "hotkey": {
-            "description": "Bir kısayol tuşuna basar.",
             "hotkey": "Kısayol Tuşu",
-            "name": "Kısayol Tuşu Simüle Et",
             "recording-placeholder": "Bir kısayol tuşuna basın…",
             "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
             "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin."
         },
         "macro": {
-            "description": "Bir klavye makrosu yazar.",
-            "name": "Makro Simüle Et",
             "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
             "recording-placeholder": "Tuşlara basın…",
             "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz."
-        },
-        "redirect": {
-            "description": "Başka bir menüyü açar.",
-            "name": "Yönlendirme"
         },
         "submenu": {
             "description": "Diğer menü öğelerini içerir.",
@@ -122,14 +110,10 @@
             "tip-6": "Önizlemede sürükleyerek öğeleri yeniden sıralayabilirsiniz."
         },
         "text": {
-            "description": "Belirtilen metni ekler.",
-            "name": "Metin Yapıştır",
             "placeholder": "Herhangi bir metin ekleyin…",
             "tip-1": "Bu eylem, metni yapıştırmak için panonuzu kullanır. Eylemi kullandıktan sonra, pano metni içerecektir."
         },
         "uri": {
-            "description": "Web siteleri ve daha fazlasını açar.",
-            "name": "URI Aç",
             "tip-1": "HTTP:// protokolünü kullanarak bir web sitesini açmak için URI öğe tipini kullanabilirsiniz.",
             "tip-2": "Bunu slack:// veya zoommtg:// gibi özel URI şemalarını çağırmak için kullanabilirsiniz.",
             "tip-3": "Bir mailto: bağlantısını açmak için URI öğe tipini kullanabilirsiniz.",
@@ -183,5 +167,35 @@
         "shortcut-label": "Kısayol",
         "shortcut-recording": "Bir kısayola basın…",
         "window-condition": "Belirli Pencere Başlıklarına Sınırla"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Dosya Aç",
+            "description": "Bir dosya veya klasör açar."
+        },
+        "execute-command": {
+            "name": "Komut Çalıştır",
+            "description": "Herhangi bir kabuk komutunu çalıştırır."
+        },
+        "open-menu": {
+            "name": "Yönlendirme",
+            "description": "Başka bir menüyü açar."
+        },
+        "open-uri": {
+            "name": "URI Aç",
+            "description": "Web siteleri ve daha fazlasını açar."
+        },
+        "simulate-hotkey": {
+            "name": "Kısayol Tuşu Simüle Et",
+            "description": "Bir kısayol tuşuna basar."
+        },
+        "set-clipboard": {
+            "name": "Metin Yapıştır",
+            "description": "Belirtilen metni ekler."
+        },
+        "execute-macro": {
+            "name": "Makro Simüle Et",
+            "description": "Bir klavye makrosu yazar."
+        }
     }
 }

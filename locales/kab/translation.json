@@ -210,8 +210,6 @@
     },
     "menu-items": {
         "command": {
-            "name": "Selkem Taladna",
-            "description": "Senker isnasen neɣ iskripten.",
             "choose-app": "Fren asnas…",
             "placeholder": "Ger taladna…",
             "isolated": "Selkem s wudem n uɛzal",
@@ -227,8 +225,6 @@
             "tip-4": "Seqdec {{app_name}} akken ad tegreḍ isem n usnas i d-ildin mi teldiḍ umuɣ.",
             "tip-5": "Seqdec {{window_name}} akken ad tegreḍ isem n usfaylu i d-ildin mi teldiḍ umuɣ.",
             "tip-6": "Seqdec {{pointer_x}} akked {{pointer_y}} ad tegreḍ ideg n usewwaṛ mi teldiḍ umuɣ.",
-            "name": "Ldi URI",
-            "description": "Ldi ismal web d ugar nniḍen.",
             "placeholder": "Ger URI tebɣiḍ…",
             "tip-1": "Tzemreḍ ad tesqedceḍ anaw n uferdis URI akken ad teldiḍ asmel web s useqdec n uneggaf http://."
         },
@@ -236,31 +232,19 @@
             "inhibit-shortcuts": "Sens inegzumen"
         },
         "file": {
-            "name": "Ldi Afaylu",
-            "description": "Ldi afaylu neɣ akaram.",
             "placeholder": "Fren afaylu neɣ akaram…",
             "tip-1": "Tzemreḍ ad tesqedceḍ anaw-agi n uferdis akken ad teldiḍ ifuyla neɣ ikaramen."
         },
         "hotkey": {
-            "name": "Serwes anegzum n unasiw",
-            "description": "Sit ɣef usuddes n tsura.",
             "hotkey": "Inegzumen",
             "recording-placeholder": "Aru anegzum n unasiw…",
             "tip-3": "Sif ɣef [this link]{{link}} akken ad twaliḍ akk ismawen n tsarut tameɣtut."
         },
         "macro": {
-            "name": "Selkem amakṛu",
-            "description": "Aru amakṛu n unasiw.",
             "placeholder": "Tekki ɣef tqeffalt n usekles akken ad tebduḍ asekles!",
             "recording-placeholder": "Tekki ɣef kra n tsura…"
         },
-        "redirect": {
-            "description": "Ldi umuɣ nniḍen.",
-            "name": "Sɛeddi ɣer wansi nniḍen"
-        },
         "settings": {
-            "name": "Ldi iɣewwaṛen",
-            "description": "Ldi asfaylu n yiɣewwaṛen n Kando.",
             "tip-1": "Anaw-agi n uferdis ad yeldi asfaylu n iɣewwaṛen n Kando."
         },
         "submenu": {
@@ -269,8 +253,6 @@
             "tip-1": "Umuɣ anaddaw yezmer ad yettwaseqdec i wegraw n iferdisen."
         },
         "text": {
-            "name": "Senṭeḍ aḍris",
-            "description": "Ad iger aḍris i d-ittunefken.",
             "placeholder": "Ger aḍris tebɣiḍ…",
             "tip-1": "Tigawt-agi ad seqdec tacfawit-k·m i usenṭeḍ n uḍris. Seld aseqdec n tigawt-agi, tacfawit ad tegber aḍris."
         }
@@ -433,6 +415,40 @@
             "desktop": "Tanarit",
             "home": "Agejdan",
             "music": "Aẓawan"
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Ldi Afaylu",
+            "description": "Ldi afaylu neɣ akaram."
+        },
+        "execute-command": {
+            "name": "Selkem Taladna",
+            "description": "Senker isnasen neɣ iskripten."
+        },
+        "open-menu": {
+            "name": "Sɛeddi ɣer wansi nniḍen",
+            "description": "Ldi umuɣ nniḍen."
+        },
+        "open-settings": {
+            "name": "Ldi iɣewwaṛen",
+            "description": "Ldi asfaylu n yiɣewwaṛen n Kando."
+        },
+        "open-uri": {
+            "name": "Ldi URI",
+            "description": "Ldi ismal web d ugar nniḍen."
+        },
+        "simulate-hotkey": {
+            "name": "Serwes anegzum n unasiw",
+            "description": "Sit ɣef usuddes n tsura."
+        },
+        "set-clipboard": {
+            "name": "Senṭeḍ aḍris",
+            "description": "Ad iger aḍris i d-ittunefken."
+        },
+        "execute-macro": {
+            "name": "Selkem amakṛu",
+            "description": "Aru amakṛu n unasiw."
         }
     }
 }
