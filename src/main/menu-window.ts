@@ -608,8 +608,8 @@ export class MenuWindow extends BrowserWindow {
    */
   private pathToArray(path: string): number[] {
     return path
-      .substring(1)
       .split('/')
+      .filter((x) => x.length > 0)
       .map((x: string) => parseInt(x));
   }
 
