@@ -5,19 +5,23 @@
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: yar2001T <https://github.com/yar2000T>
 // SPDX-License-Identifier: MIT
 
-import { ItemAction } from './item-action-registry';
+import { OpenMenuAction } from '../../common';
+import { KandoApp } from '../app';
+import { DeepReadonly } from '../settings';
 
 /**
- * This dummy action does nothing. It is used for item types which are only instantiated
- * via the IPC interface, but have no predefined action.
+ * This action opens the specified menu.
+ *
+ * @param action The action for which the menu should be opened.
+ * @param app The app which executed the action.
  */
-export class NoItemAction implements ItemAction {
-  delayedExecution() {
-    return false;
+export async function execute(action: DeepReadonly<OpenMenuAction>, app: KandoApp) {
+  if (action.menu === '') {
+    throw new Error('Menu name should not be empty!');
   }
 
-  async execute() {}
+  await app.showMenu({ name: action.menu });
 }

@@ -8,30 +8,17 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuItem } from '../../common/index';
-import { ItemAction } from './item-action-registry';
-import { DeepReadonly } from '../settings';
+import { OpenSettingsAction } from '../../common';
 import { KandoApp } from '../app';
+import { DeepReadonly } from '../settings';
 
-/** This action opens Kando settings. */
-export class SettingsItemAction implements ItemAction {
-  /**
-   * Opening settings is never delayed.
-   *
-   * @returns False
-   */
-  delayedExecution() {
-    return false;
-  }
-
-  /**
-   * Opens the Kando settings window.
-   *
-   * @param item The item for which the action should be executed. - Unused
-   * @param app The app which executed the action.
-   * @returns Void
-   */
-  async execute(_item: DeepReadonly<MenuItem>, app: KandoApp) {
-    app.showSettings();
-  }
+/**
+ * Opens the Kando settings window.
+ *
+ * @param action The action to execute.
+ * @param app The app which executed the action.
+ */
+export async function execute(action: DeepReadonly<OpenSettingsAction>, app: KandoApp) {
+  void action;
+  app.showSettings();
 }

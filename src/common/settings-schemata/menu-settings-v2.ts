@@ -13,11 +13,11 @@ import * as z from 'zod';
 import { version } from './../../../package.json';
 
 // ------------------------------------------------------------------------------------ //
-// #region                         Menu Actions
+// #region                        Workflow Actions
 // ------------------------------------------------------------------------------------ //
 
 /** This action will execute a command when triggered. */
-export const MENU_EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
+export const EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('execute-command'),
 
   /** The command to execute. */
@@ -39,7 +39,7 @@ export const MENU_EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This action will trigger a complex macro when triggered. */
-export const MENU_EXECUTE_MACRO_ACTION_SCHEMA_V2 = z.object({
+export const EXECUTE_MACRO_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('execute-macro'),
 
   /** The macro to trigger. */
@@ -53,7 +53,7 @@ export const MENU_EXECUTE_MACRO_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This action will open a file when triggered. */
-export const MENU_OPEN_FILE_ACTION_SCHEMA_V2 = z.object({
+export const OPEN_FILE_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('open-file'),
 
   /** The path of the file to open. */
@@ -61,12 +61,12 @@ export const MENU_OPEN_FILE_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This action will open Kando's settings when triggered. */
-export const MENU_OPEN_SETTINGS_ACTION_SCHEMA_V2 = z.object({
+export const OPEN_SETTINGS_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('open-settings'),
 });
 
 /** This action will open another menu when triggered. */
-export const MENU_OPEN_MENU_ACTION_SCHEMA_V2 = z.object({
+export const OPEN_MENU_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('open-menu'),
 
   /** The menu to open. */
@@ -74,7 +74,7 @@ export const MENU_OPEN_MENU_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This action will open an URI when triggered. */
-export const MENU_OPEN_URI_ACTION_SCHEMA_V2 = z.object({
+export const OPEN_URI_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('open-uri'),
 
   /** The URI to open. */
@@ -82,7 +82,7 @@ export const MENU_OPEN_URI_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This action will set the clipboard when triggered. */
-export const MENU_SET_CLIPBOARD_ACTION_SCHEMA_V2 = z.object({
+export const SET_CLIPBOARD_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('set-clipboard'),
 
   /** The text to copy to the clipboard. */
@@ -90,7 +90,7 @@ export const MENU_SET_CLIPBOARD_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This action will simulate a hotkey when triggered. */
-export const MENU_SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
+export const SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('simulate-hotkey'),
 
   /** The hotkey to simulate. */
@@ -98,19 +98,19 @@ export const MENU_SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
 });
 
 /** This type describes the possible actions that can be performed in a workflow. */
-export const MENU_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
-  MENU_EXECUTE_COMMAND_ACTION_SCHEMA_V2,
-  MENU_EXECUTE_MACRO_ACTION_SCHEMA_V2,
-  MENU_OPEN_FILE_ACTION_SCHEMA_V2,
-  MENU_OPEN_MENU_ACTION_SCHEMA_V2,
-  MENU_OPEN_SETTINGS_ACTION_SCHEMA_V2,
-  MENU_OPEN_URI_ACTION_SCHEMA_V2,
-  MENU_SET_CLIPBOARD_ACTION_SCHEMA_V2,
-  MENU_SIMULATE_HOTKEY_ACTION_SCHEMA_V2,
+export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
+  EXECUTE_COMMAND_ACTION_SCHEMA_V2,
+  EXECUTE_MACRO_ACTION_SCHEMA_V2,
+  OPEN_FILE_ACTION_SCHEMA_V2,
+  OPEN_MENU_ACTION_SCHEMA_V2,
+  OPEN_SETTINGS_ACTION_SCHEMA_V2,
+  OPEN_URI_ACTION_SCHEMA_V2,
+  SET_CLIPBOARD_ACTION_SCHEMA_V2,
+  SIMULATE_HOTKEY_ACTION_SCHEMA_V2,
 ]);
 
 /** This type describes a workflow for a menu item is triggered when it is selected. */
-export const MENU_SELECT_WORKFLOW_SCHEMA_V2 = z.object({
+export const SELECT_WORKFLOW_SCHEMA_V2 = z.object({
   /** Whether any select-workflow events should wait until the menu is hidden. */
   waitForFadeout: z.boolean().default(false),
 
@@ -118,13 +118,13 @@ export const MENU_SELECT_WORKFLOW_SCHEMA_V2 = z.object({
   inhibitShortcuts: z.boolean().default(false),
 
   /** The actions to perform when the event is triggered. */
-  actions: z.array(MENU_ACTION_SCHEMA_V2).default([]),
+  actions: z.array(WORKFLOW_ACTION_SCHEMA_V2).default([]),
 });
 
 /** This type describes a workflow for a menu item is triggered when it is hovered. */
-export const MENU_HOVER_WORKFLOW_SCHEMA_V2 = z.object({
+export const HOVER_WORKFLOW_SCHEMA_V2 = z.object({
   /** The actions to perform when the event is triggered. */
-  actions: z.array(MENU_ACTION_SCHEMA_V2).default([]),
+  actions: z.array(WORKFLOW_ACTION_SCHEMA_V2).default([]),
 });
 
 // ------------------------------------------------------------------------------------ //
@@ -161,10 +161,10 @@ export const MENU_BUTTON_ITEM_SCHEMA_V2 = MENU_ITEM_BASE_SCHEMA_V2.extend({
   type: z.literal('button'),
 
   /** The workflow which is triggered when the item is selected. */
-  selectWorkflow: MENU_SELECT_WORKFLOW_SCHEMA_V2.optional(),
+  selectWorkflow: SELECT_WORKFLOW_SCHEMA_V2.optional(),
 
   /** The workflow which is triggered when the item is hovered. */
-  hoverWorkflow: MENU_HOVER_WORKFLOW_SCHEMA_V2.optional(),
+  hoverWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
 });
 
 /**
@@ -175,10 +175,10 @@ export const MENU_SUBMENU_ITEM_SCHEMA_V2 = MENU_ITEM_BASE_SCHEMA_V2.extend({
   type: z.literal('submenu'),
 
   /** The workflow which is triggered when the submenu is opened. */
-  openWorkflow: MENU_HOVER_WORKFLOW_SCHEMA_V2.optional(),
+  openWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
 
   /** The workflow which is triggered when the submenu is hovered. */
-  hoverWorkflow: MENU_HOVER_WORKFLOW_SCHEMA_V2.optional(),
+  hoverWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
 
   /** The children of this menu item. */
   children: z.lazy(() => z.array(MENU_ITEM_SCHEMA_V2).default([])),
@@ -328,118 +328,8 @@ export const MENU_SETTINGS_SCHEMA_V2 = z.object({
 // #region                        Action Meta Info
 // ------------------------------------------------------------------------------------ //
 
-const MENU_ACTION_TYPE_META_ENTRIES_V2: Array<[MenuActionTypeV2, MenuActionTypeMetaV2]> =
-  [
-    [
-      'execute-command',
-      {
-        name: i18next.t('menu-actions.execute-command.name'),
-        icon: 'command-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.execute-command.description'),
-      },
-    ],
-    [
-      'execute-macro',
-      {
-        name: i18next.t('menu-actions.execute-macro.name'),
-        icon: 'macro-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.execute-macro.description'),
-      },
-    ],
-    [
-      'open-file',
-      {
-        name: i18next.t('menu-actions.open-file.name'),
-        icon: 'file-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.open-file.description'),
-      },
-    ],
-    [
-      'open-menu',
-      {
-        name: i18next.t('menu-actions.open-menu.name'),
-        icon: 'redirect-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.open-menu.description'),
-      },
-    ],
-    [
-      'open-settings',
-      {
-        name: i18next.t('menu-actions.open-settings.name'),
-        icon: 'settings-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.open-settings.description'),
-      },
-    ],
-    [
-      'open-uri',
-      {
-        name: i18next.t('menu-actions.open-uri.name'),
-        icon: 'uri-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.open-uri.description'),
-      },
-    ],
-    [
-      'set-clipboard',
-      {
-        name: i18next.t('menu-actions.set-clipboard.name'),
-        icon: 'clipboard-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.set-clipboard.description'),
-      },
-    ],
-    [
-      'simulate-hotkey',
-      {
-        name: i18next.t('menu-actions.simulate-hotkey.name'),
-        icon: 'hotkey-item.svg',
-        iconTheme: 'kando',
-        description: i18next.t('menu-actions.simulate-hotkey.description'),
-      },
-    ],
-  ];
-
-/** Meta information for all available action types. */
-export const MENU_ACTION_TYPE_META_V2: Readonly<
-  Record<MenuActionTypeV2, MenuActionTypeMetaV2>
-> = Object.fromEntries(MENU_ACTION_TYPE_META_ENTRIES_V2) as Record<
-  MenuActionTypeV2,
-  MenuActionTypeMetaV2
->;
-
-// ------------------------------------------------------------------------------------ //
-// #region                        Type Exports
-// ------------------------------------------------------------------------------------ //
-
-export type MenuV2 = z.infer<typeof MENU_SCHEMA_V2>;
-
-/**
- * Due to the recursive nature of the menu items, we need to explicitly define this type
- * here.
- */
-export type MenuSubmenuItemV2 = z.infer<typeof MENU_ITEM_BASE_SCHEMA_V2> & {
-  type: 'submenu';
-  children?: MenuItemV2[] | null;
-};
-export type MenuButtonItemV2 = z.infer<typeof MENU_BUTTON_ITEM_SCHEMA_V2>;
-export type MenuItemV2 = MenuButtonItemV2 | MenuSubmenuItemV2;
-
-export type MenuActionV2 = z.infer<typeof MENU_ACTION_SCHEMA_V2>;
-export type MenuActionTypeV2 = z.infer<typeof MENU_ACTION_SCHEMA_V2>['type'];
-
-export type MenuConditionsV2 = z.infer<typeof MENU_CONDITIONS_SCHEMA_V2>;
-
-export type MenuCollectionV2 = z.infer<typeof MENU_COLLECTION_SCHEMA_V2>;
-
-export type MenuSettingsV2 = z.infer<typeof MENU_SETTINGS_SCHEMA_V2>;
-
-/** This type describes meta information for an action type. */
-type MenuActionTypeMetaV2 = {
+/** This type describes meta information for a workflow action type. */
+type WorkflowActionTypeMetaV2 = {
   /** The default name for new actions of this kind. */
   name: string;
 
@@ -452,3 +342,122 @@ type MenuActionTypeMetaV2 = {
   /** A human-readable description of this kind of action. */
   description: string;
 };
+
+const WORKFLOW_ACTION_TYPE_META_ENTRIES_V2: Array<
+  [WorkflowActionTypeV2, WorkflowActionTypeMetaV2]
+> = [
+  [
+    'execute-command',
+    {
+      name: i18next.t('menu-actions.execute-command.name'),
+      icon: 'command-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.execute-command.description'),
+    },
+  ],
+  [
+    'execute-macro',
+    {
+      name: i18next.t('menu-actions.execute-macro.name'),
+      icon: 'macro-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.execute-macro.description'),
+    },
+  ],
+  [
+    'open-file',
+    {
+      name: i18next.t('menu-actions.open-file.name'),
+      icon: 'file-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.open-file.description'),
+    },
+  ],
+  [
+    'open-menu',
+    {
+      name: i18next.t('menu-actions.open-menu.name'),
+      icon: 'redirect-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.open-menu.description'),
+    },
+  ],
+  [
+    'open-settings',
+    {
+      name: i18next.t('menu-actions.open-settings.name'),
+      icon: 'settings-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.open-settings.description'),
+    },
+  ],
+  [
+    'open-uri',
+    {
+      name: i18next.t('menu-actions.open-uri.name'),
+      icon: 'uri-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.open-uri.description'),
+    },
+  ],
+  [
+    'set-clipboard',
+    {
+      name: i18next.t('menu-actions.set-clipboard.name'),
+      icon: 'clipboard-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.set-clipboard.description'),
+    },
+  ],
+  [
+    'simulate-hotkey',
+    {
+      name: i18next.t('menu-actions.simulate-hotkey.name'),
+      icon: 'hotkey-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-actions.simulate-hotkey.description'),
+    },
+  ],
+];
+
+/** Meta information for all available workflow action types. */
+export const WORKFLOW_ACTION_TYPE_META_V2: Readonly<
+  Record<WorkflowActionTypeV2, WorkflowActionTypeMetaV2>
+> = Object.fromEntries(WORKFLOW_ACTION_TYPE_META_ENTRIES_V2) as Record<
+  WorkflowActionTypeV2,
+  WorkflowActionTypeMetaV2
+>;
+
+// ------------------------------------------------------------------------------------ //
+// #region                        Type Exports
+// ------------------------------------------------------------------------------------ //
+
+export type MenuV2 = z.infer<typeof MENU_SCHEMA_V2>;
+export type ExecuteCommandActionV2 = z.infer<typeof EXECUTE_COMMAND_ACTION_SCHEMA_V2>;
+export type ExecuteMacroActionV2 = z.infer<typeof EXECUTE_MACRO_ACTION_SCHEMA_V2>;
+export type OpenFileActionV2 = z.infer<typeof OPEN_FILE_ACTION_SCHEMA_V2>;
+export type OpenMenuActionV2 = z.infer<typeof OPEN_MENU_ACTION_SCHEMA_V2>;
+export type OpenSettingsActionV2 = z.infer<typeof OPEN_SETTINGS_ACTION_SCHEMA_V2>;
+export type OpenURIActionV2 = z.infer<typeof OPEN_URI_ACTION_SCHEMA_V2>;
+export type SetClipboardActionV2 = z.infer<typeof SET_CLIPBOARD_ACTION_SCHEMA_V2>;
+export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
+
+/**
+ * Due to the recursive nature of the menu items, we need to explicitly define this type
+ * here.
+ */
+export type MenuSubmenuItemV2 = z.infer<typeof MENU_ITEM_BASE_SCHEMA_V2> & {
+  type: 'submenu';
+  children?: MenuItemV2[] | null;
+};
+export type MenuButtonItemV2 = z.infer<typeof MENU_BUTTON_ITEM_SCHEMA_V2>;
+export type MenuItemV2 = MenuButtonItemV2 | MenuSubmenuItemV2;
+
+export type WorkflowActionV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>;
+export type WorkflowActionTypeV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>['type'];
+
+export type MenuConditionsV2 = z.infer<typeof MENU_CONDITIONS_SCHEMA_V2>;
+
+export type MenuCollectionV2 = z.infer<typeof MENU_COLLECTION_SCHEMA_V2>;
+
+export type MenuSettingsV2 = z.infer<typeof MENU_SETTINGS_SCHEMA_V2>;
