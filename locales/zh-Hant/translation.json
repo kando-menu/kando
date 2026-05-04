@@ -213,7 +213,11 @@
             "preset-name-empty": "預設集名稱不可為空！",
             "preset-name-invalid": "預設集名稱只能包含英文字母、數字、連字號、底線與空格！",
             "preset-name-exists": "已存在相同名稱的預設集。",
-            "preset-name-placeholder": "例如：My Custom Colors"
+            "preset-name-placeholder": "例如：My Custom Colors",
+            "enable-menu-animations-info": "若停用，將關閉選單主題的所有轉場效果和大部分動畫。",
+            "enable-menu-animations": "選單動畫",
+            "enable-pointer-reactive-effects-info": "若停用，將關閉選單主題中根據當前指標位置產生的縮放或比例調整效果。",
+            "enable-pointer-reactive-effects": "指標互動效果"
         },
         "all-menus": "所有選單",
         "search-menus-placeholder": "搜尋選單…",
