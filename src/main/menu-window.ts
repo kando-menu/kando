@@ -13,14 +13,14 @@ import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './settings';
 import {
-  MenuSubmenuItem,
-  MenuButtonItem,
+  SubmenuMenuItem,
   ShowMenuRequest,
   Menu,
   MenuItem,
   WMInfo,
   SelectionSource,
   InteractionTarget,
+  RootMenuItem,
 } from '../common';
 import { IPCCallbacks } from '../common/ipc';
 import { ActionRegistry } from './actions/action-registry';
@@ -624,17 +624,25 @@ export class MenuWindow extends BrowserWindow {
    * @returns The menu item at the given path or null if no item is found at the path.
    */
   private getMenuItemAtPath(
-    root: DeepReadonly<MenuItem>,
+    root: DeepReadonly<RootMenuItem>,
     path: string
   ): DeepReadonly<MenuItem> | null {
-    let item = root;
     const indices = this.pathToArray(path);
 
+    if (indices.length === 0) {
+      return root;
+    }
+
+    let item: DeepReadonly<MenuItem> = root;
+
     for (const index of indices) {
-      if (item.type !== 'submenu' || !item.children || index >= item.children.length) {
+      if (item.type !== 'submenu' && item.type !== 'root') {
         return null;
       }
 
+      if (!item.children || index < 0 || index >= item.children.length) {
+        return null;
+      }
       item = item.children[index];
     }
 
@@ -692,7 +700,7 @@ export class MenuWindow extends BrowserWindow {
         // If the target of the selection is a submenu, we execute its openWorkflow.
         // The openWorkflow of a submenu uses the same type as the hoverWorkflow.
         if (target === InteractionTarget.eSubmenu) {
-          const submenu = item as DeepReadonly<MenuSubmenuItem>;
+          const submenu = item as DeepReadonly<SubmenuMenuItem>;
           if (submenu.openWorkflow) {
             ActionRegistry.getInstance().executeHoverWorkflow(
               submenu.openWorkflow,
@@ -705,12 +713,10 @@ export class MenuWindow extends BrowserWindow {
         // have to wait for the fade-out animation to finish before executing the
         // workflow.
         if (target === InteractionTarget.eItem && item.type === 'button') {
-          const button = item as DeepReadonly<MenuButtonItem>;
-
           // If the action is not delayed, we execute it immediately.
-          if (!button.selectWorkflow.waitForFadeout) {
+          if (item.selectWorkflow && !item.selectWorkflow.waitForFadeout) {
             ActionRegistry.getInstance().executeSelectWorkflow(
-              button.selectWorkflow,
+              item.selectWorkflow,
               this.kando
             );
           }
@@ -718,9 +724,9 @@ export class MenuWindow extends BrowserWindow {
           // Else we execute the action after the window is hidden.
           this.hideWindow().then(() => {
             // If the action is delayed, we execute it after the window is hidden.
-            if (button.selectWorkflow.waitForFadeout) {
+            if (item.selectWorkflow?.waitForFadeout) {
               ActionRegistry.getInstance().executeSelectWorkflow(
-                button.selectWorkflow,
+                item.selectWorkflow,
                 this.kando
               );
             }
@@ -790,13 +796,8 @@ export class MenuWindow extends BrowserWindow {
         return;
       }
 
-      if (target === InteractionTarget.eItem || target === InteractionTarget.eSubmenu) {
-        if (item.hoverWorkflow) {
-          ActionRegistry.getInstance().executeHoverWorkflow(
-            item.hoverWorkflow,
-            this.kando
-          );
-        }
+      if ('hoverWorkflow' in item) {
+        ActionRegistry.getInstance().executeHoverWorkflow(item.hoverWorkflow, this.kando);
       }
 
       this.ipcCallbacks.onHover(target, this.pathToArray(path));

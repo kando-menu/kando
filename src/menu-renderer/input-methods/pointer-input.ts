@@ -383,12 +383,14 @@ export class PointerInput extends InputMethod {
         this.buttonState = button;
         this.pointerPosition = pointer;
 
+        const toPointer = math.subtract(pointer, center);
+
         const state: InputState = {
           button,
           absolutePosition: pointer,
-          relativePosition: math.subtract(pointer, this.centerPosition),
-          distance: math.getLength(math.subtract(pointer, this.centerPosition)),
-          angle: math.getAngle(math.subtract(pointer, this.centerPosition)),
+          relativePosition: toPointer,
+          distance: math.getLength(toPointer),
+          angle: math.getAngle(toPointer),
         };
 
         this.stateCallback(state);

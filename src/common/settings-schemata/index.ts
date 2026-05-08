@@ -22,8 +22,10 @@ export type {
   SimulateHotkeyActionV2 as SimulateHotkeyAction,
   MenuConditionsV2 as MenuConditions,
   MenuItemV2 as MenuItem,
-  MenuSubmenuItemV2 as MenuSubmenuItem,
-  MenuButtonItemV2 as MenuButtonItem,
+  RootMenuItemV2 as RootMenuItem,
+  ChildMenuItemV2 as ChildMenuItem,
+  SubmenuMenuItemV2 as SubmenuMenuItem,
+  ButtonMenuItemV2 as ButtonMenuItem,
   MenuV2 as Menu,
   MenuCollectionV2 as MenuCollection,
   MenuSettingsV2 as MenuSettings,
@@ -36,7 +38,7 @@ export {
   MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA,
   MENU_ITEM_SCHEMA_V2 as MENU_ITEM_SCHEMA,
   WORKFLOW_ACTION_TYPE_META_V2 as WORKFLOW_ACTION_TYPE_META,
-  MENU_SUBMENU_ITEM_SCHEMA_V2 as MENU_SUBMENU_ITEM_SCHEMA,
+  ROOT_MENU_ITEM_SCHEMA_V2 as ROOT_MENU_ITEM_SCHEMA,
 } from './menu-settings-v2';
 
 export type { ExportedMenuV1 as ExportedMenu } from './exported-menu-v1';

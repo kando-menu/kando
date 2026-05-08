@@ -3,7 +3,7 @@
   "shortcutID": "example-menu",
   "centered": false,
   "root": {
-    "type": "submenu",
+    "type": "root",
     "name": "example-menu.name",
     "icon": "award_star",
     "iconTheme": "material-symbols-rounded",

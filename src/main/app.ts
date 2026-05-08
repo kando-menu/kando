@@ -38,6 +38,7 @@ import {
   CommandlineOptions,
   SystemInfo,
   VersionInfo,
+  RootMenuItem,
 } from '../common';
 import {
   Settings,
@@ -47,14 +48,12 @@ import {
 } from './settings';
 import { IPCServer, IPCCallbacks } from '../common/ipc';
 import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
-import {
-  EXPORTED_MENU_SCHEMA_V1,
-  ExportedMenuV1,
-} from '../common/settings-schemata/exported-menu-v1';
+import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
 import { supportsIsolatedProcesses } from './utils/shell';
+import { ExportedMenuV2 } from '../common/settings-schemata/exported-menu-v2';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -1037,9 +1036,9 @@ export class KandoApp {
       // include local UI flags like centered/anchored/hoverMode). This also makes future
       // extensions easier.
       const menu = settings.menus[menuIndex];
-      const menuData: ExportedMenuV1 = {
+      const menuData: ExportedMenuV2 = {
         version: settings.version,
-        menu: menu.root as MenuItem,
+        menu: menu.root as RootMenuItem,
       };
 
       try {
@@ -1790,9 +1789,9 @@ export class KandoApp {
       menu = require('./example-menus/linux.json');
     }
 
-    const translate = (item: MenuItem) => {
+    const translate = (item: MenuItem | RootMenuItem) => {
       item.name = i18next.t(item.name as ParseKeys);
-      if (item.type === 'submenu') {
+      if (item.type === 'submenu' || item.type === 'root') {
         for (const child of item.children) {
           translate(child);
         }

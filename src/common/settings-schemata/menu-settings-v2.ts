@@ -133,9 +133,9 @@ export const HOVER_WORKFLOW_SCHEMA_V2 = z.object({
 
 /**
  * This type describes the basic properties of each menu item. It is extended by the
- * specific types for button and submenu items further below.
+ * specific types for the root, button and submenu items further below.
  */
-export const MENU_ITEM_BASE_SCHEMA_V2 = z.object({
+const BASE_MENU_ITEM_SCHEMA_V2 = z.object({
   /** The name of the menu item. This may be displayed with some kind of label. */
   name: z.string(),
 
@@ -144,6 +144,25 @@ export const MENU_ITEM_BASE_SCHEMA_V2 = z.object({
 
   /** The theme from which the above icon should be used. */
   iconTheme: z.string(),
+});
+
+/**
+ * The root menu item is the top-level item of a menu. It can have children, which are the
+ * actual items that are displayed in the menu. The root item itself does not have any
+ * workflows.
+ */
+export const ROOT_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
+  type: z.literal('root'),
+
+  /** The top-level children of the menu. */
+  get children() {
+    return z.array(CHILD_MENU_ITEM_SCHEMA_V2);
+  },
+});
+
+/** Button menu items do not have any children but can have workflows. */
+export const BUTTON_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
+  type: z.literal('button'),
 
   /** The quick-select key for selecting this menu item. */
   quickSelectKey: z.string().optional(),
@@ -154,11 +173,6 @@ export const MENU_ITEM_BASE_SCHEMA_V2 = z.object({
    * be distributed more or less evenly around.
    */
   angle: z.number().optional(),
-});
-
-/** Button menu items do not have any additional properties beyond the base properties. */
-export const MENU_BUTTON_ITEM_SCHEMA_V2 = MENU_ITEM_BASE_SCHEMA_V2.extend({
-  type: z.literal('button'),
 
   /** The workflow which is triggered when the item is selected. */
   selectWorkflow: SELECT_WORKFLOW_SCHEMA_V2.optional(),
@@ -171,8 +185,17 @@ export const MENU_BUTTON_ITEM_SCHEMA_V2 = MENU_ITEM_BASE_SCHEMA_V2.extend({
  * Submenu items have children, which are other menu items. Due to the type recursion, we
  * use a lazy schema.
  */
-export const MENU_SUBMENU_ITEM_SCHEMA_V2 = MENU_ITEM_BASE_SCHEMA_V2.extend({
+export const SUBMENU_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   type: z.literal('submenu'),
+
+  /** The quick-select key for selecting this menu item. */
+  quickSelectKey: z.string().optional(),
+
+  /**
+   * The direction of the menu item in degrees. If not set, it will be computed when the
+   * menu is opened. If set, it is considered to be a "fixed angle".
+   */
+  angle: z.number().optional(),
 
   /** The workflow which is triggered when the submenu is opened. */
   openWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
@@ -181,13 +204,23 @@ export const MENU_SUBMENU_ITEM_SCHEMA_V2 = MENU_ITEM_BASE_SCHEMA_V2.extend({
   hoverWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
 
   /** The children of this menu item. */
-  children: z.lazy(() => z.array(MENU_ITEM_SCHEMA_V2).default([])),
+  get children() {
+    return z.array(CHILD_MENU_ITEM_SCHEMA_V2);
+  },
 });
 
-/** The menu consists of a tree of menu items. Each item can be a button or a submenu. */
-export const MENU_ITEM_SCHEMA_V2 = z.lazy(() =>
-  z.discriminatedUnion('type', [MENU_BUTTON_ITEM_SCHEMA_V2, MENU_SUBMENU_ITEM_SCHEMA_V2])
-) as z.ZodType<MenuItemV2>;
+/** Child menu items can be either button items or submenu items. */
+export const CHILD_MENU_ITEM_SCHEMA_V2 = z.union([
+  BUTTON_MENU_ITEM_SCHEMA_V2,
+  SUBMENU_MENU_ITEM_SCHEMA_V2,
+]);
+
+/** This type can be any menu item, including the root item. */
+export const MENU_ITEM_SCHEMA_V2 = z.union([
+  ROOT_MENU_ITEM_SCHEMA_V2,
+  BUTTON_MENU_ITEM_SCHEMA_V2,
+  SUBMENU_MENU_ITEM_SCHEMA_V2,
+]);
 
 // ------------------------------------------------------------------------------------ //
 // #region                         Menu Conditions
@@ -232,7 +265,7 @@ export const MENU_CONDITIONS_SCHEMA_V2 = z.object({
  */
 export const MENU_SCHEMA_V2 = z.object({
   /** The root item of the menu. */
-  root: MENU_SUBMENU_ITEM_SCHEMA_V2,
+  root: ROOT_MENU_ITEM_SCHEMA_V2,
 
   /**
    * The shortcut to open the menu. Something like 'Control+Space'.
@@ -434,6 +467,11 @@ export const WORKFLOW_ACTION_TYPE_META_V2: Readonly<
 
 export type MenuV2 = z.infer<typeof MENU_SCHEMA_V2>;
 
+export type SelectWorkflowV2 = z.infer<typeof SELECT_WORKFLOW_SCHEMA_V2>;
+export type HoverWorkflowV2 = z.infer<typeof HOVER_WORKFLOW_SCHEMA_V2>;
+export type WorkflowActionV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>;
+export type WorkflowActionTypeV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>['type'];
+
 export type ExecuteCommandActionV2 = z.infer<typeof EXECUTE_COMMAND_ACTION_SCHEMA_V2>;
 export type ExecuteMacroActionV2 = z.infer<typeof EXECUTE_MACRO_ACTION_SCHEMA_V2>;
 export type OpenFileActionV2 = z.infer<typeof OPEN_FILE_ACTION_SCHEMA_V2>;
@@ -443,27 +481,12 @@ export type OpenURIActionV2 = z.infer<typeof OPEN_URI_ACTION_SCHEMA_V2>;
 export type SetClipboardActionV2 = z.infer<typeof SET_CLIPBOARD_ACTION_SCHEMA_V2>;
 export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
 
-export type SelectWorkflowV2 = z.infer<typeof SELECT_WORKFLOW_SCHEMA_V2>;
-export type HoverWorkflowV2 = z.infer<typeof HOVER_WORKFLOW_SCHEMA_V2>;
-
-/**
- * Due to the recursive nature of the menu items, we need to explicitly define this type
- * here.
- */
-export type MenuSubmenuItemV2 = z.infer<typeof MENU_ITEM_BASE_SCHEMA_V2> & {
-  type: 'submenu';
-  hoverWorkflow?: HoverWorkflowV2;
-  openWorkflow?: HoverWorkflowV2;
-  children?: MenuItemV2[] | null;
-};
-export type MenuButtonItemV2 = z.infer<typeof MENU_BUTTON_ITEM_SCHEMA_V2>;
-export type MenuItemV2 = MenuButtonItemV2 | MenuSubmenuItemV2;
-
-export type WorkflowActionV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>;
-export type WorkflowActionTypeV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>['type'];
+export type RootMenuItemV2 = z.infer<typeof ROOT_MENU_ITEM_SCHEMA_V2>;
+export type ButtonMenuItemV2 = z.infer<typeof BUTTON_MENU_ITEM_SCHEMA_V2>;
+export type SubmenuMenuItemV2 = z.infer<typeof SUBMENU_MENU_ITEM_SCHEMA_V2>;
+export type ChildMenuItemV2 = ButtonMenuItemV2 | SubmenuMenuItemV2;
+export type MenuItemV2 = RootMenuItemV2 | ChildMenuItemV2;
 
 export type MenuConditionsV2 = z.infer<typeof MENU_CONDITIONS_SCHEMA_V2>;
-
 export type MenuCollectionV2 = z.infer<typeof MENU_COLLECTION_SCHEMA_V2>;
-
 export type MenuSettingsV2 = z.infer<typeof MENU_SETTINGS_SCHEMA_V2>;

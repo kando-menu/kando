@@ -13,10 +13,10 @@ import { ipcRenderer, webFrame } from 'electron';
 import { COMMON_WINDOW_API } from '../common/common-window-api';
 import {
   Vec2,
-  MenuItem,
   ShowMenuOptions,
   SelectionSource,
   InteractionTarget,
+  RootMenuItem,
 } from '../common';
 
 /**
@@ -47,7 +47,7 @@ export const MENU_WINDOW_API = {
    *
    * @param callback This callback will be called when a new menu should be shown.
    */
-  onShowMenu: (func: (root: MenuItem, menuOptions: ShowMenuOptions) => void) => {
+  onShowMenu: (func: (root: RootMenuItem, menuOptions: ShowMenuOptions) => void) => {
     ipcRenderer.on('menu-window.show-menu', (event, root, menuOptions) =>
       func(root, menuOptions)
     );

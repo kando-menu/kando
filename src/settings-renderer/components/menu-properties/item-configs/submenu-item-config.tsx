@@ -11,7 +11,7 @@
 import i18next from 'i18next';
 
 /** The tips component for submenu items shows a list of useful tips for submenu items. */
-export function getSubmenuItemTips() {
+export function getSubmenuMenuItemTips() {
   return [
     i18next.t('menu-items.submenu.tip-1'),
     i18next.t('menu-items.submenu.tip-2'),

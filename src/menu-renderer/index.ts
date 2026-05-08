@@ -18,6 +18,7 @@ import { SettingsButton } from './settings-button';
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
+import { CenterText } from './center-text';
 
 /**
  * This file is the main entry point for Kando's menu renderer process. It is responsible
@@ -41,6 +42,10 @@ Promise.all([
   menuTheme.loadDescription(themeDescription);
   menuTheme.setColors(colors);
 
+  // The center text is not directly shown by the menu, but handled by a separate class.
+  const centerText = new CenterText(document.getElementById('kando-menu'));
+  centerText.setDiameter(menuTheme.centerTextWrapWidth);
+
   // This will be called below whenever the menu theme should be reloaded.
   const reloadMenuTheme = async () => {
     Promise.all([
@@ -49,6 +54,9 @@ Promise.all([
     ]).then(([themeDescription, colors]) => {
       menuTheme.loadDescription(themeDescription);
       menuTheme.setColors(colors);
+
+      centerText.setDiameter(menuTheme.centerTextWrapWidth);
+      centerText.setEnabled(menuTheme.drawCenterText);
 
       // Reload the menu if it is currently shown.
       const [root, menuOptions] = menu.getCurrentRequest();
@@ -106,6 +114,7 @@ Promise.all([
     document.getElementById('kando-menu'),
     menuTheme,
     soundTheme,
+    centerText,
     settings
   );
 

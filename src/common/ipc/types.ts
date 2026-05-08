@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as z from 'zod';
-import { MENU_SUBMENU_ITEM_SCHEMA } from '../settings-schemata';
+import { ROOT_MENU_ITEM_SCHEMA } from '../settings-schemata';
 import { InteractionTarget } from '..';
 
 /** Enum of all possible reasons for declining a request. */
@@ -43,7 +43,7 @@ export const IPC_INFO_SCHEMA = z.object({
  */
 export const SHOW_MENU_MESSAGE = z.object({
   type: z.literal('show-menu'),
-  menu: MENU_SUBMENU_ITEM_SCHEMA,
+  menu: ROOT_MENU_ITEM_SCHEMA,
 });
 
 /**

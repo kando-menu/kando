@@ -10,7 +10,7 @@
 
 import React from 'react';
 
-import { getSubmenuItemTips } from './submenu-item-config';
+import { getSubmenuMenuItemTips } from './submenu-item-config';
 import { CommandItemConfig, getCommandItemTips } from './command-item-config';
 import { FileItemConfig, getFileItemTips } from './file-item-config';
 import { HotkeyItemConfig, getHotkeyItemTips } from './hotkey-item-config';
@@ -48,7 +48,7 @@ export function getConfigComponent(type: string): React.ReactElement {
  */
 export function getItemTips(type: string): string[] {
   const tips: Record<string, string[]> = {
-    submenu: getSubmenuItemTips(),
+    submenu: getSubmenuMenuItemTips(),
     command: getCommandItemTips(),
     file: getFileItemTips(),
     hotkey: getHotkeyItemTips(),
