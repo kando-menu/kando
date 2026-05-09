@@ -11,8 +11,8 @@
 import React from 'react';
 import i18next from 'i18next';
 
-import { useAppState, useMenuSettings, getSelectedChild } from '../state';
-import { TextInput } from '../components/common';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { TextInput } from '../../common';
 import { ItemData } from '../../../../common/item-types/uri-item-type';
 
 /** The configuration component for uri items is primarily a text input field for the URI. */

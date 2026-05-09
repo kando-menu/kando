@@ -11,8 +11,8 @@
 import React from 'react';
 import i18next from 'i18next';
 
-import { useAppState, useMenuSettings, getSelectedChild } from '../state';
-import { ShortcutPicker, Checkbox } from '../components/common';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { ShortcutPicker, Checkbox } from '../../common';
 import { ItemData } from '../../../../common/item-types/hotkey-item-type';
 
 /** The configuration component for hotkey items is a shortcut picker. */

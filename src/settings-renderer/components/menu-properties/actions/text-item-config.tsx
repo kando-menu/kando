@@ -9,16 +9,14 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 
-import { useAppState, useMenuSettings, getSelectedChild } from '../state';
-import { Dropdown } from '../components/common';
-import { ItemData } from '../../../../common/item-types/redirect-item-type';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { TextInput } from '../../common';
+import { ItemData } from '../../../../common/item-types/text-item-type';
 
-/**
- * The configuration component for redirect items is primarily a text input field for the
- * redirect.
- */
-export function RedirectItemConfig() {
+/** The configuration component for text items is primarily a text area. */
+export function TextItemConfig() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
@@ -26,32 +24,28 @@ export function RedirectItemConfig() {
   const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
 
   // Sanity check. Should never happen, but just in case.
-  if (!selectedItem || selectedItem.type !== 'redirect') {
+  if (!selectedItem || selectedItem.type !== 'text') {
     return null;
   }
-
-  // Assemble a list of all existing menu names.
-  const menuNames = menus.map((menu) => menu.root.name);
-  const options = Array.from(new Set(menuNames)).map((name) => {
-    return { value: name, label: name };
-  });
 
   const data = selectedItem.data as ItemData;
 
   return (
-    <Dropdown
-      initialValue={data.menu}
-      options={options}
-      onChange={(menuName) => {
-        const menu = menus.find((menu) => menu.root.name === menuName);
+    <TextInput
+      isMultiline
+      initialValue={data.text}
+      placeholder={i18next.t('menu-items.text.placeholder')}
+      onChange={(value) => {
         editMenuItem(selectedMenu, selectedChildPath, (item) => {
-          item.name = menu?.root.name || '';
-          item.icon = menu?.root.icon || '';
-          item.iconTheme = menu?.root.iconTheme || '';
-          (item.data as ItemData).menu = menuName;
+          (item.data as ItemData).text = value;
           return item;
         });
       }}
     />
   );
+}
+
+/** The tips component for text items shows a list of useful tips for text items. */
+export function getTextItemTips() {
+  return [i18next.t('menu-items.text.tip-1')];
 }

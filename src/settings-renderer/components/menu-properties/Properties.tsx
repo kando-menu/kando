@@ -26,7 +26,7 @@ import {
   Scrollbox,
   TextInput,
 } from '../common';
-import { getConfigComponent, getItemTips } from '../../actions';
+import { getConfigComponent, getItemTips } from './actions';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
 import { ChildMenuItem } from '../../../common';

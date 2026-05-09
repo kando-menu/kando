@@ -12,10 +12,10 @@ import React from 'react';
 import i18next from 'i18next';
 import { TbApps } from 'react-icons/tb';
 
-import { useAppState, useMenuSettings, getSelectedChild } from '../state';
-import { TextInput, Checkbox, Button } from '../components/common';
+import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { TextInput, Checkbox, Button } from '../../common';
 import { ItemData } from '../../../../common/item-types/command-item-type';
-import AppPicker from '../components/menu-properties/AppPicker';
+import AppPicker from '../AppPicker';
 
 /**
  * The configuration component for command items is primarily a text input field for the
